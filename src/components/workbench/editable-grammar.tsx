@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 import type { GrammarPoint } from "@/types/passage-analysis";
 
 interface EditableGrammarProps {
@@ -280,6 +282,11 @@ export function EditableGrammar({
                     <>
                       <Sparkles className="w-3 h-3 mr-0.5" />
                       AI로 보완
+                      <CreditCostChip
+                        amount={CREDIT_COSTS.GRAMMAR_ENHANCEMENT}
+                        className="ml-0.5 rounded bg-amber-100 px-1 text-[9px] text-amber-700"
+                        iconClassName="size-2.5"
+                      />
                     </>
                   )}
                 </Button>

@@ -22,25 +22,24 @@ import {
 
 export type Difficulty = "BASIC" | "INTERMEDIATE" | "KILLER";
 
-// 난이도 톤 — 기본 문제 생성과 동일 팔레트(기본 파랑 / 중급 노랑 / 킬러 빨강).
 const DIFFICULTY_TONES = [
   {
     value: "BASIC",
     label: "기본",
-    selected: "bg-blue-50 text-blue-700 border-blue-300 shadow-sm shadow-blue-50",
-    idle: "bg-white text-slate-400 border-slate-200 hover:border-blue-200 hover:text-blue-600",
+    selected: "border-slate-300 bg-white text-slate-800 shadow-sm",
+    idle: "border-slate-200 bg-white text-slate-400 hover:border-slate-300 hover:text-slate-700",
   },
   {
     value: "INTERMEDIATE",
     label: "중급",
-    selected: "bg-amber-50 text-amber-700 border-amber-300 shadow-sm shadow-amber-50",
-    idle: "bg-white text-slate-400 border-slate-200 hover:border-amber-200 hover:text-amber-600",
+    selected: "border-slate-300 bg-white text-slate-800 shadow-sm",
+    idle: "border-slate-200 bg-white text-slate-400 hover:border-slate-300 hover:text-slate-700",
   },
   {
     value: "KILLER",
     label: "킬러",
-    selected: "bg-red-50 text-red-700 border-red-300 shadow-sm shadow-red-50",
-    idle: "bg-white text-slate-400 border-slate-200 hover:border-red-200 hover:text-red-600",
+    selected: "border-slate-300 bg-white text-slate-800 shadow-sm",
+    idle: "border-slate-200 bg-white text-slate-400 hover:border-slate-300 hover:text-slate-700",
   },
 ] as const;
 
@@ -106,7 +105,8 @@ export function GenerationConfigPanel({
         {/* 커스텀 유형 + 개수 (+ 유형별 상세 토글) */}
         {types.length === 0 ? (
           <p className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-3 py-6 text-center text-[12.5px] text-slate-500">
-            저장된 커스텀 유형이 없습니다. ‘유형 만들기’ 탭에서 먼저 유형을 만드세요.
+            저장된 커스텀 유형이 없습니다. ‘유형 만들기’ 탭에서 먼저 유형을
+            만드세요.
           </p>
         ) : (
           <div className="space-y-1.5">
@@ -117,7 +117,9 @@ export function GenerationConfigPanel({
                 count={typeCounts[t.id] || 0}
                 override={typeOverrides[t.id]}
                 expanded={expandedTypeId === t.id}
-                onToggleExpand={() => setExpandedTypeId(expandedTypeId === t.id ? null : t.id)}
+                onToggleExpand={() =>
+                  setExpandedTypeId(expandedTypeId === t.id ? null : t.id)
+                }
                 onSetCount={(c) => setTypeCount(t.id, c)}
                 onSetOverride={(ov) => setTypeOverride(t.id, ov)}
                 onResetOverride={() => resetTypeOverride(t.id)}
@@ -126,18 +128,22 @@ export function GenerationConfigPanel({
             ))}
 
             {totalQuestions > 0 ? (
-              <div className="flex items-center justify-between rounded-xl border border-blue-200/60 bg-blue-50 px-3.5 py-2">
+              <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2">
                 <div className="flex items-center gap-2">
-                  <Target className="size-3.5 text-blue-600" />
-                  <span className="text-[12px] font-semibold text-blue-800">
-                    총 <strong className="text-blue-700">{totalQuestions}</strong>문제
-                    <span className="ml-1 font-medium text-blue-500">({activeTypeCount}개 유형)</span>
+                  <Target className="size-3.5 text-slate-500" />
+                  <span className="text-[12px] font-semibold text-slate-700">
+                    총{" "}
+                    <strong className="text-slate-900">{totalQuestions}</strong>
+                    문제
+                    <span className="ml-1 font-medium text-slate-500">
+                      ({activeTypeCount}개 유형)
+                    </span>
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={onResetCounts}
-                  className="text-[11px] font-medium text-blue-500 transition-colors hover:text-blue-700"
+                  className="text-[11px] font-medium text-slate-500 transition-colors hover:text-slate-700"
                 >
                   초기화
                 </button>
@@ -215,13 +221,15 @@ function CustomTypeBlock({
     <section
       className={cn(
         "overflow-hidden rounded-xl border bg-white transition-all",
-        active ? "border-blue-300 shadow-sm shadow-blue-50" : "border-slate-200 shadow-sm",
+        active ? "border-slate-300 shadow-sm" : "border-slate-200 shadow-sm",
       )}
     >
       <div
         className={cn(
           "flex items-center gap-1 border-b px-2.5 py-1.5",
-          active ? "border-blue-100 bg-blue-50/70" : "border-slate-100 bg-slate-50/70",
+          active
+            ? "border-slate-200 bg-slate-50"
+            : "border-slate-100 bg-slate-50/70",
         )}
       >
         <button
@@ -232,7 +240,7 @@ function CustomTypeBlock({
           <span
             className={cn(
               "w-full truncate text-[12.5px] font-bold",
-              active ? "text-blue-800" : "text-slate-700",
+              active ? "text-slate-900" : "text-slate-700",
             )}
           >
             {type.name}
@@ -243,14 +251,16 @@ function CustomTypeBlock({
           </span>
         </button>
 
-        {active ? <CheckCircle2 className="size-3.5 shrink-0 text-blue-600" /> : null}
+        {active ? (
+          <CheckCircle2 className="size-3.5 shrink-0 text-slate-500" />
+        ) : null}
 
         <div className="flex shrink-0 items-center gap-0.5">
           <button
             type="button"
             onClick={() => onSetCount(Math.max(0, count - 1))}
             disabled={!active}
-            className="flex size-7 items-center justify-center rounded-md text-blue-400 transition-colors hover:bg-white hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200"
+            className="flex size-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200"
             aria-label={`${type.name} 개수 줄이기`}
           >
             <Minus className="size-3.5" />
@@ -258,7 +268,7 @@ function CustomTypeBlock({
           <span
             className={cn(
               "w-5 text-center text-[12px] font-bold tabular-nums",
-              active ? "text-blue-700" : "text-slate-300",
+              active ? "text-slate-800" : "text-slate-300",
             )}
           >
             {count}
@@ -266,7 +276,7 @@ function CustomTypeBlock({
           <button
             type="button"
             onClick={() => onSetCount(count + 1)}
-            className="flex size-7 items-center justify-center rounded-md text-blue-500 transition-colors hover:bg-white hover:text-blue-700"
+            className="flex size-7 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-white hover:text-blue-700"
             aria-label={`${type.name} 개수 늘리기`}
           >
             <Plus className="size-3.5" />
@@ -277,11 +287,15 @@ function CustomTypeBlock({
           <button
             type="button"
             onClick={onToggleExpand}
-            className="flex size-7 items-center justify-center rounded-md bg-blue-50 text-blue-500 ring-1 ring-blue-100 transition-colors hover:bg-blue-100 hover:text-blue-700"
+            className="flex size-7 items-center justify-center rounded-md bg-white text-slate-500 ring-1 ring-slate-200 transition-colors hover:bg-blue-50 hover:text-blue-700"
             title={expanded ? "상세 설정 접기" : "상세 설정 펼치기"}
             aria-label={expanded ? "상세 설정 접기" : "상세 설정 펼치기"}
           >
-            {expanded ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
+            {expanded ? (
+              <ChevronUp className="size-3.5" />
+            ) : (
+              <ChevronDown className="size-3.5" />
+            )}
           </button>
         ) : null}
 
@@ -299,7 +313,8 @@ function CustomTypeBlock({
       {expanded && canExpand ? (
         <div className="space-y-2.5 px-3 py-2.5">
           <p className="text-[10.5px] leading-snug text-slate-400">
-            이 생성 배치에만 적용되는 임시 설정입니다. 유형 정의를 영구히 바꾸려면 ✦ 수정을 쓰세요.
+            이 생성 배치에만 적용되는 임시 설정입니다. 유형 정의를 영구히
+            바꾸려면 ✦ 수정을 쓰세요.
           </p>
           {isMc ? (
             <>
@@ -318,8 +333,9 @@ function CustomTypeBlock({
                 onChange={(v) => patch({ correctAnswerCount: v })}
               />
               {correctAnswerCount >= 2 ? (
-                <p className="text-[10.5px] leading-snug text-blue-500">
-                  정답 {correctAnswerCount}개 — 복수 정답으로 ‘모두 고르시오’ 형식으로 출제됩니다.
+                <p className="text-[10.5px] leading-snug text-slate-500">
+                  정답 {correctAnswerCount}개 — 복수 정답으로 ‘모두 고르시오’
+                  형식으로 출제됩니다.
                 </p>
               ) : null}
             </>
@@ -388,17 +404,19 @@ function NumberStepper({
           type="button"
           onClick={() => onChange(Math.max(min, value - 1))}
           disabled={value <= min}
-          className="flex size-7 items-center justify-center rounded-md text-blue-400 transition-colors hover:bg-blue-100 hover:text-blue-600 disabled:text-slate-200 disabled:hover:bg-transparent"
+          className="flex size-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:text-slate-200 disabled:hover:bg-transparent"
           aria-label={`${label} 줄이기`}
         >
           <Minus className="size-3" />
         </button>
-        <span className="w-6 text-center text-[12px] font-bold tabular-nums text-blue-700">{value}</span>
+        <span className="w-6 text-center text-[12px] font-bold tabular-nums text-slate-800">
+          {value}
+        </span>
         <button
           type="button"
           onClick={() => onChange(Math.min(max, value + 1))}
           disabled={value >= max}
-          className="flex size-7 items-center justify-center rounded-md text-blue-500 transition-colors hover:bg-blue-100 hover:text-blue-700 disabled:text-slate-200 disabled:hover:bg-transparent"
+          className="flex size-7 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-blue-50 hover:text-blue-700 disabled:text-slate-200 disabled:hover:bg-transparent"
           aria-label={`${label} 늘리기`}
         >
           <Plus className="size-3" />
@@ -432,7 +450,7 @@ function LanguageToggle({
             className={cn(
               "rounded px-2 py-1 text-[10px] font-bold transition-colors",
               value === item.value
-                ? "bg-white text-blue-700 shadow-sm"
+                ? "bg-white text-slate-800 shadow-sm"
                 : "text-slate-400 hover:text-slate-600",
             )}
           >

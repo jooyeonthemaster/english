@@ -1,10 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ChevronDown,
   ChevronUp,
-  ListStart,
   Loader2,
   Minus,
   MousePointer2,
@@ -21,6 +27,8 @@ import { toast } from "sonner";
 
 import { Textarea } from "@/components/ui/textarea";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import {
   RestoreIntroDialog,
   readRestoreIntroDismissed,
@@ -180,8 +188,7 @@ function measureSelectionAnchor(
   const last = rects[rects.length - 1];
   const sameLine = Math.abs(first.top - last.top) < 4;
   return {
-    x:
-      (sameLine ? (first.left + last.right) / 2 : last.right) - hostRect.left,
+    x: (sameLine ? (first.left + last.right) / 2 : last.right) - hostRect.left,
     topY: first.top - hostRect.top - el.scrollTop,
     bottomY: last.bottom - hostRect.top - el.scrollTop,
     containerW: host.clientWidth,
@@ -193,19 +200,30 @@ function measureSelectionAnchor(
 function buildHighlightSegments(
   content: string,
   highlights: RowHighlight[],
-): { text: string; kind: RowHighlight["kind"] | null }[] {
+): { text: string; kind: RowHighlight["kind"] | null; original?: string }[] {
   if (highlights.length === 0) return [{ text: content, kind: null }];
   const sorted = [...highlights].sort((a, b) => a.start - b.start);
-  const segments: { text: string; kind: RowHighlight["kind"] | null }[] = [];
+  const segments: {
+    text: string;
+    kind: RowHighlight["kind"] | null;
+    original?: string;
+  }[] = [];
   let pos = 0;
   for (const h of sorted) {
     const start = Math.max(pos, Math.min(h.start, content.length));
     const end = Math.max(start, Math.min(h.end, content.length));
-    if (start > pos) segments.push({ text: content.slice(pos, start), kind: null });
-    if (end > start) segments.push({ text: content.slice(start, end), kind: h.kind });
+    if (start > pos)
+      segments.push({ text: content.slice(pos, start), kind: null });
+    if (end > start)
+      segments.push({
+        text: content.slice(start, end),
+        kind: h.kind,
+        original: h.original,
+      });
     pos = Math.max(pos, end);
   }
-  if (pos < content.length) segments.push({ text: content.slice(pos), kind: null });
+  if (pos < content.length)
+    segments.push({ text: content.slice(pos), kind: null });
   return segments;
 }
 
@@ -251,6 +269,7 @@ export function WorkspacePassageRow({
 }: WorkspacePassageRowProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
+  const rangeBackdropRef = useRef<HTMLDivElement>(null);
   const [selection, setSelection] = useState<SelectionState | null>(null);
   const [selectionAnchor, setSelectionAnchor] =
     useState<SelectionAnchor | null>(null);
@@ -259,6 +278,34 @@ export function WorkspacePassageRow({
   );
   const [restoreIntroOpen, setRestoreIntroOpen] = useState(false);
   const [preview, setPreview] = useState<PreviewState | null>(null);
+  // 변형 문장 위에 커서를 올리면 원문을 보여주는 툴팁 (에디터 컨테이너 기준 좌표).
+  const [originalTip, setOriginalTip] = useState<{
+    left: number;
+    top: number;
+    /** 호버 중인 줄의 윗변 — 아래 공간이 부족할 때 위로 뒤집는 기준. */
+    lineTop: number;
+    text: string;
+  } | null>(null);
+  const originalTipRef = useRef<HTMLDivElement>(null);
+  // 툴팁은 overflow-hidden 에디터 안에 뜨므로, 렌더 직후 실제 크기를 재서
+  // 좌우는 컨테이너 안으로 클램프하고 아래 공간이 부족하면 줄 위로 뒤집는다.
+  useLayoutEffect(() => {
+    const tip = originalTipRef.current;
+    const host = tip?.parentElement;
+    if (!tip || !host || !originalTip) return;
+    const w = tip.offsetWidth;
+    const h = tip.offsetHeight;
+    const left = Math.min(
+      Math.max(originalTip.left - w / 2, 8),
+      Math.max(host.clientWidth - w - 8, 8),
+    );
+    const top =
+      originalTip.top + h > host.clientHeight - 4
+        ? Math.max(originalTip.lineTop - h - 4, 4)
+        : originalTip.top;
+    tip.style.left = `${left}px`;
+    tip.style.top = `${top}px`;
+  }, [originalTip]);
   // "다시 생성" 회피 목록 — 같은 대상에 대한 직전 결과들.
   const avoidRef = useRef<string[]>([]);
   // 타이핑 버스트 타이머 — 활성인 동안의 연속 입력은 undo 1단계로 묶는다.
@@ -301,12 +348,58 @@ export function WorkspacePassageRow({
   const hasPrependHl = row.highlights.some((h) => h.kind === "prepend");
   const hasParaphraseHl = row.highlights.some((h) => h.kind === "paraphrase");
 
+  // textarea 는 글자 단위 hover 이벤트가 없으므로, 동일 메트릭으로 뒤에 깔린
+  // 백드롭의 변형 mark 요소들 사각형에 마우스 좌표를 직접 히트테스트한다.
+  const handleEditorMouseMove = useCallback((e: React.MouseEvent) => {
+    const bd = backdropRef.current;
+    const container = bd?.parentElement;
+    if (!bd || !container) {
+      setOriginalTip(null);
+      return;
+    }
+    const marks = bd.querySelectorAll<HTMLElement>("mark[data-hl-original]");
+    for (const mark of marks) {
+      const original = mark.dataset.hlOriginal;
+      if (!original) continue;
+      for (const rect of mark.getClientRects()) {
+        if (
+          e.clientX >= rect.left &&
+          e.clientX <= rect.right &&
+          e.clientY >= rect.top &&
+          e.clientY <= rect.bottom
+        ) {
+          const cRect = container.getBoundingClientRect();
+          setOriginalTip((prev) => {
+            const next = {
+              left: e.clientX - cRect.left,
+              top: rect.bottom - cRect.top + 4,
+              lineTop: rect.top - cRect.top,
+              text: original,
+            };
+            // 같은 줄 안에서의 미세 이동은 리렌더하지 않는다.
+            if (prev && prev.text === next.text && prev.top === next.top) {
+              return prev;
+            }
+            return next;
+          });
+          return;
+        }
+      }
+    }
+    setOriginalTip(null);
+  }, []);
+
   const syncBackdropScroll = useCallback(() => {
     const el = textareaRef.current;
     const bd = backdropRef.current;
     if (el && bd) {
       bd.scrollTop = el.scrollTop;
       bd.scrollLeft = el.scrollLeft;
+    }
+    const rbd = rangeBackdropRef.current;
+    if (el && rbd) {
+      rbd.scrollTop = el.scrollTop;
+      rbd.scrollLeft = el.scrollLeft;
     }
     // 내부 스크롤 시 선택 팝오버 위치도 따라가야 한다.
     if (el && selection) {
@@ -317,7 +410,7 @@ export function WorkspacePassageRow({
   }, [selection]);
   useEffect(() => {
     syncBackdropScroll();
-  }, [row.content, row.highlights, syncBackdropScroll]);
+  }, [row.content, row.highlights, row.range, syncBackdropScroll]);
 
   // 생성 시 변형본으로 리바인드되면(passageId 교체) 본문이 외부에서 바뀐다 —
   // 이전 본문 기준의 선택/미리보기 오프셋은 무효이므로 즉시 폐기한다.
@@ -409,6 +502,7 @@ export function WorkspacePassageRow({
     if (end - start >= MIN_PARAPHRASE_CHARS) {
       setSelection({ start, end, text: row.content.slice(start, end) });
       setSelectionAnchor(measureSelectionAnchor(el, start, end));
+      dispatchGenerateTourMilestone("workspace-text-selected");
       // 직접 드래그에 성공했다 — 코치는 임무 완료, 영구 종료.
       dismissDragCoach(true);
     } else {
@@ -436,6 +530,7 @@ export function WorkspacePassageRow({
           text: r.text,
           note: r.note,
         });
+        dispatchGenerateTourMilestone("workspace-paraphrase-previewed");
       } catch (err) {
         toast.error(
           err instanceof Error ? err.message : "AI 문장 변형에 실패했습니다.",
@@ -452,25 +547,6 @@ export function WorkspacePassageRow({
     avoidRef.current = [];
     void runParaphrase(selection, []);
   }, [selection, busy, disabled, runParaphrase]);
-
-  // "문장 변형…" 티칭 버튼 — API 호출 없이(크레딧 0) 첫 문장을 대신 선택해
-  // "선택 → 액션 바" 흐름을 그대로 보여준다. 처음 보는 사람용 발견 장치.
-  const handleTeachParaphrase = useCallback(() => {
-    const el = textareaRef.current;
-    if (!el || locked) return;
-    const text = row.content;
-    const m = text.match(/[\s\S]*?[.!?…]["'”’)\]]*(?=\s|$)/u);
-    let end = m ? m[0].length : 0;
-    if (end < MIN_PARAPHRASE_CHARS) end = Math.min(text.length, 140);
-    if (end < MIN_PARAPHRASE_CHARS) return;
-    el.focus();
-    el.setSelectionRange(0, end);
-    setSelection({ start: 0, end, text: text.slice(0, end) });
-    setSelectionAnchor(measureSelectionAnchor(el, 0, end));
-    toast.info(
-      "첫 문장을 선택했어요 — 다른 문장을 원하면 본문에서 드래그로 선택하세요.",
-    );
-  }, [locked, row.content]);
 
   // ── AI 복원 (문제 형태 → 원문) — intake 붙여넣기와 동일 API·플로우 ──
   const runRestore = useCallback(async () => {
@@ -537,6 +613,7 @@ export function WorkspacePassageRow({
           sentenceCount: prependCount,
         });
         setPreview({ kind: "prepend", text: r.text, note: r.note });
+        dispatchGenerateTourMilestone("workspace-prepend-previewed");
       } catch (err) {
         toast.error(
           err instanceof Error ? err.message : "앞 문단 생성에 실패했습니다.",
@@ -591,7 +668,9 @@ export function WorkspacePassageRow({
         start: preview.start,
         end: preview.start + preview.text.length,
         kind: "paraphrase",
+        original: preview.original,
       });
+      dispatchGenerateTourMilestone("workspace-paraphrase-applied");
     } else {
       const next = `${preview.text} ${row.content.trimStart()}`;
       onApplyAi(next, {
@@ -599,6 +678,7 @@ export function WorkspacePassageRow({
         end: preview.text.length,
         kind: "prepend",
       });
+      dispatchGenerateTourMilestone("workspace-prepend-applied");
     }
     setPreview(null);
     setSelection(null);
@@ -636,6 +716,7 @@ export function WorkspacePassageRow({
       return;
     }
     onSetRange({ start: selection.start, end: selection.end });
+    dispatchGenerateTourMilestone("workspace-range-set");
     setSelection(null);
     toast.success("출제 범위가 지정됐습니다. 이 구간만으로 문제를 생성합니다.");
   }, [selection, disabled, onSetRange]);
@@ -666,7 +747,7 @@ export function WorkspacePassageRow({
           className="flex h-full min-w-0 flex-1 cursor-pointer items-center gap-2 text-left"
           title={row.collapsed ? "펼치기" : "접기"}
         >
-          <span className="flex h-[22px] min-w-[22px] shrink-0 items-center justify-center rounded-md bg-blue-600 px-1 text-[11px] font-bold leading-none text-white tabular-nums">
+          <span className="flex h-[22px] min-w-[22px] shrink-0 items-center justify-center rounded-md bg-violet-600 px-1 text-[11px] font-bold leading-none text-white tabular-nums">
             {index + 1}
           </span>
           <span className="min-w-[72px] shrink truncate text-[12.5px] font-semibold text-slate-700">
@@ -674,7 +755,7 @@ export function WorkspacePassageRow({
           </span>
           {row.variantOfId ? (
             <span
-              className="shrink-0 rounded-sm bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white"
+              className="shrink-0 rounded-sm bg-violet-600 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white"
               title="편집된 본문이 새 지문(변형본)으로 저장됐습니다. 원본 지문은 그대로 보존됩니다."
             >
               변형본
@@ -682,7 +763,7 @@ export function WorkspacePassageRow({
           ) : null}
           {dirty ? (
             <span
-              className="shrink-0 rounded-sm bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold leading-none text-blue-600 ring-1 ring-inset ring-blue-200"
+              className="shrink-0 rounded-sm bg-violet-50 px-1.5 py-0.5 text-[10px] font-bold leading-none text-violet-600 ring-1 ring-inset ring-violet-200"
               title="본문이 수정됐습니다. 생성 시 변형본이 새 지문으로 저장됩니다."
             >
               수정됨
@@ -739,41 +820,35 @@ export function WorkspacePassageRow({
       {!row.collapsed ? (
         <div className="space-y-2 px-2.5 py-2.5">
           {/* ── AI 도구 바 ── */}
-          <div className="flex min-h-7 flex-wrap items-center gap-x-2 gap-y-1.5">
+          <div
+            className="flex min-h-7 flex-wrap items-center gap-x-2 gap-y-1.5"
+            data-generate-tour="workspace-ai-tools"
+          >
             <button
               type="button"
               onClick={handleRestoreClick}
               disabled={locked || row.content.trim().length < 20}
               title="문제 형태 지문을 원문으로 AI 복원"
-              className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-4 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-violet-600 px-4 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {busy === "restore" ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                <Loader2
+                  className="h-3.5 w-3.5 animate-spin"
+                  aria-hidden="true"
+                />
               ) : (
                 <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
               )}
               {busy === "restore" ? "복원 중" : "AI 복원"}
               {busy !== "restore" ? (
-                <span
-                  title={`이 작업은 크레딧 ${CREDIT_COSTS.PASSAGE_RESTORATION}을 사용합니다`}
-                  className="rounded-sm bg-white/20 px-1 py-px text-[10px] font-bold"
-                >
-                  ◈{CREDIT_COSTS.PASSAGE_RESTORATION}
-                </span>
+                <CreditCostChip
+                  amount={CREDIT_COSTS.PASSAGE_RESTORATION}
+                  className="rounded-sm bg-white/20 px-1 py-px text-[10px]"
+                />
               ) : null}
             </button>
-            <button
-              type="button"
-              onClick={handleTeachParaphrase}
-              disabled={locked}
-              title="클릭하면 첫 문장이 선택됩니다 — 원하는 문장을 드래그로 바꿔 선택한 뒤 ‘AI 문장 변형’을 누르세요"
-              className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-blue-200 bg-white px-2 text-[11.5px] font-bold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <Wand2 className="h-3.5 w-3.5" aria-hidden="true" />
-              문장 변형…
-            </button>
             {rangePreview ? (
-              <span className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 pl-2 pr-1 text-[11px] font-bold text-white">
+              <span className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-violet-600 pl-2 pr-1 text-[11px] font-bold text-white">
                 <Scissors className="h-3 w-3" aria-hidden="true" />
                 출제 범위 {rangePreview.words}/{words} words
                 <button
@@ -788,7 +863,7 @@ export function WorkspacePassageRow({
             ) : null}
             <span className="flex min-w-0 items-center gap-1.5 text-[11px] font-medium text-slate-400">
               <TextCursorInput
-                className="h-3.5 w-3.5 shrink-0 text-blue-400"
+                className="h-3.5 w-3.5 shrink-0 text-violet-400"
                 aria-hidden="true"
               />
               <span className="truncate">
@@ -834,72 +909,86 @@ export function WorkspacePassageRow({
 
           {/* ── 본문 에디터 (앞 맥락 삽입 바 + 하이라이트 백드롭) ── */}
           <div
+            data-generate-tour="workspace-editor"
             className={
               "overflow-hidden rounded-lg border transition-colors " +
               (editorLocked
                 ? "border-slate-200 bg-slate-50"
-                : "border-slate-200 bg-white focus-within:border-blue-300 focus-within:ring-2 focus-within:ring-blue-100")
+                : "border-slate-200 bg-white focus-within:border-violet-300 focus-within:ring-2 focus-within:ring-violet-100")
             }
           >
-            {/* 앞 맥락 삽입 바 — 본문 첫 글자 바로 위 = 문단이 들어올 자리 */}
-            <div className="relative flex items-stretch border-b border-dashed border-blue-200/80 bg-blue-50/40">
-              <button
-                type="button"
-                onClick={handlePrependClick}
-                disabled={locked}
-                title={`지문 맥락과 자연스럽게 이어지는 앞 문단(${prependCount}문장)을 AI가 생성해 이 위치에 끼워 넣습니다`}
-                className="flex h-8 min-w-0 flex-1 items-center gap-1.5 pl-2.5 pr-2 text-left text-[11.5px] font-bold text-blue-600 transition-colors hover:bg-blue-100/60 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {busy === "prepend" ? (
-                  <Loader2
-                    className="h-3.5 w-3.5 shrink-0 animate-spin"
-                    aria-hidden="true"
-                  />
-                ) : (
-                  <ListStart className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                )}
-                <span className="truncate">
-                  {busy === "prepend"
-                    ? "앞 문단을 생성하고 있어요…"
-                    : "여기에 앞 맥락 문단 추가"}
-                </span>
-                <span
-                  title="이 작업은 크레딧 1을 사용합니다"
-                  className="shrink-0 rounded-sm bg-white px-1 py-px text-[10px] font-bold text-blue-500 ring-1 ring-inset ring-blue-200"
-                >
-                  ◈1
-                </span>
-              </button>
+            {/* 앞 맥락 삽입 지점 — 점선 가운데 '+' 알약이 떠 있는 insertion
+                point 패턴. "클릭하면 이 줄 자리에 문단이 끼워 넣어진다"가
+                모양만으로 읽히도록 본문 첫 글자 바로 위에 둔다. */}
+            <div className="relative flex items-center gap-2 border-b border-dashed border-violet-200/80 bg-violet-50/30 px-2.5 py-1.5">
               <span
-                className="my-1.5 w-px shrink-0 bg-blue-200/70"
+                className="h-0 min-w-3 flex-1 border-t border-dashed border-violet-300/80"
                 aria-hidden="true"
               />
-              <div
-                className="flex shrink-0 items-center gap-0.5 pl-1 pr-1"
-                title="생성할 앞 문단의 문장 수 (1~5)"
-              >
+              {/* 알약 하나에 [추가 버튼 | 문장 수 스테퍼]를 함께 담는다 —
+                  button 안에 button 을 중첩할 수 없어 컨테이너는 div. */}
+              <div className="flex shrink-0 items-stretch overflow-hidden rounded-full border border-violet-300 bg-white shadow-sm">
                 <button
                   type="button"
-                  onClick={() => changePrependCount(-1)}
-                  disabled={locked || prependCount <= 1}
-                  className="flex h-6 w-6 items-center justify-center rounded text-blue-400 transition-colors hover:bg-blue-100/70 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-35"
-                  aria-label="앞 문단 문장 수 줄이기"
+                  onClick={handlePrependClick}
+                  disabled={locked}
+                  data-generate-tour="workspace-prepend-button"
+                  title={`지문 맥락과 자연스럽게 이어지는 앞 문단(${prependCount}문장)을 AI가 생성해 이 위치에 끼워 넣습니다`}
+                  className="flex min-w-0 cursor-pointer items-center gap-1.5 py-0.5 pl-2 pr-2 text-[11.5px] font-bold text-violet-600 transition-colors hover:bg-violet-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <Minus className="h-3 w-3" aria-hidden="true" />
+                  {busy === "prepend" ? (
+                    <Loader2
+                      className="h-3.5 w-3.5 shrink-0 animate-spin"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <Plus className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  )}
+                  <span className="truncate">
+                    {busy === "prepend"
+                      ? "앞 문단을 생성하고 있어요…"
+                      : "앞 맥락 문단 추가"}
+                  </span>
+                  <CreditCostChip
+                    amount={CREDIT_COSTS.PASSAGE_TRANSFORM}
+                    className="shrink-0 rounded-sm bg-white px-1 py-px text-[10px] text-violet-500 ring-1 ring-inset ring-violet-200"
+                  />
                 </button>
-                <span className="w-[42px] text-center text-[11px] font-bold tabular-nums text-blue-700">
-                  {prependCount}문장
-                </span>
-                <button
-                  type="button"
-                  onClick={() => changePrependCount(1)}
-                  disabled={locked || prependCount >= 5}
-                  className="flex h-6 w-6 items-center justify-center rounded text-blue-400 transition-colors hover:bg-blue-100/70 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-35"
-                  aria-label="앞 문단 문장 수 늘리기"
+                <span
+                  className="my-1 w-px shrink-0 bg-violet-200"
+                  aria-hidden="true"
+                />
+                <div
+                  className="flex shrink-0 items-center gap-0.5 px-1"
+                  title="생성할 앞 문단의 문장 수 (1~5)"
                 >
-                  <Plus className="h-3 w-3" aria-hidden="true" />
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => changePrependCount(-1)}
+                    disabled={locked || prependCount <= 1}
+                    className="flex h-5 w-5 items-center justify-center rounded-full text-violet-400 transition-colors hover:bg-violet-100/70 hover:text-violet-600 disabled:cursor-not-allowed disabled:opacity-35"
+                    aria-label="앞 문단 문장 수 줄이기"
+                  >
+                    <Minus className="h-3 w-3" aria-hidden="true" />
+                  </button>
+                  <span className="w-[38px] text-center text-[11px] font-bold tabular-nums text-violet-700">
+                    {prependCount}문장
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => changePrependCount(1)}
+                    disabled={locked || prependCount >= 5}
+                    className="flex h-5 w-5 items-center justify-center rounded-full text-violet-400 transition-colors hover:bg-violet-100/70 hover:text-violet-600 disabled:cursor-not-allowed disabled:opacity-35"
+                    aria-label="앞 문단 문장 수 늘리기"
+                  >
+                    <Plus className="h-3 w-3" aria-hidden="true" />
+                  </button>
+                </div>
               </div>
+              <span
+                className="h-0 min-w-3 flex-1 border-t border-dashed border-violet-300/80"
+                aria-hidden="true"
+              />
 
               {/* ── 앞 맥락 모션 코치 — ① 커서가 본문에서 올라와 바를 클릭
                   ② 바로 아래에 'AI 앞 문단' 고스트 패널이 펼쳐지며 쉬머
@@ -909,16 +998,16 @@ export function WorkspacePassageRow({
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-0 z-[2]"
                 >
-                  <div className="ws-prepcoach-wash absolute inset-0 bg-blue-400/20 opacity-0" />
-                  <span className="ws-prepcoach-ring absolute left-[96px] top-1/2 h-7 w-7 rounded-full border-2 border-blue-500/70 opacity-0" />
-                  <MousePointer2 className="ws-prepcoach-cursor absolute left-[96px] top-[7px] h-4 w-4 text-blue-700 opacity-0 drop-shadow-sm" />
+                  <div className="ws-prepcoach-wash absolute inset-0 bg-violet-400/20 opacity-0" />
+                  <span className="ws-prepcoach-ring absolute left-[96px] top-1/2 h-7 w-7 rounded-full border-2 border-violet-500/70 opacity-0" />
+                  <MousePointer2 className="ws-prepcoach-cursor absolute left-[96px] top-[7px] h-4 w-4 text-violet-700 opacity-0 drop-shadow-sm" />
                   {/* 클릭 결과로 삽입되는 고스트 문단 */}
-                  <div className="ws-prepcoach-ghost absolute inset-x-2 top-full mt-1.5 origin-top rounded-md border border-blue-200 bg-white opacity-0 shadow-lg shadow-blue-100/70">
+                  <div className="ws-prepcoach-ghost absolute inset-x-2 top-full mt-1.5 origin-top rounded-md border border-violet-200 bg-white opacity-0 shadow-lg shadow-violet-100/70">
                     <div className="flex items-center gap-1.5 px-3 pt-2">
-                      <span className="rounded-sm bg-blue-600 px-1 py-px text-[9px] font-bold leading-none text-white">
+                      <span className="rounded-sm bg-violet-600 px-1 py-px text-[9px] font-bold leading-none text-white">
                         AI
                       </span>
-                      <span className="text-[10.5px] font-bold text-blue-600">
+                      <span className="text-[10.5px] font-bold text-violet-600">
                         이어지는 앞 문단이 이 자리에 생성돼요
                       </span>
                     </div>
@@ -974,6 +1063,34 @@ export function WorkspacePassageRow({
             </div>
 
             <div className="relative">
+              {/* 출제 범위 백드롭 — 지정된 구간을 형광펜처럼 칠한다.
+                  AI 하이라이트 백드롭과 같은 메트릭의 별도 레이어. */}
+              {row.range ? (
+                <div
+                  ref={rangeBackdropRef}
+                  aria-hidden="true"
+                  style={EDITOR_TEXT_STYLE}
+                  className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words px-3 py-2 text-transparent"
+                >
+                  <span>
+                    {row.content.slice(
+                      0,
+                      Math.min(row.range.start, row.content.length),
+                    )}
+                  </span>
+                  <mark className="rounded-[2px] bg-amber-100 text-transparent">
+                    {row.content.slice(
+                      Math.min(row.range.start, row.content.length),
+                      Math.min(row.range.end, row.content.length),
+                    )}
+                  </mark>
+                  <span>
+                    {row.content.slice(
+                      Math.min(row.range.end, row.content.length),
+                    )}
+                  </span>
+                </div>
+              ) : null}
               {/* 하이라이트 백드롭 — textarea 와 동일 메트릭(px-3 py-2,
                   13px/relaxed)으로 뒤에 깔린다. 글자는 투명, 배경만 칠한다. */}
               {row.highlights.length > 0 ? (
@@ -987,11 +1104,14 @@ export function WorkspacePassageRow({
                     seg.kind ? (
                       <mark
                         key={i}
+                        data-hl-original={
+                          seg.kind === "paraphrase" ? seg.original : undefined
+                        }
                         className={
                           "rounded-[2px] text-transparent " +
                           (seg.kind === "prepend"
-                            ? "bg-blue-100"
-                            : "bg-violet-100")
+                            ? "bg-violet-100"
+                            : "bg-orange-200/80")
                         }
                       >
                         {seg.text}
@@ -1023,7 +1143,12 @@ export function WorkspacePassageRow({
                   setSelection(null);
                 }}
                 onSelect={handleSelect}
-                onScroll={syncBackdropScroll}
+                onScroll={() => {
+                  syncBackdropScroll();
+                  setOriginalTip(null);
+                }}
+                onMouseMove={handleEditorMouseMove}
+                onMouseLeave={() => setOriginalTip(null)}
                 readOnly={editorLocked}
                 disabled={disabled}
                 spellCheck={false}
@@ -1035,6 +1160,23 @@ export function WorkspacePassageRow({
                 placeholder="지문 본문"
               />
 
+              {/* ── 변형 문장 원문 툴팁 — 하늘색 하이라이트 위에 커서를
+                  올리면 변형 전 문장을 보여준다 ── */}
+              {originalTip ? (
+                <div
+                  ref={originalTipRef}
+                  className="pointer-events-none absolute z-[3] w-max max-w-[min(440px,85%)] rounded-md border border-orange-200 bg-white px-2.5 py-1.5 shadow-lg shadow-orange-100/60"
+                  style={{ left: originalTip.left, top: originalTip.top }}
+                >
+                  <div className="mb-0.5 text-[10px] font-bold text-orange-600">
+                    변형 전 원문
+                  </div>
+                  <div className="line-clamp-4 whitespace-pre-wrap text-[11.5px] leading-relaxed text-slate-700">
+                    {originalTip.text}
+                  </div>
+                </div>
+              ) : null}
+
               {/* ── 드래그 모션 코치 — 고스트 커서가 첫 줄을 쓸며 선택
                   하이라이트가 자라나는 루프. 실제 드래그/편집 시 영구 종료. ── */}
               {dragCoachVisible && !editorLocked && !disabled ? (
@@ -1043,13 +1185,13 @@ export function WorkspacePassageRow({
                   className="pointer-events-none absolute inset-x-0 top-0 z-[2]"
                 >
                   <div className="relative mx-3 mt-2 h-[21px]">
-                    <div className="ws-dragcoach-band absolute left-0 top-0 h-full rounded-[3px] bg-blue-500/25 ring-1 ring-inset ring-blue-400/30" />
+                    <div className="ws-dragcoach-band absolute left-0 top-0 h-full rounded-[3px] bg-violet-500/25 ring-1 ring-inset ring-violet-400/30" />
                     <MousePointer2
-                      className="ws-dragcoach-cursor absolute top-[3px] h-4 w-4 text-blue-700 drop-shadow-sm"
+                      className="ws-dragcoach-cursor absolute top-[3px] h-4 w-4 text-violet-700 drop-shadow-sm"
                       aria-hidden="true"
                     />
                   </div>
-                  <div className="ws-dragcoach-chip pointer-events-auto mx-3 mt-1.5 inline-flex items-center gap-1.5 rounded-md border border-blue-300 bg-white py-1 pl-2.5 pr-1 text-[11.5px] font-bold text-blue-700 shadow-md shadow-blue-100/70">
+                  <div className="ws-dragcoach-chip pointer-events-auto mx-3 mt-1.5 inline-flex items-center gap-1.5 rounded-md border border-violet-300 bg-white py-1 pl-2.5 pr-1 text-[11.5px] font-bold text-violet-700 shadow-md shadow-violet-100/70">
                     <TextCursorInput
                       className="h-3.5 w-3.5 shrink-0"
                       aria-hidden="true"
@@ -1058,7 +1200,7 @@ export function WorkspacePassageRow({
                     <button
                       type="button"
                       onClick={() => dismissDragCoach(true)}
-                      className="ml-0.5 flex h-5 w-5 items-center justify-center rounded text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                      className="ml-0.5 flex h-5 w-5 items-center justify-center rounded text-violet-300 transition-colors hover:bg-violet-50 hover:text-violet-600"
                       title="알겠어요 — 다시 보지 않기"
                     >
                       <X className="h-3 w-3" aria-hidden="true" />
@@ -1094,11 +1236,7 @@ export function WorkspacePassageRow({
 
               {/* ── 선택 액션 팝오버 — 드래그한 문장 바로 옆에 뜬다
                   (학습지 필기 툴바와 동일한 앵커·클램프 규칙) ── */}
-              {selection &&
-              selectionAnchor &&
-              !preview &&
-              !busy &&
-              !disabled
+              {selection && selectionAnchor && !preview && !busy && !disabled
                 ? (() => {
                     const fitsBelow =
                       selectionAnchor.bottomY + SELECTION_POPUP_H + 10 <=
@@ -1128,38 +1266,33 @@ export function WorkspacePassageRow({
                           top: below
                             ? selectionAnchor.bottomY + 8
                             : selectionAnchor.topY - 8,
-                          ...(below
-                            ? {}
-                            : { transform: "translateY(-100%)" }),
+                          ...(below ? {} : { transform: "translateY(-100%)" }),
                         }}
                       >
                         {below ? (
                           <div style={{ paddingLeft: arrowX - 4 }}>
-                            <div className="-mb-1 h-2 w-2 rotate-45 border-l border-t border-blue-300 bg-white" />
+                            <div className="-mb-1 h-2 w-2 rotate-45 border-l border-t border-violet-300 bg-white" />
                           </div>
                         ) : null}
-                        <div className="flex items-center gap-1.5 rounded-lg border border-blue-300 bg-white p-1.5 shadow-lg shadow-blue-200/60 duration-150 animate-in fade-in zoom-in-95">
+                        <div className="flex items-center gap-1.5 rounded-lg border border-violet-300 bg-white p-1.5 shadow-lg shadow-violet-200/60 duration-150 animate-in fade-in zoom-in-95">
                           <button
                             type="button"
                             onClick={handleParaphraseClick}
+                            data-generate-tour="workspace-paraphrase-button"
                             title="뜻은 그대로, 단어·표현만 바꿔 재작성합니다"
-                            className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 pl-2.5 pr-2 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
+                            className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-violet-600 pl-2.5 pr-2 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-violet-700"
                           >
-                            <Wand2
-                              className="h-3.5 w-3.5"
-                              aria-hidden="true"
-                            />
+                            <Wand2 className="h-3.5 w-3.5" aria-hidden="true" />
                             AI 문장 변형
-                            <span
-                              title="이 작업은 크레딧 1을 사용합니다"
-                              className="rounded-sm bg-white/20 px-1 py-px text-[10px] font-bold"
-                            >
-                              ◈1
-                            </span>
+                            <CreditCostChip
+                              amount={CREDIT_COSTS.PASSAGE_TRANSFORM}
+                              className="rounded-sm bg-white/20 px-1 py-px text-[10px]"
+                            />
                           </button>
                           <button
                             type="button"
                             onClick={handleSetRangeFromSelection}
+                            data-generate-tour="workspace-range-button"
                             title="선택한 구간만으로 문제를 생성합니다 (긴 지문용)"
                             className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50"
                           >
@@ -1172,7 +1305,7 @@ export function WorkspacePassageRow({
                         </div>
                         {!below ? (
                           <div style={{ paddingLeft: arrowX - 4 }}>
-                            <div className="-mt-1 h-2 w-2 rotate-45 border-b border-r border-blue-300 bg-white" />
+                            <div className="-mt-1 h-2 w-2 rotate-45 border-b border-r border-violet-300 bg-white" />
                           </div>
                         ) : null}
                       </div>
@@ -1183,12 +1316,21 @@ export function WorkspacePassageRow({
           </div>
 
           {/* ── 하이라이트 범례 ── */}
-          {row.highlights.length > 0 ? (
+          {row.highlights.length > 0 || row.range ? (
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-0.5 text-[10.5px] font-medium text-slate-400">
+              {row.range ? (
+                <span className="flex items-center gap-1">
+                  <span
+                    className="h-2.5 w-2.5 rounded-[2px] bg-amber-100 ring-1 ring-inset ring-amber-300"
+                    aria-hidden="true"
+                  />
+                  출제 범위 — 이 구간만으로 문제를 생성해요
+                </span>
+              ) : null}
               {hasPrependHl ? (
                 <span className="flex items-center gap-1">
                   <span
-                    className="h-2.5 w-2.5 rounded-[2px] bg-blue-100 ring-1 ring-inset ring-blue-200"
+                    className="h-2.5 w-2.5 rounded-[2px] bg-violet-100 ring-1 ring-inset ring-violet-200"
                     aria-hidden="true"
                   />
                   AI가 추가한 앞 맥락
@@ -1197,26 +1339,28 @@ export function WorkspacePassageRow({
               {hasParaphraseHl ? (
                 <span className="flex items-center gap-1">
                   <span
-                    className="h-2.5 w-2.5 rounded-[2px] bg-violet-100 ring-1 ring-inset ring-violet-200"
+                    className="h-2.5 w-2.5 rounded-[2px] bg-orange-200 ring-1 ring-inset ring-orange-300"
                     aria-hidden="true"
                   />
-                  AI 변형 문장
+                  AI 변형 문장 — 마우스를 올리면 원문이 보여요
                 </span>
               ) : null}
               <span className="min-w-0 flex-1" aria-hidden="true" />
-              <button
-                type="button"
-                onClick={onClearHighlights}
-                className="shrink-0 transition-colors hover:text-slate-600"
-                title="색 표시만 지웁니다 (본문은 그대로)"
-              >
-                표시 지우기
-              </button>
+              {row.highlights.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={onClearHighlights}
+                  className="shrink-0 transition-colors hover:text-slate-600"
+                  title="색 표시만 지웁니다 (본문은 그대로)"
+                >
+                  표시 지우기
+                </button>
+              ) : null}
             </div>
           ) : null}
 
           {busy === "paraphrase" ? (
-            <div className="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50/50 px-3 py-2.5 text-[12px] font-semibold text-blue-600">
+            <div className="flex items-center gap-2 rounded-lg border border-violet-200 bg-violet-50/50 px-3 py-2.5 text-[12px] font-semibold text-violet-600">
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
               선택한 문장을 변형하고 있어요…
             </div>

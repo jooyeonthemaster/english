@@ -92,7 +92,7 @@ export function EditableRestoredTextBox({
             el.scrollLeft = event.currentTarget.scrollLeft;
           }}
           spellCheck={false}
-          className="absolute inset-0 h-full w-full resize-none overflow-y-auto rounded-b-lg border-0 bg-transparent px-4 py-3 text-[14px] leading-7 text-transparent caret-slate-950 outline-none selection:bg-sky-200/60 focus:ring-2 focus:ring-sky-200"
+          className="absolute inset-0 h-full w-full resize-none overflow-y-auto rounded-b-lg border-0 bg-transparent px-4 py-3 text-[14px] leading-7 text-transparent caret-slate-950 outline-none selection:bg-blue-200/60 focus:ring-2 focus:ring-blue-200"
         />
       </div>
     </div>
@@ -146,10 +146,7 @@ function HighlightedText({
       {segments.map((segment, index) => {
         if (segment.diffOverlay) {
           return (
-            <mark
-              key={index}
-              className="rounded bg-amber-100/70 text-slate-900"
-            >
+            <mark key={index} className="rounded bg-slate-100 text-slate-900">
               {segment.text}
             </mark>
           );
@@ -172,10 +169,10 @@ function HighlightedText({
             className={
               "pointer-events-auto cursor-pointer rounded px-0.5 transition-colors " +
               (isActive
-                ? "bg-violet-200 text-violet-950 ring-1 ring-violet-400"
+                ? "bg-blue-100 text-slate-950 ring-1 ring-blue-300"
                 : isHovered
-                  ? "bg-amber-200 text-slate-900 ring-1 ring-amber-300"
-                  : "bg-amber-100 text-slate-900")
+                  ? "bg-slate-200 text-slate-900 ring-1 ring-slate-300"
+                  : "bg-slate-100 text-slate-900")
             }
           >
             {segment.text}
@@ -190,7 +187,10 @@ function HighlightedText({
  *  built-in `CSS.escape` is overkill, but using it where available keeps us
  *  defensive for any future id format change. */
 function cssEscape(value: string): string {
-  if (typeof window !== "undefined" && typeof window.CSS?.escape === "function") {
+  if (
+    typeof window !== "undefined" &&
+    typeof window.CSS?.escape === "function"
+  ) {
     return window.CSS.escape(value);
   }
   return value.replace(/["\\]/g, "\\$&");

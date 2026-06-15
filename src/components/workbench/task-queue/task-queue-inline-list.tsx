@@ -157,11 +157,11 @@ interface TaskQueueInlineListProps {
 function gridCardClass(status: TaskStatus): string {
   switch (status) {
     case "processing":
-      return "border-blue-200 bg-white";
+      return "border-slate-200 bg-white";
     case "completed":
-      return "border-emerald-200 bg-white";
+      return "border-slate-200 bg-white";
     case "partial":
-      return "border-amber-200 bg-white";
+      return "border-slate-200 bg-white";
     case "failed":
       return "border-red-200 bg-white";
     case "cancelled":
@@ -177,9 +177,9 @@ function gridIconClass(status: TaskStatus): string {
     case "processing":
       return "text-blue-600";
     case "completed":
-      return "text-emerald-600";
+      return "text-slate-500";
     case "partial":
-      return "text-amber-600";
+      return "text-slate-500";
     case "failed":
       return "text-red-500";
     case "cancelled":
@@ -248,11 +248,11 @@ function statToneClass(
 ): string {
   switch (tone) {
     case "blue":
-      return "bg-blue-50 text-blue-700";
+      return "bg-slate-50 text-slate-600";
     case "emerald":
-      return "bg-emerald-50 text-emerald-700";
+      return "bg-slate-50 text-slate-600";
     case "amber":
-      return "bg-amber-50 text-amber-700";
+      return "bg-slate-50 text-slate-600";
     case "red":
       return "bg-red-50 text-red-700";
     case "slate":
@@ -523,10 +523,10 @@ function TaskGridCard({
         (selectionMode
           ? "cursor-pointer"
           : draggableEnabled
-          ? isDragging
-            ? "cursor-grabbing opacity-50"
-            : "cursor-grab active:cursor-grabbing"
-          : "cursor-pointer")
+            ? isDragging
+              ? "cursor-grabbing opacity-50"
+              : "cursor-grab active:cursor-grabbing"
+            : "cursor-pointer")
       }
     >
       {active ? (
@@ -644,7 +644,7 @@ function TaskGridCard({
         )}
 
         <div className="mt-auto flex flex-wrap items-center gap-2 pt-3 text-[10px] font-medium">
-          <span className="inline-flex items-center gap-1 rounded bg-blue-50 px-1.5 py-0.5 text-blue-600">
+          <span className="inline-flex items-center gap-1 rounded bg-slate-50 px-1.5 py-0.5 text-slate-500">
             <DomainIcon className="size-3.5" aria-hidden="true" />
             {DOMAIN_LABELS[task.domain]}
           </span>
@@ -777,10 +777,10 @@ function TaskListRow({
         (selectionMode
           ? "cursor-pointer"
           : draggableEnabled
-          ? isDragging
-            ? "cursor-grabbing opacity-50"
-            : "cursor-grab active:cursor-grabbing"
-          : "cursor-pointer")
+            ? isDragging
+              ? "cursor-grabbing opacity-50"
+              : "cursor-grab active:cursor-grabbing"
+            : "cursor-pointer")
       }
     >
       {onToggleCheck ? (
@@ -890,7 +890,8 @@ function ViewModeToggle({
       ? {
           ...option,
           disabled: grid3Disabled,
-          disabledTitle: "드로어가 열려 있는 동안 3열 보기는 사용할 수 없습니다",
+          disabledTitle:
+            "드로어가 열려 있는 동안 3열 보기는 사용할 수 없습니다",
         }
       : option,
   );
@@ -937,7 +938,11 @@ export function TaskQueueInlineList({
 }: TaskQueueInlineListProps) {
   const marqueeEnabled = Boolean(marqueeSelectedTaskIds && onMarqueeChange);
   const sectionRef = useRef<HTMLElement | null>(null);
-  const { tasks: fetchedTasks, loading, reload } = useTaskList({
+  const {
+    tasks: fetchedTasks,
+    loading,
+    reload,
+  } = useTaskList({
     scope: domain,
     refreshKey: refreshSignal ?? 0,
   });
@@ -1146,7 +1151,7 @@ export function TaskQueueInlineList({
       {bare ? null : (
         <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
           <div className="flex min-w-0 items-center gap-2">
-            <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+            <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-slate-50 text-slate-500 ring-1 ring-slate-200">
               <HeaderIcon className="size-4" aria-hidden="true" />
             </span>
             <h3 className="truncate text-[13px] font-bold text-slate-900">

@@ -91,7 +91,11 @@ export function RowHistoryPopover({
           ) : null}
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" sideOffset={6} className="w-[330px] p-0 shadow-xl">
+      <PopoverContent
+        align="end"
+        sideOffset={6}
+        className="w-[330px] p-0 shadow-xl"
+      >
         <div className="border-b border-slate-100 px-3.5 py-2.5">
           <div className="flex items-baseline justify-between">
             <p className="text-[12.5px] font-bold text-slate-800">생성 이력</p>
@@ -104,8 +108,8 @@ export function RowHistoryPopover({
             </p>
           </div>
           <p className="mt-0.5 text-[10.5px] text-slate-400">
-            아래 목록은 최근 생성 작업 기준이에요. 전체 문제는 하단
-            ‘생성/검수 결과’에서 확인하세요.
+            아래 목록은 최근 생성 작업 기준이에요. 전체 문제는 하단 ‘생성/검수
+            결과’에서 확인하세요.
           </p>
         </div>
         {jobs.length === 0 ? (
@@ -130,7 +134,7 @@ export function RowHistoryPopover({
                   ) : job.status === "error" ? (
                     <XCircle className="h-3.5 w-3.5 text-red-400" />
                   ) : (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                    <CheckCircle2 className="h-3.5 w-3.5 text-slate-400" />
                   )}
                 </span>
                 <span className="min-w-0 flex-1">

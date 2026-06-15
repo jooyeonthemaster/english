@@ -54,9 +54,14 @@ export const SUBTYPE_LABELS: Record<string, string> = {
 };
 
 // Hierarchical type → subtype grouping for filter UI
-export const TYPE_SUBTYPE_MAP: { type: string; label: string; subtypes: { value: string; label: string }[] }[] = [
+export const TYPE_SUBTYPE_MAP: {
+  type: string;
+  label: string;
+  subtypes: { value: string; label: string }[];
+}[] = [
   {
-    type: "MULTIPLE_CHOICE", label: "객관식",
+    type: "MULTIPLE_CHOICE",
+    label: "객관식",
     subtypes: [
       { value: "BLANK_INFERENCE", label: "빈칸 추론" },
       { value: "GRAMMAR_ERROR", label: "어법 판단" },
@@ -76,7 +81,8 @@ export const TYPE_SUBTYPE_MAP: { type: string; label: string; subtypes: { value:
     ],
   },
   {
-    type: "SHORT_ANSWER", label: "주관식/서술형",
+    type: "SHORT_ANSWER",
+    label: "주관식/서술형",
     subtypes: [
       { value: "CONDITIONAL_WRITING", label: "조건부 영작" },
       { value: "SENTENCE_TRANSFORM", label: "문장 전환" },
@@ -87,7 +93,8 @@ export const TYPE_SUBTYPE_MAP: { type: string; label: string; subtypes: { value:
     ],
   },
   {
-    type: "VOCAB", label: "어휘",
+    type: "VOCAB",
+    label: "어휘",
     subtypes: [
       { value: "CONTEXT_MEANING", label: "문맥 속 의미" },
       { value: "SYNONYM", label: "동의어" },
@@ -96,10 +103,22 @@ export const TYPE_SUBTYPE_MAP: { type: string; label: string; subtypes: { value:
   },
 ];
 
-export const DIFFICULTY_CONFIG: Record<string, { label: string; className: string }> = {
-  BASIC: { label: "기본", className: "bg-blue-50 text-blue-700 border-blue-200" },
-  INTERMEDIATE: { label: "중급", className: "bg-amber-50 text-amber-700 border-amber-200" },
-  KILLER: { label: "킬러", className: "bg-red-50 text-red-700 border-red-200" },
+export const DIFFICULTY_CONFIG: Record<
+  string,
+  { label: string; className: string }
+> = {
+  BASIC: {
+    label: "기본",
+    className: "bg-slate-50 text-slate-600 border-slate-200",
+  },
+  INTERMEDIATE: {
+    label: "중급",
+    className: "bg-slate-50 text-slate-600 border-slate-200",
+  },
+  KILLER: {
+    label: "킬러",
+    className: "bg-slate-50 text-slate-600 border-slate-200",
+  },
 };
 
 // ---------------------------------------------------------------------------
@@ -114,15 +133,21 @@ export function TypeFilterPopover({
   onApply: (selected: string[]) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<Set<string>>(new Set(currentSubTypes));
-  const [collapsed, setCollapsed] = useState<Set<string>>(new Set(TYPE_SUBTYPE_MAP.map((g) => g.type)));
+  const [selected, setSelected] = useState<Set<string>>(
+    new Set(currentSubTypes),
+  );
+  const [collapsed, setCollapsed] = useState<Set<string>>(
+    new Set(TYPE_SUBTYPE_MAP.map((g) => g.type)),
+  );
 
   // Sync with external filter changes
   useEffect(() => {
     setSelected(new Set(currentSubTypes));
   }, [currentSubTypes.join(",")]);
 
-  const allSubTypes = TYPE_SUBTYPE_MAP.flatMap((g) => g.subtypes.map((s) => s.value));
+  const allSubTypes = TYPE_SUBTYPE_MAP.flatMap((g) =>
+    g.subtypes.map((s) => s.value),
+  );
   const totalCount = allSubTypes.length;
   const selectedCount = selected.size;
   const isAll = selectedCount === 0;
@@ -136,7 +161,7 @@ export function TypeFilterPopover({
     });
   }
 
-  function toggleGroup(group: typeof TYPE_SUBTYPE_MAP[number]) {
+  function toggleGroup(group: (typeof TYPE_SUBTYPE_MAP)[number]) {
     const groupSubs = group.subtypes.map((s) => s.value);
     const allSelected = groupSubs.every((s) => selected.has(s));
     setSelected((prev) => {
@@ -172,17 +197,23 @@ export function TypeFilterPopover({
   const triggerLabel = isAll
     ? "전체 유형"
     : selectedCount <= 2
-    ? [...selected].map((s) => SUBTYPE_LABELS[s] || s).join(", ")
-    : `${selectedCount}개 유형`;
+      ? [...selected].map((s) => SUBTYPE_LABELS[s] || s).join(", ")
+      : `${selectedCount}개 유형`;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button className={`flex items-center gap-1.5 h-8 px-3 text-[12px] rounded-md border transition-colors ${
-          !isAll ? "border-blue-300 bg-blue-50 text-blue-700" : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
-        }`}>
+        <button
+          className={`flex items-center gap-1.5 h-8 px-3 text-[12px] rounded-md border transition-colors ${
+            !isAll
+              ? "border-blue-300 bg-blue-50 text-blue-700"
+              : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
+          }`}
+        >
           <Filter className="w-3 h-3" />
-          <span className="font-medium max-w-[140px] truncate">{triggerLabel}</span>
+          <span className="font-medium max-w-[140px] truncate">
+            {triggerLabel}
+          </span>
           {!isAll && (
             <span className="w-4 h-4 rounded-full bg-blue-600 text-white text-[9px] font-bold flex items-center justify-center">
               {selectedCount}
@@ -194,7 +225,9 @@ export function TypeFilterPopover({
       <PopoverContent align="start" className="w-64 p-0">
         {/* Header */}
         <div className="flex items-center justify-between px-3 py-2 border-b border-slate-100">
-          <span className="text-[12px] font-semibold text-slate-700">문제 유형 필터</span>
+          <span className="text-[12px] font-semibold text-slate-700">
+            문제 유형 필터
+          </span>
           {!isAll && (
             <button
               onClick={handleReset}
@@ -209,7 +242,9 @@ export function TypeFilterPopover({
         <div className="max-h-[360px] overflow-y-auto py-1">
           {TYPE_SUBTYPE_MAP.map((group) => {
             const groupSubs = group.subtypes.map((s) => s.value);
-            const groupSelectedCount = groupSubs.filter((s) => selected.has(s)).length;
+            const groupSelectedCount = groupSubs.filter((s) =>
+              selected.has(s),
+            ).length;
             const allGroupSelected = groupSelectedCount === groupSubs.length;
             const someGroupSelected = groupSelectedCount > 0;
             const isCollapsed = collapsed.has(group.type);
@@ -229,7 +264,13 @@ export function TypeFilterPopover({
                     )}
                   </button>
                   <Checkbox
-                    checked={allGroupSelected ? true : someGroupSelected ? "indeterminate" : false}
+                    checked={
+                      allGroupSelected
+                        ? true
+                        : someGroupSelected
+                          ? "indeterminate"
+                          : false
+                    }
                     onCheckedChange={() => toggleGroup(group)}
                     className="shrink-0"
                   />
@@ -259,9 +300,13 @@ export function TypeFilterPopover({
                           onCheckedChange={() => toggleSub(sub.value)}
                           className="shrink-0"
                         />
-                        <span className={`text-[12px] select-none ${
-                          selected.has(sub.value) ? "text-blue-700 font-medium" : "text-slate-600"
-                        }`}>
+                        <span
+                          className={`text-[12px] select-none ${
+                            selected.has(sub.value)
+                              ? "text-blue-700 font-medium"
+                              : "text-slate-600"
+                          }`}
+                        >
                           {sub.label}
                         </span>
                       </label>
@@ -278,7 +323,11 @@ export function TypeFilterPopover({
           <span className="text-[11px] text-slate-400">
             {isAll ? "전체 표시 중" : `${selectedCount}개 선택`}
           </span>
-          <Button size="sm" className="h-7 text-[11px] bg-blue-600 hover:bg-blue-700" onClick={handleApply}>
+          <Button
+            size="sm"
+            className="h-7 text-[11px] bg-blue-600 hover:bg-blue-700"
+            onClick={handleApply}
+          >
             적용
           </Button>
         </div>

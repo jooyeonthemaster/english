@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 
 // "다시 보지 않기" preference for the AI-restore intro modal. "1" = dismissed.
 const DISMISS_KEY = "smoat:generate:restore-intro-dismissed";
@@ -87,9 +88,9 @@ export function RestoreIntroDialog({
         className="gap-0 overflow-hidden rounded-2xl border-slate-200 p-0 sm:max-w-xl"
       >
         {/* Hero band */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-700 px-6 py-5">
+        <div className="relative overflow-hidden bg-blue-600 px-6 py-5">
           <div className="pointer-events-none absolute -right-10 -top-12 h-36 w-36 rounded-full bg-white/10 blur-2xl" />
-          <div className="pointer-events-none absolute -bottom-14 left-12 h-28 w-28 rounded-full bg-indigo-300/20 blur-2xl" />
+          <div className="pointer-events-none absolute -bottom-14 left-12 h-28 w-28 rounded-full bg-blue-300/20 blur-2xl" />
           <div className="relative flex items-start gap-3.5">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white shadow-lg shadow-blue-900/30 ring-1 ring-white/30">
               <RotateCcw className="h-5 w-5" />
@@ -153,24 +154,24 @@ export function RestoreIntroDialog({
               </span>
             </div>
 
-            <div className="min-w-0 flex-1 rounded-xl border border-emerald-200 bg-emerald-50/50 p-3">
+            <div className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-slate-50 p-3">
               <div className="mb-2 flex items-center gap-1.5">
-                <span className="inline-flex h-4 items-center rounded bg-emerald-100 px-1.5 text-[9.5px] font-bold text-emerald-700">
+                <span className="inline-flex h-4 items-center rounded bg-slate-100 px-1.5 text-[9.5px] font-bold text-slate-600">
                   복원 후
                 </span>
-                <span className="text-[10.5px] font-medium text-emerald-600/80">
+                <span className="text-[10.5px] font-medium text-slate-500">
                   원문
                 </span>
               </div>
               <div className="space-y-1 font-mono text-[10.5px] leading-relaxed text-slate-700">
                 <p>
                   The trait{" "}
-                  <span className="font-semibold text-emerald-700">was</span>{" "}
+                  <span className="font-semibold text-slate-800">was</span>{" "}
                   common in
                 </p>
                 <p>
                   the{" "}
-                  <span className="font-semibold text-emerald-700">village</span>{" "}
+                  <span className="font-semibold text-slate-800">village</span>{" "}
                   where people
                 </p>
                 <p>gathered every morning.</p>
@@ -187,8 +188,8 @@ export function RestoreIntroDialog({
               <b className="font-bold text-blue-700">
                 완전한 복원을 위해 문제와 선지(①②③④⑤)까지 함께 붙여넣어 주세요.
               </b>{" "}
-              정답·문항이 있어야 AI가 빈칸과 밑줄 어법을 <b>정확히</b> 되살립니다.
-              지문만 넣으면 문맥 추정으로 일부만 복원될 수 있어요.
+              정답·문항이 있어야 AI가 빈칸과 밑줄 어법을 <b>정확히</b>{" "}
+              되살립니다. 지문만 넣으면 문맥 추정으로 일부만 복원될 수 있어요.
             </p>
           </div>
 
@@ -229,9 +230,10 @@ export function RestoreIntroDialog({
 
           <div className="flex items-center gap-2">
             <span className="hidden items-center gap-1 text-[11px] font-semibold text-slate-400 sm:flex">
-              <span className="rounded bg-slate-200/80 px-1.5 py-0.5 text-[10px] text-slate-600">
-                ◈ {CREDIT_COSTS.PASSAGE_RESTORATION}
-              </span>
+              <CreditCostChip
+                amount={CREDIT_COSTS.PASSAGE_RESTORATION}
+                className="rounded bg-slate-200/80 px-1.5 py-0.5 text-[10px] text-slate-600"
+              />
               지문당
             </span>
             <button

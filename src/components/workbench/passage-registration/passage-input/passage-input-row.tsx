@@ -20,6 +20,7 @@ import {
 } from "@/components/workbench/editor";
 import { detectProblemFormArtifacts } from "@/lib/passage-source";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { countWords } from "@/app/(director)/director/workbench/generate/generate-page-types";
 import { splitPastedPassages } from "@/app/(director)/director/workbench/generate/intake/smart-split";
 import {
@@ -295,9 +296,11 @@ export function PassageInputRow({
             )}
             {restoring ? "복원 중" : "AI 복원"}
             {!restoring && (
-              <span className="rounded bg-blue-500/70 px-1 py-0.5 text-[9px] font-bold text-blue-50">
-                ◈{CREDIT_COSTS.PASSAGE_RESTORATION}
-              </span>
+              <CreditCostChip
+                amount={CREDIT_COSTS.PASSAGE_RESTORATION}
+                className="rounded bg-blue-500/70 px-1 py-0.5 text-[9px] text-blue-50"
+                iconClassName="size-2.5"
+              />
             )}
           </button>
         )}

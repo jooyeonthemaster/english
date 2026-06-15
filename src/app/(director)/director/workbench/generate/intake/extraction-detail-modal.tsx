@@ -3,23 +3,34 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
-  ArrowLeftRight,
   CheckCircle2,
   FileText,
   GraduationCap,
   Loader2,
   NotebookPen,
+  Save,
   Undo2,
   Wand2,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
 
-import { savePassageAnnotations, updateWorkbenchPassage } from "@/actions/workbench";
+import {
+  savePassageAnnotations,
+  updateWorkbenchPassage,
+} from "@/actions/workbench";
 import { notifyCreditsChanged } from "@/lib/credits-client";
+import {
+  notePassageAnalysisStarted,
+  notePassageAnalysisStartFailed,
+} from "@/hooks/use-passage-analysis-activity";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { AnalysisReportEditor } from "@/components/workbench/analysis-report/AnalysisReportEditor";
-import { PassageAnnotationEditor, type Annotation } from "@/components/workbench/editor";
+import {
+  PassageAnnotationEditor,
+  type Annotation,
+} from "@/components/workbench/editor";
 import { AnalysisToneSelector } from "@/components/workbench/analysis-prompt-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +41,6 @@ import {
   DEFAULT_ANALYSIS_TONE,
   type AnalysisTone,
 } from "@/lib/passage-analysis-options";
-import { PassageCompare } from "../../passages/import/_components/extraction-manage-client/components/passage-compare";
 import { OriginalProblemBox } from "../../passages/import/_components/extraction-manage-client/components/original-problem-box";
 import { RestorationBadge } from "../../passages/import/_components/extraction-manage-client/components/restoration-badge";
 import type { M1PassageDraftWithJob } from "../../passages/import/_components/extraction-manage-client/types";
@@ -53,7 +63,10 @@ function readTemporaryReportDraft(passageId: string): AnalysisReport | null {
 function writeTemporaryReportDraft(passageId: string, report: AnalysisReport) {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(reportDraftStorageKey(passageId), JSON.stringify(report));
+    window.localStorage.setItem(
+      reportDraftStorageKey(passageId),
+      JSON.stringify(report),
+    );
   } catch {
     // Temporary persistence is best-effort; editing should continue even if storage is full.
   }
@@ -72,6 +85,11 @@ interface ExtractionDetailModalProps {
   passage: PassageItem;
   onClose: () => void;
   onPassageAnalyzed?: (passageId: string) => void | Promise<void>;
+  /** 제목/복원문 저장 직후 호출 — 부모가 카드 목록을 제자리 갱신할 수 있게. */
+  onPassageSaved?: (
+    passageId: string,
+    updated: { title: string; content: string },
+  ) => void;
   reviewBusy?: boolean;
   onToggleExtractionReview?: (passage: PassageItem) => void;
 }
@@ -87,6 +105,7 @@ export function ExtractionDetailModal({
   passage,
   onClose,
   onPassageAnalyzed,
+  onPassageSaved,
   reviewBusy = false,
   onToggleExtractionReview,
 }: ExtractionDetailModalProps) {
@@ -96,17 +115,22 @@ export function ExtractionDetailModal({
     () => formatExtractedTextForDisplay(passage.content || ""),
     [passage.content],
   );
-  const [studyMode, setStudyMode] = useState(true);
   const [editorTitle, setEditorTitle] = useState(passage.title || "지문");
   const [editorContent, setEditorContent] = useState(passage.content || "");
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
   const [customPrompt, setCustomPrompt] = useState("");
-  const [analysisTone, setAnalysisTone] =
-    useState<AnalysisTone>(DEFAULT_ANALYSIS_TONE);
+  const [analysisTone, setAnalysisTone] = useState<AnalysisTone>(
+    DEFAULT_ANALYSIS_TONE,
+  );
   const [analysisRunning, setAnalysisRunning] = useState(false);
-  const [activeReportJobId, setActiveReportJobId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [activeReportJobId, setActiveReportJobId] = useState<string | null>(
+    null,
+  );
   const [reportJobError, setReportJobError] = useState<string | null>(null);
-  const [generatedReport, setGeneratedReport] = useState<AnalysisReport | null>(null);
+  const [generatedReport, setGeneratedReport] = useState<AnalysisReport | null>(
+    null,
+  );
   const [reportEditorOpen, setReportEditorOpen] = useState(false);
 
   const sourceLabel =
@@ -190,11 +214,14 @@ export function ExtractionDetailModal({
   }, [passage.id]);
 
   useEffect(() => {
+    // Passage.content 우선 — 이 모달의 "저장"은 Passage 를 갱신하므로,
+    // 다시 열었을 때도 저장본이 보여야 한다. (draft.teacherText 는 승급
+    // 시점의 복원문이라 저장 후에는 한 세대 뒤일 수 있다.)
     const nextText =
+      passage.content ||
       draft?.teacherText?.trim() ||
       draft?.restoredText?.trim() ||
       draft?.rawText?.trim() ||
-      passage.content ||
       "";
     setEditorContent(nextText);
     setEditorTitle(passage.title || draft?.title || "지문");
@@ -259,7 +286,8 @@ export function ExtractionDetailModal({
         const data = await res.json().catch(() => ({}));
         const job = Array.isArray(data?.jobs)
           ? data.jobs.find(
-              (candidate: { id?: string }) => candidate.id === activeReportJobId,
+              (candidate: { id?: string }) =>
+                candidate.id === activeReportJobId,
             )
           : null;
         if (cancelled || !job) return;
@@ -278,7 +306,9 @@ export function ExtractionDetailModal({
             openReportEditor();
             setReportJobError(null);
           } else {
-            setReportJobError("생성은 완료되었지만 학습자료를 불러오지 못했습니다. 잠시 후 다시 열어주세요.");
+            setReportJobError(
+              "생성은 완료되었지만 학습자료를 불러오지 못했습니다. 잠시 후 다시 열어주세요.",
+            );
           }
           setActiveReportJobId(null);
           setAnalysisRunning(false);
@@ -320,46 +350,86 @@ export function ExtractionDetailModal({
     };
   }, [activeReportJobId, onPassageAnalyzed, openReportEditor, passage.id]);
 
-  async function handleRunInlineAnalysis() {
+  /** 제목·복원문·마킹을 Passage 에 저장한다. 검증 실패 시 toast 후 null. */
+  async function persistPassageEdits(): Promise<{
+    title: string;
+    content: string;
+  } | null> {
     const title = editorTitle.trim() || passage.title || "지문";
     const content = editorContent.trim();
     if (content.length < 20) {
       toast.error("지문이 너무 짧습니다. 최소 20자 이상 필요합니다.");
-      return;
+      return null;
     }
 
+    const updateResult = await updateWorkbenchPassage(passage.id, {
+      title,
+      content,
+      schoolId: passage.school?.id,
+      grade: passage.grade ?? undefined,
+      semester: passage.semester ?? undefined,
+      unit: passage.unit ?? undefined,
+      publisher: passage.publisher ?? undefined,
+      difficulty: passage.difficulty ?? undefined,
+      // 기존 source 를 보존한다 — sourceLabel(추출 잡 파일명)로 덮어쓰면
+      // '직접 입력' 마커 등이 사라져 배지·필터가 깨진다. source 가 비어있을
+      // 때만 잡 파일명으로 채운다.
+      source: passage.source || sourceLabel || undefined,
+    });
+    if (!updateResult.success) {
+      throw new Error(updateResult.error || "지문을 저장하지 못했습니다.");
+    }
+
+    const annotationResult = await savePassageAnnotations(
+      passage.id,
+      annotations.map((annotation) => ({
+        id: annotation.id,
+        type: annotation.type,
+        text: annotation.text,
+        memo: annotation.memo,
+        from: annotation.from,
+        to: annotation.to,
+      })),
+    );
+    if (!annotationResult.success) {
+      throw new Error(annotationResult.error || "필기를 저장하지 못했습니다.");
+    }
+
+    return { title, content };
+  }
+
+  /** 학습자료 생성 없이 제목/복원문 수정만 저장. */
+  async function handleSaveEdits() {
+    if (saving || analysisRunning) return;
+    setSaving(true);
+    try {
+      const saved = await persistPassageEdits();
+      if (!saved) return;
+      onPassageSaved?.(passage.id, saved);
+      toast.success("지문이 저장되었습니다.");
+    } catch (err) {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : "지문 저장 중 오류가 발생했습니다.",
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleRunInlineAnalysis() {
     setAnalysisRunning(true);
     try {
-      const updateResult = await updateWorkbenchPassage(passage.id, {
-        title,
-        content,
-        schoolId: passage.school?.id,
-        grade: passage.grade ?? undefined,
-        semester: passage.semester ?? undefined,
-        unit: passage.unit ?? undefined,
-        publisher: passage.publisher ?? undefined,
-        difficulty: passage.difficulty ?? undefined,
-        source: sourceLabel || passage.source || undefined,
-      });
-      if (!updateResult.success) {
-        throw new Error(updateResult.error || "지문을 저장하지 못했습니다.");
+      const saved = await persistPassageEdits();
+      if (!saved) {
+        setAnalysisRunning(false);
+        return;
       }
+      onPassageSaved?.(passage.id, saved);
 
-      const annotationResult = await savePassageAnnotations(
-        passage.id,
-        annotations.map((annotation) => ({
-          id: annotation.id,
-          type: annotation.type,
-          text: annotation.text,
-          memo: annotation.memo,
-          from: annotation.from,
-          to: annotation.to,
-        })),
-      );
-      if (!annotationResult.success) {
-        throw new Error(annotationResult.error || "필기를 저장하지 못했습니다.");
-      }
-
+      // 폴링 딜레이 없이 다른 화면의 "학습자료 생성중" 배지가 바로 켜지도록
+      notePassageAnalysisStarted(passage.id, saved.title);
       const res = await fetch("/api/workbench/ai-jobs/passage-analysis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -376,18 +446,25 @@ export function ExtractionDetailModal({
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data?.error || !data?.jobId) {
-        throw new Error(data?.error || "학습자료 생성 작업을 시작하지 못했습니다.");
+        notePassageAnalysisStartFailed(passage.id);
+        throw new Error(
+          data?.error || "학습자료 생성 작업을 시작하지 못했습니다.",
+        );
       }
 
       setActiveReportJobId(data.jobId as string);
       setReportJobError(null);
       clearTemporaryReportDraft(passage.id);
       setAnalysisRunning(true);
-      toast.success("학습자료 생성을 백그라운드에서 시작했습니다. 창을 닫아도 계속 진행됩니다.");
+      toast.success(
+        "학습자료 생성을 백그라운드에서 시작했습니다. 창을 닫아도 계속 진행됩니다.",
+      );
     } catch (err) {
       setAnalysisRunning(false);
       toast.error(
-        err instanceof Error ? err.message : "학습자료 생성 중 오류가 발생했습니다.",
+        err instanceof Error
+          ? err.message
+          : "학습자료 생성 중 오류가 발생했습니다.",
       );
     } finally {
       notifyCreditsChanged();
@@ -402,7 +479,10 @@ export function ExtractionDetailModal({
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-4 my-4 flex max-h-[calc(100vh-2rem)] w-full max-w-[1440px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#F8FAFB] shadow-2xl">
+      <div
+        className="relative z-10 mx-4 my-4 flex max-h-[calc(100vh-2rem)] w-full max-w-[1440px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#F8FAFB] shadow-2xl"
+        data-generate-tour="passage-learning-detail-modal"
+      >
         {/* Header */}
         <div className="flex shrink-0 items-center gap-3 border-b border-slate-200 bg-white px-5 py-3 xl:px-6">
           <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
@@ -412,8 +492,10 @@ export function ExtractionDetailModal({
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
               <h2 className="truncate text-base font-bold text-slate-900">
                 {reportEditorOpen
-                  ? generatedReport?.meta.titleKo || editorTitle || "지문 학습자료"
-                  : passage.title || "지문"}
+                  ? generatedReport?.meta.titleKo ||
+                    editorTitle ||
+                    "지문 학습자료"
+                  : editorTitle.trim() || passage.title || "지문"}
               </h2>
               {draft ? (
                 <RestorationBadge status={draft.restorationStatus} />
@@ -436,32 +518,17 @@ export function ExtractionDetailModal({
               <ArrowLeft className="size-3.5" aria-hidden="true" />
               뒤로가기
             </button>
-          ) : studyMode ? (
+          ) : generatedReport ? (
+            // 학습자료가 이미 생성된 지문에만 노출 — 바로 보고서를 연다.
             <button
               type="button"
-              onClick={() => setStudyMode(false)}
-              disabled={analysisRunning}
-              className="ml-2 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-[12px] font-bold text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              onClick={openReportEditor}
+              className="ml-2 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 text-[12px] font-bold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100"
             >
-              <ArrowLeftRight className="size-3.5" aria-hidden="true" />
-              복원 비교
+              <GraduationCap className="size-3.5" aria-hidden="true" />
+              학습자료 열기
             </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setStudyMode(true)}
-              disabled={loading || !draft}
-              title={!loading && !draft ? "연결된 추출 원본이 없어 이 팝업에서는 바로 분석할 수 없습니다." : undefined}
-              className="ml-2 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 text-[12px] font-bold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {loading ? (
-                <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
-              ) : (
-                <GraduationCap className="size-3.5" aria-hidden="true" />
-              )}
-              학습자료 생성
-            </button>
-          )}
+          ) : null}
           {reviewDraft && onToggleExtractionReview ? (
             <button
               type="button"
@@ -475,8 +542,8 @@ export function ExtractionDetailModal({
               className={
                 "ml-1 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border px-3 text-[12px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-60 " +
                 (isReviewCommitted
-                  ? "border-rose-200 bg-rose-50 text-rose-600 hover:border-rose-300 hover:bg-rose-100 hover:text-rose-700"
-                  : "border-emerald-600 bg-emerald-600 text-white shadow-sm hover:bg-emerald-700")
+                  ? "border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                  : "border-blue-600 bg-blue-600 text-white shadow-sm hover:bg-blue-700")
               }
             >
               {reviewBusy ? (
@@ -520,7 +587,7 @@ export function ExtractionDetailModal({
               <Loader2 className="size-5 animate-spin" aria-hidden="true" />
               <span className="text-[13px]">불러오는 중…</span>
             </div>
-          ) : draft && studyMode ? (
+          ) : draft ? (
             <InlineStudyAnalysisWorkspace
               draft={draft}
               title={editorTitle}
@@ -531,19 +598,18 @@ export function ExtractionDetailModal({
               analysisRunning={analysisRunning}
               analysisCreditCost={analysisCreditCost}
               reportJobError={reportJobError}
+              saving={saving}
               onTitleChange={setEditorTitle}
               onContentChange={setEditorContent}
               onAnnotationsChange={setAnnotations}
               onCustomPromptChange={setCustomPrompt}
               onAnalysisToneChange={setAnalysisTone}
               onRunAnalysis={handleRunInlineAnalysis}
+              onSaveEdits={handleSaveEdits}
               onOpenResult={openReportEditor}
               hasGeneratedReport={!!generatedReport}
               hasActiveReportJob={!!activeReportJobId}
             />
-          ) : draft ? (
-            // Read-only: no onRerestore → 재복원 버튼 숨김; onTextChange는 no-op.
-            <PassageCompare draft={draft} onTextChange={() => {}} />
           ) : (
             <div className="min-h-0 flex-1 overflow-auto rounded-lg border border-slate-200 bg-white p-5">
               <div className="whitespace-pre-wrap text-[14px] leading-7 text-slate-800">
@@ -569,12 +635,14 @@ function InlineStudyAnalysisWorkspace({
   reportJobError,
   hasGeneratedReport,
   hasActiveReportJob,
+  saving,
   onTitleChange,
   onContentChange,
   onAnnotationsChange,
   onCustomPromptChange,
   onAnalysisToneChange,
   onRunAnalysis,
+  onSaveEdits,
   onOpenResult,
 }: {
   draft: M1PassageDraftWithJob;
@@ -588,12 +656,14 @@ function InlineStudyAnalysisWorkspace({
   reportJobError: string | null;
   hasGeneratedReport: boolean;
   hasActiveReportJob: boolean;
+  saving: boolean;
   onTitleChange: (value: string) => void;
   onContentChange: (value: string) => void;
   onAnnotationsChange: (annotations: Annotation[]) => void;
   onCustomPromptChange: (value: string) => void;
   onAnalysisToneChange: (value: AnalysisTone) => void;
   onRunAnalysis: () => void;
+  onSaveEdits: () => void;
   onOpenResult: () => void;
 }) {
   const [hoveredChangeId, setHoveredChangeId] = useState<string | null>(null);
@@ -619,17 +689,33 @@ function InlineStudyAnalysisWorkspace({
               마킹 {annotations.length}
             </span>
           </div>
-          {hasActiveReportJob ? (
-            <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-bold text-blue-600">
-              <Loader2 className="size-3 animate-spin" aria-hidden="true" />
-              생성 중
-            </span>
-          ) : hasGeneratedReport ? (
-            <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-1 text-[11px] font-bold text-emerald-600">
-              <CheckCircle2 className="size-3" aria-hidden="true" />
-              생성 완료
-            </span>
-          ) : null}
+          <div className="flex shrink-0 items-center gap-2">
+            {hasActiveReportJob ? (
+              <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-bold text-blue-600">
+                <Loader2 className="size-3 animate-spin" aria-hidden="true" />
+                생성 중
+              </span>
+            ) : hasGeneratedReport ? (
+              <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-[11px] font-bold text-slate-600">
+                <CheckCircle2 className="size-3" aria-hidden="true" />
+                생성 완료
+              </span>
+            ) : null}
+            <button
+              type="button"
+              onClick={onSaveEdits}
+              disabled={saving || analysisRunning || !hasContent}
+              title="제목·복원문 수정 내용을 저장합니다 (학습자료 생성 없이)"
+              className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-blue-200 bg-white px-2.5 text-[11.5px] font-bold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {saving ? (
+                <Loader2 className="size-3 animate-spin" aria-hidden="true" />
+              ) : (
+                <Save className="size-3" aria-hidden="true" />
+              )}
+              저장
+            </button>
+          </div>
         </div>
         <div className="flex shrink-0 items-center gap-2 border-b border-slate-100 px-3 py-2">
           <Input
@@ -656,7 +742,9 @@ function InlineStudyAnalysisWorkspace({
           <span className="flex size-6 items-center justify-center rounded-md bg-blue-50 text-blue-600">
             <NotebookPen className="size-3.5" aria-hidden="true" />
           </span>
-          <span className="text-[13px] font-bold text-slate-900">학습자료 생성</span>
+          <span className="text-[13px] font-bold text-slate-900">
+            학습자료 생성
+          </span>
         </div>
         <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 py-3">
           <AnalysisToneSelector
@@ -688,7 +776,7 @@ function InlineStudyAnalysisWorkspace({
               type="button"
               variant="outline"
               onClick={onOpenResult}
-              className="h-9 w-full rounded-lg border-emerald-200 text-[12.5px] font-bold text-emerald-700 hover:bg-emerald-50"
+              className="h-9 w-full rounded-lg border-blue-200 text-[12.5px] font-bold text-blue-700 hover:bg-blue-50"
             >
               <CheckCircle2 className="size-4" aria-hidden="true" />
               학습자료 다시 열기
@@ -706,9 +794,10 @@ function InlineStudyAnalysisWorkspace({
               <Wand2 className="size-4" aria-hidden="true" />
             )}
             {analysisRunning ? "백그라운드 생성 중..." : "학습자료 생성"}
-            <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] tabular-nums">
-              {analysisCreditCost.toLocaleString("ko-KR")} 크레딧
-            </span>
+            <CreditCostChip
+              amount={analysisCreditCost}
+              className="rounded bg-white/20 px-1.5 py-0.5 text-[10px]"
+            />
           </Button>
         </div>
       </aside>

@@ -1,6 +1,10 @@
 "use client";
 
-import { forwardRef, type RefObject } from "react";
+import {
+  forwardRef,
+  type ComponentPropsWithoutRef,
+  type RefObject,
+} from "react";
 import { GripVertical } from "lucide-react";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import { cn } from "@/lib/utils";
@@ -49,11 +53,15 @@ export function makeCardDragPreview(sourceRef: RefObject<HTMLElement | null>) {
  */
 export const DragHandle = forwardRef<
   HTMLDivElement,
-  { className?: string; title?: string }
->(function DragHandle({ className, title = "드래그하여 폴더로 이동" }, ref) {
+  ComponentPropsWithoutRef<"div"> & { className?: string; title?: string }
+>(function DragHandle(
+  { className, title = "드래그하여 폴더로 이동", ...props },
+  ref,
+) {
   return (
     <div
       ref={ref}
+      {...props}
       data-drag-select-ignore
       title={title}
       aria-label="드래그 핸들"

@@ -10,6 +10,8 @@
 
 import { useEffect, useState } from "react";
 import { ArrowRight, Bot, Check, Crop, FileText } from "lucide-react";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 
 interface Step {
   title: string;
@@ -107,7 +109,13 @@ export function RestoreGuideDemo() {
           </h3>
           <p className="mt-0.5 text-[11.5px] leading-snug text-slate-500">
             빈칸 ____·뒤섞인 순서·삽입 문장 같은 불완전한 지문을 원래 글로
-            되살립니다. (지문만 잘라내면 복원되지 않아요 · 지문당 ◈1)
+            되살립니다. (지문만 잘라내면 복원되지 않아요 · 지문당{" "}
+            <CreditCostChip
+              amount={CREDIT_COSTS.PASSAGE_RESTORATION}
+              className="align-middle"
+              iconClassName="size-2.5"
+            />
+            )
           </p>
         </div>
       </div>
@@ -318,8 +326,13 @@ export function RestoreGuideDemo() {
         <p className="text-[12px] leading-relaxed text-slate-700">
           <b className="font-bold text-blue-700">반드시 문제와 선지를 함께 크롭</b>
           하세요. AI가 문제를 풀어 빈칸·순서를{" "}
-          <b className="font-bold text-blue-700">원래 지문으로 복원</b>합니다. (지문당
-          ◈1)
+          <b className="font-bold text-blue-700">원래 지문으로 복원</b>합니다. (지문당{" "}
+          <CreditCostChip
+            amount={CREDIT_COSTS.PASSAGE_RESTORATION}
+            className="align-middle"
+            iconClassName="size-2.5"
+          />
+          )
         </p>
       </div>
     </div>

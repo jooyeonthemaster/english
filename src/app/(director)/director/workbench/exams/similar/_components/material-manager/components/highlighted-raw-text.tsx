@@ -8,7 +8,10 @@ import {
 } from "../utils/restoration-changes";
 
 function cssEscape(value: string): string {
-  if (typeof window !== "undefined" && typeof window.CSS?.escape === "function") {
+  if (
+    typeof window !== "undefined" &&
+    typeof window.CSS?.escape === "function"
+  ) {
     return window.CSS.escape(value);
   }
   return value.replace(/["\\]/g, "\\$&");
@@ -58,10 +61,7 @@ export function HighlightedRawText({
       {segments.map((segment, index) => {
         if (segment.diffOverlay) {
           return (
-            <mark
-              key={index}
-              className="rounded bg-rose-100/70 text-rose-900"
-            >
+            <mark key={index} className="rounded bg-rose-100/70 text-rose-900">
               {segment.text}
             </mark>
           );
@@ -84,7 +84,7 @@ export function HighlightedRawText({
             className={
               "cursor-pointer rounded px-0.5 transition-colors " +
               (isActive
-                ? "bg-violet-200 text-violet-950 ring-1 ring-violet-400"
+                ? "bg-blue-100 text-slate-950 ring-1 ring-blue-300"
                 : isHovered
                   ? "bg-rose-200 text-rose-950 ring-1 ring-rose-300"
                   : "bg-rose-100 text-rose-900")

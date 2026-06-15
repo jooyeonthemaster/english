@@ -41,7 +41,10 @@ const EMPTY_CROP_COUNTS: InlineCropBoardCounts = {
 const MAX_CUSTOM_REFERENCE_QUESTIONS = 20;
 const FILE_INPUT_ID = "custom-type-file-input";
 
-function withStableSlotIds(slots: ClientPageSlot[], offset = 0): ClientPageSlot[] {
+function withStableSlotIds(
+  slots: ClientPageSlot[],
+  offset = 0,
+): ClientPageSlot[] {
   return slots.map((slot, index) => ({
     ...slot,
     pageIndex: offset + index,
@@ -57,14 +60,19 @@ function summarizeFileNames(files: File[]): string {
 
 // 유형 만들기: 자료 추출 crop 보드를 그대로 사용한다. 여러 crop 그룹은 각각
 // 하나의 reference question 분석 잡으로 등록되어 여러 커스텀 유형을 한 번에 만들 수 있다.
-export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) {
+export function CustomTypeCreatePanel({
+  onCreated,
+}: {
+  onCreated: () => void;
+}) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const cropBoardRef = useRef<InlineCropBoardHandle>(null);
   const slotsRef = useRef<ClientPageSlot[]>([]);
 
   const [slots, setSlots] = useState<ClientPageSlot[]>([]);
   const [sourceName, setSourceName] = useState<string | null>(null);
-  const [cropCounts, setCropCounts] = useState<InlineCropBoardCounts>(EMPTY_CROP_COUNTS);
+  const [cropCounts, setCropCounts] =
+    useState<InlineCropBoardCounts>(EMPTY_CROP_COUNTS);
   const [preparing, setPreparing] = useState(false);
   const [baking, setBaking] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -97,7 +105,9 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
 
       const pdfs = list.filter((file) => file.type === "application/pdf");
       if (pdfs.length > 1 || (pdfs.length === 1 && list.length > 1)) {
-        toast.error("PDF는 한 번에 하나만 넣을 수 있습니다. 여러 장은 이미지 파일로 넣어주세요.");
+        toast.error(
+          "PDF는 한 번에 하나만 넣을 수 있습니다. 여러 장은 이미지 파일로 넣어주세요.",
+        );
         return;
       }
 
@@ -112,9 +122,12 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
           throw new Error("이미지를 준비하지 못했습니다.");
         }
         appendSlots(nextSlots);
-        setSourceName((current) => current ?? (pdf ? pdf.name : summarizeFileNames(list)));
+        setSourceName(
+          (current) => current ?? (pdf ? pdf.name : summarizeFileNames(list)),
+        );
       } catch (err) {
-        const message = err instanceof Error ? err.message : "파일을 준비하지 못했습니다.";
+        const message =
+          err instanceof Error ? err.message : "파일을 준비하지 못했습니다.";
         setError(message);
         toast.error(message);
       } finally {
@@ -217,7 +230,8 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
       }
     } catch (err) {
       setBaking(false);
-      const message = err instanceof Error ? err.message : "분석 등록에 실패했습니다.";
+      const message =
+        err instanceof Error ? err.message : "분석 등록에 실패했습니다.";
       setError(message);
       toast.error(message);
     } finally {
@@ -258,7 +272,7 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
   const fileUploadLabel = (
     <label
       htmlFor={FILE_INPUT_ID}
-      className="flex min-h-0 flex-1 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-blue-500 bg-white px-6 py-8 text-center transition-colors hover:bg-blue-50"
+      className="flex min-h-0 flex-1 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-slate-300 bg-white px-6 py-8 text-center transition-colors hover:border-blue-300 hover:bg-blue-50"
     >
       <input
         id={FILE_INPUT_ID}
@@ -272,7 +286,7 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
           event.currentTarget.value = "";
         }}
       />
-      <span className="inline-flex items-center gap-2 text-[14px] font-extrabold text-blue-700">
+      <span className="inline-flex items-center gap-2 text-[14px] font-extrabold text-slate-800">
         {preparing ? (
           <Loader2 className="size-5 animate-spin" aria-hidden="true" />
         ) : (
@@ -287,7 +301,8 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
         </span>
         <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5">
           <Database className="size-3.5" aria-hidden="true" />
-          PDF {Math.round(MAX_PDF_BYTES / 1024 / 1024)}MB · 최대 {MAX_PAGES_PER_JOB}p
+          PDF {Math.round(MAX_PDF_BYTES / 1024 / 1024)}MB · 최대{" "}
+          {MAX_PAGES_PER_JOB}p
         </span>
       </span>
     </label>
@@ -306,7 +321,7 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-slate-100 px-4 py-2.5">
           <div className="flex min-w-0 items-center gap-2">
             <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-slate-900">
-              <Layers className="size-4 text-blue-600" aria-hidden="true" />
+              <Layers className="size-4 text-slate-500" aria-hidden="true" />
               유형 후보 {cropCounts.totalPassages}개
             </span>
             {sourceName ? (
@@ -337,12 +352,14 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
             }}
             onDragLeave={(event) => {
               const next = event.relatedTarget as Node | null;
-              if (!next || !event.currentTarget.contains(next)) setDragActive(false);
+              if (!next || !event.currentTarget.contains(next))
+                setDragActive(false);
             }}
             onDrop={(event) => {
               event.preventDefault();
               setDragActive(false);
-              if (event.dataTransfer.files.length > 0) void pickFiles(event.dataTransfer.files);
+              if (event.dataTransfer.files.length > 0)
+                void pickFiles(event.dataTransfer.files);
             }}
             className="flex h-[min(760px,calc(100dvh-260px))] min-h-[520px] flex-col overflow-hidden lg:flex-row"
           >
@@ -351,7 +368,9 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
               <div
                 className={
                   "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors " +
-                  (dragActive ? "border-sky-500 bg-sky-50" : "border-slate-200 bg-slate-50/70")
+                  (dragActive
+                    ? "border-blue-300 bg-blue-50"
+                    : "border-slate-200 bg-slate-50/70")
                 }
               >
                 {fileUploadLabel}
@@ -362,13 +381,16 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
             <aside className="flex min-h-0 flex-col border-t border-slate-100 bg-white max-lg:w-full lg:w-[340px] lg:shrink-0 lg:border-l lg:border-t-0">
               <div className="shrink-0 border-b border-slate-100 px-3.5 py-2.5">
                 <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-slate-900">
-                  <Layers className="size-4 text-blue-600" aria-hidden="true" />
+                  <Layers
+                    className="size-4 text-slate-500"
+                    aria-hidden="true"
+                  />
                   유형 후보 {cropCounts.totalPassages}개
                 </span>
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5">
                 <div className="mx-auto mt-6 flex max-w-xs flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-4">
-                  <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
+                  <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-slate-100 px-2 py-1 text-[11px] font-bold text-slate-700">
                     <Sparkles className="size-3.5" aria-hidden="true" />
                     사용 순서
                   </div>
@@ -381,17 +403,22 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
                         key={step.label}
                         className="flex items-center gap-2 rounded-md bg-white px-2.5 py-2 text-[12px] font-bold text-slate-700 ring-1 ring-slate-200"
                       >
-                        <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[10px] font-extrabold text-blue-700">
+                        <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-extrabold text-slate-700">
                           {index + 1}
                         </span>
-                        <step.icon className="size-3.5 text-blue-600" aria-hidden="true" />
+                        <step.icon
+                          className="size-3.5 text-slate-500"
+                          aria-hidden="true"
+                        />
                         <span>{step.label}</span>
                       </li>
                     ))}
                   </ol>
                 </div>
               </div>
-              <div className="shrink-0 border-t border-slate-100 bg-white p-2.5">{startArea}</div>
+              <div className="shrink-0 border-t border-slate-100 bg-white p-2.5">
+                {startArea}
+              </div>
             </aside>
           </div>
         ) : (
@@ -408,8 +435,9 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
               onClear={clearStaged}
               footer={
                 <div className="space-y-2">
-                  <div className="rounded-md border border-blue-100 bg-blue-50 px-3 py-2 text-[12px] font-semibold text-blue-700">
-                    각 crop 그룹이 하나의 커스텀 유형 후보로 등록됩니다. 같은 문제 조각은 하나의 지문으로 합쳐 주세요.
+                  <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-[12px] font-semibold text-slate-600">
+                    각 crop 그룹이 하나의 커스텀 유형 후보로 등록됩니다. 같은
+                    문제 조각은 하나의 지문으로 합쳐 주세요.
                   </div>
                   {startArea}
                 </div>
@@ -418,7 +446,9 @@ export function CustomTypeCreatePanel({ onCreated }: { onCreated: () => void }) 
           </div>
         )}
 
-        {error ? <p className="px-4 pb-3 text-[12px] text-rose-600">{error}</p> : null}
+        {error ? (
+          <p className="px-4 pb-3 text-[12px] text-red-600">{error}</p>
+        ) : null}
       </section>
 
       <CustomTypeAnalysisJobsPanel

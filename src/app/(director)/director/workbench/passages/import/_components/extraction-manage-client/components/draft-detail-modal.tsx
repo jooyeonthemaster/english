@@ -210,7 +210,7 @@ export function DraftDetailModal({
               disabled={busy}
               className={
                 isReviewed
-                  ? "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-rose-200 bg-rose-50 px-3 text-[12px] font-bold text-rose-600 hover:border-rose-300 hover:bg-rose-100 hover:text-rose-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  ? "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50 px-3 text-[12px] font-bold text-emerald-700 hover:border-emerald-300 hover:bg-emerald-100 hover:text-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
                   : "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md bg-emerald-600 px-3 text-[12px] font-bold text-white shadow-sm hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
               }
               title={

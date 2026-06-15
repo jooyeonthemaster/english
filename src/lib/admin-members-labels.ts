@@ -32,12 +32,20 @@ const TRANSACTION_TYPE_LABELS: Record<TransactionType, string> = {
 // MUST stay in sync with OPERATION_TYPE_ALLOWLIST in
 // src/actions/admin-members.ts — keys here drive UI dropdown labels; the
 // allowlist gates which values pass server validation.
-const OPERATION_TYPE_LABELS: Record<string, string> = {
+export const OPERATION_TYPE_LABELS: Record<string, string> = {
   QUESTION_GEN_SINGLE: "문제 생성 (단건)",
   QUESTION_GEN_VOCAB: "어휘 문제 생성",
   AUTO_GEN_BATCH: "자동 일괄 생성",
+  LEARNING_QUESTION_GEN: "학습 문제 생성",
   PASSAGE_ANALYSIS: "학습지 생성",
   TEXT_EXTRACTION: "텍스트 추출 (OCR 무료)",
+  GRAMMAR_ENHANCEMENT: "문법 포인트 분석",
+  SENTENCE_RETRANSLATION: "문장 재번역",
+  QUESTION_EXPLANATION: "해설 생성",
+  QUESTION_MODIFY: "문제 수정",
+  AI_CHAT: "AI 튜터링",
+  PASSAGE_RESTORATION: "AI 지문 복원",
+  WEBTOON_IMAGE: "웹툰 이미지 생성",
   EXAM_GENERATION: "시험지 생성",
 };
 

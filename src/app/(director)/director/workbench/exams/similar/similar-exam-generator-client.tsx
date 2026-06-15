@@ -111,7 +111,8 @@ async function putWithLimit(
       const slot = queue.shift();
       if (!slot) return;
       const target = byIndex.get(slot.pageIndex);
-      if (!target) throw new Error(`No upload target for page ${slot.pageIndex}`);
+      if (!target)
+        throw new Error(`No upload target for page ${slot.pageIndex}`);
 
       const res = await fetch(target.uploadUrl, {
         method: "PUT",
@@ -121,7 +122,8 @@ async function putWithLimit(
           "x-upsert": "true",
         },
       });
-      if (!res.ok) throw new Error(`${slot.pageIndex + 1}페이지 업로드에 실패했습니다.`);
+      if (!res.ok)
+        throw new Error(`${slot.pageIndex + 1}페이지 업로드에 실패했습니다.`);
       uploaded += 1;
       onProgress(uploaded);
     }
@@ -143,7 +145,8 @@ export function SimilarExamGeneratorClient({
   const headerAutoHideReadyRef = useRef(false);
   const suppressHandleClickRef = useRef(false);
   const { triggerRefresh } = useTaskQueue();
-  const { setCollapseRequested: setSidebarCollapseRequested } = useSidebarFocus();
+  const { setCollapseRequested: setSidebarCollapseRequested } =
+    useSidebarFocus();
 
   const [selectedDraftIds, setSelectedDraftIds] = useState<Set<string>>(
     () => new Set(),
@@ -220,7 +223,11 @@ export function SimilarExamGeneratorClient({
         width - PANEL_TOGGLE_HANDLE_WIDTH - PANEL_MIN_CENTER,
       );
       setLeftWidth((current) => {
-        const next = clampNumber(current, LEFT_MIN, Math.max(LEFT_MIN, maxLeft));
+        const next = clampNumber(
+          current,
+          LEFT_MIN,
+          Math.max(LEFT_MIN, maxLeft),
+        );
         return next === current ? current : next;
       });
     });
@@ -259,9 +266,13 @@ export function SimilarExamGeneratorClient({
 
       try {
         const pdf =
-          list.length === 1 && list[0].type === "application/pdf" ? list[0] : null;
+          list.length === 1 && list[0].type === "application/pdf"
+            ? list[0]
+            : null;
 
-        setSplitMessage(pdf ? "PDF 페이지를 이미지로 변환 중" : "이미지 순서를 정리 중");
+        setSplitMessage(
+          pdf ? "PDF 페이지를 이미지로 변환 중" : "이미지 순서를 정리 중",
+        );
         const nextSlots = pdf
           ? await splitPdfToImages(pdf, {
               onProgress: (progress) => {
@@ -277,13 +288,14 @@ export function SimilarExamGeneratorClient({
         slotsRef.current = nextSlots;
         setSlots(nextSlots);
         setStaged({
-          fileName: pdf ? pdf.name : list[0]?.name ?? "업로드한 시험지",
+          fileName: pdf ? pdf.name : (list[0]?.name ?? "업로드한 시험지"),
           sourceType: pdf ? "PDF" : "IMAGES",
           totalPages: nextSlots.length,
         });
         setSplitMessage("");
       } catch (err) {
-        const message = err instanceof Error ? err.message : "시험지를 준비하지 못했습니다.";
+        const message =
+          err instanceof Error ? err.message : "시험지를 준비하지 못했습니다.";
         setError(message);
         toast.error(message);
       } finally {
@@ -326,7 +338,9 @@ export function SimilarExamGeneratorClient({
       });
       if (!regRes.ok) {
         const data = await regRes.json().catch(() => ({}));
-        throw new Error(data?.error || "추출 자료를 지문으로 저장하지 못했습니다.");
+        throw new Error(
+          data?.error || "추출 자료를 지문으로 저장하지 못했습니다.",
+        );
       }
       const regData = (await regRes.json()) as {
         passages?: Array<{ draftId: string; passageId: string }>;
@@ -362,10 +376,13 @@ export function SimilarExamGeneratorClient({
       setSplitMessage("시험지 업로드 중");
       await putWithLimit(currentSlots, created.uploadTargets, setUploaded);
 
-      const startRes = await fetch(`/api/similar-exams/jobs/${created.jobId}/start`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const startRes = await fetch(
+        `/api/similar-exams/jobs/${created.jobId}/start`,
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
       if (!startRes.ok) {
         const data = await startRes.json().catch(() => ({}));
         throw new Error(data?.error || "생성 작업을 시작하지 못했습니다.");
@@ -378,7 +395,8 @@ export function SimilarExamGeneratorClient({
       setBusy(false);
       router.replace(ROUTE_PATH);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "처리 중 오류가 발생했습니다.";
+      const message =
+        err instanceof Error ? err.message : "처리 중 오류가 발생했습니다.";
       setError(message);
       setBusy(false);
       toast.error(message);
@@ -394,7 +412,9 @@ export function SimilarExamGeneratorClient({
     setLeftCollapsed((c) => !c);
   }
 
-  function handleLeftResizePointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
+  function handleLeftResizePointerDown(
+    event: ReactPointerEvent<HTMLButtonElement>,
+  ) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
     suppressHandleClickRef.current = false;
 
@@ -435,7 +455,9 @@ export function SimilarExamGeneratorClient({
       }
     };
 
-    window.addEventListener("pointermove", handlePointerMove, { passive: false });
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: false,
+    });
     window.addEventListener("pointerup", finish, { once: true });
     window.addEventListener("pointercancel", finish, { once: true });
   }
@@ -504,44 +526,44 @@ export function SimilarExamGeneratorClient({
     <div className="relative bg-[#F4F6F9] md:-m-6">
       {/* 작업 화면 — 스크롤 전 한 화면(뷰포트)을 가득 채운다 */}
       <div className="relative flex h-[100dvh] min-h-0 flex-col overflow-hidden bg-white">
-      {/* 자동 숨김 헤더 */}
-      <div
-        aria-hidden={!headerVisible}
-        className={cn(
-          "shrink-0 overflow-hidden border-b bg-white px-5 transition-[max-height,padding,opacity,transform,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
-          headerVisible
-            ? "max-h-20 translate-y-0 border-slate-200/80 py-3 opacity-100"
-            : "pointer-events-none max-h-0 -translate-y-3 border-transparent py-0 opacity-0",
-        )}
-      >
+        {/* 자동 숨김 헤더 */}
         <div
+          aria-hidden={!headerVisible}
           className={cn(
-            "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
-            headerVisible ? "translate-y-0" : "-translate-y-2",
+            "shrink-0 overflow-hidden border-b bg-white px-5 transition-[max-height,padding,opacity,transform,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            headerVisible
+              ? "max-h-20 translate-y-0 border-slate-200/80 py-3 opacity-100"
+              : "pointer-events-none max-h-0 -translate-y-3 border-transparent py-0 opacity-0",
           )}
         >
-          <WorkflowPageTitle
-            icon={ExamPaperGenerationIcon}
-            title="동형 시험지 생성"
-            beta
-            description="자료를 선택하고 완성본 시험지를 넣어 같은 출제 패턴으로 새 시험지를 생성합니다."
-          />
+          <div
+            className={cn(
+              "transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              headerVisible ? "translate-y-0" : "-translate-y-2",
+            )}
+          >
+            <WorkflowPageTitle
+              icon={ExamPaperGenerationIcon}
+              title="동형 시험지 생성"
+              beta
+              description="자료를 선택하고 완성본 시험지를 넣어 같은 출제 패턴으로 새 시험지를 생성합니다."
+            />
+          </div>
         </div>
-      </div>
-      <button
-        type="button"
-        onMouseEnter={() => setHeaderVisible(true)}
-        onFocus={() => setHeaderVisible(true)}
-        onClick={() => setHeaderVisible(true)}
-        title="헤더 보기"
-        aria-label="헤더 보기"
-        className={cn(
-          "absolute left-0 top-0 z-40 h-4 w-4 bg-slate-900/10 shadow-[2px_2px_8px_rgba(15,23,42,0.12)] backdrop-blur-sm transition-[opacity,transform,background-color] duration-300 ease-out [clip-path:polygon(0_0,100%_0,0_100%)] hover:bg-blue-500/20 focus:bg-blue-500/20 focus:outline-none focus:ring-2 focus:ring-blue-200",
-          headerVisible
-            ? "pointer-events-none -translate-x-1 -translate-y-1 opacity-0"
-            : "translate-x-0 translate-y-0 opacity-100",
-        )}
-      />
+        <button
+          type="button"
+          onMouseEnter={() => setHeaderVisible(true)}
+          onFocus={() => setHeaderVisible(true)}
+          onClick={() => setHeaderVisible(true)}
+          title="헤더 보기"
+          aria-label="헤더 보기"
+          className={cn(
+            "absolute left-0 top-0 z-40 h-4 w-4 bg-slate-900/10 shadow-[2px_2px_8px_rgba(15,23,42,0.12)] backdrop-blur-sm transition-[opacity,transform,background-color] duration-300 ease-out [clip-path:polygon(0_0,100%_0,0_100%)] hover:bg-blue-500/20 focus:bg-blue-500/20 focus:outline-none focus:ring-2 focus:ring-blue-200",
+            headerVisible
+              ? "pointer-events-none -translate-x-1 -translate-y-1 opacity-0"
+              : "translate-x-0 translate-y-0 opacity-100",
+          )}
+        />
 
         <div
           ref={gridRef}
@@ -578,7 +600,7 @@ export function SimilarExamGeneratorClient({
               title="자료 관리 패널 열기"
               aria-label="자료 관리 패널 열기"
               aria-expanded={false}
-              className="mx-1 hidden h-full min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
+              className="mx-1 hidden h-full min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100 lg:flex"
             >
               <span>{">"}</span>
               <span style={{ writingMode: "vertical-rl" }}>자료 관리</span>
@@ -591,7 +613,7 @@ export function SimilarExamGeneratorClient({
               title="드래그하여 폭 조절 · 클릭하여 닫기"
               aria-label="자료 관리 패널 닫기"
               aria-expanded
-              className="group/lhandle mx-1 hidden h-full min-h-0 w-4 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
+              className="group/lhandle mx-1 hidden h-full min-h-0 w-4 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100 lg:flex"
             >
               <span>{"<"}</span>
               <span style={{ writingMode: "vertical-rl" }}>자료 관리</span>
@@ -607,7 +629,9 @@ export function SimilarExamGeneratorClient({
               busy={busy}
               canGenerate={canGenerate}
               selectedPassageCount={selectedCount}
-              onOpenCommandPalette={() => setCommandPaletteOpen((open) => !open)}
+              onOpenCommandPalette={() =>
+                setCommandPaletteOpen((open) => !open)
+              }
               onGenerate={generate}
             />
             <SimilarExamCommandBar

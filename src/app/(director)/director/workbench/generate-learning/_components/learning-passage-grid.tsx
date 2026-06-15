@@ -82,20 +82,18 @@ export function LearningPassageGrid({
     <div className="flex flex-col overflow-hidden bg-white border-r border-slate-200/80">
       {/* Selection toolbar */}
       {selectedIds.size > 0 && (
-        <div className="px-5 py-2 bg-blue-50 border-b border-blue-200 shrink-0 flex items-center gap-3">
-          <span className="text-[12px] font-semibold text-blue-700">
+        <div className="flex shrink-0 items-center gap-3 border-b border-slate-200 bg-slate-50 px-5 py-2">
+          <span className="text-[12px] font-semibold text-slate-700">
             {selectedIds.size}개 선택
           </span>
-          <div className="w-px h-4 bg-blue-200" />
+          <div className="h-4 w-px bg-slate-200" />
           <button
             onClick={
               selectedIds.size === passages.length ? deselectAll : selectAll
             }
-            className="text-[11px] text-blue-600 hover:text-blue-800 font-medium"
+            className="text-[11px] font-medium text-slate-500 hover:text-slate-800"
           >
-            {selectedIds.size === passages.length
-              ? "선택 해제"
-              : "전체 선택"}
+            {selectedIds.size === passages.length ? "선택 해제" : "전체 선택"}
           </button>
           <div className="flex-1" />
           <button
@@ -108,7 +106,7 @@ export function LearningPassageGrid({
           </button>
           <button
             onClick={deselectAll}
-            className="text-[11px] text-blue-500 hover:text-blue-700 font-medium"
+            className="text-[11px] font-medium text-slate-500 hover:text-slate-700"
           >
             취소
           </button>
@@ -132,8 +130,8 @@ export function LearningPassageGrid({
             className={cn(
               "h-9 px-3 rounded-lg text-[12px] font-medium flex items-center gap-1.5 transition-all border",
               showFilters || activeFilterCount > 0
-                ? "bg-blue-50 text-blue-700 border-blue-300 shadow-sm"
-                : "text-slate-500 border-slate-200 hover:bg-slate-50"
+                ? "border-slate-300 bg-white text-slate-700 shadow-sm"
+                : "text-slate-500 border-slate-200 hover:bg-slate-50",
             )}
           >
             <Filter className="w-3.5 h-3.5" />
@@ -158,8 +156,8 @@ export function LearningPassageGrid({
                 className={cn(
                   "h-7 px-2 pr-6 rounded-md text-[11px] font-medium border appearance-none cursor-pointer transition-all",
                   filterSchool
-                    ? "bg-blue-50 text-blue-700 border-blue-300"
-                    : "bg-white text-slate-500 border-slate-200"
+                    ? "border-slate-300 bg-slate-50 text-slate-700"
+                    : "bg-white text-slate-500 border-slate-200",
                 )}
               >
                 <option value="">학교 전체</option>
@@ -177,8 +175,8 @@ export function LearningPassageGrid({
                 className={cn(
                   "h-7 px-2 pr-6 rounded-md text-[11px] font-medium border appearance-none cursor-pointer transition-all",
                   filterGrade
-                    ? "bg-blue-50 text-blue-700 border-blue-300"
-                    : "bg-white text-slate-500 border-slate-200"
+                    ? "border-slate-300 bg-slate-50 text-slate-700"
+                    : "bg-white text-slate-500 border-slate-200",
                 )}
               >
                 <option value="">학년 전체</option>
@@ -201,8 +199,8 @@ export function LearningPassageGrid({
                   className={cn(
                     "h-6 px-2.5 rounded-md text-[11px] font-medium transition-all",
                     filterSemester === s.value
-                      ? "bg-white text-blue-700 shadow-sm"
-                      : "text-slate-400 hover:text-slate-600"
+                      ? "bg-white text-slate-700 shadow-sm"
+                      : "text-slate-400 hover:text-slate-600",
                   )}
                 >
                   {s.label}
@@ -216,7 +214,7 @@ export function LearningPassageGrid({
                   setFilterGrade("");
                   setFilterSemester("");
                 }}
-                className="text-[11px] text-blue-600 hover:text-blue-700 font-medium ml-auto flex items-center gap-1"
+                className="ml-auto flex items-center gap-1 text-[11px] font-medium text-slate-500 hover:text-slate-700"
               >
                 <X className="w-3 h-3" />
                 초기화
@@ -233,8 +231,8 @@ export function LearningPassageGrid({
               className={cn(
                 "shrink-0 h-7 px-3 rounded-lg text-[11px] font-medium flex items-center gap-1.5 transition-all border",
                 !selectedCollectionId
-                  ? "bg-blue-50 text-blue-700 border-blue-300"
-                  : "text-slate-500 border-slate-200 hover:border-slate-300"
+                  ? "border-slate-300 bg-slate-50 text-slate-700"
+                  : "text-slate-500 border-slate-200 hover:border-slate-300",
               )}
             >
               전체 지문
@@ -244,14 +242,14 @@ export function LearningPassageGrid({
                 key={c.id}
                 onClick={() =>
                   setSelectedCollectionId(
-                    selectedCollectionId === c.id ? "" : c.id
+                    selectedCollectionId === c.id ? "" : c.id,
                   )
                 }
                 className={cn(
                   "shrink-0 h-7 px-3 rounded-lg text-[11px] font-medium flex items-center gap-1.5 transition-all border",
                   selectedCollectionId === c.id
-                    ? "bg-blue-50 text-blue-700 border-blue-300"
-                    : "text-slate-500 border-slate-200 hover:border-slate-300"
+                    ? "border-slate-300 bg-slate-50 text-slate-700"
+                    : "text-slate-500 border-slate-200 hover:border-slate-300",
                 )}
               >
                 <FolderOpen className="w-3 h-3" />
@@ -289,10 +287,10 @@ export function LearningPassageGrid({
                   key={p.id}
                   onClick={() => toggleCheckbox(p.id)}
                   className={cn(
-                    "text-left rounded-xl border p-3.5 transition-all group",
+                    "group rounded-xl border bg-white p-3.5 text-left transition-all",
                     checked
-                      ? "border-blue-400 bg-blue-50/50 ring-1 ring-blue-200"
-                      : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm"
+                      ? "border-blue-400 ring-2 ring-blue-300/30"
+                      : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm",
                   )}
                 >
                   <div className="flex items-start gap-2.5">
@@ -312,7 +310,7 @@ export function LearningPassageGrid({
                       </p>
                       <div className="flex items-center gap-2 mt-1.5">
                         {p.analysis && (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600 font-medium">
+                          <span className="text-[10px] font-medium text-slate-500">
                             분석 완료
                           </span>
                         )}

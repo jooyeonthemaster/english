@@ -3,7 +3,6 @@ import {
   AlertTriangle,
   ArrowDownRight,
   ArrowUpRight,
-  Building2,
   CalendarDays,
   CalendarRange,
   ChevronLeft,
@@ -33,6 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CostsAcademyUsageTable } from "@/components/admin/costs-academy-usage-table";
 import { cn, formatCurrency, formatNumber } from "@/lib/utils";
 
 type PageProps = {
@@ -374,79 +374,12 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
         </section>
       </div>
 
-      <section className="rounded-xl border border-gray-100 bg-white">
-        <div className="flex items-center justify-between border-b border-gray-50 px-5 py-4">
-          <div>
-            <h2 className="text-[14px] font-semibold text-gray-800">학원별 사용량</h2>
-            <p className="mt-1 text-[12px] text-gray-400">
-              {dashboard.summaryLabel} API 원가 기준 · {formatNumber(dashboard.academyUsage.length)}개 학원
-            </p>
-          </div>
-          <Building2 className="size-4 text-gray-400" strokeWidth={1.8} />
-        </div>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="h-9 pl-5 text-[12px] font-medium text-gray-400">
-                  학원
-                </TableHead>
-                <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">
-                  원가
-                </TableHead>
-                <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">
-                  비중
-                </TableHead>
-                <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">
-                  API
-                </TableHead>
-                <TableHead className="h-9 pr-5 text-right text-[12px] font-medium text-gray-400">
-                  토큰
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {dashboard.academyUsage.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="py-8 text-center text-[13px] text-gray-400">
-                    집계된 학원별 사용량이 없습니다
-                  </TableCell>
-                </TableRow>
-              ) : (
-                dashboard.academyUsage.map((academy) => {
-                  const denominator = Math.max(dashboard.current.variableCostKrw, 1);
-                  const ratio = Math.min(100, (academy.costKrw / denominator) * 100);
-                  return (
-                    <TableRow
-                      key={academy.academyId ?? "__unassigned__"}
-                      className="hover:bg-gray-50/50"
-                    >
-                      <TableCell className="pl-5 text-[13px] font-medium text-gray-800">
-                        {academy.name}
-                      </TableCell>
-                      <TableCell className="text-right text-[13px] font-semibold text-gray-900">
-                        <p>{formatCurrency(academy.costKrw)}</p>
-                        <p className="mt-0.5 text-[11px] font-normal text-gray-400">
-                          ${academy.costUsd.toFixed(4)}
-                        </p>
-                      </TableCell>
-                      <TableCell className="text-right text-[13px] text-gray-500">
-                        {formatPercent(ratio)}
-                      </TableCell>
-                      <TableCell className="text-right text-[13px] text-gray-500">
-                        {formatNumber(academy.calls)}회
-                      </TableCell>
-                      <TableCell className="pr-5 text-right text-[13px] text-gray-500">
-                        {formatNumber(academy.inputTokens + academy.outputTokens)}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </section>
+      <CostsAcademyUsageTable
+        key={`${dashboard.mode}-${dashboard.summaryMode}-${dashboard.summaryLabel}`}
+        academies={dashboard.academyUsage}
+        summaryLabel={dashboard.summaryLabel}
+        variableCostKrw={dashboard.current.variableCostKrw}
+      />
 
       <section className="rounded-xl border border-gray-100 bg-white">
         <div className="flex items-center justify-between border-b border-gray-50 px-5 py-4">

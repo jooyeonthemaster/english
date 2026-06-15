@@ -12,8 +12,7 @@ import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 const CATEGORY_GROUPS = [
   {
     category: "VOCAB",
-    label: "📗 어휘",
-    color: "blue",
+    label: "어휘",
     target: QUESTION_GENERATION_TARGET.VOCAB,
     items: [
       { id: "WORD_MEANING", label: "영→한 뜻" },
@@ -29,8 +28,7 @@ const CATEGORY_GROUPS = [
   },
   {
     category: "INTERPRETATION",
-    label: "📘 해석",
-    color: "indigo",
+    label: "해석",
     target: QUESTION_GENERATION_TARGET.INTERPRETATION,
     items: [
       { id: "SENTENCE_INTERPRET", label: "해석 고르기" },
@@ -42,8 +40,7 @@ const CATEGORY_GROUPS = [
   },
   {
     category: "GRAMMAR",
-    label: "📙 문법",
-    color: "violet",
+    label: "문법",
     target: QUESTION_GENERATION_TARGET.GRAMMAR,
     items: [
       { id: "GRAMMAR_SELECT", label: "문법 고르기" },
@@ -55,8 +52,7 @@ const CATEGORY_GROUPS = [
   },
   {
     category: "COMPREHENSION",
-    label: "📕 독해",
-    color: "amber",
+    label: "독해",
     target: QUESTION_GENERATION_TARGET.COMPREHENSION,
     items: [
       { id: "TRUE_FALSE", label: "O/X" },
@@ -128,7 +124,7 @@ export function LearningConfigPanel({
               "flex-1 h-9 rounded-lg text-[13px] font-semibold transition-all flex items-center justify-center gap-1.5",
               genMode === "auto"
                 ? "bg-blue-600 text-white shadow-sm"
-                : "text-slate-500 hover:text-slate-700"
+                : "text-slate-500 hover:text-slate-700",
             )}
           >
             <Zap className="w-3.5 h-3.5" /> 자동 생성
@@ -139,7 +135,7 @@ export function LearningConfigPanel({
               "flex-1 h-9 rounded-lg text-[13px] font-semibold transition-all flex items-center justify-center gap-1.5",
               genMode === "manual"
                 ? "bg-blue-600 text-white shadow-sm"
-                : "text-slate-500 hover:text-slate-700"
+                : "text-slate-500 hover:text-slate-700",
             )}
           >
             <Settings2 className="w-3.5 h-3.5" /> 유형 지정
@@ -155,11 +151,11 @@ export function LearningConfigPanel({
 
         {genMode === "auto" && (
           <div className="space-y-4">
-            <div className="bg-blue-50/80 rounded-xl p-4 border border-blue-100">
-              <p className="text-[12px] font-semibold text-blue-800 mb-1">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <p className="mb-1 text-[12px] font-semibold text-slate-800">
                 AI 자동 출제
               </p>
-              <p className="text-[11px] text-blue-600 leading-relaxed">
+              <p className="text-[11px] leading-relaxed text-slate-500">
                 학습지 생성 데이터를 기반으로 최적의 유형과 난이도를 자동
                 선택합니다. 지문당 최대 300문제.
               </p>
@@ -171,8 +167,8 @@ export function LearningConfigPanel({
               className={cn(
                 "w-full h-10 rounded-xl border-2 border-dashed text-[13px] font-semibold transition-all flex items-center justify-center gap-1.5",
                 autoCount === 75
-                  ? "border-blue-400 bg-blue-50 text-blue-700"
-                  : "border-blue-300 text-blue-600 hover:bg-blue-50 hover:border-blue-400"
+                  ? "border-slate-300 bg-white text-slate-700"
+                  : "border-slate-300 text-slate-600 hover:bg-slate-50 hover:border-slate-400",
               )}
             >
               <Zap className="w-3.5 h-3.5" />
@@ -201,10 +197,14 @@ export function LearningConfigPanel({
                   <Plus className="w-3.5 h-3.5 text-slate-500" />
                 </button>
               </div>
-              <p className={cn(
-                "text-[11px] text-center mt-1",
-                autoCount * 4 > 300 ? "text-red-500 font-medium" : "text-slate-400"
-              )}>
+              <p
+                className={cn(
+                  "text-[11px] text-center mt-1",
+                  autoCount * 4 > 300
+                    ? "text-red-500 font-medium"
+                    : "text-slate-400",
+                )}
+              >
                 총 {autoCount * 4}개 (4개 카테고리 × {autoCount})
                 {autoCount * 4 >= 300 && " · 최대"}
               </p>
@@ -230,10 +230,16 @@ export function LearningConfigPanel({
                   </button>
                 )}
               </div>
-              <span className={cn(
-                "text-[12px] font-bold",
-                totalQuestions > 300 ? "text-red-500" : totalQuestions > 0 ? "text-blue-600" : "text-slate-400"
-              )}>
+              <span
+                className={cn(
+                  "text-[12px] font-bold",
+                  totalQuestions > 300
+                    ? "text-red-500"
+                    : totalQuestions > 0
+                      ? "text-slate-700"
+                      : "text-slate-400",
+                )}
+              >
                 {totalQuestions}/300
                 {totalQuestions > 300 && " ⚠️ 초과"}
               </span>
@@ -242,7 +248,7 @@ export function LearningConfigPanel({
             {CATEGORY_GROUPS.map((group) => {
               const groupTotal = group.items.reduce(
                 (s, item) => s + (typeCounts[item.id] || 0),
-                0
+                0,
               );
               const handleFillCategory = () => {
                 const perItem = Math.floor(group.target / group.items.length);
@@ -265,8 +271,8 @@ export function LearningConfigPanel({
                         className={cn(
                           "text-[10px] px-2 py-0.5 rounded-md font-medium transition-all",
                           groupTotal === group.target
-                            ? "bg-blue-100 text-blue-600"
-                            : "text-blue-500 hover:bg-blue-50 border border-blue-200"
+                            ? "bg-slate-100 text-slate-700"
+                            : "text-slate-500 hover:bg-slate-50 border border-slate-200",
                         )}
                       >
                         {group.target}개 채우기
@@ -300,9 +306,7 @@ export function LearningConfigPanel({
                               {count}
                             </span>
                             <button
-                              onClick={() =>
-                                setTypeCount(item.id, count + 1)
-                              }
+                              onClick={() => setTypeCount(item.id, count + 1)}
                               className="w-6 h-6 rounded-md border border-slate-200 bg-white flex items-center justify-center text-slate-400 hover:text-slate-600"
                             >
                               <Plus className="w-3 h-3" />
@@ -317,7 +321,6 @@ export function LearningConfigPanel({
             })}
           </div>
         )}
-
       </div>
 
       {/* 생성 버튼 (하단 고정) */}

@@ -1,4 +1,5 @@
 import type { PassageItem } from "../generate-page-types";
+import { formatExtractedTextForDisplay } from "../../passages/import/_components/extraction-manage-client/utils/display-text";
 
 // ============================================================================
 // 지문 워크스페이스 — 문제 생성 전에 지문을 불러와 편집·AI 변형·범위 지정·
@@ -23,6 +24,8 @@ export interface RowHighlight {
   start: number;
   end: number;
   kind: "prepend" | "paraphrase";
+  /** 변형(paraphrase) 전의 원문 — 하이라이트 호버 시 툴팁으로 보여준다. */
+  original?: string;
 }
 
 /** undo/redo 스냅샷 — 본문과 하이라이트를 함께 복원한다. */
@@ -57,6 +60,10 @@ export interface WorkspaceRow {
 }
 
 export function makeWorkspaceRow(passage: PassageItem): WorkspaceRow {
+  // 추출 지문은 OCR이 원본 이미지의 물리적 줄바꿈을 그대로 담고 있어 에디터
+  // 폭과 무관하게 중간에서 꺾인다 — 소프트 줄바꿈만 공백으로 접는다(문단
+  // 구분·보기 행은 보존). isRowDirty 는 공백 무시 비교라 수정 오탐 없음.
+  const content = formatExtractedTextForDisplay(passage.content);
   return {
     localId:
       typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
@@ -64,8 +71,8 @@ export function makeWorkspaceRow(passage: PassageItem): WorkspaceRow {
         : `ws-${Math.random().toString(36).slice(2)}`,
     passageId: passage.id,
     title: passage.title,
-    content: passage.content,
-    savedContent: passage.content,
+    content,
+    savedContent: content,
     range: null,
     override: null,
     collapsed: false,
@@ -115,6 +122,50 @@ export function adjustHighlights(
     }
   }
   return out;
+}
+
+/**
+ * 본문이 oldStr → newStr 로 바뀌었을 때 출제 범위 오프셋을 보정한다.
+ * adjustHighlights 와 같은 단일 변경 구간 규칙 — AI 변형/앞 맥락 추가가
+ * 범위 밖이면 그대로(또는 평행이동), 겹치면 살아남은 구간만 남긴다.
+ * 보정 결과가 effectiveRowContent 최소 길이(20자)에 못 미치면 해제한다.
+ */
+export function adjustRange(
+  oldStr: string,
+  newStr: string,
+  range: RowRange | null,
+): RowRange | null {
+  if (!range) return null;
+  if (oldStr === newStr) return range;
+  let p = 0;
+  const maxP = Math.min(oldStr.length, newStr.length);
+  while (p < maxP && oldStr[p] === newStr[p]) p += 1;
+  let s = 0;
+  while (
+    s < oldStr.length - p &&
+    s < newStr.length - p &&
+    oldStr[oldStr.length - 1 - s] === newStr[newStr.length - 1 - s]
+  )
+    s += 1;
+  const oldEnd = oldStr.length - s;
+  const delta = newStr.length - oldStr.length;
+  let start: number;
+  let end: number;
+  if (range.end <= p) {
+    ({ start, end } = range);
+  } else if (range.start >= oldEnd) {
+    start = range.start + delta;
+    end = range.end + delta;
+  } else {
+    // 변경 구간과 겹침 — 범위가 변경 구간을 포함하면 늘어난 채 유지
+    // (범위 안 문장 변형), 일부만 겹치면 살아남은 앞부분만.
+    start = Math.min(range.start, p);
+    end = range.end >= oldEnd ? range.end + delta : Math.min(range.end, p);
+  }
+  start = Math.max(0, start);
+  end = Math.min(end, newStr.length);
+  if (newStr.slice(start, end).trim().length < 20) return null;
+  return { start, end };
 }
 
 const normalizeText = (s: string) => s.replace(/\s+/g, " ").trim();

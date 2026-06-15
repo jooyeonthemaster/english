@@ -42,13 +42,18 @@ export async function GET(request: NextRequest) {
           publisher: true,
           difficulty: true,
           source: true,
+          createdAt: true,
+          updatedAt: true,
           school: { select: { id: true, name: true } },
           collectionItems: { select: { collectionId: true } },
           analysis: { select: { id: true, analysisData: true, updatedAt: true } },
           // 이 지문으로 이미 생성된 문제 수 — 지문 카드 뱃지에 사용.
           _count: { select: { questions: true } },
         },
-        orderBy: { createdAt: "desc" },
+        // updatedAt 기준 — 재추출 dedup 이 기존 행을 재사용(touch)해도
+        // "방금 추출한 지문"이 새로고침 후에도 맨 앞에 오게 한다.
+        // 손대지 않은 행은 updatedAt == createdAt 이라 기존 순서와 동일하다.
+        orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
         take: passageIdsFilter.length > 0 ? passageIdsFilter.length : 200,
       }),
       prisma.school.findMany({

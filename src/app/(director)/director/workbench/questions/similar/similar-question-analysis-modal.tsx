@@ -12,7 +12,12 @@ interface QAnalysis {
   source?: {
     direction?: string;
     passageBased?: boolean;
-    options?: Array<{ label?: string; text?: string; isCorrect?: boolean; rationale?: string }>;
+    options?: Array<{
+      label?: string;
+      text?: string;
+      isCorrect?: boolean;
+      rationale?: string;
+    }>;
     optionCount?: number;
     correctAnswerLabels?: string[];
     multipleAnswers?: boolean;
@@ -50,12 +55,22 @@ const DIFFICULTY_LABEL: Record<string, string> = {
   KILLER: "킬러",
 };
 
-function Block({ title, sub, children }: { title: string; sub?: string; children: ReactNode }) {
+function Block({
+  title,
+  sub,
+  children,
+}: {
+  title: string;
+  sub?: string;
+  children: ReactNode;
+}) {
   return (
     <section className="border-t border-slate-100 px-6 py-5 first:border-t-0">
       <h3 className="mb-3 text-[13px] font-bold text-slate-900">
         {title}
-        {sub ? <span className="ml-1.5 font-medium text-slate-400">· {sub}</span> : null}
+        {sub ? (
+          <span className="ml-1.5 font-medium text-slate-400">· {sub}</span>
+        ) : null}
       </h3>
       {children}
     </section>
@@ -94,7 +109,7 @@ export function SimilarQuestionAnalysisModal({
   const typeLabel = cls.isNovelType
     ? "신규 유형"
     : cls.matchedType
-      ? QUESTION_TYPE_META[cls.matchedType]?.label ?? cls.matchedType
+      ? (QUESTION_TYPE_META[cls.matchedType]?.label ?? cls.matchedType)
       : "미분류";
 
   return (
@@ -109,7 +124,9 @@ export function SimilarQuestionAnalysisModal({
         <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-6 py-4">
           <div className="min-w-0">
             <h2 className="text-base font-bold text-slate-950">분석 정보</h2>
-            <p className="mt-0.5 truncate text-xs text-slate-500">원본 문항 분석 · {typeLabel}</p>
+            <p className="mt-0.5 truncate text-xs text-slate-500">
+              원본 문항 분석 · {typeLabel}
+            </p>
           </div>
           <button
             type="button"
@@ -137,9 +154,13 @@ export function SimilarQuestionAnalysisModal({
                 <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12px]">
                   <span>
                     <span className="text-slate-400">유형 </span>
-                    <span className="font-bold text-slate-800">{typeLabel}</span>
+                    <span className="font-bold text-slate-800">
+                      {typeLabel}
+                    </span>
                     {cls.matchConfidence ? (
-                      <span className="ml-1 text-slate-400">({cls.matchConfidence})</span>
+                      <span className="ml-1 text-slate-400">
+                        ({cls.matchConfidence})
+                      </span>
                     ) : null}
                   </span>
                   {cls.difficulty ? (
@@ -152,15 +173,17 @@ export function SimilarQuestionAnalysisModal({
                   ) : null}
                   <span>
                     <span className="text-slate-400">보기 </span>
-                    <span className="font-bold text-slate-800">{src.optionCount ?? src.options?.length ?? 0}개</span>
+                    <span className="font-bold text-slate-800">
+                      {src.optionCount ?? src.options?.length ?? 0}개
+                    </span>
                   </span>
                   <span>
                     <span className="text-slate-400">정답 </span>
-                    <span className="font-bold text-blue-700">
+                    <span className="font-bold text-slate-800">
                       {(src.correctAnswerLabels ?? []).join(", ") || "-"}
                     </span>
                     {src.multipleAnswers ? (
-                      <span className="ml-1 rounded bg-amber-50 px-1 text-[10.5px] font-bold text-amber-700">
+                      <span className="ml-1 rounded bg-slate-100 px-1 text-[10.5px] font-bold text-slate-600">
                         복수정답
                       </span>
                     ) : null}
@@ -173,7 +196,7 @@ export function SimilarQuestionAnalysisModal({
                   </span>
                 </div>
                 {cls.isNovelType && cls.noveltyNote ? (
-                  <p className="mt-2 rounded-md bg-violet-50 px-2.5 py-1.5 text-[11.5px] text-violet-700">
+                  <p className="mt-2 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-[11.5px] text-slate-600">
                     신규 유형: {cls.noveltyNote}
                   </p>
                 ) : null}
@@ -183,7 +206,9 @@ export function SimilarQuestionAnalysisModal({
               {(tp.summary || (tp.skills?.length ?? 0) > 0) && (
                 <Block title="출제 포인트">
                   {tp.summary ? (
-                    <p className="text-[12.5px] leading-relaxed text-slate-700">{tp.summary}</p>
+                    <p className="text-[12.5px] leading-relaxed text-slate-700">
+                      {tp.summary}
+                    </p>
                   ) : null}
                   {cls.difficultyRationale ? (
                     <p className="mt-1.5 text-[11.5px] leading-relaxed text-slate-500">
@@ -199,10 +224,15 @@ export function SimilarQuestionAnalysisModal({
               )}
 
               {/* 3. 변형 분석 */}
-              {tr.applied && (tr.description || (tr.rules?.length ?? 0) > 0 || (tr.changedSpans?.length ?? 0) > 0) ? (
+              {tr.applied &&
+              (tr.description ||
+                (tr.rules?.length ?? 0) > 0 ||
+                (tr.changedSpans?.length ?? 0) > 0) ? (
                 <Block title="변형 분석" sub="원본을 어떻게 바꿔 출제했나">
                   {tr.description ? (
-                    <p className="text-[12.5px] leading-relaxed text-slate-700">{tr.description}</p>
+                    <p className="text-[12.5px] leading-relaxed text-slate-700">
+                      {tr.description}
+                    </p>
                   ) : null}
                   {tr.rules && tr.rules.length > 0 ? (
                     <div className="mt-2">
@@ -213,10 +243,18 @@ export function SimilarQuestionAnalysisModal({
                     <ul className="mt-2 space-y-1">
                       {tr.changedSpans.map((s, i) => (
                         <li key={i} className="text-[11.5px] text-slate-600">
-                          <span className="text-rose-600 line-through">{s.from}</span>
+                          <span className="text-red-600 line-through">
+                            {s.from}
+                          </span>
                           <span className="mx-1 text-slate-400">→</span>
-                          <span className="font-semibold text-emerald-700">{s.to}</span>
-                          {s.rule ? <span className="ml-1.5 text-slate-400">({s.rule})</span> : null}
+                          <span className="font-semibold text-slate-800">
+                            {s.to}
+                          </span>
+                          {s.rule ? (
+                            <span className="ml-1.5 text-slate-400">
+                              ({s.rule})
+                            </span>
+                          ) : null}
                         </li>
                       ))}
                     </ul>
@@ -233,19 +271,25 @@ export function SimilarQuestionAnalysisModal({
                         key={i}
                         className={
                           "rounded-md px-2 py-1.5 text-[11.5px] leading-relaxed " +
-                          (o.isCorrect ? "bg-emerald-50 text-emerald-800" : "bg-slate-50 text-slate-600")
+                          (o.isCorrect
+                            ? "bg-slate-100 text-slate-800"
+                            : "bg-slate-50 text-slate-600")
                         }
                       >
                         <span className="font-bold">
                           {o.label}. {o.text}
                           {o.isCorrect ? " ✓" : ""}
                         </span>
-                        {o.rationale ? <span className="ml-1 block text-slate-500">{o.rationale}</span> : null}
+                        {o.rationale ? (
+                          <span className="ml-1 block text-slate-500">
+                            {o.rationale}
+                          </span>
+                        ) : null}
                       </li>
                     ))}
                   </ul>
                   {src.originalExplanation ? (
-                    <div className="mt-2 rounded-md bg-amber-50/60 px-2.5 py-1.5 text-[11.5px] leading-relaxed text-slate-700">
+                    <div className="mt-2 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-[11.5px] leading-relaxed text-slate-700">
                       <span className="font-bold">원본 해설: </span>
                       {src.originalExplanation}
                     </div>
@@ -261,14 +305,45 @@ export function SimilarQuestionAnalysisModal({
                 (analysis.variationAxes?.length ?? 0) > 0) && (
                 <Block title="동형 재현 기준">
                   <div className="space-y-1 text-[11.5px] leading-relaxed text-slate-600">
-                    {rep.stemFormat ? <p><span className="font-semibold text-slate-700">발문 형식: </span>{rep.stemFormat}</p> : null}
-                    {rep.optionFormat ? <p><span className="font-semibold text-slate-700">보기 형식: </span>{rep.optionFormat}</p> : null}
-                    {rep.answerFormat ? <p><span className="font-semibold text-slate-700">정답 형식: </span>{rep.answerFormat}</p> : null}
-                    {rep.structureNotes ? <p><span className="font-semibold text-slate-700">구조: </span>{rep.structureNotes}</p> : null}
+                    {rep.stemFormat ? (
+                      <p>
+                        <span className="font-semibold text-slate-700">
+                          발문 형식:{" "}
+                        </span>
+                        {rep.stemFormat}
+                      </p>
+                    ) : null}
+                    {rep.optionFormat ? (
+                      <p>
+                        <span className="font-semibold text-slate-700">
+                          보기 형식:{" "}
+                        </span>
+                        {rep.optionFormat}
+                      </p>
+                    ) : null}
+                    {rep.answerFormat ? (
+                      <p>
+                        <span className="font-semibold text-slate-700">
+                          정답 형식:{" "}
+                        </span>
+                        {rep.answerFormat}
+                      </p>
+                    ) : null}
+                    {rep.structureNotes ? (
+                      <p>
+                        <span className="font-semibold text-slate-700">
+                          구조:{" "}
+                        </span>
+                        {rep.structureNotes}
+                      </p>
+                    ) : null}
                   </div>
-                  {analysis.variationAxes && analysis.variationAxes.length > 0 ? (
+                  {analysis.variationAxes &&
+                  analysis.variationAxes.length > 0 ? (
                     <div className="mt-2.5">
-                      <p className="mb-1.5 text-[11px] font-semibold text-slate-400">바꿀 수 있는 축</p>
+                      <p className="mb-1.5 text-[11px] font-semibold text-slate-400">
+                        바꿀 수 있는 축
+                      </p>
                       <Chips items={analysis.variationAxes} />
                     </div>
                   ) : null}

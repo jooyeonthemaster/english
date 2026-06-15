@@ -26,6 +26,7 @@ import {
 import { ExtractionTaskListIcon } from "@/components/icons/workflow-icons";
 import { MAX_PAGES_PER_JOB, MAX_PDF_BYTES } from "@/lib/extraction/constants";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import type { ClientPageSlot } from "@/lib/extraction/types";
 
 import { ACCEPTED } from "../constants";
@@ -388,7 +389,12 @@ export function UploadPanel({
     {
       v: "restored" as const,
       label: "AI로 원문 복원",
-      badge: `지문당 ◈${restoredCredits}`,
+      badge: (
+        <span className="inline-flex items-center gap-0.5">
+          지문당{" "}
+          <CreditCostChip amount={restoredCredits} iconClassName="size-2.5" />
+        </span>
+      ),
     },
   ];
   const controlRowClass =

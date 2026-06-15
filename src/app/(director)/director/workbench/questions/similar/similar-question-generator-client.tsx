@@ -76,7 +76,8 @@ export function SimilarQuestionGeneratorClient({
   const leftColRef = useRef<HTMLDivElement | null>(null);
   const suppressHandleClickRef = useRef(false);
   const clearExtractionPendingRef = useRef<(jobId: string) => void>(() => {});
-  const { setCollapseRequested: setSidebarCollapseRequested } = useSidebarFocus();
+  const { setCollapseRequested: setSidebarCollapseRequested } =
+    useSidebarFocus();
   const taskQueue = useTaskQueue();
 
   // ── 중앙: 원본 문항(참조) 입력 — 스테이징 로직은 use-staged-question-file 훅으로 분리 ──
@@ -177,7 +178,10 @@ export function SimilarQuestionGeneratorClient({
   }, [leftWidth]);
   useEffect(() => {
     try {
-      window.localStorage.setItem(LEFT_COLLAPSED_STORAGE_KEY, String(leftCollapsed));
+      window.localStorage.setItem(
+        LEFT_COLLAPSED_STORAGE_KEY,
+        String(leftCollapsed),
+      );
     } catch {
       // 무시
     }
@@ -193,7 +197,11 @@ export function SimilarQuestionGeneratorClient({
         width - PANEL_TOGGLE_HANDLE_WIDTH - PANEL_MIN_CENTER,
       );
       setLeftWidth((current) => {
-        const next = clampNumber(current, LEFT_MIN, Math.max(LEFT_MIN, maxLeft));
+        const next = clampNumber(
+          current,
+          LEFT_MIN,
+          Math.max(LEFT_MIN, maxLeft),
+        );
         return next === current ? current : next;
       });
     });
@@ -251,7 +259,13 @@ export function SimilarQuestionGeneratorClient({
         );
       });
     },
-    [loadPassages, setPassageSearch, setSelectedCollectionId, setAnalysisStatusFilter, setSelectedIds],
+    [
+      loadPassages,
+      setPassageSearch,
+      setSelectedCollectionId,
+      setAnalysisStatusFilter,
+      setSelectedIds,
+    ],
   );
 
   const {
@@ -288,7 +302,10 @@ export function SimilarQuestionGeneratorClient({
   );
 
   // ── 중앙: 원본 문항(참조) 파일 처리 — pickFiles/removeSlot/reorderSlots 는 훅에서 ──
-  const requestFileDialog = useCallback(() => fileInputRef.current?.click(), []);
+  const requestFileDialog = useCallback(
+    () => fileInputRef.current?.click(),
+    [],
+  );
 
   // 선택한 passage 로 직접 생성 — from-drafts 변환 불필요(좌측이 이미 passage 를 준다).
   const run = useCallback(async () => {
@@ -320,7 +337,9 @@ export function SimilarQuestionGeneratorClient({
         throw new Error("크롭한 문항 이미지를 만들지 못했습니다.");
       }
       if (baked.length !== 1) {
-        throw new Error("동형 문제 생성은 한 번에 원본 문항 1개만 분석할 수 있습니다.");
+        throw new Error(
+          "동형 문제 생성은 한 번에 원본 문항 1개만 분석할 수 있습니다.",
+        );
       }
       const manualReferenceSlot = baked[0];
       const images = [
@@ -355,7 +374,9 @@ export function SimilarQuestionGeneratorClient({
         throw new Error(`${data.error || "요청 실패"} (요청 ${trace})`);
       }
       if (!data.jobId) {
-        throw new Error(`작업 ID를 받지 못했습니다. (요청 ${data.requestId ?? clientRequestId})`);
+        throw new Error(
+          `작업 ID를 받지 못했습니다. (요청 ${data.requestId ?? clientRequestId})`,
+        );
       }
 
       setJobsRefreshKey((value) => value + 1);
@@ -366,13 +387,23 @@ export function SimilarQuestionGeneratorClient({
       );
     } catch (err) {
       setBaking(false);
-      const message = err instanceof Error ? err.message : "처리 중 오류가 발생했습니다.";
+      const message =
+        err instanceof Error ? err.message : "처리 중 오류가 발생했습니다.";
       setError(message);
       toast.error(message);
     } finally {
       setBusy(false);
     }
-  }, [staged, selectedIds, cropCounts.totalPassages, gradeInfo, clearStaged, slotsRef, setError, setSelectedIds]);
+  }, [
+    staged,
+    selectedIds,
+    cropCounts.totalPassages,
+    gradeInfo,
+    clearStaged,
+    slotsRef,
+    setError,
+    setSelectedIds,
+  ]);
 
   // ─── 좌패널 핸들: 클릭=여닫기, 드래그=폭 조절 (동형 시험지 생성과 동일) ───
   function toggleLeftCollapsed() {
@@ -383,7 +414,9 @@ export function SimilarQuestionGeneratorClient({
     setLeftCollapsed((c) => !c);
   }
 
-  function handleLeftResizePointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
+  function handleLeftResizePointerDown(
+    event: ReactPointerEvent<HTMLButtonElement>,
+  ) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
     suppressHandleClickRef.current = false;
     const container = gridRef.current;
@@ -421,7 +454,9 @@ export function SimilarQuestionGeneratorClient({
         document.body.style.userSelect = previousUserSelect;
       }
     };
-    window.addEventListener("pointermove", handlePointerMove, { passive: false });
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: false,
+    });
     window.addEventListener("pointerup", finish, { once: true });
     window.addEventListener("pointercancel", finish, { once: true });
   }
@@ -471,7 +506,9 @@ export function SimilarQuestionGeneratorClient({
                 }
                 library={
                   <PassageCardGrid
-                    loadingCards={<ExtractionLoadingCards pending={extractionPending} />}
+                    loadingCards={
+                      <ExtractionLoadingCards pending={extractionPending} />
+                    }
                     passages={passages}
                     filteredPassages={filteredPassages}
                     filterOptions={filterOptions}
@@ -516,7 +553,7 @@ export function SimilarQuestionGeneratorClient({
               title="자료 패널 열기"
               aria-label="자료 패널 열기"
               aria-expanded={false}
-              className="mx-1 hidden h-full min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
+              className="mx-1 hidden h-full min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100 lg:flex"
             >
               <span>{">"}</span>
               <span style={{ writingMode: "vertical-rl" }}>지문</span>
@@ -529,7 +566,7 @@ export function SimilarQuestionGeneratorClient({
               title="드래그하여 폭 조절 · 클릭하여 닫기"
               aria-label="자료 패널 닫기"
               aria-expanded
-              className="group/lhandle mx-1 hidden h-full min-h-0 w-4 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
+              className="group/lhandle mx-1 hidden h-full min-h-0 w-4 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100 lg:flex"
             >
               <span>{"<"}</span>
               <span style={{ writingMode: "vertical-rl" }}>지문</span>
@@ -541,7 +578,9 @@ export function SimilarQuestionGeneratorClient({
           <section className="flex min-w-0 flex-col overflow-hidden bg-slate-100/70">
             <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-slate-200 bg-white px-4 py-2">
               <span className="text-[12px] font-bold text-slate-700">
-                {staged ? `${staged.fileName} · ${staged.totalPages}p` : "원본 문항 미입력"}
+                {staged
+                  ? `${staged.fileName} · ${staged.totalPages}p`
+                  : "원본 문항 미입력"}
               </span>
               {staged ? (
                 <button
@@ -556,7 +595,7 @@ export function SimilarQuestionGeneratorClient({
               <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-500">
                 선택 지문 {selectedCount}
               </span>
-              <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700 ring-1 ring-blue-100">
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-700 ring-1 ring-slate-200">
                 원본 문항 {cropCounts.totalPassages}
               </span>
               <div className="ml-auto flex items-center gap-2">
@@ -599,8 +638,9 @@ export function SimilarQuestionGeneratorClient({
                 onCountChange={setCropCounts}
                 onClear={clearStaged}
                 footer={
-                  <div className="rounded-md border border-blue-100 bg-blue-50 px-3 py-2 text-[12px] font-semibold text-blue-700">
-                    동형 문제 생성은 원본 문항 1개만 분석합니다. 여러 페이지에 걸친 문항은 같은 지문으로 합쳐 주세요.
+                  <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-[12px] font-semibold text-slate-600">
+                    동형 문제 생성은 원본 문항 1개만 분석합니다. 여러 페이지에
+                    걸친 문항은 같은 지문으로 합쳐 주세요.
                   </div>
                 }
               />
@@ -634,7 +674,10 @@ export function SimilarQuestionGeneratorClient({
       />
 
       {detailPassage && (
-        <ExtractionDetailModal passage={detailPassage} onClose={() => setDetailPassage(null)} />
+        <ExtractionDetailModal
+          passage={detailPassage}
+          onClose={() => setDetailPassage(null)}
+        />
       )}
 
       <input

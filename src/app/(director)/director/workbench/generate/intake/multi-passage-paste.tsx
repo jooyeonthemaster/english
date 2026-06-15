@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 
 import { TextInputBoard } from "../../passages/import/_components/intake/text/text-input-board";
 
@@ -19,6 +20,8 @@ interface MultiPassagePasteProps {
   ) => boolean | void | Promise<boolean | void>;
   /** True while the parent is persisting + refreshing the list. */
   saving: boolean;
+  /** Hide the built-in text tutorial while the page-level tour is active. */
+  suppressTutorial?: boolean;
 }
 
 type OutputMode = "verbatim" | "restored";
@@ -47,11 +50,13 @@ async function restorePassageBeforeRegister(
   if (!res.ok) {
     if (res.status === 402) {
       const required = data.requiredCredits
-        ? ` 필요 크레딧: ◈${data.requiredCredits}`
+        ? ` 필요 크레딧: ${data.requiredCredits}`
         : "";
       const balance =
-        typeof data.balance === "number" ? ` 현재 잔액: ◈${data.balance}` : "";
-      throw new Error(data.error || `크레딧이 부족합니다.${required}${balance}`);
+        typeof data.balance === "number" ? ` 현재 잔액: ${data.balance}` : "";
+      throw new Error(
+        data.error || `크레딧이 부족합니다.${required}${balance}`,
+      );
     }
     throw new Error(data.error || "AI 원문 복원에 실패했습니다.");
   }
@@ -74,6 +79,7 @@ async function restorePassageBeforeRegister(
 export function MultiPassagePaste({
   onSubmitRows,
   saving,
+  suppressTutorial = false,
 }: MultiPassagePasteProps) {
   const [outputMode, setOutputMode] = useState<OutputMode>("verbatim");
   const [restoring, setRestoring] = useState(false);
@@ -92,12 +98,23 @@ export function MultiPassagePaste({
     {
       v: "restored" as const,
       label: "AI로 원문 복원",
-      badge: `지문당 ◈${CREDIT_COSTS.PASSAGE_RESTORATION}`,
+      badge: (
+        <span className="inline-flex items-center gap-0.5">
+          지문당{" "}
+          <CreditCostChip
+            amount={CREDIT_COSTS.PASSAGE_RESTORATION}
+            iconClassName="size-2.5"
+          />
+        </span>
+      ),
     },
   ];
 
   const outputModeToggle = (
-    <div className="flex min-w-0 items-center gap-3">
+    <div
+      className="flex min-w-0 items-center gap-3"
+      data-generate-tour="paste-output-mode"
+    >
       <span className={controlLabelClass}>출력 방식</span>
       <div className="inline-flex h-9 items-center rounded-lg border border-slate-200 bg-slate-50 p-0.5">
         {outputModeOptions.map((opt) => {
@@ -149,12 +166,18 @@ export function MultiPassagePaste({
 
   return (
     <section className="flex h-full min-h-0 flex-col overflow-hidden">
-      <div className={controlRowClass}>{outputModeToggle}</div>
+      <div className={controlRowClass + " justify-end"}>
+        {outputModeToggle}
+      </div>
 
-      <div className="flex min-h-0 flex-1 flex-col">
+      <div
+        className="flex min-h-0 flex-1 flex-col"
+        data-generate-tour="paste-board"
+      >
         <TextInputBoard
           busy={busy}
           outputMode={outputMode}
+          suppressTutorial={suppressTutorial}
           onStart={async (passages) => {
             const rows = passages.map((passage) => ({
               title: passage.title ?? "",
@@ -185,7 +208,9 @@ export function MultiPassagePaste({
               setRestoring(false);
             }
           }}
-          reviewLabel={outputMode === "restored" ? "복원할 지문" : "등록할 지문"}
+          reviewLabel={
+            outputMode === "restored" ? "복원할 지문" : "등록할 지문"
+          }
           emptyTitle={
             outputMode === "restored"
               ? "문제·선지 텍스트를 붙여넣고 지문을 쌓아요"

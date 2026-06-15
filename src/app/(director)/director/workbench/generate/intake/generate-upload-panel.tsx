@@ -31,6 +31,12 @@ import {
   MAX_PDF_BYTES,
 } from "@/lib/extraction/constants";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import {
+  dispatchGenerateTourMilestone,
+  GENERATE_TOUR_SAMPLE_FILE_DRAG_TYPE,
+  GENERATE_TOUR_SAMPLE_FILE_NAME,
+} from "@/lib/generate-tour-demo";
 import {
   imagesToSlots,
   revokeSlotUrls,
@@ -52,9 +58,9 @@ import { UploadMetaChip } from "../../passages/import/_components/bulk-extract-c
 // 사용법 튜토리얼 영상(@remotion/player) — 브라우저 전용이라 lazy + ssr:false.
 const CropTutorialPlayer = dynamic(
   () =>
-    import(
-      "../../passages/import/_components/intake/tutorial/crop-tutorial-player"
-    ).then((m) => m.CropTutorialPlayer),
+    import("../../passages/import/_components/intake/tutorial/crop-tutorial-player").then(
+      (m) => m.CropTutorialPlayer,
+    ),
   {
     ssr: false,
     loading: () => (
@@ -67,9 +73,9 @@ const CropTutorialPlayer = dynamic(
 );
 const RestoreTutorialPlayer = dynamic(
   () =>
-    import(
-      "../../passages/import/_components/intake/tutorial/restore-tutorial-player"
-    ).then((m) => m.RestoreTutorialPlayer),
+    import("../../passages/import/_components/intake/tutorial/restore-tutorial-player").then(
+      (m) => m.RestoreTutorialPlayer,
+    ),
   {
     ssr: false,
     loading: () => (
@@ -95,6 +101,120 @@ const FILE_TUTORIAL_NEVER_KEY = "smoat.extraction.fileTutorialNeverShow.v2";
 const clampFileGuideW = (w: number) =>
   Math.min(460, Math.max(280, Math.round(w)));
 
+function wrapCanvasText(
+  context: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+) {
+  const words = text.split(/\s+/).filter(Boolean);
+  const lines: string[] = [];
+  let line = "";
+  for (const word of words) {
+    const next = line ? `${line} ${word}` : word;
+    if (context.measureText(next).width > maxWidth && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = next;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+async function createGenerateTourSampleImageFile(): Promise<File> {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1200;
+  canvas.height = 1500;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Canvas 2D 컨텍스트를 열 수 없습니다.");
+
+  context.fillStyle = "#f8fafc";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = "#ffffff";
+  context.shadowColor = "rgba(15, 23, 42, 0.08)";
+  context.shadowBlur = 24;
+  context.shadowOffsetY = 10;
+  context.fillRect(110, 96, 980, 1300);
+  context.shadowColor = "transparent";
+
+  context.fillStyle = "#2563eb";
+  context.font = "700 32px Arial, sans-serif";
+  context.fillText("SMOAT Tutorial Sample", 170, 180);
+  context.fillStyle = "#64748b";
+  context.font = "600 22px Arial, sans-serif";
+  context.fillText(
+    "Reading passage for image/PDF extraction practice",
+    170,
+    224,
+  );
+
+  context.strokeStyle = "#dbeafe";
+  context.lineWidth = 4;
+  context.beginPath();
+  context.moveTo(170, 270);
+  context.lineTo(1030, 270);
+  context.stroke();
+
+  const leftColumn = [
+    "A good reader does not simply translate each sentence. Instead, the reader checks how ideas connect across the paragraph.",
+    "When one sentence feels isolated, the whole flow becomes weak. Therefore, structure is as important as vocabulary.",
+    "Students who mark signal words while reading can notice contrast, cause, and result more quickly.",
+  ];
+  const rightColumn = [
+    "They can also explain the writer's purpose with clearer evidence.",
+    "This sample page is designed for the tutorial. Drag it into the upload area, then crop the first column.",
+    "Hold Shift and drag the second column to attach it to the same passage before extraction.",
+  ];
+
+  context.strokeStyle = "#e2e8f0";
+  context.lineWidth = 3;
+  context.beginPath();
+  context.moveTo(600, 318);
+  context.lineTo(600, 850);
+  context.stroke();
+
+  const drawColumn = (paragraphs: string[], x: number) => {
+    context.fillStyle = "#0f172a";
+    context.font = "400 25px Arial, sans-serif";
+    let y = 342;
+    for (const paragraph of paragraphs) {
+      for (const line of wrapCanvasText(context, paragraph, 390)) {
+        context.fillText(line, x, y);
+        y += 40;
+      }
+      y += 26;
+    }
+  };
+
+  drawColumn(leftColumn, 170);
+  drawColumn(rightColumn, 640);
+
+  context.fillStyle = "#eef2ff";
+  context.fillRect(170, 1130, 860, 92);
+  context.fillStyle = "#4338ca";
+  context.font = "700 24px Arial, sans-serif";
+  context.fillText(
+    "Tip: crop only the passage body before extraction.",
+    205,
+    1188,
+  );
+
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((result) => {
+      if (!result) {
+        reject(new Error("예시 이미지 생성에 실패했습니다."));
+        return;
+      }
+      resolve(result);
+    }, "image/png");
+  });
+
+  return new File([blob], GENERATE_TOUR_SAMPLE_FILE_NAME, {
+    type: "image/png",
+  });
+}
+
 function summarizeNames(files: File[]): string {
   if (files.length === 0) return "";
   if (files.length === 1) return files[0].name;
@@ -108,6 +228,8 @@ interface GenerateUploadPanelProps {
   onResult: (id: string, jobId: string | null) => void;
   /** Number of extraction passages from this page still running (for the banner). */
   inFlightCount: number;
+  /** Suppress the built-in extraction tutorial while the page-level tour is open. */
+  suppressTutorial?: boolean;
 }
 
 /**
@@ -121,6 +243,7 @@ export function GenerateUploadPanel({
   onBegin,
   onResult,
   inFlightCount,
+  suppressTutorial = false,
 }: GenerateUploadPanelProps) {
   const startUpload = useExtractionUpload();
 
@@ -262,6 +385,7 @@ export function GenerateUploadPanel({
           appendSlots(pages);
           setSourceName((current) => current ?? pdf.name);
           setSourceType("PDF");
+          dispatchGenerateTourMilestone("file-ready");
           return;
         }
 
@@ -272,7 +396,9 @@ export function GenerateUploadPanel({
             );
             return;
           }
-          const oversized = arr.find((file) => file.size > MAX_PAGE_IMAGE_BYTES);
+          const oversized = arr.find(
+            (file) => file.size > MAX_PAGE_IMAGE_BYTES,
+          );
           if (oversized) {
             setError(
               `${oversized.name} 파일이 너무 큽니다. 이미지는 5MB 이하로 올려 주세요.`,
@@ -283,6 +409,7 @@ export function GenerateUploadPanel({
           appendSlots(pages);
           setSourceName((current) => current ?? summarizeNames(arr));
           setSourceType("IMAGES");
+          dispatchGenerateTourMilestone("file-ready");
           return;
         }
 
@@ -345,7 +472,10 @@ export function GenerateUploadPanel({
         setError("추출할 자료가 없습니다. (잘라낸 원본은 추출에서 제외됩니다)");
         return;
       }
-      const reindexed = extractable.map((slot, i) => ({ ...slot, pageIndex: i }));
+      const reindexed = extractable.map((slot, i) => ({
+        ...slot,
+        pageIndex: i,
+      }));
       const oversized = reindexed.find((s) => s.bytes > MAX_PAGE_IMAGE_BYTES);
       if (oversized) {
         setError(
@@ -358,6 +488,13 @@ export function GenerateUploadPanel({
       const token = crypto.randomUUID();
       onBegin(token, reindexed.length);
       setUploading(true);
+      // 업로드 완료를 기다리지 않고 클릭 즉시 알림 — 업로드가 실패하면 아래에서
+      // 에러 토스트로 정정한다.
+      toast.success(
+        outputMode === "restored"
+          ? "복원 추출을 시작했어요. 완료되면 ‘내 지문’에 추가됩니다."
+          : "추출을 시작했어요. 완료되면 ‘내 지문’에 추가됩니다.",
+      );
       try {
         const jobId = await startUpload({
           slots: reindexed,
@@ -374,21 +511,26 @@ export function GenerateUploadPanel({
         if (jobId) {
           onResult(token, jobId);
           clearFiles();
-          toast.success(
-            outputMode === "restored"
-              ? "복원 추출을 시작했어요. 완료되면 ‘내 지문’에 추가됩니다."
-              : "추출을 시작했어요. 완료되면 ‘내 지문’에 추가됩니다.",
-          );
         } else {
           onResult(token, null);
           const storeErr = useExtractionStore.getState().error;
           setError(storeErr || "추출 시작에 실패했습니다.");
+          toast.error(storeErr || "추출 시작에 실패했습니다.");
         }
       } finally {
         setUploading(false);
       }
     },
-    [clearFiles, onBegin, onResult, outputMode, slots, sourceName, sourceType, startUpload],
+    [
+      clearFiles,
+      onBegin,
+      onResult,
+      outputMode,
+      slots,
+      sourceName,
+      sourceType,
+      startUpload,
+    ],
   );
 
   // 추출 시작 — 보드 결과를 구운 뒤 업로드(완료 후 '내 지문'으로 넘어가 로딩 카드 표시).
@@ -425,11 +567,33 @@ export function GenerateUploadPanel({
         : "작업 중";
 
   const outputModeOptions = [
-    { v: "verbatim" as const, label: "그대로 추출", badge: "OCR 무료" },
+    {
+      v: "verbatim" as const,
+      label: "그대로 추출",
+      badge: (
+        <span className="inline-flex items-center gap-0.5">
+          지문당{" "}
+          <CreditCostChip
+            amount={CREDIT_COSTS.TEXT_EXTRACTION}
+            iconClassName="size-2.5"
+          />
+        </span>
+      ),
+    },
     {
       v: "restored" as const,
       label: "AI로 원문 복원",
-      badge: `지문당 ◈${CREDIT_COSTS.PASSAGE_RESTORATION}`,
+      badge: (
+        <span className="inline-flex items-center gap-0.5">
+          지문당{" "}
+          <CreditCostChip
+            amount={
+              CREDIT_COSTS.TEXT_EXTRACTION + CREDIT_COSTS.PASSAGE_RESTORATION
+            }
+            iconClassName="size-2.5"
+          />
+        </span>
+      ),
     },
   ];
   const controlRowClass =
@@ -449,6 +613,7 @@ export function GenerateUploadPanel({
         type="button"
         onClick={handleFileStart}
         disabled={fileStartDisabled}
+        data-generate-tour="file-extract-button"
         className={
           "inline-flex h-12 w-full items-center justify-center rounded-lg border text-[14px] font-extrabold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
           (busy
@@ -469,18 +634,11 @@ export function GenerateUploadPanel({
             {outputMode === "restored" ? "복원하여 추출 시작" : "추출 시작"}
             {fileTotalPassages > 0 ? ` (지문 ${fileTotalPassages}개)` : ""}
             {fileTotalPassages > 0 ? (
-              <span
-                className="ml-2 inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-bold"
-                title={
-                  creditsPerPassage > 0
-                    ? `지문당 ◈${creditsPerPassage} × ${fileTotalPassages}개 = ◈${fileProjectedCredits} 소모`
-                    : "순수 OCR은 크레딧을 차감하지 않습니다"
-                }
-              >
-                {creditsPerPassage > 0
-                  ? `◈${fileProjectedCredits.toLocaleString("ko-KR")} 소모`
-                  : "무료"}
-              </span>
+              <CreditCostChip
+                amount={fileProjectedCredits}
+                className="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-[11px]"
+                title={`지문당 크레딧 ${creditsPerPassage} × ${fileTotalPassages}개 = 크레딧 ${fileProjectedCredits} 소모`}
+              />
             ) : null}
           </>
         )}
@@ -489,7 +647,10 @@ export function GenerateUploadPanel({
   );
 
   const outputModeToggle = (
-    <div className="flex min-w-0 items-center gap-3">
+    <div
+      className="flex min-w-0 items-center gap-3"
+      data-generate-tour="output-mode"
+    >
       <span className={controlLabelClass}>출력 방식</span>
       <div className="inline-flex h-9 items-center rounded-lg border border-slate-200 bg-slate-50 p-0.5">
         {outputModeOptions.map((opt) => {
@@ -501,6 +662,7 @@ export function GenerateUploadPanel({
               onClick={() => setOutputMode(opt.v)}
               disabled={busy}
               aria-pressed={active}
+              data-generate-tour={`output-mode-${opt.v}`}
               className={
                 "inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-[11.5px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
                 (active
@@ -594,7 +756,10 @@ export function GenerateUploadPanel({
     { icon: CheckCircle2, label: "합치고 추출" },
   ];
   const fileTutorialPopup =
-    slots.length === 0 && !fileTutorialClosed && !fileTutorialHidden ? (
+    slots.length === 0 &&
+    !fileTutorialClosed &&
+    !fileTutorialHidden &&
+    !suppressTutorial ? (
       outputMode === "restored" ? (
         <TutorialVideoPopup
           durationLabel="30초 AI 원문 복원 사용법"
@@ -623,8 +788,7 @@ export function GenerateUploadPanel({
   return (
     <section className="flex h-full min-h-0 flex-col overflow-hidden">
       <div className={controlRowClass + " justify-between"}>
-        <div className="min-w-0">{outputModeToggle}</div>
-        <div className="flex flex-wrap items-center justify-end gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {inFlightCount > 0 ? (
             <span className="inline-flex items-center gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-semibold text-blue-700">
               <Loader2 className="size-3 animate-spin" aria-hidden="true" />
@@ -632,11 +796,15 @@ export function GenerateUploadPanel({
             </span>
           ) : null}
         </div>
+        <div className="min-w-0">{outputModeToggle}</div>
       </div>
 
       {error ? (
         <div className="mx-4 mt-2 flex shrink-0 items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-[12px] text-red-700">
-          <AlertCircle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+          <AlertCircle
+            className="mt-0.5 size-3.5 shrink-0"
+            aria-hidden="true"
+          />
           <span>{error}</span>
         </div>
       ) : null}
@@ -646,9 +814,14 @@ export function GenerateUploadPanel({
         {slots.length === 0 ? (
           <div
             onDragOver={(event) => {
-              const isFileDrag = event.dataTransfer.types.includes("Files");
-              if (!isFileDrag) return;
+              const acceptsDrop =
+                event.dataTransfer.types.includes("Files") ||
+                event.dataTransfer.types.includes(
+                  GENERATE_TOUR_SAMPLE_FILE_DRAG_TYPE,
+                );
+              if (!acceptsDrop) return;
               event.preventDefault();
+              event.dataTransfer.dropEffect = "copy";
               setDragActive(true);
             }}
             onDragLeave={(event) => {
@@ -659,22 +832,45 @@ export function GenerateUploadPanel({
             onDrop={(event) => {
               event.preventDefault();
               setDragActive(false);
-              if (event.dataTransfer.files.length > 0)
+              const hasTourSample = event.dataTransfer.types.includes(
+                GENERATE_TOUR_SAMPLE_FILE_DRAG_TYPE,
+              );
+              if (event.dataTransfer.files.length > 0) {
                 void handleFiles(event.dataTransfer.files);
+                return;
+              }
+              if (hasTourSample) {
+                void (async () => {
+                  try {
+                    const sampleFile =
+                      await createGenerateTourSampleImageFile();
+                    await handleFiles([sampleFile]);
+                  } catch (err) {
+                    setError(
+                      err instanceof Error
+                        ? err.message
+                        : "예시 파일을 준비하지 못했습니다.",
+                    );
+                  }
+                })();
+              }
             }}
             className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row"
           >
             <div className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 p-3.5 lg:border-b-0">
               {fileTutorialPopup}
               <div
+                data-generate-tour="upload-dropzone"
                 className={
                   "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors " +
                   (dragActive
-                    ? "border-sky-500 bg-sky-50"
+                    ? "border-blue-300 bg-blue-50"
                     : "border-slate-200 bg-slate-50/70")
                 }
               >
-                {renderFileUploadLabel("min-h-0 flex-1 justify-center px-6 py-8")}
+                {renderFileUploadLabel(
+                  "min-h-0 flex-1 justify-center px-6 py-8",
+                )}
               </div>
             </div>
 
@@ -683,7 +879,7 @@ export function GenerateUploadPanel({
               onPointerDown={beginFileGuideResize}
               title="드래그하여 추출 지문 패널 폭 조절"
               aria-label="추출 지문 패널 폭 조절"
-              className="group/rhandle no-print hidden h-full min-h-0 w-3 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 border-l border-slate-100 bg-slate-50 py-1 text-[10.5px] font-semibold text-slate-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
+              className="group/rhandle no-print hidden h-full min-h-0 w-3 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 border-l border-slate-100 bg-slate-50 py-1 text-[10.5px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100 lg:flex"
             >
               <GripVertical
                 className="size-3 opacity-50 transition-opacity group-hover/rhandle:opacity-80"
@@ -726,7 +922,9 @@ export function GenerateUploadPanel({
                           className="size-3.5 text-blue-600"
                           aria-hidden="true"
                         />
-                        <span className="min-w-0 leading-snug">{step.label}</span>
+                        <span className="min-w-0 leading-snug">
+                          {step.label}
+                        </span>
                       </li>
                     ))}
                   </ol>
@@ -738,19 +936,24 @@ export function GenerateUploadPanel({
             </aside>
           </div>
         ) : (
-          <InlineCropBoard
-            ref={boardRef}
-            images={slots}
-            disabled={busy}
-            onAddFiles={handleFiles}
-            onRemoveImage={removeSlot}
-            onReorderImages={reorderSlots}
-            maxPassages={MAX_PAGES_PER_JOB}
-            onCountChange={setBoardCounts}
-            footer={fileStartArea}
-            onClear={clearFiles}
-            outputMode={outputMode}
-          />
+          <div
+            className="flex h-full min-h-0 flex-1"
+            data-generate-tour="file-crop-board"
+          >
+            <InlineCropBoard
+              ref={boardRef}
+              images={slots}
+              disabled={busy}
+              onAddFiles={handleFiles}
+              onRemoveImage={removeSlot}
+              onReorderImages={reorderSlots}
+              maxPassages={MAX_PAGES_PER_JOB}
+              onCountChange={setBoardCounts}
+              footer={fileStartArea}
+              onClear={clearFiles}
+              outputMode={outputMode}
+            />
+          </div>
         )}
       </div>
       <style>{`

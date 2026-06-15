@@ -2,7 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { CalendarClock, CheckCircle2, FileText, Loader2, Pencil } from "lucide-react";
+import {
+  CalendarClock,
+  CheckCircle2,
+  FileText,
+  Loader2,
+  Pencil,
+} from "lucide-react";
 
 import { ACTIVE_STATUSES } from "@/components/workbench/task-queue/constants";
 import { TaskStatusBadge } from "@/components/workbench/task-queue/components/task-status-badge";
@@ -10,7 +16,9 @@ import { formatTaskDate } from "@/components/workbench/task-queue/utils/format";
 import type { TaskStatus } from "@/components/workbench/task-queue/types";
 import { DetailActionButton } from "@/components/ui/detail-action-button";
 
-function mapJobStatusToTaskStatus(status: string | null | undefined): TaskStatus {
+function mapJobStatusToTaskStatus(
+  status: string | null | undefined,
+): TaskStatus {
   switch (status) {
     case "PENDING":
       return "pending";
@@ -105,22 +113,46 @@ export function MaterialJobCard({
   const taskStatus = mapJobStatusToTaskStatus(status);
   const isActiveJob = status != null && ACTIVE_STATUSES.has(taskStatus);
   const dateLabel =
-    createdAt != null ? formatTaskDate(new Date(createdAt).toISOString()) : null;
+    createdAt != null
+      ? formatTaskDate(new Date(createdAt).toISOString())
+      : null;
 
   // ── Analysis progress (footer) ──
   const hasItems = count > 0;
   const safeAnalyzed = Math.min(analyzedCount, count);
   const allAnalyzed = hasItems && safeAnalyzed >= count;
   const someAnalyzed = safeAnalyzed > 0;
-  const pct = hasItems ? Math.min(100, Math.round((safeAnalyzed / count) * 100)) : 0;
+  const pct = hasItems
+    ? Math.min(100, Math.round((safeAnalyzed / count) * 100))
+    : 0;
 
   const progressTone = !hasItems
-    ? { surface: "border-slate-100 bg-slate-50", text: "text-slate-400", track: "bg-slate-200", bar: "bg-slate-300" }
+    ? {
+        surface: "border-slate-100 bg-slate-50",
+        text: "text-slate-400",
+        track: "bg-slate-200",
+        bar: "bg-slate-300",
+      }
     : allAnalyzed
-      ? { surface: "border-emerald-100 bg-emerald-50/70", text: "text-emerald-700", track: "bg-emerald-100", bar: "bg-emerald-500" }
+      ? {
+          surface: "border-slate-100 bg-slate-50",
+          text: "text-slate-700",
+          track: "bg-slate-200",
+          bar: "bg-slate-500",
+        }
       : someAnalyzed
-        ? { surface: "border-blue-100 bg-blue-50/60", text: "text-blue-700", track: "bg-blue-100", bar: "bg-blue-500" }
-        : { surface: "border-slate-100 bg-slate-50", text: "text-slate-500", track: "bg-slate-200", bar: "bg-slate-300" };
+        ? {
+            surface: "border-slate-100 bg-slate-50",
+            text: "text-slate-700",
+            track: "bg-slate-200",
+            bar: "bg-blue-500",
+          }
+        : {
+            surface: "border-slate-100 bg-slate-50",
+            text: "text-slate-500",
+            track: "bg-slate-200",
+            bar: "bg-slate-300",
+          };
 
   const cardClass = active
     ? "border-blue-500 ring-2 ring-blue-200 shadow-md shadow-blue-100/60"
@@ -210,7 +242,7 @@ export function MaterialJobCard({
 
         {/* Currently-open marker */}
         {active ? (
-          <span className="absolute bottom-1.5 left-1.5 z-10 inline-flex items-center gap-1 rounded-full bg-blue-600 px-2 py-0.5 text-[10.5px] font-bold text-white shadow-sm ring-1 ring-white/70">
+          <span className="absolute bottom-1.5 left-1.5 z-10 inline-flex items-center gap-1 rounded-full bg-slate-900/80 px-2 py-0.5 text-[10.5px] font-bold text-white shadow-sm ring-1 ring-white/70">
             <CheckCircle2 className="size-3" aria-hidden="true" />
             선택됨
           </span>
@@ -222,7 +254,7 @@ export function MaterialJobCard({
             className="absolute inset-0 flex items-center justify-center bg-slate-900/30"
             aria-label="진행 중"
           >
-            <span className="inline-flex size-12 items-center justify-center rounded-full bg-blue-600 text-white shadow-md ring-4 ring-white/70">
+            <span className="inline-flex size-12 items-center justify-center rounded-full bg-slate-900/80 text-white shadow-md ring-4 ring-white/70">
               <Loader2 className="size-6 animate-spin" aria-hidden="true" />
             </span>
           </span>
@@ -295,7 +327,12 @@ export function MaterialJobCard({
 
       {/* Analysis-progress footer */}
       <div className={"mt-auto border-t px-2.5 py-1.5 " + progressTone.surface}>
-        <p className={"whitespace-nowrap text-[10.5px] font-bold leading-none " + progressTone.text}>
+        <p
+          className={
+            "whitespace-nowrap text-[10.5px] font-bold leading-none " +
+            progressTone.text
+          }
+        >
           {hasItems ? (
             <>
               <span className="tabular-nums">{count}</span>건 중{" "}
@@ -306,9 +343,16 @@ export function MaterialJobCard({
           )}
         </p>
         {hasItems ? (
-          <div className={"mt-1.5 h-1 overflow-hidden rounded-full " + progressTone.track}>
+          <div
+            className={
+              "mt-1.5 h-1 overflow-hidden rounded-full " + progressTone.track
+            }
+          >
             <div
-              className={"h-full rounded-full transition-[width] duration-300 " + progressTone.bar}
+              className={
+                "h-full rounded-full transition-[width] duration-300 " +
+                progressTone.bar
+              }
               style={{ width: `${pct}%` }}
             />
           </div>

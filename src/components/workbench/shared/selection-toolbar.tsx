@@ -55,17 +55,15 @@ export function SelectionToolbar({
     ? "transition-colors"
     : "rounded-lg border shadow-sm transition-colors " +
       (hasSelection
-        ? "border-blue-200/70 bg-gradient-to-r from-blue-50 via-blue-50/90 to-blue-50/70"
+        ? "border-slate-200 bg-slate-50"
         : "border-slate-200 bg-slate-50/80");
 
   return (
-    <div
-      className={`px-3 h-9 flex items-center gap-2.5 shrink-0 ${chrome}`}
-    >
+    <div className={`px-3 h-9 flex items-center gap-2.5 shrink-0 ${chrome}`}>
       <span
         className={
           "text-[12px] font-medium flex items-center gap-1.5 " +
-          (hasSelection ? "text-blue-700" : "text-slate-500")
+          (hasSelection ? "text-slate-700" : "text-slate-500")
         }
       >
         <Check className="w-4 h-4" />
@@ -78,7 +76,9 @@ export function SelectionToolbar({
         disabled={totalCount === 0}
         className={
           "text-[11px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
-          (hasSelection ? "text-blue-600 hover:text-blue-700" : "text-slate-600 hover:text-slate-800")
+          (hasSelection
+            ? "text-slate-600 hover:text-slate-800"
+            : "text-slate-600 hover:text-slate-800")
         }
       >
         {isAllSelected && hasSelection ? deselectAllLabel : selectAllLabel}
@@ -94,10 +94,14 @@ export function SelectionToolbar({
             }
             className={
               "inline-flex items-center gap-1 text-[11px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
-              (hasSelection ? "text-blue-600 hover:text-blue-700" : "text-slate-600 hover:text-slate-800")
+              (hasSelection
+                ? "text-slate-600 hover:text-slate-800"
+                : "text-slate-600 hover:text-slate-800")
             }
           >
-            {isSelectingAllPages && <Loader2 className="h-3 w-3 animate-spin" />}
+            {isSelectingAllPages && (
+              <Loader2 className="h-3 w-3 animate-spin" />
+            )}
             {selectAllPagesLabel}
           </button>
         </>
@@ -128,7 +132,10 @@ export function SelectionToolbar({
 
       <div className="flex-1" />
       {hasSelection ? (
-        <button onClick={onClearSelection} className="text-[11px] text-slate-500 hover:text-slate-700">
+        <button
+          onClick={onClearSelection}
+          className="text-[11px] text-slate-500 hover:text-slate-700"
+        >
           선택 취소
         </button>
       ) : null}

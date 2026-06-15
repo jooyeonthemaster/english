@@ -56,7 +56,7 @@ export function TaskRow({
   };
 
   return (
-    <div className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-left transition-colors hover:border-sky-200">
+    <div className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-left transition-colors hover:border-blue-200">
       <div className="flex items-center justify-between gap-2">
         <button
           type="button"

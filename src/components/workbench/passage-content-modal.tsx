@@ -106,7 +106,10 @@ export function PassageContentModal({
       />
 
       {/* Modal container */}
-      <div className="relative z-10 mx-4 my-4 flex w-full max-w-[920px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#F8FAFB] shadow-2xl">
+      <div
+        className="relative z-10 mx-4 my-4 flex w-full max-w-[920px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#F8FAFB] shadow-2xl"
+        data-generate-tour="passage-learning-detail-modal"
+      >
         {/* ─── Header ─── */}
         <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-6 py-4">
           <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -162,12 +165,15 @@ export function PassageContentModal({
                 className={
                   "flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border px-3 text-[12px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-60 " +
                   (isReviewCommitted
-                    ? "border-rose-200 bg-rose-50 text-rose-600 hover:border-rose-300 hover:bg-rose-100 hover:text-rose-700"
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:border-emerald-300 hover:bg-emerald-100 hover:text-emerald-800"
                     : "border-emerald-600 bg-emerald-600 text-white shadow-sm hover:bg-emerald-700")
                 }
               >
                 {reviewBusy ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                  <Loader2
+                    className="h-3.5 w-3.5 animate-spin"
+                    aria-hidden="true"
+                  />
                 ) : isReviewCommitted ? (
                   <Undo2 className="h-3.5 w-3.5" aria-hidden="true" />
                 ) : (

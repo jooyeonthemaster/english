@@ -31,6 +31,16 @@ import {
 } from "lucide-react";
 
 import { MAX_PAGES_PER_JOB } from "@/lib/extraction/constants";
+import {
+  GENERATE_TOUR_CLEAR_SAMPLE_TEXT_EVENT,
+  GENERATE_TOUR_FILL_SAMPLE_TEXT_EVENT,
+  GENERATE_TOUR_SAMPLE_TEXT,
+  GENERATE_TOUR_SAMPLE_TEXT_TITLE,
+  dispatchGenerateTourMilestone,
+  hasAllGenerateTourSampleTexts,
+  isGenerateTourSampleText,
+  type GenerateTourSampleTextDetail,
+} from "@/lib/generate-tour-demo";
 import { TEXT_EXTRACTION_MIN_LENGTH } from "../../bulk-extract-client/constants";
 import { TutorialVideoPopup } from "../tutorial/tutorial-video-popup";
 
@@ -53,6 +63,7 @@ export interface TextInputBoardProps {
   startLabel?: string;
   restoredStartLabel?: string;
   busyLabel?: string;
+  suppressTutorial?: boolean;
 }
 
 /** 본문 앞부분 미리보기(제목이 없을 때 카드 라벨로 사용). */
@@ -92,6 +103,7 @@ export function TextInputBoard({
   startLabel = "텍스트 추출 시작",
   restoredStartLabel = "복원하여 추출 시작",
   busyLabel = "작업 중",
+  suppressTutorial = false,
 }: TextInputBoardProps) {
   const [draftTitle, setDraftTitle] = useState("");
   const [draftText, setDraftText] = useState("");
@@ -153,7 +165,10 @@ export function TextInputBoard({
   const isRestored = outputMode === "restored";
   const locked = busy || submitting;
   const showTextTutorial =
-    passages.length === 0 && !textTutorialClosed && !textTutorialHidden;
+    passages.length === 0 &&
+    !textTutorialClosed &&
+    !textTutorialHidden &&
+    !suppressTutorial;
   const hideTextTutorialPermanently = () => {
     setTextTutorialHidden(true);
     try {
@@ -168,6 +183,45 @@ export function TextInputBoard({
     }
   }, [outputMode, passages.length]);
 
+  useEffect(() => {
+    const handleSampleText = (event: Event) => {
+      const detail = (event as CustomEvent<GenerateTourSampleTextDetail>)
+        .detail;
+      setDraftTitle(detail?.title ?? GENERATE_TOUR_SAMPLE_TEXT_TITLE);
+      setDraftText(detail?.text ?? GENERATE_TOUR_SAMPLE_TEXT);
+      setTextTutorialClosed(true);
+    };
+    window.addEventListener(
+      GENERATE_TOUR_FILL_SAMPLE_TEXT_EVENT,
+      handleSampleText,
+    );
+    return () => {
+      window.removeEventListener(
+        GENERATE_TOUR_FILL_SAMPLE_TEXT_EVENT,
+        handleSampleText,
+      );
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClearSampleText = () => {
+      if (isGenerateTourSampleText(draftTitle, draftText)) {
+        setDraftTitle("");
+        setDraftText("");
+      }
+    };
+    window.addEventListener(
+      GENERATE_TOUR_CLEAR_SAMPLE_TEXT_EVENT,
+      handleClearSampleText,
+    );
+    return () => {
+      window.removeEventListener(
+        GENERATE_TOUR_CLEAR_SAMPLE_TEXT_EVENT,
+        handleClearSampleText,
+      );
+    };
+  }, [draftTitle, draftText]);
+
   const draftLen = draftText.trim().length;
   const draftValid = draftLen >= TEXT_EXTRACTION_MIN_LENGTH;
 
@@ -178,10 +232,17 @@ export function TextInputBoard({
   const addDraft = useCallback(() => {
     if (!draftValid) return;
     const id = crypto.randomUUID();
-    setPassages((prev) => [
-      ...prev,
-      { id, title: draftTitle.trim(), text: draftText.trim() },
-    ]);
+    const added = { id, title: draftTitle.trim(), text: draftText.trim() };
+    setPassages((prev) => {
+      const next = [...prev, added];
+      if (isGenerateTourSampleText(added.title, added.text)) {
+        dispatchGenerateTourMilestone("paste-draft-added");
+      }
+      if (hasAllGenerateTourSampleTexts(next)) {
+        dispatchGenerateTourMilestone("paste-two-drafts-added");
+      }
+      return next;
+    });
     // 방금 추가한 카드만 펼치고, 기존 카드는 모두 자동으로 접는다(아코디언).
     setCollapsed(new Set(passages.map((p) => p.id)));
     setDraftTitle("");
@@ -231,7 +292,11 @@ export function TextInputBoard({
   const handleStart = useCallback(async () => {
     const all = [...passages];
     if (draftValid)
-      all.push({ id: "draft", title: draftTitle.trim(), text: draftText.trim() });
+      all.push({
+        id: "draft",
+        title: draftTitle.trim(),
+        text: draftText.trim(),
+      });
     const payload = all
       .map((p) => ({ title: p.title.trim() || undefined, text: p.text.trim() }))
       .filter((p) => p.text.length >= TEXT_EXTRACTION_MIN_LENGTH);
@@ -244,6 +309,7 @@ export function TextInputBoard({
         setCollapsed(new Set());
         setDraftTitle("");
         setDraftText("");
+        dispatchGenerateTourMilestone("paste-registered");
       }
     } finally {
       setSubmitting(false);
@@ -258,9 +324,7 @@ export function TextInputBoard({
   const textTutorialPopup = showTextTutorial ? (
     <TutorialVideoPopup
       durationLabel={
-        isRestored
-          ? "30초 텍스트 원문 복원 사용법"
-          : "30초 텍스트 추출 사용법"
+        isRestored ? "30초 텍스트 원문 복원 사용법" : "30초 텍스트 추출 사용법"
       }
       title={
         isRestored
@@ -283,298 +347,304 @@ export function TextInputBoard({
   return (
     <>
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
-      {/* ── 좌: 입력창 (제목 + 본문 + 지문 추가) ───────────────────────── */}
-      <div className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 p-3.5 lg:border-b-0">
-        {textTutorialPopup}
-        <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-50/70 p-3">
-          <div className="mb-2 flex items-center gap-2">
-            <input
-              value={draftTitle}
-              onChange={(e) => setDraftTitle(e.target.value)}
+        {/* ── 좌: 입력창 (제목 + 본문 + 지문 추가) ───────────────────────── */}
+        <div className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 p-3.5 lg:border-b-0">
+          {textTutorialPopup}
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-50/70 p-3">
+            <div className="mb-2 flex items-center gap-2">
+              <input
+                value={draftTitle}
+                onChange={(e) => setDraftTitle(e.target.value)}
+                disabled={locked}
+                placeholder="제목(선택). 예: 2026 고1 3월 모의고사"
+                aria-label="제목"
+                className="h-9 min-w-0 flex-1 rounded-md border border-slate-200 bg-white px-3 text-[13px] text-slate-900 shadow-sm outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
+              />
+              <span
+                className={
+                  "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 " +
+                  (draftValid
+                    ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+                    : "bg-white text-slate-500 ring-slate-200")
+                }
+              >
+                {draftLen.toLocaleString()}자
+              </span>
+            </div>
+            <textarea
+              value={draftText}
+              onChange={(e) => setDraftText(e.target.value)}
               disabled={locked}
-              placeholder="제목(선택). 예: 2026 고1 3월 모의고사"
-              aria-label="제목"
-              className="h-9 min-w-0 flex-1 rounded-md border border-slate-200 bg-white px-3 text-[13px] text-slate-900 shadow-sm outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
+              onKeyDown={(e) => {
+                // ⌘/Ctrl + Enter = 빠른 추가.
+                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                  e.preventDefault();
+                  addDraft();
+                }
+              }}
+              placeholder={placeholder}
+              aria-label="본문"
+              className="min-h-0 flex-1 resize-none rounded-md border border-dashed border-slate-300 bg-white px-4 py-3 text-[13px] leading-7 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
             />
-            <span
-              className={
-                "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 " +
-                (draftValid
-                  ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-                  : "bg-white text-slate-500 ring-slate-200")
-              }
-            >
-              {draftLen.toLocaleString()}자
-            </span>
-          </div>
-          <textarea
-            value={draftText}
-            onChange={(e) => setDraftText(e.target.value)}
-            disabled={locked}
-            onKeyDown={(e) => {
-              // ⌘/Ctrl + Enter = 빠른 추가.
-              if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                e.preventDefault();
-                addDraft();
-              }
-            }}
-            placeholder={placeholder}
-            aria-label="본문"
-            className="min-h-0 flex-1 resize-none rounded-md border border-dashed border-slate-300 bg-white px-4 py-3 text-[13px] leading-7 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
-          />
-          <button
-            type="button"
-            onClick={addDraft}
-            disabled={!draftValid || locked || overMax}
-            title={
-              draftValid
-                ? "이 지문을 오른쪽 목록에 추가"
-                : `최소 ${TEXT_EXTRACTION_MIN_LENGTH}자 이상 입력하세요`
-            }
-            className="mt-2 inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-blue-500 bg-white px-4 text-[13px] font-extrabold text-blue-700 transition-colors hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
-          >
-            <Plus className="size-4" aria-hidden="true" />
-            지문 추가
-          </button>
-        </div>
-      </div>
-
-      {/* ── 좌우 폭 조절 핸들 (lg+) — 가운데 바를 끌어 누적 패널 폭 조절 ── */}
-      <button
-        type="button"
-        onPointerDown={beginReviewResize}
-        title="드래그하여 누적 패널 폭 조절"
-        aria-label="누적 패널 폭 조절"
-        className="group/rhandle no-print hidden h-full min-h-0 w-3 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 border-l border-slate-100 bg-slate-50 py-1 text-[10.5px] font-semibold text-slate-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
-      >
-        <GripVertical
-          className="size-3 opacity-50 transition-opacity group-hover/rhandle:opacity-80"
-          aria-hidden="true"
-        />
-        <span style={{ writingMode: "vertical-rl" }}>추출 지문</span>
-      </button>
-
-      {/* ── 우: 추출될 지문 누적 ──────────────────────────────────────── */}
-      <aside
-        style={{ width: reviewWidth }}
-        className="flex min-h-0 flex-col bg-white max-lg:!w-full lg:shrink-0"
-      >
-        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-2.5">
-          <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-slate-900">
-            <Layers className="size-4 text-blue-600" aria-hidden="true" />
-            {reviewLabel} {effectiveCount}개
-          </span>
-          {passages.length > 0 ? (
             <button
               type="button"
-              onClick={() => {
-                setPassages([]);
-                setCollapsed(new Set());
-              }}
-              disabled={locked}
-              className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50"
+              onClick={addDraft}
+              disabled={!draftValid || locked || overMax}
+              data-generate-tour="paste-add-button"
+              title={
+                draftValid
+                  ? "이 지문을 오른쪽 목록에 추가"
+                  : `최소 ${TEXT_EXTRACTION_MIN_LENGTH}자 이상 입력하세요`
+              }
+              className="mt-2 inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-blue-500 bg-white px-4 text-[13px] font-extrabold text-blue-700 transition-colors hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
             >
-              <Trash2 className="size-3.5" aria-hidden="true" />
-              비우기
+              <Plus className="size-4" aria-hidden="true" />
+              지문 추가
             </button>
-          ) : null}
+          </div>
         </div>
 
-        <div className="smoat-text-review-scroll min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5">
-          {passages.length === 0 ? (
-            <div className="smoat-text-empty-guide mx-auto flex w-full max-w-[640px] flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-4">
-              <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-                <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
-                  <PlayCircle className="size-3.5" aria-hidden="true" />
-                  사용 순서
-                </div>
-                <h3 className="smoat-text-empty-guide__title min-w-0 flex-1 text-[15px] font-extrabold leading-snug text-slate-950">
-                  {emptyTitle}
-                </h3>
-              </div>
-              <ol className="smoat-text-empty-guide__steps mt-3 grid gap-2">
-                {[
-                  { icon: Keyboard, label: "본문 붙여넣기" },
-                  { icon: Plus, label: "지문 추가" },
-                  { icon: PlayCircle, label: guideStartLabel },
-                ].map((step, index) => (
-                  <li
-                    key={step.label}
-                    className="smoat-text-empty-guide__step flex min-w-0 items-center gap-2 rounded-md bg-white px-2.5 py-2 text-[12px] font-bold text-slate-700 ring-1 ring-slate-200"
-                  >
-                    <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[10px] font-extrabold text-blue-700">
-                      {index + 1}
-                    </span>
-                    <step.icon
-                      className="size-3.5 text-blue-600"
-                      aria-hidden="true"
-                    />
-                    <span className="min-w-0 leading-snug">{step.label}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {passages.map((p, idx) => {
-                const isOpen = !collapsed.has(p.id);
-                const isDragging = dragIdx === idx;
-                const isDropTarget = dropIdx === idx && dragIdx !== idx;
-                const len = p.text.trim().length;
-                return (
-                  <div
-                    key={p.id}
-                    onDragOver={(e) => {
-                      if (dragIdx === null) return;
-                      e.preventDefault();
-                      e.stopPropagation();
-                      e.dataTransfer.dropEffect = "move";
-                      if (dropIdx !== idx) setDropIdx(idx);
-                    }}
-                    onDrop={(e) => {
-                      if (dragIdx === null) return;
-                      e.preventDefault();
-                      e.stopPropagation();
-                      if (dragIdx !== idx) reorder(dragIdx, idx);
-                      setDragIdx(null);
-                      setDropIdx(null);
-                    }}
-                    className={
-                      "overflow-hidden rounded-lg border bg-white transition-all " +
-                      (isDragging
-                        ? "border-blue-300 opacity-40 "
-                        : isDropTarget
-                          ? "border-blue-500 ring-2 ring-blue-200 "
-                          : "border-slate-200 hover:border-slate-300 ")
-                    }
-                  >
-                    <div className="flex items-center gap-1.5 border-b border-slate-100 px-2 py-1.5">
-                      <span
-                        draggable={!locked}
-                        onDragStart={(e) => {
-                          if (locked) return;
-                          e.dataTransfer.effectAllowed = "move";
-                          e.dataTransfer.setData("text/plain", String(idx));
-                          setDragIdx(idx);
-                        }}
-                        onDragEnd={() => {
-                          setDragIdx(null);
-                          setDropIdx(null);
-                        }}
-                        title="드래그해 지문 순서 변경"
-                        aria-label={`지문 ${idx + 1} 순서 변경 핸들`}
-                        className={
-                          "inline-flex size-5 shrink-0 items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 " +
-                          (locked
-                            ? "cursor-not-allowed"
-                            : "cursor-grab active:cursor-grabbing")
-                        }
-                      >
-                        <GripVertical className="size-3.5" aria-hidden="true" />
-                      </span>
-                      <span className="inline-flex shrink-0 items-center gap-1 rounded bg-blue-600 px-2 py-0.5 text-[11px] font-bold text-white">
-                        지문 {idx + 1}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => toggleCollapse(p.id)}
-                        aria-expanded={isOpen}
-                        title={isOpen ? "지문 접기" : "지문 펼치기"}
-                        className="min-w-0 flex-1 cursor-pointer truncate rounded px-1 py-0.5 text-left text-[11px] font-medium text-slate-700 transition-colors hover:bg-slate-50"
-                      >
-                        {p.title.trim() || snippet(p.text)}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => removePassage(p.id)}
-                        disabled={locked}
-                        aria-label={`지문 ${idx + 1} 삭제`}
-                        title="이 지문 삭제"
-                        className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        <Trash2 className="size-3.5" aria-hidden="true" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => toggleCollapse(p.id)}
-                        aria-expanded={isOpen}
-                        aria-label={
-                          isOpen ? `지문 ${idx + 1} 접기` : `지문 ${idx + 1} 펼치기`
-                        }
-                        title={isOpen ? "지문 접기" : "지문 펼치기"}
-                        className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
-                      >
-                        <ChevronRight
-                          className={
-                            "size-3.5 motion-safe:transition-transform motion-safe:duration-150 " +
-                            (isOpen ? "rotate-90" : "")
-                          }
-                          aria-hidden="true"
-                        />
-                      </button>
-                    </div>
-                    {isOpen ? (
-                      <div className="space-y-1.5 bg-slate-50/60 p-2">
-                        <input
-                          value={p.title}
-                          onChange={(e) =>
-                            updatePassage(p.id, { title: e.target.value })
-                          }
-                          disabled={locked}
-                          placeholder="제목(선택)"
-                          aria-label={`지문 ${idx + 1} 제목`}
-                          className="h-8 w-full rounded-md border border-slate-200 bg-white px-2.5 text-[12px] text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
-                        />
-                        <textarea
-                          value={p.text}
-                          onChange={(e) =>
-                            updatePassage(p.id, { text: e.target.value })
-                          }
-                          disabled={locked}
-                          rows={5}
-                          aria-label={`지문 ${idx + 1} 본문`}
-                          className="w-full resize-y rounded-md border border-slate-200 bg-white px-3 py-2 text-[12px] leading-6 text-slate-900 outline-none transition-colors focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
-                        />
-                        <div className="flex justify-end">
-                          <span
-                            className={
-                              "rounded-full px-2 py-0.5 text-[10px] font-bold ring-1 " +
-                              (len >= TEXT_EXTRACTION_MIN_LENGTH
-                                ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-                                : "bg-amber-50 text-amber-700 ring-amber-100")
-                            }
-                          >
-                            {len >= TEXT_EXTRACTION_MIN_LENGTH
-                              ? `${len.toLocaleString()}자`
-                              : `${len}/${TEXT_EXTRACTION_MIN_LENGTH}자`}
-                          </span>
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        {/* ── 하단: 텍스트 추출 시작 ── */}
-        <div className="shrink-0 border-t border-slate-100 bg-white p-2.5">
-          {overMax ? (
-            <p className="mb-1.5 text-center text-[11px] font-bold text-red-600">
-              지문 한도({MAX_PAGES_PER_JOB}개) 초과 — 지문을 줄여 주세요.
-            </p>
-          ) : null}
-          <StartButton
-            disabled={effectiveCount === 0 || overMax || locked}
-            busy={locked}
-            count={effectiveCount}
-            label={isRestored ? restoredStartLabel : startLabel}
-            busyLabel={busyLabel}
-            onClick={handleStart}
+        {/* ── 좌우 폭 조절 핸들 (lg+) — 가운데 바를 끌어 누적 패널 폭 조절 ── */}
+        <button
+          type="button"
+          onPointerDown={beginReviewResize}
+          title="드래그하여 누적 패널 폭 조절"
+          aria-label="누적 패널 폭 조절"
+          className="group/rhandle no-print hidden h-full min-h-0 w-3 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 border-l border-slate-100 bg-slate-50 py-1 text-[10.5px] font-semibold text-slate-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100 lg:flex"
+        >
+          <GripVertical
+            className="size-3 opacity-50 transition-opacity group-hover/rhandle:opacity-80"
+            aria-hidden="true"
           />
-        </div>
-        <style>{`
+          <span style={{ writingMode: "vertical-rl" }}>추출 지문</span>
+        </button>
+
+        {/* ── 우: 추출될 지문 누적 ──────────────────────────────────────── */}
+        <aside
+          style={{ width: reviewWidth }}
+          className="flex min-h-0 flex-col bg-white max-lg:!w-full lg:shrink-0"
+        >
+          <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-2.5">
+            <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-slate-900">
+              <Layers className="size-4 text-blue-600" aria-hidden="true" />
+              {reviewLabel} {effectiveCount}개
+            </span>
+            {passages.length > 0 ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setPassages([]);
+                  setCollapsed(new Set());
+                }}
+                disabled={locked}
+                className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50"
+              >
+                <Trash2 className="size-3.5" aria-hidden="true" />
+                비우기
+              </button>
+            ) : null}
+          </div>
+
+          <div className="smoat-text-review-scroll min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5">
+            {passages.length === 0 ? (
+              <div className="smoat-text-empty-guide mx-auto flex w-full max-w-[640px] flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-4">
+                <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                  <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
+                    <PlayCircle className="size-3.5" aria-hidden="true" />
+                    사용 순서
+                  </div>
+                  <h3 className="smoat-text-empty-guide__title min-w-0 flex-1 text-[15px] font-extrabold leading-snug text-slate-950">
+                    {emptyTitle}
+                  </h3>
+                </div>
+                <ol className="smoat-text-empty-guide__steps mt-3 grid gap-2">
+                  {[
+                    { icon: Keyboard, label: "본문 붙여넣기" },
+                    { icon: Plus, label: "지문 추가" },
+                    { icon: PlayCircle, label: guideStartLabel },
+                  ].map((step, index) => (
+                    <li
+                      key={step.label}
+                      className="smoat-text-empty-guide__step flex min-w-0 items-center gap-2 rounded-md bg-white px-2.5 py-2 text-[12px] font-bold text-slate-700 ring-1 ring-slate-200"
+                    >
+                      <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[10px] font-extrabold text-blue-700">
+                        {index + 1}
+                      </span>
+                      <step.icon
+                        className="size-3.5 text-blue-600"
+                        aria-hidden="true"
+                      />
+                      <span className="min-w-0 leading-snug">{step.label}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {passages.map((p, idx) => {
+                  const isOpen = !collapsed.has(p.id);
+                  const isDragging = dragIdx === idx;
+                  const isDropTarget = dropIdx === idx && dragIdx !== idx;
+                  const len = p.text.trim().length;
+                  return (
+                    <div
+                      key={p.id}
+                      onDragOver={(e) => {
+                        if (dragIdx === null) return;
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.dataTransfer.dropEffect = "move";
+                        if (dropIdx !== idx) setDropIdx(idx);
+                      }}
+                      onDrop={(e) => {
+                        if (dragIdx === null) return;
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (dragIdx !== idx) reorder(dragIdx, idx);
+                        setDragIdx(null);
+                        setDropIdx(null);
+                      }}
+                      className={
+                        "overflow-hidden rounded-lg border bg-white transition-all " +
+                        (isDragging
+                          ? "border-blue-300 opacity-40 "
+                          : isDropTarget
+                            ? "border-blue-500 ring-2 ring-blue-200 "
+                            : "border-slate-200 hover:border-slate-300 ")
+                      }
+                    >
+                      <div className="flex items-center gap-1.5 border-b border-slate-100 px-2 py-1.5">
+                        <span
+                          draggable={!locked}
+                          onDragStart={(e) => {
+                            if (locked) return;
+                            e.dataTransfer.effectAllowed = "move";
+                            e.dataTransfer.setData("text/plain", String(idx));
+                            setDragIdx(idx);
+                          }}
+                          onDragEnd={() => {
+                            setDragIdx(null);
+                            setDropIdx(null);
+                          }}
+                          title="드래그해 지문 순서 변경"
+                          aria-label={`지문 ${idx + 1} 순서 변경 핸들`}
+                          className={
+                            "inline-flex size-5 shrink-0 items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 " +
+                            (locked
+                              ? "cursor-not-allowed"
+                              : "cursor-grab active:cursor-grabbing")
+                          }
+                        >
+                          <GripVertical
+                            className="size-3.5"
+                            aria-hidden="true"
+                          />
+                        </span>
+                        <span className="inline-flex shrink-0 items-center gap-1 rounded bg-blue-600 px-2 py-0.5 text-[11px] font-bold text-white">
+                          지문 {idx + 1}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => toggleCollapse(p.id)}
+                          aria-expanded={isOpen}
+                          title={isOpen ? "지문 접기" : "지문 펼치기"}
+                          className="min-w-0 flex-1 cursor-pointer truncate rounded px-1 py-0.5 text-left text-[11px] font-medium text-slate-700 transition-colors hover:bg-slate-50"
+                        >
+                          {p.title.trim() || snippet(p.text)}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => removePassage(p.id)}
+                          disabled={locked}
+                          aria-label={`지문 ${idx + 1} 삭제`}
+                          title="이 지문 삭제"
+                          className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <Trash2 className="size-3.5" aria-hidden="true" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => toggleCollapse(p.id)}
+                          aria-expanded={isOpen}
+                          aria-label={
+                            isOpen
+                              ? `지문 ${idx + 1} 접기`
+                              : `지문 ${idx + 1} 펼치기`
+                          }
+                          title={isOpen ? "지문 접기" : "지문 펼치기"}
+                          className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                        >
+                          <ChevronRight
+                            className={
+                              "size-3.5 motion-safe:transition-transform motion-safe:duration-150 " +
+                              (isOpen ? "rotate-90" : "")
+                            }
+                            aria-hidden="true"
+                          />
+                        </button>
+                      </div>
+                      {isOpen ? (
+                        <div className="space-y-1.5 bg-slate-50/60 p-2">
+                          <input
+                            value={p.title}
+                            onChange={(e) =>
+                              updatePassage(p.id, { title: e.target.value })
+                            }
+                            disabled={locked}
+                            placeholder="제목(선택)"
+                            aria-label={`지문 ${idx + 1} 제목`}
+                            className="h-8 w-full rounded-md border border-slate-200 bg-white px-2.5 text-[12px] text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
+                          />
+                          <textarea
+                            value={p.text}
+                            onChange={(e) =>
+                              updatePassage(p.id, { text: e.target.value })
+                            }
+                            disabled={locked}
+                            rows={5}
+                            aria-label={`지문 ${idx + 1} 본문`}
+                            className="w-full resize-y rounded-md border border-slate-200 bg-white px-3 py-2 text-[12px] leading-6 text-slate-900 outline-none transition-colors focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
+                          />
+                          <div className="flex justify-end">
+                            <span
+                              className={
+                                "rounded-full px-2 py-0.5 text-[10px] font-bold ring-1 " +
+                                (len >= TEXT_EXTRACTION_MIN_LENGTH
+                                  ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
+                                  : "bg-amber-50 text-amber-700 ring-amber-100")
+                              }
+                            >
+                              {len >= TEXT_EXTRACTION_MIN_LENGTH
+                                ? `${len.toLocaleString()}자`
+                                : `${len}/${TEXT_EXTRACTION_MIN_LENGTH}자`}
+                            </span>
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* ── 하단: 텍스트 추출 시작 ── */}
+          <div className="shrink-0 border-t border-slate-100 bg-white p-2.5">
+            {overMax ? (
+              <p className="mb-1.5 text-center text-[11px] font-bold text-red-600">
+                지문 한도({MAX_PAGES_PER_JOB}개) 초과 — 지문을 줄여 주세요.
+              </p>
+            ) : null}
+            <StartButton
+              disabled={effectiveCount === 0 || overMax || locked}
+              busy={locked}
+              count={effectiveCount}
+              label={isRestored ? restoredStartLabel : startLabel}
+              busyLabel={busyLabel}
+              onClick={handleStart}
+            />
+          </div>
+          <style>{`
           .smoat-text-review-scroll {
             container-type: inline-size;
           }
@@ -616,9 +686,8 @@ export function TextInputBoard({
             }
           }
         `}</style>
-      </aside>
+        </aside>
       </div>
-
     </>
   );
 }
@@ -643,6 +712,7 @@ function StartButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
+      data-generate-tour="paste-register-button"
       className={
         "inline-flex h-12 w-full items-center justify-center rounded-lg border text-[14px] font-extrabold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
         (busy

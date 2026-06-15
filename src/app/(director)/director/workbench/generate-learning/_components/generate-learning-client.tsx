@@ -17,6 +17,10 @@ import {
 import { saveNaeshinQuestions } from "@/actions/learning-questions";
 import { notifyCreditsChanged } from "@/lib/credits-client";
 import {
+  beginLearningGenerationTask,
+  settleLearningGenerationTask,
+} from "@/lib/learning-generation-tracker";
+import {
   SUBTYPE_TO_CATEGORY,
   SUBTYPE_TO_INTERACTION,
   LEARNING_SUBTYPE_LABELS,
@@ -74,7 +78,10 @@ function readLearningTags(rawTags: unknown): string[] {
       ? parsed.filter((tag): tag is string => typeof tag === "string")
       : [];
   } catch {
-    return rawTags.split(/[,;|]/).map((tag) => tag.trim()).filter(Boolean);
+    return rawTags
+      .split(/[,;|]/)
+      .map((tag) => tag.trim())
+      .filter(Boolean);
   }
 }
 
@@ -119,7 +126,9 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
 
   // ── Queue ──
   const [sessionQueue, setSessionQueue] = useState<QueueItem[]>([]);
-  const [queueFilter, setQueueFilter] = useState<"all" | "done" | "error">("all");
+  const [queueFilter, setQueueFilter] = useState<"all" | "done" | "error">(
+    "all",
+  );
 
   // ── Save modal ──
   const [showSaveModal, setShowSaveModal] = useState<string | null>(null);
@@ -128,10 +137,12 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
   // ── Computed ──
   const totalQuestions = useMemo(
     () => Object.values(typeCounts).reduce((a, b) => a + b, 0),
-    [typeCounts]
+    [typeCounts],
   );
 
-  const activeFilterCount = [filterSchool, filterGrade, filterSemester].filter(Boolean).length;
+  const activeFilterCount = [filterSchool, filterGrade, filterSemester].filter(
+    Boolean,
+  ).length;
 
   const filteredPassages = useMemo(() => {
     return passages.filter((p) => {
@@ -146,10 +157,23 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
       if (filterGrade && p.grade !== Number(filterGrade)) return false;
       if (filterSchool && p.school?.id !== filterSchool) return false;
       if (filterSemester && p.semester !== filterSemester) return false;
-      if (selectedCollectionId && !(p as any).collectionItems?.some((ci: any) => ci.collectionId === selectedCollectionId)) return false;
+      if (
+        selectedCollectionId &&
+        !(p as any).collectionItems?.some(
+          (ci: any) => ci.collectionId === selectedCollectionId,
+        )
+      )
+        return false;
       return true;
     });
-  }, [passages, search, filterGrade, filterSchool, filterSemester, selectedCollectionId]);
+  }, [
+    passages,
+    search,
+    filterGrade,
+    filterSchool,
+    filterSemester,
+    selectedCollectionId,
+  ]);
 
   const autoTotal = autoCount * 4; // 지문당 총 문제 수
   const canGenerate =
@@ -164,7 +188,7 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
       done: sessionQueue.filter((q) => q.status === "done").length,
       error: sessionQueue.filter((q) => q.status === "error").length,
     }),
-    [sessionQueue]
+    [sessionQueue],
   );
 
   const filteredQueue = useMemo(() => {
@@ -206,21 +230,28 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
 
   // ── Generation handler ──
   const parseQuestions = (
-    data: Record<string, unknown>
+    data: Record<string, unknown>,
   ): GeneratedQuestion[] => {
     const questions: GeneratedQuestion[] = [];
-    const responsePlan = normalizeQuestionGenerationPlan(data.generationPlan || generationPlan);
+    const responsePlan = normalizeQuestionGenerationPlan(
+      data.generationPlan || generationPlan,
+    );
     for (const [typeId, items] of Object.entries(
-      (data.results as Record<string, unknown[]>) || {}
+      (data.results as Record<string, unknown[]>) || {},
     )) {
       for (const item of items as Record<string, unknown>[]) {
-        const itemPlan = normalizeQuestionGenerationPlan(item._generationPlan || responsePlan);
+        const itemPlan = normalizeQuestionGenerationPlan(
+          item._generationPlan || responsePlan,
+        );
         questions.push({
           ...item,
           _typeId: typeId,
           _typeLabel: LEARNING_SUBTYPE_LABELS[typeId] || typeId,
           _generationPlan: itemPlan,
-          tags: mergeQuestionGenerationPlanTag(readLearningTags(item.tags), itemPlan),
+          tags: mergeQuestionGenerationPlanTag(
+            readLearningTags(item.tags),
+            itemPlan,
+          ),
         });
       }
     }
@@ -241,10 +272,37 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
       if (genMode === "auto") {
         // 자동: 카테고리별 서브타입 균등 분배
         const AUTO_SUBTYPES: Record<string, string[]> = {
-          VOCAB: ["WORD_MEANING", "WORD_MEANING_REVERSE", "WORD_FILL", "WORD_MATCH", "WORD_SPELL", "VOCAB_SYNONYM", "VOCAB_DEFINITION", "VOCAB_COLLOCATION", "VOCAB_CONFUSABLE"],
-          INTERPRETATION: ["SENTENCE_INTERPRET", "SENTENCE_COMPLETE", "WORD_ARRANGE", "KEY_EXPRESSION", "SENT_CHUNK_ORDER"],
-          GRAMMAR: ["GRAMMAR_SELECT", "ERROR_FIND", "ERROR_CORRECT", "GRAM_TRANSFORM", "GRAM_BINARY"],
-          COMPREHENSION: ["TRUE_FALSE", "CONTENT_QUESTION", "PASSAGE_FILL", "CONNECTOR_FILL"],
+          VOCAB: [
+            "WORD_MEANING",
+            "WORD_MEANING_REVERSE",
+            "WORD_FILL",
+            "WORD_MATCH",
+            "WORD_SPELL",
+            "VOCAB_SYNONYM",
+            "VOCAB_DEFINITION",
+            "VOCAB_COLLOCATION",
+            "VOCAB_CONFUSABLE",
+          ],
+          INTERPRETATION: [
+            "SENTENCE_INTERPRET",
+            "SENTENCE_COMPLETE",
+            "WORD_ARRANGE",
+            "KEY_EXPRESSION",
+            "SENT_CHUNK_ORDER",
+          ],
+          GRAMMAR: [
+            "GRAMMAR_SELECT",
+            "ERROR_FIND",
+            "ERROR_CORRECT",
+            "GRAM_TRANSFORM",
+            "GRAM_BINARY",
+          ],
+          COMPREHENSION: [
+            "TRUE_FALSE",
+            "CONTENT_QUESTION",
+            "PASSAGE_FILL",
+            "CONNECTOR_FILL",
+          ],
         };
         for (const [cat, subtypes] of Object.entries(AUTO_SUBTYPES)) {
           const perItem = Math.floor(autoCount / subtypes.length);
@@ -279,6 +337,13 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
         };
 
         setSessionQueue((prev) => [...prev, queueItem]);
+        // 페이지를 벗어나도 다른 워크벤치 화면에서 진행 상태가 보이도록 전역 트래커에 등록
+        beginLearningGenerationTask({
+          id: queueId,
+          passageId,
+          passageTitle: passage.title,
+          category,
+        });
 
         // 비동기 API 호출
         (async () => {
@@ -286,20 +351,27 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
             const res = await fetch("/api/ai/generate-learning-question", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ passageId, category, counts, generationPlan }),
+              body: JSON.stringify({
+                passageId,
+                category,
+                counts,
+                generationPlan,
+              }),
             });
             const data = await res.json();
             if (data.error) {
+              settleLearningGenerationTask(queueId, "error");
               setSessionQueue((prev) =>
                 prev.map((q) =>
                   q.id === queueId
                     ? { ...q, status: "error", error: data.error }
-                    : q
-                )
+                    : q,
+                ),
               );
               return;
             }
             const questions = parseQuestions(data);
+            settleLearningGenerationTask(queueId, "done");
             setSessionQueue((prev) =>
               prev.map((q) =>
                 q.id === queueId
@@ -307,18 +379,21 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
                       ...q,
                       status: "done",
                       questions,
-                      generationPlan: normalizeQuestionGenerationPlan(data.generationPlan || generationPlan),
+                      generationPlan: normalizeQuestionGenerationPlan(
+                        data.generationPlan || generationPlan,
+                      ),
                     }
-                  : q
-              )
+                  : q,
+              ),
             );
           } catch (e) {
+            settleLearningGenerationTask(queueId, "error");
             setSessionQueue((prev) =>
               prev.map((q) =>
                 q.id === queueId
                   ? { ...q, status: "error", error: "생성 실패" }
-                  : q
-              )
+                  : q,
+              ),
             );
           } finally {
             notifyCreditsChanged(); // 차감/실패환급 즉시 사이드바 반영
@@ -338,7 +413,7 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
       textbook?: string;
       grade?: number;
       unit?: string;
-    }
+    },
   ) => {
     setSaving(true);
     try {
@@ -354,23 +429,22 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
                 !k.startsWith("_") &&
                 k !== "tags" &&
                 k !== "explanation" &&
-                k !== "correctAnswer"
-            )
-          )
+                k !== "correctAnswer",
+            ),
+          ),
         ),
         options: null,
-        correctAnswer: String(
-          q.correctAnswer ?? q.isTrue ?? q.isCorrect ?? ""
-        ),
+        correctAnswer: String(q.correctAnswer ?? q.isTrue ?? q.isCorrect ?? ""),
         difficulty: "INTERMEDIATE",
         tags: JSON.stringify(
           mergeQuestionGenerationPlanTag(
             readLearningTags(q.tags),
-            normalizeQuestionGenerationPlan(q._generationPlan || queueItem.generationPlan || generationPlan),
-          )
+            normalizeQuestionGenerationPlan(
+              q._generationPlan || queueItem.generationPlan || generationPlan,
+            ),
+          ),
         ),
-        explanation:
-          typeof q.explanation === "string" ? q.explanation : null,
+        explanation: typeof q.explanation === "string" ? q.explanation : null,
         keyPoints: null,
         wrongOptionExplanations: null,
       }));
@@ -385,13 +459,9 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
       });
 
       if (result.success) {
-        toast.success(
-          `${queueItem.questions.length}개 문제 저장 완료`
-        );
+        toast.success(`${queueItem.questions.length}개 문제 저장 완료`);
         // 큐에서 제거
-        setSessionQueue((prev) =>
-          prev.filter((q) => q.id !== queueItem.id)
-        );
+        setSessionQueue((prev) => prev.filter((q) => q.id !== queueItem.id));
       } else {
         toast.error(result.error || "저장 실패");
       }
@@ -440,9 +510,9 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
             </div>
           )}
           {queueCounts.done > 0 && (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200">
-              <Eye className="w-3.5 h-3.5 text-amber-600" />
-              <span className="text-[12px] font-semibold text-amber-700">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200">
+              <Eye className="w-3.5 h-3.5 text-slate-500" />
+              <span className="text-[12px] font-semibold text-slate-700">
                 미저장 {queueCounts.done}
               </span>
             </div>

@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import type { PassageItem } from "../generate-page-types";
 import {
   adjustHighlights,
+  adjustRange,
   makeWorkspaceRow,
   type RowHighlight,
   type RowOverride,
@@ -140,7 +141,9 @@ export function useWorkspaceRows(): WorkspaceRowsApi {
           return {
             ...r,
             content,
-            range: null,
+            // AI 변형/앞 맥락 추가는 단일 구간 변경 — 하이라이트처럼 출제
+            // 범위도 오프셋을 보정해 유지한다 (겹치면 살아남은 구간만).
+            range: adjustRange(r.content, content, r.range),
             highlights: [
               ...adjustHighlights(r.content, content, r.highlights),
               highlight,

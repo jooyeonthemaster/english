@@ -249,7 +249,17 @@ export function useGenerationSessionQueue(): [
           setDbQueue(jobs.map((job) => jobToQueueItem(job)).filter(Boolean) as QueueItem[]);
           // Signature: status + successCount per job → snaps back to the fast
           // cadence on any start/progress/completion, backs off when idle.
-          return jobs.map((j) => `${j.id}:${j.status}:${j.successCount}`).join("|");
+          // 진행 중(PENDING/PROCESSING) 잡이 있는 동안은 서명에 시각을 섞어 백오프를
+          // 막는다 — 생성 중에는 status 가 한동안 안 변해 idleMs(5분)까지 늘어지고,
+          // 그만큼 완료 반영이 늦어지기 때문. PROCESSING(실제 생성 구간)이 가장 길어
+          // PENDING 만 보면 정작 긴 구간에서 폴링이 느려진다. 잡이 없으면 기존 백오프.
+          const base = jobs
+            .map((j) => `${j.id}:${j.status}:${j.successCount}`)
+            .join("|");
+          const anyActive = jobs.some(
+            (j) => j.status === "PENDING" || j.status === "PROCESSING",
+          );
+          return anyActive ? `${base}|t${Date.now()}` : base;
         } catch {
           // Keep local optimistic rows visible when a poll fails.
           return null;

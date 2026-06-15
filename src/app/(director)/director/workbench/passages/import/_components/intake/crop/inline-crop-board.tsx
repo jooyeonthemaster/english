@@ -45,6 +45,7 @@ import {
   PREVIEW_ZOOM_MIN,
   PREVIEW_ZOOM_STEP,
 } from "@/components/exams/exam-paper-builder-client-parts/preview-zoom-controls";
+import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import { ACCEPTED } from "../../bulk-extract-client/constants";
 import type { ClientPageSlot, CropBox } from "@/lib/extraction/types";
 import { CropCanvas, type CropCanvasChangeMeta } from "./crop-canvas";
@@ -395,6 +396,10 @@ export const InlineCropBoard = forwardRef<
   const [baseWidth, setBaseWidth] = useState(420);
   const [availWidth, setAvailWidth] = useState(900);
   const [ctrlPos, setCtrlPos] = useState({ top: 12, right: 12 });
+  const primaryImageWidth = images[0]?.width ?? 0;
+  const primaryImageHeight = images[0]?.height ?? 0;
+  const primaryImageKey =
+    images[0]?.slotId ?? images[0]?.previewUrl ?? String(images.length);
 
   useEffect(() => {
     const el = scrollerRef.current;
@@ -402,15 +407,29 @@ export const InlineCropBoard = forwardRef<
     const update = () => {
       const w = Math.max(1, el.clientWidth - 28); // 좌우 패딩 보정
       setAvailWidth(w);
-      // 100%(=baseWidth) 상한을 적당히 낮게 둬서, 폭이 넓으면 기본으로 2열↑이
-      // 자연스럽게 잡히게 한다(과대 방지 + "자리 많으면 다열" 요구 반영).
+      const ratio =
+        primaryImageWidth > 0 && primaryImageHeight > 0
+          ? primaryImageHeight / primaryImageWidth
+          : 0;
+      if (images.length === 1 && ratio > 0) {
+        const CARD_CHROME = 34; // 헤더(32) + 테두리(2)
+        const PAD_Y = 24; // 스크롤러 py-3 (위·아래 12)
+        const h = Math.max(1, el.clientHeight - PAD_Y - CARD_CHROME);
+        setBaseWidth(Math.max(240, Math.min(w, Math.round(h / ratio))));
+        return;
+      }
+      // 다중 페이지는 기존처럼 폭이 넓으면 2열↑이 자연스럽게 잡히도록 둔다.
       setBaseWidth(Math.max(240, Math.min(420, w)));
     };
     update();
     const ro = new ResizeObserver(update);
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
+  }, [images.length, primaryImageHeight, primaryImageWidth]);
+
+  useEffect(() => {
+    setZoom(1);
+  }, [primaryImageKey]);
 
   const contentWidth = Math.round(baseWidth * zoom);
   const round2 = (n: number) => Math.round(n * 100) / 100;
@@ -419,35 +438,39 @@ export const InlineCropBoard = forwardRef<
   const zoomOut = () =>
     setZoom((z) => Math.max(PREVIEW_ZOOM_MIN, round2(z - PREVIEW_ZOOM_STEP)));
   const zoomReset = () => setZoom(1);
-  const onCtrlDrag = useCallback((event: ReactMouseEvent<HTMLSpanElement>) => {
-    if (event.button !== 0) return;
-    event.preventDefault();
-    event.stopPropagation();
-    const sx = event.clientX;
-    const sy = event.clientY;
-    const startTop = ctrlPos.top;
-    const startRight = ctrlPos.right;
-    document.body.style.cursor = "grabbing";
-    document.body.style.userSelect = "none";
-    const move = (e: MouseEvent) =>
-      setCtrlPos({
-        top: Math.max(0, startTop + (e.clientY - sy)),
-        right: Math.max(0, startRight - (e.clientX - sx)),
-      });
-    const up = () => {
-      document.removeEventListener("mousemove", move);
-      document.removeEventListener("mouseup", up);
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
-    };
-    document.addEventListener("mousemove", move);
-    document.addEventListener("mouseup", up);
-  }, [ctrlPos]);
+  const onCtrlDrag = useCallback(
+    (event: ReactMouseEvent<HTMLSpanElement>) => {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const sx = event.clientX;
+      const sy = event.clientY;
+      const startTop = ctrlPos.top;
+      const startRight = ctrlPos.right;
+      document.body.style.cursor = "grabbing";
+      document.body.style.userSelect = "none";
+      const move = (e: MouseEvent) =>
+        setCtrlPos({
+          top: Math.max(0, startTop + (e.clientY - sy)),
+          right: Math.max(0, startRight - (e.clientX - sx)),
+        });
+      const up = () => {
+        document.removeEventListener("mousemove", move);
+        document.removeEventListener("mouseup", up);
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+      };
+      document.addEventListener("mousemove", move);
+      document.addEventListener("mouseup", up);
+    },
+    [ctrlPos],
+  );
 
   // ── 검수 패널 좌우 폭 조절 + 페이지 썸네일 레일 ────────────────────────
   const REVIEW_W_KEY = "smoat:extraction:review-width";
   const THUMBS_KEY = "smoat:extraction:thumbs-open";
-  const clampReviewW = (w: number) => Math.min(760, Math.max(300, Math.round(w)));
+  const clampReviewW = (w: number) =>
+    Math.min(760, Math.max(300, Math.round(w)));
   const [reviewWidth, setReviewWidth] = useState<number>(() => {
     if (typeof window === "undefined") return 420;
     const raw = window.localStorage.getItem(REVIEW_W_KEY);
@@ -591,8 +614,7 @@ export const InlineCropBoard = forwardRef<
     const el = scrollerRef.current;
     if (!el) return;
     const img = images[currentPage] ?? images[0];
-    const ratio =
-      img && img.width && img.height ? img.height / img.width : 0;
+    const ratio = img && img.width && img.height ? img.height / img.width : 0;
     if (ratio <= 0) {
       // 비율 정보가 없으면 기존처럼 가로 기준으로 폴백.
       const avail = Math.max(1, el.clientWidth - 28);
@@ -609,10 +631,7 @@ export const InlineCropBoard = forwardRef<
     const availH = Math.max(1, el.clientHeight - PAD_Y - CARD_CHROME);
     const zoomForH = availH / (baseWidth * ratio);
     setZoom(
-      Math.min(
-        PREVIEW_ZOOM_MAX,
-        Math.max(PREVIEW_ZOOM_MIN, round2(zoomForH)),
-      ),
+      Math.min(PREVIEW_ZOOM_MAX, Math.max(PREVIEW_ZOOM_MIN, round2(zoomForH))),
     );
   }, [images, currentPage, baseWidth]);
 
@@ -751,6 +770,13 @@ export const InlineCropBoard = forwardRef<
         const newGroup = activeGroup ?? maxGroup + 1;
         nextGroups = [...prevGroups, newGroup];
         focusGroup = newGroup;
+        if (meta?.action === "create") {
+          dispatchGenerateTourMilestone(
+            meta.joinWithActiveGroup && activeGroup !== undefined
+              ? "file-crop-joined"
+              : "file-crop-first-created",
+          );
+        }
       } else if (nextBoxes.length < prev.length) {
         const removedIdx = prev.findIndex((b) => !nextBoxes.includes(b));
         nextGroups =
@@ -1109,7 +1135,9 @@ export const InlineCropBoard = forwardRef<
     ClientPageSlot[] | null
   > => {
     if (totalPassages === 0) {
-      setError("추출할 지문이 없습니다. 이미지를 추가하거나 영역을 그려 주세요.");
+      setError(
+        "추출할 지문이 없습니다. 이미지를 추가하거나 영역을 그려 주세요.",
+      );
       return null;
     }
     if (totalPassages > maxPassages) {
@@ -1133,7 +1161,9 @@ export const InlineCropBoard = forwardRef<
         const items = flat.filter((e) => e.group === g).sort(readingSort);
         if (items.length === 0) continue;
         const crops = await Promise.all(
-          items.map((it) => cropImageToBlob(images[it.imageOrder].blob, it.box)),
+          items.map((it) =>
+            cropImageToBlob(images[it.imageOrder].blob, it.box),
+          ),
         );
         crops.forEach((c) => createdUrls.push(c.previewUrl));
         if (crops.length === 1) {
@@ -1188,12 +1218,14 @@ export const InlineCropBoard = forwardRef<
   const CANVAS_GAP = 12;
   const canvasCols = Math.max(
     1,
-    Math.floor((availWidth + CANVAS_GAP) / (contentWidth + CANVAS_GAP)),
+    images.length === 1
+      ? 1
+      : Math.floor((availWidth + CANVAS_GAP) / (contentWidth + CANVAS_GAP)),
   );
   const canvasOverflow = contentWidth > availWidth;
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
+    <div className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden lg:flex-row">
       {/* ── 페이지 썸네일 레일 (lg+) — 현재 페이지 하이라이트 + 클릭 점프 ── */}
       {showThumbs && thumbsOpen ? (
         <div
@@ -1201,7 +1233,9 @@ export const InlineCropBoard = forwardRef<
           style={{ width: 96 }}
         >
           <div className="flex h-8 shrink-0 items-center justify-between border-b border-slate-100 px-2">
-            <span className="text-[10.5px] font-bold text-slate-500">페이지</span>
+            <span className="text-[10.5px] font-bold text-slate-500">
+              페이지
+            </span>
             <button
               type="button"
               onClick={toggleThumbs}
@@ -1238,7 +1272,9 @@ export const InlineCropBoard = forwardRef<
                   <span
                     className={
                       "absolute left-1 top-1 inline-flex size-4 items-center justify-center rounded text-[9px] font-bold " +
-                      (isCur ? "bg-blue-600 text-white" : "bg-slate-900/70 text-white")
+                      (isCur
+                        ? "bg-blue-600 text-white"
+                        : "bg-slate-900/70 text-white")
                     }
                   >
                     {i + 1}
@@ -1344,7 +1380,9 @@ export const InlineCropBoard = forwardRef<
                       <kbd className="rounded border border-blue-200 bg-white/80 px-1 py-0.5 text-[10px] font-black leading-none text-blue-700 shadow-sm">
                         Shift
                       </kbd>
-                      <span>누른 채 다음 영역을 그리면 같은 지문에 이어붙어요.</span>
+                      <span>
+                        누른 채 다음 영역을 그리면 같은 지문에 이어붙어요.
+                      </span>
                     </p>
                   </div>
                   <button
@@ -1377,7 +1415,8 @@ export const InlineCropBoard = forwardRef<
           }}
           onDragLeave={(event) => {
             const next = event.relatedTarget as Node | null;
-            if (!next || !event.currentTarget.contains(next)) setDropActive(false);
+            if (!next || !event.currentTarget.contains(next))
+              setDropActive(false);
           }}
           onDrop={(event) => {
             if (!event.dataTransfer.types.includes("Files")) return;
@@ -1500,18 +1539,21 @@ export const InlineCropBoard = forwardRef<
                     fit="width"
                     imageUrl={img.previewUrl}
                     boxes={boxes}
-                    onChange={(next, meta) => handleBoxesChange(sid, next, meta)}
+                    onChange={(next, meta) =>
+                      handleBoxesChange(sid, next, meta)
+                    }
                     activeIndex={active?.slotId === sid ? active.j : null}
                     onActiveIndexChange={(j) =>
                       setActive(j === null ? null : { slotId: sid, j })
                     }
                     disabled={locked}
-                    regionLabels={groups.map((g) => String(groupRank.get(g) ?? g))}
+                    regionLabels={groups.map((g) =>
+                      String(groupRank.get(g) ?? g),
+                    )}
                   />
                 </div>
               );
             })}
-
           </div>
         </div>
 
@@ -1622,8 +1664,8 @@ export const InlineCropBoard = forwardRef<
               ) : selectedGroups.length === 1 ? (
                 <>
                   1개 선택됨 ·{" "}
-                  <b className="font-bold text-slate-700">하나 더 고르면</b> 합칠
-                  수 있어요
+                  <b className="font-bold text-slate-700">하나 더 고르면</b>{" "}
+                  합칠 수 있어요
                 </>
               ) : (
                 <>
@@ -1646,7 +1688,8 @@ export const InlineCropBoard = forwardRef<
               }
               className="inline-flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:bg-blue-300"
             >
-              <Layers className="size-3.5" aria-hidden="true" />한 지문으로 합치기
+              <Layers className="size-3.5" aria-hidden="true" />한 지문으로
+              합치기
             </button>
           </div>
         </div>
@@ -1714,157 +1757,162 @@ export const InlineCropBoard = forwardRef<
                       (passageSelectDrag?.active ? "select-none " : "")
                     }
                   >
-                <div
-                  onClick={() => toggleGroupCollapse(p.group)}
-                  role="button"
-                  tabIndex={0}
-                  aria-expanded={!collapsed}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      toggleGroupCollapse(p.group);
-                    }
-                  }}
-                  title={collapsed ? "지문 펼치기" : "지문 접기"}
-                  className="flex cursor-pointer items-center gap-1.5 border-b border-slate-100 px-2 py-1.5 transition-colors hover:bg-slate-50"
-                >
-                  <span
-                    data-passage-drag-handle="true"
-                    draggable={!locked}
-                    onClick={(event) => event.stopPropagation()}
-                    onDragStart={(event) => {
-                      if (locked) return;
-                      event.dataTransfer.effectAllowed = "move";
-                      event.dataTransfer.setData("text/plain", String(idx));
-                      setPassDragIdx(idx);
-                    }}
-                    onDragEnd={() => {
-                      setPassDragIdx(null);
-                      setPassDropIdx(null);
-                    }}
-                    title="드래그해 지문 순서 변경"
-                    aria-label={`지문 ${p.rank} 순서 변경 핸들`}
-                    className={
-                      "inline-flex size-5 shrink-0 items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 " +
-                      (locked
-                        ? "cursor-not-allowed"
-                        : "cursor-grab active:cursor-grabbing")
-                    }
-                  >
-                    <GripVertical className="size-3.5" aria-hidden="true" />
-                  </span>
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      toggleGroupSel(p.group);
-                    }}
-                    disabled={locked}
-                    aria-pressed={selected}
-                    aria-label={`지문 ${p.rank} 합치기 선택`}
-                    className={
-                      "inline-flex size-5 shrink-0 items-center justify-center rounded border text-[10px] font-bold transition-colors " +
-                      (selected
-                        ? "border-blue-600 bg-blue-600 text-white"
-                        : "border-slate-300 bg-white text-transparent hover:border-blue-400")
-                    }
-                  >
-                    ✓
-                  </button>
-                  <span className="inline-flex shrink-0 items-center gap-1 rounded bg-blue-600 px-2 py-0.5 text-[11px] font-bold text-white">
-                    지문 {p.rank}
-                  </span>
-                  <span
-                    className="min-w-0 flex-1 truncate px-1 py-0.5 text-left text-[10.5px] text-slate-500"
-                  >
-                    {multi
-                      ? `${p.pieces.length}개 영역을 이어붙인 지문`
-                      : `${p.pieces[0].imageOrder + 1}장에서 자른 지문`}
-                  </span>
-                  {multi ? (
-                    <button
-                      type="button"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        splitGroup(p.group);
+                    <div
+                      onClick={() => toggleGroupCollapse(p.group)}
+                      role="button"
+                      tabIndex={0}
+                      aria-expanded={!collapsed}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          toggleGroupCollapse(p.group);
+                        }
                       }}
-                      disabled={locked}
-                      title="조각마다 별개 지문으로 분리"
-                      className="inline-flex h-6 shrink-0 cursor-pointer items-center gap-1 rounded border border-slate-200 bg-white px-1.5 text-[10px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50"
+                      title={collapsed ? "지문 펼치기" : "지문 접기"}
+                      className="flex cursor-pointer items-center gap-1.5 border-b border-slate-100 px-2 py-1.5 transition-colors hover:bg-slate-50"
                     >
-                      <Scissors className="size-3" aria-hidden="true" />
-                      분리
-                    </button>
-                  ) : null}
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      deleteGroup(p.group);
-                    }}
-                    disabled={locked}
-                    aria-label={`지문 ${p.rank} 삭제`}
-                    title="이 지문 삭제"
-                    className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <Trash2 className="size-3.5" aria-hidden="true" />
-                  </button>
-                  {/* 토글 — 항상 섹션 오른쪽 끝에 정렬(접기/펴기). 헤더 전체도 토글되므로 버블 차단. */}
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      toggleGroupCollapse(p.group);
-                    }}
-                    aria-expanded={!collapsed}
-                    aria-label={collapsed ? `지문 ${p.rank} 펼치기` : `지문 ${p.rank} 접기`}
-                    title={collapsed ? "지문 펼치기" : "지문 접기"}
-                    className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
-                  >
-                    <ChevronRight
-                      className={
-                        "size-3.5 motion-safe:transition-transform motion-safe:duration-150 " +
-                        (collapsed ? "" : "rotate-90")
-                      }
-                      aria-hidden="true"
-                    />
-                  </button>
-                </div>
-                {/* 실제 잘린 모습 — 큰 미리보기(정확한 비율, 검수용). 접으면 헤더만 남는다. */}
-                {collapsed ? null : (
-                  <div className="space-y-1.5 bg-slate-100/60 p-2">
-                    {p.pieces.map((piece) => {
-                      const img = images[piece.imageOrder];
-                      if (!img) return null;
-                      return (
-                        <div
-                          key={`${piece.slotId}-${piece.j}`}
-                          className="relative w-full overflow-hidden rounded border border-slate-200 bg-white"
-                          style={{
-                            aspectRatio: cropAspect(img, piece.box),
-                            ...cropBgStyle(img.previewUrl, piece.box),
+                      <span
+                        data-passage-drag-handle="true"
+                        draggable={!locked}
+                        onClick={(event) => event.stopPropagation()}
+                        onDragStart={(event) => {
+                          if (locked) return;
+                          event.dataTransfer.effectAllowed = "move";
+                          event.dataTransfer.setData("text/plain", String(idx));
+                          setPassDragIdx(idx);
+                        }}
+                        onDragEnd={() => {
+                          setPassDragIdx(null);
+                          setPassDropIdx(null);
+                        }}
+                        title="드래그해 지문 순서 변경"
+                        aria-label={`지문 ${p.rank} 순서 변경 핸들`}
+                        className={
+                          "inline-flex size-5 shrink-0 items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 " +
+                          (locked
+                            ? "cursor-not-allowed"
+                            : "cursor-grab active:cursor-grabbing")
+                        }
+                      >
+                        <GripVertical className="size-3.5" aria-hidden="true" />
+                      </span>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          toggleGroupSel(p.group);
+                        }}
+                        disabled={locked}
+                        aria-pressed={selected}
+                        aria-label={`지문 ${p.rank} 합치기 선택`}
+                        className={
+                          "inline-flex size-5 shrink-0 items-center justify-center rounded border text-[10px] font-bold transition-colors " +
+                          (selected
+                            ? "border-blue-600 bg-blue-600 text-white"
+                            : "border-slate-300 bg-white text-transparent hover:border-blue-400")
+                        }
+                      >
+                        ✓
+                      </button>
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded bg-blue-600 px-2 py-0.5 text-[11px] font-bold text-white">
+                        지문 {p.rank}
+                      </span>
+                      <span className="min-w-0 flex-1 truncate px-1 py-0.5 text-left text-[10.5px] text-slate-500">
+                        {multi
+                          ? `${p.pieces.length}개 영역을 이어붙인 지문`
+                          : `${p.pieces[0].imageOrder + 1}장에서 자른 지문`}
+                      </span>
+                      {multi ? (
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            splitGroup(p.group);
                           }}
+                          disabled={locked}
+                          title="조각마다 별개 지문으로 분리"
+                          className="inline-flex h-6 shrink-0 cursor-pointer items-center gap-1 rounded border border-slate-200 bg-white px-1.5 text-[10px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50"
                         >
-                          {multi ? (
-                            <span className="absolute left-1 top-1 rounded bg-slate-900/70 px-1.5 py-0.5 text-[9.5px] font-bold text-white">
-                              {piece.imageOrder + 1}장
-                            </span>
-                          ) : null}
-                        </div>
-                      );
-                    })}
+                          <Scissors className="size-3" aria-hidden="true" />
+                          분리
+                        </button>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          deleteGroup(p.group);
+                        }}
+                        disabled={locked}
+                        aria-label={`지문 ${p.rank} 삭제`}
+                        title="이 지문 삭제"
+                        className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <Trash2 className="size-3.5" aria-hidden="true" />
+                      </button>
+                      {/* 토글 — 항상 섹션 오른쪽 끝에 정렬(접기/펴기). 헤더 전체도 토글되므로 버블 차단. */}
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          toggleGroupCollapse(p.group);
+                        }}
+                        aria-expanded={!collapsed}
+                        aria-label={
+                          collapsed
+                            ? `지문 ${p.rank} 펼치기`
+                            : `지문 ${p.rank} 접기`
+                        }
+                        title={collapsed ? "지문 펼치기" : "지문 접기"}
+                        className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
+                      >
+                        <ChevronRight
+                          className={
+                            "size-3.5 motion-safe:transition-transform motion-safe:duration-150 " +
+                            (collapsed ? "" : "rotate-90")
+                          }
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </div>
+                    {/* 실제 잘린 모습 — 큰 미리보기(정확한 비율, 검수용). 접으면 헤더만 남는다. */}
+                    {collapsed ? null : (
+                      <div className="space-y-1.5 bg-slate-100/60 p-2">
+                        {p.pieces.map((piece) => {
+                          const img = images[piece.imageOrder];
+                          if (!img) return null;
+                          return (
+                            <div
+                              key={`${piece.slotId}-${piece.j}`}
+                              className="relative w-full overflow-hidden rounded border border-slate-200 bg-white"
+                              style={{
+                                aspectRatio: cropAspect(img, piece.box),
+                                ...cropBgStyle(img.previewUrl, piece.box),
+                              }}
+                            >
+                              {multi ? (
+                                <span className="absolute left-1 top-1 rounded bg-slate-900/70 px-1.5 py-0.5 text-[9.5px] font-bold text-white">
+                                  {piece.imageOrder + 1}장
+                                </span>
+                              ) : null}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            );
-          })}
+                );
+              })}
             </div>
           ) : null}
         </div>
 
         {error ? (
           <div className="flex shrink-0 items-start gap-1.5 border-t border-slate-100 bg-red-50 px-3.5 py-2 text-[10.5px] font-medium leading-relaxed text-red-600">
-            <AlertCircle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+            <AlertCircle
+              className="mt-0.5 size-3.5 shrink-0"
+              aria-hidden="true"
+            />
             <span>{error}</span>
           </div>
         ) : null}
