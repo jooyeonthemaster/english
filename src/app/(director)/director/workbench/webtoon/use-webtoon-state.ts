@@ -215,12 +215,19 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
     }
   }, []);
 
+  const patchItem = useCallback((webtoonId: string, patch: Partial<WebtoonRow>) => {
+    setItems((prev) =>
+      prev.map((it) => (it.id === webtoonId ? { ...it, ...patch } : it)),
+    );
+  }, []);
+
   return {
     items,
     loading,
     handleBatchGenerate,
     handleRetry,
     handleRemove,
+    patchItem,
   };
 }
 

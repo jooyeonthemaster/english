@@ -288,11 +288,11 @@ export function UploadPanel({
 
   // slots가 비면 보드가 언마운트돼 boardCounts가 stale로 남으므로 0으로 강제.
   const fileTotalPassages = slots.length === 0 ? 0 : boardCounts.totalPassages;
-  // 출력 방식별 지문당 크레딧: 그대로=OCR(◈3), 복원=OCR+AI복원(◈5). 총액=지문 수×지문당.
+  // Pure OCR is free; AI restoration costs per passage.
   const creditsPerPassage =
     selectedOutput === "restored"
-      ? CREDIT_COSTS.TEXT_EXTRACTION + CREDIT_COSTS.PASSAGE_RESTORATION
-      : CREDIT_COSTS.TEXT_EXTRACTION;
+      ? CREDIT_COSTS.PASSAGE_RESTORATION
+      : 0;
   const fileProjectedCredits = fileTotalPassages * creditsPerPassage;
   const fileOverMax = fileTotalPassages > MAX_PAGES_PER_JOB;
   const startBusy = busy || baking;
@@ -359,9 +359,15 @@ export function UploadPanel({
               {fileTotalPassages > 0 ? (
                 <span
                   className="ml-2 inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-bold"
-                  title={`지문당 ◈${creditsPerPassage} × ${fileTotalPassages}개 = ◈${fileProjectedCredits} 소모`}
+                  title={
+                    creditsPerPassage > 0
+                      ? `지문당 ◈${creditsPerPassage} × ${fileTotalPassages}개 = ◈${fileProjectedCredits} 소모`
+                      : "순수 OCR은 크레딧을 차감하지 않습니다"
+                  }
                 >
-                  ◈{fileProjectedCredits.toLocaleString("ko-KR")} 소모
+                  {creditsPerPassage > 0
+                    ? `◈${fileProjectedCredits.toLocaleString("ko-KR")} 소모`
+                    : "무료"}
                 </span>
               ) : null}
             </>
@@ -372,14 +378,12 @@ export function UploadPanel({
   );
 
   // ── P7-D2 출력 방식 토글 (컴팩트 1줄 세그먼트) — 헤더 아래 컨트롤바 공용 ──
-  const verbatimCredits = CREDIT_COSTS.TEXT_EXTRACTION;
-  const restoredCredits =
-    CREDIT_COSTS.TEXT_EXTRACTION + CREDIT_COSTS.PASSAGE_RESTORATION;
+  const restoredCredits = CREDIT_COSTS.PASSAGE_RESTORATION;
   const outputModeOptions = [
     {
       v: "verbatim" as const,
       label: "그대로 추출",
-      badge: `지문당 ◈${verbatimCredits}`,
+      badge: "OCR 무료",
     },
     {
       v: "restored" as const,

@@ -117,8 +117,13 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-correct-answer-labels",
   "grammar-missing-error-expression",
   "grammar-error-not-mutated",
+  "grammar-error-pos-change",
   "grammar-decoy-point-diversity",
   "grammar-killer-thin-answer",
+  // 절/문장 통째 밑줄(예: 프리미엄 실측 "these digital platforms create a trusting
+  // environment" 7단어)은 정답성·가독성을 해치는 명백한 결함 — relaxed 폴백에서도
+  // 출하 금지. ('wide'는 strict 전용이라 의도적으로 제외 — 완전 실패 방지.)
+  "grammar-underline-too-long",
   // 복수정답 시비(규범 논쟁 자리 밑줄)는 relaxed 폴백에서도 출하 금지 —
   // 정답 무효급 결함이라 미생성이 잘못된 문항보다 낫다.
   "grammar-disputed-usage-target",

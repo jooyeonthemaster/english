@@ -6,7 +6,6 @@ import {
   WORKBENCH_PASSAGE_ANALYSIS_QUEUE_NAME,
   WORKBENCH_PASSAGE_ANALYSIS_TRIGGER_MAX_ATTEMPTS,
 } from "@/lib/concurrency-config";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
 import {
   InsufficientCreditsError,
   refundCredits,
@@ -22,9 +21,12 @@ import {
   normalizeAnalysisTone,
   type AnalysisTone,
 } from "@/lib/passage-analysis-options";
+import {
+  getPassageAnalysisCreditCost,
+  getPassageAnalysisWorksheetCreditCost,
+} from "@/lib/passage-analysis-credit-costs";
 import { prisma } from "@/lib/prisma";
 import {
-  getQuestionGenerationCreditCost,
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
@@ -201,10 +203,8 @@ export const workbenchPassageAnalysisTask = task({
 
     const includeWorksheet = config.includeWorksheet === true;
     // 실전 학습지는 옵트인 라우트(prime/[passageId]/worksheet)와 동일 단가.
-    const worksheetCost = includeWorksheet ? CREDIT_COSTS.PASSAGE_ANALYSIS : 0;
-    const creditCost =
-      getQuestionGenerationCreditCost(CREDIT_COSTS.PASSAGE_ANALYSIS, generationPlan) +
-      worksheetCost;
+    const worksheetCost = getPassageAnalysisWorksheetCreditCost(includeWorksheet);
+    const creditCost = getPassageAnalysisCreditCost({ includeWorksheet });
     let creditTxId: string | null = null;
 
     try {

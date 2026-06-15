@@ -143,8 +143,7 @@ export async function POST(req: NextRequest) {
   const { passageText, answerKey } = parsed.data;
 
   // ◈1 (PASSAGE_RESTORATION) — same cost as the image·PDF "AI 원문 복원". Deduct
-  // upfront; refund when no real restoration happened (AI error fallback, empty
-  // result, FAILED, or NO_RESTORATION_NEEDED).
+  // upfront; refund only when the AI call fails or returns an unusable result.
   let creditTxId: string;
   try {
     const credit = await deductCredits(
@@ -267,12 +266,9 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // Only RESTORED / PARTIAL actually restored something — refund otherwise so
-  // the teacher isn't charged when nothing changed.
-  if (status === "FAILED" || status === "NO_RESTORATION_NEEDED") {
-    await refundRestore(
-      status === "FAILED" ? "복원 실패" : "복원 불필요(이미 깨끗함)",
-    );
+  // The AI restoration call completed, so only failed results are refunded.
+  if (status === "FAILED") {
+    await refundRestore("복원 실패");
   }
 
   return NextResponse.json({

@@ -1,8 +1,14 @@
+import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { errorResponse, requireStaff } from "@/lib/extraction/api-utils";
 import { buildM1SourceMatchRows } from "@/lib/extraction/m1-draft-persistence";
+import {
+  chargeDraftRestorationAttempt,
+  refundRestorationCharge,
+  InsufficientCreditsError,
+} from "@/lib/extraction/restoration-credits";
 import type { RestorationQuestionInput } from "@/lib/extraction/restoration";
 import { restoreM1Passage } from "@/trigger/_lib/m1-passage-restoration";
 
@@ -66,6 +72,7 @@ export async function POST(_req: Request, ctx: RouteContext) {
     },
     select: {
       id: true,
+      jobId: true,
       rawText: true,
       sourcePageIndex: true,
       metadata: true,
@@ -75,13 +82,37 @@ export async function POST(_req: Request, ctx: RouteContext) {
     return errorResponse("NOT_FOUND", "지문 추출 결과를 찾을 수 없습니다.", 404);
   }
 
+  let restorationCreditTxId: string | null = null;
   try {
+    const charge = await chargeDraftRestorationAttempt({
+      academyId: staff.academyId,
+      staffId: staff.id,
+      jobId: draft.jobId,
+      draftId: draft.id,
+      idempotencyKey: `restore:rerestore:${draft.id}:${randomUUID()}`,
+      metadata: {
+        sourcePageIndex: draft.sourcePageIndex,
+      },
+    });
+    restorationCreditTxId = charge.transactionId;
+
     const restoration = await restoreM1Passage({
       academyId: staff.academyId,
       rawText: draft.rawText,
       // 문제 컨텍스트가 있으면 복원 정확도↑ (구조화 드래프트). verbatim은 [].
       questions: readQuestionsFromMetadata(draft.metadata),
     });
+
+    if (restoration.status === "FAILED" && restorationCreditTxId) {
+      await refundRestorationCharge({
+        academyId: staff.academyId,
+        jobId: draft.jobId,
+        transactionId: restorationCreditTxId,
+        reason: "M1 rerestore failed",
+        clearDraftId: draft.id,
+      }).catch(() => {});
+      restorationCreditTxId = null;
+    }
 
     const changeRows: Prisma.ExtractionM1PassageDraftChangeCreateManyInput[] =
       restoration.changes.map((change) => ({
@@ -173,6 +204,28 @@ export async function POST(_req: Request, ctx: RouteContext) {
 
     return NextResponse.json({ draft: updated });
   } catch (err) {
+    if (err instanceof InsufficientCreditsError) {
+      return NextResponse.json(
+        {
+          error: "INSUFFICIENT_CREDITS",
+          message: "AI restoration requires 1 credit.",
+          balance: err.currentBalance,
+          requiredCredits: err.requiredCredits,
+        },
+        { status: 402 },
+      );
+    }
+
+    if (restorationCreditTxId) {
+      await refundRestorationCharge({
+        academyId: staff.academyId,
+        jobId: draft.jobId,
+        transactionId: restorationCreditTxId,
+        reason: "M1 rerestore failed",
+        clearDraftId: draft.id,
+      }).catch(() => {});
+    }
+
     return errorResponse(
       "RERESTORE_FAILED",
       err instanceof Error ? err.message : "AI 복원을 다시 실행하지 못했습니다.",

@@ -4,7 +4,6 @@ import { z } from "zod";
 
 import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
 import { getStaffSession } from "@/lib/auth";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
 import {
   InsufficientCreditsError,
   refundCredits,
@@ -20,11 +19,13 @@ import {
   normalizeAnalysisTone,
   type AnalysisTone,
 } from "@/lib/passage-analysis-options";
+import {
+  getPassageAnalysisCreditCost,
+  getPassageAnalysisWorksheetCreditCost,
+} from "@/lib/passage-analysis-credit-costs";
 import { prisma } from "@/lib/prisma";
 import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 import {
-  getQuestionGenerationCreditCost,
-  getQuestionGenerationPlanTag,
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
@@ -78,23 +79,6 @@ function shouldUseCachedAnalysis(
   if (!cachedTone && requestedTone !== DEFAULT_ANALYSIS_TONE) return false;
   if (requestedPlan === "PREMIUM") return cachedPlan === "PREMIUM";
   return true;
-}
-
-function withAnalysisGenerationMetadata(
-  analysisData: unknown,
-  generationPlan: QuestionGenerationPlan,
-  analysisTone: AnalysisTone,
-) {
-  if (!analysisData || typeof analysisData !== "object" || Array.isArray(analysisData)) {
-    return analysisData;
-  }
-
-  return {
-    ...(analysisData as Record<string, unknown>),
-    _generationPlan: generationPlan,
-    _generationTag: getQuestionGenerationPlanTag(generationPlan),
-    _analysisTone: analysisTone,
-  };
 }
 
 async function recordCostSafely(input: {
@@ -271,13 +255,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const analysisCost = getQuestionGenerationCreditCost(
-      CREDIT_COSTS.PASSAGE_ANALYSIS,
-      generationPlan,
-    );
     // 실전 학습지는 옵트인 라우트(prime/[passageId]/worksheet)와 동일 단가.
-    const worksheetCost = includeWorksheet ? CREDIT_COSTS.PASSAGE_ANALYSIS : 0;
-    const creditCost = analysisCost + worksheetCost;
+    const worksheetCost = getPassageAnalysisWorksheetCreditCost(includeWorksheet);
+    const creditCost = getPassageAnalysisCreditCost({ includeWorksheet });
     const creditStartedAt = Date.now();
     const credit = await ensureWorkbenchAiJobCharged({
       jobId: job.id,
@@ -517,9 +497,7 @@ export async function POST(req: NextRequest) {
 
     // 청구 총액(분석 + 옵트인 워크시트 몫) 그대로 환불 — 부분 환불은 위의
     // worksheetFailed 경로에서만 발생하고, 여기는 기본 분석 자체가 실패한 경우다.
-    const creditCost =
-      getQuestionGenerationCreditCost(CREDIT_COSTS.PASSAGE_ANALYSIS, generationPlan) +
-      (includeWorksheet ? CREDIT_COSTS.PASSAGE_ANALYSIS : 0);
+    const creditCost = getPassageAnalysisCreditCost({ includeWorksheet });
     if (creditTxId) {
       await refundCredits(
         job.academyId,

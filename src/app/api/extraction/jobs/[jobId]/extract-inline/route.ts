@@ -11,19 +11,17 @@
 // Next.js server (DB ~28ms, no boot) — this route does the same for extraction.
 //
 // Reuses the exact same building blocks as the trigger pipeline
-// (ensurePageCharged / runOcrForPage / persistPageSuccess / finalizeStructured)
-// so behaviour (credits, idempotency, segmentation, drafts) is identical — only
+// (runOcrForPage / persistPageSuccess / finalizeStructured)
+// so behaviour (OCR, idempotency, segmentation, drafts) is identical — only
 // the execution context changes (warm request vs cold pod).
 //
 // Trade-offs vs trigger: the HTTP request stays open for the whole run (fine for
 // image jobs of a handful of pages), and there is no automatic retry/durability
-// (a failed request can simply be re-run; `ensurePageCharged` stays idempotent
-// so re-runs don't double-charge). Large PDF jobs should keep the trigger path.
+// (a failed request can simply be re-run; pure OCR does not deduct credits).
+// Large PDF jobs should keep the trigger path.
 // ============================================================================
 
 import { NextRequest, NextResponse } from "next/server";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
-import { refundCredits } from "@/lib/credits";
 import { classifyGeminiError } from "@/lib/extraction/error-classifier";
 import { usesStructuredExtraction } from "@/lib/extraction/modes";
 import type { ExtractionMode } from "@/lib/extraction/types";
@@ -34,10 +32,6 @@ import {
   errorResponse,
 } from "@/lib/extraction/api-utils";
 import { startJobRequestSchema } from "@/lib/extraction/zod-schemas";
-import {
-  ensurePageCharged,
-  PageOutOfCreditsError,
-} from "@/trigger/_lib/extraction-page/charge-credits";
 import { claimPageLease } from "@/trigger/_lib/extraction-page/claim-lease";
 import { runOcrForPage } from "@/trigger/_lib/extraction-page/ocr-dispatch";
 import { persistPageSuccess } from "@/trigger/_lib/extraction-page/persist-success";
@@ -132,8 +126,6 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
   });
 
   const totalPages = auth.job.totalPages;
-  const academyId = auth.job.academyId;
-
   // ── 크롭-네이티브 극속 경로 ────────────────────────────────────────────────
   // 이미지 크롭(=1슬롯=1지문) + AI 원문 복원이면, "사진 1장 → Gemini 1콜 → 지문 OCR +
   // 원문 복원 + 변경점"으로 직접 처리한다. 기존 다단계(DocAI OCR → 블록분류 → finalize
@@ -173,28 +165,6 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
       const page = claim.page;
 
       // Credits (idempotent — safe on re-run).
-      let creditTxId: string;
-      try {
-        creditTxId = await ensurePageCharged({
-          page,
-          idempotencyKey,
-          jobId,
-          pageIndex,
-          mode,
-        });
-      } catch (err) {
-        if (err instanceof PageOutOfCreditsError) {
-          await markPageDead(
-            idempotencyKey,
-            jobId,
-            "INSUFFICIENT_CREDITS",
-            err.message,
-          );
-          return { ok: false, code: "INSUFFICIENT_CREDITS" };
-        }
-        throw err;
-      }
-
       // OCR + persist, with one inline retry + REAL backoff for transients.
       // (Inside a trigger task, retry.fetch backs off via wait.until; outside a
       // task that throws, so we do our own sleep-backoff here and let the loop
@@ -236,26 +206,12 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
       // returns whether it actually transitioned, so we refund AT MOST ONCE
       // (never double-refund if another path already terminalized the page).
       const classified = classifyGeminiError(lastErr);
-      const flippedDead = await markPageDead(
+      await markPageDead(
         idempotencyKey,
         jobId,
         classified.code,
         classified.userMessage,
       );
-      if (flippedDead && creditTxId) {
-        await refundCredits(
-          academyId,
-          "TEXT_EXTRACTION",
-          creditTxId,
-          `Inline page ${pageIndex} failed: ${classified.code}`,
-        ).catch(() => {});
-        await prisma.extractionJob
-          .update({
-            where: { id: jobId },
-            data: { creditsRefunded: { increment: CREDIT_COSTS.TEXT_EXTRACTION } },
-          })
-          .catch(() => {});
-      }
       return { ok: false, code: classified.code };
     },
   );

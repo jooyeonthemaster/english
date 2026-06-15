@@ -111,7 +111,19 @@ const CONCURRENCY = Math.max(1, Number(process.env.GRAMMAR_AUDIT_CONCURRENCY || 
 const MAX_ATTEMPTS = Math.max(1, Number(process.env.GRAMMAR_AUDIT_MAX_ATTEMPTS || 6));
 const RUN_ID = process.env.GRAMMAR_AUDIT_RUN_ID || new Date().toISOString().replace(/[:.]/g, "-");
 const DIFFICULTIES: Difficulty[] = ["BASIC", "INTERMEDIATE", "KILLER"];
-const TYPES: GrammarTypeId[] = ["GRAMMAR_ERROR", "GRAMMAR_CORRECTION"];
+const TYPES: GrammarTypeId[] = ((): GrammarTypeId[] => {
+  const only = (process.env.GRAMMAR_AUDIT_TYPES || "").trim();
+  if (!only) return ["GRAMMAR_ERROR", "GRAMMAR_CORRECTION"];
+  const wanted = only.split(",").map((value) => value.trim().toUpperCase());
+  const filtered = (["GRAMMAR_ERROR", "GRAMMAR_CORRECTION"] as GrammarTypeId[]).filter(
+    (type) => wanted.includes(type),
+  );
+  return filtered.length ? filtered : ["GRAMMAR_ERROR", "GRAMMAR_CORRECTION"];
+})();
+const PLAN: "STANDARD" | "PREMIUM" =
+  (process.env.GRAMMAR_AUDIT_PLAN || "STANDARD").toUpperCase() === "PREMIUM"
+    ? "PREMIUM"
+    : "STANDARD";
 
 function selectedPassages(): PassageFixture[] {
   return HS_PASSAGE_DATA
@@ -229,7 +241,7 @@ async function runOne(testCase: RunCase): Promise<SampleResult> {
       analysisContext: "",
       diffLabel: testCase.difficulty,
       diffInstruction: difficultyInstruction(testCase.difficulty),
-      generationPlan: "STANDARD",
+      generationPlan: PLAN,
       typeSettings,
     }, {
       logPrefix: "GRAMMAR-100-AUDIT",
@@ -410,6 +422,35 @@ function auditGrammarError(question: Record<string, unknown>, passage: string) {
       if (optionText && expression && !containsComparable(optionText, expression)) {
         issues.push({ severity: "warning", code: "grammar-audit-decoy-option-text", label, message: "Non-answer option text does not clearly match the source expression." });
       }
+    }
+
+    // 밑줄 span 길이 감사 — 화면 밑줄 = 오류는 errorExpression, 디코이는 expression.
+    // 절/문장 통째 밑줄(프리미엄 실측 결함)을 per-label 로 가시화한다.
+    const displayedSurface = isError ? errorExpression || expression : expression;
+    const surfaceWords = countWords(displayedSurface);
+    if (displayedSurface && (surfaceWords > 7 || displayedSurface.length > 48)) {
+      issues.push({
+        severity: "error",
+        code: "grammar-audit-underline-too-long",
+        label,
+        message: `Underline spans ${surfaceWords} words / ${displayedSurface.length} chars ("${displayedSurface.slice(0, 50)}") — full clause/sentence.`,
+      });
+    } else if (displayedSurface && (surfaceWords > 5 || displayedSurface.length > 34)) {
+      issues.push({
+        severity: "warning",
+        code: "grammar-audit-underline-wide",
+        label,
+        message: `Underline wide (${surfaceWords} words / ${displayedSurface.length} chars: "${displayedSurface.slice(0, 50)}").`,
+      });
+    }
+    // pointCode 진실성 감사(경고) — 닫힌 토큰셋 코드만.
+    if (pointCode && grammarPointCodeSurfaceMismatchAudit(pointCode, displayedSurface)) {
+      issues.push({
+        severity: "warning",
+        code: "grammar-audit-pointcode-span-mismatch",
+        label,
+        message: `pointCode (${pointCode}) has no matching token in underline "${displayedSurface.slice(0, 50)}".`,
+      });
     }
 
     for (const issue of issues) {
@@ -594,8 +635,8 @@ async function runWithConcurrency<T, R>(
 function writeReports(results: SampleResult[]) {
   fs.mkdirSync(OUTDIR, { recursive: true });
   const summary = buildSummary(results);
-  const jsonPath = path.join(OUTDIR, `grammar-generation-100-audit-${RUN_ID}.json`);
-  const mdPath = path.join(OUTDIR, `grammar-generation-100-audit-${RUN_ID}.md`);
+  const jsonPath = path.join(OUTDIR, `grammar-generation-audit-${PLAN}-${RUN_ID}.json`);
+  const mdPath = path.join(OUTDIR, `grammar-generation-audit-${PLAN}-${RUN_ID}.md`);
   fs.writeFileSync(jsonPath, JSON.stringify({ summary, results }, null, 2), "utf8");
   fs.writeFileSync(mdPath, renderMarkdown(summary, results), "utf8");
   return { jsonPath, mdPath, summary };
@@ -744,6 +785,34 @@ function countWords(text: unknown): number {
   return normalizeText(text).split(/\s+/).filter(Boolean).length;
 }
 
+// 품질게이트(grammarPointCodeSurfaceMismatch)의 감사 측 사본 — 닫힌 토큰셋 코드만.
+function grammarPointCodeSurfaceMismatchAudit(code: string, surface: string): boolean {
+  const text = normalizeText(surface);
+  if (!text) return false;
+  switch (code.toLowerCase()) {
+    case "b":
+      return !/\b(?:that|what|which|who|whom|whose|where|when|why)\b/i.test(text);
+    case "c":
+      return (
+        !/\b[A-Za-z]+(?:ing|ed|en)\b/i.test(text) &&
+        !/\b(?:cut|put|set|hit|let|shut|spread|cost|read|made|held|left|found|told|kept|brought|thought|caught|taught|sought|spent|sent|lost|won|met|led|paid|laid|said|built|done|gone|seen|known|grown|thrown|blown|flown|shown|drawn|worn|torn|born|driven|risen|fallen|chosen|frozen|broken|spoken|stolen|woken|written|hidden|begun|run|come|become)\b/i.test(text)
+      );
+    case "g":
+      return !/\b(?:it|its|they|them|their|theirs|themselves|itself|that|those|this|these|one|ones|he|him|his|she|her|hers|herself|himself|we|us|our|ours|you|your|yours)\b/i.test(text);
+    case "k":
+      return !/\bto\s+[A-Za-z]/i.test(text) && !/\b[A-Za-z]+ing\b/i.test(text);
+    case "l":
+      return (
+        !/\b(?:during|while|despite|although|though|because|since|as|if|unless|before|after|until|when|whereas|whilst)\b/i.test(text) &&
+        !/\b(?:in spite of|due to|owing to|thanks to|because of|on account of)\b/i.test(text)
+      );
+    case "m":
+      return !/\b(?:more|less|most|least|as|than)\b/i.test(text) && !/\b[A-Za-z]+(?:er|est)\b/i.test(text);
+    default:
+      return false;
+  }
+}
+
 function round(value: number, digits: number) {
   const factor = 10 ** digits;
   return Math.round(value * factor) / factor;
@@ -754,12 +823,15 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 async function main() {
-  if (!process.env.GEMINI_API_KEY && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+  if (PLAN === "STANDARD" && !process.env.GEMINI_API_KEY && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
     throw new Error("GEMINI_API_KEY or GOOGLE_GENERATIVE_AI_API_KEY is required.");
+  }
+  if (PLAN === "PREMIUM" && !process.env.ANTHROPIC_API_KEY) {
+    throw new Error("ANTHROPIC_API_KEY is required for PREMIUM audit.");
   }
   const cases = buildCases(TOTAL);
   console.log(
-    `[grammar-audit] start total=${TOTAL} concurrency=${CONCURRENCY} maxAttempts=${MAX_ATTEMPTS} passages=${selectedPassages().length} runId=${RUN_ID}`,
+    `[grammar-audit] start plan=${PLAN} types=${TYPES.join("+")} total=${TOTAL} concurrency=${CONCURRENCY} maxAttempts=${MAX_ATTEMPTS} passages=${selectedPassages().length} runId=${RUN_ID}`,
   );
   const results = await runWithConcurrency(cases, CONCURRENCY, runOne);
   const { jsonPath, mdPath, summary } = writeReports(results);

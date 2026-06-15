@@ -119,6 +119,7 @@ export async function runPassageOnlyClusterLoop(params: {
       const result = await persistM1PassageDrafts({
         jobId,
         academyId,
+        createdById,
         outputMode,
         slotAuthored,
         sourceMaterialId: clusterSourceMaterialId,

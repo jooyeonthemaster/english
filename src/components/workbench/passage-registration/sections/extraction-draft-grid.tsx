@@ -17,7 +17,6 @@ import {
   Copy,
   Check,
   X,
-  Crown,
   Filter,
 } from "lucide-react";
 import {
@@ -32,7 +31,7 @@ import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/
 import { isDraftAnalysisComplete } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/analysis-status";
 import { getDraftDisplayTitle } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/title";
 import { buildDuplicateIndex } from "@/lib/duplicate-detection";
-import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import { PASSAGE_ANALYSIS_BASE_CREDIT_COST } from "@/lib/passage-analysis-credit-costs";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { DraftCollectionItem } from "../types";
 
@@ -580,7 +579,7 @@ export function ExtractionDraftGrid({
                 해제
               </button>
             </div>
-            <div className={`${FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? "grid-cols-2" : "grid-cols-1"} grid gap-1.5 min-w-0`}>
+            <div className="grid grid-cols-1 gap-1.5 min-w-0">
               <button
                 type="button"
                 onClick={() => void handleBulk("STANDARD")}
@@ -602,39 +601,11 @@ export function ExtractionDraftGrid({
                     <Layers className="w-3 h-3" />
                     일반 {bulkSelectedIds.size}개
                     <span className="text-[10px] font-semibold bg-white/20 px-1 py-0.5 rounded">
-                      5
+                      {PASSAGE_ANALYSIS_BASE_CREDIT_COST}
                     </span>
                   </>
                 )}
               </button>
-              {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-              <button
-                type="button"
-                onClick={() => void handleBulk("PREMIUM")}
-                disabled={bulkAnalyzing}
-                className={
-                  "h-8 min-w-0 px-2 text-[11.5px] font-bold rounded-md inline-flex items-center justify-center gap-1 transition-colors whitespace-nowrap " +
-                  (bulkAnalyzing
-                    ? "bg-slate-300 text-white cursor-not-allowed"
-                    : "bg-violet-600 text-white hover:bg-violet-700")
-                }
-              >
-                {bulkAnalyzing ? (
-                  <>
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                    등록 중...
-                  </>
-                ) : (
-                  <>
-                    <Crown className="w-3 h-3" />
-                    프리미엄 {bulkSelectedIds.size}개
-                    <span className="text-[10px] font-semibold bg-white/20 px-1 py-0.5 rounded">
-                      10
-                    </span>
-                  </>
-                )}
-              </button>
-              )}
             </div>
           </div>
         ) : null}

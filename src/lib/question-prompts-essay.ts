@@ -60,9 +60,14 @@ ESSAY_PROMPTS.GRAMMAR_CORRECTION = `어법 고치기 서술형 문제를 만드�
 - isError=true인 항목의 displayedText는 sourceText 안의 correctedPart를 errorPart로 바꾼 텍스트입니다.
 
 ## 좋은 어법 포인트
-- 주어-동사 수일치, 정동사/준동사, 병렬구조, 분사 능수동, 관계사/명사절, 대명사 일치, 보어 형태, 비교구문, 전치사 vs 접속사처럼 내신에서 판단 가치가 큰 포인트를 사용합니다.
+- 주어-동사 수일치, 정동사/준동사, 병렬구조, 분사 능수동, 관계사/명사절, 대명사 일치, 보어 형태, 비교구문, 전치사 vs 접속사처럼 내신에서 판단 가치가 큰 포인트를 사용합니다. 수능·평가원 28년 최빈출 코어(정·준동사, 관계사 that/what, 분사 능수동, 병렬, 수일치)를 우선합니다.
 - 관사, 사소한 전치사, 철자, 구두점, 문체 선호, 논쟁적인 표현 개선은 사용하지 마세요.
 - 원문이 이미 문법적으로 옳다고 가정하고, 원문을 고치는 문제가 아니라 원문 표현을 틀리게 변형한 뒤 되돌리게 하는 문제를 만듭니다.
+
+## ⚠️ errorPart 설계 — "둘 다 맞는" 변형·비현실적 형태 금지
+- 밑줄 구간(sourceText)은 절/문장 단위로 넓게 두되, 실제 틀린 토큰(errorPart)은 **판단이 걸린 최소 단위**(보통 1~3단어)여야 합니다. 절 전체를 errorPart로 잡지 마세요.
+- errorPart↔correctedPart는 **한쪽만 명백히 틀려야** 합니다. 둘 다 문법적으로 성립하는 변형 금지: "better utilizing"↔"to better utilize", "to gain"↔"to be gained", "stop to do"↔"stop doing", that 생략 가능 자리, 시간부사 없는 현재완료↔과거.
+- errorPart는 실제 영어에 있는 형태여야 합니다. ❌"unfriendlily"(-ly 형용사에 -ly), ❌"more better"(이중 비교급), ❌"informations"(불가산 복수), ❌"childs" 같은 가짜 형태 금지. -ly 형용사(friendly/costly)는 부사로 못 바꾸므로 형/부 오류로 쓰지 마세요.
 
 ## 출력 필드
 - underlinedSegments: 문장/절 단위 밑줄 구간 1~5개. 각 항목은 label, sourceText, displayedText, isError=true, surroundingText, errorPart, correctedPart를 포함합니다.

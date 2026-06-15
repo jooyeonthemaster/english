@@ -24,6 +24,8 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
     },
     select: {
       imageUrl: true,
+      editedImageUrl: true,
+      editedStoragePath: true,
       storagePath: true,
       passage: { select: { title: true } },
     },
@@ -33,7 +35,10 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
     return NextResponse.json({ error: "다운로드할 웹툰을 찾을 수 없습니다." }, { status: 404 });
   }
 
-  const upstream = await fetch(webtoon.imageUrl, { cache: "no-store" });
+  // Prefer the re-typeset export when the user has edited the text.
+  const downloadUrl = webtoon.editedImageUrl || webtoon.imageUrl;
+  const downloadPath = webtoon.editedImageUrl ? webtoon.editedStoragePath : webtoon.storagePath;
+  const upstream = await fetch(downloadUrl, { cache: "no-store" });
   if (!upstream.ok) {
     return NextResponse.json(
       { error: `이미지 다운로드에 실패했습니다. (${upstream.status})` },
@@ -42,7 +47,7 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
   }
 
   const contentType = upstream.headers.get("Content-Type") ?? "image/jpeg";
-  const filename = buildFilename(webtoon.passage.title, webtoon.storagePath, contentType);
+  const filename = buildFilename(webtoon.passage.title, downloadPath, contentType);
   const headers = new Headers();
   headers.set("Content-Type", contentType);
   headers.set("Content-Disposition", contentDisposition(filename));

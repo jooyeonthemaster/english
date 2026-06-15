@@ -411,8 +411,8 @@ export function GenerateUploadPanel({
   const fileOverMax = fileTotalPassages > MAX_PAGES_PER_JOB;
   const creditsPerPassage =
     outputMode === "restored"
-      ? CREDIT_COSTS.TEXT_EXTRACTION + CREDIT_COSTS.PASSAGE_RESTORATION
-      : CREDIT_COSTS.TEXT_EXTRACTION;
+      ? CREDIT_COSTS.PASSAGE_RESTORATION
+      : 0;
   const fileProjectedCredits = fileTotalPassages * creditsPerPassage;
   const fileStartDisabled =
     busy || slots.length === 0 || fileTotalPassages === 0 || fileOverMax;
@@ -425,8 +425,12 @@ export function GenerateUploadPanel({
         : "작업 중";
 
   const outputModeOptions = [
-    { v: "verbatim" as const, label: "그대로 추출", badge: "OCR만" },
-    { v: "restored" as const, label: "AI로 원문 복원", badge: "지문당 ◈1" },
+    { v: "verbatim" as const, label: "그대로 추출", badge: "OCR 무료" },
+    {
+      v: "restored" as const,
+      label: "AI로 원문 복원",
+      badge: `지문당 ◈${CREDIT_COSTS.PASSAGE_RESTORATION}`,
+    },
   ];
   const controlRowClass =
     "flex shrink-0 items-center gap-3 border-b border-slate-100 px-4 py-2.5";
@@ -467,9 +471,15 @@ export function GenerateUploadPanel({
             {fileTotalPassages > 0 ? (
               <span
                 className="ml-2 inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-bold"
-                title={`지문당 ◈${creditsPerPassage} × ${fileTotalPassages}개 = ◈${fileProjectedCredits} 소모`}
+                title={
+                  creditsPerPassage > 0
+                    ? `지문당 ◈${creditsPerPassage} × ${fileTotalPassages}개 = ◈${fileProjectedCredits} 소모`
+                    : "순수 OCR은 크레딧을 차감하지 않습니다"
+                }
               >
-                ◈{fileProjectedCredits.toLocaleString("ko-KR")} 소모
+                {creditsPerPassage > 0
+                  ? `◈${fileProjectedCredits.toLocaleString("ko-KR")} 소모`
+                  : "무료"}
               </span>
             ) : null}
           </>

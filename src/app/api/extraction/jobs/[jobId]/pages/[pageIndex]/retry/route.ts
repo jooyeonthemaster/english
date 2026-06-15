@@ -1,7 +1,7 @@
 // ============================================================================
 // POST /api/extraction/jobs/:jobId/pages/:pageIndex/retry
-// Manual retry of a failed page. Resets the page to PENDING (keeping its
-// creditTxId so no double-charge) and re-triggers extraction-page.
+// Manual retry of a failed page. Resets the page to PENDING and re-triggers
+// extraction-page. Pure OCR retries do not deduct credits.
 // ============================================================================
 
 import { NextRequest, NextResponse } from "next/server";
@@ -57,7 +57,7 @@ export async function POST(_req: NextRequest, ctx: RouteContext) {
     );
   }
 
-  // Reset the page to PENDING, preserving creditTxId and extractedText.
+  // Reset the page to PENDING, preserving extractedText.
   // Also decrement failedPages and increment pendingPages so job counters
   // stay consistent.
   const counterAdjusted = page.status === "DEAD" || page.status === "FAILED";

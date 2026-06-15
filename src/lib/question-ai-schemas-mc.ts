@@ -62,10 +62,18 @@ const GRAMMAR_LABELS = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", 
 
 const grammarMarkedExpressionSchema = z.object({
   label: z.string().describe("(A)~(J) 라벨"),
-  expression: z.string().describe("원문에서의 올바른 표현"),
+  expression: z
+    .string()
+    .describe(
+      "원문에서 밑줄 칠 '최소 문법 단위' — 그 자리의 어법 판단을 결정하는 핵심 토큰만. 수능 어법 밑줄은 보통 1~3단어(최대 4단어). 동사/준동사/분사/관계사/대명사/형용사·부사 등 판단 대상 토큰과 그것을 어법적으로 묶는 최소 수식어까지만 포함한다. ⚠️ 절 전체(주어+정동사+목적어), 문장 전체, 등위로 이어진 두 동사구를 통째로 밑줄 치지 마라 — 예: 'these digital platforms create a trusting environment'(X, 절 전체) → 'create'(O, 동사 1개). 이 문자열의 길이가 곧 화면 밑줄 길이다.",
+    ),
   isError: z.boolean().describe("이 표현이 오류인지 여부"),
-  correction: z.string().optional().describe("오류인 경우 올바른 표현"),
-  errorExpression: z.string().describe("지문에 표시할 어법 오류 표현 (isError=true일 때 틀린 형태, isError=false일 때 원문 그대로)"),
+  correction: z.string().optional().describe("오류인 경우 올바른 표현 (expression과 동일한 최소 단위)"),
+  errorExpression: z
+    .string()
+    .describe(
+      "지문에 표시할 어법 오류 표현. isError=true일 때는 expression의 어간을 유지하고 형태만 틀리게 변형한 같은 길이의 최소 단위(품사 변경·단어 추가 금지), isError=false일 때는 expression과 동일. expression과 같은 최소 span 규칙을 따른다 — 절/문장 통째 금지.",
+    ),
   surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
   pointCode: z
     .enum(GRAMMAR_POINT_CODES)

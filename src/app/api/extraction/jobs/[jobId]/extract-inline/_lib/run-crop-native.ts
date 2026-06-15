@@ -6,7 +6,7 @@
 //
 // 기존 다단계(DocAI OCR → Gemini 블록분류 → finalize 클러스터/STEM 그룹핑 → DB 조회 →
 // Gemini 복원 배치)를 통째로 우회한다. 크레딧/리스/페이지상태/SourceMaterial은 검증된
-// 공용 헬퍼(ensurePageCharged/claimPageLease/persistPageSuccess/ensureSourceMaterial)를
+// 공용 헬퍼(claimPageLease/persistPageSuccess/ensureSourceMaterial)를
 // 그대로 재사용해 회귀 위험을 격리한다. 킬스위치: EXTRACTION_CROP_NATIVE_RESTORE=false.
 // ============================================================================
 
@@ -14,19 +14,19 @@ import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import type { Prisma } from "@prisma/client";
 
-import { CREDIT_COSTS } from "@/lib/credit-costs";
-import { refundCredits } from "@/lib/credits";
 import { errorResponse } from "@/lib/extraction/api-utils";
 import { classifyGeminiError } from "@/lib/extraction/error-classifier";
+import {
+  findOrCreateRestorationCharge,
+  recordJobRestorationCharge,
+  refundRestorationCharge,
+  InsufficientCreditsError,
+} from "@/lib/extraction/restoration-credits";
 import type { StructuredOcrResponse } from "@/lib/extraction/ocr";
 import type { ExtractionMode, M1RestorationStatus } from "@/lib/extraction/types";
 import { prisma } from "@/lib/prisma";
 import { downloadAsBuffer } from "@/lib/supabase-storage";
 import { ensureSourceMaterial } from "@/trigger/_lib/extraction-finalize/source-material";
-import {
-  ensurePageCharged,
-  PageOutOfCreditsError,
-} from "@/trigger/_lib/extraction-page/charge-credits";
 import {
   claimPageLease,
   type ClaimedPageRow,
@@ -123,17 +123,20 @@ export async function runCropNativeRestore(args: {
   const { academyId, createdById, originalFileName } = job0;
 
   const leaseOwner = `inline-crop:${jobId}`;
-  const restored = new Map<number, CropRestoreResult>();
+  const restored = new Map<
+    number,
+    { result: CropRestoreResult; restorationCreditTxId: string }
+  >();
 
-  // ── Phase 1: 리스 확보 + 크레딧 차감 (순차) ─────────────────────────────────
+  // ── Phase 1: 리스 확보 + 복원 크레딧 차감 (순차) ─────────────────────────────
   // deductCredits는 인터랙티브 트랜잭션(기본 5초 한도)이다. 이걸 여러 개 동시에 열면
   // DB 커넥션 풀이 경합해(특히 dev 콜드스타트 + 폴링) 5초를 넘겨 P2028로 죽는다.
-  // 짧은 DB 작업인 차감/리스는 순차로 빠르게 끝내고, 느린 Gemini 호출만 Phase 2에서
+  // 짧은 DB 작업인 복원 차감/리스는 순차로 빠르게 끝내고, 느린 Gemini 호출만 Phase 2에서
   // 병렬화한다(속도는 Gemini가 지배적이라 그대로 유지).
   const charged: Array<{
     page: ClaimedPageRow;
     pageIndex: number;
-    creditTxId: string;
+    restorationCreditTxId: string;
   }> = [];
   for (const pageRow of pageRows) {
     const pageIndex = pageRow.pageIndex;
@@ -141,16 +144,36 @@ export async function runCropNativeRestore(args: {
     const claim = await claimPageLease({ idempotencyKey, leaseOwner });
     if (claim.skipped) continue;
     try {
-      const creditTxId = await ensurePageCharged({
-        page: claim.page,
-        idempotencyKey,
-        jobId,
-        pageIndex,
-        mode,
+      const charge = await findOrCreateRestorationCharge({
+        academyId,
+        staffId: createdById,
+        idempotencyKey: `restore:crop:${jobId}:${pageIndex}`,
+        metadata: {
+          source: "M1_CROP_NATIVE_RESTORE",
+          jobId,
+          pageIndex,
+          mode,
+        },
       });
-      charged.push({ page: claim.page, pageIndex, creditTxId });
+      if (charge.created) {
+        try {
+          await recordJobRestorationCharge({ jobId });
+        } catch (err) {
+          await refundRestorationCharge({
+            academyId,
+            transactionId: charge.transactionId,
+            reason: "Crop-native restoration charge was not recorded on job",
+          }).catch(() => {});
+          throw err;
+        }
+      }
+      charged.push({
+        page: claim.page,
+        pageIndex,
+        restorationCreditTxId: charge.transactionId,
+      });
     } catch (err) {
-      if (err instanceof PageOutOfCreditsError) {
+      if (err instanceof InsufficientCreditsError) {
         await markPageDead(idempotencyKey, jobId, "INSUFFICIENT_CREDITS", err.message);
         continue;
       }
@@ -162,7 +185,7 @@ export async function runCropNativeRestore(args: {
   await mapLimit(
     charged,
     INLINE_CROP_CONCURRENCY,
-    async ({ page, pageIndex, creditTxId }) => {
+    async ({ page, pageIndex, restorationCreditTxId }) => {
       const idempotencyKey = `${jobId}:${pageIndex}`;
       const startTs = Date.now();
       let result: CropRestoreResult | null = null;
@@ -192,20 +215,12 @@ export async function runCropNativeRestore(args: {
           classified.userMessage,
         );
         if (flippedDead) {
-          await refundCredits(
+          await refundRestorationCharge({
             academyId,
-            "TEXT_EXTRACTION",
-            creditTxId,
-            `Inline crop ${pageIndex} failed: ${classified.code}`,
-          ).catch(() => {});
-          await prisma.extractionJob
-            .update({
-              where: { id: jobId },
-              data: {
-                creditsRefunded: { increment: CREDIT_COSTS.TEXT_EXTRACTION },
-              },
-            })
-            .catch(() => {});
+            jobId,
+            transactionId: restorationCreditTxId,
+            reason: `Inline crop ${pageIndex} failed: ${classified.code}`,
+          }).catch(() => {});
         }
         return;
       }
@@ -228,7 +243,7 @@ export async function runCropNativeRestore(args: {
         latencyMs: Date.now() - startTs,
         structured,
       });
-      restored.set(pageIndex, result);
+      restored.set(pageIndex, { result, restorationCreditTxId });
     },
   );
 
@@ -243,7 +258,7 @@ export async function runCropNativeRestore(args: {
   const ordered = [...restored.entries()].sort((a, b) => a[0] - b[0]);
 
   // ── SourceMaterial(검수완료 게이트) — 잡당 1행, 기존 헬퍼 재사용 ──────────────
-  const allTexts = ordered.map(([, r]) => r.rawText).filter(Boolean);
+  const allTexts = ordered.map(([, r]) => r.result.rawText).filter(Boolean);
   const sourceMaterialId =
     allTexts.length > 0
       ? await ensureSourceMaterial({
@@ -252,7 +267,7 @@ export async function runCropNativeRestore(args: {
           createdById,
           mode,
           filename: originalFileName,
-          page1Text: ordered[0]?.[1].rawText ?? "",
+          page1Text: ordered[0]?.[1].result.rawText ?? "",
           allTexts,
         })
       : null;
@@ -265,7 +280,8 @@ export async function runCropNativeRestore(args: {
           where: { jobId, reviewStatus: "DRAFT" },
         });
         let order = 0;
-        for (const [pageIndex, r] of ordered) {
+        for (const [pageIndex, entry] of ordered) {
+          const r = entry.result;
           const id = randomUUID();
           const hasChanges = r.changes.length > 0;
           const status: M1RestorationStatus = hasChanges
@@ -282,6 +298,7 @@ export async function runCropNativeRestore(args: {
               rawText: r.rawText,
               restoredText: r.restoredText,
               teacherText: r.restoredText,
+              restorationCreditTxId: entry.restorationCreditTxId,
               restorationStatus: status,
               reviewStatus: "DRAFT",
               confidence: 0.9,

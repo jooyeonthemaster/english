@@ -46,7 +46,7 @@ export async function DELETE(_req: NextRequest, ctx: RouteContext) {
   const { id } = await ctx.params;
   const webtoon = await prisma.webtoon.findFirst({
     where: { id, academyId: staff.academyId },
-    select: { id: true, storagePath: true, status: true },
+    select: { id: true, storagePath: true, editedStoragePath: true, status: true },
   });
   if (!webtoon) {
     return NextResponse.json({ error: "찾을 수 없습니다" }, { status: 404 });
@@ -59,9 +59,12 @@ export async function DELETE(_req: NextRequest, ctx: RouteContext) {
     );
   }
 
-  // Best-effort storage cleanup, then DB row delete
+  // Best-effort storage cleanup (original + re-typeset export), then DB row delete
   if (webtoon.storagePath) {
     await deleteWebtoonImage(webtoon.storagePath);
+  }
+  if (webtoon.editedStoragePath) {
+    await deleteWebtoonImage(webtoon.editedStoragePath);
   }
   await prisma.webtoon.delete({ where: { id: webtoon.id } });
 

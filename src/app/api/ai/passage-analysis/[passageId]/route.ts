@@ -4,7 +4,6 @@ import { generateObject, generateText } from "ai";
 import { model } from "@/lib/ai";
 import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
 import { getStaffSession } from "@/lib/auth";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
 import {
   InsufficientCreditsError,
   deductCredits,
@@ -16,10 +15,10 @@ import {
   normalizeAnalysisTone,
   type AnalysisTone,
 } from "@/lib/passage-analysis-options";
+import { getPassageAnalysisCreditCost } from "@/lib/passage-analysis-credit-costs";
 import { hashContent } from "@/lib/passage-utils";
 import { prisma } from "@/lib/prisma";
 import {
-  getQuestionGenerationCreditCost,
   getQuestionGenerationPlanTag,
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
@@ -104,10 +103,7 @@ export async function GET(
     const analysisTone = normalizeAnalysisTone(
       _request.nextUrl.searchParams.get("analysisTone"),
     );
-    const creditCost = getQuestionGenerationCreditCost(
-      CREDIT_COSTS.PASSAGE_ANALYSIS,
-      generationPlan,
-    );
+    const creditCost = getPassageAnalysisCreditCost();
 
     const passage = await prisma.passage.findUnique({
       where: { id: passageId },
@@ -244,10 +240,7 @@ export async function POST(
     const body = await request.json();
     const generationPlan = normalizeQuestionGenerationPlan(body.generationPlan);
     const analysisTone = normalizeAnalysisTone(body.analysisTone);
-    const creditCost = getQuestionGenerationCreditCost(
-      CREDIT_COSTS.PASSAGE_ANALYSIS,
-      generationPlan,
-    );
+    const creditCost = getPassageAnalysisCreditCost();
 
     const passage = await prisma.passage.findUnique({
       where: { id: passageId },

@@ -65,6 +65,14 @@ const GRAMMAR_MARKER_COUNT_MIN = 5;
 const GRAMMAR_MARKER_COUNT_MAX = 10;
 const GRAMMAR_CORRECTION_ERROR_COUNT_MIN = 1;
 const GRAMMAR_CORRECTION_ERROR_COUNT_MAX = 5;
+// 객관식 어법(GRAMMAR_ERROR) 밑줄 span 길이 한도. 수능 어법 밑줄은 최소 문법
+// 단위(보통 1~4단어)다. HARD 초과 = 절/문장 통째 밑줄(예: 프리미엄 실측
+// "these digital platforms create a trusting environment" 7단어/53자) → relaxed
+// 폴백에서도 차단. SOFT 초과 = 다소 넓음 → strict에서만 차단(relaxed에선 경고).
+const GRAMMAR_UNDERLINE_HARD_MAX_WORDS = 7;
+const GRAMMAR_UNDERLINE_HARD_MAX_CHARS = 48;
+const GRAMMAR_UNDERLINE_SOFT_MAX_WORDS = 5;
+const GRAMMAR_UNDERLINE_SOFT_MAX_CHARS = 34;
 const VOCAB_CHOICE_MARKER_COUNT_DEFAULT = 5;
 const VOCAB_CHOICE_MARKER_COUNT_MIN = 5;
 const VOCAB_CHOICE_MARKER_COUNT_MAX = 10;
@@ -841,9 +849,11 @@ function findGrammarGenerationCandidates(
     for (const match of passage.matchAll(rule.pattern)) {
       const rawExpression = normalizeText(match[0]);
       if (!rawExpression || rawExpression.length < 2) continue;
+      // 후보 expression은 모델이 밑줄로 그대로 복사할 수 있으므로 짧게 유지한다
+      // (긴 후보 → 긴 밑줄 유도). 최소 문법 단위 원칙과 일치.
       const expression =
-        rawExpression.length > 120
-          ? `${rawExpression.slice(0, 117).trim()}...`
+        rawExpression.length > 60
+          ? `${rawExpression.slice(0, 57).trim()}...`
           : rawExpression;
       const index = match.index ?? passage.indexOf(match[0]);
       if (index < 0) continue;
@@ -939,6 +949,64 @@ function escapePromptSnippet(value: string): string {
 function extractGrammarPointCode(value: unknown): GrammarPointCode | null {
   const code = normalizeText(value).toLowerCase().replace(/[^a-m]/g, "");
   return /^[a-m]$/.test(code) ? (code as GrammarPointCode) : null;
+}
+
+// 무접미 불규칙 과거분사(형태 변화 없음/특수형) — -ing/-ed/-en 정규식으로는
+// 못 잡는 분사들. pointCode (c) 진실성 판정 보강용.
+const ZERO_OR_IRREGULAR_PARTICIPLE =
+  /\b(?:cut|put|set|hit|let|shut|spread|cost|read|bet|burst|cast|hurt|quit|split|thrust|made|held|left|found|told|kept|brought|thought|caught|taught|sought|spent|sent|lost|won|met|led|paid|laid|said|built|bound|done|gone|seen|known|grown|thrown|blown|flown|shown|drawn|worn|torn|born|sworn|driven|risen|fallen|chosen|frozen|broken|spoken|stolen|woken|written|hidden|bitten|beaten|forgotten|gotten|begun|sung|swum|run|come|become)\b/i;
+
+// 품사 변경 변형 검출: 형용사/동사 → 명사('likely'→'likelihood', 'important'→
+// 'importance')는 "어간 유지·형태만 변형" 위반(실측: 프리미엄). 명사화 접미사로
+// 한쪽만 갈리고 어간을 공유하는 쌍을 잡는다. 형/부(adj↔adv)는 정상 f 변형이라
+// 둘 다 명사 접미사가 아니므로 걸리지 않는다.
+const NOUN_FORMING_SUFFIX = /(?:hood|ness|ity|ment|tion|sion|ance|ence|ship|dom|cy)$/;
+function isGrammarPosChangeMutation(expression: string, errorExpression: string): boolean {
+  const a = normalizeText(expression).toLowerCase();
+  const b = normalizeText(errorExpression).toLowerCase();
+  if (!a || !b || a === b) return false;
+  // 단일 토큰 쌍만 — 구/절은 다른 게이트가 처리
+  if (/\s/.test(a) || /\s/.test(b)) return false;
+  const aNoun = NOUN_FORMING_SUFFIX.test(a);
+  const bNoun = NOUN_FORMING_SUFFIX.test(b);
+  if (aNoun === bNoun) return false;
+  // 어간 공유(앞 4글자 일치)일 때만 — 무관한 단어 오탐 방지
+  return a.slice(0, 4) === b.slice(0, 4);
+}
+
+/**
+ * pointCode 진실성(휴리스틱): 그 코드가 가리키는 문법은 밑줄 표면에 해당 토큰이
+ * 실제로 있어야 한다. 토큰셋이 닫혀 판정이 안전한 코드(b 관계사, c 분사, k
+ * to-v/v-ing, l 전치사·접속사)만 검사하고, 모호한 코드는 검사하지 않아 오탐을
+ * 피한다. true = 라벨이 표면 토큰과 불일치(가짜 디코이 라벨 의심).
+ */
+function grammarPointCodeSurfaceMismatch(
+  code: GrammarPointCode,
+  surface: string,
+): boolean {
+  const text = normalizeText(surface);
+  if (!text) return false;
+  switch (code) {
+    case "b": // 관계사 — 관계사/명사절 유도어가 표면에 있어야 함
+      return !/\b(?:that|what|which|who|whom|whose|where|when|why)\b/i.test(text);
+    case "c": // 분사 능/수동 — -ing/-ed/-en 또는 무접미 불규칙 분사
+      return (
+        !/\b[A-Za-z]+(?:ing|ed|en)\b/i.test(text) &&
+        !ZERO_OR_IRREGULAR_PARTICIPLE.test(text)
+      );
+    case "g": // 대명사 — 닫힌 대명사 토큰셋
+      return !/\b(?:it|its|they|them|their|theirs|themselves|itself|that|those|this|these|one|ones|he|him|his|she|her|hers|herself|himself|we|us|our|ours|you|your|yours)\b/i.test(text);
+    case "k": // to-v vs v-ing — 'to + 단어' 또는 동명사(-ing)
+      return !/\bto\s+[A-Za-z]/i.test(text) && !/\b[A-Za-z]+ing\b/i.test(text);
+    case "l": // 전치사 vs 접속사 — 닫힌 혼동쌍 어휘
+      return !/\b(?:during|while|despite|although|though|because|since|as|if|unless|before|after|until|when|whereas|whilst)\b/i.test(text) &&
+        !/\b(?:in spite of|due to|owing to|thanks to|because of|on account of)\b/i.test(text);
+    case "m": // 비교구문 — 비교 표지
+      return !/\b(?:more|less|most|least|as|than)\b/i.test(text) &&
+        !/\b[A-Za-z]+(?:er|est)\b/i.test(text);
+    default:
+      return false;
+  }
 }
 
 function hasKillerGrammarStructure(text: string): boolean {
@@ -1037,6 +1105,8 @@ function buildGrammarErrorCandidateBlock(
   return [
     "## GRAMMAR_ERROR target planning guardrail",
     disputedBanLine,
+    "- ⭐ Underline span = the minimal grammatical unit only (usually 1-3 words, never more than 5). expression/errorExpression IS the exact underlined surface, so keep it to the single token that carries the grammar decision (the verb / participle / relative word / pronoun / adjective-adverb / to-V / connector). NEVER underline a full clause (subject + finite verb + object) or a whole sentence — e.g. 'create', not 'these digital platforms create a trusting environment'.",
+    "- ⭐ pointCode must be true to the underlined surface: the code's required token must actually appear inside the underline (b→relative word, c→participle -ing/p.p., k→to-V or -ing, g→pronoun, l→during/while/despite/because, m→comparative marker). Never fabricate a code just to fill decoy diversity.",
     `- The final item must contain ${markedCount} marked expression(s) labeled ${labels}.`,
     `- Exactly ${answerCount} marked expression(s) must be grammatically incorrect.`,
     answerCount >= 2
@@ -2512,6 +2582,23 @@ function validateTypeSpecific(
         "GRAMMAR_ERROR should distribute marked expressions across at least three real grammar point codes; repeated pointCode decoys make the item feel padded.",
       );
     }
+    // 단조 방지: distinct 코드가 3개여도 한 코드가 3회 이상 쓰이면(예: 관계사 b
+    // 4개 — 프리미엄 실측) 한 가지 문법만 반복 검사하는 꼴이라 변별력이 떨어진다.
+    // 코드당 최대 2회. strict 전용(RELAXED 미포함)이라 완전 실패는 유발하지 않는다.
+    if (markedPointCodes.length >= 5) {
+      const codeCounts = new Map<GrammarPointCode, number>();
+      for (const code of markedPointCodes) {
+        codeCounts.set(code, (codeCounts.get(code) ?? 0) + 1);
+      }
+      const worst = [...codeCounts.entries()].sort((a, b) => b[1] - a[1])[0];
+      if (worst && worst[1] >= 3) {
+        add(
+          "error",
+          "grammar-decoy-point-monotony",
+          `pointCode (${worst[0]}) is used ${worst[1]} times across the marks — decoys are monotonous (one grammar point repeated). Use at most 2 marks per code and spread across more grammar points.`,
+        );
+      }
+    }
     // 규범 논쟁 자리 검출: "복수 등위 주어 + 동격 each + 단수동사"(예: A and B
     // each assumes)는 표준 규범과 실사용이 갈리는 자리 — 여기 밑줄(정답·디코이
     // 불문)을 그으면 복수정답 시비가 생긴다 (실측 critical, 프롬프트 소프트
@@ -2564,6 +2651,13 @@ function validateTypeSpecific(
       if (errorExpression && expression && errorExpression === expression) {
         add("error", "grammar-error-not-mutated", "The grammar error surface matches the original expression.");
       }
+      if (expression && errorExpression && isGrammarPosChangeMutation(expression, errorExpression)) {
+        add(
+          "error",
+          "grammar-error-pos-change",
+          `The grammar error mutates a word across part of speech (adjective/verb → noun: "${expression}" → "${errorExpression}"). Keep the same part of speech and mutate form only (e.g. adjective↔adverb, verb agreement, finite↔nonfinite).`,
+        );
+      }
       if (correction && expression && correction !== expression) {
         add("warning", "grammar-correction-differs-from-source", "The correction differs from the original expression; verify the model did not rewrite acceptable source text.");
       }
@@ -2575,6 +2669,49 @@ function validateTypeSpecific(
           "error",
           "grammar-killer-thin-answer",
           "KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check.",
+        );
+      }
+    }
+    // 밑줄 span 길이 + pointCode 진실성 — 모든 밑줄(정답·디코이) 검사.
+    // 화면 밑줄 표면 = 오류는 errorExpression, 디코이는 expression
+    // (getMarkedSurfaceExpression 와 동일). 절/문장 통째 밑줄(프리미엄 실측 결함)을
+    // egregious(relaxed에서도 차단) / wide(strict 전용) 2단으로 막는다.
+    for (const markedExpression of markedExpressions) {
+      const surface = normalizeText(
+        markedExpression.isError === true
+          ? normalizeText(markedExpression.errorExpression) ||
+              normalizeText(markedExpression.expression)
+          : markedExpression.expression,
+      );
+      if (!surface) continue;
+      const markerLabel = normalizeText(markedExpression.label) || "(?)";
+      const surfaceWords = countWordsForQuality(surface);
+      const surfaceChars = surface.length;
+      if (
+        surfaceWords > GRAMMAR_UNDERLINE_HARD_MAX_WORDS ||
+        surfaceChars > GRAMMAR_UNDERLINE_HARD_MAX_CHARS
+      ) {
+        add(
+          "error",
+          "grammar-underline-too-long",
+          `Underline ${markerLabel} spans ${surfaceWords} words / ${surfaceChars} chars ("${surface.slice(0, 60)}") — a full clause or sentence was underlined. Underline only the minimal grammatical unit (usually 1-4 words).`,
+        );
+      } else if (
+        surfaceWords > GRAMMAR_UNDERLINE_SOFT_MAX_WORDS ||
+        surfaceChars > GRAMMAR_UNDERLINE_SOFT_MAX_CHARS
+      ) {
+        add(
+          "error",
+          "grammar-underline-wide",
+          `Underline ${markerLabel} is too wide (${surfaceWords} words / ${surfaceChars} chars: "${surface.slice(0, 60)}"). Tighten it to the core grammar token (usually 1-4 words, max 5).`,
+        );
+      }
+      const surfacePointCode = extractGrammarPointCode(markedExpression.pointCode);
+      if (surfacePointCode && grammarPointCodeSurfaceMismatch(surfacePointCode, surface)) {
+        add(
+          "warning",
+          "grammar-pointcode-span-mismatch",
+          `Underline ${markerLabel} is tagged pointCode (${surfacePointCode}) but its surface "${surface.slice(0, 50)}" has no token matching that grammar point — the label looks fabricated. Move the underline onto the real ${surfacePointCode}-token or fix the code.`,
         );
       }
     }

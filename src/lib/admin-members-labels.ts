@@ -37,7 +37,7 @@ const OPERATION_TYPE_LABELS: Record<string, string> = {
   QUESTION_GEN_VOCAB: "어휘 문제 생성",
   AUTO_GEN_BATCH: "자동 일괄 생성",
   PASSAGE_ANALYSIS: "학습지 생성",
-  TEXT_EXTRACTION: "텍스트 추출 (OCR)",
+  TEXT_EXTRACTION: "텍스트 추출 (OCR 무료)",
   EXAM_GENERATION: "시험지 생성",
 };
 

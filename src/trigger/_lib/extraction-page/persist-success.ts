@@ -1,4 +1,3 @@
-import { CREDIT_COSTS } from "@/lib/credit-costs";
 import type { StructuredOcrResponse } from "@/lib/extraction/ocr";
 import { getExtractionAiModelName } from "@/lib/extraction/model-config";
 import { prisma } from "@/lib/prisma";
@@ -39,7 +38,7 @@ export async function persistPageSuccess(params: {
   // trigger model, and the reaper (5-min cron) can re-dispatch a still-PENDING
   // page to a trigger worker that also lands here. The `status: { not: SUCCESS }`
   // guard means the second writer matches 0 rows → no double increment of
-  // successPages/creditsConsumed, no double decrement of pendingPages (which
+  // successPages, no double decrement of pendingPages (which
   // could otherwise go negative), and no duplicate ExtractionItem rows.
   await prisma.$transaction(async (tx) => {
     const flipped = await tx.extractionPage.updateMany({
@@ -68,7 +67,6 @@ export async function persistPageSuccess(params: {
       data: {
         successPages: { increment: 1 },
         pendingPages: { decrement: 1 },
-        creditsConsumed: { increment: CREDIT_COSTS.TEXT_EXTRACTION },
       },
     });
   });
