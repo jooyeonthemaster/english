@@ -204,6 +204,9 @@ export async function createWorkbenchPassage(
     const session = await requireAuth();
     const academyId = getAcademyId(session);
     const schoolId = data.schoolId && data.schoolId !== "NONE" ? data.schoolId : null;
+    // 생성의 부수효과로 지문을 만들 땐(동형 시험지 from-drafts 등) 원본 draft 를
+    // 검수완료로 올리지 않는다 — 생성은 사람 검수가 아니므로 검수필요를 유지한다.
+    const markDraftReviewed = data.markReviewed ?? true;
 
     if (schoolId) {
       const school = await prisma.school.findFirst({
@@ -278,10 +281,12 @@ export async function createWorkbenchPassage(
                 ...(data.tags ? { tags: JSON.stringify(data.tags) } : {}),
               },
             });
-            await tx.extractionM1PassageDraft.update({
-              where: { id: linkedDraft.id },
-              data: { reviewStatus: "COMMITTED", confirmedAt: new Date() },
-            });
+            if (markDraftReviewed) {
+              await tx.extractionM1PassageDraft.update({
+                where: { id: linkedDraft.id },
+                data: { reviewStatus: "COMMITTED", confirmedAt: new Date() },
+              });
+            }
             return existing;
           }
         }
@@ -319,11 +324,13 @@ export async function createWorkbenchPassage(
         if (sourceDraft) {
           await tx.extractionM1PassageDraft.update({
             where: { id: sourceDraft.id },
-            data: {
-              savedPassageId: created.id,
-              reviewStatus: "COMMITTED",
-              confirmedAt: new Date(),
-            },
+            data: markDraftReviewed
+              ? {
+                  savedPassageId: created.id,
+                  reviewStatus: "COMMITTED",
+                  confirmedAt: new Date(),
+                }
+              : { savedPassageId: created.id },
           });
         }
       }

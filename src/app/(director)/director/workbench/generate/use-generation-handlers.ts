@@ -20,6 +20,8 @@ import {
   nextGenerationRunToken,
   scheduleFastGeneration,
 } from "./fast-generation-scheduler";
+import { isDraftPseudoId } from "@/lib/extraction/draft-passage-id";
+import { resolveSelectionToPassageIds } from "@/lib/extraction/resolve-draft-selection";
 
 function readFastBatchConcurrency(): number {
   const raw = process.env.NEXT_PUBLIC_WORKBENCH_FAST_BATCH_CONCURRENCY;
@@ -51,6 +53,8 @@ interface UseGenerationHandlersParams {
   setReviewModalId: (v: string | null) => void;
   loadSavedQuestions: () => void;
   onGenerationCompleted?: () => void;
+  /** 검수 전 자료를 승격해 생성한 직후 '내 지문' 목록을 새로고침(선택). */
+  loadPassages?: () => Promise<void> | void;
 }
 
 function readQuestionTags(rawTags: unknown): string[] {
@@ -308,6 +312,7 @@ export function useGenerationHandlers({
   setReviewModalId,
   loadSavedQuestions,
   onGenerationCompleted,
+  loadPassages,
 }: UseGenerationHandlersParams) {
   const { triggerRefresh } = useTaskQueue();
 
@@ -471,7 +476,28 @@ export function useGenerationHandlers({
 
   const handleBatchGenerate = useCallback(async () => {
     if (selectedIds.size === 0) return;
-    const selectedPassages = passages.filter((p) => selectedIds.has(p.id));
+    let selectedPassages = passages.filter((p) => selectedIds.has(p.id));
+
+    // 검수 전 자료(미승격 draft)는 실제 지문으로 승격한 뒤 생성한다.
+    if (selectedPassages.some((p) => isDraftPseudoId(p.id))) {
+      const { resolvedById, failedCount } = await resolveSelectionToPassageIds(
+        selectedPassages.map((p) => p.id),
+      );
+      selectedPassages = selectedPassages
+        .map((p) => {
+          const realId = resolvedById[p.id];
+          if (!realId) return null;
+          return isDraftPseudoId(p.id)
+            ? { ...p, id: realId, source: null, extractionReviewDraft: null }
+            : p;
+        })
+        .filter(Boolean) as PassageItem[];
+      if (failedCount > 0) {
+        toast.warning(`${failedCount}개 자료는 지문으로 준비하지 못해 제외했어요.`);
+      }
+      if (selectedPassages.length === 0) return;
+      void loadPassages?.();
+    }
 
     if (genMode === "manual") {
       const units: ManualGenerationUnit[] = [];
@@ -694,6 +720,7 @@ export function useGenerationHandlers({
     setSelectedIds,
     setSessionQueue,
     loadSavedQuestions,
+    loadPassages,
     refreshTaskQueueSoon,
     runManualUnitsWithFastPath,
     triggerRefresh,

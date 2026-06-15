@@ -35,6 +35,8 @@ import {
   type PassageSortOrder,
 } from "./generate-page-types";
 import { PassageCardGrid } from "./passage-card-grid";
+import { isDraftPseudoId } from "@/lib/extraction/draft-passage-id";
+import { resolveSelectionToPassageIds } from "@/lib/extraction/resolve-draft-selection";
 import {
   IntakeSurface,
   type IntakeView,
@@ -558,7 +560,9 @@ export function GeneratePageClient({
   const loadPassages = useCallback(async () => {
     setLoadingPassages(true);
     try {
-      const response = await fetch(`/api/passages/list?academyId=${academyId}`);
+      const response = await fetch(
+        `/api/passages/list?academyId=${academyId}&includeUnreviewed=true`,
+      );
       const data = await response.json();
       setPassages(data.passages || []);
       if (data.filters) setFilterOptions(data.filters);
@@ -788,7 +792,7 @@ export function GeneratePageClient({
 
   const handleCopySelectedPassagesToCollection = useCallback(
     async (collectionId: string) => {
-      const ids = [...selectedIds];
+      const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
       if (ids.length === 0 || passageBulkAction) return;
       setPassageBulkAction("move");
       try {
@@ -868,7 +872,9 @@ export function GeneratePageClient({
 
   const handleMovePassagesToCollection = useCallback(
     async (passageIds: string[], collectionId: string) => {
-      const ids = Array.from(new Set(passageIds));
+      const ids = Array.from(new Set(passageIds)).filter(
+        (id) => !isDraftPseudoId(id),
+      );
       if (ids.length === 0 || passageBulkAction) return;
       setPassageBulkAction("move");
       try {
@@ -1032,7 +1038,7 @@ export function GeneratePageClient({
   );
 
   const handleRemoveSelectedPassagesFromCollection = useCallback(async () => {
-    const ids = [...selectedIds];
+    const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
     const collectionId = selectedCollectionId;
     if (!collectionId || ids.length === 0 || passageBulkAction) return;
 
@@ -1114,7 +1120,7 @@ export function GeneratePageClient({
   ]);
 
   const handleDeleteSelectedPassages = useCallback(async () => {
-    const ids = [...selectedIds];
+    const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
     if (ids.length === 0 || passageBulkAction) return;
     if (!window.confirm(`${ids.length}개 지문을 삭제하시겠습니까?`)) return;
 
@@ -1949,7 +1955,7 @@ export function GeneratePageClient({
   );
 
   // ── 워크스페이스 불러오기 ──
-  const handleLoadSelectedToWorkspace = useCallback(() => {
+  const handleLoadSelectedToWorkspace = useCallback(async () => {
     const selected = passages.filter((p) => selectedIds.has(p.id));
     if (selected.length === 0) {
       toast.error("'내 지문함'에서 워크스페이스로 보낼 지문을 먼저 선택하세요.");
@@ -1957,7 +1963,30 @@ export function GeneratePageClient({
     }
     // 이미 작업 중인 워크스페이스가 있으면 '추가' 어휘로 안내한다.
     const wasActive = workspaceApi.rows.length > 0;
-    const { added, skipped } = workspaceApi.loadPassages(selected);
+    // 검수 전 자료(미승격 draft)는 실제 지문으로 승격한 뒤 워크스페이스로 불러온다.
+    let resolved = selected;
+    if (selected.some((p) => isDraftPseudoId(p.id))) {
+      const { resolvedById, failedCount } = await resolveSelectionToPassageIds(
+        selected.map((p) => p.id),
+      );
+      resolved = selected
+        .map((p) => {
+          const realId = resolvedById[p.id];
+          if (!realId) return null;
+          // 승격된 draft 는 새 실제 passageId 로 교체(검수 메타는 비운다).
+          return isDraftPseudoId(p.id)
+            ? { ...p, id: realId, source: null, extractionReviewDraft: null }
+            : p;
+        })
+        .filter(Boolean);
+      if (failedCount > 0) {
+        toast.warning(`${failedCount}개 자료는 지문으로 준비하지 못해 제외했어요.`);
+      }
+      // 승격된 draft 가 '내 지문'에 실제 카드로 반영되도록 목록 새로고침.
+      void loadPassages();
+      if (resolved.length === 0) return;
+    }
+    const { added, skipped } = workspaceApi.loadPassages(resolved);
     if (added > 0) {
       toast.success(
         (wasActive
@@ -1974,7 +2003,7 @@ export function GeneratePageClient({
       setWorkspaceOpen(true);
       dispatchGenerateTourMilestone("workspace-opened");
     }
-  }, [passages, selectedIds, workspaceApi]);
+  }, [passages, selectedIds, workspaceApi, loadPassages]);
 
   // ── Generation handlers (extracted to hook) ──
   const { handleBatchGenerate, handleGenerate, handleSaveQuestions } =
@@ -2000,6 +2029,7 @@ export function GeneratePageClient({
       loadSavedQuestions,
       onGenerationCompleted: () =>
         dispatchGenerateTourMilestone("question-generation-completed"),
+      loadPassages,
     });
 
   // ── 워크스페이스 생성 (변형본 저장 → 행별 설정으로 생성) ──

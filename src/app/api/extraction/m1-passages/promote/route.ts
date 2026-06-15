@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
         continue;
       }
 
-      outcomes.push(await promoteM1Draft(draft));
+      outcomes.push(await promoteM1Draft(draft, { markReviewed }));
     } catch (err) {
       console.error("[m1-passages/promote] draft promotion failed", {
         draftId: draft.id,
