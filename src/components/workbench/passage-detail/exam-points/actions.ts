@@ -5,6 +5,11 @@ import {
   buildGrammarCorrectionQuestionTextForDisplay,
   grammarCorrectionErrorSentenceForQuestionText,
 } from "@/lib/grammar-correction-display";
+import {
+  mergeQuestionGenerationPlanTag,
+  normalizeQuestionGenerationPlan,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 
 // Build questionText from structured fields for DB storage
 export function buildQuestionText(q: any): string {
@@ -36,10 +41,36 @@ export interface GenerateQuestionsArgs {
   activeTypes: string[];
   typeCounts: Record<string, number>;
   generationPrompt: string;
+  generationPlan: QuestionGenerationPlan;
   totalQuestions: number;
   setGenerating: Dispatch<SetStateAction<boolean>>;
   setGeneratedQuestions: Dispatch<SetStateAction<any[] | null>>;
   setGenerationProgress: Dispatch<SetStateAction<Record<string, "pending" | "done" | "error">>>;
+}
+
+function readQuestionTags(rawTags: unknown): string[] {
+  if (Array.isArray(rawTags)) {
+    return rawTags
+      .filter((tag): tag is string => typeof tag === "string")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  }
+  if (typeof rawTags !== "string") return [];
+  try {
+    const parsed = JSON.parse(rawTags);
+    if (Array.isArray(parsed)) {
+      return parsed
+        .filter((tag): tag is string => typeof tag === "string")
+        .map((tag) => tag.trim())
+        .filter(Boolean);
+    }
+  } catch {
+    // Fall through to comma-separated tag parsing.
+  }
+  return rawTags
+    .split(/[,;|]/)
+    .map((tag) => tag.trim())
+    .filter(Boolean);
 }
 
 export async function generateQuestions(args: GenerateQuestionsArgs) {
@@ -48,6 +79,7 @@ export async function generateQuestions(args: GenerateQuestionsArgs) {
     activeTypes,
     typeCounts,
     generationPrompt,
+    generationPlan,
     totalQuestions,
     setGenerating,
     setGeneratedQuestions,
@@ -88,6 +120,7 @@ export async function generateQuestions(args: GenerateQuestionsArgs) {
             count: typeCounts[typeId],
             difficulty: "INTERMEDIATE",
             customPrompt: generationPrompt.trim() || undefined,
+            generationPlan,
           }),
         });
         const data = await res.json();
@@ -108,7 +141,15 @@ export async function generateQuestions(args: GenerateQuestionsArgs) {
     const allQuestions: any[] = [];
     for (const r of results) {
       for (const q of r.questions) {
-        allQuestions.push({ ...q, _typeId: r.typeId, _typeLabel: r.label });
+        const plan = normalizeQuestionGenerationPlan(q._generationPlan ?? generationPlan);
+        const tags = mergeQuestionGenerationPlanTag(readQuestionTags(q.tags), plan);
+        allQuestions.push({
+          ...q,
+          _typeId: r.typeId,
+          _typeLabel: r.label,
+          _generationPlan: plan,
+          tags,
+        });
       }
     }
 
@@ -132,28 +173,34 @@ export async function generateQuestions(args: GenerateQuestionsArgs) {
 export interface SaveGeneratedQuestionsArgs {
   passageId: string;
   generatedQuestions: any[] | null;
+  generationPlan: QuestionGenerationPlan;
   router: { push: (path: string) => void };
 }
 
 export async function saveGeneratedQuestionsToBank(args: SaveGeneratedQuestionsArgs) {
-  const { passageId, generatedQuestions, router } = args;
+  const { passageId, generatedQuestions, generationPlan, router } = args;
   if (!generatedQuestions || generatedQuestions.length === 0) return;
   try {
     const { saveGeneratedQuestions } = await import("@/actions/workbench");
-    const questionsToSave = generatedQuestions.map((q: any) => ({
-      type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
-      subType: q._typeId || q.subType || null,
-      questionText: buildQuestionText(q),
-      structuredData: q._typeId ? q : undefined,
-      options: q.options ? JSON.stringify(q.options) : null,
-      correctAnswer: q.correctAnswer || q.modelAnswer || "",
-      points: 1,
-      difficulty: q.difficulty || "INTERMEDIATE",
-      tags: q.tags ? JSON.stringify(q.tags) : null,
-      explanation: q.explanation || null,
-      keyPoints: q.keyPoints ? JSON.stringify(q.keyPoints) : null,
-      wrongOptionExplanations: q.wrongOptionExplanations ? JSON.stringify(q.wrongOptionExplanations) : null,
-    }));
+    const questionsToSave = generatedQuestions.map((q: any) => {
+      const plan = normalizeQuestionGenerationPlan(q._generationPlan ?? generationPlan);
+      const tags = mergeQuestionGenerationPlanTag(readQuestionTags(q.tags), plan);
+      return {
+        type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
+        subType: q._typeId || q.subType || null,
+        questionText: buildQuestionText(q),
+        structuredData: q._typeId ? { ...q, _generationPlan: plan, tags } : undefined,
+        options: Array.isArray(q.options) ? q.options : undefined,
+        correctAnswer: q.correctAnswer || q.modelAnswer || "",
+        points: 1,
+        difficulty: q.difficulty || "INTERMEDIATE",
+        tags,
+        aiGenerated: true,
+        explanation: q.explanation || null,
+        keyPoints: Array.isArray(q.keyPoints) ? q.keyPoints : undefined,
+        wrongOptionExplanations: q.wrongOptionExplanations || undefined,
+      };
+    });
     const result = await saveGeneratedQuestions(questionsToSave.map((q: any) => ({ ...q, passageId })));
     if (result.success) {
       toast.success("문제 은행에 저장되었습니다.");

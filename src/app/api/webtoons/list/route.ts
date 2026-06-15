@@ -66,6 +66,7 @@ export async function GET(req: NextRequest) {
         id: true,
         passageId: true,
         style: true,
+        language: true,
         customPrompt: true,
         status: true,
         imageUrl: true,

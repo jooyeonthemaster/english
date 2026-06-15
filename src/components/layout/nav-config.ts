@@ -67,6 +67,7 @@ export const COMING_SOON_FEATURE_BY_PATH: Record<string, { feature: string; labe
 
 export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
   const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
+  const showSimilarExamGeneration = FEATURE_FLAGS.SHOW_SIMILAR_EXAM_GENERATION;
   // 원장 대시보드는 제거됐다(문제 생성 페이지가 사실상의 홈). 교사(/teacher)는
   // 기존 대시보드를 그대로 쓰므로 교사일 때만 대시보드 메뉴를 노출한다.
   const isTeacher = basePath === "/teacher";
@@ -103,7 +104,15 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           children: [
             { label: "시험지 생성", href: `${basePath}/workbench/exams/create` },
             { label: "시험지 관리", href: `${basePath}/workbench/exams` },
-            { label: "동형 시험지 생성", href: `${basePath}/workbench/similar-exams`, beta: true },
+            ...(showSimilarExamGeneration
+              ? [
+                  {
+                    label: "동형 시험지 생성",
+                    href: `${basePath}/workbench/similar-exams`,
+                    beta: true,
+                  },
+                ]
+              : []),
           ],
         },
         {
@@ -144,14 +153,12 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       title: "운영",
       directorOnly: true,
       items: [
-        { label: "학생·반 관리", icon: Users, href: `${basePath}/students`, directorOnly: true },
+        { label: "튜터 운영 홈", icon: Users, href: `${basePath}/tutor`, directorOnly: true },
         {
           label: "모바일 학습",
           icon: Smartphone,
-          href: `${basePath}/tutor`,
+          href: `${basePath}/tutor/programs`,
           children: [
-            { label: "튜터 홈", href: `${basePath}/tutor` },
-            { label: "프로그램 생성", href: `${basePath}/tutor/programs/new` },
             { label: "프로그램 관리", href: `${basePath}/tutor/programs` },
             ...(showResults
               ? [{ label: "수강 현황", href: `${basePath}/tutor/monitor` }]

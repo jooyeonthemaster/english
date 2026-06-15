@@ -6,5 +6,5 @@ interface Props {
 
 export default async function ClassDetailPage({ params }: Props) {
   const { classId } = await params;
-  redirect(`/director/students?classId=${classId}`);
+  redirect(`/director/tutor?classId=${classId}`);
 }

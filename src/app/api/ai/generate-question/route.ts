@@ -12,6 +12,8 @@ import {
 import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import {
   getQuestionTypeSettingsForType,
+  readQuestionTypeDifficultySetting,
+  readQuestionTypeGenerationPlanSetting,
   readIrrelevantSlotCountSetting,
   validateIrrelevantAgainstPassage,
 } from "@/lib/question-type-generation-settings";
@@ -21,6 +23,7 @@ import { generateQuestionObject } from "@/lib/question-generation-llm";
 import {
   getQuestionGenerationCreditCost,
   normalizeQuestionGenerationPlan,
+  withQuestionGenerationPlanMetadata,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { getStaffSession } from "@/lib/auth";
@@ -157,7 +160,14 @@ export async function POST(request: NextRequest) {
       rawTypeSettings,
       questionType,
     );
-    const generationPlan = normalizeQuestionGenerationPlan(rawGenerationPlan);
+    const generationPlan = readQuestionTypeGenerationPlanSetting(
+      typeSettingsForType,
+      normalizeQuestionGenerationPlan(rawGenerationPlan),
+    );
+    const effectiveDifficulty = readQuestionTypeDifficultySetting(
+      typeSettingsForType,
+      difficulty || "INTERMEDIATE",
+    );
 
     const operationType: OperationType = VOCAB_TYPES.has(questionType)
       ? "QUESTION_GEN_VOCAB"
@@ -171,6 +181,7 @@ export async function POST(request: NextRequest) {
         count,
         passageId,
         generationPlan,
+        difficulty: effectiveDifficulty,
         creditCost,
       }, creditCost);
     } catch (err) {
@@ -238,10 +249,13 @@ export async function POST(request: NextRequest) {
 
     // Use structured type prompt if available, otherwise fall back
     const typePrompt = STRUCTURED_TYPE_PROMPTS[questionType] || `${questionType} 유형의 문제를 만드세요.`;
-    const typeQualityRubric = getTypeQualityRubric(questionType, difficulty);
+    const typeQualityRubric = getTypeQualityRubric(
+      questionType,
+      effectiveDifficulty,
+    );
     const targetCandidateBlock = buildQuestionTargetCandidateBlock(questionType, passage.content, {
       irrelevantSlotCount,
-      requestedDifficulty: difficulty,
+      requestedDifficulty: effectiveDifficulty,
     });
 
     // NOTE: most of this section is a dead-code path; the live entry below
@@ -305,9 +319,9 @@ export async function POST(request: NextRequest) {
           passageContent: passage.content,
           teacherIntentBlock: annotationBlock,
           analysisContext,
-          diffLabel: difficulty,
+          diffLabel: effectiveDifficulty,
           diffInstruction:
-            DIFFICULTY_RUBRIC[difficulty] || DIFFICULTY_RUBRIC.INTERMEDIATE,
+            DIFFICULTY_RUBRIC[effectiveDifficulty] || DIFFICULTY_RUBRIC.INTERMEDIATE,
           generationPlan,
           customPrompt,
           typeSettings: typeSettingsForType
@@ -317,6 +331,9 @@ export async function POST(request: NextRequest) {
         { logPrefix: "SINGLE-GEN" },
       );
       const questions = generationResult.questions.slice(0, requestedQuestionCount);
+      const taggedQuestions = questions.map((question) =>
+        withQuestionGenerationPlanMetadata(question, generationPlan),
+      );
 
       if (questions.length === 0) {
         await refundCredits(
@@ -330,9 +347,9 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         questionType,
-        difficulty,
+        difficulty: effectiveDifficulty,
         generationPlan,
-        questions,
+        questions: taggedQuestions,
         creditsRemaining: creditResult.balanceAfter,
         ...(questions.length === 0
           ? { warning: "No questions generated after fallback." }

@@ -758,9 +758,25 @@ export const customBlockSchema = z.discriminatedUnion("kind", [
       answersHidden: z.boolean().default(true),
     })
     .passthrough(),
+  // 지문 웹툰(이미지) 블록 — 생성한 웹툰을 문서/인쇄물에 삽입. AI 생성 아님(편집기 전용).
+  z
+    .object({
+      kind: z.literal("image"),
+      id: z.string().min(1),
+      imageUrl: z.string().min(1),                    // Supabase 공개 URL
+      webtoonId: z.string().optional(),               // 출처 웹툰 id (추적용)
+      caption: z.string().optional().catch(undefined),// 캡션(선택)
+      // 손상값이 와도 그 한 블록만 기본값으로 강등 — 배열 전체가 .catch(undefined)로
+      // 날아가지 않도록 깨지기 쉬운 필드에 개별 .catch 를 둔다.
+      widthPct: z.number().min(20).max(100).catch(70), // 본문 폭 대비 이미지 폭(%)
+      align: z.enum(["left", "center", "right"]).catch("center"),
+      ratio: z.number().positive().optional().catch(undefined), // height/width — 페이지 넘침 방지 폭 계산용
+    })
+    .passthrough(),
 ]);
 export type CustomBlock = z.infer<typeof customBlockSchema>;
 export type ActivityBlock = Extract<CustomBlock, { kind: "activity" }>;
+export type ImageBlock = Extract<CustomBlock, { kind: "image" }>;
 
 // ─── 표지(Cover) — 편집 가능한 템플릿 (AI 생성 아님) ──────────────────────────
 export const coverTemplateIdSchema = z.enum([

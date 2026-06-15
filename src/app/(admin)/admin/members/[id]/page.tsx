@@ -6,6 +6,7 @@ import {
   getMemberDetail,
   getMemberTransactions,
 } from "@/actions/admin-members";
+import { getMemberActivity } from "@/actions/admin-activity";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MemberDetailClient } from "@/components/admin/member-detail-client";
 
@@ -52,17 +53,25 @@ async function MemberContent({ memberId }: { memberId: string }) {
   // result.kind === "ok"
   const member = result.member;
 
-  // First page of transactions, server-fetched
-  const txResult = await getMemberTransactions(memberId, { limit: 30 });
+  // First page of transactions + activity timeline, server-fetched
+  const [txResult, activityResult] = await Promise.all([
+    getMemberTransactions(memberId, { limit: 30 }),
+    getMemberActivity(memberId, { limit: 40 }),
+  ]);
   const initialTransactions =
     txResult.kind === "ok"
       ? { items: txResult.items, nextCursor: txResult.nextCursor }
       : { items: [], nextCursor: null };
+  const initialActivity =
+    activityResult.kind === "ok"
+      ? { items: activityResult.items, nextBefore: activityResult.nextBefore }
+      : { items: [], nextBefore: null };
 
   return (
     <MemberDetailClient
       member={member}
       initialTransactions={initialTransactions}
+      initialActivity={initialActivity}
     />
   );
 }

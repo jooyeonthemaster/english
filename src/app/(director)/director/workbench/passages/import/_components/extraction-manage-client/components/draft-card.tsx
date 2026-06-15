@@ -9,7 +9,7 @@ import {
 } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { FileText, Pencil, Maximize2, type LucideIcon } from "lucide-react";
+import { CheckCircle2, FileText, Pencil, Maximize2, type LucideIcon } from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
 import {
@@ -45,6 +45,10 @@ interface DraftCardProps {
    *  Renders a subtle shading so users can quickly find where they were
    *  after closing the popup. Overridden by `active` when both are true. */
   recentlyViewed?: boolean;
+  /** True when this draft is already loaded into the embedder's workspace
+   *  (학습지 생성 우측 지문 스택). Renders a subtle blue tint + '불러옴' chip so
+   *  the teacher can see at a glance which 자료 are in the current session. */
+  loadedInWorkspace?: boolean;
   /** Hide the selection checkbox. Used by contexts (e.g., the extraction
    *  page preview drawer) that don't expose folder/bulk operations the
    *  checkbox feeds into. */
@@ -72,6 +76,7 @@ export function DraftCard({
   onToggleCheck,
   bulkDragIds,
   recentlyViewed,
+  loadedInWorkspace = false,
   hideCheckbox,
   onTitleChange,
   statusBadgeMode = "review",
@@ -274,6 +279,8 @@ export function DraftCard({
           ? "border-blue-300 bg-blue-50/40 ring-1 ring-blue-100"
           : checked
             ? "border-blue-300 bg-blue-50/30 ring-1 ring-blue-100"
+          : loadedInWorkspace
+            ? "border-blue-200/90 bg-blue-50/25 ring-1 ring-blue-100/80 hover:border-blue-300/80"
           : stampDone
             ? "border-slate-200 hover:border-slate-300 hover:bg-slate-50/60"
             : statusBadgeMode === "analysis"
@@ -291,6 +298,11 @@ export function DraftCard({
         <span
           aria-hidden="true"
           className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-blue-500 to-blue-600"
+        />
+      ) : loadedInWorkspace ? (
+        <span
+          aria-hidden="true"
+          className="absolute inset-y-0 left-0 w-1 bg-blue-300/70"
         />
       ) : null}
       {stampDone ? (
@@ -414,6 +426,12 @@ export function DraftCard({
 
       <div className="flex flex-wrap items-center gap-1">
         <RestorationBadge status={draft.restorationStatus} />
+        {loadedInWorkspace ? (
+          <span className="inline-flex shrink-0 items-center gap-0.5 rounded border border-blue-200 bg-blue-50 px-1 py-px text-[9.5px] font-bold leading-none text-blue-600">
+            <CheckCircle2 className="size-2.5" aria-hidden="true" />
+            불러옴
+          </span>
+        ) : null}
       </div>
 
       <p className="line-clamp-2 text-[11px] leading-snug text-slate-600">

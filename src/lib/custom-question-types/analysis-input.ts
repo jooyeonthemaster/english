@@ -25,6 +25,8 @@ export interface AnalyzedCustomTypeSource {
   questions: QuestionAnalysis[];
   /** 분석 수행 모델 ID(데이터에 남겨 비교/디버깅용). */
   model: string;
+  /** DocAI OCR 원문(있으면) — 2차 포맷 분석의 전사 안정화(하이브리드 입력)에 재사용. */
+  referenceText?: string;
 }
 
 /**
@@ -47,5 +49,5 @@ export async function analyzeForCustomType(
     throw new Error("분석 결과에서 문항을 찾지 못했습니다.");
   }
 
-  return { primary, questions, model: result.model };
+  return { primary, questions, model: result.model, referenceText: result.referenceText };
 }

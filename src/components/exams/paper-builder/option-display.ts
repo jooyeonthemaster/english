@@ -23,6 +23,21 @@ export function optionOrdinalLabel(index: number) {
   return getCircledNumber(index);
 }
 
+const CUSTOM_LABEL_SUBTYPES = new Set(["CUSTOM", "CUSTOM_LAYOUT"]);
+
+/** 커스텀 유형은 저장된 선지 라벨(마커 스킴)을 그대로 존중, 그 외엔 인덱스 원형 숫자. */
+export function optionDisplayLabel(
+  subType: string | null | undefined,
+  index: number,
+  storedLabel?: string | null,
+): string {
+  if (subType && CUSTOM_LABEL_SUBTYPES.has(subType)) {
+    const t = (storedLabel ?? "").trim();
+    if (t) return t;
+  }
+  return optionOrdinalLabel(index);
+}
+
 export function optionReferenceLabel(index: number) {
   return index >= 0 && index < 26
     ? `(${String.fromCharCode(65 + index)})`

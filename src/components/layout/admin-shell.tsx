@@ -222,6 +222,17 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
 
   const routeMatches = useCallback((href: string, path: string) => {
     if (href === basePath) return path === basePath;
+    // 튜터 운영 홈(/tutor)은 학생·클래스·기기·원비 허브다. 하위 /tutor/programs,
+    // /tutor/distributions, /tutor/monitor 는 별도 nav 항목이므로 자손까지
+    // active 로 번지지 않게 정확히 일치(+ 학생 상세 /students/* 는 허브 소속)로 본다.
+    const tutorHubHref = `${basePath}/tutor`;
+    if (href === tutorHubHref) {
+      return (
+        path === tutorHubHref ||
+        path === `${basePath}/students` ||
+        path.startsWith(`${basePath}/students/`)
+      );
+    }
     const passageBankHref = `${basePath}/workbench/passages`;
     const passageImportHref = `${passageBankHref}/import`;
     if (

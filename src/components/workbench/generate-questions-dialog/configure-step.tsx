@@ -5,8 +5,10 @@ import React from "react";
 import { Bookmark, FileText, Loader2, Save, Sparkles, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { GenerationPlanSelector } from "@/components/workbench/generation-plan-selector";
 import { QUESTION_TYPE_GROUPS as EXAM_TYPE_GROUPS } from "@/lib/question-type-ui";
 import { createCustomPrompt, deleteCustomPrompt } from "@/actions/custom-prompts";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { PassageItem, SavedPrompt } from "./types";
 
 interface Props {
@@ -18,6 +20,8 @@ interface Props {
   totalQuestions: number;
   prompt: string;
   setPrompt: (v: string) => void;
+  generationPlan: QuestionGenerationPlan;
+  setGenerationPlan: (v: QuestionGenerationPlan) => void;
   savedPrompts: SavedPrompt[];
   showSavedPrompts: boolean;
   setShowSavedPrompts: (v: boolean) => void;
@@ -40,6 +44,8 @@ export function ConfigureStep({
   totalQuestions,
   prompt,
   setPrompt,
+  generationPlan,
+  setGenerationPlan,
   savedPrompts,
   showSavedPrompts,
   setShowSavedPrompts,
@@ -68,6 +74,22 @@ export function ConfigureStep({
         >
           변경
         </button>
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[11px] font-semibold text-slate-400 tracking-wider">
+            생성 품질
+          </span>
+          <span className="text-[10px] font-bold text-violet-500">
+            프리미엄 2x
+          </span>
+        </div>
+        <GenerationPlanSelector
+          value={generationPlan}
+          onChange={setGenerationPlan}
+          compact
+        />
       </div>
 
       {/* Type groups */}

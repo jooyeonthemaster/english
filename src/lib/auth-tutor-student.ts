@@ -12,6 +12,10 @@ import {
 
 export const TUTOR_STUDENT_COOKIE = "tutor-student-session";
 export const TUTOR_DEVICE_COOKIE = "tutor-device";
+/** Max active devices a single student code may be logged in on at once. */
+export const TUTOR_DEVICE_LIMIT = 2;
+/** Sentinel thrown by loginTutorStudent when the device limit is reached. */
+export const DEVICE_LIMIT_EXCEEDED = "DEVICE_LIMIT_EXCEEDED";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
 const COOKIE_PATH = "/";
 const LEGACY_TUTOR_COOKIE_PATH = "/tutor";
@@ -174,37 +178,66 @@ export async function loginTutorStudent({
   const deviceSeed = await getDeviceSeed();
   const deviceFingerprint = hashDeviceFingerprint(deviceSeed, userAgent);
 
-  const expiresAt = new Date(Date.now() + COOKIE_MAX_AGE * 1000);
-  const existingSession = await prisma.tutorStudentSession.findFirst({
-    where: { studentId: student.id },
-    orderBy: { issuedAt: "desc" },
-    select: { id: true },
-  });
-  const tutorSession = existingSession
-    ? await prisma.tutorStudentSession.update({
-        where: { id: existingSession.id },
+  const now = new Date();
+  const expiresAt = new Date(now.getTime() + COOKIE_MAX_AGE * 1000);
+  const studentId = student.id;
+  const academyId = academy.id;
+
+  // Per-student device limit (max TUTOR_DEVICE_LIMIT active devices).
+  // count + create are wrapped in a transaction so two concurrent new-device
+  // logins can't both read "1 device" and both create a 3rd session (TOCTOU).
+  const tutorSession = await prisma.$transaction(async (tx) => {
+    // (A) Same device re-login → reuse & refresh the existing active session.
+    const sameDevice = await tx.tutorStudentSession.findFirst({
+      where: {
+        studentId,
+        deviceFingerprint,
+        revokedAt: null,
+        expiresAt: { gt: now },
+      },
+      orderBy: { issuedAt: "desc" },
+      select: { id: true },
+    });
+    if (sameDevice) {
+      return tx.tutorStudentSession.update({
+        where: { id: sameDevice.id },
         data: {
-          academyId: academy.id,
-          deviceFingerprint,
+          academyId,
           userAgent,
           ip,
-          issuedAt: new Date(),
-          lastSeenAt: new Date(),
+          issuedAt: now,
+          lastSeenAt: now,
           expiresAt,
           revokedAt: null,
           revokedReason: null,
         },
-      })
-    : await prisma.tutorStudentSession.create({
-        data: {
-          academyId: academy.id,
-          studentId: student.id,
-          deviceFingerprint,
-          userAgent,
-          ip,
-          expiresAt,
-        },
       });
+    }
+
+    // (B) New device → enforce the active device limit (distinct fingerprints).
+    const activeSessions = await tx.tutorStudentSession.findMany({
+      where: { studentId, revokedAt: null, expiresAt: { gt: now } },
+      select: { deviceFingerprint: true },
+    });
+    const activeDevices = new Set(activeSessions.map((s) => s.deviceFingerprint));
+    if (activeDevices.size >= TUTOR_DEVICE_LIMIT) {
+      throw new Error(DEVICE_LIMIT_EXCEEDED);
+    }
+
+    // (C) Under the limit → register the new device session.
+    return tx.tutorStudentSession.create({
+      data: {
+        academyId,
+        studentId,
+        deviceFingerprint,
+        userAgent,
+        ip,
+        issuedAt: now,
+        lastSeenAt: now,
+        expiresAt,
+      },
+    });
+  });
 
   const tokenPayload: Omit<TutorStudentTokenPayload, "iat" | "exp"> = {
     typ: "tutor-student",

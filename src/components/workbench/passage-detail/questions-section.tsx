@@ -2,9 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Gem, Sparkles } from "lucide-react";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { formatDate } from "@/lib/utils";
-import { getVisibleQuestionTags } from "@/lib/question-generation-plans";
+import {
+  getQuestionGenerationPlanFromTags,
+  getVisibleQuestionTags,
+  QUESTION_GENERATION_PLAN_TAGS,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 import type { PassageDetailProps } from "./types";
 import { Q_TYPE_LABELS, Q_SUBTYPE_LABELS, Q_DIFF } from "./constants";
 import { safeParseJSON } from "./utils";
@@ -17,6 +23,12 @@ import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/op
 // Questions Section — toggle + 2-column grid with FULL question cards
 // ---------------------------------------------------------------------------
 
+function readGenerationPlanFromStructuredData(value: unknown): QuestionGenerationPlan | null {
+  if (!value || typeof value !== "object" || !("_generationPlan" in value)) return null;
+  const plan = (value as { _generationPlan?: unknown })._generationPlan;
+  return plan === "PREMIUM" || plan === "STANDARD" ? plan : null;
+}
+
 function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["questions"][0]; num: number }) {
   const [showExplanation, setShowExplanation] = useState(false);
   const options = safeParseJSON<{ label: string; text: string }[]>(q.options, []);
@@ -28,7 +40,11 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
         }))
       : options;
   const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
-  const tags = getVisibleQuestionTags(safeParseJSON<string[]>(q.tags, []));
+  const rawTags = safeParseJSON<string[]>(q.tags, []);
+  const generationPlan =
+    getQuestionGenerationPlanFromTags(rawTags) ??
+    readGenerationPlanFromStructuredData(q.structuredData);
+  const tags = getVisibleQuestionTags(rawTags);
   const keyPoints = safeParseJSON<string[]>(q.explanation?.keyPoints, []);
   const displayQuestionText = repairGrammarCorrectionQuestionText({
     subType: q.subType,
@@ -53,6 +69,22 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
           <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${Q_DIFF[q.difficulty]?.cls || "bg-slate-100 text-slate-500"}`}>
             {Q_DIFF[q.difficulty]?.label || q.difficulty}
           </span>
+          {generationPlan && (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
+            <span
+              className={`inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded border ${
+                generationPlan === "PREMIUM"
+                  ? "border-violet-200 bg-violet-50 text-violet-700"
+                  : "border-sky-200 bg-sky-50 text-sky-700"
+              }`}
+            >
+              {generationPlan === "PREMIUM" ? (
+                <Gem className="w-3 h-3" />
+              ) : (
+                <Sparkles className="w-3 h-3" />
+              )}
+              {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
+            </span>
+          )}
           {q.approved && (
             <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600">승인</span>
           )}

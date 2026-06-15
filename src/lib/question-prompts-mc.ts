@@ -12,13 +12,14 @@ export const MC_PROMPTS: Record<string, string> = {
 2. 기본 모드에서는 **정답은 반드시 원문에서 선택한 표현을 그대로(한 글자도 바꾸지 않고) 사용해야 합니다.**
    - 패러프레이즈, 동의어 치환, 어순 변경 절대 불가
 3. 단, 별도의 Type detail setting이 주어지면 그 설정이 정답 선지 구성 규칙을 우선합니다.
+   - "PARAPHRASE" 모드에서는 originalExpression은 원문 그대로 두되, 정답 선지 text만 의미 보존 패러프레이즈로 작성합니다.
 4. 오답 4개는 원문에 없는, 비슷하지만 명확히 구분 가능한 영어 표현으로 구성합니다.
 
 ## 출력 필드
 - originalExpression: 원문에서 빈칸으로 만들 정확한 표현 (원문과 한 글자도 다르면 안 됨)
 - surroundingText: originalExpression 주변 40~60자 텍스트 (위치 식별용, 원문 그대로 복사)
-- blankAnswerMode: 기본 모드는 "SOURCE_EXACT"; 부정-부정 설정이 있을 때만 "DOUBLE_NEGATIVE"
-- answerLogic: 부정-부정 설정이 있을 때, 정답 논리를 한국어로 간단히 설명
+- blankAnswerMode: 기본 모드는 "SOURCE_EXACT"; 빈칸 변형 설정이 있을 때는 "PARAPHRASE"; 부정-부정 설정이 있을 때만 "DOUBLE_NEGATIVE"
+- answerLogic: 빈칸 변형/부정-부정 설정이 있을 때, 정답 논리를 한국어로 간단히 설명
 - correctAnswer: 정답 선지의 label ("1"~"5")
 - options: label "1"~"5", text는 영어 표현. 기본 모드에서는 정답 선지의 text가 반드시 originalExpression과 동일
 - ⚠️ passageWithBlank 필드는 생성하지 마세요 (서버에서 자동 생성)
@@ -119,10 +120,34 @@ direction 예시: "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?
 - ⚠️ passageWithMarkers 필드는 생성하지 마세요 (서버에서 자동 생성)
 - direction 예시: "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?"`,
 
-  SENTENCE_ORDER: `글의 순서 문제를 만드세요.
-- givenSentence: 주어진 첫 문장
-- paragraphs: (A), (B), (C) 3개 단락 (label + text)
-- options: 순서 조합 5개 (예: label "1", text "(A)-(C)-(B)")
+  SENTENCE_ORDER: `글의 순서 문제를 만드세요. (수능/모의고사형: 주어진 글 + (A)(B)(C) 순서 배열)
+
+## 핵심 형식 규칙 — 절대 위반 금지
+1. givenSentence는 반드시 지문의 도입부 1문장 또는 2문장만 사용합니다.
+   - 3문장 이상 금지.
+   - 긴 문단 전체를 givenSentence로 넣는 것 금지.
+   - 반드시 65단어 이하로 유지합니다.
+   - 첫 두 문장이 65단어를 넘으면 첫 문장만 givenSentence로 사용합니다.
+   - givenSentence는 (A)(B)(C)보다 길어서는 안 됩니다.
+2. paragraphs는 반드시 (A), (B), (C) 세 덩어리입니다.
+   - 각 덩어리는 최소 2문장 이상이어야 합니다.
+   - 세 덩어리의 분량은 균형 있게 나눕니다. 한 덩어리만 한 줄/한 문장으로 만들지 마세요.
+   - 한 덩어리가 다른 덩어리의 2배 가까이 길어지면 실패입니다.
+3. 지문 전체를 "given 4문장 + A/B/C 한 문장씩"처럼 쪼개는 것은 불량 문항입니다.
+4. labels는 정확히 "(A)", "(B)", "(C)"를 사용합니다.
+5. options는 (A)(B)(C)의 순열 5개만 만듭니다. 예: "(B)-(A)-(C)"
+6. 정답 순서는 가급적 "(A)-(B)-(C)"가 되지 않게 paragraphs 라벨을 섞어 배치합니다. 학생이 표시 순서 그대로 찍어 맞히는 구조 금지.
+
+## 출제 단서
+- A/B/C 사이에는 대명사·지시어(this/these/it/they), 연결사(However/Therefore/For example), 시간 순서, 원인-결과, 일반→구체, 문제→해결, 주장→근거 같은 명확한 순서 단서가 있어야 합니다.
+- 오답 순서도 표면적으로는 그럴듯해야 하지만, 하나의 지시어/연결사/논리 전개가 깨지도록 설계합니다.
+
+## 출력 필드
+- givenSentence: 주어진 첫 문장 또는 첫 두 문장
+- paragraphs: (A), (B), (C) 3개 단락 (각각 label + text, 각 2문장 이상)
+- options: 순서 조합 5개 (label "1"~"5", text는 "(A)-(C)-(B)" 형식)
+- correctAnswer: 정답 선지 label
+- wrongOptionExplanations: 각 오답 순서가 왜 흐름상 깨지는지 한국어 설명
 - direction 예시: "주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?"`,
 
   SENTENCE_INSERT: `문장 삽입 문제를 만드세요. (수능 38·39번 / 내신 킬러급 변별력 기준)

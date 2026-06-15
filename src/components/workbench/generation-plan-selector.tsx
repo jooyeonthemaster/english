@@ -68,7 +68,7 @@ export function GenerationPlanSelector({
               </span>
             </div>
             <p className="mt-1 text-[10px] font-medium leading-snug text-slate-500 truncate">
-              {plan.modelLabel}
+              {plan.description}
             </p>
           </button>
         );

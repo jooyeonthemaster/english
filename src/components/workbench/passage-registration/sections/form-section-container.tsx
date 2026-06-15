@@ -70,6 +70,8 @@ interface FormSectionContainerProps {
   draftRefreshToken: number;
   onSelectDraft: (draft: M1PassageDraftWithJob) => void;
   onLoadSelectedDrafts: (drafts: M1PassageDraftWithJob[]) => void;
+  /** 우측 워크스페이스에 이미 불러온 드래프트 id — 자료 카드 '불러옴' 표시. */
+  loadedDraftIds?: string[];
   draftCollections: DraftCollectionItem[];
   draftMembership: Record<string, string[]>;
 
@@ -136,6 +138,7 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       onDeletePrompt={(id) => deletePrompt({ id, setSavedPrompts: p.setSavedPrompts })}
       onSelectDraft={p.onSelectDraft}
       onLoadSelectedDrafts={p.onLoadSelectedDrafts}
+      loadedDraftIds={p.loadedDraftIds}
       draftCollections={p.draftCollections}
       draftMembership={p.draftMembership}
       intakeView={p.intakeView}

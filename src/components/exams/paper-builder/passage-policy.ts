@@ -32,6 +32,10 @@ export const QUESTION_PASSAGE_FLOW_RULES: Record<string, PassageFlow> = {
   CONTEXT_MEANING: "embedded",
   SYNONYM: "source",
   ANTONYM: "embedded",
+  // 커스텀 문항은 자료가 questionText 안에 통째로 포함됨(LayoutDoc 조립)
+  // — 원본 지문 블록 중복 방지.
+  CUSTOM: "embedded",
+  CUSTOM_LAYOUT: "embedded",
 };
 
 const INLINE_SOURCE_PASSAGE_SUBTYPES = new Set([

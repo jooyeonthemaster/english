@@ -130,6 +130,7 @@ export const extractionPageTask = task({
     let structured: Awaited<ReturnType<typeof runOcrForPage>>["structured"] = null;
     let inputTokens: number | undefined;
     let outputTokens: number | undefined;
+    let modelUsed: string | undefined;
 
     try {
       const ocrResult = await runOcrForPage({
@@ -145,6 +146,7 @@ export const extractionPageTask = task({
       structured = ocrResult.structured;
       inputTokens = ocrResult.inputTokens;
       outputTokens = ocrResult.outputTokens;
+      modelUsed = ocrResult.modelUsed;
     } catch (err) {
       const classified = classifyGeminiError(err);
       const debugMessage = getErrorDebugMessage(err);
@@ -232,6 +234,7 @@ export const extractionPageTask = task({
       outputTokens,
       latencyMs,
       structured: structured ?? undefined,
+      modelUsed,
     });
 
     logger.info("page success", {

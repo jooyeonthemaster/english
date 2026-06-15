@@ -26,6 +26,7 @@ export interface ClassData {
 interface ActionResult {
   success: boolean;
   error?: string;
+  id?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -33,12 +34,23 @@ interface ActionResult {
 // ---------------------------------------------------------------------------
 // NOTE: formatScheduleLabel moved to @/lib/utils (can't export non-async from "use server")
 
+/** True when the class exists and belongs to the given academy. */
+async function classBelongsToAcademy(classId: string, academyId: string) {
+  const cls = await prisma.class.findFirst({
+    where: { id: classId, academyId },
+    select: { id: true },
+  });
+  return !!cls;
+}
+
 
 // ---------------------------------------------------------------------------
 // CRUD
 // ---------------------------------------------------------------------------
 
 export async function getClasses(academyId: string) {
+  const staff = await requireStaffAuth();
+  if (academyId !== staff.academyId) throw new Error("권한이 없습니다.");
   const classes = await prisma.class.findMany({
     where: { academyId },
     include: {
@@ -147,8 +159,12 @@ export async function createClass(
   data: ClassData
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth("DIRECTOR");
-    await prisma.class.create({
+    const staff = await requireStaffAuth("DIRECTOR");
+    if (academyId === "__CURRENT__") academyId = staff.academyId;
+    if (academyId !== staff.academyId) {
+      return { success: false, error: "권한이 없습니다." };
+    }
+    const cls = await prisma.class.create({
       data: {
         academyId,
         name: data.name,
@@ -160,9 +176,8 @@ export async function createClass(
         isActive: data.isActive ?? true,
       },
     });
-    revalidatePath("/director/classes");
-    revalidatePath("/director/students");
-    return { success: true };
+    revalidatePath("/director/tutor");
+    return { success: true, id: cls.id };
   } catch (error) {
     return {
       success: false,
@@ -176,7 +191,10 @@ export async function updateClass(
   data: Partial<ClassData>
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth("DIRECTOR");
+    const staff = await requireStaffAuth("DIRECTOR");
+    if (!(await classBelongsToAcademy(classId, staff.academyId))) {
+      return { success: false, error: "반을 찾을 수 없습니다." };
+    }
     const updateData: Record<string, unknown> = {};
     if (data.name !== undefined) updateData.name = data.name;
     if (data.teacherId !== undefined) updateData.teacherId = data.teacherId || null;
@@ -191,9 +209,7 @@ export async function updateClass(
       where: { id: classId },
       data: updateData,
     });
-    revalidatePath("/director/classes");
-    revalidatePath(`/director/classes/${classId}`);
-    revalidatePath("/director/students");
+    revalidatePath("/director/tutor");
     return { success: true };
   } catch (error) {
     return {
@@ -205,10 +221,12 @@ export async function updateClass(
 
 export async function deleteClass(classId: string): Promise<ActionResult> {
   try {
-    await requireStaffAuth("DIRECTOR");
+    const staff = await requireStaffAuth("DIRECTOR");
+    if (!(await classBelongsToAcademy(classId, staff.academyId))) {
+      return { success: false, error: "반을 찾을 수 없습니다." };
+    }
     await prisma.class.delete({ where: { id: classId } });
-    revalidatePath("/director/classes");
-    revalidatePath("/director/students");
+    revalidatePath("/director/tutor");
     return { success: true };
   } catch (error) {
     return {
@@ -224,21 +242,26 @@ export async function enrollStudent(
   status: "ENROLLED" | "WAITLISTED" = "ENROLLED"
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth("DIRECTOR");
+    const staff = await requireStaffAuth("DIRECTOR");
 
-    // Check capacity if enrolling
-    if (status === "ENROLLED") {
-      const cls = await prisma.class.findUnique({
-        where: { id: classId },
+    // Class + student must both belong to the caller's academy.
+    const [cls, student] = await Promise.all([
+      prisma.class.findFirst({
+        where: { id: classId, academyId: staff.academyId },
         include: {
-          _count: {
-            select: { enrollments: { where: { status: "ENROLLED" } } },
-          },
+          _count: { select: { enrollments: { where: { status: "ENROLLED" } } } },
         },
-      });
-      if (cls && cls._count.enrollments >= cls.capacity) {
-        return { success: false, error: "정원이 초과되었습니다. 대기열에 추가하시겠습니까?" };
-      }
+      }),
+      prisma.student.findFirst({
+        where: { id: studentId, academyId: staff.academyId },
+        select: { id: true },
+      }),
+    ]);
+    if (!cls || !student) {
+      return { success: false, error: "학생 또는 반을 찾을 수 없습니다." };
+    }
+    if (status === "ENROLLED" && cls._count.enrollments >= cls.capacity) {
+      return { success: false, error: "정원이 초과되었습니다. 대기열에 추가하시겠습니까?" };
     }
 
     await prisma.classEnrollment.upsert({
@@ -247,8 +270,7 @@ export async function enrollStudent(
       create: { classId, studentId, status },
     });
 
-    revalidatePath(`/director/classes/${classId}`);
-    revalidatePath("/director/students");
+    revalidatePath("/director/tutor");
     return { success: true };
   } catch (error) {
     return {
@@ -263,13 +285,15 @@ export async function removeStudent(
   studentId: string
 ): Promise<ActionResult> {
   try {
-    await requireStaffAuth("DIRECTOR");
+    const staff = await requireStaffAuth("DIRECTOR");
+    if (!(await classBelongsToAcademy(classId, staff.academyId))) {
+      return { success: false, error: "반을 찾을 수 없습니다." };
+    }
     await prisma.classEnrollment.update({
       where: { classId_studentId: { classId, studentId } },
       data: { status: "DROPPED", droppedAt: new Date() },
     });
-    revalidatePath(`/director/classes/${classId}`);
-    revalidatePath("/director/students");
+    revalidatePath("/director/tutor");
     return { success: true };
   } catch (error) {
     return {
@@ -280,6 +304,8 @@ export async function removeStudent(
 }
 
 export async function getClassStudents(classId: string) {
+  const staff = await requireStaffAuth();
+  if (!(await classBelongsToAcademy(classId, staff.academyId))) return [];
   const enrollments = await prisma.classEnrollment.findMany({
     where: { classId, status: "ENROLLED" },
     include: {
@@ -300,22 +326,35 @@ export async function getClassStudents(classId: string) {
   return enrollments.map((e) => e.student);
 }
 
-export async function getStaffList(academyId: string) {
+/** academyId arg is accepted for back-compat but ignored — always scoped to session. */
+export async function getStaffList(academyId?: string) {
+  const staff = await requireStaffAuth();
+  void academyId;
   return prisma.staff.findMany({
-    where: { academyId, isActive: true },
+    where: { academyId: staff.academyId, isActive: true },
     select: { id: true, name: true, role: true, avatarUrl: true },
     orderBy: { name: "asc" },
   });
 }
 
-export async function searchStudents(academyId: string, query: string) {
+/**
+ * Search active students by name/code, always scoped to the caller's academy.
+ * The first positional arg is accepted for back-compat but ignored; some callers
+ * pass it positionally with the query — the session academy is authoritative.
+ */
+export async function searchStudents(academyIdOrQuery: string, query?: string) {
+  const staff = await requireStaffAuth();
+  // Back-compat: enroll-dialog calls (academyId, query); consultation-dialog
+  // calls (query). The query wins when present, else the first positional arg.
+  const term = (query ?? academyIdOrQuery ?? "").trim();
+  if (!term) return [];
   return prisma.student.findMany({
     where: {
-      academyId,
+      academyId: staff.academyId,
       status: "ACTIVE",
       OR: [
-        { name: { contains: query, mode: "insensitive" } },
-        { studentCode: { contains: query, mode: "insensitive" } },
+        { name: { contains: term, mode: "insensitive" } },
+        { studentCode: { contains: term, mode: "insensitive" } },
       ],
     },
     select: {

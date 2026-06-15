@@ -18,6 +18,8 @@ export function processBlankInference(
   const options = ai.options as Array<{ label: string; text: string }>;
   const correctAnswer = ai.correctAnswer as string;
   const isDoubleNegativeMode = ai.blankAnswerMode === "DOUBLE_NEGATIVE";
+  const isParaphraseMode = ai.blankAnswerMode === "PARAPHRASE";
+  const isTransformedAnswerMode = isDoubleNegativeMode || isParaphraseMode;
 
   if (!originalExpression) {
     return { success: false, data: ai, warnings, error: "Missing originalExpression field" };
@@ -35,11 +37,11 @@ export function processBlankInference(
   }
 
   // Validate: in default mode the correct answer option's text should equal originalExpression.
-  // In double-negative mode, originalExpression is still the source span to blank,
+  // In transformed modes, originalExpression is still the source span to blank,
   // but the visible correct option is intentionally transformed.
   if (options && Array.isArray(options)) {
     const correctOption = options.find((o) => o.label === correctAnswer);
-    if (!isDoubleNegativeMode && correctOption && correctOption.text !== originalExpression) {
+    if (!isTransformedAnswerMode && correctOption && correctOption.text !== originalExpression) {
       // Auto-fix: check if any other option matches
       const matchingOption = options.find((o) => o.text === originalExpression);
       if (matchingOption) {
@@ -55,9 +57,9 @@ export function processBlankInference(
         );
         correctOption.text = originalExpression;
       }
-    } else if (isDoubleNegativeMode && correctOption?.text === originalExpression) {
+    } else if (isTransformedAnswerMode && correctOption?.text === originalExpression) {
       warnings.push(
-        "DOUBLE_NEGATIVE mode expected a transformed correct option, but correct option matches originalExpression.",
+        `${ai.blankAnswerMode} mode expected a transformed correct option, but correct option matches originalExpression.`,
       );
     }
   }
@@ -92,6 +94,7 @@ function processMultiBlankInference(
   ai: QuestionPostProcessData,
 ): PostProcessResult {
   const warnings: string[] = [];
+  const isParaphraseMode = ai.blankAnswerMode === "PARAPHRASE";
 
   const rawBlanks = (ai.blanks as Array<{
     label?: string;
@@ -207,7 +210,8 @@ function processMultiBlankInference(
     };
   }
 
-  // The correct option must restore the original passage expressions.
+  // The correct option must restore the original passage expressions unless
+  // the teacher requested paraphrased blank values.
   const correctLabel = cleanText(ai.correctAnswer);
   const correctOption = normalizedOptions.find((option) => option.label === correctLabel);
   if (!correctOption) {
@@ -222,18 +226,23 @@ function processMultiBlankInference(
     (value, index) =>
       comparableText(value) === comparableText(normalizedBlanks[index].originalExpression),
   );
-  if (!matchesSource) {
+  if (!matchesSource && !isParaphraseMode) {
     warnings.push(
       "Multi-blank correct option did not match the source expressions; auto-fixed to the verbatim passage expressions.",
     );
     correctOption.blankValues = normalizedBlanks.map((blank) => blank.originalExpression);
     correctOption.text = correctOption.blankValues.join(" …… ");
+  } else if (matchesSource && isParaphraseMode) {
+    warnings.push(
+      "PARAPHRASE mode expected transformed correct blankValues, but the correct option matches the source expressions.",
+    );
   }
 
   return {
     success: true,
     data: {
       ...ai,
+      blankAnswerMode: isParaphraseMode ? "PARAPHRASE" : ai.blankAnswerMode,
       blanks: normalizedBlanks,
       passageWithBlank,
       options: normalizedOptions,

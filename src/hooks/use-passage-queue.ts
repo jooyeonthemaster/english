@@ -21,10 +21,7 @@ import {
   type AnalysisTone,
 } from "@/lib/passage-analysis-options";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
-import {
-  notePassageAnalysisStarted,
-  notePassageAnalysisStartFailed,
-} from "@/hooks/use-passage-analysis-activity";
+import { bulkDeleteWorkbenchPassages } from "@/actions/workbench";
 
 export interface AnalysisPromptConfig {
   customPrompt: string;
@@ -32,6 +29,8 @@ export interface AnalysisPromptConfig {
   targetLevel: string;
   generationPlan?: QuestionGenerationPlan;
   analysisTone?: AnalysisTone;
+  /** true 면 기본 분석에 이어 실전 학습지(06)까지 한 번에 생성한다 (+5크레딧/지문). */
+  includeWorksheet?: boolean;
 }
 
 export type QueuedPassageStatus =
@@ -193,6 +192,7 @@ function promptConfigFromJobConfig(config: unknown): AnalysisPromptConfig {
     targetLevel: typeof raw.targetLevel === "string" ? raw.targetLevel : "",
     generationPlan: normalizeQuestionGenerationPlan(raw.generationPlan),
     analysisTone: normalizeAnalysisTone(raw.analysisTone),
+    includeWorksheet: raw.includeWorksheet === true,
   };
 }
 
@@ -522,37 +522,30 @@ function safeParseTags(raw: string): string[] | undefined {
 async function startPassageAnalysisJob(
   passageId: string,
   promptConfig: AnalysisPromptConfig,
-  options: { fast?: boolean; title?: string } = { fast: true },
+  options: { fast?: boolean } = { fast: true },
 ): Promise<PassageAnalysisJobResponse> {
-  const endpoint = options.fast !== false
+  const endpoint = options.fast
     ? "/api/workbench/ai-jobs/passage-analysis/fast"
     : "/api/workbench/ai-jobs/passage-analysis";
-  // 폴링을 기다리지 않고 다른 화면(문제 생성 등)의 "학습자료 생성중" 배지가
-  // 즉시 켜지도록 낙관적 등록. 시작 실패 시 아래에서 거둔다.
-  notePassageAnalysisStarted(passageId, options.title);
-  try {
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({
-        passageId,
-        customPrompt: promptConfig.customPrompt,
-        focusAreas: promptConfig.focusAreas,
-        targetLevel: promptConfig.targetLevel,
-        generationPlan: promptConfig.generationPlan,
-        analysisTone: promptConfig.analysisTone,
-      }),
-    });
-    const data = (await res.json().catch(() => ({}))) as PassageAnalysisJobResponse;
-    if (!res.ok || data.error) {
-      throw new Error(data.details || data.error || "Failed to start passage analysis job.");
-    }
-    return data;
-  } catch (err) {
-    notePassageAnalysisStartFailed(passageId);
-    throw err;
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({
+      passageId,
+      customPrompt: promptConfig.customPrompt,
+      focusAreas: promptConfig.focusAreas,
+      targetLevel: promptConfig.targetLevel,
+      generationPlan: promptConfig.generationPlan,
+      analysisTone: promptConfig.analysisTone,
+      includeWorksheet: promptConfig.includeWorksheet === true,
+    }),
+  });
+  const data = (await res.json().catch(() => ({}))) as PassageAnalysisJobResponse;
+  if (!res.ok || data.error) {
+    throw new Error(data.details || data.error || "Failed to start passage analysis job.");
   }
+  return data;
 }
 
 export function usePassageQueue(
@@ -647,9 +640,7 @@ export function usePassageQueue(
 
       if (!runAnalysisNow) return;
 
-      void startPassageAnalysisJob(passage.id, normalizedPromptConfig, {
-        title: passage.title,
-      })
+      void startPassageAnalysisJob(passage.id, normalizedPromptConfig)
         .then((response) => {
           updateQueueItem(setLocalQueue, passage.id, (item) =>
             applyAnalysisJobResponse(item, response),
@@ -700,7 +691,6 @@ export function usePassageQueue(
             const response = await startPassageAnalysisJob(
               passage.id,
               promptConfig,
-              { title: passage.title },
             );
             updateQueueItem(setLocalQueue, passage.id, (item) =>
               applyAnalysisJobResponse(item, response),
@@ -760,9 +750,7 @@ export function usePassageQueue(
             : p,
         ),
       );
-      void startPassageAnalysisJob(passageId, target.promptConfig, {
-        title: target.title,
-      })
+      void startPassageAnalysisJob(passageId, target.promptConfig)
         .then((response) => {
           updateQueueItem(setLocalQueue, passageId, (item) =>
             applyAnalysisJobResponse(item, response),
@@ -782,11 +770,34 @@ export function usePassageQueue(
     [notifyJobsChanged, queue, setLocalQueue],
   );
 
+  // 로컬 큐(화면)에서만 제거한다. 서버 삭제는 호출자(예: 분석 모달)가 이미
+  // 끝낸 뒤 UI 정리용으로 부른다 — 이 함수 자체는 DB 를 건드리지 않는다.
   const removeFromQueue = useCallback((passageId: string) => {
     setLocalQueue((prev) => prev.filter((p) => p.id !== passageId));
     setJobQueue((prev) => prev.filter((p) => p.id !== passageId));
     notifyJobsChanged();
   }, [notifyJobsChanged, setLocalQueue]);
+
+  // 지문을 DB 에서 실제로 삭제한 뒤 화면에서도 제거한다. 서버 삭제가 성공한
+  // 경우에만 로컬 큐에서 빼므로, 실패하면 카드가 그대로 남아 재시도할 수 있다.
+  // (academy 스코프 삭제이므로 다른 학원 id 는 조용히 무시된다.)
+  const deletePassages = useCallback(
+    async (passageIds: string[]) => {
+      const ids = passageIds.filter(Boolean);
+      if (ids.length === 0) {
+        return { success: true as const, requested: 0, deleted: 0 };
+      }
+      const result = await bulkDeleteWorkbenchPassages(ids);
+      if (result.success) {
+        const idSet = new Set(ids);
+        setLocalQueue((prev) => prev.filter((p) => !idSet.has(p.id)));
+        setJobQueue((prev) => prev.filter((p) => !idSet.has(p.id)));
+        notifyJobsChanged();
+      }
+      return result;
+    },
+    [notifyJobsChanged, setLocalQueue],
+  );
 
   const updateAnalysisData = useCallback(
     (passageId: string, data: PassageAnalysisData) => {
@@ -851,6 +862,7 @@ export function usePassageQueue(
     enqueueManyPending,
     retryAnalysis,
     removeFromQueue,
+    deletePassages,
     updateAnalysisData,
     updateQuestions,
   };

@@ -15,12 +15,15 @@ import {
   Square,
   ChevronLeft,
   ChevronRight,
+  Gem,
+  Sparkles,
 } from "lucide-react";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 import {
-  QUESTION_GENERATION_PLANS,
   getQuestionGenerationPlanFromTags,
+  QUESTION_GENERATION_PLANS,
+  QUESTION_GENERATION_PLAN_TAGS,
 } from "@/lib/question-generation-plans";
 import {
   approveNaeshinQuestion,
@@ -477,9 +480,21 @@ function QuestionCard({
           >
             {DIFFICULTY_LABELS[q.difficulty] || q.difficulty}
           </span>
-          {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && plan && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-lg bg-blue-50 text-blue-600 font-semibold">
-              {QUESTION_GENERATION_PLANS[plan].shortLabel}
+          {plan && (plan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
+            <span
+              className={cn(
+                "inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-lg border font-bold",
+                plan === "PREMIUM"
+                  ? "border-violet-200 bg-violet-50 text-violet-700"
+                  : "border-sky-200 bg-sky-50 text-sky-700",
+              )}
+            >
+              {plan === "PREMIUM" ? (
+                <Gem className="w-3 h-3" />
+              ) : (
+                <Sparkles className="w-3 h-3" />
+              )}
+              {QUESTION_GENERATION_PLAN_TAGS[plan]}
             </span>
           )}
           {q.approved ? (

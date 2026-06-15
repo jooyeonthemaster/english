@@ -107,6 +107,8 @@ interface DraftGridProps {
   /** Most recently opened draft id — kept after the detail modal closes
    *  so the card stays subtly shaded. */
   lastViewedDraftId?: string | null;
+  /** 임베더 워크스페이스에 이미 불러와 있는 드래프트 id — '불러옴' 은은한 표시. */
+  loadedDraftIds?: Set<string>;
   checkedIds: Set<string>;
   setCheckedIds: (next: Set<string>) => void;
   gridCols: GridCols;
@@ -205,6 +207,7 @@ export function DraftGrid({
   hasActiveSearchOrFilter,
   selectedDraftId,
   lastViewedDraftId,
+  loadedDraftIds,
   checkedIds,
   setCheckedIds,
   gridCols,
@@ -469,6 +472,7 @@ export function DraftGrid({
                             selectedDraftId !== draft.id &&
                             lastViewedDraftId === draft.id
                           }
+                          loadedInWorkspace={loadedDraftIds?.has(draft.id) ?? false}
                           checked={checkedIds.has(draft.id)}
                           bulkDragIds={checkedIdsList}
                           onClick={() => onSelectDraft(draft.id)}
@@ -516,6 +520,7 @@ export function DraftGrid({
                       selectedDraftId !== draft.id &&
                       lastViewedDraftId === draft.id
                     }
+                    loadedInWorkspace={loadedDraftIds?.has(draft.id) ?? false}
                     checked={checkedIds.has(draft.id)}
                     bulkDragIds={checkedIdsList}
                     onClick={() => onSelectDraft(draft.id)}

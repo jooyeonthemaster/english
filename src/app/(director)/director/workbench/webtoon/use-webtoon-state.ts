@@ -2,8 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import type { WebtoonRow, WebtoonStyleId } from "./webtoon-page-types";
-import { isActiveStatus } from "./webtoon-page-types";
+import type {
+  WebtoonRow,
+  WebtoonStyleId,
+  WebtoonLanguageId,
+} from "./webtoon-page-types";
+import { DEFAULT_WEBTOON_LANGUAGE, isActiveStatus } from "./webtoon-page-types";
 
 interface ListResponse {
   ok: boolean;
@@ -115,8 +119,13 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
   }, [activeKey]);
 
   const handleBatchGenerate = useCallback(
-    async (passages: PassageMin[], style: WebtoonStyleId, customPrompt: string) => {
-      if (passages.length === 0) return;
+    async (
+      passages: PassageMin[],
+      style: WebtoonStyleId,
+      customPrompt: string,
+      language: WebtoonLanguageId = DEFAULT_WEBTOON_LANGUAGE,
+    ): Promise<number> => {
+      if (passages.length === 0) return 0;
 
       const passageIds = passages.map((p) => p.id);
 
@@ -125,7 +134,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
         const res = await fetch("/api/ai/webtoon/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ passageIds, style, customPrompt }),
+          body: JSON.stringify({ passageIds, style, language, customPrompt }),
         });
         resData = await res.json();
 
@@ -141,11 +150,11 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
       } catch (err) {
         const message = err instanceof Error ? err.message : "요청 실패";
         toast.error(`생성 요청 실패: ${message}`);
-        return;
+        return 0;
       }
 
       const queuedIds = (resData.queued ?? []).map((q) => q.webtoonId);
-      if (queuedIds.length === 0) return;
+      if (queuedIds.length === 0) return 0;
 
       try {
         const fresh = await Promise.all(
@@ -168,6 +177,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
       toast.message(`${queuedIds.length}개 웹툰 생성을 시작했습니다.`, {
         description: "완료되면 이 화면에 자동으로 표시됩니다.",
       });
+      return queuedIds.length;
     },
     [],
   );
@@ -176,11 +186,17 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
     async (webtoonId: string) => {
       const target = items.find((it) => it.id === webtoonId);
       if (!target) return;
-      await handleBatchGenerate(
+      const queued = await handleBatchGenerate(
         [{ id: target.passageId, title: target.passage.title, content: "" }],
         target.style,
         target.customPrompt ?? "",
+        target.language ?? DEFAULT_WEBTOON_LANGUAGE,
       );
+      // 재생성은 새 행을 만들므로(생성 API가 항상 새 row 생성), 성공 시 기존 실패 행을
+      // 치워 갤러리에 실패 카드가 쌓이지 않게 한다.
+      if (queued > 0 && target.status === "FAILED") {
+        setItems((prev) => prev.filter((it) => it.id !== webtoonId));
+      }
     },
     [items, handleBatchGenerate],
   );

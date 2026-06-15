@@ -94,7 +94,8 @@ interface QueueSectionContainerProps {
   // Modal / queue actions
   setModalPassageId: (id: string | null) => void;
   retryAnalysis: (id: string) => void;
-  removeFromQueue: (id: string) => void;
+  // 지문을 DB 에서 실제 삭제한다(단건/일괄 공용). 성공 시 화면에서도 사라진다.
+  onDeletePassages: (ids: string[]) => void | Promise<void>;
 }
 
 const QUEUE_GRID_OPTIONS = [
@@ -142,14 +143,16 @@ export function QueueSectionContainer(p: QueueSectionContainerProps) {
       setCollectionPassageIds: p.setCollectionPassageIds,
       clearSelection: p.clearSelection,
     });
-  // 선택한 지문을 목록에서 일괄 삭제(로컬 큐에서 제거).
-  const handleDeleteSelected = () => {
+  // 선택한 지문을 DB 에서 일괄 삭제한다. 되돌릴 수 없으므로 확인을 받는다.
+  const handleDeleteSelected = async () => {
     if (selectedCount === 0) return;
     if (
-      !window.confirm(`선택한 ${selectedCount}개 지문을 목록에서 삭제할까요?`)
+      !window.confirm(
+        `선택한 ${selectedCount}개 지문을 삭제할까요? 관련 분석·문제도 함께 삭제되며 되돌릴 수 없습니다.`,
+      )
     )
       return;
-    p.selectedIds.forEach((id) => p.removeFromQueue(id));
+    await p.onDeletePassages([...p.selectedIds]);
     p.clearSelection();
   };
 
@@ -253,7 +256,7 @@ export function QueueSectionContainer(p: QueueSectionContainerProps) {
               onToggleSelect={p.toggleSelect}
               onViewDetail={p.setModalPassageId}
               onRetry={p.retryAnalysis}
-              onRemove={p.removeFromQueue}
+              onRemove={(id) => p.onDeletePassages([id])}
               gridCols={gridCols}
               marqueeBoundaryRef={marqueeBoundaryRef}
             />

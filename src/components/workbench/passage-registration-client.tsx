@@ -110,6 +110,14 @@ export function PassageRegistrationClient({
   // remembers the extraction draft it was loaded from so analysis updates that
   // Passage instead of forking a duplicate.
   const [rows, setRows] = useState<PassageInputRow[]>(() => [makeEmptyRow()]);
+  // 워크스페이스에 불러와 있는 드래프트 id — 좌측 자료 카드의 '불러옴' 은은한 표시용.
+  const loadedDraftIds = useMemo(
+    () =>
+      rows
+        .map((r) => r.sourceDraftId)
+        .filter((id): id is string => typeof id === "string" && id.length > 0),
+    [rows],
+  );
   const rowsRef = useRef(rows);
   useEffect(() => {
     rowsRef.current = rows;
@@ -137,6 +145,7 @@ export function PassageRegistrationClient({
     enqueueManyPending,
     retryAnalysis,
     removeFromQueue,
+    deletePassages,
     updateAnalysisData,
     updateQuestions,
   } = usePassageQueue(initialQueueItems, {
@@ -582,7 +591,11 @@ export function PassageRegistrationClient({
   // marks both persist (PassageNote) AND fold into that passage's analysis
   // prompt; sourceDraftId keeps a loaded draft linked to its Passage.
   const handleAnalyzeRows = useCallback(
-    async (plan: QuestionGenerationPlan) => {
+    async (
+      plan: QuestionGenerationPlan,
+      options?: { includeWorksheet?: boolean },
+    ) => {
+      const includeWorksheet = options?.includeWorksheet === true;
       const current = rowsRef.current;
       const valid = current.filter(
         (r) => r.content.trim().length >= MIN_CONTENT_CHARS,
@@ -662,6 +675,7 @@ export function PassageRegistrationClient({
                 targetLevel: "",
                 generationPlan: plan,
                 analysisTone,
+                includeWorksheet,
               },
             };
 
@@ -680,7 +694,7 @@ export function PassageRegistrationClient({
 
         if (success > 0) {
           toast.success(
-            `${success}개 지문이 등록되었습니다. 백그라운드에서 분석 진행 중 (동시 3개씩).`,
+            `${success}개 지문이 등록되었습니다. 백그라운드에서 학습지 생성 중 (동시 3개씩).`,
           );
           const fresh = [makeEmptyRow()];
           rowsRef.current = fresh;
@@ -728,6 +742,26 @@ export function PassageRegistrationClient({
 
   const removeTag = (tag: string) =>
     setTags((prev) => prev.filter((t) => t !== tag));
+
+  // 지문 목록 카드의 휴지통/일괄 삭제 → DB 에서 실제 삭제. 성공해야 화면에서
+  // 사라지므로, 예전처럼 새로고침 시 되살아나지 않는다.
+  const handleDeletePassages = useCallback(
+    async (ids: string[]) => {
+      const targets = ids.filter(Boolean);
+      if (targets.length === 0) return;
+      const result = await deletePassages(targets);
+      if (!result.success) {
+        toast.error(result.error || "지문 삭제에 실패했습니다.");
+        return;
+      }
+      if (result.deleted > 0) {
+        toast.success(`${result.deleted}개 지문을 삭제했습니다.`);
+      } else {
+        toast.error("삭제된 지문이 없습니다.");
+      }
+    },
+    [deletePassages],
+  );
 
   return (
     <TooltipProvider>
@@ -777,6 +811,7 @@ export function PassageRegistrationClient({
             draftRefreshToken={draftRefreshToken}
             onSelectDraft={handleSelectDraftLoad}
             onLoadSelectedDrafts={handleLoadDrafts}
+            loadedDraftIds={loadedDraftIds}
             draftCollections={draftCollections ?? []}
             draftMembership={draftMembership ?? {}}
             intakeView={intakeView}
@@ -832,7 +867,7 @@ export function PassageRegistrationClient({
             clearSelection={clearSelection}
             setModalPassageId={setModalPassageId}
             retryAnalysis={retryAnalysis}
-            removeFromQueue={removeFromQueue}
+            onDeletePassages={handleDeletePassages}
           />
         </main>
 

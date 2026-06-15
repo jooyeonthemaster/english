@@ -12,6 +12,8 @@ import { normalizeQuestionGenerationPlan } from "@/lib/question-generation-plans
 import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 import {
+  readQuestionTypeDifficultySetting,
+  readQuestionTypeGenerationPlanSetting,
   readIrrelevantSlotCountSetting,
   validateIrrelevantAgainstPassage,
 } from "@/lib/question-type-generation-settings";
@@ -91,6 +93,20 @@ export async function POST(req: NextRequest) {
   const generationPlan = normalizeQuestionGenerationPlan(
     parsed.data.generationPlan,
   );
+  const effectiveGenerationPlan =
+    parsed.data.mode === "MANUAL" && parsed.data.questionType
+      ? readQuestionTypeGenerationPlanSetting(
+          parsed.data.questionTypeSettings,
+          generationPlan,
+        )
+      : generationPlan;
+  const effectiveDifficulty =
+    parsed.data.mode === "MANUAL" && parsed.data.questionType
+      ? readQuestionTypeDifficultySetting(
+          parsed.data.questionTypeSettings,
+          parsed.data.difficulty,
+        )
+      : readQuestionTypeDifficultySetting(undefined, parsed.data.difficulty);
   const job = await prisma.workbenchAiJob.create({
     data: {
       academyId: staff.academyId,
@@ -101,17 +117,17 @@ export async function POST(req: NextRequest) {
       passageId: passage.id,
       mode: parsed.data.mode,
       questionType: parsed.data.questionType ?? null,
-      generationPlan,
-      difficulty: parsed.data.difficulty,
+      generationPlan: effectiveGenerationPlan,
+      difficulty: effectiveDifficulty,
       requestedCount: parsed.data.count,
       config: {
         mode: parsed.data.mode,
         count: parsed.data.count,
         questionType: parsed.data.questionType ?? null,
         questionTypeSettings: parsed.data.questionTypeSettings ?? null,
-        difficulty: parsed.data.difficulty,
+        difficulty: effectiveDifficulty,
         customPrompt: parsed.data.customPrompt ?? "",
-        generationPlan,
+        generationPlan: effectiveGenerationPlan,
       },
     },
   });

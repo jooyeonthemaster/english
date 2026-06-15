@@ -6,21 +6,26 @@ import { useRouter } from "next/navigation";
 import {
   ArrowDown,
   ArrowUp,
+  Gem,
   Loader2,
   Plus,
+  Sparkles,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   updateWorkbenchQuestion,
   deleteWorkbenchQuestion,
   approveWorkbenchQuestion,
 } from "@/actions/workbench";
 import {
+  getQuestionGenerationPlanFromTags,
   getVisibleQuestionTags,
   isQuestionGenerationPlanTag,
+  QUESTION_GENERATION_PLAN_TAGS,
 } from "@/lib/question-generation-plans";
 import { buildCanonicalSentenceInsertOptionsFrom } from "@/lib/sentence-insert-options";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
@@ -123,9 +128,9 @@ export function QuestionEditClient({
     question.subType === "SENTENCE_INSERT"
       ? buildCanonicalSentenceInsertOptionsFrom(question.options)
       : question.options ? JSON.parse(question.options) : [];
-  const initialTags: string[] = getVisibleQuestionTags(
-    question.tags ? JSON.parse(question.tags) : [],
-  );
+  const rawInitialTags: string[] = question.tags ? JSON.parse(question.tags) : [];
+  const generationPlan = getQuestionGenerationPlanFromTags(rawInitialTags);
+  const initialTags: string[] = getVisibleQuestionTags(rawInitialTags);
   const initialKeyPoints: string[] = question.explanation?.keyPoints ? JSON.parse(question.explanation.keyPoints) : [];
   const initialWrongExplanations: Record<string, string> = question.explanation?.wrongOptionExplanations
     ? JSON.parse(question.explanation.wrongOptionExplanations)
@@ -314,6 +319,22 @@ export function QuestionEditClient({
         <div className="flex-1 min-w-[340px] overflow-hidden flex min-h-0 flex-col bg-white">
           {/* Tags bar */}
           <div className="flex items-center gap-2 px-6 py-3 border-b border-slate-200 bg-white shrink-0 flex-wrap">
+            {generationPlan && (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
+              <span
+                className={`inline-flex items-center gap-1.5 text-[12.5px] font-bold border px-2.5 py-1 rounded-md ${
+                  generationPlan === "PREMIUM"
+                    ? "border-violet-200 bg-violet-50 text-violet-700"
+                    : "border-sky-200 bg-sky-50 text-sky-700"
+                }`}
+              >
+                {generationPlan === "PREMIUM" ? (
+                  <Gem className="w-3.5 h-3.5" />
+                ) : (
+                  <Sparkles className="w-3.5 h-3.5" />
+                )}
+                {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
+              </span>
+            )}
             {tags.map((tag) => (
               <span key={tag} className="inline-flex items-center gap-1.5 text-[12.5px] font-medium bg-blue-50 text-blue-700 border border-blue-100 px-2.5 py-1 rounded-md">
                 {tag}

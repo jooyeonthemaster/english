@@ -7,7 +7,11 @@ import {
   enqueueLocalWebtoonGeneration,
   shouldUseLocalWebtoonWorker,
 } from "@/lib/webtoon-local-worker";
-import type { WebtoonStyleId } from "@/app/(director)/director/workbench/webtoon/webtoon-page-types";
+import {
+  DEFAULT_WEBTOON_LANGUAGE,
+  isWebtoonLanguageId,
+  type WebtoonStyleId,
+} from "@/app/(director)/director/workbench/webtoon/webtoon-page-types";
 
 export const runtime = "nodejs";
 
@@ -23,6 +27,7 @@ interface RequestBody {
   passageIds?: string[];
   passageId?: string;
   style?: string;
+  language?: string;
   customPrompt?: string;
 }
 
@@ -51,6 +56,9 @@ export async function POST(req: NextRequest) {
   const style = VALID_STYLES.includes(body.style as WebtoonStyleId)
     ? (body.style as WebtoonStyleId)
     : null;
+  const language = isWebtoonLanguageId(body.language)
+    ? body.language
+    : DEFAULT_WEBTOON_LANGUAGE;
   const customPrompt =
     typeof body.customPrompt === "string" ? body.customPrompt.slice(0, 1000) : "";
 
@@ -87,6 +95,7 @@ export async function POST(req: NextRequest) {
       const result = await deductCredits(staff.academyId, "WEBTOON_IMAGE", staff.id, {
         passageId,
         style,
+        language,
       });
       txId = result.transactionId;
     } catch (err) {
@@ -111,6 +120,7 @@ export async function POST(req: NextRequest) {
         passageId,
         createdById: staff.id,
         style,
+        language,
         customPrompt: customPrompt || null,
         status: "PENDING",
         creditTransactionId: txId,

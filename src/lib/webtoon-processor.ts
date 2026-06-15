@@ -9,7 +9,10 @@ import {
 import { refundCredits } from "@/lib/credits";
 import { buildWebtoonImagePrompt } from "@/lib/webtoon-prompts";
 import { uploadRemoteImageToWebtoonBucket } from "@/lib/webtoon-storage";
-import type { WebtoonStyleId } from "@/app/(director)/director/workbench/webtoon/webtoon-page-types";
+import type {
+  WebtoonStyleId,
+  WebtoonLanguageId,
+} from "@/app/(director)/director/workbench/webtoon/webtoon-page-types";
 
 const DEFAULT_STALE_AFTER_MS = 30 * 60 * 1000;
 
@@ -103,6 +106,7 @@ export async function processWebtoonGeneration(
     passageTitle: webtoon.passage.title,
     passageContent: webtoon.passage.content,
     style: webtoon.style as WebtoonStyleId,
+    language: (webtoon.language ?? "KO") as WebtoonLanguageId,
     customPrompt: webtoon.customPrompt ?? "",
   });
   const imageOptions = getWebtoonImageOptions();

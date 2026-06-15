@@ -5,8 +5,8 @@ import {
 } from "@/lib/question-diversity";
 import {
   buildGrammarPointGuidance,
-  GRAMMAR_CORE_ANSWER_CODES,
   GRAMMAR_POINT_CATALOG,
+  type GrammarPointCode,
 } from "@/lib/grammar-point-catalog";
 import { splitPassageSentences as splitSharedPassageSentences } from "@/lib/passage-sentence-utils";
 import { sentenceInsertOptionMarkerIndex } from "@/lib/sentence-insert-options";
@@ -46,6 +46,8 @@ interface ValidateQuestionQualityInput {
   antonymPairCount?: number;
   /** Requested BLANK_INFERENCE blank count. 2~3 routes to the multi-blank validator. */
   blankInferenceBlankCount?: number;
+  /** Requested BLANK_INFERENCE paraphrased answer mode. */
+  blankInferenceParaphraseAnswer?: boolean;
   /** Requested option count for free-text option types (TOPIC/TITLE/...). */
   genericOptionCount?: number;
   /** Requested correct-answer count for free-text option types. Omitted = 1. */
@@ -75,6 +77,13 @@ const ANTONYM_MARKER_COUNT_DEFAULT = 5;
 const ANTONYM_MARKER_COUNT_MIN = 5;
 const ANTONYM_MARKER_COUNT_MAX = 10;
 const ANTONYM_KEYS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"] as const;
+const SENTENCE_ORDER_PARAGRAPH_LABELS = ["(A)", "(B)", "(C)"] as const;
+const SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES = 2;
+const SENTENCE_ORDER_MIN_PARAGRAPH_WORDS = 24;
+const SENTENCE_ORDER_MAX_GIVEN_SENTENCES = 2;
+const SENTENCE_ORDER_MAX_GIVEN_WORDS = 70;
+const SENTENCE_ORDER_MAX_PARAGRAPH_WORD_RATIO = 1.9;
+const SENTENCE_ORDER_MAX_GIVEN_TO_AVG_PARAGRAPH_RATIO = 1.3;
 
 function normalizeGrammarMarkedCount(markedCount: unknown): number {
   const n = typeof markedCount === "number" ? markedCount : Number(markedCount);
@@ -136,6 +145,7 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "If the sentence after the blank begins with a conclusion signal such as therefore, thus, for this reason, or by adopting this strategy, the correct answer must directly support that adjacent conclusion.",
     "Avoid result-declaration or over-absolute answers such as no disruption, unlimited imports, complete independence, or guarantee major crops unless the passage explicitly warrants that strength.",
     "For KILLER, the answer should require connecting at least two sentences or a concession/cause-effect relation.",
+    "If blankAnswerMode is PARAPHRASE, originalExpression is still the exact source span, but the correct option must be a non-verbatim paraphrase calibrated to the requested difficulty.",
   ],
   GRAMMAR_ERROR: [
     "Mark 5-10 real expressions from the original passage. Detailed settings control both marked-position count and the exact answer count, including the case where every label is an answer.",
@@ -149,7 +159,12 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "For KILLER, test register, collocation, stance, causality, or discourse role, not a simple dictionary antonym.",
   ],
   SENTENCE_ORDER: [
+    "The givenSentence must be only the opening 1-2 sentences and should stay under 65 words; if two opening sentences are too long, use only the first.",
+    "Never put a whole introductory paragraph in givenSentence. Do not create a given part with 3+ sentences.",
+    "Each of (A), (B), and (C) must be a real chunk with at least two sentences; avoid one-line or one-sentence chunks.",
+    "Keep (A)/(B)/(C) balanced in length; no chunk should be roughly twice as long as another.",
     "The three reordered paragraphs must have explicit discourse clues such as pronoun reference, chronology, contrast, or cause-effect.",
+    "Shuffle paragraph labels so the correct order is not simply (A)-(B)-(C).",
     "All options should be plausible permutations; avoid an answer that is forced by a single first-word connector only.",
     "For KILLER, the correct order should require checking both local cohesion and the whole paragraph argument.",
   ],
@@ -306,6 +321,10 @@ export function buildQuestionTargetCandidateBlock(
     antonymPairCount?: number;
     /** 2~3 = multi-blank BLANK_INFERENCE; the single-blank candidate block is suppressed. */
     blankInferenceBlankCount?: number;
+    /** Single-blank BLANK_INFERENCE should use paraphrased visible answers. */
+    blankInferenceParaphraseAnswer?: boolean;
+    /** Single-blank BLANK_INFERENCE should use double-negative transformed answers. */
+    blankInferenceDoubleNegative?: boolean;
     /** Legacy name; interpreted as grammarMarkerCount. */
     grammarErrorCount?: number;
     requestedDifficulty?: string;
@@ -354,7 +373,11 @@ export function buildQuestionTargetCandidateBlock(
       // The candidate block proposes single-blank targets; the multi-blank
       // variant carries its own instructions in the type-settings prompt.
       if ((options.blankInferenceBlankCount ?? 1) >= 2) return "";
-      return buildBlankInferenceCandidateBlock(passage, diversity);
+      return buildBlankInferenceCandidateBlock(passage, diversity, {
+        paraphraseAnswer: options.blankInferenceParaphraseAnswer,
+        doubleNegative: options.blankInferenceDoubleNegative,
+        requestedDifficulty: options.requestedDifficulty,
+      });
     case "REFERENCE":
       return buildReferenceCandidateBlock(passage, diversity);
     case "IMPLIED_MEANING":
@@ -663,6 +686,329 @@ function findStandaloneTokenMatch(
   return { word: match[0], index: match.index };
 }
 
+type GrammarCandidateTier = "basic" | "intermediate" | "killer";
+
+type GrammarCandidateRule = {
+  code: GrammarPointCode;
+  pattern: RegExp;
+  note: string;
+  trap: string;
+  mutationHint: string;
+  tier: GrammarCandidateTier;
+  priority: number;
+};
+
+type GrammarGenerationCandidate = {
+  code: GrammarPointCode;
+  expression: string;
+  surroundingText: string;
+  note: string;
+  trap: string;
+  mutationHint: string;
+  tier: GrammarCandidateTier;
+  priority: number;
+  index: number;
+};
+
+const GRAMMAR_GENERATION_CANDIDATE_RULES: GrammarCandidateRule[] = [
+  {
+    code: "b",
+    pattern: /\b(?:in|at|on|for|from|through|by|with)\s+which\b|\b(?:what|that|which|who|whom|whose|where|when)\b/gi,
+    note: "관계사/명사절 접속사",
+    trap: "선행사 유무, 뒤 절의 완전/불완전, 전치사+관계대명사 여부를 확인하게 함",
+    mutationHint: "what <-> that/which, where <-> which, who/whom 격 오류",
+    tier: "killer",
+    priority: 10,
+  },
+  {
+    code: "c",
+    pattern: /\bwith\s+(?:the\s+)?[A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z'-]*){0,5}\s+(?:[A-Za-z]+ing|[A-Za-z]+ed|known|left|given|made|seen|found)\b|\b(?:when|while|if|unless|once|although)\s+(?:[A-Za-z]+ing|[A-Za-z]+ed|known|left|given|asked|seen)\b/gi,
+    note: "with+O+분사 / 축약 부사절 분사",
+    trap: "의미상 주어와 분사의 능동/수동 관계를 확인하게 함",
+    mutationHint: "v-ing <-> p.p., being p.p. <-> p.p.",
+    tier: "killer",
+    priority: 10,
+  },
+  {
+    code: "c",
+    pattern: /\b[A-Za-z][A-Za-z'-]*(?:s)?\s+(?:called|known|based|made|used|given|left|seen|found|created|built|designed|involving|requiring|including|containing|leading|causing)\b/gi,
+    note: "명사 뒤 분사 수식",
+    trap: "수식받는 명사가 행위자인지 대상인지 확인하게 함",
+    mutationHint: "p.p. <-> v-ing, reduced relative clause 오류",
+    tier: "intermediate",
+    priority: 8,
+  },
+  {
+    code: "d",
+    pattern: /\b(?:the number of|a number of|one of|each of|neither of|either of|percent of|half of|most of|the rest of)\b[^.;!?]{0,90}\b(?:is|are|was|were|has|have|do|does|seem|seems|require|requires|depend|depends|make|makes)\b/gi,
+    note: "수량 표현/부분 표현 수일치",
+    trap: "가까운 명사가 아니라 진짜 주어와 동사의 수를 확인하게 함",
+    mutationHint: "singular verb <-> plural verb",
+    tier: "intermediate",
+    priority: 8,
+  },
+  {
+    code: "d",
+    pattern: /\b(?:[A-Za-z]+ing|What|That|Whether)\b[^.;!?]{10,110}\b(?:is|are|was|were|has|have|requires?|depends?|seems?)\b/gi,
+    note: "긴 주어/절 주어 수일치",
+    trap: "삽입구와 수식어를 걷어내고 주어 핵을 찾게 함",
+    mutationHint: "verb+s <-> bare/plural verb, is <-> are",
+    tier: "killer",
+    priority: 9,
+  },
+  {
+    code: "e",
+    pattern: /\b(?:is|are|was|were|be|been|being|get|gets|got)\s+(?:[A-Za-z]+ed|known|made|seen|found|given|left|built|told|shown|used)\b|\b(?:occur|occurs|happen|happens|appear|appears|disappear|disappears|consist|consists|belong|belongs)\b/gi,
+    note: "능동태/수동태 및 자동사 수동 불가",
+    trap: "목적어 유무와 주어가 행위자인지 대상인지 확인하게 함",
+    mutationHint: "active <-> passive, 자동사에 be p.p. 금지",
+    tier: "intermediate",
+    priority: 7,
+  },
+  {
+    code: "f",
+    pattern: /\b(?:seem|seems|look|looks|sound|sounds|feel|feels|remain|remains|keep|keeps|stay|stays|become|becomes|get|gets|grow|grows|make|makes|find|finds|leave|leaves|render|renders)\b[^.;!?]{0,55}\b[A-Za-z]+(?:ly)?\b|\b(?:hard|hardly|late|lately|high|highly|near|nearly|close|closely|most|mostly|costly|friendly|likely|lively)\b/gi,
+    note: "형용사/부사 자리",
+    trap: "보어 자리와 부사 수식 자리를 구분하게 함",
+    mutationHint: "adjective <-> adverb, hard/hardly류 의미 차이",
+    tier: "intermediate",
+    priority: 8,
+  },
+  {
+    code: "g",
+    pattern: /\b(?:it|its|itself|they|them|their|theirs|themselves|one|ones|that|those|this|these)\b/gi,
+    note: "대명사/지시어 일치",
+    trap: "지시 대상의 수와 동일 대상 여부를 앞뒤 문맥에서 확인하게 함",
+    mutationHint: "it <-> they, that <-> those, one <-> it",
+    tier: "intermediate",
+    priority: 6,
+  },
+  {
+    code: "h",
+    pattern: /\b(?:make|makes|made|have|has|had|let|lets|see|sees|hear|hears|watch|watches|notice|notices|enable|enables|allow|allows|cause|causes|force|forces|encourage|encourages|expect|expects)\b[^.;!?]{1,90}\b(?:to\s+)?[A-Za-z]+(?:ing|ed)?\b/gi,
+    note: "목적격보어 형태",
+    trap: "사역/지각/준사역 동사의 목적격보어 형태와 O-OC 관계를 확인하게 함",
+    mutationHint: "bare infinitive <-> to-v, v-ing/p.p. 보어",
+    tier: "intermediate",
+    priority: 7,
+  },
+  {
+    code: "i",
+    pattern: /\b(?:both\s+[^.;!?]{1,80}\s+and|not only\s+[^.;!?]{1,100}\s+but(?:\s+also)?|either\s+[^.;!?]{1,80}\s+or|neither\s+[^.;!?]{1,80}\s+nor|from\s+[^.;!?]{1,60}\s+to|between\s+[^.;!?]{1,60}\s+and|rather than)\b/gi,
+    note: "병렬/상관접속 구조",
+    trap: "A와 B의 품사·구·절 형태를 멀리 떨어진 자리까지 맞춰 보게 함",
+    mutationHint: "parallel form mismatch, omitted repeated to 오판 방지",
+    tier: "killer",
+    priority: 9,
+  },
+  {
+    code: "k",
+    pattern: /\b(?:spend|spends|spent)\b[^.;!?]{0,70}\b[A-Za-z]+ing\b|\b(?:look forward to|be used to|object to|contribute to|when it comes to|devoted to|committed to)\s+[A-Za-z]+ing\b|\b(?:remember|remembers|forget|forgets|regret|regrets|try|tries|stop|stops)\s+(?:to\s+)?[A-Za-z]+ing?\b/gi,
+    note: "to부정사/동명사 선택",
+    trap: "to가 전치사인지 부정사 표지인지, 동사별 의미 차이를 확인하게 함",
+    mutationHint: "to-v <-> v-ing",
+    tier: "intermediate",
+    priority: 9,
+  },
+  {
+    code: "l",
+    pattern: /\b(?:because of|due to|despite|in spite of|although|though|even though|while|during)\b/gi,
+    note: "전치사/접속사 선택",
+    trap: "뒤에 명사구가 오는지 S+V 절이 오는지 확인하게 함",
+    mutationHint: "because <-> because of, although <-> despite, while <-> during",
+    tier: "basic",
+    priority: 5,
+  },
+  {
+    code: "m",
+    pattern: /\b(?:as\s+[A-Za-z]+(?:\s+as)?|more\s+[A-Za-z]+|less\s+[A-Za-z]+|[A-Za-z]+er\s+than|the\s+more|the\s+less|than)\b/gi,
+    note: "비교구문",
+    trap: "as-as 어순, 비교급 수식어, 병렬 비교 대상을 확인하게 함",
+    mutationHint: "as 형용사 as, than 비교 대상 병렬",
+    tier: "intermediate",
+    priority: 4,
+  },
+];
+
+function findGrammarGenerationCandidates(
+  passage: string,
+  requestedDifficulty?: string,
+): GrammarGenerationCandidate[] {
+  const candidates: GrammarGenerationCandidate[] = [];
+  const seen = new Set<string>();
+
+  for (const rule of GRAMMAR_GENERATION_CANDIDATE_RULES) {
+    for (const match of passage.matchAll(rule.pattern)) {
+      const rawExpression = normalizeText(match[0]);
+      if (!rawExpression || rawExpression.length < 2) continue;
+      const expression =
+        rawExpression.length > 120
+          ? `${rawExpression.slice(0, 117).trim()}...`
+          : rawExpression;
+      const index = match.index ?? passage.indexOf(match[0]);
+      if (index < 0) continue;
+      const key = `${rule.code}:${normalizeComparableText(expression).slice(0, 80)}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      candidates.push({
+        code: rule.code,
+        expression,
+        surroundingText: buildSurroundingWindow(passage, index, match[0].length),
+        note: rule.note,
+        trap: rule.trap,
+        mutationHint: rule.mutationHint,
+        tier: rule.tier,
+        priority: rule.priority,
+        index,
+      });
+    }
+  }
+
+  return candidates.sort((a, b) => (
+    grammarCandidateScore(b, requestedDifficulty) -
+    grammarCandidateScore(a, requestedDifficulty)
+  ));
+}
+
+function grammarCandidateScore(
+  candidate: GrammarGenerationCandidate,
+  requestedDifficulty?: string,
+): number {
+  const difficulty = String(requestedDifficulty ?? "").toUpperCase();
+  const tierBonus =
+    difficulty === "KILLER"
+      ? candidate.tier === "killer" ? 5 : candidate.tier === "intermediate" ? 2 : -2
+      : difficulty === "BASIC"
+        ? candidate.tier === "basic" ? 4 : candidate.tier === "intermediate" ? 1 : -2
+        : candidate.tier === "intermediate" ? 3 : candidate.tier === "killer" ? 1 : 0;
+  const spanBonus = Math.min(3, Math.floor(countWordsForQuality(candidate.surroundingText) / 8));
+  return candidate.priority + tierBonus + spanBonus;
+}
+
+function buildGrammarSourceCandidateBlock(
+  passage: string,
+  requestedDifficulty: string | undefined,
+  mode: "judgment" | "correction",
+  limit = 14,
+): string {
+  const candidates = findGrammarGenerationCandidates(passage, requestedDifficulty).slice(0, limit);
+  const difficulty = String(requestedDifficulty ?? "").toUpperCase();
+  if (candidates.length === 0) {
+    return [
+      "## Source-backed grammar target candidates",
+      "- No high-confidence grammar candidate was detected by heuristics. Still choose only exact expressions from the passage, and avoid article/spelling/tiny-preposition errors.",
+    ].join("\n");
+  }
+
+  return [
+    "## Source-backed grammar target candidates",
+    "- Prefer answer and decoy targets from this list before inventing another location. Copy the expression from the original passage exactly; mutate only the answer expression.",
+    mode === "correction"
+      ? "- For GRAMMAR_CORRECTION, underline a wider clause/sentence containing the chosen candidate, not just the expression itself."
+      : "- For GRAMMAR_ERROR, use these as marked expressions or nearby marked spans, keeping non-answer decoys grammatically correct.",
+    difficulty === "KILLER"
+      ? "- KILLER priority: first try candidates tagged tier=killer. Single-token finite/nonfinite flips, adjacent subject-verb agreement, or obvious verb+s changes are rejected unless the surrounding span also contains a long-distance clause, modifier, relation, or parallel-structure check."
+      : difficulty === "BASIC"
+        ? "- BASIC priority: choose a visible but still meaningful one-step grammar relation; avoid exotic reduced clauses as the answer."
+        : "- INTERMEDIATE priority: choose at least one candidate whose trap requires checking clause boundary, semantic subject, or collocation.",
+    ...candidates.map((candidate, index) => {
+      const info = GRAMMAR_POINT_CATALOG[candidate.code];
+      const preferredUse =
+        difficulty === "KILLER" && candidate.tier === "killer"
+          ? "answer-preferred"
+          : candidate.tier === "basic" && difficulty !== "BASIC"
+            ? "decoy-preferred"
+            : "answer-or-decoy";
+      return [
+        `${index + 1}. code=(${candidate.code}) ${info.label}`,
+        `tier=${candidate.tier}`,
+        `use=${preferredUse}`,
+        `expression="${escapePromptSnippet(candidate.expression)}"`,
+        `trap="${escapePromptSnippet(candidate.trap)}"`,
+        `mutation="${escapePromptSnippet(candidate.mutationHint)}"`,
+        `context="${escapePromptSnippet(candidate.surroundingText)}"`,
+      ].join(" | ");
+    }),
+  ].join("\n");
+}
+
+function escapePromptSnippet(value: string): string {
+  return normalizeText(value).replace(/"/g, "'");
+}
+
+function extractGrammarPointCode(value: unknown): GrammarPointCode | null {
+  const code = normalizeText(value).toLowerCase().replace(/[^a-m]/g, "");
+  return /^[a-m]$/.test(code) ? (code as GrammarPointCode) : null;
+}
+
+function hasKillerGrammarStructure(text: string): boolean {
+  const normalized = normalizeText(text);
+  if (!normalized) return false;
+  return (
+    /\b(?:what|which|whose|whom|where|when)\b[\s\S]{0,120}\b(?:is|are|was|were|has|have|do|does|can|could|should|would|may|might)\b/i.test(normalized) ||
+    /\b(?:with|without)\s+(?:the\s+)?[A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z'-]*){1,6}\s+(?:[A-Za-z]+ing|[A-Za-z]+ed|known|left|given|made|seen|found)\b/i.test(normalized) ||
+    /\b(?:when|while|if|unless|once|although)\s+(?:[A-Za-z]+ing|[A-Za-z]+ed|known|left|given|asked|seen)\b/i.test(normalized) ||
+    /\b(?:not only|both|either|neither|from|between)\b[\s\S]{10,140}\b(?:but|and|or|nor|to)\b/i.test(normalized) ||
+    /\b(?:the number of|a number of|one of|each of|neither of|either of|most of|the rest of)\b[\s\S]{10,120}\b(?:is|are|was|were|has|have|requires?|depends?|seems?)\b/i.test(normalized) ||
+    /\b(?:of|with|including|along with|as well as|who|which|that)\b[\s\S]{25,140}\b(?:is|are|was|were|has|have|requires?|depends?|seems?|make|makes)\b/i.test(normalized)
+  );
+}
+
+function isSimpleAgreementFlip(
+  expression: string,
+  errorExpression: string,
+  correction: string,
+): boolean {
+  const forms = [expression, errorExpression, correction]
+    .map((value) => normalizeText(value).toLowerCase())
+    .filter(Boolean);
+  if (forms.length < 2) return false;
+  if (!forms.every(isSingleEnglishToken)) return false;
+  const stems = forms.map(stripAgreementSuffix);
+  return new Set(stems).size === 1 || /^(?:is|are|was|were|has|have|do|does)$/.test(forms.join(" "));
+}
+
+function stripAgreementSuffix(value: string): string {
+  const lower = value.toLowerCase();
+  if (/ies$/.test(lower) && lower.length > 4) return `${lower.slice(0, -3)}y`;
+  if (/(?:ches|shes|sses|xes|zes|oes)$/.test(lower) && lower.length > 4) {
+    return lower.slice(0, -2);
+  }
+  if (/s$/.test(lower) && lower.length > 3) return lower.slice(0, -1);
+  return lower;
+}
+
+function isThinKillerGrammarErrorTarget(markedExpression: Record<string, unknown>): boolean {
+  const expression = normalizeText(markedExpression.expression);
+  const errorExpression = normalizeText(markedExpression.errorExpression);
+  const correction = normalizeText(markedExpression.correction);
+  const surroundingText = normalizeText(markedExpression.surroundingText);
+  const pointCode = extractGrammarPointCode(markedExpression.pointCode);
+  const combined = `${expression} ${errorExpression} ${correction} ${surroundingText}`;
+  if (hasKillerGrammarStructure(combined)) return false;
+  if (pointCode === "d" && isSimpleAgreementFlip(expression, errorExpression, correction)) return true;
+  return (
+    countWordsForQuality(expression) <= 2 &&
+    countWordsForQuality(errorExpression || expression) <= 2 &&
+    countWordsForQuality(surroundingText) < 10
+  );
+}
+
+function isThinKillerGrammarCorrectionTarget(args: {
+  sourceText: string;
+  displayedText: string;
+  displayedError: string;
+  sourceCorrection: string;
+}): boolean {
+  const combined = `${args.sourceText} ${args.displayedText} ${args.displayedError} ${args.sourceCorrection}`;
+  if (hasKillerGrammarStructure(combined)) return false;
+  if (countWordsForQuality(args.sourceText) < 10) return true;
+  return (
+    isSimpleAgreementFlip(args.sourceCorrection, args.displayedError, args.sourceCorrection) &&
+    !/\b(?:of|which|that|who|with|including|along with|as well as|not only|both|between|from)\b/i.test(args.sourceText)
+  );
+}
+
 function buildGrammarErrorCandidateBlock(
   passage: string,
   requestedMarkerCount = 5,
@@ -700,7 +1046,7 @@ function buildGrammarErrorCandidateBlock(
     "- Use the original passage as correct source text. For every answer, mutate only the marked expression and keep the original expression/correction verbatim.",
     "- If the passage has fewer source sentences than requested marked expressions, you may mark more than one expression in a sentence only when they test clearly different clauses or grammar relations.",
     requestedDifficulty === "KILLER"
-      ? "- KILLER calibration: make the wrong forms look locally natural until the full sentence structure is checked; avoid spelling-level or one-word giveaway errors."
+      ? "- KILLER calibration: make the wrong forms look locally natural until the full sentence structure is checked. Do not use a lone main-verb/subject-verb/local -s error as the answer; it must require checking a relation, reduced clause, semantic subject, long modifier, complement pattern, or parallel range."
       : "",
     // 어법끝 28년 빈도 증류 가이드 — 정답 포인트 코어 풀 + 함정 디코이 카드 +
     // (다양성 모드) variantIndex 로테이션 정답 포인트 지정.
@@ -709,7 +1055,15 @@ function buildGrammarErrorCandidateBlock(
       usedPointCodes: diversity?.usedPointCodes,
       diversityEnabled: diversity?.diversityEnabled,
       answerCount,
+      requestedDifficulty,
+      mode: "judgment",
     }),
+    buildGrammarSourceCandidateBlock(
+      passage,
+      requestedDifficulty,
+      "judgment",
+      Math.max(12, markedCount + 5),
+    ),
     // 다양성 모드: 정답 밑줄의 호스트 문장도 로테이션 힌트로 지정 — 포인트만
     // 지정하면 같은 포인트를 받은 병렬 유닛들이 지문의 같은 '손쉬운 자리'로
     // 수렴한다 (실측: 고유 정답 표현 후퇴). 포인트 지시가 우선인 소프트 힌트.
@@ -760,9 +1114,17 @@ function buildGrammarCorrectionCandidateBlock(
     "- correctedParts should list every corrected expression in the same order as underlinedSegments.",
     "- Do NOT print a separate error sentence below the passage. The visible question must show the original passage with the wider underlined segment(s).",
     "- Use wording like \"다음 글의 밑줄 친 부분에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오.\"",
-    // 어법끝 28년 빈도 코어 풀 — 숨길 오류는 최빈출 포인트에서 선택.
-    `- 숨길 오류는 수능 최빈출 코어 포인트에서 선택하세요: ${GRAMMAR_CORE_ANSWER_CODES.map((code) => `${GRAMMAR_POINT_CATALOG[code].label}[${GRAMMAR_POINT_CATALOG[code].rank}위]`).join(" · ")}.`,
-    `- 가정법(28년 정답 ${GRAMMAR_POINT_CATALOG.j.answerFreq}회)·비교구문(${GRAMMAR_POINT_CATALOG.m.answerFreq}회)은 정답 출제가 극히 드문 포인트입니다 — 오류로 만들지 마세요.`,
+    buildGrammarPointGuidance({
+      answerCount: errorCount,
+      requestedDifficulty,
+      mode: "correction",
+    }),
+    buildGrammarSourceCandidateBlock(
+      passage,
+      requestedDifficulty,
+      "correction",
+      Math.max(12, errorCount + 6),
+    ),
     "- Avoid padding with articles, tiny prepositions, punctuation, spelling-only changes, optional style improvements, or debatable active/passive infinitive preferences such as to gain vs to be gained.",
     requestedDifficulty === "KILLER"
       ? "- KILLER calibration: use a long enough underlined clause/sentence that students must inspect structure, not just spot a visibly odd token."
@@ -861,6 +1223,37 @@ function buildImpliedMeaningCandidateBlock(
 function buildBlankInferenceCandidateBlock(
   passage: string,
   diversity?: CandidateDiversityOptions,
+  options: {
+    paraphraseAnswer?: boolean;
+    doubleNegative?: boolean;
+    requestedDifficulty?: string;
+  } = {},
+): string {
+  if (options.paraphraseAnswer) {
+    return buildBlankParaphraseCandidateBlock(
+      passage,
+      options.requestedDifficulty,
+      diversity,
+    );
+  }
+
+  if (options.doubleNegative) {
+    return buildNegativeBlankInferenceCandidateBlock(
+      passage,
+      diversity,
+    );
+  }
+
+  return buildStandardBlankInferenceCandidateBlock(
+    passage,
+    options.requestedDifficulty,
+    diversity,
+  );
+}
+
+function buildNegativeBlankInferenceCandidateBlock(
+  passage: string,
+  diversity?: CandidateDiversityOptions,
 ): string {
   const sentences = splitPassageSentences(passage);
   // 기사용 빈칸 스팬을 담고 있는 문장은 후보에서 제외 (전부 걸러지면 원본 유지).
@@ -947,6 +1340,290 @@ function buildBlankInferenceCandidateBlock(
         : `${index + 1}. ${sentence}`;
     }),
   ].filter(Boolean).join("\n");
+}
+
+function buildStandardBlankInferenceCandidateBlock(
+  passage: string,
+  requestedDifficulty?: string,
+  diversity?: CandidateDiversityOptions,
+): string {
+  const minWords =
+    requestedDifficulty === "KILLER"
+      ? 6
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 4
+        : 3;
+  const minContent =
+    requestedDifficulty === "KILLER"
+      ? 5
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 3
+        : 2;
+  const sentences = splitPassageSentences(passage);
+  const candidateRows = sentences
+    .map((sentence, index) => ({
+      sentence,
+      index,
+      targets: getStandardBlankInferenceSuggestedTargets(
+        sentence,
+        requestedDifficulty,
+      ),
+    }))
+    .filter((item) => item.targets.length > 0);
+  const candidates = rotateByVariantIndex(
+    filterUsedCandidates(
+      candidateRows,
+      diversity?.usedTargets,
+      ({ sentence }) => sentence,
+    ).items.sort(
+      (a, b) =>
+        Math.max(...b.targets.map(scoreStandardBlankInferenceTarget)) -
+        Math.max(...a.targets.map(scoreStandardBlankInferenceTarget)),
+    ),
+    diversity?.variantIndex,
+  ).slice(0, 8);
+
+  if (candidates.length === 0) {
+    return [
+      "## BLANK_INFERENCE source-exact target note",
+      "- Standard blank mode is active: the correct option may match originalExpression, so the source span itself must carry the inference difficulty.",
+      `- For ${requestedDifficulty || "the requested difficulty"}, choose originalExpression as a compact central relation with at least ${minWords} words and ${minContent} meaningful content words when possible.`,
+    "- Avoid tiny local tails, reciprocal filler such as 'both parties review each other', long punctuation spans, comma-separated lists, example lists, and isolated abstract nouns.",
+      "- KILLER items should blank a claim, causal relation, evaluative turn, or contrast that requires checking the surrounding passage logic.",
+    ].join("\n");
+  }
+
+  return [
+    "## BLANK_INFERENCE source-exact target candidates",
+    "- Standard blank mode is active: the correct option may copy originalExpression, so the blank target must be intrinsically inference-worthy.",
+    `- For ${requestedDifficulty || "the requested difficulty"}, prefer a clean semantic unit with at least ${minWords} words and ${minContent} meaningful content words, while staying within 13 words and 95 characters.`,
+    "- Do not blank a tiny local tail, reciprocal filler such as 'both parties review each other', a colon/semicolon span, a comma-separated list, or an example-list slot.",
+    "- For KILLER, choose a passage-central claim/relation/contrast; do not make the answer recoverable from one nearby collocation alone.",
+    "- Every option must fit the exact same grammatical slot as originalExpression and include at least two passage-grounded near misses.",
+    "Suggested candidates:",
+    ...candidates.map(({ sentence, index, targets }) => (
+      `${index + 1}. ${sentence}\n   Suggested originalExpression options: ${targets
+        .slice(0, 3)
+        .map((target) => `"${target}"`)
+        .join(", ")}`
+    )),
+  ].join("\n");
+}
+
+function getStandardBlankInferenceSuggestedTargets(
+  sentence: string,
+  requestedDifficulty?: string,
+): string[] {
+  const targets: string[] = [];
+  const add = (value: string | undefined) => {
+    const target = normalizeSuggestedTarget(value ?? "");
+    if (isValidStandardBlankInferenceTarget(target, requestedDifficulty)) {
+      targets.push(target);
+    }
+  };
+
+  const patterns = [
+    /\b((?:is|are|was|were|becomes?|became|remains?)\s+(?:driven|shaped|defined|constrained|guided|grounded|organized|supported|limited)\s+by\s+[^.;:!?]{18,95}?)(?=\.|,|;|:|$)/gi,
+    /\b((?:these|those|such|this|that|the|a|an|most|many|some|users|people|companies|platforms|systems|policy|policies|technology|technologies|models|choices|decisions|problem|issue|challenge|capacity|ability|process|world|economy)\s+[^.;:!?]{0,35}?\b(?:creates?|takes? advantage of|utilizes?|benefits?|requires?|depends?|allows?|enables?|prevents?|fosters?|illuminates?|reveals?|demonstrates?|suggests?|shows?|reflects?|transforms?|reorganizes?|preserves?|maintains?|weakens?|strengthens?|distinguishes?|addresses?|reduces?|increases?|changes?)\b[^.;:!?]{10,95}?)(?=\.|,|;|:|$)/gi,
+    /\b((?:not\s+(?:because|whether|only|merely)|rather than|instead of)\b[^.;:!?]{20,95}?)(?=\.|,|;|:|$)/gi,
+    /\b((?:selling|creating|maintaining|preserving|cultivating|developing|protecting|reducing|reorganizing|distinguishing|balancing|challenging|supporting|strengthening|weakening|sharing|utilizing)\b[^.;:!?]{12,95}?)(?=\.|,|;|:|$)/gi,
+  ];
+
+  for (const pattern of patterns) {
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(sentence))) {
+      add(match[1]);
+    }
+  }
+
+  return [...new Set(targets)]
+    .sort((a, b) => scoreStandardBlankInferenceTarget(b) - scoreStandardBlankInferenceTarget(a))
+    .slice(0, 4);
+}
+
+function isValidStandardBlankInferenceTarget(
+  target: string,
+  requestedDifficulty?: string,
+): boolean {
+  if (!target) return false;
+  const wordCount = countWordsForQuality(target);
+  const contentCount = countContentTokens(target);
+  const minWords =
+    requestedDifficulty === "KILLER"
+      ? 6
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 4
+        : 3;
+  const minContent =
+    requestedDifficulty === "KILLER"
+      ? 5
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 3
+        : 2;
+
+  return (
+    wordCount >= minWords &&
+    wordCount <= 13 &&
+    contentCount >= minContent &&
+    target.length <= 95 &&
+    !hasTrailingFunctionWordBlankTarget(target) &&
+    !isListLikeBlankTarget(target) &&
+    !isSingleAbstractNounTarget(target) &&
+    !isLowValueKillerBlankTarget(target)
+  );
+}
+
+function scoreStandardBlankInferenceTarget(target: string): number {
+  const wordCount = countWordsForQuality(target);
+  const contentCount = countContentTokens(target);
+  const relationBonus = /\b(?:not|but|because|therefore|requires?|depends?|allows?|enables?|prevents?|fosters?|illuminates?|reveals?|suggests?|creates?|takes? advantage|selling|benefit|driven|trusting|capacity|transaction|product|traditional)\b/i.test(target)
+    ? 4
+    : 0;
+  const widthPenalty = wordCount > 12 ? 1 : 0;
+  return contentCount * 2 + relationBonus - widthPenalty;
+}
+
+function buildBlankParaphraseCandidateBlock(
+  passage: string,
+  requestedDifficulty?: string,
+  diversity?: CandidateDiversityOptions,
+): string {
+  const minWords =
+    requestedDifficulty === "KILLER"
+      ? 7
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 4
+        : 3;
+  const minContent =
+    requestedDifficulty === "KILLER"
+      ? 5
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 4
+        : 2;
+  const sentences = splitPassageSentences(passage);
+  const candidateRows = sentences
+    .map((sentence, index) => ({
+      sentence,
+      index,
+      targets: getBlankParaphraseSuggestedTargets(
+        sentence,
+        requestedDifficulty,
+      ),
+    }))
+    .filter((item) => item.targets.length > 0);
+  const candidates = rotateByVariantIndex(
+    filterUsedCandidates(
+      candidateRows,
+      diversity?.usedTargets,
+      ({ sentence }) => sentence,
+    ).items.sort(
+      (a, b) =>
+        Math.max(...b.targets.map(scoreBlankParaphraseTarget)) -
+        Math.max(...a.targets.map(scoreBlankParaphraseTarget)),
+    ),
+    diversity?.variantIndex,
+  ).slice(0, 8);
+
+  if (candidates.length === 0) {
+    return [
+      "## BLANK_INFERENCE paraphrase-answer target note",
+      "- The blank paraphrase setting is active, but no strong automatic source target was detected.",
+      `- For ${requestedDifficulty || "the requested difficulty"}, choose originalExpression as a clean semantic unit with at least ${minWords} words and ${minContent} meaningful content words when possible.`,
+      "- Avoid tiny local tails, long clauses, punctuation/list spans, and dangling modal/auxiliary/function-word endings.",
+      "- The visible correct option must be a non-verbatim paraphrase that fits the exact same grammatical slot.",
+    ].join("\n");
+  }
+
+  return [
+    "## BLANK_INFERENCE paraphrase-answer target candidates",
+    "- The blank paraphrase setting is active. Prefer one of these source-backed originalExpression candidates instead of a tiny local tail.",
+    `- For ${requestedDifficulty || "the requested difficulty"}, originalExpression should have at least ${minWords} words and ${minContent} meaningful content words when possible, while staying within 12 words and 90 characters.`,
+    "- Use a suggested originalExpression exactly when it fits the item; otherwise choose the same kind of compact semantic relation from the listed sentence.",
+    "- Do not choose a whole clause, comma-separated list span, or a 2-3 word tail such as 'making subsequent judgments' for INTERMEDIATE/KILLER.",
+    "- The visible correct option must paraphrase the selected source span, preserve polarity and grammar slot, and avoid copying source wording.",
+    "Suggested candidates:",
+    ...candidates.map(({ sentence, index, targets }) => (
+      `${index + 1}. ${sentence}\n   Suggested originalExpression options: ${targets
+        .slice(0, 3)
+        .map((target) => `"${target}"`)
+        .join(", ")}`
+    )),
+  ].join("\n");
+}
+
+function getBlankParaphraseSuggestedTargets(
+  sentence: string,
+  requestedDifficulty?: string,
+): string[] {
+  const targets: string[] = [];
+  const add = (value: string | undefined) => {
+    const target = normalizeSuggestedTarget(value ?? "");
+    if (isValidBlankParaphraseSuggestedTarget(target, requestedDifficulty)) {
+      targets.push(target);
+    }
+  };
+
+  const patterns = [
+    /\b(?:tendency|tendencies)\s+to\s+([^.;:!?]{20,95}?)(?=\s+when\b|,|\.|;|:|$)/gi,
+    /\b(?:ability|capacity)\s+to\s+([^.;:!?]{20,95}?)(?=\s+(?:depend(?:ed|s)?|was|is|are|were)\b|,|\.|;|:|$)/gi,
+    /\b((?:ability|capacity)\s+to\s+[^.;:!?]{20,95}?)(?=,|\.|;|:|$)/gi,
+    /\b((?:does|do|did|is|are|was|were)\s+not\s+(?:simply|merely|only)?\s*[^.;:!?]{10,80}?\s+but\s+[^.;:!?]{10,80}?)(?=\.|,|;|:|$)/gi,
+    /\b((?:not\s+because|not\s+whether|not\s+only|not\s+merely)\b[^.;:!?]{20,95}?)(?=\.|,|;|:|$)/gi,
+    /\b((?:requires?|depends?|allows?|enables?|helps?|prevents?|fosters?|illuminates?|reveals?|demonstrates?|suggests?|shows?)\b[^.;:!?]{15,90}?)(?=\.|,|;|:|$)/gi,
+    /\b((?:bridge|bridging|maintain|maintaining|preserve|preserving|cultivate|cultivating|engage|engaging|recognize|recognizing|interpret|interpreting|reconcile|reconciling|construct|constructing|shape|shaping|adapt|adapting)\b[^.;:!?]{12,90}?)(?=\.|,|;|:|$)/gi,
+  ];
+
+  for (const pattern of patterns) {
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(sentence))) {
+      add(match[1]);
+    }
+  }
+
+  return [...new Set(targets)]
+    .sort((a, b) => scoreBlankParaphraseTarget(b) - scoreBlankParaphraseTarget(a))
+    .slice(0, 4);
+}
+
+function isValidBlankParaphraseSuggestedTarget(
+  target: string,
+  requestedDifficulty?: string,
+): boolean {
+  if (!target) return false;
+  const wordCount = countWordsForQuality(target);
+  const contentCount = countContentTokens(target);
+  const minWords =
+    requestedDifficulty === "KILLER"
+      ? 7
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 4
+        : 3;
+  const minContent =
+    requestedDifficulty === "KILLER"
+      ? 5
+      : requestedDifficulty === "INTERMEDIATE"
+        ? 4
+        : 2;
+
+  return (
+    wordCount >= minWords &&
+    wordCount <= 12 &&
+    contentCount >= minContent &&
+    target.length <= 90 &&
+    !hasTrailingFunctionWordBlankTarget(target) &&
+    !isListLikeBlankTarget(target) &&
+    !isSingleAbstractNounTarget(target)
+  );
+}
+
+function scoreBlankParaphraseTarget(target: string): number {
+  const wordCount = countWordsForQuality(target);
+  const contentCount = countContentTokens(target);
+  const relationBonus = /\b(?:not|but|because|therefore|requires?|depends?|allows?|enables?|prevents?|fosters?|illuminates?|constructs?|shapes?|bridge|maintain|preserve|critical|selective)\b/i.test(target)
+    ? 3
+    : 0;
+  const widthPenalty = wordCount > 11 ? 1 : 0;
+  return contentCount * 2 + relationBonus - widthPenalty;
 }
 
 function buildIrrelevantCandidateBlock(
@@ -1055,6 +1732,7 @@ export function validateQuestionQuality({
   sentenceInsertSlotCount,
   antonymPairCount,
   blankInferenceBlankCount,
+  blankInferenceParaphraseAnswer,
   genericOptionCount,
   genericAnswerCount,
   diversityUsedTargets,
@@ -1107,6 +1785,7 @@ export function validateQuestionQuality({
     sentenceInsertSlotCount,
     antonymPairCount,
     blankInferenceBlankCount,
+    blankInferenceParaphraseAnswer,
     add,
   );
 
@@ -1683,6 +2362,7 @@ function validateTypeSpecific(
   sentenceInsertSlotCount: number | undefined,
   antonymPairCount: number | undefined,
   blankInferenceBlankCount: number | undefined,
+  blankInferenceParaphraseAnswer: boolean | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   if (SHORT_TARGET_TYPES.has(typeId)) {
@@ -1708,10 +2388,17 @@ function validateTypeSpecific(
         question,
         passage,
         blankInferenceBlankCount,
+        blankInferenceParaphraseAnswer,
         add,
       );
     } else {
-      validateBlankInferenceQuestion(question, passage, requestedDifficulty, add);
+      validateBlankInferenceQuestion(
+        question,
+        passage,
+        requestedDifficulty,
+        blankInferenceParaphraseAnswer,
+        add,
+      );
     }
   }
 
@@ -1745,6 +2432,10 @@ function validateTypeSpecific(
 
   if (typeId === "SENTENCE_INSERT") {
     validateSentenceInsertQuestion(question, passage, sentenceInsertSlotCount, add);
+  }
+
+  if (typeId === "SENTENCE_ORDER") {
+    validateSentenceOrderQuestion(question, add);
   }
 
   if (typeId === "VOCAB_CHOICE") {
@@ -1807,6 +2498,20 @@ function validateTypeSpecific(
         `correctAnswer/correctAnswers must match isError labels. Missing: ${missingAnswerLabels.join(", ") || "none"}; extra: ${extraAnswerLabels.join(", ") || "none"}.`,
       );
     }
+    const markedPointCodes = markedExpressions
+      .map((markedExpression) => extractGrammarPointCode(markedExpression.pointCode))
+      .filter((code): code is GrammarPointCode => !!code);
+    if (
+      expectedMarkedCount >= 5 &&
+      markedPointCodes.length >= 4 &&
+      new Set(markedPointCodes).size < 3
+    ) {
+      add(
+        "error",
+        "grammar-decoy-point-diversity",
+        "GRAMMAR_ERROR should distribute marked expressions across at least three real grammar point codes; repeated pointCode decoys make the item feel padded.",
+      );
+    }
     // 규범 논쟁 자리 검출: "복수 등위 주어 + 동격 each + 단수동사"(예: A and B
     // each assumes)는 표준 규범과 실사용이 갈리는 자리 — 여기 밑줄(정답·디코이
     // 불문)을 그으면 복수정답 시비가 생긴다 (실측 critical, 프롬프트 소프트
@@ -1865,6 +2570,13 @@ function validateTypeSpecific(
       if (/\bto\s+(?:be\s+)?(?:gain|gained|lose|lost)\b/.test(combined)) {
         add("error", "grammar-debatable-infinitive", "Do not use active/passive infinitive preference as the grammar-error target.");
       }
+      if (requestedDifficulty === "KILLER" && isThinKillerGrammarErrorTarget(markedExpression)) {
+        add(
+          "error",
+          "grammar-killer-thin-answer",
+          "KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check.",
+        );
+      }
     }
     const grammarExplanationText = [
       question.explanation,
@@ -1885,6 +2597,7 @@ function validateTypeSpecific(
       question,
       passage,
       grammarCorrectionErrorCount,
+      requestedDifficulty,
       add,
     );
   }
@@ -2673,6 +3386,7 @@ function validateGrammarCorrectionQuestion(
   question: Record<string, unknown>,
   passage: string | undefined,
   requestedErrorCount: number | undefined,
+  requestedDifficulty: string | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const expectedErrorCount = normalizeGrammarCorrectionErrorCount(requestedErrorCount);
@@ -2778,6 +3492,21 @@ function validateGrammarCorrectionQuestion(
     if (/\bto\s+(?:be\s+)?(?:gain|gained|lose|lost)\b/.test(combined)) {
       add("error", "grammar-correction-debatable-infinitive", "Do not use active/passive infinitive preference as the grammar-correction target.");
     }
+    if (
+      requestedDifficulty === "KILLER" &&
+      isThinKillerGrammarCorrectionTarget({
+        sourceText,
+        displayedText,
+        displayedError,
+        sourceCorrection,
+      })
+    ) {
+      add(
+        "error",
+        "grammar-correction-killer-thin-segment",
+        `KILLER GRAMMAR_CORRECTION segment ${index + 1} hides a local short-form change without enough structural load; prefer a relation, participle, parallel, long subject-verb, or complement pattern.`,
+      );
+    }
   }
 
   if (collectedCorrectedParts.length === expectedErrorCount) {
@@ -2806,9 +3535,13 @@ function validateBlankInferenceQuestion(
   question: Record<string, unknown>,
   passage: string | undefined,
   requestedDifficulty: string | undefined,
+  blankInferenceParaphraseAnswer: boolean | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const isNegativeParaphraseMode = question.blankAnswerMode === "DOUBLE_NEGATIVE";
+  const isAnswerParaphraseMode =
+    question.blankAnswerMode === "PARAPHRASE" ||
+    (blankInferenceParaphraseAnswer === true && !isNegativeParaphraseMode);
   const originalExpression = normalizeText(question.originalExpression);
   const passageWithBlank = normalizeText(question.passageWithBlank);
   const blankCarrierText = extractBlankCarrierText(passageWithBlank);
@@ -2829,6 +3562,20 @@ function validateBlankInferenceQuestion(
     return;
   }
 
+  if (isAnswerParaphraseMode) {
+    validateBlankAnswerParaphraseMode(
+      question,
+      options,
+      originalExpression,
+      blankCarrierText,
+      correctText,
+      correctLabel,
+      passage,
+      requestedDifficulty,
+      add,
+    );
+  }
+
   if (crossesStrongContrastBoundary(originalExpression)) {
     add(
       isNegativeParaphraseMode ? "error" : "warning",
@@ -2843,6 +3590,17 @@ function validateBlankInferenceQuestion(
       "blank-target-too-small",
       "KILLER BLANK_INFERENCE should target a meaningful phrase or relation, not a single obvious keyword.",
     );
+  }
+
+  if (
+    requestedDifficulty === "KILLER" &&
+    !isNegativeParaphraseMode &&
+    !isAnswerParaphraseMode
+  ) {
+    const killerSourceIssue = findStandardBlankKillerIssue(originalExpression);
+    if (killerSourceIssue) {
+      add("error", killerSourceIssue.code, killerSourceIssue.message);
+    }
   }
 
   if (isSingleAbstractNounTarget(originalExpression)) {
@@ -3044,14 +3802,430 @@ function validateBlankInferenceQuestion(
   }
 }
 
+const BASIC_PARAPHRASE_ADVANCED_WORDS = new Set([
+  "abstraction",
+  "ambiguous",
+  "conceptual",
+  "consequential",
+  "constitute",
+  "cultivation",
+  "epistemic",
+  "framework",
+  "fundamental",
+  "heterogeneous",
+  "intrinsic",
+  "manifestation",
+  "mechanism",
+  "metacognitive",
+  "normative",
+  "paradigm",
+  "phenomenon",
+  "prerequisite",
+  "reciprocal",
+  "synthesize",
+  "transcend",
+]);
+
+const INTERMEDIATE_PARAPHRASE_OVERLY_ORNATE_WORDS = new Set([
+  "acumen",
+  "influx",
+  "influxes",
+  "sovereignly",
+  "terrain",
+  "terrains",
+]);
+
+function validateBlankAnswerParaphraseMode(
+  question: Record<string, unknown>,
+  options: Record<string, unknown>[],
+  originalExpression: string,
+  blankCarrierText: string,
+  correctText: string,
+  correctLabel: string,
+  passage: string | undefined,
+  requestedDifficulty: string | undefined,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  if (originalExpression && normalizeComparableText(correctText) === normalizeComparableText(originalExpression)) {
+    add(
+      "error",
+      "blank-paraphrase-answer-not-transformed",
+      "PARAPHRASE blank correct option must not copy originalExpression verbatim.",
+    );
+  } else if (originalExpression && isNearVerbatimBlankParaphrase(correctText, originalExpression)) {
+    add(
+      "error",
+      "blank-paraphrase-answer-too-verbatim",
+      "PARAPHRASE blank correct option is too close to originalExpression; rewrite it as a real paraphrase.",
+    );
+  }
+
+  const difficultyIssue = findBlankParaphraseDifficultyIssue(
+    correctText,
+    originalExpression,
+    requestedDifficulty,
+  );
+  if (difficultyIssue) {
+    add("error", difficultyIssue.code, difficultyIssue.message);
+  }
+
+  const slotIssue = findBlankParaphraseSlotIssue(
+    blankCarrierText,
+    originalExpression,
+    correctText,
+  );
+  if (slotIssue) {
+    add("error", slotIssue.code, slotIssue.message);
+  }
+
+  const killerIssue = findBlankParaphraseKillerIssue(
+    options,
+    correctLabel,
+    originalExpression,
+    correctText,
+    requestedDifficulty,
+  );
+  if (killerIssue) {
+    add("error", killerIssue.code, killerIssue.message);
+  }
+
+  const polarityIssue = findBlankParaphrasePolarityIssue(
+    originalExpression,
+    correctText,
+  );
+  if (polarityIssue) {
+    add("error", polarityIssue.code, polarityIssue.message);
+  }
+
+  if (hasTrailingFunctionWordBlankTarget(originalExpression)) {
+    add(
+      "error",
+      "blank-paraphrase-target-trailing-function",
+      "PARAPHRASE blank originalExpression ends with a modal/auxiliary/function tail; choose a cleaner semantic unit so options do not become grammar-tail variants.",
+    );
+  }
+
+  if (
+    countWordsForQuality(originalExpression) > 12 ||
+    originalExpression.length > 90
+  ) {
+    add(
+      "error",
+      "blank-paraphrase-target-too-wide",
+      "PARAPHRASE blank originalExpression is too broad; choose a compact semantic unit instead of a long clause.",
+    );
+  }
+
+  const answerLogic = normalizeText(question.answerLogic);
+  if (answerLogic.length < 30) {
+    add(
+      "error",
+      "blank-paraphrase-missing-answer-logic",
+      "PARAPHRASE blank should include answerLogic explaining the source meaning and paraphrased correct option.",
+    );
+  }
+
+  const optionTexts = options.map((option) => normalizeText(option.text)).filter(Boolean);
+  const wordCounts = optionTexts.map(countWordsForQuality).filter((count) => count > 0);
+  if (wordCounts.length >= 4) {
+    const minWords = Math.min(...wordCounts);
+    const maxWords = Math.max(...wordCounts);
+    if (maxWords >= 8 && maxWords / Math.max(1, minWords) > 2.4) {
+      add(
+        "error",
+        "blank-paraphrase-option-imbalance",
+        `PARAPHRASE blank options are too uneven in length (${minWords}-${maxWords} words).`,
+      );
+    }
+  }
+
+  if (passage) {
+    for (const option of options) {
+      const optionText = normalizeText(option.text);
+      if (!optionText || normalizeLabel(option.label) === correctLabel) continue;
+      if (
+        countContentTokens(optionText) >= 3 &&
+        normalizeComparableText(passage).includes(normalizeComparableText(optionText))
+      ) {
+        add(
+          "error",
+          "blank-paraphrase-option-source-copy",
+          `PARAPHRASE blank wrong option copies a source passage phrase verbatim: "${optionText.slice(0, 80)}".`,
+        );
+        break;
+      }
+    }
+  }
+}
+
+function findBlankParaphraseSlotIssue(
+  blankCarrierText: string,
+  originalExpression: string,
+  correctText: string,
+): { code: string; message: string } | null {
+  const carrier = normalizeText(blankCarrierText);
+  if (!carrier.includes("_____")) return null;
+
+  const sourceIsTaskLikeSubject =
+    /\b(?:challenge|task|problem|question|issue|matter)\b/i.test(originalExpression);
+  const isWhetherHowSubjectFrame =
+    /^_____\s+(?:is|are|was|were)\s+not\s+(?:whether|if)\b/i.test(carrier) ||
+    /^_____\s+(?:is|are|was|were)\s+not\s+(?:a\s+)?(?:question|matter|issue)\s+of\s+(?:whether|if)\b/i.test(carrier);
+
+  if (
+    sourceIsTaskLikeSubject &&
+    isWhetherHowSubjectFrame &&
+    startsWithGerundProcessPhrase(correctText)
+  ) {
+    return {
+      code: "blank-paraphrase-subject-slot-mismatch",
+      message:
+        "PARAPHRASE blank uses a process-like gerund phrase in a task/challenge subject slot; use a compact noun phrase such as the central challenge/task.",
+    };
+  }
+
+  const blankIndex = carrier.indexOf("_____");
+  const leftOfBlank = blankIndex >= 0 ? carrier.slice(0, blankIndex).trim() : "";
+  if (
+    /\bto\s*$/i.test(leftOfBlank) &&
+    startsWithGerundProcessPhrase(correctText)
+  ) {
+    return {
+      code: "blank-paraphrase-verb-form-slot-mismatch",
+      message:
+        "PARAPHRASE blank uses a gerund phrase after an infinitive marker; use a base verb phrase that fits the blank sentence.",
+    };
+  }
+
+  if (
+    startsLikeFiniteClause(originalExpression) &&
+    startsWithGerundProcessPhrase(correctText) &&
+    /(?:^|[.;:!?])$/.test(leftOfBlank)
+  ) {
+    return {
+      code: "blank-paraphrase-clause-slot-mismatch",
+      message:
+        "PARAPHRASE blank turns a finite source clause into a gerund phrase in an independent-clause slot.",
+    };
+  }
+
+  return null;
+}
+
+function findBlankParaphraseKillerIssue(
+  options: Record<string, unknown>[],
+  correctLabel: string,
+  originalExpression: string,
+  correctText: string,
+  requestedDifficulty: string | undefined,
+): { code: string; message: string } | null {
+  if (requestedDifficulty !== "KILLER") return null;
+
+  const sourceContentCount = countContentTokens(originalExpression);
+  const sourceWordCount = countWordsForQuality(originalExpression);
+  const correctContentCount = countContentTokens(correctText);
+  const correctWordCount = countWordsForQuality(correctText);
+  if (
+    sourceWordCount < 7 ||
+    sourceContentCount < 5 ||
+    correctContentCount < 6 ||
+    correctWordCount < 8
+  ) {
+    return {
+      code: "blank-paraphrase-killer-too-easy",
+      message:
+        "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load.",
+    };
+  }
+
+  const wrongOptions = options.filter(
+    (option) => normalizeLabel(option.label) !== correctLabel,
+  );
+  const giveawayCount = wrongOptions.filter((option) =>
+    hasKillerBlankGiveawayCue(normalizeText(option.text)),
+  ).length;
+  if (giveawayCount >= 2) {
+    return {
+      code: "blank-paraphrase-killer-giveaway-distractors",
+      message:
+        "KILLER PARAPHRASE blank has too many obviously eliminable distractors; replace extreme/opposite options with passage-grounded near misses.",
+    };
+  }
+
+  return null;
+}
+
+function findStandardBlankKillerIssue(
+  originalExpression: string,
+): { code: string; message: string } | null {
+  const sourceContentCount = countContentTokens(originalExpression);
+  const sourceWordCount = countWordsForQuality(originalExpression);
+  if (
+    sourceWordCount < 6 ||
+    sourceContentCount < 5 ||
+    isLowValueKillerBlankTarget(originalExpression)
+  ) {
+    return {
+      code: "blank-killer-target-too-easy",
+      message:
+        "KILLER BLANK_INFERENCE target is too local or surface-level; choose a central claim, relation, contrast, or evaluative turn with enough conceptual load.",
+    };
+  }
+
+  return null;
+}
+
+function hasKillerBlankGiveawayCue(text: string): boolean {
+  const normalized = normalizeText(text);
+  return /\b(?:unconditionally|completely|passive(?:ly)?|strict(?:ly)?|inevitably|naturally|whatever|successfully|always|never|solely|entirely|exclusively|fully|merely|simply|all|every|only|must|cannot|guarantee(?:s|d)?|definitive|flawless|seamless|error-free|automatically|altogether|indefinitely|immediate(?:ly)?|eliminate(?:s|d|ing)?|bound\s+to|any\s+form\s+of|(?:from|without|against)\s+any|without\s+\w+\s+any|fail(?:s|ed|ing)?\s+to|prevent(?:s|ed|ing)?\s+all|avoid(?:s|ed|ing)?\s+all)\b/i.test(
+    normalized,
+  );
+}
+
+function findBlankParaphrasePolarityIssue(
+  originalExpression: string,
+  correctText: string,
+): { code: string; message: string } | null {
+  const original = normalizeText(originalExpression);
+  const answer = normalizeText(correctText);
+
+  const originalResistsReduction =
+    /\bresist\w*\s+(?:the\s+)?temptation\s+to\s+(?:reduce|simplify|limit|narrow)\b/i.test(original);
+  const answerPerformsReduction =
+    /\b(?:reduce|reducing|simplify|simplifying|limit|limiting|narrow|narrowing)\b/i.test(answer);
+  const answerKeepsResistance =
+    /\b(?:resist\w*|avoid\w*|refus\w*|reject\w*|guard(?:ing)?\s+against|prevent\w*|keep\w*\s+from|not|never|without|rather\s+than|instead\s+of)\b/i.test(answer);
+
+  if (originalResistsReduction && answerPerformsReduction && !answerKeepsResistance) {
+    return {
+      code: "blank-paraphrase-polarity-loss",
+      message:
+        "PARAPHRASE blank loses the source resistance/negation relation; it turns resisting reduction into performing reduction.",
+    };
+  }
+
+  return null;
+}
+
+function startsWithGerundProcessPhrase(text: string): boolean {
+  const normalized = normalizeText(text).toLowerCase();
+  const match = normalized.match(
+    /^(?:(?:the|a|an)\s+)?(?:(?:act|process|practice)\s+of\s+)?(?:[a-z][a-z'-]*ly\s+){0,2}([a-z][a-z'-]*ing)\b/,
+  );
+  if (!match) return false;
+  return !new Set(["anything", "everything", "nothing", "something", "thing"]).has(match[1] ?? "");
+}
+
+function startsLikeFiniteClause(text: string): boolean {
+  return /^(?:it|this|that|these|those|they|we|one|people|students|readers|leaders|scientists|researchers|individuals|societies|communities)\s+(?:requires?|demands?|allows?|enables?|helps?|makes?|does|is|are|was|were|can|could|will|would|should|must|may|might)\b/i.test(
+    normalizeText(text),
+  );
+}
+
+function hasTrailingFunctionWordBlankTarget(text: string): boolean {
+  return /\b(?:will|shall|can|could|would|should|must|may|might|do|does|did|is|are|was|were|be|being|been|to)$/i.test(
+    normalizeText(text),
+  );
+}
+
+function isNearVerbatimBlankParaphrase(candidate: string, source: string): boolean {
+  const candidateComparable = normalizeComparableText(candidate);
+  const sourceComparable = normalizeComparableText(source);
+  if (!candidateComparable || !sourceComparable) return false;
+  if (candidateComparable === sourceComparable) return true;
+  if (
+    sourceComparable.length >= 16 &&
+    (candidateComparable.includes(sourceComparable) ||
+      sourceComparable.includes(candidateComparable))
+  ) {
+    return true;
+  }
+
+  const sourceTokens = contentTokens(source);
+  const candidateTokens = contentTokens(candidate);
+  const smallerTokenCount = Math.min(sourceTokens.size, candidateTokens.size);
+  if (smallerTokenCount < 3) return false;
+  const overlapRatio = countTokenOverlap(sourceTokens, candidateTokens) / smallerTokenCount;
+  const sourceWords = countWordsForQuality(source);
+  const candidateWords = countWordsForQuality(candidate);
+  return overlapRatio >= 0.8 && Math.abs(sourceWords - candidateWords) <= 2;
+}
+
+function findBlankParaphraseDifficultyIssue(
+  correctText: string,
+  originalExpression: string,
+  requestedDifficulty: string | undefined,
+): { code: string; message: string } | null {
+  const wordCount = countWordsForQuality(correctText);
+  const contentCount = countContentTokens(correctText);
+  const originalWordCount = countWordsForQuality(originalExpression);
+  const originalContentCount = countContentTokens(originalExpression);
+
+  if (requestedDifficulty === "BASIC") {
+    const advancedCount = [...contentTokens(correctText)].filter((token) =>
+      BASIC_PARAPHRASE_ADVANCED_WORDS.has(token),
+    ).length;
+    if (wordCount > 12 || advancedCount > 1 || /[;:]/.test(correctText)) {
+      return {
+        code: "blank-paraphrase-difficulty-mismatch",
+        message:
+          "BASIC PARAPHRASE blank should use short high-frequency wording, not dense academic phrasing.",
+      };
+    }
+  }
+
+  if (requestedDifficulty === "INTERMEDIATE") {
+    const ornateCount = [...contentTokens(correctText)].filter((token) =>
+      INTERMEDIATE_PARAPHRASE_OVERLY_ORNATE_WORDS.has(token),
+    ).length;
+    if (
+      originalWordCount < 4 ||
+      originalContentCount < 4 ||
+      wordCount < 4 ||
+      contentCount < 4
+    ) {
+      return {
+        code: "blank-paraphrase-difficulty-mismatch",
+        message:
+          "INTERMEDIATE PARAPHRASE blank should be more than a short local synonym swap; choose a fuller source relation and paraphrase.",
+      };
+    }
+    if (wordCount > 16 || ornateCount > 0) {
+      return {
+        code: "blank-paraphrase-difficulty-mismatch",
+        message:
+          "INTERMEDIATE PARAPHRASE blank should stay natural and readable, not drift into ornate KILLER-level diction.",
+      };
+    }
+  }
+
+  if (
+    requestedDifficulty === "KILLER" &&
+    originalContentCount >= 4 &&
+    contentCount < 3
+  ) {
+    return {
+      code: "blank-paraphrase-correct-too-thin",
+      message:
+        "KILLER PARAPHRASE blank should preserve a multi-part source idea, not collapse it into a thin generic phrase.",
+    };
+  }
+
+  return null;
+}
+
 const MULTI_BLANK_INFERENCE_LABELS = ["(A)", "(B)", "(C)"] as const;
 
 function validateMultiBlankInferenceQuestion(
   question: Record<string, unknown>,
   passage: string | undefined,
   requestedBlankCount: number | undefined,
+  blankInferenceParaphraseAnswer: boolean | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
+  const isParaphraseMode =
+    question.blankAnswerMode === "PARAPHRASE" ||
+    blankInferenceParaphraseAnswer === true;
   const blanks = Array.isArray(question.blanks) ? question.blanks.filter(isRecord) : [];
   const expectedBlankCount =
     requestedBlankCount && requestedBlankCount >= 2 && requestedBlankCount <= 3
@@ -3159,6 +4333,7 @@ function validateMultiBlankInferenceQuestion(
   }
   if (
     blankAnswers.length === expectedBlankCount &&
+    !isParaphraseMode &&
     !correctValues.every(
       (value, index) => normalizeComparableText(value) === normalizeComparableText(blankAnswers[index]),
     )
@@ -3167,6 +4342,29 @@ function validateMultiBlankInferenceQuestion(
       "error",
       "multi-blank-correct-option-mismatch",
       "The correct option's blankValues must be exactly the original passage expressions, in blank order.",
+    );
+  }
+  if (
+    blankAnswers.length === expectedBlankCount &&
+    isParaphraseMode &&
+    correctValues.every(
+      (value, index) => normalizeComparableText(value) === normalizeComparableText(blankAnswers[index]),
+    )
+  ) {
+    add(
+      "error",
+      "multi-blank-paraphrase-correct-source-exact",
+      "PARAPHRASE multi-blank correct option must not copy the original passage expressions verbatim.",
+    );
+  } else if (
+    blankAnswers.length === expectedBlankCount &&
+    isParaphraseMode &&
+    correctValues.some((value, index) => isNearVerbatimBlankParaphrase(value, blankAnswers[index]))
+  ) {
+    add(
+      "error",
+      "blank-paraphrase-answer-too-verbatim",
+      "PARAPHRASE multi-blank correct option has a blank value too close to the original passage expression.",
     );
   }
 
@@ -4586,6 +5784,215 @@ function validateIrrelevantQuestion(
   }
 }
 
+function validateSentenceOrderQuestion(
+  question: Record<string, unknown>,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const givenSentence = normalizeText(question.givenSentence);
+  if (!givenSentence) {
+    add("error", "sentence-order-missing-given", "SENTENCE_ORDER is missing givenSentence.");
+  }
+
+  const givenSentenceCount = countDisplaySentences(givenSentence);
+  const givenWordCount = countWords(givenSentence);
+  if (
+    givenSentence &&
+    (givenSentenceCount < 1 || givenSentenceCount > SENTENCE_ORDER_MAX_GIVEN_SENTENCES)
+  ) {
+    add(
+      "error",
+      "sentence-order-given-too-long",
+      `SENTENCE_ORDER givenSentence must be 1-2 sentences, got ${givenSentenceCount}.`,
+    );
+  }
+  if (givenWordCount > SENTENCE_ORDER_MAX_GIVEN_WORDS) {
+    add(
+      "error",
+      "sentence-order-given-too-long",
+      `SENTENCE_ORDER givenSentence is too long (${givenWordCount} words). Use only the first 1-2 sentences.`,
+    );
+  }
+  if (/[（(]\s*[ABC]\s*[）)]/.test(givenSentence)) {
+    add(
+      "error",
+      "sentence-order-given-too-long",
+      "SENTENCE_ORDER givenSentence appears to contain paragraph labels; split given and (A)/(B)/(C) separately.",
+    );
+  }
+
+  const paragraphs = Array.isArray(question.paragraphs)
+    ? question.paragraphs.filter(isRecord)
+    : [];
+  if (paragraphs.length !== 3) {
+    add(
+      "error",
+      "sentence-order-paragraph-count",
+      `SENTENCE_ORDER must have exactly 3 paragraphs, got ${paragraphs.length}.`,
+    );
+  }
+
+  const paragraphWordCounts: number[] = [];
+  const normalizedLabels: string[] = [];
+  for (let index = 0; index < paragraphs.length; index += 1) {
+    const paragraph = paragraphs[index];
+    const expectedLabel = SENTENCE_ORDER_PARAGRAPH_LABELS[index] ?? `(${index + 1})`;
+    const label = normalizeSentenceOrderParagraphLabel(paragraph.label);
+    normalizedLabels.push(label);
+    const text = normalizeText(paragraph.text);
+    const sentenceCount = countDisplaySentences(text);
+    const wordCount = countWords(text);
+    paragraphWordCounts.push(wordCount);
+
+    if (label !== expectedLabel) {
+      add(
+        "error",
+        "sentence-order-paragraph-labels",
+        `SENTENCE_ORDER paragraph labels must be (A), (B), (C) in order; got ${normalizedLabels.join(", ")}.`,
+      );
+    }
+    if (sentenceCount < SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES) {
+      add(
+        "error",
+        "sentence-order-paragraph-too-short",
+        `SENTENCE_ORDER paragraph ${expectedLabel} must contain at least ${SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES} sentences, got ${sentenceCount}.`,
+      );
+    }
+    if (wordCount < SENTENCE_ORDER_MIN_PARAGRAPH_WORDS) {
+      add(
+        "error",
+        "sentence-order-paragraph-too-thin",
+        `SENTENCE_ORDER paragraph ${expectedLabel} is too short (${wordCount} words).`,
+      );
+    }
+  }
+
+  const positiveParagraphCounts = paragraphWordCounts.filter((count) => count > 0);
+  if (positiveParagraphCounts.length === 3) {
+    const minWords = Math.min(...positiveParagraphCounts);
+    const maxWords = Math.max(...positiveParagraphCounts);
+    const avgWords =
+      positiveParagraphCounts.reduce((sum, count) => sum + count, 0) /
+      positiveParagraphCounts.length;
+
+    if (minWords > 0 && maxWords / minWords > SENTENCE_ORDER_MAX_PARAGRAPH_WORD_RATIO) {
+      add(
+        "error",
+        "sentence-order-paragraph-imbalance",
+        `SENTENCE_ORDER (A)/(B)/(C) chunks are imbalanced (${positiveParagraphCounts.join("/")} words).`,
+      );
+    }
+
+    if (
+      givenWordCount > 0 &&
+      avgWords > 0 &&
+      givenWordCount / avgWords > SENTENCE_ORDER_MAX_GIVEN_TO_AVG_PARAGRAPH_RATIO
+    ) {
+      add(
+        "error",
+        "sentence-order-given-too-long-relative",
+        `SENTENCE_ORDER givenSentence (${givenWordCount} words) is longer than the balanced A/B/C chunk average (${Math.round(avgWords)} words).`,
+      );
+    }
+  }
+
+  validateSentenceOrderOptions(question, add);
+}
+
+function validateSentenceOrderOptions(
+  question: Record<string, unknown>,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
+  if (!options.length) return;
+
+  const optionOrders = options.map((option) =>
+    parseSentenceOrderPermutation(option.text),
+  );
+  const invalidOptionIndex = optionOrders.findIndex((order) => !order);
+  if (invalidOptionIndex >= 0) {
+    add(
+      "error",
+      "sentence-order-option-permutation",
+      `SENTENCE_ORDER option ${invalidOptionIndex + 1} is not a valid (A)/(B)/(C) permutation.`,
+    );
+  }
+
+  const validOrderTexts = optionOrders
+    .filter((order): order is string[] => Array.isArray(order))
+    .map((order) => order.join("-"));
+  const duplicateOrder = findDuplicate(validOrderTexts);
+  if (duplicateOrder) {
+    add(
+      "error",
+      "sentence-order-option-duplicates",
+      `SENTENCE_ORDER has duplicate order option: ${duplicateOrder}.`,
+    );
+  }
+
+  const answerLabels = collectCorrectAnswerLabels(question);
+  const answerLabel = answerLabels[0];
+  if (!answerLabel) return;
+  const correctOption = options.find(
+    (option) => normalizeLabel(option.label) === answerLabel,
+  );
+  if (!correctOption) return;
+
+  const correctOrder = parseSentenceOrderPermutation(correctOption.text);
+  if (!correctOrder) {
+    add(
+      "error",
+      "sentence-order-correct-option-shape",
+      "SENTENCE_ORDER correct option must be a valid (A)/(B)/(C) permutation.",
+    );
+    return;
+  }
+  if (correctOrder.join("-") === "(A)-(B)-(C)") {
+    add(
+      "error",
+      "sentence-order-unscrambled-answer",
+      "SENTENCE_ORDER correct order must not be the displayed (A)-(B)-(C) order; shuffle labels so students cannot pick the visible order.",
+    );
+  }
+}
+
+function normalizeSentenceOrderParagraphLabel(value: unknown): string {
+  const text = normalizeText(value).toUpperCase();
+  const match = text.match(/[ABC]/);
+  return match ? `(${match[0]})` : text;
+}
+
+function parseSentenceOrderPermutation(value: unknown): string[] | null {
+  const text = normalizeText(value).toUpperCase();
+  const labels = [...text.matchAll(/[（(]\s*([ABC])\s*[）)]/g)].map(
+    (match) => `(${match[1]})`,
+  );
+  if (labels.length !== 3) return null;
+  const unique = new Set(labels);
+  if (unique.size !== 3) return null;
+  return SENTENCE_ORDER_PARAGRAPH_LABELS.every((label) => unique.has(label))
+    ? labels
+    : null;
+}
+
+function countDisplaySentences(value: string): number {
+  const text = normalizeText(value);
+  if (!text) return 0;
+  const splitSentences = splitSharedPassageSentences(text);
+  if (splitSentences.length > 0) return splitSentences.length;
+  const punctuationSentences = text
+    .split(/(?<=[.!?])\s+(?=[A-Z"'(\[])/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  return Math.max(1, punctuationSentences.length);
+}
+
+function countWords(value: string): number {
+  const text = normalizeText(value);
+  if (!text) return 0;
+  const words = text.match(/[A-Za-z]+(?:['-][A-Za-z]+)?|\d+(?:[.,]\d+)*/g);
+  return words?.length ?? 0;
+}
+
 function validateKillerBar(
   question: Record<string, unknown>,
   typeId: string,
@@ -4688,13 +6095,34 @@ function isSingleAbstractNounTarget(text: string): boolean {
 
 function isListLikeBlankTarget(text: string): boolean {
   const normalized = normalizeText(text);
+  const commaCount = (normalized.match(/,/g) ?? []).length;
   return (
     normalized.includes(":") ||
     normalized.includes(";") ||
-    normalized.includes(",") ||
+    commaCount >= 2 ||
     normalized.length > 90 ||
     countContentTokens(normalized) > 11
   );
+}
+
+function isLowValueKillerBlankTarget(text: string): boolean {
+  const normalized = normalizeText(text).toLowerCase();
+  if (!normalized) return true;
+  if (
+    /\b(?:both|each|one another)\b.*\b(?:review|reviews|interact|interacts|communicate|communicates|share|shares)\b/.test(
+      normalized,
+    )
+  ) {
+    return true;
+  }
+  if (
+    /^(?:both parties|each party|users|people|students|companies|platforms)\s+\w+(?:\s+\w+){0,3}$/.test(
+      normalized,
+    )
+  ) {
+    return true;
+  }
+  return false;
 }
 
 function findNegativeParaphraseSlotIssue(
@@ -5014,6 +6442,26 @@ function findAwkwardBlankOptionPhrase(text: string): string | null {
     "absence of erosion",
     "that lack of",
     "which lack of",
+    "following evaluations or estimations",
+    "act as an active filter",
+    "active filter amidst",
+    "global cultural influxes",
+    "external cultural influxes",
+    "cultural influxes",
+    "sovereignly filtering",
+    "moral terrains",
+    "environmental degraders",
+    "degraders",
+    "making degraders",
+    "degraders internalize",
+    "financial accountability of their ecological footprint",
+    "property of shared choices",
+    "synergistic channels",
+    "collective boundaries",
+    "compassionate comprehension",
+    "compromising alternatives",
+    "reality that envelopes us",
+    "envelopes us",
   ];
   const normalized = text.toLowerCase();
   const listedPattern = patterns.find((pattern) => normalized.includes(pattern));
@@ -5060,6 +6508,31 @@ function findContextualAwkwardBlankOptionPhrase(
   blankCarrierText: string,
   optionText: string,
 ): string | null {
+  const blankIndex = blankCarrierText.indexOf("_____");
+  const leftOfBlank =
+    blankIndex >= 0 ? blankCarrierText.slice(0, blankIndex) : "";
+
+  if (
+    /\b(?:by|of|to|for|with|without|from|in|on|at|as|than|about|toward|towards)\s+$/i.test(leftOfBlank) &&
+    /^(?:by|of|to|for|with|without|from|in|on|at|as|than|about|toward|towards)\b/i.test(optionText)
+  ) {
+    return "stacked prepositions";
+  }
+
+  if (
+    /\bways?\s+in\s+which\s+$/i.test(leftOfBlank) &&
+    /\bways?\s+in\s+which\b/i.test(optionText)
+  ) {
+    return "duplicated ways in which";
+  }
+
+  if (
+    /\bprocess\s+by\s+which\s+$/i.test(leftOfBlank) &&
+    /\bprocess\s+by\s+which\b/i.test(optionText)
+  ) {
+    return "duplicated process by which";
+  }
+
   const blankSubjectSuggestsEvent =
     /\b(?:events?|phenomena|processes|consequences|effects|outcomes)\s+_____/.test(blankCarrierText);
   if (blankSubjectSuggestsEvent && /^(?:can(?:not)?|can't|could|will|would|do\s+not|does\s+not|cannot)\s+survive\b/i.test(optionText)) {

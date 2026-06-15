@@ -84,6 +84,18 @@ export function makeLocalId(questionId: string): string {
   return `${questionId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
+// 커스텀 레이아웃(v2) 문항은 LayoutDoc.answerLineCount 가 서술형 답란 줄 수를
+// 명시한다(원본 문항 양식 캡처값). 있으면 기본값 로직보다 우선한다.
+function customLayoutAnswerSpaceLines(question: BuilderQuestion): number | null {
+  const structuredData = parseJSON<Record<string, unknown>>(question.structuredData, {});
+  if (structuredData?._typeId !== "CUSTOM_LAYOUT") return null;
+  const layout = structuredData.layout;
+  if (!layout || typeof layout !== "object") return null;
+  const count = (layout as { answerLineCount?: unknown }).answerLineCount;
+  if (typeof count !== "number" || !Number.isFinite(count) || count <= 0) return null;
+  return clampNumber(Math.round(count), 0, 12);
+}
+
 function paperBlockDefaults(): Pick<
   PaperItem,
   | "locked"
@@ -123,6 +135,7 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
       : parseOptions(question.options);
   const localId = makeLocalId(question.id);
   const isSubjective = options.length === 0;
+  const customAnswerSpaceLines = customLayoutAnswerSpaceLines(question);
   const normalizedQuestionText = normalizedQuestionTextForPaper(question);
   const passageContent = normalizePassageText(question.passage?.content || "");
   const includeSourcePassage = shouldIncludeSourcePassageByDefault(question);
@@ -147,7 +160,9 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     questionText: normalizedQuestionText,
     options,
     correctAnswer: question.correctAnswer || "",
-    answerSpaceLines: isSubjective && question.subType !== "GRAMMAR_CORRECTION" ? 4 : 0,
+    answerSpaceLines:
+      customAnswerSpaceLines ??
+      (isSubjective && question.subType !== "GRAMMAR_CORRECTION" ? 4 : 0),
     objectiveAnswerSlots: 0,
     objectiveAnswerTexts: [],
     sectionTitle: "",

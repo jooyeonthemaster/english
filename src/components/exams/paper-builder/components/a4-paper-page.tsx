@@ -6,6 +6,7 @@ import { PAPER_SIZE_SPECS, SUBTYPE_LABELS } from "../constants";
 import {
   formatInlineMarkersForSubtype,
   formatSentenceInsertPassageMarkers,
+  optionDisplayLabel,
   optionDisplayTextForSubtype,
   optionOrdinalLabel,
   shouldRenderOptionListForSubtype,
@@ -867,7 +868,11 @@ export function A4PaperPage({
                                         visual.optionNumberClass,
                                       )}
                                     >
-                                      {optionOrdinalLabel(originalIndex)}
+                                      {optionDisplayLabel(
+                                        item.sourceQuestion.subType,
+                                        originalIndex,
+                                        option.label,
+                                      )}
                                     </span>
                                     {useReferenceLabel && hasOptionDisplayText ? (
                                       <span className="flex-1 font-semibold">

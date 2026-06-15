@@ -15,6 +15,7 @@ import {
   MessageSquare,
   Target,
   LayoutList,
+  Gem,
   Sparkles,
   CalendarClock,
 } from "lucide-react";
@@ -272,8 +273,19 @@ export const PassageQueueCard = memo(function PassageQueueCard({
         spinIcon={passage.status === "analyzing"}
         variant={passage.status === "analyzing" ? "analyzing" : "pending"}
         planBadge={
-          FEATURE_FLAGS.SHOW_MODEL_SELECTOR && planConfig ? (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-600 font-semibold">
+          planConfig && (planConfig.id === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) ? (
+            <span
+              className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-md border font-bold ${
+                planConfig.id === "PREMIUM"
+                  ? "border-violet-200 bg-violet-50 text-violet-700"
+                  : "border-sky-200 bg-sky-50 text-sky-700"
+              }`}
+            >
+              {planConfig.id === "PREMIUM" ? (
+                <Gem className="w-3 h-3" />
+              ) : (
+                <Sparkles className="w-3 h-3" />
+              )}
               {planConfig.shortLabel}
             </span>
           ) : null
@@ -345,8 +357,19 @@ export const PassageQueueCard = memo(function PassageQueueCard({
                   <span className="workbench-loading-dot h-1 w-1 rounded-full bg-teal-400 [animation-delay:0.32s]" />
                 </span>
               )}
-              {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && planConfig && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-600 font-semibold">
+              {planConfig && (planConfig.id === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
+                <span
+                  className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-md border font-bold ${
+                    planConfig.id === "PREMIUM"
+                      ? "border-violet-200 bg-violet-50 text-violet-700"
+                      : "border-sky-200 bg-sky-50 text-sky-700"
+                  }`}
+                >
+                  {planConfig.id === "PREMIUM" ? (
+                    <Gem className="w-3 h-3" />
+                  ) : (
+                    <Sparkles className="w-3 h-3" />
+                  )}
                   {planConfig.shortLabel}
                 </span>
               )}

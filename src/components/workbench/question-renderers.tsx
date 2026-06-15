@@ -7,6 +7,7 @@ import { getVisibleQuestionTags } from "@/lib/question-generation-plans";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 import { normalizePassageWhitespace } from "@/lib/question-postprocess/text-utils";
 import { OptionList } from "./question-renderer-primitives";
+import { CustomLayoutRenderer } from "./custom-layout-renderer";
 import {
   BlankInferenceRenderer,
   GrammarErrorRenderer,
@@ -651,6 +652,13 @@ function hasStructuredFields(typeId: string, q: any): boolean {
       return !!q.passageWithUnderline && !!q.underlinedSegments && !!q.correctedPart;
     case "SYNONYM":
       return !!q.targetWord && !!q.contextSentence;
+    case "CUSTOM_LAYOUT":
+      // 커스텀 유형(v2): structuredData.layout(LayoutDoc) 이 있어야 고충실도 렌더 가능.
+      return (
+        !!q.layout &&
+        (!!q.layout.direction ||
+          (Array.isArray(q.layout.blocks) && q.layout.blocks.length > 0))
+      );
     default:
       return false;
   }
@@ -703,6 +711,8 @@ function renderTypedQuestion(typeId: string, q: any): React.ReactNode {
       return <SynonymRenderer q={q} />;
     case "ANTONYM":
       return <AntonymRenderer q={q} />;
+    case "CUSTOM_LAYOUT":
+      return <CustomLayoutRenderer q={q} />;
     default:
       return <FallbackRenderer question={q} />;
   }

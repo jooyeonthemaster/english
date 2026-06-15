@@ -160,6 +160,20 @@ export async function createSignedDownloadUrl(
   return data.signedUrl;
 }
 
+/** 객체 존재 여부 — 서명 URL은 미존재 경로도 발급되므로(다운로드 시 404)
+ *  "원본 파일" 버튼처럼 존재가 보장돼야 하는 곳에서 먼저 확인한다. */
+export async function storageObjectExists(path: string): Promise<boolean> {
+  const supabase = getServiceSupabase();
+  const idx = path.lastIndexOf("/");
+  const dir = idx > 0 ? path.slice(0, idx) : "";
+  const name = path.slice(idx + 1);
+  const { data, error } = await supabase.storage
+    .from(STORAGE_BUCKET)
+    .list(dir, { limit: 10, search: name });
+  if (error || !data) return false;
+  return data.some((f) => f.name === name);
+}
+
 // ─── Cleanup ─────────────────────────────────────────────────────────────────
 
 /** Remove every object under a job's prefix. Used by daily-cleanup and

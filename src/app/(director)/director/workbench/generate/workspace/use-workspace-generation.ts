@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useCallback,
-  useMemo,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useCallback, useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { toast } from "sonner";
 
 import { CREDIT_COSTS } from "@/lib/credit-costs";
@@ -14,7 +8,11 @@ import {
   getQuestionGenerationCreditCost,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
-import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import {
+  readQuestionTypeDifficultySetting,
+  readQuestionTypeGenerationPlanSetting,
+  type QuestionTypeGenerationSettings,
+} from "@/lib/question-type-generation-settings";
 import type { PassageItem, QueueItem } from "../generate-page-types";
 import {
   FAST_BATCH_CONCURRENCY,
@@ -25,7 +23,6 @@ import {
   runWithConcurrency,
 } from "../use-generation-handlers";
 import { useTaskQueue } from "@/components/workbench/task-queue";
-import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import {
   effectiveRowContent,
   overrideHasTypeCounts,
@@ -62,9 +59,7 @@ function nextVariantTitle(
 ): string {
   const base = baseTitle.replace(/\s*\(변형(?:\s*\d+)?\)\s*$/, "").trim();
   const taken = new Set(
-    passages
-      .filter((p) => p.title.startsWith(`${base} (변형`))
-      .map((p) => p.title),
+    passages.filter((p) => p.title.startsWith(`${base} (변형`)).map((p) => p.title),
   );
   for (const t of usedTitles) {
     if (t.startsWith(`${base} (변형`)) taken.add(t);
@@ -108,22 +103,15 @@ interface UseWorkspaceGenerationParams {
   difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
   customPrompt: string;
   autoCount: number;
-  selectedIds?: Set<string>;
-  setSelectedIds?: Dispatch<SetStateAction<Set<string>>>;
   setSessionQueue: Dispatch<SetStateAction<QueueItem[]>>;
   loadPassages: () => Promise<void> | void;
 }
 
 export interface WorkspaceGenerationSummary {
+  rowCount: number;
   totalQuestions: number;
   creditCost: number;
-  /** 워크스페이스 행 수. */
-  rowCount: number;
-  /** 워크스페이스에 없는, 내 지문에서 체크만 된 생성 대상 수. */
-  selectedOnlyCount: number;
-  /** 실제 생성 대상 수 = 워크스페이스 행 + 선택-only 지문. */
-  targetCount: number;
-  /** 변형본 저장이 필요한 워크스페이스 행 수 (버튼 안내용). */
+  /** 변형본 저장이 필요한 행 수 (버튼 안내용). */
   variantCount: number;
 }
 
@@ -137,59 +125,16 @@ export function useWorkspaceGeneration({
   difficulty,
   customPrompt,
   autoCount,
-  selectedIds,
-  setSelectedIds,
   setSessionQueue,
   loadPassages,
 }: UseWorkspaceGenerationParams) {
   const { triggerRefresh } = useTaskQueue();
   const [generating, setGenerating] = useState(false);
 
-  const workspacePassageIdSet = useMemo(() => {
-    return new Set(
-      api.rows
-        .flatMap((row) => [row.passageId, row.variantOfId])
-        .filter(Boolean),
-    );
-  }, [api.rows]);
-
-  const selectedOnlyPassages = useMemo(
-    () =>
-      passages.filter(
-        (passage) =>
-          selectedIds?.has(passage.id) &&
-          !workspacePassageIdSet.has(passage.id),
-      ),
-    [passages, selectedIds, workspacePassageIdSet],
-  );
-
-  const globalQuestionCount =
-    genMode === "auto"
-      ? Math.max(0, autoCount)
-      : genMode === "manual"
-        ? Object.values(typeCounts).reduce((a, b) => a + b, 0)
-        : 0;
-
-  const globalBaseCredit = useMemo(() => {
-    if (genMode === "auto") return CREDIT_COSTS.AUTO_GEN_BATCH;
-    if (genMode !== "manual") return 0;
-    return Object.entries(typeCounts).reduce((sum, [typeId, n]) => {
-      if (n <= 0) return sum;
-      const unit = VOCAB_GENERATION_TYPE_IDS.has(typeId)
-        ? CREDIT_COSTS.QUESTION_GEN_VOCAB
-        : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-      return sum + unit * n;
-    }, 0);
-  }, [genMode, typeCounts]);
-
   const summary: WorkspaceGenerationSummary = useMemo(() => {
-    const globalCfg = {
-      genMode,
-      autoCount,
-      totalQuestions: globalQuestionCount,
-    };
+    const globalCfg = { genMode, autoCount, totalQuestions: Object.values(typeCounts).reduce((a, b) => a + b, 0) };
     let totalQuestions = 0;
-    let baseCredits = 0;
+    let creditCost = 0;
     let variantCount = 0;
     for (const row of api.rows) {
       totalQuestions += rowQuestionCount(row, globalCfg);
@@ -200,44 +145,52 @@ export function useWorkspaceGeneration({
           const unit = VOCAB_GENERATION_TYPE_IDS.has(typeId)
             ? CREDIT_COSTS.QUESTION_GEN_VOCAB
             : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-          baseCredits += unit * n;
+          creditCost += getQuestionGenerationCreditCost(
+            unit * n,
+            readQuestionTypeGenerationPlanSetting(
+              questionTypeSettings[typeId],
+              generationPlan,
+            ),
+          );
         }
       } else if (genMode === "auto") {
-        baseCredits += CREDIT_COSTS.AUTO_GEN_BATCH;
+        creditCost += getQuestionGenerationCreditCost(
+          CREDIT_COSTS.AUTO_GEN_BATCH,
+          generationPlan,
+        );
       } else if (genMode === "manual") {
-        baseCredits += globalBaseCredit;
+        for (const [typeId, n] of Object.entries(typeCounts)) {
+          if (n <= 0) continue;
+          const unit = VOCAB_GENERATION_TYPE_IDS.has(typeId)
+            ? CREDIT_COSTS.QUESTION_GEN_VOCAB
+            : CREDIT_COSTS.QUESTION_GEN_SINGLE;
+          creditCost += getQuestionGenerationCreditCost(
+            unit * n,
+            readQuestionTypeGenerationPlanSetting(
+              questionTypeSettings[typeId],
+              generationPlan,
+            ),
+          );
+        }
       }
     }
-    const actionableSelectedOnlyCount =
-      genMode === "set" || globalQuestionCount <= 0
-        ? 0
-        : selectedOnlyPassages.length;
-    totalQuestions += actionableSelectedOnlyCount * globalQuestionCount;
-    baseCredits += actionableSelectedOnlyCount * globalBaseCredit;
     return {
       rowCount: api.rows.length,
-      selectedOnlyCount: actionableSelectedOnlyCount,
-      targetCount: api.rows.length + actionableSelectedOnlyCount,
       totalQuestions,
-      creditCost: getQuestionGenerationCreditCost(baseCredits, generationPlan),
+      creditCost,
       variantCount,
     };
   }, [
     api.rows,
     genMode,
     autoCount,
-    globalQuestionCount,
-    globalBaseCredit,
-    selectedOnlyPassages.length,
+    typeCounts,
+    questionTypeSettings,
     generationPlan,
   ]);
 
   const handleWorkspaceGenerate = useCallback(async () => {
-    if (
-      (api.rows.length === 0 && selectedOnlyPassages.length === 0) ||
-      generating
-    )
-      return;
+    if (api.rows.length === 0 || generating) return;
     if (genMode === "set") {
       // 장문 세트는 라이브러리 체크 지문 1개로 동작 — 워크스페이스 생성 금지.
       toast.error(
@@ -249,17 +202,12 @@ export function useWorkspaceGeneration({
     const globalCfg = {
       genMode,
       autoCount,
-      totalQuestions: globalQuestionCount,
+      totalQuestions: Object.values(typeCounts).reduce((a, b) => a + b, 0),
     };
     const actionableRows = api.rows.filter(
       (row) => rowQuestionCount(row, globalCfg) > 0,
     );
-    const actionableSelectedOnlyPassages =
-      globalQuestionCount > 0 ? selectedOnlyPassages : [];
-    if (
-      actionableRows.length === 0 &&
-      actionableSelectedOnlyPassages.length === 0
-    ) {
+    if (actionableRows.length === 0) {
       toast.error("생성할 유형이 없습니다. 유형을 선택해주세요.");
       return;
     }
@@ -268,26 +216,17 @@ export function useWorkspaceGeneration({
     try {
       // ── 1) 변형본 저장 (수정/범위 지정된 행) ──
       // passageOrder 충돌 방지를 위해 순차 실행.
-      type ResolvedTarget =
-        | {
-            kind: "workspace";
-            row: WorkspaceRow;
-            passageId: string;
-            title: string;
-            content: string;
-          }
-        | {
-            kind: "library";
-            passage: PassageItem;
-            passageId: string;
-            title: string;
-            content: string;
-          };
-      const resolved: ResolvedTarget[] = [];
+      const resolved: {
+        row: WorkspaceRow;
+        passageId: string;
+        title: string;
+        content: string;
+      }[] = [];
       let variantsCreated = 0;
 
-      const { createDirectInputPassageMaterial } =
-        await import("@/actions/workbench");
+      const { createDirectInputPassageMaterial } = await import(
+        "@/actions/workbench"
+      );
       const usedTitles = new Set<string>();
       for (const row of actionableRows) {
         const content = effectiveRowContent(row);
@@ -296,13 +235,7 @@ export function useWorkspaceGeneration({
           continue;
         }
         if (!rowNeedsVariant(row)) {
-          resolved.push({
-            kind: "workspace",
-            row,
-            passageId: row.passageId,
-            title: row.title,
-            content,
-          });
+          resolved.push({ row, passageId: row.passageId, title: row.title, content });
           continue;
         }
         const title = nextVariantTitle(row.title, passages, usedTitles);
@@ -316,9 +249,7 @@ export function useWorkspaceGeneration({
         if (!result?.success || !result.id) {
           toast.error(
             `"${row.title}" 변형본 저장에 실패해 건너뜁니다.` +
-              (result && "error" in result && result.error
-                ? ` (${result.error})`
-                : ""),
+              (result && "error" in result && result.error ? ` (${result.error})` : ""),
           );
           continue;
         }
@@ -330,7 +261,6 @@ export function useWorkspaceGeneration({
           variantOfId: row.variantOfId ?? row.passageId,
         });
         resolved.push({
-          kind: "workspace",
           row: {
             ...row,
             passageId: result.id,
@@ -343,20 +273,6 @@ export function useWorkspaceGeneration({
           },
           passageId: result.id,
           title,
-          content,
-        });
-      }
-      for (const passage of actionableSelectedOnlyPassages) {
-        const content = passage.content.trim();
-        if (content.length < 20) {
-          toast.error(`"${passage.title}" 본문이 너무 짧아 건너뜁니다.`);
-          continue;
-        }
-        resolved.push({
-          kind: "library",
-          passage,
-          passageId: passage.id,
-          title: passage.title,
           content,
         });
       }
@@ -379,6 +295,7 @@ export function useWorkspaceGeneration({
         questionType?: string; // undefined → AUTO
         settings?: unknown;
         difficulty: string;
+        generationPlan: QuestionGenerationPlan;
         tempId: string;
         config: QueueItem["config"];
         progressKey: string;
@@ -392,53 +309,49 @@ export function useWorkspaceGeneration({
       }[] = [];
 
       for (const item of resolved) {
-        const passageLike =
-          item.kind === "workspace"
-            ? ({
-                ...rowAsPassageItem(item.row, passages),
-                id: item.passageId,
-                title: item.title,
-                content: item.content,
-              } as PassageItem)
-            : ({
-                ...item.passage,
-                id: item.passageId,
-                title: item.title,
-                content: item.content,
-              } as PassageItem);
-        const effDifficulty =
-          item.kind === "workspace"
-            ? (item.row.override?.difficulty ?? difficulty)
-            : difficulty;
+        const passageLike = {
+          ...rowAsPassageItem(item.row, passages),
+          id: item.passageId,
+          title: item.title,
+          content: item.content,
+        } as PassageItem;
+        const effDifficulty = item.row.override?.difficulty ?? difficulty;
         // 난이도만 지정한 오버라이드는 "전체 설정 유형 + 이 난이도" — 유형이
         // 비어있다고 행을 제외하지 않는다.
-        const effTypeCounts =
-          item.kind === "workspace" && overrideHasTypeCounts(item.row.override)
-            ? item.row.override!.typeCounts
-            : genMode === "manual"
-              ? typeCounts
-              : null;
+        const effTypeCounts = overrideHasTypeCounts(item.row.override)
+          ? item.row.override!.typeCounts
+          : genMode === "manual"
+            ? typeCounts
+            : null;
 
         if (effTypeCounts) {
           for (const [typeId, rawCount] of Object.entries(effTypeCounts)) {
             const repeat = Math.max(0, Math.floor(Number(rawCount) || 0));
+            const settingsForType = questionTypeSettings[typeId];
+            const unitDifficulty = readQuestionTypeDifficultySetting(
+              settingsForType,
+              effDifficulty,
+            );
+            const unitGenerationPlan = readQuestionTypeGenerationPlanSetting(
+              settingsForType,
+              generationPlan,
+            );
             for (let i = 0; i < repeat; i += 1) {
               fastUnits.push({
                 passage: passageLike,
                 questionType: typeId,
-                settings: questionTypeSettings[typeId],
-                difficulty: effDifficulty,
+                settings: settingsForType,
+                difficulty: unitDifficulty,
+                generationPlan: unitGenerationPlan,
                 tempId: `fast:${item.passageId}:${typeId}:${runId}:${i}`,
                 progressKey: typeId,
                 config: {
                   typeCounts: { [typeId]: 1 },
-                  questionTypeSettings: {
-                    [typeId]: questionTypeSettings[typeId],
-                  },
-                  difficulty: effDifficulty,
+                  questionTypeSettings: { [typeId]: settingsForType },
+                  difficulty: unitDifficulty,
                   prompt,
                   mode: "manual",
-                  generationPlan,
+                  generationPlan: unitGenerationPlan,
                 },
               });
             }
@@ -448,6 +361,7 @@ export function useWorkspaceGeneration({
             passage: passageLike,
             questionType: undefined,
             difficulty: effDifficulty,
+            generationPlan,
             tempId: `fast:${item.passageId}:${runId}:0`,
             progressKey: "auto",
             config: {
@@ -515,7 +429,7 @@ export function useWorkspaceGeneration({
                 questionTypeSettings: unit.settings,
                 difficulty: unit.difficulty,
                 customPrompt: prompt || undefined,
-                generationPlan,
+                generationPlan: unit.generationPlan,
               });
               const doneItem = {
                 ...buildOptimisticItem({
@@ -528,26 +442,18 @@ export function useWorkspaceGeneration({
                 createdAt: result.createdAt || new Date().toISOString(),
                 status: "done" as const,
                 progress: { [unit.progressKey]: "done" as const },
-                questions: Array.isArray(result.questions)
-                  ? result.questions
-                  : [],
+                questions: Array.isArray(result.questions) ? result.questions : [],
                 questionIds: Array.isArray(result.questionIds)
                   ? result.questionIds
                   : [],
               };
               setSessionQueue((prev) =>
-                replaceQueueItemInPlace(
-                  prev,
-                  [unit.tempId, result.jobId],
-                  doneItem,
-                ),
+                replaceQueueItemInPlace(prev, [unit.tempId, result.jobId], doneItem),
               );
               return result;
             } catch (err) {
               const message =
-                err instanceof Error
-                  ? err.message
-                  : "문제 생성에 실패했습니다.";
+                err instanceof Error ? err.message : "문제 생성에 실패했습니다.";
               setSessionQueue((prev) =>
                 prev.map((q) =>
                   q.id === unit.tempId
@@ -599,7 +505,6 @@ export function useWorkspaceGeneration({
 
       triggerRefresh();
       if (success > 0) {
-        dispatchGenerateTourMilestone("question-generation-completed");
         toast.success(
           slowJobs.length > 0
             ? `${success}개 생성 작업이 시작/완료됐습니다.`
@@ -609,15 +514,10 @@ export function useWorkspaceGeneration({
       if (failed > 0) {
         toast.error(`${failed}개 문제 생성이 실패했습니다.`);
       }
-      if (actionableSelectedOnlyPassages.length > 0) {
-        setSelectedIds?.(new Set());
-      }
     } catch (err) {
       // 변형본 저장/유닛 구성 단계의 예기치 못한 오류 — 무음 종료 방지.
       toast.error(
-        err instanceof Error
-          ? err.message
-          : "문제 생성 준비 중 오류가 발생했습니다.",
+        err instanceof Error ? err.message : "문제 생성 준비 중 오류가 발생했습니다.",
       );
     } finally {
       setGenerating(false);
@@ -632,10 +532,7 @@ export function useWorkspaceGeneration({
     difficulty,
     customPrompt,
     autoCount,
-    globalQuestionCount,
-    selectedOnlyPassages,
     generating,
-    setSelectedIds,
     setSessionQueue,
     loadPassages,
     triggerRefresh,

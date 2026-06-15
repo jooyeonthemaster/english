@@ -25,6 +25,8 @@ export const blankInferenceSchema = z.object({
   ...commonFields,
   originalExpression: z.string().describe("원문에서 빈칸으로 교체한 정확한 표현 (한 글자도 변경하지 않은 원문 그대로)"),
   passageWithBlank: z.string().describe("빈칸(_____) 이 삽입된 지문 전체"),
+  blankAnswerMode: z.enum(["SOURCE_EXACT", "PARAPHRASE", "DOUBLE_NEGATIVE"]).optional(),
+  answerLogic: z.string().optional(),
   options: z.array(optionSchema).length(5),
   ...mcWrongExplanations,
 });
@@ -70,12 +72,14 @@ export type VocabChoiceQuestion = z.infer<typeof vocabChoiceSchema>;
 
 export const sentenceOrderSchema = z.object({
   ...commonFields,
-  givenSentence: z.string().describe("주어진 첫 문장"),
+  givenSentence: z
+    .string()
+    .describe("주어진 글. 반드시 도입부 1~2문장만 사용하고, 긴 문단 전체나 3문장 이상은 금지"),
   paragraphs: z.array(z.object({
     label: z.string().describe("(A), (B), (C)"),
-    text: z.string(),
-  })).length(3),
-  options: z.array(optionSchema).length(5),
+    text: z.string().describe("각 (A)/(B)/(C) 덩어리. 최소 2문장 이상, 세 덩어리의 분량이 균형 있게 배치되어야 함"),
+  })).length(3).describe("(A), (B), (C) 세 덩어리. 어느 하나도 한 문장짜리/한 줄짜리로 만들지 말 것"),
+  options: z.array(optionSchema).length(5).describe("(A)(B)(C)의 순열 5개. 예: (B)-(A)-(C)"),
   ...mcWrongExplanations,
 });
 export type SentenceOrderQuestion = z.infer<typeof sentenceOrderSchema>;
