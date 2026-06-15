@@ -1421,6 +1421,11 @@ export function GenerationConfigPanel({
                     <span className="truncate text-[12px] font-bold">
                       {plan.shortLabel}
                     </span>
+                    <span
+                      className={`ml-auto text-[10px] font-bold tabular-nums ${active ? "text-blue-600" : "text-slate-400"}`}
+                    >
+                      {plan.creditMultiplier}x
+                    </span>
                   </button>
                 );
               })}
@@ -1503,43 +1508,9 @@ export function GenerationConfigPanel({
           </div>
         </div>
 
-        {/* Model selector — 난이도 세그먼트와 동일 디자인(제목 왼쪽 + 흰색 활성) */}
-        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-          <div className="px-4 pb-3 shrink-0">
-            <div className="flex items-center gap-3">
-              <span className="w-14 shrink-0 whitespace-nowrap text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                생성 모델
-              </span>
-              <div className="flex h-8 flex-1 rounded-lg bg-slate-100 p-0.5">
-                {(["STANDARD", "PREMIUM"] as const).map((planId) => {
-                  const plan = QUESTION_GENERATION_PLANS[planId];
-                  const active = generationPlan === planId;
-                  const Icon = planId === "PREMIUM" ? Gem : Sparkles;
-                  return (
-                    <button
-                      key={planId}
-                      type="button"
-                      onClick={() => setGenerationPlan(planId)}
-                      className={`flex flex-1 items-center justify-center gap-1.5 rounded-[6px] text-[12px] transition-all duration-150 ${
-                        active
-                          ? "bg-white font-bold text-slate-800 shadow-sm"
-                          : "font-semibold text-slate-400 hover:text-slate-600"
-                      }`}
-                    >
-                      <Icon
-                        className={`h-3.5 w-3.5 shrink-0 ${active ? "text-blue-600" : "text-slate-400"}`}
-                      />
-                      {plan.shortLabel}
-                      <span className="text-[10px] font-bold tabular-nums text-slate-400">
-                        {plan.creditMultiplier}x
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        )}
+        {/* 생성 모델(플랜)은 글로벌 셀렉터를 두지 않는다 — 유형별 세부옵션의
+            "생성 플랜 · 이 유형만"에서만 정의한다. 미설정 유형은 기본(STANDARD)으로
+            생성된다. (전역 generationPlan 은 미설정 유형의 fallback 으로만 남는다.) */}
 
         {/* Auto Mode Config */}
         {genMode === "auto" && (
