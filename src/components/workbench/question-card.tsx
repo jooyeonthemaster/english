@@ -19,6 +19,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,7 +41,14 @@ import {
 } from "@/lib/question-generation-plans";
 import { getCircledNumbers } from "@/lib/question-postprocess/types";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
-import { shouldIgnoreCardClick } from "./shared/card-click";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardClick,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "./shared/card-click";
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 
 // ─── Constants ───────────────────────────────────────────
@@ -442,6 +450,8 @@ interface QuestionCardProps {
   /** 해설보기 줄 왼쪽에 '상세 보기' 버튼을 띄우고, 해설보기를 오른쪽으로 보낸다.
    *  두 버튼 색은 '펼치기' 버튼과 통일(blue-400). 생성/검수 결과 카드 전용. */
   showDetailButton?: boolean;
+  /** Icon-only detail button anchored at the bottom-right of the card. */
+  showDetailIconButton?: boolean;
   /** 영역 드래그 선택(DragSelect)이 읽는 식별자. 기본은 q.id 지만, 선택 상태가
    *  q.id 가 아닌 다른 키(예: 생성 결과의 persistedQuestionId)로 관리되는 경우
    *  해당 키를 넘긴다. null 을 주면 이 카드는 영역 선택 대상에서 제외된다. */
@@ -468,6 +478,7 @@ export function QuestionCard({
   showHeaderActions = false,
   openOnCardClick = false,
   showDetailButton = false,
+  showDetailIconButton = false,
   dragItemId,
   detailExtra,
 }: QuestionCardProps) {
@@ -476,6 +487,10 @@ export function QuestionCard({
   const [explanationOpen, setExplanationOpen] = useState(false);
   const [compactExpanded, setCompactExpanded] = useState(false);
   const router = useRouter();
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
 
   const options = parseJSON<{ label: string; text: string }[]>(q.options, []);
   const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
@@ -539,7 +554,20 @@ export function QuestionCard({
     else handleEdit();
   };
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!openOnCardClick || shouldIgnoreCardClick(e)) return;
+    if (!openOnCardClick || e.detail > 1) return;
+    if (onToggle) {
+      if (shouldIgnoreCardSelectionClick(e)) return;
+      scheduleCardSelectionClick(onToggle);
+      return;
+    }
+    if (shouldIgnoreCardClick(e)) return;
+    handleDetail();
+  };
+
+  const handleCardDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    cancelPendingCardSelectionClick();
+    clearCardTextSelection();
+    if (!openOnCardClick || shouldIgnoreCardDoubleClick(e)) return;
     handleDetail();
   };
 
@@ -573,7 +601,9 @@ export function QuestionCard({
   return (
     <Card
       data-drag-item-id={resolvedDragItemId ?? undefined}
+      onMouseDown={preventCardDoubleClickTextSelection}
       onClick={handleCardClick}
+      onDoubleClick={handleCardDoubleClick}
       className={`group relative gap-0 py-0 transition-all ${openOnCardClick ? "cursor-pointer" : ""} ${
         selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"
       } ${!q.approved ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]" : ""}${
@@ -583,10 +613,10 @@ export function QuestionCard({
       <CardContent
         className={
           compactFixed
-            ? "p-3 flex flex-col gap-2 h-full"
+            ? `p-3 flex flex-col gap-2 h-full${showDetailIconButton && onDetail ? " pb-11" : ""}`
             : compact
-              ? "p-3 space-y-2"
-              : "p-4 space-y-3"
+              ? `p-3 space-y-2${showDetailIconButton && onDetail ? " pb-11" : ""}`
+              : `p-4 space-y-3${showDetailIconButton && onDetail ? " pb-12" : ""}`
         }
       >
         <div
@@ -1022,8 +1052,18 @@ export function QuestionCard({
               </div>
             ))}
         </div>
-        {showDetailButton && onDetail ? <CardHoverActionLabel /> : null}
       </CardContent>
+      {showDetailIconButton && onDetail ? (
+        <CardDetailIconButton
+          className="absolute bottom-2 right-2 z-30"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDetail();
+          }}
+        />
+      ) : showDetailButton && onDetail ? (
+        <CardHoverActionLabel />
+      ) : null}
     </Card>
   );
 }

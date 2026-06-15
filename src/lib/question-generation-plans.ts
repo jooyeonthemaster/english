@@ -16,14 +16,14 @@ export const QUESTION_GENERATION_PLANS: Record<
     id: "STANDARD",
     label: "일반 문제 생성",
     shortLabel: "일반",
-    description: "빠르고 안정적인 기본 생성",
+    description: "빠른 속도 · 기본 품질",
     creditMultiplier: 1,
   },
   PREMIUM: {
     id: "PREMIUM",
     label: "프리미엄 문제 생성",
     shortLabel: "프리미엄",
-    description: "정밀 검수와 고난도 품질 기준을 강화한 생성",
+    description: "정밀 검수 · 고난도 품질",
     creditMultiplier: 2,
   },
 };

@@ -33,6 +33,13 @@ import { getDraftDisplayTitle } from "@/app/(director)/director/workbench/passag
 import { buildDuplicateIndex } from "@/lib/duplicate-detection";
 import { PASSAGE_ANALYSIS_BASE_CREDIT_COST } from "@/lib/passage-analysis-credit-costs";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "@/components/workbench/shared/card-click";
 import type { DraftCollectionItem } from "../types";
 
 interface ExtractionDraftGridProps {
@@ -185,6 +192,10 @@ export function ExtractionDraftGrid({
   const [activeFolder, setActiveFolder] = useState<string | null>(null);
   const [hideDuplicates, setHideDuplicates] = useState(false);
   const [bulkSelectedIds, setBulkSelectedIds] = useState<Set<string>>(new Set());
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
 
   const toggleBulkSelect = (id: string) => {
     setBulkSelectedIds((prev) => {
@@ -726,9 +737,27 @@ export function ExtractionDraftGrid({
                   role="button"
                   aria-pressed={active}
                   tabIndex={0}
-                  onClick={() => onSelectDraft(draft)}
+                  onMouseDown={preventCardDoubleClickTextSelection}
+                  onClick={(e) => {
+                    if (e.detail > 1 || shouldIgnoreCardSelectionClick(e))
+                      return;
+                    scheduleCardSelectionClick(() =>
+                      toggleBulkSelect(draft.id),
+                    );
+                  }}
+                  onDoubleClick={(e) => {
+                    cancelPendingCardSelectionClick();
+                    clearCardTextSelection();
+                    if (shouldIgnoreCardDoubleClick(e)) return;
+                    onSelectDraft(draft);
+                  }}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
+                    if (e.key === " ") {
+                      e.preventDefault();
+                      toggleBulkSelect(draft.id);
+                      return;
+                    }
+                    if (e.key === "Enter") {
                       e.preventDefault();
                       onSelectDraft(draft);
                     }

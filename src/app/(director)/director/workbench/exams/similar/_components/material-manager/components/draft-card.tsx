@@ -21,6 +21,13 @@ import { getDraftDisplayTitle } from "../utils/title";
 import { RestorationBadge } from "./restoration-badge";
 import { DetailActionButton } from "@/components/ui/detail-action-button";
 import { DragHandle } from "@/components/ui/drag-handle";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "@/components/workbench/shared/card-click";
 
 export type DraftCardStatusBadgeMode = "review" | "analysis";
 
@@ -74,6 +81,10 @@ export function DraftCard({
     draftId: string;
     value: string;
   } | null>(null);
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
   const titleEditing = titleEditState?.draftId === draft.id;
   const titleInput = titleEditing ? titleEditState.value : (draft.title ?? "");
   const setTitleInput = useCallback(
@@ -230,11 +241,29 @@ export function DraftCard({
       data-drag-item-id={hideCheckbox ? undefined : draft.id}
       role="button"
       tabIndex={0}
-      onClick={onClick}
+      onMouseDown={preventCardDoubleClickTextSelection}
+      onClick={(e) => {
+        if (hideCheckbox || e.detail > 1 || shouldIgnoreCardSelectionClick(e))
+          return;
+        scheduleCardSelectionClick(onToggleCheck);
+      }}
+      onDoubleClick={(e) => {
+        cancelPendingCardSelectionClick();
+        clearCardTextSelection();
+        if (shouldIgnoreCardDoubleClick(e)) return;
+        onClick();
+      }}
       onKeyDown={(e) => {
+        if (hideCheckbox) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            onClick();
+          }
+          return;
+        }
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          onClick();
+          onToggleCheck();
         }
       }}
       className={

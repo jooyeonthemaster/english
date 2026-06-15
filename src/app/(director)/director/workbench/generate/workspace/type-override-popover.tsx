@@ -31,20 +31,48 @@ interface TypeOverridePopoverProps {
 
 export function overrideSummary(override: RowOverride | null): string {
   if (!override) return "전체 설정 따름";
+  const diff = overrideDifficultyLabel(override);
+  const types = overrideTypeSummary(override);
+  return (
+    [types, diff].filter(Boolean).join(" / ") ||
+    "전체 설정 따름"
+  );
+}
+
+/** 난이도 값 → 한글 라벨 (없으면 null). */
+export function difficultyLabel(
+  value: "BASIC" | "INTERMEDIATE" | "KILLER" | null | undefined,
+): string | null {
+  return value === "BASIC"
+    ? "기본"
+    : value === "INTERMEDIATE"
+      ? "중급"
+      : value === "KILLER"
+        ? "킬러"
+        : null;
+}
+
+/** 오버라이드의 난이도 라벨 (없으면 null) — 별도 뱃지 표기용. */
+export function overrideDifficultyLabel(
+  override: RowOverride | null,
+): string | null {
+  return difficultyLabel(override?.difficulty);
+}
+
+/** 난이도를 뺀 유형 요약 (유형 + 세부옵션 표시). 유형이 없으면 빈 문자열. */
+export function overrideTypeSummary(override: RowOverride | null): string {
+  if (!override) return "";
   const parts = Object.entries(override.typeCounts)
     .filter(([, n]) => n > 0)
     .map(([id, n]) => `${typeLabel(id)} ${n}`);
-  const diff =
-    override.difficulty === "BASIC"
-      ? "기본"
-      : override.difficulty === "INTERMEDIATE"
-        ? "중급"
-        : override.difficulty === "KILLER"
-          ? "킬러"
-          : null;
+  const hasDetail =
+    !!override.questionTypeSettings &&
+    Object.keys(override.questionTypeSettings).length > 0;
   const head = parts.slice(0, 2).join("·");
   const more = parts.length > 2 ? ` 외 ${parts.length - 2}` : "";
-  return [head + more, diff].filter(Boolean).join(" / ") || "전체 설정 따름";
+  const base = head + more;
+  if (!base) return hasDetail ? "세부옵션" : "";
+  return hasDetail ? `${base}·세부` : base;
 }
 
 export function TypeOverridePopover({

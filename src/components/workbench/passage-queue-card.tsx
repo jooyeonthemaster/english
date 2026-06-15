@@ -33,6 +33,13 @@ import {
 } from "@/lib/question-generation-plans";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
 import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "@/components/workbench/shared/card-click";
 import type { QueuedPassage, QueuedPassageStatus } from "@/hooks/use-passage-queue";
 
 function formatAnalysisDateTime(value: Date | string | null | undefined) {
@@ -188,6 +195,10 @@ export const PassageQueueCard = memo(function PassageQueueCard({
       : "workbench-loading-card workbench-loading-card--pending"
     : "";
   const canOpenDetail = passage.status === "done";
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
 
   if (isLoading) {
     const rightActions = confirmDelete ? (
@@ -296,6 +307,27 @@ export const PassageQueueCard = memo(function PassageQueueCard({
         role="button"
         tabIndex={0}
         dataDragItemId={passage.id}
+        onMouseDown={preventCardDoubleClickTextSelection}
+        onClick={
+          onToggleSelect
+            ? (e) => {
+                if (e.detail > 1 || shouldIgnoreCardSelectionClick(e)) return;
+                const shiftKey = e.shiftKey;
+                scheduleCardSelectionClick(() =>
+                  onToggleSelect(passage.id, shiftKey),
+                );
+              }
+            : undefined
+        }
+        onDoubleClick={() => {
+          cancelPendingCardSelectionClick();
+          clearCardTextSelection();
+        }}
+        onKeyDown={(e) => {
+          if (!onToggleSelect || (e.key !== "Enter" && e.key !== " ")) return;
+          e.preventDefault();
+          onToggleSelect(passage.id, e.shiftKey);
+        }}
         ariaLabel={`${displayTitle} - ${config.label}`}
       />
     );
@@ -309,13 +341,28 @@ export const PassageQueueCard = memo(function PassageQueueCard({
       } ${
         selected ? "ring-2 ring-blue-400" : ""
       }`}
-      onClick={() => {
-        if (canOpenDetail) onViewDetail(passage.id);
+      onMouseDown={preventCardDoubleClickTextSelection}
+      onClick={(e) => {
+        if (!onToggleSelect || e.detail > 1 || shouldIgnoreCardSelectionClick(e))
+          return;
+        const shiftKey = e.shiftKey;
+        scheduleCardSelectionClick(() => onToggleSelect(passage.id, shiftKey));
+      }}
+      onDoubleClick={(e) => {
+        cancelPendingCardSelectionClick();
+        clearCardTextSelection();
+        if (!canOpenDetail || shouldIgnoreCardDoubleClick(e)) return;
+        onViewDetail(passage.id);
       }}
       role={canOpenDetail ? "button" : undefined}
       tabIndex={canOpenDetail ? 0 : undefined}
       onKeyDown={(e) => {
-        if (!canOpenDetail || (e.key !== "Enter" && e.key !== " ")) return;
+        if (e.key === " " && onToggleSelect) {
+          e.preventDefault();
+          onToggleSelect(passage.id, e.shiftKey);
+          return;
+        }
+        if (!canOpenDetail || e.key !== "Enter") return;
         e.preventDefault();
         onViewDetail(passage.id);
       }}

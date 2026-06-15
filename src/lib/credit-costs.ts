@@ -6,7 +6,7 @@ export const CREDIT_COSTS = {
   // Question generation
   QUESTION_GEN_SINGLE: 2,     // Single MC question generation
   QUESTION_GEN_VOCAB: 1,      // Vocabulary question (simpler prompt)
-  AUTO_GEN_BATCH: 15,         // AI plans + generates ~10 questions automatically
+  AUTO_GEN_BATCH: 2,          // 자동 출제 — 문제 1개당 단가 (문제 수만큼 청구)
   LEARNING_QUESTION_GEN: 2,   // 내신/수능 학습 문제 생성
 
   // Passage operations
@@ -36,7 +36,7 @@ export type OperationType = keyof typeof CREDIT_COSTS;
 export const OPERATION_LABELS: Record<OperationType, string> = {
   QUESTION_GEN_SINGLE: "문제 생성 (단일)",
   QUESTION_GEN_VOCAB: "어휘 문제 생성",
-  AUTO_GEN_BATCH: "자동 출제 (배치)",
+  AUTO_GEN_BATCH: "자동 출제",
   LEARNING_QUESTION_GEN: "학습 문제 생성",
   PASSAGE_ANALYSIS: "학습지 생성",
   GRAMMAR_ENHANCEMENT: "문법 포인트 분석",

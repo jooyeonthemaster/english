@@ -35,7 +35,7 @@ import {
 } from "lucide-react";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { Badge } from "@/components/ui/badge";
-import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import {
   Popover,
   PopoverContent,
@@ -58,6 +58,13 @@ import { DragHandle } from "@/components/ui/drag-handle";
 import type { QuestionCardItem } from "@/components/workbench/question-card";
 import { PassageQuestionsSummary } from "./passage-questions-summary";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "@/components/workbench/shared/card-click";
 
 type ParsedAnalysisSummary = {
   vocabulary?: unknown[];
@@ -287,6 +294,10 @@ export function PassageCardGrid({
   const [lastCreatedCollectionId, setLastCreatedCollectionId] = useState<
     string | null
   >(null);
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
   const passageDragRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   // 마키(영역 드래그) 시작 영역을 "학습지 관리" 패널 전체(헤더·폴더·필터·그리드)로 넓힌다.
   // 아래 "생성/검수결과" 패널과는 boundary 가 분리돼 서로 섞이지 않는다.
@@ -645,8 +656,31 @@ export function PassageCardGrid({
     id: string,
     event: React.KeyboardEvent<HTMLDivElement>,
   ) => {
-    if (event.key !== "Enter" && event.key !== " ") return;
+    if (event.key === " ") {
+      event.preventDefault();
+      toggleCheckbox(id);
+      return;
+    }
+    if (event.key !== "Enter") return;
     event.preventDefault();
+    void openPassageCard(id);
+  };
+
+  const handlePassageCardClick = (
+    id: string,
+    event: React.MouseEvent<HTMLDivElement>,
+  ) => {
+    if (event.detail > 1 || shouldIgnoreCardSelectionClick(event)) return;
+    scheduleCardSelectionClick(() => toggleCheckbox(id));
+  };
+
+  const handlePassageCardDoubleClick = (
+    id: string,
+    event: React.MouseEvent<HTMLDivElement>,
+  ) => {
+    cancelPendingCardSelectionClick();
+    clearCardTextSelection();
+    if (shouldIgnoreCardDoubleClick(event)) return;
     void openPassageCard(id);
   };
 
@@ -1223,37 +1257,8 @@ export function PassageCardGrid({
               aria-label={allVisibleSelected ? "선택 해제" : "전체 선택"}
               className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
             />
-            {/* 워크스페이스 액션 묶음 — '추가'(선택 의존, 자체 disabled)와
-                그 오른쪽의 '열기'(선택 무관, 항상 활성). 선택 미선택 시 흐려지는
-                일괄 관리 그룹 밖에 둬 '열기'가 항상 또렷하게 클릭된다. */}
-            {onEditSelected ? (
-              <button
-                type="button"
-                onClick={onEditSelected}
-                disabled={selectedIds.size === 0 || passageBulkAction !== null}
-                data-generate-tour="library-edit-selected"
-                title={
-                  selectedIds.size > 0
-                    ? workspaceActive
-                      ? `선택한 ${selectedIds.size}개 지문을 작업 중인 워크스페이스에 추가합니다.`
-                      : `선택한 ${selectedIds.size}개 지문을 워크스페이스에서 편집합니다. 편집·AI 변형 후 문제를 생성하세요.`
-                    : "워크스페이스에서 편집할 지문을 선택하세요"
-                }
-                className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-violet-200 bg-white px-2.5 text-[11px] font-medium text-violet-700 shadow-sm transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <FilePen className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="@max-[30rem]:hidden">
-                  {workspaceActive
-                    ? "워크스페이스에 추가"
-                    : "워크스페이스에서 지문 편집"}
-                </span>
-                {selectedIds.size > 0 ? (
-                  <span className="rounded bg-violet-50 px-1 py-px text-[10px] font-semibold tabular-nums text-violet-700 @max-[36rem]:hidden">
-                    {selectedIds.size}개
-                  </span>
-                ) : null}
-              </button>
-            ) : null}
+            {/* '워크스페이스에서 지문 편집 / 추가' 버튼은 내 지문함 하단의
+                가로 전체 보라색 버튼으로 내렸다 (목록 아래 큰 액션 바). */}
             {canManageSelectedPassages ? (
               <div
                 className={
@@ -1679,9 +1684,11 @@ export function PassageCardGrid({
                     role="button"
                     tabIndex={0}
                     aria-label={`${p.title} 상세 보기`}
-                    onClick={() => void openPassageCard(p.id)}
+                    onMouseDown={preventCardDoubleClickTextSelection}
+                    onClick={(e) => handlePassageCardClick(p.id, e)}
+                    onDoubleClick={(e) => handlePassageCardDoubleClick(p.id, e)}
                     onKeyDown={(e) => handleCardKeyDown(p.id, e)}
-                    className={`group relative flex flex-col overflow-hidden rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
+                    className={`group relative flex flex-col overflow-hidden rounded-xl border bg-white p-4 pb-12 transition-all duration-200 hover:shadow-md cursor-pointer ${
                       isChecked
                         ? "border-blue-400 ring-2 ring-blue-300/30"
                         : hasReviewDraft && !isReviewCommitted
@@ -1905,7 +1912,13 @@ export function PassageCardGrid({
                       questions={questionsByPassage?.get(p.id) ?? []}
                     />
 
-                    <CardHoverActionLabel className="bottom-2 right-3" />
+                    <CardDetailIconButton
+                      className="absolute bottom-2 right-2 z-30"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        void openPassageCard(p.id);
+                      }}
+                    />
                   </div>
                 );
               })}
@@ -1922,6 +1935,39 @@ export function PassageCardGrid({
           onClose={() => setBreakdownPassage(null)}
         />
       )}
+      {/* ── 내 지문함 하단 액션 바 — 가로 전체 보라색 버튼 ──
+          선택한 지문을 워크스페이스로 보내 편집하거나(없을 때) 작업 중인
+          워크스페이스에 추가한다(있을 때). 목록 아래 항상 보이는 큰 버튼. */}
+      {onEditSelected ? (
+        <div className="shrink-0 border-t border-slate-100 bg-white px-5 py-3">
+          <button
+            type="button"
+            onClick={onEditSelected}
+            disabled={selectedIds.size === 0 || passageBulkAction !== null}
+            data-generate-tour="library-edit-selected"
+            title={
+              selectedIds.size > 0
+                ? workspaceActive
+                  ? `선택한 ${selectedIds.size}개 지문을 작업 중인 워크스페이스에 추가합니다.`
+                  : `선택한 ${selectedIds.size}개 지문을 워크스페이스에서 편집합니다. 편집·AI 변형 후 문제를 생성하세요.`
+                : "워크스페이스에서 편집할 지문을 선택하세요"
+            }
+            className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 text-[14px] font-bold text-white shadow-sm transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none"
+          >
+            <FilePen className="h-5 w-5" aria-hidden="true" />
+            <span>
+              {workspaceActive
+                ? "워크스페이스에 추가"
+                : "워크스페이스에서 지문 편집"}
+            </span>
+            {selectedIds.size > 0 ? (
+              <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[12px] font-bold tabular-nums">
+                {selectedIds.size}개
+              </span>
+            ) : null}
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -44,6 +44,14 @@ import {
   type ViewModeCycleOption,
 } from "@/components/workbench/shared/view-mode-cycle-button";
 import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardClick,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "@/components/workbench/shared/card-click";
 
 type InlineListLayout = "horizontal" | "grid";
 export type GridViewMode = "grid-3" | "grid-2" | "list";
@@ -384,6 +392,10 @@ function TaskGridCard({
 }) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
   const dragRef = useRef<HTMLElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const dragStateRef = useRef<{
@@ -485,6 +497,23 @@ function TaskGridCard({
   const canOpen = Boolean(onClick || task.href);
   const selectionMode = Boolean(onToggleCheck);
 
+  const handleCardClick = (event: MouseEvent<HTMLElement>) => {
+    if (selectionMode) {
+      if (event.detail > 1 || shouldIgnoreCardSelectionClick(event)) return;
+      scheduleCardSelectionClick(() => onToggleCheck?.());
+      return;
+    }
+    if (shouldIgnoreCardClick(event)) return;
+    handleOpen();
+  };
+
+  const handleCardDoubleClick = (event: MouseEvent<HTMLElement>) => {
+    cancelPendingCardSelectionClick();
+    clearCardTextSelection();
+    if (!canOpen || shouldIgnoreCardDoubleClick(event)) return;
+    handleOpen();
+  };
+
   const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     if (!task.onDelete) return;
@@ -509,12 +538,18 @@ function TaskGridCard({
         dragRef.current = node;
       }}
       data-drag-item-id={dragItemId}
-      onClick={handleOpen}
+      onClick={handleCardClick}
+      onMouseDown={preventCardDoubleClickTextSelection}
+      onDoubleClick={handleCardDoubleClick}
       onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
+        if (event.key === " " && selectionMode) {
           event.preventDefault();
-          handleOpen();
+          onToggleCheck?.();
+          return;
         }
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        handleOpen();
       }}
       role="button"
       tabIndex={0}
@@ -699,6 +734,10 @@ function TaskListRow({
 }) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
   const dragRef = useRef<HTMLElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const dragStateRef = useRef<{
@@ -739,6 +778,23 @@ function TaskListRow({
   const canOpen = Boolean(onClick || task.href);
   const selectionMode = Boolean(onToggleCheck);
 
+  const handleRowClick = (event: MouseEvent<HTMLElement>) => {
+    if (selectionMode) {
+      if (event.detail > 1 || shouldIgnoreCardSelectionClick(event)) return;
+      scheduleCardSelectionClick(() => onToggleCheck?.());
+      return;
+    }
+    if (shouldIgnoreCardClick(event)) return;
+    handleOpen();
+  };
+
+  const handleRowDoubleClick = (event: MouseEvent<HTMLElement>) => {
+    cancelPendingCardSelectionClick();
+    clearCardTextSelection();
+    if (!canOpen || shouldIgnoreCardDoubleClick(event)) return;
+    handleOpen();
+  };
+
   const handleDelete = async (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     if (!task.onDelete) return;
@@ -763,12 +819,18 @@ function TaskListRow({
         dragRef.current = node;
       }}
       data-drag-item-id={dragItemId}
-      onClick={handleOpen}
+      onClick={handleRowClick}
+      onMouseDown={preventCardDoubleClickTextSelection}
+      onDoubleClick={handleRowDoubleClick}
       onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
+        if (event.key === " " && selectionMode) {
           event.preventDefault();
-          handleOpen();
+          onToggleCheck?.();
+          return;
         }
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        handleOpen();
       }}
       role="button"
       tabIndex={0}

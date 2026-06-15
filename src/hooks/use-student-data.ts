@@ -6,12 +6,14 @@ import { getNotificationsData, getStudentEnrollments } from "@/actions/student-a
 import { getLearnPageData } from "@/actions/learning-session";
 import { getDailyQuests } from "@/actions/learning-gamification";
 
-export function useHeaderData() {
+export function useHeaderData(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ["student", "header"],
     queryFn: () => getStudentHeaderData(),
     staleTime: 5 * 60_000,
     placeholderData: keepPreviousData,
+    // 로그인 페이지 등 세션이 없는 곳에서는 호출하지 않는다(서버 액션이 500).
+    enabled: options?.enabled ?? true,
   });
 }
 

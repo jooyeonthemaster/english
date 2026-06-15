@@ -44,7 +44,13 @@ import { parseQuestionSections } from "./question-bank-card/parse-question-secti
 import { renderFormatted } from "./question-bank-card/render-formatted";
 import { RenderedSections } from "./question-bank-card/rendered-sections";
 import type { QuestionBankItem } from "./question-bank-card/types";
-import { shouldIgnoreCardClick } from "./shared/card-click";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "./shared/card-click";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 import {
@@ -133,7 +139,7 @@ export function QuestionBankCard({
   // 시험지 빌더(exams/create)용 간결 표기: 미사용 "0개 시험지에 미사용",
   // 사용 "N개 시험지에 사용". 기본(questions 페이지)은 기존 문구 유지.
   compactUsageLabel?: boolean;
-  // 상세 버튼이 표시되는 화면에서는 카드 본문 클릭도 같은 상세 동작을 실행한다.
+  // 카드 본문 단일 클릭은 선택, 더블클릭은 상세/편집을 실행한다.
   cardClickSelects?: boolean;
   // 시험지 빌더: 해설보기 줄 오른쪽에 '상세 보기' 버튼을 띄운다.
   showDetailButton?: boolean;
@@ -166,6 +172,10 @@ export function QuestionBankCard({
   // 드래그 시작 시점의 최신 선택 상태를 읽기 위해 ref로 보관한다(effect 재구독 방지).
   const getDragQuestionIdsRef = useRef(getDragQuestionIds);
   const getDuplicateDragQuestionIdsRef = useRef(getDuplicateDragQuestionIds);
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
   useEffect(() => {
     getDragQuestionIdsRef.current = getDragQuestionIds;
   }, [getDragQuestionIds]);
@@ -308,17 +318,37 @@ export function QuestionBankCard({
   };
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (suppressCardClickRef.current || shouldIgnoreCardClick(e)) return;
+    if (
+      suppressCardClickRef.current ||
+      e.detail > 1 ||
+      shouldIgnoreCardSelectionClick(e)
+    )
+      return;
     if (selectionDisabled && !onDetail && !onEdit) {
       if (onDuplicateSelectConfirm) setDuplicatePromptOpen(true);
       return;
     }
-    // 상세 버튼이 표시되는 화면에서는 카드 본문 클릭도 같은 상세 동작을 실행한다.
     if (cardClickSelects) {
-      (onDetail ?? onEdit)?.();
+      if (selectionDisabled) {
+        if (onDuplicateSelectConfirm) setDuplicatePromptOpen(true);
+      } else {
+        scheduleCardSelectionClick(onToggle);
+      }
       return;
     }
     if (!onDetail && !onEdit) return;
+    if (onDetail) onDetail();
+    else onEdit?.();
+  };
+
+  const handleCardDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    cancelPendingCardSelectionClick();
+    clearCardTextSelection();
+    if (suppressCardClickRef.current || shouldIgnoreCardDoubleClick(e)) return;
+    if (selectionDisabled && !onDetail && !onEdit) {
+      if (onDuplicateSelectConfirm) setDuplicatePromptOpen(true);
+      return;
+    }
     if (onDetail) onDetail();
     else onEdit?.();
   };
@@ -327,7 +357,9 @@ export function QuestionBankCard({
     <Card
       ref={dragRef}
       data-drag-item-id={selectionDisabled ? undefined : q.id}
+      onMouseDown={preventCardDoubleClickTextSelection}
       onClick={handleCardClick}
+      onDoubleClick={handleCardDoubleClick}
       className={`${onDetail || onEdit || (cardClickSelects && !selectionDisabled) ? "cursor-pointer" : ""} group relative flex flex-col ${
         expanded ? "" : "overflow-hidden"
       } ${isDragging ? "opacity-40 scale-95" : ""} ${

@@ -34,6 +34,15 @@ async function requireStudent() {
   return session;
 }
 
+/**
+ * DailyQuest 모델은 아직 스키마에 없는 pending 기능(파일 상단 @ts-nocheck 참고).
+ * Prisma 클라이언트에 모델이 없으면 prisma.dailyQuest 접근이 throw 되어 학습 홈이
+ * 500 나므로, 모델 존재 여부를 확인해 퀘스트 기능을 안전하게 비활성화한다.
+ */
+function dailyQuestAvailable(): boolean {
+  return Boolean((prisma as { dailyQuest?: unknown }).dailyQuest);
+}
+
 /** 날짜 기반 시드로 퀘스트 2개 선택 (EASY 1 + HARD 1, 학생별 다른 조합) */
 function pickDailyQuests(studentId: string, date: Date) {
   const dateStr = getTodayStringKST(); // KST 기준 날짜 문자열
@@ -72,6 +81,14 @@ function hashCode(str: string): number {
 
 export async function getDailyQuests(): Promise<DailyQuestStatus> {
   const session = await requireStudent();
+  if (!dailyQuestAvailable()) {
+    return {
+      date: getTodayStringKST(),
+      quests: [],
+      activeMultiplier: null,
+      multiplierExpiresAt: null,
+    };
+  }
   const studentId = session.studentId;
   const { today } = getTodayRangeKST();
 
@@ -156,6 +173,7 @@ export async function updateQuestProgress(
   sessionType: string
 ): Promise<QuestProgressUpdate[]> {
   const session = await requireStudent();
+  if (!dailyQuestAvailable()) return [];
   const studentId = session.studentId;
   const { today, tomorrow } = getTodayRangeKST();
 
@@ -283,6 +301,7 @@ export async function updateQuestProgress(
 // ---------------------------------------------------------------------------
 
 export async function getActiveMultiplier(studentId: string): Promise<number> {
+  if (!dailyQuestAvailable()) return 1;
   const { today } = getTodayRangeKST();
   const now = new Date();
 

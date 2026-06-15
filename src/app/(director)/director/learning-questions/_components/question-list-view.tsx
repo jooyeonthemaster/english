@@ -31,9 +31,15 @@ import {
   bulkApproveNaeshinQuestions,
   bulkDeleteNaeshinQuestions,
 } from "@/actions/learning-questions";
-import { LEARNING_CATEGORIES } from "@/lib/learning-constants";
 import { getQuestionDifficultyBadge } from "@/lib/difficulty";
 import { QuestionDetail } from "../question-detail";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "@/components/workbench/shared/card-click";
 import {
   CATEGORY_COLORS,
   CATEGORY_LABELS,
@@ -439,6 +445,10 @@ function QuestionCard({
   const preview = getPreviewText(q.subType, q.questionText);
   const tags = parseQuestionTags(q.tags);
   const plan = getQuestionGenerationPlanFromTags(tags);
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
 
   return (
     <div
@@ -450,7 +460,29 @@ function QuestionCard({
     >
       <div
         className="flex items-center gap-3 px-4 py-2.5 cursor-pointer"
-        onClick={onToggleExpand}
+        role="button"
+        tabIndex={0}
+        onMouseDown={preventCardDoubleClickTextSelection}
+        onClick={(e) => {
+          if (e.detail > 1 || shouldIgnoreCardSelectionClick(e)) return;
+          scheduleCardSelectionClick(onToggleSelect);
+        }}
+        onDoubleClick={(e) => {
+          cancelPendingCardSelectionClick();
+          clearCardTextSelection();
+          if (shouldIgnoreCardDoubleClick(e)) return;
+          onToggleExpand();
+        }}
+        onKeyDown={(e) => {
+          if (e.key === " ") {
+            e.preventDefault();
+            onToggleSelect();
+            return;
+          }
+          if (e.key !== "Enter") return;
+          e.preventDefault();
+          onToggleExpand();
+        }}
       >
         <button
           onClick={(e) => {

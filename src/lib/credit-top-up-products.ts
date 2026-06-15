@@ -27,7 +27,8 @@ export type CreditTopUpProductView = {
 };
 
 function getEstimatedAutoQuestionCount(credits: number) {
-  return Math.floor((credits / CREDIT_COSTS.AUTO_GEN_BATCH) * 10);
+  // 자동 출제는 문제 1개당 AUTO_GEN_BATCH 크레딧 — 크레딧으로 만들 수 있는 문제 수.
+  return Math.floor(credits / CREDIT_COSTS.AUTO_GEN_BATCH);
 }
 
 export const DEFAULT_CREDIT_TOP_UP_PRODUCTS = TOP_UP_PACKS.map((pack, index) => {
