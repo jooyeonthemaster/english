@@ -14,11 +14,7 @@ import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
-import {
-  readQuestionTypeDifficultySetting,
-  readQuestionTypeGenerationPlanSetting,
-  type QuestionTypeGenerationSettings,
-} from "@/lib/question-type-generation-settings";
+import { type QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 import { useTaskQueue } from "@/components/workbench/task-queue";
 
 function readFastBatchConcurrency(): number {
@@ -50,16 +46,23 @@ interface UseGenerationHandlersParams {
   reviewItem: QueueItem | null;
   setReviewModalId: (v: string | null) => void;
   loadSavedQuestions: () => void;
+  onGenerationCompleted?: () => void;
 }
 
 function readQuestionTags(rawTags: unknown): string[] {
-  if (Array.isArray(rawTags)) return rawTags.filter((tag): tag is string => typeof tag === "string");
+  if (Array.isArray(rawTags))
+    return rawTags.filter((tag): tag is string => typeof tag === "string");
   if (typeof rawTags !== "string") return [];
   try {
     const parsed = JSON.parse(rawTags);
-    return Array.isArray(parsed) ? parsed.filter((tag): tag is string => typeof tag === "string") : [];
+    return Array.isArray(parsed)
+      ? parsed.filter((tag): tag is string => typeof tag === "string")
+      : [];
   } catch {
-    return rawTags.split(/[,;|]/).map((tag) => tag.trim()).filter(Boolean);
+    return rawTags
+      .split(/[,;|]/)
+      .map((tag) => tag.trim())
+      .filter(Boolean);
   }
 }
 
@@ -147,7 +150,9 @@ export async function createFastQuestionGenerationJob({
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok || data.error) {
-    throw new Error(data.details || data.error || "Question generation failed.");
+    throw new Error(
+      data.details || data.error || "Question generation failed.",
+    );
   }
   return data as {
     jobId: string;
@@ -238,10 +243,7 @@ export function replaceQueueItemInPlace(
   };
 
   if (!anchor) {
-    return [
-      stableReplacement,
-      ...prev.filter((item) => !targets.has(item.id)),
-    ];
+    return [stableReplacement, ...prev.filter((item) => !targets.has(item.id))];
   }
 
   let inserted = false;
@@ -263,8 +265,6 @@ interface ManualGenerationUnit {
   passage: PassageItem;
   questionType: string;
   questionTypeSettings?: unknown;
-  difficulty: string;
-  generationPlan: QuestionGenerationPlan;
   tempId: string;
   config: QueueItem["config"];
   /** 같은 지문+유형 배치(N개)에서의 인덱스 — 서버 다양성 분산용 */
@@ -303,6 +303,7 @@ export function useGenerationHandlers({
   reviewItem,
   setReviewModalId,
   loadSavedQuestions,
+  onGenerationCompleted,
 }: UseGenerationHandlersParams) {
   const { triggerRefresh } = useTaskQueue();
 
@@ -356,9 +357,9 @@ export function useGenerationHandlers({
               count: 1,
               questionType: unit.questionType,
               questionTypeSettings: unit.questionTypeSettings,
-              difficulty: unit.difficulty,
+              difficulty,
               customPrompt: unit.config.prompt || undefined,
-              generationPlan: unit.generationPlan,
+              generationPlan,
               variantIndex: unit.variantIndex,
               variantCount: unit.variantCount,
             });
@@ -373,16 +374,26 @@ export function useGenerationHandlers({
               createdAt: result.createdAt || new Date().toISOString(),
               status: "done" as const,
               progress: { [unit.questionType]: "done" as const },
-              questions: Array.isArray(result.questions) ? result.questions : [],
-              questionIds: Array.isArray(result.questionIds) ? result.questionIds : [],
+              questions: Array.isArray(result.questions)
+                ? result.questions
+                : [],
+              questionIds: Array.isArray(result.questionIds)
+                ? result.questionIds
+                : [],
             };
             setSessionQueue((prev) =>
-              replaceQueueItemInPlace(prev, [unit.tempId, result.jobId], doneItem),
+              replaceQueueItemInPlace(
+                prev,
+                [unit.tempId, result.jobId],
+                doneItem,
+              ),
             );
             return result;
           } catch (err) {
             const message =
-              err instanceof Error ? err.message : "Question generation failed.";
+              err instanceof Error
+                ? err.message
+                : "Question generation failed.";
             setSessionQueue((prev) =>
               prev.map((item) =>
                 item.id === unit.tempId
@@ -405,7 +416,7 @@ export function useGenerationHandlers({
         failed: results.filter((r) => r.status === "rejected").length,
       };
     },
-    [refreshTaskQueueSoon, setSessionQueue],
+    [difficulty, generationPlan, refreshTaskQueueSoon, setSessionQueue],
   );
 
   const enqueueJob = useCallback(
@@ -463,34 +474,30 @@ export function useGenerationHandlers({
       const runId = Date.now();
 
       for (const p of selectedPassages) {
-        for (const typeId of Object.keys(typeCounts).filter((k) => typeCounts[k] > 0)) {
-          const repeatCount = Math.max(0, Math.floor(Number(typeCounts[typeId]) || 0));
-          const settingsForType = questionTypeSettings[typeId];
-          const unitDifficulty = readQuestionTypeDifficultySetting(
-            settingsForType,
-            difficulty,
-          );
-          const unitGenerationPlan = readQuestionTypeGenerationPlanSetting(
-            settingsForType,
-            generationPlan,
+        for (const typeId of Object.keys(typeCounts).filter(
+          (k) => typeCounts[k] > 0,
+        )) {
+          const repeatCount = Math.max(
+            0,
+            Math.floor(Number(typeCounts[typeId]) || 0),
           );
           for (let index = 0; index < repeatCount; index += 1) {
             units.push({
               passage: p,
               questionType: typeId,
-              questionTypeSettings: settingsForType,
-              difficulty: unitDifficulty,
-              generationPlan: unitGenerationPlan,
+              questionTypeSettings: questionTypeSettings[typeId],
               tempId: `fast:${p.id}:${typeId}:${runId}:${index}`,
               variantIndex: Math.min(index, 99),
               variantCount: Math.min(repeatCount, 99),
               config: {
                 typeCounts: { [typeId]: 1 },
-                questionTypeSettings: { [typeId]: settingsForType },
-                difficulty: unitDifficulty,
+                questionTypeSettings: {
+                  [typeId]: questionTypeSettings[typeId],
+                },
+                difficulty,
                 prompt: customPrompt.trim(),
                 mode: genMode,
-                generationPlan: unitGenerationPlan,
+                generationPlan,
               },
             });
           }
@@ -506,19 +513,22 @@ export function useGenerationHandlers({
 
       setSelectedIds(new Set());
       triggerRefresh();
+      if (success > 0) onGenerationCompleted?.();
       if (success > 0) {
-        toast.success(`${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
+        toast.success(
+          `${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`,
+        );
       }
       if (failed > 0) {
-        toast.error(`${failed}\uac1c \ubb38\uc81c \uc0dd\uc131\uc774 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4.`);
+        toast.error(
+          `${failed}\uac1c \ubb38\uc81c \uc0dd\uc131\uc774 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4.`,
+        );
       }
       return;
     }
 
     const canUseFastPath =
-      selectedPassages.length > 0 &&
-      genMode === "auto" &&
-      autoCount === 1;
+      selectedPassages.length > 0 && genMode === "auto" && autoCount === 1;
 
     if (canUseFastPath) {
       const progressKey = "auto";
@@ -579,8 +589,12 @@ export function useGenerationHandlers({
               createdAt: result.createdAt || new Date().toISOString(),
               status: "done" as const,
               progress: { [progressKey]: "done" as const },
-              questions: Array.isArray(result.questions) ? result.questions : [],
-              questionIds: Array.isArray(result.questionIds) ? result.questionIds : [],
+              questions: Array.isArray(result.questions)
+                ? result.questions
+                : [],
+              questionIds: Array.isArray(result.questionIds)
+                ? result.questionIds
+                : [],
             };
             setSessionQueue((prev) =>
               replaceQueueItemInPlace(prev, [tempId, result.jobId], doneItem),
@@ -588,7 +602,9 @@ export function useGenerationHandlers({
             return result;
           } catch (err) {
             const message =
-              err instanceof Error ? err.message : "Question generation failed.";
+              err instanceof Error
+                ? err.message
+                : "Question generation failed.";
             setSessionQueue((prev) =>
               prev.map((item) =>
                 item.id === tempId
@@ -610,11 +626,16 @@ export function useGenerationHandlers({
 
       setSelectedIds(new Set());
       triggerRefresh();
+      if (success > 0) onGenerationCompleted?.();
       if (success > 0) {
-        toast.success(`${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
+        toast.success(
+          `${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`,
+        );
       }
       if (failed > 0) {
-        toast.error(`${failed}\uac1c \ubb38\uc81c \uc0dd\uc131\uc774 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4.`);
+        toast.error(
+          `${failed}\uac1c \ubb38\uc81c \uc0dd\uc131\uc774 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4.`,
+        );
       }
       return;
     }
@@ -649,6 +670,7 @@ export function useGenerationHandlers({
     const failed = results.length - success;
 
     setSelectedIds(new Set());
+    if (success > 0) onGenerationCompleted?.();
     if (success > 0) toast.info(`${success}개 문제 생성 작업을 시작했습니다.`);
     if (failed > 0) toast.error(`${failed}개 문제 생성 작업 시작 실패`);
   }, [
@@ -670,6 +692,7 @@ export function useGenerationHandlers({
     refreshTaskQueueSoon,
     runManualUnitsWithFastPath,
     triggerRefresh,
+    onGenerationCompleted,
   ]);
 
   const handleGenerate = useCallback(async () => {
@@ -678,7 +701,8 @@ export function useGenerationHandlers({
 
     const baseConfig = {
       typeCounts: genMode === "manual" ? { ...typeCounts } : {},
-      questionTypeSettings: genMode === "manual" ? { ...questionTypeSettings } : {},
+      questionTypeSettings:
+        genMode === "manual" ? { ...questionTypeSettings } : {},
       difficulty,
       prompt: customPrompt.trim(),
       mode: genMode,
@@ -691,32 +715,24 @@ export function useGenerationHandlers({
         const runId = Date.now();
 
         for (const typeId of activeTypes) {
-          const repeatCount = Math.max(0, Math.floor(Number(typeCounts[typeId]) || 0));
-          const settingsForType = questionTypeSettings[typeId];
-          const unitDifficulty = readQuestionTypeDifficultySetting(
-            settingsForType,
-            difficulty,
-          );
-          const unitGenerationPlan = readQuestionTypeGenerationPlanSetting(
-            settingsForType,
-            generationPlan,
+          const repeatCount = Math.max(
+            0,
+            Math.floor(Number(typeCounts[typeId]) || 0),
           );
           for (let index = 0; index < repeatCount; index += 1) {
             units.push({
               passage: selectedPassage,
               questionType: typeId,
-              questionTypeSettings: settingsForType,
-              difficulty: unitDifficulty,
-              generationPlan: unitGenerationPlan,
+              questionTypeSettings: questionTypeSettings[typeId],
               tempId: `fast:${selectedPassage.id}:${typeId}:${runId}:${index}`,
               variantIndex: Math.min(index, 99),
               variantCount: Math.min(repeatCount, 99),
               config: {
                 ...baseConfig,
                 typeCounts: { [typeId]: 1 },
-                questionTypeSettings: { [typeId]: settingsForType },
-                difficulty: unitDifficulty,
-                generationPlan: unitGenerationPlan,
+                questionTypeSettings: {
+                  [typeId]: questionTypeSettings[typeId],
+                },
               },
             });
           }
@@ -725,10 +741,14 @@ export function useGenerationHandlers({
         const { success, failed } = await runManualUnitsWithFastPath(units);
         triggerRefresh();
         if (success > 0) {
-          toast.success(`${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`);
+          toast.success(
+            `${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`,
+          );
         }
         if (failed > 0) {
-          toast.error(`${failed}\uac1c \ubb38\uc81c \uc0dd\uc131\uc774 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4.`);
+          toast.error(
+            `${failed}\uac1c \ubb38\uc81c \uc0dd\uc131\uc774 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4.`,
+          );
         }
         return;
       }
@@ -758,14 +778,19 @@ export function useGenerationHandlers({
           status: "done" as const,
           progress: { [progressKey]: "done" as const },
           questions: Array.isArray(result.questions) ? result.questions : [],
-          questionIds: Array.isArray(result.questionIds) ? result.questionIds : [],
+          questionIds: Array.isArray(result.questionIds)
+            ? result.questionIds
+            : [],
         };
         setSessionQueue((prev) => [
           doneItem,
           ...prev.filter((item) => item.id !== result.jobId),
         ]);
         triggerRefresh();
-        toast.success("\ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
+        onGenerationCompleted?.();
+        toast.success(
+          "\ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.",
+        );
         return;
       }
 
@@ -778,6 +803,7 @@ export function useGenerationHandlers({
           config: baseConfig,
           progressKey: "auto",
         });
+        onGenerationCompleted?.();
         toast.info("문제 생성 작업을 시작했습니다.");
       } else {
         const jobs = activeTypes.map((typeId) =>
@@ -797,10 +823,13 @@ export function useGenerationHandlers({
           }),
         );
         await Promise.all(jobs);
+        if (jobs.length > 0) onGenerationCompleted?.();
         toast.info(`${jobs.length}개 문제 생성 작업을 시작했습니다.`);
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "문제 생성 작업 시작 실패");
+      toast.error(
+        err instanceof Error ? err.message : "문제 생성 작업 시작 실패",
+      );
     }
   }, [
     selectedPassage,
@@ -820,54 +849,77 @@ export function useGenerationHandlers({
     refreshTaskQueueSoon,
     runManualUnitsWithFastPath,
     triggerRefresh,
+    onGenerationCompleted,
   ]);
 
-  const handleSaveQuestions = useCallback(async (questions: any[]) => {
-    if (!reviewItem) return;
-    try {
-      const { saveGeneratedQuestions } = await import("@/actions/workbench");
-      const questionsToSave = questions.map((q: any) => {
-        const plan = normalizeQuestionGenerationPlan(q?._generationPlan ?? reviewItem.config.generationPlan ?? generationPlan);
-        const tags = mergeQuestionGenerationPlanTag(readQuestionTags(q?.tags), plan);
-        const enriched = { ...q, _generationPlan: plan, tags };
-        return {
-          passageId: reviewItem.passageId,
-          type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
-          subType: q._typeId || q.subType || null,
-          questionText: buildQuestionText(q),
-          structuredData: toStructuredData(enriched),
-          options: Array.isArray(q.options) ? q.options : undefined,
-          correctAnswer: q.correctAnswer || q.modelAnswer || "",
-          points: 1,
-          difficulty: q.difficulty || "INTERMEDIATE",
-          tags,
-          aiGenerated: true,
-          explanation: typeof q.explanation === "string" ? q.explanation : undefined,
-          keyPoints: Array.isArray(q.keyPoints) ? q.keyPoints : undefined,
-          wrongOptionExplanations:
-            q.wrongOptionExplanations &&
-            typeof q.wrongOptionExplanations === "object" &&
-            !Array.isArray(q.wrongOptionExplanations)
-              ? q.wrongOptionExplanations
-              : undefined,
-        };
-      });
+  const handleSaveQuestions = useCallback(
+    async (questions: any[]) => {
+      if (!reviewItem) return;
+      try {
+        const { saveGeneratedQuestions } = await import("@/actions/workbench");
+        const questionsToSave = questions.map((q: any) => {
+          const plan = normalizeQuestionGenerationPlan(
+            q?._generationPlan ??
+              reviewItem.config.generationPlan ??
+              generationPlan,
+          );
+          const tags = mergeQuestionGenerationPlanTag(
+            readQuestionTags(q?.tags),
+            plan,
+          );
+          const enriched = { ...q, _generationPlan: plan, tags };
+          return {
+            passageId: reviewItem.passageId,
+            type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
+            subType: q._typeId || q.subType || null,
+            questionText: buildQuestionText(q),
+            structuredData: toStructuredData(enriched),
+            options: Array.isArray(q.options) ? q.options : undefined,
+            correctAnswer: q.correctAnswer || q.modelAnswer || "",
+            points: 1,
+            difficulty: q.difficulty || "INTERMEDIATE",
+            tags,
+            aiGenerated: true,
+            explanation:
+              typeof q.explanation === "string" ? q.explanation : undefined,
+            keyPoints: Array.isArray(q.keyPoints) ? q.keyPoints : undefined,
+            wrongOptionExplanations:
+              q.wrongOptionExplanations &&
+              typeof q.wrongOptionExplanations === "object" &&
+              !Array.isArray(q.wrongOptionExplanations)
+                ? q.wrongOptionExplanations
+                : undefined,
+          };
+        });
 
-      const result = await saveGeneratedQuestions(questionsToSave);
-      if (result.success) {
-        toast.success("문제관리에 저장되었습니다.");
-        setSessionQueue((prev) =>
-          prev.map((item) => item.id === reviewItem.id ? { ...item, status: "reviewed" } : item)
-        );
-        setReviewModalId(null);
-        loadSavedQuestions();
-      } else {
-        toast.error(result.error || "저장 실패");
+        const result = await saveGeneratedQuestions(questionsToSave);
+        if (result.success) {
+          toast.success("문제관리에 저장되었습니다.");
+          setSessionQueue((prev) =>
+            prev.map((item) =>
+              item.id === reviewItem.id
+                ? { ...item, status: "reviewed" }
+                : item,
+            ),
+          );
+          setReviewModalId(null);
+          loadSavedQuestions();
+        } else {
+          toast.error(result.error || "저장 실패");
+        }
+      } catch {
+        toast.error("저장 중 오류가 발생했습니다.");
       }
-    } catch {
-      toast.error("저장 중 오류가 발생했습니다.");
-    }
-  }, [generationPlan, reviewItem, toStructuredData, setSessionQueue, setReviewModalId, loadSavedQuestions]);
+    },
+    [
+      generationPlan,
+      reviewItem,
+      toStructuredData,
+      setSessionQueue,
+      setReviewModalId,
+      loadSavedQuestions,
+    ],
+  );
 
   return { handleBatchGenerate, handleGenerate, handleSaveQuestions };
 }

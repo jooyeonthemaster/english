@@ -10,11 +10,9 @@ import {
   ChevronUp,
   Trash2,
   FileText,
-  Gem,
   Pencil,
   Layers,
   ClipboardList,
-  Sparkles,
   Star,
   XCircle,
 } from "lucide-react";
@@ -31,7 +29,6 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 import { DragHandle } from "@/components/ui/drag-handle";
-import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { formatDate } from "@/lib/utils";
 import {
   TYPE_LABELS,
@@ -51,11 +48,8 @@ import { shouldIgnoreCardClick } from "./shared/card-click";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 import {
-  getQuestionGenerationPlanFromTags,
   getVisibleQuestionTags,
-  QUESTION_GENERATION_PLAN_TAGS,
   sanitizeAiModelDisclosureText,
-  type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 
 export type { QuestionBankItem } from "./question-bank-card/types";
@@ -66,7 +60,9 @@ export type { QuestionBankItem } from "./question-bank-card/types";
 
 function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
   const labels = new Set<string>();
-  const matches = correctAnswer?.match(/[([]?\s*(?:[A-Ja-j]|10|[1-9]|[①②③④⑤⑥⑦⑧⑨⑩])\s*[)\].:]?/g);
+  const matches = correctAnswer?.match(
+    /[([]?\s*(?:[A-Ja-j]|10|[1-9]|[①②③④⑤⑥⑦⑧⑨⑩])\s*[)\].:]?/g,
+  );
   if (matches?.length) {
     matches.forEach((match) => {
       const label = normalizeAnswerLabel(match);
@@ -85,13 +81,9 @@ function normalizeAnswerLabel(value: unknown): string {
   const circled = "①②③④⑤⑥⑦⑧⑨⑩";
   const circledIndex = circled.indexOf(text);
   if (circledIndex >= 0) return String(circledIndex + 1);
-  return text.replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1").toLowerCase();
-}
-
-function readGenerationPlanFromStructuredData(value: unknown): QuestionGenerationPlan | null {
-  if (!value || typeof value !== "object" || !("_generationPlan" in value)) return null;
-  const plan = (value as { _generationPlan?: unknown })._generationPlan;
-  return plan === "PREMIUM" || plan === "STANDARD" ? plan : null;
+  return text
+    .replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1")
+    .toLowerCase();
 }
 
 export function QuestionBankCard({
@@ -193,13 +185,12 @@ export function QuestionBankCard({
   const tags: string[] = Array.isArray(q.tags)
     ? q.tags
     : parseJSON<string[]>(q.tags, []);
-  const generationPlan =
-    getQuestionGenerationPlanFromTags(tags) ??
-    readGenerationPlanFromStructuredData(q.structuredData);
   const visibleTags = getVisibleQuestionTags(tags);
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
   const structuredQuestion =
-    q.structuredData && typeof q.structuredData === "object" && "_typeId" in q.structuredData
+    q.structuredData &&
+    typeof q.structuredData === "object" &&
+    "_typeId" in q.structuredData
       ? (q.structuredData as Record<string, unknown>)
       : null;
   const displayQuestionText = repairGrammarCorrectionQuestionText({
@@ -226,7 +217,8 @@ export function QuestionBankCard({
       getInitialData: () => ({
         questionId: q.id,
         questionIds: getDragQuestionIdsRef.current?.(q.id) ?? [q.id],
-        duplicateQuestionIds: getDuplicateDragQuestionIdsRef.current?.(q.id) ?? [],
+        duplicateQuestionIds:
+          getDuplicateDragQuestionIdsRef.current?.(q.id) ?? [],
         type: "question",
       }),
       // 다중 선택 드래그: 선택한 카드들이 한 장으로 겹쳐진 듯한 미리보기 + 개수 배지.
@@ -304,8 +296,7 @@ export function QuestionBankCard({
     });
   }, [enableDrag, q.id, selectionDisabled]);
 
-  const questionClamp =
-    viewSize === "lg" ? "line-clamp-3" : "line-clamp-2";
+  const questionClamp = viewSize === "lg" ? "line-clamp-3" : "line-clamp-2";
 
   // Review action footer (검수완료/검수취소 + 수정하기 + stamp) — only in managed contexts
   const showReviewActions =
@@ -339,111 +330,108 @@ export function QuestionBankCard({
       onClick={handleCardClick}
       className={`${onDetail || onEdit || (cardClickSelects && !selectionDisabled) ? "cursor-pointer" : ""} group relative flex flex-col ${
         expanded ? "" : "overflow-hidden"
-      } ${
-        isDragging ? "opacity-40 scale-95" : ""
-      } ${
+      } ${isDragging ? "opacity-40 scale-95" : ""} ${
         selected && selectedCardHighlight
           ? "ring-2 ring-blue-400 bg-blue-50/30"
           : "hover:shadow-md"
       } ${
-        selectionDisabled ? "border-slate-200 bg-slate-100/80 text-slate-400 shadow-none hover:shadow-none" : ""
+        selectionDisabled
+          ? "border-slate-200 bg-slate-100/80 text-slate-400 shadow-none hover:shadow-none"
+          : ""
       } ${
         !selectionDisabled && !q.approved
           ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]"
           : ""
       }`}
     >
-      <CardContent ref={contentRef} className={`p-3 flex flex-col gap-1.5 ${expanded ? "" : "flex-1 min-h-0"}`}>
+      <CardContent
+        ref={contentRef}
+        className={`p-3 flex flex-col gap-1.5 ${expanded ? "" : "flex-1 min-h-0"}`}
+      >
         {/* Header row */}
         <div className="flex items-start gap-1.5 shrink-0">
           {enableDrag && !selectionDisabled && (
             <DragHandle ref={dragHandleRef} className="mt-0.5 shrink-0" />
           )}
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
-          <Checkbox
-            checked={selected}
-            aria-disabled={selectionDisabled}
-            onCheckedChange={() => {
-              if (selectionDisabled) {
-                if (onDuplicateSelectConfirm) setDuplicatePromptOpen(true);
-                return;
-              }
-              onToggle();
-            }}
-            className="shrink-0"
-          />
-          {selected && typeof selectionIndex === "number" && (
-            <span
-              className="inline-flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold tabular-nums text-white"
-              title={`체크 순서 ${selectionIndex}번`}
-            >
-              {selectionIndex}
-            </span>
-          )}
-          {showStar && (
-            onToggleStar ? (
-              <button
-                onClick={(e) => { e.stopPropagation(); onToggleStar(); }}
-                className="shrink-0 p-0.5 rounded hover:bg-yellow-50 transition-colors"
-                aria-label={q.starred ? "중요 해제" : "중요 표시"}
-                aria-pressed={q.starred}
+            <Checkbox
+              checked={selected}
+              aria-disabled={selectionDisabled}
+              onCheckedChange={() => {
+                if (selectionDisabled) {
+                  if (onDuplicateSelectConfirm) setDuplicatePromptOpen(true);
+                  return;
+                }
+                onToggle();
+              }}
+              className="shrink-0"
+            />
+            {selected && typeof selectionIndex === "number" && (
+              <span
+                className="inline-flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold tabular-nums text-white"
+                title={`체크 순서 ${selectionIndex}번`}
               >
-                <Star
-                  className={`w-3.5 h-3.5 transition-colors ${
-                    q.starred
-                      ? "fill-yellow-400 text-yellow-500"
-                      : "text-slate-300 hover:text-yellow-400"
-                  }`}
-                />
-              </button>
-            ) : (
-              <span className="shrink-0 p-0.5" aria-hidden="true">
-                <Star
-                  className={`w-3.5 h-3.5 ${
-                    q.starred ? "fill-yellow-400 text-yellow-500" : "text-slate-300"
-                  }`}
-                />
+                {selectionIndex}
               </span>
-            )
-          )}
-          <span className="text-xs font-bold text-slate-400 shrink-0">
-            {num}.
-          </span>
-          <Badge variant="outline" className="text-[10px] shrink-0">
-            {TYPE_LABELS[q.type] || q.type}
-          </Badge>
-          {q.subType && SUBTYPE_LABELS[q.subType] && (
-            <Badge variant="outline" className="text-[10px] shrink-0 bg-slate-50">
-              {SUBTYPE_LABELS[q.subType]}
+            )}
+            {showStar &&
+              (onToggleStar ? (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleStar();
+                  }}
+                  className="shrink-0 p-0.5 rounded hover:bg-yellow-50 transition-colors"
+                  aria-label={q.starred ? "중요 해제" : "중요 표시"}
+                  aria-pressed={q.starred}
+                >
+                  <Star
+                    className={`w-3.5 h-3.5 transition-colors ${
+                      q.starred
+                        ? "fill-yellow-400 text-yellow-500"
+                        : "text-slate-300 hover:text-yellow-400"
+                    }`}
+                  />
+                </button>
+              ) : (
+                <span className="shrink-0 p-0.5" aria-hidden="true">
+                  <Star
+                    className={`w-3.5 h-3.5 ${
+                      q.starred
+                        ? "fill-yellow-400 text-yellow-500"
+                        : "text-slate-300"
+                    }`}
+                  />
+                </span>
+              ))}
+            <span className="text-xs font-bold text-slate-400 shrink-0">
+              {num}.
+            </span>
+            <Badge variant="outline" className="text-[10px] shrink-0">
+              {TYPE_LABELS[q.type] || q.type}
             </Badge>
-          )}
-          {diffConfig && (
-            <Badge
-              variant="outline"
-              className={`text-[10px] shrink-0 ${diffConfig.className}`}
-            >
-              {diffConfig.label}
-            </Badge>
-          )}
-          {generationPlan && (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
-            <Badge
-              variant="outline"
-              className={`gap-1 text-[10px] font-bold ${
-                generationPlan === "PREMIUM"
-                  ? "border-violet-200 bg-violet-50 text-violet-700"
-                  : "border-sky-200 bg-sky-50 text-sky-700"
-              }`}
-            >
-              {generationPlan === "PREMIUM" ? <Gem className="h-3 w-3" /> : <Sparkles className="h-3 w-3" />}
-              {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
-            </Badge>
-          )}
-          {q.aiGenerated && (
-            <Layers className="w-3 h-3 text-blue-400 shrink-0" />
-          )}
-          {q.approved && (
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-          )}
+            {q.subType && SUBTYPE_LABELS[q.subType] && (
+              <Badge
+                variant="outline"
+                className="text-[10px] shrink-0 bg-slate-50"
+              >
+                {SUBTYPE_LABELS[q.subType]}
+              </Badge>
+            )}
+            {diffConfig && (
+              <Badge
+                variant="outline"
+                className={`text-[10px] shrink-0 ${diffConfig.className}`}
+              >
+                {diffConfig.label}
+              </Badge>
+            )}
+            {q.aiGenerated && (
+              <Layers className="w-3 h-3 text-blue-400 shrink-0" />
+            )}
+            {q.approved && (
+              <CheckCircle2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            )}
           </div>
           <div className="flex items-center gap-1 shrink-0">
             {typeof duplicateCount === "number" && duplicateCount > 1 && (
@@ -471,217 +459,239 @@ export function QuestionBankCard({
             )}
             {/* Expand/Collapse toggle */}
             <button
-              onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); if (!expanded) setPassageOpen(false); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setExpanded(!expanded);
+                if (!expanded) setPassageOpen(false);
+              }}
               aria-expanded={expanded}
               title={expanded ? "문제 내용 접기" : "문제 전체 내용 펼치기"}
               className="group/expand inline-flex shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
             >
               {expanded ? (
-                <><ChevronUp className="size-3.5" />접기</>
+                <>
+                  <ChevronUp className="size-3.5" />
+                  접기
+                </>
               ) : (
-                <><ChevronDown className="size-3.5 transition-transform group-hover/expand:translate-y-0.5" />펼치기</>
+                <>
+                  <ChevronDown className="size-3.5 transition-transform group-hover/expand:translate-y-0.5" />
+                  펼치기
+                </>
               )}
             </button>
           </div>
         </div>
 
-        <div className={`flex flex-col ${expanded ? "gap-2" : "gap-1.5 flex-1 min-h-0 overflow-hidden"}`}>
-        {/* Tags — compact view caps at 3 (+N overflow); expanding shows all.
+        <div
+          className={`flex flex-col ${expanded ? "gap-2" : "gap-1.5 flex-1 min-h-0 overflow-hidden"}`}
+        >
+          {/* Tags — compact view caps at 3 (+N overflow); expanding shows all.
             Keeps the card from drowning in topic chips. */}
-        {visibleTags.length > 0 && viewSize !== "sm" && (
-          <div className="flex flex-wrap items-center gap-1 shrink-0">
-            {(expanded ? visibleTags : visibleTags.slice(0, 3)).map((tag) => (
-              <span
-                key={tag}
-                className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-50 text-slate-500 ring-1 ring-inset ring-slate-100 whitespace-nowrap"
-              >
-                {tag}
-              </span>
-            ))}
-            {!expanded && visibleTags.length > 3 && (
-              <span
-                title={visibleTags.join(", ")}
-                className="text-[10px] px-1 py-0.5 font-semibold text-slate-400 whitespace-nowrap"
-              >
-                +{visibleTags.length - 3}
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Passage reference with independent toggle */}
-        {q.passage && viewSize !== "sm" && (
-          <div className="shrink-0 bg-slate-50 rounded-lg border border-slate-100">
-            <button
-              onClick={(e) => { e.stopPropagation(); setPassageOpen(!passageOpen); }}
-              className="w-full flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-slate-100 rounded-lg transition-colors"
-            >
-              <FileText className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-              <span className="text-[11px] text-slate-600 truncate flex-1 text-left font-medium">
-                {sanitizeAiModelDisclosureText(q.passage.title)}
-              </span>
-              {passageOpen ? (
-                <ChevronUp className="w-3 h-3 text-slate-400 shrink-0" />
-              ) : (
-                <ChevronDown className="w-3 h-3 text-slate-400 shrink-0" />
+          {visibleTags.length > 0 && viewSize !== "sm" && (
+            <div className="flex flex-wrap items-center gap-1 shrink-0">
+              {(expanded ? visibleTags : visibleTags.slice(0, 3)).map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-50 text-slate-500 ring-1 ring-inset ring-slate-100 whitespace-nowrap"
+                >
+                  {tag}
+                </span>
+              ))}
+              {!expanded && visibleTags.length > 3 && (
+                <span
+                  title={visibleTags.join(", ")}
+                  className="text-[10px] px-1 py-0.5 font-semibold text-slate-400 whitespace-nowrap"
+                >
+                  +{visibleTags.length - 3}
+                </span>
               )}
-            </button>
-            {passageOpen && q.passage.content && (
-              <div className="px-2.5 pb-2 border-t border-slate-100">
-                <p className="text-[11px] text-slate-500 leading-relaxed mt-2 font-mono whitespace-pre-line max-h-[250px] overflow-y-auto">
-                  {q.passage.content}
-                </p>
-              </div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
 
-        {/* ── Question content: collapsed vs expanded ── */}
-        {expanded ? (
-          <>
-            {/* Expanded: full structured rendering */}
-            {structuredQuestion ? (
-              <StructuredQuestionRenderer
-                question={structuredQuestion}
-                index={num - 1}
-                hideHeader
-                sourcePassageContent={q.passage?.content}
-              />
-            ) : (
-              <RenderedSections sections={sections} expanded />
-            )}
-
-            {/* Options (MC) */}
-            {!structuredQuestion && displayOptions.length > 0 && (
-              <div className="space-y-1 pl-1">
-                {displayOptions.map((opt) => {
-                  const isCorrect = correctAnswerLabels.has(normalizeAnswerLabel(opt.label));
-                  return (
-                    <div
-                      key={opt.label}
-                      className={`flex items-start gap-2.5 text-[12px] rounded px-2 py-1 ${
-                        isCorrect
-                          ? "bg-emerald-50 text-emerald-800 font-medium"
-                          : "text-slate-600"
-                      }`}
-                    >
-                      <span
-                        className={`shrink-0 text-[13px] font-bold tabular-nums pt-px ${
-                          isCorrect ? "text-emerald-600" : "text-slate-400"
-                        }`}
-                      >
-                        {opt.label}.
-                      </span>
-                      <span className="pt-0.5">{renderFormatted(opt.text)}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* Non-MC correct answer */}
-            {!structuredQuestion && displayOptions.length === 0 && q.correctAnswer && (
-              <div className="text-[12px] bg-emerald-50 text-emerald-700 px-2.5 py-1.5 rounded">
-                <span className="font-medium">정답:</span> {renderFormatted(q.correctAnswer)}
-              </div>
-            )}
-          </>
-        ) : (
-          /* Collapsed: smart preview */
-          <CollapsedPreview
-            sections={sections}
-            options={displayOptions}
-            correctAnswer={q.correctAnswer}
-            questionClamp={questionClamp}
-          />
-        )}
-
-        {/* Explanation toggle */}
-        {/* 상세 보기는 카드 본문 클릭(+ CardHoverActionLabel 힌트)으로 처리하므로
-            rightSlot에는 두지 않는다. '분석 정보'(동형 전용)만 별도 액션으로 남긴다. */}
-        <ExplanationSection
-          explanation={q.explanation}
-          rightSlot={
-            onShowAnalysis ? (
+          {/* Passage reference with independent toggle */}
+          {q.passage && viewSize !== "sm" && (
+            <div className="shrink-0 bg-slate-50 rounded-lg border border-slate-100">
               <button
-                type="button"
-                data-drag-select-ignore
                 onClick={(e) => {
                   e.stopPropagation();
-                  onShowAnalysis();
+                  setPassageOpen(!passageOpen);
                 }}
-                className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                className="w-full flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-slate-100 rounded-lg transition-colors"
               >
-                분석 정보
+                <FileText className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                <span className="text-[11px] text-slate-600 truncate flex-1 text-left font-medium">
+                  {sanitizeAiModelDisclosureText(q.passage.title)}
+                </span>
+                {passageOpen ? (
+                  <ChevronUp className="w-3 h-3 text-slate-400 shrink-0" />
+                ) : (
+                  <ChevronDown className="w-3 h-3 text-slate-400 shrink-0" />
+                )}
               </button>
-            ) : undefined
-          }
-        />
+              {passageOpen && q.passage.content && (
+                <div className="px-2.5 pb-2 border-t border-slate-100">
+                  <p className="text-[11px] text-slate-500 leading-relaxed mt-2 font-mono whitespace-pre-line max-h-[250px] overflow-y-auto">
+                    {q.passage.content}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Question content: collapsed vs expanded ── */}
+          {expanded ? (
+            <>
+              {/* Expanded: full structured rendering */}
+              {structuredQuestion ? (
+                <StructuredQuestionRenderer
+                  question={structuredQuestion}
+                  index={num - 1}
+                  hideHeader
+                  sourcePassageContent={q.passage?.content}
+                />
+              ) : (
+                <RenderedSections sections={sections} expanded />
+              )}
+
+              {/* Options (MC) */}
+              {!structuredQuestion && displayOptions.length > 0 && (
+                <div className="space-y-1 pl-1">
+                  {displayOptions.map((opt) => {
+                    const isCorrect = correctAnswerLabels.has(
+                      normalizeAnswerLabel(opt.label),
+                    );
+                    return (
+                      <div
+                        key={opt.label}
+                        className={`flex items-start gap-2.5 text-[12px] rounded px-2 py-1 ${
+                          isCorrect
+                            ? "bg-slate-100 text-slate-800 font-medium"
+                            : "text-slate-600"
+                        }`}
+                      >
+                        <span
+                          className={`shrink-0 text-[13px] font-bold tabular-nums pt-px ${
+                            isCorrect ? "text-slate-600" : "text-slate-400"
+                          }`}
+                        >
+                          {opt.label}.
+                        </span>
+                        <span className="pt-0.5">
+                          {renderFormatted(opt.text)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Non-MC correct answer */}
+              {!structuredQuestion &&
+                displayOptions.length === 0 &&
+                q.correctAnswer && (
+                  <div className="text-[12px] bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded border border-slate-200">
+                    <span className="font-medium">정답:</span>{" "}
+                    {renderFormatted(q.correctAnswer)}
+                  </div>
+                )}
+            </>
+          ) : (
+            /* Collapsed: smart preview */
+            <CollapsedPreview
+              sections={sections}
+              options={displayOptions}
+              correctAnswer={q.correctAnswer}
+              questionClamp={questionClamp}
+            />
+          )}
+
+          {/* Explanation toggle */}
+          {/* 상세 보기는 카드 본문 클릭(+ CardHoverActionLabel 힌트)으로 처리하므로
+            rightSlot에는 두지 않는다. '분석 정보'(동형 전용)만 별도 액션으로 남긴다. */}
+          <ExplanationSection
+            explanation={q.explanation}
+            rightSlot={
+              onShowAnalysis ? (
+                <button
+                  type="button"
+                  data-drag-select-ignore
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onShowAnalysis();
+                  }}
+                  className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                >
+                  분석 정보
+                </button>
+              ) : undefined
+            }
+          />
         </div>
 
         {/* Footer: review actions (검수완료/취소 + 수정).
             compactUsageLabel(시험지 빌더)에서는 날짜+스탬프 줄을 생략하고
             스탬프를 아래 '사용 이력' 밴드 우측으로 옮긴다. */}
         {(!compactUsageLabel || showReviewActions) && (
-        <div className="space-y-2 pt-1.5 border-t border-slate-100 shrink-0">
-          <div className="flex items-end justify-between gap-2">
-            <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
-              <span>{formatDate(q.createdAt)}</span>
-              {q._count.examLinks > 0 && (
-                <span>시험 {q._count.examLinks}회 사용</span>
+          <div className="space-y-2 pt-1.5 border-t border-slate-100 shrink-0">
+            <div className="flex items-end justify-between gap-2">
+              <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
+                <span>{formatDate(q.createdAt)}</span>
+                {q._count.examLinks > 0 && (
+                  <span>시험 {q._count.examLinks}회 사용</span>
+                )}
+              </div>
+              {!showReviewActions && (
+                <ReviewStatusStamp approved={q.approved} className="shrink-0" />
               )}
             </div>
-            {!showReviewActions && (
-              <ReviewStatusStamp approved={q.approved} className="shrink-0" />
+            {showReviewActions && (
+              <div className="flex items-end gap-1.5">
+                <div className="flex min-w-0 flex-1 items-center gap-1.5">
+                  {q.approved ? (
+                    <Button
+                      type="button"
+                      size="sm"
+                      disabled={!onUnapprove}
+                      className="h-7 flex-1 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 shadow-none hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:bg-slate-50 disabled:text-slate-300 disabled:opacity-100"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onUnapprove?.();
+                      }}
+                    >
+                      <XCircle className="w-3.5 h-3.5 mr-1" />
+                      검수취소
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      size="sm"
+                      disabled={!onApprove}
+                      className="h-7 flex-1 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 shadow-none hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-300 disabled:opacity-100"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onApprove?.();
+                      }}
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                      검수완료
+                    </Button>
+                  )}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 flex-1 justify-center gap-1.5 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                    onClick={handleEdit}
+                  >
+                    <Pencil className="w-3 h-3" />
+                    수정하기
+                  </Button>
+                </div>
+                <ReviewStatusStamp approved={q.approved} className="shrink-0" />
+              </div>
             )}
           </div>
-          {showReviewActions && (
-            <div className="flex items-end gap-1.5">
-              <div className="flex min-w-0 flex-1 items-center gap-1.5">
-                {q.approved ? (
-                  <Button
-                    type="button"
-                    size="sm"
-                    disabled={!onUnapprove}
-                    className="h-7 flex-1 border border-rose-200 bg-rose-50 px-2 text-[11px] font-semibold text-rose-600 shadow-none hover:border-rose-300 hover:bg-rose-100 hover:text-rose-700 disabled:bg-rose-50 disabled:text-rose-300 disabled:opacity-100"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onUnapprove?.();
-                    }}
-                  >
-                    <XCircle className="w-3.5 h-3.5 mr-1" />
-                    검수취소
-                  </Button>
-                ) : (
-                  <Button
-                    type="button"
-                    size="sm"
-                    disabled={!onApprove}
-                    className="h-7 flex-1 border border-green-200 bg-green-50/60 px-2 text-[11px] font-semibold text-green-700 shadow-none hover:border-green-300 hover:bg-green-50 hover:text-green-800 disabled:border-green-100 disabled:bg-green-50/50 disabled:text-green-300 disabled:opacity-100"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onApprove?.();
-                    }}
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
-                    검수완료
-                  </Button>
-                )}
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 flex-1 justify-center gap-1.5 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
-                  onClick={handleEdit}
-                >
-                  <Pencil className="w-3 h-3" />
-                  수정하기
-                </Button>
-              </div>
-              <ReviewStatusStamp approved={q.approved} className="shrink-0" />
-            </div>
-          )}
-        </div>
         )}
 
         {/* Footer — exam-usage history band: shows whether (and where) this
@@ -719,11 +729,17 @@ export function QuestionBankCard({
                 {createdLabel}
               </span>
               {hasList && (
-                <ChevronDown className="w-3 h-3 shrink-0 text-blue-400" aria-hidden="true" />
+                <ChevronDown
+                  className="w-3 h-3 shrink-0 text-blue-400"
+                  aria-hidden="true"
+                />
               )}
               {/* 시험지 빌더: 검수 도장을 밴드(카드 오른쪽 아래)로 옮겨 표시 */}
               {compactUsageLabel && (
-                <ReviewStatusStamp approved={q.approved} className="ml-1 shrink-0" />
+                <ReviewStatusStamp
+                  approved={q.approved}
+                  className="ml-1 shrink-0"
+                />
               )}
             </>
           );
@@ -734,8 +750,12 @@ export function QuestionBankCard({
 
           if (hasList) {
             const sortedLinks = [...links].sort((a, b) => {
-              const at = a.exam.createdAt ? new Date(a.exam.createdAt).getTime() : 0;
-              const bt = b.exam.createdAt ? new Date(b.exam.createdAt).getTime() : 0;
+              const at = a.exam.createdAt
+                ? new Date(a.exam.createdAt).getTime()
+                : 0;
+              const bt = b.exam.createdAt
+                ? new Date(b.exam.createdAt).getTime()
+                : 0;
               return bt - at;
             });
             return (

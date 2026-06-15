@@ -77,15 +77,23 @@ const SUBTYPE_LABELS: Record<string, string> = {
   CONTEXT_MEANING: "문맥 속 의미",
   SYNONYM: "동의어",
   ANTONYM: "반의어",
-  CUSTOM: "커스텀",
-  CUSTOM_LAYOUT: "커스텀",
 };
 
-const DIFFICULTY_CONFIG: Record<string, { label: string; className: string }> = {
-  BASIC: { label: "기본", className: "bg-blue-50 text-blue-700 border-blue-200" },
-  INTERMEDIATE: { label: "중급", className: "bg-amber-50 text-amber-700 border-amber-200" },
-  KILLER: { label: "킬러", className: "bg-red-50 text-red-700 border-red-200" },
-};
+const DIFFICULTY_CONFIG: Record<string, { label: string; className: string }> =
+  {
+    BASIC: {
+      label: "기본",
+      className: "bg-slate-50 text-slate-600 border-slate-200",
+    },
+    INTERMEDIATE: {
+      label: "중급",
+      className: "bg-slate-50 text-slate-600 border-slate-200",
+    },
+    KILLER: {
+      label: "킬러",
+      className: "bg-slate-50 text-slate-600 border-slate-200",
+    },
+  };
 
 export function ReviewStatusStamp({
   approved,
@@ -102,7 +110,7 @@ export function ReviewStatusStamp({
       className={
         "pointer-events-none inline-flex -rotate-12 select-none items-center justify-center rounded-full leading-none " +
         (approved
-          ? "size-7 whitespace-nowrap border-2 border-emerald-600/85 bg-white/70 text-[7px] font-bold tracking-tighter text-emerald-700 shadow-sm"
+          ? "size-7 whitespace-nowrap border-2 border-slate-500 bg-white/70 text-[7px] font-bold tracking-tighter text-slate-600 shadow-sm"
           : "size-7 border border-dashed border-red-300/70 bg-red-50/30 text-[7.5px] font-bold tracking-tight text-red-400/80") +
         " " +
         className
@@ -128,8 +136,12 @@ export interface QuestionCardItem {
   approved: boolean;
   createdAt: Date;
   passage: {
-    id: string; title: string; content: string;
-    grade?: number | null; semester?: string | null; publisher?: string | null;
+    id: string;
+    title: string;
+    content: string;
+    grade?: number | null;
+    semester?: string | null;
+    publisher?: string | null;
     school?: { id: string; name: string } | null;
   } | null;
   explanation: {
@@ -163,7 +175,9 @@ function parseJSON<T>(str: unknown, fallback: T): T {
 
 function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
   const labels = new Set<string>();
-  const matches = correctAnswer?.match(/[\(\[]?\s*(?:[A-Ja-j]|\d{1,3}|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g);
+  const matches = correctAnswer?.match(
+    /[\(\[]?\s*(?:[A-Ja-j]|\d{1,3}|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g,
+  );
   if (matches?.length) {
     matches.forEach((match) => {
       const label = normalizeAnswerLabel(match);
@@ -181,7 +195,9 @@ function normalizeAnswerLabel(value: unknown): string {
   const text = value.trim();
   const circledIndex = getCircledNumbers(50).indexOf(text);
   if (circledIndex >= 0) return String(circledIndex + 1);
-  return text.replace(/^[\(\[]?\s*([A-Ja-j]|\d{1,3})\s*[\)\].:]?\s*$/, "$1").toLowerCase();
+  return text
+    .replace(/^[\(\[]?\s*([A-Ja-j]|\d{1,3})\s*[\)\].:]?\s*$/, "$1")
+    .toLowerCase();
 }
 
 function pushStructuredTextPart(parts: string[], value: unknown) {
@@ -197,7 +213,8 @@ function structuredQuestionTextForCard(
 
   const parts: string[] = [];
   pushStructuredTextPart(parts, structuredData.direction);
-  if (structuredData.givenSentence) parts.push(`[given] ${String(structuredData.givenSentence)}`);
+  if (structuredData.givenSentence)
+    parts.push(`[given] ${String(structuredData.givenSentence)}`);
   pushStructuredTextPart(parts, structuredData.passageWithBlank);
   pushStructuredTextPart(parts, structuredData.passageWithMarkers);
   pushStructuredTextPart(parts, structuredData.passageWithUnderline);
@@ -221,23 +238,51 @@ function structuredQuestionTextForCard(
 }
 
 // Detect what marking pattern the passage uses: (a)(b)(c), (A)(B)(C), circled numbers, or none
-function readGenerationPlanFromStructuredData(value: unknown): QuestionGenerationPlan | null {
-  if (!value || typeof value !== "object" || !("_generationPlan" in value)) return null;
+function readGenerationPlanFromStructuredData(
+  value: unknown,
+): QuestionGenerationPlan | null {
+  if (!value || typeof value !== "object" || !("_generationPlan" in value))
+    return null;
   const plan = (value as { _generationPlan?: unknown })._generationPlan;
   return plan === "PREMIUM" || plan === "STANDARD" ? plan : null;
 }
 
-function detectPassageMarking(passageContent?: string): "lowercase" | "uppercase" | "circled" | "none" {
+function detectPassageMarking(
+  passageContent?: string,
+): "lowercase" | "uppercase" | "circled" | "none" {
   if (!passageContent) return "none";
   if (/\(a\)/.test(passageContent)) return "lowercase";
   if (/\(A\)/.test(passageContent)) return "uppercase";
-  if (/[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]/.test(passageContent)) return "circled";
+  if (/[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]/.test(passageContent))
+    return "circled";
   return "none";
 }
 
 const MARKERS = {
-  lowercase: ["(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)", "(i)", "(j)"],
-  uppercase: ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"],
+  lowercase: [
+    "(a)",
+    "(b)",
+    "(c)",
+    "(d)",
+    "(e)",
+    "(f)",
+    "(g)",
+    "(h)",
+    "(i)",
+    "(j)",
+  ],
+  uppercase: [
+    "(A)",
+    "(B)",
+    "(C)",
+    "(D)",
+    "(E)",
+    "(F)",
+    "(G)",
+    "(H)",
+    "(I)",
+    "(J)",
+  ],
   circled: getCircledNumbers(50),
   none: getCircledNumbers(50),
 };
@@ -262,9 +307,13 @@ function formatOption(
   const trimmed = text.trim();
 
   // If text is just a marker (circled number, number, or empty) — use passage marking pattern
-  const isTextOnlyMarker = !trimmed || CIRCLED_MARKER_REGEX.test(trimmed) || /^\d{1,3}$/.test(trimmed);
+  const isTextOnlyMarker =
+    !trimmed || CIRCLED_MARKER_REGEX.test(trimmed) || /^\d{1,3}$/.test(trimmed);
   if (isTextOnlyMarker) {
-    return { displayLabel, displayText: MARKERS[passageMarking][index] || label };
+    return {
+      displayLabel,
+      displayText: MARKERS[passageMarking][index] || label,
+    };
   }
 
   // If label is a plain number or circled number, just show text
@@ -276,7 +325,10 @@ function formatOption(
   return { displayLabel, displayText: `${label} ${text}` };
 }
 
-export function renderFormatted(text: string, opts?: { underlineMarkedWords?: boolean; highlightMarkers?: boolean }): React.ReactNode {
+export function renderFormatted(
+  text: string,
+  opts?: { underlineMarkedWords?: boolean; highlightMarkers?: boolean },
+): React.ReactNode {
   const underline = opts?.underlineMarkedWords ?? false;
   const highlightMarkers = opts?.highlightMarkers ?? false;
 
@@ -305,16 +357,22 @@ export function renderFormatted(text: string, opts?: { underlineMarkedWords?: bo
     if (match[1]) {
       // __word__ → underline
       parts.push(
-        <span key={key++} className="underline decoration-2 decoration-blue-500 underline-offset-4 font-semibold text-slate-900">
+        <span
+          key={key++}
+          className="underline decoration-2 decoration-blue-500 underline-offset-4 font-semibold text-slate-900"
+        >
           {match[1]}
-        </span>
+        </span>,
       );
     } else if (match[2]) {
       // Circled number -> bold blue
       parts.push(
-        <span key={key++} className="font-extrabold text-blue-600 text-[18px] mx-1 relative -top-[1px]">
+        <span
+          key={key++}
+          className="font-extrabold text-blue-600 text-[18px] mx-1 relative -top-[1px]"
+        >
           {match[2]}
-        </span>
+        </span>,
       );
     } else if (match[3]) {
       // (a)~(e), (A)~(E) marker
@@ -322,25 +380,29 @@ export function renderFormatted(text: string, opts?: { underlineMarkedWords?: bo
         // (a) word → blue marker + underlined word (for passage text)
         parts.push(
           <span key={key++}>
-            <span className="font-bold text-blue-600">({match[3]})</span>
-            {" "}
+            <span className="font-bold text-blue-600">({match[3]})</span>{" "}
             <span className="underline decoration-2 decoration-blue-500 underline-offset-4 font-semibold">
               {match[4]}
             </span>
-          </span>
+          </span>,
         );
       } else {
         // Just the marker, no underline (for options / non-underline mode)
         parts.push(
           <span key={key++} className="font-bold text-blue-600">
             ({match[3]})
-          </span>
+          </span>,
         );
       }
     } else {
       // _____ → blank
       parts.push(
-        <span key={key++} className="inline-block min-w-[80px] border-b-2 border-blue-400 mx-1 align-baseline">&nbsp;</span>
+        <span
+          key={key++}
+          className="inline-block min-w-[80px] border-b-2 border-blue-400 mx-1 align-baseline"
+        >
+          &nbsp;
+        </span>,
       );
     }
     lastIndex = match.index + match[0].length;
@@ -421,22 +483,35 @@ export function QuestionCard({
     questionText: q.questionText,
     structuredData: q.structuredData,
   });
-  const passageMarking = detectPassageMarking(q.passage?.content || displayQuestionText);
-  const UNDERLINE_TYPES = ["VOCAB_CHOICE", "GRAMMAR_ERROR", "IMPLIED_MEANING", "ANTONYM"];
+  const passageMarking = detectPassageMarking(
+    q.passage?.content || displayQuestionText,
+  );
+  const UNDERLINE_TYPES = [
+    "VOCAB_CHOICE",
+    "GRAMMAR_ERROR",
+    "IMPLIED_MEANING",
+    "ANTONYM",
+  ];
   const MARKER_ONLY_TYPES = ["SENTENCE_INSERT", "IRRELEVANT", "SENTENCE_ORDER"];
   const sub = q.subType || "";
   const needsUnderline = UNDERLINE_TYPES.includes(sub);
-  const showMarkers = UNDERLINE_TYPES.includes(sub) || MARKER_ONLY_TYPES.includes(sub);
-  const tags: string[] = Array.isArray(q.tags) ? q.tags : parseJSON<string[]>(q.tags, []);
+  const showMarkers =
+    UNDERLINE_TYPES.includes(sub) || MARKER_ONLY_TYPES.includes(sub);
+  const tags: string[] = Array.isArray(q.tags)
+    ? q.tags
+    : parseJSON<string[]>(q.tags, []);
   const generationPlan =
-    getQuestionGenerationPlanFromTags(tags) ?? readGenerationPlanFromStructuredData(q.structuredData);
+    getQuestionGenerationPlanFromTags(tags) ??
+    readGenerationPlanFromStructuredData(q.structuredData);
   const visibleTags = tags.filter((tag) => !isQuestionGenerationPlanTag(tag));
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
   const keyPoints = parseJSON<string[]>(q.explanation?.keyPoints || null, []);
 
   // 구조화 데이터가 있으면 해당 유형의 전용 렌더러 사용 (compact 아닐 때)
   const structuredData =
-    q.structuredData && typeof q.structuredData === "object" && "_typeId" in q.structuredData
+    q.structuredData &&
+    typeof q.structuredData === "object" &&
+    "_typeId" in q.structuredData
       ? (q.structuredData as Record<string, unknown>)
       : null;
   const hasStructured = !!structuredData;
@@ -472,12 +547,21 @@ export function QuestionCard({
   const explanationPanel =
     q.explanation && explanationOpen ? (
       <div className="mt-2 bg-slate-50 border border-slate-100 rounded-md px-3 py-2 space-y-2">
-        <p className="text-[12px] text-slate-700 leading-relaxed whitespace-pre-line">{q.explanation.content}</p>
+        <p className="text-[12px] text-slate-700 leading-relaxed whitespace-pre-line">
+          {q.explanation.content}
+        </p>
         {keyPoints.length > 0 && (
           <div className="space-y-1">
-            <span className="text-[10px] font-semibold text-slate-500">핵심 포인트</span>
+            <span className="text-[10px] font-semibold text-slate-500">
+              핵심 포인트
+            </span>
             {keyPoints.map((kp, i) => (
-              <p key={i} className="text-[11px] text-slate-600 pl-2 border-l-2 border-teal-300">{kp}</p>
+              <p
+                key={i}
+                className="text-[11px] text-slate-600 pl-2 border-l-2 border-teal-300"
+              >
+                {kp}
+              </p>
             ))}
           </div>
         )}
@@ -504,257 +588,360 @@ export function QuestionCard({
         }
       >
         <div
-          className={compactFixed ? "flex flex-col gap-2 flex-1 min-h-0" : "contents"}
+          className={
+            compactFixed ? "flex flex-col gap-2 flex-1 min-h-0" : "contents"
+          }
         >
-        {/* Top row */}
-        <div className="flex items-start gap-3">
-          {onToggle && (
-            <div className="pt-0.5">
-              <Checkbox checked={selected} onCheckedChange={onToggle} />
-            </div>
-          )}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-xs font-bold text-slate-400">{num}.</span>
-              <Badge variant="outline" className="text-[10px]">{TYPE_LABELS[q.type] || q.type}</Badge>
-              {q.subType && <Badge variant="outline" className="text-[10px] text-slate-500">{SUBTYPE_LABELS[q.subType] || q.subType}</Badge>}
-              {diffConfig && <Badge variant="outline" className={`text-[10px] ${diffConfig.className}`}>{diffConfig.label}</Badge>}
-              {generationPlan && (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
-                <Badge
-                  variant="outline"
-                  className={`gap-1 text-[10px] font-bold ${
-                    generationPlan === "PREMIUM"
-                      ? "bg-violet-50 text-violet-700 border-violet-200"
-                      : "bg-sky-50 text-sky-700 border-sky-200"
-                  }`}
-                >
-                  {generationPlan === "PREMIUM" ? <Gem className="w-3 h-3" /> : <Sparkles className="w-3 h-3" />}
-                  {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
+          {/* Top row */}
+          <div className="flex items-start gap-3">
+            {onToggle && (
+              <div className="pt-0.5">
+                <Checkbox checked={selected} onCheckedChange={onToggle} />
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-xs font-bold text-slate-400">{num}.</span>
+                <Badge variant="outline" className="text-[10px]">
+                  {TYPE_LABELS[q.type] || q.type}
                 </Badge>
+                {q.subType && (
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] text-slate-500"
+                  >
+                    {SUBTYPE_LABELS[q.subType] || q.subType}
+                  </Badge>
+                )}
+                {diffConfig && (
+                  <Badge
+                    variant="outline"
+                    className={`text-[10px] ${diffConfig.className}`}
+                  >
+                    {diffConfig.label}
+                  </Badge>
+                )}
+                {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && generationPlan && (
+                  <Badge
+                    variant="outline"
+                    className={`gap-1 text-[10px] font-bold ${
+                      generationPlan === "PREMIUM"
+                        ? "bg-slate-50 text-slate-600 border-slate-200"
+                        : "bg-slate-50 text-slate-600 border-slate-200"
+                    }`}
+                  >
+                    {generationPlan === "PREMIUM" ? (
+                      <Gem className="w-3 h-3" />
+                    ) : (
+                      <Sparkles className="w-3 h-3" />
+                    )}
+                    {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
+                  </Badge>
+                )}
+                {q.aiGenerated && <Layers className="w-3 h-3 text-blue-400" />}
+              </div>
+              {visibleTags.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {visibleTags.map((tag, tagIndex) => (
+                    <span
+                      key={`${tag}-${tagIndex}`}
+                      className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               )}
-              {q.aiGenerated && <Layers className="w-3 h-3 text-blue-400" />}
             </div>
-            {visibleTags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-1">
-                {visibleTags.map((tag, tagIndex) => (
-                  <span key={`${tag}-${tagIndex}`} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">{tag}</span>
-                ))}
+            {showHeaderActions && onDelete && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 shrink-0 text-red-500 hover:bg-red-50 hover:text-red-600"
+                aria-label="삭제"
+                title="삭제"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete();
+                }}
+              >
+                <Trash2 className="w-3 h-3" />
+              </Button>
+            )}
+            {compact && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCompactExpanded((prev) => !prev);
+                  if (compactExpanded) setPassageOpen(false);
+                }}
+                aria-expanded={compactExpanded}
+                title={compactExpanded ? "접기" : "펼치기"}
+                className="group/expand inline-flex shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
+              >
+                {compactExpanded ? (
+                  <>
+                    <ChevronUp className="size-3.5" />
+                    접기
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="size-3.5 transition-transform group-hover/expand:translate-y-0.5" />
+                    펼치기
+                  </>
+                )}
+              </button>
+            )}
+            {!readonly && (
+              <div className="flex items-center gap-1 shrink-0">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7"
+                  onClick={() => router.push(`/director/questions/${q.id}`)}
+                >
+                  <Pencil className="w-3 h-3" />
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-7 w-7">
+                      <span className="text-xs">...</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={handleDetail}>
+                      <Eye className="w-3.5 h-3.5 mr-2" /> 상세 보기
+                    </DropdownMenuItem>
+                    {!q.approved && onApprove && (
+                      <DropdownMenuItem onClick={onApprove}>
+                        <CheckCircle2 className="w-3.5 h-3.5 mr-2" /> 승인
+                      </DropdownMenuItem>
+                    )}
+                    {onDelete && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={onDelete}
+                          className="text-red-600"
+                        >
+                          <Trash2 className="w-3.5 h-3.5 mr-2" /> 삭제
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             )}
           </div>
-          {showHeaderActions && onDelete && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6 shrink-0 text-red-500 hover:bg-red-50 hover:text-red-600"
-              aria-label="삭제"
-              title="삭제"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete();
-              }}
-            >
-              <Trash2 className="w-3 h-3" />
-            </Button>
-          )}
-          {compact && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setCompactExpanded((prev) => !prev);
-                if (compactExpanded) setPassageOpen(false);
-              }}
-              aria-expanded={compactExpanded}
-              title={compactExpanded ? "접기" : "펼치기"}
-              className="group/expand inline-flex shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
-            >
-              {compactExpanded ? (
-                <>
-                  <ChevronUp className="size-3.5" />
-                  접기
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="size-3.5 transition-transform group-hover/expand:translate-y-0.5" />
-                  펼치기
-                </>
-              )}
-            </button>
-          )}
-          {!readonly && (
-            <div className="flex items-center gap-1 shrink-0">
-              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => router.push(`/director/questions/${q.id}`)}>
-                <Pencil className="w-3 h-3" />
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-7 w-7"><span className="text-xs">...</span></Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={handleDetail}>
-                    <Eye className="w-3.5 h-3.5 mr-2" /> 상세 보기
-                  </DropdownMenuItem>
-                  {!q.approved && onApprove && (
-                    <DropdownMenuItem onClick={onApprove}>
-                      <CheckCircle2 className="w-3.5 h-3.5 mr-2" /> 승인
-                    </DropdownMenuItem>
-                  )}
-                  {onDelete && (
-                    <>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={onDelete} className="text-red-600">
-                        <Trash2 className="w-3.5 h-3.5 mr-2" /> 삭제
-                      </DropdownMenuItem>
-                    </>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          )}
-        </div>
 
-        {/* ── 구조화 데이터가 있고 compact가 아닐 때: StructuredQuestionRenderer 사용 ── */}
-        {showStructured ? (
-          <>
-            {/* 원본 지문: 유형이 자체 지문을 포함하지 않는 경우에만 표시 */}
-            {q.passage && !hidePassageBlock && (
-              <div className="bg-slate-50 rounded-md px-3 py-2">
-                <button className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium w-full text-left" onClick={() => setPassageOpen(!passageOpen)}>
-                  <FileText className="w-3 h-3 shrink-0" />
-                  <span className="truncate">{sanitizeAiModelDisclosureText(q.passage.title)}</span>
-                  {passageOpen ? <ChevronUp className="w-3 h-3 ml-auto shrink-0" /> : <ChevronDown className="w-3 h-3 ml-auto shrink-0" />}
-                </button>
-                {passageOpen && (
-                  <p className="text-[11px] text-slate-500 font-mono leading-relaxed mt-1.5">
-                    {renderFormatted(q.passage.content, { underlineMarkedWords: needsUnderline, highlightMarkers: showMarkers })}
-                  </p>
-                )}
-              </div>
-            )}
-            <StructuredQuestionRenderer
-              question={structuredData}
-              index={num - 1}
-              hideHeader
-              sourcePassageContent={q.passage?.content}
-            />
-          </>
-        ) : (
-          <>
-            {/* ── Flat 렌더링 (DB 저장 문제 또는 compact 모드) ── */}
-
-            {/* Passage — structuredData가 있고 includesPassage인 유형만 지문 숨김 (DB 로드 문제는 항상 지문 표시) */}
-            {q.passage && (!compact || compactExpanded) && !(q.structuredData && structuredRendererOwnsPassage) && (
-              <div className="bg-slate-50 rounded-md px-3 py-2">
-                <button className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium w-full text-left" onClick={() => setPassageOpen(!passageOpen)}>
-                  <FileText className="w-3 h-3 shrink-0" />
-                  <span className="truncate">{sanitizeAiModelDisclosureText(q.passage.title)}</span>
-                  {passageOpen ? <ChevronUp className="w-3 h-3 ml-auto shrink-0" /> : <ChevronDown className="w-3 h-3 ml-auto shrink-0" />}
-                </button>
-                <p className={`text-[11px] text-slate-500 font-mono leading-relaxed mt-1.5 ${passageOpen ? "" : "line-clamp-3"}`}>
-                  {renderFormatted(q.passage.content, { underlineMarkedWords: needsUnderline, highlightMarkers: showMarkers })}
-                </p>
-              </div>
-            )}
-
-            {/* Question text */}
-            <div className={`text-slate-800 leading-relaxed font-medium whitespace-pre-line ${
-              compact
-                ? compactExpanded
-                  ? "text-[12px]"
-                  : "text-[12px] line-clamp-3"
-                : "text-[13px]"
-            }`}>
-              {renderFormatted(flatDisplayQuestionText, { underlineMarkedWords: needsUnderline, highlightMarkers: showMarkers })}
-            </div>
-
-            {/* Options */}
-            {options.length > 0 && (() => {
-              const MAX_COMPACT_OPTIONS = 3;
-              const allEntries = options.map((opt, idx) => ({
-                opt,
-                idx,
-                isCorrect: correctAnswerLabels.has(normalizeAnswerLabel(opt.label)),
-              }));
-              const compactCorrect = allEntries.filter((e) => e.isCorrect);
-              const visibleEntries = compactFixed
-                ? compactCorrect.slice(0, MAX_COMPACT_OPTIONS)
-                : allEntries;
-              const hiddenCount = options.length - visibleEntries.length;
-              return (
-                <div className={`space-y-1 pl-1 ${compact ? "text-[11px]" : ""}`}>
-                  {visibleEntries.map(({ opt, idx, isCorrect }) => {
-                    const optionText =
-                      sub === "SENTENCE_INSERT"
-                        ? optionDisplayTextForSubtype(sub, idx, opt.text)
-                        : opt.text;
-                    const { displayLabel, displayText } = formatOption(opt.label, optionText, idx, passageMarking);
-                    return (
-                      <div key={`${opt.label}-${idx}`} className={`flex items-start gap-2.5 ${compact ? "text-[11px]" : "text-[12px]"} rounded px-2 py-1 ${isCorrect ? "bg-emerald-50 text-emerald-800 font-medium" : "text-slate-600"}`}>
-                        <span className={`shrink-0 text-[13px] font-bold tabular-nums pt-px ${isCorrect ? "text-emerald-600" : "text-slate-400"}`}>
-                          {displayLabel}.
-                        </span>
-                        <span className="pt-0.5 line-clamp-1">{displayText}</span>
-                      </div>
-                    );
-                  })}
-                  {compactFixed && hiddenCount > 0 && (
-                    <span className="text-[10px] text-slate-400 pl-2">외 {hiddenCount}개 선택지</span>
-                  )}
-                </div>
-              );
-            })()}
-
-            {/* Non-MC answer */}
-            {options.length === 0 && q.correctAnswer && !flatDisplayQuestionText.includes(q.correctAnswer) && (
-              <div className="text-[12px] bg-emerald-50 text-emerald-700 px-2.5 py-1.5 rounded">
-                <span className="font-medium">정답:</span> {q.correctAnswer}
-              </div>
-            )}
-
-            {/* Explanation (+ 동형 '분석 정보' 등 detailExtra 슬롯) */}
-            {showDetailButton && onDetail ? (
-              detailExtra || q.explanation ? (
-                <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex min-w-0 items-center gap-1.5">
-                      {detailExtra}
-                    </div>
-                    {q.explanation ? (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setExplanationOpen(!explanationOpen);
-                        }}
-                        className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                      >
-                        {explanationOpen ? "해설 접기" : "해설 보기"}
-                        {explanationOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                      </button>
-                    ) : null}
-                  </div>
-                  {explanationPanel}
-                </div>
-              ) : null
-            ) : (
-              q.explanation && (
-                <div>
-                  <button className="text-[11px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1" onClick={() => setExplanationOpen(!explanationOpen)}>
-                    {explanationOpen ? "해설 접기" : "해설 보기"}
-                    {explanationOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+          {/* ── 구조화 데이터가 있고 compact가 아닐 때: StructuredQuestionRenderer 사용 ── */}
+          {showStructured ? (
+            <>
+              {/* 원본 지문: 유형이 자체 지문을 포함하지 않는 경우에만 표시 */}
+              {q.passage && !hidePassageBlock && (
+                <div className="bg-slate-50 rounded-md px-3 py-2">
+                  <button
+                    className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium w-full text-left"
+                    onClick={() => setPassageOpen(!passageOpen)}
+                  >
+                    <FileText className="w-3 h-3 shrink-0" />
+                    <span className="truncate">
+                      {sanitizeAiModelDisclosureText(q.passage.title)}
+                    </span>
+                    {passageOpen ? (
+                      <ChevronUp className="w-3 h-3 ml-auto shrink-0" />
+                    ) : (
+                      <ChevronDown className="w-3 h-3 ml-auto shrink-0" />
+                    )}
                   </button>
-                  {explanationPanel}
+                  {passageOpen && (
+                    <p className="text-[11px] text-slate-500 font-mono leading-relaxed mt-1.5">
+                      {renderFormatted(q.passage.content, {
+                        underlineMarkedWords: needsUnderline,
+                        highlightMarkers: showMarkers,
+                      })}
+                    </p>
+                  )}
                 </div>
-              )
-            )}
-          </>
-        )}
+              )}
+              <StructuredQuestionRenderer
+                question={structuredData}
+                index={num - 1}
+                hideHeader
+                sourcePassageContent={q.passage?.content}
+              />
+            </>
+          ) : (
+            <>
+              {/* ── Flat 렌더링 (DB 저장 문제 또는 compact 모드) ── */}
 
+              {/* Passage — structuredData가 있고 includesPassage인 유형만 지문 숨김 (DB 로드 문제는 항상 지문 표시) */}
+              {q.passage &&
+                (!compact || compactExpanded) &&
+                !(q.structuredData && structuredRendererOwnsPassage) && (
+                  <div className="bg-slate-50 rounded-md px-3 py-2">
+                    <button
+                      className="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium w-full text-left"
+                      onClick={() => setPassageOpen(!passageOpen)}
+                    >
+                      <FileText className="w-3 h-3 shrink-0" />
+                      <span className="truncate">
+                        {sanitizeAiModelDisclosureText(q.passage.title)}
+                      </span>
+                      {passageOpen ? (
+                        <ChevronUp className="w-3 h-3 ml-auto shrink-0" />
+                      ) : (
+                        <ChevronDown className="w-3 h-3 ml-auto shrink-0" />
+                      )}
+                    </button>
+                    <p
+                      className={`text-[11px] text-slate-500 font-mono leading-relaxed mt-1.5 ${passageOpen ? "" : "line-clamp-3"}`}
+                    >
+                      {renderFormatted(q.passage.content, {
+                        underlineMarkedWords: needsUnderline,
+                        highlightMarkers: showMarkers,
+                      })}
+                    </p>
+                  </div>
+                )}
+
+              {/* Question text */}
+              <div
+                className={`text-slate-800 leading-relaxed font-medium whitespace-pre-line ${
+                  compact
+                    ? compactExpanded
+                      ? "text-[12px]"
+                      : "text-[12px] line-clamp-3"
+                    : "text-[13px]"
+                }`}
+              >
+                {renderFormatted(flatDisplayQuestionText, {
+                  underlineMarkedWords: needsUnderline,
+                  highlightMarkers: showMarkers,
+                })}
+              </div>
+
+              {/* Options */}
+              {options.length > 0 &&
+                (() => {
+                  const MAX_COMPACT_OPTIONS = 3;
+                  const allEntries = options.map((opt, idx) => ({
+                    opt,
+                    idx,
+                    isCorrect: correctAnswerLabels.has(
+                      normalizeAnswerLabel(opt.label),
+                    ),
+                  }));
+                  const compactCorrect = allEntries.filter((e) => e.isCorrect);
+                  const visibleEntries = compactFixed
+                    ? compactCorrect.slice(0, MAX_COMPACT_OPTIONS)
+                    : allEntries;
+                  const hiddenCount = options.length - visibleEntries.length;
+                  return (
+                    <div
+                      className={`space-y-1 pl-1 ${compact ? "text-[11px]" : ""}`}
+                    >
+                      {visibleEntries.map(({ opt, idx, isCorrect }) => {
+                        const optionText =
+                          sub === "SENTENCE_INSERT"
+                            ? optionDisplayTextForSubtype(sub, idx, opt.text)
+                            : opt.text;
+                        const { displayLabel, displayText } = formatOption(
+                          opt.label,
+                          optionText,
+                          idx,
+                          passageMarking,
+                        );
+                        return (
+                          <div
+                            key={`${opt.label}-${idx}`}
+                            className={`flex items-start gap-2.5 ${compact ? "text-[11px]" : "text-[12px]"} rounded px-2 py-1 ${isCorrect ? "bg-slate-100 text-slate-800 font-medium" : "text-slate-600"}`}
+                          >
+                            <span
+                              className={`shrink-0 text-[13px] font-bold tabular-nums pt-px ${isCorrect ? "text-slate-600" : "text-slate-400"}`}
+                            >
+                              {displayLabel}.
+                            </span>
+                            <span className="pt-0.5 line-clamp-1">
+                              {displayText}
+                            </span>
+                          </div>
+                        );
+                      })}
+                      {compactFixed && hiddenCount > 0 && (
+                        <span className="text-[10px] text-slate-400 pl-2">
+                          외 {hiddenCount}개 선택지
+                        </span>
+                      )}
+                    </div>
+                  );
+                })()}
+
+              {/* Non-MC answer */}
+              {options.length === 0 &&
+                q.correctAnswer &&
+                !flatDisplayQuestionText.includes(q.correctAnswer) && (
+                  <div className="text-[12px] bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded border border-slate-200">
+                    <span className="font-medium">정답:</span> {q.correctAnswer}
+                  </div>
+                )}
+
+              {/* Explanation (+ 동형 '분석 정보' 등 detailExtra 슬롯) */}
+              {showDetailButton && onDetail ? (
+                detailExtra || q.explanation ? (
+                  <div>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex min-w-0 items-center gap-1.5">
+                        {detailExtra}
+                      </div>
+                      {q.explanation ? (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setExplanationOpen(!explanationOpen);
+                          }}
+                          className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                        >
+                          {explanationOpen ? "해설 접기" : "해설 보기"}
+                          {explanationOpen ? (
+                            <ChevronUp className="w-3 h-3" />
+                          ) : (
+                            <ChevronDown className="w-3 h-3" />
+                          )}
+                        </button>
+                      ) : null}
+                    </div>
+                    {explanationPanel}
+                  </div>
+                ) : null
+              ) : (
+                q.explanation && (
+                  <div>
+                    <button
+                      className="text-[11px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+                      onClick={() => setExplanationOpen(!explanationOpen)}
+                    >
+                      {explanationOpen ? "해설 접기" : "해설 보기"}
+                      {explanationOpen ? (
+                        <ChevronUp className="w-3 h-3" />
+                      ) : (
+                        <ChevronDown className="w-3 h-3" />
+                      )}
+                    </button>
+                    {explanationPanel}
+                  </div>
+                )
+              )}
+            </>
+          )}
         </div>
 
         {/* Footer */}
-        <div className={`space-y-2 pt-1 border-t border-slate-100${compactFixed ? " shrink-0" : ""}`}>
+        <div
+          className={`space-y-2 pt-1 border-t border-slate-100${compactFixed ? " shrink-0" : ""}`}
+        >
           <div className="flex items-end justify-between gap-2">
             <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
               <span>{formatDate(q.createdAt)}</span>
@@ -766,15 +953,15 @@ export function QuestionCard({
               <ReviewStatusStamp approved={q.approved} className="shrink-0" />
             )}
           </div>
-          {showFooterActions && (
-            q.approved ? (
+          {showFooterActions &&
+            (q.approved ? (
               <div className="flex items-end gap-1.5">
                 <div className="flex min-w-0 flex-1 items-center gap-1.5">
                   <Button
                     type="button"
                     size="sm"
                     disabled={!onUnapprove}
-                    className="h-7 flex-1 border border-rose-200 bg-rose-50 px-2 text-[11px] font-semibold text-rose-600 shadow-none hover:border-rose-300 hover:bg-rose-100 hover:text-rose-700 disabled:bg-rose-50 disabled:text-rose-300 disabled:opacity-100"
+                    className="h-7 flex-1 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 shadow-none hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:bg-slate-50 disabled:text-slate-300 disabled:opacity-100"
                     onClick={(e) => {
                       e.stopPropagation();
                       onUnapprove?.();
@@ -783,19 +970,19 @@ export function QuestionCard({
                     <XCircle className="w-3.5 h-3.5 mr-1" />
                     검수취소
                   </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 flex-1 justify-center gap-1.5 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEdit();
-                  }}
-                >
-                  <Pencil className="w-3 h-3" />
-                  수정하기
-                </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 flex-1 justify-center gap-1.5 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit();
+                    }}
+                  >
+                    <Pencil className="w-3 h-3" />
+                    수정하기
+                  </Button>
                 </div>
                 <ReviewStatusStamp approved={q.approved} className="shrink-0" />
               </div>
@@ -806,7 +993,7 @@ export function QuestionCard({
                     type="button"
                     size="sm"
                     disabled={!onApprove}
-                    className="h-7 flex-1 border border-green-200 bg-green-50/60 px-2 text-[11px] font-semibold text-green-700 shadow-none hover:border-green-300 hover:bg-green-50 hover:text-green-800 disabled:border-green-100 disabled:bg-green-50/50 disabled:text-green-300 disabled:opacity-100"
+                    className="h-7 flex-1 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 shadow-none hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-300 disabled:opacity-100"
                     onClick={(e) => {
                       e.stopPropagation();
                       onApprove?.();
@@ -831,8 +1018,7 @@ export function QuestionCard({
                 </div>
                 <ReviewStatusStamp approved={q.approved} className="shrink-0" />
               </div>
-            )
-          )}
+            ))}
         </div>
         {showDetailButton && onDetail ? <CardHoverActionLabel /> : null}
       </CardContent>

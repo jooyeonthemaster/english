@@ -21,6 +21,7 @@ import {
   bulkApproveWorkbenchQuestions,
   bulkDeleteWorkbenchPassages,
   bulkDeleteWorkbenchQuestions,
+  createPassageCollection,
   deleteWorkbenchQuestion,
   removePassagesFromCollection,
   unapproveWorkbenchQuestion,
@@ -60,29 +61,40 @@ import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
 import { WorkspaceShell } from "./workspace-shell";
 import {
   ArrowDownToLine,
+  ChevronLeft,
   ChevronRight,
   GripVertical,
-  PanelRightClose,
-  PanelRightOpen,
-  PencilLine,
   Settings2,
 } from "lucide-react";
 import { useWorkspaceRows } from "./workspace/use-workspace-rows";
 import { useWorkspaceGeneration } from "./workspace/use-workspace-generation";
 import { PassageWorkspace } from "./workspace/passage-workspace";
+import { LearningGenerationIndicator } from "@/components/workbench/learning-generation-indicator";
+import { useLearningGenerationTasks } from "@/lib/learning-generation-tracker";
+import {
+  usePassageAnalysisActivity,
+  notePassageAnalysisStarted,
+  notePassageAnalysisStartFailed,
+} from "@/hooks/use-passage-analysis-activity";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { notifyCreditsChanged } from "@/lib/credits-client";
+import { GeneratePageTour } from "./tutorial/generate-page-tour";
+import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 
 // ─── Helpers ─────────────────────────────────────────────
 
 // 우측 "유형·생성 설정" 컬럼 너비 (드래그 조절 가능).
-// 336px = 유형 라벨이 잘리지 않는 최소폭이지만, 사용자가 의도적으로
-// 줄이는 경우 300px까지 허용 (라벨은 truncate로 우아하게 줄어든다).
-const CONFIG_PANE_WIDTH_KEY = "smoat:generate:config-pane-width";
-const CONFIG_PANE_MIN = 300;
-const CONFIG_PANE_DEFAULT = 360;
+// 기본은 지문 입력·선택 칸이 더 넓고 설정 칸이 더 좁게 보이도록 잡는다.
+const CONFIG_PANE_WIDTH_KEY = "smoat:generate:config-pane-width.v2";
+const CONFIG_PANE_MIN = 340;
+const CONFIG_PANE_DEFAULT = 620;
 // 저장값 위생용 절대 상한 — 실제 드래그 한계는 컨테이너 폭에서
-// [워크스페이스 최소 120px + 핸들 20px + 여유 4px]을 뺀 값으로 동적 계산.
+// [지문 입력·선택 최소폭 + 핸들]을 뺀 값으로 동적 계산.
 const CONFIG_PANE_MAX = 1600;
-const CONFIG_PANE_RESERVED = 144;
+const INTAKE_PANE_MIN = 420;
+const CONFIG_PANE_HANDLE_WIDTH = 20;
+const REVIEW_ACTION_TIMEOUT_MS = 30_000;
 
 /** Build a passage title from the first non-empty line of pasted content. */
 function derivePastedTitle(content: string): string {
@@ -92,6 +104,29 @@ function derivePastedTitle(content: string): string {
   const words = firstLine.split(/\s+/).filter(Boolean).slice(0, 8).join(" ");
   const base = words || "직접 입력 지문";
   return base.length > 60 ? base.slice(0, 60) + "…" : base;
+}
+
+function isAbortError(error: unknown) {
+  return (
+    (typeof DOMException !== "undefined" && error instanceof DOMException) ||
+    (typeof error === "object" &&
+      error !== null &&
+      "name" in error &&
+      (error as { name?: string }).name === "AbortError")
+  );
+}
+
+async function fetchReviewAction(input: RequestInfo | URL, init: RequestInit) {
+  const controller = new AbortController();
+  const timeout = window.setTimeout(
+    () => controller.abort(),
+    REVIEW_ACTION_TIMEOUT_MS,
+  );
+  try {
+    return await fetch(input, { ...init, signal: controller.signal });
+  } finally {
+    window.clearTimeout(timeout);
+  }
 }
 
 const UNDO_TOAST_DURATION = 8000;
@@ -108,6 +143,16 @@ export function GeneratePageClient({
 }) {
   const searchParams = useSearchParams();
   const taskQueue = useTaskQueue();
+  const [generateTourOpen, setGenerateTourOpen] = useState(false);
+  const [
+    generateTourResultHighlightCount,
+    setGenerateTourResultHighlightCount,
+  ] = useState(0);
+
+  // 백그라운드로 돌고 있는 학습자료 생성 — 지문 카드 배지 + 우하단 버퍼링 창.
+  // (usePassageAnalysisActivity 호출은 loadPassages 정의 뒤에 있다 — 완료
+  // 시점에 목록을 다시 불러 카드를 "분석 완료" 모습으로 즉시 바꾸기 위해.)
+  const learningGenerationTasks = useLearningGenerationTasks();
 
   // ── Deep-link context (from /import or detail page) ──
   // Accept `?passageIds=cuid1,cuid2` for pre-selection,
@@ -118,6 +163,7 @@ export function GeneratePageClient({
   // 마키(영역 드래그) 시작 영역을 "생성된 문제" 섹션 전체로 넓힌다(카드만 선택). 상단의
   // 지문 그리드(PassageCardGrid)는 자체 스크롤 영역을 boundary 로 쓰므로 서로 겹치지 않는다.
   const bottomQueueBoundaryRef = useRef<HTMLElement>(null);
+  const previousSessionQueueLengthRef = useRef<number | null>(null);
   // dedupe and cap at 100 ids so downstream `Set` construction + the cross-
   // tenant validity filter (useEffect below) never have to chew on junk.
   const initialPassageIdsRef = useRef<string[]>(
@@ -166,6 +212,16 @@ export function GeneratePageClient({
   const [freshAnalysisPassageIds, setFreshAnalysisPassageIds] = useState<
     Set<string>
   >(() => new Set());
+  // 방금 학습자료 생성(분석)이 완료된 지문 — 카드에 초록 글로우.
+  // 추출 완료(freshAnalysisPassageIds, 파란 글로우)와 색으로 구분된다.
+  const [freshLearningPassageIds, setFreshLearningPassageIds] = useState<
+    Set<string>
+  >(() => new Set());
+  // 이번 세션에서 추출 완료된 지문 id — 추출한 순서 그대로 그리드 맨 앞에
+  // 고정하는 데 쓴다(최근 배치가 앞). "newest" 정렬에서만 적용.
+  const [recentExtractionPassageIds, setRecentExtractionPassageIds] = useState<
+    string[]
+  >([]);
   const [reviewActionPassageIds, setReviewActionPassageIds] = useState<
     Set<string>
   >(() => new Set());
@@ -174,7 +230,7 @@ export function GeneratePageClient({
   // ── Collections ──
   const [collections, setCollections] = useState<PassageCollectionItem[]>([]);
   const [selectedCollectionId, setSelectedCollectionId] = useState<string>("");
-  // ── Intake-first left panel (지문 추가 ↔ 내 지문) ──
+  // ── Intake/library panel (지문 추가 ↔ 내 지문) ──
   // Default to the intake surface, unless the user deep-linked passageIds (then
   // show the library so they see the pre-selection land).
   const [intakeView, setIntakeView] = useState<IntakeView>(
@@ -239,6 +295,22 @@ export function GeneratePageClient({
   const [sessionQueue, setSessionQueue] = useGenerationSessionQueue();
   const [queueFilter, setQueueFilter] = useState<"all" | "error">("all");
 
+  useEffect(() => {
+    const previousLength = previousSessionQueueLengthRef.current;
+    previousSessionQueueLengthRef.current = sessionQueue.length;
+
+    if (previousLength === null || sessionQueue.length <= previousLength) {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      bottomQueueBoundaryRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }, [sessionQueue.length]);
+
   // ── Review modal ──
   const [reviewModalId, setReviewModalId] = useState<string | null>(null);
 
@@ -249,12 +321,12 @@ export function GeneratePageClient({
 
   // ── 지문 워크스페이스 (불러오기 → 편집·AI 변형 → 생성) ──
   const workspaceApi = useWorkspaceRows();
-  // 불러오기 직후 왼쪽 지문 목록을 샤라락 접는 신호 (증가 카운터).
-  const [leftCollapseSignal, setLeftCollapseSignal] = useState(0);
   // 우측 "유형·생성 설정" 컬럼 접힘 상태 (워크스페이스와 나란히 배치).
   // 영구 저장하지 않는다 — 접힌 채 저장되면 다음 방문에서 생성 버튼·유형
   // 설정이 통째로 숨겨진 채 시작되는 사고가 난다 (세션 내 토글만 허용).
   const [configPaneOpen, setConfigPaneOpen] = useState(true);
+  // 드래그 리사이즈 중에는 설정 컬럼 width 트랜지션을 꺼서 손을 따라오게 한다.
+  const [configDragging, setConfigDragging] = useState(false);
   const toggleConfigPane = useCallback(() => {
     setConfigPaneOpen((prev) => !prev);
   }, []);
@@ -273,17 +345,20 @@ export function GeneratePageClient({
   });
   // 클릭=접기 / 드래그=너비 조절 — workspace-shell 좌측 핸들과 동일 제스처.
   const handleConfigHandlePointerDown = useCallback(
-    (e: React.PointerEvent) => {
+    (e: React.PointerEvent, options?: { toggleOnClick?: boolean }) => {
       if (e.button !== 0) return;
       const startX = e.clientX;
       const startWidth = configPaneWidth;
-      // 드래그 한계는 우측 패널 컨테이너 폭 기준 — 워크스페이스 최소폭만
-      // 남기고 끝까지 넓힐 수 있다 (좌측 지문 핸들과 동일 방식).
+      // 드래그 한계는 우측 패널 컨테이너 폭 기준 — 지문 입력·선택 칸의
+      // 최소폭을 남긴다.
       const containerWidth =
         e.currentTarget.parentElement?.getBoundingClientRect().width ?? 0;
       const maxWidth =
         containerWidth > 0
-          ? Math.max(CONFIG_PANE_MIN, containerWidth - CONFIG_PANE_RESERVED)
+          ? Math.max(
+              CONFIG_PANE_MIN,
+              containerWidth - INTAKE_PANE_MIN - CONFIG_PANE_HANDLE_WIDTH,
+            )
           : CONFIG_PANE_MAX;
       let didDrag = false;
       let latest = startWidth;
@@ -293,16 +368,21 @@ export function GeneratePageClient({
         if (!didDrag) {
           if (Math.abs(delta) < 4) return;
           didDrag = true;
+          setConfigDragging(true);
           document.body.style.cursor = "col-resize";
           document.body.style.userSelect = "none";
         }
-        latest = Math.min(maxWidth, Math.max(CONFIG_PANE_MIN, startWidth + delta));
+        latest = Math.min(
+          maxWidth,
+          Math.max(CONFIG_PANE_MIN, startWidth + delta),
+        );
         setConfigPaneWidth(latest);
       };
       const onUp = () => {
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
         if (didDrag) {
+          setConfigDragging(false);
           document.body.style.cursor = "";
           document.body.style.userSelect = "";
           try {
@@ -310,7 +390,7 @@ export function GeneratePageClient({
           } catch {
             /* ignore */
           }
-        } else {
+        } else if (options?.toggleOnClick !== false) {
           toggleConfigPane();
         }
       };
@@ -330,9 +410,9 @@ export function GeneratePageClient({
       /* ignore */
     }
   }, []);
-  // 워크스페이스가 비워지면 왼쪽 지문 패널을 자동으로 편다 — 비우기 직후
-  // 설정 패널만 전폭을 차지한 채 다음 행동이 막히는 화면 방지.
-  const [leftOpenSignal, setLeftOpenSignal] = useState(0);
+  // 워크스페이스가 '내 지문함'을 덮어 표시되는지 여부. true면 가운데 컬럼이
+  // 내 지문함 대신 워크스페이스로 교체된다 (왼쪽 패널 모달 방식 폐기).
+  const [workspaceOpen, setWorkspaceOpen] = useState(false);
 
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
@@ -388,6 +468,20 @@ export function GeneratePageClient({
     for (const q of savedQuestions) {
       const pid = q.passage?.id;
       if (pid) map.set(pid, (map.get(pid) ?? 0) + 1);
+    }
+    return map;
+  }, [savedQuestions]);
+
+  // 지문별 생성된 문제 목록(요약 토글용). 지문 카드 하단에서 어떤 문제들이
+  // 생성됐는지 펼쳐 보여준다.
+  const questionsByPassage = useMemo(() => {
+    const map = new Map<string, QuestionCardItem[]>();
+    for (const q of savedQuestions) {
+      const pid = q.passage?.id;
+      if (!pid) continue;
+      const list = map.get(pid);
+      if (list) list.push(q);
+      else map.set(pid, [q]);
     }
     return map;
   }, [savedQuestions]);
@@ -463,7 +557,7 @@ export function GeneratePageClient({
       return true;
     });
 
-    // `passages` arrives newest-first (createdAt desc), so "newest" keeps the
+    // `passages` arrives newest-first (updatedAt desc), so "newest" keeps the
     // source order and "oldest" reverses it. Name sorts use the Korean locale.
     switch (passageSortOrder) {
       case "oldest":
@@ -477,6 +571,22 @@ export function GeneratePageClient({
         break;
       case "newest":
       default:
+        // 방금 추출된 지문은 "추출한 순서" 그대로 맨 앞에 고정한다. 일괄
+        // promote 가 지문별 createdAt/updatedAt 을 뒤섞을 수 있고, 재추출
+        // dedup 은 기존(오래된) 행을 재사용하므로 시간 정렬만으로는 새
+        // 추출분이 앞에 온다는 보장이 없다.
+        if (recentExtractionPassageIds.length > 0) {
+          const pinRank = new Map(
+            recentExtractionPassageIds.map((id, i) => [id, i]),
+          );
+          const pinned: PassageItem[] = [];
+          const rest: PassageItem[] = [];
+          for (const p of result) {
+            (pinRank.has(p.id) ? pinned : rest).push(p);
+          }
+          pinned.sort((a, b) => pinRank.get(a.id)! - pinRank.get(b.id)!);
+          return [...pinned, ...rest];
+        }
         break;
     }
 
@@ -490,6 +600,7 @@ export function GeneratePageClient({
     analysisStatusFilter,
     selectedCollectionId,
     passageSortOrder,
+    recentExtractionPassageIds,
   ]);
 
   const passageStatusCounts = useMemo(
@@ -548,6 +659,218 @@ export function GeneratePageClient({
     void loadPassages();
   }, [loadPassages]);
 
+  // 특정 지문만 다시 받아 기존 배열에 제자리 병합한다. loadPassages 와 달리
+  // 로딩 상태를 켜지 않아 그리드 전체가 "새로고침"되는 느낌 없이 해당 카드만
+  // 분석 완료 모습으로 바뀐다. 목록에 없는 지문은 건드리지 않는다.
+  const patchPassages = useCallback(
+    async (passageIds: string[]) => {
+      if (passageIds.length === 0) return;
+      try {
+        const params = new URLSearchParams({
+          academyId,
+          passageIds: passageIds.join(","),
+        });
+        const response = await fetch(`/api/passages/list?${params}`);
+        const data = await response.json();
+        const fetched: PassageItem[] = data.passages || [];
+        if (fetched.length === 0) return;
+        const byId = new Map(fetched.map((p) => [p.id, p]));
+        setPassages((prev) => prev.map((p) => byId.get(p.id) ?? p));
+      } catch {
+        /* ignore — 다음 전체 로드에서 따라잡는다 */
+      }
+    },
+    [academyId],
+  );
+
+  const patchExtractionReviewState = useCallback(
+    (
+      updates: Array<{
+        passageId: string;
+        draft: PassageItem["extractionReviewDraft"];
+      }>,
+    ) => {
+      if (updates.length === 0) return;
+      const byPassageId = new Map(
+        updates.map((update) => [update.passageId, update.draft]),
+      );
+      const applyReviewState = <
+        T extends {
+          id?: string;
+          extractionReviewDraft?: PassageItem["extractionReviewDraft"];
+        } | null,
+      >(
+        current: T,
+      ): T =>
+        current?.id && byPassageId.has(current.id)
+          ? {
+              ...current,
+              extractionReviewDraft: byPassageId.get(current.id) ?? null,
+            }
+          : current;
+
+      setPassages((prev) =>
+        prev.map((passage) =>
+          byPassageId.has(passage.id)
+            ? {
+                ...passage,
+                extractionReviewDraft: byPassageId.get(passage.id) ?? null,
+              }
+            : passage,
+        ),
+      );
+      setDetailPassage((prev) => applyReviewState(prev));
+      setContentModalPassage((prev) => applyReviewState(prev));
+      setAnalysisModalPassage((prev) => applyReviewState(prev));
+    },
+    [],
+  );
+
+  const removePassageLocally = useCallback((passageId: string) => {
+    setPassages((prev) => prev.filter((passage) => passage.id !== passageId));
+    setSelectedIds((prev) => {
+      if (!prev.has(passageId)) return prev;
+      const next = new Set(prev);
+      next.delete(passageId);
+      return next;
+    });
+    setDetailPassage((prev) => (prev?.id === passageId ? null : prev));
+    setContentModalPassage((prev) => (prev?.id === passageId ? null : prev));
+    setAnalysisModalPassage((prev) => (prev?.id === passageId ? null : prev));
+  }, []);
+
+  // 백그라운드 학습자료 생성(서버 분석 잡) 폴링. 잡이 끝나면 해당 지문만
+  // 제자리 패치해 새로고침 느낌 없이 카드가 "분석 완료" 모습(배지·글로우)으로
+  // 바뀐다.
+  const analysisActivityJobs = usePassageAnalysisActivity({
+    onSettled: useCallback(
+      (completedPassageIds, failedPassageIds) => {
+        const settled = [...completedPassageIds, ...failedPassageIds];
+        if (settled.length === 0) return;
+        void patchPassages(settled);
+        if (completedPassageIds.length > 0) {
+          setFreshLearningPassageIds((prev) => {
+            const next = new Set(prev);
+            completedPassageIds.forEach((id) => next.add(id));
+            return next;
+          });
+          dispatchGenerateTourMilestone("learning-generation-completed");
+        }
+      },
+      [patchPassages],
+    ),
+  });
+  const learningGeneratingPassageIds = useMemo(() => {
+    const ids = new Set<string>(analysisActivityJobs.map((j) => j.passageId));
+    for (const t of learningGenerationTasks) {
+      if (t.status === "generating") ids.add(t.passageId);
+    }
+    return ids;
+  }, [analysisActivityJobs, learningGenerationTasks]);
+
+  // ── 선택 지문 일괄 학습자료 생성 ──
+  const [learningBulkActionRunning, setLearningBulkActionRunning] =
+    useState(false);
+  const handleBulkGenerateLearning = useCallback(
+    async (targets: PassageItem[]) => {
+      if (targets.length === 0 || learningBulkActionRunning) return;
+      const cost = targets.length * CREDIT_COSTS.PASSAGE_ANALYSIS;
+      if (
+        !window.confirm(
+          `선택한 ${targets.length}개 지문의 학습자료를 생성합니다.\n${cost}크레딧이 사용됩니다. 진행할까요?`,
+        )
+      )
+        return;
+
+      setLearningBulkActionRunning(true);
+      // 클릭 즉시 카드에 '학습자료 생성중' 표시(낙관적). 시작 실패분은 아래서 거둔다.
+      targets.forEach((p) => notePassageAnalysisStarted(p.id, p.title));
+      toast.success(`${targets.length}개 지문의 학습자료 생성을 시작했습니다.`);
+      try {
+        const failedTitles: string[] = [];
+        const CONCURRENCY = 4;
+        for (let i = 0; i < targets.length; i += CONCURRENCY) {
+          const chunk = targets.slice(i, i + CONCURRENCY);
+          await Promise.all(
+            chunk.map(async (p) => {
+              try {
+                const res = await fetch(
+                  "/api/workbench/ai-jobs/passage-analysis",
+                  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({
+                      passageId: p.id,
+                      customPrompt: "",
+                      focusAreas: [],
+                      targetLevel: "",
+                      forcePrimeReport: true,
+                    }),
+                  },
+                );
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || data?.error || !data?.jobId) {
+                  throw new Error(data?.error || "start failed");
+                }
+              } catch {
+                notePassageAnalysisStartFailed(p.id);
+                failedTitles.push(p.title);
+              }
+            }),
+          );
+        }
+        if (failedTitles.length > 0) {
+          toast.error(
+            `${failedTitles.length}개 지문은 시작하지 못했습니다: ${failedTitles
+              .slice(0, 3)
+              .join(", ")}${failedTitles.length > 3 ? " 외" : ""}`,
+          );
+        }
+        if (failedTitles.length < targets.length) {
+          dispatchGenerateTourMilestone("learning-generation-started");
+          setSelectedIds(new Set());
+        }
+      } finally {
+        setLearningBulkActionRunning(false);
+        notifyCreditsChanged();
+      }
+    },
+    [learningBulkActionRunning],
+  );
+
+  const handleCreatePassageCollection = useCallback(
+    async (name: string, parentId?: string | null) => {
+      const trimmed = name.trim();
+      if (!trimmed) return null;
+
+      const result = await createPassageCollection({
+        name: trimmed,
+        parentId: parentId || undefined,
+      });
+      if (!result.success) {
+        toast.error(result.error || "폴더 생성 실패");
+        return null;
+      }
+
+      const created: PassageCollectionItem = {
+        id: result.id,
+        parentId: parentId || null,
+        name: trimmed,
+        _count: { items: 0 },
+      };
+      setCollections((prev) =>
+        [...prev.filter((collection) => collection.id !== result.id), created]
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name, "ko")),
+      );
+      toast.success(`"${trimmed}" 폴더를 만들었습니다.`);
+      void loadPassages();
+      return result.id;
+    },
+    [loadPassages],
+  );
+
   const handleCopySelectedPassagesToCollection = useCallback(
     async (collectionId: string) => {
       const ids = [...selectedIds];
@@ -561,7 +884,9 @@ export function GeneratePageClient({
           (id) =>
             !selectedPassages
               .find((passage) => passage.id === id)
-              ?.collectionItems?.some((item) => item.collectionId === collectionId),
+              ?.collectionItems?.some(
+                (item) => item.collectionId === collectionId,
+              ),
         );
         if (idsToAdd.length === 0) {
           toast.info("이미 이 폴더에 들어있는 지문입니다.");
@@ -614,24 +939,6 @@ export function GeneratePageClient({
           },
         });
         setSelectedIds(new Set());
-        const nextDraft = {
-          ...draft,
-          reviewStatus: isReviewed ? "REVIEWED" : "COMMITTED",
-          confirmedAt: isReviewed ? null : new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-        const applyPassageReviewState = <
-          T extends { id?: string; extractionReviewDraft?: PassageItem["extractionReviewDraft"] } | null,
-        >(
-          current: T,
-        ): T =>
-          current?.id === passage.id
-            ? { ...current, extractionReviewDraft: nextDraft }
-            : current;
-
-        setDetailPassage((prev) => applyPassageReviewState(prev));
-        setContentModalPassage((prev) => applyPassageReviewState(prev));
-        setAnalysisModalPassage((prev) => applyPassageReviewState(prev));
         await loadPassages();
       } catch (err) {
         toast.error(
@@ -694,7 +1001,10 @@ export function GeneratePageClient({
         }
 
         if (idsToAdd.length > 0) {
-          const addResult = await addPassagesToCollection(collectionId, idsToAdd);
+          const addResult = await addPassagesToCollection(
+            collectionId,
+            idsToAdd,
+          );
           if (!addResult.success) {
             toast.error(addResult.error || "폴더로 이동하지 못했습니다.");
             return;
@@ -704,8 +1014,7 @@ export function GeneratePageClient({
         const folderName =
           collections.find((collection) => collection.id === collectionId)
             ?.name || "폴더";
-        const countLabel =
-          ids.length > 1 ? `${ids.length}개 지문이` : "지문이";
+        const countLabel = ids.length > 1 ? `${ids.length}개 지문이` : "지문이";
 
         const undoFolderMove = async () => {
           setPassageBulkAction("move");
@@ -749,11 +1058,46 @@ export function GeneratePageClient({
             onClick: () => void undoFolderMove(),
           },
         });
+        setPassages((prev) =>
+          prev.map((passage) => {
+            if (!idSet.has(passage.id)) return passage;
+            const collectionItems = (passage.collectionItems ?? []).filter(
+              (item) => !sourceCollectionIds.includes(item.collectionId),
+            );
+            if (
+              !collectionItems.some(
+                (item) => item.collectionId === collectionId,
+              )
+            ) {
+              collectionItems.push({ collectionId });
+            }
+            return { ...passage, collectionItems };
+          }),
+        );
+        setCollections((prev) =>
+          prev.map((collection) => {
+            const removed = sourceCollectionIds.includes(collection.id)
+              ? (previousMembership
+                  .get(collection.id)
+                  ?.filter((id) => idSet.has(id)).length ?? 0)
+              : 0;
+            const added = collection.id === collectionId ? idsToAdd.length : 0;
+            if (removed === 0 && added === 0) return collection;
+            return {
+              ...collection,
+              _count: {
+                ...collection._count,
+                items: Math.max(0, collection._count.items - removed + added),
+              },
+            };
+          }),
+        );
         setSelectedIds((prev) => {
           if (!ids.some((id) => prev.has(id))) return prev;
           return new Set([...prev].filter((id) => !idSet.has(id)));
         });
-        await loadPassages();
+        dispatchGenerateTourMilestone("passage-folder-drop-completed");
+        void loadPassages();
       } catch (err) {
         toast.error(
           err instanceof Error ? err.message : "폴더로 이동하지 못했습니다.",
@@ -922,8 +1266,8 @@ export function GeneratePageClient({
       workspaceApi.loadPassages(validPassages as PassageItem[]);
       toast.success(
         validIds.length === ids.length
-          ? `지문 ${validIds.length}개를 편집 워크스페이스에 펼쳤어요.`
-          : `지문 ${validIds.length}/${ids.length}개를 편집 워크스페이스에 펼쳤어요.`,
+          ? `지문 ${validIds.length}개를 워크스페이스에 담았어요.`
+          : `지문 ${validIds.length}/${ids.length}개를 워크스페이스에 담았어요.`,
       );
     }
     // 시드된 원시 선택을 정리 — 검증 전 id(다른 학원/삭제된 지문)가 선택
@@ -1017,6 +1361,15 @@ export function GeneratePageClient({
   }, [selectedPassage?.id]);
 
   // ── Handlers ──
+  const setTypeCount = useCallback((id: string, count: number) => {
+    setTypeCounts((prev) => {
+      const next = { ...prev };
+      if (count <= 0) delete next[id];
+      else next[id] = count;
+      return next;
+    });
+  }, []);
+
   const handleSelectPassage = useCallback((p: PassageItem) => {
     setSelectedPassage(p);
   }, []);
@@ -1066,9 +1419,8 @@ export function GeneratePageClient({
       }
       setPasteSaving(true);
       try {
-        const { createDirectInputPassageMaterial } = await import(
-          "@/actions/workbench"
-        );
+        const { createDirectInputPassageMaterial } =
+          await import("@/actions/workbench");
         const createdIds: string[] = [];
         // Sequential (not parallel): the action assigns passageOrder = last+1,
         // so concurrent calls could collide on the (jobId, passageOrder) unique.
@@ -1132,43 +1484,45 @@ export function GeneratePageClient({
       resolvedCount: number;
       complete: boolean;
     }) => {
-      void loadPassages().then(() => {
-        setPassageSearch("");
-        setSelectedCollectionId("");
-        setAnalysisStatusFilter("all");
-        setIntakeView("library");
-        if (passageIds.length > 0) {
-          setFreshAnalysisPassageIds((prev) => {
-            const next = new Set(prev);
-            passageIds.forEach((id) => next.add(id));
-            return next;
-          });
-        }
-        if (complete) {
-          clearExtractionPendingRef.current(jobId);
-        }
-        if (passageIds.length === 0) {
-          toast.message(
-            partial
-              ? "일부 페이지만 추출됐어요. 작업 큐에서 확인하세요."
-              : "추출은 끝났지만 등록할 지문이 없습니다.",
-          );
-          return;
-        }
-        if (!complete) {
-          const missing = Math.max(1, expectedCount - resolvedCount);
-          toast.warning(
-            `추출된 지문 ${resolvedCount}/${expectedCount}개만 등록됐습니다. 남은 ${missing}개는 작업 큐 또는 자료 관리에서 확인해주세요.`,
-            {
-              action: {
-                label: "등록된 지문 선택",
-                onClick: () => setSelectedIds(new Set(passageIds)),
-              },
-              duration: 14000,
+      // 알림·화면 전환은 즉시 — 목록 재조회(RTT)를 기다리지 않는다. 추출 중
+      // 로딩 카드 제거만 실제 카드가 로드된 뒤(then)로 미뤄 깜빡임을 막는다.
+      setPassageSearch("");
+      setSelectedCollectionId("");
+      setAnalysisStatusFilter("all");
+      setIntakeView("library");
+      if (passageIds.length > 0) {
+        setFreshAnalysisPassageIds((prev) => {
+          const next = new Set(prev);
+          passageIds.forEach((id) => next.add(id));
+          return next;
+        });
+        // 새 배치를 앞에 두고, 배치 안에서는 추출 순서를 유지한다.
+        setRecentExtractionPassageIds((prev) => [
+          ...passageIds,
+          ...prev.filter((id) => !passageIds.includes(id)),
+        ]);
+        dispatchGenerateTourMilestone("file-extraction-completed");
+      }
+
+      if (passageIds.length === 0) {
+        toast.message(
+          partial
+            ? "일부 페이지만 추출됐어요. 작업 큐에서 확인하세요."
+            : "추출은 끝났지만 등록할 지문이 없습니다.",
+        );
+      } else if (!complete) {
+        const missing = Math.max(1, expectedCount - resolvedCount);
+        toast.warning(
+          `추출된 지문 ${resolvedCount}/${expectedCount}개만 등록됐습니다. 남은 ${missing}개는 작업 큐 또는 자료 관리에서 확인해주세요.`,
+          {
+            action: {
+              label: "등록된 지문 선택",
+              onClick: () => setSelectedIds(new Set(passageIds)),
             },
-          );
-          return;
-        }
+            duration: 14000,
+          },
+        );
+      } else {
         toast.success(
           `추출된 ${passageIds.length}개 지문이 ‘내 지문’에 추가됐어요. 문제를 생성할 지문을 선택하세요.`,
           {
@@ -1179,6 +1533,12 @@ export function GeneratePageClient({
             duration: 12000,
           },
         );
+      }
+
+      void loadPassages().then(() => {
+        if (complete) {
+          clearExtractionPendingRef.current(jobId);
+        }
       });
     },
     [loadPassages],
@@ -1191,18 +1551,24 @@ export function GeneratePageClient({
       next.delete(passageId);
       return next;
     });
+    setFreshLearningPassageIds((prev) => {
+      if (!prev.has(passageId)) return prev;
+      const next = new Set(prev);
+      next.delete(passageId);
+      return next;
+    });
   }, []);
 
   const handleInlinePassageAnalyzed = useCallback(
     async (passageId: string) => {
-      await loadPassages();
-      setFreshAnalysisPassageIds((prev) => {
+      await patchPassages([passageId]);
+      setFreshLearningPassageIds((prev) => {
         const next = new Set(prev);
         next.add(passageId);
         return next;
       });
     },
-    [loadPassages],
+    [patchPassages],
   );
 
   const handleToggleExtractionReview = useCallback(
@@ -1226,7 +1592,7 @@ export function GeneratePageClient({
 
       try {
         if (isReviewed) {
-          const res = await fetch(
+          const res = await fetchReviewAction(
             `/api/extraction/m1-passages/${draft.id}/unpromote`,
             {
               method: "POST",
@@ -1237,20 +1603,19 @@ export function GeneratePageClient({
           if (!res.ok) {
             throw new Error(data?.error ?? "검수를 취소하지 못했습니다.");
           }
-          setSelectedIds((prev) => {
-            if (!prev.has(passage.id)) return prev;
-            const next = new Set(prev);
-            next.delete(passage.id);
-            return next;
-          });
+          removePassageLocally(passage.id);
           toast.success("검수완료를 취소했습니다.");
+          void loadPassages();
         } else {
-          const res = await fetch("/api/extraction/m1-passages/promote", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ draftIds: [draft.id] }),
-          });
+          const res = await fetchReviewAction(
+            "/api/extraction/m1-passages/promote",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              body: JSON.stringify({ draftIds: [draft.id] }),
+            },
+          );
           const data = await res.json().catch(() => ({}));
           if (!res.ok) {
             throw new Error(data?.error ?? "검수완료로 표시하지 못했습니다.");
@@ -1260,13 +1625,28 @@ export function GeneratePageClient({
           if (promoted + skipped <= 0) {
             throw new Error("검수 처리에 실패했습니다.");
           }
+          const reviewedAt = new Date().toISOString();
+          patchExtractionReviewState([
+            {
+              passageId: passage.id,
+              draft: {
+                ...draft,
+                reviewStatus: "COMMITTED",
+                confirmedAt: reviewedAt,
+                updatedAt: reviewedAt,
+              },
+            },
+          ]);
           toast.success("검수완료로 표시했습니다.");
+          void patchPassages([passage.id]);
         }
-
-        await loadPassages();
       } catch (err) {
         toast.error(
-          err instanceof Error ? err.message : "검수 상태를 변경하지 못했습니다.",
+          isAbortError(err)
+            ? "검수 처리 응답이 지연되고 있습니다. 잠시 후 다시 시도해주세요."
+            : err instanceof Error
+              ? err.message
+              : "검수 상태를 변경하지 못했습니다.",
         );
       } finally {
         setReviewActionPassageIds((prev) => {
@@ -1277,7 +1657,12 @@ export function GeneratePageClient({
         });
       }
     },
-    [loadPassages],
+    [
+      loadPassages,
+      patchExtractionReviewState,
+      patchPassages,
+      removePassageLocally,
+    ],
   );
 
   const handleBulkCompleteExtractionReview = useCallback(
@@ -1327,12 +1712,15 @@ export function GeneratePageClient({
       });
 
       try {
-        const res = await fetch("/api/extraction/m1-passages/promote", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ draftIds }),
-        });
+        const res = await fetchReviewAction(
+          "/api/extraction/m1-passages/promote",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ draftIds }),
+          },
+        );
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
           throw new Error(data?.error ?? "검수완료 처리에 실패했습니다.");
@@ -1345,17 +1733,43 @@ export function GeneratePageClient({
           throw new Error("검수완료 처리에 실패했습니다.");
         }
 
-        await loadPassages();
+        const reviewedAt = new Date().toISOString();
+        patchExtractionReviewState(
+          pendingPassages.map((passage) => ({
+            passageId: passage.id,
+            draft: passage.extractionReviewDraft
+              ? {
+                  ...passage.extractionReviewDraft,
+                  reviewStatus: "COMMITTED",
+                  confirmedAt: reviewedAt,
+                  updatedAt: reviewedAt,
+                }
+              : null,
+          })),
+        );
+        setSelectedIds((prev) => {
+          const next = new Set(prev);
+          pendingPassages.forEach((passage) => next.delete(passage.id));
+          return next;
+        });
+        dispatchGenerateTourMilestone("passage-review-completed");
+        void patchPassages(pendingPassages.map((passage) => passage.id));
         if (failed > 0) {
           toast.warning(
             `${promoted}개 검수완료, ${skipped + failed}개 건너뜀/실패`,
           );
         } else {
-          toast.success(`${promoted + skipped}개 지문을 검수완료로 표시했습니다.`);
+          toast.success(
+            `${promoted + skipped}개 지문을 검수완료로 표시했습니다.`,
+          );
         }
       } catch (err) {
         toast.error(
-          err instanceof Error ? err.message : "검수완료 처리에 실패했습니다.",
+          isAbortError(err)
+            ? "검수완료 응답이 지연되고 있습니다. 잠시 후 다시 시도해주세요."
+            : err instanceof Error
+              ? err.message
+              : "검수완료 처리에 실패했습니다.",
         );
       } finally {
         setReviewBulkActionRunning(false);
@@ -1366,7 +1780,7 @@ export function GeneratePageClient({
         });
       }
     },
-    [loadPassages, reviewBulkActionRunning],
+    [patchExtractionReviewState, patchPassages, reviewBulkActionRunning],
   );
 
   const {
@@ -1407,35 +1821,41 @@ export function GeneratePageClient({
   // 분석 완료 지문 → 분석/보고서 모달. 미분석 지문 → 원문 전체 뷰어 모달.
   // (지문 카드에서 이미 분기하지만, 어떤 경로로 호출돼도 동일하게 동작하도록
   //  서버에서 받은 analysis 유무로 한 번 더 분기해 조건을 철저히 보장한다.)
-  const handleOpenAnalysisModal = useCallback(async (passageId: string) => {
-    setLoadingAnalysisModal(true);
-    try {
-      const { getWorkbenchPassage } = await import("@/actions/workbench");
-      const result = await getWorkbenchPassage(passageId);
-      if (result) {
-        const listPassage = passages.find((item) => item.id === passageId);
-        const enrichedResult = {
-          ...result,
-          extractionReviewDraft:
-            listPassage?.extractionReviewDraft ??
-            (result as { extractionReviewDraft?: PassageItem["extractionReviewDraft"] })
-              .extractionReviewDraft ??
-            null,
-        };
-        if (result.analysis) {
-          setAnalysisModalPassage(enrichedResult);
+  const handleOpenAnalysisModal = useCallback(
+    async (passageId: string) => {
+      setLoadingAnalysisModal(true);
+      try {
+        const { getWorkbenchPassage } = await import("@/actions/workbench");
+        const result = await getWorkbenchPassage(passageId);
+        if (result) {
+          const listPassage = passages.find((item) => item.id === passageId);
+          const enrichedResult = {
+            ...result,
+            extractionReviewDraft:
+              listPassage?.extractionReviewDraft ??
+              (
+                result as {
+                  extractionReviewDraft?: PassageItem["extractionReviewDraft"];
+                }
+              ).extractionReviewDraft ??
+              null,
+          };
+          if (result.analysis) {
+            setAnalysisModalPassage(enrichedResult);
+          } else {
+            setContentModalPassage(enrichedResult as unknown as PassageItem);
+          }
         } else {
-          setContentModalPassage(enrichedResult as unknown as PassageItem);
+          toast.error("지문 데이터를 불러올 수 없습니다.");
         }
-      } else {
-        toast.error("지문 데이터를 불러올 수 없습니다.");
+      } catch {
+        toast.error("지문 로딩 실패");
+      } finally {
+        setLoadingAnalysisModal(false);
       }
-    } catch {
-      toast.error("지문 로딩 실패");
-    } finally {
-      setLoadingAnalysisModal(false);
-    }
-  }, [passages]);
+    },
+    [passages],
+  );
 
   const applyReviewState = useCallback(
     (questionIds: string[], approved: boolean) => {
@@ -1617,20 +2037,27 @@ export function GeneratePageClient({
   const handleLoadSelectedToWorkspace = useCallback(() => {
     const selected = passages.filter((p) => selectedIds.has(p.id));
     if (selected.length === 0) {
-      toast.error("왼쪽 '내 지문'에서 편집할 지문을 먼저 선택하세요.");
+      toast.error("'내 지문함'에서 워크스페이스로 보낼 지문을 먼저 선택하세요.");
       return;
     }
+    // 이미 작업 중인 워크스페이스가 있으면 '추가' 어휘로 안내한다.
+    const wasActive = workspaceApi.rows.length > 0;
     const { added, skipped } = workspaceApi.loadPassages(selected);
     if (added > 0) {
       toast.success(
-        `지문 ${added}개를 편집 워크스페이스에 펼쳤어요.` +
+        (wasActive
+          ? `지문 ${added}개를 워크스페이스에 추가했어요.`
+          : `지문 ${added}개를 워크스페이스에 담았어요.`) +
           (skipped > 0 ? ` (${skipped}개는 이미 있어요)` : ""),
       );
       setSelectedIds(new Set());
-      // 지문 목록을 옆으로 접어 작업 공간 확보 — 핸들로 언제든 다시 연다.
-      setLeftCollapseSignal((s) => s + 1);
+      // 내 지문함을 덮으며 워크스페이스를 펼친다 (가운데 컬럼 교체).
+      setWorkspaceOpen(true);
+      dispatchGenerateTourMilestone("workspace-opened");
     } else if (skipped > 0) {
       toast.info("선택한 지문은 이미 워크스페이스에 있습니다.");
+      setWorkspaceOpen(true);
+      dispatchGenerateTourMilestone("workspace-opened");
     }
   }, [passages, selectedIds, workspaceApi]);
 
@@ -1656,90 +2083,170 @@ export function GeneratePageClient({
       reviewItem,
       setReviewModalId,
       loadSavedQuestions,
+      onGenerationCompleted: () =>
+        dispatchGenerateTourMilestone("question-generation-completed"),
     });
 
   // ── 워크스페이스 생성 (변형본 저장 → 행별 설정으로 생성) ──
-  const { generating: workspaceGenerating, handleWorkspaceGenerate, workspaceSummary } =
-    useWorkspaceGeneration({
-      api: workspaceApi,
-      passages,
-      genMode,
-      generationPlan,
-      typeCounts,
-      questionTypeSettings,
-      difficulty,
-      customPrompt,
-      autoCount,
-      setSessionQueue,
-      loadPassages,
-    });
+  const {
+    generating: workspaceGenerating,
+    handleWorkspaceGenerate,
+    workspaceSummary,
+  } = useWorkspaceGeneration({
+    api: workspaceApi,
+    passages,
+    genMode,
+    generationPlan,
+    typeCounts,
+    questionTypeSettings,
+    difficulty,
+    customPrompt,
+    autoCount,
+    selectedIds,
+    setSelectedIds,
+    setSessionQueue,
+    loadPassages,
+  });
   const workspaceActive = workspaceApi.rows.length > 0;
-  // 워크스페이스 활성 → 비활성 전환(비우기/마지막 행 제거) 감지 시 좌측 열기.
+  // 워크스페이스가 '내 지문함'을 덮어 표시되는 상태.
+  // 행이 있고(workspaceActive) 사용자가 워크스페이스를 펼친(workspaceOpen) 동안
+  // 가운데 컬럼이 내 지문함 대신 워크스페이스로 교체된다.
+  const workspaceVisible = workspaceActive && workspaceOpen;
+  // 워크스페이스가 처음 생기면 자동으로 펼쳐 내 지문함을 덮는다.
   const prevWorkspaceActiveRef = useRef(false);
   useEffect(() => {
-    if (prevWorkspaceActiveRef.current && !workspaceActive) {
-      setLeftOpenSignal((s) => s + 1);
+    if (!prevWorkspaceActiveRef.current && workspaceActive) {
+      setWorkspaceOpen(true);
     }
     prevWorkspaceActiveRef.current = workspaceActive;
   }, [workspaceActive]);
-  // 체크된 지문 중 아직 워크스페이스에 없는 수 — loadPassages 의 dedupe 와
-  // 동일한 집합(passageId + variantOfId)으로 판정해 안내문 거짓 양성 방지.
-  const workspaceUnloadedSelectedCount = useMemo(() => {
-    if (selectedIds.size === 0) return 0;
-    const loaded = new Set(
-      workspaceApi.rows
-        .flatMap((r) => [r.passageId, r.variantOfId])
-        .filter(Boolean),
-    );
-    return [...selectedIds].filter((id) => !loaded.has(id)).length;
-  }, [selectedIds, workspaceApi.rows]);
+  // 워크스페이스 행이 모두 비워지면 자동으로 내 지문함을 다시 드러낸다.
+  useEffect(() => {
+    if (!workspaceActive && workspaceOpen) setWorkspaceOpen(false);
+  }, [workspaceActive, workspaceOpen]);
+  const workspacePassageIds = useMemo(
+    () =>
+      new Set(
+        workspaceApi.rows
+          .flatMap((r) => [r.passageId, r.variantOfId])
+          .filter(Boolean),
+      ),
+    [workspaceApi.rows],
+  );
 
   // ── Can generate? ──
   const canGenerate =
     selectedIds.size > 0 &&
     (genMode === "auto" ? autoCount > 0 : totalQuestions > 0);
 
-  return (
-    <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
-      <main className="flex w-full min-w-0 flex-col gap-4">
-        {/* ═══ TOP SECTION: 학습지 관리(좌) + 문제생성 작업대(우) ═══ */}
-        <WorkspaceShell
-          leftLabel="지문"
-          leftCollapseSignal={leftCollapseSignal}
-          leftOpenSignal={leftOpenSignal}
-          rightPaneMin={workspaceActive ? 560 : 400}
-          header={
-            <WorkflowPageTitle
-              icon={QuestionGenerationIcon}
-              title="문제 생성"
-              description="지문을 선택해 편집·AI 변형한 뒤, 유형과 난이도를 설정해 문제를 생성합니다."
-            />
-          }
-          left={
-            /* ═══ LEFT PANEL: 지문 추가(intake) ↔ 내 지문(library) ═══ */
-            <IntakeSurface
-              intakeView={intakeView}
-              setIntakeView={setIntakeView}
-              intakeTab={intakeTab}
-              setIntakeTab={setIntakeTab}
-              libraryCount={passages.length}
-              onSubmitPastedRows={handleCreatePastedPassages}
-              pasteSaving={pasteSaving}
-              upload={
-                <GenerateUploadPanel
-                  onBegin={handleExtractionBegin}
-                  onResult={handleExtractionResult}
-                  inFlightCount={extractionPending.length}
-                />
+  useEffect(() => {
+    if (intakeView !== "library" || selectedIds.size === 0) return;
+    const hasPendingReviewSelection = passages.some(
+      (passage) =>
+        selectedIds.has(passage.id) &&
+        passage.extractionReviewDraft?.reviewStatus !== "COMMITTED",
+    );
+    dispatchGenerateTourMilestone("passage-selected");
+    if (hasPendingReviewSelection) {
+      dispatchGenerateTourMilestone("review-passage-selected");
+    }
+    const id = window.setInterval(() => {
+      dispatchGenerateTourMilestone("passage-selected");
+      if (hasPendingReviewSelection) {
+        dispatchGenerateTourMilestone("review-passage-selected");
+      }
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, [intakeView, passages, selectedIds]);
+
+  const workspacePane = (
+    <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden">
+      <div className="min-h-0 flex-1">
+        <PassageWorkspace
+          api={workspaceApi}
+          generating={workspaceGenerating}
+          sessionQueue={sessionQueue}
+          questionCountByPassage={questionCountByPassage}
+          setModeActive={genMode === "set"}
+        />
+      </div>
+      {/* 설정 컬럼이 접혀 있어도 생성 버튼은 항상 보이게 — 워크스페이스
+          하단에 미러링한다 (설정을 접었다가 생성을 못 누르는 사고 방지).
+          장문 세트 모드는 설정 패널과 동일하게 워크스페이스 생성 제외. */}
+      {!configPaneOpen && workspaceVisible && genMode !== "set" ? (
+        <div className="flex shrink-0 items-center gap-2 border-t border-slate-200 bg-white px-3 py-2.5">
+          <button
+            type="button"
+            onClick={toggleConfigPane}
+            className="flex h-10 shrink-0 items-center rounded-lg border border-slate-200 px-3 text-[12px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:text-blue-600"
+          >
+            유형·난이도 설정 열기
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              dispatchGenerateTourMilestone("question-generation-started");
+              handleWorkspaceGenerate();
+            }}
+            disabled={
+              workspaceSummary.totalQuestions === 0 || workspaceGenerating
+            }
+            data-generate-tour="generate-button"
+            className="flex h-10 min-w-0 flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+          >
+            <span className="min-w-0 flex-1 truncate">
+              {workspaceGenerating
+                ? "생성 중…"
+                : workspaceSummary.totalQuestions > 0
+                  ? workspaceSummary.selectedOnlyCount > 0
+                    ? `워크스페이스 ${workspaceSummary.rowCount}개 + 선택 ${workspaceSummary.selectedOnlyCount}개 · ${workspaceSummary.totalQuestions}문제 생성`
+                    : `워크스페이스 ${workspaceSummary.rowCount}개 · ${workspaceSummary.totalQuestions}문제 생성`
+                  : "유형을 선택하세요 (설정 열기)"}
+            </span>
+            {!workspaceGenerating &&
+            workspaceSummary.totalQuestions > 0 &&
+            workspaceSummary.creditCost > 0 ? (
+              <CreditCostChip
+                amount={workspaceSummary.creditCost}
+                className="shrink-0 rounded bg-white/20 px-1.5 py-0.5 text-[10px]"
+              />
+            ) : null}
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+
+  const libraryPane = (
+    <IntakeSurface
+      intakeView={intakeView}
+      setIntakeView={setIntakeView}
+      intakeTab={intakeTab}
+      setIntakeTab={setIntakeTab}
+      libraryCount={passages.length}
+      onSubmitPastedRows={handleCreatePastedPassages}
+      pasteSaving={pasteSaving}
+      suppressTutorial={generateTourOpen}
+      overlay={workspaceVisible ? workspacePane : undefined}
+      onDismissOverlay={() => setWorkspaceOpen(false)}
+      workspaceActive={workspaceActive}
+      onReopenWorkspace={() => setWorkspaceOpen(true)}
+      upload={
+        <GenerateUploadPanel
+          onBegin={handleExtractionBegin}
+          onResult={handleExtractionResult}
+          inFlightCount={extractionPending.length}
+          suppressTutorial={generateTourOpen}
+        />
+      }
+      library={
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+            <PassageCardGrid
+              loadingCards={
+                <ExtractionLoadingCards pending={extractionPending} />
               }
-              library={
-                <div className="flex min-h-0 flex-1 flex-col">
-                <div className="min-h-0 flex-1 overflow-hidden flex flex-col">
-                <PassageCardGrid
-                  loadingCards={
-                    <ExtractionLoadingCards pending={extractionPending} />
-                  }
-                  passages={passages}
+              passages={passages}
               filteredPassages={filteredPassages}
               filterOptions={filterOptions}
               collections={collections}
@@ -1772,6 +2279,7 @@ export function GeneratePageClient({
                 handleMoveSelectedPassagesToCollection
               }
               onMovePassagesToCollection={handleMovePassagesToCollection}
+              onCreateCollection={handleCreatePassageCollection}
               onRemoveSelectedFromCollection={
                 handleRemoveSelectedPassagesFromCollection
               }
@@ -1781,199 +2289,186 @@ export function GeneratePageClient({
               totalQuestions={totalQuestions}
               handleBatchGenerate={handleBatchGenerate}
               questionCountByPassage={questionCountByPassage}
+              questionsByPassage={questionsByPassage}
+              learningGeneratingPassageIds={learningGeneratingPassageIds}
+              learningCompletedPassageIds={freshLearningPassageIds}
               freshAnalysisPassageIds={freshAnalysisPassageIds}
               onFreshAnalysisAcknowledged={acknowledgeFreshAnalysisPassage}
               reviewBulkActionRunning={reviewBulkActionRunning}
-              onBulkCompleteExtractionReview={handleBulkCompleteExtractionReview}
+              onBulkCompleteExtractionReview={
+                handleBulkCompleteExtractionReview
+              }
+              onBulkGenerateLearning={handleBulkGenerateLearning}
+              learningBulkActionRunning={learningBulkActionRunning}
+              learningCreditCostPerPassage={CREDIT_COSTS.PASSAGE_ANALYSIS}
+              onEditSelected={handleLoadSelectedToWorkspace}
+              workspacePassageIds={workspacePassageIds}
+              workspaceActive={workspaceActive}
               handleOpenAnalysisModal={handleOpenAnalysisModal}
               onViewPassageContent={setDetailPassage}
-                />
-                </div>
-                {/* 선택 지문 → 편집 워크스페이스로 (학습지 생성과 동일한 동선) */}
-                {selectedIds.size > 0 ? (
-                  <div className="shrink-0 border-t border-slate-100 bg-white px-2.5 py-2">
-                    <button
-                      type="button"
-                      onClick={handleLoadSelectedToWorkspace}
-                      title={`선택한 ${selectedIds.size}개 지문을 편집 워크스페이스에 펼칩니다. 편집·AI 변형 후 문제를 생성하세요.`}
-                      className="flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[12.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
-                    >
-                      <PencilLine className="size-4" aria-hidden="true" />
-                      <span>선택 지문 편집하기</span>
-                      <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
-                        {selectedIds.size}개 선택
-                      </span>
-                    </button>
-                  </div>
-                ) : null}
-                </div>
-              }
             />
+          </div>
+        </div>
+      }
+    />
+  );
+
+  const settingsPaneCollapsed = workspaceVisible && !configPaneOpen;
+  const settingsPaneWidth = settingsPaneCollapsed
+    ? "0px"
+    : `min(${configPaneWidth}px, calc(100% - ${
+        INTAKE_PANE_MIN + CONFIG_PANE_HANDLE_WIDTH
+      }px))`;
+
+  const settingsPane = (
+    <>
+      {settingsPaneCollapsed ? (
+        <button
+          type="button"
+          // onClick 대신 pointerdown — 설정 닫기 핸들과 거의 같은
+          // 자리에 스왑되므로, 닫기 직후의 잔여 click 이 이 버튼을
+          // 눌러 곧바로 다시 열리는 사고를 막는다.
+          onPointerDown={(e) => {
+            if (e.button !== 0) return;
+            toggleConfigPane();
+          }}
+          title="유형·생성 설정 열기"
+          className="flex min-h-0 w-5 shrink-0 cursor-pointer select-none flex-col items-center justify-center gap-1.5 border-l border-slate-200 bg-slate-50/40 py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
+        >
+          <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
+          <span style={{ writingMode: "vertical-rl" }}>설정 열기</span>
+        </button>
+      ) : workspaceVisible ? (
+        /* 설정 컬럼 리사이즈 핸들 — 워크스페이스가 있을 때만 의미가
+            있다 (빈 상태에선 설정이 우측 전체라 나눌 공간이 없음) */
+        <button
+          type="button"
+          onPointerDown={handleConfigHandlePointerDown}
+          onDoubleClick={resetConfigPaneWidth}
+          title="클릭하여 닫기 · 좌우로 드래그하여 너비 조절 · 더블 클릭하여 초기화"
+          className="group/chandle flex min-h-0 w-5 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1.5 border-l border-slate-200 bg-slate-50/40 py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
+        >
+          <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+          <span style={{ writingMode: "vertical-rl" }}>설정 닫기</span>
+          <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/chandle:opacity-70" />
+        </button>
+      ) : (
+        <button
+          type="button"
+          role="separator"
+          aria-orientation="vertical"
+          onPointerDown={(e) =>
+            handleConfigHandlePointerDown(e, { toggleOnClick: false })
           }
-          right={
-            /* ═══ RIGHT PANEL: 지문 워크스페이스 + 유형·생성 설정 ═══
-                워크스페이스 컬럼은 지문을 불러왔을 때만 존재한다 — 빈 상태로
-                중앙을 차지하는 대신, 불러오기 전엔 설정이 우측 전체를 쓰고
-                라이브러리가 넓어진다. */
-            <div className="flex h-full min-h-0 min-w-0">
-              {workspaceActive ? (
-              <div className="flex min-h-0 min-w-[120px] flex-1 flex-col">
-                <div className="min-h-0 flex-1">
-                  <PassageWorkspace
-                    api={workspaceApi}
-                    selectedCount={selectedIds.size}
-                    onLoadSelected={handleLoadSelectedToWorkspace}
-                    generating={workspaceGenerating}
-                    sessionQueue={sessionQueue}
-                    questionCountByPassage={questionCountByPassage}
-                    setModeActive={genMode === "set"}
-                  />
-                </div>
-                {/* 설정 컬럼이 접혀 있어도 생성 버튼은 항상 보이게 — 워크스페이스
-                    하단에 미러링한다 (설정을 접었다가 생성을 못 누르는 사고 방지).
-                    장문 세트 모드는 설정 패널과 동일하게 워크스페이스 생성 제외. */}
-                {!configPaneOpen && workspaceActive && genMode !== "set" ? (
-                  <div className="flex shrink-0 items-center gap-2 border-t border-slate-200 bg-white px-3 py-2.5">
-                    <button
-                      type="button"
-                      onClick={toggleConfigPane}
-                      className="flex h-10 shrink-0 items-center rounded-lg border border-slate-200 px-3 text-[12px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:text-blue-600"
-                    >
-                      유형·난이도 설정 열기
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleWorkspaceGenerate}
-                      disabled={
-                        workspaceSummary.totalQuestions === 0 ||
-                        workspaceGenerating
-                      }
-                      className="flex h-10 min-w-0 flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
-                    >
-                      {workspaceGenerating
-                        ? "생성 중…"
-                        : workspaceSummary.totalQuestions > 0
-                          ? `${workspaceSummary.rowCount}개 지문 · ${workspaceSummary.totalQuestions}문제 생성`
-                          : "유형을 선택하세요 (설정 열기)"}
-                      {!workspaceGenerating &&
-                      workspaceSummary.totalQuestions > 0 &&
-                      workspaceSummary.creditCost > 0 ? (
-                        <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-bold tabular-nums">
-                          {workspaceSummary.creditCost}크레딧
-                        </span>
-                      ) : null}
-                    </button>
-                  </div>
-                ) : null}
-              </div>
-              ) : null}
-              {workspaceActive && !configPaneOpen ? (
-                <button
-                  type="button"
-                  onClick={toggleConfigPane}
-                  title="유형·생성 설정 열기"
-                  className="flex min-h-0 w-6 shrink-0 select-none flex-col items-center justify-center gap-1.5 border-l border-slate-200 bg-slate-50/60 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                >
-                  <PanelRightOpen className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span style={{ writingMode: "vertical-rl" }}>유형·생성 설정</span>
-                </button>
-              ) : (
-                <>
-                  {/* 설정 컬럼 리사이즈 핸들 — 워크스페이스가 있을 때만 의미가
-                      있다 (빈 상태에선 설정이 우측 전체라 나눌 공간이 없음) */}
-                  {workspaceActive ? (
-                  <button
-                    type="button"
-                    onPointerDown={handleConfigHandlePointerDown}
-                    onDoubleClick={resetConfigPaneWidth}
-                    title="클릭하여 닫기 · 좌우로 드래그하여 너비 조절 · 더블 클릭하여 초기화"
-                    className="group/chandle flex min-h-0 w-5 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1.5 border-l border-slate-200 bg-slate-50/40 py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
-                  >
-                    <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span style={{ writingMode: "vertical-rl" }}>설정 닫기</span>
-                    <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/chandle:opacity-70" />
-                  </button>
-                  ) : null}
-                  {/* 설정 컬럼 — 워크스페이스 있음: 드래그로 300~560px /
-                      빈 상태: 우측 패널 전체 */}
-                  <div
-                    className={
-                      "flex h-full min-w-0 flex-col overflow-hidden " +
-                      (workspaceActive ? "shrink-0" : "flex-1")
-                    }
-                    style={
-                      workspaceActive
-                        ? {
-                            width: `min(${configPaneWidth}px, calc(100% - ${CONFIG_PANE_RESERVED}px))`,
-                          }
-                        : undefined
-                    }
-                  >
-                    {/* 3컬럼 공통 44px 헤더 — 좌측 탭/워크스페이스 헤더와 끝선 정렬 */}
-                    <div className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-100 bg-white pl-3 pr-1.5">
-                      <Settings2
-                        className="h-3.5 w-3.5 text-slate-400"
-                        aria-hidden="true"
-                      />
-                      <h3 className="min-w-0 flex-1 truncate text-[12.5px] font-bold text-slate-800">
-                        유형·생성 설정
-                      </h3>
-                      {workspaceActive ? (
-                      <button
-                        type="button"
-                        onClick={toggleConfigPane}
-                        title="설정 접기"
-                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
-                      >
-                        <PanelRightClose className="h-4 w-4" aria-hidden="true" />
-                      </button>
-                      ) : null}
-                    </div>
-            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-            <GenerationConfigPanel
-              genMode={genMode}
-              setGenMode={setGenMode}
-              generationPlan={generationPlan}
-              autoCount={autoCount}
-              setAutoCount={setAutoCount}
-              typeCounts={typeCounts}
-              setTypeCounts={setTypeCounts}
-              questionTypeSettings={questionTypeSettings}
-              setQuestionTypeSettings={setQuestionTypeSettings}
-              totalQuestions={totalQuestions}
-              difficulty={difficulty}
-              customPrompt={customPrompt}
-              setCustomPrompt={setCustomPrompt}
-              savedPrompts={savedPrompts}
-              showSavedPrompts={showSavedPrompts}
-              setShowSavedPrompts={setShowSavedPrompts}
-              showSaveInput={showSaveInput}
-              setShowSaveInput={setShowSaveInput}
-              savePromptName={savePromptName}
-              setSavePromptName={setSavePromptName}
-              savingPrompt={savingPrompt}
-              setSavingPrompt={setSavingPrompt}
-              editingPromptId={editingPromptId}
-              setEditingPromptId={setEditingPromptId}
-              editingName={editingName}
-              setEditingName={setEditingName}
-              loadSavedPrompts={loadSavedPrompts}
-              canGenerate={canGenerate}
-              selectedIds={selectedIds}
-              handleBatchGenerate={handleBatchGenerate}
-              workspaceActive={workspaceActive}
-              workspaceUnloadedSelectedCount={workspaceUnloadedSelectedCount}
-              workspaceRowCount={workspaceSummary.rowCount}
-              workspaceTotalQuestions={workspaceSummary.totalQuestions}
-              workspaceCreditCost={workspaceSummary.creditCost}
-              workspaceVariantCount={workspaceSummary.variantCount}
-              workspaceGenerating={workspaceGenerating}
-              onWorkspaceGenerate={handleWorkspaceGenerate}
-            />
+          onDoubleClick={resetConfigPaneWidth}
+          title="좌우로 드래그하여 지문 입력·선택 / 유형·생성 설정 너비 조절 · 더블 클릭하여 초기화"
+          className="group/csplit flex min-h-0 w-4 shrink-0 cursor-col-resize touch-none select-none items-center justify-center border-l border-r border-slate-100 bg-slate-50/50 text-slate-300 transition-colors hover:bg-blue-50 hover:text-blue-500 active:bg-blue-100"
+        >
+          <GripVertical
+            className="h-4 w-4 opacity-55 transition-opacity group-hover/csplit:opacity-90"
+            aria-hidden="true"
+          />
+        </button>
+      )}
+      <div
+        className={
+          /* 설정 칸은 저장된 고정폭을 쓰고, 왼쪽 지문 입력·선택 칸이
+             남은 폭을 가져간다. 드래그 중에는 트랜지션을 끈다. */
+          "flex h-full min-w-0 flex-col overflow-hidden " +
+          (configDragging
+            ? ""
+            : "transition-[flex-grow,width] duration-500 ease-in-out ") +
+          "shrink-0 grow-0"
+        }
+        style={{ width: settingsPaneWidth }}
+        aria-hidden={settingsPaneCollapsed}
+      >
+        {/* 3컬럼 공통 44px 헤더 — 좌측 탭/워크스페이스 헤더와 끝선 정렬 */}
+        <div className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-100 bg-white pl-3 pr-1.5">
+          <Settings2
+            className="h-3.5 w-3.5 text-slate-400"
+            aria-hidden="true"
+          />
+          <h3 className="min-w-0 flex-1 truncate text-[12.5px] font-bold text-slate-800">
+            유형·생성 설정
+          </h3>
+        </div>
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+          <GenerationConfigPanel
+            genMode={genMode}
+            setGenMode={setGenMode}
+            generationPlan={generationPlan}
+            setGenerationPlan={setGenerationPlan}
+            autoCount={autoCount}
+            setAutoCount={setAutoCount}
+            typeCounts={typeCounts}
+            setTypeCount={setTypeCount}
+            setTypeCounts={setTypeCounts}
+            questionTypeSettings={questionTypeSettings}
+            setQuestionTypeSettings={setQuestionTypeSettings}
+            totalQuestions={totalQuestions}
+            difficulty={difficulty}
+            setDifficulty={setDifficulty}
+            customPrompt={customPrompt}
+            setCustomPrompt={setCustomPrompt}
+            savedPrompts={savedPrompts}
+            showSavedPrompts={showSavedPrompts}
+            setShowSavedPrompts={setShowSavedPrompts}
+            showSaveInput={showSaveInput}
+            setShowSaveInput={setShowSaveInput}
+            savePromptName={savePromptName}
+            setSavePromptName={setSavePromptName}
+            savingPrompt={savingPrompt}
+            setSavingPrompt={setSavingPrompt}
+            editingPromptId={editingPromptId}
+            setEditingPromptId={setEditingPromptId}
+            editingName={editingName}
+            setEditingName={setEditingName}
+            loadSavedPrompts={loadSavedPrompts}
+            canGenerate={canGenerate}
+            selectedIds={selectedIds}
+            handleBatchGenerate={handleBatchGenerate}
+            workspaceActive={workspaceActive}
+            workspaceSelectedOnlyCount={workspaceSummary.selectedOnlyCount}
+            workspaceRowCount={workspaceSummary.rowCount}
+            workspaceTotalQuestions={workspaceSummary.totalQuestions}
+            workspaceCreditCost={workspaceSummary.creditCost}
+            workspaceVariantCount={workspaceSummary.variantCount}
+            workspaceGenerating={workspaceGenerating}
+            onWorkspaceGenerate={handleWorkspaceGenerate}
+          />
+        </div>
+      </div>
+    </>
+  );
+
+  return (
+    <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
+      <main className="flex w-full min-w-0 flex-col gap-4">
+        {/* ═══ TOP SECTION: 내 지문함(=워크스페이스가 덮음) + 설정 ═══
+            워크스페이스를 좌측 모달 패널로 띄우지 않는다. 대신 지문을
+            워크스페이스로 보내면 가운데 컬럼에서 내 지문함을 그대로 덮는다. */}
+        <WorkspaceShell
+          leftActive={false}
+          rightPaneMin={400}
+          header={
+            <div data-generate-tour="page-title">
+              <WorkflowPageTitle
+                icon={QuestionGenerationIcon}
+                title="문제 생성"
+                description="지문을 선택해 편집·AI 변형한 뒤, 유형과 난이도를 설정해 문제를 생성합니다."
+              />
             </div>
-                  </div>
-                </>
-              )}
+          }
+          left={null}
+          right={
+            <div className="flex h-full min-h-0 min-w-0">
+              {/* 내 지문함(탭 행 포함)은 항상 렌더 — 워크스페이스는 IntakeSurface
+                  본문만 덮는 오버레이로 들어가 입력·선택 탭 행은 그대로 남는다. */}
+              <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+                {libraryPane}
+              </div>
+              {settingsPane}
             </div>
           }
         />
@@ -1981,6 +2476,7 @@ export function GeneratePageClient({
         {/* ═══ BOTTOM SECTION: 생성된 문제 (최신순) ═══ */}
         <section
           ref={bottomQueueBoundaryRef}
+          data-generate-tour="results-section"
           className="relative rounded-lg border border-slate-200 bg-white shadow-sm"
         >
           <BottomQueueSection
@@ -2003,9 +2499,15 @@ export function GeneratePageClient({
             batchDeleting={deletingQuestions}
             onDeleteQuestion={handleDeleteQuestion}
             onEditQuestion={editor.openEditor}
+            tourHighlightSessionQuestionCount={generateTourResultHighlightCount}
           />
         </section>
       </main>
+      <GeneratePageTour
+        onOpenChange={setGenerateTourOpen}
+        onResultHighlightCountChange={setGenerateTourResultHighlightCount}
+        onFileTutorialStart={() => setDetailQuestion(null)}
+      />
       {/* end vertical stack */}
 
       {/* ─── Review Modal ─── */}
@@ -2049,7 +2551,10 @@ export function GeneratePageClient({
             className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
             onClick={() => setDetailQuestion(null)}
           />
-          <div className="relative z-10 w-full max-w-[1200px] mx-4 my-4 bg-white rounded-2xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden">
+          <div
+            data-generate-tour="question-detail-modal"
+            className="relative z-10 w-full max-w-[1200px] mx-4 my-4 bg-white rounded-2xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden"
+          >
             {/* Header */}
             <div className="flex items-center justify-between gap-3 px-6 py-3 border-b border-slate-200 shrink-0">
               <div className="flex min-w-0 items-center gap-2.5">
@@ -2062,7 +2567,7 @@ export function GeneratePageClient({
                   <button
                     type="button"
                     onClick={() => handleUnapproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-rose-200 bg-rose-50 px-2.5 text-[11px] font-semibold text-rose-600 shadow-none transition-colors hover:border-rose-300 hover:bg-rose-100 hover:text-rose-700"
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <XCircle className="h-3.5 w-3.5" />
                     검수취소
@@ -2071,7 +2576,7 @@ export function GeneratePageClient({
                   <button
                     type="button"
                     onClick={() => handleApproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-green-200 bg-green-50/60 px-2.5 text-[11px] font-semibold text-green-700 shadow-none transition-colors hover:border-green-300 hover:bg-green-50 hover:text-green-800"
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     검수완료
@@ -2179,7 +2684,8 @@ export function GeneratePageClient({
         onClose={() => setContentModalPassage(null)}
         passage={contentModalPassage}
         reviewBusy={
-          !!contentModalPassage && reviewActionPassageIds.has(contentModalPassage.id)
+          !!contentModalPassage &&
+          reviewActionPassageIds.has(contentModalPassage.id)
         }
         onToggleExtractionReview={handleToggleExtractionReview}
       />
@@ -2190,10 +2696,19 @@ export function GeneratePageClient({
           passage={detailPassage}
           onClose={() => setDetailPassage(null)}
           onPassageAnalyzed={handleInlinePassageAnalyzed}
+          onPassageSaved={(passageId) => {
+            // 카드 목록만 제자리 패치한다. detailPassage 객체를 갱신하면
+            // 모달의 에디터 리셋 effect 가 돌아 마킹이 날아가므로 건드리지
+            // 않는다(모달 헤더 제목은 editorTitle 을 직접 보여준다).
+            void patchPassages([passageId]);
+          }}
           reviewBusy={reviewActionPassageIds.has(detailPassage.id)}
           onToggleExtractionReview={handleToggleExtractionReview}
         />
       )}
+
+      {/* ─── 백그라운드 학습자료 생성 버퍼링 창 ─── */}
+      <LearningGenerationIndicator analysisJobs={analysisActivityJobs} />
 
       {/* Loading overlay for analysis modal fetch */}
       {loadingAnalysisModal && (
