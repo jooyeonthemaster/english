@@ -335,6 +335,7 @@ export async function runQuestionGeneration(
         irrelevantSlotCount,
         grammarMarkerCount,
         grammarAnswerCount,
+        grammarPointFocus,
         grammarCorrectionErrorCount,
         summaryCompleteMcBlankCount,
         summaryCompleteBlankCount,
@@ -396,6 +397,7 @@ export async function runQuestionGeneration(
           usedPointCodes: diversitySignals?.usedPointCodes,
           variantIndex: effectiveVariantIndex,
           diversityEnabled: !!diversity,
+          pointFocus: grammarPointFocus,
         },
       );
       const hasAiSchema = !!AI_QUESTION_SCHEMAS[subType];

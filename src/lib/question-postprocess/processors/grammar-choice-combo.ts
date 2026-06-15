@@ -1,5 +1,11 @@
 import { applyReplacementsRTL, findExpressionInPassage, sanitizeExpressionForMarker } from "../text-utils";
+import { sanitizeGrammarExplanationMeta } from "../grammar-explanation-sanitize";
 import type { PostProcessResult, QuestionPostProcessData, Replacement } from "../types";
+
+/** 문자열이면 어법 해설 메타 누설을 결정형으로 제거, 아니면 원값 유지. */
+function cleanMeta(value: unknown): unknown {
+  return typeof value === "string" ? sanitizeGrammarExplanationMeta(value) : value;
+}
 
 // ============================================================================
 // 네모 어법 (GRAMMAR_CHOICE_COMBO)
@@ -299,14 +305,14 @@ export function processGrammarChoiceCombo(
       item && typeof item === "object" && !Array.isArray(item)
         ? {
             ...(item as Record<string, unknown>),
-            explanation: remapLabelMentions((item as Record<string, unknown>).explanation),
+            explanation: cleanMeta(remapLabelMentions((item as Record<string, unknown>).explanation)),
           }
         : item,
     );
   } else if (wrongOptionExplanations && typeof wrongOptionExplanations === "object") {
     remappedWrongOptionExplanations = Object.fromEntries(
       Object.entries(wrongOptionExplanations as Record<string, unknown>).map(
-        ([key, text]) => [key, remapLabelMentions(text)],
+        ([key, text]) => [key, cleanMeta(remapLabelMentions(text))],
       ),
     );
   }
@@ -319,10 +325,11 @@ export function processGrammarChoiceCombo(
       options: normalizedOptions,
       correctAnswer: allCorrectOptions[0].label,
       passageWithMarkers,
-      explanation: remapLabelMentions(ai.explanation),
-      answerLogic: remapLabelMentions(ai.answerLogic),
+      // 어법 해설 메타 누설을 결정형으로 청소(추가 LLM 호출 없음).
+      explanation: cleanMeta(remapLabelMentions(ai.explanation)),
+      answerLogic: cleanMeta(remapLabelMentions(ai.answerLogic)),
       keyPoints: Array.isArray(ai.keyPoints)
-        ? ai.keyPoints.map((point) => remapLabelMentions(point))
+        ? ai.keyPoints.map((point) => cleanMeta(remapLabelMentions(point)))
         : ai.keyPoints,
       wrongOptionExplanations: remappedWrongOptionExplanations,
     },

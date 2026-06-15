@@ -55,6 +55,12 @@ export interface GrammarErrorGenerationSettings
   answerCount?: number;
   /** Legacy field name kept for already-saved configs; interpreted as markerCount. */
   errorCount?: number;
+  /**
+   * 핵심 집중 모드 — true 면 정답 포인트를 기출 1000제 고빈출 톱셋(관계사·수일치·
+   * to부정사/동명사·분사·대명사·형부)으로 좁혀 출제 포인트를 집중시킨다.
+   * false/미지정이면 기존 다양성(코어 10개 순회). 기본 false.
+   */
+  pointFocus?: boolean;
 }
 
 export interface VocabChoiceGenerationSettings
@@ -799,6 +805,8 @@ export interface ResolvedQuestionTypeGenerationSettings {
   irrelevantSlotCount?: number;
   grammarMarkerCount?: number;
   grammarAnswerCount?: number;
+  /** 어법 핵심 집중 모드 — 정답 포인트를 고빈출 톱셋으로 좁힘. */
+  grammarPointFocus?: boolean;
   grammarCorrectionErrorCount?: number;
   summaryCompleteMcBlankCount?: number;
   summaryCompleteBlankCount?: number;
@@ -880,14 +888,17 @@ export function resolveQuestionTypeGenerationSettings(
       rawSettings,
       grammarMarkerCount,
     );
+    const grammarPointFocus = readBooleanSetting(rawSettings, "GRAMMAR_ERROR", "pointFocus");
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         markerCount: grammarMarkerCount,
         answerCount: grammarAnswerCount,
+        pointFocus: grammarPointFocus,
       }),
       ...languageSettings,
       grammarMarkerCount,
       grammarAnswerCount,
+      grammarPointFocus,
     };
   }
 

@@ -346,6 +346,8 @@ export function buildQuestionTargetCandidateBlock(
     variantIndex?: number;
     /** 다양성 모드 활성 여부 (미지정 시 기존 동작 그대로) */
     diversityEnabled?: boolean;
+    /** 핵심 집중(focus) 모드 — 어법 정답 포인트를 고빈출 톱셋으로 좁힘 */
+    pointFocus?: boolean;
   } = {},
 ): string {
   const diversity: CandidateDiversityOptions = {
@@ -354,6 +356,7 @@ export function buildQuestionTargetCandidateBlock(
     usedPointCodes: options.usedPointCodes,
     variantIndex: options.variantIndex,
     diversityEnabled: options.diversityEnabled,
+    pointFocus: options.pointFocus,
   };
   switch (typeId) {
     case "GRAMMAR_ERROR":
@@ -422,6 +425,8 @@ interface CandidateDiversityOptions {
   usedPointCodes?: string[];
   variantIndex?: number;
   diversityEnabled?: boolean;
+  /** 핵심 집중 모드 — 어법 정답 포인트를 고빈출 톱셋(1000제 상위 6)으로 좁힘. */
+  pointFocus?: boolean;
 }
 
 /** variantIndex 만큼 배열을 회전시켜 병렬 배치의 각 호출이 다른 후보를 먼저 보게 한다. */
@@ -1109,10 +1114,12 @@ function buildGrammarErrorCandidateBlock(
       : "",
     // 어법끝 28년 빈도 증류 가이드 — 정답 포인트 코어 풀 + 함정 디코이 카드 +
     // (다양성 모드) variantIndex 로테이션 정답 포인트 지정.
+    // 핵심 집중 모드면 정답 포인트를 고빈출 톱셋(1000제 상위 6)으로 좁힌다.
     buildGrammarPointGuidance({
       variantIndex: diversity?.variantIndex,
       usedPointCodes: diversity?.usedPointCodes,
       diversityEnabled: diversity?.diversityEnabled,
+      pointFocus: diversity?.pointFocus,
       answerCount,
       requestedDifficulty,
       mode: "judgment",
@@ -1200,6 +1207,7 @@ function buildGrammarChoiceComboCandidateBlock(
       variantIndex: diversity?.variantIndex,
       usedPointCodes: diversity?.usedPointCodes,
       diversityEnabled: isKiller ? false : diversity?.diversityEnabled,
+      pointFocus: diversity?.pointFocus,
       answerCount: 3,
     }),
     sentences.length
@@ -1413,12 +1421,39 @@ function explanationLeaksMutationProcess(explanation: string): boolean {
 function grammarExplanationLeaksMeta(text: string): boolean {
   if (!text) return false;
   // 생성 지침 어휘 — 학생 해설에 절대 등장하면 안 됨.
-  if (/지시문|가이드라인|출제\s*의도|유도하는\s*함정|함정으로\s*(?:만들|변형|유도|구성)|포인트를\s*활용|타깃\s*포인트|타고전/.test(text)) {
+  if (/지시문|가이드라인|출제\s*의도|출제\s*포인트|어법\s*포인트\s*(?:관점|측면|차원)|포인트\s*관점에서|유도하는\s*함정|함정으로\s*(?:만들|변형|유도|구성)|포인트를\s*활용|타깃\s*포인트|타고전/.test(text)) {
     return true;
   }
   // 출제 과정 서술: "X(를) Y(로) (잘못) 변형/바꾸/치환/교체 + 하였/했/한/된/하여/해서/시켰/시킨".
   // 타깃 Y 는 다중어(to interact 등)도 허용.
   if (/['"]?[A-Za-z][A-Za-z'\- ]*['"]?\s*(?:을|를)\s*['"]?[A-Za-z][A-Za-z'\- ]*['"]?\s*(?:로|으로)\s*(?:잘못\s*)?(?:변형|바꾸|바꿔|바꾼|치환|교체|변경)(?:하였|했|한|된|하여|해서|시켰|시킨)/.test(text)) {
+    return true;
+  }
+  // 한국어 변형 서술 — 주어/대상이 한국어("이를 ~로 변형하였으므로")라 위 영어
+  // 패턴이 놓친 누출. 과거시제 변형 동사(변형하였/했/시켰)는 *이미 변형한* 산출물
+  // 임을 노출 — 클린 해설은 "변형하면"(조건)이지 "변형하였"(완료)을 안 쓴다.
+  if (/(?:로|으로)\s*(?:잘못\s*)?(?:변형|치환|교체|변경)(?:하였|했(?!\s*을\s*때)|시켰|시킨|한\s*것|하므로|하였으므로|하여|해서)/.test(text)) {
+    return true;
+  }
+  // 생성 설계 어휘 + "틀린/잘못된 변형" 명시. (포인트 설정/이번 문항에서는 = 출제 메타)
+  if (/정답\s*설계|출제\s*설계|설계에\s*따라|(?:정답\s*)?포인트\s*설정|이번\s*문항에서는|(?:틀린|잘못된|오답)\s*변형/.test(text)) {
+    return true;
+  }
+  // 내부 생성 필드명 노출 (errorExpression/pointCode 등) — 학생 해설에 절대 금지.
+  if (/\b(errorExpression|correctExpression|wrongExpression|pointCode|_?typeId|slotValues?)\b/i.test(text)) {
+    return true;
+  }
+  // 원형(변형 전) 누설·변형 형태·출제 설계 포인트 — 후처리 청소기와 동일 표면형.
+  if (/원문은|원(?:문|래)\s*표현|정답형(?:인|을|이|은)|변형(?:된|한|인)?\s*형태|(?:정답으로|정답형으로|오답으로)\s*변형|포인트로\s*설계|(?:의도된|의도한)\s*(?:정답\s*)?포인트|변형(?:한|된|인)\s*(?:것|부분|결과|표현|단어)/.test(text)) {
+    return true;
+  }
+  // 출제 프레이밍·원본 노출·수동 변형 서사 (라운드2~3).
+  if (/문제에서(?:는|의)|문제를?\s*설계(?:했|하였|한)|(?:실제\s*)?본문에서(?:의)?\s*올바른|올바른\s*표현은\s*['"]?[A-Za-z]|정답으로\s*지정|(?:정답\s*)?포인트\s*설계|설계\s*지시|(?:정답\s*)?포인트인\b|지정된\s*\d\s*순위|\d\s*순위[^.]*?어법\s*포인트|어법\s*포인트의\s*검토|고친\s*형태|변형(?:되어|되었|됨)|변형하게\s*되면/.test(text)) {
+    return true;
+  }
+  // 조건형 변형 서사 ("…으로 변형하면/바꾸면 … 틀리/비문/오답").
+  // 주의: "틀립니다/틀린"은 음절이 달라 "틀리"로 안 잡힘 → 음절 집합으로.
+  if (/(?:로|으로)\s*(?:잘못\s*)?(?:변형|바꾸|바꿔|치환|고치)(?:하면|면|하여|해서|한|게\s*되면)[^.]*?(?:틀[린립려리렸림]|비문|오류|오답|어긋|없[어이]|사라)/.test(text)) {
     return true;
   }
   return false;
@@ -3233,10 +3268,23 @@ function validateTypeSpecific(
     // "지시문 가이드라인의 1순위 포인트인 ...를 활용하여 ... 함정으로 X를 Y로
     // 잘못 변형하였습니다"). 학생 해설은 왜 그 형태가 어법상 틀린지만 설명해야 함.
     if (grammarExplanationLeaksMeta(grammarExplanationText)) {
+      // error 로 승격(2026-06-15): warning 은 strict 재시도를 안 시켜 그대로 출하됨.
+      // focus/최소대립쌍이 준 내부 framing(1순위·출제 포인트·변형 방향)을 모델이
+      // 해설에 베끼는 누출이 잦아(R2 3/10), strict 재시도로 강제 회피한다.
+      // RELAXED 미등록 — 끈질기면 relaxed 폴백이 출하(0수율 방지).
+      add(
+        "error",
+        "grammar-explanation-meta-leak",
+        "Grammar explanation narrates the generation process or instruction (지시문/가이드라인/출제 포인트/1순위/함정으로/X를 Y로 변형) instead of explaining the grammar from the student's view.",
+      );
+    }
+    // CoT 덤프 백스톱: 정상 어법 해설은 300~500자. 900자 초과는 사고과정
+    // 덤프(정답 번복·무관 내용 나열) 의심 (실측 focus u7: 1012자 자기모순).
+    if (normalizeText(question.explanation).length > 900) {
       add(
         "warning",
-        "grammar-explanation-meta-leak",
-        "Grammar explanation narrates the generation process or instruction (지시문/가이드라인/함정으로/X를 Y로 변형) instead of explaining the grammar from the student's view.",
+        "grammar-explanation-too-long",
+        "Grammar explanation is excessively long (>900 chars), suggesting a chain-of-thought dump rather than a concise student-facing rationale.",
       );
     }
   }

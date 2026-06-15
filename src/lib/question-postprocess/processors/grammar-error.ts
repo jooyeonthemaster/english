@@ -5,7 +5,13 @@ import {
   findWordInPassage,
   sanitizeExpressionForMarker,
 } from "../text-utils";
+import { sanitizeGrammarExplanationMeta } from "../grammar-explanation-sanitize";
 import type { PostProcessResult, QuestionPostProcessData, Replacement } from "../types";
+
+/** 문자열이면 어법 해설 메타 누설을 결정형으로 제거, 아니면 원값 유지. */
+function cleanMeta(value: unknown): unknown {
+  return typeof value === "string" ? sanitizeGrammarExplanationMeta(value) : value;
+}
 
 type GrammarMarkedExpression = {
   label: string;
@@ -136,16 +142,19 @@ export function processGrammarError(
     }
     return result.replace(/@@GLBL_([A-J])@@/g, "($1)");
   };
-  const explanation = remapLabelMentions(ai.explanation);
-  const answerLogic = remapLabelMentions(ai.answerLogic);
+  // 라벨 재매핑 후 어법 해설 메타 누설(출제/생성 과정 서술·내부 필드명)을
+  // 결정형으로 제거한다 — 추가 LLM 호출 없이 후처리에서 청소. 게이트가 이 청소된
+  // 텍스트를 검사하므로 대부분 재시도 없이 통과한다.
+  const explanation = cleanMeta(remapLabelMentions(ai.explanation));
+  const answerLogic = cleanMeta(remapLabelMentions(ai.answerLogic));
   const keyPoints = Array.isArray(ai.keyPoints)
-    ? ai.keyPoints.map((point) => remapLabelMentions(point))
+    ? ai.keyPoints.map((point) => cleanMeta(remapLabelMentions(point)))
     : undefined;
   const remappedWrongOptionExplanations =
     wrongOptionExplanations && typeof wrongOptionExplanations === "object" && !Array.isArray(wrongOptionExplanations)
       ? Object.fromEntries(
           Object.entries(wrongOptionExplanations as Record<string, unknown>).map(
-            ([key, text]) => [key, remapLabelMentions(text)],
+            ([key, text]) => [key, cleanMeta(remapLabelMentions(text))],
           ),
         )
       : wrongOptionExplanations;
