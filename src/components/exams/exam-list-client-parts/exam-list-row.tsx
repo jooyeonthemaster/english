@@ -9,6 +9,13 @@ import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { STATUS_COLORS, STATUS_LABELS, TYPE_COLORS, TYPE_LABELS } from "./constants";
 import type { ExamItem } from "./types";
 import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "@/components/workbench/shared/card-click";
 
 // ---------------------------------------------------------------------------
 // 목록 보기 모드에서 사용하는 드래그 가능한 시험 행
@@ -37,6 +44,10 @@ export function ExamListRow({
   const dragHandleRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
 
   useEffect(() => {
     // 네이티브 드래그(폴더 이동)는 손잡이에만 등록 → 행 본문은 영역 선택용.
@@ -59,7 +70,30 @@ export function ExamListRow({
     <div
       ref={dragRef}
       data-drag-item-id={exam.id}
-      onClick={() => onClick(exam.id)}
+      onMouseDown={preventCardDoubleClickTextSelection}
+      onClick={(e) => {
+        if (e.detail > 1 || shouldIgnoreCardSelectionClick(e)) return;
+        const shiftKey = e.shiftKey;
+        scheduleCardSelectionClick(() => onToggleSelect(exam.id, shiftKey));
+      }}
+      onDoubleClick={(e) => {
+        cancelPendingCardSelectionClick();
+        clearCardTextSelection();
+        if (shouldIgnoreCardDoubleClick(e)) return;
+        onClick(exam.id);
+      }}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === " ") {
+          e.preventDefault();
+          onToggleSelect(exam.id, e.shiftKey);
+          return;
+        }
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        onClick(exam.id);
+      }}
       className={cn(
         "group flex items-center gap-3 px-4 py-3 rounded-lg bg-white border cursor-pointer transition-all hover:shadow-sm",
         selected

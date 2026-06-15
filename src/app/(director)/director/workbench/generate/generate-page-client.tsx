@@ -63,9 +63,17 @@ import {
   ArrowDownToLine,
   ChevronLeft,
   ChevronRight,
+  FileText,
   GripVertical,
+  MousePointer2,
   Settings2,
 } from "lucide-react";
+import {
+  diffQuestionTypeSettings,
+  isOverrideEmpty,
+  overrideHasTypeCounts,
+  type RowOverride,
+} from "./workspace/workspace-types";
 import { useWorkspaceRows } from "./workspace/use-workspace-rows";
 import { useWorkspaceGeneration } from "./workspace/use-workspace-generation";
 import { PassageWorkspace } from "./workspace/passage-workspace";
@@ -324,7 +332,11 @@ export function GeneratePageClient({
   // 우측 "유형·생성 설정" 컬럼 접힘 상태 (워크스페이스와 나란히 배치).
   // 영구 저장하지 않는다 — 접힌 채 저장되면 다음 방문에서 생성 버튼·유형
   // 설정이 통째로 숨겨진 채 시작되는 사고가 난다 (세션 내 토글만 허용).
-  const [configPaneOpen, setConfigPaneOpen] = useState(true);
+  // 설정 패널은 '워크스페이스를 열었을 때만' 자동으로 펼친다(아래 effect):
+  // 유형·난이도·세부옵션은 워크스페이스 지문으로 문제를 만들 때 필요하므로,
+  // 워크스페이스가 없는 내 지문함 화면에서는 접어 가운데 지문함이 전체 폭을
+  // 쓰게 한다. 따라서 초기값은 항상 접힘(워크스페이스는 진입 시 생긴다).
+  const [configPaneOpen, setConfigPaneOpen] = useState(false);
   // 드래그 리사이즈 중에는 설정 컬럼 width 트랜지션을 꺼서 손을 따라오게 한다.
   const [configDragging, setConfigDragging] = useState(false);
   const toggleConfigPane = useCallback(() => {
@@ -413,6 +425,9 @@ export function GeneratePageClient({
   // 워크스페이스가 '내 지문함'을 덮어 표시되는지 여부. true면 가운데 컬럼이
   // 내 지문함 대신 워크스페이스로 교체된다 (왼쪽 패널 모달 방식 폐기).
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
+  // 우측 '유형·생성 설정'이 개별 설정 중인 워크스페이스 행. null 이면 전체
+  // 설정을 편집한다. 워크스페이스에서 지문 행을 클릭하면 그 행으로 바뀐다.
+  const [activeRowId, setActiveRowId] = useState<string | null>(null);
 
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
@@ -2106,6 +2121,7 @@ export function GeneratePageClient({
     setSelectedIds,
     setSessionQueue,
     loadPassages,
+    loadSavedQuestions,
   });
   const workspaceActive = workspaceApi.rows.length > 0;
   // 워크스페이스가 '내 지문함'을 덮어 표시되는 상태.
@@ -2120,6 +2136,22 @@ export function GeneratePageClient({
     }
     prevWorkspaceActiveRef.current = workspaceActive;
   }, [workspaceActive]);
+
+  // 설정 패널은 '워크스페이스를 열었을 때만' 자동으로 펼친다 — 워크스페이스가
+  // 보이면(workspaceVisible) 펼치고, 닫히면(내 지문함으로 복귀) 다시 접는다.
+  // 펼침/접힘 '전환 순간'에만 손대므로, 워크스페이스가 열린 동안 사용자가
+  // 직접 접거나 편 것은 그대로 둔다(세션 내 수동 토글 허용).
+  const prevWorkspaceVisibleRef = useRef(false);
+  useEffect(() => {
+    if (workspaceVisible === prevWorkspaceVisibleRef.current) return;
+    prevWorkspaceVisibleRef.current = workspaceVisible;
+    setConfigPaneOpen(workspaceVisible);
+    // 워크스페이스에 들어오면 가장 위 지문을 기본 선택한다 — 설정은 무조건
+    // 지문별이므로, 진입 즉시 첫 지문이 편집 대상이 되게 한다.
+    if (workspaceVisible) {
+      setActiveRowId(workspaceApi.rows[0]?.localId ?? null);
+    }
+  }, [workspaceVisible, workspaceApi.rows]);
   // 워크스페이스 행이 모두 비워지면 자동으로 내 지문함을 다시 드러낸다.
   useEffect(() => {
     if (!workspaceActive && workspaceOpen) setWorkspaceOpen(false);
@@ -2133,6 +2165,175 @@ export function GeneratePageClient({
       ),
     [workspaceApi.rows],
   );
+
+  // ── 지문별 개별 설정 (워크스페이스) ───────────────────────────────
+  // 워크스페이스 행을 클릭하면 우측 '유형·생성 설정'이 그 지문만 편집한다.
+  // 편집 대상 행이 있으면(editingRow) 난이도·유형 개수·유형별 세부옵션을
+  // 행 오버라이드로 읽고/쓰며(전체 설정값을 시드로 fork), 생성 모드·프롬프트
+  // 등은 그대로 전체 공통값을 쓴다. 행이 없으면 기존처럼 전체 설정을 편집.
+  const activeRow =
+    workspaceVisible && activeRowId
+      ? (workspaceApi.rows.find((r) => r.localId === activeRowId) ?? null)
+      : null;
+  const editingRow = activeRow !== null;
+
+  // 워크스페이스가 사라지면 개별 설정 선택을 해제 (전체 설정으로 복귀).
+  useEffect(() => {
+    if (!workspaceVisible && activeRowId !== null) setActiveRowId(null);
+  }, [workspaceVisible, activeRowId]);
+
+  // 지문 선택 → 그 지문을 개별 설정 대상으로. 우측 패널이 '자동 생성'이면
+  // 선택과 동시에 그 설정을 이 지문에 바로 반영한다(아직 개별 모드가 없을
+  // 때만 — 직접 지정한 모드는 덮어쓰지 않는다). 그러면 카드 배지가 곧바로
+  // '자동 생성'으로 바뀌어 설정창 상태가 그대로 비친다.
+  const selectRow = useCallback(
+    (localId: string) => {
+      setActiveRowId(localId);
+      if (genMode === "auto") {
+        const row = workspaceApi.rows.find((r) => r.localId === localId);
+        if (row && !row.override?.mode) {
+          const base: RowOverride = row.override
+            ? { ...row.override }
+            : { typeCounts: {}, difficulty: null };
+          workspaceApi.setOverride(localId, { ...base, mode: "auto" });
+        }
+      }
+    },
+    [genMode, workspaceApi],
+  );
+
+  // 행 클릭 → 그 지문을 개별 설정 대상으로. 설정 패널이 접혀 있었다면 함께
+  // 펼쳐 편집 UI 가 바로 보이게 한다.
+  const handleSetActiveRow = useCallback(
+    (localId: string) => {
+      selectRow(localId);
+      setConfigPaneOpen(true);
+    },
+    [selectRow],
+  );
+
+  // 활성 행의 오버라이드를 부분 수정한다. 결과가 전체 설정과 같아지면(빈
+  // 오버라이드) null 로 저장해 '전체 설정 따름'으로 되돌린다.
+  const writeActiveOverride = useCallback(
+    (updater: (base: RowOverride) => RowOverride) => {
+      if (!activeRowId) return;
+      const row = workspaceApi.rows.find((r) => r.localId === activeRowId);
+      const base: RowOverride = row?.override
+        ? { ...row.override }
+        : { typeCounts: {}, difficulty: null };
+      const next = updater(base);
+      workspaceApi.setOverride(
+        activeRowId,
+        isOverrideEmpty(next) ? null : next,
+      );
+    },
+    [activeRowId, workspaceApi],
+  );
+
+  // 우측 패널에 넘길 '유효 설정' — 편집 중이면 행 오버라이드(없으면 전체
+  // 설정 시드), 아니면 전체 설정. 세터는 편집 중이면 오버라이드에 쓴다.
+  const panelDifficulty = editingRow
+    ? (activeRow.override?.difficulty ?? difficulty)
+    : difficulty;
+  const panelSetDifficulty = editingRow
+    ? (v: "BASIC" | "INTERMEDIATE" | "KILLER") =>
+        writeActiveOverride((o) => ({ ...o, difficulty: v }))
+    : setDifficulty;
+
+  // 개별 설정 중인 행은 '빈 슬레이트'에서 시작한다 — 지정하지 않은 지문은
+  // 0개(생성 제외)이므로, 전체 설정 유형을 시드로 채우지 않는다(채우면 화면엔
+  // 보이는데 실제로는 생성/합산되지 않아 어긋난다). 행에 이미 개별 지정이
+  // 있으면 그 값을 보여준다.
+  const panelTypeCounts = editingRow
+    ? overrideHasTypeCounts(activeRow.override)
+      ? activeRow.override!.typeCounts
+      : {}
+    : typeCounts;
+  const panelSetTypeCount = editingRow
+    ? (id: string, count: number) =>
+        writeActiveOverride((o) => {
+          const seed = overrideHasTypeCounts(o) ? o.typeCounts : {};
+          const nextCounts = { ...seed };
+          if (count <= 0) delete nextCounts[id];
+          else nextCounts[id] = count;
+          return { ...o, typeCounts: nextCounts };
+        })
+    : setTypeCount;
+  // 패널은 setTypeCounts 를 값/업데이터 함수 양쪽으로 호출한다(정렬·증감 등).
+  // 업데이터에는 '현재 행 typeCounts'(개별 지정 없으면 빈 슬레이트)를 넘긴다.
+  const panelSetTypeCounts = editingRow
+    ? (
+        v:
+          | Record<string, number>
+          | ((prev: Record<string, number>) => Record<string, number>),
+      ) =>
+        writeActiveOverride((o) => {
+          const seed = overrideHasTypeCounts(o) ? o.typeCounts : {};
+          const next = typeof v === "function" ? v(seed) : v;
+          return { ...o, typeCounts: next };
+        })
+    : setTypeCounts;
+  const panelTotalQuestions = editingRow
+    ? Object.values(panelTypeCounts).reduce((a, b) => a + b, 0)
+    : totalQuestions;
+
+  const panelQuestionTypeSettings = editingRow
+    ? { ...questionTypeSettings, ...(activeRow.override?.questionTypeSettings ?? {}) }
+    : questionTypeSettings;
+  const panelSetQuestionTypeSettings = editingRow
+    ? (
+        v:
+          | QuestionTypeGenerationSettings
+          | ((
+              prev: QuestionTypeGenerationSettings,
+            ) => QuestionTypeGenerationSettings),
+      ) =>
+        writeActiveOverride((o) => {
+          const merged = {
+            ...questionTypeSettings,
+            ...(o.questionTypeSettings ?? {}),
+          };
+          const nextFull = typeof v === "function" ? v(merged) : v;
+          return {
+            ...o,
+            questionTypeSettings: diffQuestionTypeSettings(
+              nextFull,
+              questionTypeSettings,
+            ),
+          };
+        })
+    : setQuestionTypeSettings;
+
+  // 생성 모드(자동/유형지정/장문세트)와 생성 플랜(일반/프리미엄)도 개별 설정
+  // 대상이다 — 행 편집 중이면 그 행 오버라이드에 쓰고/읽고(없으면 전체 설정을
+  // 시드로), 아니면 전체 공통 설정을 그대로 쓴다.
+  const panelGenMode = editingRow
+    ? (activeRow.override?.mode ?? genMode)
+    : genMode;
+  const panelSetGenMode = editingRow
+    ? (m: "auto" | "manual" | "set") =>
+        writeActiveOverride((o) => ({ ...o, mode: m }))
+    : setGenMode;
+  const panelGenerationPlan = editingRow
+    ? (activeRow.override?.generationPlan ?? generationPlan)
+    : generationPlan;
+  const panelSetGenerationPlan = editingRow
+    ? (p: "STANDARD" | "PREMIUM") =>
+        writeActiveOverride((o) => ({ ...o, generationPlan: p }))
+    : setGenerationPlan;
+  // 장문 세트 구성도 지문별로 저장한다(자동/유형지정과 동일 원리). 편집 중인
+  // 행의 override.setMembers 를 controlled 값으로 넘기고, 변경 시 그 행에 쓴다.
+  const panelSetMembers = editingRow
+    ? (activeRow.override?.setMembers ?? [])
+    : undefined;
+  const panelOnSetMembersChange = editingRow
+    ? (
+        members: {
+          typeId: string;
+          difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
+        }[],
+      ) => writeActiveOverride((o) => ({ ...o, mode: "set", setMembers: members }))
+    : undefined;
 
   // ── Can generate? ──
   const canGenerate =
@@ -2167,7 +2368,13 @@ export function GeneratePageClient({
           generating={workspaceGenerating}
           sessionQueue={sessionQueue}
           questionCountByPassage={questionCountByPassage}
+          globalDifficulty={difficulty}
+          globalGenerationPlan={generationPlan}
           setModeActive={genMode === "set"}
+          activeRowId={activeRowId}
+          onSetActiveRow={selectRow}
+          onOpenRowSettings={handleSetActiveRow}
+          onClearActiveRow={() => setActiveRowId(null)}
         />
       </div>
       {/* 설정 컬럼이 접혀 있어도 생성 버튼은 항상 보이게 — 워크스페이스
@@ -2198,9 +2405,7 @@ export function GeneratePageClient({
               {workspaceGenerating
                 ? "생성 중…"
                 : workspaceSummary.totalQuestions > 0
-                  ? workspaceSummary.selectedOnlyCount > 0
-                    ? `워크스페이스 ${workspaceSummary.rowCount}개 + 선택 ${workspaceSummary.selectedOnlyCount}개 · ${workspaceSummary.totalQuestions}문제 생성`
-                    : `워크스페이스 ${workspaceSummary.rowCount}개 · ${workspaceSummary.totalQuestions}문제 생성`
+                  ? `${workspaceSummary.totalQuestions}문제 생성`
                   : "유형을 선택하세요 (설정 열기)"}
             </span>
             {!workspaceGenerating &&
@@ -2313,7 +2518,9 @@ export function GeneratePageClient({
     />
   );
 
-  const settingsPaneCollapsed = workspaceVisible && !configPaneOpen;
+  // 접힘은 configPaneOpen 만 따른다 — 기본(워크스페이스 닫힘)은 접힌 상태라
+  // 가운데 지문함이 전체 폭을 쓰고, 워크스페이스를 열면 자동으로 펼쳐진다.
+  const settingsPaneCollapsed = !configPaneOpen;
   const settingsPaneWidth = settingsPaneCollapsed
     ? "0px"
     : `min(${configPaneWidth}px, calc(100% - ${
@@ -2322,7 +2529,10 @@ export function GeneratePageClient({
 
   const settingsPane = (
     <>
-      {settingsPaneCollapsed ? (
+      {/* 핸들/바는 워크스페이스가 열려 있을 때만 — 내 지문함만 보는 동안에는
+          '설정 열기' 바도 띄우지 않는다. (본문은 항상 마운트해 width 트랜지션으로
+          자연스럽게 슬라이드하므로, 여기서 null 이어도 본문은 0px 로 접혀 있다.) */}
+      {!workspaceVisible ? null : settingsPaneCollapsed ? (
         <button
           type="button"
           // onClick 대신 pointerdown — 설정 닫기 핸들과 거의 같은
@@ -2338,9 +2548,9 @@ export function GeneratePageClient({
           <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
           <span style={{ writingMode: "vertical-rl" }}>설정 열기</span>
         </button>
-      ) : workspaceVisible ? (
-        /* 설정 컬럼 리사이즈 핸들 — 워크스페이스가 있을 때만 의미가
-            있다 (빈 상태에선 설정이 우측 전체라 나눌 공간이 없음) */
+      ) : (
+        /* 설정 컬럼 리사이즈 핸들 — 워크스페이스 열림 동안만 노출
+            (클릭=닫기, 드래그=너비 조절) */
         <button
           type="button"
           onPointerDown={handleConfigHandlePointerDown}
@@ -2351,23 +2561,6 @@ export function GeneratePageClient({
           <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           <span style={{ writingMode: "vertical-rl" }}>설정 닫기</span>
           <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/chandle:opacity-70" />
-        </button>
-      ) : (
-        <button
-          type="button"
-          role="separator"
-          aria-orientation="vertical"
-          onPointerDown={(e) =>
-            handleConfigHandlePointerDown(e, { toggleOnClick: false })
-          }
-          onDoubleClick={resetConfigPaneWidth}
-          title="좌우로 드래그하여 지문 입력·선택 / 유형·생성 설정 너비 조절 · 더블 클릭하여 초기화"
-          className="group/csplit flex min-h-0 w-4 shrink-0 cursor-col-resize touch-none select-none items-center justify-center border-l border-r border-slate-100 bg-slate-50/50 text-slate-300 transition-colors hover:bg-blue-50 hover:text-blue-500 active:bg-blue-100"
-        >
-          <GripVertical
-            className="h-4 w-4 opacity-55 transition-opacity group-hover/csplit:opacity-90"
-            aria-hidden="true"
-          />
         </button>
       )}
       <div
@@ -2393,22 +2586,48 @@ export function GeneratePageClient({
             유형·생성 설정
           </h3>
         </div>
-        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-          <GenerationConfigPanel
-            genMode={genMode}
-            setGenMode={setGenMode}
-            generationPlan={generationPlan}
-            setGenerationPlan={setGenerationPlan}
+        {/* 선택된 지문 표시 — 설정은 '무조건 지문별'이라 전체 설정 모드는 없다. */}
+        {workspaceVisible && editingRow ? (
+          <div className="mx-4 mt-2 flex shrink-0 items-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-3 py-2">
+            <FileText
+              className="h-3.5 w-3.5 shrink-0 text-violet-500"
+              aria-hidden="true"
+            />
+            <p className="min-w-0 flex-1 truncate text-[11.5px] font-bold text-violet-800">
+              {activeRow.title}
+            </p>
+          </div>
+        ) : null}
+        {/* 지문 미선택 시 설정창을 음영 처리하고 가운데 안내를 띄운다. */}
+        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
+          <div
+            className={
+              "flex min-h-0 flex-1 flex-col overflow-hidden " +
+              (workspaceVisible && !editingRow
+                ? "pointer-events-none select-none opacity-40"
+                : "")
+            }
+            aria-hidden={workspaceVisible && !editingRow}
+          >
+            <GenerationConfigPanel
+            genMode={panelGenMode}
+            setGenMode={panelSetGenMode}
+            editingRow={editingRow}
+            activePassageId={activeRow?.passageId ?? null}
+            setMembers={panelSetMembers}
+            onSetMembersChange={panelOnSetMembersChange}
+            generationPlan={panelGenerationPlan}
+            setGenerationPlan={panelSetGenerationPlan}
             autoCount={autoCount}
             setAutoCount={setAutoCount}
-            typeCounts={typeCounts}
-            setTypeCount={setTypeCount}
-            setTypeCounts={setTypeCounts}
-            questionTypeSettings={questionTypeSettings}
-            setQuestionTypeSettings={setQuestionTypeSettings}
-            totalQuestions={totalQuestions}
-            difficulty={difficulty}
-            setDifficulty={setDifficulty}
+            typeCounts={panelTypeCounts}
+            setTypeCount={panelSetTypeCount}
+            setTypeCounts={panelSetTypeCounts}
+            questionTypeSettings={panelQuestionTypeSettings}
+            setQuestionTypeSettings={panelSetQuestionTypeSettings}
+            totalQuestions={panelTotalQuestions}
+            difficulty={panelDifficulty}
+            setDifficulty={panelSetDifficulty}
             customPrompt={customPrompt}
             setCustomPrompt={setCustomPrompt}
             savedPrompts={savedPrompts}
@@ -2437,6 +2656,26 @@ export function GeneratePageClient({
             workspaceGenerating={workspaceGenerating}
             onWorkspaceGenerate={handleWorkspaceGenerate}
           />
+          </div>
+          {workspaceVisible && !editingRow ? (
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/55 px-6 backdrop-blur-[1px]">
+              <div className="flex max-w-[260px] flex-col items-center gap-2 text-center">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-100">
+                  <MousePointer2
+                    className="h-5 w-5 text-slate-400"
+                    aria-hidden="true"
+                  />
+                </span>
+                <p className="text-[13.5px] font-bold text-slate-700">
+                  지문을 선택해주세요
+                </p>
+                <p className="text-[11.5px] leading-relaxed text-slate-400">
+                  왼쪽 워크스페이스에서 지문을 클릭하면 그 지문의 유형·난이도를
+                  설정할 수 있어요.
+                </p>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </>
@@ -2468,6 +2707,10 @@ export function GeneratePageClient({
               <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
                 {libraryPane}
               </div>
+              {/* 항상 마운트한다 — 워크스페이스 개폐 시 본문 width 가 0↔실폭으로
+                  트랜지션되며 옆으로 밀리듯 슬라이드한다. 핸들/바는 settingsPane
+                  안에서 워크스페이스가 열렸을 때만 노출하므로, 닫혀 있을 때는
+                  0px 로 접혀 아무것도 보이지 않는다. */}
               {settingsPane}
             </div>
           }

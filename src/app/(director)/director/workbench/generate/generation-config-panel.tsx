@@ -87,9 +87,9 @@ const TYPE_ORDER_STORAGE_KEY =
 
 // Difficulty — 세그먼트 컨트롤. 단계 식별은 컬러 닷으로만 (면색 남용 금지).
 const DIFFICULTY_TONES = [
-  { value: "BASIC", label: "기본", dot: "bg-slate-400" },
-  { value: "INTERMEDIATE", label: "중급", dot: "bg-slate-400" },
-  { value: "KILLER", label: "킬러", dot: "bg-slate-400" },
+  { value: "BASIC", label: "기본", on: "bg-blue-50 text-blue-700" },
+  { value: "INTERMEDIATE", label: "중급", on: "bg-amber-50 text-amber-700" },
+  { value: "KILLER", label: "킬러", on: "bg-red-50 text-red-700" },
 ] as const;
 
 // 난이도 세그먼트 — 자동/유형지정 모드 공통.
@@ -102,7 +102,7 @@ function DifficultySegment({
 }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+      <span className="w-14 shrink-0 whitespace-nowrap text-[11px] font-bold uppercase tracking-wider text-slate-500">
         난이도
       </span>
       <div className="flex h-8 flex-1 rounded-lg bg-slate-100 p-0.5">
@@ -113,18 +113,12 @@ function DifficultySegment({
               key={d.value}
               type="button"
               onClick={() => setDifficulty(d.value)}
-              className={`flex flex-1 items-center justify-center gap-1.5 rounded-[6px] text-[12px] transition-all duration-150 ${
+              className={`flex flex-1 items-center justify-center rounded-[6px] text-[12px] transition-all duration-150 ${
                 active
-                  ? "bg-white font-bold text-slate-800 shadow-sm"
+                  ? `font-bold shadow-sm ${d.on}`
                   : "font-semibold text-slate-400 hover:text-slate-600"
               }`}
             >
-              <span
-                className={`h-1.5 w-1.5 shrink-0 rounded-full ${d.dot} ${
-                  active ? "" : "opacity-40"
-                }`}
-                aria-hidden="true"
-              />
               {d.label}
             </button>
           );
@@ -140,6 +134,15 @@ interface GenerationConfigPanelProps {
   // Mode
   genMode: "auto" | "manual" | "set";
   setGenMode: (v: "auto" | "manual" | "set") => void;
+  /** 워크스페이스의 특정 지문만 개별 설정 중인지 — 장문 세트 빌더 바인딩에 쓴다. */
+  editingRow?: boolean;
+  /** 개별 설정 중인 지문 id — 장문 세트 모드일 때 이 지문으로 세트를 만든다. */
+  activePassageId?: string | null;
+  /** 개별 설정 중인 지문의 장문 세트 구성(controlled) — 있으면 지문별 저장. */
+  setMembers?: { typeId: string; difficulty: "BASIC" | "INTERMEDIATE" | "KILLER" }[];
+  onSetMembersChange?: (
+    members: { typeId: string; difficulty: "BASIC" | "INTERMEDIATE" | "KILLER" }[],
+  ) => void;
   generationPlan: QuestionGenerationPlan;
   setGenerationPlan: (v: QuestionGenerationPlan) => void;
 
@@ -206,6 +209,10 @@ interface GenerationConfigPanelProps {
 export function GenerationConfigPanel({
   genMode,
   setGenMode,
+  editingRow = false,
+  activePassageId = null,
+  setMembers,
+  onSetMembersChange,
   generationPlan,
   setGenerationPlan,
   autoCount,
@@ -748,14 +755,18 @@ export function GenerationConfigPanel({
     setTypeCounts((prev) => orderTypeCounts(next, prev));
   };
 
-  // 카테고리 닷은 위치 단서로만 쓴다. 색으로 유형을 더 늘리면 패널이 산만해진다.
-  const getCategoryDotClass = (category: string) =>
-    category ? "bg-slate-300" : "bg-slate-300";
+  // 카테고리별 닷 색 — 범례와 유형 목록이 같은 색을 쓰도록 group 문자열로 매핑한다.
+  const getCategoryDotClass = (category: string) => {
+    if (category.startsWith("수능")) return "bg-blue-400";
+    if (category.startsWith("내신")) return "bg-emerald-400";
+    if (category.startsWith("어휘")) return "bg-amber-400";
+    return "bg-slate-300";
+  };
 
   const categoryLegend = [
-    { label: "수능·모의", dot: "bg-slate-300" },
-    { label: "내신 서술", dot: "bg-slate-300" },
-    { label: "어휘", dot: "bg-slate-300" },
+    { label: "수능·모의", dot: "bg-blue-400" },
+    { label: "내신 서술", dot: "bg-emerald-400" },
+    { label: "어휘", dot: "bg-amber-400" },
   ];
 
   const renderNumberSetting = ({
@@ -1399,46 +1410,40 @@ export function GenerationConfigPanel({
           </div>
         </div>
 
-        {/* Model selector */}
+        {/* Model selector — 난이도 세그먼트와 동일 디자인(제목 왼쪽 + 흰색 활성) */}
         {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-          <div className="px-5 pb-3 shrink-0">
-            <div className="grid grid-cols-2 gap-2">
-              {(["STANDARD", "PREMIUM"] as const).map((planId) => {
-                const plan = QUESTION_GENERATION_PLANS[planId];
-                const active = generationPlan === planId;
-                const Icon = planId === "PREMIUM" ? Gem : Sparkles;
-                return (
-                  <button
-                    key={planId}
-                    type="button"
-                    onClick={() => setGenerationPlan(planId)}
-                    className={`min-h-[72px] rounded-xl border p-3 text-left transition-all duration-150 ${
-                      active
-                        ? "border-blue-300 bg-blue-50 text-blue-800 shadow-sm shadow-blue-50"
-                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <Icon
-                          className={`w-3.5 h-3.5 shrink-0 ${active ? "text-blue-600" : "text-slate-400"}`}
-                        />
-                        <span className="text-[12px] font-bold truncate">
-                          {plan.shortLabel}
-                        </span>
-                      </div>
-                      <span
-                        className={`text-[10px] font-bold tabular-nums ${active ? "text-blue-600" : "text-slate-400"}`}
-                      >
+          <div className="px-4 pb-3 shrink-0">
+            <div className="flex items-center gap-3">
+              <span className="w-14 shrink-0 whitespace-nowrap text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                생성 모델
+              </span>
+              <div className="flex h-8 flex-1 rounded-lg bg-slate-100 p-0.5">
+                {(["STANDARD", "PREMIUM"] as const).map((planId) => {
+                  const plan = QUESTION_GENERATION_PLANS[planId];
+                  const active = generationPlan === planId;
+                  const Icon = planId === "PREMIUM" ? Gem : Sparkles;
+                  return (
+                    <button
+                      key={planId}
+                      type="button"
+                      onClick={() => setGenerationPlan(planId)}
+                      className={`flex flex-1 items-center justify-center gap-1.5 rounded-[6px] text-[12px] transition-all duration-150 ${
+                        active
+                          ? "bg-white font-bold text-slate-800 shadow-sm"
+                          : "font-semibold text-slate-400 hover:text-slate-600"
+                      }`}
+                    >
+                      <Icon
+                        className={`h-3.5 w-3.5 shrink-0 ${active ? "text-blue-600" : "text-slate-400"}`}
+                      />
+                      {plan.shortLabel}
+                      <span className="text-[10px] font-bold tabular-nums text-slate-400">
                         {plan.creditMultiplier}x
                       </span>
-                    </div>
-                    <p className="mt-1.5 text-[10px] font-medium leading-snug text-slate-500">
-                      {plan.modelLabel}
-                    </p>
-                  </button>
-                );
-              })}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
@@ -1446,6 +1451,14 @@ export function GenerationConfigPanel({
         {/* Auto Mode Config */}
         {genMode === "auto" && (
           <div className="px-4 py-3 flex flex-1 min-h-0 flex-col gap-3">
+            {/* Difficulty */}
+            <div className="shrink-0">
+              <DifficultySegment
+                difficulty={difficulty}
+                setDifficulty={setDifficulty}
+              />
+            </div>
+
             {/* 문제 수 — minimal inline control */}
             <div
               className="flex items-center justify-between gap-2 shrink-0"
@@ -1473,14 +1486,6 @@ export function GenerationConfigPanel({
                   <Plus className="w-3.5 h-3.5" />
                 </button>
               </div>
-            </div>
-
-            {/* Difficulty */}
-            <div className="shrink-0">
-              <DifficultySegment
-                difficulty={difficulty}
-                setDifficulty={setDifficulty}
-              />
             </div>
 
             {/* Custom prompt */}
@@ -1576,7 +1581,7 @@ export function GenerationConfigPanel({
                           dragOver
                             ? "bg-blue-50 ring-1 ring-inset ring-blue-300"
                             : active
-                              ? "bg-slate-50"
+                              ? "bg-blue-50/70"
                               : "hover:bg-slate-50/80"
                         } ${dragging ? "opacity-50" : ""}`}
                       >
@@ -1622,7 +1627,7 @@ export function GenerationConfigPanel({
                             <span
                               className={`min-w-0 flex-1 truncate text-[12px] ${
                                 active
-                                  ? "font-bold text-slate-800"
+                                  ? "font-bold text-blue-800"
                                   : "font-semibold text-slate-600"
                               }`}
                             >
@@ -1632,28 +1637,28 @@ export function GenerationConfigPanel({
 
                           <div className="grid w-[100px] shrink-0 grid-cols-[72px_28px] items-center">
                             <div className="flex items-center justify-end gap-0.5">
-                              {/* 0개 행은 +만 — 죽은 −/0 을 14행에 반복하지 않는다.
-                                +는 항상 같은 칸이라 세로 정렬이 유지된다. */}
-                              {active ? (
-                                <>
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      applyTypeCount(
-                                        item.id,
-                                        Math.max(0, count - 1),
-                                      )
-                                    }
-                                    className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-blue-600"
-                                    aria-label={`${item.label} 개수 줄이기`}
-                                  >
-                                    <Minus className="h-3.5 w-3.5" />
-                                  </button>
-                                  <span className="w-5 text-center text-[12.5px] font-bold tabular-nums text-blue-700">
-                                    {count}
-                                  </span>
-                                </>
-                              ) : null}
+                              {/* 0개 행도 −/0/+ 를 모두 보여준다 — 0일 때 −는
+                                비활성(흐림), 숫자는 옅게. +는 항상 우측 고정칸이라
+                                세로 정렬이 유지된다. */}
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  applyTypeCount(item.id, Math.max(0, count - 1))
+                                }
+                                disabled={count <= 0}
+                                className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent disabled:hover:text-slate-200"
+                                aria-label={`${item.label} 개수 줄이기`}
+                              >
+                                <Minus className="h-3.5 w-3.5" />
+                              </button>
+                              <span
+                                className={
+                                  "w-5 text-center text-[12.5px] font-bold tabular-nums " +
+                                  (count > 0 ? "text-blue-700" : "text-slate-300")
+                                }
+                              >
+                                {count}
+                              </span>
                               <button
                                 type="button"
                                 onClick={() =>
@@ -1764,7 +1769,7 @@ export function GenerationConfigPanel({
 
         {genMode === "set" && (
           <>
-            {workspaceActive ? (
+            {!editingRow && workspaceActive ? (
               <p className="mx-4 mt-3 rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-slate-500">
                 장문 세트는 ‘내 지문’에서 체크한 지문 1개로 동작합니다 —
                 워크스페이스에 불러온 지문({workspaceRowCount}개)은 여기에
@@ -1774,19 +1779,25 @@ export function GenerationConfigPanel({
             <div data-generate-tour="set-builder-panel">
               <SetBuilderPanel
                 passageId={
-                  selectedIds && selectedIds.size > 0
-                    ? Array.from(selectedIds)[0]
-                    : null
+                  editingRow
+                    ? activePassageId
+                    : selectedIds && selectedIds.size > 0
+                      ? Array.from(selectedIds)[0]
+                      : null
                 }
                 generationPlan={generationPlan}
+                members={editingRow ? (setMembers ?? []) : undefined}
+                onMembersChange={editingRow ? onSetMembersChange : undefined}
+                embedded={editingRow}
               />
             </div>
           </>
         )}
       </div>
 
-      {/* Generate Button — 워크스페이스 모드 */}
-      {genMode !== "set" && workspaceActive && (
+      {/* Generate Button — 워크스페이스 모드.
+          지문별 설정(editingRow)에서는 장문 세트도 이 공용 버튼으로 생성한다. */}
+      {(genMode !== "set" || editingRow) && workspaceActive && (
         <div className="px-4 py-3 border-t border-slate-100 bg-white shrink-0">
           {workspaceVariantCount > 0 ? (
             <p className="mb-2 rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-slate-500">
@@ -1823,9 +1834,7 @@ export function GenerationConfigPanel({
               <span className="flex min-w-0 flex-1 items-center justify-center gap-2 overflow-hidden">
                 <Cpu className="w-4.5 h-4.5" />
                 <span className="min-w-0 truncate">
-                  {workspaceSelectedOnlyCount > 0
-                    ? `워크스페이스 ${workspaceRowCount}개 + 선택 ${workspaceSelectedOnlyCount}개 · ${workspaceTotalQuestions}문제 생성`
-                    : `워크스페이스 ${workspaceRowCount}개 · ${workspaceTotalQuestions}문제 생성`}
+                  {`${workspaceTotalQuestions}문제 생성`}
                 </span>
               </span>
             ) : (
@@ -1853,7 +1862,9 @@ export function GenerationConfigPanel({
             // 크레딧 비용 계산
             const baseCreditCost =
               genMode === "auto"
-                ? CREDIT_COSTS.AUTO_GEN_BATCH * selectedIds.size
+                ? CREDIT_COSTS.AUTO_GEN_BATCH *
+                  Math.max(1, autoCount) *
+                  selectedIds.size
                 : selectedIds.size *
                   Object.entries(typeCounts).reduce((sum, [typeId, value]) => {
                     if (value <= 0) return sum;

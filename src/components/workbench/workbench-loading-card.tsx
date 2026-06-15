@@ -1,6 +1,6 @@
 "use client";
 
-import type { ElementType, KeyboardEvent, ReactNode } from "react";
+import type { ElementType, KeyboardEvent, MouseEvent, ReactNode } from "react";
 import { Check, Loader2 } from "lucide-react";
 
 type LoadingVariant = "pending" | "analyzing";
@@ -27,7 +27,9 @@ interface WorkbenchLoadingCardProps {
   tabIndex?: number;
   /** 영역 드래그 선택 대상 식별자(DragSelect가 읽는 data-drag-item-id). */
   dataDragItemId?: string;
-  onClick?: () => void;
+  onClick?: (event: MouseEvent<HTMLDivElement>) => void;
+  onMouseDown?: (event: MouseEvent<HTMLDivElement>) => void;
+  onDoubleClick?: (event: MouseEvent<HTMLDivElement>) => void;
   onKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
 }
 
@@ -53,6 +55,8 @@ export function WorkbenchLoadingCard({
   tabIndex,
   dataDragItemId,
   onClick,
+  onMouseDown,
+  onDoubleClick,
   onKeyDown,
 }: WorkbenchLoadingCardProps) {
   const loadingClass =
@@ -75,6 +79,8 @@ export function WorkbenchLoadingCard({
       className={`group relative rounded-xl border ${shellColor} ${loadingClass} ${shellSizing} transition-shadow duration-200 hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${selected ? "ring-2 ring-blue-400" : ""} ${className}`}
       data-drag-item-id={dataDragItemId}
       onClick={onClick}
+      onMouseDown={onMouseDown}
+      onDoubleClick={onDoubleClick}
       role={role}
       tabIndex={tabIndex}
       onKeyDown={onKeyDown}

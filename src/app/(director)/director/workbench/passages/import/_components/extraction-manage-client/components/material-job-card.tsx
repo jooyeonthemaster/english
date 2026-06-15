@@ -9,6 +9,13 @@ import { TaskStatusBadge } from "@/components/workbench/task-queue/components/ta
 import { formatTaskDate } from "@/components/workbench/task-queue/utils/format";
 import type { TaskStatus } from "@/components/workbench/task-queue/types";
 import { DetailActionButton } from "@/components/ui/detail-action-button";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "@/components/workbench/shared/card-click";
 
 function mapJobStatusToTaskStatus(status: string | null | undefined): TaskStatus {
   switch (status) {
@@ -76,6 +83,10 @@ export function MaterialJobCard({
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(label);
   const [isDragging, setIsDragging] = useState(false);
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
 
   const canDrag = draftIds.length > 0;
 
@@ -134,13 +145,27 @@ export function MaterialJobCard({
       data-drag-item-id={dragItemId}
       role="button"
       tabIndex={0}
-      onClick={editing ? undefined : onToggleCheck}
+      onMouseDown={preventCardDoubleClickTextSelection}
+      onClick={(e) => {
+        if (editing || e.detail > 1 || shouldIgnoreCardSelectionClick(e)) return;
+        scheduleCardSelectionClick(onToggleCheck);
+      }}
+      onDoubleClick={(e) => {
+        cancelPendingCardSelectionClick();
+        clearCardTextSelection();
+        if (editing || shouldIgnoreCardDoubleClick(e)) return;
+        onClick();
+      }}
       onKeyDown={(e) => {
         if (editing) return;
-        if (e.key === "Enter" || e.key === " ") {
+        if (e.key === " ") {
           e.preventDefault();
           onToggleCheck();
+          return;
         }
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        onClick();
       }}
       aria-pressed={checked}
       title={label}

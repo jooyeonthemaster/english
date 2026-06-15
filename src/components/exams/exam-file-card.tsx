@@ -18,6 +18,13 @@ import { cn, formatDate } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
 import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "@/components/workbench/shared/card-click";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -63,6 +70,10 @@ export function ExamFileCard({
   const dragHandleRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
 
   useEffect(() => {
     // 네이티브 드래그(폴더 이동)는 손잡이에만 등록 → 카드 본문은 영역 선택용.
@@ -81,11 +92,27 @@ export function ExamFileCard({
     <div
       ref={dragRef}
       data-drag-item-id={exam.id}
-      onClick={() => onClick(exam.id)}
+      onMouseDown={preventCardDoubleClickTextSelection}
+      onClick={(e) => {
+        if (e.detail > 1 || shouldIgnoreCardSelectionClick(e)) return;
+        const shiftKey = e.shiftKey;
+        scheduleCardSelectionClick(() => onToggleSelect(exam.id, shiftKey));
+      }}
+      onDoubleClick={(e) => {
+        cancelPendingCardSelectionClick();
+        clearCardTextSelection();
+        if (shouldIgnoreCardDoubleClick(e)) return;
+        onClick(exam.id);
+      }}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
-        if (e.key !== "Enter" && e.key !== " ") return;
+        if (e.key === " ") {
+          e.preventDefault();
+          onToggleSelect(exam.id, e.shiftKey);
+          return;
+        }
+        if (e.key !== "Enter") return;
         e.preventDefault();
         onClick(exam.id);
       }}
@@ -201,7 +228,7 @@ export function ExamFileCard({
         </span>
       </div>
 
-      {/* 카드 클릭 = 상세 열기. 호버 시 '상세보기' 라벨을 좌하단에 노출한다. */}
+      {/* 더블클릭 = 상세 열기. 호버 시 '상세보기' 라벨을 좌하단에 노출한다. */}
       <CardHoverActionLabel className="bottom-4 left-4 right-auto" />
 
       {/* Bottom row: 분석 정보(동형 생성 시험지 한정, 좌) · 마지막 수정일 (최우측) */}

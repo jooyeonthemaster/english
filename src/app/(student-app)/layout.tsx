@@ -64,9 +64,11 @@ export default function StudentAppLayout({ children }: { children: React.ReactNo
 function StudentAppLayoutInner({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { data: headerData } = useHeaderData();
 
   const isLoginPage = pathname === "/student/login";
+  // 로그인 페이지에는 학생 세션이 없어 헤더 데이터 서버 액션이 500 → 호출 차단.
+  const { data: headerData } = useHeaderData({ enabled: !isLoginPage });
+
   const isLearningSession =
     pathname.includes("/learn/") &&
     (pathname.includes("/session") || pathname.includes("/stories"));

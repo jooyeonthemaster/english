@@ -190,7 +190,12 @@ export const workbenchQuestionGenerationTask = task({
           )
         : readQuestionTypeDifficultySetting(undefined, config.difficulty);
     const operationType = getOperationType(config);
-    const baseCost = CREDIT_COSTS[operationType];
+    // 자동 출제는 문제 1개당 단가 — 이 잡이 만드는 문제 수(config.count)만큼
+    // 청구한다. (수동은 기존대로 잡당 1회 — 수동은 보통 fast 경로로 1문제씩.)
+    const baseCost =
+      config.mode === "AUTO"
+        ? CREDIT_COSTS[operationType] * Math.max(1, config.count)
+        : CREDIT_COSTS[operationType];
     const creditCost = getQuestionGenerationCreditCost(
       baseCost,
       effectiveGenerationPlan,

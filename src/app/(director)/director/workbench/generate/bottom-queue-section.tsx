@@ -42,6 +42,13 @@ import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import { DragSelect } from "@/components/ui/drag-select";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
 import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "@/components/workbench/shared/card-click";
+import {
   type QueueItem,
   buildQuestionText,
   countWords,
@@ -304,6 +311,10 @@ export function BottomQueueSection({
   const [selectedQuestionIds, setSelectedQuestionIds] = useState<Set<string>>(
     new Set(),
   );
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
   const [batchApproving, setBatchApproving] = useState(false);
   const [expandedPassageIds, setExpandedPassageIds] = useState<
     Record<string, boolean>
@@ -878,16 +889,21 @@ export function BottomQueueSection({
               : undefined
         }
         onClick={(e) => {
-          const target = e.target as HTMLElement;
           if (
-            target.closest("button") ||
-            target.closest("a") ||
-            target.closest("input") ||
-            target.closest('[role="checkbox"]')
+            e.detail > 1 ||
+            !cardToggle ||
+            shouldIgnoreCardSelectionClick(e)
           )
             return;
+          scheduleCardSelectionClick(cardToggle);
+        }}
+        onDoubleClick={(e) => {
+          cancelPendingCardSelectionClick();
+          clearCardTextSelection();
+          if (shouldIgnoreCardDoubleClick(e)) return;
           openDetail();
         }}
+        onMouseDown={preventCardDoubleClickTextSelection}
         className={`h-full cursor-pointer rounded-xl transition-shadow ${
           isTourHighlighted
             ? "ring-2 ring-blue-400 ring-offset-2 ring-offset-white"
@@ -906,6 +922,7 @@ export function BottomQueueSection({
           onToggle={cardToggle}
           onDetail={openDetail}
           showDetailButton
+          showDetailIconButton
           detailExtra={renderCardDetailExtra?.(card.question)}
           onApprove={
             !onApproveQuestion
@@ -936,16 +953,16 @@ export function BottomQueueSection({
       <div
         key={q.id}
         onClick={(e) => {
-          const target = e.target as HTMLElement;
-          if (
-            target.closest("button") ||
-            target.closest("a") ||
-            target.closest("input") ||
-            target.closest('[role="checkbox"]')
-          )
-            return;
+          if (e.detail > 1 || shouldIgnoreCardSelectionClick(e)) return;
+          scheduleCardSelectionClick(cardToggle);
+        }}
+        onDoubleClick={(e) => {
+          cancelPendingCardSelectionClick();
+          clearCardTextSelection();
+          if (shouldIgnoreCardDoubleClick(e)) return;
           setDetailQuestion(cardQuestion);
         }}
+        onMouseDown={preventCardDoubleClickTextSelection}
         className="h-full cursor-pointer"
       >
         <QuestionCard
@@ -960,6 +977,7 @@ export function BottomQueueSection({
           onToggle={cardToggle}
           onDetail={() => setDetailQuestion(cardQuestion)}
           showDetailButton
+          showDetailIconButton
           detailExtra={renderCardDetailExtra?.(cardQuestion)}
           onApprove={
             !onApproveQuestion

@@ -9,8 +9,12 @@ import {
   useState,
 } from "react";
 import {
+  Check,
   ChevronDown,
   ChevronUp,
+  CircleAlert,
+  FileText,
+  Gem,
   Loader2,
   Minus,
   MousePointer2,
@@ -18,7 +22,10 @@ import {
   Redo2,
   RotateCcw,
   Scissors,
+  SlidersHorizontal,
+  Sparkles,
   TextCursorInput,
+  Trash2,
   Undo2,
   Wand2,
   X,
@@ -38,12 +45,15 @@ import type { QueueItem } from "../generate-page-types";
 import {
   countWords,
   isRowDirty,
+  overrideHasTypeCounts,
   type RowHighlight,
-  type RowOverride,
   type RowRange,
   type WorkspaceRow,
 } from "./workspace-types";
-import { TypeOverridePopover } from "./type-override-popover";
+import {
+  difficultyLabel,
+  overrideTypeSummary,
+} from "./type-override-popover";
 import { RowHistoryPopover } from "./row-history-popover";
 import {
   ParaphrasePreviewPanel,
@@ -232,6 +242,10 @@ interface WorkspacePassageRowProps {
   row: WorkspaceRow;
   /** 첫 행에서만 드래그 모션 코치를 보여준다. */
   dragCoach?: boolean;
+  /** 전체 공통 난이도 — 이 지문에 개별 난이도 지정이 없을 때 기본 뱃지로 표시. */
+  globalDifficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
+  /** 전체 공통 생성 플랜 — 개별 지정이 없을 때 기본 뱃지로 표시. */
+  globalGenerationPlan: "STANDARD" | "PREMIUM";
   disabled: boolean;
   sessionQueue: QueueItem[];
   savedQuestionCount: number;
@@ -244,15 +258,22 @@ interface WorkspacePassageRowProps {
   onRedo: () => void;
   onClearHighlights: () => void;
   onSetRange: (range: RowRange | null) => void;
-  onSetOverride: (override: RowOverride | null) => void;
   onToggleCollapsed: () => void;
   onRemove: () => void;
+  /** 이 행이 우측 패널의 '개별 설정' 대상으로 선택돼 있는지. */
+  active?: boolean;
+  /** 행 본문 클릭 → 우측 패널을 이 지문에 바인딩 (패널은 열지 않음). */
+  onSetActive: () => void;
+  /** '지문별 설정' 버튼 → 이 지문 선택 + 접혀 있던 설정 패널 펼치기. */
+  onOpenSettings: () => void;
 }
 
 export function WorkspacePassageRow({
   index,
   row,
   dragCoach = false,
+  globalDifficulty,
+  globalGenerationPlan,
   disabled,
   sessionQueue,
   savedQuestionCount,
@@ -263,9 +284,11 @@ export function WorkspacePassageRow({
   onRedo,
   onClearHighlights,
   onSetRange,
-  onSetOverride,
   onToggleCollapsed,
   onRemove,
+  active = false,
+  onSetActive,
+  onOpenSettings,
 }: WorkspacePassageRowProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -306,6 +329,53 @@ export function WorkspacePassageRow({
     tip.style.left = `${left}px`;
     tip.style.top = `${top}px`;
   }, [originalTip]);
+
+  // ── 하이라이트(앞 맥락·출제 범위) 호버 액션 메뉴 ──
+  // 백드롭은 textarea 뒤라 직접 클릭이 안 되므로, 하이라이트 위에 커서를
+  // 올리면 그 줄 근처에 삭제/해제 버튼을 띄운다. 메뉴까지 커서가 닿도록
+  // 짧은 지연(scheduleHlHide) 후에만 닫는다.
+  const [hlMenu, setHlMenu] = useState<{
+    left: number;
+    top: number;
+    lineTop: number;
+    kind: "prepend" | "range";
+    start: number;
+    end: number;
+  } | null>(null);
+  const hlMenuRef = useRef<HTMLDivElement>(null);
+  const hlHideTimerRef = useRef<number | null>(null);
+  const cancelHlHide = useCallback(() => {
+    if (hlHideTimerRef.current !== null) {
+      window.clearTimeout(hlHideTimerRef.current);
+      hlHideTimerRef.current = null;
+    }
+  }, []);
+  const scheduleHlHide = useCallback(() => {
+    cancelHlHide();
+    hlHideTimerRef.current = window.setTimeout(() => {
+      hlHideTimerRef.current = null;
+      setHlMenu(null);
+    }, 180);
+  }, [cancelHlHide]);
+  // 메뉴도 overflow 컨테이너 안에 뜨므로 좌우 클램프 + 아래 공간 부족 시 위로.
+  useLayoutEffect(() => {
+    const menu = hlMenuRef.current;
+    const host = menu?.parentElement;
+    if (!menu || !host || !hlMenu) return;
+    const w = menu.offsetWidth;
+    const h = menu.offsetHeight;
+    const left = Math.min(
+      Math.max(hlMenu.left - w / 2, 8),
+      Math.max(host.clientWidth - w - 8, 8),
+    );
+    const top =
+      hlMenu.top + h > host.clientHeight - 4
+        ? Math.max(hlMenu.lineTop - h - 4, 4)
+        : hlMenu.top;
+    menu.style.left = `${left}px`;
+    menu.style.top = `${top}px`;
+  }, [hlMenu]);
+
   // "다시 생성" 회피 목록 — 같은 대상에 대한 직전 결과들.
   const avoidRef = useRef<string[]>([]);
   // 타이핑 버스트 타이머 — 활성인 동안의 연속 입력은 undo 1단계로 묶는다.
@@ -338,6 +408,59 @@ export function WorkspacePassageRow({
 
   const words = useMemo(() => countWords(row.content), [row.content]);
   const dirty = isRowDirty(row);
+  // 이 지문에 개별 유형이 지정돼 있는지 — 유형 요약 표시·생성 포함 여부 기준.
+  const hasTypes = overrideHasTypeCounts(row.override);
+  // 이 지문에 개별 지정된 생성 모드 — 없으면 '미설정'(전체 공통 설정을 따름).
+  // 우측 패널에서 이 지문을 선택해 모드를 고르면 여기에 반영된다.
+  const rowMode: "auto" | "manual" | "set" | null =
+    row.override?.mode ?? (hasTypes ? "manual" : null);
+  // 헤더 설정 배지 — 이 지문에 적용될 생성 설정을 한눈에 보여준다.
+  // 미설정/자동 생성/유형(요약)/장문 세트, 그리고 유형 지정인데 아직 유형이
+  // 없는 미완성 상태(생성 제외)는 호박색으로 또렷하게 구분한다.
+  const settingsBadge: {
+    Icon: typeof SlidersHorizontal;
+    label: string;
+    title: string;
+    tone: "neutral" | "configured" | "warn";
+  } =
+    rowMode === "auto"
+      ? {
+          Icon: Sparkles,
+          label: "자동 생성",
+          title: "이 지문은 자동 생성됩니다 — 클릭해 설정 변경",
+          tone: "configured",
+        }
+      : rowMode === "set"
+        ? {
+            Icon: FileText,
+            label:
+              row.override?.setMembers && row.override.setMembers.length > 0
+                ? `장문 세트 ${row.override.setMembers.length}`
+                : "장문 세트",
+            title: "이 지문으로 장문 세트를 구성합니다 — 클릭해 편집",
+            tone: "configured",
+          }
+        : rowMode === "manual"
+          ? hasTypes
+            ? {
+                Icon: SlidersHorizontal,
+                label: overrideTypeSummary(row.override),
+                title: "이 지문의 유형 설정 — 클릭해 편집",
+                tone: "configured",
+              }
+            : {
+                Icon: CircleAlert,
+                label: "유형 지정 필요",
+                title:
+                  "유형 지정 모드인데 아직 유형이 없어요 (생성 제외) — 클릭해 지정",
+                tone: "warn",
+              }
+          : {
+              Icon: CircleAlert,
+              label: "유형 지정 필요",
+              title: "아직 유형이 지정되지 않았어요 — 클릭해 지정",
+              tone: "warn",
+            };
   const locked = disabled || busy !== null || preview !== null;
   const editorLocked = preview !== null || busy !== null;
 
@@ -349,45 +472,87 @@ export function WorkspacePassageRow({
   const hasParaphraseHl = row.highlights.some((h) => h.kind === "paraphrase");
 
   // textarea 는 글자 단위 hover 이벤트가 없으므로, 동일 메트릭으로 뒤에 깔린
-  // 백드롭의 변형 mark 요소들 사각형에 마우스 좌표를 직접 히트테스트한다.
-  const handleEditorMouseMove = useCallback((e: React.MouseEvent) => {
-    const bd = backdropRef.current;
-    const container = bd?.parentElement;
-    if (!bd || !container) {
-      setOriginalTip(null);
-      return;
-    }
-    const marks = bd.querySelectorAll<HTMLElement>("mark[data-hl-original]");
-    for (const mark of marks) {
-      const original = mark.dataset.hlOriginal;
-      if (!original) continue;
-      for (const rect of mark.getClientRects()) {
-        if (
-          e.clientX >= rect.left &&
-          e.clientX <= rect.right &&
-          e.clientY >= rect.top &&
-          e.clientY <= rect.bottom
-        ) {
-          const cRect = container.getBoundingClientRect();
-          setOriginalTip((prev) => {
-            const next = {
+  // 앞 맥락(prepend) / 출제 범위(range) 하이라이트를 삭제·해제한다.
+  // 영역 텍스트를 잘라내면 setContent 의 하이라이트 보정으로 그 표시도 사라진다.
+  const handleDeleteHighlightRegion = useCallback(
+    (start: number, end: number) => {
+      onPushHistory();
+      onChangeContent(row.content.slice(0, start) + row.content.slice(end));
+      setHlMenu(null);
+    },
+    [row.content, onPushHistory, onChangeContent],
+  );
+
+  // 백드롭의 하이라이트 mark 들에 마우스 좌표를 히트테스트한다. 변형(paraphrase)
+  // 은 원문 미리보기 툴팁, 앞 맥락/출제 범위는 삭제·해제 액션 메뉴를 띄운다.
+  const handleEditorMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      const container = textareaRef.current?.parentElement;
+      if (!container) {
+        setOriginalTip(null);
+        scheduleHlHide();
+        return;
+      }
+      const marks =
+        container.querySelectorAll<HTMLElement>("mark[data-hl-kind]");
+      for (const mark of marks) {
+        const kind = mark.dataset.hlKind;
+        if (!kind) continue;
+        for (const rect of mark.getClientRects()) {
+          if (
+            e.clientX >= rect.left &&
+            e.clientX <= rect.right &&
+            e.clientY >= rect.top &&
+            e.clientY <= rect.bottom
+          ) {
+            const cRect = container.getBoundingClientRect();
+            const base = {
               left: e.clientX - cRect.left,
               top: rect.bottom - cRect.top + 4,
               lineTop: rect.top - cRect.top,
-              text: original,
             };
-            // 같은 줄 안에서의 미세 이동은 리렌더하지 않는다.
-            if (prev && prev.text === next.text && prev.top === next.top) {
-              return prev;
+            if (kind === "paraphrase") {
+              scheduleHlHide();
+              const original = mark.dataset.hlOriginal || "";
+              setOriginalTip((prev) => {
+                const next = { ...base, text: original };
+                if (prev && prev.text === next.text && prev.top === next.top) {
+                  return prev;
+                }
+                return next;
+              });
+            } else {
+              setOriginalTip(null);
+              cancelHlHide();
+              const start = Number(mark.dataset.hlStart);
+              const end = Number(mark.dataset.hlEnd);
+              setHlMenu((prev) => {
+                const next = {
+                  ...base,
+                  kind: kind as "prepend" | "range",
+                  start,
+                  end,
+                };
+                if (
+                  prev &&
+                  prev.kind === next.kind &&
+                  prev.start === next.start &&
+                  prev.top === next.top
+                ) {
+                  return prev;
+                }
+                return next;
+              });
             }
-            return next;
-          });
-          return;
+            return;
+          }
         }
       }
-    }
-    setOriginalTip(null);
-  }, []);
+      setOriginalTip(null);
+      scheduleHlHide();
+    },
+    [scheduleHlHide, cancelHlHide],
+  );
 
   const syncBackdropScroll = useCallback(() => {
     const el = textareaRef.current;
@@ -733,7 +898,17 @@ export function WorkspacePassageRow({
   const firstSentence = row.content.trim().split(/(?<=[.!?])\s+/)[0] || "";
 
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+    // 행 아무 곳이나 누르면 우측 '유형·생성 설정'이 이 지문을 편집한다.
+    // (setActive 는 멱등 — 같은 값이면 React 가 리렌더를 건너뛴다.)
+    <div
+      onClick={onSetActive}
+      className={
+        "overflow-hidden rounded-lg border bg-white shadow-sm transition-shadow " +
+        (active
+          ? "border-violet-300 ring-2 ring-violet-200"
+          : "border-slate-200 hover:border-violet-200")
+      }
+    >
       {/* ── 헤더 (40px 고정 — 모든 컨트롤 h-7, 아이콘 h-4) ── */}
       <div
         className={
@@ -741,12 +916,25 @@ export function WorkspacePassageRow({
           (row.collapsed ? "" : "border-b border-slate-100")
         }
       >
-        <button
-          type="button"
-          onClick={onToggleCollapsed}
-          className="flex h-full min-w-0 flex-1 cursor-pointer items-center gap-2 text-left"
-          title={row.collapsed ? "펼치기" : "접기"}
-        >
+        {/* 제목 영역은 더 이상 접기/펼치기를 토글하지 않는다 — 여닫기는
+            오른쪽 끝 셰브론 버튼으로만. (행 클릭은 바깥 div 에서 '이 지문
+            설정 대상 선택'으로 처리되므로 여기 클릭해도 선택만 된다.) */}
+        <div className="flex h-full min-w-0 flex-1 items-center gap-2 text-left">
+          {/* 선택 체크박스 — 이 지문이 우측 설정 대상으로 선택되면 체크된다.
+              한 번에 하나만 선택(단일) — 카드 클릭이 곧 선택이므로 여기선 표시만. */}
+          <span
+            role="checkbox"
+            aria-checked={active}
+            aria-label="이 지문 선택"
+            className={
+              "flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] border transition-colors " +
+              (active
+                ? "border-violet-600 bg-violet-600 text-white"
+                : "border-slate-300 bg-white text-transparent")
+            }
+          >
+            <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
+          </span>
           <span className="flex h-[22px] min-w-[22px] shrink-0 items-center justify-center rounded-md bg-violet-600 px-1 text-[11px] font-bold leading-none text-white tabular-nums">
             {index + 1}
           </span>
@@ -779,7 +967,7 @@ export function WorkspacePassageRow({
           <span className="shrink-0 whitespace-nowrap text-[11px] tabular-nums text-slate-400">
             {words} words
           </span>
-        </button>
+        </div>
 
         <span className="h-4 w-px shrink-0 bg-slate-200" aria-hidden="true" />
         <RowHistoryPopover
@@ -789,11 +977,92 @@ export function WorkspacePassageRow({
           sessionQueue={sessionQueue}
           savedQuestionCount={savedQuestionCount}
         />
-        <TypeOverridePopover
-          override={row.override}
-          onChange={onSetOverride}
+        {/* 생성 플랜 뱃지 — 개별 지정이 있으면 그 플랜을(또렷하게), 없으면
+            전체 공통 플랜을 기본 뱃지(흐리게)로 보여준다. 프리미엄은 보라색. */}
+        {(() => {
+          const custom = !!row.override?.generationPlan;
+          const isPremium =
+            (row.override?.generationPlan ?? globalGenerationPlan) === "PREMIUM";
+          const PlanIcon = isPremium ? Gem : Sparkles;
+          return (
+            <span
+              title={
+                custom
+                  ? "이 지문에 지정된 생성 플랜"
+                  : "전체 공통 생성 플랜 (기본값) — 지문별 설정에서 따로 지정 가능"
+              }
+              className={
+                "flex h-7 shrink-0 items-center gap-1 rounded-md border px-1.5 text-[10.5px] font-semibold " +
+                (isPremium
+                  ? custom
+                    ? "border-violet-300 bg-violet-100 text-violet-700"
+                    : "border-violet-200 bg-violet-50 text-violet-600"
+                  : custom
+                    ? "border-slate-200 bg-slate-50 text-slate-600"
+                    : "border-slate-200 bg-white text-slate-400")
+              }
+            >
+              <PlanIcon className="h-3 w-3 shrink-0" aria-hidden="true" />
+              {isPremium ? "프리미엄" : "일반"}
+            </span>
+          );
+        })()}
+        {/* 난이도 뱃지 — 개별 지정이 있으면 그 난이도를(또렷하게), 없으면
+            전체 공통 난이도를 기본 뱃지(흐리게)로 항상 보여준다. */}
+        {(() => {
+          const custom = !!row.override?.difficulty;
+          const label = difficultyLabel(
+            row.override?.difficulty ?? globalDifficulty,
+          );
+          if (!label) return null;
+          return (
+            <span
+              title={
+                custom
+                  ? "이 지문에 지정된 난이도"
+                  : "전체 공통 난이도 (기본값) — 지문별 설정에서 따로 지정 가능"
+              }
+              className={
+                "flex h-7 shrink-0 items-center rounded-md border px-1.5 text-[10.5px] font-semibold " +
+                (custom
+                  ? "border-slate-200 bg-slate-50 text-slate-600"
+                  : "border-slate-200 bg-white text-slate-400")
+              }
+            >
+              {label}
+            </span>
+          );
+        })()}
+        {/* 지문별 생성 설정 배지/진입 — 우측 '유형·생성 설정'에서 이 지문만
+            편집한다. 적용될 설정(미설정/자동 생성/유형/장문 세트)을 그대로 비춘다. */}
+        <button
+          type="button"
           disabled={disabled}
-        />
+          onClick={onOpenSettings}
+          title={settingsBadge.title}
+          className={
+            "flex h-7 min-w-0 shrink items-center gap-1.5 rounded-md border px-2 text-[11px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
+            (settingsBadge.tone === "warn"
+              ? active
+                ? "border-amber-300 bg-amber-100 text-amber-700"
+                : "border-dashed border-amber-300 bg-amber-50 text-amber-600 hover:bg-amber-100"
+              : settingsBadge.tone === "configured"
+                ? active
+                  ? "border-violet-300 bg-violet-100 text-violet-700"
+                  : "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
+                : active
+                  ? "border-violet-300 bg-violet-100 text-violet-700"
+                  : "border-slate-200 bg-white text-slate-500 hover:border-violet-200 hover:text-violet-600")
+          }
+        >
+          <settingsBadge.Icon
+            className="h-3.5 w-3.5 shrink-0"
+            aria-hidden="true"
+          />
+          <span className="min-w-0 max-w-[200px] truncate">
+            {settingsBadge.label}
+          </span>
+        </button>
         <button
           type="button"
           onClick={onToggleCollapsed}
@@ -848,13 +1117,15 @@ export function WorkspacePassageRow({
               ) : null}
             </button>
             {rangePreview ? (
-              <span className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-violet-600 pl-2 pr-1 text-[11px] font-bold text-white">
+              // 뱃지 색을 범위 하이라이트(amber-100)와 같은 노란 계열로 맞춰,
+              // 'X'로 해제하는 이 버튼이 그 노란 표시를 끄는 것임을 한눈에 보이게.
+              <span className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-amber-300 pl-2 pr-1 text-[11px] font-bold text-amber-900 ring-1 ring-inset ring-amber-400/60">
                 <Scissors className="h-3 w-3" aria-hidden="true" />
                 출제 범위 {rangePreview.words}/{words} words
                 <button
                   type="button"
                   onClick={() => onSetRange(null)}
-                  className="rounded-sm p-0.5 transition-colors hover:bg-white/20"
+                  className="rounded-sm p-0.5 transition-colors hover:bg-amber-500/30"
                   title="범위 해제 (전체 지문으로 출제)"
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
@@ -1078,7 +1349,15 @@ export function WorkspacePassageRow({
                       Math.min(row.range.start, row.content.length),
                     )}
                   </span>
-                  <mark className="rounded-[2px] bg-amber-100 text-transparent">
+                  <mark
+                    data-hl-kind="range"
+                    data-hl-start={Math.min(
+                      row.range.start,
+                      row.content.length,
+                    )}
+                    data-hl-end={Math.min(row.range.end, row.content.length)}
+                    className="rounded-[2px] bg-amber-100 text-transparent"
+                  >
                     {row.content.slice(
                       Math.min(row.range.start, row.content.length),
                       Math.min(row.range.end, row.content.length),
@@ -1100,26 +1379,37 @@ export function WorkspacePassageRow({
                   style={EDITOR_TEXT_STYLE}
                   className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words px-3 py-2 text-transparent"
                 >
-                  {highlightSegments.map((seg, i) =>
-                    seg.kind ? (
-                      <mark
-                        key={i}
-                        data-hl-original={
-                          seg.kind === "paraphrase" ? seg.original : undefined
-                        }
-                        className={
-                          "rounded-[2px] text-transparent " +
-                          (seg.kind === "prepend"
-                            ? "bg-violet-100"
-                            : "bg-orange-200/80")
-                        }
-                      >
-                        {seg.text}
-                      </mark>
-                    ) : (
-                      <span key={i}>{seg.text}</span>
-                    ),
-                  )}
+                  {(() => {
+                    // content 기준 누적 오프셋 — 호버 메뉴가 이 구간을 삭제할
+                    // 수 있도록 mark 에 start/end 를 실어 보낸다.
+                    let acc = 0;
+                    return highlightSegments.map((seg, i) => {
+                      const start = acc;
+                      acc += seg.text.length;
+                      const end = acc;
+                      return seg.kind ? (
+                        <mark
+                          key={i}
+                          data-hl-kind={seg.kind}
+                          data-hl-start={start}
+                          data-hl-end={end}
+                          data-hl-original={
+                            seg.kind === "paraphrase" ? seg.original : undefined
+                          }
+                          className={
+                            "rounded-[2px] text-transparent " +
+                            (seg.kind === "prepend"
+                              ? "bg-violet-100"
+                              : "bg-orange-200/80")
+                          }
+                        >
+                          {seg.text}
+                        </mark>
+                      ) : (
+                        <span key={i}>{seg.text}</span>
+                      );
+                    });
+                  })()}
                 </div>
               ) : null}
               <Textarea
@@ -1146,9 +1436,13 @@ export function WorkspacePassageRow({
                 onScroll={() => {
                   syncBackdropScroll();
                   setOriginalTip(null);
+                  setHlMenu(null);
                 }}
                 onMouseMove={handleEditorMouseMove}
-                onMouseLeave={() => setOriginalTip(null)}
+                onMouseLeave={() => {
+                  setOriginalTip(null);
+                  scheduleHlHide();
+                }}
                 readOnly={editorLocked}
                 disabled={disabled}
                 spellCheck={false}
@@ -1174,6 +1468,50 @@ export function WorkspacePassageRow({
                   <div className="line-clamp-4 whitespace-pre-wrap text-[11.5px] leading-relaxed text-slate-700">
                     {originalTip.text}
                   </div>
+                </div>
+              ) : null}
+
+              {/* ── 하이라이트 호버 액션 — 앞 맥락(보라)·출제 범위(노랑)
+                  하이라이트 위에 커서를 올리면 삭제/해제 버튼이 뜬다. ── */}
+              {hlMenu ? (
+                <div
+                  ref={hlMenuRef}
+                  onMouseEnter={cancelHlHide}
+                  onMouseLeave={scheduleHlHide}
+                  className={
+                    "absolute z-[4] flex items-center gap-1 rounded-lg border bg-white px-1.5 py-1 shadow-lg " +
+                    (hlMenu.kind === "range"
+                      ? "border-amber-200 shadow-amber-100/60"
+                      : "border-violet-200 shadow-violet-100/60")
+                  }
+                  style={{ left: hlMenu.left, top: hlMenu.top }}
+                >
+                  <span
+                    className={
+                      "pl-1 pr-0.5 text-[10.5px] font-bold " +
+                      (hlMenu.kind === "range"
+                        ? "text-amber-700"
+                        : "text-violet-700")
+                    }
+                  >
+                    {hlMenu.kind === "range" ? "출제 범위" : "추가된 앞 맥락"}
+                  </span>
+                  <button
+                    type="button"
+                    disabled={disabled}
+                    onClick={() => {
+                      if (hlMenu.kind === "range") {
+                        onSetRange(null);
+                        setHlMenu(null);
+                      } else {
+                        handleDeleteHighlightRegion(hlMenu.start, hlMenu.end);
+                      }
+                    }}
+                    className="flex h-6 items-center gap-1 rounded-md px-1.5 text-[11px] font-semibold text-rose-600 transition-colors hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <Trash2 className="h-3 w-3" aria-hidden="true" />
+                    {hlMenu.kind === "range" ? "범위 해제" : "삭제"}
+                  </button>
                 </div>
               ) : null}
 
@@ -1244,6 +1582,20 @@ export function WorkspacePassageRow({
                     const fitsAbove =
                       selectionAnchor.topY - SELECTION_POPUP_H - 10 >= 0;
                     const below = fitsBelow || !fitsAbove;
+                    // 선택 구간이 에디터 전체를 덮어 위·아래 모두 공간이 없으면
+                    // (긴 지문 전체 선택) 팝오버를 컨테이너 안으로 끌어와 잘림을
+                    // 막는다. 이때는 본문 위에 겹치므로 화살표를 생략한다.
+                    const clamped = !fitsBelow && !fitsAbove;
+                    const rawTop = below
+                      ? selectionAnchor.bottomY + 8
+                      : selectionAnchor.topY - 8 - SELECTION_POPUP_H;
+                    const top = Math.max(
+                      4,
+                      Math.min(
+                        rawTop,
+                        selectionAnchor.containerH - SELECTION_POPUP_H - 4,
+                      ),
+                    );
                     const left = Math.max(
                       4,
                       Math.min(
@@ -1259,17 +1611,8 @@ export function WorkspacePassageRow({
                       ),
                     );
                     return (
-                      <div
-                        className="absolute z-[3]"
-                        style={{
-                          left,
-                          top: below
-                            ? selectionAnchor.bottomY + 8
-                            : selectionAnchor.topY - 8,
-                          ...(below ? {} : { transform: "translateY(-100%)" }),
-                        }}
-                      >
-                        {below ? (
+                      <div className="absolute z-[3]" style={{ left, top }}>
+                        {below && !clamped ? (
                           <div style={{ paddingLeft: arrowX - 4 }}>
                             <div className="-mb-1 h-2 w-2 rotate-45 border-l border-t border-violet-300 bg-white" />
                           </div>
@@ -1303,7 +1646,7 @@ export function WorkspacePassageRow({
                             이 범위만 출제
                           </button>
                         </div>
-                        {!below ? (
+                        {!below && !clamped ? (
                           <div style={{ paddingLeft: arrowX - 4 }}>
                             <div className="-mt-1 h-2 w-2 rotate-45 border-b border-r border-violet-300 bg-white" />
                           </div>

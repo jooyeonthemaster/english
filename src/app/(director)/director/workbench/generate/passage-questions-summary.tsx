@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown, FileText } from "lucide-react";
 import type { QuestionCardItem } from "@/components/workbench/question-card";
 import {
@@ -23,14 +24,27 @@ function stripText(value: string): string {
 }
 
 function SummaryRow({ q, num }: { q: QuestionCardItem; num: number }) {
+  const router = useRouter();
   const typeLabel = Q_TYPE_LABELS[q.type] || q.type;
   const subLabel = q.subType ? Q_SUBTYPE_LABELS[q.subType] || q.subType : null;
   const diff = Q_DIFF[q.difficulty];
   const examLinks = q._count?.examLinks ?? 0;
   const text = stripText(q.questionText || subLabel || typeLabel);
 
+  const openDetail = () => router.push(`/director/questions/${q.id}`);
+
   return (
-    <div className="rounded-lg border border-slate-100 bg-slate-50/60 px-2 py-1.5">
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={openDetail}
+      onKeyDown={(e) => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        e.preventDefault();
+        openDetail();
+      }}
+      className="cursor-pointer rounded-lg border border-slate-100 bg-slate-50/60 px-2 py-1.5 transition-colors hover:border-slate-200 hover:bg-slate-100/70"
+    >
       <div className="flex items-center gap-1 flex-wrap">
         <span className="text-[10px] font-bold text-slate-400">{num}.</span>
         <span className="inline-flex items-center rounded bg-slate-100 px-1 py-0.5 text-[9.5px] font-medium text-slate-600">

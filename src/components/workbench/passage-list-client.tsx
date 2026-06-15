@@ -842,6 +842,7 @@ export function PassageListClient({
                         passage={p}
                         selected={selection.selectedIds.has(p.id)}
                         onToggleSelect={selection.toggleSelect}
+                        onViewDetail={setModalPassageId}
                       />
                     ))}
                   </DragSelect>

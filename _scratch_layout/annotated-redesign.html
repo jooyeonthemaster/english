@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root{
+    --grammar:#2563a8; --parsing:#047857; --exam:#9f1239; --logic:#9a6b00;
+    --ink:#0f1b2d; --muted:#5b6b7f; --gloss:#6a7b8e; --rule:#d8e1ec;
+    --font-ko:"Apple SD Gothic Neo","Pretendard","Noto Sans KR",sans-serif;
+    --font-en:"Georgia","Times New Roman",serif;
+  }
+  html{ font-family:var(--font-ko); color:var(--ink); }
+  .page{ width:210mm; min-height:297mm; background:#fff; padding:14mm 16mm 12mm; position:relative; }
+  .page.first{ break-after:page; }
+
+  /* 페이지 구분 배지 */
+  .badge{ position:absolute; top:10mm; right:16mm; font-size:8pt; font-weight:900; letter-spacing:.05em;
+    border-radius:9mm; padding:1mm 3mm; }
+  .badge.before{ background:#fdecec; color:#b42318; border:.3mm solid #f3c9ce; }
+  .badge.after{ background:#e8f6ef; color:#047857; border:.3mm solid #b6e3cd; }
+
+  /* 헤더 */
+  .sec-head{ display:flex; align-items:baseline; gap:3mm; border-bottom:.6mm solid var(--ink); padding-bottom:2mm; margin-bottom:2mm;}
+  .sec-no{ font-family:var(--font-en); font-style:italic; font-weight:800; font-size:15pt; color:#b08d2e;}
+  .sec-ko{ font-weight:800; font-size:13pt;}
+  .sec-en{ font-family:var(--font-en); font-style:italic; color:#9aa6b4; font-size:9.5pt;}
+  .sub{ font-size:8.6pt; color:var(--muted); font-style:italic; margin-bottom:4mm;}
+
+  .legend{ display:flex; flex-wrap:wrap; gap:2mm 4mm; align-items:center;
+    border:.25mm solid var(--rule); border-radius:1.5mm; background:#f7fafd; padding:1.6mm 3mm; margin-bottom:5mm; font-size:8pt;}
+  .legend b{ color:var(--muted); font-weight:800; letter-spacing:.03em;}
+  .lg{ font-weight:800; border-bottom:.45mm solid currentColor; padding-bottom:.2mm;}
+
+  .no{ flex:0 0 auto; width:5.4mm; height:5.4mm; border-radius:50%; background:#0ea5e9; color:#fff;
+    font-weight:900; font-size:7.4pt; display:flex; align-items:center; justify-content:center; margin-top:1mm;}
+  .head-row{ display:flex; gap:2.2mm; align-items:flex-start;}
+
+  /* 공통: 해석/코멘트/레일 */
+  .trans{ margin-top:2.4mm; padding-top:1.6mm; border-top:.25mm solid var(--rule); display:grid; grid-template-columns:5mm 1fr; gap:1.4mm; align-items:baseline;}
+  .trans .tn{ color:#0ea5e9; font-weight:900; font-size:8.2pt;}
+  .trans .tk{ font-size:9.2pt; line-height:1.55; color:#2b3a49;}
+  .cmt{ margin-top:2mm; font-size:8.4pt; line-height:1.5; color:#5b6b7f;}
+  .cmt::before{ content:"▶ "; color:#b08d2e; font-weight:800;}
+  .rail{ display:flex; flex-direction:column; gap:1.6mm;}
+  .card{ border:.25mm solid #c9ddf5; border-left:1mm solid var(--c); border-radius:1mm; background:#fff; padding:1.4mm 1.8mm; font-size:8.4pt; line-height:1.34;}
+  .card.exam{ border-color:#f3c9ce;}
+  .card .csrc{ display:block; font-family:var(--font-en); font-style:italic; font-weight:700; color:var(--c); font-size:7.6pt; margin-bottom:.6mm; padding-bottom:.5mm; border-bottom:.2mm dotted var(--c);}
+  .card .crole{ display:block; font-weight:900; color:var(--c); margin-bottom:.4mm;}
+  .note{ font-size:7.6pt; color:#9aa6b4; margin-top:6mm; text-align:center; font-style:italic;}
+
+  /* ===================== 현행(BEFORE) 레이아웃 — report-styles.ts 재현 ===================== */
+  .cur-snt{ margin-bottom:8mm; }
+  .cur-snt.has-rail{ display:grid; grid-template-columns: 1fr 46mm; column-gap:4mm; align-items:start;}
+  .cur-staff{ display:flex; flex-wrap:wrap; align-items:flex-start; column-gap:0; row-gap:2mm; min-width:0; }
+  .cur-sep{ align-self:flex-start; margin:0 1mm; color:#94a3b8; font-family:var(--font-en); font-size:11pt; font-weight:400; line-height:1.62; }
+  .cur-chunk{ display:flex; flex-direction:column; min-width:0; max-width:100%; }
+  .cur-chunk.noted{ min-width:31mm; flex:0 1 auto; }
+  .cur-en{ font-family:var(--font-en); font-size:11pt; font-weight:760; line-height:1.62; color:#061528; }
+  .cur-chunk.anchor .cur-en{ text-decoration:underline; text-decoration-color:var(--c); text-decoration-thickness:.3mm; text-underline-offset:1.6mm; }
+  .cur-role{ align-self:stretch; margin-top:.3mm; padding-top:.4mm; border-top:.35mm solid var(--c,#047857); color:var(--c,#047857); font-size:7.4pt; font-weight:800; line-height:1.16; }
+  .cur-notes{ display:flex; flex-direction:column; gap:.7mm; margin-top:.9mm; min-width:0; }
+  .cur-note{ font-size:7.6pt; line-height:1.34; }
+  .cur-note-role{ display:block; color:var(--c); font-weight:800; }
+  .cur-note-line{ display:block; color:#475569; }
+  .cur-note-trap{ display:block; color:#b42318; font-weight:800; }
+  .cur-note-trap::before{ content:"⚠ "; }
+</style>
+</head>
+<body>
+
+<!-- ===================== PAGE 1 · 현행 (BEFORE) ===================== -->
+<div class="page first">
+  <span class="badge before">BEFORE · 현행</span>
+  <div class="sec-head"><span class="sec-no">05</span><span class="sec-ko">필기 분석 · 어법과 구문</span><span class="sec-en">Annotated Reading</span></div>
+  <div class="sub">— 현행: 직독직해 역할 라벨이 영어 청크 <b>아래</b>에 붙고, 라벨이 길어 칸이 넓게 벌어짐</div>
+
+  <!-- 문장 1 -->
+  <div class="cur-snt">
+    <div class="head-row">
+      <span class="no">5</span>
+      <div class="cur-staff">
+        <span class="cur-chunk"><span class="cur-en">This means</span><span class="cur-role" style="--c:var(--parsing)">주어와 동사 (앞 문장의 결과를 이끌어요)</span></span>
+        <span class="cur-sep">/</span>
+        <span class="cur-chunk"><span class="cur-en">that our thoughts, emotions, and behaviors</span><span class="cur-role" style="--c:var(--parsing)">명사절 주어 (통제받는 대상들이에요)</span></span>
+        <span class="cur-sep">/</span>
+        <span class="cur-chunk anchor noted" style="--c:var(--grammar)">
+          <span class="cur-en">could be controlled</span>
+          <span class="cur-role" style="--c:var(--grammar)">명사절 동사 (해커에게 조종당한다는 뜻이에요)</span>
+          <span class="cur-notes"><span class="cur-note" style="--c:var(--grammar)">
+            <span class="cur-note-role">(e) 능·수동태 — be controlled</span>
+            <span class="cur-note-line">생각·행동은 통제받는 대상이라 수동</span>
+            <span class="cur-note-trap">시험에선 controlling 으로 바꿔 밑줄. 주어가 당하는 입장이므로 controlled(p.p.)가 정답이에요.</span>
+          </span></span>
+        </span>
+        <span class="cur-sep">/</span>
+        <span class="cur-chunk"><span class="cur-en">by hackers.</span><span class="cur-role" style="--c:var(--parsing)">전치사구 (통제의 주체예요)</span></span>
+      </div>
+    </div>
+    <div class="trans"><span class="tn">⑤</span><span class="tk">이것은 우리의 생각, 감정, 그리고 행동이 해커에 의해 통제될 수 있다는 것을 의미해요.</span></div>
+    <div class="cmt">앞 문장의 결과를 받아 'this'로 정리하는 문장. 통제의 '대상'과 '주체(해커)'를 수동태로 분명히 보여줍니다.</div>
+  </div>
+
+  <!-- 문장 2 (레일) -->
+  <div class="cur-snt has-rail">
+    <div>
+      <div class="head-row">
+        <span class="no">6</span>
+        <div class="cur-staff">
+          <span class="cur-chunk"><span class="cur-en">There's an additional risk</span><span class="cur-role" style="--c:var(--parsing)">주어+동사 (세 번째 위험을 덧붙여요)</span></span>
+          <span class="cur-sep">/</span>
+          <span class="cur-chunk anchor" style="--c:var(--parsing)"><span class="cur-en">that this technology could lead to</span><span class="cur-role" style="--c:var(--parsing)">동격절 (어떤 위험인지 풀어요)</span></span>
+          <span class="cur-sep">/</span>
+          <span class="cur-chunk"><span class="cur-en">even greater social inequality,</span><span class="cur-role" style="--c:var(--parsing)">목적어 (불평등이라는 위험이에요)</span></span>
+          <span class="cur-sep">/</span>
+          <span class="cur-chunk anchor noted" style="--c:var(--grammar)">
+            <span class="cur-en">given that it may not be available to all</span>
+            <span class="cur-role" style="--c:var(--grammar)">분사구문→접속사 (모두가 쓸 수 없다는 점을 고려하면)</span>
+            <span class="cur-notes"><span class="cur-note" style="--c:var(--grammar)">
+              <span class="cur-note-role">(분사) given that</span>
+              <span class="cur-note-line">'~을 고려하면'으로 굳어진 표현 (뒤에 절)</span>
+              <span class="cur-note-trap">시험에선 giving 으로 바꿔 출제. 의미상 과거분사 given이 맞아요.</span>
+            </span></span>
+          </span>
+          <span class="cur-sep">/</span>
+          <span class="cur-chunk"><span class="cur-en">due to its high cost.</span><span class="cur-role" style="--c:var(--parsing)">이유 전치사구 (비싼 가격 때문이에요)</span></span>
+        </div>
+      </div>
+      <div class="trans"><span class="tn">⑥</span><span class="tk">비싼 비용 때문에 모두가 이용하지는 못할 수 있다는 점을 고려하면, 이 기술이 훨씬 더 큰 사회적 불평등으로 이어질 수 있다는 추가적인 위험이 있어요.</span></div>
+      <div class="cmt">통제 위험에 이어 '불평등'이라는 두 번째 위험을 동격절로 덧붙이는 전개입니다.</div>
+    </div>
+    <aside class="rail">
+      <div class="card exam" style="--c:var(--exam)"><span class="csrc">even greater social inequality</span><span class="crole">★ 빈칸·요약 대비</span>이 기술의 '두 번째 위험'이 무엇인지 묻기 좋아요. 정답 개념: <b>사회적 불평등</b>.</div>
+    </aside>
+  </div>
+
+  <!-- 문장 3 -->
+  <div class="cur-snt">
+    <div class="head-row">
+      <span class="no">4</span>
+      <div class="cur-staff">
+        <span class="cur-chunk"><span class="cur-en">Older trees have been observed transferring carbon</span><span class="cur-role" style="--c:var(--grammar)">주어+수동태 동사+목적격보어</span></span>
+        <span class="cur-sep">/</span>
+        <span class="cur-chunk anchor noted" style="--c:var(--grammar)">
+          <span class="cur-en">to younger seedlings struggling in the shade.</span>
+          <span class="cur-role" style="--c:var(--grammar)">전치사구+현재분사구 (그늘에서 힘겹게 자라는)</span>
+          <span class="cur-notes"><span class="cur-note" style="--c:var(--grammar)">
+            <span class="cur-note-role">(c) 분사 능/수동 — struggling</span>
+            <span class="cur-note-line">seedlings를 꾸미는 분사 · 스스로 애쓰는 능동이므로 -ing</span>
+            <span class="cur-note-trap">시험에선 struggled 로 바꾸어 출제해요. 묘목이 스스로 애쓰는 능동이므로 -ing가 맞아요.</span>
+          </span></span>
+        </span>
+      </div>
+    </div>
+    <div class="trans"><span class="tn">④</span><span class="tk">나이가 더 많은 나무들이 그늘에서 힘겹게 자라는 어린 묘목들에게 탄소를 나누어 주는 것이 관찰되어 왔어요.</span></div>
+    <div class="cmt">나무들 사이의 '협력'을 보여주는 구체적 사례 — 분사 두 개(transferring/struggling)의 방향만 정확히 잡으면 됩니다.</div>
+  </div>
+
+  <div class="note">레이아웃 비교 1/2 · 현행 — 사이트 미반영 · ENGLISH READING LAB</div>
+</div>
+
+<!-- ===================== PAGE 2 · 개선안 (AFTER) ===================== -->
+<div class="page">
+  <span class="badge after">AFTER · 개선안</span>
+
+  <style>
+    /* 개선안 전용 스타일 */
+    .flow{ display:flex; flex-wrap:wrap; align-items:flex-end; row-gap:3mm; }
+    .ck{ display:inline-flex; flex-direction:column; align-items:flex-start; }
+    .ck .ko{ font-size:7.5pt; color:var(--gloss); line-height:1.15; margin-bottom:.4mm; white-space:nowrap; }
+    /* 모든 청크 영어에 동일한 밑줄 자리(투명)를 미리 확보 → 밑줄 유무로 글자가 밀리지 않음.
+       두께 .45mm 는 색상 안내(.lg)와 동일. */
+    .ck .en{ font-family:var(--font-en); font-size:11.4pt; font-weight:600; color:#06203a; line-height:1.2; padding-bottom:.6mm; border-bottom:.45mm solid transparent; }
+    .ck.core .en{ font-weight:800; }
+    .ck.anchor .en{ border-bottom-color:var(--c); }
+    .slash{ align-self:flex-end; margin:0 1.4mm; color:#c2ccd8; font-family:var(--font-en); font-size:11pt; padding-bottom:.6mm; border-bottom:.45mm solid transparent;}
+    .snt{ margin-bottom:7mm; }
+    .snt.has-rail{ display:grid; grid-template-columns: 1fr 42mm; column-gap:4mm; align-items:start;}
+    .pts{ margin-top:2.4mm; display:flex; flex-direction:column; gap:1.2mm; }
+    .pt{ font-size:8.4pt; line-height:1.4; color:#26323f; padding-left:4.6mm; position:relative;}
+    .pt::before{ content:""; position:absolute; left:0; top:1.7mm; width:2.4mm; height:2.4mm; border-radius:50%; background:var(--c);}
+    .pt .tag{ font-weight:800; color:var(--c); }
+    .pt .src{ font-family:var(--font-en); font-style:italic; font-weight:700; color:var(--c); }
+    .pt .trap{ display:block; margin-top:.4mm; color:#b42318; font-weight:600;}
+    .pt .ex{ display:block; margin-top:.6mm; padding:.6mm 2mm; border-left:.6mm solid #b42318;
+      background:rgba(180,35,24,.06); font-family:var(--font-en); font-style:italic; color:#33414f; font-size:8pt; }
+    .pt .ex::before{ content:"함정 예) "; font-style:normal; font-family:var(--font-ko); font-weight:800; color:#b42318;}
+    .pt .ex .bad{ color:#dc2626; font-weight:800; text-decoration:line-through; }
+    .pt .ex .good{ color:#047857; font-weight:700; font-style:normal; }
+  </style>
+
+  <div class="sec-head"><span class="sec-no">05</span><span class="sec-ko">필기 분석 · 어법과 구문</span><span class="sec-en">Annotated Reading</span></div>
+  <div class="sub">— 개선안: 직독직해 뜻을 영어 <b>위</b>에 / 얇은 슬래시로 촘촘히 / 어법·구문·함정은 아래 목록으로</div>
+
+  <div class="legend">
+    <b>색상 안내</b>
+    <span class="lg" style="color:var(--grammar)">어법 포인트</span>
+    <span class="lg" style="color:var(--parsing)">구문 · 끊어읽기</span>
+    <span class="lg" style="color:var(--exam)">출제 포인트</span>
+    <span class="lg" style="color:var(--logic)">논리 흐름</span>
+  </div>
+
+  <!-- 문장 1 -->
+  <section class="snt">
+    <div class="head-row">
+      <span class="no">5</span>
+      <div class="flow">
+        <span class="ck"><span class="ko">이것은 의미해요</span><span class="en">This means</span></span>
+        <span class="slash">/</span>
+        <span class="ck anchor" style="--c:var(--parsing)"><span class="ko">~라는 것을</span><span class="en">that</span></span>
+        <span class="slash">/</span>
+        <span class="ck"><span class="ko">우리의 생각·감정·행동이</span><span class="en">our thoughts, emotions, and behaviors</span></span>
+        <span class="slash">/</span>
+        <span class="ck anchor core" style="--c:var(--grammar)"><span class="ko">통제될 수 있다</span><span class="en">could be controlled</span></span>
+        <span class="slash">/</span>
+        <span class="ck"><span class="ko">해커에 의해</span><span class="en">by hackers.</span></span>
+      </div>
+    </div>
+    <div class="pts">
+      <div class="pt" style="--c:var(--grammar)"><span class="tag">어법</span> · <span class="src">could be controlled</span> — 수동태(be+p.p.). 생각·행동은 '통제<b>되는</b>' 대상이라 수동이에요.
+        <span class="trap">⚠ 시험에선 controlling 으로 바꿔 밑줄. 주어가 당하는 입장이므로 controlled가 정답이에요.</span>
+        <span class="ex">Your data can be <span class="bad">controlling</span> <span class="good">(→ controlled)</span> by the app.</span></div>
+      <div class="pt" style="--c:var(--parsing)"><span class="tag">구문</span> · <span class="src">that ...</span> — means의 목적어 <b>that 명사절</b>. 'that 이하 전체'를 '~라는 것'으로 묶어 읽어요.</div>
+    </div>
+    <div class="trans"><span class="tn">⑤</span><span class="tk">이것은 우리의 생각, 감정, 그리고 행동이 해커에 의해 통제될 수 있다는 것을 의미해요.</span></div>
+    <div class="cmt">앞 문장의 결과를 받아 'this'로 정리하는 문장. 통제의 '대상'과 '주체(해커)'를 수동태로 분명히 보여줍니다.</div>
+  </section>
+
+  <!-- 문장 2 (레일) -->
+  <section class="snt has-rail">
+    <div>
+      <div class="head-row">
+        <span class="no">6</span>
+        <div class="flow">
+          <span class="ck core"><span class="ko">추가적인 위험이 있어요</span><span class="en">There's an additional risk</span></span>
+          <span class="slash">/</span>
+          <span class="ck anchor" style="--c:var(--parsing)"><span class="ko">이 기술이 이어질 수 있다는</span><span class="en">that this technology could lead to</span></span>
+          <span class="slash">/</span>
+          <span class="ck"><span class="ko">훨씬 더 큰 사회적 불평등으로</span><span class="en">even greater social inequality,</span></span>
+          <span class="slash">/</span>
+          <span class="ck anchor" style="--c:var(--grammar)"><span class="ko">모두가 쓰지 못할 수 있다는 점을 고려하면</span><span class="en">given that it may not be available to all</span></span>
+          <span class="slash">/</span>
+          <span class="ck"><span class="ko">비싼 비용 때문에</span><span class="en">due to its high cost.</span></span>
+        </div>
+      </div>
+      <div class="pts">
+        <div class="pt" style="--c:var(--grammar)"><span class="tag">어법</span> · <span class="src">given that ...</span> — '~을 고려하면'으로 굳어진 분사구문. 뒤에 절(S+V)이 와요.
+          <span class="trap">⚠ 시험에선 giving 으로 바꿔 출제. 과거분사 given이 맞아요.</span>
+          <span class="ex"><span class="bad">Giving</span> <span class="good">(→ Given)</span> that it's late, we should hurry.</span></div>
+        <div class="pt" style="--c:var(--parsing)"><span class="tag">구문</span> · <span class="src">risk that ...</span> — 추상명사 risk를 <b>동격 that절</b>이 풀어 설명해요.</div>
+      </div>
+      <div class="trans"><span class="tn">⑥</span><span class="tk">비싼 비용 때문에 모두가 이용하지는 못할 수 있다는 점을 고려하면, 이 기술이 훨씬 더 큰 사회적 불평등으로 이어질 수 있다는 추가적인 위험이 있어요.</span></div>
+      <div class="cmt">통제 위험에 이어 '불평등'이라는 두 번째 위험을 동격절로 덧붙이는 전개입니다.</div>
+    </div>
+    <aside class="rail">
+      <div class="card exam" style="--c:var(--exam)"><span class="csrc">even greater social inequality</span><span class="crole">★ 빈칸·요약 대비</span>이 기술의 '두 번째 위험'이 무엇인지 묻기 좋아요. 정답 개념: <b>사회적 불평등</b>.</div>
+      <div class="card" style="--c:var(--logic)"><span class="crole">논리</span>not only(통제) → additional risk(불평등)로 위험을 <b>추가·심화</b>.</div>
+    </aside>
+  </section>
+
+  <!-- 문장 3 -->
+  <section class="snt">
+    <div class="head-row">
+      <span class="no">4</span>
+      <div class="flow">
+        <span class="ck"><span class="ko">나이 든 나무들이</span><span class="en">Older trees</span></span>
+        <span class="slash">/</span>
+        <span class="ck anchor" style="--c:var(--grammar)"><span class="ko">관찰되어 왔어요</span><span class="en">have been observed</span></span>
+        <span class="slash">/</span>
+        <span class="ck"><span class="ko">탄소를 전달하는 것이</span><span class="en">transferring carbon</span></span>
+        <span class="slash">/</span>
+        <span class="ck"><span class="ko">어린 묘목들에게</span><span class="en">to younger seedlings</span></span>
+        <span class="slash">/</span>
+        <span class="ck anchor" style="--c:var(--grammar)"><span class="ko">그늘에서 힘겹게 자라는</span><span class="en">struggling in the shade.</span></span>
+      </div>
+    </div>
+    <div class="pts">
+      <div class="pt" style="--c:var(--grammar)"><span class="tag">어법</span> · <span class="src">struggling</span> — seedlings를 꾸미는 현재분사. 묘목이 스스로 애쓰는 <b>능동</b>이라 -ing예요.
+        <span class="trap">⚠ 시험에선 struggled 로 바꿔 출제. 스스로 애쓰는 능동이라 -ing가 맞아요.</span>
+        <span class="ex">I saw a boy <span class="bad">struggled</span> <span class="good">(→ struggling)</span> with the heavy box.</span></div>
+      <div class="pt" style="--c:var(--parsing)"><span class="tag">구문</span> · <span class="src">have been observed -ing</span> — 지각/관찰 동사의 <b>수동태</b>. '~하는 것이 관찰되어 왔다'.</div>
+    </div>
+    <div class="trans"><span class="tn">④</span><span class="tk">나이가 더 많은 나무들이 그늘에서 힘겹게 자라는 어린 묘목들에게 탄소를 나누어 주는 것이 관찰되어 왔어요.</span></div>
+    <div class="cmt">나무들 사이의 '협력'을 보여주는 구체적 사례 — 분사 두 개(transferring/struggling)의 방향만 정확히 잡으면 됩니다.</div>
+  </section>
+
+  <div class="note">레이아웃 비교 2/3 · 개선안 — 사이트 미반영 · ENGLISH READING LAB</div>
+</div>
+
+<!-- ===================== PAGE 3 · 개선안 v2 (구문 역할 라벨 복원 + 번호 연결) ===================== -->
+<div class="page">
+  <span class="badge after">AFTER v2 · 역할 라벨 + 번호 연결</span>
+  <style>
+    /* 짧은 구문 역할 라벨 (영어 아래) — 짧게 유지해 칸이 벌어지지 않음 */
+    .ck .role{ align-self:stretch; margin-top:.6mm; padding-top:.4mm; border-top:.3mm solid #cdd6e0;
+      font-size:6.8pt; font-weight:700; color:#5b7088; line-height:1.12; }
+    /* 밑줄↔설명 연결: 같은 색·같은 번호 뱃지 (화살표 대신, 인쇄 안전) */
+    .lk{ display:inline-flex; align-items:center; justify-content:center; width:3mm; height:3mm; border-radius:50%;
+      background:var(--c); color:#fff; font-size:5.6pt; font-weight:800; margin-left:.8mm; vertical-align:middle; }
+    .pt.num{ padding-left:5.4mm; }
+    .pt.num::before{ content:none; }
+    .pt .lkp{ position:absolute; left:0; top:.5mm; display:inline-flex; align-items:center; justify-content:center;
+      width:3.4mm; height:3.4mm; border-radius:50%; background:var(--c); color:#fff; font-size:6pt; font-weight:800; }
+    /* 역할 라벨이 높이를 더하므로 문장 간격을 살짝 조여 3쪽에 맞춤 */
+    .snt{ margin-bottom:5mm; }
+    .pts{ margin-top:2mm; }
+    .trans{ margin-top:2mm; }
+  </style>
+
+  <div class="sec-head"><span class="sec-no">05</span><span class="sec-ko">필기 분석 · 어법과 구문</span><span class="sec-en">Annotated Reading</span></div>
+  <div class="sub">— 개선안 v2: 직독직해 뜻(위) + 영어 + <b>짧은 구문 역할(아래)</b> / 밑줄과 설명은 <b>같은 색·번호 뱃지</b>로 연결</div>
+
+  <div class="legend">
+    <b>색상 안내</b>
+    <span class="lg" style="color:var(--grammar)">어법 포인트</span>
+    <span class="lg" style="color:var(--parsing)">구문 · 끊어읽기</span>
+    <span class="lg" style="color:var(--exam)">출제 포인트</span>
+    <span class="lg" style="color:var(--logic)">논리 흐름</span>
+  </div>
+
+  <!-- 문장 1 -->
+  <section class="snt">
+    <div class="head-row">
+      <span class="no">5</span>
+      <div class="flow">
+        <span class="ck"><span class="ko">이것은 의미해요</span><span class="en">This means</span><span class="role">주어·동사</span></span>
+        <span class="slash">/</span>
+        <span class="ck anchor" style="--c:var(--parsing)"><span class="ko">~라는 것을 <span class="lk">2</span></span><span class="en">that</span><span class="role">접속사</span></span>
+        <span class="slash">/</span>
+        <span class="ck"><span class="ko">우리의 생각·감정·행동이</span><span class="en">our thoughts, emotions, and behaviors</span><span class="role">명사절 주어</span></span>
+        <span class="slash">/</span>
+        <span class="ck anchor core" style="--c:var(--grammar)"><span class="ko">통제될 수 있다 <span class="lk">1</span></span><span class="en">could be controlled</span><span class="role">동사(수동)</span></span>
+        <span class="slash">/</span>
+        <span class="ck"><span class="ko">해커에 의해</span><span class="en">by hackers.</span><span class="role">전치사구</span></span>
+      </div>
+    </div>
+    <div class="pts">
+      <div class="pt num" style="--c:var(--grammar)"><span class="lkp">1</span><span class="tag">어법</span> · <span class="src">could be controlled</span> — 수동태(be+p.p.). 생각·행동은 '통제<b>되는</b>' 대상이라 수동이에요.
+        <span class="trap">⚠ 시험에선 controlling 으로 바꿔 밑줄. controlled가 정답이에요.</span>
+        <span class="ex">Your data can be <span class="bad">controlling</span> <span class="good">(→ controlled)</span> by the app.</span></div>
+      <div class="pt num" style="--c:var(--parsing)"><span class="lkp">2</span><span class="tag">구문</span> · <span class="src">that ...</span> — means의 목적어 <b>that 명사절</b>. 'that 이하 전체'를 '~라는 것'으로 묶어 읽어요.</div>
+    </div>
+    <div class="trans"><span class="tn">⑤</span><span class="tk">이것은 우리의 생각, 감정, 그리고 행동이 해커에 의해 통제될 수 있다는 것을 의미해요.</span></div>
+  </section>
+
+  <!-- 문장 2 -->
+  <section class="snt has-rail">
+    <div>
+      <div class="head-row">
+        <span class="no">6</span>
+        <div class="flow">
+          <span class="ck core"><span class="ko">추가적인 위험이 있어요</span><span class="en">There's an additional risk</span><span class="role">유도부사·주어</span></span>
+          <span class="slash">/</span>
+          <span class="ck anchor" style="--c:var(--parsing)"><span class="ko">이 기술이 이어질 수 있다는 <span class="lk">2</span></span><span class="en">that this technology could lead to</span><span class="role">동격절(주어+동사)</span></span>
+          <span class="slash">/</span>
+          <span class="ck"><span class="ko">훨씬 더 큰 사회적 불평등으로</span><span class="en">even greater social inequality,</span><span class="role">목적어</span></span>
+          <span class="slash">/</span>
+          <span class="ck anchor" style="--c:var(--grammar)"><span class="ko">모두가 쓰지 못할 수 있다는 점을 고려하면 <span class="lk">1</span></span><span class="en">given that it may not be available to all</span><span class="role">분사구문</span></span>
+          <span class="slash">/</span>
+          <span class="ck"><span class="ko">비싼 비용 때문에</span><span class="en">due to its high cost.</span><span class="role">전치사구</span></span>
+        </div>
+      </div>
+      <div class="pts">
+        <div class="pt num" style="--c:var(--grammar)"><span class="lkp">1</span><span class="tag">어법</span> · <span class="src">given that ...</span> — '~을 고려하면'으로 굳어진 분사구문. 뒤에 절(S+V)이 와요.
+          <span class="trap">⚠ 시험에선 giving 으로 바꿔 출제. 과거분사 given이 맞아요.</span>
+          <span class="ex"><span class="bad">Giving</span> <span class="good">(→ Given)</span> that it's late, we should hurry.</span></div>
+        <div class="pt num" style="--c:var(--parsing)"><span class="lkp">2</span><span class="tag">구문</span> · <span class="src">risk that ...</span> — 추상명사 risk를 <b>동격 that절</b>이 풀어 설명해요.</div>
+      </div>
+      <div class="trans"><span class="tn">⑥</span><span class="tk">비싼 비용 때문에 모두가 이용하지는 못할 수 있다는 점을 고려하면, 이 기술이 훨씬 더 큰 사회적 불평등으로 이어질 수 있다는 추가적인 위험이 있어요.</span></div>
+    </div>
+    <aside class="rail">
+      <div class="card exam" style="--c:var(--exam)"><span class="csrc">even greater social inequality</span><span class="crole">★ 빈칸·요약 대비</span>'두 번째 위험'이 무엇인지 묻기 좋아요. 정답 개념: <b>사회적 불평등</b>.</div>
+    </aside>
+  </section>
+
+  <!-- 문장 3 -->
+  <section class="snt">
+    <div class="head-row">
+      <span class="no">4</span>
+      <div class="flow">
+        <span class="ck"><span class="ko">나이 든 나무들이</span><span class="en">Older trees</span><span class="role">주어</span></span>
+        <span class="slash">/</span>
+        <span class="ck anchor" style="--c:var(--grammar)"><span class="ko">관찰되어 왔어요 <span class="lk">2</span></span><span class="en">have been observed</span><span class="role">동사(수동)</span></span>
+        <span class="slash">/</span>
+        <span class="ck"><span class="ko">탄소를 전달하는 것이</span><span class="en">transferring carbon</span><span class="role">목적격보어</span></span>
+        <span class="slash">/</span>
+        <span class="ck"><span class="ko">어린 묘목들에게</span><span class="en">to younger seedlings</span><span class="role">전치사구</span></span>
+        <span class="slash">/</span>
+        <span class="ck anchor" style="--c:var(--grammar)"><span class="ko">그늘에서 힘겹게 자라는 <span class="lk">1</span></span><span class="en">struggling in the shade.</span><span class="role">현재분사구</span></span>
+      </div>
+    </div>
+    <div class="pts">
+      <div class="pt num" style="--c:var(--grammar)"><span class="lkp">1</span><span class="tag">어법</span> · <span class="src">struggling</span> — seedlings를 꾸미는 현재분사. 스스로 애쓰는 <b>능동</b>이라 -ing예요.
+        <span class="trap">⚠ 시험에선 struggled 로 바꿔 출제. 능동이라 -ing가 맞아요.</span>
+        <span class="ex">I saw a boy <span class="bad">struggled</span> <span class="good">(→ struggling)</span> with the heavy box.</span></div>
+      <div class="pt num" style="--c:var(--parsing)"><span class="lkp">2</span><span class="tag">구문</span> · <span class="src">have been observed -ing</span> — 지각/관찰 동사의 <b>수동태</b>. '~하는 것이 관찰되어 왔다'.</div>
+    </div>
+    <div class="trans"><span class="tn">④</span><span class="tk">나이가 더 많은 나무들이 그늘에서 힘겹게 자라는 어린 묘목들에게 탄소를 나누어 주는 것이 관찰되어 왔어요.</span></div>
+  </section>
+
+  <div class="note">레이아웃 비교 3/4 · 개선안 v2 (역할 라벨 + 번호 연결) — 사이트 미반영 · ENGLISH READING LAB</div>
+</div>
+
+<!-- ===================== PAGE 4 · 개선안 v3 (v2 + 화살표) ===================== -->
+<div class="page arrows">
+  <span class="badge after">AFTER v3 · 화살표 연결</span>
+  <div class="sec-head"><span class="sec-no">05</span><span class="sec-ko">필기 분석 · 어법과 구문</span><span class="sec-en">Annotated Reading</span></div>
+  <div class="sub">— 개선안 v3: v2 + <b>직각 화살표(왼쪽 여백 통로)</b> — 밑줄 왼쪽 → 아래로 → 왼쪽 빈 여백으로 수직 낙하 → 설명에 닿음 (본문 가로지르기 최소화)</div>
+
+  <div class="legend">
+    <b>색상 안내</b>
+    <span class="lg" style="color:var(--grammar)">어법 포인트</span>
+    <span class="lg" style="color:var(--parsing)">구문 · 끊어읽기</span>
+    <span class="lg" style="color:var(--exam)">출제 포인트</span>
+    <span class="lg" style="color:var(--logic)">논리 흐름</span>
+  </div>
+
+  <!-- 문장 1 -->
+  <section class="snt">
+    <div class="head-row">
+      <span class="no">5</span>
+      <div class="flow">
+        <span class="ck"><span class="ko">이것은 의미해요</span><span class="en">This means</span><span class="role">주어·동사</span></span>
+        <span class="slash">/</span>
+        <span class="ck anchor" data-arr="2" style="--c:var(--parsing)"><span class="ko">~라는 것을 <span class="lk">2</span></span><span class="en">that</span><span class="role">접속사</span></span>
+        <span class="slash">/</span>
+        <span class="ck"><span class="ko">우리의 생각·감정·행동이</span><span class="en">our thoughts, emotions, and behaviors</span><span class="role">명사절 주어</span></span>
+        <span class="slash">/</span>
+        <span class="ck anchor core" data-arr="1" style="--c:var(--grammar)"><span class="ko">통제될 수 있다 <span class="lk">1</span></span><span class="en">could be controlled</span><span class="role">동사(수동)</span></span>
+        <span class="slash">/</span>
+        <span class="ck"><span class="ko">해커에 의해</span><span class="en">by hackers.</span><span class="role">전치사구</span></span>
+      </div>
+    </div>
+    <div class="pts">
+      <div class="pt num" data-arr-tgt="1" style="--c:var(--grammar)"><span class="lkp">1</span><span class="tag">어법</span> · <span class="src">could be controlled</span> — 수동태(be+p.p.). 생각·행동은 '통제<b>되는</b>' 대상이라 수동이에요.
+        <span class="trap">⚠ 시험에선 controlling 으로 바꿔 밑줄. controlled가 정답이에요.</span>
+        <span class="ex">Your data can be <span class="bad">controlling</span> <span class="good">(→ controlled)</span> by the app.</span></div>
+      <div class="pt num" data-arr-tgt="2" style="--c:var(--parsing)"><span class="lkp">2</span><span class="tag">구문</span> · <span class="src">that ...</span> — means의 목적어 <b>that 명사절</b>. 'that 이하 전체'를 '~라는 것'으로 묶어 읽어요.</div>
+    </div>
+    <div class="trans"><span class="tn">⑤</span><span class="tk">이것은 우리의 생각, 감정, 그리고 행동이 해커에 의해 통제될 수 있다는 것을 의미해요.</span></div>
+  </section>
+
+  <!-- 문장 2 -->
+  <section class="snt has-rail">
+    <div>
+      <div class="head-row">
+        <span class="no">6</span>
+        <div class="flow">
+          <span class="ck core"><span class="ko">추가적인 위험이 있어요</span><span class="en">There's an additional risk</span><span class="role">유도부사·주어</span></span>
+          <span class="slash">/</span>
+          <span class="ck anchor" data-arr="2" style="--c:var(--parsing)"><span class="ko">이 기술이 이어질 수 있다는 <span class="lk">2</span></span><span class="en">that this technology could lead to</span><span class="role">동격절(주어+동사)</span></span>
+          <span class="slash">/</span>
+          <span class="ck"><span class="ko">훨씬 더 큰 사회적 불평등으로</span><span class="en">even greater social inequality,</span><span class="role">목적어</span></span>
+          <span class="slash">/</span>
+          <span class="ck anchor" data-arr="1" style="--c:var(--grammar)"><span class="ko">모두가 쓰지 못할 수 있다는 점을 고려하면 <span class="lk">1</span></span><span class="en">given that it may not be available to all</span><span class="role">분사구문</span></span>
+          <span class="slash">/</span>
+          <span class="ck"><span class="ko">비싼 비용 때문에</span><span class="en">due to its high cost.</span><span class="role">전치사구</span></span>
+        </div>
+      </div>
+      <div class="pts">
+        <div class="pt num" data-arr-tgt="1" style="--c:var(--grammar)"><span class="lkp">1</span><span class="tag">어법</span> · <span class="src">given that ...</span> — '~을 고려하면'으로 굳어진 분사구문. 뒤에 절(S+V)이 와요.
+          <span class="trap">⚠ 시험에선 giving 으로 바꿔 출제. 과거분사 given이 맞아요.</span>
+          <span class="ex"><span class="bad">Giving</span> <span class="good">(→ Given)</span> that it's late, we should hurry.</span></div>
+        <div class="pt num" data-arr-tgt="2" style="--c:var(--parsing)"><span class="lkp">2</span><span class="tag">구문</span> · <span class="src">risk that ...</span> — 추상명사 risk를 <b>동격 that절</b>이 풀어 설명해요.</div>
+      </div>
+      <div class="trans"><span class="tn">⑥</span><span class="tk">비싼 비용 때문에 모두가 이용하지는 못할 수 있다는 점을 고려하면, 이 기술이 훨씬 더 큰 사회적 불평등으로 이어질 수 있다는 추가적인 위험이 있어요.</span></div>
+    </div>
+    <aside class="rail">
+      <div class="card exam" style="--c:var(--exam)"><span class="csrc">even greater social inequality</span><span class="crole">★ 빈칸·요약 대비</span>'두 번째 위험'이 무엇인지 묻기 좋아요. 정답 개념: <b>사회적 불평등</b>.</div>
+    </aside>
+  </section>
+
+  <!-- 문장 3 -->
+  <section class="snt">
+    <div class="head-row">
+      <span class="no">4</span>
+      <div class="flow">
+        <span class="ck"><span class="ko">나이 든 나무들이</span><span class="en">Older trees</span><span class="role">주어</span></span>
+        <span class="slash">/</span>
+        <span class="ck anchor" data-arr="2" style="--c:var(--grammar)"><span class="ko">관찰되어 왔어요 <span class="lk">2</span></span><span class="en">have been observed</span><span class="role">동사(수동)</span></span>
+        <span class="slash">/</span>
+        <span class="ck"><span class="ko">탄소를 전달하는 것이</span><span class="en">transferring carbon</span><span class="role">목적격보어</span></span>
+        <span class="slash">/</span>
+        <span class="ck"><span class="ko">어린 묘목들에게</span><span class="en">to younger seedlings</span><span class="role">전치사구</span></span>
+        <span class="slash">/</span>
+        <span class="ck anchor" data-arr="1" style="--c:var(--grammar)"><span class="ko">그늘에서 힘겹게 자라는 <span class="lk">1</span></span><span class="en">struggling in the shade.</span><span class="role">현재분사구</span></span>
+      </div>
+    </div>
+    <div class="pts">
+      <div class="pt num" data-arr-tgt="1" style="--c:var(--grammar)"><span class="lkp">1</span><span class="tag">어법</span> · <span class="src">struggling</span> — seedlings를 꾸미는 현재분사. 스스로 애쓰는 <b>능동</b>이라 -ing예요.
+        <span class="trap">⚠ 시험에선 struggled 로 바꿔 출제. 능동이라 -ing가 맞아요.</span>
+        <span class="ex">I saw a boy <span class="bad">struggled</span> <span class="good">(→ struggling)</span> with the heavy box.</span></div>
+      <div class="pt num" data-arr-tgt="2" style="--c:var(--parsing)"><span class="lkp">2</span><span class="tag">구문</span> · <span class="src">have been observed -ing</span> — 지각/관찰 동사의 <b>수동태</b>. '~하는 것이 관찰되어 왔다'.</div>
+    </div>
+    <div class="trans"><span class="tn">④</span><span class="tk">나이가 더 많은 나무들이 그늘에서 힘겹게 자라는 어린 묘목들에게 탄소를 나누어 주는 것이 관찰되어 왔어요.</span></div>
+  </section>
+
+  <div class="note">레이아웃 비교 4/4 · 개선안 v3 (v2 + 화살표) — 사이트 미반영 · ENGLISH READING LAB</div>
+</div>
+
+</body>
+</html>

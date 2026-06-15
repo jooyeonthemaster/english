@@ -19,6 +19,14 @@ import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 import type { TaskStatus } from "@/components/workbench/task-queue/types";
 import { MODES, type ExtractionMode } from "@/lib/extraction/modes";
 import type { ExtractionJobStatus } from "@/lib/extraction/types";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardClick,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "@/components/workbench/shared/card-click";
 
 function mapJobStatusToTaskStatus(
   status: string | null | undefined,
@@ -106,6 +114,10 @@ export function JobCard({
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(label);
   const [isDragging, setIsDragging] = useState(false);
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
 
   const canDrag = variant === "compact" && draftIds.length > 0;
 
@@ -176,18 +188,42 @@ export function JobCard({
   const showDelete = variant === "detailed" && onDelete;
   const selectionMode = Boolean(onToggleCheck);
 
+  const handleCardClick = (event: React.MouseEvent<HTMLElement>) => {
+    if (editing || event.detail > 1) return;
+    if (selectionMode) {
+      if (shouldIgnoreCardSelectionClick(event)) return;
+      scheduleCardSelectionClick(() => onToggleCheck?.());
+      return;
+    }
+    if (shouldIgnoreCardClick(event)) return;
+    onClick();
+  };
+
+  const handleCardDoubleClick = (event: React.MouseEvent<HTMLElement>) => {
+    cancelPendingCardSelectionClick();
+    clearCardTextSelection();
+    if (editing || shouldIgnoreCardDoubleClick(event)) return;
+    onClick();
+  };
+
   return (
     <article
       ref={dragRef}
       role="button"
       tabIndex={0}
-      onClick={editing ? undefined : onClick}
+      onMouseDown={preventCardDoubleClickTextSelection}
+      onClick={handleCardClick}
+      onDoubleClick={handleCardDoubleClick}
       onKeyDown={(e) => {
         if (editing) return;
-        if (e.key === "Enter" || e.key === " ") {
+        if (e.key === " " && selectionMode) {
           e.preventDefault();
-          onClick();
+          onToggleCheck?.();
+          return;
         }
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        onClick();
       }}
       aria-pressed={active}
       title={label}

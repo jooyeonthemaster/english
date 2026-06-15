@@ -47,8 +47,9 @@ export async function POST(request: NextRequest) {
       generationPlan?: unknown;
     };
     const generationPlan = normalizeQuestionGenerationPlan(rawGenerationPlan);
+    // 자동 출제는 문제 1개당 단가 — 생성할 문제 수만큼 청구.
     const creditCost = getQuestionGenerationCreditCost(
-      CREDIT_COSTS.AUTO_GEN_BATCH,
+      CREDIT_COSTS.AUTO_GEN_BATCH * Math.max(1, Math.floor(Number(count) || 1)),
       generationPlan,
     );
 

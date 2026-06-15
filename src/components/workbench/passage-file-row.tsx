@@ -1,11 +1,16 @@
-// @ts-nocheck
 "use client";
 
-import Link from "next/link";
 import { FileText, Check, BookOpen, PenTool } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "@/components/workbench/shared/card-click";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -46,19 +51,49 @@ export function PassageFileRow({
   passage,
   selected,
   onToggleSelect,
+  onViewDetail,
 }: {
   passage: PassageItem;
   selected: boolean;
   onToggleSelect: (id: string, shift: boolean) => void;
+  onViewDetail: (id: string) => void;
 }) {
   const data = parseAnalysis(passage.analysis);
   const isAnalyzed = !!passage.analysis;
   const vocabCount = data?.vocabulary?.length ?? 0;
   const grammarCount = data?.grammarPoints?.length ?? 0;
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
 
   return (
     <div
       data-drag-item-id={passage.id}
+      role="button"
+      tabIndex={0}
+      onMouseDown={preventCardDoubleClickTextSelection}
+      onClick={(e) => {
+        if (e.detail > 1 || shouldIgnoreCardSelectionClick(e)) return;
+        const shiftKey = e.shiftKey;
+        scheduleCardSelectionClick(() => onToggleSelect(passage.id, shiftKey));
+      }}
+      onDoubleClick={(e) => {
+        cancelPendingCardSelectionClick();
+        clearCardTextSelection();
+        if (shouldIgnoreCardDoubleClick(e)) return;
+        onViewDetail(passage.id);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === " ") {
+          e.preventDefault();
+          onToggleSelect(passage.id, e.shiftKey);
+          return;
+        }
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        onViewDetail(passage.id);
+      }}
       className={`flex items-center gap-3 px-4 py-2.5 rounded-lg border transition-all hover:shadow-sm cursor-pointer group ${
         selected ? "bg-blue-50 border-blue-300" : "bg-white border-slate-200 hover:border-slate-300"
       }`}
@@ -76,11 +111,11 @@ export function PassageFileRow({
         <FileText className={`w-4 h-4 ${isAnalyzed ? "text-blue-500" : "text-slate-400"}`} />
       </div>
 
-      <Link href={`/director/workbench/passages/${passage.id}`} className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0">
         <p className="text-[13px] font-medium text-slate-800 truncate group-hover:text-blue-600 transition-colors">
           {sanitizeAiModelDisclosureText(passage.title)}
         </p>
-      </Link>
+      </div>
 
       <div className="flex items-center gap-1.5 shrink-0">
         {passage.school && (

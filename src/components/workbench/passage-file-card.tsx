@@ -16,6 +16,13 @@ import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { isDirectInputPassage } from "@/lib/passage-source";
 import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
 import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import {
+  clearCardTextSelection,
+  preventCardDoubleClickTextSelection,
+  shouldIgnoreCardDoubleClick,
+  shouldIgnoreCardSelectionClick,
+  useDeferredCardSelectionClick,
+} from "@/components/workbench/shared/card-click";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -82,6 +89,10 @@ export function PassageFileCard({
   const dragRef = useRef<HTMLDivElement>(null);
   const dragHandleRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const {
+    cancelPendingCardSelectionClick,
+    scheduleCardSelectionClick,
+  } = useDeferredCardSelectionClick();
 
   useEffect(() => {
     // 네이티브 드래그(폴더 이동)는 손잡이에만 등록 → 카드 본문은 영역 선택용.
@@ -104,11 +115,27 @@ export function PassageFileCard({
     <div
       ref={dragRef}
       data-drag-item-id={passage.id}
-      onClick={() => onViewDetail(passage.id)}
+      onMouseDown={preventCardDoubleClickTextSelection}
+      onClick={(e) => {
+        if (e.detail > 1 || shouldIgnoreCardSelectionClick(e)) return;
+        const shiftKey = e.shiftKey;
+        scheduleCardSelectionClick(() => onToggleSelect(passage.id, shiftKey));
+      }}
+      onDoubleClick={(e) => {
+        cancelPendingCardSelectionClick();
+        clearCardTextSelection();
+        if (shouldIgnoreCardDoubleClick(e)) return;
+        onViewDetail(passage.id);
+      }}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
-        if (e.key !== "Enter" && e.key !== " ") return;
+        if (e.key === " ") {
+          e.preventDefault();
+          onToggleSelect(passage.id, e.shiftKey);
+          return;
+        }
+        if (e.key !== "Enter") return;
         e.preventDefault();
         onViewDetail(passage.id);
       }}

@@ -45,8 +45,20 @@ interface PassageWorkspaceProps {
   generating: boolean;
   sessionQueue: QueueItem[];
   questionCountByPassage: Map<string, number>;
+  /** 전체 공통 난이도 — 행에 개별 난이도가 없을 때 기본 뱃지로 표시. */
+  globalDifficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
+  /** 전체 공통 생성 플랜 — 행에 개별 플랜이 없을 때 기본 뱃지로 표시. */
+  globalGenerationPlan: "STANDARD" | "PREMIUM";
   /** 우측 설정이 '장문 세트' 모드 — 워크스페이스가 생성에 사용되지 않음. */
   setModeActive?: boolean;
+  /** 우측 패널이 개별 설정 중인 행 (null 이면 전체 설정 편집). */
+  activeRowId?: string | null;
+  /** 행 본문 클릭 → 우측 패널을 이 지문에 바인딩 (패널은 열지 않음). */
+  onSetActiveRow?: (localId: string) => void;
+  /** '지문별 설정' 버튼 → 이 지문 선택 + 설정 패널 펼치기. */
+  onOpenRowSettings?: (localId: string) => void;
+  /** 워크스페이스 여백 클릭 → 개별 설정 선택 해제 (전체 설정으로 복귀). */
+  onClearActiveRow?: () => void;
 }
 
 export function PassageWorkspace({
@@ -54,7 +66,13 @@ export function PassageWorkspace({
   generating,
   sessionQueue,
   questionCountByPassage,
+  globalDifficulty,
+  globalGenerationPlan,
   setModeActive = false,
+  activeRowId = null,
+  onSetActiveRow,
+  onOpenRowSettings,
+  onClearActiveRow,
 }: PassageWorkspaceProps) {
   const { rows } = api;
   const [coachDismissed, setCoachDismissed] = useState(true);
@@ -177,7 +195,14 @@ export function PassageWorkspace({
       {/* ── 본문 — 이 컴포넌트는 행이 있을 때만 마운트된다 (빈 상태는
           상위에서 컬럼 자체를 렌더하지 않음). ── */}
       {
-        <div className="min-h-0 flex-1 space-y-2.5 overflow-y-auto p-3">
+        <div
+          // 여백(행이 아닌 배경) 클릭 → 개별 설정 선택 해제. 행/자식 클릭은
+          // target !== currentTarget 이라 무시된다 (행 선택과 충돌 없음).
+          onClick={(e) => {
+            if (e.target === e.currentTarget) onClearActiveRow?.();
+          }}
+          className="min-h-0 flex-1 space-y-2.5 overflow-y-auto p-3"
+        >
           {!coachDismissed ? (
             <div className="flex items-start gap-3 rounded-lg border border-violet-100 bg-violet-50/60 py-2.5 pl-3.5 pr-2">
               <div className="min-w-0 flex-1">
@@ -225,6 +250,8 @@ export function PassageWorkspace({
               index={index}
               row={row}
               dragCoach={index === 0}
+              globalDifficulty={globalDifficulty}
+              globalGenerationPlan={globalGenerationPlan}
               disabled={generating}
               sessionQueue={sessionQueue}
               savedQuestionCount={
@@ -244,11 +271,11 @@ export function PassageWorkspace({
               onRedo={() => api.redo(row.localId)}
               onClearHighlights={() => api.clearHighlights(row.localId)}
               onSetRange={(range) => api.setRange(row.localId, range)}
-              onSetOverride={(override) =>
-                api.setOverride(row.localId, override)
-              }
               onToggleCollapsed={() => api.toggleCollapsed(row.localId)}
               onRemove={() => handleRemoveRow(row.localId)}
+              active={activeRowId === row.localId}
+              onSetActive={() => onSetActiveRow?.(row.localId)}
+              onOpenSettings={() => onOpenRowSettings?.(row.localId)}
             />
           ))}
         </div>
