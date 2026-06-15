@@ -93,6 +93,10 @@ import {
   openGenerateTour,
 } from "@/lib/generate-tour-demo";
 
+// 튜토리얼(문제 생성 투어) 임시 비활성화 — 미완성 기능이라 배포에서 숨긴다.
+// 재활성화: 아래 값을 true 로 바꾸면 "튜토리얼" 버튼과 투어 오버레이가 다시 노출된다.
+const GENERATE_TUTORIAL_ENABLED = false;
+
 // ─── Helpers ─────────────────────────────────────────────
 
 // 우측 "유형·생성 설정" 컬럼 너비 (드래그 조절 가능).
@@ -2703,14 +2707,16 @@ export function GeneratePageClient({
                 title="문제 생성"
                 description="지문을 선택해 편집·AI 변형한 뒤, 유형과 난이도를 설정해 문제를 생성합니다."
               />
-              <button
-                type="button"
-                onClick={() => openGenerateTour()}
-                className="mt-1 inline-flex shrink-0 items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-[12px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50"
-                title="문제 생성 튜토리얼을 다시 봅니다"
-              >
-                튜토리얼
-              </button>
+              {GENERATE_TUTORIAL_ENABLED ? (
+                <button
+                  type="button"
+                  onClick={() => openGenerateTour()}
+                  className="mt-1 inline-flex shrink-0 items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-[12px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50"
+                  title="문제 생성 튜토리얼을 다시 봅니다"
+                >
+                  튜토리얼
+                </button>
+              ) : null}
             </div>
           }
           left={null}
@@ -2760,11 +2766,13 @@ export function GeneratePageClient({
           />
         </section>
       </main>
-      <GeneratePageTour
-        onOpenChange={setGenerateTourOpen}
-        onResultHighlightCountChange={setGenerateTourResultHighlightCount}
-        onFileTutorialStart={() => setDetailQuestion(null)}
-      />
+      {GENERATE_TUTORIAL_ENABLED ? (
+        <GeneratePageTour
+          onOpenChange={setGenerateTourOpen}
+          onResultHighlightCountChange={setGenerateTourResultHighlightCount}
+          onFileTutorialStart={() => setDetailQuestion(null)}
+        />
+      ) : null}
       {/* end vertical stack */}
 
       {/* ─── Review Modal ─── */}
