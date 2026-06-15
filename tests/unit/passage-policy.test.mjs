@@ -170,6 +170,7 @@ const sentenceOrderSections = parseQuestionSections(
 const allQuestionTypeIds = [
   "BLANK_INFERENCE",
   "GRAMMAR_ERROR",
+  "GRAMMAR_CHOICE_COMBO",
   "VOCAB_CHOICE",
   "SENTENCE_ORDER",
   "SENTENCE_INSERT",

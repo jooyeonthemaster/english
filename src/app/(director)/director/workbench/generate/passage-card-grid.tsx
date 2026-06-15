@@ -42,6 +42,7 @@ import {
 } from "@/components/ui/popover";
 import { isDirectInputPassage } from "@/lib/passage-source";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
+import { PassageQuestionBreakdownModal } from "@/components/workbench/passage-question-breakdown-modal";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import {
   type PassageItem,
@@ -237,6 +238,11 @@ export function PassageCardGrid({
   // 네이티브 드래그(폴더 이동)는 손잡이 엘리먼트에만 등록한다 → 카드 본문은 영역 선택용.
   const passageHandleRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const [mountedAtMs] = useState(() => Date.now());
+  // "문제 N" 배지 클릭 시 유형별 생성 현황 모달을 띄울 대상 지문.
+  const [breakdownPassage, setBreakdownPassage] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
   const [acknowledgedAnalysisGlowKeys, setAcknowledgedAnalysisGlowKeys] =
     useState<Set<string>>(() => {
       if (typeof window === "undefined") return new Set();
@@ -1436,12 +1442,18 @@ export function PassageCardGrid({
                             {countWords(p.content)} words
                           </span>
                           {generatedQuestionCount > 0 && (
-                            <span
-                              className="inline-flex items-center gap-1 text-[10px] font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded"
-                              title={`이 지문으로 생성된 문제 ${generatedQuestionCount}개`}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setBreakdownPassage({ id: p.id, title: p.title });
+                              }}
+                              className="inline-flex items-center gap-1 text-[10px] font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded transition-colors hover:bg-indigo-100 hover:border-indigo-300"
+                              title={`이 지문으로 생성된 문제 ${generatedQuestionCount}개 — 클릭하면 유형별 현황`}
                             >
                               <FileText className="w-3 h-3" /> 문제 {generatedQuestionCount}
-                            </span>
+                            </button>
                           )}
                         </div>
                       </div>
@@ -1530,6 +1542,15 @@ export function PassageCardGrid({
           </DragSelect>
         )}
       </div>
+
+      {breakdownPassage && (
+        <PassageQuestionBreakdownModal
+          open={!!breakdownPassage}
+          passageId={breakdownPassage.id}
+          passageTitle={breakdownPassage.title}
+          onClose={() => setBreakdownPassage(null)}
+        />
+      )}
     </div>
   );
 }

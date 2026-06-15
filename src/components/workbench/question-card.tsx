@@ -56,6 +56,7 @@ const TYPE_LABELS: Record<string, string> = {
 const SUBTYPE_LABELS: Record<string, string> = {
   BLANK_INFERENCE: "빈칸 추론",
   GRAMMAR_ERROR: "어법 판단",
+  GRAMMAR_CHOICE_COMBO: "네모 어법",
   VOCAB_CHOICE: "어휘 적절성",
   SENTENCE_ORDER: "글의 순서",
   SENTENCE_INSERT: "문장 삽입",
@@ -423,7 +424,8 @@ export function QuestionCard({
   });
   const passageMarking = detectPassageMarking(q.passage?.content || displayQuestionText);
   const UNDERLINE_TYPES = ["VOCAB_CHOICE", "GRAMMAR_ERROR", "IMPLIED_MEANING", "ANTONYM"];
-  const MARKER_ONLY_TYPES = ["SENTENCE_INSERT", "IRRELEVANT", "SENTENCE_ORDER"];
+  // 네모 어법은 밑줄 모드 금지 — (A) 뒤 첫 토큰("[후보1")만 밑줄 그어져 깨진다.
+  const MARKER_ONLY_TYPES = ["SENTENCE_INSERT", "IRRELEVANT", "SENTENCE_ORDER", "GRAMMAR_CHOICE_COMBO"];
   const sub = q.subType || "";
   const needsUnderline = UNDERLINE_TYPES.includes(sub);
   const showMarkers = UNDERLINE_TYPES.includes(sub) || MARKER_ONLY_TYPES.includes(sub);

@@ -35,6 +35,9 @@ check("structural: GRAMMAR_ERROR blocked (solo-only)", getAddability("GRAMMAR_ER
 check("locked: REFERENCE blocked", getAddability("REFERENCE", ["GRAMMAR_ERROR"]).ok === false);
 check("locked: anything blocked", getAddability("TOPIC", ["BLANK_INFERENCE"]).ok === false);
 check("isSetLocked grammar", isSetLocked(["GRAMMAR_ERROR"]) === true);
+check("empty: GRAMMAR_CHOICE_COMBO ok (solo start)", getAddability("GRAMMAR_CHOICE_COMBO", []).ok === true);
+check("locked: combo locks set", isSetLocked(["GRAMMAR_CHOICE_COMBO"]) === true);
+check("combo: GRAMMAR_CHOICE_COMBO blocked in mixed set", getAddability("GRAMMAR_CHOICE_COMBO", ["REFERENCE"]).ok === false);
 check("isSetLocked irrelevant", isSetLocked(["IRRELEVANT"]) === true);
 check("isSetLocked underline false", isSetLocked(["REFERENCE"]) === false);
 

@@ -55,6 +55,12 @@ export interface GrammarErrorGenerationSettings
   answerCount?: number;
   /** Legacy field name kept for already-saved configs; interpreted as markerCount. */
   errorCount?: number;
+  /**
+   * 핵심 집중 모드 — true 면 정답 포인트를 기출 1000제 고빈출 톱셋(관계사·수일치·
+   * to부정사/동명사·분사·대명사·형부)으로 좁혀 출제 포인트를 집중시킨다.
+   * false/미지정이면 기존 다양성(코어 10개 순회). 기본 false.
+   */
+  pointFocus?: boolean;
 }
 
 export interface VocabChoiceGenerationSettings
@@ -199,6 +205,8 @@ const DEFAULT_QUESTION_LANGUAGE_SETTINGS: Record<
 > = {
   BLANK_INFERENCE: { stemLanguage: "ko", optionLanguage: "en" },
   GRAMMAR_ERROR: { stemLanguage: "ko", optionLanguage: "ko" },
+  // 네모 어법 보기는 영어 후보 조합(구조적) — 보기 언어 토글 대상 아님.
+  GRAMMAR_CHOICE_COMBO: { stemLanguage: "ko", optionLanguage: "ko" },
   VOCAB_CHOICE: { stemLanguage: "ko", optionLanguage: "en" },
   SENTENCE_ORDER: { stemLanguage: "ko", optionLanguage: "en" },
   SENTENCE_INSERT: { stemLanguage: "ko", optionLanguage: "ko" },
@@ -797,6 +805,8 @@ export interface ResolvedQuestionTypeGenerationSettings {
   irrelevantSlotCount?: number;
   grammarMarkerCount?: number;
   grammarAnswerCount?: number;
+  /** 어법 핵심 집중 모드 — 정답 포인트를 고빈출 톱셋으로 좁힘. */
+  grammarPointFocus?: boolean;
   grammarCorrectionErrorCount?: number;
   summaryCompleteMcBlankCount?: number;
   summaryCompleteBlankCount?: number;
@@ -878,14 +888,17 @@ export function resolveQuestionTypeGenerationSettings(
       rawSettings,
       grammarMarkerCount,
     );
+    const grammarPointFocus = readBooleanSetting(rawSettings, "GRAMMAR_ERROR", "pointFocus");
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         markerCount: grammarMarkerCount,
         answerCount: grammarAnswerCount,
+        pointFocus: grammarPointFocus,
       }),
       ...languageSettings,
       grammarMarkerCount,
       grammarAnswerCount,
+      grammarPointFocus,
     };
   }
 
@@ -1510,6 +1523,9 @@ export function buildQuestionTypeSettingsPrompt(
       `- The teacher requested a ${blankInferenceBlankCount}-blank combination item instead of the standard single-blank item. This block overrides the single-blank output rules.`,
       `- Do NOT output originalExpression/surroundingText at the top level. Instead output a "blanks" array with exactly ${blankInferenceBlankCount} entries labeled ${labelsText}, in passage order.`,
       "- Each blanks[].originalExpression must be copied verbatim from the passage (not a paraphrase), must be a meaningful content expression (verb phrase, modified noun phrase, or compact clause-level phrase — never a bare function word), and the blanks must come from different sentences.",
+      "- ⚠️ Never blank an expression whose exact wording also appears elsewhere in the passage (key phrases are often repeated): the remaining occurrence would reveal the answer and the item will be rejected. Before choosing, scan the passage and pick expressions that occur exactly once.",
+      "- ⚠️ This also applies to any meaningful PART of the expression and to close synonyms: do not blank a span if its core content words (e.g. a key noun phrase inside it) or an obvious synonym/paraphrase of them still appears elsewhere in the passage. The blanked answer must not be recoverable by simple word matching against the remaining text.",
+      "- ⚠️ Never blank a semantically empty light phrase such as \"doing things\", \"a way of doing things\", \"get things done\", or \"make something\" — placeholder nouns (thing/way/stuff) and light verbs (do/make/get/have) carry no testable meaning and students just fill them by idiom. Blank the contentful core of the sentence instead.",
       "- Each blanks[].surroundingText must copy 40~60 characters of the passage around that expression for position identification.",
       `- options must contain exactly 5 combination choices labeled "1"~"5". Each option must provide blankValues with exactly ${blankInferenceBlankCount} entries (one per blank, in ${labelsText} order) and text joining the values with " …… ".`,
       useParaphraseAnswer

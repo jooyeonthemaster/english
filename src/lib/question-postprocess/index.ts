@@ -15,6 +15,7 @@ import { processAntonym } from "./processors/antonym";
 import { processBlankInference } from "./processors/blank-inference";
 import { processContextMeaning } from "./processors/context-meaning";
 import { processFillBlankKey } from "./processors/fill-blank-key";
+import { processGrammarChoiceCombo } from "./processors/grammar-choice-combo";
 import { processGrammarCorrection } from "./processors/grammar-correction";
 import { processGrammarError } from "./processors/grammar-error";
 import { processImpliedMeaning } from "./processors/implied-meaning";
@@ -91,6 +92,9 @@ export function postProcessQuestion(
 
       case "GRAMMAR_ERROR":
         return processGrammarError(passageContent, aiOutput);
+
+      case "GRAMMAR_CHOICE_COMBO":
+        return processGrammarChoiceCombo(passageContent, aiOutput);
 
       case "GRAMMAR_CORRECTION":
         return processGrammarCorrection(passageContent, aiOutput);

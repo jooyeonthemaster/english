@@ -272,15 +272,21 @@ export function processVocabChoice(
   const canonicalAnswerLabels = inappropriateKeys.map((key) => `(${key})`);
 
   const passageWithMarkers = applyReplacementsRTL(passage, replacements);
+  const wordByKey = new Map(
+    normalizedWords.map((mw) => [normalizeVocabKey(mw.label), mw.word]),
+  );
   const normalizedOptions = Array.isArray(ai.options)
-    ? ai.options.map((option, index) =>
-        option && typeof option === "object"
-          ? {
-              ...(option as Record<string, unknown>),
-              label: canonicalVocabLabel((option as Record<string, unknown>).label, index),
-            }
-          : option,
-      )
+    ? ai.options.map((option, index) => {
+        if (!option || typeof option !== "object") return option;
+        const record = option as Record<string, unknown>;
+        const label = canonicalVocabLabel(record.label, index);
+        // 모델이 보기 text에 "(a) word"처럼 라벨을 중복 포함하는 사례가 있어,
+        // 표시 단어의 진실원본인 markedWords 기준으로 text를 정규화한다.
+        const displayWord = wordByKey.get(normalizeVocabKey(label));
+        return displayWord
+          ? { ...record, label, text: displayWord }
+          : { ...record, label };
+      })
     : ai.options;
 
   return {

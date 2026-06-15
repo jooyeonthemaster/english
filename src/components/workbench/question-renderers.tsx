@@ -11,6 +11,7 @@ import { CustomLayoutRenderer } from "./custom-layout-renderer";
 import {
   BlankInferenceRenderer,
   GrammarErrorRenderer,
+  GrammarChoiceComboRenderer,
   VocabChoiceRenderer,
   SentenceOrderRenderer,
   SentenceInsertRenderer,
@@ -617,6 +618,7 @@ function hasStructuredFields(typeId: string, q: any): boolean {
     case "BLANK_INFERENCE":
       return !!q.passageWithBlank && !!q.direction;
     case "GRAMMAR_ERROR":
+    case "GRAMMAR_CHOICE_COMBO":
     case "VOCAB_CHOICE":
     case "ANTONYM":
       return !!q.passageWithMarkers && !!q.direction;
@@ -671,6 +673,8 @@ function renderTypedQuestion(typeId: string, q: any): React.ReactNode {
       return <BlankInferenceRenderer q={q} />;
     case "GRAMMAR_ERROR":
       return <GrammarErrorRenderer q={q} />;
+    case "GRAMMAR_CHOICE_COMBO":
+      return <GrammarChoiceComboRenderer q={q} />;
     case "VOCAB_CHOICE":
       return <VocabChoiceRenderer q={q} />;
     case "SENTENCE_ORDER":

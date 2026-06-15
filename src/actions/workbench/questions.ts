@@ -283,6 +283,115 @@ export async function getWorkbenchQuestionStatusCounts(
   return { all: approved + pending, pending, approved };
 }
 
+export interface PassageQuestionTypeBreakdown {
+  total: number;
+  /** 일반 유형 지정 생성분 — subType별 개수 (커스텀/동형 제외) */
+  typeSpecified: Array<{ subType: string; count: number }>;
+  /** 강사 커스텀 유형 생성분 — 유형 id+이름별 개수 */
+  custom: Array<{ customTypeId: string; name: string; count: number }>;
+  /** 동형(similar) 생성분 — 요청에 따라 총계만 */
+  similarCount: number;
+}
+
+/**
+ * 한 지문에서 생성된 문제를 (유형 지정 / 강사 커스텀 유형 / 동형) 3구분으로
+ * 집계한다. 문제 생성 페이지의 지문 카드 "문제 N" 배지 클릭 시 뜨는 모달용.
+ *
+ * - 유형 지정: customTypeId·similarQuestionGenJobId 둘 다 없는 일반 생성분 → subType별
+ * - 커스텀 유형: customTypeId 보유 → CustomQuestionType.name 별
+ * - 동형: similarQuestionGenJobId 보유 → 총계만(단순 "동형 N개" 표기)
+ *
+ * academyId 는 세션에서 해석해 타 학원 데이터 노출을 막는다. inSet 여부와
+ * 무관하게 그 지문에 귀속된 모든 문항을 세어 카드 배지(_count.questions)와 맞춘다.
+ */
+export async function getPassageQuestionTypeBreakdown(
+  passageId: string,
+): Promise<PassageQuestionTypeBreakdown> {
+  const staff = await requireAuth();
+  const academyId = getAcademyId(staff);
+  const baseWhere = { academyId, passageId } as const;
+
+  // 3분류가 서로 겹치지 않도록 우선순위로 자른다:
+  //   ① 동형  = similarQuestionGenJobId 보유
+  //   ② 커스텀 = (동형 아님) & (customTypeId 보유 OR subType="CUSTOM")
+  //   ③ 유형 지정 = 나머지 일반 생성분(subType별)
+  // GENERIC 커스텀 생성분은 customTypeId 백필이 없어도 subType="CUSTOM"으로
+  // 남으므로 ②에서 함께 흡수한다.
+  const [typeGroups, customNamedGroups, customUnnamedCount, similarCount] =
+    await Promise.all([
+      prisma.question.groupBy({
+        by: ["subType"],
+        where: {
+          ...baseWhere,
+          customTypeId: null,
+          similarQuestionGenJobId: null,
+          subType: { not: "CUSTOM" },
+        },
+        _count: { _all: true },
+      }),
+      prisma.question.groupBy({
+        by: ["customTypeId"],
+        where: {
+          ...baseWhere,
+          customTypeId: { not: null },
+          similarQuestionGenJobId: null,
+        },
+        _count: { _all: true },
+      }),
+      prisma.question.count({
+        where: {
+          ...baseWhere,
+          customTypeId: null,
+          similarQuestionGenJobId: null,
+          subType: "CUSTOM",
+        },
+      }),
+      prisma.question.count({
+        where: { ...baseWhere, similarQuestionGenJobId: { not: null } },
+      }),
+    ]);
+
+  const customIds = customNamedGroups
+    .map((g) => g.customTypeId)
+    .filter((id): id is string => !!id);
+  const customTypes = customIds.length
+    ? await prisma.customQuestionType.findMany({
+        where: { id: { in: customIds } },
+        select: { id: true, name: true },
+      })
+    : [];
+  const nameById = new Map(customTypes.map((c) => [c.id, c.name]));
+
+  const typeSpecified = typeGroups
+    .map((g) => ({ subType: g.subType ?? "UNKNOWN", count: g._count._all }))
+    .filter((g) => g.count > 0)
+    .sort((a, b) => b.count - a.count);
+
+  const custom = customNamedGroups
+    .map((g) => ({
+      customTypeId: g.customTypeId as string,
+      name: nameById.get(g.customTypeId as string) ?? "커스텀 유형",
+      count: g._count._all,
+    }))
+    .filter((g) => g.count > 0)
+    .sort((a, b) => b.count - a.count);
+  // 이름 미상(customTypeId 누락) 커스텀 생성분을 한 줄로 합산해 노출.
+  if (customUnnamedCount > 0) {
+    custom.push({
+      customTypeId: "__unnamed__",
+      name: "커스텀 유형",
+      count: customUnnamedCount,
+    });
+  }
+
+  const total =
+    typeSpecified.reduce((s, x) => s + x.count, 0) +
+    custom.reduce((s, x) => s + x.count, 0) +
+    similarCount;
+
+  return { total, typeSpecified, custom, similarCount };
+}
+
 /**
  * Returns passages that have
  * at least one question matching the filters, paginated by passage. Each

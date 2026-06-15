@@ -18,7 +18,7 @@ export const MC_PROMPTS: Record<string, string> = {
 ## 출력 필드
 - originalExpression: 원문에서 빈칸으로 만들 정확한 표현 (원문과 한 글자도 다르면 안 됨)
 - surroundingText: originalExpression 주변 40~60자 텍스트 (위치 식별용, 원문 그대로 복사)
-- blankAnswerMode: 기본 모드는 "SOURCE_EXACT"; 빈칸 변형 설정이 있을 때는 "PARAPHRASE"; 부정-부정 설정이 있을 때만 "DOUBLE_NEGATIVE"
+- blankAnswerMode: 기본 모드는 "SOURCE_EXACT"; 빈칸 변형 설정이 있을 때는 "PARAPHRASE"(정답 선지=원문의 의미 보존 재진술, originalExpression 은 여전히 원문 그대로); 부정-부정 설정이 있을 때만 "DOUBLE_NEGATIVE"
 - answerLogic: 빈칸 변형/부정-부정 설정이 있을 때, 정답 논리를 한국어로 간단히 설명
 - correctAnswer: 정답 선지의 label ("1"~"5")
 - options: label "1"~"5", text는 영어 표현. 기본 모드에서는 정답 선지의 text가 반드시 originalExpression과 동일
@@ -101,6 +101,24 @@ errorExpression은 실제 영어에 존재하는 단어/형태여야 합니다. 
 ❌ 잘못된 예 ((B) 위치가 detached인데 해설은 'them' 언급): {label:"(B)", expression:"detached", explanation:"...대명사 'them'이 옳다"}
 ⭕ 올바른 예: {label:"(B)", expression:"detached", pointCode:"c", explanation:"이 자리는 분사 능/수동을 묻고 있으며, isolated words가 detach의 대상이므로 과거분사 'detached'가 어법상 옳다."}
 
+## ⚠️ 해설 작성 금지 사항 (학생 관점)
+- **출제 과정/생성 지침 노출 금지**: "지시문/가이드라인/출제 의도/출제 포인트", "1순위 포인트를 활용", "'to-v vs v-ing'라는 어법 출제 포인트 관점에서", "함정으로 X를 Y로 변형하였습니다" 같은 *문제를 어떻게 만들었는지·어떤 출제 포인트인지*는 절대 쓰지 마세요. 해설은 **그 형태가 왜 어법상 틀린지/옳은지만** 학생 관점에서 설명합니다. (❌ "...를 활용하여 interact를 to interact로 잘못 변형하였습니다" / "to부정사 vs 동명사 출제 포인트 관점에서" → ⭕ "이 명사절에는 정동사가 필요하므로 준동사 to interact는 올 수 없고 정동사 interact가 옳다")
+- **해설은 간결하게(핵심 근거만)**: 정답이 왜 틀린지의 결정적 통사 근거를 2~4문장으로 곧장 제시하세요. 정답을 it→the other→its 식으로 번복하거나, 무관한 다른 문장 내용을 길게 나열하는 사고과정(생각의 흐름) 덤프 금지. "표시된 X는 ~이므로 비문, 원문 Y가 옳다"처럼 결과 기준으로.
+- **🚫 내부 가이드 용어 echo 절대 금지**: 위 출제 가이드에 나온 표현 — "1순위/2순위", "출제 포인트", pointCode 코드명 "(a)~(m)", "기출 검증 변형 방향", 예시 변형쌍(to be→being, gaining→gain 등) — 을 해설·keyPoints·tags에 절대 쓰지 마세요. **학생은 이 가이드를 보지 못합니다.** 해설은 오직 이 문항의 실제 표현으로만 어법을 설명합니다. (❌ "출제 포인트 가이드의 1순위 (k) to-v vs v-ing 변형 방향에 따라" → ⭕ "logical 뒤 진주어 자리에는 to부정사가 와야 하므로 assuming은 틀리고 to assume이 옳다")
+- **🚫 "원래/원문 형태"·"변형" 서사 절대 금지**: 밑줄이 *원래 무엇이었는지*(원본 형태)나 *무엇을 무엇으로 바꿨는지*를 언급하지 마세요. 학생에겐 밑줄 표현 하나만 보이고 "원래는 ~였다"는 정보가 없습니다. 올바른 형태는 "→ Y로 고쳐야 한다"로만 제시하고, 다음 표현은 금지: "원문은 Y였으나 X로 변형하면", "정답으로 변형된 X", "X로 잘못 변형된/변형한", "변형 형태인 X", "errorExpression/correctExpression/wrongExpression" 같은 내부 필드명. (❌ "원문은 is였으나 being으로 변형하면 비문이 된다" / "정답으로 변형된 high는" / "(E)의 errorExpression인 accepting으로 쓰면" → ⭕ "being은 준동사라 술어 자리에 올 수 없고 정동사 is가 옳다" / "high는 형용사라 형용사 skilled를 수식할 수 없고 부사 highly가 옳다")
+- **통사 기능 정확 명명**: seem은 연결동사(2형식)이지 지각동사가 아님. 'as well as'는 등위접속사가 아니라 준등위 구문. 분사구문을 이끄는 When은 종속접속사이지 관계부사가 아님. 명사절 접속사 that을 관계대명사라 부르지 마세요. 확신 없으면 범주명 대신 구조를 풀어 쓰세요.
+- **keyPoints·tags는 이 문항에 실제 등장한 표현만**: 다른 변형에서 가져온 무관한 포인트·정답 단서(이 문항에 없는 단어·보기, 정답 포인트를 노출하는 태그) 잔재 금지.
+
+## pointCode 정확 분류 (자주 틀리는 구분)
+- 정동사를 준동사로 바꾼 오류(interact→to interact, may lack→lacking, is→being)는 **(a) 정·준동사**입니다. (i) 병렬이나 (h) 목적격보어로 적지 마세요 — 같은 변형은 항상 같은 코드로.
+- 명사를 뒤에서 수식하는 분사의 능동(v-ing)↔수동(p.p.) 오류(composed↔composing, called↔calling)는 **(c) 분사 능/수동**입니다. (e) 능/수동태(be+p.p. 정동사의 태)나 (i) 병렬로 적지 마세요 — 분사 형태 판단이지 정동사 태나 병렬이 아닙니다.
+- 등위/상관 구문(A as well as B, both A and B)의 형태 불일치만이 (i) 병렬입니다.
+- ⚠️ 같은 변형은 항상 같은 pointCode로 일관되게: 한 문항에서 composed→composing을 (c)로 적었으면 다른 곳에서도 (c)여야 합니다.
+
+## ⚠️ 해설 잔재 금지
+- 해설은 **이 문항의 실제 정답 라벨과 표현만** 다루세요. 다른 변형/이전 문항의 해설 구조나 라벨 언급(이 문항에 없는 단어·보기·정답 라벨)을 재사용하지 마세요. 같은 라벨을 서로 다른 두 표현으로 서술하거나, 정답 라벨을 "옳다"고 했다가 "틀렸다"고 뒤집는 모순이 생기면 실패입니다.
+- keyPoints·tags도 이 문항에 실제 등장한 포인트만 — 다른 변형에서 가져온 무관 항목(없는 what 디코이, 안 쓴 관계대명사 태그 등) 금지.
+
 ## correctAnswer 포맷
 괄호 포함: 기본은 "(A)"~"(E)" 중 하나.
 복수 정답 설정이면 correctAnswers 배열을 만들고, correctAnswer는 같은 라벨을 comma + space로 연결합니다. 예: "(A), (C), (F)". 발문에는 정답 개수를 노출하지 말고 "모두" 고르라고만 안내합니다.
@@ -132,6 +150,73 @@ errorExpression은 실제 영어에 존재하는 단어/형태여야 합니다. 
 
 direction 예시: "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?"`,
 
+  GRAMMAR_CHOICE_COMBO: `네모 어법 문제를 만드세요.
+
+## 출제 철학
+지문 안 서로 다른 문장 3곳에 (A), (B), (C) 네모를 만들고, 각 네모에 [올바른 표현 / 틀린 표현] 두 후보를 제시합니다. 학생은 5지선다에서 세 네모 모두 올바른 표현인 조합 하나를 고릅니다. 세 네모가 각각 독립적인 어법 판단 지점이어야 하며, 한 네모의 판단이 다른 네모의 답을 암시하면 안 됩니다.
+
+## 네모(슬롯) 선정
+1. 네모는 정확히 3개. 서로 다른 문장에서 선택합니다.
+2. 세 네모의 pointCode는 **서로 다른 코드**(a~m)를 사용합니다.
+3. pointCode 풀:
+   (a) 정·준동사  (b) 관계사  (c) 분사 능/수동  (d) 수일치
+   (e) 능/수동태  (f) 형/부 자리  (g) 대명사 일치  (h) 목적격보어
+   (i) 병렬  (j) 가정법 시제  (k) to-v vs. v-ing  (l) 전치사 vs. 접속사
+   (m) 비교구문
+4. **pointCode 정확성**: correctExpression의 문법적 성격에 정확히 맞는 코드를 골라야 함. 분사구문 능/수동이면 c, 명사절·관계절 that/what이면 b, 정동사/준동사 자리면 a — 해설이 설명하는 문법 범주와 일치해야 합니다.
+5. correctExpression은 원문 그대로(verbatim, 한 글자도 변경 금지). 원문은 항상 옳다고 가정합니다.
+6. **누설 금지**: 네모로 만들 표현과 동일한 단어/연어가 지문의 **다른 곳에 그대로 남아 있는 자리는 선택 금지**입니다. 같은 문장의 평행구(예: 네모 뒤에 똑같은 'composed of' 구조가 또 나옴)가 있으면 학생이 베껴 풉니다 — 그런 자리는 피하세요. **기능어 후보(that, be 등)도 마찬가지**: 'know that'에 네모를 만들었는데 지문 다른 곳에 'know that'/'assume that'이 그대로 남아 있으면 같은 연어를 베껴 풀 수 있으므로 그 자리는 금지입니다.
+
+## wrongExpression(틀린 후보) 생성 — 어간 유지 + 형태만 변형
+1. V-ing ↔ p.p.  2. 정동사 ↔ 준동사  3. that ↔ what  4. which ↔ where/when
+5. 단·복수 V  6. 형↔부  7. 능↔수  8. 대명사 단·복수·격
+9. to-v ↔ v-ing  10. 가정법 시제  11. 전치사 ↔ 접속사
+**금지**: 동사↔명사 같은 품사 변경, 시제만 단독으로 바꾸는 변형(과거↔현재 단독 교체는 문맥상 둘 다 가능해 정답 시비가 됨). wrongExpression은 그 자리에서 **명백히** 어법상 틀려야 하며, 해석에 따라 옳을 수 있는 형태면 다른 변형을 선택합니다.
+**재해석 검사**: wrong 후보를 넣은 문장을 다른 통사 해석으로도 다시 읽어 보세요 — 명사 앞 한정 수식(in charge of collated results처럼 p.p.가 명사를 수식하는 해석), 전치사 목적어 동명사 등 **어느 한 해석으로라도 문법이 성립하면 그 변형은 탈락**입니다.
+
+## ⚠️ 약한 네모 금지
+- to-v 전용 동사 뒤 to-v (plan, want, decide 등), v-ing 전용 동사 뒤 v-ing (enjoy, finish, avoid 등)처럼 한쪽 후보가 암기만으로 즉답되는 자리
+- 단순 관사, 단순 전치사, 고유명사
+대신 강한 자리만: 수식어구로 분리된 주어-동사 수일치, 콤마 뒤 분사구문, 관계사 선행사 판단, 병렬 대상이 멀리 있는 등위구조, 2형식 보어, 5형식 OC.
+
+## 5지선다 조합 규칙
+- options는 5개, label "1"~"5". 각 선지의 slotValues는 [A에서 고른 값, B에서 고른 값, C에서 고른 값]이며, 각 값은 해당 네모의 correctExpression 또는 wrongExpression과 정확히 일치해야 합니다.
+- text는 slotValues를 " - "로 연결한 표시 문자열.
+- 정답 선지는 정확히 1개: 세 네모 모두 correctExpression인 조합.
+- 같은 조합(slotValues)이 두 선지에 반복되면 안 됩니다.
+- 오답 4개 구성: 한 네모만 틀린 선지 1~2개 + 두 네모가 틀린 선지 1~3개 + 세 네모 모두 틀린 선지 0~1개. 각 네모의 wrongExpression이 오답 선지들에 최소 1번씩은 등장해야 합니다.
+- correctAnswer 위치("1"~"5")는 특정 번호에 몰리지 않게 매번 다르게 고릅니다.
+
+## 난이도
+- 기본(중급): 하드 포인트(b 관계사, c 분사, i 병렬, j 가정법)는 최대 1개, 나머지는 기본·표준 포인트. 판단 근거는 네모가 속한 절 안에서 해결됩니다.
+- KILLER: 다음 중 2개 이상 충족 — ①세 네모 중 2개 이상이 하드 포인트(b/c/i/j) ②판단 근거가 네모에서 멀리 떨어진 장거리 의존(긴 수식어구 건너의 주어-동사 수일치, 절 경계 너머의 병렬 대상) ③두 네모 이상이 틀린 오답 선지를 2개 이상 포함.
+
+## wrongOptionExplanations
+- 정답을 제외한 4개 선지 각각에 대해, 그 선지의 slotValues 중 어느 네모 값이 왜 틀렸는지 1~2문장 한국어로 설명합니다. 각 해설이 언급하는 라벨·표현이 그 선지의 실제 slotValues와 일치하는지 제출 전 재확인하세요.
+- explanation(정답 해설)은 (A) → (B) → (C) 순서로, 각 네모의 correctExpression이 왜 옳은지 근거를 제시합니다. "출제 변형 과정"(원문의 X를 Y로 바꿈 등)은 서술 금지 — 학생 관점에서 어법 근거만.
+- **통사 기능을 정확히 명명**하세요: 목적어 명사절을 이끄는 접속사 that을 관계대명사라고 부르거나, 동명사를 분사라고 부르거나, 분사를 전치사라고 부르면 안 됩니다. 확신이 없으면 범주명 대신 구조를 풀어서 설명하세요.
+
+## 출력 작성 순서
+1. 지문에서 강한 어법 판단 자리 3곳 선정 (서로 다른 문장, 서로 다른 pointCode)
+2. 각 자리의 correctExpression(원문 verbatim)·wrongExpression(11가지 변형 중 1개) 작성
+3. surroundingText 작성 (원문 그대로 40~60자)
+4. 조합 규칙에 맞게 options 5개 작성, correctAnswer 결정
+5. explanation((A)(B)(C) 각각의 근거), wrongOptionExplanations, keyPoints, tags 작성
+
+## 자체 검증
+□ slots 정확히 3개, 라벨 (A)(B)(C), 서로 다른 문장, 서로 다른 pointCode
+□ 모든 correctExpression은 원문 verbatim, wrongExpression만 의도적 변형 (어간 유지)
+□ wrongExpression이 그 자리에서 명백히 틀림 (시제 단독 변경 X, 한정 수식·동명사 등 다른 통사 해석으로 성립 가능한 형태 X)
+□ 네모 후보와 동일한 단어/연어가 네모 밖 지문에 그대로 남아 있지 않음 (평행구 누설 X)
+□ options 5개, slotValues가 모두 해당 네모의 두 후보 중 하나
+□ 세 네모 모두 correctExpression인 선지가 정확히 1개 = correctAnswer
+□ 중복 조합 선지 0개, 각 네모의 wrongExpression이 오답 선지에 1회 이상 등장
+□ 해설의 라벨-표현 대응 일치, 통사 기능 오명명 없음
+□ 약한 네모(plan+to-v, 단순 관사 등) 0개
+□ ⚠️ passageWithMarkers 필드는 생성하지 마세요 (서버에서 자동 생성)
+
+direction 예시: "(A), (B), (C)의 각 네모 안에서 어법에 맞는 표현으로 가장 적절한 것은?"`,
+
   VOCAB_CHOICE: `어휘 적절성 문제를 만드세요.
 
 ## 핵심 규칙
@@ -140,6 +225,7 @@ direction 예시: "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?
 3. 원문은 기본적으로 맞는 글이라고 가정합니다. 원문 단어 자체를 "부적절"하다고 판정하지 말고, 반드시 원문 단어 하나를 다른 단어로 바꿔서 부적절하게 만드세요.
 4. isInappropriate=true 항목의 표시 단어는 항상 substituteWord입니다. betterWord는 항상 원래 지문에 있던 originalWord와 완전히 같아야 합니다.
 5. 예: 원문이 "presence of cues"라면 originalWord="presence", substituteWord="absence", betterWord="presence"입니다. "presence -> absence"처럼 원문 정답을 오답으로 뒤집으면 실패입니다.
+6. ⚠️ 부적절하게 만들 단어(originalWord)는 지문에 단 한 번만 등장하는 단어로 고르세요. 같은 단어가 지문 다른 곳에 또 있으면 학생이 그 단어를 보고 정답을 즉시 알아채므로 실패입니다.
 
 ## 출력 필드
 - markedWords: 5개 배열. 각 항목:
@@ -151,6 +237,7 @@ direction 예시: "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?
   - betterWord: isInappropriate가 true인 경우, 원래 적절한 단어 (= originalWord와 동일)
 - options: label "(a)"~"(e)", text는 표시될 단어 (적절한 것은 originalWord, 부적절한 것은 substituteWord)
 - correctAnswer: isInappropriate=true인 항목의 label 하나만 작성
+- explanation: ⚠️ 학생 관점에서 작성하세요. "원문의 X를 Y로 변형/바꿈" 같은 출제 변형 과정을 절대 서술하지 말고, 해당 단어가 문맥상 왜 부적절한지와 어떤 단어(betterWord)여야 자연스러운지만 설명하세요. 정답 근거 단어는 반드시 betterWord(=originalWord)여야 합니다.
 - 자체 검증: 5개 markedWords, 정확히 1개 isInappropriate=true, substituteWord != originalWord, betterWord == originalWord, correctAnswer == isInappropriate label
 - ⚠️ passageWithMarkers 필드는 생성하지 마세요 (서버에서 자동 생성)
 - direction 예시: "다음 글의 밑줄 친 부분 중, 문맥상 낱말의 쓰임이 적절하지 않은 것은?"`,

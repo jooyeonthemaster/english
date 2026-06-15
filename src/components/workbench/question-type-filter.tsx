@@ -27,6 +27,7 @@ export const TYPE_LABELS: Record<string, string> = {
 export const SUBTYPE_LABELS: Record<string, string> = {
   BLANK_INFERENCE: "빈칸 추론",
   GRAMMAR_ERROR: "어법 판단",
+  GRAMMAR_CHOICE_COMBO: "네모 어법",
   VOCAB_CHOICE: "어휘 적절성",
   SENTENCE_INSERT: "문장 삽입",
   SENTENCE_ORDER: "글의 순서",
@@ -59,6 +60,7 @@ export const TYPE_SUBTYPE_MAP: { type: string; label: string; subtypes: { value:
     subtypes: [
       { value: "BLANK_INFERENCE", label: "빈칸 추론" },
       { value: "GRAMMAR_ERROR", label: "어법 판단" },
+      { value: "GRAMMAR_CHOICE_COMBO", label: "네모 어법" },
       { value: "VOCAB_CHOICE", label: "어휘 적절성" },
       { value: "SENTENCE_INSERT", label: "문장 삽입" },
       { value: "SENTENCE_ORDER", label: "글의 순서" },
