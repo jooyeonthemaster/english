@@ -14,7 +14,10 @@ import {
   getQuestionGenerationCreditCost,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
-import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import {
+  readQuestionTypeGenerationPlanSetting,
+  type QuestionTypeGenerationSettings,
+} from "@/lib/question-type-generation-settings";
 import type { PassageItem, QueueItem } from "../generate-page-types";
 import {
   FAST_BATCH_CONCURRENCY,
@@ -206,6 +209,9 @@ export function useWorkspaceGeneration({
       const mode = effectiveRowMode(row.override, genMode);
       const plan = row.override?.generationPlan ?? generationPlan;
       let rowBase = 0;
+      // 수동(유형 지정)은 유형마다 플랜이 다를 수 있어, 유형별 배수를 이미 적용한
+      // 비용을 따로 누적한다(rowFinal). auto/set 은 행 단위 플랜 배수를 끝에 적용.
+      let rowFinal = 0;
       if (mode === "manual") {
         if (overrideHasTypeCounts(row.override)) {
           for (const [typeId, n] of Object.entries(row.override!.typeCounts)) {
@@ -213,7 +219,12 @@ export function useWorkspaceGeneration({
             const unit = VOCAB_GENERATION_TYPE_IDS.has(typeId)
               ? CREDIT_COSTS.QUESTION_GEN_VOCAB
               : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-            rowBase += unit * n;
+            const typePlan = readQuestionTypeGenerationPlanSetting(
+              row.override?.questionTypeSettings?.[typeId] ??
+                questionTypeSettings[typeId],
+              plan,
+            );
+            rowFinal += getQuestionGenerationCreditCost(unit * n, typePlan);
           }
         }
         // 유형 지정인데 유형이 없는 행은 생성에서 빠지므로 크레딧 0.
@@ -228,7 +239,7 @@ export function useWorkspaceGeneration({
             : CREDIT_COSTS.QUESTION_GEN_SINGLE;
         }
       }
-      creditCost += getQuestionGenerationCreditCost(rowBase, plan);
+      creditCost += rowFinal + getQuestionGenerationCreditCost(rowBase, plan);
     }
     const actionableSelectedOnlyCount =
       genMode === "set" || globalQuestionCount <= 0
@@ -479,13 +490,21 @@ export function useWorkspaceGeneration({
             const repeat = Math.max(0, Math.floor(Number(rawCount) || 0));
             const effSettings =
               rowTypeSettings?.[typeId] ?? questionTypeSettings[typeId];
+            // 유형별 생성 플랜(일반/프리미엄)을 우선 반영 — 글로벌 셀렉터 제거 후
+            // 플랜은 유형별 설정에서만 지정된다. 서버도 questionTypeSettings 의
+            // generationPlan 을 effectiveGenerationPlan 으로 해석하므로,
+            // 낙관적 카드 뱃지/페이로드를 여기에 일치시킨다.
+            const effTypePlan = readQuestionTypeGenerationPlanSetting(
+              effSettings,
+              effPlan,
+            );
             for (let i = 0; i < repeat; i += 1) {
               fastUnits.push({
                 passage: passageLike,
                 questionType: typeId,
                 settings: effSettings,
                 difficulty: effDifficulty,
-                generationPlan: effPlan,
+                generationPlan: effTypePlan,
                 tempId: `fast:${item.passageId}:${typeId}:${runId}:${i}`,
                 progressKey: typeId,
                 config: {
@@ -496,7 +515,7 @@ export function useWorkspaceGeneration({
                   difficulty: effDifficulty,
                   prompt,
                   mode: "manual",
-                  generationPlan: effPlan,
+                  generationPlan: effTypePlan,
                 },
               });
             }
