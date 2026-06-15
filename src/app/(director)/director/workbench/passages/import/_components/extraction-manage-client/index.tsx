@@ -83,13 +83,8 @@ import { useDraftActions } from "./hooks/use-draft-actions";
 import { useDraftDisplay } from "./hooks/use-draft-display";
 import { useDraftsData } from "./hooks/use-drafts-data";
 import { PASSAGE_ANALYSIS_BASE_CREDIT_COST } from "@/lib/passage-analysis-credit-costs";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
-import { FEATURE_FLAGS } from "@/lib/feature-flags";
-import {
-  getQuestionGenerationCreditCost,
-  type QuestionGenerationPlan,
-} from "@/lib/question-generation-plans";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { M1PassageDraftWithJob } from "./types";
 import { isDraftAnalysisComplete } from "./utils/analysis-status";
 

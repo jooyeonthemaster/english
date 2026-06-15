@@ -762,7 +762,9 @@ export function BottomQueueSection({
           fixedHeight
           ariaLabel={`${item.passageTitle} - 문제 생성 중`}
           planBadge={
-            FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
+            // 모델 셀렉터가 꺼져 있어도 이미 PREMIUM으로 생성된 항목은 배지를 보인다.
+            FEATURE_FLAGS.SHOW_MODEL_SELECTOR ||
+            planConfig.id === "PREMIUM" ? (
               <span
                 className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
                   planConfig.id === "PREMIUM"
@@ -808,7 +810,8 @@ export function BottomQueueSection({
                 <h4 className="text-[13px] font-bold text-slate-800 truncate">
                   {item.passageTitle}
                 </h4>
-                {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
+                {(FEATURE_FLAGS.SHOW_MODEL_SELECTOR ||
+                  planConfig.id === "PREMIUM") && (
                   <span
                     className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
                       planConfig.id === "PREMIUM"
@@ -1203,9 +1206,10 @@ export function BottomQueueSection({
       </div>
 
       <div className="space-y-4 rounded-b-lg bg-white px-4 py-4">
-        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
+        {(FEATURE_FLAGS.SHOW_MODEL_SELECTOR || savedPlanCounts.PREMIUM > 0) && (
           <div className="flex flex-wrap items-center justify-end gap-2">
-            {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
+            {(FEATURE_FLAGS.SHOW_MODEL_SELECTOR ||
+              savedPlanCounts.PREMIUM > 0) && (
               <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-lg border border-slate-200 bg-white p-0.5">
                 {(
                   [

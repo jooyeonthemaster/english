@@ -70,6 +70,7 @@ import {
   readGenericAnswerCountSetting,
   readGenericOptionCountSetting,
   readOptionLanguageSetting,
+  readQuestionTypeGenerationPlanSetting,
   readSentenceInsertSlotCountSetting,
   readStemLanguageSetting,
   readVocabChoiceAnswerCountSetting,
@@ -1367,8 +1368,54 @@ export function GenerationConfigPanel({
   const renderTypeDetailContent = (typeId: string) => {
     const numericContent = renderTypeNumericDetailContent(typeId);
     const languageScope = getQuestionLanguageToggleScope(typeId);
+    // 유형별 생성 플랜 개별지정(예: 어법만 PREMIUM). per-type generationPlan 을
+    // questionTypeSettings[typeId] 에 써넣으면 서버(fast route·워커)가
+    // readQuestionTypeGenerationPlanSetting 으로 전역값 대신 우선 적용한다.
+    const typePlan = readQuestionTypeGenerationPlanSetting(
+      questionTypeSettings[typeId],
+      generationPlan,
+    );
     return (
       <div className="space-y-3">
+        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
+          <div
+            className={
+              numericContent ? "border-b border-slate-100 pb-3" : undefined
+            }
+          >
+            <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              생성 플랜 · 이 유형만
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {(["STANDARD", "PREMIUM"] as const).map((planId) => {
+                const plan = QUESTION_GENERATION_PLANS[planId];
+                const active = typePlan === planId;
+                const Icon = planId === "PREMIUM" ? Gem : Sparkles;
+                return (
+                  <button
+                    key={planId}
+                    type="button"
+                    onClick={() =>
+                      patchTypeSettings(typeId, { generationPlan: planId })
+                    }
+                    className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 transition-colors ${
+                      active
+                        ? "border-blue-300 bg-blue-50 text-blue-800"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                    }`}
+                  >
+                    <Icon
+                      className={`h-3.5 w-3.5 shrink-0 ${active ? "text-blue-600" : "text-slate-400"}`}
+                    />
+                    <span className="truncate text-[12px] font-bold">
+                      {plan.shortLabel}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
         {numericContent}
         <div
           className={
