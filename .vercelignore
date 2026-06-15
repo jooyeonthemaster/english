@@ -6,7 +6,12 @@ node_modules
 .trigger
 .claude
 .codex
+# remotion/데모 영상 렌더 산출물 — 수 GB라 업로드 시 1GB 파일 한도 초과(배포 실패). 앱과 무관.
+out
+remotion/out
 scripts/_gen_audit_out
+# 로그인/진단 프로브 스크립트 — 자격증명 포함 가능, 배포 컨텍스트에 올리지 않는다.
+scripts/_probe-*
 /*.pdf
 *.log
 
