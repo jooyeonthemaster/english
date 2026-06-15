@@ -16,14 +16,18 @@ export function CollapsedPreview({
   questionClamp: string;
 }) {
   const direction = sections.find((s) => s.type === "direction");
-  const passage = sections.find((s) => s.type === "passage" || s.type === "summary");
+  const passage = sections.find(
+    (s) => s.type === "passage" || s.type === "summary",
+  );
   const correctLabels = parseCorrectAnswerLabels(correctAnswer);
 
   return (
     <div className="space-y-1">
       {/* Direction */}
       {direction && (
-        <div className={`text-[13px] font-bold text-slate-900 leading-relaxed ${questionClamp}`}>
+        <div
+          className={`text-[13px] font-bold text-slate-900 leading-relaxed ${questionClamp}`}
+        >
           {direction.content}
         </div>
       )}
@@ -43,8 +47,11 @@ export function CollapsedPreview({
             .filter((o) => correctLabels.has(normalizeAnswerLabel(o.label)))
             .slice(0, 3)
             .map((correct) => (
-              <div key={correct.label} className="flex items-start gap-2.5 text-[12px] rounded px-2 py-1 bg-emerald-50 text-emerald-800 font-medium">
-                <span className="shrink-0 text-[13px] font-bold tabular-nums pt-px text-emerald-600">
+              <div
+                key={correct.label}
+                className="flex items-start gap-2.5 text-[12px] rounded border border-slate-200 bg-slate-50 px-2 py-1 text-slate-700 font-medium"
+              >
+                <span className="shrink-0 text-[13px] font-bold tabular-nums pt-px text-slate-600">
                   {correct.label}.
                 </span>
                 <div className="truncate pt-0.5">{correct.text}</div>
@@ -57,7 +64,7 @@ export function CollapsedPreview({
           )}
         </div>
       ) : correctAnswer ? (
-        <div className="text-[12px] bg-emerald-50 text-emerald-700 px-2 py-1 rounded line-clamp-1">
+        <div className="text-[12px] bg-slate-50 text-slate-700 px-2 py-1 rounded border border-slate-200 line-clamp-1">
           <span className="font-medium">정답:</span> {correctAnswer}
         </div>
       ) : null}
@@ -67,7 +74,9 @@ export function CollapsedPreview({
 
 function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
   const labels = new Set<string>();
-  const matches = correctAnswer?.match(/[([]?\s*(?:[A-Ja-j]|10|[1-9]|[①②③④⑤⑥⑦⑧⑨⑩])\s*[)\].:]?/g);
+  const matches = correctAnswer?.match(
+    /[([]?\s*(?:[A-Ja-j]|10|[1-9]|[①②③④⑤⑥⑦⑧⑨⑩])\s*[)\].:]?/g,
+  );
   if (matches?.length) {
     matches.forEach((match) => {
       const label = normalizeAnswerLabel(match);
@@ -86,5 +95,7 @@ function normalizeAnswerLabel(value: unknown): string {
   const circled = "①②③④⑤⑥⑦⑧⑨⑩";
   const circledIndex = circled.indexOf(text);
   if (circledIndex >= 0) return String(circledIndex + 1);
-  return text.replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1").toLowerCase();
+  return text
+    .replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1")
+    .toLowerCase();
 }

@@ -205,8 +205,12 @@ export function useGenerateExtraction({ onPromoted }: UseGenerateExtractionArgs)
   useEffect(() => {
     if (pollCount === 0) return;
     const stop = startAdaptivePoll({
-      activeMs: 4000,
-      idleMs: 15000,
+      // 이 루프는 추출이 진행 중일 때만 돈다(pollCount > 0). 추출 중에는 잡
+      // status 가 한동안 안 바뀌어 어댑티브 백오프가 idleMs 까지 늘어지는데,
+      // 그게 곧 "완료 알림 딜레이"가 된다 → 짧게 잡아 완료를 즉시에 가깝게
+      // 감지한다(요약 목록 fetch 라 가볍고, 추출이 끝나면 루프도 멈춘다).
+      activeMs: 1500,
+      idleMs: 3000,
       run: async (signal) => {
         const tasks = await extractionAdapter.fetchTasks(signal).catch(() => []);
         const sig: string[] = [];

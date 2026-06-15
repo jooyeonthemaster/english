@@ -111,10 +111,19 @@ interface PassageAnalysisModalProps {
 function safeParseJSON<T>(str: unknown, fallback: T): T {
   if (!str) return fallback;
   if (Array.isArray(str)) return str as T;
-  if (typeof str === "object") return Array.isArray(fallback) && !Array.isArray(str) ? fallback : (str as T);
+  if (typeof str === "object")
+    return Array.isArray(fallback) && !Array.isArray(str)
+      ? fallback
+      : (str as T);
   if (typeof str !== "string") return fallback;
-  try { const parsed = JSON.parse(str); return Array.isArray(fallback) && !Array.isArray(parsed) ? fallback : parsed; }
-  catch { return fallback; }
+  try {
+    const parsed = JSON.parse(str);
+    return Array.isArray(fallback) && !Array.isArray(parsed)
+      ? fallback
+      : parsed;
+  } catch {
+    return fallback;
+  }
 }
 
 // ─── Modal Component ─────────────────────────────────────
@@ -129,25 +138,28 @@ export function PassageAnalysisModal({
   reviewBusy = false,
   onToggleExtractionReview,
 }: PassageAnalysisModalProps) {
-  const [analysisData, setAnalysisData] = useState<PassageAnalysisData | null>(initialAnalysis);
+  const [analysisData, setAnalysisData] = useState<PassageAnalysisData | null>(
+    initialAnalysis,
+  );
   const [analyzing, setAnalyzing] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [lastPromptConfig, setLastPromptConfig] = useState<AnalysisPromptConfig>(
-    initialPromptConfig || {
-      customPrompt: "",
-      focusAreas: [],
-      targetLevel: "",
-      generationPlan: "STANDARD",
-      analysisTone: DEFAULT_ANALYSIS_TONE,
-    }
-  );
+  const [lastPromptConfig, setLastPromptConfig] =
+    useState<AnalysisPromptConfig>(
+      initialPromptConfig || {
+        customPrompt: "",
+        focusAreas: [],
+        targetLevel: "",
+        generationPlan: "STANDARD",
+        analysisTone: DEFAULT_ANALYSIS_TONE,
+      },
+    );
   const [generationPlan, setGenerationPlan] = useState<QuestionGenerationPlan>(
-    lastPromptConfig.generationPlan || "STANDARD"
+    lastPromptConfig.generationPlan || "STANDARD",
   );
   const [analysisTone, setAnalysisTone] = useState<AnalysisTone>(
-    lastPromptConfig.analysisTone || DEFAULT_ANALYSIS_TONE
+    lastPromptConfig.analysisTone || DEFAULT_ANALYSIS_TONE,
   );
 
   const tags: string[] = getVisibleQuestionTags(
@@ -178,7 +190,8 @@ export function PassageAnalysisModal({
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (hasUnsavedChanges) {
-          if (confirm("저장하지 않은 변경사항이 있습니다. 닫으시겠습니까?")) onClose();
+          if (confirm("저장하지 않은 변경사항이 있습니다. 닫으시겠습니까?"))
+            onClose();
         } else {
           onClose();
         }
@@ -195,7 +208,9 @@ export function PassageAnalysisModal({
     } else {
       document.body.style.overflow = "";
     }
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [open]);
 
   if (!open) return null;
@@ -245,7 +260,11 @@ export function PassageAnalysisModal({
         setAnalysisData(json.data);
         setHasUnsavedChanges(false);
         onAnalysisUpdate?.(json.data);
-        toast.success(json.cached ? "캐시된 분석을 불러왔습니다." : "AI 분석이 완료되었습니다.");
+        toast.success(
+          json.cached
+            ? "캐시된 분석을 불러왔습니다."
+            : "AI 분석이 완료되었습니다.",
+        );
       }
     } catch {
       toast.error("분석 중 오류가 발생했습니다.");
@@ -260,7 +279,10 @@ export function PassageAnalysisModal({
     if (!analysisData) return;
     setSaving(true);
     try {
-      const result = await updatePassageAnalysis(passage.id, JSON.stringify(analysisData));
+      const result = await updatePassageAnalysis(
+        passage.id,
+        JSON.stringify(analysisData),
+      );
       if (result.success) {
         setHasUnsavedChanges(false);
         onAnalysisUpdate?.(analysisData);
@@ -277,7 +299,8 @@ export function PassageAnalysisModal({
 
   // ─── Delete passage ──────────────────────────────────
   const handleDelete = async () => {
-    if (!confirm("이 지문을 삭제하시겠습니까? 관련 문제도 모두 삭제됩니다.")) return;
+    if (!confirm("이 지문을 삭제하시겠습니까? 관련 문제도 모두 삭제됩니다."))
+      return;
     setDeleting(true);
     const result = await deleteWorkbenchPassage(passage.id);
     if (result.success) {
@@ -297,7 +320,8 @@ export function PassageAnalysisModal({
         className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
         onClick={() => {
           if (hasUnsavedChanges) {
-            if (confirm("저장하지 않은 변경사항이 있습니다. 닫으시겠습니까?")) onClose();
+            if (confirm("저장하지 않은 변경사항이 있습니다. 닫으시겠습니까?"))
+              onClose();
           } else {
             onClose();
           }
@@ -306,7 +330,10 @@ export function PassageAnalysisModal({
 
       {/* Modal container — 화면 크기에 따라 반응형으로 대부분의 영역을 채운다(상한 없음) */}
       <TooltipProvider>
-        <div className="relative z-10 w-full mx-3 my-3 bg-[#F8FAFB] rounded-2xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden">
+        <div
+          className="relative z-10 w-full mx-3 my-3 bg-[#F8FAFB] rounded-2xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden"
+          data-generate-tour="passage-learning-detail-modal"
+        >
           {/* Analysis overlay inside modal */}
           {analyzing && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-2xl">
@@ -346,7 +373,11 @@ export function PassageAnalysisModal({
                     </Badge>
                   )}
                   {tags.map((t) => (
-                    <Badge key={t} variant="outline" className="text-[10px] h-5 text-slate-500">
+                    <Badge
+                      key={t}
+                      variant="outline"
+                      className="text-[10px] h-5 text-slate-500"
+                    >
                       {t}
                     </Badge>
                   ))}
@@ -363,7 +394,7 @@ export function PassageAnalysisModal({
                   className={
                     "h-8 text-xs font-bold " +
                     (isReviewCommitted
-                      ? "border-rose-200 bg-rose-50 text-rose-600 hover:border-rose-300 hover:bg-rose-100 hover:text-rose-700"
+                      ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:border-emerald-300 hover:bg-emerald-100 hover:text-emerald-800"
                       : "border-emerald-600 bg-emerald-600 text-white shadow-sm hover:bg-emerald-700 hover:text-white")
                   }
                   onClick={() => onToggleExtractionReview(passage)}
@@ -387,7 +418,11 @@ export function PassageAnalysisModal({
                   onClick={handleSave}
                   disabled={saving}
                 >
-                  {saving ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : <Save className="w-3.5 h-3.5 mr-1" />}
+                  {saving ? (
+                    <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
+                  ) : (
+                    <Save className="w-3.5 h-3.5 mr-1" />
+                  )}
                   저장
                 </Button>
               )}
@@ -404,7 +439,12 @@ export function PassageAnalysisModal({
               <button
                 onClick={() => {
                   if (hasUnsavedChanges) {
-                    if (confirm("저장하지 않은 변경사항이 있습니다. 닫으시겠습니까?")) onClose();
+                    if (
+                      confirm(
+                        "저장하지 않은 변경사항이 있습니다. 닫으시겠습니까?",
+                      )
+                    )
+                      onClose();
                   } else {
                     onClose();
                   }

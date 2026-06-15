@@ -81,7 +81,8 @@ export function CustomTypeReviseModal({
 
   // 직접 편집 폼 + 로드 스냅샷(dirty 비교용)
   const [name, setName] = useState(typeName);
-  const [answerShape, setAnswerShape] = useState<AnswerShape>("MULTIPLE_CHOICE");
+  const [answerShape, setAnswerShape] =
+    useState<AnswerShape>("MULTIPLE_CHOICE");
   const [optionCount, setOptionCount] = useState(5);
   const [correctAnswerCount, setCorrectAnswerCount] = useState(1);
   const [multipleAnswers, setMultipleAnswers] = useState(false);
@@ -174,7 +175,9 @@ export function CustomTypeReviseModal({
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json?.error || "수정에 실패했습니다.");
-      toast.success(json.version ? `설정 저장 — v${json.version}` : "설정을 저장했어요.");
+      toast.success(
+        json.version ? `설정 저장 — v${json.version}` : "설정을 저장했어요.",
+      );
       // 낙관적 dirty 클리어(후속 GET 실패해도 stale-dirty 안 남게). load() 가 클램프값까지 정확히 재동기.
       setLoaded({
         name: name.trim(),
@@ -242,7 +245,9 @@ export function CustomTypeReviseModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-3">
-          <h3 className="truncate text-[14px] font-black text-slate-900">유형 상세 · 수정</h3>
+          <h3 className="truncate text-[14px] font-black text-slate-900">
+            유형 상세 · 수정
+          </h3>
           <button
             type="button"
             onClick={onClose}
@@ -255,7 +260,8 @@ export function CustomTypeReviseModal({
         <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-4">
           {loading && !spec ? (
             <p className="py-8 text-center text-[12.5px] text-slate-400">
-              <Loader2 className="mr-1 inline size-4 animate-spin" /> 불러오는 중…
+              <Loader2 className="mr-1 inline size-4 animate-spin" /> 불러오는
+              중…
             </p>
           ) : (
             <>
@@ -266,9 +272,9 @@ export function CustomTypeReviseModal({
                 </p>
                 <div className="space-y-2.5 rounded-lg border border-slate-200 bg-slate-50/60 p-3">
                   {spec?.tier === "BUILTIN_OVERRIDE" ? (
-                    <p className="rounded-md bg-amber-50 px-2 py-1.5 text-[11px] leading-relaxed text-amber-700">
-                      이 유형은 빌트인 엔진 구조를 따라 보기/정답 수·답형 편집이 생성에 반영되지 않습니다(난이도·이름만
-                      반영).
+                    <p className="rounded-md border border-slate-200 bg-slate-50 px-2 py-1.5 text-[11px] leading-relaxed text-slate-600">
+                      이 유형은 빌트인 엔진 구조를 따라 보기/정답 수·답형 편집이
+                      생성에 반영되지 않습니다(난이도·이름만 반영).
                     </p>
                   ) : null}
                   <label className="flex items-center justify-between gap-2 text-[12px] text-slate-600">
@@ -283,7 +289,9 @@ export function CustomTypeReviseModal({
                     답형
                     <select
                       value={answerShape}
-                      onChange={(e) => setAnswerShape(e.target.value as AnswerShape)}
+                      onChange={(e) =>
+                        setAnswerShape(e.target.value as AnswerShape)
+                      }
                       className="w-56 rounded-md border border-slate-300 px-2 py-1 text-[12px]"
                     >
                       <option value="MULTIPLE_CHOICE">객관식</option>
@@ -305,7 +313,12 @@ export function CustomTypeReviseModal({
                       disabled={!isMc}
                       value={optionCount}
                       onChange={(e) =>
-                        setOptionCount(Math.min(20, Math.max(0, Number(e.target.value) || 0)))
+                        setOptionCount(
+                          Math.min(
+                            20,
+                            Math.max(0, Number(e.target.value) || 0),
+                          ),
+                        )
                       }
                       className="w-56 rounded-md border border-slate-300 px-2 py-1 text-[12px] disabled:bg-slate-100"
                     />
@@ -324,14 +337,20 @@ export function CustomTypeReviseModal({
                       disabled={!isMc}
                       value={correctAnswerCount}
                       onChange={(e) =>
-                        setCorrectAnswerCount(Math.min(20, Math.max(1, Number(e.target.value) || 1)))
+                        setCorrectAnswerCount(
+                          Math.min(
+                            20,
+                            Math.max(1, Number(e.target.value) || 1),
+                          ),
+                        )
                       }
                       className="w-56 rounded-md border border-slate-300 px-2 py-1 text-[12px] disabled:bg-slate-100"
                     />
                   </label>
                   {correctAnswerCount >= 2 && isMc ? (
-                    <p className="text-[11px] leading-snug text-blue-500">
-                      정답 {correctAnswerCount}개 — 복수 정답으로 ‘모두 고르시오’ 형식으로 출제됩니다.
+                    <p className="text-[11px] leading-snug text-slate-500">
+                      정답 {correctAnswerCount}개 — 복수 정답으로 ‘모두
+                      고르시오’ 형식으로 출제됩니다.
                     </p>
                   ) : null}
                   <label className="flex items-center justify-between gap-2 text-[12px] text-slate-600">
@@ -347,7 +366,9 @@ export function CustomTypeReviseModal({
                     난이도
                     <select
                       value={difficulty}
-                      onChange={(e) => setDifficulty(e.target.value as Difficulty)}
+                      onChange={(e) =>
+                        setDifficulty(e.target.value as Difficulty)
+                      }
                       className="w-56 rounded-md border border-slate-300 px-2 py-1 text-[12px]"
                     >
                       <option value="BASIC">기본</option>
@@ -382,22 +403,37 @@ export function CustomTypeReviseModal({
                   <div className="space-y-3 rounded-lg border border-slate-200 p-3">
                     <div className="flex flex-wrap gap-1.5">
                       <Badge>{tierLabel(spec.tier)}</Badge>
-                      <Badge>가까운 빌트인: {builtinLabel(spec.nearestBuiltin)}</Badge>
-                      <Badge>매칭: {CONFIDENCE_LABEL[spec.matchConfidence] ?? spec.matchConfidence}</Badge>
+                      <Badge>
+                        가까운 빌트인: {builtinLabel(spec.nearestBuiltin)}
+                      </Badge>
+                      <Badge>
+                        매칭:{" "}
+                        {CONFIDENCE_LABEL[spec.matchConfidence] ??
+                          spec.matchConfidence}
+                      </Badge>
                       <Badge>{answerShapeLabel(spec.answerShape)}</Badge>
-                      <Badge>난이도: {DIFFICULTY_LABEL[spec.difficulty] ?? spec.difficulty}</Badge>
+                      <Badge>
+                        난이도:{" "}
+                        {DIFFICULTY_LABEL[spec.difficulty] ?? spec.difficulty}
+                      </Badge>
                     </div>
                     {spec.description ? (
                       <p className="rounded-md bg-slate-50 px-3 py-2 text-[12.5px] leading-relaxed text-slate-700">
                         {spec.description}
                       </p>
                     ) : null}
-                    <DefList label="반드시 보존 (invariants)" items={spec.invariants} />
-                    <DefList label="매번 가변 (variableAxes)" items={spec.variableAxes} />
+                    <DefList
+                      label="반드시 보존 (invariants)"
+                      items={spec.invariants}
+                    />
+                    <DefList
+                      label="매번 가변 (variableAxes)"
+                      items={spec.variableAxes}
+                    />
                     <button
                       type="button"
                       onClick={() => setShowPrompt((v) => !v)}
-                      className="inline-flex items-center gap-1 text-[12px] font-semibold text-blue-500 hover:text-blue-700"
+                      className="inline-flex items-center gap-1 text-[12px] font-semibold text-slate-500 hover:text-slate-700"
                     >
                       {showPrompt ? (
                         <ChevronUp className="size-3.5" />
@@ -432,19 +468,22 @@ export function CustomTypeReviseModal({
                         {original.source.passage}
                       </pre>
                     ) : null}
-                    {original.source.options && original.source.options.length > 0 ? (
+                    {original.source.options &&
+                    original.source.options.length > 0 ? (
                       <ol className="space-y-0.5">
                         {original.source.options.map((o, i) => {
                           const correct =
                             o.isCorrect ||
-                            (original.source?.correctAnswerLabels ?? []).includes(o.label);
+                            (
+                              original.source?.correctAnswerLabels ?? []
+                            ).includes(o.label);
                           return (
                             <li
                               key={i}
                               className={cn(
                                 "rounded px-1.5 py-0.5 text-[11.5px] leading-relaxed",
                                 correct
-                                  ? "bg-emerald-50 font-semibold text-emerald-700"
+                                  ? "bg-slate-100 font-semibold text-slate-800"
                                   : "text-slate-700",
                               )}
                             >
@@ -458,13 +497,13 @@ export function CustomTypeReviseModal({
                     original.source.correctAnswerLabels.length > 0 ? (
                       <p className="text-[11px]">
                         <span className="font-bold text-slate-700">정답: </span>
-                        <span className="text-blue-700">
+                        <span className="text-slate-800">
                           {original.source.correctAnswerLabels.join(", ")}
                         </span>
                       </p>
                     ) : null}
                     {original.source.originalExplanation ? (
-                      <div className="rounded-md bg-amber-50/60 p-2 text-[11px] leading-relaxed text-slate-700">
+                      <div className="rounded-md border border-slate-200 bg-slate-50 p-2 text-[11px] leading-relaxed text-slate-700">
                         <span className="font-bold">해설: </span>
                         {original.source.originalExplanation}
                       </div>
@@ -478,7 +517,7 @@ export function CustomTypeReviseModal({
                 <p className="mb-2 text-[11px] font-bold uppercase tracking-wide text-slate-400">
                   AI 수정 (자연어 — 본질·지시문)
                 </p>
-                <div className="rounded-lg border border-blue-200 bg-blue-50/40 p-3">
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
                   <textarea
                     value={instruction}
                     onChange={(e) => setInstruction(e.target.value)}
@@ -488,7 +527,8 @@ export function CustomTypeReviseModal({
                   />
                   <div className="mt-2 flex items-center justify-between gap-2">
                     <p className="text-[10.5px] leading-tight text-slate-400">
-                      구조는 위 설정에서, 본질·지시문은 여기서. 매 수정은 새 버전으로 기록됩니다.
+                      구조는 위 설정에서, 본질·지시문은 여기서. 매 수정은 새
+                      버전으로 기록됩니다.
                     </p>
                     <button
                       type="button"
@@ -515,12 +555,15 @@ export function CustomTypeReviseModal({
                   </p>
                   <ul className="space-y-1">
                     {versions.map((v) => (
-                      <li key={v.id} className="flex items-start gap-2 text-[11.5px]">
+                      <li
+                        key={v.id}
+                        className="flex items-start gap-2 text-[11.5px]"
+                      >
                         <span
                           className={cn(
                             "shrink-0 rounded px-1.5 py-0.5 font-bold",
                             v.isActive
-                              ? "bg-emerald-100 text-emerald-700"
+                              ? "bg-slate-800 text-white"
                               : "bg-slate-100 text-slate-500",
                           )}
                         >

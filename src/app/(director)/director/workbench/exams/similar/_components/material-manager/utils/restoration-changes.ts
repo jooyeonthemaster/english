@@ -275,34 +275,37 @@ export function buildHighlightedSegments({
   return segments;
 }
 
-const EVIDENCE_TYPE_LABELS: Record<string, { label: string; className: string }> = {
+const EVIDENCE_TYPE_LABELS: Record<
+  string,
+  { label: string; className: string }
+> = {
   VOCAB: {
     label: "어휘",
-    className: "bg-blue-50 text-blue-700 ring-blue-200",
+    className: "bg-slate-50 text-slate-700 ring-slate-200",
   },
   GRAMMAR: {
     label: "어법",
-    className: "bg-violet-50 text-violet-700 ring-violet-200",
+    className: "bg-slate-50 text-slate-700 ring-slate-200",
   },
   BLANK: {
     label: "빈칸",
-    className: "bg-rose-50 text-rose-700 ring-rose-200",
+    className: "bg-slate-50 text-slate-700 ring-slate-200",
   },
   WORD_ORDER: {
     label: "어순 배열",
-    className: "bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200",
+    className: "bg-slate-50 text-slate-700 ring-slate-200",
   },
   INSERTION: {
     label: "문장삽입",
-    className: "bg-cyan-50 text-cyan-700 ring-cyan-200",
+    className: "bg-slate-50 text-slate-700 ring-slate-200",
   },
   ORDERING: {
     label: "순서",
-    className: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+    className: "bg-slate-50 text-slate-700 ring-slate-200",
   },
   SUMMARY: {
     label: "요약",
-    className: "bg-amber-50 text-amber-700 ring-amber-200",
+    className: "bg-slate-50 text-slate-700 ring-slate-200",
   },
   OTHER: {
     label: "기타",
@@ -310,7 +313,7 @@ const EVIDENCE_TYPE_LABELS: Record<string, { label: string; className: string }>
   },
   "source-match": {
     label: "DB 원본 매칭",
-    className: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+    className: "bg-slate-50 text-slate-700 ring-slate-200",
   },
 };
 

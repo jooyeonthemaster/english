@@ -12,6 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 import type { SentenceAnalysis } from "@/types/passage-analysis";
 
 interface EditableSentencesProps {
@@ -180,7 +182,11 @@ export function EditableSentences({
                           <>
                             <Sparkles className="w-3 h-3 mr-0.5" />
                             AI 재번역
-                            <span className="ml-0.5 text-[8px] font-bold bg-amber-100 text-amber-700 px-1 rounded">1</span>
+                            <CreditCostChip
+                              amount={CREDIT_COSTS.SENTENCE_RETRANSLATION}
+                              className="ml-0.5 rounded bg-amber-100 px-1 text-[9px] text-amber-700"
+                              iconClassName="size-2.5"
+                            />
                           </>
                         )}
                       </Button>

@@ -23,7 +23,10 @@ import {
 //    문제 생성과 "동일하게" 맞추기 위해 BottomQueueSection·QuestionCard·타입을 차용. 동형 문항도 실제
 //    Question 이라 검수/삭제/편집은 공유 워크벤치 액션이 그대로 통한다. 동형 생성 엔진은 무관. ──
 import { BottomQueueSection } from "../../generate/bottom-queue-section";
-import { questionSignature, type QueueItem } from "../../generate/generate-page-types";
+import {
+  questionSignature,
+  type QueueItem,
+} from "../../generate/generate-page-types";
 
 import {
   SimilarQuestionAnalysisModal,
@@ -83,9 +86,12 @@ function jobToQueueItems(job: SimilarQuestionJob): QueueItem[] {
   if (job.status === "COMPLETED") return [];
   const isErr = job.status === "FAILED";
   const gradeLabel =
-    typeof job.gradeInfo === "string" && job.gradeInfo.trim() ? `${job.gradeInfo.trim()} · ` : "";
+    typeof job.gradeInfo === "string" && job.gradeInfo.trim()
+      ? `${job.gradeInfo.trim()} · `
+      : "";
   const passageN = Number(job.passageCount) > 0 ? Number(job.passageCount) : 1;
-  const createdAt = typeof job.createdAt === "string" ? job.createdAt : undefined;
+  const createdAt =
+    typeof job.createdAt === "string" ? job.createdAt : undefined;
 
   if (isErr) {
     return [
@@ -124,7 +130,12 @@ function jobToQueueItems(job: SimilarQuestionJob): QueueItem[] {
     progress: {},
     questions: [],
     // mode='manual' 이라 sum(typeCounts)=perPassage 가 'AI가 N문제…' 진행 라벨로 표시된다.
-    config: { typeCounts: { SIMILAR: perPassage }, difficulty: "", prompt: "", mode: "manual" as const },
+    config: {
+      typeCounts: { SIMILAR: perPassage },
+      difficulty: "",
+      prompt: "",
+      mode: "manual" as const,
+    },
   }));
 }
 
@@ -133,22 +144,37 @@ const isMissingQuestionError = (error?: string) =>
 
 // 동형 문항의 structuredData 에서 원본 분석(QAnalysis)을 추출(분석 정보 모달용).
 function extractSimilarAnalysis(structuredData: unknown): QAnalysis | null {
-  if (structuredData && typeof structuredData === "object" && "_similarSourceAnalysis" in structuredData) {
-    return (structuredData as { _similarSourceAnalysis?: QAnalysis | null })._similarSourceAnalysis ?? null;
+  if (
+    structuredData &&
+    typeof structuredData === "object" &&
+    "_similarSourceAnalysis" in structuredData
+  ) {
+    return (
+      (structuredData as { _similarSourceAnalysis?: QAnalysis | null })
+        ._similarSourceAnalysis ?? null
+    );
   }
   return null;
 }
 
-export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number }) {
+export function SimilarQuestionJobsPanel({
+  refreshKey,
+}: {
+  refreshKey: number;
+}) {
   const [jobs, setJobs] = useState<SimilarQuestionJob[]>([]);
   const [savedQuestions, setSavedQuestions] = useState<QuestionCardItem[]>([]);
   const [loadingSaved, setLoadingSaved] = useState(true);
-  const [deletedQuestionIds, setDeletedQuestionIds] = useState<Set<string>>(() => new Set());
-  const [deletedQuestionSignatures, setDeletedQuestionSignatures] = useState<Set<string>>(
+  const [deletedQuestionIds, setDeletedQuestionIds] = useState<Set<string>>(
     () => new Set(),
   );
+  const [deletedQuestionSignatures, setDeletedQuestionSignatures] = useState<
+    Set<string>
+  >(() => new Set());
   const [deletingQuestions, setDeletingQuestions] = useState(false);
-  const [detailQuestion, setDetailQuestion] = useState<QuestionCardItem | null>(null);
+  const [detailQuestion, setDetailQuestion] = useState<QuestionCardItem | null>(
+    null,
+  );
   const [analysisModal, setAnalysisModal] = useState<QAnalysis | null>(null);
   const jobLoadSeq = useRef(0);
   const qLoadSeq = useRef(0);
@@ -157,10 +183,13 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
 
   const loadJobs = useCallback(async () => {
     const seq = ++jobLoadSeq.current;
-    const res = await fetch("/api/similar-exams/question-generation-jobs?limit=12", {
-      credentials: "include",
-      cache: "no-store",
-    });
+    const res = await fetch(
+      "/api/similar-exams/question-generation-jobs?limit=12",
+      {
+        credentials: "include",
+        cache: "no-store",
+      },
+    );
     if (!res.ok) return;
     const data = (await res.json()) as { jobs: SimilarQuestionJob[] };
     if (seq !== jobLoadSeq.current) return;
@@ -169,10 +198,13 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
 
   const loadSaved = useCallback(async () => {
     const seq = ++qLoadSeq.current;
-    const res = await fetch("/api/similar-exams/question-generations?limit=100", {
-      credentials: "include",
-      cache: "no-store",
-    });
+    const res = await fetch(
+      "/api/similar-exams/question-generations?limit=100",
+      {
+        credentials: "include",
+        cache: "no-store",
+      },
+    );
     if (!res.ok) {
       if (seq === qLoadSeq.current) setLoadingSaved(false);
       return;
@@ -189,11 +221,17 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
     void loadSaved();
   }, [loadJobs, loadSaved, refreshKey]);
 
-  const hasActiveJobs = useMemo(() => jobs.some((j) => isActive(j.status)), [jobs]);
+  const hasActiveJobs = useMemo(
+    () => jobs.some((j) => isActive(j.status)),
+    [jobs],
+  );
 
   // 진행(PENDING/PROCESSING)·실패(FAILED) 잡만 generating/error 카드로. COMPLETED 는 제외(savedQuestions 담당).
   // 잡이 COMPLETED 로 전이되면 자동으로 큐에서 빠져 진행 카드가 사라지고 결과 카드로 매끄럽게 전환된다.
-  const jobQueue = useMemo<QueueItem[]>(() => jobs.flatMap(jobToQueueItems), [jobs]);
+  const jobQueue = useMemo<QueueItem[]>(
+    () => jobs.flatMap(jobToQueueItems),
+    [jobs],
+  );
 
   useEffect(() => {
     if (!hasActiveJobs) return;
@@ -262,12 +300,19 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
 
   const editor = useQuestionEditor(markQuestionDeletedLocally);
 
-  const applyReviewState = useCallback((questionIds: string[], approved: boolean) => {
-    if (questionIds.length === 0) return;
-    const set = new Set(questionIds);
-    setSavedQuestions((prev) => prev.map((q) => (set.has(q.id) ? { ...q, approved } : q)));
-    setDetailQuestion((prev) => (prev && set.has(prev.id) ? { ...prev, approved } : prev));
-  }, []);
+  const applyReviewState = useCallback(
+    (questionIds: string[], approved: boolean) => {
+      if (questionIds.length === 0) return;
+      const set = new Set(questionIds);
+      setSavedQuestions((prev) =>
+        prev.map((q) => (set.has(q.id) ? { ...q, approved } : q)),
+      );
+      setDetailQuestion((prev) =>
+        prev && set.has(prev.id) ? { ...prev, approved } : prev,
+      );
+    },
+    [],
+  );
 
   const handleApproveQuestion = useCallback(
     async (questionId: string) => {
@@ -357,19 +402,25 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
           });
         }
         setSavedQuestions((prev) => prev.filter((q) => !deletedSet.has(q.id)));
-        setDetailQuestion((prev) => (prev && deletedSet.has(prev.id) ? null : prev));
+        setDetailQuestion((prev) =>
+          prev && deletedSet.has(prev.id) ? null : prev,
+        );
 
         if (result.deleted === 0) {
           toast.error("삭제된 문제가 없습니다.");
         } else if (result.deleted === result.requested) {
           toast.success(`${result.deleted}개 문제를 삭제했습니다.`);
         } else {
-          toast.warning(`${result.deleted}개 삭제됨, ${result.requested - result.deleted}개 누락`);
+          toast.warning(
+            `${result.deleted}개 삭제됨, ${result.requested - result.deleted}개 누락`,
+          );
         }
         reloadSaved();
         return true;
       } catch (err) {
-        toast.error(err instanceof Error ? err.message : "문제 삭제에 실패했습니다.");
+        toast.error(
+          err instanceof Error ? err.message : "문제 삭제에 실패했습니다.",
+        );
         return false;
       } finally {
         setDeletingQuestions(false);
@@ -417,7 +468,7 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
                   e.stopPropagation();
                   setAnalysisModal(a);
                 }}
-                className="flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-semibold text-blue-500 transition-colors hover:bg-blue-50 hover:text-blue-700"
+                className="flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-semibold text-slate-500 transition-colors hover:bg-blue-50 hover:text-blue-700"
               >
                 <Sparkles className="h-3 w-3" />
                 분석 정보
@@ -436,13 +487,15 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
           />
           <div className="relative z-10 mx-4 my-4 flex w-full max-w-[1200px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
             <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 px-6 py-3">
-              <h2 className="text-[15px] font-bold text-slate-800">문제 상세</h2>
+              <h2 className="text-[15px] font-bold text-slate-800">
+                문제 상세
+              </h2>
               <div className="flex shrink-0 items-center gap-2">
                 {detailAnalysis ? (
                   <button
                     type="button"
                     onClick={() => setAnalysisModal(detailAnalysis)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-blue-200 bg-blue-50/60 px-2.5 text-[11px] font-semibold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-50"
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <Sparkles className="h-3.5 w-3.5" />
                     분석 정보
@@ -452,7 +505,7 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
                   <button
                     type="button"
                     onClick={() => handleUnapproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-red-50 px-2.5 text-[11px] font-semibold text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700"
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-700"
                   >
                     <XCircle className="h-3.5 w-3.5" />
                     검수취소
@@ -461,7 +514,7 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
                   <button
                     type="button"
                     onClick={() => handleApproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-green-200 bg-green-50/60 px-2.5 text-[11px] font-semibold text-green-700 transition-colors hover:border-green-300 hover:bg-green-50 hover:text-green-800"
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     검수완료
@@ -494,7 +547,12 @@ export function SimilarQuestionJobsPanel({ refreshKey }: { refreshKey: number })
               </div>
               <div className="relative overflow-hidden">
                 <div className="h-full overflow-y-auto px-6 py-5">
-                  <QuestionCard q={detailQuestion} num={1} readonly hideReviewStatusStamp />
+                  <QuestionCard
+                    q={detailQuestion}
+                    num={1}
+                    readonly
+                    hideReviewStatusStamp
+                  />
                 </div>
                 <ReviewStatusStamp
                   approved={detailQuestion.approved}

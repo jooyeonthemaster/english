@@ -117,7 +117,7 @@ export function DraftDetailModal({
       <div className="relative z-10 mx-4 my-4 flex max-h-[calc(100vh-2rem)] w-full max-w-[1440px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#F8FAFB] shadow-2xl">
         {/* Header — single row combining title, source, badges, actions */}
         <div className="flex items-center gap-3 border-b border-slate-200 bg-white px-5 py-3 shrink-0 xl:px-6">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-slate-500 ring-1 ring-slate-200">
             <FileText className="size-4" aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
@@ -163,7 +163,7 @@ export function DraftDetailModal({
                   <RestorationBadge status={draft.restorationStatus} />
                   <RestorationMethodBadge draft={draft} />
                   {isReviewed ? (
-                    <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200">
+                    <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600 ring-1 ring-slate-200">
                       <CheckCircle2 className="size-3" aria-hidden="true" />
                       검수완료
                     </span>
@@ -207,12 +207,14 @@ export function DraftDetailModal({
             </button>
             <button
               type="button"
-              onClick={() => (isReviewed ? onUnpromote(draft) : onPromote(draft))}
+              onClick={() =>
+                isReviewed ? onUnpromote(draft) : onPromote(draft)
+              }
               disabled={busy}
               className={
                 isReviewed
-                  ? "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-emerald-300 bg-emerald-50 px-3 text-[12px] font-bold text-emerald-700 hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
-                  : "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md bg-emerald-600 px-3 text-[12px] font-bold text-white shadow-sm hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  ? "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-bold text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  : "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[12px] font-bold text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
               }
               title={
                 isReviewed

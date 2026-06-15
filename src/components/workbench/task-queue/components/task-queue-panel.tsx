@@ -11,10 +11,7 @@ import type { BaseTask } from "../types";
 import { TaskDomainTabs } from "./task-domain-tabs";
 import { TaskEmptyState } from "./task-empty-state";
 import { TaskRow } from "./task-row";
-import {
-  TaskStatusFilter,
-  type StatusFilterValue,
-} from "./task-status-filter";
+import { TaskStatusFilter, type StatusFilterValue } from "./task-status-filter";
 
 export function TaskQueuePanel() {
   const { scope, setScope, refreshKey, setOpen } = useTaskQueue();
@@ -61,11 +58,11 @@ export function TaskQueuePanel() {
         </div>
         <div className="flex items-center gap-2">
           {runningCount > 0 ? (
-            <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10.5px] font-bold text-emerald-700">
+            <span className="rounded-full bg-slate-100 px-2 py-1 text-[10.5px] font-bold text-slate-700">
               진행 {runningCount}
             </span>
           ) : null}
-          <span className="rounded bg-slate-50 px-2 py-1 text-[11px] font-bold text-sky-700">
+          <span className="rounded bg-slate-50 px-2 py-1 text-[11px] font-bold text-slate-700">
             {tasks.length}
           </span>
         </div>

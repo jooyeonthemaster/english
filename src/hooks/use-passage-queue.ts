@@ -21,6 +21,10 @@ import {
   type AnalysisTone,
 } from "@/lib/passage-analysis-options";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
+import {
+  notePassageAnalysisStarted,
+  notePassageAnalysisStartFailed,
+} from "@/hooks/use-passage-analysis-activity";
 
 export interface AnalysisPromptConfig {
   customPrompt: string;
@@ -518,29 +522,37 @@ function safeParseTags(raw: string): string[] | undefined {
 async function startPassageAnalysisJob(
   passageId: string,
   promptConfig: AnalysisPromptConfig,
-  options: { fast?: boolean } = { fast: true },
+  options: { fast?: boolean; title?: string } = { fast: true },
 ): Promise<PassageAnalysisJobResponse> {
-  const endpoint = options.fast
+  const endpoint = options.fast !== false
     ? "/api/workbench/ai-jobs/passage-analysis/fast"
     : "/api/workbench/ai-jobs/passage-analysis";
-  const res = await fetch(endpoint, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({
-      passageId,
-      customPrompt: promptConfig.customPrompt,
-      focusAreas: promptConfig.focusAreas,
-      targetLevel: promptConfig.targetLevel,
-      generationPlan: promptConfig.generationPlan,
-      analysisTone: promptConfig.analysisTone,
-    }),
-  });
-  const data = (await res.json().catch(() => ({}))) as PassageAnalysisJobResponse;
-  if (!res.ok || data.error) {
-    throw new Error(data.details || data.error || "Failed to start passage analysis job.");
+  // 폴링을 기다리지 않고 다른 화면(문제 생성 등)의 "학습자료 생성중" 배지가
+  // 즉시 켜지도록 낙관적 등록. 시작 실패 시 아래에서 거둔다.
+  notePassageAnalysisStarted(passageId, options.title);
+  try {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        passageId,
+        customPrompt: promptConfig.customPrompt,
+        focusAreas: promptConfig.focusAreas,
+        targetLevel: promptConfig.targetLevel,
+        generationPlan: promptConfig.generationPlan,
+        analysisTone: promptConfig.analysisTone,
+      }),
+    });
+    const data = (await res.json().catch(() => ({}))) as PassageAnalysisJobResponse;
+    if (!res.ok || data.error) {
+      throw new Error(data.details || data.error || "Failed to start passage analysis job.");
+    }
+    return data;
+  } catch (err) {
+    notePassageAnalysisStartFailed(passageId);
+    throw err;
   }
-  return data;
 }
 
 export function usePassageQueue(
@@ -635,7 +647,9 @@ export function usePassageQueue(
 
       if (!runAnalysisNow) return;
 
-      void startPassageAnalysisJob(passage.id, normalizedPromptConfig)
+      void startPassageAnalysisJob(passage.id, normalizedPromptConfig, {
+        title: passage.title,
+      })
         .then((response) => {
           updateQueueItem(setLocalQueue, passage.id, (item) =>
             applyAnalysisJobResponse(item, response),
@@ -686,6 +700,7 @@ export function usePassageQueue(
             const response = await startPassageAnalysisJob(
               passage.id,
               promptConfig,
+              { title: passage.title },
             );
             updateQueueItem(setLocalQueue, passage.id, (item) =>
               applyAnalysisJobResponse(item, response),
@@ -745,7 +760,9 @@ export function usePassageQueue(
             : p,
         ),
       );
-      void startPassageAnalysisJob(passageId, target.promptConfig)
+      void startPassageAnalysisJob(passageId, target.promptConfig, {
+        title: target.title,
+      })
         .then((response) => {
           updateQueueItem(setLocalQueue, passageId, (item) =>
             applyAnalysisJobResponse(item, response),

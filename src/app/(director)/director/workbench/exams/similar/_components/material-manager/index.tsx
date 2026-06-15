@@ -80,6 +80,7 @@ import { useDraftActions } from "./hooks/use-draft-actions";
 import { useDraftDisplay } from "./hooks/use-draft-display";
 import { useDraftsData } from "./hooks/use-drafts-data";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   getQuestionGenerationCreditCost,
@@ -923,7 +924,7 @@ export function ExtractionManageClient({
         void bulk.bulkPromote(actionTargetIds, clearActionSelection)
       }
       disabled={anyBulkRunning || noSelection}
-      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md bg-emerald-600 px-2.5 text-[11px] font-medium text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md bg-blue-600 px-2.5 text-[11px] font-medium text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {isPromoting ? (
         <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
@@ -1005,7 +1006,7 @@ export function ExtractionManageClient({
             >
               <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                 <div className="flex min-w-0 items-center gap-3 border-b border-slate-100 px-4 py-2">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-slate-500 ring-1 ring-slate-200">
                     <Layers className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
                   <h3 className="truncate text-[13px] font-bold text-slate-900">
@@ -1415,10 +1416,10 @@ export function ExtractionManageClient({
                     </span>
                   ) : null}
                   {bulkAnalysisTotalCreditCost > 0 ? (
-                    <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
-                      {bulkAnalysisTotalCreditCost.toLocaleString("ko-KR")}{" "}
-                      크레딧
-                    </span>
+                    <CreditCostChip
+                      amount={bulkAnalysisTotalCreditCost}
+                      className="rounded bg-white/20 px-1.5 py-0.5 text-[10px]"
+                    />
                   ) : null}
                 </button>
               </div>
@@ -1622,8 +1623,7 @@ function EmbeddedJobCardGrid({
       if (analysisFilter === "all") {
         const aFullyAnalyzed = a.count > 0 && a.analyzedCount >= a.count;
         const bFullyAnalyzed = b.count > 0 && b.analyzedCount >= b.count;
-        const analysisDiff =
-          Number(aFullyAnalyzed) - Number(bFullyAnalyzed);
+        const analysisDiff = Number(aFullyAnalyzed) - Number(bFullyAnalyzed);
         if (analysisDiff !== 0) return analysisDiff;
       }
 

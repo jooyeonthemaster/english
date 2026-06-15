@@ -35,6 +35,8 @@ import {
   Trash2,
   Undo2,
 } from "lucide-react";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 import {
   Children,
   cloneElement,
@@ -2467,7 +2469,15 @@ export function AnalysisReportEditor({
               className="flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-2.5 text-[11.5px] font-semibold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {worksheetBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileQuestion className="h-3.5 w-3.5" />}
-              <span className="hidden sm:inline">{worksheetBusy ? "실전 학습지 생성 중…" : "실전 학습지 생성 (5크레딧)"}</span>
+              <span className="hidden items-center gap-1.5 sm:inline-flex">
+                {worksheetBusy ? "실전 학습지 생성 중…" : "실전 학습지 생성"}
+                {!worksheetBusy && (
+                  <CreditCostChip
+                    amount={CREDIT_COSTS.PASSAGE_ANALYSIS}
+                    className="rounded bg-blue-100 px-1 py-px text-[10px] text-blue-700"
+                  />
+                )}
+              </span>
               <span className="sm:hidden">실전 학습지</span>
             </button>
           ) : null}

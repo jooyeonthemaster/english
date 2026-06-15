@@ -21,7 +21,11 @@ import {
 import { inferKnownSourceFromRaw } from "../utils/source-match";
 import { SourceMatchSummary } from "./source-match-panel";
 
-export function RestorationEvidencePanel({ draft }: { draft: M1PassageDraftWithJob }) {
+export function RestorationEvidencePanel({
+  draft,
+}: {
+  draft: M1PassageDraftWithJob;
+}) {
   const problemEvidence = getDraftProblemEvidence(draft);
   const evidence = problemEvidence?.evidence ?? null;
   const questions = getEvidenceQuestions(draft);
@@ -29,17 +33,23 @@ export function RestorationEvidencePanel({ draft }: { draft: M1PassageDraftWithJ
   const topSource = draft.sourceMatches[0] ?? null;
   const selectedSource =
     draft.sourceMatches.find((match) => match.selected) ?? topSource;
-  const inferredSource = selectedSource ? null : inferKnownSourceFromRaw(draft.rawText);
+  const inferredSource = selectedSource
+    ? null
+    : inferKnownSourceFromRaw(draft.rawText);
   const displaySource = selectedSource ?? inferredSource;
-  const sourceHints = Array.isArray(evidence?.sourceHints) ? evidence.sourceHints : [];
-  const unresolved = Array.isArray(evidence?.unresolved) ? evidence.unresolved : [];
+  const sourceHints = Array.isArray(evidence?.sourceHints)
+    ? evidence.sourceHints
+    : [];
+  const unresolved = Array.isArray(evidence?.unresolved)
+    ? evidence.unresolved
+    : [];
 
   return (
     <div className="grid gap-3 xl:grid-cols-[1.15fr_0.85fr]">
       <section className="rounded-lg border border-slate-200 bg-white">
         <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
           <div className="flex items-center gap-2">
-            <Layers className="size-4 text-blue-600" aria-hidden="true" />
+            <Layers className="size-4 text-slate-500" aria-hidden="true" />
             <span className="text-[13px] font-bold text-slate-950">
               문제 단서
             </span>
@@ -54,18 +64,23 @@ export function RestorationEvidencePanel({ draft }: { draft: M1PassageDraftWithJ
               {questions.slice(0, 6).map((question, index) => (
                 <div
                   key={`${question.questionNumber ?? index}-${question.questionType ?? "UNKNOWN"}`}
-                  className="min-w-[150px] flex-1 rounded-md border border-blue-100 bg-blue-50/60 px-3 py-2"
+                  className="min-w-[150px] flex-1 rounded-md border border-slate-200 bg-slate-50 px-3 py-2"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="truncate text-[12px] font-bold text-blue-900">
-                      {labelQuestionType(question.questionType, question.typeLabel)}
+                    <span className="truncate text-[12px] font-bold text-slate-800">
+                      {labelQuestionType(
+                        question.questionType,
+                        question.typeLabel,
+                      )}
                     </span>
-                    <span className="shrink-0 text-[11px] font-bold text-blue-600">
+                    <span className="shrink-0 text-[11px] font-bold text-slate-500">
                       {formatPercent(question.confidence)}
                     </span>
                   </div>
                   <div className="mt-1 truncate text-[12px] text-slate-600">
-                    {question.answer ? `정답 ${question.answer}` : "정답 단서 없음"}
+                    {question.answer
+                      ? `정답 ${question.answer}`
+                      : "정답 단서 없음"}
                   </div>
                 </div>
               ))}
@@ -83,13 +98,15 @@ export function RestorationEvidencePanel({ draft }: { draft: M1PassageDraftWithJ
       <section className="rounded-lg border border-slate-200 bg-white">
         <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
           <div className="flex items-center gap-2">
-            <Database className="size-4 text-emerald-600" aria-hidden="true" />
+            <Database className="size-4 text-slate-500" aria-hidden="true" />
             <span className="text-[13px] font-bold text-slate-950">
               출처 활용
             </span>
           </div>
-          <span className="rounded bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
-            {displaySource ? formatPercent(displaySource.confidence) : "NO MATCH"}
+          <span className="rounded bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-600">
+            {displaySource
+              ? formatPercent(displaySource.confidence)
+              : "NO MATCH"}
           </span>
         </div>
         <div className="space-y-3 px-4 py-3">
@@ -97,7 +114,8 @@ export function RestorationEvidencePanel({ draft }: { draft: M1PassageDraftWithJ
             <SourceMatchSummary match={displaySource} />
           ) : (
             <div className="rounded-md border border-dashed border-slate-200 bg-slate-50 px-3 py-2 text-[12px] text-slate-500">
-              아직 확정 가능한 출처 후보가 없습니다. 문제 단서 기반 복원과 교사 검수를 우선합니다.
+              아직 확정 가능한 출처 후보가 없습니다. 문제 단서 기반 복원과 교사
+              검수를 우선합니다.
             </div>
           )}
           {sourceHints.length > 0 ? (
@@ -105,7 +123,7 @@ export function RestorationEvidencePanel({ draft }: { draft: M1PassageDraftWithJ
               {sourceHints.slice(0, 5).map((hint) => (
                 <span
                   key={hint}
-                  className="rounded bg-amber-50 px-2 py-1 text-[11px] font-semibold text-amber-700 ring-1 ring-amber-100"
+                  className="rounded bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-600 ring-1 ring-slate-200"
                 >
                   {hint}
                 </span>
@@ -132,7 +150,8 @@ function EvidenceActionList({
       return (
         arr.findIndex(
           (candidate) =>
-            `${candidate.type}:${candidate.target ?? ""}:${candidate.value ?? ""}` === key,
+            `${candidate.type}:${candidate.target ?? ""}:${candidate.value ?? ""}` ===
+            key,
         ) === index
       );
     })
@@ -141,7 +160,7 @@ function EvidenceActionList({
   if (uniqueActions.length === 0 && unresolved.length === 0) {
     return (
       <div className="flex items-center gap-2 text-[12px] text-slate-500">
-        <CheckCircle2 className="size-4 text-emerald-500" aria-hidden="true" />
+        <CheckCircle2 className="size-4 text-slate-400" aria-hidden="true" />
         추가 복원 액션 없이 원문/출처 매칭 중심으로 처리합니다.
       </div>
     );
@@ -163,7 +182,7 @@ function EvidenceActionList({
         </div>
       ) : null}
       {unresolved.length > 0 ? (
-        <div className="rounded-md bg-amber-50 px-3 py-2 text-[12px] text-amber-800 ring-1 ring-amber-100">
+        <div className="rounded-md bg-slate-50 px-3 py-2 text-[12px] text-slate-600 ring-1 ring-slate-200">
           {unresolved.slice(0, 2).join(" / ")}
         </div>
       ) : null}

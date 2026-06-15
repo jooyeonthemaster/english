@@ -49,10 +49,12 @@ export function RestorationChangesPanel({
     <div className="flex h-full min-h-0 flex-col rounded-lg border border-slate-200 bg-white">
       <div className="flex h-12 shrink-0 items-center justify-between border-b border-slate-100 px-4">
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[13px] font-bold text-slate-900">복원 근거</span>
+          <span className="text-[13px] font-bold text-slate-900">
+            복원 근거
+          </span>
           {aiRemovalCount > 0 ? (
             <span
-              className="inline-flex items-center gap-1 rounded bg-amber-100 px-1.5 py-0.5 text-[10.5px] font-bold text-amber-800"
+              className="inline-flex items-center gap-1 rounded bg-slate-100 px-1.5 py-0.5 text-[10.5px] font-bold text-slate-600"
               title="AI 가 본문에서 의도적으로 제거한 항목 수"
             >
               <Eraser className="size-3" aria-hidden="true" />
@@ -61,7 +63,7 @@ export function RestorationChangesPanel({
           ) : null}
           {teacherEditedCount > 0 ? (
             <span
-              className="inline-flex items-center gap-1 rounded bg-amber-50 px-1.5 py-0.5 text-[10.5px] font-bold text-amber-700"
+              className="inline-flex items-center gap-1 rounded bg-slate-100 px-1.5 py-0.5 text-[10.5px] font-bold text-slate-600"
               title="강사 수정으로 본문에서 위치를 찾을 수 없는 항목 수"
             >
               <PencilLine className="size-3" aria-hidden="true" />
@@ -78,13 +80,12 @@ export function RestorationChangesPanel({
           <EmptyState />
         ) : (
           <ol className="flex flex-col gap-2 px-3 py-3">
-            {changes.map((change, index) => {
+            {changes.map((change) => {
               const aiRemoval = isAiRemovalChange(change);
               return (
                 <ChangeCard
                   key={change.id}
                   change={change}
-                  index={index}
                   hovered={hoveredChangeId === change.id}
                   active={activeChangeId === change.id}
                   aiRemoval={aiRemoval}
@@ -119,7 +120,6 @@ function EmptyState() {
 
 function ChangeCard({
   change,
-  index,
   hovered,
   active,
   aiRemoval,
@@ -128,7 +128,6 @@ function ChangeCard({
   onSelect,
 }: {
   change: InlineRestorationChange;
-  index: number;
   hovered: boolean;
   active: boolean;
   aiRemoval: boolean;
@@ -159,19 +158,19 @@ function ChangeCard({
 
   const containerClass = (() => {
     if (active) {
-      return "border-violet-400 bg-violet-50/60 ring-2 ring-violet-300/40";
+      return "border-blue-400 bg-white ring-2 ring-blue-200/60";
     }
     if (hovered) {
-      return "border-amber-300 bg-amber-50/40 ring-1 ring-amber-200";
+      return "border-slate-300 bg-slate-50 ring-1 ring-slate-200";
     }
     if (isSourceMatch) {
-      return "border-emerald-300 bg-emerald-50/40 hover:border-emerald-400";
+      return "border-slate-200 bg-white hover:border-slate-300";
     }
     if (aiRemoval) {
-      return "border-amber-300 bg-amber-50/60 hover:border-amber-400";
+      return "border-slate-300 bg-slate-50 hover:border-slate-400";
     }
     if (orphan) {
-      return "border-dashed border-amber-300 bg-amber-50/30 hover:border-amber-400";
+      return "border-dashed border-slate-300 bg-slate-50 hover:border-slate-400";
     }
     return "border-slate-200 bg-white hover:border-slate-300";
   })();
@@ -183,7 +182,8 @@ function ChangeCard({
       onMouseLeave={() => onHover(null)}
       onClick={() => onSelect(active ? null : change.id)}
       className={
-        "cursor-pointer rounded-lg border p-3 transition-colors " + containerClass
+        "cursor-pointer rounded-lg border p-3 transition-colors " +
+        containerClass
       }
     >
       <div className="flex items-center justify-between gap-2">
@@ -203,7 +203,7 @@ function ChangeCard({
           ) : null}
           {aiRemoval ? (
             <span
-              className="inline-flex items-center gap-0.5 rounded-full bg-amber-200 px-1.5 py-0.5 text-[9.5px] font-bold text-amber-900"
+              className="inline-flex items-center gap-0.5 rounded-full bg-slate-200 px-1.5 py-0.5 text-[9.5px] font-bold text-slate-700"
               title="AI 가 본문에서 의도적으로 제거한 부분입니다"
             >
               <Eraser className="size-2.5" aria-hidden="true" />
@@ -211,7 +211,7 @@ function ChangeCard({
             </span>
           ) : orphan ? (
             <span
-              className="inline-flex items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[9.5px] font-bold text-amber-800"
+              className="inline-flex items-center gap-0.5 rounded-full bg-slate-100 px-1.5 py-0.5 text-[9.5px] font-bold text-slate-600"
               title="강사가 복원문을 수정해서 본문에서 이 변경의 위치를 찾을 수 없습니다"
             >
               <PencilLine className="size-2.5" aria-hidden="true" />
@@ -228,13 +228,13 @@ function ChangeCard({
 
       {isSourceMatch ? (
         <>
-          <p className="mt-2 rounded-md bg-emerald-50 px-2 py-2 text-[12px] leading-5 text-emerald-900">
+          <p className="mt-2 rounded-md bg-slate-50 px-2 py-2 text-[12px] leading-5 text-slate-700">
             이 자료는 학원 DB 의 동일한 raw 자료와 매칭됐어요. 강사 검수본을
             그대로 가져왔고, 아래 다른 근거 카드는 그 검수본의 원래 변경 내역
             이에요.
           </p>
           {change.reason ? (
-            <p className="mt-1 text-[10.5px] leading-4 text-emerald-700">
+            <p className="mt-1 text-[10.5px] leading-4 text-slate-500">
               {change.reason}
             </p>
           ) : null}
@@ -267,11 +267,11 @@ function ChangeCard({
           )}
 
           {aiRemoval ? (
-            <p className="mt-2 text-[10.5px] leading-4 text-amber-800">
+            <p className="mt-2 text-[10.5px] leading-4 text-slate-500">
               AI 가 본문에서 제거 · 강사 검수 본문에서도 보이지 않습니다
             </p>
           ) : orphan ? (
-            <p className="mt-2 text-[10.5px] leading-4 text-amber-700">
+            <p className="mt-2 text-[10.5px] leading-4 text-slate-500">
               본문에서 위치 매칭 안 됨 · AI 가 원래 적용했던 복원입니다
             </p>
           ) : null}
@@ -306,7 +306,7 @@ function DiffLine({
           "mt-0.5 inline-flex h-4 shrink-0 items-center rounded px-1 text-[9.5px] font-bold " +
           (isBefore
             ? "bg-rose-100 text-rose-700"
-            : "bg-emerald-100 text-emerald-700")
+            : "bg-slate-100 text-slate-700")
         }
       >
         {isBefore ? "원문" : "복원"}
@@ -317,8 +317,8 @@ function DiffLine({
           (isBefore
             ? "text-rose-900 line-through decoration-rose-300/70"
             : isEmpty && aiRemoval
-              ? "italic text-amber-700"
-              : "text-emerald-900")
+              ? "italic text-slate-500"
+              : "text-slate-800")
         }
       >
         {display}

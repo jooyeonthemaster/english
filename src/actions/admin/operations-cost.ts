@@ -1,5 +1,6 @@
 "use server";
 
+import type { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { OPERATION_LABELS, type OperationType } from "@/lib/credit-costs";
 import { getUsdKrwRate, kstTodayString } from "@/lib/fx-rate";
@@ -11,6 +12,11 @@ import {
 } from "@/lib/provider-billing-sync";
 import { prisma } from "@/lib/prisma";
 import { requireAdminAuth } from "@/lib/auth-admin";
+import {
+  TRANSACTION_TYPES,
+  getOperationTypeLabel,
+  getTransactionTypeLabel,
+} from "@/lib/admin-members-labels";
 
 export type CostPeriodMode = "daily" | "monthly";
 export type CostSummaryMode = "bucket" | "range";
@@ -171,6 +177,41 @@ export interface OperationsCostDashboard {
     directCredits: number;
   };
 }
+
+export interface AcademyTransactionFilters {
+  type?: string;
+  operationType?: string;
+  cursor?: string | null;
+  limit?: number;
+}
+
+export interface AcademyTransactionListItem {
+  id: string;
+  type: string;
+  typeLabel: string;
+  amount: number;
+  balanceAfter: number;
+  operationType: string | null;
+  operationLabel: string;
+  description: string | null;
+  referenceId: string | null;
+  referenceType: string | null;
+  staffId: string | null;
+  adminId: string | null;
+  metadata: string | null;
+  createdAt: string;
+}
+
+export type AcademyTransactionListResult =
+  | {
+      kind: "ok";
+      academy: { id: string; name: string };
+      items: AcademyTransactionListItem[];
+      nextCursor: string | null;
+      operationTypes: string[];
+    }
+  | { kind: "not_found" }
+  | { kind: "invalid_input"; error: string };
 
 type BucketAccumulator = {
   key: string;
@@ -600,6 +641,95 @@ export async function getOperationsCostDashboard(
       directCreditTransactions: directCreditTransactions.length,
       directCredits,
     },
+  };
+}
+
+export async function getAcademyCostTransactions(
+  academyId: string,
+  filters: AcademyTransactionFilters = {},
+): Promise<AcademyTransactionListResult> {
+  const session = await requireAdminAuth();
+  const elevated = session.role === "SUPER_ADMIN";
+  const normalizedAcademyId = academyId.trim();
+
+  if (!normalizedAcademyId) {
+    return { kind: "invalid_input", error: "학원 ID가 필요합니다." };
+  }
+
+  const [academy, operationTypeRows] = await Promise.all([
+    prisma.academy.findUnique({
+      where: { id: normalizedAcademyId },
+      select: { id: true, name: true },
+    }),
+    prisma.creditTransaction.findMany({
+      where: {
+        academyId: normalizedAcademyId,
+        operationType: { not: null },
+      },
+      distinct: ["operationType"],
+      select: { operationType: true },
+    }),
+  ]);
+
+  if (!academy) return { kind: "not_found" };
+
+  const operationTypes = operationTypeRows
+    .map((row) => row.operationType)
+    .filter((operationType): operationType is string => operationType !== null)
+    .sort((a, b) =>
+      getOperationTypeLabel(a).localeCompare(getOperationTypeLabel(b), "ko-KR"),
+    );
+
+  const limit = Math.min(Math.max(filters.limit ?? 30, 1), 200);
+  const where: Prisma.CreditTransactionWhereInput = {
+    academyId: normalizedAcademyId,
+  };
+
+  if (filters.type && filters.type !== "all") {
+    if (!(TRANSACTION_TYPES as readonly string[]).includes(filters.type)) {
+      return { kind: "invalid_input", error: "알 수 없는 거래 종류입니다." };
+    }
+    where.type = filters.type;
+  }
+
+  if (filters.operationType && filters.operationType !== "all") {
+    if (!operationTypes.includes(filters.operationType)) {
+      return { kind: "invalid_input", error: "알 수 없는 상품 종류입니다." };
+    }
+    where.operationType = filters.operationType;
+  }
+
+  const transactions = await prisma.creditTransaction.findMany({
+    where,
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    take: limit + 1,
+    ...(filters.cursor ? { cursor: { id: filters.cursor }, skip: 1 } : {}),
+  });
+
+  const hasMore = transactions.length > limit;
+  const slice = hasMore ? transactions.slice(0, limit) : transactions;
+
+  return {
+    kind: "ok",
+    academy,
+    items: slice.map((tx) => ({
+      id: tx.id,
+      type: tx.type,
+      typeLabel: getTransactionTypeLabel(tx.type),
+      amount: tx.amount,
+      balanceAfter: tx.balanceAfter,
+      operationType: tx.operationType,
+      operationLabel: getOperationTypeLabel(tx.operationType),
+      description: tx.description,
+      referenceId: tx.referenceId,
+      referenceType: tx.referenceType,
+      staffId: tx.staffId,
+      adminId: tx.adminId,
+      metadata: elevated ? tx.metadata : null,
+      createdAt: tx.createdAt.toISOString(),
+    })),
+    nextCursor: hasMore ? slice[slice.length - 1].id : null,
+    operationTypes,
   };
 }
 

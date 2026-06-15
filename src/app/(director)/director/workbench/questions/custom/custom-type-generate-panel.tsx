@@ -42,7 +42,10 @@ import {
 } from "../../generate/intake/use-generate-extraction";
 import { ExtractionLoadingCards } from "../../generate/intake/extraction-loading-cards";
 import { ExtractionDetailModal } from "../../generate/intake/extraction-detail-modal";
-import { questionSignature, type QueueItem } from "../../generate/generate-page-types";
+import {
+  questionSignature,
+  type QueueItem,
+} from "../../generate/generate-page-types";
 
 import {
   type CustomGenJob,
@@ -76,7 +79,8 @@ function jobToQueueItems(job: CustomGenJob): QueueItem[] {
   if (job.status === "COMPLETED") return [];
   const isErr = job.status === "FAILED";
   const passageN = Number(job.passageCount) > 0 ? Number(job.passageCount) : 1;
-  const createdAt = typeof job.createdAt === "string" ? job.createdAt : undefined;
+  const createdAt =
+    typeof job.createdAt === "string" ? job.createdAt : undefined;
 
   if (isErr) {
     return [
@@ -103,7 +107,9 @@ function jobToQueueItems(job: CustomGenJob): QueueItem[] {
     id: `${job.id}__${i}`,
     passageId: `${job.id}__${i}`,
     passageTitle:
-      passageN > 1 ? `커스텀 문항 생성 (${i + 1}/${passageN})` : "커스텀 문항 생성",
+      passageN > 1
+        ? `커스텀 문항 생성 (${i + 1}/${passageN})`
+        : "커스텀 문항 생성",
     passageContent: "선택한 지문으로 커스텀 유형 문항을 생성하고 있습니다.",
     createdAt,
     passageMeta: {},
@@ -112,7 +118,12 @@ function jobToQueueItems(job: CustomGenJob): QueueItem[] {
     progress: {},
     questions: [],
     // mode='manual' 이라 sum(typeCounts)=perPassage 가 'AI가 N문제…' 진행 라벨로 표시된다.
-    config: { typeCounts: { CUSTOM: perPassage }, difficulty: "", prompt: "", mode: "manual" as const },
+    config: {
+      typeCounts: { CUSTOM: perPassage },
+      difficulty: "",
+      prompt: "",
+      mode: "manual" as const,
+    },
   }));
 }
 
@@ -153,11 +164,16 @@ export function CustomTypeGeneratePanel({
   // ── 커스텀 유형 + 생성 설정(기본 유형지정 모드와 동일: 유형별 개수 + 난이도 + 유형별 임시 override) ──
   const [types, setTypes] = useState<CustomTypeListItem[]>([]);
   const [typeCounts, setTypeCounts] = useState<Record<string, number>>({});
-  const [typeOverrides, setTypeOverrides] = useState<Record<string, CustomTypeOverride>>({});
+  const [typeOverrides, setTypeOverrides] = useState<
+    Record<string, CustomTypeOverride>
+  >({});
   const [expandedTypeId, setExpandedTypeId] = useState<string | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>("INTERMEDIATE");
   const [submitting, setSubmitting] = useState(false);
-  const [editingType, setEditingType] = useState<{ id: string; name: string } | null>(null);
+  const [editingType, setEditingType] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const totalQuestions = useMemo(
     () => Object.values(typeCounts).reduce((a, b) => a + b, 0),
@@ -193,12 +209,16 @@ export function CustomTypeGeneratePanel({
   // ── 생성/검수 결과 (공유 BottomQueueSection 과 동일 데이터 모델) ──
   const [savedQuestions, setSavedQuestions] = useState<QuestionCardItem[]>([]);
   const [loadingSavedQuestions, setLoadingSavedQuestions] = useState(true);
-  const [deletedQuestionIds, setDeletedQuestionIds] = useState<Set<string>>(() => new Set());
-  const [deletedQuestionSignatures, setDeletedQuestionSignatures] = useState<Set<string>>(
+  const [deletedQuestionIds, setDeletedQuestionIds] = useState<Set<string>>(
     () => new Set(),
   );
+  const [deletedQuestionSignatures, setDeletedQuestionSignatures] = useState<
+    Set<string>
+  >(() => new Set());
   const [deletingQuestions, setDeletingQuestions] = useState(false);
-  const [detailQuestion, setDetailQuestion] = useState<QuestionCardItem | null>(null);
+  const [detailQuestion, setDetailQuestion] = useState<QuestionCardItem | null>(
+    null,
+  );
   const qLoadSeq = useRef(0);
   const bottomQueueBoundaryRef = useRef<HTMLElement>(null);
 
@@ -315,7 +335,13 @@ export function CustomTypeGeneratePanel({
         );
       });
     },
-    [loadPassages, setPassageSearch, setSelectedCollectionId, setAnalysisStatusFilter, setSelectedIds],
+    [
+      loadPassages,
+      setPassageSearch,
+      setSelectedCollectionId,
+      setAnalysisStatusFilter,
+      setSelectedIds,
+    ],
   );
 
   const {
@@ -355,10 +381,13 @@ export function CustomTypeGeneratePanel({
   // ── 잡 + 생성 결과 (멀티 유형이라 학원 전체 커스텀 생성분을 본다 — 기본 결과 패널과 동일) ──
   const loadJobs = useCallback(async () => {
     const seq = ++jobLoadSeq.current;
-    const res = await fetch(`/api/custom-question-types/generation-jobs?limit=20`, {
-      credentials: "include",
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `/api/custom-question-types/generation-jobs?limit=20`,
+      {
+        credentials: "include",
+        cache: "no-store",
+      },
+    );
     if (!res.ok) return;
     const data = (await res.json()) as { jobs: CustomGenJob[] };
     if (seq !== jobLoadSeq.current) return;
@@ -367,10 +396,13 @@ export function CustomTypeGeneratePanel({
 
   const loadSavedQuestions = useCallback(async () => {
     const seq = ++qLoadSeq.current;
-    const res = await fetch(`/api/custom-question-types/generations?limit=100`, {
-      credentials: "include",
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `/api/custom-question-types/generations?limit=100`,
+      {
+        credentials: "include",
+        cache: "no-store",
+      },
+    );
     if (!res.ok) {
       if (seq === qLoadSeq.current) setLoadingSavedQuestions(false);
       return;
@@ -386,11 +418,17 @@ export function CustomTypeGeneratePanel({
     void loadSavedQuestions();
   }, [loadJobs, loadSavedQuestions]);
 
-  const hasActiveJobs = useMemo(() => jobs.some((j) => isActive(j.status)), [jobs]);
+  const hasActiveJobs = useMemo(
+    () => jobs.some((j) => isActive(j.status)),
+    [jobs],
+  );
 
   // 진행(PENDING/PROCESSING)·실패(FAILED) 잡만 generating/error 카드로. COMPLETED 는 제외(savedQuestions 담당).
   // 잡이 COMPLETED 로 전이되면 자동으로 큐에서 빠져 진행 카드가 사라지고 결과 카드로 매끄럽게 전환된다.
-  const jobQueue = useMemo<QueueItem[]>(() => jobs.flatMap(jobToQueueItems), [jobs]);
+  const jobQueue = useMemo<QueueItem[]>(
+    () => jobs.flatMap(jobToQueueItems),
+    [jobs],
+  );
 
   useEffect(() => {
     if (!hasActiveJobs) return;
@@ -447,12 +485,19 @@ export function CustomTypeGeneratePanel({
 
   const editor = useQuestionEditor(markQuestionDeletedLocally);
 
-  const applyReviewState = useCallback((questionIds: string[], approved: boolean) => {
-    if (questionIds.length === 0) return;
-    const set = new Set(questionIds);
-    setSavedQuestions((prev) => prev.map((q) => (set.has(q.id) ? { ...q, approved } : q)));
-    setDetailQuestion((prev) => (prev && set.has(prev.id) ? { ...prev, approved } : prev));
-  }, []);
+  const applyReviewState = useCallback(
+    (questionIds: string[], approved: boolean) => {
+      if (questionIds.length === 0) return;
+      const set = new Set(questionIds);
+      setSavedQuestions((prev) =>
+        prev.map((q) => (set.has(q.id) ? { ...q, approved } : q)),
+      );
+      setDetailQuestion((prev) =>
+        prev && set.has(prev.id) ? { ...prev, approved } : prev,
+      );
+    },
+    [],
+  );
 
   const handleApproveQuestion = useCallback(
     async (questionId: string) => {
@@ -542,19 +587,25 @@ export function CustomTypeGeneratePanel({
           });
         }
         setSavedQuestions((prev) => prev.filter((q) => !deletedSet.has(q.id)));
-        setDetailQuestion((prev) => (prev && deletedSet.has(prev.id) ? null : prev));
+        setDetailQuestion((prev) =>
+          prev && deletedSet.has(prev.id) ? null : prev,
+        );
 
         if (result.deleted === 0) {
           toast.error("삭제된 문제가 없습니다.");
         } else if (result.deleted === result.requested) {
           toast.success(`${result.deleted}개 문제를 삭제했습니다.`);
         } else {
-          toast.warning(`${result.deleted}개 삭제됨, ${result.requested - result.deleted}개 누락`);
+          toast.warning(
+            `${result.deleted}개 삭제됨, ${result.requested - result.deleted}개 누락`,
+          );
         }
         reloadSaved();
         return true;
       } catch (err) {
-        toast.error(err instanceof Error ? err.message : "문제 삭제에 실패했습니다.");
+        toast.error(
+          err instanceof Error ? err.message : "문제 삭제에 실패했습니다.",
+        );
         return false;
       } finally {
         setDeletingQuestions(false);
@@ -588,7 +639,9 @@ export function CustomTypeGeneratePanel({
               passageIds,
               countPerPassage: count,
               difficulty,
-              ...(typeOverrides[typeId] ? { overrides: typeOverrides[typeId] } : {}),
+              ...(typeOverrides[typeId]
+                ? { overrides: typeOverrides[typeId] }
+                : {}),
             }),
           })
             .then((r) => r.ok)
@@ -603,11 +656,21 @@ export function CustomTypeGeneratePanel({
       await loadJobs();
       await loadSavedQuestions();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "생성 요청에 실패했습니다.");
+      toast.error(
+        err instanceof Error ? err.message : "생성 요청에 실패했습니다.",
+      );
     } finally {
       setSubmitting(false);
     }
-  }, [selectedIds, typeCounts, typeOverrides, difficulty, totalQuestions, loadJobs, loadSavedQuestions]);
+  }, [
+    selectedIds,
+    typeCounts,
+    typeOverrides,
+    difficulty,
+    totalQuestions,
+    loadJobs,
+    loadSavedQuestions,
+  ]);
 
   // 상세 모달 좌측 지문 분석(있으면) — 목록이 들고 있는 analysis 를 파싱.
   const detailAnalysisData = useMemo(() => {
@@ -652,7 +715,9 @@ export function CustomTypeGeneratePanel({
             }
             library={
               <PassageCardGrid
-                loadingCards={<ExtractionLoadingCards pending={extractionPending} />}
+                loadingCards={
+                  <ExtractionLoadingCards pending={extractionPending} />
+                }
                 passages={passages}
                 filteredPassages={filteredPassages}
                 filterOptions={filterOptions}
@@ -743,7 +808,10 @@ export function CustomTypeGeneratePanel({
 
       {/* 추출/입력 지문 "전체 보기" — 복원 근거 + 추출 이미지 상세 모달. */}
       {detailPassage && (
-        <ExtractionDetailModal passage={detailPassage} onClose={() => setDetailPassage(null)} />
+        <ExtractionDetailModal
+          passage={detailPassage}
+          onClose={() => setDetailPassage(null)}
+        />
       )}
 
       {/* 문제 상세 모달 — 기본 문제 생성과 동일 구성(좌 지문 / 우 문제 + 검수 도장). */}
@@ -755,13 +823,15 @@ export function CustomTypeGeneratePanel({
           />
           <div className="relative z-10 mx-4 my-4 flex w-full max-w-[1200px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
             <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 px-6 py-3">
-              <h2 className="text-[15px] font-bold text-slate-800">문제 상세</h2>
+              <h2 className="text-[15px] font-bold text-slate-800">
+                문제 상세
+              </h2>
               <div className="flex shrink-0 items-center gap-2">
                 {detailQuestion.approved ? (
                   <button
                     type="button"
                     onClick={() => handleUnapproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-red-50 px-2.5 text-[11px] font-semibold text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700"
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-700"
                   >
                     <XCircle className="h-3.5 w-3.5" />
                     검수취소
@@ -770,7 +840,7 @@ export function CustomTypeGeneratePanel({
                   <button
                     type="button"
                     onClick={() => handleApproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-green-200 bg-green-50/60 px-2.5 text-[11px] font-semibold text-green-700 transition-colors hover:border-green-300 hover:bg-green-50 hover:text-green-800"
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     검수완료
@@ -803,7 +873,12 @@ export function CustomTypeGeneratePanel({
               </div>
               <div className="relative overflow-hidden">
                 <div className="h-full overflow-y-auto px-6 py-5">
-                  <QuestionCard q={detailQuestion} num={1} readonly hideReviewStatusStamp />
+                  <QuestionCard
+                    q={detailQuestion}
+                    num={1}
+                    readonly
+                    hideReviewStatusStamp
+                  />
                 </div>
                 <ReviewStatusStamp
                   approved={detailQuestion.approved}

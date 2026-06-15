@@ -43,11 +43,13 @@ export function DraftSelectionToolbar({
     ? "transition-colors"
     : "rounded-lg border shadow-sm transition-colors " +
       (hasSelection
-        ? "border-blue-200/70 bg-gradient-to-r from-blue-50 via-blue-50/90 to-blue-50/70"
+        ? "border-slate-200 bg-slate-50"
         : "border-slate-200 bg-slate-50/80");
 
   return (
-    <div className={`flex min-h-9 shrink-0 ${embedded ? "" : "flex-wrap"} items-center gap-x-1.5 gap-y-1.5 py-1 ${chrome} ${embedded ? "pl-2 pr-0" : "px-2"}`}>
+    <div
+      className={`flex min-h-9 shrink-0 ${embedded ? "" : "flex-wrap"} items-center gap-x-1.5 gap-y-1.5 py-1 ${chrome} ${embedded ? "pl-2 pr-0" : "px-2"}`}
+    >
       <input
         ref={checkboxRef}
         type="checkbox"
@@ -62,7 +64,7 @@ export function DraftSelectionToolbar({
         <span
           className={
             "text-[12px] font-medium tabular-nums " +
-            (hasSelection ? "text-blue-700" : "text-slate-500")
+            (hasSelection ? "text-slate-700" : "text-slate-500")
           }
         >
           {selectedCount}개 선택

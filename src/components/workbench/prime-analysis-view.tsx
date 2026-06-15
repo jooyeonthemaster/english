@@ -6,6 +6,8 @@ import { useCallback, useEffect, useState } from "react";
 import { AnalysisReportDocument } from "@/components/workbench/analysis-report/AnalysisReportDocument";
 import { AnalysisReportEditor } from "@/components/workbench/analysis-report/AnalysisReportEditor";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { notifyCreditsChanged } from "@/lib/credits-client";
 import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
@@ -88,7 +90,13 @@ export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, 
             className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-blue-600 text-[12px] font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
           >
             {generating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkle className="w-3.5 h-3.5" />}
-            {generating ? "생성 중…" : "지문 학습자료로 새로 만들기 (5크레딧)"}
+            {generating ? "생성 중…" : "지문 학습자료로 새로 만들기"}
+            {!generating && (
+              <CreditCostChip
+                amount={CREDIT_COSTS.PASSAGE_ANALYSIS}
+                className="rounded bg-white/20 px-1.5 py-0.5 text-[10px]"
+              />
+            )}
           </button>
         </div>
         <div className="flex-1 overflow-auto px-6 py-5">
@@ -114,7 +122,13 @@ export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, 
           className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-60"
         >
           {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkle className="w-4 h-4" />}
-          {generating ? "생성 중… (20~30초 소요)" : "A4 분석 보고서 생성 (5크레딧)"}
+          {generating ? "생성 중… (20~30초 소요)" : "A4 분석 보고서 생성"}
+          {!generating && (
+            <CreditCostChip
+              amount={CREDIT_COSTS.PASSAGE_ANALYSIS}
+              className="rounded bg-white/20 px-1.5 py-0.5 text-[11px]"
+            />
+          )}
         </button>
         {error ? <p className="text-xs text-red-500 max-w-md">{error}</p> : null}
       </div>

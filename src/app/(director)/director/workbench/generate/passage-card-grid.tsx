@@ -25,14 +25,15 @@ import {
   ChevronUp,
   CornerUpLeft,
   ListFilter,
-  BookOpen,
   Trash2,
-  Braces,
-  Target,
   Folder,
   FolderOpen,
+  FolderPlus,
   FolderX,
+  FilePen,
+  GraduationCap,
 } from "lucide-react";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { Badge } from "@/components/ui/badge";
 import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 import {
@@ -53,6 +54,9 @@ import {
 } from "./generate-page-types";
 import { DragSelect } from "@/components/ui/drag-select";
 import { DragHandle } from "@/components/ui/drag-handle";
+import type { QuestionCardItem } from "@/components/workbench/question-card";
+import { PassageQuestionsSummary } from "./passage-questions-summary";
+import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 
 type ParsedAnalysisSummary = {
   vocabulary?: unknown[];
@@ -73,8 +77,7 @@ const FOLDER_WINDOW_HEIGHT_STORAGE_KEY =
 const FOLDER_WINDOW_MIN_HEIGHT = 48;
 const FOLDER_WINDOW_DEFAULT_HEIGHT = 136;
 const FOLDER_WINDOW_MAX_HEIGHT = 220;
-const ANALYSIS_GLOW_ACK_STORAGE_KEY =
-  "smoat:generate:analysis-glow-ack.v1";
+const ANALYSIS_GLOW_ACK_STORAGE_KEY = "smoat:generate:analysis-glow-ack.v1";
 const RECENT_ANALYSIS_GLOW_WINDOW_MS = 30 * 60 * 1000;
 
 function analysisGlowKey(passage: PassageItem): string | null {
@@ -90,6 +93,17 @@ function analysisGlowKey(passage: PassageItem): string | null {
         ? String(analysis.updatedAt)
         : "";
   return `${passage.id}:${analysis.id ?? "analysis"}:${updated}`;
+}
+
+/** 연월일시분 — 카드 타임스탬프용. 잘못된 값이면 null. */
+function formatMinuteTimestamp(value?: string | Date | null): string | null {
+  if (!value) return null;
+  const d = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(d.getTime())) return null;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(
+    d.getHours(),
+  )}:${pad(d.getMinutes())}`;
 }
 
 function analysisUpdatedAtMs(passage: PassageItem): number | null {
@@ -145,6 +159,10 @@ interface PassageCardGridProps {
     passageIds: string[],
     collectionId: string,
   ) => Promise<void> | void;
+  onCreateCollection?: (
+    name: string,
+    parentId?: string | null,
+  ) => Promise<string | null | undefined> | string | null | undefined;
   onRemoveSelectedFromCollection?: () => Promise<void> | void;
   onDeleteSelectedPassages?: () => Promise<void> | void;
   passageBulkAction?: "move" | "remove" | "delete" | null;
@@ -159,6 +177,16 @@ interface PassageCardGridProps {
   // 지문별 "이미 생성된" 문제 수(실시간). 생략 시 서버 _count 만 사용한다.
   questionCountByPassage?: Map<string, number>;
 
+  // 지문별 생성된 문제 목록. 지문 카드 하단의 "생성된 문제" 요약 토글에 쓴다.
+  questionsByPassage?: Map<string, QuestionCardItem[]>;
+
+  // 학습지 생성(다른 화면)에서 학습자료가 백그라운드로 생성 중인 지문 id.
+  // 카드 테두리에 초록 글로우가 빙글 도는 모션을 띄운다.
+  learningGeneratingPassageIds?: Set<string>;
+  // 방금 학습자료 생성(분석)이 완료된 지문 id — 초록 글로우(클릭 시 해제).
+  // 추출 완료(freshAnalysisPassageIds)의 파란 글로우와 색으로 구분된다.
+  learningCompletedPassageIds?: Set<string>;
+
   // 추출 중인 지문 로딩 카드(이미지·PDF 추출). 카드 그리드 상단에 렌더한다.
   loadingCards?: ReactNode;
   // 방금 추출/분석이 끝난 지문 id. 완료 시각이 늦게 동기화되는 경우에도 글로우를 켠다.
@@ -167,8 +195,20 @@ interface PassageCardGridProps {
   reviewBulkActionRunning?: boolean;
   onBulkCompleteExtractionReview?: (passages: PassageItem[]) => void;
 
+  // 선택한 지문 일괄 학습자료 생성. 버튼에 총 크레딧 소모량을 표시한다.
+  onBulkGenerateLearning?: (passages: PassageItem[]) => void;
+  learningBulkActionRunning?: boolean;
+  learningCreditCostPerPassage?: number;
+
+  // 선택한 지문을 워크스페이스로 보낸다 (학습자료 생성 버튼 오른쪽).
+  onEditSelected?: () => void;
+  // 워크스페이스에 올라간 지문 id. 카드 왼쪽 표시선과 배지로 구분한다.
+  workspacePassageIds?: Set<string>;
+  // 워크스페이스에 작업 중인 지문이 있는지 — 있으면 '추가' 어휘로 바꾼다.
+  workspaceActive?: boolean;
+
   // Actions
-  handleOpenAnalysisModal: (passageId: string) => void;
+  handleOpenAnalysisModal: (passageId: string) => void | Promise<void>;
   // Optional. When provided, clicking "상세 보기" on a 미분석 (un-analyzed) passage
   // opens a plain full-content viewer instead of the analysis/report modal.
   // Omit it (e.g. tutor program builder) to keep the legacy single-modal behavior.
@@ -207,6 +247,7 @@ export function PassageCardGrid({
   onCopySelectedToCollection,
   onMoveSelectedToCollection,
   onMovePassagesToCollection,
+  onCreateCollection,
   onRemoveSelectedFromCollection,
   onDeleteSelectedPassages,
   passageBulkAction = null,
@@ -216,11 +257,20 @@ export function PassageCardGrid({
   selectionActionText,
   selectionActionDisabled,
   questionCountByPassage,
+  questionsByPassage,
+  learningGeneratingPassageIds,
+  learningCompletedPassageIds,
   loadingCards,
   freshAnalysisPassageIds,
   onFreshAnalysisAcknowledged,
   reviewBulkActionRunning = false,
   onBulkCompleteExtractionReview,
+  onBulkGenerateLearning,
+  learningBulkActionRunning = false,
+  learningCreditCostPerPassage = 0,
+  onEditSelected,
+  workspacePassageIds,
+  workspaceActive = false,
   handleOpenAnalysisModal,
   onViewPassageContent,
 }: PassageCardGridProps) {
@@ -228,6 +278,12 @@ export function PassageCardGrid({
   const [folderWindowCollapsed, setFolderWindowCollapsed] = useState(false);
   const [draggingPassageIds, setDraggingPassageIds] = useState<string[]>([]);
   const [dropTargetCollectionId, setDropTargetCollectionId] = useState<
+    string | null
+  >(null);
+  const [showNewFolderInput, setShowNewFolderInput] = useState(false);
+  const [newFolderName, setNewFolderName] = useState("");
+  const [creatingFolder, setCreatingFolder] = useState(false);
+  const [lastCreatedCollectionId, setLastCreatedCollectionId] = useState<
     string | null
   >(null);
   const passageDragRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -251,6 +307,7 @@ export function PassageCardGrid({
       }
     });
   const folderDropRefs = useRef<Map<string, HTMLElement>>(new Map());
+  const newFolderInputRef = useRef<HTMLInputElement>(null);
   const [folderWindowHeight, setFolderWindowHeight] = useState<number>(() => {
     if (typeof window === "undefined") return FOLDER_WINDOW_DEFAULT_HEIGHT;
     try {
@@ -338,22 +395,88 @@ export function PassageCardGrid({
   const selectedReviewDraftPassages = useMemo(
     () =>
       passages.filter(
-        (passage) => selectedIds.has(passage.id) && passage.extractionReviewDraft,
+        (passage) =>
+          selectedIds.has(passage.id) && passage.extractionReviewDraft,
       ),
     [passages, selectedIds],
   );
   const selectedPendingReviewPassages = useMemo(
     () =>
       selectedReviewDraftPassages.filter(
-        (passage) => passage.extractionReviewDraft?.reviewStatus !== "COMMITTED",
+        (passage) =>
+          passage.extractionReviewDraft?.reviewStatus !== "COMMITTED",
       ),
     [selectedReviewDraftPassages],
+  );
+  const firstPendingReviewPassageId = useMemo(
+    () =>
+      filteredPassages.find(
+        (passage) =>
+          passage.extractionReviewDraft &&
+          passage.extractionReviewDraft.reviewStatus !== "COMMITTED",
+      )?.id ?? null,
+    [filteredPassages],
+  );
+  // 일괄 학습자료 생성 대상: 선택된 지문 중 이미 생성이 돌고 있는 것 제외.
+  const selectedLearningTargets = useMemo(
+    () =>
+      passages.filter(
+        (passage) =>
+          selectedIds.has(passage.id) &&
+          !learningGeneratingPassageIds?.has(passage.id),
+      ),
+    [learningGeneratingPassageIds, passages, selectedIds],
+  );
+  const learningBulkCreditCost =
+    selectedLearningTargets.length * learningCreditCostPerPassage;
+  const firstLearningTargetPassageId = useMemo(
+    () =>
+      filteredPassages.find(
+        (passage) => !learningGeneratingPassageIds?.has(passage.id),
+      )?.id ?? null,
+    [filteredPassages, learningGeneratingPassageIds],
   );
   const copySelectedToCollection = onCopySelectedToCollection ?? (() => {});
   const moveSelectedToCollection = onMoveSelectedToCollection ?? (() => {});
   const removeSelectedFromCollection =
     onRemoveSelectedFromCollection ?? (() => {});
   const deleteSelectedPassages = onDeleteSelectedPassages ?? (() => {});
+
+  useEffect(() => {
+    if (!showNewFolderInput) return;
+    window.requestAnimationFrame(() => {
+      newFolderInputRef.current?.focus();
+      newFolderInputRef.current?.select();
+    });
+  }, [showNewFolderInput]);
+
+  useEffect(() => {
+    if (
+      lastCreatedCollectionId &&
+      !collections.some(
+        (collection) => collection.id === lastCreatedCollectionId,
+      )
+    ) {
+      setLastCreatedCollectionId(null);
+    }
+  }, [collections, lastCreatedCollectionId]);
+
+  const handleCreateFolder = useCallback(async () => {
+    const name = newFolderName.trim();
+    if (!name || !onCreateCollection || creatingFolder) return;
+
+    setCreatingFolder(true);
+    try {
+      const id = await onCreateCollection(name, selectedCollectionId || null);
+      if (!id) return;
+      setLastCreatedCollectionId(id);
+      setNewFolderName("");
+      setShowNewFolderInput(false);
+      dispatchGenerateTourMilestone("passage-folder-created");
+    } finally {
+      setCreatingFolder(false);
+    }
+  }, [creatingFolder, newFolderName, onCreateCollection, selectedCollectionId]);
 
   const beginFolderWindowResize = (event: React.PointerEvent) => {
     event.preventDefault();
@@ -410,10 +533,14 @@ export function PassageCardGrid({
       someVisibleSelected && !allVisibleSelected;
   }, [allVisibleSelected, someVisibleSelected]);
 
-  const glowingPassageIds = useMemo(() => {
+  // 파란 글로우: 방금 "추출"이 끝난 지문 (freshAnalysisPassageIds prop).
+  // 초록 글로우: 방금 "학습자료 생성(분석)"이 끝난 지문 — 이번 세션의
+  // learningCompletedPassageIds + 최근 분석 완료 자동 감지(새로고침 후에도
+  // 30분 창 동안 유지, 클릭 ack 는 localStorage 에 남는다).
+  const learningGlowPassageIds = useMemo(() => {
     const next = new Set<string>();
     for (const passage of passages) {
-      if (freshAnalysisPassageIds?.has(passage.id)) {
+      if (learningCompletedPassageIds?.has(passage.id)) {
         next.add(passage.id);
         continue;
       }
@@ -435,14 +562,41 @@ export function PassageCardGrid({
     return next;
   }, [
     acknowledgedAnalysisGlowKeys,
-    freshAnalysisPassageIds,
+    learningCompletedPassageIds,
     mountedAtMs,
     passages,
   ]);
 
-  const openPassageCard = (id: string) => {
+  const glowingPassageIds = useMemo(() => {
+    const next = new Set<string>();
+    for (const passage of passages) {
+      if (
+        freshAnalysisPassageIds?.has(passage.id) &&
+        !learningGlowPassageIds.has(passage.id)
+      ) {
+        next.add(passage.id);
+      }
+    }
+    return next;
+  }, [freshAnalysisPassageIds, learningGlowPassageIds, passages]);
+
+  const firstLearningResultPassageId = useMemo(() => {
+    const completedPassage = filteredPassages.find((passage) =>
+      learningCompletedPassageIds?.has(passage.id),
+    );
+    if (completedPassage) return completedPassage.id;
+
+    return (
+      filteredPassages.find((passage) => learningGlowPassageIds.has(passage.id))
+        ?.id ?? null
+    );
+  }, [filteredPassages, learningCompletedPassageIds, learningGlowPassageIds]);
+
+  const openPassageCard = async (id: string) => {
     const passage = filteredPassages.find((item) => item.id === id);
     if (!passage) return;
+    const isLearningResult =
+      learningCompletedPassageIds?.has(id) || learningGlowPassageIds.has(id);
     onFreshAnalysisAcknowledged?.(id);
     const glowKey = analysisGlowKey(passage);
     if (glowKey) {
@@ -461,11 +615,24 @@ export function PassageCardGrid({
         return next;
       });
     }
-    if (!passage.analysis && onViewPassageContent) {
+    // 추출/입력 원본(draft)이 있는 지문은 분석 완료 여부와 무관하게 상세
+    // 모달(원문·복원문 비교 + 마킹 + 학습자료 생성 단계)을 연다 — 학습자료가
+    // 이미 있으면 그 안의 "학습자료 다시 열기"로 한 번에 볼 수 있다. 분석이
+    // 끝났다고 곧장 보고서로 점프하면 비교·마킹 단계가 사라진 것처럼 보인다.
+    if (
+      onViewPassageContent &&
+      (!passage.analysis || passage.extractionReviewDraft)
+    ) {
       onViewPassageContent(passage);
+      if (isLearningResult) {
+        dispatchGenerateTourMilestone("learning-detail-opened");
+      }
       return;
     }
-    handleOpenAnalysisModal(id);
+    await handleOpenAnalysisModal(id);
+    if (isLearningResult) {
+      dispatchGenerateTourMilestone("learning-detail-opened");
+    }
   };
 
   const handleCardKeyDown = (
@@ -474,7 +641,7 @@ export function PassageCardGrid({
   ) => {
     if (event.key !== "Enter" && event.key !== " ") return;
     event.preventDefault();
-    openPassageCard(id);
+    void openPassageCard(id);
   };
 
   const getDragPassageIds = useCallback(
@@ -633,6 +800,7 @@ export function PassageCardGrid({
     active: boolean,
     onClick: () => void,
     dropCollectionId?: string,
+    tourTarget?: string,
   ) => {
     const isDropTarget =
       !!dropCollectionId && dropTargetCollectionId === dropCollectionId;
@@ -649,6 +817,7 @@ export function PassageCardGrid({
             : undefined
         }
         type="button"
+        data-generate-tour={tourTarget}
         onClick={onClick}
         title={label}
         className={
@@ -771,110 +940,119 @@ export function PassageCardGrid({
 
           {/* 정렬 필터 + 검색 (팝오버) */}
           {setPassageSortOrder ? (
-          <div className="ml-auto flex shrink-0 items-center gap-1.5">
-            {setPassageSortOrder ? (
-            <>
-            <Popover>
-              <PopoverTrigger
-                title="정렬"
-                aria-label="정렬"
-                className="relative flex size-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent text-slate-700 shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[state=open]:border-blue-200 data-[state=open]:bg-blue-50 data-[state=open]:text-blue-700"
-              >
-                <ListFilter className="size-3.5 shrink-0" aria-hidden="true" />
-                {passageSortOrder !== "newest" ? (
-                  <span
-                    aria-hidden="true"
-                    className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
-                  />
-                ) : null}
-              </PopoverTrigger>
-              <PopoverContent align="end" className="w-44 p-1.5">
-                <div className="flex flex-col gap-0.5">
-                  <span className="px-2 py-1 text-[11px] font-medium text-slate-400">
-                    정렬
-                  </span>
-                  {(
-                    [
-                      { value: "newest", label: "최신순" },
-                      { value: "oldest", label: "오래된순" },
-                      { value: "name_asc", label: "이름 오름차순" },
-                      { value: "name_desc", label: "이름 내림차순" },
-                    ] as { value: PassageSortOrder; label: string }[]
-                  ).map((opt) => (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => setPassageSortOrder?.(opt.value)}
+            <div className="ml-auto flex shrink-0 items-center gap-1.5">
+              {setPassageSortOrder ? (
+                <>
+                  <Popover>
+                    <PopoverTrigger
+                      title="정렬"
+                      aria-label="정렬"
+                      className="relative flex size-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent text-slate-700 shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[state=open]:border-blue-200 data-[state=open]:bg-blue-50 data-[state=open]:text-blue-700"
+                    >
+                      <ListFilter
+                        className="size-3.5 shrink-0"
+                        aria-hidden="true"
+                      />
+                      {passageSortOrder !== "newest" ? (
+                        <span
+                          aria-hidden="true"
+                          className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
+                        />
+                      ) : null}
+                    </PopoverTrigger>
+                    <PopoverContent align="end" className="w-44 p-1.5">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="px-2 py-1 text-[11px] font-medium text-slate-400">
+                          정렬
+                        </span>
+                        {(
+                          [
+                            { value: "newest", label: "최신순" },
+                            { value: "oldest", label: "오래된순" },
+                            { value: "name_asc", label: "이름 오름차순" },
+                            { value: "name_desc", label: "이름 내림차순" },
+                          ] as { value: PassageSortOrder; label: string }[]
+                        ).map((opt) => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => setPassageSortOrder?.(opt.value)}
+                            className={
+                              "flex items-center justify-between rounded-md px-2 py-1.5 text-left text-[12px] transition-colors " +
+                              (passageSortOrder === opt.value
+                                ? "bg-blue-50 font-medium text-blue-700"
+                                : "text-slate-600 hover:bg-slate-50")
+                            }
+                          >
+                            {opt.label}
+                            {passageSortOrder === opt.value ? (
+                              <Check
+                                className="size-3.5 shrink-0"
+                                aria-hidden="true"
+                              />
+                            ) : null}
+                          </button>
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+
+                  <Popover>
+                    <PopoverTrigger
+                      title="검색"
+                      aria-label="검색"
                       className={
-                        "flex items-center justify-between rounded-md px-2 py-1.5 text-left text-[12px] transition-colors " +
-                        (passageSortOrder === opt.value
-                          ? "bg-blue-50 font-medium text-blue-700"
-                          : "text-slate-600 hover:bg-slate-50")
+                        "relative flex size-7 shrink-0 items-center justify-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[state=open]:border-blue-200 data-[state=open]:bg-blue-50 data-[state=open]:text-blue-700 " +
+                        (passageSearch
+                          ? "border-blue-200 bg-blue-50 text-blue-700"
+                          : "border-input bg-transparent text-slate-700 hover:bg-slate-50")
                       }
                     >
-                      {opt.label}
-                      {passageSortOrder === opt.value ? (
-                        <Check className="size-3.5 shrink-0" aria-hidden="true" />
+                      <Search
+                        className="size-3.5 shrink-0"
+                        aria-hidden="true"
+                      />
+                      {passageSearch ? (
+                        <span
+                          aria-hidden="true"
+                          className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
+                        />
                       ) : null}
-                    </button>
-                  ))}
-                </div>
-              </PopoverContent>
-            </Popover>
-
-            <Popover>
-              <PopoverTrigger
-                title="검색"
-                aria-label="검색"
-                className={
-                  "relative flex size-7 shrink-0 items-center justify-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[state=open]:border-blue-200 data-[state=open]:bg-blue-50 data-[state=open]:text-blue-700 " +
-                  (passageSearch
-                    ? "border-blue-200 bg-blue-50 text-blue-700"
-                    : "border-input bg-transparent text-slate-700 hover:bg-slate-50")
-                }
-              >
-                <Search className="size-3.5 shrink-0" aria-hidden="true" />
-                {passageSearch ? (
-                  <span
-                    aria-hidden="true"
-                    className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
-                  />
-                ) : null}
-              </PopoverTrigger>
-              <PopoverContent align="end" className="w-60 p-3">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[11px] font-medium text-slate-600">
-                    지문 검색
-                  </label>
-                  <div className="relative">
-                    <Search
-                      className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
-                      aria-hidden="true"
-                    />
-                    <input
-                      autoFocus
-                      placeholder="지문 제목 또는 내용 검색..."
-                      value={passageSearch}
-                      onChange={(e) => setPassageSearch(e.target.value)}
-                      className="h-8 w-full rounded-md border border-slate-200 bg-white pl-7 pr-7 text-[12px] text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
-                    />
-                    {passageSearch ? (
-                      <button
-                        type="button"
-                        onClick={() => setPassageSearch("")}
-                        className="absolute right-1.5 top-1/2 inline-flex size-4 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-                        aria-label="검색 지우기"
-                      >
-                        <X className="size-3" />
-                      </button>
-                    ) : null}
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-            </>
-            ) : null}
-          </div>
+                    </PopoverTrigger>
+                    <PopoverContent align="end" className="w-60 p-3">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[11px] font-medium text-slate-600">
+                          지문 검색
+                        </label>
+                        <div className="relative">
+                          <Search
+                            className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
+                            aria-hidden="true"
+                          />
+                          <input
+                            autoFocus
+                            placeholder="지문 제목 또는 내용 검색..."
+                            value={passageSearch}
+                            onChange={(e) => setPassageSearch(e.target.value)}
+                            className="h-8 w-full rounded-md border border-slate-200 bg-white pl-7 pr-7 text-[12px] text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+                          />
+                          {passageSearch ? (
+                            <button
+                              type="button"
+                              onClick={() => setPassageSearch("")}
+                              className="absolute right-1.5 top-1/2 inline-flex size-4 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                              aria-label="검색 지우기"
+                            >
+                              <X className="size-3" />
+                            </button>
+                          ) : null}
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </>
+              ) : null}
+            </div>
           ) : null}
 
           {folderWindowCollapsed ? (
@@ -895,6 +1073,7 @@ export function PassageCardGrid({
           <>
             <div
               style={{ height: `${folderWindowHeight}px` }}
+              data-generate-tour="library-folder-window"
               className="min-h-0 overflow-y-auto bg-slate-50/70 px-5 py-2.5"
             >
               <div className="flex flex-wrap items-center gap-2.5">
@@ -915,8 +1094,77 @@ export function PassageCardGrid({
                     false,
                     () => setSelectedCollectionId(c.id),
                     c.id,
+                    c.id === lastCreatedCollectionId
+                      ? "library-folder-created-drop-target"
+                      : undefined,
                   ),
                 )}
+                {onCreateCollection ? (
+                  showNewFolderInput ? (
+                    <form
+                      data-generate-tour="library-folder-create-form"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        void handleCreateFolder();
+                      }}
+                      className="flex h-[48px] w-[142px] items-center gap-1.5 rounded-lg border border-blue-200 bg-white px-2 shadow-sm ring-2 ring-blue-100/60"
+                    >
+                      <FolderPlus
+                        className="size-3.5 shrink-0 text-blue-600"
+                        aria-hidden="true"
+                      />
+                      <input
+                        ref={newFolderInputRef}
+                        data-generate-tour="library-folder-name-input"
+                        value={newFolderName}
+                        onChange={(event) =>
+                          setNewFolderName(event.target.value)
+                        }
+                        onKeyDown={(event) => {
+                          if (event.key === "Escape") {
+                            event.preventDefault();
+                            setShowNewFolderInput(false);
+                            setNewFolderName("");
+                          }
+                        }}
+                        placeholder="폴더 이름"
+                        disabled={creatingFolder}
+                        className="min-w-0 flex-1 rounded border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] font-semibold text-slate-700 outline-none focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-500/10 disabled:opacity-50"
+                      />
+                      <button
+                        type="submit"
+                        disabled={!newFolderName.trim() || creatingFolder}
+                        className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md bg-blue-600 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-200"
+                        aria-label="폴더 생성"
+                        title="폴더 생성"
+                      >
+                        {creatingFolder ? (
+                          <Loader2
+                            className="size-3.5 animate-spin"
+                            aria-hidden="true"
+                          />
+                        ) : (
+                          <Check className="size-3.5" aria-hidden="true" />
+                        )}
+                      </button>
+                    </form>
+                  ) : (
+                    <button
+                      type="button"
+                      data-generate-tour="library-folder-create-button"
+                      onClick={() => {
+                        setNewFolderName("");
+                        setShowNewFolderInput(true);
+                      }}
+                      className="group flex size-[48px] cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-blue-200 bg-white px-1 py-1 text-blue-600 shadow-sm transition-all hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:shadow-md"
+                      title="새 폴더 추가"
+                      aria-label="새 폴더 추가"
+                    >
+                      <FolderPlus className="mb-0.5 size-3.5" />
+                      <span className="text-[9.5px] font-bold">추가</span>
+                    </button>
+                  )
+                ) : null}
               </div>
             </div>
             <div className="relative flex shrink-0 items-center justify-end px-4 pb-0 pt-0">
@@ -945,326 +1193,398 @@ export function PassageCardGrid({
         ) : null}
       </div>
 
-      {/* Search & filter bar */}
-      <div className="px-5 py-3 border-b border-slate-100 shrink-0">
+      {/* Search & filter bar — @container: 패널 폭에 따라 일괄 액션 버튼이
+          라벨→아이콘만으로 단계적으로 줄어든다 (뷰포트가 아닌 패널 기준). */}
+      <div
+        className="@container px-5 py-3 border-b border-slate-100 shrink-0"
+        data-generate-tour="library-toolbar"
+      >
         <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
           <div className="flex min-h-9 shrink-0 items-center gap-x-1.5 gap-y-1.5 py-1 pl-2 pr-0 transition-colors">
-              <input
-                ref={selectAllCheckboxRef}
-                type="checkbox"
-                checked={allVisibleSelected}
-                onChange={() =>
-                  allVisibleSelected ? deselectAll() : selectAll()
-                }
-                disabled={filteredPassages.length === 0}
+            <input
+              ref={selectAllCheckboxRef}
+              type="checkbox"
+              checked={allVisibleSelected}
+              onChange={() =>
+                allVisibleSelected ? deselectAll() : selectAll()
+              }
+              disabled={filteredPassages.length === 0}
+              title={
+                allVisibleSelected
+                  ? "선택 해제"
+                  : `${filteredPassages.length}개 전체 선택`
+              }
+              aria-label={allVisibleSelected ? "선택 해제" : "전체 선택"}
+              className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+            />
+            {/* 워크스페이스 액션 묶음 — '추가'(선택 의존, 자체 disabled)와
+                그 오른쪽의 '열기'(선택 무관, 항상 활성). 선택 미선택 시 흐려지는
+                일괄 관리 그룹 밖에 둬 '열기'가 항상 또렷하게 클릭된다. */}
+            {onEditSelected ? (
+              <button
+                type="button"
+                onClick={onEditSelected}
+                disabled={selectedIds.size === 0 || passageBulkAction !== null}
+                data-generate-tour="library-edit-selected"
                 title={
-                  allVisibleSelected
-                    ? "선택 해제"
-                    : `${filteredPassages.length}개 전체 선택`
+                  selectedIds.size > 0
+                    ? workspaceActive
+                      ? `선택한 ${selectedIds.size}개 지문을 작업 중인 워크스페이스에 추가합니다.`
+                      : `선택한 ${selectedIds.size}개 지문을 워크스페이스에서 편집합니다. 편집·AI 변형 후 문제를 생성하세요.`
+                    : "워크스페이스에서 편집할 지문을 선택하세요"
                 }
-                aria-label={allVisibleSelected ? "선택 해제" : "전체 선택"}
-                className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-              />
-              {canManageSelectedPassages ? (
-                <div
-                  className={
-                    "flex items-center gap-3 " +
-                    (selectedIds.size > 0
-                      ? ""
-                      : "pointer-events-none opacity-50")
+                className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-violet-200 bg-white px-2.5 text-[11px] font-medium text-violet-700 shadow-sm transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <FilePen className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="@max-[30rem]:hidden">
+                  {workspaceActive
+                    ? "워크스페이스에 추가"
+                    : "워크스페이스에서 지문 편집"}
+                </span>
+                {selectedIds.size > 0 ? (
+                  <span className="rounded bg-violet-50 px-1 py-px text-[10px] font-semibold tabular-nums text-violet-700 @max-[36rem]:hidden">
+                    {selectedIds.size}개
+                  </span>
+                ) : null}
+              </button>
+            ) : null}
+            {canManageSelectedPassages ? (
+              <div
+                className={
+                  "flex items-center gap-3 @max-[30rem]:gap-1.5 " +
+                  (selectedIds.size > 0 ? "" : "pointer-events-none opacity-50")
+                }
+                aria-disabled={selectedIds.size === 0}
+              >
+                <MoveOrCopyFolderPicker
+                  collections={movePickerCollections}
+                  activeFolder={selectedCollectionId || null}
+                  selectedCount={selectedIds.size}
+                  onCopy={copySelectedToCollection}
+                  onMove={moveSelectedToCollection}
+                  disabled={
+                    selectedIds.size === 0 || passageBulkAction !== null
                   }
-                  aria-disabled={selectedIds.size === 0}
-                >
-                  <MoveOrCopyFolderPicker
-                    collections={movePickerCollections}
-                    activeFolder={selectedCollectionId || null}
-                    selectedCount={selectedIds.size}
-                    onCopy={copySelectedToCollection}
-                    onMove={moveSelectedToCollection}
-                    disabled={
-                      selectedIds.size === 0 || passageBulkAction !== null
-                    }
-                    compact
-                  />
-                  {onBulkCompleteExtractionReview ? (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        onBulkCompleteExtractionReview(selectedReviewDraftPassages)
-                      }
-                      disabled={
-                        selectedPendingReviewPassages.length === 0 ||
-                        reviewBulkActionRunning ||
-                        passageBulkAction !== null
-                      }
-                      title={
-                        selectedPendingReviewPassages.length > 0
-                          ? `검수필요 ${selectedPendingReviewPassages.length}개 검수완료`
-                          : "선택한 자료 중 검수필요 항목이 없습니다"
-                      }
-                      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md bg-emerald-600 px-2.5 text-[11px] font-medium text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {reviewBulkActionRunning ? (
-                        <Loader2
-                          className="h-3.5 w-3.5 animate-spin"
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <CheckCircle2
-                          className="h-3.5 w-3.5"
-                          aria-hidden="true"
-                        />
-                      )}
-                      검수완료
-                    </button>
-                  ) : null}
-                  {canRemoveSelectedFromCollection ? (
-                    <button
-                      type="button"
-                      onClick={removeSelectedFromCollection}
-                      disabled={
-                        selectedIds.size === 0 || passageBulkAction !== null
-                      }
-                      title="폴더에서 삭제"
-                      aria-label="폴더에서 삭제"
-                      className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {passageBulkAction === "remove" ? (
-                        <Loader2
-                          className="h-3.5 w-3.5 animate-spin"
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <FolderX className="h-3.5 w-3.5" aria-hidden="true" />
-                      )}
-                    </button>
-                  ) : null}
+                  compact
+                />
+                {onBulkCompleteExtractionReview ? (
                   <button
                     type="button"
-                    onClick={deleteSelectedPassages}
-                    disabled={
-                      selectedIds.size === 0 || passageBulkAction !== null
+                    onClick={() =>
+                      onBulkCompleteExtractionReview(
+                        selectedReviewDraftPassages,
+                      )
                     }
-                    title="삭제"
-                    aria-label="삭제"
-                    className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    data-generate-tour="library-review-complete"
+                    disabled={
+                      selectedPendingReviewPassages.length === 0 ||
+                      reviewBulkActionRunning ||
+                      passageBulkAction !== null
+                    }
+                    title={
+                      selectedPendingReviewPassages.length > 0
+                        ? `검수필요 ${selectedPendingReviewPassages.length}개 검수완료`
+                        : "선택한 자료 중 검수필요 항목이 없습니다"
+                    }
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-medium text-slate-600 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {passageBulkAction === "delete" ? (
+                    {reviewBulkActionRunning ? (
                       <Loader2
                         className="h-3.5 w-3.5 animate-spin"
                         aria-hidden="true"
                       />
                     ) : (
-                      <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                      <CheckCircle2
+                        className="h-3.5 w-3.5"
+                        aria-hidden="true"
+                      />
+                    )}
+                    <span className="@max-[30rem]:hidden">검수완료</span>
+                  </button>
+                ) : null}
+                {onBulkGenerateLearning ? (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      onBulkGenerateLearning(selectedLearningTargets)
+                    }
+                    data-generate-tour="library-learning-generate"
+                    disabled={
+                      selectedLearningTargets.length === 0 ||
+                      learningBulkActionRunning ||
+                      passageBulkAction !== null
+                    }
+                    title={
+                      selectedLearningTargets.length > 0
+                        ? `선택한 ${selectedLearningTargets.length}개 지문의 학습자료를 생성합니다 (크레딧 ${learningBulkCreditCost} 소모)`
+                        : "학습자료를 생성할 지문을 선택하세요"
+                    }
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-medium text-slate-600 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {learningBulkActionRunning ? (
+                      <Loader2
+                        className="h-3.5 w-3.5 animate-spin"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <GraduationCap
+                        className="h-3.5 w-3.5"
+                        aria-hidden="true"
+                      />
+                    )}
+                    <span className="@max-[30rem]:hidden">학습자료 생성</span>
+                    {selectedLearningTargets.length > 0 ? (
+                      <CreditCostChip
+                        amount={learningBulkCreditCost}
+                        className="rounded bg-slate-100 px-1 py-px text-[10px] text-slate-600 @max-[36rem]:hidden"
+                      />
+                    ) : null}
+                  </button>
+                ) : null}
+                {canRemoveSelectedFromCollection ? (
+                  <button
+                    type="button"
+                    onClick={removeSelectedFromCollection}
+                    disabled={
+                      selectedIds.size === 0 || passageBulkAction !== null
+                    }
+                    title="폴더에서 삭제"
+                    aria-label="폴더에서 삭제"
+                    className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {passageBulkAction === "remove" ? (
+                      <Loader2
+                        className="h-3.5 w-3.5 animate-spin"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <FolderX className="h-3.5 w-3.5" aria-hidden="true" />
                     )}
                   </button>
-                </div>
-              ) : null}
-            </div>
-          <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
-              <Popover>
-                <PopoverTrigger
-                  title={
-                    activeFilterCount > 0
-                      ? `필터 ${activeFilterCount}개 적용`
-                      : "필터"
+                ) : null}
+                <button
+                  type="button"
+                  onClick={deleteSelectedPassages}
+                  disabled={
+                    selectedIds.size === 0 || passageBulkAction !== null
                   }
-                  aria-label="필터"
-                  className={`relative flex size-7 shrink-0 items-center justify-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[state=open]:border-blue-200 data-[state=open]:bg-blue-50 data-[state=open]:text-blue-700 ${
-                    activeFilterCount > 0
-                      ? "border-blue-200 bg-blue-50 text-blue-700"
-                      : "border-input bg-transparent text-slate-700 hover:bg-slate-50"
-                  }`}
+                  title="삭제"
+                  aria-label="삭제"
+                  className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <ListFilter
-                    className="size-3.5 shrink-0"
-                    aria-hidden="true"
-                  />
-                  {activeFilterCount > 0 ? (
-                    <span
+                  {passageBulkAction === "delete" ? (
+                    <Loader2
+                      className="h-3.5 w-3.5 animate-spin"
                       aria-hidden="true"
-                      className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
                     />
-                  ) : null}
-                </PopoverTrigger>
-                <PopoverContent align="end" className="w-60 p-3">
-                  <div className="flex flex-col gap-3">
-                    {filterOptions.schools.length > 0 && (
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-[11px] font-medium text-slate-600">
-                          학교
-                        </label>
-                        <select
-                          value={filterSchool}
-                          onChange={(e) => setFilterSchool(e.target.value)}
-                          className={`h-8 px-2.5 pr-6 rounded-md text-[12px] font-medium border appearance-none cursor-pointer transition-all ${
-                            filterSchool
-                              ? "bg-blue-50 text-blue-700 border-blue-300"
-                              : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
-                          }`}
-                        >
-                          <option value="">학교 전체</option>
-                          {filterOptions.schools.map((s) => (
-                            <option key={s.id} value={s.id}>
-                              {s.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    )}
-                    {filterOptions.grades.length > 0 && (
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-[11px] font-medium text-slate-600">
-                          학년
-                        </label>
-                        <select
-                          value={filterGrade}
-                          onChange={(e) => setFilterGrade(e.target.value)}
-                          className={`h-8 px-2.5 pr-6 rounded-md text-[12px] font-medium border appearance-none cursor-pointer transition-all ${
-                            filterGrade
-                              ? "bg-blue-50 text-blue-700 border-blue-300"
-                              : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
-                          }`}
-                        >
-                          <option value="">학년 전체</option>
-                          {filterOptions.grades.map((g) => (
-                            <option key={g} value={g}>
-                              {g}학년
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    )}
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[11px] font-medium text-slate-600">
-                        학기
-                      </label>
-                      <div className="flex gap-1 rounded-lg border border-slate-200 p-0.5 bg-slate-50">
-                        {[
-                          { value: "", label: "전체" },
-                          { value: "FIRST", label: "1학기" },
-                          { value: "SECOND", label: "2학기" },
-                        ].map((s) => (
-                          <button
-                            key={s.value}
-                            type="button"
-                            onClick={() => setFilterSemester(s.value)}
-                            className={`h-6 flex-1 rounded-md text-[11px] font-medium transition-all ${
-                              filterSemester === s.value
-                                ? "bg-white text-blue-700 shadow-sm"
-                                : "text-slate-400 hover:text-slate-600"
-                            }`}
-                          >
-                            {s.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[11px] font-medium text-slate-600">
-                        분석 상태
-                      </label>
-                      <div className="flex gap-1 rounded-lg border border-slate-200 p-0.5 bg-slate-50">
-                        {[
-                          {
-                            value: "all" as const,
-                            label: "전체",
-                            count: passageStatusCounts.all,
-                          },
-                          {
-                            value: "analyzed" as const,
-                            label: "분석 완료",
-                            count: passageStatusCounts.analyzed,
-                          },
-                          {
-                            value: "unanalyzed" as const,
-                            label: "미분석",
-                            count: passageStatusCounts.unanalyzed,
-                          },
-                        ].map((s) => (
-                          <button
-                            key={s.value}
-                            type="button"
-                            onClick={() => setAnalysisStatusFilter(s.value)}
-                            className={`h-6 flex-1 rounded-md text-[11px] font-medium transition-all ${
-                              analysisStatusFilter === s.value
-                                ? "bg-white text-blue-700 shadow-sm"
-                                : "text-slate-400 hover:text-slate-600"
-                            }`}
-                          >
-                            {s.label}{" "}
-                            <span className="text-[10px] opacity-70">
-                              {s.count}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    {activeFilterCount > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setFilterSchool("");
-                          setFilterGrade("");
-                          setFilterSemester("");
-                          setAnalysisStatusFilter("all");
-                        }}
-                        className="flex items-center justify-center gap-1 text-[11px] font-medium text-blue-600 hover:text-blue-700"
-                      >
-                        <X className="w-3 h-3" />
-                        초기화
-                      </button>
-                    )}
-                  </div>
-                </PopoverContent>
-              </Popover>
-              <button
-                type="button"
-                onClick={() => setShowSearch((open) => !open)}
-                aria-expanded={showSearch}
-                title={passageSearch ? "검색어 적용 중" : "검색"}
-                aria-label="검색"
-                className={`relative flex size-7 shrink-0 items-center justify-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 ${
-                  showSearch || passageSearch
+                  ) : (
+                    <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                  )}
+                </button>
+              </div>
+            ) : null}
+          </div>
+          <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+            <Popover>
+              <PopoverTrigger
+                title={
+                  activeFilterCount > 0
+                    ? `필터 ${activeFilterCount}개 적용`
+                    : "필터"
+                }
+                aria-label="필터"
+                className={`relative flex size-7 shrink-0 items-center justify-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[state=open]:border-blue-200 data-[state=open]:bg-blue-50 data-[state=open]:text-blue-700 ${
+                  activeFilterCount > 0
                     ? "border-blue-200 bg-blue-50 text-blue-700"
                     : "border-input bg-transparent text-slate-700 hover:bg-slate-50"
                 }`}
               >
-                <Search className="size-3.5 shrink-0" aria-hidden="true" />
-                {passageSearch ? (
+                <ListFilter className="size-3.5 shrink-0" aria-hidden="true" />
+                {activeFilterCount > 0 ? (
                   <span
                     aria-hidden="true"
                     className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
                   />
                 ) : null}
-              </button>
-            </div>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-60 p-3">
+                <div className="flex flex-col gap-3">
+                  {filterOptions.schools.length > 0 && (
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[11px] font-medium text-slate-600">
+                        학교
+                      </label>
+                      <select
+                        value={filterSchool}
+                        onChange={(e) => setFilterSchool(e.target.value)}
+                        className={`h-8 px-2.5 pr-6 rounded-md text-[12px] font-medium border appearance-none cursor-pointer transition-all ${
+                          filterSchool
+                            ? "bg-blue-50 text-blue-700 border-blue-300"
+                            : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
+                        }`}
+                      >
+                        <option value="">학교 전체</option>
+                        {filterOptions.schools.map((s) => (
+                          <option key={s.id} value={s.id}>
+                            {s.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                  {filterOptions.grades.length > 0 && (
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[11px] font-medium text-slate-600">
+                        학년
+                      </label>
+                      <select
+                        value={filterGrade}
+                        onChange={(e) => setFilterGrade(e.target.value)}
+                        className={`h-8 px-2.5 pr-6 rounded-md text-[12px] font-medium border appearance-none cursor-pointer transition-all ${
+                          filterGrade
+                            ? "bg-blue-50 text-blue-700 border-blue-300"
+                            : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
+                        }`}
+                      >
+                        <option value="">학년 전체</option>
+                        {filterOptions.grades.map((g) => (
+                          <option key={g} value={g}>
+                            {g}학년
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[11px] font-medium text-slate-600">
+                      학기
+                    </label>
+                    <div className="flex gap-1 rounded-lg border border-slate-200 p-0.5 bg-slate-50">
+                      {[
+                        { value: "", label: "전체" },
+                        { value: "FIRST", label: "1학기" },
+                        { value: "SECOND", label: "2학기" },
+                      ].map((s) => (
+                        <button
+                          key={s.value}
+                          type="button"
+                          onClick={() => setFilterSemester(s.value)}
+                          className={`h-6 flex-1 rounded-md text-[11px] font-medium transition-all ${
+                            filterSemester === s.value
+                              ? "bg-white text-blue-700 shadow-sm"
+                              : "text-slate-400 hover:text-slate-600"
+                          }`}
+                        >
+                          {s.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[11px] font-medium text-slate-600">
+                      분석 상태
+                    </label>
+                    <div className="flex gap-1 rounded-lg border border-slate-200 p-0.5 bg-slate-50">
+                      {[
+                        {
+                          value: "all" as const,
+                          label: "전체",
+                          count: passageStatusCounts.all,
+                        },
+                        {
+                          value: "analyzed" as const,
+                          label: "분석 완료",
+                          count: passageStatusCounts.analyzed,
+                        },
+                        {
+                          value: "unanalyzed" as const,
+                          label: "미분석",
+                          count: passageStatusCounts.unanalyzed,
+                        },
+                      ].map((s) => (
+                        <button
+                          key={s.value}
+                          type="button"
+                          onClick={() => setAnalysisStatusFilter(s.value)}
+                          className={`h-6 flex-1 rounded-md text-[11px] font-medium transition-all ${
+                            analysisStatusFilter === s.value
+                              ? "bg-white text-blue-700 shadow-sm"
+                              : "text-slate-400 hover:text-slate-600"
+                          }`}
+                        >
+                          {s.label}{" "}
+                          <span className="text-[10px] opacity-70">
+                            {s.count}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {activeFilterCount > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFilterSchool("");
+                        setFilterGrade("");
+                        setFilterSemester("");
+                        setAnalysisStatusFilter("all");
+                      }}
+                      className="flex items-center justify-center gap-1 text-[11px] font-medium text-blue-600 hover:text-blue-700"
+                    >
+                      <X className="w-3 h-3" />
+                      초기화
+                    </button>
+                  )}
+                </div>
+              </PopoverContent>
+            </Popover>
+            <button
+              type="button"
+              onClick={() => setShowSearch((open) => !open)}
+              aria-expanded={showSearch}
+              title={passageSearch ? "검색어 적용 중" : "검색"}
+              aria-label="검색"
+              className={`relative flex size-7 shrink-0 items-center justify-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 ${
+                showSearch || passageSearch
+                  ? "border-blue-200 bg-blue-50 text-blue-700"
+                  : "border-input bg-transparent text-slate-700 hover:bg-slate-50"
+              }`}
+            >
+              <Search className="size-3.5 shrink-0" aria-hidden="true" />
+              {passageSearch ? (
+                <span
+                  aria-hidden="true"
+                  className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
+                />
+              ) : null}
+            </button>
+          </div>
         </div>
 
-          {showSearch && (
-            <div className="mt-1.5 border-t border-slate-100 pt-2">
-              <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-slate-400" />
-                <input
-                  placeholder="지문 제목 또는 내용으로 검색..."
-                  value={passageSearch}
-                  onChange={(e) => setPassageSearch(e.target.value)}
-                  className="h-8 w-full rounded-md border border-slate-200 bg-slate-50 pl-7 pr-7 text-[12px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-500/10"
-                />
-                {passageSearch ? (
-                  <button
-                    type="button"
-                    onClick={() => setPassageSearch("")}
-                    className="absolute right-1.5 top-1/2 inline-flex size-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
-                    aria-label="검색어 지우기"
-                    title="검색어 지우기"
-                  >
-                    <X className="size-3" aria-hidden="true" />
-                  </button>
-                ) : null}
-              </div>
+        {showSearch && (
+          <div className="mt-1.5 border-t border-slate-100 pt-2">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-slate-400" />
+              <input
+                placeholder="지문 제목 또는 내용으로 검색..."
+                value={passageSearch}
+                onChange={(e) => setPassageSearch(e.target.value)}
+                className="h-8 w-full rounded-md border border-slate-200 bg-slate-50 pl-7 pr-7 text-[12px] text-slate-700 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-500/10"
+              />
+              {passageSearch ? (
+                <button
+                  type="button"
+                  onClick={() => setPassageSearch("")}
+                  className="absolute right-1.5 top-1/2 inline-flex size-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+                  aria-label="검색어 지우기"
+                  title="검색어 지우기"
+                >
+                  <X className="size-3" aria-hidden="true" />
+                </button>
+              ) : null}
             </div>
-          )}
+          </div>
+        )}
       </div>
 
       {/* Passage card grid -- scrollable */}
@@ -1296,236 +1616,284 @@ export function PassageCardGrid({
             boundaryRef={marqueeBoundaryRef}
           >
             <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3">
-            {filteredPassages.map((p) => {
-              // Parse analysis
-              let aData: ParsedAnalysisSummary | null = null;
-              if (p.analysis?.analysisData) {
-                try {
-                  aData =
-                    typeof p.analysis.analysisData === "string"
-                      ? JSON.parse(p.analysis.analysisData)
-                      : p.analysis.analysisData;
-                } catch {}
-              }
-              const vocabCount = aData?.vocabulary?.length || 0;
-              const grammarCount = aData?.grammarPoints?.length || 0;
-              const syntaxCount = aData?.syntaxAnalysis?.length || 0;
-              const keySentenceCount =
-                aData?.structure?.topicSentenceIndex != null ? 1 : 0;
-              const examPointCount =
-                (aData?.examDesign?.paraphrasableSegments?.length || 0) +
-                (aData?.examDesign?.structureTransformPoints?.length || 0);
-              const mainIdea = aData?.structure?.mainIdea;
-              // 이 지문으로 이미 생성된 문제 수. 서버 _count(로드 시점 총계)와
-              // 실시간 집계(savedQuestions 기반) 중 큰 값 — 새로고침 없이 방금
-              // 생성한 문제도 반영된다.
-              const generatedQuestionCount = Math.max(
-                p._count?.questions ?? 0,
-                questionCountByPassage?.get(p.id) ?? 0,
-              );
+              {filteredPassages.map((p, cardIndex) => {
+                // Parse analysis
+                let aData: ParsedAnalysisSummary | null = null;
+                if (p.analysis?.analysisData) {
+                  try {
+                    aData =
+                      typeof p.analysis.analysisData === "string"
+                        ? JSON.parse(p.analysis.analysisData)
+                        : p.analysis.analysisData;
+                  } catch {}
+                }
+                const mainIdea = aData?.structure?.mainIdea;
+                // 이 지문으로 이미 생성된 문제 수. 서버 _count(로드 시점 총계)와
+                // 실시간 집계(savedQuestions 기반) 중 큰 값 — 새로고침 없이 방금
+                // 생성한 문제도 반영된다.
+                const generatedQuestionCount = Math.max(
+                  p._count?.questions ?? 0,
+                  questionCountByPassage?.get(p.id) ?? 0,
+                );
 
-              const isChecked = selectedIds.has(p.id);
-              const hasAnalysis = !!p.analysis;
-              const isGlowing = glowingPassageIds.has(p.id);
-              const reviewDraft = p.extractionReviewDraft ?? null;
-              const hasReviewDraft = reviewDraft != null;
-              const isReviewCommitted =
-                reviewDraft?.reviewStatus === "COMMITTED";
-              const reviewStampLabel = isReviewCommitted
-                ? "검수완료"
-                : "검수필요";
+                const isChecked = selectedIds.has(p.id);
+                const isInWorkspace = workspacePassageIds?.has(p.id) ?? false;
+                const hasAnalysis = !!p.analysis;
+                const isLearningGenerating =
+                  learningGeneratingPassageIds?.has(p.id) ?? false;
+                const isLearningGlow =
+                  !isLearningGenerating && learningGlowPassageIds.has(p.id);
+                const isGlowing =
+                  !isLearningGenerating &&
+                  !isLearningGlow &&
+                  glowingPassageIds.has(p.id);
+                const reviewDraft = p.extractionReviewDraft ?? null;
+                const hasReviewDraft = reviewDraft != null;
+                const isReviewCommitted =
+                  reviewDraft?.reviewStatus === "COMMITTED";
+                const reviewStampLabel = isReviewCommitted
+                  ? "검수완료"
+                  : "검수필요";
 
-              return (
-                <div
-                  key={p.id}
-                  data-drag-item-id={p.id}
-                  ref={(node) => {
-                    if (node) passageDragRefs.current.set(p.id, node);
-                    else passageDragRefs.current.delete(p.id);
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`${p.title} 상세 보기`}
-                  onClick={() => openPassageCard(p.id)}
-                  onKeyDown={(e) => handleCardKeyDown(p.id, e)}
-                  className={`group relative flex flex-col overflow-hidden rounded-xl border p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
-                    isChecked
-                      ? "border-blue-400 bg-blue-50/20 ring-1 ring-blue-300/30"
-                      : hasReviewDraft && !isReviewCommitted
-                        ? "border-red-200/80 bg-white shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)] hover:border-red-300/80"
-                        : hasAnalysis
-                          ? "border-emerald-200 bg-white"
-                          : "border-slate-200 bg-white"
-                  } ${
-                    draggingPassageIds.includes(p.id)
-                      ? "opacity-60 ring-2 ring-blue-200"
-                      : ""
-                  } ${
-                    isGlowing
-                      ? "!border-blue-400 !bg-blue-50/25 !ring-2 !ring-blue-400/60 !shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_36px_12px_rgba(37,99,235,0.36)] hover:!shadow-[0_0_0_1px_rgba(37,99,235,0.55),0_0_42px_14px_rgba(37,99,235,0.46)] motion-safe:animate-pulse"
-                      : ""
-                  } outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
-                >
-                  {hasReviewDraft ? (
-                    <span
-                      role="img"
-                      aria-label={reviewStampLabel}
+                return (
+                  <div
+                    key={p.id}
+                    data-drag-item-id={p.id}
+                    data-generate-tour={
+                      p.id === firstLearningResultPassageId
+                        ? "passage-learning-result-card"
+                        : cardIndex === 0
+                          ? "passage-card"
+                          : undefined
+                    }
+                    ref={(node) => {
+                      if (node) passageDragRefs.current.set(p.id, node);
+                      else passageDragRefs.current.delete(p.id);
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${p.title} 상세 보기`}
+                    onClick={() => void openPassageCard(p.id)}
+                    onKeyDown={(e) => handleCardKeyDown(p.id, e)}
+                    className={`group relative flex flex-col overflow-hidden rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
+                      isChecked
+                        ? "border-blue-400 ring-2 ring-blue-300/30"
+                        : hasReviewDraft && !isReviewCommitted
+                          ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)] hover:border-red-300/80"
+                          : hasAnalysis
+                            ? "border-slate-200"
+                            : "border-slate-200"
+                    } ${
+                      draggingPassageIds.includes(p.id)
+                        ? "opacity-60 ring-2 ring-blue-200"
+                        : ""
+                    } ${
+                      isGlowing
+                        ? "!border-blue-400 !bg-blue-50/25 !ring-2 !ring-blue-400/60 !shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_36px_12px_rgba(37,99,235,0.36)] hover:!shadow-[0_0_0_1px_rgba(37,99,235,0.55),0_0_42px_14px_rgba(37,99,235,0.46)] motion-safe:animate-pulse"
+                        : ""
+                    } ${
+                      isLearningGlow
+                        ? "!border-blue-400 !bg-blue-50/25 !ring-2 !ring-blue-400/60 !shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_36px_12px_rgba(37,99,235,0.36)] hover:!shadow-[0_0_0_1px_rgba(37,99,235,0.55),0_0_42px_14px_rgba(37,99,235,0.46)] motion-safe:animate-pulse"
+                        : ""
+                    } ${
+                      isLearningGenerating
+                        ? "learning-generating-glow !border-blue-200 !shadow-[0_0_24px_4px_rgba(37,99,235,0.18)]"
+                        : ""
+                    } outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
+                  >
+                    {isInWorkspace ? (
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-1 bg-violet-500"
+                      />
+                    ) : null}
+                    {hasReviewDraft ? (
+                      <span
+                        role="img"
+                        aria-label={reviewStampLabel}
+                        className={
+                          "pointer-events-none absolute right-1.5 top-1.5 z-10 flex size-7 -rotate-12 select-none items-center justify-center whitespace-nowrap rounded-full text-[7px] font-bold tracking-tighter " +
+                          (isReviewCommitted
+                            ? "border-2 border-slate-500 bg-white/70 text-slate-600 shadow-sm backdrop-blur-[1px]"
+                            : "border border-dashed border-red-300/70 bg-red-50/30 text-[7.5px] tracking-tight text-red-400/80")
+                        }
+                      >
+                        {reviewStampLabel}
+                      </span>
+                    ) : null}
+                    {/* Header with handle + checkbox */}
+                    <div
                       className={
-                        "pointer-events-none absolute right-1.5 top-1.5 z-10 flex size-7 -rotate-12 select-none items-center justify-center whitespace-nowrap rounded-full text-[7px] font-bold tracking-tighter " +
-                        (isReviewCommitted
-                          ? "border-2 border-emerald-600/85 bg-white/70 text-emerald-700 shadow-sm backdrop-blur-[1px]"
-                          : "border border-dashed border-red-300/70 bg-red-50/30 text-[7.5px] tracking-tight text-red-400/80")
+                        "flex items-start justify-between gap-2 " +
+                        (hasReviewDraft ? "pr-8" : "")
                       }
                     >
-                      {reviewStampLabel}
-                    </span>
-                  ) : null}
-                  {/* Header with handle + checkbox */}
-                  <div
-                    className={
-                      "flex items-start justify-between gap-2 " +
-                      (hasReviewDraft ? "pr-8" : "")
-                    }
-                  >
-                    <div className="flex items-start gap-2.5 min-w-0 flex-1">
-                      {/* Drag handle (folder 이동) — passageBulkAction 중에는 숨김 */}
-                      {passageBulkAction === null && (
-                        <DragHandle
-                          ref={(node) => {
-                            if (node) passageHandleRefs.current.set(p.id, node);
-                            else passageHandleRefs.current.delete(p.id);
-                          }}
-                          className="mt-0.5 shrink-0"
-                        />
-                      )}
-                      {/* Checkbox */}
-                      <button
-                        type="button"
-                        aria-pressed={isChecked}
-                        aria-label={`${p.title} passage ${isChecked ? "deselect" : "select"}`}
-                        onClick={(e) => toggleCheckbox(p.id, e)}
-                        className={`w-[18px] h-[18px] rounded flex items-center justify-center shrink-0 mt-0.5 transition-all ${
-                          isChecked
-                            ? "bg-blue-600 text-white border border-blue-600"
-                            : "bg-white border border-slate-300 text-transparent hover:border-blue-400 hover:text-blue-400"
-                        }`}
-                      >
-                        <Check className="w-3 h-3" />
-                      </button>
-                      <div className="min-w-0 flex-1">
-                        <h4 className="text-[13px] font-semibold text-slate-800 truncate">
-                          {p.title}
-                        </h4>
-                        <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                          {p.analysis && (
-                            <span className="text-[10px] font-medium text-emerald-600">
-                              분석 완료
+                      <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                        {/* Drag handle (folder 이동) — passageBulkAction 중에는 숨김 */}
+                        {passageBulkAction === null && (
+                          <DragHandle
+                            ref={(node) => {
+                              if (node)
+                                passageHandleRefs.current.set(p.id, node);
+                              else passageHandleRefs.current.delete(p.id);
+                            }}
+                            data-generate-tour={
+                              cardIndex === 0
+                                ? "passage-card-drag-handle"
+                                : undefined
+                            }
+                            className="mt-0.5 shrink-0"
+                          />
+                        )}
+                        {/* Checkbox */}
+                        <button
+                          type="button"
+                          aria-pressed={isChecked}
+                          aria-label={`${p.title} passage ${isChecked ? "deselect" : "select"}`}
+                          data-generate-tour={
+                            p.id === firstPendingReviewPassageId
+                              ? "passage-review-checkbox"
+                              : p.id === firstLearningTargetPassageId
+                                ? "passage-learning-checkbox"
+                                : cardIndex === 0
+                                  ? "passage-card-checkbox"
+                                  : undefined
+                          }
+                          onClick={(e) => toggleCheckbox(p.id, e)}
+                          className={`w-[18px] h-[18px] rounded flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+                            isChecked
+                              ? "bg-blue-600 text-white border border-blue-600"
+                              : "bg-white border border-slate-300 text-transparent hover:border-blue-400 hover:text-blue-400"
+                          }`}
+                        >
+                          <Check className="w-3 h-3" />
+                        </button>
+                        <div className="min-w-0 flex-1">
+                          <h4 className="text-[13px] font-semibold text-slate-800 truncate">
+                            {p.title}
+                          </h4>
+                          <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                            {p.analysis && (
+                              <span className="text-[10px] font-medium text-slate-500">
+                                분석 완료
+                              </span>
+                            )}
+                            {!hasAnalysis && (
+                              <span className="text-[10px] font-medium text-slate-400">
+                                미분석
+                              </span>
+                            )}
+                            {isDirectInputPassage(p.source) && (
+                              <span className="inline-flex items-center rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
+                                직접 입력
+                              </span>
+                            )}
+                            {isInWorkspace && (
+                              <span
+                                title="이미 워크스페이스에 담겨 작업 중인 지문이에요"
+                                className="inline-flex items-center rounded border border-violet-200 bg-white px-1.5 py-0.5 text-[10px] font-semibold text-violet-700"
+                              >
+                                워크스페이스
+                              </span>
+                            )}
+                            <span className="text-[10px] text-slate-400">
+                              {countWords(p.content)} words
                             </span>
-                          )}
-                          {!hasAnalysis && (
-                            <span className="text-[10px] font-medium text-slate-400">
-                              미분석
-                            </span>
-                          )}
-                          {isDirectInputPassage(p.source) && (
-                            <span className="inline-flex items-center text-[10px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
-                              직접 입력
-                            </span>
-                          )}
-                          <span className="text-[10px] text-slate-400">
-                            {countWords(p.content)} words
-                          </span>
-                          {generatedQuestionCount > 0 && (
-                            <span
-                              className="inline-flex items-center gap-1 text-[10px] font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded"
-                              title={`이 지문으로 생성된 문제 ${generatedQuestionCount}개`}
-                            >
-                              <FileText className="w-3 h-3" /> 문제 {generatedQuestionCount}
-                            </span>
-                          )}
+                            {(() => {
+                              const created = formatMinuteTimestamp(
+                                p.createdAt,
+                              );
+                              if (!created) return null;
+                              const updated = formatMinuteTimestamp(
+                                p.updatedAt,
+                              );
+                              return (
+                                <span
+                                  className="text-[10px] tabular-nums text-slate-400"
+                                  title={
+                                    updated && updated !== created
+                                      ? `등록 ${created} · 수정 ${updated}`
+                                      : `등록 ${created}`
+                                  }
+                                >
+                                  {created}
+                                </span>
+                              );
+                            })()}
+                            {isLearningGenerating && (
+                              <span
+                                className="learning-generating-text text-[10.5px] font-bold"
+                                title="이 지문의 학습자료가 백그라운드에서 생성되고 있습니다"
+                              >
+                                학습자료 생성중
+                              </span>
+                            )}
+                            {generatedQuestionCount > 0 && (
+                              <span
+                                className="inline-flex items-center gap-1 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600"
+                                title={`이 지문으로 생성된 문제 ${generatedQuestionCount}개`}
+                              >
+                                <FileText className="w-3 h-3" /> 문제{" "}
+                                {generatedQuestionCount}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
+
+                    {/* Content preview */}
+                    <p className="text-[11px] text-slate-500 leading-relaxed mt-2.5 line-clamp-3">
+                      {p.content.slice(0, 200)}...
+                    </p>
+
+                    {/* Main idea + Meta */}
+                    <div className="mt-3 space-y-2">
+                      {mainIdea && (
+                        <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-2">
+                          {mainIdea}
+                        </p>
+                      )}
+                      {(p.school || p.grade || p.semester) && (
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {p.school && (
+                            <Badge
+                              variant="outline"
+                              className="text-[9px] h-5 px-1.5 font-medium"
+                            >
+                              {p.school.name}
+                            </Badge>
+                          )}
+                          {p.grade && (
+                            <Badge
+                              variant="secondary"
+                              className="text-[9px] h-5 px-1.5"
+                            >
+                              {p.grade}학년
+                            </Badge>
+                          )}
+                          {p.semester && (
+                            <Badge
+                              variant="secondary"
+                              className="text-[9px] h-5 px-1.5"
+                            >
+                              {p.semester === "FIRST" ? "1학기" : "2학기"}
+                            </Badge>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex-1" />
+
+                    <PassageQuestionsSummary
+                      questions={questionsByPassage?.get(p.id) ?? []}
+                    />
+
+                    <CardHoverActionLabel className="bottom-2 right-3" />
                   </div>
-
-                  {/* Content preview */}
-                  <p className="text-[11px] text-slate-500 leading-relaxed mt-2.5 line-clamp-3">
-                    {p.content.slice(0, 200)}...
-                  </p>
-
-                  {/* Main idea + Meta + Analysis badges */}
-                  <div className="mt-3 space-y-2">
-                    {mainIdea && (
-                      <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-2">
-                        {mainIdea}
-                      </p>
-                    )}
-                    {(p.school || p.grade || p.semester) && (
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        {p.school && (
-                          <Badge
-                            variant="outline"
-                            className="text-[9px] h-5 px-1.5 font-medium"
-                          >
-                            {p.school.name}
-                          </Badge>
-                        )}
-                        {p.grade && (
-                          <Badge
-                            variant="secondary"
-                            className="text-[9px] h-5 px-1.5"
-                          >
-                            {p.grade}학년
-                          </Badge>
-                        )}
-                        {p.semester && (
-                          <Badge
-                            variant="secondary"
-                            className="text-[9px] h-5 px-1.5"
-                          >
-                            {p.semester === "FIRST" ? "1학기" : "2학기"}
-                          </Badge>
-                        )}
-                      </div>
-                    )}
-                    {aData && (
-                      <div className="flex items-center gap-2 flex-wrap">
-                        {vocabCount > 0 && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-medium text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
-                            <BookOpen className="w-3 h-3" /> 어휘 {vocabCount}
-                          </span>
-                        )}
-                        {grammarCount > 0 && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-medium text-violet-600 bg-violet-50 px-1.5 py-0.5 rounded">
-                            <Braces className="w-3 h-3" /> 어법 {grammarCount}
-                          </span>
-                        )}
-                        {syntaxCount > 0 && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-medium text-cyan-600 bg-cyan-50 px-1.5 py-0.5 rounded">
-                            <Braces className="w-3 h-3" /> 읽기포인트 {syntaxCount}
-                          </span>
-                        )}
-                        {keySentenceCount > 0 && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-medium text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
-                            핵심문장 {keySentenceCount}
-                          </span>
-                        )}
-                        {examPointCount > 0 && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-medium text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">
-                            <Target className="w-3 h-3" /> 출제포인트{" "}
-                            {examPointCount}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex-1" />
-
-                  <CardHoverActionLabel className="bottom-2 right-3" />
-                </div>
-              );
-            })}
+                );
+              })}
             </div>
           </DragSelect>
         )}

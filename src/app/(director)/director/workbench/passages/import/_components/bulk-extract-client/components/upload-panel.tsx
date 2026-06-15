@@ -26,6 +26,7 @@ import {
 import { ExtractionTaskListIcon } from "@/components/icons/workflow-icons";
 import { MAX_PAGES_PER_JOB, MAX_PDF_BYTES } from "@/lib/extraction/constants";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import type { ClientPageSlot } from "@/lib/extraction/types";
 
 import { ACCEPTED } from "../constants";
@@ -357,12 +358,11 @@ export function UploadPanel({
               {selectedOutput === "restored" ? "복원하여 추출 시작" : "추출 시작"}
               {fileTotalPassages > 0 ? ` (지문 ${fileTotalPassages}개)` : ""}
               {fileTotalPassages > 0 ? (
-                <span
-                  className="ml-2 inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-bold"
-                  title={`지문당 ◈${creditsPerPassage} × ${fileTotalPassages}개 = ◈${fileProjectedCredits} 소모`}
-                >
-                  ◈{fileProjectedCredits.toLocaleString("ko-KR")} 소모
-                </span>
+                <CreditCostChip
+                  amount={fileProjectedCredits}
+                  className="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-[11px]"
+                  title={`지문당 크레딧 ${creditsPerPassage} × ${fileTotalPassages}개 = 크레딧 ${fileProjectedCredits} 소모`}
+                />
               ) : null}
             </>
           )}
@@ -379,12 +379,22 @@ export function UploadPanel({
     {
       v: "verbatim" as const,
       label: "그대로 추출",
-      badge: `지문당 ◈${verbatimCredits}`,
+      badge: (
+        <span className="inline-flex items-center gap-0.5">
+          지문당{" "}
+          <CreditCostChip amount={verbatimCredits} iconClassName="size-2.5" />
+        </span>
+      ),
     },
     {
       v: "restored" as const,
       label: "AI로 원문 복원",
-      badge: `지문당 ◈${restoredCredits}`,
+      badge: (
+        <span className="inline-flex items-center gap-0.5">
+          지문당{" "}
+          <CreditCostChip amount={restoredCredits} iconClassName="size-2.5" />
+        </span>
+      ),
     },
   ];
   const controlRowClass =

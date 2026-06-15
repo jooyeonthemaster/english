@@ -13,7 +13,7 @@ import {
  * Resizable / collapsible two-pane workspace shell that mirrors the
  * passage-analysis (학습지생성) form-section chrome: a rounded card with a
  * header row, a horizontally split body whose LEFT pane (학습지 관리) can be
- * resized and collapsed, a flex-1 RIGHT pane (작업대), and a bottom handle
+ * resized and collapsed, a flex-1 RIGHT pane (워크스페이스), and a bottom handle
  * that resizes the overall body height.
  */
 
@@ -82,19 +82,18 @@ function readStoredCollapsed(): boolean {
 
 interface WorkspaceShellProps {
   header: ReactNode;
-  /** LEFT pane content — the 학습지 관리 panel. */
+  /** LEFT pane content — optional collapsible workspace/tool panel. */
   left: ReactNode;
-  /** RIGHT pane content — the 문제 생성 작업대. */
+  /** RIGHT pane content — main work surface. */
   right: ReactNode;
   /** Vertical label shown on the left collapse/resize handle. */
   leftLabel?: string;
-  /**
-   * 증가할 때마다 왼쪽 패널을 접는다 — "선택 지문 불러오기" 직후 지문 목록이
-   * 옆으로 샤라락 접히며 작업 공간이 넓어지는 UX 용. 0이면 무시.
-   */
+  /** 증가할 때마다 왼쪽 패널을 접는다. 0이면 무시. */
   leftCollapseSignal?: number;
-  /** 증가할 때마다 왼쪽 패널을 편다 — 빈 워크스페이스의 "내 지문 열기" 용. */
+  /** 증가할 때마다 왼쪽 패널을 편다. */
   leftOpenSignal?: number;
+  /** false이면 왼쪽 패널과 여닫기 핸들을 모두 숨긴다. */
+  leftActive?: boolean;
   /**
    * 우측 패널 최소폭 — 워크스페이스+설정 2분할이면 560, 설정 단독이면
    * 더 좁아도 되므로 호출부에서 상태에 맞게 내려준다.
@@ -109,6 +108,7 @@ export function WorkspaceShell({
   leftLabel = "지문",
   leftCollapseSignal = 0,
   leftOpenSignal = 0,
+  leftActive = true,
   rightPaneMin = RIGHT_PANE_MIN,
 }: WorkspaceShellProps) {
   const splitContainerRef = useRef<HTMLDivElement>(null);
@@ -118,8 +118,11 @@ export function WorkspaceShell({
   const [leftPaneOpen, setLeftPaneOpen] = useState<boolean>(
     readStoredLeftPaneOpen,
   );
+  // 드래그 리사이즈 중에는 width 트랜지션을 꺼서 손을 따라오게 한다.
+  const [leftDragging, setLeftDragging] = useState(false);
   const [bodyHeight, setBodyHeight] = useState<number>(readStoredBodyHeight);
   const [collapsed, setCollapsed] = useState<boolean>(readStoredCollapsed);
+  const leftPaneVisible = leftActive && leftPaneOpen;
 
   const updateCollapsed = useCallback((next: boolean) => {
     setCollapsed(next);
@@ -130,7 +133,7 @@ export function WorkspaceShell({
     }
   }, []);
 
-  // 불러오기 직후 지문 목록을 접어 작업 공간을 넓힌다 (영구 저장은 하지 않음 —
+  // 호출부 신호로 왼쪽 패널을 임시 접는다 (영구 저장은 하지 않음 —
   // 다음 방문 때는 사용자가 저장해둔 열림 상태를 따른다).
   useEffect(() => {
     if (leftCollapseSignal > 0) setLeftPaneOpen(false);
@@ -175,6 +178,7 @@ export function WorkspaceShell({
         if (!didDrag) {
           if (Math.abs(delta) < DRAG_THRESHOLD) return;
           didDrag = true;
+          setLeftDragging(true);
           document.body.style.cursor = "col-resize";
           document.body.style.userSelect = "none";
         }
@@ -186,6 +190,7 @@ export function WorkspaceShell({
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
         if (didDrag) {
+          setLeftDragging(false);
           document.body.style.cursor = "";
           document.body.style.userSelect = "";
           try {
@@ -276,27 +281,44 @@ export function WorkspaceShell({
         ) : null}
       </div>
 
-      {!collapsed ? (
-      <>
+      {/* 접기/펼치기 — grid-template-rows 트랜지션으로 높이가 부드럽게
+          접힌다 (height:auto 는 직접 애니메이션이 안 되는 것의 우회). */}
+      <div
+        className="grid transition-[grid-template-rows] duration-500 ease-in-out"
+        style={{ gridTemplateRows: collapsed ? "0fr" : "1fr" }}
+        aria-hidden={collapsed}
+      >
+      <div className="min-h-0 overflow-hidden">
       <div className="px-4 pt-4 pb-3">
         <div
           ref={splitContainerRef}
           className="flex w-full min-w-0 max-w-full flex-row gap-0 overflow-hidden"
           style={{ height: `${bodyHeight}px` }}
         >
-          {/* LEFT: 학습지 관리 panel (collapsible / resizable) */}
-          {leftPaneOpen ? (
-            <>
-              <div
-                className="flex min-h-0 min-w-0 shrink-0 flex-col overflow-hidden rounded-lg border border-slate-200"
-                style={{
-                  // 저장된 폭(기본 560)이 작은 컨테이너에서 우측 패널을
-                  // RIGHT_PANE_MIN 미만으로 밀어내지 않게 렌더 폭도 클램프.
-                  width: `min(${leftPaneWidth}px, ${LEFT_PANE_MAX_RATIO * 100}%, calc(100% - ${rightPaneMin + HANDLE_HIT_WIDTH + 8}px))`,
-                }}
-              >
-                {left}
-              </div>
+          {/* LEFT: optional panel (collapsible / resizable) —
+              닫기는 unmount 가 아니라 width 트랜지션으로 스르륵 접힌다.
+              드래그 리사이즈 중에는 트랜지션을 꺼서 손을 즉시 따라온다. */}
+          <div
+            className={
+              "flex min-h-0 min-w-0 shrink-0 flex-col overflow-hidden rounded-lg " +
+              (leftPaneVisible ? "border border-slate-200 " : "border-0 ") +
+              (leftDragging
+                ? ""
+                : "transition-[width] duration-500 ease-in-out")
+            }
+            style={{
+              // 저장된 폭(기본 560)이 작은 컨테이너에서 우측 패널을
+              // RIGHT_PANE_MIN 미만으로 밀어내지 않게 렌더 폭도 클램프.
+              width: leftPaneVisible
+                ? `min(${leftPaneWidth}px, ${LEFT_PANE_MAX_RATIO * 100}%, calc(100% - ${rightPaneMin + HANDLE_HIT_WIDTH + 8}px))`
+                : "0px",
+            }}
+            aria-hidden={!leftPaneVisible}
+          >
+            {leftPaneVisible ? left : null}
+          </div>
+          {leftActive ? (
+            leftPaneOpen ? (
               <button
                 type="button"
                 onPointerDown={handleCloseLeftPanePointerDown}
@@ -305,23 +327,33 @@ export function WorkspaceShell({
                 className="group/lhandle mx-0.5 flex w-5 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1.5 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
               >
                 <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
-                <span style={{ writingMode: "vertical-rl" }}>{leftLabel} 닫기</span>
+                <span style={{ writingMode: "vertical-rl" }}>
+                  {leftLabel} 닫기
+                </span>
                 <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/lhandle:opacity-70" />
               </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              onClick={toggleLeftPaneOpen}
-              title="클릭하여 지문 패널 열기"
-              className="mx-0.5 flex min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1.5 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-            >
-              <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-              <span style={{ writingMode: "vertical-rl" }}>{leftLabel} 열기</span>
-            </button>
-          )}
+            ) : (
+              <button
+                type="button"
+                // onClick 대신 pointerdown — 닫기 핸들과 같은 자리에 스왑되므로,
+                // 닫기 직후 브라우저가 쏘는 잔여 click 이 이 버튼에 떨어져
+                // 곧바로 다시 열리는 사고를 막는다 (click 은 무시됨).
+                onPointerDown={(e) => {
+                  if (e.button !== 0) return;
+                  toggleLeftPaneOpen();
+                }}
+                title={`클릭하여 ${leftLabel} 열기`}
+                className="mx-0.5 flex min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1.5 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+              >
+                <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+                <span style={{ writingMode: "vertical-rl" }}>
+                  {leftLabel} 열기
+                </span>
+              </button>
+            )
+          ) : null}
 
-          {/* RIGHT: 문제 생성 작업대 */}
+          {/* RIGHT: main work surface */}
           <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200">
             {right}
           </div>
@@ -353,8 +385,8 @@ export function WorkspaceShell({
           <span>접기</span>
         </button>
       </div>
-      </>
-      ) : null}
+      </div>
+      </div>
     </section>
   );
 }

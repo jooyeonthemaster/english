@@ -97,14 +97,8 @@ export function JobCard({
 }: JobCardProps) {
   const dragRef = useRef<HTMLElement>(null);
   const Icon = tone === "emerald" ? Layers : FileText;
-  const activeRing =
-    tone === "emerald"
-      ? "border-emerald-400 ring-2 ring-emerald-200"
-      : "border-blue-500 ring-2 ring-blue-200";
-  const activeSurface =
-    tone === "emerald"
-      ? "bg-emerald-50 shadow-emerald-100/70"
-      : "bg-blue-50 shadow-blue-100/70";
+  const activeRing = "border-blue-400 ring-2 ring-blue-200/60";
+  const activeSurface = "bg-white shadow-blue-100/60";
   const cardClass = active
     ? `${activeRing} ${activeSurface} shadow-md`
     : "border-slate-200 shadow-sm hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md";
@@ -203,10 +197,10 @@ export function JobCard({
         (selectionMode
           ? "cursor-pointer "
           : canDrag
-          ? isDragging
-            ? "cursor-grabbing opacity-60 "
-            : "cursor-grab active:cursor-grabbing "
-          : "cursor-pointer ") +
+            ? isDragging
+              ? "cursor-grabbing opacity-60 "
+              : "cursor-grab active:cursor-grabbing "
+            : "cursor-pointer ") +
         cardClass
       }
     >
@@ -281,7 +275,7 @@ export function JobCard({
           </span>
         ) : null}
         {active ? (
-          <span className="absolute bottom-1 left-1 inline-flex items-center gap-1 rounded-full bg-blue-600 px-1.5 py-0.5 text-[10.5px] font-bold text-white shadow-sm ring-1 ring-white/70">
+          <span className="absolute bottom-1 left-1 inline-flex items-center gap-1 rounded-full bg-slate-900/80 px-1.5 py-0.5 text-[10.5px] font-bold text-white shadow-sm ring-1 ring-white/70">
             <CheckCircle2 className="size-3" aria-hidden="true" />
             선택됨
           </span>
@@ -291,7 +285,7 @@ export function JobCard({
             className="absolute inset-0 flex items-center justify-center bg-slate-900/30"
             aria-label="진행 중"
           >
-            <span className="inline-flex size-12 items-center justify-center rounded-full bg-blue-600 text-white shadow-md ring-4 ring-white/70">
+            <span className="inline-flex size-12 items-center justify-center rounded-full bg-slate-900/80 text-white shadow-md ring-4 ring-white/70">
               <Loader2 className="size-7 animate-spin" aria-hidden="true" />
             </span>
           </span>
@@ -307,8 +301,7 @@ export function JobCard({
       </div>
       <div
         className={
-          "min-w-0 " +
-          (variant === "compact" ? "px-1 py-0.5" : "px-2 py-1.5")
+          "min-w-0 " + (variant === "compact" ? "px-1 py-0.5" : "px-2 py-1.5")
         }
       >
         <div className="flex min-w-0 items-start gap-0.5">

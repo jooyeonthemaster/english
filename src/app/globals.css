@@ -686,6 +686,39 @@
   }
 }
 
+/* 문제 유형을 아직 하나도 고르지 않았을 때, "+" 버튼이 행동 유도(CTA)로
+   파란 링을 부드럽게 뿜으며 반짝인다 — 첫 유형 선택 전까지만 노출한다. */
+@keyframes type-add-cta-pulse {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(37, 99, 235, 0.5),
+      0 0 6px 1px rgba(37, 99, 235, 0.45);
+  }
+  70% {
+    box-shadow:
+      0 0 0 6px rgba(37, 99, 235, 0),
+      0 0 12px 3px rgba(37, 99, 235, 0.6);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(37, 99, 235, 0),
+      0 0 6px 1px rgba(37, 99, 235, 0.45);
+  }
+}
+.type-add-cta-glow {
+  animation: type-add-cta-pulse 1.9s ease-out infinite;
+  background-color: rgba(37, 99, 235, 0.12);
+  color: rgb(37, 99, 235);
+}
+@media (prefers-reduced-motion: reduce) {
+  .type-add-cta-glow {
+    animation: none;
+    background-color: rgba(37, 99, 235, 0.12);
+    color: rgb(37, 99, 235);
+    box-shadow: 0 0 8px 2px rgba(37, 99, 235, 0.5);
+  }
+}
+
 .workbench-loading-progress--pending {
   width: 34%;
 }
@@ -1217,3 +1250,99 @@
 .dark .ann-sentence:hover { background: linear-gradient(to right, #16a34a 3px, rgba(34, 197, 94, 0.24) 3px); }
 .dark .ann-grammar:hover { background-color: rgba(139, 92, 246, 0.22); }
 .dark .ann-syntax:hover { background-color: rgba(8, 145, 178, 0.2); }
+
+/* ============================================================================
+   학습자료 생성중 — 카드 테두리를 따라 초록 글로우가 빙글 도는 모션.
+   conic-gradient 의 시작각(--smoat-spin-glow-angle)을 회전시키고, mask 로
+   테두리 2px 링만 남긴다. 카드(rounded-xl, overflow-hidden) 안쪽에 그려지므로
+   inset:0 기준. @property 미지원 브라우저에선 정지된 초록 링으로 폴백된다.
+   ============================================================================ */
+@property --smoat-spin-glow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes smoat-spin-glow {
+  to {
+    --smoat-spin-glow-angle: 360deg;
+  }
+}
+
+.learning-generating-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem; /* 카드 rounded-xl 과 동일 */
+  padding: 2px;
+  background: conic-gradient(
+    from var(--smoat-spin-glow-angle),
+    rgba(16, 185, 129, 0) 0deg,
+    rgba(16, 185, 129, 0.95) 70deg,
+    rgba(52, 211, 153, 0.5) 115deg,
+    rgba(16, 185, 129, 0) 170deg,
+    rgba(16, 185, 129, 0) 180deg,
+    rgba(16, 185, 129, 0.55) 250deg,
+    rgba(16, 185, 129, 0) 320deg
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: smoat-spin-glow 1.8s linear infinite;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* 학습자료 생성중 텍스트 — 초록 그라디언트가 좌→우로 흐르는 셔머 + 점 애니메이션.
+   회전 글로우(.learning-generating-glow)와 함께 카드 안에서 진행 상태를 알린다. */
+@keyframes smoat-loading-text-sweep {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes smoat-loading-dots {
+  0%,
+  20% {
+    content: "";
+  }
+  40% {
+    content: ".";
+  }
+  60% {
+    content: "..";
+  }
+  80%,
+  100% {
+    content: "...";
+  }
+}
+
+.learning-generating-text {
+  background: linear-gradient(
+    90deg,
+    #059669 0%,
+    #34d399 35%,
+    #a7f3d0 50%,
+    #34d399 65%,
+    #059669 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: smoat-loading-text-sweep 1.8s linear infinite;
+}
+
+.learning-generating-text::after {
+  content: "...";
+  animation: smoat-loading-dots 1.6s steps(1, end) infinite;
+}

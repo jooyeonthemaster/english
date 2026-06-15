@@ -36,7 +36,13 @@ type DragState =
       originY: number;
       joinWithActiveGroup: boolean;
     }
-  | { mode: "move"; index: number; grabX: number; grabY: number; start: CropBox }
+  | {
+      mode: "move";
+      index: number;
+      grabX: number;
+      grabY: number;
+      start: CropBox;
+    }
   | { mode: "resize"; index: number; handle: ResizeHandle };
 
 export interface CropCanvasChangeMeta {
@@ -210,7 +216,13 @@ export function CropCanvas({
       if (!rect) return;
       const { x, y } = toNormalized(e.clientX, e.clientY, rect);
       onActiveIndexChange(index);
-      beginDrag({ mode: "move", index, grabX: x, grabY: y, start: boxes[index] });
+      beginDrag({
+        mode: "move",
+        index,
+        grabX: x,
+        grabY: y,
+        start: boxes[index],
+      });
     },
     [beginDrag, boxes, disabled, onActiveIndexChange, readRect],
   );
@@ -277,7 +289,9 @@ export function CropCanvas({
           e.preventDefault();
           const arr = boxes.filter((_, i) => i !== activeIndex);
           onChange(arr);
-          onActiveIndexChange(arr.length > 0 ? Math.max(0, activeIndex - 1) : null);
+          onActiveIndexChange(
+            arr.length > 0 ? Math.max(0, activeIndex - 1) : null,
+          );
           break;
         }
         default:
@@ -307,6 +321,7 @@ export function CropCanvas({
     >
       <div
         ref={wrapperRef}
+        data-generate-tour="file-crop-page"
         className={
           isWidthFit
             ? "relative block w-full leading-none select-none"
@@ -407,7 +422,9 @@ export function CropCanvas({
                 ? RESIZE_HANDLES.map((h) => (
                     <span
                       key={h}
-                      onPointerDown={(e) => handleHandlePointerDown(e, index, h)}
+                      onPointerDown={(e) =>
+                        handleHandlePointerDown(e, index, h)
+                      }
                       style={{
                         left: HANDLE_POS[h].left,
                         top: HANDLE_POS[h].top,

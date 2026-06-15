@@ -4,6 +4,7 @@ import { useMemo, type Dispatch, type SetStateAction } from "react";
 import { Loader2, Plus, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   getQuestionGenerationCreditCost,
@@ -166,9 +167,10 @@ export function PassageInputStack({
             )}
             일반 분석 시작
             {countChip}
-            <span className="inline-flex items-center gap-0.5 rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700">
-              {standardTotal.toLocaleString("ko-KR")} 크레딧
-            </span>
+            <CreditCostChip
+              amount={standardTotal}
+              className="rounded bg-blue-100 px-1.5 py-0.5 text-[10px] text-blue-700"
+            />
           </Button>
         )}
         <Button
@@ -183,9 +185,10 @@ export function PassageInputStack({
           )}
           분석 시작
           {countChip}
-          <span className="inline-flex items-center gap-0.5 rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold">
-            {primaryTotal.toLocaleString("ko-KR")} 크레딧
-          </span>
+          <CreditCostChip
+            amount={primaryTotal}
+            className="rounded bg-white/20 px-1.5 py-0.5 text-[10px]"
+          />
         </Button>
       </div>
     </div>

@@ -27,6 +27,8 @@ export interface PassageItem {
   publisher: string | null;
   difficulty: string | null;
   source?: string | null;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
   school: { id: string; name: string } | null;
   content: string;
   analysis?: { id?: string; analysisData: string; updatedAt?: string | Date } | null;

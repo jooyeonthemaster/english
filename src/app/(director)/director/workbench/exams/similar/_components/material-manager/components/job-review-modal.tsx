@@ -12,10 +12,7 @@ import { DragSelect } from "@/components/ui/drag-select";
 import type { M1PassageDraftWithJob } from "../types";
 import type { JobMetaSnapshot } from "../drafts-cache";
 import { compareDraftAnalysisPriority } from "../utils/analysis-status";
-import {
-  DraftCard,
-  type DraftCardStatusBadgeMode,
-} from "./draft-card";
+import { DraftCard, type DraftCardStatusBadgeMode } from "./draft-card";
 import { ImagePages, type PageImage } from "./image-carousel";
 
 interface JobReviewModalProps {
@@ -266,7 +263,10 @@ export function JobReviewModal({
   const resetSplit = useCallback(() => {
     setImageHeight(IMAGE_DEFAULT_HEIGHT);
     try {
-      window.localStorage.setItem(IMAGE_HEIGHT_KEY, String(IMAGE_DEFAULT_HEIGHT));
+      window.localStorage.setItem(
+        IMAGE_HEIGHT_KEY,
+        String(IMAGE_DEFAULT_HEIGHT),
+      );
     } catch {
       /* ignore */
     }
@@ -321,10 +321,7 @@ export function JobReviewModal({
     );
   }, [jobMeta]);
 
-  const allIds = useMemo(
-    () => orderedDrafts.map((d) => d.id),
-    [orderedDrafts],
-  );
+  const allIds = useMemo(() => orderedDrafts.map((d) => d.id), [orderedDrafts]);
   const allChecked =
     allIds.length > 0 && allIds.every((id) => checkedIds.has(id));
   // Restrict the "selected count" and folder-action payloads to drafts visible
@@ -438,7 +435,7 @@ export function JobReviewModal({
       {/* Header */}
       <div className="flex shrink-0 items-center justify-between gap-4 border-b border-slate-200 bg-white px-5 py-3 xl:px-6">
         <div className="flex min-w-0 items-center gap-3">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-slate-500 ring-1 ring-slate-200">
             <FileText className="size-4" aria-hidden="true" />
           </span>
           <div className="min-w-0">
@@ -521,7 +518,7 @@ export function JobReviewModal({
                   disabled={anyBulkRunning || !hasModalSelection}
                   title="검수완료"
                   aria-label="검수완료"
-                  className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md bg-emerald-600 text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md bg-blue-600 text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isPromoting ? (
                     <Loader2
@@ -529,10 +526,7 @@ export function JobReviewModal({
                       aria-hidden="true"
                     />
                   ) : (
-                    <CheckCircle2
-                      className="h-3.5 w-3.5"
-                      aria-hidden="true"
-                    />
+                    <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                   )}
                 </button>
               ) : null}
@@ -569,7 +563,10 @@ export function JobReviewModal({
             </div>
           </div>
 
-          <div ref={draftListRef} className="min-h-0 flex-1 overflow-y-auto p-3">
+          <div
+            ref={draftListRef}
+            className="min-h-0 flex-1 overflow-y-auto p-3"
+          >
             {orderedDrafts.length === 0 ? (
               <p className="py-12 text-center text-[12px] text-slate-400">
                 추출된 자료가 없습니다.

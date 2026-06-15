@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { GenerationPlanSelector } from "@/components/workbench/generation-plan-selector";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
   ANALYSIS_TONE_OPTIONS,
@@ -113,7 +115,10 @@ export function AnalysisPromptPanel({
               <>
                 <RefreshCw className="w-4 h-4 mr-1.5" />
                 다시 분석하기
-                <span className="ml-1.5 text-[10px] font-semibold bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">5 크레딧</span>
+                <CreditCostChip
+                  amount={CREDIT_COSTS.PASSAGE_ANALYSIS}
+                  className="ml-1.5 rounded bg-blue-50 px-1.5 py-0.5 text-[10px] text-blue-600"
+                />
               </>
             )}
           </Button>

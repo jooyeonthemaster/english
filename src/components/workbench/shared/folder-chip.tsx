@@ -17,7 +17,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { CollectionItem } from "./types";
-import { FOLDER_COLORS } from "./constants";
 import { formatFolderDate } from "./folder-date";
 
 interface FolderChipProps {
@@ -47,10 +46,6 @@ export function FolderChip({
   const [editName, setEditName] = useState(collection.name);
   const dropRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const color =
-    collection.color ||
-    FOLDER_COLORS[collection.name.charCodeAt(0) % FOLDER_COLORS.length];
-
   useEffect(() => {
     const el = dropRef.current;
     if (!el) return;
@@ -62,8 +57,7 @@ export function FolderChip({
       onDrop: ({ source }) => {
         setIsDragOver(false);
         const itemId = source.data[dragItemIdKey] as string;
-        const isCopy =
-          (window.event as DragEvent | null)?.shiftKey ?? false;
+        const isCopy = (window.event as DragEvent | null)?.shiftKey ?? false;
         onFileDrop(itemId, collection.id, isCopy);
       },
     });
@@ -101,10 +95,10 @@ export function FolderChip({
     return (
       <div
         ref={dropRef}
-        className="flex flex-col items-center justify-center w-[120px] h-[80px] rounded-xl border-2 border-blue-400 bg-blue-50/60 backdrop-blur-sm shadow-lg transition-all animate-in fade-in zoom-in-95 duration-200"
+        className="flex flex-col items-center justify-center w-[120px] h-[80px] rounded-xl border-2 border-blue-400 bg-white backdrop-blur-sm shadow-lg ring-2 ring-blue-200/50 transition-all animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <Folder className="w-5 h-5 mb-1.5" style={{ color }} />
+        <Folder className="w-5 h-5 mb-1.5 text-slate-500" />
         <input
           ref={inputRef}
           value={editName}
@@ -130,14 +124,14 @@ export function FolderChip({
       onDoubleClick={startEditing}
       className={`group relative flex w-[64px] cursor-pointer flex-col items-center justify-center rounded-lg border px-1 py-1 shadow-sm motion-safe:transition-all motion-safe:duration-200 ${
         isDragOver
-          ? "scale-105 border-blue-400 bg-blue-50 shadow-md ring-2 ring-blue-200/60"
+          ? "scale-105 border-blue-400 bg-white shadow-md ring-2 ring-blue-200/60"
           : "border-slate-200 bg-white hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
       }`}
     >
       {isDragOver ? (
-        <FolderOpen className="mb-0.5 size-3" style={{ color }} />
+        <FolderOpen className="mb-0.5 size-3 text-blue-600" />
       ) : (
-        <Folder className="mb-0.5 size-3" style={{ color }} />
+        <Folder className="mb-0.5 size-3 text-slate-500" />
       )}
       <span className="max-w-[56px] truncate text-center text-[9.5px] font-bold leading-tight text-slate-800">
         {collection.name}
@@ -168,7 +162,8 @@ export function FolderChip({
               startEditing();
             }}
           >
-            <Pencil className="w-3.5 h-3.5 mr-2" />이름 변경
+            <Pencil className="w-3.5 h-3.5 mr-2" />
+            이름 변경
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -178,7 +173,8 @@ export function FolderChip({
             }}
             className="text-red-600"
           >
-            <Trash2 className="w-3.5 h-3.5 mr-2" />삭제
+            <Trash2 className="w-3.5 h-3.5 mr-2" />
+            삭제
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -83,6 +83,7 @@ import { useDraftActions } from "./hooks/use-draft-actions";
 import { useDraftDisplay } from "./hooks/use-draft-display";
 import { useDraftsData } from "./hooks/use-drafts-data";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   getQuestionGenerationCreditCost,
@@ -1508,10 +1509,10 @@ export function ExtractionManageClient({
                     </span>
                   ) : null}
                   {bulkAnalysisTotalCreditCost > 0 ? (
-                    <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
-                      {bulkAnalysisTotalCreditCost.toLocaleString("ko-KR")}{" "}
-                      크레딧
-                    </span>
+                    <CreditCostChip
+                      amount={bulkAnalysisTotalCreditCost}
+                      className="rounded bg-white/20 px-1.5 py-0.5 text-[10px]"
+                    />
                   ) : null}
                 </button>
               </div>

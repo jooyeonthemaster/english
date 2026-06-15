@@ -32,7 +32,7 @@ export function ComparisonPanel({ draft }: { draft: M1PassageDraftWithJob }) {
     <section className="rounded-lg border border-slate-200 bg-white">
       <div className="flex items-center justify-between gap-2 border-b border-slate-100 px-4 py-3">
         <div className="flex items-center gap-2">
-          <Layers className="size-4 text-violet-600" aria-hidden="true" />
+          <Layers className="size-4 text-slate-500" aria-hidden="true" />
           <span className="text-[13px] font-bold text-slate-950">
             출처 ↔ AI 복원 비교
           </span>
@@ -44,13 +44,14 @@ export function ComparisonPanel({ draft }: { draft: M1PassageDraftWithJob }) {
         </div>
         <div className="flex items-center gap-2">
           {agreementPct != null ? (
-            <span className="rounded bg-violet-50 px-2 py-0.5 text-[11px] font-bold text-violet-800 ring-1 ring-violet-100">
+            <span className="rounded bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-600 ring-1 ring-slate-200">
               일치도 {agreementPct}%
             </span>
           ) : null}
           <span
             className={
-              "rounded px-2 py-0.5 text-[11px] font-bold ring-1 " + recLabel.className
+              "rounded px-2 py-0.5 text-[11px] font-bold ring-1 " +
+              recLabel.className
             }
           >
             {recLabel.label}
@@ -73,7 +74,7 @@ export function ComparisonPanel({ draft }: { draft: M1PassageDraftWithJob }) {
           </details>
         ) : null}
         {differences.length > 0 ? (
-          <div className="rounded-md bg-amber-50 px-3 py-2 text-[12px] text-amber-900 ring-1 ring-amber-100">
+          <div className="rounded-md bg-slate-50 px-3 py-2 text-[12px] text-slate-600 ring-1 ring-slate-200">
             <div className="mb-1 font-bold">두 결과가 다른 부분</div>
             <ul className="list-disc space-y-0.5 pl-4">
               {differences.slice(0, 6).map((diff) => (

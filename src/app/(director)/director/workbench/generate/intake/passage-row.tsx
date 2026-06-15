@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { detectProblemFormArtifacts } from "@/lib/passage-source";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { countWords } from "../generate-page-types";
 import { splitPastedPassages } from "./smart-split";
 import {
@@ -53,7 +54,10 @@ export interface PasteRowData {
 let rowSeq = 0;
 /** Collision-free row id (survives HMR resets + StrictMode double-invoke). */
 function newRowId(): string {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
     return crypto.randomUUID();
   }
   rowSeq += 1;
@@ -73,10 +77,22 @@ const STATUS_META: Record<
   RestorationResult["status"],
   { label: string; className: string }
 > = {
-  RESTORED: { label: "복원 완료", className: "text-emerald-700 bg-emerald-50 border-emerald-200" },
-  NO_RESTORATION_NEEDED: { label: "복원 불필요 (이미 깨끗함)", className: "text-slate-600 bg-slate-50 border-slate-200" },
-  PARTIAL: { label: "부분 복원 · 검토 권장", className: "text-blue-700 bg-blue-50 border-blue-200" },
-  FAILED: { label: "복원 실패 · 직접 정리 필요", className: "text-red-700 bg-red-50 border-red-200" },
+  RESTORED: {
+    label: "복원 완료",
+    className: "text-slate-600 bg-slate-50 border-slate-200",
+  },
+  NO_RESTORATION_NEEDED: {
+    label: "복원 불필요 (이미 깨끗함)",
+    className: "text-slate-600 bg-slate-50 border-slate-200",
+  },
+  PARTIAL: {
+    label: "부분 복원 · 검토 권장",
+    className: "text-slate-600 bg-slate-50 border-slate-200",
+  },
+  FAILED: {
+    label: "복원 실패 · 직접 정리 필요",
+    className: "text-red-700 bg-red-50 border-red-200",
+  },
 };
 
 interface PassageRowProps {
@@ -108,7 +124,10 @@ export function PassageRow({
   const [introOpen, setIntroOpen] = useState(false);
 
   const trimmed = row.content.trim();
-  const wordCount = useMemo(() => (trimmed ? countWords(trimmed) : 0), [trimmed]);
+  const wordCount = useMemo(
+    () => (trimmed ? countWords(trimmed) : 0),
+    [trimmed],
+  );
   const charCount = trimmed.length;
   const tooShort = charCount > 0 && charCount < MIN_CONTENT_CHARS;
   const inReview = row.restoration !== null;
@@ -188,7 +207,8 @@ export function PassageRow({
   };
 
   const preview =
-    trimmed.slice(0, 48).replace(/\s+/g, " ") + (trimmed.length > 48 ? "…" : "");
+    trimmed.slice(0, 48).replace(/\s+/g, " ") +
+    (trimmed.length > 48 ? "…" : "");
 
   // Stretch to fill the available height when this is the only (expanded) row.
   const fill = !!grow && !collapsed;
@@ -214,7 +234,9 @@ export function PassageRow({
             지문 {index + 1}
           </span>
           {collapsed && preview ? (
-            <span className="truncate text-[11.5px] text-slate-400">{preview}</span>
+            <span className="truncate text-[11.5px] text-slate-400">
+              {preview}
+            </span>
           ) : null}
           {wordCount > 0 && (
             <span className="ml-auto shrink-0 text-[11px] tabular-nums text-slate-400">
@@ -222,7 +244,7 @@ export function PassageRow({
             </span>
           )}
           {inReview && (
-            <span className="shrink-0 rounded border border-emerald-200 bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700">
+            <span className="shrink-0 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
               복원됨
             </span>
           )}
@@ -254,12 +276,10 @@ export function PassageRow({
             )}
             {restoring ? "복원 중" : "AI 복원"}
             {!restoring && (
-              <span
-                title={`이 작업은 크레딧 ${CREDIT_COSTS.PASSAGE_RESTORATION}을 사용합니다`}
-                className="rounded-sm bg-white/20 px-1 py-px text-[10px] font-bold"
-              >
-                ◈{CREDIT_COSTS.PASSAGE_RESTORATION}
-              </span>
+              <CreditCostChip
+                amount={CREDIT_COSTS.PASSAGE_RESTORATION}
+                className="rounded-sm bg-white/20 px-1 py-px text-[10px]"
+              />
             )}
           </button>
         )}
@@ -277,7 +297,11 @@ export function PassageRow({
           className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100"
           title={collapsed ? "펼치기" : "접기"}
         >
-          {collapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
+          {collapsed ? (
+            <ChevronDown className="h-4 w-4" />
+          ) : (
+            <ChevronUp className="h-4 w-4" />
+          )}
         </button>
         {canRemove && (
           <button
@@ -323,7 +347,9 @@ export function PassageRow({
             value={row.content}
             onChange={(e) => onChange({ content: e.target.value })}
             disabled={busy}
-            placeholder={"여기에 영어 지문을 붙여넣으세요...\n\n빈칸·어법 오류·선지 마커가 섞인 '문제 형태'면 'AI 복원'으로 원문을 복구할 수 있어요."}
+            placeholder={
+              "여기에 영어 지문을 붙여넣으세요...\n\n빈칸·어법 오류·선지 마커가 섞인 '문제 형태'면 'AI 복원'으로 원문을 복구할 수 있어요."
+            }
             className={
               (fill ? "min-h-[160px] flex-1 " : "min-h-[200px] resize-y ") +
               "border-slate-200 bg-white text-[13px] leading-relaxed placeholder:text-slate-300"
@@ -332,13 +358,16 @@ export function PassageRow({
 
           {/* Split affordance */}
           {canSplit && split && (
-            <div className="mt-2 flex items-center gap-2 rounded-lg border border-violet-200 bg-violet-50/70 px-3 py-2">
-              <Scissors className="h-3.5 w-3.5 shrink-0 text-violet-600" />
-              <span className="flex-1 text-[11.5px] text-violet-700">
-                여러 지문이 감지됐어요 —{" "}
-                <b>{split.chunks.length}개 지문</b>으로 나눌까요?
+            <div className="mt-2 flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+              <Scissors className="h-3.5 w-3.5 shrink-0 text-slate-500" />
+              <span className="flex-1 text-[11.5px] text-slate-600">
+                여러 지문이 감지됐어요 — <b>{split.chunks.length}개 지문</b>으로
+                나눌까요?
                 {!split.confident && (
-                  <span className="text-violet-400"> (빈 줄 기준 · 확인 권장)</span>
+                  <span className="text-slate-400">
+                    {" "}
+                    (빈 줄 기준 · 확인 권장)
+                  </span>
                 )}
               </span>
               <Button
@@ -347,7 +376,7 @@ export function PassageRow({
                 variant="outline"
                 onClick={() => onSplit(split.chunks)}
                 disabled={busy}
-                className="h-7 shrink-0 border-violet-300 px-2.5 text-[11.5px] text-violet-700 hover:bg-violet-100"
+                className="h-7 shrink-0 border-slate-200 px-2.5 text-[11.5px] text-slate-600 hover:bg-white hover:text-blue-700"
               >
                 나누기
               </Button>
@@ -359,15 +388,16 @@ export function PassageRow({
             <div className="mt-2 flex items-start gap-2 rounded-lg border border-blue-200 bg-blue-50/70 px-3 py-2">
               <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-blue-600" />
               <div className="text-[11.5px] leading-relaxed text-blue-700">
-                <b>문제 형태 흔적이 감지됐어요</b> ({detection.hints.join(", ")}).
-                정확한 복원을 위해 아래 <b>정답·문항</b>을 함께 넣고{" "}
+                <b>문제 형태 흔적이 감지됐어요</b> ({detection.hints.join(", ")}
+                ). 정확한 복원을 위해 아래 <b>정답·문항</b>을 함께 넣고{" "}
                 <b>AI 복원</b>을 권장합니다.
               </div>
             </div>
           )}
           {tooShort && (
             <p className="mt-2 text-[11px] text-red-500">
-              지문이 너무 짧습니다. 최소 {MIN_CONTENT_CHARS}자 이상 입력해주세요.
+              지문이 너무 짧습니다. 최소 {MIN_CONTENT_CHARS}자 이상
+              입력해주세요.
             </p>
           )}
 
@@ -379,7 +409,9 @@ export function PassageRow({
                   const meta =
                     STATUS_META[row.restoration.status] ?? STATUS_META.PARTIAL;
                   return (
-                    <span className={`rounded border px-2 py-0.5 text-[10.5px] font-semibold ${meta.className}`}>
+                    <span
+                      className={`rounded border px-2 py-0.5 text-[10.5px] font-semibold ${meta.className}`}
+                    >
                       {meta.label}
                     </span>
                   );
@@ -390,14 +422,19 @@ export function PassageRow({
               </div>
               <div className="max-h-[110px] space-y-1.5 overflow-y-auto px-3 py-2">
                 {row.restoration.warnings.map((w, i) => (
-                  <p key={`w-${i}`} className="flex items-start gap-1.5 text-[11px] text-red-600">
+                  <p
+                    key={`w-${i}`}
+                    className="flex items-start gap-1.5 text-[11px] text-red-600"
+                  >
                     <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" />
                     {w}
                   </p>
                 ))}
                 {row.restoration.changes.length === 0 &&
                 row.restoration.warnings.length === 0 ? (
-                  <p className="text-[11px] text-slate-400">변경 내역이 없습니다.</p>
+                  <p className="text-[11px] text-slate-400">
+                    변경 내역이 없습니다.
+                  </p>
                 ) : (
                   row.restoration.changes.map((c, i) => {
                     const isCorrection =
@@ -406,22 +443,33 @@ export function PassageRow({
                       c.type === "BLANK" ||
                       c.type === "WORD_ORDER";
                     return (
-                      <div key={`c-${i}`} className="text-[11px] leading-relaxed">
+                      <div
+                        key={`c-${i}`}
+                        className="text-[11px] leading-relaxed"
+                      >
                         <span className="mr-1 inline-block rounded border border-slate-200 bg-white px-1 align-middle text-[9px] font-semibold text-slate-500">
                           {c.type}
                         </span>
-                        <span className="text-slate-400 line-through">{c.before || "(없음)"}</span>
+                        <span className="text-slate-400 line-through">
+                          {c.before || "(없음)"}
+                        </span>
                         {c.after ? (
                           <>
                             <span className="mx-1 text-slate-400">→</span>
-                            <span className="font-medium text-slate-700">{c.after}</span>
+                            <span className="font-medium text-slate-700">
+                              {c.after}
+                            </span>
                           </>
                         ) : isCorrection ? (
-                          <span className="ml-1 font-medium text-emerald-600">수정됨</span>
+                          <span className="ml-1 font-medium text-slate-600">
+                            수정됨
+                          </span>
                         ) : (
                           <span className="ml-1 text-slate-400">(삭제)</span>
                         )}
-                        {c.reason && <span className="text-slate-400"> · {c.reason}</span>}
+                        {c.reason && (
+                          <span className="text-slate-400"> · {c.reason}</span>
+                        )}
                       </div>
                     );
                   })
@@ -429,7 +477,6 @@ export function PassageRow({
               </div>
             </div>
           )}
-
         </div>
       )}
 

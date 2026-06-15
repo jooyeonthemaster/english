@@ -69,7 +69,9 @@ import {
 
 // 동형 문제 생성물이면 원본 문항 분석(structuredData._similarSourceAnalysis)을 추출.
 // 일반 문항은 null → '분석 정보' 버튼이 렌더되지 않는다(동형 한정).
-function getSimilarSourceAnalysis(q: { structuredData?: unknown }): QAnalysis | null {
+function getSimilarSourceAnalysis(q: {
+  structuredData?: unknown;
+}): QAnalysis | null {
   let sd: unknown = q?.structuredData;
   if (typeof sd === "string") {
     try {
@@ -78,7 +80,11 @@ function getSimilarSourceAnalysis(q: { structuredData?: unknown }): QAnalysis | 
       return null;
     }
   }
-  if (sd && typeof sd === "object" && (sd as Record<string, unknown>)._similarSourceAnalysis) {
+  if (
+    sd &&
+    typeof sd === "object" &&
+    (sd as Record<string, unknown>)._similarSourceAnalysis
+  ) {
     return (sd as Record<string, unknown>)._similarSourceAnalysis as QAnalysis;
   }
   return null;
@@ -290,8 +296,7 @@ export function QuestionBankClient({
     2,
     (v): v is 2 | 3 | "list" => v === 2 || v === 3 || v === "list",
   );
-  const viewSize: "lg" | "md" | "sm" =
-    gridCols === 3 ? "md" : "lg";
+  const viewSize: "lg" | "md" | "sm" = gridCols === 3 ? "md" : "lg";
 
   // Optimistically hide deleted questions until router.refresh() reaches the
   // page. Declared up here because the displayed-questions useMemo below
@@ -348,14 +353,16 @@ export function QuestionBankClient({
   const rawGroupedPassages = groupedData?.passages ?? [];
   const groupedPassages = useMemo(() => {
     if (removedIds.size === 0) return rawGroupedPassages;
-    return rawGroupedPassages
-      .map((p) => ({
-        ...p,
-        questions: p.questions.filter((q) => !removedIds.has(q.id)),
-      }))
-      // Hide passages whose questions are all removed so the grouped grid
-      // doesn't render empty cards.
-      .filter((p) => p.questions.length > 0);
+    return (
+      rawGroupedPassages
+        .map((p) => ({
+          ...p,
+          questions: p.questions.filter((q) => !removedIds.has(q.id)),
+        }))
+        // Hide passages whose questions are all removed so the grouped grid
+        // doesn't render empty cards.
+        .filter((p) => p.questions.length > 0)
+    );
   }, [rawGroupedPassages, removedIds]);
   const [activePassageContext, setActivePassageContext] = useState<{
     id: string;
@@ -397,12 +404,8 @@ export function QuestionBankClient({
     () => displayedQuestionIds,
     [displayedQuestionIds],
   );
-  const {
-    selectedIds,
-    setSelectedIds,
-    toggleSelect,
-    clearSelection,
-  } = useSelection(getDisplayedIds);
+  const { selectedIds, setSelectedIds, toggleSelect, clearSelection } =
+    useSelection(getDisplayedIds);
   const isCurrentPageSelected =
     displayedQuestionIds.length > 0 &&
     displayedQuestionIds.every((id) => selectedIds.has(id));
@@ -440,9 +443,10 @@ export function QuestionBankClient({
   const totalCount = isGrouped
     ? (groupedData?.total ?? 0)
     : (questionsData?.total ?? 0);
-  const allPagesSelectableCount = !isGrouped && folders.activeFolder
-    ? (folders.membership[folders.activeFolder]?.size ?? 0)
-    : totalCount;
+  const allPagesSelectableCount =
+    !isGrouped && folders.activeFolder
+      ? (folders.membership[folders.activeFolder]?.size ?? 0)
+      : totalCount;
   const currentPage = isGrouped
     ? (groupedData?.page ?? 1)
     : (questionsData?.page ?? 1);
@@ -461,9 +465,13 @@ export function QuestionBankClient({
         limit: undefined,
         collectionId: folders.activeFolder ?? filters.collectionId,
       };
-      const result = await getWorkbenchQuestionIds(academyId, effectiveFilters, {
-        passageOnly: isGrouped,
-      });
+      const result = await getWorkbenchQuestionIds(
+        academyId,
+        effectiveFilters,
+        {
+          passageOnly: isGrouped,
+        },
+      );
 
       if (!result.success) {
         toast.error(result.error || "전체 문제 선택에 실패했습니다.");
@@ -480,9 +488,7 @@ export function QuestionBankClient({
       toast.success(`${ids.length}문항을 전체 페이지에서 선택했습니다.`);
     } catch (err) {
       toast.error(
-        err instanceof Error
-          ? err.message
-          : "전체 문제 선택에 실패했습니다.",
+        err instanceof Error ? err.message : "전체 문제 선택에 실패했습니다.",
       );
     } finally {
       setSelectingAllPages(false);
@@ -803,9 +809,27 @@ export function QuestionBankClient({
 
   const reviewStatusSegment = (() => {
     const segments = [
-      { id: "all", label: "전체", count: statusCounts?.all ?? 0, value: "ALL", active: filters.approved === undefined },
-      { id: "pending", label: "미검수", count: statusCounts?.pending ?? 0, value: "false", active: filters.approved === false },
-      { id: "approved", label: "검수완료", count: statusCounts?.approved ?? 0, value: "true", active: filters.approved === true },
+      {
+        id: "all",
+        label: "전체",
+        count: statusCounts?.all ?? 0,
+        value: "ALL",
+        active: filters.approved === undefined,
+      },
+      {
+        id: "pending",
+        label: "미검수",
+        count: statusCounts?.pending ?? 0,
+        value: "false",
+        active: filters.approved === false,
+      },
+      {
+        id: "approved",
+        label: "검수완료",
+        count: statusCounts?.approved ?? 0,
+        value: "true",
+        active: filters.approved === true,
+      },
     ] as const;
     return (
       <div className="flex shrink-0 items-center overflow-hidden rounded-md border border-slate-200 bg-white">
@@ -843,7 +867,7 @@ export function QuestionBankClient({
         type="button"
         onClick={() => void handleBulkApprove()}
         disabled={selectedIds.size === 0 || bulkApproving}
-        className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-green-200 bg-green-50/60 px-2.5 text-[11px] font-semibold text-green-700 shadow-none transition-colors hover:border-green-300 hover:bg-green-50 hover:text-green-800 disabled:cursor-not-allowed disabled:border-green-100 disabled:bg-green-50/50 disabled:text-green-300 disabled:opacity-100"
+        className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-300 disabled:opacity-100"
       >
         {bulkApproving ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -890,7 +914,9 @@ export function QuestionBankClient({
     </>
   );
 
-  const gridToggle = <GridToggle gridCols={gridCols} setGridCols={setGridCols} />;
+  const gridToggle = (
+    <GridToggle gridCols={gridCols} setGridCols={setGridCols} />
+  );
   const toggleActivePassage = useCallback(() => {
     if (!activePassageContext) return;
     if (activePassageContext.isOpen) {
@@ -915,9 +941,7 @@ export function QuestionBankClient({
   const activePassageBar =
     isGrouped && activePassageContext ? (
       <div className="flex min-h-7 min-w-0 items-center gap-2 rounded-lg border border-blue-100 bg-blue-50/70 px-2.5 py-1.5 text-[11px]">
-        <span className="shrink-0 font-semibold text-blue-500">
-          현재 지문
-        </span>
+        <span className="shrink-0 font-semibold text-blue-500">현재 지문</span>
         <span className="h-3 w-px shrink-0 bg-blue-200" />
         <FileText className="h-3.5 w-3.5 shrink-0 text-blue-600" />
         <span className="min-w-0 flex-1 truncate font-bold text-blue-800">
@@ -952,48 +976,46 @@ export function QuestionBankClient({
 
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-        <div className="flex items-center gap-2">
-          <SelectAllCheckbox
-            checked={isCurrentPageSelected && selectedIds.size > 0}
-            indeterminate={selectedIds.size > 0 && !isCurrentPageSelected}
-            disabled={displayedQuestions.length === 0}
-            onChange={handleSelectCurrentPage}
-            title={`${selectedIds.size}문항 선택`}
-            ariaLabel={
-              isCurrentPageSelected ? "현재 페이지 해제" : "현재 페이지 선택"
-            }
-          />
-          <div
-            className={
-              "flex items-center gap-3 " +
-              (selectedIds.size > 0
-                ? ""
-                : "pointer-events-none opacity-50")
-            }
-            aria-disabled={selectedIds.size === 0}
-          >
-            {selectionExtraActions}
-            {folders.activeFolder ? (
-              <button
-                type="button"
-                onClick={handleRemoveFromFolder}
-                title="폴더에서 삭제"
-                aria-label="폴더에서 삭제"
-                className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-red-300 bg-red-50 px-2.5 text-[11px] font-semibold text-red-700 transition-colors hover:border-red-400 hover:bg-red-100 hover:text-red-800"
-              >
-                <FolderX className="h-3.5 w-3.5" />
-                폴더에서 삭제
-              </button>
-            ) : null}
-          </div>
-        </div>
-        <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
-          {reviewStatusSegment}
-          {viewModeToggle}
-          {filtersToolbar}
-          {gridToggle}
+      <div className="flex items-center gap-2">
+        <SelectAllCheckbox
+          checked={isCurrentPageSelected && selectedIds.size > 0}
+          indeterminate={selectedIds.size > 0 && !isCurrentPageSelected}
+          disabled={displayedQuestions.length === 0}
+          onChange={handleSelectCurrentPage}
+          title={`${selectedIds.size}문항 선택`}
+          ariaLabel={
+            isCurrentPageSelected ? "현재 페이지 해제" : "현재 페이지 선택"
+          }
+        />
+        <div
+          className={
+            "flex items-center gap-3 " +
+            (selectedIds.size > 0 ? "" : "pointer-events-none opacity-50")
+          }
+          aria-disabled={selectedIds.size === 0}
+        >
+          {selectionExtraActions}
+          {folders.activeFolder ? (
+            <button
+              type="button"
+              onClick={handleRemoveFromFolder}
+              title="폴더에서 삭제"
+              aria-label="폴더에서 삭제"
+              className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-red-300 bg-red-50 px-2.5 text-[11px] font-semibold text-red-700 transition-colors hover:border-red-400 hover:bg-red-100 hover:text-red-800"
+            >
+              <FolderX className="h-3.5 w-3.5" />
+              폴더에서 삭제
+            </button>
+          ) : null}
         </div>
       </div>
+      <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+        {reviewStatusSegment}
+        {viewModeToggle}
+        {filtersToolbar}
+        {gridToggle}
+      </div>
+    </div>
   );
 
   const isEmpty =
@@ -1178,7 +1200,9 @@ export function QuestionBankClient({
                         onDetail={() => openDetail(q.id)}
                         onEdit={() => editor.openEditor(q.id)}
                         onShowAnalysis={
-                          similarAnalysis ? () => setSourceAnalysis(similarAnalysis) : undefined
+                          similarAnalysis
+                            ? () => setSourceAnalysis(similarAnalysis)
+                            : undefined
                         }
                         viewSize={viewSize}
                         cardClickSelects

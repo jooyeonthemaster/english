@@ -8,7 +8,6 @@ export function GroupSection({
   label,
   derivedLabel,
   count,
-  tone,
   expanded,
   allChecked,
   someChecked,
@@ -81,18 +80,9 @@ export function GroupSection({
     setEditing(false);
   }, [label]);
 
-  const accent =
-    tone === "blue"
-      ? "border-blue-500 bg-blue-50/50"
-      : "border-amber-500 bg-amber-50/50";
-  const iconBg =
-    tone === "blue"
-      ? "bg-blue-100 text-blue-700"
-      : "bg-amber-100 text-amber-700";
-  const badgeBg =
-    tone === "blue"
-      ? "bg-white text-blue-700 ring-blue-200"
-      : "bg-white text-amber-700 ring-amber-200";
+  const accent = "border-slate-300 bg-white";
+  const iconBg = "bg-slate-100 text-slate-600";
+  const badgeBg = "bg-white text-slate-600 ring-slate-200";
 
   return (
     <section

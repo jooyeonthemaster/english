@@ -27,14 +27,20 @@ export function RenderedSections({
         switch (section.type) {
           case "direction":
             return (
-              <div key={i} className="text-[13px] font-bold text-slate-900 leading-relaxed whitespace-pre-line">
+              <div
+                key={i}
+                className="text-[13px] font-bold text-slate-900 leading-relaxed whitespace-pre-line"
+              >
                 {renderFormatted(section.content)}
               </div>
             );
 
           case "passage":
             return (
-              <div key={i} className="rounded-lg bg-slate-50 border border-slate-200 p-3">
+              <div
+                key={i}
+                className="rounded-lg bg-slate-50 border border-slate-200 p-3"
+              >
                 <div className="font-mono text-[12px] leading-[1.8] text-slate-700 whitespace-pre-wrap">
                   {renderFormatted(section.content)}
                 </div>
@@ -43,9 +49,12 @@ export function RenderedSections({
 
           case "marker":
             return (
-              <div key={i} className="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-2">
+              <div
+                key={i}
+                className="rounded-lg bg-slate-50 border border-slate-200 px-3 py-2"
+              >
                 <SectionLabel label={section.label!} />
-                <p className="text-[13px] text-indigo-900 leading-relaxed font-medium mt-0.5">
+                <p className="text-[13px] text-slate-800 leading-relaxed font-medium mt-0.5">
                   {renderFormatted(section.content)}
                 </p>
               </div>
@@ -53,11 +62,17 @@ export function RenderedSections({
 
           case "conditions":
             return (
-              <div key={i} className="rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/50 p-3 space-y-1.5">
+              <div
+                key={i}
+                className="rounded-lg border-2 border-dashed border-slate-300 bg-slate-50/50 p-3 space-y-1.5"
+              >
                 <SectionLabel label={section.label || "조건"} />
                 <ol className="space-y-1 list-decimal list-inside">
                   {(section.items || []).map((item, ci) => (
-                    <li key={ci} className="text-[12px] text-slate-700 leading-relaxed">
+                    <li
+                      key={ci}
+                      className="text-[12px] text-slate-700 leading-relaxed"
+                    >
                       {item}
                     </li>
                   ))}
@@ -71,14 +86,23 @@ export function RenderedSections({
                 {(section.items || []).map((item, pi) => {
                   const labelMatch = item.match(/^\(([A-C])\)\s*(.*)/);
                   return (
-                    <div key={pi} className="rounded-lg bg-slate-50 border border-slate-200 p-3">
+                    <div
+                      key={pi}
+                      className="rounded-lg bg-slate-50 border border-slate-200 p-3"
+                    >
                       {labelMatch ? (
                         <>
-                          <span className="text-[11px] font-bold text-blue-600 mr-2">({labelMatch[1]})</span>
-                          <span className="text-[12px] text-slate-700 leading-relaxed">{labelMatch[2]}</span>
+                          <span className="text-[11px] font-bold text-slate-600 mr-2">
+                            ({labelMatch[1]})
+                          </span>
+                          <span className="text-[12px] text-slate-700 leading-relaxed">
+                            {labelMatch[2]}
+                          </span>
                         </>
                       ) : (
-                        <span className="text-[12px] text-slate-700 leading-relaxed">{item}</span>
+                        <span className="text-[12px] text-slate-700 leading-relaxed">
+                          {item}
+                        </span>
                       )}
                     </div>
                   );
@@ -105,7 +129,10 @@ export function RenderedSections({
 
           case "error":
             return (
-              <div key={i} className="rounded-lg bg-red-50 border border-red-200 p-3">
+              <div
+                key={i}
+                className="rounded-lg bg-white border border-red-200 p-3"
+              >
                 <SectionLabel label="오류 문장" />
                 <p className="text-[13px] text-slate-700 leading-relaxed mt-0.5">
                   {renderFormatted(section.content)}
@@ -115,7 +142,10 @@ export function RenderedSections({
 
           case "summary":
             return (
-              <div key={i} className="rounded-lg bg-slate-50 border border-slate-200 p-3">
+              <div
+                key={i}
+                className="rounded-lg bg-slate-50 border border-slate-200 p-3"
+              >
                 <SectionLabel label="요약문" />
                 <div className="font-mono text-[12px] leading-[1.8] text-slate-700 whitespace-pre-wrap mt-1">
                   {renderFormatted(section.content)}
@@ -125,23 +155,36 @@ export function RenderedSections({
 
           case "blanks":
             return (
-              <div key={i} className="rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-2">
+              <div
+                key={i}
+                className="rounded-lg bg-slate-50 border border-slate-200 px-3 py-2"
+              >
                 <SectionLabel label="빈칸 정답" />
-                <p className="text-[12px] text-emerald-800 mt-0.5">{section.content}</p>
+                <p className="text-[12px] text-slate-700 mt-0.5">
+                  {section.content}
+                </p>
               </div>
             );
 
           case "target":
             return (
-              <div key={i} className="rounded-lg bg-violet-50 border border-violet-200 px-3 py-2">
+              <div
+                key={i}
+                className="rounded-lg bg-slate-50 border border-slate-200 px-3 py-2"
+              >
                 <SectionLabel label="대상 단어" />
-                <p className="text-[15px] font-bold text-violet-900 mt-0.5">{section.content}</p>
+                <p className="text-[15px] font-bold text-slate-800 mt-0.5">
+                  {section.content}
+                </p>
               </div>
             );
 
           case "context":
             return (
-              <div key={i} className="text-[12px] text-slate-600 italic leading-relaxed px-1">
+              <div
+                key={i}
+                className="text-[12px] text-slate-600 italic leading-relaxed px-1"
+              >
                 {section.content}
               </div>
             );
@@ -155,14 +198,23 @@ export function RenderedSections({
 
           case "matchType":
             return (
-              <div key={i} className="text-[11px] font-medium text-slate-500 px-1">
-                유형: <Badge variant="outline" className="text-[9px] ml-1">{section.content}</Badge>
+              <div
+                key={i}
+                className="text-[11px] font-medium text-slate-500 px-1"
+              >
+                유형:{" "}
+                <Badge variant="outline" className="text-[9px] ml-1">
+                  {section.content}
+                </Badge>
               </div>
             );
 
           default:
             return (
-              <div key={i} className="text-[13px] text-slate-700 leading-relaxed whitespace-pre-line">
+              <div
+                key={i}
+                className="text-[13px] text-slate-700 leading-relaxed whitespace-pre-line"
+              >
                 {renderFormatted(section.content)}
               </div>
             );

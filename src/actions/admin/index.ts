@@ -16,8 +16,11 @@ export { getSystemStats } from "./stats";
 export {
   createProviderBillingReconciliation,
   createProviderPricing,
+  getAcademyCostTransactions,
   getOperationsCostDashboard,
   syncProviderBillingReconciliation,
+  type AcademyTransactionListItem,
+  type AcademyTransactionListResult,
   type CostBucket,
   type CostPeriodMode,
   type OperationsCostDashboard,

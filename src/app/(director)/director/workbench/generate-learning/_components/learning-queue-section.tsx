@@ -26,10 +26,10 @@ import type { QueueItem } from "./generate-learning-client";
 // Category labels
 // ---------------------------------------------------------------------------
 const CATEGORY_LABELS: Record<string, string> = {
-  VOCAB: "📗 어휘",
-  INTERPRETATION: "📘 해석",
-  GRAMMAR: "📙 문법",
-  COMPREHENSION: "📕 독해",
+  VOCAB: "어휘",
+  INTERPRETATION: "해석",
+  GRAMMAR: "문법",
+  COMPREHENSION: "독해",
 };
 
 // ---------------------------------------------------------------------------
@@ -50,7 +50,7 @@ interface Props {
       textbook?: string;
       grade?: number;
       unit?: string;
-    }
+    },
   ) => void;
   onRemove: (id: string) => void;
 }
@@ -94,8 +94,8 @@ export function LearningQueueSection({
                 className={cn(
                   "text-[11px] px-3 py-1.5 rounded-full font-medium transition-all",
                   queueFilter === f.key
-                    ? "bg-blue-100 text-blue-700"
-                    : "text-slate-400 hover:text-slate-600"
+                    ? "bg-slate-100 text-slate-700"
+                    : "text-slate-400 hover:text-slate-600",
                 )}
               >
                 {f.label}
@@ -156,13 +156,13 @@ function QueueCard({
       textbook?: string;
       grade?: number;
       unit?: string;
-    }
+    },
   ) => void;
   onRemove: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const planConfig = getQuestionGenerationPlanConfig(
-    normalizeQuestionGenerationPlan(item.generationPlan)
+    normalizeQuestionGenerationPlan(item.generationPlan),
   );
 
   // 서브타입별 그룹핑
@@ -175,9 +175,9 @@ function QueueCard({
     <div
       className={cn(
         "bg-white rounded-xl border transition-all",
-        item.status === "generating" && "border-blue-200 animate-pulse",
+        item.status === "generating" && "border-slate-200 animate-pulse",
         item.status === "done" && "border-slate-200",
-        item.status === "error" && "border-red-200"
+        item.status === "error" && "border-red-200",
       )}
     >
       {/* 카드 헤더 */}
@@ -186,7 +186,7 @@ function QueueCard({
           <Loader2 className="w-4 h-4 text-blue-500 animate-spin shrink-0" />
         )}
         {item.status === "done" && (
-          <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+          <CheckCircle2 className="w-4 h-4 text-slate-400 shrink-0" />
         )}
         {item.status === "error" && (
           <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
@@ -201,12 +201,12 @@ function QueueCard({
               {CATEGORY_LABELS[item.category] || item.category}
             </span>
             {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-600 font-semibold">
+              <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-600 font-semibold">
                 {planConfig.shortLabel}
               </span>
             )}
             {item.status === "done" && (
-              <span className="text-[11px] text-emerald-600 font-medium">
+              <span className="text-[11px] text-slate-600 font-medium">
                 {item.questions.length}문제
               </span>
             )}
@@ -224,7 +224,7 @@ function QueueCard({
             <>
               <button
                 onClick={onOpenSave}
-                className="p-1.5 rounded-lg hover:bg-emerald-50 text-emerald-600 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-colors"
                 title="저장"
               >
                 <Save className="w-4 h-4" />
@@ -310,7 +310,7 @@ function SaveModal({
       textbook?: string;
       grade?: number;
       unit?: string;
-    }
+    },
   ) => void;
 }) {
   const [publisher, setPublisher] = useState("");
@@ -325,7 +325,10 @@ function SaveModal({
           <h3 className="text-[15px] font-bold text-slate-900">
             학습 문제 저장
           </h3>
-          <button onClick={onClose} className="p-1 hover:bg-slate-100 rounded-xl">
+          <button
+            onClick={onClose}
+            className="p-1 hover:bg-slate-100 rounded-xl"
+          >
             <X className="w-4 h-4 text-slate-400" />
           </button>
         </div>
@@ -396,9 +399,7 @@ function SaveModal({
             disabled={!publisher.trim() || saving}
             className="w-full h-11 rounded-xl text-[14px] font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors"
           >
-            {saving
-              ? "저장 중..."
-              : `${item.questions.length}개 문제 저장`}
+            {saving ? "저장 중..." : `${item.questions.length}개 문제 저장`}
           </button>
         </div>
       </div>

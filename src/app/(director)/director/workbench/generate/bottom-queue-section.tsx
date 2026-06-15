@@ -18,7 +18,6 @@ import {
   Sparkles,
   Trash2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 import {
@@ -35,10 +34,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { QuestionCard, type QuestionCardItem } from "@/components/workbench/question-card";
+import {
+  QuestionCard,
+  type QuestionCardItem,
+} from "@/components/workbench/question-card";
+import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import { DragSelect } from "@/components/ui/drag-select";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
-import { type QueueItem, buildQuestionText, countWords, typeLabel } from "./generate-page-types";
+import {
+  type QueueItem,
+  buildQuestionText,
+  countWords,
+  typeLabel,
+} from "./generate-page-types";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   getQuestionGenerationPlanFromTags,
@@ -84,6 +92,8 @@ interface BottomQueueSectionProps {
   marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
   /** 카드 '상세 보기' 옆에 끼울 추가 액션 렌더러(예: 동형 '분석 정보'). 선택 — 미지정 시 표시 안 함. */
   renderCardDetailExtra?: (q: QuestionCardItem) => React.ReactNode;
+  /** 튜토리얼 중 최신 세션 문제 카드 일부만 강조하기 위한 개수. */
+  tourHighlightSessionQuestionCount?: number;
 }
 
 type SavedQuestionPlanFilter = "ALL" | QuestionGenerationPlan;
@@ -121,13 +131,19 @@ type SessionFlatEntry =
   | { kind: "question"; key: string; card: SessionQuestionCard };
 
 function parseQuestionTags(rawTags: unknown): string[] {
-  if (Array.isArray(rawTags)) return rawTags.filter((tag): tag is string => typeof tag === "string");
+  if (Array.isArray(rawTags))
+    return rawTags.filter((tag): tag is string => typeof tag === "string");
   if (typeof rawTags !== "string") return [];
   try {
     const parsed = JSON.parse(rawTags);
-    return Array.isArray(parsed) ? parsed.filter((tag): tag is string => typeof tag === "string") : [];
+    return Array.isArray(parsed)
+      ? parsed.filter((tag): tag is string => typeof tag === "string")
+      : [];
   } catch {
-    return rawTags.split(/[,;|]/).map((tag) => tag.trim()).filter(Boolean);
+    return rawTags
+      .split(/[,;|]/)
+      .map((tag) => tag.trim())
+      .filter(Boolean);
   }
 }
 
@@ -135,22 +151,33 @@ function getQuestionPlan(q: QuestionCardItem): QuestionGenerationPlan | null {
   const tagPlan = getQuestionGenerationPlanFromTags(parseQuestionTags(q.tags));
   if (tagPlan) return tagPlan;
 
-  if (q.structuredData && typeof q.structuredData === "object" && "_generationPlan" in q.structuredData) {
-    const plan = (q.structuredData as { _generationPlan?: unknown })._generationPlan;
+  if (
+    q.structuredData &&
+    typeof q.structuredData === "object" &&
+    "_generationPlan" in q.structuredData
+  ) {
+    const plan = (q.structuredData as { _generationPlan?: unknown })
+      ._generationPlan;
     if (plan === "STANDARD" || plan === "PREMIUM") return plan;
   }
 
   return null;
 }
 
-function matchesPlanFilter(q: QuestionCardItem, filter: SavedQuestionPlanFilter): boolean {
+function matchesPlanFilter(
+  q: QuestionCardItem,
+  filter: SavedQuestionPlanFilter,
+): boolean {
   if (filter === "ALL") return true;
   const plan = getQuestionPlan(q);
   if (filter === "PREMIUM") return plan === "PREMIUM";
   return plan !== "PREMIUM";
 }
 
-function matchesReviewFilter(q: QuestionCardItem, filter: ReviewStatusFilter): boolean {
+function matchesReviewFilter(
+  q: QuestionCardItem,
+  filter: ReviewStatusFilter,
+): boolean {
   if (filter === "ALL") return true;
   if (filter === "APPROVED") return q.approved;
   return !q.approved;
@@ -176,7 +203,9 @@ function withVisiblePlanTag(q: QuestionCardItem): QuestionCardItem {
   const plan = getQuestionPlan(q) ?? "STANDARD";
   return {
     ...q,
-    tags: JSON.stringify(mergeQuestionGenerationPlanTag(parseQuestionTags(q.tags), plan)),
+    tags: JSON.stringify(
+      mergeQuestionGenerationPlanTag(parseQuestionTags(q.tags), plan),
+    ),
   };
 }
 
@@ -187,12 +216,17 @@ function withSessionPlanTag(
   const plan = getQuestionPlan(q) ?? fallbackPlan ?? "STANDARD";
   const structuredData =
     q.structuredData && typeof q.structuredData === "object"
-      ? { ...(q.structuredData as Record<string, unknown>), _generationPlan: plan }
+      ? {
+          ...(q.structuredData as Record<string, unknown>),
+          _generationPlan: plan,
+        }
       : q.structuredData;
 
   return {
     ...q,
-    tags: JSON.stringify(mergeQuestionGenerationPlanTag(parseQuestionTags(q.tags), plan)),
+    tags: JSON.stringify(
+      mergeQuestionGenerationPlanTag(parseQuestionTags(q.tags), plan),
+    ),
     structuredData,
   };
 }
@@ -206,7 +240,8 @@ function groupByPassage<T>(
     const q = getQuestion(card);
     const passage = q.passage;
     const id = passage?.id || "no-passage";
-    const title = sanitizeAiModelDisclosureText(passage?.title || "") || "지문 없음";
+    const title =
+      sanitizeAiModelDisclosureText(passage?.title || "") || "지문 없음";
     const meta = [
       passage?.school?.name,
       passage?.grade ? `${passage.grade}학년` : null,
@@ -252,22 +287,27 @@ export function BottomQueueSection({
   onEditQuestion,
   marqueeBoundaryRef,
   renderCardDetailExtra,
+  tourHighlightSessionQuestionCount = 0,
 }: BottomQueueSectionProps) {
-  const [savedPlanFilter, setSavedPlanFilter] = useState<SavedQuestionPlanFilter>("ALL");
-  const [reviewStatusFilter, setReviewStatusFilter] = useState<ReviewStatusFilter>("ALL");
-  const [questionViewMode, setQuestionViewMode] = useState<QuestionViewMode>("flat");
+  const [savedPlanFilter, setSavedPlanFilter] =
+    useState<SavedQuestionPlanFilter>("ALL");
+  const [reviewStatusFilter, setReviewStatusFilter] =
+    useState<ReviewStatusFilter>("ALL");
+  const [questionViewMode, setQuestionViewMode] =
+    useState<QuestionViewMode>("flat");
   const [cardLayoutMode, setCardLayoutMode] = usePersistedState<CardLayoutMode>(
     "smoat:view-mode:generate-bottom-queue",
     "grid3",
-    (v): v is CardLayoutMode =>
-      v === "grid2" || v === "grid3" || v === "list",
+    (v): v is CardLayoutMode => v === "grid2" || v === "grid3" || v === "list",
   );
-  const [selectedSessionQuestionIds, setSelectedSessionQuestionIds] = useState<Set<string>>(new Set());
+  // 카드 체크박스 선택 — 검수완료(승인 가능한 것만 적용)와 선택 삭제가 공유한다.
+  const [selectedQuestionIds, setSelectedQuestionIds] = useState<Set<string>>(
+    new Set(),
+  );
   const [batchApproving, setBatchApproving] = useState(false);
-  const [expandedPassageIds, setExpandedPassageIds] = useState<Record<string, boolean>>({});
-  // ── Delete mode (select-and-delete across session + saved) ──
-  const [deleteMode, setDeleteMode] = useState(false);
-  const [selectedDeleteIds, setSelectedDeleteIds] = useState<Set<string>>(new Set());
+  const [expandedPassageIds, setExpandedPassageIds] = useState<
+    Record<string, boolean>
+  >({});
   // Pending delete awaiting in-app confirmation (replaces native window.confirm).
   const [confirmDelete, setConfirmDelete] = useState<{
     ids: string[];
@@ -336,28 +376,45 @@ export function BottomQueueSection({
         // (the job still references the id, but the row is gone).
         if (persistedQuestionId && deletedQuestionIds?.has(persistedQuestionId))
           return;
-        const createdAt = savedQuestion?.createdAt ?? (item.createdAt ? new Date(item.createdAt) : new Date());
-        const cardItem: QuestionCardItem = withSessionPlanTag({
-          id: persistedQuestionId || `${item.id}-${qi}`,
-          type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
-          subType,
-          questionText,
-          options: optionsJson,
-          correctAnswer,
-          difficulty: q.difficulty || "INTERMEDIATE",
-          tags: Array.isArray(q.tags) ? JSON.stringify(q.tags) : q.tags ? String(q.tags) : null,
-          aiGenerated: true,
-          approved: savedQuestion?.approved ?? Boolean(q.approved),
-          createdAt,
-          passage: { id: item.passageId, title: item.passageTitle, content: item.passageContent },
-          explanation: q.explanation ? {
-            id: `${item.id}-${qi}-exp`,
-            content: q.explanation,
-            keyPoints: q.keyPoints ? JSON.stringify(q.keyPoints) : null,
-            wrongOptionExplanations: q.wrongOptionExplanations ? JSON.stringify(q.wrongOptionExplanations) : null,
-          } : null,
-          structuredData: q,
-        }, item.config.generationPlan);
+        const createdAt =
+          savedQuestion?.createdAt ??
+          (item.createdAt ? new Date(item.createdAt) : new Date());
+        const cardItem: QuestionCardItem = withSessionPlanTag(
+          {
+            id: persistedQuestionId || `${item.id}-${qi}`,
+            type: q.options ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
+            subType,
+            questionText,
+            options: optionsJson,
+            correctAnswer,
+            difficulty: q.difficulty || "INTERMEDIATE",
+            tags: Array.isArray(q.tags)
+              ? JSON.stringify(q.tags)
+              : q.tags
+                ? String(q.tags)
+                : null,
+            aiGenerated: true,
+            approved: savedQuestion?.approved ?? Boolean(q.approved),
+            createdAt,
+            passage: {
+              id: item.passageId,
+              title: item.passageTitle,
+              content: item.passageContent,
+            },
+            explanation: q.explanation
+              ? {
+                  id: `${item.id}-${qi}-exp`,
+                  content: q.explanation,
+                  keyPoints: q.keyPoints ? JSON.stringify(q.keyPoints) : null,
+                  wrongOptionExplanations: q.wrongOptionExplanations
+                    ? JSON.stringify(q.wrongOptionExplanations)
+                    : null,
+                }
+              : null,
+            structuredData: q,
+          },
+          item.config.generationPlan,
+        );
 
         cards.push({
           key: `${item.id}-${qi}`,
@@ -369,12 +426,29 @@ export function BottomQueueSection({
       });
     }
     return cards;
-  }, [filteredQueue, savedQuestionsById, savedQuestionsBySignature, deletedQuestionIds, deletedQuestionSignatures]);
+  }, [
+    filteredQueue,
+    savedQuestionsById,
+    savedQuestionsBySignature,
+    deletedQuestionIds,
+    deletedQuestionSignatures,
+  ]);
 
   const visibleSessionQuestionCards = useMemo(
-    () => sessionQuestionCards.filter((card) => matchesReviewFilter(card.question, reviewStatusFilter)),
+    () =>
+      sessionQuestionCards.filter((card) =>
+        matchesReviewFilter(card.question, reviewStatusFilter),
+      ),
     [reviewStatusFilter, sessionQuestionCards],
   );
+
+  const tourHighlightedSessionQuestionIndex = useMemo(() => {
+    const map = new Map<string, number>();
+    visibleSessionQuestionCards
+      .slice(0, Math.max(0, tourHighlightSessionQuestionCount))
+      .forEach((card, index) => map.set(card.key, index));
+    return map;
+  }, [tourHighlightSessionQuestionCount, visibleSessionQuestionCards]);
 
   // Persisted ids already shown as 현재 세션 cards — used to dedupe the saved list
   // (especially in delete mode) so one question isn't checkboxed twice.
@@ -392,20 +466,25 @@ export function BottomQueueSection({
     () => [
       ...new Set(
         visibleSessionQuestionCards
-        .filter((card) => card.persistedQuestionId && !card.question.approved)
-        .map((card) => card.persistedQuestionId as string),
+          .filter((card) => card.persistedQuestionId && !card.question.approved)
+          .map((card) => card.persistedQuestionId as string),
       ),
     ],
     [visibleSessionQuestionCards],
   );
 
   const reviewFilteredSavedQuestions = useMemo(
-    () => liveSavedQuestions.filter((q) => matchesReviewFilter(q, reviewStatusFilter)),
+    () =>
+      liveSavedQuestions.filter((q) =>
+        matchesReviewFilter(q, reviewStatusFilter),
+      ),
     [reviewStatusFilter, liveSavedQuestions],
   );
 
   const savedPlanCounts = useMemo(() => {
-    const premium = reviewFilteredSavedQuestions.filter((q) => getQuestionPlan(q) === "PREMIUM").length;
+    const premium = reviewFilteredSavedQuestions.filter(
+      (q) => getQuestionPlan(q) === "PREMIUM",
+    ).length;
     return {
       ALL: reviewFilteredSavedQuestions.length,
       STANDARD: reviewFilteredSavedQuestions.length - premium,
@@ -414,7 +493,10 @@ export function BottomQueueSection({
   }, [reviewFilteredSavedQuestions]);
 
   const visibleSavedQuestions = useMemo(
-    () => reviewFilteredSavedQuestions.filter((q) => matchesPlanFilter(q, savedPlanFilter)),
+    () =>
+      reviewFilteredSavedQuestions.filter((q) =>
+        matchesPlanFilter(q, savedPlanFilter),
+      ),
     [reviewFilteredSavedQuestions, savedPlanFilter],
   );
 
@@ -430,20 +512,20 @@ export function BottomQueueSection({
 
   // 세션 카드와 중복되지 않는 저장 문제 (최신 100개 중 세션에 안 나온 것)
   const mergedSavedQuestions = useMemo(
-    () => visibleSavedQuestions.filter((q) => !sessionCardQuestionIds.has(q.id)),
+    () =>
+      visibleSavedQuestions.filter((q) => !sessionCardQuestionIds.has(q.id)),
     [visibleSavedQuestions, sessionCardQuestionIds],
   );
 
   // "최근 N개" 윈도우: 세션 문제가 먼저 자리를 차지하고, 남는 칸만큼만 저장 문제를 채운다.
   // → 새로 생성한 세션 문제 수만큼 가장 오래된 저장 문제가 잘려나간다.
   const cappedMergedSavedQuestions = useMemo(
-    () => mergedSavedQuestions.slice(0, Math.max(0, RECENT_QUESTION_LIMIT - visibleSessionQuestionCards.length)),
+    () =>
+      mergedSavedQuestions.slice(
+        0,
+        Math.max(0, RECENT_QUESTION_LIMIT - visibleSessionQuestionCards.length),
+      ),
     [mergedSavedQuestions, visibleSessionQuestionCards.length],
-  );
-
-  const mergedSavedGroups = useMemo(
-    () => groupByPassage(cappedMergedSavedQuestions.map(withVisiblePlanTag), (q) => q),
-    [cappedMergedSavedQuestions],
   );
 
   const reviewCounts = useMemo(() => {
@@ -479,7 +561,12 @@ export function BottomQueueSection({
   );
 
   const visibleQueueCards = useMemo(
-    () => (reviewStatusFilter === "ALL" ? filteredQueue.filter((item) => item.status === "generating" || item.status === "error") : []),
+    () =>
+      reviewStatusFilter === "ALL"
+        ? filteredQueue.filter(
+            (item) => item.status === "generating" || item.status === "error",
+          )
+        : [],
     [filteredQueue, reviewStatusFilter],
   );
 
@@ -509,11 +596,13 @@ export function BottomQueueSection({
         continue;
       }
       const cards = visibleSessionQuestionCardsByItemId.get(item.id) ?? [];
-      cards.forEach((card) => entries.push({
-        kind: "question",
-        key: card.key,
-        card,
-      }));
+      cards.forEach((card) =>
+        entries.push({
+          kind: "question",
+          key: card.key,
+          card,
+        }),
+      );
     }
     return entries;
   }, [
@@ -523,108 +612,47 @@ export function BottomQueueSection({
     visibleSessionQuestionCardsByItemId,
   ]);
 
-  useEffect(() => {
-    setSelectedSessionQuestionIds((prev) => {
-      if (prev.size === 0) return prev;
-      const valid = new Set(sessionApprovableIds);
-      let changed = false;
-      const next = new Set<string>();
-      prev.forEach((id) => {
-        if (valid.has(id)) next.add(id);
-        else changed = true;
-      });
-      return changed ? next : prev;
-    });
-  }, [sessionApprovableIds]);
-
-  const toggleSessionQuestion = useCallback((id: string) => {
-    setSelectedSessionQuestionIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }, []);
-
-  const allSessionSelected =
-    sessionApprovableIds.length > 0 &&
-    sessionApprovableIds.every((id) => selectedSessionQuestionIds.has(id));
-  const someSessionSelected =
-    selectedSessionQuestionIds.size > 0 && !allSessionSelected;
-
-  const toggleSelectAllSession = useCallback(() => {
-    if (allSessionSelected) setSelectedSessionQuestionIds(new Set());
-    else setSelectedSessionQuestionIds(new Set(sessionApprovableIds));
-  }, [allSessionSelected, sessionApprovableIds]);
-
-  const toggleSessionGroupSelection = useCallback((ids: string[]) => {
-    setSelectedSessionQuestionIds((prev) => {
-      const next = new Set(prev);
-      const allSelected = ids.length > 0 && ids.every((id) => next.has(id));
-      ids.forEach((id) => {
-        if (allSelected) next.delete(id);
-        else next.add(id);
-      });
-      return next;
-    });
-  }, []);
-
-  const handleBatchApprove = useCallback(async () => {
-    if (selectedSessionQuestionIds.size === 0 || !onBatchApproveQuestions) return;
-    setBatchApproving(true);
-    try {
-      await onBatchApproveQuestions(Array.from(selectedSessionQuestionIds));
-      setSelectedSessionQuestionIds(new Set());
-    } finally {
-      setBatchApproving(false);
-    }
-  }, [onBatchApproveQuestions, selectedSessionQuestionIds]);
-
-  // ── Delete mode selection (session + saved persisted questions) ──
-  // The deletable pool mirrors exactly what the user can see (session cards +
+  // ── 선택 풀 (session + saved persisted questions) ──
+  // The selectable pool mirrors exactly what the user can see (session cards +
   // the windowed saved cards), so "전체 선택" stays honest.
-  const deletableSessionIds = useMemo(
+  const selectableSessionIds = useMemo(
     () => [...sessionShownPersistedIds],
     [sessionShownPersistedIds],
   );
 
-  // In delete mode, drop saved cards already shown as a 현재 세션 card so each
-  // question is checkboxed exactly once. Outside delete mode this is identical
-  // to the windowed saved list.
+  // Drop saved cards already shown as a 현재 세션 card so each question is
+  // checkboxed exactly once.
   const savedCardsForDisplay = useMemo(
     () =>
-      deleteMode
-        ? cappedMergedSavedQuestions.filter((q) => !sessionShownPersistedIds.has(q.id))
-        : cappedMergedSavedQuestions,
-    [deleteMode, cappedMergedSavedQuestions, sessionShownPersistedIds],
+      cappedMergedSavedQuestions.filter(
+        (q) => !sessionShownPersistedIds.has(q.id),
+      ),
+    [cappedMergedSavedQuestions, sessionShownPersistedIds],
   );
 
-  // Passage-grouped saved cards for the 지문별 view. Outside delete mode this is
-  // exactly theirs' mergedSavedGroups; in delete mode it re-groups the deduped
+  // Passage-grouped saved cards for the 지문별 view, built from the deduped
   // (session-overlap removed) list so each question is checkboxed once.
   const savedCardsForDisplayGroups = useMemo(
     () =>
-      deleteMode
-        ? groupByPassage(savedCardsForDisplay.map(withVisiblePlanTag), (q) => q)
-        : mergedSavedGroups,
-    [deleteMode, savedCardsForDisplay, mergedSavedGroups],
+      groupByPassage(savedCardsForDisplay.map(withVisiblePlanTag), (q) => q),
+    [savedCardsForDisplay],
   );
 
-  const deletableSavedIds = useMemo(
+  const selectableSavedIds = useMemo(
     () => savedCardsForDisplay.map((q) => q.id),
     [savedCardsForDisplay],
   );
 
-  const allDeletableIds = useMemo(
-    () => [...new Set([...deletableSessionIds, ...deletableSavedIds])],
-    [deletableSessionIds, deletableSavedIds],
+  const allSelectableIds = useMemo(
+    () => [...new Set([...selectableSessionIds, ...selectableSavedIds])],
+    [selectableSessionIds, selectableSavedIds],
   );
 
-  // Prune stale selections once items leave the deletable pool (e.g. deleted).
+  // Prune stale selections once items leave the selectable pool (e.g. deleted).
   useEffect(() => {
-    setSelectedDeleteIds((prev) => {
+    setSelectedQuestionIds((prev) => {
       if (prev.size === 0) return prev;
-      const valid = new Set(allDeletableIds);
+      const valid = new Set(allSelectableIds);
       let changed = false;
       const next = new Set<string>();
       prev.forEach((id) => {
@@ -633,10 +661,10 @@ export function BottomQueueSection({
       });
       return changed ? next : prev;
     });
-  }, [allDeletableIds]);
+  }, [allSelectableIds]);
 
-  const toggleDeleteQuestion = useCallback((id: string) => {
-    setSelectedDeleteIds((prev) => {
+  const toggleQuestionSelection = useCallback((id: string) => {
+    setSelectedQuestionIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
@@ -644,8 +672,8 @@ export function BottomQueueSection({
     });
   }, []);
 
-  const toggleDeleteGroupSelection = useCallback((ids: string[]) => {
-    setSelectedDeleteIds((prev) => {
+  const toggleGroupSelection = useCallback((ids: string[]) => {
+    setSelectedQuestionIds((prev) => {
       const next = new Set(prev);
       const allSelected = ids.length > 0 && ids.every((id) => next.has(id));
       ids.forEach((id) => {
@@ -656,26 +684,36 @@ export function BottomQueueSection({
     });
   }, []);
 
-  const allDeleteSelected =
-    allDeletableIds.length > 0 &&
-    allDeletableIds.every((id) => selectedDeleteIds.has(id));
-  const someDeleteSelected =
-    selectedDeleteIds.size > 0 && !allDeleteSelected;
+  const allSelected =
+    allSelectableIds.length > 0 &&
+    allSelectableIds.every((id) => selectedQuestionIds.has(id));
+  const someSelected = selectedQuestionIds.size > 0 && !allSelected;
 
-  const toggleSelectAllDelete = useCallback(() => {
-    if (allDeleteSelected) setSelectedDeleteIds(new Set());
-    else setSelectedDeleteIds(new Set(allDeletableIds));
-  }, [allDeleteSelected, allDeletableIds]);
+  const toggleSelectAll = useCallback(() => {
+    if (allSelected) setSelectedQuestionIds(new Set());
+    else setSelectedQuestionIds(new Set(allSelectableIds));
+  }, [allSelected, allSelectableIds]);
 
-  const enterDeleteMode = useCallback(() => {
-    setDeleteMode(true);
-    setSelectedSessionQuestionIds(new Set());
-  }, []);
+  // 검수완료는 선택 중 승인 가능한(미검수 세션) 문제에만 적용된다.
+  const selectedApprovableIds = useMemo(
+    () => sessionApprovableIds.filter((id) => selectedQuestionIds.has(id)),
+    [sessionApprovableIds, selectedQuestionIds],
+  );
 
-  const exitDeleteMode = useCallback(() => {
-    setDeleteMode(false);
-    setSelectedDeleteIds(new Set());
-  }, []);
+  const handleBatchApprove = useCallback(async () => {
+    if (selectedApprovableIds.length === 0 || !onBatchApproveQuestions) return;
+    setBatchApproving(true);
+    try {
+      await onBatchApproveQuestions(selectedApprovableIds);
+      setSelectedQuestionIds((prev) => {
+        const next = new Set(prev);
+        selectedApprovableIds.forEach((id) => next.delete(id));
+        return next;
+      });
+    } finally {
+      setBatchApproving(false);
+    }
+  }, [onBatchApproveQuestions, selectedApprovableIds]);
 
   // Open the in-app confirm dialog instead of a native window.confirm.
   const requestDelete = useCallback(
@@ -687,26 +725,29 @@ export function BottomQueueSection({
   );
 
   const handleBatchDelete = useCallback(() => {
-    if (selectedDeleteIds.size === 0) return;
-    requestDelete(Array.from(selectedDeleteIds), "bulk");
-  }, [requestDelete, selectedDeleteIds]);
+    if (selectedQuestionIds.size === 0) return;
+    requestDelete(Array.from(selectedQuestionIds), "bulk");
+  }, [requestDelete, selectedQuestionIds]);
 
   // Runs after the user confirms in the dialog.
   const confirmDeleteNow = useCallback(async () => {
     if (!confirmDelete || !onBatchDeleteQuestions) return;
     const { ids, source } = confirmDelete;
     const ran = await onBatchDeleteQuestions(ids);
-    if (ran !== false && source === "bulk") setSelectedDeleteIds(new Set());
+    if (ran !== false && source === "bulk") setSelectedQuestionIds(new Set());
     setConfirmDelete(null);
   }, [confirmDelete, onBatchDeleteQuestions]);
 
   function renderQueueStatusCard(item: QueueItem) {
-    const planConfig = getQuestionGenerationPlanConfig(item.config.generationPlan || "STANDARD");
+    const planConfig = getQuestionGenerationPlanConfig(
+      item.config.generationPlan || "STANDARD",
+    );
 
     if (item.status === "generating") {
-      const requestedCount = item.config.mode === "auto"
-        ? autoCount
-        : Object.values(item.config.typeCounts).reduce((a, b) => a + b, 0);
+      const requestedCount =
+        item.config.mode === "auto"
+          ? autoCount
+          : Object.values(item.config.typeCounts).reduce((a, b) => a + b, 0);
       return (
         <WorkbenchLoadingCard
           key={item.id}
@@ -722,12 +763,18 @@ export function BottomQueueSection({
           ariaLabel={`${item.passageTitle} - 문제 생성 중`}
           planBadge={
             FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
-              <span className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
-                planConfig.id === "PREMIUM"
-                  ? "border-violet-200 bg-violet-50 text-violet-700"
-                  : "border-sky-200 bg-sky-50 text-sky-700"
-              }`}>
-                {planConfig.id === "PREMIUM" ? <Gem className="w-3 h-3" /> : <Sparkles className="w-3 h-3" />}
+              <span
+                className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
+                  planConfig.id === "PREMIUM"
+                    ? "border-slate-200 bg-slate-50 text-slate-600"
+                    : "border-slate-200 bg-slate-50 text-slate-600"
+                }`}
+              >
+                {planConfig.id === "PREMIUM" ? (
+                  <Gem className="w-3 h-3" />
+                ) : (
+                  <Sparkles className="w-3 h-3" />
+                )}
                 {planConfig.shortLabel}
               </span>
             ) : null
@@ -750,24 +797,37 @@ export function BottomQueueSection({
         .join(", ");
 
       return (
-        <div key={item.id} className="h-[340px] overflow-hidden rounded-xl border border-red-200 bg-red-50/30 p-4">
+        <div
+          key={item.id}
+          className="h-[340px] overflow-hidden rounded-xl border border-red-200 bg-red-50/30 p-4"
+        >
           <div className="flex items-center gap-3">
             <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 min-w-0">
-                <h4 className="text-[13px] font-bold text-slate-800 truncate">{item.passageTitle}</h4>
+                <h4 className="text-[13px] font-bold text-slate-800 truncate">
+                  {item.passageTitle}
+                </h4>
                 {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-                  <span className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
-                    planConfig.id === "PREMIUM"
-                      ? "border-violet-200 bg-violet-50 text-violet-700"
-                      : "border-sky-200 bg-sky-50 text-sky-700"
-                  }`}>
-                    {planConfig.id === "PREMIUM" ? <Gem className="w-3 h-3" /> : <Sparkles className="w-3 h-3" />}
+                  <span
+                    className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
+                      planConfig.id === "PREMIUM"
+                        ? "border-slate-200 bg-slate-50 text-slate-600"
+                        : "border-slate-200 bg-slate-50 text-slate-600"
+                    }`}
+                  >
+                    {planConfig.id === "PREMIUM" ? (
+                      <Gem className="w-3 h-3" />
+                    ) : (
+                      <Sparkles className="w-3 h-3" />
+                    )}
                     {planConfig.shortLabel}
                   </span>
                 )}
               </div>
-              <span className="text-[11px] text-red-500 font-medium">생성 실패</span>
+              <span className="text-[11px] text-red-500 font-medium">
+                생성 실패
+              </span>
               {requestedTypes && (
                 <p className="mt-1 text-[11px] font-medium text-slate-500">
                   {requestedTypes} · {item.config.difficulty}
@@ -789,51 +849,77 @@ export function BottomQueueSection({
 
   function renderSessionQuestionCard(card: SessionQuestionCard) {
     const persistedId = card.persistedQuestionId;
-    const canDelete = deleteMode && Boolean(persistedId);
-    const canApprove = !deleteMode && Boolean(persistedId) && !card.question.approved;
-    const isSelected = canDelete
-      ? selectedDeleteIds.has(persistedId as string)
-      : canApprove
-        ? selectedSessionQuestionIds.has(persistedId as string)
-        : false;
-    const cardToggle = canDelete
-      ? () => toggleDeleteQuestion(persistedId as string)
-      : canApprove
-        ? () => toggleSessionQuestion(persistedId as string)
-        : undefined;
+    const isSelected = persistedId
+      ? selectedQuestionIds.has(persistedId)
+      : false;
+    const cardToggle = persistedId
+      ? () => toggleQuestionSelection(persistedId)
+      : undefined;
+    const tourHighlightIndex = tourHighlightedSessionQuestionIndex.get(
+      card.key,
+    );
+    const isTourHighlighted = tourHighlightIndex !== undefined;
+    const isFirstTourHighlighted = tourHighlightIndex === 0;
+    const openDetail = () => {
+      if (isFirstTourHighlighted) {
+        dispatchGenerateTourMilestone("question-detail-opened");
+      }
+      setDetailQuestion(card.question);
+    };
 
     return (
-      <div key={card.key} onClick={(e) => {
-        const target = e.target as HTMLElement;
-        if (target.closest("button") || target.closest("a") || target.closest("input") || target.closest('[role="checkbox"]')) return;
-        setDetailQuestion(card.question);
-      }} className={`h-full cursor-pointer ${deleteMode && !persistedId ? "opacity-50" : ""}`}>
+      <div
+        key={card.key}
+        data-generate-tour={
+          isFirstTourHighlighted
+            ? "generated-question-card-first"
+            : isTourHighlighted
+              ? "generated-question-card"
+              : undefined
+        }
+        onClick={(e) => {
+          const target = e.target as HTMLElement;
+          if (
+            target.closest("button") ||
+            target.closest("a") ||
+            target.closest("input") ||
+            target.closest('[role="checkbox"]')
+          )
+            return;
+          openDetail();
+        }}
+        className={`h-full cursor-pointer rounded-xl transition-shadow ${
+          isTourHighlighted
+            ? "ring-2 ring-blue-400 ring-offset-2 ring-offset-white"
+            : ""
+        }`}
+      >
         <QuestionCard
           q={card.question}
           num={card.number}
           readonly
           compact
-          showReviewActions={!deleteMode && Boolean(persistedId)}
-          showHeaderActions={!deleteMode && Boolean(persistedId)}
+          showReviewActions={Boolean(persistedId)}
+          showHeaderActions={Boolean(persistedId)}
           selected={isSelected}
-          dragItemId={canDelete || canApprove ? (persistedId as string) : null}
+          dragItemId={persistedId ?? null}
           onToggle={cardToggle}
-          onDetail={() => setDetailQuestion(card.question)}
+          onDetail={openDetail}
           showDetailButton
           detailExtra={renderCardDetailExtra?.(card.question)}
           onApprove={
-            deleteMode || !onApproveQuestion
+            !onApproveQuestion
               ? undefined
               : () => persistedId && onApproveQuestion(persistedId)
           }
           onUnapprove={
-            deleteMode || !onUnapproveQuestion
+            !onUnapproveQuestion
               ? undefined
               : () => persistedId && onUnapproveQuestion(persistedId)
           }
-          onEdit={deleteMode ? undefined : () => persistedId && onEditQuestion(persistedId)}
+          onEdit={() => persistedId && onEditQuestion(persistedId)}
           onDelete={
-            deleteMode || !persistedId
+            !persistedId
               ? undefined
               : () => requestDelete([persistedId as string], "single")
           }
@@ -844,41 +930,49 @@ export function BottomQueueSection({
 
   function renderSavedQuestionCard(q: QuestionCardItem, index: number) {
     const cardQuestion = withVisiblePlanTag(q);
-    const isSelected = deleteMode && selectedDeleteIds.has(q.id);
-    const cardToggle = deleteMode ? () => toggleDeleteQuestion(q.id) : undefined;
+    const isSelected = selectedQuestionIds.has(q.id);
+    const cardToggle = () => toggleQuestionSelection(q.id);
     return (
-      <div key={q.id} onClick={(e) => {
-        const target = e.target as HTMLElement;
-        if (target.closest("button") || target.closest("a") || target.closest("input") || target.closest('[role="checkbox"]')) return;
-        setDetailQuestion(cardQuestion);
-      }} className="h-full cursor-pointer">
+      <div
+        key={q.id}
+        onClick={(e) => {
+          const target = e.target as HTMLElement;
+          if (
+            target.closest("button") ||
+            target.closest("a") ||
+            target.closest("input") ||
+            target.closest('[role="checkbox"]')
+          )
+            return;
+          setDetailQuestion(cardQuestion);
+        }}
+        className="h-full cursor-pointer"
+      >
         <QuestionCard
           q={cardQuestion}
           num={index + 1}
           readonly
           compact
-          showReviewActions={!deleteMode}
-          showHeaderActions={!deleteMode}
+          showReviewActions
+          showHeaderActions
           selected={isSelected}
-          dragItemId={deleteMode ? q.id : null}
+          dragItemId={q.id}
           onToggle={cardToggle}
           onDetail={() => setDetailQuestion(cardQuestion)}
           showDetailButton
           detailExtra={renderCardDetailExtra?.(cardQuestion)}
           onApprove={
-            deleteMode || !onApproveQuestion
+            !onApproveQuestion
               ? undefined
               : () => onApproveQuestion(cardQuestion.id)
           }
           onUnapprove={
-            deleteMode || !onUnapproveQuestion
+            !onUnapproveQuestion
               ? undefined
               : () => onUnapproveQuestion(cardQuestion.id)
           }
-          onEdit={deleteMode ? undefined : () => onEditQuestion(cardQuestion.id)}
-          onDelete={
-            deleteMode ? undefined : () => requestDelete([cardQuestion.id], "single")
-          }
+          onEdit={() => onEditQuestion(cardQuestion.id)}
+          onDelete={() => requestDelete([cardQuestion.id], "single")}
         />
       </div>
     );
@@ -898,13 +992,10 @@ export function BottomQueueSection({
     const groupKey = `${source}:${group.id}`;
     const isOpen = expandedPassageIds[groupKey] !== false;
     const selectableIds = getSelectableIds?.(group.cards) ?? [];
-    const activeSelection = deleteMode ? selectedDeleteIds : selectedSessionQuestionIds;
-    const toggleGroup = deleteMode ? toggleDeleteGroupSelection : toggleSessionGroupSelection;
-    // Saved groups only get a header checkbox in delete mode; session groups
-    // keep theirs for both batch-approve and delete.
-    const showGroupCheckbox =
-      selectableIds.length > 0 && (deleteMode || source === "session");
-    const selectedInGroup = selectableIds.filter((id) => activeSelection.has(id)).length;
+    const showGroupCheckbox = selectableIds.length > 0;
+    const selectedInGroup = selectableIds.filter((id) =>
+      selectedQuestionIds.has(id),
+    ).length;
     const checkState: boolean | "indeterminate" =
       selectableIds.length > 0 && selectedInGroup === selectableIds.length
         ? true
@@ -913,19 +1004,27 @@ export function BottomQueueSection({
           : false;
 
     return (
-      <section key={groupKey} className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-        <header className={`flex items-center gap-2.5 border-b px-4 ${isOpen ? "bg-blue-50/50 border-blue-100" : "bg-white border-slate-100"}`}>
+      <section
+        key={groupKey}
+        className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
+      >
+        <header
+          className={`flex items-center gap-2.5 border-b px-4 ${isOpen ? "bg-blue-50/50 border-blue-100" : "bg-white border-slate-100"}`}
+        >
           {showGroupCheckbox ? (
-            <div className="-m-1 flex shrink-0 cursor-pointer items-center p-1" onClick={(e) => {
-              e.stopPropagation();
-              toggleGroup(selectableIds);
-            }}>
+            <div
+              className="-m-1 flex shrink-0 cursor-pointer items-center p-1"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleGroupSelection(selectableIds);
+              }}
+            >
               <Checkbox
                 checked={checkState}
                 aria-label={`${group.title} 전체 선택`}
                 className="size-4 cursor-pointer"
                 onClick={(e) => e.stopPropagation()}
-                onCheckedChange={() => toggleGroup(selectableIds)}
+                onCheckedChange={() => toggleGroupSelection(selectableIds)}
               />
             </div>
           ) : (
@@ -935,14 +1034,25 @@ export function BottomQueueSection({
           <button
             type="button"
             aria-expanded={isOpen}
-            onClick={() => setExpandedPassageIds((prev) => ({ ...prev, [groupKey]: !isOpen }))}
+            onClick={() =>
+              setExpandedPassageIds((prev) => ({
+                ...prev,
+                [groupKey]: !isOpen,
+              }))
+            }
             className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 py-3 text-left"
           >
-            <ChevronRight className={`size-4 shrink-0 text-slate-400 transition-transform ${isOpen ? "rotate-90" : ""}`} />
-            <span className={`flex size-7 shrink-0 items-center justify-center rounded-md ${isOpen ? "bg-blue-100 text-blue-700" : "bg-slate-100 text-slate-500"}`}>
+            <ChevronRight
+              className={`size-4 shrink-0 text-slate-400 transition-transform ${isOpen ? "rotate-90" : ""}`}
+            />
+            <span
+              className={`flex size-7 shrink-0 items-center justify-center rounded-md ${isOpen ? "bg-blue-100 text-blue-700" : "bg-slate-100 text-slate-500"}`}
+            >
               <FileText className="size-4" />
             </span>
-            <span className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900">{group.title}</span>
+            <span className="min-w-0 flex-1 truncate text-sm font-bold text-slate-900">
+              {group.title}
+            </span>
             <span className="shrink-0 rounded-full bg-white px-2 py-0.5 text-[11px] font-bold tabular-nums text-blue-700 ring-1 ring-blue-200">
               {group.cards.length}개
             </span>
@@ -957,8 +1067,8 @@ export function BottomQueueSection({
           <div className="p-3">
             <DragSelect
               className={cardLayoutClassNames[cardLayoutMode]}
-              value={deleteMode ? selectedDeleteIds : selectedSessionQuestionIds}
-              onChange={deleteMode ? setSelectedDeleteIds : setSelectedSessionQuestionIds}
+              value={selectedQuestionIds}
+              onChange={setSelectedQuestionIds}
               boundaryRef={marqueeBoundaryRef}
             >
               {group.cards.map((card, index) => renderCard(card, index))}
@@ -993,53 +1103,71 @@ export function BottomQueueSection({
           <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 ring-1 ring-blue-100">
             <ClipboardList className="size-4" aria-hidden="true" />
           </span>
-          <h2 className="truncate text-[13px] font-bold text-slate-900">생성/검수 결과</h2>
-          <span aria-hidden="true" className="shrink-0 text-[11px] font-medium text-slate-300">·</span>
+          <h2 className="truncate text-[13px] font-bold text-slate-900">
+            생성/검수 결과
+          </h2>
+          <span
+            aria-hidden="true"
+            className="shrink-0 text-[11px] font-medium text-slate-300"
+          >
+            ·
+          </span>
           <span className="shrink-0 text-[11px] font-medium tabular-nums text-slate-400">
             최근 {reviewCounts.ALL}개
           </span>
-          {!deleteMode && sessionApprovableIds.length > 0 && (
+          {allSelectableIds.length > 0 && (
             <div className="ml-1 flex shrink-0 items-center gap-1.5">
               <Checkbox
-                checked={allSessionSelected ? true : someSessionSelected ? "indeterminate" : false}
-                onCheckedChange={toggleSelectAllSession}
-                aria-label="현재 세션 문제 전체 선택"
+                checked={
+                  allSelected ? true : someSelected ? "indeterminate" : false
+                }
+                onCheckedChange={toggleSelectAll}
+                aria-label="문제 전체 선택"
                 title="전체 선택"
                 className="size-4 cursor-pointer"
               />
+              {sessionApprovableIds.length > 0 && (
+                <button
+                  type="button"
+                  disabled={
+                    selectedApprovableIds.length === 0 || batchApproving
+                  }
+                  onClick={handleBatchApprove}
+                  className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-300 disabled:opacity-100"
+                >
+                  {batchApproving ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                  )}
+                  검수완료
+                  {selectedApprovableIds.length > 0 && (
+                    <span className="text-[11px] font-bold opacity-90">
+                      ({selectedApprovableIds.length})
+                    </span>
+                  )}
+                </button>
+              )}
               <button
                 type="button"
-                disabled={selectedSessionQuestionIds.size === 0 || batchApproving}
-                onClick={handleBatchApprove}
-                className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-green-200 bg-green-50/60 px-2.5 text-[11px] font-semibold text-green-700 shadow-none transition-colors hover:border-green-300 hover:bg-green-50 hover:text-green-800 disabled:cursor-not-allowed disabled:border-green-100 disabled:bg-green-50/50 disabled:text-green-300 disabled:opacity-100"
+                disabled={
+                  selectedQuestionIds.size === 0 ||
+                  batchDeleting ||
+                  !onBatchDeleteQuestions
+                }
+                onClick={handleBatchDelete}
+                aria-label="선택한 문제 삭제"
+                title="선택한 문제 삭제"
+                className="inline-flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-300"
               >
-                {batchApproving ? (
+                {batchDeleting ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
                 ) : (
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                )}
-                검수완료
-                {selectedSessionQuestionIds.size > 0 && (
-                  <span className="text-[11px] font-bold opacity-90">
-                    ({selectedSessionQuestionIds.size})
-                  </span>
+                  <Trash2 className="h-3.5 w-3.5" />
                 )}
               </button>
             </div>
           )}
-          <button
-            type="button"
-            onClick={() => (deleteMode ? exitDeleteMode() : enterDeleteMode())}
-            aria-pressed={deleteMode}
-            className={`ml-1 inline-flex h-7 shrink-0 items-center gap-1.5 rounded-md border px-2.5 text-[11px] font-semibold transition-colors ${
-              deleteMode
-                ? "border-red-600 bg-red-600 text-white hover:bg-red-700"
-                : "border-slate-200 bg-white text-slate-500 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
-            }`}
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-            {deleteMode ? "삭제 모드 종료" : "삭제"}
-          </button>
         </div>
         <div className="flex flex-wrap items-center justify-start gap-2 sm:justify-end">
           <span className="hidden shrink-0 text-[11px] font-medium text-slate-400 lg:inline">
@@ -1052,8 +1180,7 @@ export function BottomQueueSection({
               label,
               content: (
                 <>
-                  {label}{" "}
-                  <span className="text-slate-400">{count}</span>
+                  {label} <span className="text-slate-400">{count}</span>
                 </>
               ),
             }))}
@@ -1076,68 +1203,32 @@ export function BottomQueueSection({
       </div>
 
       <div className="space-y-4 rounded-b-lg bg-white px-4 py-4">
-        {deleteMode && (
-          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-red-200 bg-red-50/70 px-4 py-2.5">
-            <label className="inline-flex cursor-pointer select-none items-center gap-2">
-              <Checkbox
-                checked={
-                  allDeleteSelected ? true : someDeleteSelected ? "indeterminate" : false
-                }
-                disabled={allDeletableIds.length === 0}
-                onCheckedChange={toggleSelectAllDelete}
-              />
-              <span className="text-[12px] font-semibold text-slate-700">
-                전체 선택
-                <span className="ml-1 font-medium text-slate-400">
-                  ({selectedDeleteIds.size}/{allDeletableIds.length})
-                </span>
-              </span>
-            </label>
-            <span className="hidden text-[12px] font-medium text-red-600 sm:inline">
-              삭제할 문제를 선택하세요. 삭제된 문제는 되돌릴 수 없습니다.
-            </span>
-            <div className="ml-auto flex items-center gap-2">
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                onClick={exitDeleteMode}
-                className="h-7 border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-600 hover:bg-slate-50"
-              >
-                취소
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                disabled={selectedDeleteIds.size === 0 || batchDeleting || !onBatchDeleteQuestions}
-                onClick={handleBatchDelete}
-                className="h-7 bg-red-600 px-3 text-[12px] font-semibold text-white shadow-sm hover:bg-red-700 disabled:bg-red-100 disabled:text-red-400"
-              >
-                {batchDeleting ? (
-                  <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Trash2 className="mr-1 h-3.5 w-3.5" />
-                )}
-                선택 삭제
-                {selectedDeleteIds.size > 0 && (
-                  <span className="ml-1 text-[11px] font-bold opacity-90">
-                    ({selectedDeleteIds.size})
-                  </span>
-                )}
-              </Button>
-            </div>
-          </div>
-        )}
-
         {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
           <div className="flex flex-wrap items-center justify-end gap-2">
             {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
               <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-lg border border-slate-200 bg-white p-0.5">
-                {([
-                  { id: "ALL", label: "전체", count: savedPlanCounts.ALL, Icon: Sparkles },
-                  { id: "STANDARD", label: QUESTION_GENERATION_PLAN_TAGS.STANDARD, count: savedPlanCounts.STANDARD, Icon: Sparkles },
-                  { id: "PREMIUM", label: QUESTION_GENERATION_PLAN_TAGS.PREMIUM, count: savedPlanCounts.PREMIUM, Icon: Gem },
-                ] as const).map(({ id, label, count, Icon }) => (
+                {(
+                  [
+                    {
+                      id: "ALL",
+                      label: "전체",
+                      count: savedPlanCounts.ALL,
+                      Icon: Sparkles,
+                    },
+                    {
+                      id: "STANDARD",
+                      label: QUESTION_GENERATION_PLAN_TAGS.STANDARD,
+                      count: savedPlanCounts.STANDARD,
+                      Icon: Sparkles,
+                    },
+                    {
+                      id: "PREMIUM",
+                      label: QUESTION_GENERATION_PLAN_TAGS.PREMIUM,
+                      count: savedPlanCounts.PREMIUM,
+                      Icon: Gem,
+                    },
+                  ] as const
+                ).map(({ id, label, count, Icon }) => (
                   <button
                     key={id}
                     type="button"
@@ -1150,7 +1241,15 @@ export function BottomQueueSection({
                   >
                     <Icon className="h-3 w-3" />
                     <span>{label}</span>
-                    <span className={savedPlanFilter === id ? "text-blue-500" : "text-slate-400"}>{count}</span>
+                    <span
+                      className={
+                        savedPlanFilter === id
+                          ? "text-blue-500"
+                          : "text-slate-400"
+                      }
+                    >
+                      {count}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -1159,17 +1258,26 @@ export function BottomQueueSection({
         )}
 
         {questionViewMode === "flat" ? (
-          loadingSavedQuestions && sessionFlatEntries.length === 0 && savedCardsForDisplay.length === 0 ? (
+          loadingSavedQuestions &&
+          sessionFlatEntries.length === 0 &&
+          savedCardsForDisplay.length === 0 ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
             </div>
-          ) : sessionFlatEntries.length === 0 && savedCardsForDisplay.length === 0 ? (
-            <EmptyState message={reviewStatusFilter === "ALL" && savedPlanFilter === "ALL" ? "아직 저장된 문제가 없습니다." : "현재 필터에 해당하는 문제가 없습니다."} />
+          ) : sessionFlatEntries.length === 0 &&
+            savedCardsForDisplay.length === 0 ? (
+            <EmptyState
+              message={
+                reviewStatusFilter === "ALL" && savedPlanFilter === "ALL"
+                  ? "아직 저장된 문제가 없습니다."
+                  : "현재 필터에 해당하는 문제가 없습니다."
+              }
+            />
           ) : (
             <DragSelect
               className={cardLayoutClassNames[cardLayoutMode]}
-              value={deleteMode ? selectedDeleteIds : selectedSessionQuestionIds}
-              onChange={deleteMode ? setSelectedDeleteIds : setSelectedSessionQuestionIds}
+              value={selectedQuestionIds}
+              onChange={setSelectedQuestionIds}
               boundaryRef={marqueeBoundaryRef}
             >
               {sessionFlatEntries.map((entry) =>
@@ -1194,11 +1302,7 @@ export function BottomQueueSection({
                 renderCard: (card) => renderSessionQuestionCard(card),
                 getSelectableIds: (cards) =>
                   cards
-                    .filter(
-                      (card) =>
-                        card.persistedQuestionId &&
-                        (deleteMode || !card.question.approved),
-                    )
+                    .filter((card) => card.persistedQuestionId)
                     .map((card) => card.persistedQuestionId as string),
               }),
             )}
@@ -1207,19 +1311,29 @@ export function BottomQueueSection({
                 group,
                 source: "saved",
                 renderCard: (q, index) => renderSavedQuestionCard(q, index),
-                getSelectableIds: deleteMode
-                  ? (qs) => qs.map((q) => q.id)
-                  : undefined,
+                getSelectableIds: (qs) => qs.map((q) => q.id),
               }),
             )}
-            {loadingSavedQuestions && visibleQueueCards.length === 0 && sessionGroups.length === 0 && savedCardsForDisplayGroups.length === 0 && (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
-              </div>
-            )}
-            {!loadingSavedQuestions && visibleQueueCards.length === 0 && sessionGroups.length === 0 && savedCardsForDisplayGroups.length === 0 && (
-              <EmptyState message={reviewStatusFilter === "ALL" && savedPlanFilter === "ALL" ? "아직 저장된 문제가 없습니다." : "현재 필터에 해당하는 문제가 없습니다."} />
-            )}
+            {loadingSavedQuestions &&
+              visibleQueueCards.length === 0 &&
+              sessionGroups.length === 0 &&
+              savedCardsForDisplayGroups.length === 0 && (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
+                </div>
+              )}
+            {!loadingSavedQuestions &&
+              visibleQueueCards.length === 0 &&
+              sessionGroups.length === 0 &&
+              savedCardsForDisplayGroups.length === 0 && (
+                <EmptyState
+                  message={
+                    reviewStatusFilter === "ALL" && savedPlanFilter === "ALL"
+                      ? "아직 저장된 문제가 없습니다."
+                      : "현재 필터에 해당하는 문제가 없습니다."
+                  }
+                />
+              )}
           </div>
         )}
       </div>

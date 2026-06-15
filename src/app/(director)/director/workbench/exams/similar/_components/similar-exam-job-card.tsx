@@ -69,7 +69,9 @@ function stagePercent(status: string, stage: string) {
   if (apMatch) {
     const current = Number(apMatch[1]);
     const total = Number(apMatch[2]);
-    return 15 + Math.round((Math.min(current, total) / Math.max(total, 1)) * 30);
+    return (
+      15 + Math.round((Math.min(current, total) / Math.max(total, 1)) * 30)
+    );
   }
   switch (stage) {
     case "UPLOADING":
@@ -90,7 +92,7 @@ function stagePercent(status: string, stage: string) {
 }
 
 const COUNTER_ENABLED =
-  "flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-blue-100 bg-blue-50/60 px-2 text-[11px] font-semibold tabular-nums text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100/70 hover:text-blue-800";
+  "flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold tabular-nums text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700";
 const COUNTER_DISABLED =
   "flex h-7 min-w-0 cursor-not-allowed items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2 text-[11px] font-semibold tabular-nums text-slate-400 opacity-70";
 const COUNTER_DISPLAY =
@@ -114,7 +116,8 @@ export function SimilarExamJobCard({
   const title = job.originalFileName || job.title || "패턴 기반 시험지";
   const questionCount =
     job.generatedExam?.questionCount ?? job.result?.questionCount ?? null;
-  const dateValue = job.generatedExam?.updatedAt || job.completedAt || job.createdAt;
+  const dateValue =
+    job.generatedExam?.updatedAt || job.completedAt || job.createdAt;
 
   const edit = job.generatedExam?.editCount ?? 0;
   const print = job.generatedExam?.printCount ?? 0;
@@ -148,7 +151,9 @@ export function SimilarExamJobCard({
         <div className="mt-1 flex flex-wrap items-center gap-3">
           <span className="inline-flex items-center gap-1 text-[11px] text-slate-500">
             <ClipboardList className="size-3 text-slate-400" />
-            {questionCount != null ? `${questionCount}문항` : `${job.totalPages}p`}
+            {questionCount != null
+              ? `${questionCount}문항`
+              : `${job.totalPages}p`}
           </span>
           <span className="inline-flex items-center gap-1 text-[11px] text-slate-500">
             <Calendar className="size-3 text-slate-400" />
@@ -203,13 +208,12 @@ export function SimilarExamJobCard({
             className={cn(
               "inline-flex h-6 items-center gap-1 rounded-full border px-2 text-[10.5px] font-semibold",
               job.status === "COMPLETED" &&
-                "border-emerald-200 bg-emerald-50 text-emerald-700",
+                "border-slate-200 bg-slate-50 text-slate-700",
               job.status === "PROCESSING" &&
-                "border-blue-200 bg-blue-50 text-blue-700",
+                "border-slate-200 bg-slate-50 text-slate-700",
               job.status === "PENDING" &&
                 "border-slate-200 bg-slate-50 text-slate-500",
-              job.status === "FAILED" &&
-                "border-red-200 bg-red-50 text-red-700",
+              job.status === "FAILED" && "border-red-200 bg-white text-red-700",
               job.status === "CANCELLED" &&
                 "border-slate-200 bg-slate-50 text-slate-500",
             )}
@@ -238,7 +242,7 @@ export function SimilarExamJobCard({
           </div>
         ) : null}
         {job.status === "FAILED" && job.errorMessage ? (
-          <p className="mt-1.5 line-clamp-2 rounded-md bg-red-50 px-2 py-1 text-[10.5px] leading-relaxed text-red-600">
+          <p className="mt-1.5 line-clamp-2 rounded-md border border-red-200 bg-white px-2 py-1 text-[10.5px] leading-relaxed text-red-600">
             {job.errorMessage}
           </p>
         ) : null}

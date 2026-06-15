@@ -11,7 +11,6 @@ import {
   Trash2,
 } from "lucide-react";
 import type { CollectionItem } from "./types";
-import { FOLDER_COLORS } from "./constants";
 
 interface FolderCardProps {
   collection: CollectionItem;
@@ -42,18 +41,11 @@ export function FolderCard({
   const [isDragOver, setIsDragOver] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
-  const color =
-    collection.color ||
-    FOLDER_COLORS[collection.name.charCodeAt(0) % FOLDER_COLORS.length];
-
   // Close menu on click outside
   useEffect(() => {
     if (!showMenu) return;
     function handleClick(e: MouseEvent) {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(e.target as Node)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setShowMenu(false);
       }
     }
@@ -73,8 +65,7 @@ export function FolderCard({
       onDrop: ({ source }) => {
         setIsDragOver(false);
         const itemId = source.data[dragItemIdKey] as string;
-        const isCopy =
-          (window.event as DragEvent | null)?.shiftKey ?? false;
+        const isCopy = (window.event as DragEvent | null)?.shiftKey ?? false;
         onFileDrop(itemId, collection.id, isCopy);
       },
     });
@@ -86,22 +77,17 @@ export function FolderCard({
       onClick={editing ? undefined : onClick}
       className={`flex items-center gap-3 px-4 py-3 rounded-xl border cursor-pointer transition-all hover:shadow-sm group ${
         isDragOver
-          ? "bg-blue-50 border-blue-400 border-2 scale-[1.02] shadow-md"
+          ? "bg-white border-blue-400 border-2 scale-[1.02] shadow-md ring-2 ring-blue-200/50"
           : selected
-          ? "bg-blue-50 border-blue-300"
-          : "bg-white border-slate-200 hover:border-slate-300"
+            ? "bg-white border-blue-400 ring-2 ring-blue-300/30"
+            : "bg-white border-slate-200 hover:border-slate-300"
       }`}
     >
-      <div
-        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors"
-        style={{
-          backgroundColor: isDragOver ? `${color}30` : `${color}15`,
-        }}
-      >
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border border-slate-200 bg-slate-50 transition-colors">
         {isDragOver ? (
-          <FolderOpen className="w-5 h-5" style={{ color }} />
+          <FolderOpen className="w-5 h-5 text-blue-600" />
         ) : (
-          <Folder className="w-5 h-5" style={{ color }} />
+          <Folder className="w-5 h-5 text-slate-500" />
         )}
       </div>
 
@@ -159,7 +145,8 @@ export function FolderCard({
               }}
               className="w-full flex items-center gap-2 px-3 py-1.5 text-[12px] text-slate-700 hover:bg-slate-50"
             >
-              <Pencil className="w-3 h-3" />이름 변경
+              <Pencil className="w-3 h-3" />
+              이름 변경
             </button>
             <button
               onClick={() => {
@@ -168,7 +155,8 @@ export function FolderCard({
               }}
               className="w-full flex items-center gap-2 px-3 py-1.5 text-[12px] text-red-600 hover:bg-red-50"
             >
-              <Trash2 className="w-3 h-3" />삭제
+              <Trash2 className="w-3 h-3" />
+              삭제
             </button>
           </div>
         )}

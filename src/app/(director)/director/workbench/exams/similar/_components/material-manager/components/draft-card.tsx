@@ -75,7 +75,7 @@ export function DraftCard({
     value: string;
   } | null>(null);
   const titleEditing = titleEditState?.draftId === draft.id;
-  const titleInput = titleEditing ? titleEditState.value : draft.title ?? "";
+  const titleInput = titleEditing ? titleEditState.value : (draft.title ?? "");
   const setTitleInput = useCallback(
     (value: string) => setTitleEditState({ draftId: draft.id, value }),
     [draft.id],
@@ -184,10 +184,7 @@ export function DraftCard({
     });
   }, [draft.id]);
 
-  const preview = draft.rawText
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, 140);
+  const preview = draft.rawText.replace(/\s+/g, " ").trim().slice(0, 140);
 
   const isReviewed =
     draft.savedPassageId != null || draft.reviewStatus === "COMMITTED";
@@ -203,16 +200,15 @@ export function DraftCard({
         : "검수필요";
   const stampDoneClass =
     statusBadgeMode === "analysis"
-      ? "border-blue-600/85 text-blue-700"
-      : "border-emerald-600/85 text-emerald-700";
+      ? "border-slate-500 text-slate-600"
+      : "border-slate-500 text-slate-600";
   const stampNeededClass =
     statusBadgeMode === "analysis"
-      ? "border-amber-300/80 bg-amber-50/40 text-amber-500/90"
+      ? "border-slate-300 bg-slate-50 text-slate-500"
       : "border-red-300/70 bg-red-50/30 text-red-400/80";
 
   const fileNames = getDraftSourceFileNames(draft);
-  const primaryFile =
-    fileNames[0] ?? draft.job?.originalFileName ?? null;
+  const primaryFile = fileNames[0] ?? draft.job?.originalFileName ?? null;
   const extraFileCount = Math.max(0, fileNames.length - 1);
   // Prefer the booklet's own page number (examMeta.pageNumber). Falls back
   // to upload-order pageIndex+1 when OCR didn't capture the page footer.
@@ -221,11 +217,12 @@ export function DraftCard({
       .filter((p) => typeof p.examPageNumber === "number")
       .map((p) => [p.pageIndex, p.examPageNumber as number] as const),
   );
-  const pageLabel = draft.sourcePageIndex.length > 0
-    ? `${draft.sourcePageIndex
-        .map((p) => examPageNumberByIndex.get(p) ?? p + 1)
-        .join(", ")}p`
-    : null;
+  const pageLabel =
+    draft.sourcePageIndex.length > 0
+      ? `${draft.sourcePageIndex
+          .map((p) => examPageNumberByIndex.get(p) ?? p + 1)
+          .join(", ")}p`
+      : null;
 
   return (
     <div
@@ -251,7 +248,7 @@ export function DraftCard({
           : stampDone
             ? "border-slate-200 hover:border-slate-300 hover:bg-slate-50/60"
             : statusBadgeMode === "analysis"
-              ? "border-amber-200/90 shadow-[0_0_0_1px_rgba(251,191,36,0.28),0_0_18px_rgba(245,158,11,0.10)] hover:border-amber-300/90"
+              ? "border-slate-200 shadow-[0_0_0_1px_rgba(148,163,184,0.24),0_0_18px_rgba(148,163,184,0.10)] hover:border-slate-300"
               : "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)] hover:border-red-300/80") +
         // "Just came back from this card" hint — one-shot bg flash. We keep
         // the workflow-status border intact so attention-needed cards stay
@@ -369,7 +366,10 @@ export function DraftCard({
           className="flex min-w-0 items-center gap-1 rounded bg-slate-100/80 px-1.5 py-0.5 ring-1 ring-slate-200/70"
           title={getDraftSourceLabel(draft)}
         >
-          <FileText className="size-3 shrink-0 text-slate-500" aria-hidden="true" />
+          <FileText
+            className="size-3 shrink-0 text-slate-500"
+            aria-hidden="true"
+          />
           <span className="truncate text-[10.5px] font-semibold text-slate-700">
             {primaryFile}
           </span>
