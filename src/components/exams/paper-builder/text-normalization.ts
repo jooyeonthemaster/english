@@ -87,11 +87,12 @@ export function normalizePassageText(text: string): string {
   const normalized = normalizeBaseText(text);
   if (!normalized) return "";
 
+  // 전부 통짜: 지문 단락을 빈 줄이 아닌 공백으로 이어 단일 흐름으로(임베드형과 통일).
   return normalized
     .split(/\n{2,}/)
     .map(collapseProseLineBreaks)
     .filter(Boolean)
-    .join("\n\n");
+    .join(" ");
 }
 
 export function normalizeQuestionText(text: string): string {

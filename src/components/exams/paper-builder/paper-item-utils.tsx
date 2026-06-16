@@ -22,6 +22,7 @@ import { splitSentenceInsertGivenBlock } from "./option-display";
 import { buildGrammarCorrectionQuestionTextForDisplay } from "@/lib/grammar-correction-display";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { formatSourcePassageForQuestionItems } from "./source-passage-markers";
+import { normalizePaperFields } from "./render-model";
 
 export function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
@@ -130,18 +131,27 @@ function paperBlockDefaults(): Pick<
 
 export function makePaperItem(question: BuilderQuestion, orderNum: number, _existingItems: PaperItem[]): PaperItem {
   void _existingItems;
-  const options =
-    question.subType === "SENTENCE_INSERT"
-      ? buildCanonicalSentenceInsertOptionsFrom(question.options)
-      : parseOptions(question.options);
   const localId = makeLocalId(question.id);
-  const isSubjective = options.length === 0;
   const customAnswerSpaceLines = customLayoutAnswerSpaceLines(question);
-  const normalizedQuestionText = normalizedQuestionTextForPaper(question);
+  // 일반 문항의 이관된 마커 유형은 표기(마커·라벨·보기순서)를 시험지 렌더 시점에 정본화.
+  // 동형·미이관·도출실패는 null → 현 동작 유지(회귀 0). 생성/DB 무영향(여기서만 변환).
+  const normalizedFields = normalizePaperFields(question, "normalized");
+  const options =
+    normalizedFields?.options ??
+    (question.subType === "SENTENCE_INSERT"
+      ? buildCanonicalSentenceInsertOptionsFrom(question.options)
+      : parseOptions(question.options));
+  const isSubjective = options.length === 0;
+  const effectiveQuestion = normalizedFields
+    ? { ...question, correctAnswer: normalizedFields.correctAnswer }
+    : question;
+  const normalizedQuestionText = normalizedFields
+    ? normalizeQuestionText(normalizedFields.questionText)
+    : normalizedQuestionTextForPaper(question);
   const passageContent = normalizePassageText(question.passage?.content || "");
   const includeSourcePassage = shouldIncludeSourcePassageByDefault(question);
   const normalizedQuestion = {
-    ...question,
+    ...effectiveQuestion,
     questionText: normalizedQuestionText,
     passage: question.passage
       ? { ...question.passage, content: passageContent }
@@ -160,7 +170,7 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     passageContent,
     questionText: normalizedQuestionText,
     options,
-    correctAnswer: formatStoredQuestionCorrectAnswer(question) || "",
+    correctAnswer: formatStoredQuestionCorrectAnswer(effectiveQuestion) || "",
     answerSpaceLines:
       customAnswerSpaceLines ??
       (isSubjective && question.subType !== "GRAMMAR_CORRECTION" ? 4 : 0),
@@ -419,7 +429,9 @@ export function renderFormattedInline(
   options?: FormattedInlineOptions,
 ) {
   const parts: React.ReactNode[] = [];
-  const pattern = /__([^_]+)__|_{3,}|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF\u24D0-\u24E9])|\(([a-eA-E])\)/g;
+  // standalone \uAD04\uD638\uBB38\uC790 \uB9C8\uCEE4: (A)~(J) (\uAC10\uC2FC __(A)..__ \uACBD\uB85C\uC758 [a-jA-J] \uC640 \uB3D9\uC77C \uBC94\uC704\uB85C
+  // \uB9DE\uCDA4 \u2014 6~10\uC9C0\uC120\uB2E4 \uBCF4\uAE30 \uCC38\uC870 (F)(G).. \uAC00 A~E\uB9CC \uD30C\uB791\uC774\uACE0 \uB098\uBA38\uC9C4 \uAC80\uC815\uC774\uB358 \uBB38\uC81C \uC218\uC815).
+  const pattern = /__([^_]+)__|_{3,}|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF\u24D0-\u24E9])|\(([a-jA-J])\)|(\[[^\]]+\])/g;
   const alphabetMarkerClassName = alphabetMarkerClassNameForSubtype(subType, options);
   let lastIndex = 0;
   let key = 0;
@@ -474,9 +486,22 @@ export function renderFormattedInline(
       );
     } else if (match[3]) {
       parts.push(
-        <span key={key++} className={alphabetMarkerClassName}>
+        // 스탠드얼론 괄호알파벳 마커도 원형숫자 마커(match[2])와 동일하게 좌우여백 통일.
+        <span key={key++} className={`mx-0.5 ${alphabetMarkerClassName}`}>
           {parenthesizedMarkerDisplay(match[3], subType)}
         </span>,
+      );
+    } else if (match[4]) {
+      // 네모 어법(GRAMMAR_CHOICE_COMBO) 후보 [좌 / 우]는 파랑으로(다른 어법 마커와 색 통일).
+      // 그 외 유형의 [조건]/[요약문] 등 대괄호는 평문 유지.
+      parts.push(
+        subType === "GRAMMAR_CHOICE_COMBO" ? (
+          <span key={key++} className="font-semibold text-blue-700">
+            {match[4]}
+          </span>
+        ) : (
+          <span key={key++}>{match[4]}</span>
+        ),
       );
     } else {
       parts.push(
@@ -531,7 +556,14 @@ export function joinRenderedLinesForDisplay(lines: string[]) {
     paragraphs.push(currentParagraph.join(" "));
   }
 
-  return paragraphs.join("\n\n").replace(/[ \t]{2,}/g, " ").trim();
+  // 전부 통짜: 단락을 빈 줄(\n\n)이 아닌 공백으로 이어 단일 흐름으로(유형 간 통일).
+  return paragraphs.join(" ").replace(/[ \t]{2,}/g, " ").trim();
+}
+
+// 지문 단락을 단일 흐름(통짜)으로 — 임베드/박스 유형 간 "문단 분리 vs 통짜" 불일치 해소.
+// 수능 지문 관례(단일 문단 흐름)에 맞춤. (given-block 분리 후 적용해 경계 탐색은 보존.)
+function collapsePassageParagraphs(text: string): string {
+  return text.replace(/\n{2,}/g, " ").replace(/[ \t]{2,}/g, " ");
 }
 
 export function renderQuestionTextInline(
@@ -540,7 +572,7 @@ export function renderQuestionTextInline(
 ) {
   const normalizedText = normalizeSummaryCompletionQuestionText(text, subType);
   const { beforeText, givenText } = splitSentenceInsertGivenBlock(normalizedText, subType);
-  if (!givenText) return renderFormattedInline(normalizedText, subType);
+  if (!givenText) return renderFormattedInline(collapsePassageParagraphs(normalizedText), subType);
 
   // 실제 수능 포맷: '주어진 문장' 박스를 지문 '위'에 둔다(라벨은 한글).
   return (
@@ -552,7 +584,7 @@ export function renderQuestionTextInline(
         {renderFormattedInline(givenText, subType)}
       </span>
       {beforeText && (
-        <span data-block="1" className="block">{renderFormattedInline(beforeText, subType)}</span>
+        <span data-block="1" className="block">{renderFormattedInline(collapsePassageParagraphs(beforeText), subType)}</span>
       )}
     </>
   );
