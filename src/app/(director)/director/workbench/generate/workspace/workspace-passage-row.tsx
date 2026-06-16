@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronUp,
   CircleAlert,
+  Cpu,
   FileText,
   Gem,
   Loader2,
@@ -23,7 +24,6 @@ import {
   RotateCcw,
   Scissors,
   SlidersHorizontal,
-  Sparkles,
   TextCursorInput,
   Trash2,
   Undo2,
@@ -59,6 +59,17 @@ import {
   ParaphrasePreviewPanel,
   PrependPreviewPanel,
 } from "./transform-panels";
+import {
+  VariantMenuButton,
+  WholePassageVariantPreviewPanel,
+  type VariantAction,
+} from "./whole-passage-variant-controls";
+import {
+  defaultVariantTitle,
+  variantModeLabel,
+  type VariantDirection,
+  type WholePassageTransformMode,
+} from "@/lib/passage-transform/schema";
 
 // ============================================================================
 // 워크스페이스 지문 행 — 본문 직접 편집 + AI 변형(문장 재작성·앞 맥락 추가) +
@@ -117,13 +128,24 @@ type PreviewState =
     }
   | { kind: "prepend"; text: string; note: string };
 
+/** 전체 변형(새 지문) 미리보기 — 적용 시 새 행으로 추가된다(원본 유지). */
+interface VariantPreviewState {
+  mode: WholePassageTransformMode;
+  direction?: VariantDirection;
+  label: string;
+  text: string;
+  title: string;
+  summary: string;
+}
+
 async function requestTransform(body: {
-  mode: "PARAPHRASE" | "PREPEND";
+  mode: "PARAPHRASE" | "PREPEND" | WholePassageTransformMode;
   passageText: string;
   selectedText?: string;
   avoidTexts?: string[];
   sentenceCount?: number;
-}): Promise<{ text: string; note: string }> {
+  direction?: VariantDirection;
+}): Promise<{ text: string; note: string; title: string; summary: string }> {
   const res = await fetch("/api/workbench/passage-transform", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -134,7 +156,12 @@ async function requestTransform(body: {
   if (!res.ok || data.error) {
     throw new Error(data.error || "AI 변형에 실패했습니다.");
   }
-  return { text: String(data.text || ""), note: String(data.note || "") };
+  return {
+    text: String(data.text || ""),
+    note: String(data.note || ""),
+    title: String(data.title || ""),
+    summary: String(data.summary || ""),
+  };
 }
 
 /** 선택 액션 팝오버 추정 크기 — 좌우 클램프·상하 플립 판정용. */
@@ -260,12 +287,25 @@ interface WorkspacePassageRowProps {
   onSetRange: (range: RowRange | null) => void;
   onToggleCollapsed: () => void;
   onRemove: () => void;
-  /** 이 행이 우측 패널의 '개별 설정' 대상으로 선택돼 있는지. */
+  /**
+   * 전체 변형본을 새 Passage 로 저장하고 워크스페이스에 새 행으로 추가한다.
+   * 성공하면 true 를 반환 — 행은 그때 미리보기를 닫는다.
+   */
+  onAddVariant: (input: {
+    sourcePassageId: string;
+    title: string;
+    content: string;
+    mode: WholePassageTransformMode;
+    direction?: VariantDirection;
+  }) => Promise<boolean>;
+  /** 이 행이 '개별 설정' 대상으로 선택돼 있는지 (선택 링 표시). */
   active?: boolean;
-  /** 행 본문 클릭 → 우측 패널을 이 지문에 바인딩 (패널은 열지 않음). */
+  /** 행 본문 클릭 → 이 지문을 선택(설정 대상)으로 바인딩 (모달은 열지 않음). */
   onSetActive: () => void;
-  /** '지문별 설정' 버튼 → 이 지문 선택 + 접혀 있던 설정 패널 펼치기. */
+  /** '문제 생성' / 설정 배지 클릭 → 이 지문의 문제 생성 모달을 연다. */
   onOpenSettings: () => void;
+  /** 이 지문이 현재 설정으로 만들어낼 문제 수·크레딧 (푸터 버튼 라벨용). */
+  genStats?: { questions: number; creditCost: number };
 }
 
 export function WorkspacePassageRow({
@@ -286,9 +326,11 @@ export function WorkspacePassageRow({
   onSetRange,
   onToggleCollapsed,
   onRemove,
+  onAddVariant,
   active = false,
   onSetActive,
   onOpenSettings,
+  genStats,
 }: WorkspacePassageRowProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -296,11 +338,17 @@ export function WorkspacePassageRow({
   const [selection, setSelection] = useState<SelectionState | null>(null);
   const [selectionAnchor, setSelectionAnchor] =
     useState<SelectionAnchor | null>(null);
-  const [busy, setBusy] = useState<"paraphrase" | "prepend" | "restore" | null>(
-    null,
-  );
+  const [busy, setBusy] = useState<
+    "paraphrase" | "prepend" | "restore" | "variant" | null
+  >(null);
   const [restoreIntroOpen, setRestoreIntroOpen] = useState(false);
   const [preview, setPreview] = useState<PreviewState | null>(null);
+  // 전체 변형(새 지문) 미리보기 + 적용 진행 상태.
+  const [variantPreview, setVariantPreview] =
+    useState<VariantPreviewState | null>(null);
+  const [variantAdding, setVariantAdding] = useState(false);
+  // "다시 생성" 회피 목록 — 같은 변형 액션에 대한 직전 결과들.
+  const variantAvoidRef = useRef<string[]>([]);
   // 변형 문장 위에 커서를 올리면 원문을 보여주는 툴팁 (에디터 컨테이너 기준 좌표).
   const [originalTip, setOriginalTip] = useState<{
     left: number;
@@ -416,7 +464,7 @@ export function WorkspacePassageRow({
     row.override?.mode ?? (hasTypes ? "manual" : null);
   // 헤더 설정 배지 — 이 지문에 적용될 생성 설정을 한눈에 보여준다.
   // 미설정/자동 생성/유형(요약)/장문 세트, 그리고 유형 지정인데 아직 유형이
-  // 없는 미완성 상태(생성 제외)는 호박색으로 또렷하게 구분한다.
+  // 없는 미완성 상태(생성 제외)는 점선 슬레이트(미설정) 톤으로 또렷하게 구분한다.
   const settingsBadge: {
     Icon: typeof SlidersHorizontal;
     label: string;
@@ -425,7 +473,7 @@ export function WorkspacePassageRow({
   } =
     rowMode === "auto"
       ? {
-          Icon: Sparkles,
+          Icon: Wand2,
           label: "자동 생성",
           title: "이 지문은 자동 생성됩니다 — 클릭해 설정 변경",
           tone: "configured",
@@ -461,8 +509,10 @@ export function WorkspacePassageRow({
               title: "아직 유형이 지정되지 않았어요 — 클릭해 지정",
               tone: "warn",
             };
-  const locked = disabled || busy !== null || preview !== null;
-  const editorLocked = preview !== null || busy !== null;
+  const locked =
+    disabled || busy !== null || preview !== null || variantPreview !== null;
+  const editorLocked =
+    preview !== null || busy !== null || variantPreview !== null;
 
   const highlightSegments = useMemo(
     () => buildHighlightSegments(row.content, row.highlights),
@@ -582,7 +632,9 @@ export function WorkspacePassageRow({
   useEffect(() => {
     setSelection(null);
     setPreview(null);
+    setVariantPreview(null);
     avoidRef.current = [];
+    variantAvoidRef.current = [];
   }, [row.passageId]);
 
   // ── 드래그 모션 코치 (첫 행) — 마운트 후 판정해 하이드레이션 안전.
@@ -661,7 +713,8 @@ export function WorkspacePassageRow({
   // ── 텍스트 선택 추적 — 선택 좌표를 재서 액션 팝오버를 선택 근처에 띄운다 ──
   const handleSelect = useCallback(() => {
     const el = textareaRef.current;
-    if (!el || preview) return;
+    // 변형 미리보기/생성 중에는 에디터가 잠겨 있으므로 선택 액션도 막는다.
+    if (!el || preview || variantPreview || busy) return;
     const start = el.selectionStart ?? 0;
     const end = el.selectionEnd ?? 0;
     if (end - start >= MIN_PARAPHRASE_CHARS) {
@@ -674,7 +727,7 @@ export function WorkspacePassageRow({
       setSelection(null);
       setSelectionAnchor(null);
     }
-  }, [row.content, preview, dismissDragCoach]);
+  }, [row.content, preview, variantPreview, busy, dismissDragCoach]);
 
   // ── AI 문장 변형 ──
   const runParaphrase = useCallback(
@@ -708,10 +761,10 @@ export function WorkspacePassageRow({
   );
 
   const handleParaphraseClick = useCallback(() => {
-    if (!selection || busy || disabled) return;
+    if (!selection || busy || disabled || preview || variantPreview) return;
     avoidRef.current = [];
     void runParaphrase(selection, []);
-  }, [selection, busy, disabled, runParaphrase]);
+  }, [selection, busy, disabled, preview, variantPreview, runParaphrase]);
 
   // ── AI 복원 (문제 형태 → 원문) — intake 붙여넣기와 동일 API·플로우 ──
   const runRestore = useCallback(async () => {
@@ -797,6 +850,97 @@ export function WorkspacePassageRow({
     void runPrepend([]);
   }, [busy, preview, disabled, runPrepend, dismissPrependCoach]);
 
+  // ── 전체 변형 (관련/상반 주제·난이도·길이 → 새 지문) ──
+  const runVariant = useCallback(
+    async (
+      mode: WholePassageTransformMode,
+      direction: VariantDirection | undefined,
+      avoidTexts: string[],
+    ) => {
+      setBusy("variant");
+      try {
+        const r = await requestTransform({
+          mode,
+          passageText: row.content,
+          direction,
+          avoidTexts: avoidTexts.length > 0 ? avoidTexts : undefined,
+        });
+        if (!r.text.trim()) throw new Error("변형 결과가 비어 있습니다.");
+        variantAvoidRef.current = [...variantAvoidRef.current, r.text].slice(-5);
+        setVariantPreview((prev) => ({
+          mode,
+          direction,
+          label: variantModeLabel(mode, direction),
+          text: r.text,
+          // 사용자가 이미 제목을 손봤으면(다시 생성) 그 제목을 유지한다.
+          title:
+            prev?.title?.trim() ||
+            r.title.trim() ||
+            defaultVariantTitle(row.title, mode, direction),
+          summary: r.summary,
+        }));
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "변형 지문 생성에 실패했습니다.",
+        );
+      } finally {
+        setBusy(null);
+      }
+    },
+    [row.content, row.title],
+  );
+
+  const handleVariantPick = useCallback(
+    (action: VariantAction) => {
+      if (busy || preview || variantPreview || disabled) return;
+      if (row.content.trim().length < 20) {
+        toast.error("변형하려면 지문이 조금 더 길어야 합니다. (최소 20자)");
+        return;
+      }
+      variantAvoidRef.current = [];
+      void runVariant(action.mode, action.direction, []);
+    },
+    [busy, preview, variantPreview, disabled, row.content, runVariant],
+  );
+
+  const handleRegenerateVariant = useCallback(() => {
+    if (!variantPreview) return;
+    void runVariant(
+      variantPreview.mode,
+      variantPreview.direction,
+      variantAvoidRef.current,
+    );
+  }, [variantPreview, runVariant]);
+
+  const handleAddVariantClick = useCallback(async () => {
+    if (!variantPreview || variantAdding || disabled) return;
+    setVariantAdding(true);
+    try {
+      const ok = await onAddVariant({
+        sourcePassageId: row.variantOfId ?? row.passageId,
+        title: variantPreview.title.trim(),
+        content: variantPreview.text,
+        mode: variantPreview.mode,
+        direction: variantPreview.direction,
+      });
+      if (ok) {
+        setVariantPreview(null);
+        variantAvoidRef.current = [];
+      }
+    } finally {
+      setVariantAdding(false);
+    }
+  }, [variantPreview, variantAdding, disabled, onAddVariant, row.variantOfId, row.passageId]);
+
+  const handleCancelVariant = useCallback(() => {
+    setVariantPreview(null);
+    variantAvoidRef.current = [];
+  }, []);
+
+  const setVariantTitle = useCallback((title: string) => {
+    setVariantPreview((prev) => (prev ? { ...prev, title } : prev));
+  }, []);
+
   // ── 미리보기 액션 ──
   const handleRegenerate = useCallback(() => {
     if (!preview) return;
@@ -875,7 +1019,7 @@ export function WorkspacePassageRow({
 
   // ── 출제 범위 ──
   const handleSetRangeFromSelection = useCallback(() => {
-    if (!selection || disabled) return;
+    if (!selection || disabled || busy || preview || variantPreview) return;
     if (selection.end - selection.start < MIN_RANGE_CHARS) {
       toast.error("출제 범위는 조금 더 길게 선택해주세요.");
       return;
@@ -884,7 +1028,7 @@ export function WorkspacePassageRow({
     dispatchGenerateTourMilestone("workspace-range-set");
     setSelection(null);
     toast.success("출제 범위가 지정됐습니다. 이 구간만으로 문제를 생성합니다.");
-  }, [selection, disabled, onSetRange]);
+  }, [selection, disabled, busy, preview, variantPreview, onSetRange]);
 
   const rangePreview = useMemo(() => {
     if (!row.range) return null;
@@ -903,7 +1047,7 @@ export function WorkspacePassageRow({
     <div
       onClick={onSetActive}
       className={
-        "overflow-hidden rounded-lg border bg-white shadow-sm transition-shadow " +
+        "flex h-full flex-col overflow-hidden rounded-lg border bg-white shadow-sm transition-shadow " +
         (active
           ? "border-violet-300 ring-2 ring-violet-200"
           : "border-slate-200 hover:border-violet-200")
@@ -983,7 +1127,7 @@ export function WorkspacePassageRow({
           const custom = !!row.override?.generationPlan;
           const isPremium =
             (row.override?.generationPlan ?? globalGenerationPlan) === "PREMIUM";
-          const PlanIcon = isPremium ? Gem : Sparkles;
+          const PlanIcon = isPremium ? Gem : Cpu;
           return (
             <span
               title={
@@ -1044,8 +1188,8 @@ export function WorkspacePassageRow({
             "flex h-7 min-w-0 shrink items-center gap-1.5 rounded-md border px-2 text-[11px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
             (settingsBadge.tone === "warn"
               ? active
-                ? "border-amber-300 bg-amber-100 text-amber-700"
-                : "border-dashed border-amber-300 bg-amber-50 text-amber-600 hover:bg-amber-100"
+                ? "border-violet-300 bg-violet-100 text-violet-700"
+                : "border-dashed border-slate-300 bg-slate-50 text-slate-500 hover:border-violet-200 hover:text-violet-600"
               : settingsBadge.tone === "configured"
                 ? active
                   ? "border-violet-300 bg-violet-100 text-violet-700"
@@ -1087,7 +1231,7 @@ export function WorkspacePassageRow({
       </div>
 
       {!row.collapsed ? (
-        <div className="space-y-2 px-2.5 py-2.5">
+        <div className="flex min-h-0 flex-1 flex-col space-y-2 px-2.5 py-2.5">
           {/* ── AI 도구 바 ── */}
           <div
             className="flex min-h-7 flex-wrap items-center gap-x-2 gap-y-1.5"
@@ -1116,6 +1260,11 @@ export function WorkspacePassageRow({
                 />
               ) : null}
             </button>
+            <VariantMenuButton
+              disabled={locked || row.content.trim().length < 20}
+              busy={busy === "variant"}
+              onPick={handleVariantPick}
+            />
             {rangePreview ? (
               // 뱃지 색을 범위 하이라이트(amber-100)와 같은 노란 계열로 맞춰,
               // 'X'로 해제하는 이 버튼이 그 노란 표시를 끄는 것임을 한눈에 보이게.
@@ -1178,11 +1327,28 @@ export function WorkspacePassageRow({
             />
           ) : null}
 
+          {/* ── 전체 변형(새 지문) 미리보기 ── */}
+          {variantPreview ? (
+            <WholePassageVariantPreviewPanel
+              label={variantPreview.label}
+              variantText={variantPreview.text}
+              sourceWords={words}
+              title={variantPreview.title}
+              summary={variantPreview.summary}
+              busy={busy === "variant" || variantAdding}
+              disabled={disabled}
+              onTitleChange={setVariantTitle}
+              onApply={handleAddVariantClick}
+              onRegenerate={handleRegenerateVariant}
+              onCancel={handleCancelVariant}
+            />
+          ) : null}
+
           {/* ── 본문 에디터 (앞 맥락 삽입 바 + 하이라이트 백드롭) ── */}
           <div
             data-generate-tour="workspace-editor"
             className={
-              "overflow-hidden rounded-lg border transition-colors " +
+              "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border transition-colors " +
               (editorLocked
                 ? "border-slate-200 bg-slate-50"
                 : "border-slate-200 bg-white focus-within:border-violet-300 focus-within:ring-2 focus-within:ring-violet-100")
@@ -1333,7 +1499,7 @@ export function WorkspacePassageRow({
               ) : null}
             </div>
 
-            <div className="relative">
+            <div className="relative flex min-h-0 flex-1 flex-col">
               {/* 출제 범위 백드롭 — 지정된 구간을 형광펜처럼 칠한다.
                   AI 하이라이트 백드롭과 같은 메트릭의 별도 레이어. */}
               {row.range ? (
@@ -1448,7 +1614,7 @@ export function WorkspacePassageRow({
                 spellCheck={false}
                 style={EDITOR_TEXT_STYLE}
                 className={
-                  "relative min-h-[180px] resize-y rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 " +
+                  "relative h-full min-h-[180px] flex-1 resize-none rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 " +
                   (editorLocked ? "text-slate-500" : "")
                 }
                 placeholder="지문 본문"
@@ -1574,7 +1740,12 @@ export function WorkspacePassageRow({
 
               {/* ── 선택 액션 팝오버 — 드래그한 문장 바로 옆에 뜬다
                   (학습지 필기 툴바와 동일한 앵커·클램프 규칙) ── */}
-              {selection && selectionAnchor && !preview && !busy && !disabled
+              {selection &&
+              selectionAnchor &&
+              !preview &&
+              !variantPreview &&
+              !busy &&
+              !disabled
                 ? (() => {
                     const fitsBelow =
                       selectionAnchor.bottomY + SELECTION_POPUP_H + 10 <=
@@ -1724,6 +1895,50 @@ export function WorkspacePassageRow({
           ) : null}
         </div>
       ) : null}
+
+      {/* ── 푸터: 이 지문 '문제 생성' (항상 표시 — 접혀 있어도 보임) ──
+          클릭하면 이 지문 전용 문제 생성 모달이 열려 유형·난이도를 설정하고
+          이 지문 하나로 바로 생성한다. "지문 = 자기 설정"을 명확히 하는 핵심 CTA. */}
+      <div className="mt-auto border-t border-slate-100 bg-slate-50/50 p-2">
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={onOpenSettings}
+          data-generate-tour="row-generate-button"
+          title={
+            genStats && genStats.questions > 0
+              ? "이 지문의 유형·난이도를 설정하고 문제를 생성합니다"
+              : "이 지문의 유형을 선택하고 문제를 생성합니다"
+          }
+          className={
+            "flex h-11 w-full items-center gap-2 rounded-lg px-3 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50 " +
+            (genStats && genStats.questions > 0
+              ? "bg-violet-600"
+              : "justify-center bg-violet-600")
+          }
+        >
+          <Cpu className="h-4 w-4 shrink-0" aria-hidden="true" />
+          {genStats && genStats.questions > 0 ? (
+            <>
+              <span className="shrink-0">문제 생성</span>
+              <span className="min-w-0 flex-1 truncate text-left text-[11.5px] font-semibold text-white/75">
+                {settingsBadge.label}
+              </span>
+              <span className="shrink-0 rounded-md bg-white/20 px-1.5 py-0.5 text-[11px] font-bold tabular-nums">
+                {genStats.questions}문제
+              </span>
+              {genStats.creditCost > 0 ? (
+                <CreditCostChip
+                  amount={genStats.creditCost}
+                  className="shrink-0 rounded-md bg-white/20 px-1.5 py-0.5 text-[10.5px]"
+                />
+              ) : null}
+            </>
+          ) : (
+            <span>유형 선택하고 문제 생성하기</span>
+          )}
+        </button>
+      </div>
 
       {/* AI 복원 첫 사용 안내 — intake 붙여넣기와 동일 다이얼로그/저장 키 */}
       <RestoreIntroDialog

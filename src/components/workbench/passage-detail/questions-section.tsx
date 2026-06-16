@@ -15,6 +15,7 @@ import type { PassageDetailProps } from "./types";
 import { Q_TYPE_LABELS, Q_SUBTYPE_LABELS, Q_DIFF } from "./constants";
 import { safeParseJSON } from "./utils";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { renderFormatted } from "@/components/workbench/question-bank-card/render-formatted";
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 
@@ -51,6 +52,7 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
     questionText: q.questionText,
     structuredData: q.structuredData,
   });
+  const displayCorrectAnswer = formatStoredQuestionCorrectAnswer(q);
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-blue-200 hover:shadow-sm transition-all">
@@ -138,10 +140,10 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
       )}
 
       {/* Short answer */}
-      {displayOptions.length === 0 && q.correctAnswer && (
+      {displayOptions.length === 0 && displayCorrectAnswer && (
         <div className="px-4 pb-3">
           <div className="px-3 py-2 rounded-lg bg-emerald-50 text-[13px] text-emerald-800 font-medium">
-            정답: {q.correctAnswer}
+            정답: {displayCorrectAnswer}
           </div>
         </div>
       )}

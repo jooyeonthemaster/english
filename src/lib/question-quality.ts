@@ -2741,6 +2741,11 @@ function normalizeVocabChoiceKey(value: unknown, fallbackIndex?: number): string
   return fallback;
 }
 
+function vocabChoiceAnswerLabelFromKey(key: string): string {
+  const index = (VOCAB_CHOICE_KEYS as readonly string[]).indexOf(key);
+  return index >= 0 ? String(index + 1) : key;
+}
+
 function collectVocabChoiceAnswerKeys(question: Record<string, unknown>): string[] {
   const keys: string[] = [];
   const push = (value: unknown) => {
@@ -3796,6 +3801,11 @@ function validateVocabChoiceQuestion(
     : [];
   const passageWithMarkers = normalizeText(question.passageWithMarkers);
 
+  // 동의어 변형 모드: 정답이 아닌 단어도 의도적으로 원문과 다른 동의어로 표시되므로
+  // "정답 외 단어는 원문 그대로" 검사를 완화한다(위치 앵커 originalWord만 본문에 존재 요구).
+  const vocabVariantMode =
+    normalizeText(question.vocabDisplayMode).toUpperCase() === "SYNONYM_VARIANT";
+
   // Expected counts: teacher-requested when provided, otherwise infer a valid
   // 5~10 count from the question itself (legacy default 5).
   const expectedMarkerCount =
@@ -3882,7 +3892,7 @@ function validateVocabChoiceQuestion(
       "error",
       "vocab-answer-label-mismatch",
       `VOCAB_CHOICE correctAnswer must match the inappropriate label set (${inappropriateKeys
-        .map((key) => `(${key})`)
+        .map(vocabChoiceAnswerLabelFromKey)
         .join(", ")}).`,
     );
   }
@@ -3982,6 +3992,19 @@ function validateVocabChoiceQuestion(
           `VOCAB_CHOICE answer (${key}) source word "${sourceCorrectWord}" still appears elsewhere in the passage, revealing the answer.`,
         );
       }
+    } else if (vocabVariantMode) {
+      // 변형 모드: 표시 단어는 의도된 동의어(비-verbatim)이므로 원문 일치/본문 존재
+      // 검사를 건너뛰고, 위치 앵커인 originalWord만 본문에 존재하면 된다.
+      if (betterWord) {
+        add("error", "vocab-nonanswer-has-better-word", `VOCAB_CHOICE non-answer (${key}) must not have betterWord.`);
+      }
+      if (passage && originalWord && !containsLoose(passage, originalWord)) {
+        add(
+          "error",
+          "vocab-nonanswer-source-anchor-missing",
+          `VOCAB_CHOICE non-answer (${key}) source word "${originalWord}" must exist in the original passage.`,
+        );
+      }
     } else {
       if (betterWord) {
         add("error", "vocab-nonanswer-has-better-word", `VOCAB_CHOICE non-answer (${key}) must not have betterWord.`);
@@ -4004,6 +4027,64 @@ function validateVocabChoiceQuestion(
           `VOCAB_CHOICE non-answer (${key}) must exist in the original passage.`,
         );
       }
+    }
+  }
+
+  if (vocabVariantMode) {
+    // 누설 가드: 정답의 정답 단어(source-correct)가 다른 밑줄칸의 "표시 단어"(동의어)로
+    // 우연히 노출되면 학생이 정답을 역추론할 수 있다. 기존 vocab-source-word-visible은
+    // 마커 밖 본문만 검사하므로, 변형 모드에서 새로 생긴 이 벡터를 여기서 막는다.
+    const answerSourceWords = markedWords
+      .filter((markedWord) => markedWord.isInappropriate === true)
+      .map(
+        (markedWord) =>
+          normalizeText(markedWord.betterWord) ||
+          normalizeText(markedWord.originalWord),
+      )
+      .filter(Boolean);
+    markedWords.forEach((markedWord, index) => {
+      if (markedWord.isInappropriate === true) return;
+      const shown =
+        normalizeText(markedWord.word) ||
+        normalizeText(markedWord.substituteWord) ||
+        normalizeText(markedWord.originalWord);
+      if (
+        shown &&
+        answerSourceWords.some(
+          (answerWord) =>
+            normalizeComparableText(answerWord) ===
+            normalizeComparableText(shown),
+        )
+      ) {
+        add(
+          "error",
+          "vocab-variant-answer-word-exposed",
+          `VOCAB_CHOICE 변형 모드: 밑줄 (${normalizeVocabChoiceKey(markedWord.label, index)})의 표시 단어가 정답의 정답 단어와 같아 정답이 노출됩니다.`,
+        );
+      }
+    });
+
+    // 정답 외 단어가 하나도 동의어로 바뀌지 않았으면 암기 무력화 효과가 없으므로 경고한다
+    // (생성 차단은 아님 — 일부 단어는 좋은 동의어가 없을 수 있음).
+    const anyDisguised = markedWords.some((markedWord) => {
+      if (markedWord.isInappropriate === true) return false;
+      const original = normalizeText(markedWord.originalWord);
+      const shown =
+        normalizeText(markedWord.word) ||
+        normalizeText(markedWord.substituteWord) ||
+        original;
+      return (
+        original &&
+        shown &&
+        normalizeComparableText(original) !== normalizeComparableText(shown)
+      );
+    });
+    if (!anyDisguised) {
+      add(
+        "warning",
+        "vocab-variant-not-applied",
+        "VOCAB_CHOICE 동의어 변형 모드인데 정답 외 단어가 모두 원문 그대로입니다. 암기 무력화 효과가 없습니다.",
+      );
     }
   }
 

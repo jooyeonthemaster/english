@@ -50,3 +50,9 @@ public/brixs-strawberry-latte-*
 public/61c7d3c3-d347-474f-83cb-2e39efdaa594.jpg
 # promo clips — local scratch, not referenced by the app, must not be served
 public/promo
+
+# local-only data / scratch (input PDFs dir, raw source fonts, screenshots, notes) — not app assets
+1618
+font
+harness-full.jpeg
+snap1.md

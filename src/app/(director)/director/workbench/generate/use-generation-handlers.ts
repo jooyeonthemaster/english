@@ -16,6 +16,10 @@ import {
 } from "@/lib/question-generation-plans";
 import { type QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 import { useTaskQueue } from "@/components/workbench/task-queue";
+import {
+  nextGenerationRunToken,
+  scheduleFastGeneration,
+} from "./fast-generation-scheduler";
 
 function readFastBatchConcurrency(): number {
   const raw = process.env.NEXT_PUBLIC_WORKBENCH_FAST_BATCH_CONCURRENCY;
@@ -346,69 +350,69 @@ export function useGenerationHandlers({
       ]);
       refreshTaskQueueSoon();
 
-      const results = await runWithConcurrency(
-        units,
-        FAST_BATCH_CONCURRENCY,
-        async (unit) => {
-          try {
-            const result = await createFastQuestionGenerationJob({
-              passageId: unit.passage.id,
-              mode: "MANUAL",
-              count: 1,
-              questionType: unit.questionType,
-              questionTypeSettings: unit.questionTypeSettings,
-              difficulty,
-              customPrompt: unit.config.prompt || undefined,
-              generationPlan,
-              variantIndex: unit.variantIndex,
-              variantCount: unit.variantCount,
-            });
-            const doneItem = {
-              ...buildOptimisticItem({
-                jobId: result.jobId,
-                passage: unit.passage,
-                analysisData: null,
-                config: unit.config,
-                progressKey: unit.questionType,
-              }),
-              createdAt: result.createdAt || new Date().toISOString(),
-              status: "done" as const,
-              progress: { [unit.questionType]: "done" as const },
-              questions: Array.isArray(result.questions)
-                ? result.questions
-                : [],
-              questionIds: Array.isArray(result.questionIds)
-                ? result.questionIds
-                : [],
-            };
-            setSessionQueue((prev) =>
-              replaceQueueItemInPlace(
-                prev,
-                [unit.tempId, result.jobId],
-                doneItem,
-              ),
-            );
-            return result;
-          } catch (err) {
-            const message =
-              err instanceof Error
-                ? err.message
-                : "Question generation failed.";
-            setSessionQueue((prev) =>
-              prev.map((item) =>
-                item.id === unit.tempId
-                  ? {
-                      ...item,
-                      status: "error" as const,
-                      progress: { [unit.questionType]: "error" as const },
-                      error: message,
-                    }
-                  : item,
-              ),
-            );
-            throw err;
-          }
-        },
+      const results = await Promise.allSettled(
+        units.map((unit) =>
+          scheduleFastGeneration(async () => {
+            try {
+              const result = await createFastQuestionGenerationJob({
+                passageId: unit.passage.id,
+                mode: "MANUAL",
+                count: 1,
+                questionType: unit.questionType,
+                questionTypeSettings: unit.questionTypeSettings,
+                difficulty,
+                customPrompt: unit.config.prompt || undefined,
+                generationPlan,
+                variantIndex: unit.variantIndex,
+                variantCount: unit.variantCount,
+              });
+              const doneItem = {
+                ...buildOptimisticItem({
+                  jobId: result.jobId,
+                  passage: unit.passage,
+                  analysisData: null,
+                  config: unit.config,
+                  progressKey: unit.questionType,
+                }),
+                createdAt: result.createdAt || new Date().toISOString(),
+                status: "done" as const,
+                progress: { [unit.questionType]: "done" as const },
+                questions: Array.isArray(result.questions)
+                  ? result.questions
+                  : [],
+                questionIds: Array.isArray(result.questionIds)
+                  ? result.questionIds
+                  : [],
+              };
+              setSessionQueue((prev) =>
+                replaceQueueItemInPlace(
+                  prev,
+                  [unit.tempId, result.jobId],
+                  doneItem,
+                ),
+              );
+              return result;
+            } catch (err) {
+              const message =
+                err instanceof Error
+                  ? err.message
+                  : "Question generation failed.";
+              setSessionQueue((prev) =>
+                prev.map((item) =>
+                  item.id === unit.tempId
+                    ? {
+                        ...item,
+                        status: "error" as const,
+                        progress: { [unit.questionType]: "error" as const },
+                        error: message,
+                      }
+                    : item,
+                ),
+              );
+              throw err;
+            }
+          }),
+        ),
       );
 
       return {
@@ -471,7 +475,7 @@ export function useGenerationHandlers({
 
     if (genMode === "manual") {
       const units: ManualGenerationUnit[] = [];
-      const runId = Date.now();
+      const runId = nextGenerationRunToken();
 
       for (const p of selectedPassages) {
         for (const typeId of Object.keys(typeCounts).filter(
@@ -540,8 +544,9 @@ export function useGenerationHandlers({
         mode: genMode,
         generationPlan,
       };
+      const runId = nextGenerationRunToken();
       const optimisticItems = selectedPassages.map((passage, index) => {
-        const tempId = `fast:${passage.id}:${Date.now()}:${index}`;
+        const tempId = `fast:${passage.id}:${runId}:${index}`;
         return {
           tempId,
           passage,
@@ -564,62 +569,62 @@ export function useGenerationHandlers({
       ]);
       refreshTaskQueueSoon();
 
-      const results = await runWithConcurrency(
-        optimisticItems,
-        FAST_BATCH_CONCURRENCY,
-        async ({ tempId, passage }) => {
-          try {
-            const result = await createFastQuestionGenerationJob({
-              passageId: passage.id,
-              mode: "AUTO",
-              count: 1,
-              questionType: undefined,
-              difficulty,
-              customPrompt: baseConfig.prompt || undefined,
-              generationPlan,
-            });
-            const doneItem = {
-              ...buildOptimisticItem({
-                jobId: result.jobId,
-                passage,
-                analysisData: null,
-                config: baseConfig,
-                progressKey,
-              }),
-              createdAt: result.createdAt || new Date().toISOString(),
-              status: "done" as const,
-              progress: { [progressKey]: "done" as const },
-              questions: Array.isArray(result.questions)
-                ? result.questions
-                : [],
-              questionIds: Array.isArray(result.questionIds)
-                ? result.questionIds
-                : [],
-            };
-            setSessionQueue((prev) =>
-              replaceQueueItemInPlace(prev, [tempId, result.jobId], doneItem),
-            );
-            return result;
-          } catch (err) {
-            const message =
-              err instanceof Error
-                ? err.message
-                : "Question generation failed.";
-            setSessionQueue((prev) =>
-              prev.map((item) =>
-                item.id === tempId
-                  ? {
-                      ...item,
-                      status: "error" as const,
-                      progress: { [progressKey]: "error" as const },
-                      error: message,
-                    }
-                  : item,
-              ),
-            );
-            throw err;
-          }
-        },
+      const results = await Promise.allSettled(
+        optimisticItems.map(({ tempId, passage }) =>
+          scheduleFastGeneration(async () => {
+            try {
+              const result = await createFastQuestionGenerationJob({
+                passageId: passage.id,
+                mode: "AUTO",
+                count: 1,
+                questionType: undefined,
+                difficulty,
+                customPrompt: baseConfig.prompt || undefined,
+                generationPlan,
+              });
+              const doneItem = {
+                ...buildOptimisticItem({
+                  jobId: result.jobId,
+                  passage,
+                  analysisData: null,
+                  config: baseConfig,
+                  progressKey,
+                }),
+                createdAt: result.createdAt || new Date().toISOString(),
+                status: "done" as const,
+                progress: { [progressKey]: "done" as const },
+                questions: Array.isArray(result.questions)
+                  ? result.questions
+                  : [],
+                questionIds: Array.isArray(result.questionIds)
+                  ? result.questionIds
+                  : [],
+              };
+              setSessionQueue((prev) =>
+                replaceQueueItemInPlace(prev, [tempId, result.jobId], doneItem),
+              );
+              return result;
+            } catch (err) {
+              const message =
+                err instanceof Error
+                  ? err.message
+                  : "Question generation failed.";
+              setSessionQueue((prev) =>
+                prev.map((item) =>
+                  item.id === tempId
+                    ? {
+                        ...item,
+                        status: "error" as const,
+                        progress: { [progressKey]: "error" as const },
+                        error: message,
+                      }
+                    : item,
+                ),
+              );
+              throw err;
+            }
+          }),
+        ),
       );
       const success = results.filter((r) => r.status === "fulfilled").length;
       const failed = results.length - success;
@@ -712,7 +717,7 @@ export function useGenerationHandlers({
     try {
       if (genMode === "manual") {
         const units: ManualGenerationUnit[] = [];
-        const runId = Date.now();
+        const runId = nextGenerationRunToken();
 
         for (const typeId of activeTypes) {
           const repeatCount = Math.max(

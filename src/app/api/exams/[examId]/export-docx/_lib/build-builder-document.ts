@@ -50,7 +50,7 @@ import {
   formatSummaryCompleteMcSummaryForDisplay,
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
-import { formatGrammarCorrectionCorrectAnswerForStoredQuestion } from "@/lib/grammar-correction-display";
+import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
 
 /*
@@ -1017,7 +1017,7 @@ function buildQuestionBlock(
   if (includeAnswers) {
     result.push(
       ...buildAnswerBlock({
-        correctAnswer: formatGrammarCorrectionCorrectAnswerForStoredQuestion({
+        correctAnswer: formatStoredQuestionCorrectAnswer({
           ...item.sourceQuestion,
           correctAnswer: item.correctAnswer ?? item.sourceQuestion.correctAnswer ?? "",
         }),

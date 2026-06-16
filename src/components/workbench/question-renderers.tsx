@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
+import { formatVocabChoiceCorrectAnswer } from "@/lib/question-answer-display";
 import { getVisibleQuestionTags } from "@/lib/question-generation-plans";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 import { normalizePassageWhitespace } from "@/lib/question-postprocess/text-utils";
@@ -346,11 +347,22 @@ function repairVocabChoiceForDisplay(question: any, sourcePassageContent?: strin
   const existingPassage = typeof question.passageWithMarkers === "string"
     ? question.passageWithMarkers
     : "";
+  const formattedCorrectAnswer = formatVocabChoiceCorrectAnswer(
+    question.correctAnswer,
+    question.correctAnswers,
+  );
+  let changed =
+    !!formattedCorrectAnswer &&
+    formattedCorrectAnswer !== question.correctAnswer;
+
   let repairedPassage = existingPassage || sourcePassageContent || "";
-  if (!repairedPassage) return question;
+  if (!repairedPassage) {
+    return changed
+      ? { ...question, correctAnswer: formattedCorrectAnswer }
+      : question;
+  }
 
   const renderedKeys = vocabChoiceRenderedKeys(repairedPassage);
-  let changed = false;
   const normalizedMarkedWords = question.markedWords.map((markedWord: unknown, index: number) => {
     if (!markedWord || typeof markedWord !== "object" || Array.isArray(markedWord)) {
       return markedWord;
@@ -383,6 +395,7 @@ function repairVocabChoiceForDisplay(question: any, sourcePassageContent?: strin
   if (!changed) return question;
   return {
     ...question,
+    correctAnswer: formattedCorrectAnswer || question.correctAnswer,
     passageWithMarkers: repairedPassage,
     markedWords: normalizedMarkedWords,
   };

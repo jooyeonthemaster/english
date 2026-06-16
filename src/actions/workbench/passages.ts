@@ -354,6 +354,39 @@ export async function createWorkbenchPassage(
  * The Passage keeps `source = 직접 입력` (so the existing includeDirectInput /
  * direct-input UI paths still work) and gains `sourceMaterialId` lineage.
  */
+// 정규 Passage 난이도 6단계(CEFR). 추출 zod 스키마·import 정규화와 동일 집합.
+// (값 출처: src/lib/extraction/zod-schemas.ts, src/app/api/passages/import/route.ts)
+const CEFR_DIFFICULTY_LADDER = [
+  "BEGINNER",
+  "ELEMENTARY",
+  "INTERMEDIATE",
+  "UPPER_INTERMEDIATE",
+  "ADVANCED",
+  "EXPERT",
+] as const;
+
+/**
+ * 난이도 변형(EASIER/HARDER)용 — 원본 난이도를 정규 6단계에서 한 칸 이동.
+ * 원본이 비었거나 정규 값이 아니거나 이동 결과가 같으면 undefined(=원본 승계).
+ * 두 변형 표면(인라인·전용탭)이 같은 서버 로직을 쓰게 해 데이터 일관성을 보장한다.
+ */
+function shiftCefrDifficulty(
+  current: string | null | undefined,
+  direction: "EASIER" | "HARDER",
+): string | undefined {
+  if (!current) return undefined;
+  const idx = CEFR_DIFFICULTY_LADDER.indexOf(
+    current as (typeof CEFR_DIFFICULTY_LADDER)[number],
+  );
+  if (idx < 0) return undefined;
+  const nextIdx =
+    direction === "EASIER"
+      ? Math.max(0, idx - 1)
+      : Math.min(CEFR_DIFFICULTY_LADDER.length - 1, idx + 1);
+  if (nextIdx === idx) return undefined;
+  return CEFR_DIFFICULTY_LADDER[nextIdx];
+}
+
 export async function createDirectInputPassageMaterial(data: {
   title: string;
   content: string;
@@ -362,6 +395,17 @@ export async function createDirectInputPassageMaterial(data: {
    * 메타를 원본에서 승계한다 (analysis 는 본문이 달라 stale 이므로 승계하지 않음).
    */
   sourcePassageId?: string;
+  /**
+   * 전체 변형본(관련/상반 주제·난이도·길이)용 — UI 라벨/태그/메타에 쓸 한국어
+   * 변형 종류 라벨 (예: "관련 주제"). 지정되면 metadata.source 가 "VARIANT" 가 된다.
+   */
+  variantKind?: string;
+  /** 난이도/길이 변형의 방향 (EASIER/HARDER/SHORTER/LONGER) — 메타 기록용. */
+  variantDirection?: string;
+  /** 난이도 변형 시 원본 승계 대신 적용할 난이도(없으면 원본 승계/미설정). */
+  difficultyOverride?: string | null;
+  /** Passage.tags(JSON 배열 문자열)에 저장할 태그들 — 변형본 식별·필터용. */
+  tags?: string[];
 }): Promise<ActionResult> {
   try {
     const staff = await requireAuth();
@@ -388,9 +432,39 @@ export async function createDirectInputPassageMaterial(data: {
             unit: true,
             publisher: true,
             difficulty: true,
+            tags: true,
           },
         })
       : null;
+
+    // 난이도 변형(EASIER/HARDER)이면 서버에서 정규 CEFR 래더로 한 칸 이동한다 —
+    // 명시 difficultyOverride 가 우선, 없으면 방향 기반 시프트. 두 변형 표면이
+    // 같은 서버 로직을 타 일관된 난이도가 저장된다.
+    const directionShift =
+      data.variantDirection === "EASIER" || data.variantDirection === "HARDER"
+        ? shiftCefrDifficulty(sourcePassage?.difficulty, data.variantDirection)
+        : undefined;
+    const difficultyToSet =
+      data.difficultyOverride !== undefined
+        ? data.difficultyOverride
+        : directionShift;
+
+    // 변형본 태그 — 원본의 분류 태그(JSON 배열)를 승계하고 변형 식별 태그를 더한다.
+    let mergedTags: string[] | undefined;
+    if (data.tags && data.tags.length > 0) {
+      const inherited: string[] = [];
+      if (sourcePassage?.tags) {
+        try {
+          const parsed = JSON.parse(sourcePassage.tags);
+          if (Array.isArray(parsed)) {
+            for (const t of parsed) if (typeof t === "string") inherited.push(t);
+          }
+        } catch {
+          /* 원본 tags 가 비정상 JSON 이면 무시하고 변형 태그만 단다. */
+        }
+      }
+      mergedTags = Array.from(new Set([...inherited, ...data.tags]));
+    }
 
     const passageId = await prisma.$transaction(
       async (tx) => {
@@ -465,6 +539,14 @@ export async function createDirectInputPassageMaterial(data: {
                   difficulty: sourcePassage.difficulty,
                 }
               : {}),
+            // 난이도 변형 — 원본 승계 difficulty 를 덮어쓴다 (명시 지정 또는 방향 시프트).
+            ...(difficultyToSet !== undefined
+              ? { difficulty: difficultyToSet }
+              : {}),
+            // 변형본 태그 (원본 분류 태그 + 변형 식별 태그, JSON 배열 문자열).
+            ...(mergedTags && mergedTags.length > 0
+              ? { tags: JSON.stringify(mergedTags) }
+              : {}),
           },
           select: { id: true },
         });
@@ -498,8 +580,12 @@ export async function createDirectInputPassageMaterial(data: {
             metadata: data.sourcePassageId
               ? {
                   directInput: true,
-                  source: "PASTE",
+                  source: data.variantKind ? "VARIANT" : "PASTE",
                   variantOf: data.sourcePassageId,
+                  ...(data.variantKind ? { variantKind: data.variantKind } : {}),
+                  ...(data.variantDirection
+                    ? { variantDirection: data.variantDirection }
+                    : {}),
                 }
               : { directInput: true, source: "PASTE" },
           },

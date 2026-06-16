@@ -84,6 +84,8 @@ export const vocabChoiceSchema = z.object({
     betterWord: z.string().optional().describe("부적절한 경우 적절한 단어"),
   })).length(5),
   options: z.array(optionSchema).length(5),
+  vocabDisplayMode: z.enum(["SOURCE_EXACT", "SYNONYM_VARIANT"]).optional()
+    .describe("SYNONYM_VARIANT이면 정답 외 단어도 동의어로 변형 표시(지문 암기 무력화)"),
   ...mcWrongExplanations,
 });
 export type VocabChoiceQuestion = z.infer<typeof vocabChoiceSchema>;

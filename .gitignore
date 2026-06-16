@@ -123,3 +123,11 @@ __pycache__/
 
 # Local analysis dumps
 docs/grammar_1000_analysis/
+
+# local-only data / scratch (never commit — input PDFs dir, raw fonts, screenshots, notes)
+/1618/
+/font/
+/harness-full.jpeg
+/snap1.md
+# login/diagnostic probe scripts — may contain credentials (mirror .vercelignore)
+/scripts/_probe-*

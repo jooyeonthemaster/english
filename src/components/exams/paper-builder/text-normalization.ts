@@ -7,6 +7,26 @@ const INTERNAL_METADATA_BLOCK_RE =
 const MATCH_TYPE_METADATA_SPAN_RE =
   /\s*\[(?:type|match\s*type|\uC720\uD615)\s*:\s*[^\]]+\]\s*/gi;
 
+const LEGACY_QUESTION_SECTION_LABELS: Record<string, string> = {
+  reference: "영작할 우리말",
+  original: "원문",
+  condition: "조건",
+  conditions: "조건",
+  "word order": "배열 단어",
+  hint: "힌트",
+};
+
+export function normalizeQuestionSectionMarkers(text: string): string {
+  return text.replace(
+    /(^|\n)[ \t]*\[(reference|original|conditions?|word order|hint)\][ \t]*(\n?)/gi,
+    (_match, lineStart: string, rawMarker: string, trailingNewline: string) => {
+      const label = LEGACY_QUESTION_SECTION_LABELS[rawMarker.toLowerCase()];
+      const separator = label === "조건" || trailingNewline ? "\n" : " ";
+      return `${lineStart}[${label}]${separator}`;
+    },
+  );
+}
+
 function normalizeBaseText(text: string): string {
   return text
     .replace(/\u00a0/g, " ")
@@ -75,7 +95,9 @@ export function normalizePassageText(text: string): string {
 }
 
 export function normalizeQuestionText(text: string): string {
-  const normalized = stripInternalMetadataBlocks(normalizeBaseText(text));
+  const normalized = stripInternalMetadataBlocks(
+    normalizeQuestionSectionMarkers(normalizeBaseText(text)),
+  );
   if (!normalized) return "";
 
   return normalized

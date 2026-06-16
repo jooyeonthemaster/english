@@ -138,6 +138,13 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
     {
       title: "AI 콘텐츠",
       items: [
+        // 지문 변형(/workbench/passage-variant) — 페이지는 살아있으나 UI 개편 전까지
+        // 좌측 메뉴에서만 임시 숨김. 복구: 아래 항목 주석 해제 + Shuffle 아이콘 import.
+        // {
+        //   label: "지문 변형",
+        //   icon: Shuffle,
+        //   href: `${basePath}/workbench/passage-variant`,
+        // },
         {
           label: "지문 기반 웹툰",
           icon: Palette,

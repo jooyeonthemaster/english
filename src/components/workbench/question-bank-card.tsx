@@ -52,6 +52,7 @@ import {
   useDeferredCardSelectionClick,
 } from "./shared/card-click";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 import {
   getVisibleQuestionTags,
@@ -208,6 +209,7 @@ export function QuestionBankCard({
     questionText: q.questionText,
     structuredData: q.structuredData,
   });
+  const displayCorrectAnswer = formatStoredQuestionCorrectAnswer(q);
 
   // Parse questionText into structured sections
   const sections = useMemo(
@@ -621,10 +623,10 @@ export function QuestionBankCard({
               {/* Non-MC correct answer */}
               {!structuredQuestion &&
                 displayOptions.length === 0 &&
-                q.correctAnswer && (
+                displayCorrectAnswer && (
                   <div className="text-[12px] bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded border border-slate-200">
                     <span className="font-medium">정답:</span>{" "}
-                    {renderFormatted(q.correctAnswer)}
+                    {renderFormatted(displayCorrectAnswer)}
                   </div>
                 )}
             </>
@@ -634,6 +636,7 @@ export function QuestionBankCard({
               sections={sections}
               options={displayOptions}
               correctAnswer={q.correctAnswer}
+              displayCorrectAnswer={displayCorrectAnswer}
               questionClamp={questionClamp}
             />
           )}

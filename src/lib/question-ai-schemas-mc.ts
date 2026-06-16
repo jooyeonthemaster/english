@@ -332,10 +332,20 @@ const vocabMarkedWordSchema = z.object({
   surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
 });
 
+const vocabDisplayModeField = {
+  vocabDisplayMode: z
+    .enum(["SOURCE_EXACT", "SYNONYM_VARIANT"])
+    .optional()
+    .describe(
+      "SYNONYM_VARIANT이면 정답이 아닌 밑줄 단어도 substituteWord에 원문과 다른 문맥상 적절한 동의어를 넣어 표시(지문 암기 무력화). 미지정/SOURCE_EXACT이면 기존 방식(정답 외 단어는 원문 그대로).",
+    ),
+};
+
 export const aiVocabChoiceSchema = z.object({
   ...commonFields,
   markedWords: z.array(vocabMarkedWordSchema).length(5).describe("밑줄 표시할 5개 어휘"),
   options: z.array(optionSchema).length(5).describe("5개 선지"),
+  ...vocabDisplayModeField,
   ...mcWrongExplanations,
 });
 export type AiVocabChoiceQuestion = z.infer<typeof aiVocabChoiceSchema>;
@@ -368,6 +378,7 @@ export function buildAiVocabChoiceSchema(markerCount: number, answerCount = 1) {
       .array(optionSchema)
       .length(count)
       .describe(`선지. 정확히 ${count}개를 생성해야 함.`),
+    ...vocabDisplayModeField,
     wrongOptionExplanations: buildAiWrongOptionExplanationsSchema(count - answers),
   });
 }

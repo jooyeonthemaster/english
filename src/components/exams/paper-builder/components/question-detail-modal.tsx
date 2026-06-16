@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { optionDisplayTextForSubtype } from "../option-display";
 import { parseOptions } from "../paper-item-utils";
+import { normalizeQuestionText } from "../text-normalization";
 import type { BuilderQuestion } from "../types";
 
 interface QuestionDetailModalProps {
@@ -11,6 +12,7 @@ interface QuestionDetailModalProps {
 
 export function QuestionDetailModal({ question, onClose }: QuestionDetailModalProps) {
   const options = parseOptions(question.options);
+  const displayQuestionText = normalizeQuestionText(question.questionText);
   const displayOptions =
     question.subType === "SENTENCE_INSERT"
       ? options.map((option, index) => ({
@@ -48,7 +50,7 @@ export function QuestionDetailModal({ question, onClose }: QuestionDetailModalPr
               <p className="whitespace-pre-line text-[12px] leading-relaxed text-slate-600">{question.passage.content}</p>
             </div>
           )}
-          <p className="whitespace-pre-line text-[14px] font-semibold leading-relaxed text-slate-800">{question.questionText}</p>
+          <p className="whitespace-pre-line text-[14px] font-semibold leading-relaxed text-slate-800">{displayQuestionText}</p>
           {displayOptions.length > 0 && (
             <div className="mt-4 space-y-2">
               {displayOptions.map((option) => (

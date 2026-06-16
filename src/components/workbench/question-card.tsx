@@ -41,6 +41,7 @@ import {
 } from "@/lib/question-generation-plans";
 import { getCircledNumbers } from "@/lib/question-postprocess/types";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import {
   clearCardTextSelection,
   preventCardDoubleClickTextSelection,
@@ -499,6 +500,7 @@ export function QuestionCard({
     questionText: q.questionText,
     structuredData: q.structuredData,
   });
+  const displayCorrectAnswer = formatStoredQuestionCorrectAnswer(q);
   const passageMarking = detectPassageMarking(
     q.passage?.content || displayQuestionText,
   );
@@ -912,10 +914,10 @@ export function QuestionCard({
 
               {/* Non-MC answer */}
               {options.length === 0 &&
-                q.correctAnswer &&
-                !flatDisplayQuestionText.includes(q.correctAnswer) && (
+                displayCorrectAnswer &&
+                !flatDisplayQuestionText.includes(displayCorrectAnswer) && (
                   <div className="text-[12px] bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded border border-slate-200">
-                    <span className="font-medium">정답:</span> {q.correctAnswer}
+                    <span className="font-medium">정답:</span> {displayCorrectAnswer}
                   </div>
                 )}
 

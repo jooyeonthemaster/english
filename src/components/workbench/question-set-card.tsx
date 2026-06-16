@@ -13,6 +13,7 @@ import { useMemo, useState } from "react";
 import { AlertTriangle, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
 
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
+import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { reconstructPassageView } from "@/lib/question-sets/reconstruct";
 import type { Anchor } from "@/lib/question-sets/types";
 import type {
@@ -99,6 +100,7 @@ function MemberBlock({
           text: optionDisplayTextForSubtype("SENTENCE_INSERT", optionIndex, option.text || ""),
         }))
       : options;
+  const displayCorrectAnswer = formatStoredQuestionCorrectAnswer(member);
   return (
     <div className="border-t border-slate-100 px-5 py-4">
       <div className="flex items-start gap-2">
@@ -139,9 +141,9 @@ function MemberBlock({
           })}
         </ul>
       )}
-      {showAnswer && displayOptions.length === 0 && member.correctAnswer && (
+      {showAnswer && displayOptions.length === 0 && displayCorrectAnswer && (
         <p className="mt-2 pl-7 text-[13px] font-semibold text-blue-700">
-          정답: {member.correctAnswer}
+          정답: {displayCorrectAnswer}
         </p>
       )}
     </div>

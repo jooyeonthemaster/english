@@ -12,6 +12,7 @@ const harnessSource = `
 import paperUtils from "@/components/exams/paper-builder/paper-item-utils";
 import * as questionBodyLayoutModule from "../src/components/exams/paper-builder/question-body-layout";
 import * as parseQuestionSectionsModule from "../src/app/api/exams/[examId]/export-docx/_lib/parse-question-sections";
+import persistence from "@/lib/question-generation-persistence";
 
 const { buildGroups, makePaperItem, shouldRenderSourcePassageForItem } = paperUtils;
 const questionBodyLayout =
@@ -22,6 +23,7 @@ const parseQuestionSectionsApi =
   parseQuestionSectionsModule["module.exports"] ??
   parseQuestionSectionsModule;
 const { parseQuestionSections } = parseQuestionSectionsApi;
+const { buildGeneratedQuestionText } = persistence;
 
 const passage = [
   "To understand memory, imagine your brain as a vast digital archive.",
@@ -256,6 +258,29 @@ const sentenceTransformSegments = structuredSegments(sentenceTransformItem).map(
   text: "text" in segment ? segment.text : "",
 }));
 
+const generatedConditionalWritingText = buildGeneratedQuestionText({
+  _typeId: "CONDITIONAL_WRITING",
+  direction: "다음 우리말을 주어진 조건에 맞게 영작하시오.",
+  referenceSentence: "이 데이터에 접근하는 것은 두 가지 방법에 달려 있다.",
+  conditions: ["recall을 사용할 것", "recognition을 사용할 것"],
+  modelAnswer: "Accessing this data depends on two methods.",
+  correctAnswer: "Accessing this data depends on two methods.",
+});
+
+const legacyConditionalWritingSections = parseQuestionSections(
+  [
+    "Translate the Korean sentence according to the given conditions.",
+    "[reference] 이 데이터에 접근하는 것은 두 가지 방법에 달려 있다.",
+    "[conditions]\\n1. Use the word recall.\\n2. Use the word recognition."
+  ].join("\\n\\n"),
+  "CONDITIONAL_WRITING",
+).map((section) => ({
+  type: section.type,
+  label: section.label || "",
+  content: section.content || "",
+  items: section.items || [],
+}));
+
 const metadataLeakResults = allQuestionTypeIds.map((subType, index) => {
   const item = makePaperItem(
     question(
@@ -315,6 +340,8 @@ process.stdout.write(JSON.stringify({
   sentenceTransformStem: sentenceTransformStemBody.stem,
   sentenceTransformBody: sentenceTransformStemBody.body,
   sentenceTransformSegments,
+  generatedConditionalWritingText,
+  legacyConditionalWritingSections,
   metadataLeakResults,
 }));
 `;
@@ -363,7 +390,8 @@ test("embedded underline passage suppresses duplicate source passage", () => {
   assert.equal(result.wordOrderSegments[0]?.style, "passage");
   assert.match(result.wordOrderSegments[0]?.text || "", /__forces the brain to work in a vacuum__/);
   assert.equal(result.wordOrderSegments[1]?.kind, "text");
-  assert.match(result.wordOrderSegments[1]?.text || "", /\[word order\]/i);
+  assert.match(result.wordOrderSegments[1]?.text || "", /\[배열 단어\]/);
+  assert.doesNotMatch(result.wordOrderSegments[1]?.text || "", /\[word order\]/i);
 });
 
 test("summary completion keeps the original source passage visible", () => {
@@ -432,8 +460,9 @@ test("conditional writing renders its source passage inside the question body", 
   assert.equal(result.conditionalWritingSegments[0]?.style, "passage");
   assert.match(result.conditionalWritingSegments[0]?.text || "", /^To understand memory/);
   assert.equal(result.conditionalWritingSegments[1]?.kind, "text");
-  assert.match(result.conditionalWritingSegments[1]?.text || "", /\[reference\]/);
-  assert.match(result.conditionalWritingSegments[1]?.text || "", /\[conditions\]/);
+  assert.match(result.conditionalWritingSegments[1]?.text || "", /\[영작할 우리말\]/);
+  assert.match(result.conditionalWritingSegments[1]?.text || "", /\[조건\]/);
+  assert.doesNotMatch(result.conditionalWritingSegments[1]?.text || "", /\[reference\]|\[conditions\]/i);
 });
 
 test("sentence transform renders the passage first and underlines the original sentence", () => {
@@ -447,8 +476,23 @@ test("sentence transform renders the passage first and underlines the original s
     /__recall forces the brain to work in a vacuum\.__/,
   );
   assert.equal(result.sentenceTransformSegments[1]?.kind, "text");
-  assert.match(result.sentenceTransformSegments[1]?.text || "", /\[conditions\]/);
+  assert.match(result.sentenceTransformSegments[1]?.text || "", /\[조건\]/);
+  assert.doesNotMatch(result.sentenceTransformSegments[1]?.text || "", /\[conditions\]/i);
   assert.doesNotMatch(result.sentenceTransformSegments[1]?.text || "", /\[original\]/i);
+});
+
+test("generated and legacy conditional writing markers render in Korean", () => {
+  assert.match(result.generatedConditionalWritingText, /\[영작할 우리말\]/);
+  assert.match(result.generatedConditionalWritingText, /\[조건\]/);
+  assert.doesNotMatch(result.generatedConditionalWritingText, /\[reference\]|\[conditions\]/i);
+  assert.equal(result.legacyConditionalWritingSections[1]?.type, "marker");
+  assert.equal(result.legacyConditionalWritingSections[1]?.label, "영작할 우리말");
+  assert.equal(result.legacyConditionalWritingSections[2]?.type, "conditions");
+  assert.equal(result.legacyConditionalWritingSections[2]?.label, "조건");
+  assert.deepEqual(result.legacyConditionalWritingSections[2]?.items, [
+    "Use the word recall.",
+    "Use the word recognition.",
+  ]);
 });
 
 test("all question types hide match type metadata in paper item text", () => {

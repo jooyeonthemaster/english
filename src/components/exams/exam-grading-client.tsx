@@ -17,6 +17,7 @@ import {
   User,
 } from "lucide-react";
 import { gradeSubmission } from "@/actions/exam-grading";
+import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { isSameObjectiveAnswerForSubtype } from "@/lib/sentence-insert-options";
 import { toast } from "sonner";
 
@@ -354,6 +355,7 @@ export function ExamGradingClient({
                 const ans = answers[eq.question.id];
                 const ansText =
                   typeof ans === "string" ? ans : ans?.answer || "";
+                const displayCorrectAnswer = formatStoredQuestionCorrectAnswer(eq.question);
                 const grade = grades[eq.question.id] || {
                   score: 0,
                   feedback: "",
@@ -386,7 +388,7 @@ export function ExamGradingClient({
                         정답
                       </p>
                       <p className="text-sm text-emerald-700">
-                        {eq.question.correctAnswer}
+                        {displayCorrectAnswer}
                       </p>
                     </div>
 

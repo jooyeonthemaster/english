@@ -203,6 +203,11 @@ interface GenerationConfigPanelProps {
   workspaceVariantCount?: number;
   workspaceGenerating?: boolean;
   onWorkspaceGenerate?: () => void;
+  /**
+   * 패널 하단의 생성 버튼들을 숨긴다 — 지문별 '문제 생성' 모달처럼 생성 CTA 를
+   * 패널 바깥(모달 푸터)에서 제공할 때 쓴다. 미지정 시 기존처럼 버튼을 렌더한다.
+   */
+  hideGenerateButtons?: boolean;
 }
 
 // ─── Component ───────────────────────────────────────
@@ -211,6 +216,7 @@ export function GenerationConfigPanel({
   genMode,
   setGenMode,
   editingRow = false,
+  hideGenerateButtons = false,
   activePassageId = null,
   setMembers,
   onSetMembersChange,
@@ -1263,6 +1269,8 @@ export function GenerationConfigPanel({
     }
 
     if (typeId === "VOCAB_CHOICE") {
+      const vocabSynonymVariants =
+        questionTypeSettings.VOCAB_CHOICE?.synonymVariants === true;
       return (
         <div className="space-y-3">
           {renderNumberSetting({
@@ -1295,24 +1303,141 @@ export function GenerationConfigPanel({
               ariaBase: "vocab choice answer count",
             })}
           </div>
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <span className="text-[12px] font-bold text-slate-800">
+                동의어 변형 (암기 무력화)
+              </span>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  지문 암기 방지
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  난이도 ↑
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                밑줄 친 어휘를 모두 동의어로 바꿔 표시합니다. 지문을 외워도 표면
+                매칭으로는 못 풀고 뜻으로 판단해야 합니다.
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={vocabSynonymVariants}
+              onClick={() =>
+                patchTypeSettings("VOCAB_CHOICE", {
+                  synonymVariants: !vocabSynonymVariants,
+                })
+              }
+              className={`relative h-6 w-11 rounded-full border transition-colors ${
+                vocabSynonymVariants
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  vocabSynonymVariants ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
         </div>
       );
     }
 
     if (typeId === "SENTENCE_INSERT") {
+      const sentenceInsertParaphrasePrefix =
+        questionTypeSettings.SENTENCE_INSERT?.paraphrasePrefix === true;
+      return (
+        <div className="space-y-3">
+          {renderNumberSetting({
+            title: "삽입 위치 개수",
+            badges: [
+              `${SENTENCE_INSERT_SLOT_COUNT_MIN} ~ ${SENTENCE_INSERT_SLOT_COUNT_MAX}`,
+              "①~ 마커",
+            ],
+            description:
+              "지문에 표시할 삽입 위치(①~) 수입니다. 정답은 항상 1곳이며, 위치 수만큼 지문 문장이 필요해 짧은 지문은 생성에 실패할 수 있습니다.",
+            value: sentenceInsertSlotCount,
+            min: SENTENCE_INSERT_SLOT_COUNT_MIN,
+            max: SENTENCE_INSERT_SLOT_COUNT_MAX,
+            onChange: setSentenceInsertSlotCount,
+            ariaBase: "sentence insert slot count",
+          })}
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <span className="text-[12px] font-bold text-slate-800">
+                주어진 문장 앞부분 변형
+              </span>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  지문 암기 방지
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  난이도 ↑
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                주어진(삽입) 문장의 앞부분을 같은 의미로 바꿔, 표면 표현을 외워
+                푸는 것을 막습니다. 정답 위치는 그대로입니다.
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={sentenceInsertParaphrasePrefix}
+              onClick={() =>
+                patchTypeSettings("SENTENCE_INSERT", {
+                  paraphrasePrefix: !sentenceInsertParaphrasePrefix,
+                })
+              }
+              className={`relative h-6 w-11 rounded-full border transition-colors ${
+                sentenceInsertParaphrasePrefix
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  sentenceInsertParaphrasePrefix ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    if (typeId === "SENTENCE_ORDER") {
+      const sentenceOrderPrefixVariationCount = Math.min(
+        3,
+        Math.max(
+          0,
+          Math.round(
+            Number(
+              questionTypeSettings.SENTENCE_ORDER?.prefixVariationCount,
+            ) || 0,
+          ),
+        ),
+      );
       return renderNumberSetting({
-        title: "삽입 위치 개수",
+        title: "앞문장 변형 문단 수",
         badges: [
-          `${SENTENCE_INSERT_SLOT_COUNT_MIN} ~ ${SENTENCE_INSERT_SLOT_COUNT_MAX}`,
-          "①~ 마커",
+          "0 ~ 3",
+          sentenceOrderPrefixVariationCount > 0 ? "암기 무력화" : "끄기",
         ],
         description:
-          "지문에 표시할 삽입 위치(①~) 수입니다. 정답은 항상 1곳이며, 위치 수만큼 지문 문장이 필요해 짧은 지문은 생성에 실패할 수 있습니다.",
-        value: sentenceInsertSlotCount,
-        min: SENTENCE_INSERT_SLOT_COUNT_MIN,
-        max: SENTENCE_INSERT_SLOT_COUNT_MAX,
-        onChange: setSentenceInsertSlotCount,
-        ariaBase: "sentence insert slot count",
+          "(A)(B)(C) 중 앞 문장을 같은 의미로 변형할 문단 수입니다. 0이면 변형하지 않습니다. 주어진 글과 정답 순서는 그대로 유지됩니다.",
+        value: sentenceOrderPrefixVariationCount,
+        min: 0,
+        max: 3,
+        onChange: (next) =>
+          patchTypeSettings("SENTENCE_ORDER", {
+            prefixVariationCount: Math.min(3, Math.max(0, Math.round(next))),
+          }),
+        ariaBase: "sentence order prefix variation count",
       });
     }
 
@@ -1860,8 +1985,9 @@ export function GenerationConfigPanel({
       </div>
 
       {/* Generate Button — 워크스페이스 모드.
-          지문별 설정(editingRow)에서는 장문 세트도 이 공용 버튼으로 생성한다. */}
-      {(genMode !== "set" || editingRow) && workspaceActive && (
+          지문별 설정(editingRow)에서는 장문 세트도 이 공용 버튼으로 생성한다.
+          hideGenerateButtons(=지문별 모달) 일 때는 모달 푸터가 CTA 를 제공하므로 숨긴다. */}
+      {!hideGenerateButtons && (genMode !== "set" || editingRow) && workspaceActive && (
         <div className="px-4 py-3 border-t border-slate-100 bg-white shrink-0">
           {workspaceVariantCount > 0 ? (
             <p className="mb-2 rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-slate-500">
@@ -1920,7 +2046,7 @@ export function GenerationConfigPanel({
       )}
 
       {/* Generate Button — 기존 라이브러리 선택 모드 */}
-      {genMode !== "set" && !workspaceActive && (
+      {!hideGenerateButtons && genMode !== "set" && !workspaceActive && (
         <div className="px-4 py-3 border-t border-slate-100 bg-white shrink-0">
           {(() => {
             // 크레딧 비용 계산

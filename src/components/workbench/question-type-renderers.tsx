@@ -53,6 +53,7 @@ import {
   formatGrammarCorrectionCorrectAnswer,
   grammarCorrectionErrorSentenceForQuestionText,
 } from "@/lib/grammar-correction-display";
+import { formatVocabChoiceCorrectAnswer } from "@/lib/question-answer-display";
 import { formatInlineMarkersForSubtype } from "@/components/exams/paper-builder/option-display";
 
 // ============================================================================
@@ -163,6 +164,11 @@ export function GrammarChoiceComboRenderer({ q }: { q: GrammarChoiceComboQuestio
 }
 
 export function VocabChoiceRenderer({ q }: { q: VocabChoiceQuestion }) {
+  const answer = formatVocabChoiceCorrectAnswer(
+    q.correctAnswer,
+    (q as VocabChoiceQuestion & { correctAnswers?: string[] }).correctAnswers,
+  );
+
   return (
     <>
       <Direction text={q.direction} />
@@ -182,7 +188,7 @@ export function VocabChoiceRenderer({ q }: { q: VocabChoiceQuestion }) {
             </div>
           </div>
         )}
-        <AnswerLine answer={q.correctAnswer} />
+        <AnswerLine answer={answer || q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />
       </AnswerRevealSection>
     </>

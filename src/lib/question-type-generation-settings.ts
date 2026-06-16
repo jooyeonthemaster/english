@@ -70,6 +70,13 @@ export interface VocabChoiceGenerationSettings
   markerCount?: number;
   /** Number of contextually inappropriate words (= answers). Range 1~markerCount. Default 1. */
   answerCount?: number;
+  /**
+   * 동의어 변형 모드. true면 정답이 아닌 밑줄 단어도 원문 verbatim이 아니라 문맥상
+   * 적절한 동의어로 표시해, 지문을 통째로 외운 학생도 표면 매칭으로는 못 풀게 한다.
+   * 위치 식별용 originalWord는 항상 원문 그대로 유지되고, 정답(부적절 단어)의
+   * originalWord/betterWord 계약도 그대로다. 기본 false.
+   */
+  synonymVariants?: boolean;
 }
 
 export interface SentenceInsertGenerationSettings
@@ -77,6 +84,24 @@ export interface SentenceInsertGenerationSettings
     QuestionTypeQualityGenerationSettings {
   /** Number of insertion-position markers (①~). The answer is always one gap. Range 5~8. Default 5. */
   slotCount?: number;
+  /**
+   * 주어진(삽입) 문장의 앞부분을 같은 의미로 변형(패러프레이즈)한다. true면 도입 절/
+   * 주어구의 표면 표현을 바꾸되, 정답 위치를 결정하는 응집 단서(지시어·연결어 등)의
+   * 기능은 보존해 정답 칸은 그대로 유지된다. 지문 표현을 외워 표면 매칭하는 풀이를 막는다.
+   * 기본 false.
+   */
+  paraphrasePrefix?: boolean;
+}
+
+export interface SentenceOrderGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
+  /**
+   * (A)(B)(C) 문단 중 "앞 문장"을 같은 의미로 변형(패러프레이즈)할 문단 수.
+   * 0 = 변형 없음(기본), 1~3 = 그만큼의 문단 첫 문장을 변형. 주어진 글은 항상 그대로
+   * 두고, 정답 순서·문단 라벨은 변하지 않는다. 지문 암기 표면 매칭을 막는다.
+   */
+  prefixVariationCount?: number;
 }
 
 export interface AntonymGenerationSettings
@@ -169,6 +194,9 @@ export const GENERIC_ANSWER_COUNT_DEFAULT = 1;
 export const SENTENCE_INSERT_SLOT_COUNT_MIN = 5;
 export const SENTENCE_INSERT_SLOT_COUNT_MAX = 8;
 export const SENTENCE_INSERT_SLOT_COUNT_DEFAULT = 5;
+export const SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MIN = 0;
+export const SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MAX = 3;
+export const SENTENCE_ORDER_PREFIX_VARIATION_COUNT_DEFAULT = 0;
 export const ANTONYM_PAIR_COUNT_MIN = 5;
 export const ANTONYM_PAIR_COUNT_MAX = 10;
 export const ANTONYM_PAIR_COUNT_DEFAULT = 5;
@@ -397,6 +425,18 @@ export function readBlankInferenceParaphraseAnswerSetting(
   return readBooleanSetting(rawSettings, "BLANK_INFERENCE", "paraphraseAnswer");
 }
 
+export function readVocabChoiceSynonymVariantsSetting(
+  rawSettings: unknown,
+): boolean {
+  return readBooleanSetting(rawSettings, "VOCAB_CHOICE", "synonymVariants");
+}
+
+export function readSentenceInsertParaphrasePrefixSetting(
+  rawSettings: unknown,
+): boolean {
+  return readBooleanSetting(rawSettings, "SENTENCE_INSERT", "paraphrasePrefix");
+}
+
 const IRRELEVANT_SLOT_COUNT_SETTING: NumericSettingSpec = {
   key: "slotCount",
   min: IRRELEVANT_SLOT_COUNT_MIN,
@@ -500,6 +540,13 @@ const SENTENCE_INSERT_SLOT_COUNT_SETTING: NumericSettingSpec = {
   min: SENTENCE_INSERT_SLOT_COUNT_MIN,
   max: SENTENCE_INSERT_SLOT_COUNT_MAX,
   defaultValue: SENTENCE_INSERT_SLOT_COUNT_DEFAULT,
+};
+
+const SENTENCE_ORDER_PREFIX_VARIATION_COUNT_SETTING: NumericSettingSpec = {
+  key: "prefixVariationCount",
+  min: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MIN,
+  max: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MAX,
+  defaultValue: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_DEFAULT,
 };
 
 const ANTONYM_PAIR_COUNT_SETTING: NumericSettingSpec = {
@@ -693,6 +740,23 @@ export function readSentenceInsertSlotCountSetting(rawSettings: unknown): number
   );
 }
 
+export function normalizeSentenceOrderPrefixVariationCount(value: unknown): number {
+  return normalizeNumericSetting(
+    value,
+    SENTENCE_ORDER_PREFIX_VARIATION_COUNT_SETTING,
+  );
+}
+
+export function readSentenceOrderPrefixVariationCountSetting(
+  rawSettings: unknown,
+): number {
+  return readNumericSetting(
+    rawSettings,
+    "SENTENCE_ORDER",
+    SENTENCE_ORDER_PREFIX_VARIATION_COUNT_SETTING,
+  );
+}
+
 export function normalizeAntonymPairCount(value: unknown): number {
   return normalizeNumericSetting(value, ANTONYM_PAIR_COUNT_SETTING);
 }
@@ -794,6 +858,7 @@ export interface QuestionTypeGenerationSettings {
   IRRELEVANT?: IrrelevantGenerationSettings;
   VOCAB_CHOICE?: VocabChoiceGenerationSettings;
   SENTENCE_INSERT?: SentenceInsertGenerationSettings;
+  SENTENCE_ORDER?: SentenceOrderGenerationSettings;
   ANTONYM?: AntonymGenerationSettings;
   [typeId: string]: unknown;
 }
@@ -814,7 +879,13 @@ export interface ResolvedQuestionTypeGenerationSettings {
   contentMatchAnswerCount?: number;
   vocabChoiceMarkerCount?: number;
   vocabChoiceAnswerCount?: number;
+  /** True면 정답 외 밑줄 단어도 동의어로 변형 표시(지문 암기 무력화). */
+  vocabChoiceSynonymVariants?: boolean;
   sentenceInsertSlotCount?: number;
+  /** True면 주어진(삽입) 문장 앞부분을 같은 의미로 변형(지문 암기 무력화). */
+  sentenceInsertParaphrasePrefix?: boolean;
+  /** (A)(B)(C) 중 앞 문장을 변형할 문단 수(0=없음, 1~3). */
+  sentenceOrderPrefixVariationCount?: number;
   antonymPairCount?: number;
   /** 1 = standard single blank (default pipeline); 2~3 = combination-option variant. */
   blankInferenceBlankCount?: number;
@@ -972,25 +1043,45 @@ export function resolveQuestionTypeGenerationSettings(
       rawSettings,
       vocabChoiceMarkerCount,
     );
+    const vocabChoiceSynonymVariants =
+      readVocabChoiceSynonymVariantsSetting(rawSettings);
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         markerCount: vocabChoiceMarkerCount,
         answerCount: vocabChoiceAnswerCount,
+        synonymVariants: vocabChoiceSynonymVariants,
       }),
       ...languageSettings,
       vocabChoiceMarkerCount,
       vocabChoiceAnswerCount,
+      vocabChoiceSynonymVariants,
     };
   }
 
   if (typeId === "SENTENCE_INSERT") {
     const sentenceInsertSlotCount = readSentenceInsertSlotCountSetting(rawSettings);
+    const sentenceInsertParaphrasePrefix =
+      readSentenceInsertParaphrasePrefixSetting(rawSettings);
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         slotCount: sentenceInsertSlotCount,
+        paraphrasePrefix: sentenceInsertParaphrasePrefix,
       }),
       ...languageSettings,
       sentenceInsertSlotCount,
+      sentenceInsertParaphrasePrefix,
+    };
+  }
+
+  if (typeId === "SENTENCE_ORDER") {
+    const sentenceOrderPrefixVariationCount =
+      readSentenceOrderPrefixVariationCountSetting(rawSettings);
+    return {
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
+        prefixVariationCount: sentenceOrderPrefixVariationCount,
+      }),
+      ...languageSettings,
+      sentenceOrderPrefixVariationCount,
     };
   }
 
@@ -1110,7 +1201,8 @@ export function getQuestionTypeGenerationTokenFloor(
     ((resolved.vocabChoiceMarkerCount ?? VOCAB_CHOICE_MARKER_COUNT_DEFAULT) >
       VOCAB_CHOICE_MARKER_COUNT_DEFAULT ||
       (resolved.vocabChoiceAnswerCount ?? VOCAB_CHOICE_ANSWER_COUNT_DEFAULT) >
-        VOCAB_CHOICE_ANSWER_COUNT_DEFAULT)
+        VOCAB_CHOICE_ANSWER_COUNT_DEFAULT ||
+      resolved.vocabChoiceSynonymVariants === true)
   ) {
     return 8_192;
   }
@@ -1189,11 +1281,17 @@ export function getDefaultQuestionTypeGenerationSettings(): QuestionTypeGenerati
     VOCAB_CHOICE: {
       markerCount: VOCAB_CHOICE_MARKER_COUNT_DEFAULT,
       answerCount: VOCAB_CHOICE_ANSWER_COUNT_DEFAULT,
+      synonymVariants: false,
       ...defaultLanguageSettingsForType("VOCAB_CHOICE"),
     },
     SENTENCE_INSERT: {
       slotCount: SENTENCE_INSERT_SLOT_COUNT_DEFAULT,
+      paraphrasePrefix: false,
       ...defaultLanguageSettingsForType("SENTENCE_INSERT"),
+    },
+    SENTENCE_ORDER: {
+      prefixVariationCount: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_DEFAULT,
+      ...defaultLanguageSettingsForType("SENTENCE_ORDER"),
     },
     ANTONYM: {
       pairCount: ANTONYM_PAIR_COUNT_DEFAULT,
@@ -1304,46 +1402,98 @@ export function buildQuestionTypeSettingsPrompt(
     const markerCount = readVocabChoiceMarkerCountSetting(rawSettings);
     const answerCount = readVocabChoiceAnswerCountSetting(rawSettings, markerCount);
     const stemLanguage = readStemLanguageSetting(rawSettings, typeId);
-    if (
+    const synonymVariants = readVocabChoiceSynonymVariantsSetting(rawSettings);
+    const labels = VOCAB_CHOICE_LABELS.slice(0, markerCount).join(" ");
+    const countBlock =
       markerCount === VOCAB_CHOICE_MARKER_COUNT_DEFAULT &&
       answerCount === VOCAB_CHOICE_ANSWER_COUNT_DEFAULT
-    ) {
-      return languagePrompt;
-    }
-    const labels = VOCAB_CHOICE_LABELS.slice(0, markerCount).join(" ");
-    return combinePromptSections(languagePrompt, [
-      "## Type detail setting: VOCAB_CHOICE / underlined word count and answer count",
-      `- The teacher requested exactly ${markerCount} underlined vocabulary positions and exactly ${answerCount} inappropriate word(s).`,
-      `- Output exactly ${markerCount} markedWords and exactly ${markerCount} options, labeled ${labels} in order.`,
-      `- Exactly ${answerCount} markedWords item(s) must have isInappropriate=true. Every other markedWords item must keep the original source word unchanged (substituteWord = originalWord).`,
-      `- For every isInappropriate=true item: originalWord is the source word, substituteWord is the displayed wrong word (different from originalWord), and betterWord equals originalWord.`,
-      answerCount >= 2
-        ? `- correctAnswers must list every isInappropriate=true label (exactly ${answerCount} labels). correctAnswer must be the same labels joined by comma + space, for example "(a), (c)".`
-        : "- correctAnswer must be the single isInappropriate=true label.",
-      answerCount >= 2
-        ? stemLanguage === "en"
-          ? "- The direction must ask students to choose all contextually inappropriate words (for example, 'Choose all the words that are NOT appropriate in context.'), without saying how many answers there are."
-          : "- The direction must ask students to choose all contextually inappropriate words using '모두', without saying how many answers there are."
-        : "- The direction must ask for the single contextually inappropriate word.",
-      "- Every marked word, including appropriate ones, must be a meaningful content word worth testing. Do not pad with articles, prepositions, or trivial function words.",
-      "- wrongOptionExplanations must cover every appropriate (non-answer) label, citing why the source word fits the context.",
-      "- explanation and keyPoints must cover every inappropriate label, naming the displayed wrong word and the source-correct word for each.",
-    ].join("\n"));
+        ? ""
+        : [
+            "## Type detail setting: VOCAB_CHOICE / underlined word count and answer count",
+            `- The teacher requested exactly ${markerCount} underlined vocabulary positions and exactly ${answerCount} inappropriate word(s).`,
+            `- Output exactly ${markerCount} markedWords and exactly ${markerCount} options, labeled ${labels} in order.`,
+            // 변형 모드면 비정답 단어의 표시 규칙은 아래 synonym-disguise 블록이 관장한다.
+            synonymVariants
+              ? `- Exactly ${answerCount} markedWords item(s) must have isInappropriate=true.`
+              : `- Exactly ${answerCount} markedWords item(s) must have isInappropriate=true. Every other markedWords item must keep the original source word unchanged (substituteWord = originalWord).`,
+            `- For every isInappropriate=true item: originalWord is the source word, substituteWord is the displayed wrong word (different from originalWord), and betterWord equals originalWord.`,
+            answerCount >= 2
+              ? `- correctAnswers must list every isInappropriate=true label (exactly ${answerCount} labels). correctAnswer must be the same labels joined by comma + space, for example "(a), (c)".`
+              : "- correctAnswer must be the single isInappropriate=true label.",
+            answerCount >= 2
+              ? stemLanguage === "en"
+                ? "- The direction must ask students to choose all contextually inappropriate words (for example, 'Choose all the words that are NOT appropriate in context.'), without saying how many answers there are."
+                : "- The direction must ask students to choose all contextually inappropriate words using '모두', without saying how many answers there are."
+              : "- The direction must ask for the single contextually inappropriate word.",
+            "- Every marked word, including appropriate ones, must be a meaningful content word worth testing. Do not pad with articles, prepositions, or trivial function words.",
+            "- wrongOptionExplanations must cover every appropriate (non-answer) label, citing why the source word fits the context.",
+            "- explanation and keyPoints must cover every inappropriate label, naming the displayed wrong word and the source-correct word for each.",
+          ].join("\n");
+    const variantBlock = synonymVariants
+      ? [
+          "## Type detail setting: VOCAB_CHOICE / synonym-disguise (anti-memorization)",
+          '- Set vocabDisplayMode to "SYNONYM_VARIANT". This block OVERRIDES the default rule that non-answer marked words keep the source word unchanged.',
+          "- Goal: a student who has memorized the passage word-for-word must NOT be able to answer by surface matching. So NONE of the displayed marked words may be a verbatim copy of the passage word at that position — every appropriate marked word is shown as a synonym, and the answer word is shown as a contextually wrong word.",
+          "- For every isInappropriate=false (appropriate) markedWord: keep originalWord as the EXACT passage word (verbatim — used only to locate the underline). Set substituteWord to a DIFFERENT, contextually-appropriate near-synonym that fits the sentence perfectly: same part of speech, same inflection/number/tense, natural collocation, and the same meaning, so the word stays unambiguously correct in context. Do NOT output betterWord for appropriate words.",
+          "- For every isInappropriate=true (answer) markedWord: keep the standard contract — originalWord is the verbatim source word, substituteWord is the contextually WRONG word (different from originalWord), and betterWord equals originalWord.",
+          "- options[].text for each label must be exactly the displayed word: the synonym for appropriate labels, the wrong word for answer labels — matching the underlined word in the passage.",
+          "- Fairness is critical: the answer(s) must remain the ONLY contextually wrong choice(s). Every appropriate synonym must be clearly correct; never introduce a second word that could be judged inappropriate, and never pick a synonym so odd, archaic, or wrong-register that it reads as an error.",
+          "- Per-synonym self-check: after choosing each appropriate word's synonym, silently re-read the sentence with it and confirm it is unambiguously correct, with no alternative reading that makes it wrong or that a student could debate as a better/worse fit. If unsure, choose a clearer synonym.",
+          "- Never let an appropriate word's displayed synonym equal an answer word's source-correct word (its betterWord/originalWord); that would expose the answer.",
+          "- Keep all displayed words in a similar difficulty/register band. Do not telegraph the answer by making only the wrong word unusual.",
+          "- Do not narrate the substitution in explanation/keyPoints; explain why the answer word is contextually wrong using the passage logic.",
+        ].join("\n")
+      : "";
+    return combinePromptSections(languagePrompt, countBlock, variantBlock);
   }
 
   if (typeId === "SENTENCE_INSERT") {
     if (!isRecord(rawSettings)) return languagePrompt;
     const slotCount = readSentenceInsertSlotCountSetting(rawSettings);
-    if (slotCount === SENTENCE_INSERT_SLOT_COUNT_DEFAULT) return languagePrompt;
+    const paraphrasePrefix =
+      readSentenceInsertParaphrasePrefixSetting(rawSettings);
     const lastMarker = String.fromCodePoint(0x2460 + slotCount - 1);
+    const slotBlock =
+      slotCount === SENTENCE_INSERT_SLOT_COUNT_DEFAULT
+        ? ""
+        : [
+            "## Type detail setting: SENTENCE_INSERT / insertion-position marker count",
+            `- The teacher requested exactly ${slotCount} insertion-position markers (①~${lastMarker}) instead of the default 5.`,
+            `- markerAfterSentenceIndices must contain exactly ${slotCount} distinct 0-based sentence indices in strictly ascending order.`,
+            `- The passage must have at least ${slotCount} sentences available after removing any omitted source sentence; spread the markers across the whole passage flow, not only the first half.`,
+            `- options must contain exactly ${slotCount} entries: label "1"~"${slotCount}", text ①~${lastMarker} in order.`,
+            "- Exactly one gap is correct. The given sentence must fit only that gap; every other gap must break cohesion for a distinct reason.",
+            "- Do not place the correct gap at the first or last marker when an inner gap is possible.",
+          ].join("\n");
+    const prefixBlock = paraphrasePrefix
+      ? [
+          "## Type detail setting: SENTENCE_INSERT / paraphrased given-sentence prefix",
+          "- Paraphrase the OPENING of the given sentence (its introductory phrase, leading clause, or subject phrase) into different surface wording, while keeping the rest of the sentence and its full meaning intact.",
+          "- CRITICAL: preserve the cohesive function that fixes the gap. If the opening uses an anaphoric pronoun or demonstrative (it/they/this/these/that/those/such + noun), the paraphrase MUST keep a pronoun or demonstrative that resolves to the SAME referent — do not nominalize the reference away, because removing the pronoun deletes the cue and can make several gaps fit. If the opening uses a discourse connector (however/therefore/for example/in contrast/as a result), you may reword it (however → by contrast), but its logical direction (reversal vs. cause vs. example) must stay identical.",
+          "- The point is that a student must not be able to locate the gap by surface-matching memorized passage words; they must follow the logical/referential connection.",
+          "- Do NOT change which gap is correct. After paraphrasing, silently re-check that the given sentence still fits only that one gap and every other gap still breaks cohesion.",
+          "- If you omit a source sentence, put its EXACT verbatim passage text in sourceSentenceToOmit (so the server can locate it). The paraphrase applies only to the displayed givenSentence.",
+        ].join("\n")
+      : "";
+    return combinePromptSections(languagePrompt, slotBlock, prefixBlock);
+  }
+
+  if (typeId === "SENTENCE_ORDER") {
+    const prefixVariationCount =
+      readSentenceOrderPrefixVariationCountSetting(rawSettings);
+    if (prefixVariationCount <= 0) return languagePrompt;
+    const scope =
+      prefixVariationCount >= 3
+        ? "all three (A), (B) and (C)"
+        : `the first ${prefixVariationCount} of the (A)/(B)/(C)`;
     return combinePromptSections(languagePrompt, [
-      "## Type detail setting: SENTENCE_INSERT / insertion-position marker count",
-      `- The teacher requested exactly ${slotCount} insertion-position markers (①~${lastMarker}) instead of the default 5.`,
-      `- markerAfterSentenceIndices must contain exactly ${slotCount} distinct 0-based sentence indices in strictly ascending order.`,
-      `- The passage must have at least ${slotCount} sentences available after removing any omitted source sentence; spread the markers across the whole passage flow, not only the first half.`,
-      `- options must contain exactly ${slotCount} entries: label "1"~"${slotCount}", text ①~${lastMarker} in order.`,
-      "- Exactly one gap is correct. The given sentence must fit only that gap; every other gap must break cohesion for a distinct reason.",
-      "- Do not place the correct gap at the first or last marker when an inner gap is possible.",
+      "## Type detail setting: SENTENCE_ORDER / paraphrased paragraph-opening sentences",
+      `- Paraphrase the FIRST sentence of ${scope} paragraph(s) into different surface wording while keeping the same meaning. Leave the given sentence (주어진 글) and every other sentence exactly as in the source.`,
+      "- Apply it to paragraphs in label order (A first, then B, then C) so the selection is deterministic, not random.",
+      "- CRITICAL: identify the single logical cue in each opening that controls its position (e.g. 'However' = reversal, 'Therefore' = cause/result, 'For example' = illustration, 'this/such + noun' or 'it/they' = back-reference to a specific prior idea). Paraphrase the surrounding wording, but keep that cue's TYPE and DIRECTION unchanged and keep any back-reference pointing to the same antecedent. The correct order and the (A)/(B)/(C) labels must NOT change.",
+      "- The point is that a student must not be able to reassemble the order by surface-matching memorized wording; they must follow the logic.",
+      "- Anti-aliasing check: after paraphrasing, silently test whether any OTHER ordering now also reads as coherent. If a paraphrased opening makes a paragraph fit more than one position, revert to a lighter paraphrase. The intended order must remain the unique answer.",
+      "- Paraphrase only the opening sentence of each targeted paragraph; keep that paragraph's remaining sentences verbatim from the source.",
     ].join("\n"));
   }
 

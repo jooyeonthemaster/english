@@ -202,7 +202,10 @@ export function IntakeSurface({
           {upload ?? <UploadPlaceholder />}
         </div>
         {libraryActive ? (
-          <div className="flex min-h-0 flex-1 flex-col">{library}</div>
+          // isolate: 지문함 카드의 '상세보기' 버튼(z-30)이 워크스페이스
+          // 오버레이(z-10) 위로 새어 보이지 않도록 그리드의 stacking context 를
+          // 가둔다. 오버레이가 닫혀 지문함이 다시 드러나면 버튼은 정상 노출된다.
+          <div className="isolate flex min-h-0 flex-1 flex-col">{library}</div>
         ) : pasteActive && onSubmitPastedRows ? (
           <div className="flex min-h-0 flex-1 flex-col">
             <MultiPassagePaste

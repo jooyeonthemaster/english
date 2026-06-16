@@ -20,6 +20,7 @@ import { buildCanonicalSentenceInsertOptionsFrom } from "@/lib/sentence-insert-o
 import { getCircledNumber } from "@/lib/question-postprocess/types";
 import { splitSentenceInsertGivenBlock } from "./option-display";
 import { buildGrammarCorrectionQuestionTextForDisplay } from "@/lib/grammar-correction-display";
+import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { formatSourcePassageForQuestionItems } from "./source-passage-markers";
 
 export function clampNumber(value: number, min: number, max: number) {
@@ -159,7 +160,7 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     passageContent,
     questionText: normalizedQuestionText,
     options,
-    correctAnswer: question.correctAnswer || "",
+    correctAnswer: formatStoredQuestionCorrectAnswer(question) || "",
     answerSpaceLines:
       customAnswerSpaceLines ??
       (isSubjective && question.subType !== "GRAMMAR_CORRECTION" ? 4 : 0),

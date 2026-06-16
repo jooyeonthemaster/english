@@ -8,11 +8,13 @@ export function CollapsedPreview({
   sections,
   options,
   correctAnswer,
+  displayCorrectAnswer = correctAnswer,
   questionClamp,
 }: {
   sections: ParsedSection[];
   options: { label: string; text: string }[];
   correctAnswer: string;
+  displayCorrectAnswer?: string;
   questionClamp: string;
 }) {
   const direction = sections.find((s) => s.type === "direction");
@@ -63,9 +65,9 @@ export function CollapsedPreview({
             </span>
           )}
         </div>
-      ) : correctAnswer ? (
+      ) : displayCorrectAnswer ? (
         <div className="text-[12px] bg-slate-50 text-slate-700 px-2 py-1 rounded border border-slate-200 line-clamp-1">
-          <span className="font-medium">정답:</span> {correctAnswer}
+          <span className="font-medium">정답:</span> {displayCorrectAnswer}
         </div>
       ) : null}
     </div>

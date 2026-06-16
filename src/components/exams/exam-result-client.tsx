@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import {
   ArrowLeft,
   Check,
@@ -19,6 +20,7 @@ interface ResultQuestion {
   points: number;
   questionId: string;
   type: string;
+  subType?: string | null;
   questionText: string;
   options: { label: string; text: string }[] | null;
   correctAnswer: string;
@@ -239,7 +241,7 @@ export function ExamResultClient({ result }: Props) {
                     정답:
                   </span>
                   <span className="text-sm text-emerald-600 font-medium">
-                    {q.correctAnswer}
+                    {formatStoredQuestionCorrectAnswer(q)}
                   </span>
                 </div>
               </div>
