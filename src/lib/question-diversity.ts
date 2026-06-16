@@ -37,7 +37,9 @@ export interface QuestionDiversityContext {
   variantCount?: number;
 }
 
-const MAX_USED_TARGETS_PER_TYPE = 8;
+// 순차 wave(앞 배치가 DB에 저장된 뒤 생성)가 직전 배치 전체를 회피 기억하도록
+// 8→24 로 상향(typical 배치 ≤20). 표현 단위 중복방지의 cross-wave 기억 한계 해소.
+const MAX_USED_TARGETS_PER_TYPE = 24;
 const MAX_USED_ANSWER_LABELS_PER_TYPE = 12;
 const MAX_TARGET_DISPLAY_LENGTH = 140;
 
