@@ -125,6 +125,11 @@ export interface GrammarCorrectionGenerationSettings
     QuestionTypeQualityGenerationSettings {
   /** Number of wrong underlined sentence/clause segments. Range 1~5. Default 1. */
   errorCount?: number;
+  /**
+   * 핵심 집중 모드 — true 면 정답 교정 포인트를 기출 1000제 고빈출 톱셋으로 좁힌다.
+   * false/미지정이면 기존 다양성(코어 10개 순회). 기본 false.
+   */
+  pointFocus?: boolean;
 }
 
 export interface SummaryCompleteMcGenerationSettings
@@ -133,6 +138,12 @@ export interface SummaryCompleteMcGenerationSettings
   /** Number of summary blanks. Range 2~4. Default 2. */
   blankCount?: number;
 }
+
+/** 내용 일치 정답 극성. undefined = AUTO(모델 결정, 기존 동작). */
+export type ContentMatchPolarity = "일치" | "불일치";
+
+/** 대의파악 계열(제목/주제/요지) 정답 극성. undefined/POSITIVE = 기존 동작. */
+export type GistAnswerPolarity = "POSITIVE" | "NEGATIVE";
 
 export interface ContentMatchGenerationSettings
   extends QuestionLanguageGenerationSettings,
@@ -143,6 +154,11 @@ export interface ContentMatchGenerationSettings
   answerCount?: number;
   /** Legacy analysis field name; interpreted as answerCount. */
   correctAnswerCount?: number;
+  /**
+   * 정답 극성 토글. "일치" = 일치하는 것 고르기, "불일치" = 일치하지 않는 것 고르기.
+   * 미지정(undefined) = AUTO(모델이 결정) — 기존 동작과 100% 동일.
+   */
+  matchType?: ContentMatchPolarity;
 }
 
 export interface SummaryCompleteGenerationSettings
@@ -225,6 +241,22 @@ const GENERIC_OPTION_COUNT_TYPE_IDS = new Set<string>(GENERIC_OPTION_COUNT_TYPE_
 
 export function supportsGenericOptionCount(typeId: string): boolean {
   return GENERIC_OPTION_COUNT_TYPE_IDS.has(typeId);
+}
+
+/**
+ * 대의파악 계열 — "적절한 것 ↔ 적절하지 않은 것" 정답 극성 토글 지원 유형.
+ * (IMPLIED_MEANING/CONTEXT_MEANING/SYNONYM은 generic 옵션수는 쓰지만 극성 토글
+ *  대상 아님 — 이번 작업 범위에서 제외.)
+ */
+const GIST_POLARITY_TYPE_IDS = new Set<string>([
+  "TOPIC",
+  "MAIN_IDEA",
+  "TOPIC_MAIN_IDEA",
+  "TITLE",
+]);
+
+export function supportsGistAnswerPolarity(typeId: string): boolean {
+  return GIST_POLARITY_TYPE_IDS.has(typeId);
 }
 
 const DEFAULT_QUESTION_LANGUAGE_SETTINGS: Record<
@@ -429,6 +461,42 @@ export function readVocabChoiceSynonymVariantsSetting(
   rawSettings: unknown,
 ): boolean {
   return readBooleanSetting(rawSettings, "VOCAB_CHOICE", "synonymVariants");
+}
+
+/**
+ * 내용 일치 정답 극성 설정 읽기. flat(rawSettings.matchType) 우선, nested
+ * (rawSettings.CONTENT_MATCH.matchType) 폴백 — 다른 read 헬퍼와 동일 규약.
+ * 강사 선택은 "일치"/"불일치" 둘 중 하나이며, 미지정 시 기본값은 "불일치"
+ * (수능 표준형이자 기존 모델의 사실상 기본 동작). "자동" 개념은 없음.
+ */
+export function readContentMatchTypeSetting(
+  rawSettings: unknown,
+): ContentMatchPolarity {
+  if (!isRecord(rawSettings)) return "불일치";
+  const direct = rawSettings.matchType;
+  const nested = isRecord(rawSettings.CONTENT_MATCH)
+    ? rawSettings.CONTENT_MATCH.matchType
+    : undefined;
+  const value = direct !== undefined ? direct : nested;
+  return value === "일치" ? "일치" : "불일치";
+}
+
+/**
+ * 대의파악 계열 정답 극성 설정 읽기. flat 우선 → nested(typeId) 폴백.
+ * "NEGATIVE"일 때만 반환, 그 외(POSITIVE/미설정/타유형) = undefined(기존 동작).
+ */
+export function readGistAnswerPolaritySetting(
+  rawSettings: unknown,
+  typeId: string,
+): GistAnswerPolarity | undefined {
+  if (!supportsGistAnswerPolarity(typeId)) return undefined;
+  if (!isRecord(rawSettings)) return undefined;
+  const direct = rawSettings.answerPolarity;
+  const nestedRecord = isRecord(rawSettings[typeId])
+    ? (rawSettings[typeId] as Record<string, unknown>)
+    : undefined;
+  const value = direct !== undefined ? direct : nestedRecord?.answerPolarity;
+  return value === "NEGATIVE" ? "NEGATIVE" : undefined;
 }
 
 export function readSentenceInsertParaphrasePrefixSetting(
@@ -877,6 +945,8 @@ export interface ResolvedQuestionTypeGenerationSettings {
   summaryCompleteBlankCount?: number;
   contentMatchOptionCount?: number;
   contentMatchAnswerCount?: number;
+  /** 내용 일치 강제 극성. undefined = AUTO(모델 결정, 기존 동작). */
+  contentMatchType?: ContentMatchPolarity;
   vocabChoiceMarkerCount?: number;
   vocabChoiceAnswerCount?: number;
   /** True면 정답 외 밑줄 단어도 동의어로 변형 표시(지문 암기 무력화). */
@@ -897,6 +967,11 @@ export interface ResolvedQuestionTypeGenerationSettings {
   genericOptionCount?: number;
   /** Resolved correct-answer count for free-text option types. */
   genericAnswerCount?: number;
+  /**
+   * 대의파악 계열(TOPIC/TITLE/MAIN_IDEA/TOPIC_MAIN_IDEA) 강제 정답 극성.
+   * "NEGATIVE" = 적절하지 않은 것 고르기. undefined/"POSITIVE" = 기존 동작.
+   */
+  answerPolarity?: GistAnswerPolarity;
 }
 
 export function normalizeQuestionDifficulty(
@@ -976,12 +1051,19 @@ export function resolveQuestionTypeGenerationSettings(
   if (typeId === "GRAMMAR_CORRECTION") {
     const grammarCorrectionErrorCount =
       readGrammarCorrectionErrorCountSetting(rawSettings);
+    const grammarPointFocus = readBooleanSetting(
+      rawSettings,
+      "GRAMMAR_CORRECTION",
+      "pointFocus",
+    );
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         errorCount: grammarCorrectionErrorCount,
+        pointFocus: grammarPointFocus,
       }),
       ...languageSettings,
       grammarCorrectionErrorCount,
+      grammarPointFocus,
     };
   }
 
@@ -1002,14 +1084,18 @@ export function resolveQuestionTypeGenerationSettings(
       rawSettings,
       contentMatchOptionCount,
     );
+    const contentMatchType = readContentMatchTypeSetting(rawSettings);
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         optionCount: contentMatchOptionCount,
         answerCount: contentMatchAnswerCount,
+        // 미지정(AUTO)이면 키를 넣지 않아 프롬프트/스키마 기존 경로 그대로.
+        ...(contentMatchType ? { matchType: contentMatchType } : {}),
       }),
       ...languageSettings,
       contentMatchOptionCount,
       contentMatchAnswerCount,
+      contentMatchType,
     };
   }
 
@@ -1126,14 +1212,19 @@ export function resolveQuestionTypeGenerationSettings(
       typeId,
       genericOptionCount,
     );
+    // 대의파악 계열만 극성 토글 대상. 그 외(IMPLIED/CONTEXT/SYNONYM)는 undefined.
+    const answerPolarity = readGistAnswerPolaritySetting(rawSettings, typeId);
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         optionCount: genericOptionCount,
         answerCount: genericAnswerCount,
+        // 미설정(POSITIVE)이면 키 미주입 → 프롬프트/스키마 기존 경로 그대로.
+        ...(answerPolarity ? { answerPolarity } : {}),
       }),
       ...languageSettings,
       genericOptionCount,
       genericAnswerCount,
+      answerPolarity,
     };
   }
 
@@ -1515,6 +1606,25 @@ export function buildQuestionTypeSettingsPrompt(
   }
 
   if (supportsGenericOptionCount(typeId)) {
+    // 대의파악 부정 극성('적절하지 않은 것') — 고정 발문/선지 지시를 덮어쓰는
+    // 전용 블록. (이 블록이 generic 카운트 블록보다 먼저 처리되어야 한다.)
+    const gistAnswerPolarity = readGistAnswerPolaritySetting(rawSettings, typeId);
+    if (gistAnswerPolarity === "NEGATIVE") {
+      const kindKo =
+        typeId === "TITLE" ? "제목" : typeId === "MAIN_IDEA" ? "요지" : "주제";
+      const negDirection = `다음 글의 ${kindKo}로 가장 적절하지 않은 것은?`;
+      return combinePromptSections(languagePrompt, [
+        `## ⚠️ 최우선 지시(OVERRIDE) — ${typeId} 정답 극성: '적절하지 않은 것' 고르기`,
+        `- 이 블록은 위에 있는 모든 발문/선지 지시를 덮어씁니다. 위에서 "가장 적절한 것은?"으로 쓰라는 고정 지시가 있어도 반드시 무시하세요.`,
+        `- direction은 반드시 정확히 "${negDirection}" 로 작성하세요. '적절한'이 아니라 '적절하지 않은'입니다(부정형).`,
+        `- 이것은 "${kindKo}로 적절한 선택지 4개 + 부적절한 선택지 1개" 구조이며, 일반 문제와 정답이 정반대입니다.`,
+        `- correctAnswer는 ${kindKo}로 '명백히 부적절한' 단 하나의 선택지 label입니다.`,
+        `- 나머지 4개 선택지는 모두 ${kindKo}로 충분히 타당해야 합니다(각각 다른 근거로 적절). 어느 하나도 정답(부적절)으로 오인될 여지가 없어야 합니다 — 복수정답을 절대 만들지 마세요.`,
+        `- 정답(부적절) 선택지는 길이·추상도·문체를 나머지와 비슷하게 맞추되, 지문 범위를 벗어나거나 핵심 관점을 뒤집거나 지문에 없는 주장을 담아 '명백히' 부적절하게 만드세요. 단순히 덜 포괄적이거나 약간 약한 정도면 복수정답 시비이므로 금지합니다.`,
+        `- wrongOptionExplanations에는 '적절한' 나머지 선택지가 각각 왜 ${kindKo}로 타당한지(=정답이 아닌지) 지문 근거로 설명하세요.`,
+        `- 다시 강조: direction = "${negDirection}", 정답 = 부적절한 1개.`,
+      ].join("\n"));
+    }
     if (!isRecord(rawSettings)) return languagePrompt;
     const optionCount = readGenericOptionCountSetting(rawSettings, typeId);
     const answerCount = readGenericAnswerCountSetting(rawSettings, typeId, optionCount);
@@ -1587,10 +1697,13 @@ export function buildQuestionTypeSettingsPrompt(
     const answerCount = readContentMatchAnswerCountSetting(rawSettings, optionCount);
     const optionLanguage = readOptionLanguageSetting(rawSettings, typeId);
     const stemLanguage = readStemLanguageSetting(rawSettings, typeId);
+    // 정답 극성 강제(일치/불일치). undefined = AUTO → 아래 분기는 모두 기존 문구.
+    const matchType = readContentMatchTypeSetting(rawSettings);
     if (
       optionCount === CONTENT_MATCH_OPTION_COUNT_DEFAULT &&
       answerCount === CONTENT_MATCH_ANSWER_COUNT_DEFAULT &&
-      !languagePrompt
+      !languagePrompt &&
+      !matchType
     ) {
       return languagePrompt;
     }
@@ -1601,15 +1714,29 @@ export function buildQuestionTypeSettingsPrompt(
       `- The teacher requested exactly ${optionCount} numbered statement option(s), labeled ${labelsText}.`,
       `- The teacher requested exactly ${answerCount} correct statement label(s).`,
       `- options must contain exactly ${optionCount} ${languageName(optionLanguage)} statement options. Each option label must be one of ${labelsText}.`,
-      answerCount >= 2
-        ? stemLanguage === "en"
-          ? "- The direction must ask students to choose all matching or all non-matching statements (for example, 'Choose all the statements that match the passage.'). Do not reveal the answer count in the direction."
-          : "- The direction must ask students to choose all matching or all non-matching statements using '모두'. Do not reveal the answer count in the direction."
-        : "- The direction must ask for one best matching or non-matching statement.",
+      // 발문 지시: 극성 강제 시 명시 방향, 미지정(AUTO)이면 기존 모호 지시 그대로.
+      matchType
+        ? answerCount >= 2
+          ? stemLanguage === "en"
+            ? `- The direction MUST ask students to choose ALL statements that ${matchType === "일치" ? "match" : "do NOT match"} the passage, without revealing the answer count.`
+            : `- 발문은 반드시 지문과 ${matchType === "일치" ? "일치하는" : "일치하지 않는"} 진술을 '모두' 고르도록 작성하고, 정답 개수는 드러내지 마세요.`
+          : stemLanguage === "en"
+            ? `- The direction MUST ask for the one statement that ${matchType === "일치" ? "matches" : "does NOT match"} the passage.`
+            : `- 발문은 반드시 지문과 ${matchType === "일치" ? "일치하는" : "일치하지 않는"} 것 하나를 고르도록 작성하세요 (예: "다음 글의 내용과 ${matchType === "일치" ? "일치하는" : "일치하지 않는"} 것은?").`
+        : answerCount >= 2
+          ? stemLanguage === "en"
+            ? "- The direction must ask students to choose all matching or all non-matching statements (for example, 'Choose all the statements that match the passage.'). Do not reveal the answer count in the direction."
+            : "- The direction must ask students to choose all matching or all non-matching statements using '모두'. Do not reveal the answer count in the direction."
+          : "- The direction must ask for one best matching or non-matching statement.",
       answerCount >= 2
         ? `- correctAnswers must contain exactly ${answerCount} labels, and correctAnswer must be the same labels joined by comma + space.`
         : "- correctAnswer must be the single correct option label.",
-      "- Keep matchType polarity consistent: if the direction asks for non-matching statements, every correct label must be false against the passage; if it asks for matching statements, every correct label must be true.",
+      // matchType 강제 시 정답 의미를 명시, 아니면 기존 일관성 지시.
+      matchType === "일치"
+        ? `- Set matchType to "일치". Every correct option must be a statement that is TRUE according to the passage; every wrong option must be false or contradicted by the passage.`
+        : matchType === "불일치"
+          ? `- Set matchType to "불일치". Every correct option must be a statement that is FALSE or contradicted by the passage; every wrong option must be true according to the passage.`
+          : "- Keep matchType polarity consistent: if the direction asks for non-matching statements, every correct label must be false against the passage; if it asks for matching statements, every correct label must be true.",
       "- Every option must be independently checkable from the passage and should be similar in length and specificity.",
       "- wrongOptionExplanations must explain every non-answer label by citing the decisive passage clue.",
     ].join("\n"));

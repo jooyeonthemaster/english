@@ -177,6 +177,12 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-correction-debatable-infinitive",
   "grammar-correction-killer-thin-segment",
   "topic-option-language",
+  // 정답 극성 토글(강제 설정 시에만 발생) — 발문/저장 극성이 강제값과 어긋나면
+  // 정답 무효급이라 relaxed 폴백에서도 출하 금지. 미설정(기본) 경로엔 영향 없음.
+  "content-match-direction-polarity",
+  "content-match-type-mismatch",
+  "gist-polarity-direction-mismatch",
+  "gist-polarity-field-mismatch",
   "summary-mc-direction-frame",
   "summary-mc-missing-summary",
   "summary-mc-blank-marker-count",
@@ -346,6 +352,7 @@ export async function runQuestionGeneration(
         summaryCompleteBlankCount,
         contentMatchOptionCount,
         contentMatchAnswerCount,
+        contentMatchType,
         vocabChoiceMarkerCount,
         vocabChoiceAnswerCount,
         sentenceInsertSlotCount,
@@ -355,6 +362,7 @@ export async function runQuestionGeneration(
         blankInferenceParaphraseAnswer,
         genericOptionCount,
         genericAnswerCount,
+        answerPolarity,
       } = resolvedTypeSettings;
 
       const typeSettingsPrompt = buildQuestionTypeSettingsPrompt(
@@ -592,6 +600,8 @@ export async function runQuestionGeneration(
             blankInferenceParaphraseAnswer,
             genericOptionCount,
             genericAnswerCount,
+            contentMatchType,
+            answerPolarity,
           });
           const qualityErrors = qualityIssues.filter(
             (issue) => issue.severity === "error",

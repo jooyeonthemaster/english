@@ -53,6 +53,16 @@ interface ValidateQuestionQualityInput {
   /** Requested correct-answer count for free-text option types. Omitted = 1. */
   genericAnswerCount?: number;
   /**
+   * 내용 일치 강제 정답 극성("일치"/"불일치"). 주어졌을 때만 극성 일관성 게이트가
+   * 동작한다. Omitted = AUTO(모델 결정) — 게이트 미동작, 기존 동작과 동일.
+   */
+  contentMatchType?: "일치" | "불일치";
+  /**
+   * 대의파악 계열(제목/주제/요지) 강제 정답 극성. "NEGATIVE"일 때만 부정 극성
+   * 게이트가 동작한다. Omitted/"POSITIVE" = 기존 동작과 동일.
+   */
+  answerPolarity?: "POSITIVE" | "NEGATIVE";
+  /**
    * 다양성: 같은 지문에서 이미 사용된 타깃(원문 표현). 전달 시 동일 타깃 재사용을
    * error 로 표시해 strict 재시도를 유도한다 (RELAXED_BLOCKING 미포함 — relaxed
    * 폴백은 통과시키므로 타깃 풀이 고갈된 지문에서도 생성은 성공한다).
@@ -386,6 +396,7 @@ export function buildQuestionTargetCandidateBlock(
         passage,
         options.grammarCorrectionErrorCount,
         options.requestedDifficulty,
+        diversity,
       );
     case "IRRELEVANT":
       return buildIrrelevantCandidateBlock(
@@ -1301,6 +1312,7 @@ function buildGrammarCorrectionCandidateBlock(
   passage: string,
   requestedErrorCount?: number,
   requestedDifficulty?: string,
+  diversity?: CandidateDiversityOptions,
 ): string {
   const sentences = splitPassageSentences(passage);
   const errorCount = normalizeGrammarCorrectionErrorCount(requestedErrorCount);
@@ -1316,7 +1328,22 @@ function buildGrammarCorrectionCandidateBlock(
     "- correctedParts should list every corrected expression in the same order as underlinedSegments.",
     "- Do NOT print a separate error sentence below the passage. The visible question must show the original passage with the wider underlined segment(s).",
     "- Use wording like \"다음 글의 밑줄 친 부분에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오.\"",
+    // 다양성(반복 생성) 모드 한정 품질 가드 — 지문의 깨끗한 오류 자리가
+    // 고갈되는 천장 부근에서 모델이 '깨진 새 문항'(정답시비·조작된 교정)을
+    // 양산하는 것을 막는다. 캡 없이 꼬리를 '유효한 반복'으로 흡수. baseline
+    // 경로는 이 가드를 받지 않아 동작 불변. (E2E 검증 short-dedup 회귀 대응)
+    diversity?.diversityEnabled
+      ? [
+          "- ⭐ 다양성 한계 가드(반복 생성 시 품질 우선): 변별의 핵심은 '새로운 오류 자리'가 아니라 '명백한 단일 오류'다. 지문에 더 이상 명백하고 논쟁 없는 오류 자리가 남지 않았으면, 모호한 새 자리를 억지로 만들지 말고 앞서 쓴 명백한 오류 자리를 다른 문장·다른 밑줄 범위·다른 해설로 재사용하라. 깨진 새 문항보다 유효한 반복이 낫다.",
+          "- 🚫 다음 자리는 정답시비를 유발하므로 새 오류 타깃으로 쓰지 마라: (1) 'and + 동사'가 동명사 병렬로도 정동사 병렬로도 읽히는 자리(예: tried wearing X and turning↔turned Y), (2) one/it/that 등으로 바꿔도 양쪽이 자연스러운 대명사 자리, (3) 능동/수동·시제가 문맥상 양쪽 다 허용되는 자리.",
+          "- 🚫 correctedPart 무결성: correctedPart 는 네가 errorPart 로 바꾸기 전 sourceText 원문에 실제로 있던 바로 그 단어(들)여야 한다. 원문에도 errorPart 에도 없는 제3의 단어를 정답으로 만들지 마라 — displayedText 에 correctedPart 를 도로 넣으면 정확히 sourceText 가 되어야 한다.",
+        ].join("\n")
+      : "",
     buildGrammarPointGuidance({
+      variantIndex: diversity?.variantIndex,
+      usedPointCodes: diversity?.usedPointCodes,
+      diversityEnabled: diversity?.diversityEnabled,
+      pointFocus: diversity?.pointFocus,
       answerCount: errorCount,
       requestedDifficulty,
       mode: "correction",
@@ -2236,6 +2263,8 @@ export function validateQuestionQuality({
   blankInferenceParaphraseAnswer,
   genericOptionCount,
   genericAnswerCount,
+  contentMatchType,
+  answerPolarity,
   diversityUsedTargets,
 }: ValidateQuestionQualityInput): QuestionQualityIssue[] {
   const issues: QuestionQualityIssue[] = [];
@@ -2289,6 +2318,23 @@ export function validateQuestionQuality({
     blankInferenceParaphraseAnswer,
     add,
   );
+
+  // ── 정답 극성 토글 게이트 (강제 설정일 때만 동작 — 미설정/기본 경로 불변) ──
+  if (
+    typeId === "CONTENT_MATCH" &&
+    (contentMatchType === "일치" || contentMatchType === "불일치")
+  ) {
+    validateContentMatchPolarity(question, contentMatchType, add);
+  }
+  if (
+    answerPolarity === "NEGATIVE" &&
+    (typeId === "TOPIC" ||
+      typeId === "MAIN_IDEA" ||
+      typeId === "TOPIC_MAIN_IDEA" ||
+      typeId === "TITLE")
+  ) {
+    validateGistNegativePolarity(question, typeId, add);
+  }
 
   if (requestedDifficulty === "KILLER") {
     validateKillerBar(question, typeId, add);
@@ -5423,6 +5469,78 @@ function validateMultiBlankInferenceQuestion(
         "Include at least one wrong option that is correct for all but one blank so students must verify every blank.",
       );
     }
+  }
+}
+
+/**
+ * 내용 일치 강제 극성 검증 — matchType 설정이 주어졌을 때만 호출(AUTO=미호출).
+ * 발문/저장 matchType이 강제 극성과 어긋나면 정답 무효급이므로 error.
+ */
+function validateContentMatchPolarity(
+  question: Record<string, unknown>,
+  matchType: "일치" | "불일치",
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const direction = normalizeText(question.direction);
+  // 부정(불일치) 패턴을 먼저 본다 — "일치"는 "일치하지 않는"의 부분문자열이므로.
+  const asksNonMatch =
+    /일치하지\s*않|불일치|않는\s*것|do(?:es)?\s*not\s*match|not\s*match/i.test(direction);
+  const asksMatch =
+    !asksNonMatch && /일치하는|that\s*match|matches\b/i.test(direction);
+
+  if (matchType === "불일치" && !asksNonMatch) {
+    add(
+      "error",
+      "content-match-direction-polarity",
+      "불일치 설정이지만 발문이 '일치하지 않는 것'을 묻지 않습니다.",
+    );
+  }
+  if (matchType === "일치" && !asksMatch) {
+    add(
+      "error",
+      "content-match-direction-polarity",
+      "일치 설정이지만 발문이 '일치하는 것'을 묻지 않습니다.",
+    );
+  }
+
+  const storedMatchType = normalizeText(question.matchType);
+  if (storedMatchType && storedMatchType !== matchType) {
+    add(
+      "error",
+      "content-match-type-mismatch",
+      `matchType(${storedMatchType})가 강제 설정(${matchType})과 다릅니다.`,
+    );
+  }
+}
+
+/**
+ * 대의파악 계열(제목/주제/요지) 부정 극성("적절하지 않은 것") 검증 —
+ * answerPolarity=NEGATIVE일 때만 호출(POSITIVE/미설정=미호출, 기존 동작 불변).
+ * 발문이 부정형이 아니면 정답 극성이 어긋난 것이므로 error.
+ * (오답 4개의 "적절성"은 의미 판단이라 결정형 검증 불가 → 프롬프트+품질루프로 보강.)
+ */
+function validateGistNegativePolarity(
+  question: Record<string, unknown>,
+  typeId: string,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const direction = normalizeText(question.direction);
+  const asksNegative =
+    /적절하지\s*않|알맞지\s*않|옳지\s*않|않은\s*것|아닌\s*것|\bNOT\b/i.test(direction);
+  if (!asksNegative) {
+    add(
+      "error",
+      "gist-polarity-direction-mismatch",
+      `${typeId} 부정 극성 설정이지만 발문이 '적절하지 않은 것'을 묻지 않습니다.`,
+    );
+  }
+  const storedPolarity = normalizeText(question.answerPolarity).toUpperCase();
+  if (storedPolarity && storedPolarity !== "NEGATIVE") {
+    add(
+      "error",
+      "gist-polarity-field-mismatch",
+      `answerPolarity(${storedPolarity})가 강제 설정(NEGATIVE)과 다릅니다.`,
+    );
   }
 }
 

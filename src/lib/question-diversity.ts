@@ -217,6 +217,24 @@ function extractUsedSignature(
       }
       break;
     }
+    case "GRAMMAR_CORRECTION": {
+      // 서술형 어법 수정: 각 오류 구간에서 '학생이 고쳐 쓴 표현(correctedPart)'을
+      // 타깃으로 기록 — 같은 지문 반복 생성 시 같은 교정 포인트가 다시 나오는 것을
+      // 줄인다. 스키마의 폴백 순서(item → correctedParts[i] → correctedPart[0])를 따른다.
+      if (Array.isArray(data.underlinedSegments)) {
+        data.underlinedSegments.forEach((seg, index) => {
+          if (!isRecord(seg) || seg.isError !== true) return;
+          const corrected =
+            asTrimmedString(seg.correctedPart) ||
+            (Array.isArray(data.correctedParts)
+              ? asTrimmedString(data.correctedParts[index])
+              : "") ||
+            (index === 0 ? asTrimmedString(data.correctedPart) : "");
+          pushTarget(targets, corrected);
+        });
+      }
+      break;
+    }
     case "SENTENCE_INSERT":
       pushTarget(targets, data.givenSentence);
       break;
@@ -438,6 +456,7 @@ const TARGET_NOUN_BY_SUBTYPE: Record<string, string> = {
   VOCAB_CHOICE: "밑줄 어휘",
   GRAMMAR_ERROR: "오류로 변형한 표현",
   GRAMMAR_CHOICE_COMBO: "네모 후보로 변형한 원문 표현",
+  GRAMMAR_CORRECTION: "정답으로 고쳐 쓴 표현",
   SENTENCE_INSERT: "삽입용으로 빼낸 문장",
   REFERENCE: "밑줄 친 대명사",
   SUMMARY_COMPLETE_MC: "요약문 빈칸 정답 어구",
