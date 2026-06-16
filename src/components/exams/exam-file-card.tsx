@@ -17,7 +17,7 @@ import {
 import { cn, formatDate } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
-import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import {
   clearCardTextSelection,
   preventCardDoubleClickTextSelection,
@@ -228,9 +228,6 @@ export function ExamFileCard({
         </span>
       </div>
 
-      {/* 더블클릭 = 상세 열기. 호버 시 '상세보기' 라벨을 좌하단에 노출한다. */}
-      <CardHoverActionLabel className="bottom-4 left-4 right-auto" />
-
       {/* Bottom row: 분석 정보(동형 생성 시험지 한정, 좌) · 마지막 수정일 (최우측) */}
       <div className="flex items-center justify-between gap-2 mt-3">
         {/* 동형 생성 시험지: 분석 정보 — 카드 클릭(상세 열기)과 구분되는 별도 액션 */}
@@ -258,6 +255,14 @@ export function ExamFileCard({
           <Clock className="w-3 h-3 shrink-0 text-slate-300" />
           {formatDate(exam.updatedAt)}
         </span>
+        <CardDetailIconButton
+          className="size-7 rounded-md shadow-none"
+          iconClassName="size-3.5"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClick(exam.id);
+          }}
+        />
       </div>
     </div>
   );

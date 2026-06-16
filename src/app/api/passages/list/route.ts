@@ -47,6 +47,20 @@ export async function GET(request: NextRequest) {
           school: { select: { id: true, name: true } },
           collectionItems: { select: { collectionId: true } },
           analysis: { select: { id: true, analysisData: true, updatedAt: true } },
+          // 이 지문으로 생성된 학습자료(A4 보고서) — 지문 카드 하단 토글에 사용.
+          // soft delete 된 보고서는 제외, 최근 편집순.
+          reports: {
+            where: { deletedAt: null },
+            select: {
+              id: true,
+              title: true,
+              status: true,
+              templateId: true,
+              updatedAt: true,
+            },
+            orderBy: { updatedAt: "desc" },
+            take: 20,
+          },
           // 이 지문으로 이미 생성된 문제 수 — 지문 카드 뱃지에 사용.
           _count: { select: { questions: true } },
         },

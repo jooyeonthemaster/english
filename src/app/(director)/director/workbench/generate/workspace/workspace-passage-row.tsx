@@ -11,6 +11,7 @@ import {
 import {
   Check,
   ChevronDown,
+  ChevronRight,
   ChevronUp,
   CircleAlert,
   FileText,
@@ -23,13 +24,14 @@ import {
   RotateCcw,
   Scissors,
   SlidersHorizontal,
-  Sparkles,
   TextCursorInput,
   Trash2,
   Undo2,
   Wand2,
   X,
+  Zap,
 } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { toast } from "sonner";
 
 import { Textarea } from "@/components/ui/textarea";
@@ -41,7 +43,6 @@ import {
   readRestoreIntroDismissed,
 } from "../intake/restore-intro-dialog";
 import { formatExtractedTextForDisplay } from "../../passages/import/_components/extraction-manage-client/utils/display-text";
-import type { QueueItem } from "../generate-page-types";
 import {
   countWords,
   isRowDirty,
@@ -54,7 +55,6 @@ import {
   difficultyLabel,
   overrideTypeSummary,
 } from "./type-override-popover";
-import { RowHistoryPopover } from "./row-history-popover";
 import {
   ParaphrasePreviewPanel,
   PrependPreviewPanel,
@@ -247,8 +247,6 @@ interface WorkspacePassageRowProps {
   /** 전체 공통 생성 플랜 — 개별 지정이 없을 때 기본 뱃지로 표시. */
   globalGenerationPlan: "STANDARD" | "PREMIUM";
   disabled: boolean;
-  sessionQueue: QueueItem[];
-  savedQuestionCount: number;
   onChangeContent: (content: string) => void;
   /** 수동 편집 버스트 시작 — undo 스냅샷 저장. */
   onPushHistory: () => void;
@@ -260,8 +258,14 @@ interface WorkspacePassageRowProps {
   onSetRange: (range: RowRange | null) => void;
   onToggleCollapsed: () => void;
   onRemove: () => void;
+  /** 이 행이 일괄 삭제용 다중 선택 체크박스로 선택돼 있는지. */
+  selected?: boolean;
+  /** 다중 선택 체크박스 토글 (전체선택/일괄 삭제용 — 설정 대상 선택과 무관). */
+  onToggleSelected?: () => void;
   /** 이 행이 우측 패널의 '개별 설정' 대상으로 선택돼 있는지. */
   active?: boolean;
+  /** 다른 지문이 설정 대상으로 선택돼 있어, 이 행은 흐리게(스포트라이트 밖). */
+  dimmed?: boolean;
   /** 행 본문 클릭 → 우측 패널을 이 지문에 바인딩 (패널은 열지 않음). */
   onSetActive: () => void;
   /** '지문별 설정' 버튼 → 이 지문 선택 + 접혀 있던 설정 패널 펼치기. */
@@ -275,8 +279,6 @@ export function WorkspacePassageRow({
   globalDifficulty,
   globalGenerationPlan,
   disabled,
-  sessionQueue,
-  savedQuestionCount,
   onChangeContent,
   onPushHistory,
   onApplyAi,
@@ -286,7 +288,10 @@ export function WorkspacePassageRow({
   onSetRange,
   onToggleCollapsed,
   onRemove,
+  selected = false,
+  onToggleSelected,
   active = false,
+  dimmed = false,
   onSetActive,
   onOpenSettings,
 }: WorkspacePassageRowProps) {
@@ -299,6 +304,8 @@ export function WorkspacePassageRow({
   const [busy, setBusy] = useState<"paraphrase" | "prepend" | "restore" | null>(
     null,
   );
+  // undo/redo 안내 말풍선 — '?' 호버 시 미리보기, 클릭하면 고정(유지),
+  // 다시 클릭하면 닫힌다. (hover OR pinned 일 때 표시)
   const [restoreIntroOpen, setRestoreIntroOpen] = useState(false);
   const [preview, setPreview] = useState<PreviewState | null>(null);
   // 변형 문장 위에 커서를 올리면 원문을 보여주는 툴팁 (에디터 컨테이너 기준 좌표).
@@ -425,7 +432,7 @@ export function WorkspacePassageRow({
   } =
     rowMode === "auto"
       ? {
-          Icon: Sparkles,
+          Icon: Zap,
           label: "자동 생성",
           title: "이 지문은 자동 생성됩니다 — 클릭해 설정 변경",
           tone: "configured",
@@ -903,12 +910,27 @@ export function WorkspacePassageRow({
     <div
       onClick={onSetActive}
       className={
-        "overflow-hidden rounded-lg border bg-white shadow-sm transition-shadow " +
+        "relative overflow-hidden rounded-lg border bg-white shadow-sm transition-[box-shadow,opacity,border-color] " +
         (active
-          ? "border-violet-300 ring-2 ring-violet-200"
-          : "border-slate-200 hover:border-violet-200")
+          ? "border-2 border-violet-600 ring-2 ring-violet-300"
+          : "border-slate-200 hover:border-violet-200 ") +
+        // 스포트라이트 — 다른 지문이 설정 대상일 때 이 행은 흐리게 물러나
+        // 선택 지문 ↔ 우측 설정이 한 쌍으로 도드라진다(호버하면 다시 또렷).
+        (dimmed && !active ? "opacity-45 hover:opacity-100" : "")
       }
     >
+      {/* ── 설정 테더 탭 — 선택된 카드 우측 가장자리에 보라 ▶ 탭을 붙여,
+          오른쪽 설정 패널의 좌측 스파인(◀)과 색·방향으로 이어지며 "이 카드의
+          설정이 저기"라는 연결을 만든다. 접힌 카드는 헤더 우측 버튼과 겹치므로
+          펼친 상태에서만 노출. */}
+      {active && !row.collapsed ? (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-0 top-1/2 z-10 flex h-8 w-[18px] -translate-y-1/2 items-center justify-center rounded-l-full bg-violet-600 text-white shadow-sm"
+        >
+          <ChevronRight className="h-4 w-4" aria-hidden="true" />
+        </span>
+      ) : null}
       {/* ── 헤더 (40px 고정 — 모든 컨트롤 h-7, 아이콘 h-4) ── */}
       <div
         className={
@@ -920,21 +942,28 @@ export function WorkspacePassageRow({
             오른쪽 끝 셰브론 버튼으로만. (행 클릭은 바깥 div 에서 '이 지문
             설정 대상 선택'으로 처리되므로 여기 클릭해도 선택만 된다.) */}
         <div className="flex h-full min-w-0 flex-1 items-center gap-2 text-left">
-          {/* 선택 체크박스 — 이 지문이 우측 설정 대상으로 선택되면 체크된다.
-              한 번에 하나만 선택(단일) — 카드 클릭이 곧 선택이므로 여기선 표시만. */}
-          <span
+          {/* 다중 선택 체크박스 — 헤더의 전체선택·일괄 삭제 대상이 된다.
+              카드의 '설정 대상 선택'(active, 굵은 보라 테두리로 표시)과는
+              별개 개념이라, 클릭이 카드 선택(onSetActive)으로 전파되지 않게 막는다. */}
+          <button
+            type="button"
             role="checkbox"
-            aria-checked={active}
-            aria-label="이 지문 선택"
+            aria-checked={selected}
+            aria-label="이 지문 선택 (일괄 삭제용)"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleSelected?.();
+            }}
+            title="선택 — 헤더 휴지통으로 선택한 지문을 한 번에 제거"
             className={
-              "flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] border transition-colors " +
-              (active
+              "flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center rounded-[5px] border transition-colors " +
+              (selected
                 ? "border-violet-600 bg-violet-600 text-white"
-                : "border-slate-300 bg-white text-transparent")
+                : "border-slate-300 bg-white text-transparent hover:border-violet-400")
             }
           >
             <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
-          </span>
+          </button>
           <span className="flex h-[22px] min-w-[22px] shrink-0 items-center justify-center rounded-md bg-violet-600 px-1 text-[11px] font-bold leading-none text-white tabular-nums">
             {index + 1}
           </span>
@@ -957,6 +986,95 @@ export function WorkspacePassageRow({
               수정됨
             </span>
           ) : null}
+          {/* 상태 배지 — 생성 플랜 / 난이도 / 유형 을 제목 옆(왼쪽)에 모은다.
+              (단어 수는 입력창 우하단 푸터로 이동) */}
+          {/* 생성 플랜 뱃지 — 개별 지정이 있으면 그 플랜을(또렷하게), 없으면
+              전체 공통 플랜을 기본 뱃지(흐리게)로 보여준다. 프리미엄은 보라색. */}
+          {(() => {
+            const custom = !!row.override?.generationPlan;
+            const isPremium =
+              (row.override?.generationPlan ?? globalGenerationPlan) ===
+              "PREMIUM";
+            const PlanIcon = isPremium ? Gem : PearlIcon;
+            return (
+              <span
+                title={
+                  custom
+                    ? "이 지문에 지정된 생성 플랜"
+                    : "전체 공통 생성 플랜 (기본값) — 지문별 설정에서 따로 지정 가능"
+                }
+                className={
+                  "flex h-7 shrink-0 items-center gap-1 rounded-md border px-1.5 text-[10.5px] font-semibold " +
+                  (isPremium
+                    ? custom
+                      ? "border-violet-300 bg-violet-100 text-violet-700"
+                      : "border-violet-200 bg-violet-50 text-violet-600"
+                    : custom
+                      ? "border-slate-200 bg-slate-50 text-slate-600"
+                      : "border-slate-200 bg-white text-slate-400")
+                }
+              >
+                <PlanIcon className="h-3 w-3 shrink-0" aria-hidden="true" />
+                {isPremium ? "프리미엄" : "일반"}
+              </span>
+            );
+          })()}
+          {/* 난이도 뱃지 — 개별 지정이 있으면 그 난이도를(또렷하게), 없으면
+              전체 공통 난이도를 기본 뱃지(흐리게)로 항상 보여준다. */}
+          {(() => {
+            const custom = !!row.override?.difficulty;
+            const label = difficultyLabel(
+              row.override?.difficulty ?? globalDifficulty,
+            );
+            if (!label) return null;
+            return (
+              <span
+                title={
+                  custom
+                    ? "이 지문에 지정된 난이도"
+                    : "전체 공통 난이도 (기본값) — 지문별 설정에서 따로 지정 가능"
+                }
+                className={
+                  "flex h-7 shrink-0 items-center rounded-md border px-1.5 text-[10.5px] font-semibold " +
+                  (custom
+                    ? "border-slate-200 bg-slate-50 text-slate-600"
+                    : "border-slate-200 bg-white text-slate-400")
+                }
+              >
+                {label}
+              </span>
+            );
+          })()}
+          {/* 지문별 생성 설정 배지/진입 — 우측 '유형·생성 설정'에서 이 지문만
+              편집한다. 적용될 설정(미설정/자동 생성/유형/장문 세트)을 비춘다. */}
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={onOpenSettings}
+            title={settingsBadge.title}
+            className={
+              "flex h-6 min-w-0 shrink items-center gap-1 rounded-md border px-1.5 text-[10.5px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
+              (settingsBadge.tone === "warn"
+                ? active
+                  ? "border-amber-300 bg-amber-100 text-amber-700"
+                  : "border-dashed border-amber-300 bg-amber-50 text-amber-600 hover:bg-amber-100"
+                : settingsBadge.tone === "configured"
+                  ? active
+                    ? "border-slate-300 bg-slate-100 text-slate-700"
+                    : "border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100"
+                  : active
+                    ? "border-slate-300 bg-slate-100 text-slate-700"
+                    : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-600")
+            }
+          >
+            <settingsBadge.Icon
+              className="h-3 w-3 shrink-0"
+              aria-hidden="true"
+            />
+            <span className="min-w-0 max-w-[200px] truncate">
+              {settingsBadge.label}
+            </span>
+          </button>
           {row.collapsed ? (
             <span className="min-w-0 flex-1 truncate text-[11px] text-slate-400">
               {collapsedPreview}
@@ -964,105 +1082,35 @@ export function WorkspacePassageRow({
           ) : (
             <span className="min-w-0 flex-1" aria-hidden="true" />
           )}
-          <span className="shrink-0 whitespace-nowrap text-[11px] tabular-nums text-slate-400">
-            {words} words
-          </span>
         </div>
 
-        <span className="h-4 w-px shrink-0 bg-slate-200" aria-hidden="true" />
-        <RowHistoryPopover
-          passageIds={[row.passageId, row.variantOfId].filter(
-            (v): v is string => !!v,
-          )}
-          sessionQueue={sessionQueue}
-          savedQuestionCount={savedQuestionCount}
-        />
-        {/* 생성 플랜 뱃지 — 개별 지정이 있으면 그 플랜을(또렷하게), 없으면
-            전체 공통 플랜을 기본 뱃지(흐리게)로 보여준다. 프리미엄은 보라색. */}
-        {(() => {
-          const custom = !!row.override?.generationPlan;
-          const isPremium =
-            (row.override?.generationPlan ?? globalGenerationPlan) === "PREMIUM";
-          const PlanIcon = isPremium ? Gem : Sparkles;
-          return (
-            <span
-              title={
-                custom
-                  ? "이 지문에 지정된 생성 플랜"
-                  : "전체 공통 생성 플랜 (기본값) — 지문별 설정에서 따로 지정 가능"
-              }
-              className={
-                "flex h-7 shrink-0 items-center gap-1 rounded-md border px-1.5 text-[10.5px] font-semibold " +
-                (isPremium
-                  ? custom
-                    ? "border-violet-300 bg-violet-100 text-violet-700"
-                    : "border-violet-200 bg-violet-50 text-violet-600"
-                  : custom
-                    ? "border-slate-200 bg-slate-50 text-slate-600"
-                    : "border-slate-200 bg-white text-slate-400")
-              }
-            >
-              <PlanIcon className="h-3 w-3 shrink-0" aria-hidden="true" />
-              {isPremium ? "프리미엄" : "일반"}
-            </span>
-          );
-        })()}
-        {/* 난이도 뱃지 — 개별 지정이 있으면 그 난이도를(또렷하게), 없으면
-            전체 공통 난이도를 기본 뱃지(흐리게)로 항상 보여준다. */}
-        {(() => {
-          const custom = !!row.override?.difficulty;
-          const label = difficultyLabel(
-            row.override?.difficulty ?? globalDifficulty,
-          );
-          if (!label) return null;
-          return (
-            <span
-              title={
-                custom
-                  ? "이 지문에 지정된 난이도"
-                  : "전체 공통 난이도 (기본값) — 지문별 설정에서 따로 지정 가능"
-              }
-              className={
-                "flex h-7 shrink-0 items-center rounded-md border px-1.5 text-[10.5px] font-semibold " +
-                (custom
-                  ? "border-slate-200 bg-slate-50 text-slate-600"
-                  : "border-slate-200 bg-white text-slate-400")
-              }
-            >
-              {label}
-            </span>
-          );
-        })()}
-        {/* 지문별 생성 설정 배지/진입 — 우측 '유형·생성 설정'에서 이 지문만
-            편집한다. 적용될 설정(미설정/자동 생성/유형/장문 세트)을 그대로 비춘다. */}
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={onOpenSettings}
-          title={settingsBadge.title}
-          className={
-            "flex h-7 min-w-0 shrink items-center gap-1.5 rounded-md border px-2 text-[11px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
-            (settingsBadge.tone === "warn"
-              ? active
-                ? "border-amber-300 bg-amber-100 text-amber-700"
-                : "border-dashed border-amber-300 bg-amber-50 text-amber-600 hover:bg-amber-100"
-              : settingsBadge.tone === "configured"
-                ? active
-                  ? "border-violet-300 bg-violet-100 text-violet-700"
-                  : "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
-                : active
-                  ? "border-violet-300 bg-violet-100 text-violet-700"
-                  : "border-slate-200 bg-white text-slate-500 hover:border-violet-200 hover:text-violet-600")
-          }
-        >
-          <settingsBadge.Icon
-            className="h-3.5 w-3.5 shrink-0"
-            aria-hidden="true"
-          />
-          <span className="min-w-0 max-w-[200px] truncate">
-            {settingsBadge.label}
-          </span>
-        </button>
+        {/* AI 복원 — 토글 바로 왼쪽 (펼친 상태에서만, 본문 편집과 연관) */}
+        {!row.collapsed ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRestoreClick();
+            }}
+            disabled={locked || row.content.trim().length < 20}
+            data-generate-tour="workspace-ai-tools"
+            title="문제 형태 지문을 원문으로 AI 복원"
+            className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-violet-600 px-2.5 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {busy === "restore" ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+            ) : (
+              <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+            )}
+            {busy === "restore" ? "복원 중" : "AI 복원"}
+            {busy !== "restore" ? (
+              <CreditCostChip
+                amount={CREDIT_COSTS.PASSAGE_RESTORATION}
+                className="rounded-sm bg-white/20 px-1 py-px text-[10px]"
+              />
+            ) : null}
+          </button>
+        ) : null}
         <button
           type="button"
           onClick={onToggleCollapsed}
@@ -1088,37 +1136,10 @@ export function WorkspacePassageRow({
 
       {!row.collapsed ? (
         <div className="space-y-2 px-2.5 py-2.5">
-          {/* ── AI 도구 바 ── */}
-          <div
-            className="flex min-h-7 flex-wrap items-center gap-x-2 gap-y-1.5"
-            data-generate-tour="workspace-ai-tools"
-          >
-            <button
-              type="button"
-              onClick={handleRestoreClick}
-              disabled={locked || row.content.trim().length < 20}
-              title="문제 형태 지문을 원문으로 AI 복원"
-              className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-violet-600 px-4 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {busy === "restore" ? (
-                <Loader2
-                  className="h-3.5 w-3.5 animate-spin"
-                  aria-hidden="true"
-                />
-              ) : (
-                <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-              )}
-              {busy === "restore" ? "복원 중" : "AI 복원"}
-              {busy !== "restore" ? (
-                <CreditCostChip
-                  amount={CREDIT_COSTS.PASSAGE_RESTORATION}
-                  className="rounded-sm bg-white/20 px-1 py-px text-[10px]"
-                />
-              ) : null}
-            </button>
-            {rangePreview ? (
-              // 뱃지 색을 범위 하이라이트(amber-100)와 같은 노란 계열로 맞춰,
-              // 'X'로 해제하는 이 버튼이 그 노란 표시를 끄는 것임을 한눈에 보이게.
+          {/* 출제 범위 표시 — 범위가 지정됐을 때만(없으면 줄을 만들지 않아
+              카드 높이를 줄인다). AI 복원은 헤더로, undo/redo 는 에디터로 이동. */}
+          {rangePreview ? (
+            <div className="flex">
               <span className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-amber-300 pl-2 pr-1 text-[11px] font-bold text-amber-900 ring-1 ring-inset ring-amber-400/60">
                 <Scissors className="h-3 w-3" aria-hidden="true" />
                 출제 범위 {rangePreview.words}/{words} words
@@ -1131,38 +1152,8 @@ export function WorkspacePassageRow({
                   <X className="h-3 w-3" aria-hidden="true" />
                 </button>
               </span>
-            ) : null}
-            <span className="flex min-w-0 items-center gap-1.5 text-[11px] font-medium text-slate-400">
-              <TextCursorInput
-                className="h-3.5 w-3.5 shrink-0 text-violet-400"
-                aria-hidden="true"
-              />
-              <span className="truncate">
-                문장을 드래그하면 AI 변형 · 범위 지정
-              </span>
-            </span>
-            <span className="min-w-0 flex-1" aria-hidden="true" />
-            <span className="flex shrink-0 items-center gap-0.5">
-              <button
-                type="button"
-                onClick={handleUndo}
-                disabled={locked || row.past.length === 0}
-                title="되돌리기 — 직전 편집·AI 적용을 취소합니다"
-                className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-35"
-              >
-                <Undo2 className="h-4 w-4" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={handleRedo}
-                disabled={locked || row.future.length === 0}
-                title="다시 실행 — 되돌린 편집을 다시 적용합니다"
-                className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-35"
-              >
-                <Redo2 className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </span>
-          </div>
+            </div>
+          ) : null}
 
           {/* ── 앞 문단 미리보기 ── */}
           {preview?.kind === "prepend" ? (
@@ -1341,7 +1332,7 @@ export function WorkspacePassageRow({
                   ref={rangeBackdropRef}
                   aria-hidden="true"
                   style={EDITOR_TEXT_STYLE}
-                  className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words px-3 py-2 text-transparent"
+                  className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words py-2 pl-3 pr-16 text-transparent"
                 >
                   <span>
                     {row.content.slice(
@@ -1377,7 +1368,7 @@ export function WorkspacePassageRow({
                   ref={backdropRef}
                   aria-hidden="true"
                   style={EDITOR_TEXT_STYLE}
-                  className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words px-3 py-2 text-transparent"
+                  className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words py-2 pl-3 pr-16 text-transparent"
                 >
                   {(() => {
                     // content 기준 누적 오프셋 — 호버 메뉴가 이 구간을 삭제할
@@ -1448,11 +1439,34 @@ export function WorkspacePassageRow({
                 spellCheck={false}
                 style={EDITOR_TEXT_STYLE}
                 className={
-                  "relative min-h-[180px] resize-y rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 " +
+                  "relative min-h-[180px] resize-y rounded-none border-0 bg-transparent py-2 pl-3 pr-16 shadow-none focus-visible:ring-0 " +
                   (editorLocked ? "text-slate-500" : "")
                 }
                 placeholder="지문 본문"
               />
+
+              {/* ── undo / redo — 입력창 우상단에 떠 있는 컨트롤. 본문은 pr-16
+                  으로 우측 거터를 비워 글자가 줄바꿈돼 버튼에 가려지지 않는다. ── */}
+              <div className="absolute right-1.5 top-1.5 z-[4] flex items-center gap-0.5 rounded-md border border-slate-200 bg-white/90 p-0.5 shadow-sm">
+                <button
+                  type="button"
+                  onClick={handleUndo}
+                  disabled={locked || row.past.length === 0}
+                  title="되돌리기 — 직전 편집·AI 적용을 취소합니다"
+                  className="flex h-6 w-6 items-center justify-center rounded text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-35"
+                >
+                  <Undo2 className="h-3.5 w-3.5" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRedo}
+                  disabled={locked || row.future.length === 0}
+                  title="다시 실행 — 되돌린 편집을 다시 적용합니다"
+                  className="flex h-6 w-6 items-center justify-center rounded text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-35"
+                >
+                  <Redo2 className="h-3.5 w-3.5" aria-hidden="true" />
+                </button>
+              </div>
 
               {/* ── 변형 문장 원문 툴팁 — 하늘색 하이라이트 위에 커서를
                   올리면 변형 전 문장을 보여준다 ── */}
@@ -1655,6 +1669,11 @@ export function WorkspacePassageRow({
                     );
                   })()
                 : null}
+            </div>
+
+            {/* 단어 수 — 입력창 우하단 푸터(본문 아래라 텍스트와 겹치지 않음) */}
+            <div className="flex justify-end border-t border-slate-100 px-2.5 py-1 text-[10.5px] tabular-nums text-slate-400">
+              {words} words
             </div>
           </div>
 

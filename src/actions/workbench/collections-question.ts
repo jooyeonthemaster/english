@@ -17,6 +17,29 @@ export async function getQuestionCollections(academyId: string) {
   });
 }
 
+/**
+ * Returns the question-collection membership graph for an academy as
+ * { collectionId: questionId[] }. Client-callable analogue of the inline
+ * prisma.questionCollectionItem.findMany the question-management page runs
+ * server-side. Academy-scoped: never leaks another tenant's membership.
+ */
+export async function getAcademyQuestionCollectionMembership(
+  academyId: string,
+): Promise<Record<string, string[]>> {
+  const session = await requireAuth();
+  if (session.academyId !== academyId) return {};
+  const items = await prisma.questionCollectionItem.findMany({
+    where: { collection: { academyId } },
+    select: { collectionId: true, questionId: true },
+  });
+  const membership: Record<string, string[]> = {};
+  for (const item of items) {
+    if (!membership[item.collectionId]) membership[item.collectionId] = [];
+    membership[item.collectionId].push(item.questionId);
+  }
+  return membership;
+}
+
 export async function createQuestionCollection(data: {
   name: string;
   description?: string;

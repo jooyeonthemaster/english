@@ -2,6 +2,7 @@
 
 import { FileText, Check, BookOpen, PenTool } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import { formatDate } from "@/lib/utils";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import {
@@ -148,6 +149,14 @@ export function PassageFileRow({
       <span className="text-[10px] text-slate-400 shrink-0 w-20 text-right">
         {formatDate(passage.createdAt)}
       </span>
+      <CardDetailIconButton
+        className="size-7 rounded-md shadow-none"
+        iconClassName="size-3.5"
+        onClick={(e) => {
+          e.stopPropagation();
+          onViewDetail(passage.id);
+        }}
+      />
     </div>
   );
 }

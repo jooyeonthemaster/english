@@ -2,22 +2,26 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   AlertTriangle,
   Braces,
   CheckCircle2,
   ChevronRight,
   ClipboardList,
+  FileOutput,
   FileText,
   Gem,
   Grid2X2,
   Grid3X3,
   List as ListIcon,
   Loader2,
+  RotateCcw,
   Rows3,
   Sparkles,
   Trash2,
 } from "lucide-react";
+import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
 import { Checkbox } from "@/components/ui/checkbox";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 import {
@@ -95,6 +99,8 @@ interface BottomQueueSectionProps {
   deletedQuestionSignatures?: Set<string>;
   batchDeleting?: boolean;
   onEditQuestion: (questionId: string) => void;
+  /** 생성 실패 카드에서 같은 조건으로 다시 생성 — 미지정 시 버튼을 숨긴다. */
+  onRetryGeneration?: (item: QueueItem) => void | Promise<void>;
   /** 마키(영역 드래그) 시작 영역을 이 섹션 전체로 넓히기 위한 boundary(부모에서 내려줌). */
   marqueeBoundaryRef?: React.RefObject<HTMLElement | null>;
   /** 카드 '상세 보기' 옆에 끼울 추가 액션 렌더러(예: 동형 '분석 정보'). 선택 — 미지정 시 표시 안 함. */
@@ -292,6 +298,7 @@ export function BottomQueueSection({
   deletedQuestionSignatures,
   batchDeleting = false,
   onEditQuestion,
+  onRetryGeneration,
   marqueeBoundaryRef,
   renderCardDetailExtra,
   tourHighlightSessionQuestionCount = 0,
@@ -311,6 +318,19 @@ export function BottomQueueSection({
   const [selectedQuestionIds, setSelectedQuestionIds] = useState<Set<string>>(
     new Set(),
   );
+  // 방금 생성된(현재 세션) 문제 카드의 파란 글로우 — 한 번 클릭하면 해제된다.
+  // (지문 추출의 fresh 글로우와 동일 패턴) 카드 key 기준으로 확인 처리.
+  const [acknowledgedFreshKeys, setAcknowledgedFreshKeys] = useState<
+    Set<string>
+  >(new Set());
+  const acknowledgeFreshCard = useCallback((key: string) => {
+    setAcknowledgedFreshKeys((prev) => {
+      if (prev.has(key)) return prev;
+      const next = new Set(prev);
+      next.add(key);
+      return next;
+    });
+  }, []);
   const {
     cancelPendingCardSelectionClick,
     scheduleCardSelectionClick,
@@ -659,6 +679,27 @@ export function BottomQueueSection({
     [selectableSessionIds, selectableSavedIds],
   );
 
+  const router = useRouter();
+  // '시험지 생성' — 아래에서 '선택한' 문제만 데리고 시험지 빌더로 이동한다.
+  // (선택이 없으면 비활성) id 목록은 sessionStorage 로 넘겨 빌더가
+  // 미리보기(시험지)에 바로 올린다.
+  const examSeedIds = useMemo(
+    () => allSelectableIds.filter((id) => selectedQuestionIds.has(id)),
+    [selectedQuestionIds, allSelectableIds],
+  );
+  const handleCreateExam = useCallback(() => {
+    if (examSeedIds.length === 0) return;
+    try {
+      window.sessionStorage.setItem(
+        EXAM_SEED_QUESTION_IDS_KEY,
+        JSON.stringify(examSeedIds),
+      );
+    } catch {
+      // sessionStorage 실패해도 이동은 진행 (빈 빌더로 열림).
+    }
+    router.push("/director/workbench/exams/create");
+  }, [examSeedIds, router]);
+
   // Prune stale selections once items leave the selectable pool (e.g. deleted).
   useEffect(() => {
     setSelectedQuestionIds((prev) => {
@@ -851,6 +892,17 @@ export function BottomQueueSection({
               )}
             </div>
           </div>
+          {onRetryGeneration && (
+            <button
+              type="button"
+              onClick={() => onRetryGeneration(item)}
+              title="이 카드에 사용된 유형·난이도·조건 그대로 다시 생성합니다"
+              className="mt-3 inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 text-[11.5px] font-bold text-red-600 shadow-sm transition-colors hover:bg-red-50"
+            >
+              <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+              같은 조건으로 다시 생성하기
+            </button>
+          )}
         </div>
       );
     }
@@ -871,6 +923,8 @@ export function BottomQueueSection({
     );
     const isTourHighlighted = tourHighlightIndex !== undefined;
     const isFirstTourHighlighted = tourHighlightIndex === 0;
+    // 방금 생성된 카드의 파란 글로우 — 클릭 전까지 표시(투어 강조와는 별개).
+    const isFreshGlow = !isTourHighlighted && !acknowledgedFreshKeys.has(card.key);
     const openDetail = () => {
       if (isFirstTourHighlighted) {
         dispatchGenerateTourMilestone("question-detail-opened");
@@ -889,6 +943,7 @@ export function BottomQueueSection({
               : undefined
         }
         onClick={(e) => {
+          acknowledgeFreshCard(card.key);
           if (
             e.detail > 1 ||
             !cardToggle ||
@@ -898,6 +953,7 @@ export function BottomQueueSection({
           scheduleCardSelectionClick(cardToggle);
         }}
         onDoubleClick={(e) => {
+          acknowledgeFreshCard(card.key);
           cancelPendingCardSelectionClick();
           clearCardTextSelection();
           if (shouldIgnoreCardDoubleClick(e)) return;
@@ -907,7 +963,9 @@ export function BottomQueueSection({
         className={`h-full cursor-pointer rounded-xl transition-shadow ${
           isTourHighlighted
             ? "ring-2 ring-blue-400 ring-offset-2 ring-offset-white"
-            : ""
+            : isFreshGlow
+              ? "ring-2 ring-blue-400/70 shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_26px_8px_rgba(37,99,235,0.30)] motion-safe:animate-pulse [&_[data-slot=card]]:!border-transparent [&_[data-slot=card]]:!shadow-none"
+              : ""
         }`}
       >
         <QuestionCard
@@ -1116,165 +1174,177 @@ export function BottomQueueSection({
 
   return (
     <div className="rounded-lg bg-white">
-      <div className="sticky top-0 z-20 flex flex-col gap-3 rounded-t-lg border-b border-slate-100 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 ring-1 ring-blue-100">
-            <ClipboardList className="size-4" aria-hidden="true" />
-          </span>
-          <h2 className="truncate text-[13px] font-bold text-slate-900">
-            생성/검수 결과
-          </h2>
-          <span
-            aria-hidden="true"
-            className="shrink-0 text-[11px] font-medium text-slate-300"
+      <div className="sticky top-0 z-20 flex flex-col gap-3 rounded-t-lg border-b border-slate-100 bg-white px-4 py-3">
+        {/* ── 1행: 제목 + 시험지 생성 ── */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+              <ClipboardList className="size-4" aria-hidden="true" />
+            </span>
+            <h2 className="truncate text-[13px] font-bold text-slate-900">
+              문제 생성/검수 결과
+            </h2>
+            <span
+              aria-hidden="true"
+              className="shrink-0 text-[11px] font-medium text-slate-300"
+            >
+              ·
+            </span>
+            <span className="shrink-0 text-[11px] font-medium tabular-nums text-slate-400">
+              최근 {reviewCounts.ALL}개
+            </span>
+          </div>
+          {/* 시험지 생성 — 아래에서 선택한 문제만 데리고 시험지 빌더로 이동 */}
+          <button
+            type="button"
+            onClick={handleCreateExam}
+            disabled={examSeedIds.length === 0}
+            title={
+              examSeedIds.length === 0
+                ? "아래에서 시험지에 넣을 문제를 먼저 선택하세요"
+                : "선택한 문제로 시험지를 만듭니다 (미리보기에 바로 올라갑니다)"
+            }
+            className="flex h-8 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[12px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none"
           >
-            ·
-          </span>
-          <span className="shrink-0 text-[11px] font-medium tabular-nums text-slate-400">
-            최근 {reviewCounts.ALL}개
-          </span>
-          {allSelectableIds.length > 0 && (
-            <div className="ml-1 flex shrink-0 items-center gap-1.5">
-              <Checkbox
-                checked={
-                  allSelected ? true : someSelected ? "indeterminate" : false
-                }
-                onCheckedChange={toggleSelectAll}
-                aria-label="문제 전체 선택"
-                title="전체 선택"
-                className="size-4 cursor-pointer"
-              />
-              {sessionApprovableIds.length > 0 && (
+            <FileOutput className="h-4 w-4" aria-hidden="true" />
+            시험지 생성
+            {examSeedIds.length > 0 && (
+              <span className="rounded bg-white/20 px-1 text-[11px] font-bold tabular-nums">
+                {examSeedIds.length}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* ── 2행: 선택/삭제 + 필터 ── */}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-1.5">
+            {allSelectableIds.length > 0 && (
+              <>
+                <Checkbox
+                  checked={
+                    allSelected ? true : someSelected ? "indeterminate" : false
+                  }
+                  onCheckedChange={toggleSelectAll}
+                  aria-label="문제 전체 선택"
+                  title="전체 선택"
+                  className="size-4 cursor-pointer"
+                />
+                {sessionApprovableIds.length > 0 && (
+                  <button
+                    type="button"
+                    disabled={
+                      selectedApprovableIds.length === 0 || batchApproving
+                    }
+                    onClick={handleBatchApprove}
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-300 disabled:opacity-100"
+                  >
+                    {batchApproving ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                    )}
+                    검수완료
+                    {selectedApprovableIds.length > 0 && (
+                      <span className="text-[11px] font-bold opacity-90">
+                        ({selectedApprovableIds.length})
+                      </span>
+                    )}
+                  </button>
+                )}
                 <button
                   type="button"
                   disabled={
-                    selectedApprovableIds.length === 0 || batchApproving
+                    selectedQuestionIds.size === 0 ||
+                    batchDeleting ||
+                    !onBatchDeleteQuestions
                   }
-                  onClick={handleBatchApprove}
-                  className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-300 disabled:opacity-100"
+                  onClick={handleBatchDelete}
+                  aria-label="선택한 문제 삭제"
+                  title="선택한 문제 삭제"
+                  className="inline-flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-300"
                 >
-                  {batchApproving ? (
+                  {batchDeleting ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   ) : (
-                    <CheckCircle2 className="h-3.5 w-3.5" />
-                  )}
-                  검수완료
-                  {selectedApprovableIds.length > 0 && (
-                    <span className="text-[11px] font-bold opacity-90">
-                      ({selectedApprovableIds.length})
-                    </span>
+                    <Trash2 className="h-3.5 w-3.5" />
                   )}
                 </button>
-              )}
-              <button
-                type="button"
-                disabled={
-                  selectedQuestionIds.size === 0 ||
-                  batchDeleting ||
-                  !onBatchDeleteQuestions
-                }
-                onClick={handleBatchDelete}
-                aria-label="선택한 문제 삭제"
-                title="선택한 문제 삭제"
-                className="inline-flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-300"
-              >
-                {batchDeleting ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Trash2 className="h-3.5 w-3.5" />
-                )}
-              </button>
-            </div>
-          )}
-        </div>
-        <div className="flex flex-wrap items-center justify-start gap-2 sm:justify-end">
-          <span className="hidden shrink-0 text-[11px] font-medium text-slate-400 lg:inline">
-            검수 상태와 지문 단위로 표시됩니다
-          </span>
-          <ViewModeCycleButton
-            value={reviewStatusFilter}
-            options={reviewButtons.map(({ id, label, count }) => ({
-              value: id,
-              label,
-              content: (
-                <>
-                  {label} <span className="text-slate-400">{count}</span>
-                </>
-              ),
-            }))}
-            onChange={setReviewStatusFilter}
-          />
+              </>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center justify-start gap-2 sm:justify-end">
+            <ViewModeCycleButton
+              value={reviewStatusFilter}
+              options={reviewButtons.map(({ id, label, count }) => ({
+                value: id,
+                label,
+                content: (
+                  <>
+                    {label} <span className="text-slate-400">{count}</span>
+                  </>
+                ),
+              }))}
+              onChange={setReviewStatusFilter}
+            />
 
-          <ViewModeCycleButton
-            value={questionViewMode}
-            options={QUESTION_VIEW_MODE_OPTIONS}
-            showLabel
-            onChange={setQuestionViewMode}
-          />
-
-          <ViewModeCycleButton
-            value={cardLayoutMode}
-            options={layoutButtons}
-            onChange={setCardLayoutMode}
-          />
-        </div>
-      </div>
-
-      <div className="space-y-4 rounded-b-lg bg-white px-4 py-4">
-        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-          <div className="flex flex-wrap items-center justify-end gap-2">
+            {/* 생성 플랜 필터 — 전체 → 일반 생성 → 프리미엄 생성 순환(단일 버튼). */}
             {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-              <div className="flex max-w-full items-center gap-1 overflow-x-auto rounded-lg border border-slate-200 bg-white p-0.5">
-                {(
+              <ViewModeCycleButton
+                value={savedPlanFilter}
+                options={(
                   [
                     {
-                      id: "ALL",
+                      value: "ALL",
                       label: "전체",
                       count: savedPlanCounts.ALL,
                       Icon: Sparkles,
                     },
                     {
-                      id: "STANDARD",
+                      value: "STANDARD",
                       label: QUESTION_GENERATION_PLAN_TAGS.STANDARD,
                       count: savedPlanCounts.STANDARD,
                       Icon: Sparkles,
                     },
                     {
-                      id: "PREMIUM",
+                      value: "PREMIUM",
                       label: QUESTION_GENERATION_PLAN_TAGS.PREMIUM,
                       count: savedPlanCounts.PREMIUM,
                       Icon: Gem,
                     },
                   ] as const
-                ).map(({ id, label, count, Icon }) => (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => setSavedPlanFilter(id)}
-                    className={`inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-[11px] font-semibold transition-all ${
-                      savedPlanFilter === id
-                        ? "bg-blue-50 text-blue-700 shadow-sm"
-                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
-                    }`}
-                  >
-                    <Icon className="h-3 w-3" />
-                    <span>{label}</span>
-                    <span
-                      className={
-                        savedPlanFilter === id
-                          ? "text-blue-500"
-                          : "text-slate-400"
-                      }
-                    >
-                      {count}
-                    </span>
-                  </button>
-                ))}
-              </div>
+                ).map(({ value, label, count, Icon }) => ({
+                  value,
+                  label,
+                  content: (
+                    <>
+                      <Icon className="h-3 w-3" aria-hidden />
+                      <span>{label}</span>
+                      <span className="text-slate-400">{count}</span>
+                    </>
+                  ),
+                }))}
+                onChange={setSavedPlanFilter}
+              />
             )}
-          </div>
-        )}
 
+            <ViewModeCycleButton
+              value={questionViewMode}
+              options={QUESTION_VIEW_MODE_OPTIONS}
+              showLabel
+              onChange={setQuestionViewMode}
+            />
+
+            <ViewModeCycleButton
+              value={cardLayoutMode}
+              options={layoutButtons}
+              onChange={setCardLayoutMode}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4 rounded-b-lg bg-white px-4 py-4">
         {questionViewMode === "flat" ? (
           loadingSavedQuestions &&
           sessionFlatEntries.length === 0 &&

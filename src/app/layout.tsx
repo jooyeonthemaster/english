@@ -83,7 +83,7 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
         />
       </head>
-      <body className={`${geistMono.variable} font-sans antialiased`}>
+      <body className={`${geistMono.variable} smoat-large-ui font-sans antialiased`}>
         <Providers>
           {children}
           <GlobalBusinessFooter />

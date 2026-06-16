@@ -43,6 +43,8 @@ export interface WorkspaceRowsApi {
   toggleCollapsed: (localId: string) => void;
   setAllCollapsed: (collapsed: boolean) => void;
   removeRow: (localId: string) => void;
+  /** 여러 행을 한 번에 제거 (전체선택 후 일괄 삭제). */
+  removeRows: (localIds: string[]) => void;
   clear: () => void;
   /** 변형본 저장 직후 — 행을 새 Passage 로 재바인딩. */
   rebindToVariant: (
@@ -237,6 +239,12 @@ export function useWorkspaceRows(): WorkspaceRowsApi {
     setRows((prev) => prev.filter((r) => r.localId !== localId));
   }, []);
 
+  const removeRows = useCallback((localIds: string[]) => {
+    if (localIds.length === 0) return;
+    const drop = new Set(localIds);
+    setRows((prev) => prev.filter((r) => !drop.has(r.localId)));
+  }, []);
+
   const clear = useCallback(() => setRows([]), []);
 
   const rebindToVariant = useCallback(
@@ -287,6 +295,7 @@ export function useWorkspaceRows(): WorkspaceRowsApi {
     toggleCollapsed,
     setAllCollapsed,
     removeRow,
+    removeRows,
     clear,
     rebindToVariant,
   };

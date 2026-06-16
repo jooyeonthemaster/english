@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  CheckCircle2,
-  Loader2,
-  Sparkles,
-  Trash2,
-  X,
-  XCircle,
-} from "lucide-react";
+import { Loader2, Pencil, Sparkles, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
 import {
@@ -40,6 +33,8 @@ interface QuestionDetailDialogProps {
   onApprove: (id: string) => void;
   onUnapprove: (id: string) => void;
   onDelete: (id: string) => void;
+  /** 전달 시 우측 상단에 '문제 수정' 버튼을 노출한다. */
+  onEdit?: (id: string) => void;
 }
 
 function parseAnalysisData(value: unknown) {
@@ -63,6 +58,7 @@ export function QuestionDetailDialog({
   onApprove,
   onUnapprove,
   onDelete,
+  onEdit,
 }: QuestionDetailDialogProps) {
   const [analysisOpen, setAnalysisOpen] = useState(false);
   if (!open) return null;
@@ -89,9 +85,31 @@ export function QuestionDetailDialog({
           className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
           onClick={onClose}
         />
-        <div className="relative z-10 mx-4 my-4 flex w-full max-w-[1200px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+        <div className="relative z-10 mx-4 my-4 flex w-full max-w-[1680px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
           <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 px-6 py-3">
             <div className="flex min-w-0 items-center gap-2.5">
+              {/* 검수 토글 점 — 좌측 끝 첫 번째. 누르면 검수상태(초록↔빨강)가
+                  실제로 바뀐다. 제목과 세로 중앙 정렬(items-center). */}
+              {question ? (
+                <button
+                  type="button"
+                  onClick={() =>
+                    question.approved
+                      ? onUnapprove(question.id)
+                      : onApprove(question.id)
+                  }
+                  aria-label={question.approved ? "검수완료" : "검수필요"}
+                  title={
+                    question.approved
+                      ? "검수완료 — 누르면 검수를 취소합니다"
+                      : "검수필요 — 누르면 검수완료로 표시합니다"
+                  }
+                  className={
+                    "size-3.5 shrink-0 cursor-pointer rounded-full ring-2 ring-white shadow-sm transition-colors hover:brightness-110 " +
+                    (question.approved ? "bg-emerald-500" : "bg-red-500")
+                  }
+                />
+              ) : null}
               <h2 className="text-[15px] font-bold text-slate-800">
                 문제 상세
               </h2>
@@ -99,6 +117,16 @@ export function QuestionDetailDialog({
             <div className="flex shrink-0 items-center gap-2">
               {question ? (
                 <>
+                  {onEdit ? (
+                    <button
+                      type="button"
+                      onClick={() => onEdit(question.id)}
+                      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-blue-600 bg-blue-600 px-2.5 text-[11px] font-semibold text-white shadow-sm transition-colors hover:border-blue-700 hover:bg-blue-700"
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                      문제 수정
+                    </button>
+                  ) : null}
                   {similarAnalysis ? (
                     <button
                       type="button"
@@ -117,25 +145,6 @@ export function QuestionDetailDialog({
                     <Trash2 className="h-3.5 w-3.5" />
                     삭제
                   </button>
-                  {question.approved ? (
-                    <button
-                      type="button"
-                      onClick={() => onUnapprove(question.id)}
-                      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-                    >
-                      <XCircle className="h-3.5 w-3.5" />
-                      검수취소
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => onApprove(question.id)}
-                      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-                    >
-                      <CheckCircle2 className="h-3.5 w-3.5" />
-                      검수완료
-                    </button>
-                  )}
                 </>
               ) : null}
               <button

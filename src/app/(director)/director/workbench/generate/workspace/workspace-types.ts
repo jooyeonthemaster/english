@@ -98,7 +98,10 @@ export function makeWorkspaceRow(passage: PassageItem): WorkspaceRow {
     content,
     savedContent: content,
     range: null,
-    override: null,
+    // 기본값: 워크스페이스에 들어오자마자 '자동 생성'으로 바로 생성 가능하게 한다.
+    // 난이도·생성 플랜은 null 로 두어 전체 공통값(기본 중급·일반)을 따르고,
+    // 자동 생성 문항 수는 전역 autoCount(기본 1)를 따른다 → 지문 수만큼 1문제씩.
+    override: { mode: "auto", typeCounts: {}, difficulty: null },
     collapsed: false,
     highlights: [],
     past: [],

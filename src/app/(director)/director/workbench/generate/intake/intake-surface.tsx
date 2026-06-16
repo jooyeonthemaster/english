@@ -101,14 +101,14 @@ export function IntakeSurface({
         className="flex h-11 shrink-0 items-center gap-3 border-b border-slate-100 px-3"
         data-generate-tour="intake-tabs"
       >
-        <div className="flex min-w-0 items-center gap-1.5 text-[12.5px] font-bold text-slate-700">
+        <div className="flex w-[128px] shrink-0 items-center gap-1.5 text-[12.5px] font-bold text-slate-700">
           <FileText
             className="h-3.5 w-3.5 shrink-0 text-slate-400"
             aria-hidden="true"
           />
           <span className="truncate">지문 입력·선택</span>
         </div>
-        <div className="ml-auto flex shrink-0 items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1">
           {showPasteTab ? (
             <Tab
               active={pasteActive && !overlay}
@@ -132,7 +132,7 @@ export function IntakeSurface({
               dispatchGenerateTourMilestone("upload-tab-opened");
             }}
             icon={<ImageUp className="h-3.5 w-3.5" />}
-            label="이미지·PDF"
+            label="파일업로드"
             tourKey="intake-upload"
           />
           <span
@@ -149,6 +149,10 @@ export function IntakeSurface({
             label={`${libraryLabel} ${libraryCount > 0 ? `(${libraryCount})` : ""}`.trim()}
             tourKey="intake-library"
           />
+        </div>
+        {/* 워크스페이스 ↔ 지문함 이동 버튼은 탭 행 오른쪽 끝에 고정 — 탭은
+            왼쪽 정렬, 이 버튼 그룹만 ml-auto 로 우측에 붙인다. */}
+        <div className="ml-auto flex shrink-0 items-center gap-1">
           {/* 워크스페이스 ↔ 지문함 이동 버튼 — 같은 줄(탭 행) 오른쪽 끝에
               현재 위치에 따라 하나만 보인다.
               · 워크스페이스 안: '지문함으로' (닫고 지문함 보기)

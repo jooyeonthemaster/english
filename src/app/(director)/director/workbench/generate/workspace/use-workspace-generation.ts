@@ -408,6 +408,8 @@ export function useWorkspaceGeneration({
         tempId: string;
         config: QueueItem["config"];
         progressKey: string;
+        /** 워크스페이스 행의 localId — 생성 성공 시 그 행을 비우는 데 쓴다. */
+        localId?: string;
       };
       const fastUnits: FastUnit[] = [];
       const slowJobs: {
@@ -416,6 +418,7 @@ export function useWorkspaceGeneration({
         difficulty: string;
         generationPlan: QuestionGenerationPlan;
         config: QueueItem["config"];
+        localId?: string;
       }[] = [];
       // 장문 세트 잡 — 자동/유형지정과 같은 공용 '생성' 흐름에 합류한다.
       const setJobs: {
@@ -424,7 +427,11 @@ export function useWorkspaceGeneration({
         members: { typeId: string; difficulty: string }[];
         structuralMode: string;
         generationPlan: QuestionGenerationPlan;
+        localId?: string;
       }[] = [];
+      // 생성을 시도한 워크스페이스 행과, 그중 실패한 행 — 성공 행만 비운다.
+      const attemptedLocalIds = new Set<string>();
+      const failedLocalIds = new Set<string>();
 
       for (const item of resolved) {
         const passageLike =
@@ -441,6 +448,8 @@ export function useWorkspaceGeneration({
                 title: item.title,
                 content: item.content,
               } as PassageItem);
+        const rowLocalId =
+          item.kind === "workspace" ? item.row.localId : undefined;
         const effDifficulty =
           item.kind === "workspace"
             ? (item.row.override?.difficulty ?? difficulty)
@@ -480,6 +489,7 @@ export function useWorkspaceGeneration({
             const effSettings =
               rowTypeSettings?.[typeId] ?? questionTypeSettings[typeId];
             for (let i = 0; i < repeat; i += 1) {
+              if (rowLocalId) attemptedLocalIds.add(rowLocalId);
               fastUnits.push({
                 passage: passageLike,
                 questionType: typeId,
@@ -488,6 +498,7 @@ export function useWorkspaceGeneration({
                 generationPlan: effPlan,
                 tempId: `fast:${item.passageId}:${typeId}:${runId}:${i}`,
                 progressKey: typeId,
+                localId: rowLocalId,
                 config: {
                   typeCounts: { [typeId]: 1 },
                   questionTypeSettings: {
@@ -504,6 +515,7 @@ export function useWorkspaceGeneration({
         } else if (effMode === "auto") {
           // 자동 생성 — 개별 유형 지정이 없어도 autoCount 만큼.
           if (autoCount === 1) {
+            if (rowLocalId) attemptedLocalIds.add(rowLocalId);
             fastUnits.push({
               passage: passageLike,
               questionType: undefined,
@@ -511,6 +523,7 @@ export function useWorkspaceGeneration({
               generationPlan: effPlan,
               tempId: `fast:${item.passageId}:${runId}:0`,
               progressKey: "auto",
+              localId: rowLocalId,
               config: {
                 typeCounts: {},
                 questionTypeSettings: {},
@@ -521,11 +534,13 @@ export function useWorkspaceGeneration({
               },
             });
           } else {
+            if (rowLocalId) attemptedLocalIds.add(rowLocalId);
             slowJobs.push({
               passage: passageLike,
               count: autoCount,
               difficulty: effDifficulty,
               generationPlan: effPlan,
+              localId: rowLocalId,
               config: {
                 typeCounts: {},
                 questionTypeSettings: {},
@@ -540,12 +555,14 @@ export function useWorkspaceGeneration({
           // 장문 세트 — 구성한 멤버로 세트를 생성한다(공용 '생성' 흐름).
           const members = item.row.override?.setMembers ?? [];
           if (members.length > 0) {
+            if (rowLocalId) attemptedLocalIds.add(rowLocalId);
             setJobs.push({
               passageId: item.passageId,
               title: item.title,
               members,
               structuralMode: deriveStructuralMode(members.map((m) => m.typeId)),
               generationPlan: effPlan,
+              localId: rowLocalId,
             });
           }
         }
@@ -624,6 +641,7 @@ export function useWorkspaceGeneration({
                 err instanceof Error
                   ? err.message
                   : "문제 생성에 실패했습니다.";
+              if (unit.localId) failedLocalIds.add(unit.localId);
               setSessionQueue((prev) =>
                 prev.map((q) =>
                   q.id === unit.tempId
@@ -667,6 +685,7 @@ export function useWorkspaceGeneration({
           success += 1;
         } catch (err) {
           failed += 1;
+          if (job.localId) failedLocalIds.add(job.localId);
           toast.error(
             err instanceof Error ? err.message : "문제 생성 작업 시작 실패",
           );
@@ -706,12 +725,22 @@ export function useWorkspaceGeneration({
             : job.members.length;
         } catch (err) {
           failed += 1;
+          if (job.localId) failedLocalIds.add(job.localId);
           toast.error(
             err instanceof Error
               ? `"${job.title}" ${err.message}`
               : "장문 세트 생성에 실패했습니다.",
           );
         }
+      }
+
+      // 생성을 제출한 워크스페이스 행 중 '성공'한 행만 비운다(워크스페이스는
+      // 스테이징 영역). 실패한 행은 그대로 남아 같은 조건으로 재시도할 수 있다.
+      const succeededLocalIds = [...attemptedLocalIds].filter(
+        (id) => !failedLocalIds.has(id),
+      );
+      if (succeededLocalIds.length > 0) {
+        api.removeRows(succeededLocalIds);
       }
 
       triggerRefresh();

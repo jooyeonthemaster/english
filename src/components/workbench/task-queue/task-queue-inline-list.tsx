@@ -43,7 +43,7 @@ import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
 } from "@/components/workbench/shared/view-mode-cycle-button";
-import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import {
   clearCardTextSelection,
   preventCardDoubleClickTextSelection,
@@ -687,12 +687,21 @@ function TaskGridCard({
             <CalendarClock className="size-3.5" aria-hidden="true" />
             {formatTaskDate(task.createdAt)}
           </span>
-          {renderActions ? (
+          {renderActions || canOpen ? (
             <div className="ml-auto flex items-center gap-1.5">
               {renderActions}
+              {canOpen ? (
+                <CardDetailIconButton
+                  className="size-7 rounded-md"
+                  iconClassName="size-3.5"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpen();
+                  }}
+                />
+              ) : null}
             </div>
           ) : null}
-          {canOpen ? <CardHoverActionLabel /> : null}
         </div>
       </div>
 
@@ -903,7 +912,14 @@ function TaskListRow({
       </span>
       {renderActions}
       {canOpen ? (
-        <CardHoverActionLabel className="bottom-1/2 right-3 translate-y-1/2" />
+        <CardDetailIconButton
+          className="size-7 rounded-md shadow-none"
+          iconClassName="size-3.5"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleOpen();
+          }}
+        />
       ) : null}
       {canDelete ? (
         <button

@@ -8,7 +8,7 @@ import { ACTIVE_STATUSES, TERMINAL_STATUSES } from "../constants";
 import type { BaseTask } from "../types";
 import { formatTaskDateParts } from "../utils/format";
 import { TaskStatusBadge } from "./task-status-badge";
-import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 
 export function TaskCard({
   task,
@@ -119,12 +119,34 @@ export function TaskCard({
           ) : null}
         </div>
         {dateParts ? (
-          <div className="mt-0.5 flex items-center justify-between gap-2 text-[12px] font-medium text-slate-900">
-            <span className="truncate">{dateParts.day}</span>
-            <span className="shrink-0 tabular-nums">{dateParts.time}</span>
+          <div className="mt-0.5 flex items-center gap-1.5">
+            <div className="flex min-w-0 flex-1 items-center justify-between gap-2 text-[12px] font-medium text-slate-900">
+              <span className="truncate">{dateParts.day}</span>
+              <span className="shrink-0 tabular-nums">{dateParts.time}</span>
+            </div>
+            {canOpen ? (
+              <CardDetailIconButton
+                className="size-6 rounded-md shadow-none"
+                iconClassName="size-3"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpen();
+                }}
+              />
+            ) : null}
+          </div>
+        ) : canOpen ? (
+          <div className="mt-0.5 flex justify-end">
+            <CardDetailIconButton
+              className="size-6 rounded-md shadow-none"
+              iconClassName="size-3"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpen();
+              }}
+            />
           </div>
         ) : null}
-        {canOpen ? <CardHoverActionLabel className="bottom-2 right-2" /> : null}
       </div>
     </article>
   );

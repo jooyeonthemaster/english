@@ -552,6 +552,27 @@ export function QuestionBankClient({
     setDetailLoading(false);
   }, []);
 
+  // 상세 → 수정 진입 여부. true 일 때만 수정 모달에 '뒤로' 버튼을 노출한다.
+  const [editorCameFromDetail, setEditorCameFromDetail] = useState(false);
+
+  // 상세 보기 우측 상단 '문제 수정' → 상세를 닫고 수정 모달을 연다.
+  const openEditorFromDetail = useCallback(
+    (id: string) => {
+      closeDetail();
+      setEditorCameFromDetail(true);
+      editor.openEditor(id);
+    },
+    [closeDetail, editor],
+  );
+
+  // 수정 모달 '뒤로' → 수정을 닫고 같은 문제의 상세로 복귀한다.
+  const backToDetail = useCallback(() => {
+    const id = editor.editingQuestionId;
+    setEditorCameFromDetail(false);
+    editor.closeEditor();
+    if (id) void openDetail(id);
+  }, [editor, openDetail]);
+
   // ─── Question Actions ───
   async function handleDelete(id: string) {
     if (!confirm("이 문제를 삭제하시겠습니까?")) return;
@@ -1257,6 +1278,7 @@ export function QuestionBankClient({
         onApprove={handleApprove}
         onUnapprove={handleUnapprove}
         onDelete={handleDelete}
+        onEdit={openEditorFromDetail}
       />
 
       {sourceAnalysis ? (
@@ -1269,16 +1291,22 @@ export function QuestionBankClient({
       <EditQuestionDialog
         open={editor.editDialogOpen}
         onOpenChange={(open) => {
-          if (!open) editor.closeEditor();
-          else editor.setEditDialogOpen(true);
+          if (!open) {
+            setEditorCameFromDetail(false);
+            editor.closeEditor();
+          } else editor.setEditDialogOpen(true);
         }}
         loading={editor.questionLoading}
         loadError={editor.questionLoadError}
         editingQuestion={editor.editingQuestion}
         editingQuestionId={editor.editingQuestionId}
-        onClose={editor.closeEditor}
+        onClose={() => {
+          setEditorCameFromDetail(false);
+          editor.closeEditor();
+        }}
         onDeleted={editor.handleEditorDeleted}
         onRetry={editor.openEditor}
+        onBack={editorCameFromDetail ? backToDetail : undefined}
       />
 
       <AlertDialog

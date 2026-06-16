@@ -32,7 +32,7 @@ import {
   sanitizeAiModelDisclosureText,
 } from "@/lib/question-generation-plans";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
-import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import {
   clearCardTextSelection,
   preventCardDoubleClickTextSelection,
@@ -582,18 +582,29 @@ export const PassageQueueCard = memo(function PassageQueueCard({
         <AnalysisMiniSummary data={passage.analysisData} />
       )}
 
-      {/* Questions count */}
-      {questionsCount > 0 && (
-        <div className="mt-2 flex items-center gap-1">
-          <LayoutList className="w-3 h-3 text-slate-400" />
-          <span className="text-[10px] text-slate-400 font-medium">
-            문제 {questionsCount}개
-          </span>
+      {(questionsCount > 0 || passage.status === "done") && (
+        <div className="mt-2 flex items-center gap-2">
+          <div className="min-w-0 flex flex-1 items-center gap-1">
+            {questionsCount > 0 ? (
+              <>
+                <LayoutList className="w-3 h-3 text-slate-400" />
+                <span className="text-[10px] text-slate-400 font-medium">
+                  문제 {questionsCount}개
+                </span>
+              </>
+            ) : null}
+          </div>
+          {passage.status === "done" ? (
+            <CardDetailIconButton
+              className="size-7 rounded-md"
+              iconClassName="size-3.5"
+              onClick={(e) => {
+                e.stopPropagation();
+                onViewDetail(passage.id);
+              }}
+            />
+          ) : null}
         </div>
-      )}
-
-      {passage.status === "done" && (
-        <CardHoverActionLabel className="bottom-2 right-3" />
       )}
     </div>
   );

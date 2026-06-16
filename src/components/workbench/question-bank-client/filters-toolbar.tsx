@@ -3,7 +3,6 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  ArrowUpDown,
   ChevronDown,
   ChevronRight,
   ListFilter,
@@ -17,13 +16,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { TYPE_SUBTYPE_MAP } from "../question-type-filter";
 
 interface Filters {
@@ -42,6 +34,8 @@ interface Props {
   onSearchSubmit: () => void;
   updateFilter: (key: string, value: string) => void;
   updateFilters: (updates: Record<string, string>) => void;
+  /** 필터 팝오버 맨 위에 끼워 넣을 추가 컨트롤(전체 선택·검수 상태·보기 등). */
+  popoverExtra?: React.ReactNode;
 }
 
 export function QuestionFiltersToolbar({
@@ -51,6 +45,7 @@ export function QuestionFiltersToolbar({
   onSearchSubmit,
   updateFilter,
   updateFilters,
+  popoverExtra,
 }: Props) {
   const currentSubTypes = filters.subType?.split(",").filter(Boolean) || [];
 
@@ -153,6 +148,12 @@ export function QuestionFiltersToolbar({
         </PopoverTrigger>
         <PopoverContent align="end" className="w-72 p-0">
           <div className="flex max-h-[70vh] flex-col gap-3 overflow-y-auto p-3">
+            {/* 외부에서 끼워 넣은 추가 컨트롤(전체 선택·검수 상태·보기) */}
+            {popoverExtra ? (
+              <div className="flex flex-col gap-2 border-b border-slate-100 pb-3">
+                {popoverExtra}
+              </div>
+            ) : null}
             {/* 유형 */}
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
@@ -249,50 +250,82 @@ export function QuestionFiltersToolbar({
               </div>
             </div>
 
-            {/* 난이도 */}
+            {/* 난이도 — 토글 버튼 그룹 */}
             <div className="flex flex-col gap-1.5">
               <label className="text-[11px] font-medium text-slate-600">
                 난이도
               </label>
-              <Select
-                value={filters.difficulty || "ALL"}
-                onValueChange={(v) => updateFilter("difficulty", v)}
-              >
-                <SelectTrigger className="h-8 w-full px-2.5 text-[12px]">
-                  <SelectValue placeholder="난이도" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="ALL">전체 난이도</SelectItem>
-                  <SelectItem value="BASIC">기본</SelectItem>
-                  <SelectItem value="INTERMEDIATE">중급</SelectItem>
-                  <SelectItem value="KILLER">킬러</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex flex-wrap gap-1.5">
+                {(
+                  [
+                    { value: "ALL", label: "전체" },
+                    { value: "BASIC", label: "기본" },
+                    { value: "INTERMEDIATE", label: "중급" },
+                    { value: "KILLER", label: "킬러" },
+                  ] as const
+                ).map((opt) => {
+                  const active = (filters.difficulty || "ALL") === opt.value;
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => updateFilter("difficulty", opt.value)}
+                      className={`flex h-7 items-center rounded-md border px-2.5 text-[11px] font-medium transition-colors ${
+                        active
+                          ? "border-slate-800 bg-slate-800 text-white"
+                          : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* 정렬 */}
+            {/* 정렬 — 토글 버튼 그룹 */}
             <div className="flex flex-col gap-1.5">
               <label className="text-[11px] font-medium text-slate-600">
                 정렬
               </label>
-              <Select
-                value={filters.sort || "newest"}
-                onValueChange={(v) =>
-                  updateFilter("sort", v === "newest" ? "ALL" : v)
-                }
-              >
-                <SelectTrigger className="h-8 w-full px-2.5 text-[12px]">
-                  <ArrowUpDown className="mr-1 size-3 shrink-0" />
-                  <SelectValue placeholder="정렬" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="newest">최신순</SelectItem>
-                  <SelectItem value="oldest">오래된순</SelectItem>
-                  <SelectItem value="difficulty_desc">난이도 높은순</SelectItem>
-                  <SelectItem value="difficulty_asc">난이도 낮은순</SelectItem>
-                  <SelectItem value="starred">중요 문제 먼저</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex flex-wrap gap-1.5">
+                {(
+                  [
+                    { value: "newest", label: "최신순" },
+                    { value: "oldest", label: "오래된순" },
+                    { value: "difficulty_desc", label: "난이도 높은순" },
+                    { value: "difficulty_asc", label: "난이도 낮은순" },
+                    { value: "starred", label: "중요 먼저" },
+                  ] as const
+                ).map((opt) => {
+                  const currentSort =
+                    !filters.sort || filters.sort === "ALL"
+                      ? "newest"
+                      : filters.sort;
+                  const active = currentSort === opt.value;
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() =>
+                        updateFilter(
+                          "sort",
+                          opt.value === "newest" ? "ALL" : opt.value,
+                        )
+                      }
+                      className={`flex h-7 items-center rounded-md border px-2.5 text-[11px] font-medium transition-colors ${
+                        active
+                          ? "border-slate-800 bg-slate-800 text-white"
+                          : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {/* 중요 */}

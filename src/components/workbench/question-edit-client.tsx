@@ -20,6 +20,7 @@ import {
   updateWorkbenchQuestion,
   deleteWorkbenchQuestion,
   approveWorkbenchQuestion,
+  unapproveWorkbenchQuestion,
 } from "@/actions/workbench";
 import {
   getQuestionGenerationPlanFromTags,
@@ -97,6 +98,7 @@ interface QuestionEditProps {
   onDeleted?: (questionId: string) => void;
   onSaved?: () => void;
   onApproved?: () => void;
+  onBack?: () => void;
 }
 
 function safeParseJSON<T>(str: unknown, fallback: T): T {
@@ -117,6 +119,7 @@ export function QuestionEditClient({
   onDeleted,
   onSaved,
   onApproved,
+  onBack,
 }: QuestionEditProps) {
   const router = useRouter();
   const isModal = mode === "modal";
@@ -273,6 +276,16 @@ export function QuestionEditClient({
     } else toast.error(r.error || "승인 실패");
   }
 
+  async function handleUnapprove() {
+    const r = await unapproveWorkbenchQuestion(question.id);
+    if (r.success) {
+      toast.success("검수 취소됨");
+      setApproved(false);
+      router.refresh();
+      onApproved?.();
+    } else toast.error(r.error || "검수 취소 실패");
+  }
+
   const passageAnalysis = safeParseJSON<PassageAnalysisData | null>(
     question.passage?.analysis?.analysisData,
     null,
@@ -287,6 +300,7 @@ export function QuestionEditClient({
       <EditHeader
         isModal={isModal}
         onClose={requestClose}
+        onBack={onBack}
         approved={approved}
         aiGenerated={question.aiGenerated}
         type={type}
@@ -297,6 +311,7 @@ export function QuestionEditClient({
         setDifficulty={setDifficulty}
         onDelete={handleDelete}
         onApprove={handleApprove}
+        onUnapprove={handleUnapprove}
         onSave={handleSave}
         saving={saving}
         deleting={deleting}

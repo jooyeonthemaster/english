@@ -32,6 +32,14 @@ export interface PassageItem {
   school: { id: string; name: string } | null;
   content: string;
   analysis?: { id?: string; analysisData: string; updatedAt?: string | Date } | null;
+  // 이 지문으로 생성된 학습자료(A4 보고서) 목록 — 지문 카드 하단 토글에 사용.
+  reports?: {
+    id: string;
+    title: string;
+    status: string;
+    templateId: string | null;
+    updatedAt?: string | Date;
+  }[];
   extractionReviewDraft?: {
     id: string;
     savedPassageId: string | null;

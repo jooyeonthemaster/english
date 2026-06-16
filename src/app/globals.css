@@ -1346,3 +1346,388 @@
   content: "...";
   animation: smoat-loading-dots 1.6s steps(1, end) infinite;
 }
+
+/* ============================================================================
+   전역 대형 UI 기준 — 문제생성 화면에서 맞춘 큰 글자/버튼 스케일을
+   전체 앱으로 확장한다. 기존 컴포넌트의 촘촘한 Tailwind 폰트/버튼
+   유틸리티를 한 단계 키우되, 인터랙티브 컨트롤은 최소 크기 중심으로
+   보강해 텍스트가 영역 밖으로 튀는 상황을 줄인다.
+   ============================================================================ */
+body.smoat-large-ui {
+  font-size: 20px;
+  --smoat-large-ui-line: 1.35;
+}
+
+body.smoat-large-ui :where(.text-\[6px\]) {
+  font-size: 7.75px !important;
+}
+
+body.smoat-large-ui :where(.text-\[7px\]) {
+  font-size: 8.75px !important;
+}
+
+body.smoat-large-ui :where(.text-\[7\.5px\]) {
+  font-size: 9.25px !important;
+}
+
+body.smoat-large-ui :where(.text-\[8px\]) {
+  font-size: 10px !important;
+}
+
+body.smoat-large-ui :where(.text-\[8\.5px\]) {
+  font-size: 10.75px !important;
+}
+
+body.smoat-large-ui :where(.text-\[9px\]) {
+  font-size: 11.75px !important;
+}
+
+body.smoat-large-ui :where(.text-\[9\.5px\]) {
+  font-size: 12.25px !important;
+}
+
+body.smoat-large-ui :where(.text-\[10px\]) {
+  font-size: 13px !important;
+}
+
+body.smoat-large-ui :where(.text-\[10\.5px\]) {
+  font-size: 13.5px !important;
+}
+
+body.smoat-large-ui :where(.text-\[11px\]) {
+  font-size: 14px !important;
+}
+
+body.smoat-large-ui :where(.text-\[11\.5px\]) {
+  font-size: 15px !important;
+}
+
+body.smoat-large-ui :where(.text-\[12px\]),
+body.smoat-large-ui :where(.text-xs) {
+  font-size: 15.5px !important;
+}
+
+body.smoat-large-ui :where(.text-\[12\.5px\]) {
+  font-size: 16px !important;
+}
+
+body.smoat-large-ui :where(.text-\[13px\]) {
+  font-size: 17px !important;
+}
+
+body.smoat-large-ui :where(.text-\[13\.5px\]) {
+  font-size: 17.5px !important;
+}
+
+body.smoat-large-ui :where(.text-\[14px\]),
+body.smoat-large-ui :where(.text-sm) {
+  font-size: 18px !important;
+}
+
+body.smoat-large-ui :where(.text-\[14\.5px\]) {
+  font-size: 18.75px !important;
+}
+
+body.smoat-large-ui :where(.text-\[15px\]) {
+  font-size: 19.5px !important;
+}
+
+body.smoat-large-ui :where(.text-\[15\.5px\]) {
+  font-size: 20px !important;
+}
+
+body.smoat-large-ui :where(.text-\[16px\]),
+body.smoat-large-ui :where(.text-base) {
+  font-size: 20.5px !important;
+}
+
+body.smoat-large-ui :where(.text-\[17px\]) {
+  font-size: 22px !important;
+}
+
+body.smoat-large-ui :where(.text-\[18px\]),
+body.smoat-large-ui :where(.text-lg) {
+  font-size: 23px !important;
+}
+
+body.smoat-large-ui :where(.text-\[19px\]) {
+  font-size: 24px !important;
+}
+
+body.smoat-large-ui :where(.text-\[20px\]) {
+  font-size: 25.5px !important;
+}
+
+body.smoat-large-ui :where(.text-\[21px\]) {
+  font-size: 26.75px !important;
+}
+
+body.smoat-large-ui :where(.text-\[22px\]) {
+  font-size: 28px !important;
+}
+
+body.smoat-large-ui :where(.text-\[23px\]) {
+  font-size: 29px !important;
+}
+
+body.smoat-large-ui :where(.text-\[24px\]),
+body.smoat-large-ui :where(.text-2xl) {
+  font-size: 30px !important;
+}
+
+body.smoat-large-ui :where(.text-xl) {
+  font-size: 26px !important;
+}
+
+body.smoat-large-ui :where(button, [role="button"], input, textarea, select) {
+  line-height: var(--smoat-large-ui-line);
+}
+
+body.smoat-large-ui :where(button, [role="button"]) {
+  max-width: 100%;
+  min-width: 0;
+}
+
+body.smoat-large-ui :where(button.h-6, [role="button"].h-6, input.h-6, select.h-6) {
+  min-height: 1.9rem !important;
+}
+
+body.smoat-large-ui :where(button.h-7, [role="button"].h-7, input.h-7, select.h-7) {
+  min-height: 2.25rem !important;
+}
+
+body.smoat-large-ui :where(button.h-8, [role="button"].h-8, input.h-8, select.h-8) {
+  min-height: 2.6rem !important;
+}
+
+body.smoat-large-ui :where(button.h-9, [role="button"].h-9, input.h-9, select.h-9) {
+  min-height: 2.9rem !important;
+}
+
+body.smoat-large-ui :where(button.h-10, [role="button"].h-10, input.h-10, select.h-10) {
+  min-height: 3.25rem !important;
+}
+
+body.smoat-large-ui :where(button.h-11, [role="button"].h-11, input.h-11, select.h-11) {
+  min-height: 3.55rem !important;
+}
+
+body.smoat-large-ui :where(button.h-12, [role="button"].h-12, input.h-12, select.h-12) {
+  min-height: 3.9rem !important;
+}
+
+body.smoat-large-ui :where(button.w-5, [role="button"].w-5) {
+  min-width: 1.65rem !important;
+}
+
+body.smoat-large-ui :where(button.w-6, [role="button"].w-6) {
+  min-width: 1.9rem !important;
+}
+
+body.smoat-large-ui :where(button.w-7, [role="button"].w-7) {
+  min-width: 2.25rem !important;
+}
+
+body.smoat-large-ui :where(button.w-8, [role="button"].w-8) {
+  min-width: 2.6rem !important;
+}
+
+body.smoat-large-ui :where(button.w-9, [role="button"].w-9) {
+  min-width: 2.9rem !important;
+}
+
+body.smoat-large-ui :where(button.w-10, [role="button"].w-10) {
+  min-width: 3.25rem !important;
+}
+
+body.smoat-large-ui :where(button.size-6, [role="button"].size-6) {
+  height: 1.9rem !important;
+  min-width: 1.9rem !important;
+  width: 1.9rem !important;
+}
+
+body.smoat-large-ui :where(button.size-7, [role="button"].size-7) {
+  height: 2.25rem !important;
+  min-width: 2.25rem !important;
+  width: 2.25rem !important;
+}
+
+body.smoat-large-ui :where(button.size-8, [role="button"].size-8) {
+  height: 2.6rem !important;
+  min-width: 2.6rem !important;
+  width: 2.6rem !important;
+}
+
+body.smoat-large-ui :where(button.size-9, [role="button"].size-9) {
+  height: 2.9rem !important;
+  min-width: 2.9rem !important;
+  width: 2.9rem !important;
+}
+
+body.smoat-large-ui :where(button.size-10, [role="button"].size-10) {
+  height: 3.25rem !important;
+  min-width: 3.25rem !important;
+  width: 3.25rem !important;
+}
+
+body.smoat-large-ui :where(svg.size-2\.5) {
+  height: 0.8rem !important;
+  width: 0.8rem !important;
+}
+
+body.smoat-large-ui :where(svg.size-3, svg.h-3) {
+  height: 0.95rem !important;
+}
+
+body.smoat-large-ui :where(svg.size-3, svg.w-3) {
+  width: 0.95rem !important;
+}
+
+body.smoat-large-ui :where(svg.h-3\.5) {
+  height: 1.05rem !important;
+}
+
+body.smoat-large-ui :where(svg.w-3\.5) {
+  width: 1.05rem !important;
+}
+
+body.smoat-large-ui :where(svg.size-4, svg.h-4) {
+  height: 1.25rem !important;
+}
+
+body.smoat-large-ui :where(svg.size-4, svg.w-4) {
+  width: 1.25rem !important;
+}
+
+body.smoat-large-ui :where(svg.size-5, svg.h-5) {
+  height: 1.55rem !important;
+}
+
+body.smoat-large-ui :where(svg.size-5, svg.w-5) {
+  width: 1.55rem !important;
+}
+
+body.smoat-large-ui :where(svg.size-6, svg.h-6) {
+  height: 1.85rem !important;
+}
+
+body.smoat-large-ui :where(svg.size-6, svg.w-6) {
+  width: 1.85rem !important;
+}
+
+/* 출력물/문서 미리보기는 실제 종이 비율이 중요하므로 전역 UI 확대에서 제외한다. */
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) {
+  font-size: 16px;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[6px\]) {
+  font-size: 6px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[7px\]) {
+  font-size: 7px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[7\.5px\]) {
+  font-size: 7.5px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[8px\]) {
+  font-size: 8px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[8\.5px\]) {
+  font-size: 8.5px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[9px\]) {
+  font-size: 9px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[9\.5px\]) {
+  font-size: 9.5px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[10px\]) {
+  font-size: 10px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[10\.5px\]) {
+  font-size: 10.5px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[11px\]) {
+  font-size: 11px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[11\.5px\]) {
+  font-size: 11.5px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[12px\]) {
+  font-size: 12px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-xs) {
+  font-size: 0.75rem !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[12\.5px\]) {
+  font-size: 12.5px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[13px\]) {
+  font-size: 13px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[13\.5px\]) {
+  font-size: 13.5px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[14px\]) {
+  font-size: 14px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-sm) {
+  font-size: 0.875rem !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[14\.5px\]) {
+  font-size: 14.5px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[15px\]) {
+  font-size: 15px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[15\.5px\]) {
+  font-size: 15.5px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[16px\]) {
+  font-size: 16px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-base) {
+  font-size: 1rem !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[17px\]) {
+  font-size: 17px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-\[18px\]) {
+  font-size: 18px !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-lg) {
+  font-size: 1.125rem !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-xl) {
+  font-size: 1.25rem !important;
+}
+
+body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-2xl) {
+  font-size: 1.5rem !important;
+}

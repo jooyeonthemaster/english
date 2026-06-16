@@ -6,7 +6,7 @@ import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/op
 import { getVisibleQuestionTags } from "@/lib/question-generation-plans";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 import { normalizePassageWhitespace } from "@/lib/question-postprocess/text-utils";
-import { OptionList } from "./question-renderer-primitives";
+import { OptionList, AnswerRevealContext } from "./question-renderer-primitives";
 import { CustomLayoutRenderer } from "./custom-layout-renderer";
 import {
   BlankInferenceRenderer,
@@ -46,12 +46,16 @@ export function StructuredQuestionRenderer({
   index,
   hideHeader = false,
   sourcePassageContent,
+  answerRevealMode = "default",
 }: {
   question: any;
   index: number;
   /** QuestionCard 내부에서 호출될 때 true — 외부 카드가 이미 헤더를 표시하므로 중복 방지 */
   hideHeader?: boolean;
   sourcePassageContent?: string;
+  /** 답안·해설 노출 방식 (AnswerRevealContext). "show-all"=토글 없이 즉시 노출,
+   *  "as-explanation"=단일 '해설 보기' 토글로 밑줄분석·정답·해설을 모두 감쌈. */
+  answerRevealMode?: "default" | "show-all" | "as-explanation";
 }) {
   const questionForRender = enrichQuestionForDisplay(question, sourcePassageContent);
   const typeId = questionForRender._typeId as string | undefined;
@@ -65,6 +69,7 @@ export function StructuredQuestionRenderer({
   const isStructured = typeId && hasStructuredFields(typeId, questionForRender);
 
   return (
+    <AnswerRevealContext.Provider value={answerRevealMode}>
     <div className={hideHeader ? "space-y-3" : "p-4 rounded-lg border border-slate-200 bg-white space-y-3"}>
       {/* Header — 외부 카드가 헤더를 제공할 때 숨김 */}
       {!hideHeader && (
@@ -116,6 +121,7 @@ export function StructuredQuestionRenderer({
         <FallbackRenderer question={questionForRender} />
       )}
     </div>
+    </AnswerRevealContext.Provider>
   );
 }
 

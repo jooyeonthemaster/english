@@ -597,9 +597,9 @@ export function GenerateUploadPanel({
     },
   ];
   const controlRowClass =
-    "flex shrink-0 items-center gap-3 border-b border-slate-100 px-4 py-2.5";
+    "flex h-11 shrink-0 items-center gap-3 border-b border-slate-100 px-3";
   const controlLabelClass =
-    "w-[64px] shrink-0 text-[11px] font-bold text-slate-600";
+    "w-[128px] shrink-0 text-[12.5px] font-bold text-slate-700";
 
   // 검수 패널 하단에 고정되는 시작 버튼(보드 footer로 주입).
   const fileStartArea = (
@@ -652,7 +652,7 @@ export function GenerateUploadPanel({
       data-generate-tour="output-mode"
     >
       <span className={controlLabelClass}>출력 방식</span>
-      <div className="inline-flex h-9 items-center rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+      <div className="flex shrink-0 items-center gap-1">
         {outputModeOptions.map((opt) => {
           const active = outputMode === opt.v;
           return (
@@ -664,23 +664,12 @@ export function GenerateUploadPanel({
               aria-pressed={active}
               data-generate-tour={`output-mode-${opt.v}`}
               className={
-                "inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-[11.5px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
+                "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
                 (active
-                  ? "bg-white text-blue-700 shadow-sm ring-1 ring-blue-100"
-                  : "cursor-pointer text-slate-500 hover:text-slate-700")
+                  ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
+                  : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")
               }
             >
-              <span
-                className={
-                  "inline-flex size-3 shrink-0 items-center justify-center rounded-full border " +
-                  (active ? "border-blue-600" : "border-slate-300")
-                }
-                aria-hidden="true"
-              >
-                {active ? (
-                  <span className="size-1.5 rounded-full bg-blue-600" />
-                ) : null}
-              </span>
               {opt.label}
               <span
                 className={
@@ -787,16 +776,14 @@ export function GenerateUploadPanel({
 
   return (
     <section className="flex h-full min-h-0 flex-col overflow-hidden">
-      <div className={controlRowClass + " justify-between"}>
-        <div className="flex flex-wrap items-center gap-2">
-          {inFlightCount > 0 ? (
-            <span className="inline-flex items-center gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-semibold text-blue-700">
-              <Loader2 className="size-3 animate-spin" aria-hidden="true" />
-              추출 중 {inFlightCount}건
-            </span>
-          ) : null}
-        </div>
+      <div className={controlRowClass}>
         <div className="min-w-0">{outputModeToggle}</div>
+        {inFlightCount > 0 ? (
+          <span className="inline-flex items-center gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-semibold text-blue-700">
+            <Loader2 className="size-3 animate-spin" aria-hidden="true" />
+            추출 중 {inFlightCount}건
+          </span>
+        ) : null}
       </div>
 
       {error ? (

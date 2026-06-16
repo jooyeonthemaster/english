@@ -19,7 +19,7 @@ import {
 import { isDraftAnalysisComplete } from "../utils/analysis-status";
 import { getDraftDisplayTitle } from "../utils/title";
 import { RestorationBadge } from "./restoration-badge";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import { DragHandle } from "@/components/ui/drag-handle";
 import {
   clearCardTextSelection,
@@ -423,7 +423,9 @@ export function DraftCard({
         {preview || "추출된 본문이 비어있습니다."}
       </p>
       <div className="mt-auto flex justify-end pt-1">
-        <DetailActionButton
+        <CardDetailIconButton
+          className="size-7 rounded-md"
+          iconClassName="size-3.5"
           onClick={(e) => {
             e.stopPropagation();
             onClick();

@@ -3,12 +3,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { Calendar, Check, Eye, FileSearch, PencilLine, Trash2 } from "lucide-react";
+import { Calendar, Check, FileSearch, PencilLine, Trash2 } from "lucide-react";
 import { cn, formatDate } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { STATUS_COLORS, STATUS_LABELS, TYPE_COLORS, TYPE_LABELS } from "./constants";
 import type { ExamItem } from "./types";
 import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import {
   clearCardTextSelection,
   preventCardDoubleClickTextSelection,
@@ -193,14 +194,11 @@ export function ExamListRow({
         >
           <PencilLine className="w-3.5 h-3.5 text-blue-500" />
         </button>
-        <button
+        <CardDetailIconButton
+          className="size-7 rounded-md shadow-none"
+          iconClassName="size-3.5"
           onClick={() => onClick(exam.id)}
-          title="상세 보기"
-          aria-label="상세 보기"
-          className="w-7 h-7 rounded-md flex items-center justify-center hover:bg-slate-100 transition-colors"
-        >
-          <Eye className="w-3.5 h-3.5 text-slate-400" />
-        </button>
+        />
         {exam.status === "DRAFT" && (
           <button
             onClick={() => onDelete(exam.id)}

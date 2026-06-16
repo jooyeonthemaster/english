@@ -24,6 +24,8 @@ interface Props {
   onRetry: (id: string) => void;
   onSaved?: () => void;
   onApproved?: () => void;
+  /** 상세 보기에서 들어온 경우에만 전달 — 헤더에 '뒤로' 버튼을 노출한다. */
+  onBack?: () => void;
 }
 
 export function EditQuestionDialog({
@@ -38,11 +40,12 @@ export function EditQuestionDialog({
   onRetry,
   onSaved,
   onApproved,
+  onBack,
 }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-[1920px] gap-0 overflow-hidden rounded-2xl border-slate-200 bg-[#F8FAFB] p-0 shadow-2xl sm:max-w-[1920px]"
+        className="h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] max-w-[1680px] gap-0 overflow-hidden rounded-2xl border-slate-200 bg-[#F8FAFB] p-0 shadow-2xl sm:max-w-[1680px]"
         showCloseButton={false}
         onEscapeKeyDown={(e) => e.preventDefault()}
         onInteractOutside={(e) => e.preventDefault()}
@@ -83,6 +86,7 @@ export function EditQuestionDialog({
             onDeleted={onDeleted}
             onSaved={onSaved}
             onApproved={onApproved}
+            onBack={onBack}
           />
         ) : null}
       </DialogContent>

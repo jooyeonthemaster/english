@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import {
   Cpu,
   FileText,
@@ -1421,7 +1422,7 @@ export function GenerationConfigPanel({
                 {(["STANDARD", "PREMIUM"] as const).map((planId) => {
                   const plan = QUESTION_GENERATION_PLANS[planId];
                   const active = generationPlan === planId;
-                  const Icon = planId === "PREMIUM" ? Gem : Sparkles;
+                  const Icon = planId === "PREMIUM" ? Gem : PearlIcon;
                   return (
                     <button
                       key={planId}
