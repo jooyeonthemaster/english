@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
+import { normalizeStructuredQuestionForDisplay } from "@/components/exams/paper-builder/render-model";
 import { formatVocabChoiceCorrectAnswer } from "@/lib/question-answer-display";
 import { getVisibleQuestionTags } from "@/lib/question-generation-plans";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
@@ -163,6 +164,12 @@ function enrichQuestionForDisplay(question: any, rawSourcePassageContent?: strin
     questionWithAlignedExplanations,
   );
   normalizedQuestion = repairVocabChoiceForDisplay(
+    normalizedQuestion,
+    sourcePassageContent,
+  );
+  // 마커 유형(어법·어휘·반의어)은 시험지와 동일한 출현순 정본화를 structured 필드
+  // 위에서 수행한다(렌더러/모달/분석블록은 그대로 — 순서·라벨·정답·보기순서만 정본화).
+  normalizedQuestion = normalizeStructuredQuestionForDisplay(
     normalizedQuestion,
     sourcePassageContent,
   );

@@ -50,7 +50,10 @@ import {
   shouldIgnoreCardSelectionClick,
   useDeferredCardSelectionClick,
 } from "./shared/card-click";
-import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
+import {
+  optionDisplayTextForSubtype,
+  shouldRenderOptionListForSubtype,
+} from "@/components/exams/paper-builder/option-display";
 
 // ─── Constants ───────────────────────────────────────────
 
@@ -516,6 +519,8 @@ export function QuestionCard({
   const needsUnderline = UNDERLINE_TYPES.includes(sub);
   const showMarkers =
     UNDERLINE_TYPES.includes(sub) || MARKER_ONLY_TYPES.includes(sub);
+  // 지문 마커형(어법·어휘·삽입·무관)은 시험지와 동일하게 하단 보기 리스트 숨김.
+  const hideOptionList = !shouldRenderOptionListForSubtype(sub);
   const tags: string[] = Array.isArray(q.tags)
     ? q.tags
     : parseJSON<string[]>(q.tags, []);
@@ -857,7 +862,8 @@ export function QuestionCard({
               </div>
 
               {/* Options */}
-              {options.length > 0 &&
+              {!hideOptionList &&
+                options.length > 0 &&
                 (() => {
                   const MAX_COMPACT_OPTIONS = 3;
                   const allEntries = options.map((opt, idx) => ({
