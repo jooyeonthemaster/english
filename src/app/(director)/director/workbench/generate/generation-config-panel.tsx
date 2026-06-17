@@ -1418,6 +1418,56 @@ export function GenerationConfigPanel({
               />
             </button>
           </div>
+
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[12px] font-bold text-slate-800">
+                  출제 포인트 집중
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  {blankSettings.pointFocus ? "핵심 논리 집중" : "폭넓게 출제"}
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  인과·개념명명·재진술·대조
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                켜면 정답을 기출 최빈출 추론 논리(인과·기제, 추상 개념 명명,
+                재진술·환언, 대조 전환)에 집중합니다. 끄면 다양한 논리로 폭넓게
+                출제합니다.
+              </p>
+              {blankSettings.pointFocus ? (
+                <p className="mt-1 text-[10px] leading-snug text-amber-600">
+                  ⚠️ 집중 모드는 출제 논리를 좁히므로, 같은 지문에서 많은 문항을
+                  생성하면 중복 가능성이 높아집니다.
+                </p>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!!blankSettings.pointFocus}
+              onClick={() =>
+                updateBlankSetting({
+                  pointFocus: !blankSettings.pointFocus,
+                })
+              }
+              className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors ${
+                blankSettings.pointFocus
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  blankSettings.pointFocus ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
         </div>
       );
     }

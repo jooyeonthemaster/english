@@ -8,6 +8,7 @@ import {
   GRAMMAR_POINT_CATALOG,
   type GrammarPointCode,
 } from "@/lib/grammar-point-catalog";
+import { buildBlankPointGuidance } from "@/lib/blank-point-catalog";
 import { splitPassageSentences as splitSharedPassageSentences } from "@/lib/passage-sentence-utils";
 import { sentenceInsertOptionMarkerIndex } from "@/lib/sentence-insert-options";
 
@@ -1757,26 +1758,30 @@ function buildBlankInferenceCandidateBlock(
     requestedDifficulty?: string;
   } = {},
 ): string {
-  if (options.paraphraseAnswer) {
-    return buildBlankParaphraseCandidateBlock(
-      passage,
-      options.requestedDifficulty,
-      diversity,
-    );
-  }
+  // 출제 포인트 집중(focus) 가이드 — 정답 형태(환언/이중부정/표준)와 직교하는
+  // "정답논리 축"이라 모드 무관하게 후보 블록 앞에 1회 주입한다. pointFocus 미지정
+  // 이면 "" 반환이라 기존(비-focus) 동작 불변.
+  const pointGuidance = buildBlankPointGuidance({
+    variantIndex: diversity?.variantIndex,
+    pointFocus: diversity?.pointFocus,
+    diversityEnabled: diversity?.diversityEnabled,
+  });
 
-  if (options.doubleNegative) {
-    return buildNegativeBlankInferenceCandidateBlock(
-      passage,
-      diversity,
-    );
-  }
+  const block = options.paraphraseAnswer
+    ? buildBlankParaphraseCandidateBlock(
+        passage,
+        options.requestedDifficulty,
+        diversity,
+      )
+    : options.doubleNegative
+      ? buildNegativeBlankInferenceCandidateBlock(passage, diversity)
+      : buildStandardBlankInferenceCandidateBlock(
+          passage,
+          options.requestedDifficulty,
+          diversity,
+        );
 
-  return buildStandardBlankInferenceCandidateBlock(
-    passage,
-    options.requestedDifficulty,
-    diversity,
-  );
+  return [pointGuidance, block].filter(Boolean).join("\n\n");
 }
 
 function buildNegativeBlankInferenceCandidateBlock(

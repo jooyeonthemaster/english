@@ -37,6 +37,12 @@ export interface BlankInferenceGenerationSettings
    * to the single-blank mode.
    */
   blankCount?: number;
+  /**
+   * 핵심 집중 모드 — true 면 정답이 빈칸에서 완성하는 추론 논리를 기출 716문항 LLM
+   * 검증 고빈출 코어(인과·개념명명·재진술·대조전환 + 보조 전체주제문)로 좁힌다.
+   * false/미지정이면 기존 동작. 기본 false.
+   */
+  pointFocus?: boolean;
 }
 
 export interface IrrelevantGenerationSettings
@@ -963,6 +969,8 @@ export interface ResolvedQuestionTypeGenerationSettings {
   blankInferenceDoubleNegative?: boolean;
   /** True when the correct blank option must be a non-verbatim paraphrase. */
   blankInferenceParaphraseAnswer?: boolean;
+  /** 빈칸 핵심 집중 모드 — 정답논리를 검증 고빈출 코어로 좁힘. */
+  blankPointFocus?: boolean;
   /** Resolved option count for free-text option types (TOPIC/TITLE/...). */
   genericOptionCount?: number;
   /** Resolved correct-answer count for free-text option types. */
@@ -1190,10 +1198,16 @@ export function resolveQuestionTypeGenerationSettings(
       blankInferenceBlankCount === 1 &&
       isRecord(rawSettings) &&
       rawSettings.doubleNegative === true;
+    const blankPointFocus = readBooleanSetting(
+      rawSettings,
+      "BLANK_INFERENCE",
+      "pointFocus",
+    );
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         blankCount: blankInferenceBlankCount,
         paraphraseAnswer: blankInferenceParaphraseAnswer,
+        pointFocus: blankPointFocus,
       }),
       ...languageSettings,
       blankInferenceBlankCount,
@@ -1202,6 +1216,7 @@ export function resolveQuestionTypeGenerationSettings(
       blankInferenceDoubleNegative,
       blankInferenceParaphraseAnswer:
         blankInferenceParaphraseAnswer && !blankInferenceDoubleNegative,
+      blankPointFocus,
     };
   }
 
