@@ -192,3 +192,34 @@ export function buildBlankPointGuidance(options: BlankPointGuidanceOptions = {})
     .filter(Boolean)
     .join("\n");
 }
+
+export interface MultiBlankPointGuidanceOptions {
+  /** 핵심 집중 모드 */
+  pointFocus?: boolean;
+}
+
+/**
+ * 다중빈칸(2~3) 출제 포인트 집중 — pointFocus 일 때만 다중빈칸 프롬프트에 주입.
+ * 단일빈칸과 달리 candidate block 이 suppress 되므로 typeSettings 프롬프트 경로에 주입한다.
+ * (A) 분산형: blankCount 개 빈칸을 코어4 중 **서로 다른** 논리축에 배정해, 한 문항 안에서
+ * 빈칸마다 다른 사고(인과/개념명명/재진술/대조)를 묻게 한다. 지정이 안 맞으면 코어 내 대체.
+ * pointFocus 미지정이면 "" 반환 → 기존(비-focus) 다중빈칸 동작 불변.
+ */
+export function buildMultiBlankPointGuidance(
+  blankCount: number,
+  options: MultiBlankPointGuidanceOptions = {},
+): string {
+  if (!options.pointFocus) return "";
+  const count = Math.max(2, Math.min(3, Math.floor(blankCount) || 2));
+  const pool = BLANK_HIGH_YIELD_FOCUS_CODES;
+  const coreList = pool.map((c) => `${BLANK_POINT_CATALOG[c].name}(${c})`).join(" / ");
+  return [
+    `## 다중빈칸 출제 포인트 집중 — 빈칸별 코어 논리 분산 (핵심 집중 모드, blankCount=${count})`,
+    `- ⭐ ${count}개 빈칸이 **각각 서로 다른** 코어 추론논리를 묻도록 고르세요. 코어4 = ${coreList}.`,
+    `- 🚫 절대 규칙: ${count}개 빈칸 중 **둘 이상이 같은 논리를 묻게 하지 마세요**(예: 두 빈칸 모두 인과면 실패). 저빈출축(예시→원리·담화연결어·유추·전체주제문)은 코어로 ${count}개를 채울 수 없을 때만 최후로 쓰세요.`,
+    `- ⭐ 선택 순서가 중요: 먼저 이 지문이 지원하는 **서로 다른 코어 논리 ${count}가지**를 정하고, 그 논리가 실제로 성립하는 자리를 각각 빈칸으로 고르세요. 빈칸 자리를 먼저 잡고 논리를 갖다 붙이지 마세요. 특정 한 축(예: 대조)을 여러 빈칸에 몰아넣지 말고, 지문이 가장 자연스럽게 지원하는 ${count}개의 서로 다른 코어 논리를 고르세요.`,
+    ...pool.map((c) => `  · ${BLANK_POINT_CATALOG[c].name}: ${BLANK_POINT_CATALOG[c].signal}`),
+    `- ⚠️ '${BLANK_POINT_CATALOG.concept_labeling.name}'(구체 정황을 상위 추상명사로 명명) ↔ '${BLANK_POINT_CATALOG.restate_paraphrase.name}'(빈칸 옆에 동의표현이 이미 풀려있는 문장단위 동치)은 가장 혼동되니, 한 문항에 둘을 같이 쓸 땐 성격이 분명히 다른 자리로만 배정하세요.`,
+    `- ⭐ 제출 전 자가검증: ${count}개 빈칸 각각의 정답논리를 라벨링해보고, 같은 논리가 둘 이상이거나 비코어가 섞였으면 해당 빈칸을 다른 자리로 교체한 뒤 확정하세요.`,
+  ].join("\n");
+}

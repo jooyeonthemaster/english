@@ -4,6 +4,7 @@ import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
+import { buildMultiBlankPointGuidance } from "@/lib/blank-point-catalog";
 
 export type QuestionGenerationLanguage = "ko" | "en";
 
@@ -1810,9 +1811,15 @@ export function buildQuestionTypeSettingsPrompt(
     // single-blank-only feature and is intentionally ignored here.
     const labels = MULTI_BLANK_LABELS.slice(0, blankInferenceBlankCount);
     const labelsText = labels.join(", ");
+    // 다중빈칸은 candidate block 이 suppress 되므로 focus(출제포인트 집중)를 이 프롬프트
+    // 경로에 주입한다 — 빈칸별로 서로 다른 코어 논리축에 분산(A 분산형).
+    const blankPointFocus = readBooleanSetting(rawSettings, "BLANK_INFERENCE", "pointFocus");
     return combinePromptSections(languagePrompt, [
       "## Type detail setting: BLANK_INFERENCE / multi-blank combination item",
       `- The teacher requested a ${blankInferenceBlankCount}-blank combination item instead of the standard single-blank item. This block overrides the single-blank output rules.`,
+      ...(blankPointFocus
+        ? [buildMultiBlankPointGuidance(blankInferenceBlankCount, { pointFocus: true })]
+        : []),
       `- Do NOT output originalExpression/surroundingText at the top level. Instead output a "blanks" array with exactly ${blankInferenceBlankCount} entries labeled ${labelsText}, in passage order.`,
       "- Each blanks[].originalExpression must be copied verbatim from the passage (not a paraphrase), must be a meaningful content expression (verb phrase, modified noun phrase, or compact clause-level phrase — never a bare function word), and the blanks must come from different sentences.",
       "- ⚠️ Never blank an expression whose exact wording also appears elsewhere in the passage (key phrases are often repeated): the remaining occurrence would reveal the answer and the item will be rejected. Before choosing, scan the passage and pick expressions that occur exactly once.",
