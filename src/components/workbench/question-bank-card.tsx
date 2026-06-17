@@ -50,7 +50,10 @@ import {
 } from "./shared/card-click";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
-import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
+import {
+  optionDisplayTextForSubtype,
+  shouldRenderOptionListForSubtype,
+} from "@/components/exams/paper-builder/option-display";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 
 export type { QuestionBankItem } from "./question-bank-card/types";
@@ -186,6 +189,11 @@ export function QuestionBankCard({
           text: optionDisplayTextForSubtype(q.subType, index, option.text),
         }))
       : options;
+  // 지문 마커형(어법·어휘·삽입·무관)은 시험지와 동일하게 하단 보기 리스트를 숨긴다
+  // (마커는 지문에만). 같은 게이트(shouldRenderOptionListForSubtype) 공유 — 접힘/펼침 모두.
+  const hideOptionList =
+    !!q.subType && !shouldRenderOptionListForSubtype(q.subType);
+  const visibleOptions = hideOptionList ? [] : displayOptions;
   const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
   const structuredQuestion =
@@ -539,9 +547,9 @@ export function QuestionBankCard({
               )}
 
               {/* Options (MC) */}
-              {!structuredQuestion && displayOptions.length > 0 && (
+              {!structuredQuestion && visibleOptions.length > 0 && (
                 <div className="space-y-1 pl-1">
-                  {displayOptions.map((opt) => {
+                  {visibleOptions.map((opt) => {
                     const isCorrect = correctAnswerLabels.has(
                       normalizeAnswerLabel(opt.label),
                     );

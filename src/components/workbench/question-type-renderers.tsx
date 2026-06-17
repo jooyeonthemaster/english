@@ -54,7 +54,10 @@ import {
   grammarCorrectionErrorSentenceForQuestionText,
 } from "@/lib/grammar-correction-display";
 import { formatVocabChoiceCorrectAnswer } from "@/lib/question-answer-display";
-import { formatInlineMarkersForSubtype } from "@/components/exams/paper-builder/option-display";
+import {
+  formatInlineMarkersForSubtype,
+  shouldRenderOptionListForSubtype,
+} from "@/components/exams/paper-builder/option-display";
 
 // ============================================================================
 // 수능/모의고사 객관식 (10 types)
@@ -106,7 +109,12 @@ export function GrammarErrorRenderer({ q }: { q: GrammarErrorQuestion }) {
     <>
       <Direction text={q.direction} />
       <PassageBlock>{renderPassageFormatted(q.passageWithMarkers)}</PassageBlock>
-      <OptionList options={q.options} correctAnswer={q.correctAnswer} correctAnswers={q.correctAnswers} />
+      {/* 어법 판단은 지문 마커(①②③④⑤)만 쓰는 inline-marked 유형 — 시험지와 동일하게
+          하단 보기 리스트를 렌더하지 않는다(같은 게이트 공유). 정답·표현은 아래
+          '밑줄 표현 분석'과 정답 줄에 그대로 남는다. */}
+      {shouldRenderOptionListForSubtype("GRAMMAR_ERROR") && (
+        <OptionList options={q.options} correctAnswer={q.correctAnswer} correctAnswers={q.correctAnswers} />
+      )}
       <AnswerRevealSection>
         {q.markedExpressions && (
           <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">

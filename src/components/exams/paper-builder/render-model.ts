@@ -19,6 +19,7 @@ import {
   findWordInPassage,
   sanitizeExpressionForMarker,
 } from "@/lib/question-postprocess/text-utils";
+import { getCircledNumber } from "@/lib/question-postprocess/types";
 import type { BuilderQuestion, OptionItem, PaperItem } from "./types";
 import { resolveMarkerScheme, type MarkerRenderScheme } from "./marker-render-scheme";
 
@@ -40,6 +41,9 @@ export type RenderMark = {
   isError?: boolean;
   /** faithful 모드(원문 미러)에서 보존할 원본 라벨 문자열(예: "A"). normalized 는 무시. */
   sourceLabel?: string;
+  /** source 재유도 경로에서 이 마크가 유래한 원본 markedExpressions/markedWords 인덱스.
+   *  문제 관리 structured 정규화가 분석 배열을 출현순으로 재정렬할 때 역매핑에 쓴다. */
+  origIndex?: number;
 };
 
 export type RenderSegmentRole = "passage" | "summary" | "given" | "para" | "text";
@@ -176,8 +180,8 @@ function deriveGrammarMarksFromSource(
   marked: GrammarMarkedExpression[],
 ): RenderMark[] | null {
   const located = marked
-    .map((me) => ({ me, found: locateGrammarExpression(passage, me) }))
-    .filter((x): x is { me: GrammarMarkedExpression; found: { index: number; length: number } } =>
+    .map((me, origIndex) => ({ me, origIndex, found: locateGrammarExpression(passage, me) }))
+    .filter((x): x is { me: GrammarMarkedExpression; origIndex: number; found: { index: number; length: number } } =>
       Boolean(x.found),
     );
 
@@ -192,6 +196,7 @@ function deriveGrammarMarksFromSource(
     ordinal,
     kind: "underline" as const,
     isError: item.me.isError === true,
+    origIndex: item.origIndex,
   }));
 }
 
@@ -350,7 +355,7 @@ function deriveVocabMarksFromSource(
   variantMode: boolean,
 ): RenderMark[] | null {
   const located = marked
-    .map((mw) => {
+    .map((mw, origIndex) => {
       const original = normalizeSpaces(str(mw.originalWord));
       if (!original) return null;
       const surrounding = normalizeSpaces(str(mw.surroundingText)) || undefined;
@@ -363,9 +368,9 @@ function deriveVocabMarksFromSource(
       const showsSubstitute = isInappropriate || (variantMode && !!substitute);
       // 정본 processVocabChoice 와 동일하게 표시 단어를 sanitize.
       const surface = sanitizeExpressionForMarker((showsSubstitute ? substitute : original) || original);
-      return { found, surface, isError: isInappropriate };
+      return { found, surface, isError: isInappropriate, origIndex };
     })
-    .filter((x): x is { found: { index: number; length: number }; surface: string; isError: boolean } =>
+    .filter((x): x is { found: { index: number; length: number }; surface: string; isError: boolean; origIndex: number } =>
       Boolean(x),
     );
 
@@ -378,6 +383,7 @@ function deriveVocabMarksFromSource(
     ordinal,
     kind: "underline" as const,
     isError: item.isError,
+    origIndex: item.origIndex,
   }));
 }
 
@@ -490,6 +496,7 @@ function enrichAntonym(q: BuilderQuestion, style: RenderStyle): RenderModel {
         ordinal,
         kind: "underline" as const,
         isError: it.isError,
+        origIndex: it.origIndex,
       }));
       // 보기: 출현순 + (라벨) 참조. 라벨은 직렬화와 동일 대문자.
       const options: RenderOption[] = located.map((it, ordinal) => ({
@@ -660,4 +667,131 @@ export function normalizePaperFields(
     : undefined;
 
   return { questionText: `${stem}\n\n${markedPassage}`, correctAnswer, options };
+}
+
+// ─────────────────── 문제 관리(카드·상세 모달) 구조 정규화 ───────────────────
+// 시험지(normalizePaperFields)는 평탄 questionText 를 만들지만, 문제 관리 화면은
+// structuredData 의 개별 필드(passageWithMarkers·markedExpressions/markedWords·
+// options·correctAnswer)를 유형별 렌더러가 직접 소비한다. 그래서 동일한 출현순
+// 정본화를 **structured 필드 위에서** 수행해 돌려준다 — 렌더러/모달/분석블록/폰트는 그대로.
+//   - 시험지와 동일한 ordering 로직(enrichQuestionForRender)을 재사용 → 두 화면이 한 소스로 일치.
+//   - 동형(_similar*)은 시험지와 동일하게 faithful 유지(재정렬 안 함).
+//   - 각 유형의 현행 라벨 심볼은 보존(어법=(A)·어휘=①·반의어=(A)+보기①)하고 **순서만** 정본화.
+//   - back-map(원본 항목↔출현순) 실패 시 전체 미적용(부분 정규화 금지 → 안전 폴백).
+
+const DISPLAY_NORMALIZE_SUBTYPES = new Set(["GRAMMAR_ERROR", "VOCAB_CHOICE", "ANTONYM"]);
+
+type DisplayMarked = Record<string, unknown> & { label?: unknown };
+
+function isSimilarGeneratedDisplay(question: Record<string, unknown>): boolean {
+  return (
+    "_similarQuestionGenJobId" in question ||
+    "_similarQuestionGen" in question ||
+    "_genericSimilar" in question ||
+    "_similarExamJobId" in question
+  );
+}
+
+/**
+ * 출현순 marks 로 원본 분석 배열(markedExpressions/markedWords)을 재정렬 + 라벨 재부여.
+ * source 재유도 마크는 origIndex 로, baked 마크는 sourceLabel(키)로 원본을 역매핑한다.
+ * 하나라도 역매핑 실패 시 null(상위가 전체 미적용 → 깨진 중간 상태 방지).
+ */
+function reorderMarkedForDisplay(
+  marks: RenderMark[],
+  original: DisplayMarked[],
+  relabel: (ordinal: number) => string,
+): DisplayMarked[] | null {
+  const byKey = new Map<string, DisplayMarked>();
+  original.forEach((item) => {
+    const key = grammarKey(item.label);
+    if (key && !byKey.has(key)) byKey.set(key, item);
+  });
+
+  const ordered = [...marks].sort((a, b) => a.ordinal - b.ordinal);
+  const result: DisplayMarked[] = [];
+  for (const mark of ordered) {
+    let item: DisplayMarked | undefined;
+    if (typeof mark.origIndex === "number") item = original[mark.origIndex];
+    else if (mark.sourceLabel) item = byKey.get(mark.sourceLabel.toUpperCase());
+    if (!item) return null;
+    result.push({ ...item, label: relabel(mark.ordinal) });
+  }
+  return result;
+}
+
+/**
+ * structuredData(display) → 출현순 정본화된 structuredData. GRAMMAR_ERROR·VOCAB_CHOICE·
+ * ANTONYM 만 처리하고 그 외/동형/도출실패는 입력을 그대로 돌려준다(회귀 0).
+ */
+export function normalizeStructuredQuestionForDisplay(
+  question: unknown,
+  sourcePassageContent?: string,
+): unknown {
+  if (!question || typeof question !== "object" || Array.isArray(question)) return question;
+  const q = question as Record<string, unknown>;
+  const typeId = typeof q._typeId === "string" ? q._typeId : "";
+  if (!DISPLAY_NORMALIZE_SUBTYPES.has(typeId)) return question;
+  if (isSimilarGeneratedDisplay(q)) return question; // 동형=faithful(시험지와 동일)
+
+  // enrichQuestionForRender 는 BuilderQuestion 형태를 읽으므로 최소 어댑터로 감싼다
+  // (subType·structuredData·passage.content·correctAnswer 만 참조).
+  const builderLike = {
+    subType: typeId,
+    structuredData: q,
+    questionText: "",
+    correctAnswer: typeof q.correctAnswer === "string" ? q.correctAnswer : "",
+    passage: sourcePassageContent ? { content: sourcePassageContent } : null,
+  } as unknown as BuilderQuestion;
+
+  const model = enrichQuestionForRender(builderLike, "normalized");
+  if (model.kind !== "MARKED_PASSAGE") return question;
+  const seg = model.segments.find((s) => s.role === "passage");
+  if (!seg || seg.marks.length === 0) return question;
+
+  const passageWithMarkers = serializeNormalizedMarkedPassage(model);
+  if (!passageWithMarkers) return question;
+
+  const circled = (ordinal: number) => getCircledNumber(ordinal);
+  const alpha = (ordinal: number) => `(${VERIFY_LABELS[ordinal] ?? String(ordinal + 1)})`;
+  const next: Record<string, unknown> = { ...q, passageWithMarkers };
+
+  if (typeId === "GRAMMAR_ERROR") {
+    const original = Array.isArray(q.markedExpressions) ? (q.markedExpressions as DisplayMarked[]) : [];
+    const reordered = reorderMarkedForDisplay(seg.marks, original, alpha);
+    if (!reordered) return question;
+    next.markedExpressions = reordered;
+    if (model.answerOrdinals.length) {
+      const labels = model.answerOrdinals.map(alpha);
+      next.correctAnswer = labels.join(", ");
+      next.correctAnswers = labels;
+    }
+    return next;
+  }
+
+  if (typeId === "VOCAB_CHOICE") {
+    const original = Array.isArray(q.markedWords) ? (q.markedWords as DisplayMarked[]) : [];
+    const reordered = reorderMarkedForDisplay(seg.marks, original, circled);
+    if (!reordered) return question;
+    next.markedWords = reordered;
+    if (model.answerOrdinals.length) {
+      const labels = model.answerOrdinals.map((o) => String(o + 1));
+      next.correctAnswer = labels.join(", ");
+      next.correctAnswers = labels;
+    }
+    return next;
+  }
+
+  // ANTONYM — 보기 리스트까지 출현순 재정렬(라벨형+리스트 유형).
+  const original = Array.isArray(q.markedWords) ? (q.markedWords as DisplayMarked[]) : [];
+  const reordered = reorderMarkedForDisplay(seg.marks, original, alpha);
+  if (!reordered) return question;
+  next.markedWords = reordered;
+  if (model.options) {
+    next.options = model.options.map((o) => ({ label: getCircledNumber(o.ordinal), text: o.text }));
+  }
+  if (model.answerOrdinals.length) {
+    next.correctAnswer = model.answerOrdinals.map(circled).join(", ");
+  }
+  return next;
 }
