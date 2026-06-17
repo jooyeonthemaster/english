@@ -12,11 +12,10 @@ export interface RowOverride {
   /**
    * 이 지문에 개별 지정된 생성 모드. null/undefined → '미설정'(전체 공통 설정을
    * 따름). 지문을 선택해 우측 패널에서 모드를 고르면 그 지문에만 저장된다.
-   * - auto: 자동 생성(autoCount 만큼)
    * - manual: 지정된 유형(typeCounts)
    * - set: 장문 세트(우측 세트 빌더에서 단독 생성)
    */
-  mode?: "auto" | "manual" | "set" | null;
+  mode?: "manual" | "set" | null;
   /** null/undefined → 전체 설정의 생성 플랜(일반/프리미엄) 사용. */
   generationPlan?: "STANDARD" | "PREMIUM" | null;
   typeCounts: Record<string, number>;
@@ -257,8 +256,8 @@ export function isOverrideEmpty(override: RowOverride): boolean {
  */
 export function effectiveRowMode(
   override: RowOverride | null,
-  globalMode: "auto" | "manual" | "set",
-): "auto" | "manual" | "set" {
+  globalMode: "manual" | "set",
+): "manual" | "set" {
   if (override?.mode) return override.mode;
   if (overrideHasTypeCounts(override)) return "manual";
   return globalMode;
@@ -284,13 +283,12 @@ export function diffQuestionTypeSettings(
 /**
  * 행 하나가 생성할 문제 수.
  * - 개별 유형 지정(typeCounts 오버라이드)이 있으면 그 합.
- * - 자동 생성 모드면 모든 지문에 autoCount 만큼.
  * - 그 외(수동·세트인데 개별 유형 지정 없음)는 0 — 지정하지 않은 지문은
  *   전체 설정으로 폴백하지 않고 생성에서 제외한다.
  */
 export function rowQuestionCount(
   row: WorkspaceRow,
-  global: { genMode: "auto" | "manual" | "set"; autoCount: number; totalQuestions: number },
+  global: { genMode: "manual" | "set"; totalQuestions: number },
 ): number {
   const mode = effectiveRowMode(row.override, global.genMode);
   if (mode === "manual") {
@@ -298,7 +296,6 @@ export function rowQuestionCount(
       ? Object.values(row.override!.typeCounts).reduce((a, b) => a + b, 0)
       : 0;
   }
-  if (mode === "auto") return Math.max(0, global.autoCount);
   // 장문 세트 — 구성한 문항(멤버) 수만큼.
   if (mode === "set") return row.override?.setMembers?.length ?? 0;
   return 0;

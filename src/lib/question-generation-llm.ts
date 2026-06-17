@@ -102,6 +102,33 @@ export function isNonRetryableQuestionGenerationProviderError(error: unknown): b
   ].some((pattern) => message.includes(pattern));
 }
 
+/**
+ * 모델/인프라발(發) 원시 에러 메시지를 사용자에게 보여줄 한국어 안내로 변환한다.
+ * 청구·쿼터 고갈이나 일시적 서비스 장애는 영어 원문 대신 친화 메시지로 노출하고,
+ * 그 외(품질 게이트 소진 등)는 원문을 그대로 둔다. 원문은 호출자가 result 에 보존한다.
+ */
+export function toUserFacingQuestionGenerationError(rawMessage: string): string {
+  const m = rawMessage.toLowerCase();
+  const isBilling =
+    m.includes("billing") ||
+    m.includes("quota") ||
+    m.includes("prepayment") ||
+    m.includes("spending cap");
+  const isTransient =
+    m.includes("temporary service disruptions") ||
+    m.includes("unrestricted key") ||
+    m.includes("overloaded") ||
+    m.includes("service unavailable") ||
+    m.includes(" 503");
+  if (isBilling) {
+    return "AI 서비스 한도 문제로 문제 생성이 일시 중단되었어요. 크레딧은 환불되었습니다. 잠시 후 다시 시도해 주세요.";
+  }
+  if (isTransient) {
+    return "일시적인 AI 서비스 문제로 생성에 실패했어요. 크레딧은 환불되었습니다. 잠시 후 다시 시도해 주세요.";
+  }
+  return rawMessage;
+}
+
 export async function generateQuestionObject<T>({
   schema,
   prompt,
@@ -188,12 +215,12 @@ export async function generateQuestionObject<T>({
         console.warn(`[${logPrefix}]   rawText: ${error.text.slice(0, 300)}`);
       }
 
-      if (
-        config.provider === "google" &&
-        isNonRetryableQuestionGenerationProviderError(error)
-      ) {
+      // 영구·결정적 provider 실패(billing/quota/permission/invalid-key)는
+      // provider 무관으로 즉시 중단한다. (이전엔 google 에만 적용돼 PREMIUM=
+      // anthropic 경로가 billing 에러도 maxRetries 만큼 낭비 재시도했다.)
+      if (isNonRetryableQuestionGenerationProviderError(error)) {
         console.warn(
-          `[${logPrefix}] Non-retryable Google provider error; stopping retries.`,
+          `[${logPrefix}] Non-retryable provider error (${config.provider}); stopping retries.`,
         );
         throw error;
       }
@@ -311,12 +338,12 @@ export async function generateQuestionText({
         console.warn(`[${logPrefix}]   rawText: ${error.text.slice(0, 300)}`);
       }
 
-      if (
-        config.provider === "google" &&
-        isNonRetryableQuestionGenerationProviderError(error)
-      ) {
+      // 영구·결정적 provider 실패(billing/quota/permission/invalid-key)는
+      // provider 무관으로 즉시 중단한다. (이전엔 google 에만 적용돼 PREMIUM=
+      // anthropic 경로가 billing 에러도 maxRetries 만큼 낭비 재시도했다.)
+      if (isNonRetryableQuestionGenerationProviderError(error)) {
         console.warn(
-          `[${logPrefix}] Non-retryable Google provider error; stopping retries.`,
+          `[${logPrefix}] Non-retryable provider error (${config.provider}); stopping retries.`,
         );
         throw error;
       }

@@ -70,7 +70,7 @@ interface TourStep {
     | "second-column"
     | "workspace-selection";
   activateOutputMode?: "verbatim" | "restored";
-  activateGenerationMode?: "auto" | "manual" | "set";
+  activateGenerationMode?: "manual" | "set";
   required?: {
     milestone: GenerateTourMilestone;
     startedMilestone?: GenerateTourMilestone;
@@ -501,38 +501,6 @@ const GENERATION_DETAILS_TOUR_STEPS: TourStep[] = [
       {
         label: "핵심 차이",
         text: "문제 번호, 보기, 선지처럼 지문 밖 요소가 섞여 있으면 본문만 골라 읽기 좋은 형태로 복원합니다.",
-      },
-    ],
-  },
-  {
-    title: "자동 생성은 빠른 초안용입니다",
-    body: "자동 생성은 지문을 선택하고 문제 수만 정하면 AI가 유형을 배분하는 방식입니다. 이 단계에 들어오면 화면이 자동 생성 모드로 맞춰집니다.",
-    video: "results",
-    targets: ["generation-mode-auto", "auto-count", "generation-mode"],
-    glowTargets: ["generation-mode-auto"],
-    activateGenerationMode: "auto",
-    examples: [
-      {
-        label: "어떻게 쓰나",
-        text: "지문 3개를 체크하고 문제 수를 5로 두면, AI가 지문 길이와 내용에 맞춰 빈칸·어휘·순서 같은 유형을 섞어 초안 5문제를 만듭니다.",
-      },
-      {
-        label: "추천 상황",
-        text: "수업 전 후보 문제를 빠르게 뽑고, 생성/검수 결과에서 좋은 문제만 검수완료로 남길 때 적합합니다.",
-      },
-    ],
-  },
-  {
-    title: "자동 생성에서는 개수와 방향만 잡습니다",
-    body: "자동 생성 안에서는 문제 수, 난이도, 추가 지시사항을 조정합니다. 세부 유형을 고르지 않는 대신 전체적인 생성 방향을 빠르게 정하는 구조입니다.",
-    video: "results",
-    targets: ["auto-count", "prompt-section", "generation-mode"],
-    glowTargets: ["auto-count"],
-    activateGenerationMode: "auto",
-    examples: [
-      {
-        label: "예시",
-        text: "문제 수 4, 난이도 중급, 추가 지시사항에 ‘수능형으로, 선지는 영어로’라고 적으면 그 방향에 맞춰 초안이 만들어집니다.",
       },
     ],
   },

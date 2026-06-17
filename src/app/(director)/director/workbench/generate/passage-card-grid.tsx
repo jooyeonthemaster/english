@@ -177,6 +177,9 @@ interface PassageCardGridProps {
   passageBulkAction?: "move" | "remove" | "delete" | null;
 
   // Generation
+  // NOTE: PassageCardGrid 는 문제 생성 외 페이지(튜터 프로그램 빌더 등)에서도
+  // 재사용된다. 그쪽은 여전히 "auto" 를 넘기고 이 prop 은 본문에서 쓰이지 않으므로,
+  // 문제 생성의 genMode 좁히기와 무관하게 넓은 유니온을 유지한다.
   genMode: "auto" | "manual" | "set";
   totalQuestions: number;
   handleBatchGenerate: () => void;

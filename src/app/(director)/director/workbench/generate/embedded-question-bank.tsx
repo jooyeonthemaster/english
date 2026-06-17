@@ -179,11 +179,9 @@ function useMeasuredHeight(enabled: boolean) {
 // Renders generating / error queue items at the very front of the bank list.
 function QueueStripCard({
   item,
-  autoCount,
   onRetryGeneration,
 }: {
   item: QueueItem;
-  autoCount: number;
   onRetryGeneration?: (item: QueueItem) => void | Promise<void>;
 }) {
   const planConfig = getQuestionGenerationPlanConfig(
@@ -191,13 +189,10 @@ function QueueStripCard({
   );
 
   if (item.status === "generating") {
-    const requestedCount =
-      item.config.mode === "auto"
-        ? autoCount
-        : Object.values(item.config.typeCounts).reduce(
-            (a: number, b: any) => a + Number(b),
-            0,
-          );
+    const requestedCount = Object.values(item.config.typeCounts).reduce(
+      (a: number, b: any) => a + Number(b),
+      0,
+    );
     return (
       <WorkbenchLoadingCard
         title={item.passageTitle}
@@ -303,7 +298,6 @@ interface EmbeddedQuestionBankProps {
   queueCounts?: { generating: number; done: number; error: number };
   queueFilter?: "all" | "error";
   setQueueFilter?: (v: "all" | "error") => void;
-  autoCount?: number;
   onRetryGeneration?: (item: QueueItem) => void | Promise<void>;
   // 마키(영역 드래그) 시작 영역을 이 패널 전체로 넓히는 boundary — 지문 목록
   // (PassageCardGrid)과 동일한 방식. 문제별/지문별 두 뷰의 DragSelect 가 모두
@@ -317,7 +311,6 @@ export function EmbeddedQuestionBank({
   queueCounts = { generating: 0, done: 0, error: 0 },
   queueFilter = "all",
   setQueueFilter,
-  autoCount = 0,
   onRetryGeneration,
   marqueeBoundaryRef,
 }: EmbeddedQuestionBankProps) {
@@ -1284,7 +1277,6 @@ export function EmbeddedQuestionBank({
               <QueueStripCard
                 key={item.id}
                 item={item}
-                autoCount={autoCount}
                 onRetryGeneration={onRetryGeneration}
               />
             ))}

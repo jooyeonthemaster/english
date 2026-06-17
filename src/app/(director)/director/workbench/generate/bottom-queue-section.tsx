@@ -75,7 +75,6 @@ interface BottomQueueSectionProps {
   queueFilter: "all" | "error";
   setQueueFilter: (v: "all" | "error") => void;
   queueCounts: { generating: number; done: number; error: number };
-  autoCount: number;
   savedQuestions: QuestionCardItem[];
   loadingSavedQuestions: boolean;
   setDetailQuestion: (q: QuestionCardItem | null) => void;
@@ -282,7 +281,6 @@ function EmptyState({ message }: { message: string }) {
 
 export function BottomQueueSection({
   filteredQueue,
-  autoCount,
   savedQuestions,
   loadingSavedQuestions,
   setDetailQuestion,
@@ -796,10 +794,10 @@ export function BottomQueueSection({
     );
 
     if (item.status === "generating") {
-      const requestedCount =
-        item.config.mode === "auto"
-          ? autoCount
-          : Object.values(item.config.typeCounts).reduce((a, b) => a + b, 0);
+      const requestedCount = Object.values(item.config.typeCounts).reduce(
+        (a, b) => a + b,
+        0,
+      );
       return (
         <WorkbenchLoadingCard
           key={item.id}

@@ -9,7 +9,6 @@ import {
   Minus,
   Plus,
   Target,
-  Zap,
   Gem,
   Layers,
   Settings2,
@@ -133,52 +132,12 @@ function Collapsible({
   );
 }
 
-// 난이도 세그먼트 — 자동/유형지정 모드 공통.
-function DifficultySegment({
-  difficulty,
-  setDifficulty,
-}: {
-  difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
-  setDifficulty: (v: "BASIC" | "INTERMEDIATE" | "KILLER") => void;
-}) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="w-14 shrink-0 whitespace-nowrap text-[11px] font-bold uppercase tracking-wider text-slate-500">
-        난이도
-      </span>
-      <div className="flex h-8 flex-1 rounded-lg bg-slate-100 p-0.5">
-        {DIFFICULTY_TONES.map((d) => {
-          const active = difficulty === d.value;
-          return (
-            <button
-              key={d.value}
-              type="button"
-              onClick={() => setDifficulty(d.value)}
-              className={`flex flex-1 items-center justify-center gap-1 rounded-[6px] text-[12px] transition-all duration-150 ${
-                active
-                  ? `font-bold shadow-sm ${d.on}`
-                  : "font-semibold text-slate-400 hover:text-slate-600"
-              }`}
-            >
-              <span
-                className={`h-1.5 w-1.5 rounded-full ${d.dot}`}
-                aria-hidden="true"
-              />
-              {d.label}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 // ─── Props ───────────────────────────────────────────
 
 interface GenerationConfigPanelProps {
   // Mode
-  genMode: "auto" | "manual" | "set";
-  setGenMode: (v: "auto" | "manual" | "set") => void;
+  genMode: "manual" | "set";
+  setGenMode: (v: "manual" | "set") => void;
   /** 워크스페이스의 특정 지문만 개별 설정 중인지 — 장문 세트 빌더 바인딩에 쓴다. */
   editingRow?: boolean;
   /** 개별 설정 중인 지문 id — 장문 세트 모드일 때 이 지문으로 세트를 만든다. */
@@ -190,10 +149,6 @@ interface GenerationConfigPanelProps {
   ) => void;
   generationPlan: QuestionGenerationPlan;
   setGenerationPlan: (v: QuestionGenerationPlan) => void;
-
-  // Auto config
-  autoCount: number;
-  setAutoCount: (v: number) => void;
 
   // Manual config
   typeCounts: Record<string, number>;
@@ -208,6 +163,12 @@ interface GenerationConfigPanelProps {
         ) => QuestionTypeGenerationSettings),
   ) => void;
   totalQuestions: number;
+  /**
+   * 활성 지문의 문장 수 — 문장삽입(SENTENCE_INSERT)처럼 일정 문장 수를 요구하는
+   * 유형을 짧은 지문에서 비활성화(게이팅)하는 데 쓴다. 미전달(undefined) 시
+   * 게이팅하지 않음(다른 호출자 무영향).
+   */
+  passageSentenceCount?: number;
 
   // Difficulty
   difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
@@ -271,16 +232,14 @@ export function GenerationConfigPanel({
   onSetMembersChange,
   generationPlan,
   setGenerationPlan,
-  autoCount,
-  setAutoCount,
   typeCounts,
   setTypeCount,
   setTypeCounts,
   questionTypeSettings,
   setQuestionTypeSettings,
   totalQuestions,
+  passageSentenceCount,
   difficulty,
-  setDifficulty,
   customPrompt,
   setCustomPrompt,
   savedPrompts,
@@ -796,7 +755,23 @@ export function GenerationConfigPanel({
     return next;
   };
 
+  // ── SENTENCE_INSERT 짧은 지문 게이팅 ──────────────────────────────────
+  // 문장삽입은 한 문장을 보기로 빼고 나머지 사이에 slotCount 개의 후보 위치를
+  // 만들어야 한다 → 최소 (slotCount + 1) 문장이 필요. 지문이 그보다 짧으면
+  // 5회 재생성 후 "유효 marker 위치 부족"으로 전멸하므로(프로덕션 1위 실패),
+  // 애초에 선택할 수 없게 막는다.
+  // sentenceInsertSlotCount 는 위에서 readSentenceInsertSlotCountSetting 으로 이미 계산됨.
+  const sentenceInsertRequiredSentences = sentenceInsertSlotCount + 1;
+  const sentenceInsertTooShort =
+    typeof passageSentenceCount === "number" &&
+    passageSentenceCount > 0 &&
+    passageSentenceCount < sentenceInsertRequiredSentences;
+  const isTypeDisabledForPassage = (id: string) =>
+    id === "SENTENCE_INSERT" && sentenceInsertTooShort;
+
   const applyTypeCount = (id: string, count: number) => {
+    // 짧은 지문에서는 문장삽입 추가를 차단(모든 진입점이 이 함수로 수렴).
+    if (count > 0 && isTypeDisabledForPassage(id)) return;
     const ordered = normalizeTypeOrder(typeOrder);
     setTypeCounts((prev) => {
       const draft = { ...prev };
@@ -1924,7 +1899,6 @@ export function GenerationConfigPanel({
           >
             {(
               [
-                { mode: "auto", label: "자동 생성", Icon: Zap },
                 { mode: "manual", label: "유형 지정", Icon: Settings2 },
                 ...(FEATURE_FLAGS.ENABLE_LONG_PASSAGE_SETS
                   ? [{ mode: "set", label: "장문 세트", Icon: FileText }]
@@ -1964,69 +1938,6 @@ export function GenerationConfigPanel({
         {/* 생성 모델(플랜)은 글로벌 셀렉터를 두지 않는다 — 유형별 세부옵션의
             "생성 플랜 · 이 유형만"에서만 정의한다. 미설정 유형은 기본(STANDARD)으로
             생성된다. (전역 generationPlan 은 미설정 유형의 fallback 으로만 남는다.) */}
-
-        {/* Auto Mode Config */}
-        {genMode === "auto" && (
-          <div className="px-4 py-3 flex flex-1 min-h-0 flex-col gap-3">
-            {/* Difficulty */}
-            <div className="shrink-0">
-              <DifficultySegment
-                difficulty={difficulty}
-                setDifficulty={setDifficulty}
-              />
-            </div>
-
-            {/* 문제 수 — minimal inline control */}
-            <div
-              className="flex items-center justify-between gap-2 shrink-0"
-              data-generate-tour="auto-count"
-            >
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                문제 수
-              </span>
-              <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-white shrink-0">
-                <button
-                  onClick={() => setAutoCount(Math.max(1, autoCount - 1))}
-                  className="w-7 h-8 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                  aria-label="문제 수 줄이기"
-                >
-                  <Minus className="w-3.5 h-3.5" />
-                </button>
-                <span className="w-8 h-8 flex items-center justify-center text-[13px] font-bold text-slate-700 border-x border-slate-200 bg-slate-50/50 tabular-nums">
-                  {autoCount}
-                </span>
-                <button
-                  onClick={() => setAutoCount(Math.min(20, autoCount + 1))}
-                  className="w-7 h-8 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                  aria-label="문제 수 늘리기"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Custom prompt */}
-            <PromptSection
-              fill
-              customPrompt={customPrompt}
-              setCustomPrompt={setCustomPrompt}
-              savedPrompts={savedPrompts}
-              showSavedPrompts={showSavedPrompts}
-              setShowSavedPrompts={setShowSavedPrompts}
-              showSaveInput={showSaveInput}
-              setShowSaveInput={setShowSaveInput}
-              savePromptName={savePromptName}
-              setSavePromptName={setSavePromptName}
-              savingPrompt={savingPrompt}
-              setSavingPrompt={setSavingPrompt}
-              editingPromptId={editingPromptId}
-              setEditingPromptId={setEditingPromptId}
-              editingName={editingName}
-              setEditingName={setEditingName}
-              loadSavedPrompts={loadSavedPrompts}
-            />
-          </div>
-        )}
 
         {/* Manual Mode Config */}
         {genMode === "manual" && (
@@ -2084,6 +1995,9 @@ export function GenerationConfigPanel({
                             {group.items.map((item) => {
                               const count = typeCounts[item.id] || 0;
                               const active = count > 0;
+                              const itemDisabled = isTypeDisabledForPassage(
+                                item.id,
+                              );
                               // 모든 유형에 세부옵션이 있어 모든 행이 펼쳐진다.
                               const expanded = expandedTypeId === item.id;
                               const dragging = draggingTypeId === item.id;
@@ -2202,7 +2116,17 @@ export function GenerationConfigPanel({
                                         event.stopPropagation();
                                         applyTypeCount(item.id, count + 1);
                                       }}
-                                      className="flex h-7 min-w-0 flex-1 items-center gap-1.5 rounded-md px-1 text-left"
+                                      disabled={itemDisabled}
+                                      title={
+                                        itemDisabled
+                                          ? `이 지문은 문장이 적어 문장삽입에 적합하지 않아요 (최소 ${sentenceInsertRequiredSentences}문장 필요).`
+                                          : undefined
+                                      }
+                                      className={`flex h-7 min-w-0 flex-1 items-center gap-1.5 rounded-md px-1 text-left ${
+                                        itemDisabled
+                                          ? "cursor-not-allowed opacity-40"
+                                          : ""
+                                      }`}
                                       aria-label={`${item.label} 1개 추가`}
                                     >
                                       <span
@@ -2220,6 +2144,11 @@ export function GenerationConfigPanel({
                                           title="이 유형만 개별 난이도"
                                           aria-hidden="true"
                                         />
+                                      ) : null}
+                                      {itemDisabled ? (
+                                        <span className="shrink-0 whitespace-nowrap rounded bg-slate-100 px-1 text-[9px] font-semibold text-slate-400">
+                                          문장 부족
+                                        </span>
                                       ) : null}
                                     </button>
 
@@ -2259,8 +2188,9 @@ export function GenerationConfigPanel({
                                           onClick={() =>
                                             applyTypeCount(item.id, count + 1)
                                           }
+                                          disabled={itemDisabled}
                                           data-generate-tour="type-add-button"
-                                          className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                                          className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
                                           aria-label={`${item.label} 개수 늘리기`}
                                         >
                                           <Plus className="h-3.5 w-3.5" />
@@ -2473,20 +2403,16 @@ export function GenerationConfigPanel({
       {!hideGenerateButtons && genMode !== "set" && !workspaceActive && (
         <div className="px-4 py-3 border-t border-slate-100 bg-white shrink-0">
           {(() => {
-            // 크레딧 비용 계산
+            // 크레딧 비용 계산 — 유형 지정(MANUAL) 전용.
             const baseCreditCost =
-              genMode === "auto"
-                ? CREDIT_COSTS.AUTO_GEN_BATCH *
-                  Math.max(1, autoCount) *
-                  selectedIds.size
-                : selectedIds.size *
-                  Object.entries(typeCounts).reduce((sum, [typeId, value]) => {
-                    if (value <= 0) return sum;
-                    const unitCost = VOCAB_GENERATION_TYPE_IDS.has(typeId)
-                      ? CREDIT_COSTS.QUESTION_GEN_VOCAB
-                      : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-                    return sum + unitCost * value;
-                  }, 0);
+              selectedIds.size *
+              Object.entries(typeCounts).reduce((sum, [typeId, value]) => {
+                if (value <= 0) return sum;
+                const unitCost = VOCAB_GENERATION_TYPE_IDS.has(typeId)
+                  ? CREDIT_COSTS.QUESTION_GEN_VOCAB
+                  : CREDIT_COSTS.QUESTION_GEN_SINGLE;
+                return sum + unitCost * value;
+              }, 0);
             const creditCost = getQuestionGenerationCreditCost(
               baseCreditCost,
               generationPlan,
@@ -2513,15 +2439,6 @@ export function GenerationConfigPanel({
                       <FileText className="w-4.5 h-4.5" />
                       <span className="min-w-0 truncate">
                         지문을 선택하세요
-                      </span>
-                    </span>
-                  ) : genMode === "auto" ? (
-                    <span className="flex min-w-0 flex-1 items-center justify-center gap-2 overflow-hidden">
-                      <Zap className="w-4.5 h-4.5" />
-                      <span className="min-w-0 truncate">
-                        {selectedIds.size === 1
-                          ? `${autoCount}문제 자동 생성`
-                          : `${selectedIds.size}개 지문 × ${autoCount}문제 생성`}
                       </span>
                     </span>
                   ) : totalQuestions > 0 ? (
