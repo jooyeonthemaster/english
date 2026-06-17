@@ -2277,6 +2277,7 @@ export function GeneratePageClient({
           sessionQueue={sessionQueue}
           questionCountByPassage={questionCountByPassage}
           questionsByPassage={questionsByPassage}
+          onOpenQuestionDetail={(q) => setDetailQuestion(q)}
           globalDifficulty={difficulty}
           globalGenerationPlan={generationPlan}
           setModeActive={genMode === "set"}
@@ -2364,6 +2365,7 @@ export function GeneratePageClient({
               handleBatchGenerate={handleBatchGenerate}
               questionCountByPassage={questionCountByPassage}
               questionsByPassage={questionsByPassage}
+              onOpenQuestionDetail={(q) => setDetailQuestion(q)}
               learningGeneratingPassageIds={learningGeneratingPassageIds}
               learningCompletedPassageIds={freshLearningPassageIds}
               freshAnalysisPassageIds={freshAnalysisPassageIds}
@@ -2462,6 +2464,7 @@ export function GeneratePageClient({
           workspaceGenerating={workspaceGenerating}
           onWorkspaceGenerate={handleWorkspaceGenerate}
           hideGenerateButtons
+          tourActive={generateTourOpen}
         />
       </PassageGenerateModal>
     ) : null;
@@ -2526,6 +2529,7 @@ export function GeneratePageClient({
             setQueueFilter={setQueueFilter}
             autoCount={autoCount}
             onRetryGeneration={retryGeneration}
+            marqueeBoundaryRef={bottomQueueBoundaryRef}
           />
         </section>
       </main>

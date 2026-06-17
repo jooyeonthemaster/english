@@ -512,6 +512,7 @@ export function QuestionLibraryPanel({
             getDragQuestionIds={buildDragQuestionIds}
             selectionOrder={selectionOrder}
             usageCounts={paperQuestionCounts}
+            collapsible
             expandedPassageIds={expandedPassageIds}
             setExpandedPassageIds={setExpandedPassageIds}
           />
@@ -551,6 +552,7 @@ export function QuestionLibraryPanel({
                   selectionIndex={selectionOrder.get(question.id)}
                   duplicateCount={usageCount > 1 ? usageCount : undefined}
                   selectedCardHighlight={false}
+                  collapsible
                 />
               );
             })}

@@ -40,6 +40,7 @@ import { ExplanationSection } from "./question-bank-card/explanation-section";
 import { parseQuestionSections } from "./question-bank-card/parse-question-sections";
 import { renderFormatted } from "./question-bank-card/render-formatted";
 import { RenderedSections } from "./question-bank-card/rendered-sections";
+import { CollapsedPreview } from "./question-bank-card/collapsed-preview";
 import type { QuestionBankItem } from "./question-bank-card/types";
 import {
   clearCardTextSelection,
@@ -117,6 +118,8 @@ export function QuestionBankCard({
   duplicateCount,
   onDuplicateSelectConfirm,
   selectedCardHighlight = true,
+  // 접힘(콤팩트) 모드 — 시험지 빌더 등 목록을 콤팩트하게 볼 때. 기본은 펼침(전체) 유지.
+  collapsible = false,
 }: {
   q: QuestionBankItem;
   num: number;
@@ -158,6 +161,7 @@ export function QuestionBankCard({
   onDuplicateSelectConfirm?: () => void;
   // 시험지 빌더처럼 체크박스/순서 뱃지만으로 선택 상태를 표시할 때 카드 배경 강조를 끈다.
   selectedCardHighlight?: boolean;
+  collapsible?: boolean;
 }) {
   const [isDragging, setIsDragging] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -322,6 +326,8 @@ export function QuestionBankCard({
   }, [enableDrag, q.id, selectionDisabled]);
 
   const questionClamp = viewSize === "lg" ? "line-clamp-3" : "line-clamp-2";
+  // 접힘 모드: collapsible 이고 아직 펼치지 않았을 때만 콤팩트 미리보기를 보여준다.
+  const collapsed = collapsible && !expanded;
 
   // Review action footer (검수완료/검수취소 + 수정하기 + stamp) — only in managed contexts
   const showReviewActions =
@@ -488,6 +494,30 @@ export function QuestionBankCard({
             )}
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
+            {collapsible && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setExpanded((prev) => !prev);
+                }}
+                aria-expanded={expanded}
+                title={expanded ? "접기" : "펼치기"}
+                className="group/expand -m-1 inline-flex shrink-0 cursor-pointer items-center gap-1 whitespace-nowrap rounded-md p-1 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+              >
+                {expanded ? (
+                  <>
+                    접기
+                    <ChevronUp className="w-3 h-3" />
+                  </>
+                ) : (
+                  <>
+                    펼치기
+                    <ChevronDown className="w-3 h-3 transition-transform group-hover/expand:translate-y-0.5" />
+                  </>
+                )}
+              </button>
+            )}
             {typeof duplicateCount === "number" && duplicateCount > 1 && (
               <span
                 className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-black tabular-nums text-white shadow-sm"
@@ -530,8 +560,16 @@ export function QuestionBankCard({
             </div>
           )}
 
-          {/* ── Question content — 접힘/펼침 모두 전체 렌더(해설만 펼침 전용) ── */}
-          {
+          {/* ── Question content — collapsible(시험지 빌더 등)이면 접힘 미리보기, 아니면 전체 ── */}
+          {collapsed ? (
+            <CollapsedPreview
+              sections={sections}
+              options={visibleOptions}
+              correctAnswer={q.correctAnswer}
+              displayCorrectAnswer={hideOptionList ? "" : displayCorrectAnswer}
+              questionClamp={questionClamp}
+            />
+          ) : (
             <>
               {/* 전체 구조화 렌더링 */}
               {structuredQuestion ? (
@@ -587,31 +625,28 @@ export function QuestionBankCard({
                     {renderFormatted(displayCorrectAnswer)}
                   </div>
                 )}
+              {/* 해설 보기 — 비구조화에서만(구조화는 위 렌더러가 직접 제공). */}
+              {!structuredQuestion && (
+                <ExplanationSection
+                  explanation={q.explanation}
+                  rightSlot={
+                    onShowAnalysis ? (
+                      <button
+                        type="button"
+                        data-drag-select-ignore
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onShowAnalysis();
+                        }}
+                        className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                      >
+                        분석 정보
+                      </button>
+                    ) : undefined
+                  }
+                />
+              )}
             </>
-          }
-
-          {/* 해설 보기 — 자체 토글이 있어 항상 렌더. 구조화 문제는 위
-            StructuredQuestionRenderer 가 해설을 직접 제공하므로 비구조화에서만 렌더(중복 방지).
-            rightSlot에는 '분석 정보'(동형 전용)만 별도 액션으로 남긴다. */}
-          {!structuredQuestion && (
-            <ExplanationSection
-              explanation={q.explanation}
-              rightSlot={
-                onShowAnalysis ? (
-                  <button
-                    type="button"
-                    data-drag-select-ignore
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onShowAnalysis();
-                    }}
-                    className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                  >
-                    분석 정보
-                  </button>
-                ) : undefined
-              }
-            />
           )}
 
         </div>
@@ -646,13 +681,6 @@ export function QuestionBankCard({
                 <ChevronDown
                   className="ml-auto w-3 h-3 shrink-0 text-slate-400"
                   aria-hidden="true"
-                />
-              )}
-              {/* 시험지 빌더: 검수 도장을 밴드(카드 오른쪽 아래)로 옮겨 표시 */}
-              {compactUsageLabel && (
-                <ReviewStatusStamp
-                  approved={q.approved}
-                  className="ml-1 shrink-0"
                 />
               )}
             </>

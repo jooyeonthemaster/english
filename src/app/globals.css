@@ -686,39 +686,6 @@
   }
 }
 
-/* 문제 유형을 아직 하나도 고르지 않았을 때, "+" 버튼이 행동 유도(CTA)로
-   파란 링을 부드럽게 뿜으며 반짝인다 — 첫 유형 선택 전까지만 노출한다. */
-@keyframes type-add-cta-pulse {
-  0% {
-    box-shadow:
-      0 0 0 0 rgba(37, 99, 235, 0.5),
-      0 0 6px 1px rgba(37, 99, 235, 0.45);
-  }
-  70% {
-    box-shadow:
-      0 0 0 6px rgba(37, 99, 235, 0),
-      0 0 12px 3px rgba(37, 99, 235, 0.6);
-  }
-  100% {
-    box-shadow:
-      0 0 0 0 rgba(37, 99, 235, 0),
-      0 0 6px 1px rgba(37, 99, 235, 0.45);
-  }
-}
-.type-add-cta-glow {
-  animation: type-add-cta-pulse 1.9s ease-out infinite;
-  background-color: rgba(37, 99, 235, 0.12);
-  color: rgb(37, 99, 235);
-}
-@media (prefers-reduced-motion: reduce) {
-  .type-add-cta-glow {
-    animation: none;
-    background-color: rgba(37, 99, 235, 0.12);
-    color: rgb(37, 99, 235);
-    box-shadow: 0 0 8px 2px rgba(37, 99, 235, 0.5);
-  }
-}
-
 .workbench-loading-progress--pending {
   width: 34%;
 }

@@ -21,6 +21,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type RefObject,
 } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -304,6 +305,10 @@ interface EmbeddedQuestionBankProps {
   setQueueFilter?: (v: "all" | "error") => void;
   autoCount?: number;
   onRetryGeneration?: (item: QueueItem) => void | Promise<void>;
+  // 마키(영역 드래그) 시작 영역을 이 패널 전체로 넓히는 boundary — 지문 목록
+  // (PassageCardGrid)과 동일한 방식. 문제별/지문별 두 뷰의 DragSelect 가 모두
+  // 이 boundary 를 공유해, 패널 어디서든 드래그를 시작해 카드를 다중 선택한다.
+  marqueeBoundaryRef?: RefObject<HTMLElement | null>;
 }
 
 export function EmbeddedQuestionBank({
@@ -314,6 +319,7 @@ export function EmbeddedQuestionBank({
   setQueueFilter,
   autoCount = 0,
   onRetryGeneration,
+  marqueeBoundaryRef,
 }: EmbeddedQuestionBankProps) {
   const router = useRouter();
 
@@ -650,7 +656,7 @@ export function EmbeddedQuestionBank({
   // ─── Grid view mode (separate storage key from question-management) ───
   const [gridCols, setGridCols] = usePersistedState<2 | 3 | "list">(
     "smoat:view-mode:generate-embedded-question-bank",
-    2,
+    3,
     (v): v is 2 | 3 | "list" => v === 2 || v === 3 || v === "list",
   );
   const viewSize: "lg" | "md" | "sm" = gridCols === 3 ? "md" : "lg";
@@ -1426,6 +1432,7 @@ export function EmbeddedQuestionBank({
                   viewSize={viewSize}
                   selectedIds={selectedIds}
                   setSelectedIds={setSelectedIds}
+                  marqueeBoundaryRef={marqueeBoundaryRef}
                   onToggleSelect={toggleSelect}
                   onDelete={handleDelete}
                   onApprove={handleApprove}
@@ -1462,6 +1469,7 @@ export function EmbeddedQuestionBank({
                 <DragSelect
                   value={selectedIds}
                   onChange={setSelectedIds}
+                  boundaryRef={marqueeBoundaryRef}
                   className={`grid gap-3 ${
                     gridCols === 2
                       ? "grid-cols-1 md:grid-cols-2"

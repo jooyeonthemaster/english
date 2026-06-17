@@ -168,7 +168,7 @@ async function requestTransform(body: {
 }
 
 /** 선택 액션 팝오버 추정 크기 — 좌우 클램프·상하 플립 판정용. */
-const SELECTION_POPUP_W = 268;
+const SELECTION_POPUP_W = 320;
 const SELECTION_POPUP_H = 48;
 
 interface SelectionAnchor {
@@ -294,6 +294,8 @@ interface WorkspacePassageRowProps {
   savedQuestionCount: number;
   /** 이 지문(원본+변형)으로 저장된 문제 목록 — 히스토리 팝오버에 실제 표시. */
   questions: QuestionCardItem[];
+  /** 히스토리 팝오버의 문제 행 클릭 시 '문제 상세' 모달을 연다. */
+  onOpenQuestionDetail?: (q: QuestionCardItem) => void;
   /**
    * 전체 변형본을 새 Passage 로 저장하고 워크스페이스에 새 행으로 추가한다.
    * 성공하면 true 를 반환 — 행은 그때 미리보기를 닫는다.
@@ -331,6 +333,7 @@ export function WorkspacePassageRow({
   sessionQueue,
   savedQuestionCount,
   questions,
+  onOpenQuestionDetail,
   onChangeContent,
   onPushHistory,
   onApplyAi,
@@ -1223,6 +1226,7 @@ export function WorkspacePassageRow({
           sessionQueue={sessionQueue}
           savedQuestionCount={savedQuestionCount}
           questions={questions}
+          onOpenDetail={onOpenQuestionDetail}
         />
         <button
           type="button"

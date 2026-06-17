@@ -11,10 +11,9 @@ import {
   Target,
   Zap,
   Gem,
-  Sparkles,
+  Layers,
   Settings2,
   ChevronDown,
-  ChevronUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EXAM_TYPE_GROUPS } from "./generate-page-types";
@@ -86,13 +85,53 @@ const VOCAB_GENERATION_TYPE_IDS = new Set([
 ]);
 const TYPE_ORDER_STORAGE_KEY =
   "smoat.workbench.questions.generate.typeOrder.v1";
+// 카테고리 그룹 접힘 상태(UI 취향) — 유형 목록을 3개 카테고리 카드로 묶고
+// 각 카드를 접을 수 있게 한다. 투어 중에는 강제로 모두 펼친다.
+const GROUP_COLLAPSE_STORAGE_KEY =
+  "smoat.workbench.questions.generate.groupCollapsed.v1";
+// 렌더 순서(고정): 수능 → 내신 → 어휘. 정렬(typeOrder)은 그룹 내부에만 적용된다.
+const GROUP_ORDER = ["수능", "내신", "어휘"] as const;
+const GROUP_LABELS: Record<string, string> = {
+  수능: "수능·모의고사 객관식",
+  내신: "내신 서술형",
+  어휘: "어휘",
+};
 
-// Difficulty — 세그먼트 컨트롤. 단계 식별은 컬러 닷으로만 (면색 남용 금지).
+// Difficulty — 세그먼트 컨트롤. 단계 식별은 컬러 닷 + 난이도별 면색(SOT).
+// 색은 src/lib/difficulty.ts 와 동일(기본=파랑·중급=노랑·킬러=빨강) — 전 화면 일관.
 const DIFFICULTY_TONES = [
-  { value: "BASIC", label: "기본", on: "bg-blue-50 text-blue-700" },
-  { value: "INTERMEDIATE", label: "중급", on: "bg-amber-50 text-amber-700" },
-  { value: "KILLER", label: "킬러", on: "bg-red-50 text-red-700" },
+  { value: "BASIC", label: "기본", on: "bg-blue-50 text-blue-700", dot: "bg-blue-500" },
+  { value: "INTERMEDIATE", label: "중급", on: "bg-amber-50 text-amber-700", dot: "bg-amber-500" },
+  { value: "KILLER", label: "킬러", on: "bg-red-50 text-red-700", dot: "bg-red-500" },
 ] as const;
+
+// 부드럽게 펼쳐지는 컨테이너 — 순수 CSS grid-rows 0fr↔1fr 트릭(높이 측정·프레이머
+// 불필요, 임의 내용 높이 애니메이션). 유형 세부옵션·카테고리 그룹 양쪽에 쓴다.
+// 내용은 항상 마운트해 펼침/접힘이 모두 애니메이션되게 한다(접힘 시 inert 로 비활성).
+function Collapsible({
+  open,
+  children,
+}: {
+  open: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className="grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
+      style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+    >
+      <div className="min-h-0 overflow-hidden" inert={!open}>
+        <div
+          className={`transition-[opacity,transform] duration-300 motion-reduce:transition-none ${
+            open ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1"
+          }`}
+        >
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // 난이도 세그먼트 — 자동/유형지정 모드 공통.
 function DifficultySegment({
@@ -115,12 +154,16 @@ function DifficultySegment({
               key={d.value}
               type="button"
               onClick={() => setDifficulty(d.value)}
-              className={`flex flex-1 items-center justify-center rounded-[6px] text-[12px] transition-all duration-150 ${
+              className={`flex flex-1 items-center justify-center gap-1 rounded-[6px] text-[12px] transition-all duration-150 ${
                 active
                   ? `font-bold shadow-sm ${d.on}`
                   : "font-semibold text-slate-400 hover:text-slate-600"
               }`}
             >
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${d.dot}`}
+                aria-hidden="true"
+              />
               {d.label}
             </button>
           );
@@ -209,6 +252,11 @@ interface GenerationConfigPanelProps {
    * 패널 바깥(모달 푸터)에서 제공할 때 쓴다. 미지정 시 기존처럼 버튼을 렌더한다.
    */
   hideGenerateButtons?: boolean;
+  /**
+   * 제품 투어가 진행 중인지 — true 면 카테고리 그룹을 강제로 모두 펼쳐 투어가
+   * 가리키는 유형 행(type-add-button 등)이 항상 보이게 한다.
+   */
+  tourActive?: boolean;
 }
 
 // ─── Component ───────────────────────────────────────
@@ -260,10 +308,42 @@ export function GenerationConfigPanel({
   workspaceVariantCount = 0,
   workspaceGenerating = false,
   onWorkspaceGenerate,
+  tourActive = false,
 }: GenerationConfigPanelProps) {
   const [expandedTypeId, setExpandedTypeId] = useState<string | null>(
     "BLANK_INFERENCE",
   );
+  // 카테고리 그룹 접힘 상태 — localStorage 영속(UI 취향). 투어 중엔 무시(강제 펼침).
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(() => {
+    if (typeof window === "undefined") return new Set();
+    try {
+      const parsed = JSON.parse(
+        window.localStorage.getItem(GROUP_COLLAPSE_STORAGE_KEY) || "[]",
+      );
+      if (Array.isArray(parsed)) {
+        return new Set(parsed.filter((p) => typeof p === "string"));
+      }
+    } catch {
+      // 그룹 접힘은 편의 설정 — 저장 실패는 무시.
+    }
+    return new Set();
+  });
+  const toggleGroup = (prefix: string) => {
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(prefix)) next.delete(prefix);
+      else next.add(prefix);
+      try {
+        window.localStorage.setItem(
+          GROUP_COLLAPSE_STORAGE_KEY,
+          JSON.stringify([...next]),
+        );
+      } catch {
+        // 무시.
+      }
+      return next;
+    });
+  };
   const allTypeItems = useMemo(
     () =>
       EXAM_TYPE_GROUPS.flatMap((group) =>
@@ -317,6 +397,19 @@ export function GenerationConfigPanel({
   const activeTypeItems = useMemo(() => {
     return orderedTypeItems.filter((item) => (typeCounts[item.id] || 0) > 0);
   }, [orderedTypeItems, typeCounts]);
+  // 유형 목록을 3개 카테고리로 분할(렌더 시에만). 그룹 순서는 수능→내신→어휘 고정,
+  // 그룹 내부 순서는 사용자의 드래그 정렬(orderedTypeItems)을 그대로 따른다.
+  const groupedTypeItems = useMemo(
+    () =>
+      GROUP_ORDER.map((prefix) => ({
+        prefix,
+        label: GROUP_LABELS[prefix],
+        items: orderedTypeItems.filter((item) =>
+          (item.groupLabel || "").startsWith(prefix),
+        ),
+      })).filter((group) => group.items.length > 0),
+    [orderedTypeItems],
+  );
   const blankSettings = questionTypeSettings.BLANK_INFERENCE || {};
   const updateBlankSetting = (
     next: Partial<
@@ -770,12 +863,6 @@ export function GenerationConfigPanel({
     if (category.startsWith("어휘")) return "bg-amber-400";
     return "bg-slate-300";
   };
-
-  const categoryLegend = [
-    { label: "수능·모의", dot: "bg-blue-400" },
-    { label: "내신 서술", dot: "bg-emerald-400" },
-    { label: "어휘", dot: "bg-amber-400" },
-  ];
 
   const renderNumberSetting = ({
     title,
@@ -1694,6 +1781,53 @@ export function GenerationConfigPanel({
     return null;
   };
 
+  // 유형별 난이도 — 전역 난이도가 기본값(상속)이고, 이 유형만 다르게 출제하고
+  // 싶을 때 override 한다. 값은 questionTypeSettings[typeId].difficulty 에 쓰며,
+  // 서버는 readQuestionTypeDifficultySetting(…, 전역 difficulty) 로 이를 우선 적용한다.
+  // undefined = 전역 따름(오늘과 동일 동작). 순수 프런트엔드(백엔드 변경 0).
+  const renderPerTypeDifficulty = (typeId: string) => {
+    const raw = questionTypeSettings[typeId]?.difficulty as
+      | "BASIC"
+      | "INTERMEDIATE"
+      | "KILLER"
+      | undefined;
+    // 미설정이면 기본 난이도(전역 difficulty, 보통 중급)가 선택된 것으로 표시한다.
+    const effective = raw ?? difficulty;
+    return (
+      <div>
+        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          난이도 · 이 유형만
+        </span>
+        <div className="mt-1.5 flex h-8 rounded-lg bg-slate-100 p-0.5">
+          {DIFFICULTY_TONES.map((d) => {
+            const isActive = effective === d.value;
+            return (
+              <button
+                key={d.value}
+                type="button"
+                onClick={() =>
+                  patchTypeSettings(typeId, { difficulty: d.value })
+                }
+                className={`flex flex-1 items-center justify-center gap-1 rounded-[6px] text-[12px] transition-all duration-150 ${
+                  isActive
+                    ? `font-bold shadow-sm ${d.on}`
+                    : "font-semibold text-slate-500 hover:text-slate-700"
+                }`}
+                aria-pressed={isActive}
+              >
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${d.dot}`}
+                  aria-hidden="true"
+                />
+                {d.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   // Every type gets language toggles; numeric/special settings render above them.
   const renderTypeDetailContent = (typeId: string) => {
     const numericContent = renderTypeNumericDetailContent(typeId);
@@ -1720,7 +1854,7 @@ export function GenerationConfigPanel({
               {(["STANDARD", "PREMIUM"] as const).map((planId) => {
                 const plan = QUESTION_GENERATION_PLANS[planId];
                 const active = typePlan === planId;
-                const Icon = planId === "PREMIUM" ? Gem : Sparkles;
+                const Icon = planId === "PREMIUM" ? Gem : Layers;
                 return (
                   <button
                     key={planId}
@@ -1897,216 +2031,307 @@ export function GenerationConfigPanel({
         {/* Manual Mode Config */}
         {genMode === "manual" && (
           <div className="px-4 py-3 space-y-3">
-            {/* Difficulty */}
-            <DifficultySegment
-              difficulty={difficulty}
-              setDifficulty={setDifficulty}
-            />
+            {/* 난이도는 유형별로만 설정한다 — 전역 세그먼트는 제거하고, 각 유형의
+                '설정'에서 지정(미지정 시 기본 난이도로 출제). */}
 
-            {/* Type selection blocks — 단일 컨테이너 리스트 (카드 더미 금지) */}
+            {/* Type selection — 3개 카테고리 그룹 카드 (긴 평면 리스트 해소) */}
             <div className="space-y-3">
               <div>
-                <div className="flex items-center justify-between px-0.5">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                    문제 유형
-                  </span>
-                  <div className="flex items-center gap-2.5">
-                    {categoryLegend.map((c) => (
-                      <span
-                        key={c.label}
-                        className="flex items-center gap-1 text-[10px] font-medium text-slate-400"
-                      >
-                        <span
-                          className={`h-1.5 w-1.5 rounded-full ${c.dot}`}
-                          aria-hidden="true"
-                        />
-                        {c.label}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div
-                  className="mt-1.5 divide-y divide-slate-100 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
-                  data-generate-tour="type-list"
-                >
-                  {orderedTypeItems.map((item) => {
-                    const count = typeCounts[item.id] || 0;
-                    const active = count > 0;
-                    // Language toggles exist for every type, so every block expands.
-                    const expanded = expandedTypeId === item.id;
-                    const dragging = draggingTypeId === item.id;
-                    const dragOver =
-                      dragOverTypeId === item.id && draggingTypeId !== item.id;
-
+                <span className="block px-0.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  문제 유형
+                </span>
+                <div className="mt-1.5 space-y-2" data-generate-tour="type-list">
+                  {groupedTypeItems.map((group) => {
+                    const groupOpen =
+                      tourActive || !collapsedGroups.has(group.prefix);
+                    const selectedCount = group.items.filter(
+                      (it) => (typeCounts[it.id] || 0) > 0,
+                    ).length;
                     return (
-                      <section
-                        key={item.id}
-                        data-question-type-id={item.id}
-                        onClick={(event) =>
-                          handleTypeSectionClick(event, item.id)
-                        }
-                        onDragOver={(event) => {
-                          event.preventDefault();
-                          if (draggingTypeId && draggingTypeId !== item.id) {
-                            setDragOverTypeId(item.id);
-                          }
-                        }}
-                        onDrop={(event) => {
-                          event.preventDefault();
-                          const sourceId =
-                            draggingTypeId ||
-                            event.dataTransfer.getData("text/plain");
-                          dropTypeBlock(sourceId, item.id);
-                          setDraggingTypeId(null);
-                          setDragOverTypeId(null);
-                        }}
-                        className={`group cursor-pointer transition-colors ${
-                          dragOver
-                            ? "bg-blue-50 ring-1 ring-inset ring-blue-300"
-                            : active
-                              ? "bg-blue-50/70"
-                              : "hover:bg-slate-50/80"
-                        } ${dragging ? "opacity-50" : ""}`}
+                      <div
+                        key={group.prefix}
+                        className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
                       >
-                        <div
-                          onClick={(event) =>
-                            handleTypeSurfaceClick(event, item.id)
-                          }
-                          className="flex h-10 items-center gap-0.5 pl-1 pr-1.5"
+                        <button
+                          type="button"
+                          onClick={() => toggleGroup(group.prefix)}
+                          className="flex h-10 w-full items-center gap-2 border-b border-slate-200 bg-slate-50/80 px-3 text-left transition-colors hover:bg-slate-100/80"
+                          aria-expanded={groupOpen}
+                          title={`${group.label} ${groupOpen ? "접기" : "펼치기"}`}
                         >
-                          <button
-                            type="button"
-                            draggable
-                            onDragStart={(event) => {
-                              setDraggingTypeId(item.id);
-                              event.dataTransfer.effectAllowed = "move";
-                              event.dataTransfer.setData("text/plain", item.id);
-                            }}
-                            onDragEnd={() => {
-                              setDraggingTypeId(null);
-                              setDragOverTypeId(null);
-                            }}
-                            className="flex h-7 w-6 shrink-0 cursor-grab items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 active:cursor-grabbing"
-                            title={`${item.label} 순서 드래그`}
-                            aria-label={`${item.label} 순서 드래그`}
-                          >
-                            <GripVertical className="h-3.5 w-3.5" />
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              applyTypeCount(item.id, count + 1);
-                            }}
-                            className="flex h-7 min-w-0 flex-1 items-center gap-2 rounded-md px-1 text-left"
-                            aria-label={`${item.label} 1개 추가`}
-                          >
-                            <span
-                              title={item.groupLabel}
-                              className={`h-1.5 w-1.5 shrink-0 rounded-full ${getCategoryDotClass(item.groupLabel)}`}
-                              aria-hidden="true"
-                            />
-                            <span
-                              className={`min-w-0 flex-1 truncate text-[12px] ${
-                                active
-                                  ? "font-bold text-blue-800"
-                                  : "font-semibold text-slate-600"
-                              }`}
-                            >
-                              {item.label}
+                          <span
+                            className={`h-2 w-2 shrink-0 rounded-full ${getCategoryDotClass(group.label)}`}
+                            aria-hidden="true"
+                          />
+                          <span className="text-[12px] font-bold text-slate-700">
+                            {group.label}
+                          </span>
+                          {selectedCount > 0 ? (
+                            <span className="ml-1 rounded-full bg-white px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-slate-600 ring-1 ring-inset ring-slate-200">
+                              선택 {selectedCount}
                             </span>
-                          </button>
+                          ) : null}
+                          <span className="text-[10px] font-medium tabular-nums text-slate-300">
+                            {group.items.length}
+                          </span>
+                          <ChevronDown
+                            className={`ml-auto h-4 w-4 shrink-0 text-slate-400 transition-transform duration-300 ${groupOpen ? "" : "-rotate-90"}`}
+                            aria-hidden="true"
+                          />
+                        </button>
+                        <Collapsible open={groupOpen}>
+                          <div className="divide-y divide-slate-100">
+                            {group.items.map((item) => {
+                              const count = typeCounts[item.id] || 0;
+                              const active = count > 0;
+                              // 모든 유형에 세부옵션이 있어 모든 행이 펼쳐진다.
+                              const expanded = expandedTypeId === item.id;
+                              const dragging = draggingTypeId === item.id;
+                              const dragOver =
+                                dragOverTypeId === item.id &&
+                                draggingTypeId !== item.id;
+                              // 이 유형의 실제 난이도(미설정이면 기본 난이도).
+                              // 기본 난이도와 다를 때만 이름 옆에 컬러 점으로 표시한다.
+                              const effDiff =
+                                (questionTypeSettings[item.id]?.difficulty as
+                                  | "BASIC"
+                                  | "INTERMEDIATE"
+                                  | "KILLER"
+                                  | undefined) ?? difficulty;
+                              const overrideDot =
+                                effDiff === difficulty
+                                  ? ""
+                                  : effDiff === "BASIC"
+                                    ? "bg-blue-500"
+                                    : effDiff === "INTERMEDIATE"
+                                      ? "bg-amber-500"
+                                      : "bg-red-500";
 
-                          <div className="grid w-[100px] shrink-0 grid-cols-[72px_28px] items-center">
-                            <div className="flex items-center justify-end gap-0.5">
-                              {/* 0개 행도 −/0/+ 를 모두 보여준다 — 0일 때 −는
-                                비활성(흐림), 숫자는 옅게. +는 항상 우측 고정칸이라
-                                세로 정렬이 유지된다. */}
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  applyTypeCount(item.id, Math.max(0, count - 1))
-                                }
-                                disabled={count <= 0}
-                                className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent disabled:hover:text-slate-200"
-                                aria-label={`${item.label} 개수 줄이기`}
-                              >
-                                <Minus className="h-3.5 w-3.5" />
-                              </button>
-                              <span
-                                className={
-                                  "w-5 text-center text-[12.5px] font-bold tabular-nums " +
-                                  (count > 0 ? "text-blue-700" : "text-slate-300")
-                                }
-                              >
-                                {count}
-                              </span>
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  applyTypeCount(item.id, count + 1)
-                                }
-                                data-generate-tour="type-add-button"
-                                className={`flex h-7 w-7 items-center justify-center rounded-md transition-colors ${
-                                  active
-                                    ? "text-blue-500 hover:bg-white hover:text-blue-700"
-                                    : "text-slate-400 hover:bg-blue-50 hover:text-blue-600"
-                                } ${
-                                  totalQuestions === 0
-                                    ? "type-add-cta-glow"
-                                    : ""
-                                }`}
-                                aria-label={`${item.label} 개수 늘리기`}
-                              >
-                                <Plus className="h-3.5 w-3.5" />
-                              </button>
-                            </div>
-                            {/* jay 파라미터 확장으로 모든 유형에 세부 옵션이 생겨
-                              항상 노출 — 스타일은 워크스페이스 재설계 톤 유지 */}
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (!expanded) {
-                                  dispatchGenerateTourMilestone(
-                                    "type-detail-opened",
-                                  );
-                                }
-                                setExpandedTypeId(expanded ? null : item.id);
-                              }}
-                              data-generate-tour={
-                                expanded ? undefined : "type-detail-toggle"
-                              }
-                              className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
-                              title={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
-                              aria-label={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
-                            >
-                              {expanded ? (
-                                <ChevronUp className="h-3.5 w-3.5" />
-                              ) : (
-                                <ChevronDown className="h-3.5 w-3.5" />
-                              )}
-                            </button>
-                          </div>
-                        </div>
+                              return (
+                                <section
+                                  key={item.id}
+                                  data-question-type-id={item.id}
+                                  onClick={(event) =>
+                                    handleTypeSectionClick(event, item.id)
+                                  }
+                                  onDragOver={(event) => {
+                                    event.preventDefault();
+                                    if (
+                                      !draggingTypeId ||
+                                      draggingTypeId === item.id
+                                    )
+                                      return;
+                                    // 같은 카테고리 안에서만 정렬 — 그룹 간 이동 차단.
+                                    const src = allTypeItems.find(
+                                      (t) => t.id === draggingTypeId,
+                                    );
+                                    if (
+                                      src &&
+                                      item.groupLabel &&
+                                      src.groupLabel !== item.groupLabel
+                                    )
+                                      return;
+                                    setDragOverTypeId(item.id);
+                                  }}
+                                  onDrop={(event) => {
+                                    event.preventDefault();
+                                    const sourceId =
+                                      draggingTypeId ||
+                                      event.dataTransfer.getData("text/plain");
+                                    const src = allTypeItems.find(
+                                      (t) => t.id === sourceId,
+                                    );
+                                    if (
+                                      !src ||
+                                      !item.groupLabel ||
+                                      src.groupLabel === item.groupLabel
+                                    ) {
+                                      dropTypeBlock(sourceId, item.id);
+                                    }
+                                    setDraggingTypeId(null);
+                                    setDragOverTypeId(null);
+                                  }}
+                                  className={`group relative cursor-pointer overflow-hidden transition-colors ${
+                                    dragOver
+                                      ? "bg-blue-100 ring-1 ring-inset ring-blue-300"
+                                      : active || expanded
+                                        ? "bg-blue-100"
+                                        : "hover:bg-slate-50/80"
+                                  } ${dragging ? "opacity-50" : ""}`}
+                                >
+                                  {/* 좌측 액센트 바 — 선택(파랑) 또는 펼침(연파랑)
+                                    시 헤더~우물 전체를 관통해 '열린 한 덩어리'로 묶는다. */}
+                                  {active || expanded ? (
+                                    <span
+                                      className={`absolute left-0 top-0 h-full w-0.5 ${active ? "bg-blue-500/70" : "bg-blue-400/50"}`}
+                                      aria-hidden="true"
+                                    />
+                                  ) : null}
+                                  <div
+                                    onClick={(event) =>
+                                      handleTypeSurfaceClick(event, item.id)
+                                    }
+                                    className="flex h-10 items-center gap-0.5 pl-1 pr-1.5"
+                                  >
+                                    <button
+                                      type="button"
+                                      draggable
+                                      onDragStart={(event) => {
+                                        setDraggingTypeId(item.id);
+                                        event.dataTransfer.effectAllowed =
+                                          "move";
+                                        event.dataTransfer.setData(
+                                          "text/plain",
+                                          item.id,
+                                        );
+                                      }}
+                                      onDragEnd={() => {
+                                        setDraggingTypeId(null);
+                                        setDragOverTypeId(null);
+                                      }}
+                                      className="flex h-7 w-6 shrink-0 cursor-grab items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 active:cursor-grabbing"
+                                      title={`${item.label} 순서 드래그`}
+                                      aria-label={`${item.label} 순서 드래그`}
+                                    >
+                                      <GripVertical className="h-3.5 w-3.5" />
+                                    </button>
 
-                        {expanded ? (
-                          <div
-                            onClick={(event) =>
-                              handleTypeSurfaceClick(event, item.id)
-                            }
-                            className="border-t border-slate-100 bg-slate-50/60 px-3.5 py-3"
-                          >
-                            {renderTypeDetailContent(item.id)}
+                                    <button
+                                      type="button"
+                                      onClick={(event) => {
+                                        event.stopPropagation();
+                                        applyTypeCount(item.id, count + 1);
+                                      }}
+                                      className="flex h-7 min-w-0 flex-1 items-center gap-1.5 rounded-md px-1 text-left"
+                                      aria-label={`${item.label} 1개 추가`}
+                                    >
+                                      <span
+                                        className={`min-w-0 truncate text-[12px] ${
+                                          active
+                                            ? "font-bold text-slate-800"
+                                            : "font-semibold text-slate-600"
+                                        }`}
+                                      >
+                                        {item.label}
+                                      </span>
+                                      {active && overrideDot ? (
+                                        <span
+                                          className={`h-1.5 w-1.5 shrink-0 rounded-full ${overrideDot}`}
+                                          title="이 유형만 개별 난이도"
+                                          aria-hidden="true"
+                                        />
+                                      ) : null}
+                                    </button>
+
+                                    <div className="flex shrink-0 items-center gap-1.5">
+                                      {/* 문항 수(=생성할 문제 수). 박스형 수량 컨트롤 +
+                                        '문항' 라벨로, 세부옵션의 테두리 없는 설정 스테퍼
+                                        (빈칸 개수 등)와 한눈에 구분되게 한다. */}
+                                      <span className="whitespace-nowrap text-[10px] font-semibold text-slate-400">
+                                        문항 수
+                                      </span>
+                                      <div className="flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white">
+                                        <button
+                                          type="button"
+                                          onClick={() =>
+                                            applyTypeCount(
+                                              item.id,
+                                              Math.max(0, count - 1),
+                                            )
+                                          }
+                                          disabled={count <= 0}
+                                          className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
+                                          aria-label={`${item.label} 개수 줄이기`}
+                                        >
+                                          <Minus className="h-3.5 w-3.5" />
+                                        </button>
+                                        <span
+                                          className={`flex h-7 w-7 items-center justify-center border-x border-slate-200 text-[12.5px] font-bold tabular-nums ${
+                                            count > 0
+                                              ? "bg-blue-50/50 text-blue-700"
+                                              : "bg-slate-50/60 text-slate-300"
+                                          }`}
+                                        >
+                                          {count}
+                                        </span>
+                                        <button
+                                          type="button"
+                                          onClick={() =>
+                                            applyTypeCount(item.id, count + 1)
+                                          }
+                                          data-generate-tour="type-add-button"
+                                          className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                                          aria-label={`${item.label} 개수 늘리기`}
+                                        >
+                                          <Plus className="h-3.5 w-3.5" />
+                                        </button>
+                                      </div>
+                                      {/* 세부 옵션 토글 — 아이콘만 있던 것을 라벨 pill 로
+                                        키워 발견성을 높인다(접힘 시 selector 부착). */}
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          if (!expanded) {
+                                            dispatchGenerateTourMilestone(
+                                              "type-detail-opened",
+                                            );
+                                          }
+                                          setExpandedTypeId(
+                                            expanded ? null : item.id,
+                                          );
+                                        }}
+                                        data-generate-tour={
+                                          expanded
+                                            ? undefined
+                                            : "type-detail-toggle"
+                                        }
+                                        className={`flex h-7 shrink-0 items-center gap-1 rounded-full border pl-2 pr-1.5 text-[10px] font-semibold transition-colors ${
+                                          expanded
+                                            ? "border-blue-200 bg-blue-50 text-blue-600"
+                                            : "border-slate-200 bg-slate-50 text-slate-500 group-hover:text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
+                                        }`}
+                                        title={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
+                                        aria-label={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
+                                        aria-expanded={expanded}
+                                      >
+                                        <span>{expanded ? "접기" : "설정"}</span>
+                                        <ChevronDown
+                                          className={`h-3 w-3 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
+                                          aria-hidden="true"
+                                        />
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  <Collapsible open={expanded}>
+                                    <div
+                                      onClick={(event) =>
+                                        handleTypeSurfaceClick(event, item.id)
+                                      }
+                                      className="border-t-2 border-slate-200 bg-slate-100 px-3 pb-3 pt-2.5 shadow-[inset_0_2px_4px_-2px_rgba(15,23,42,0.12)]"
+                                    >
+                                      <div className="space-y-2.5">
+                                        <div className="rounded-lg border border-slate-200 bg-white px-2.5 py-2">
+                                          {renderPerTypeDifficulty(item.id)}
+                                        </div>
+                                        <div className="rounded-lg border border-slate-200 bg-white px-3 py-2.5">
+                                          {renderTypeDetailContent(item.id)}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </Collapsible>
+                                </section>
+                              );
+                            })}
                           </div>
-                        ) : null}
-                      </section>
+                        </Collapsible>
+                      </div>
                     );
                   })}
                 </div>
               </div>
 
-              {totalQuestions > 0 && (
+              {totalQuestions > 0 ? (
                 <div className="flex h-9 items-center justify-between rounded-lg border border-slate-200 bg-slate-50 pl-3 pr-1.5">
                   <span className="text-[12px] font-semibold text-slate-700">
                     총{" "}
@@ -2124,6 +2349,11 @@ export function GenerationConfigPanel({
                   >
                     초기화
                   </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 rounded-lg border border-dashed border-blue-200 bg-blue-50/50 px-3 py-2 text-[11px] font-semibold text-blue-700">
+                  <Plus className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  <span>유형 이름이나 + 를 눌러 문제 수를 더하세요.</span>
                 </div>
               )}
             </div>

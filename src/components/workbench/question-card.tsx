@@ -12,7 +12,6 @@ import {
   Gem,
   Pencil,
   Layers,
-  Sparkles,
   XCircle,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,7 +33,6 @@ import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 import {
   getQuestionGenerationPlanFromTags,
   isQuestionGenerationPlanTag,
-  QUESTION_GENERATION_PLAN_TAGS,
   sanitizeAiModelDisclosureText,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
@@ -526,6 +524,26 @@ export function QuestionCard({
   const generationPlan =
     getQuestionGenerationPlanFromTags(tags) ??
     readGenerationPlanFromStructuredData(q.structuredData);
+  // 생성 플랜(일반/프리미엄) 태그 — 프리미엄은 보라(프리미엄 톤), 일반은 슬레이트.
+  // 카드 헤더(콤팩트·비콤팩트 공통)에 노출한다. (Sparkles 금지 → Layers 사용)
+  const planBadge =
+    FEATURE_FLAGS.SHOW_MODEL_SELECTOR && generationPlan ? (
+      <Badge
+        variant="outline"
+        className={`shrink-0 gap-1 text-[10px] font-bold ${
+          generationPlan === "PREMIUM"
+            ? "border-violet-200 bg-violet-50 text-violet-700"
+            : "border-slate-200 bg-slate-50 text-slate-500"
+        }`}
+      >
+        {generationPlan === "PREMIUM" ? (
+          <Gem className="h-3 w-3" />
+        ) : (
+          <Layers className="h-3 w-3" />
+        )}
+        {generationPlan === "PREMIUM" ? "프리미엄" : "일반"}
+      </Badge>
+    ) : null;
   const visibleTags = tags.filter((tag) => !isQuestionGenerationPlanTag(tag));
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
   const keyPoints = parseJSON<string[]>(q.explanation?.keyPoints || null, []);
@@ -664,11 +682,22 @@ export function QuestionCard({
             )}
             <div className="flex-1 min-w-0">
               {compact ? (
-                /* compact(생성/검수 결과) 카드: 뱃지·태그 대신 문제의 발문(의문문)을
-                   헤더에 바로 노출 — "무엇을 묻는 문제인지"가 한눈에 보인다. */
-                <p className="text-[12.5px] font-bold leading-snug text-slate-800 line-clamp-2">
-                  {directionText}
-                </p>
+                /* compact(생성/검수 결과) 카드: 헤더에 발문(의문문)을 바로 노출 —
+                   "무엇을 묻는 문제인지"가 한눈에 보인다. 펼친 상태에서는 본문이
+                   발문을 다시 렌더하므로(중복/겹침 방지) 헤더 발문은 접힌 상태에서만
+                   보여준다. 단, 생성 플랜 태그는 접힘/펼침 모두 항상 노출한다. */
+                <>
+                  {planBadge ? (
+                    <div className={!compactExpanded ? "mb-1.5" : ""}>
+                      {planBadge}
+                    </div>
+                  ) : null}
+                  {!compactExpanded ? (
+                    <p className="text-[12.5px] font-bold leading-snug text-slate-800 line-clamp-2">
+                      {directionText}
+                    </p>
+                  ) : null}
+                </>
               ) : (
                 <>
                   <div className="flex items-center gap-1.5 flex-wrap">
@@ -694,23 +723,7 @@ export function QuestionCard({
                         {diffConfig.label}
                       </Badge>
                     )}
-                    {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && generationPlan && (
-                      <Badge
-                        variant="outline"
-                        className={`gap-1 text-[10px] font-bold ${
-                          generationPlan === "PREMIUM"
-                            ? "bg-slate-50 text-slate-600 border-slate-200"
-                            : "bg-slate-50 text-slate-600 border-slate-200"
-                        }`}
-                      >
-                        {generationPlan === "PREMIUM" ? (
-                          <Gem className="w-3 h-3" />
-                        ) : (
-                          <Sparkles className="w-3 h-3" />
-                        )}
-                        {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
-                      </Badge>
-                    )}
+                    {planBadge}
                     {q.aiGenerated && (
                       <Layers className="w-3 h-3 text-blue-400" />
                     )}
@@ -730,6 +743,32 @@ export function QuestionCard({
                 </>
               )}
             </div>
+            {/* 펼치기/접기 — 발문 바로 옆(헤더 오른쪽)에 배치. */}
+            {compact && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCompactExpanded((prev) => !prev);
+                  if (compactExpanded) setPassageOpen(false);
+                }}
+                aria-expanded={compactExpanded}
+                title={compactExpanded ? "접기" : "펼치기"}
+                className="group/expand -m-1.5 inline-flex shrink-0 cursor-pointer items-center gap-1 whitespace-nowrap rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+              >
+                {compactExpanded ? (
+                  <>
+                    접기
+                    <ChevronUp className="w-3 h-3" />
+                  </>
+                ) : (
+                  <>
+                    펼치기
+                    <ChevronDown className="w-3 h-3 transition-transform group-hover/expand:translate-y-0.5" />
+                  </>
+                )}
+              </button>
+            )}
             {showHeaderActions && onDelete && (
               <Button
                 variant="ghost"
@@ -869,10 +908,15 @@ export function QuestionCard({
                     : "text-[13px]"
                 }`}
               >
-                {renderFormatted(compact ? compactBodyText : flatDisplayQuestionText, {
-                  underlineMarkedWords: needsUnderline,
-                  highlightMarkers: showMarkers,
-                })}
+                {renderFormatted(
+                  !compact || compactExpanded
+                    ? flatDisplayQuestionText
+                    : compactBodyText,
+                  {
+                    underlineMarkedWords: needsUnderline,
+                    highlightMarkers: showMarkers,
+                  },
+                )}
               </div>
 
               {/* Options */}
@@ -992,35 +1036,6 @@ export function QuestionCard({
             </>
           )}
 
-          {/* compact 카드: 해설 보기 대신 카드 전체 펼치기/접기 토글.
-              구조화/플랫 분기와 무관하게 항상 노출되도록 ternary 바깥에 둔다. */}
-          {compact && (
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCompactExpanded((prev) => !prev);
-                  if (compactExpanded) setPassageOpen(false);
-                }}
-                aria-expanded={compactExpanded}
-                title={compactExpanded ? "접기" : "펼치기"}
-                className="group/expand -m-1.5 inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-              >
-                {compactExpanded ? (
-                  <>
-                    접기
-                    <ChevronUp className="w-3 h-3" />
-                  </>
-                ) : (
-                  <>
-                    펼치기
-                    <ChevronDown className="w-3 h-3 transition-transform group-hover/expand:translate-y-0.5" />
-                  </>
-                )}
-              </button>
-            </div>
-          )}
         </div>
 
         {/* Footer */}
@@ -1030,9 +1045,9 @@ export function QuestionCard({
           <div className="flex items-end justify-between gap-2">
             <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
               <span>{formatDate(q.createdAt)}</span>
-              {q._count?.examLinks && q._count.examLinks > 0 && (
+              {q._count?.examLinks ? (
                 <span>시험 {q._count.examLinks}회 사용</span>
-              )}
+              ) : null}
             </div>
             {!showFooterActions &&
             (!hideReviewStatusStamp || detailIconButton) ? (

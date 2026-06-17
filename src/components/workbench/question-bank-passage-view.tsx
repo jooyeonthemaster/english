@@ -56,6 +56,8 @@ interface PassageGroupedViewProps {
   usageCounts?: Map<string, number>;
   onApproveDuplicateSelect?: (questionId: string) => void;
   renderQuestion?: (question: any, index: number) => ReactNode;
+  /** 카드 접힘(콤팩트) 모드 — fallback QuestionBankCard 로 그대로 전달. */
+  collapsible?: boolean;
   expandedPassageIds: Record<string, boolean>;
   setExpandedPassageIds: (
     next:
@@ -122,6 +124,7 @@ export function PassageGroupedView({
   usageCounts,
   onApproveDuplicateSelect,
   renderQuestion,
+  collapsible,
   expandedPassageIds,
   setExpandedPassageIds,
   onActivePassageChange,
@@ -488,6 +491,7 @@ export function PassageGroupedView({
                           getDuplicateDragQuestionIds={getDuplicateDragQuestionIds}
                           selectionIndex={selectionOrder?.get(q.id)}
                           selectionDisabled={disabled}
+                          collapsible={collapsible}
                           duplicateCount={usageCount > 1 ? usageCount : undefined}
                           onDuplicateSelectConfirm={
                             disabled && onApproveDuplicateSelect
