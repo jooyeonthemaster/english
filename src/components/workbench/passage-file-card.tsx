@@ -15,7 +15,7 @@ import { getSemesterLabel } from "@/lib/utils";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { isDirectInputPassage } from "@/lib/passage-source";
 import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
-import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import {
   clearCardTextSelection,
   preventCardDoubleClickTextSelection,
@@ -202,37 +202,47 @@ export function PassageFileCard({
           <p className="text-[11px] text-slate-500 leading-relaxed mt-2 line-clamp-2">{mainIdea}</p>
         )}
 
-        {isAnalyzed && (
-          <div className="flex items-center gap-2 flex-wrap mt-2">
-            {vocabCount > 0 && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-medium text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
-                <BookOpen className="w-3 h-3" />어휘 {vocabCount}
-              </span>
-            )}
-            {grammarCount > 0 && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-medium text-violet-600 bg-violet-50 px-1.5 py-0.5 rounded">
-                <PenTool className="w-3 h-3" />어법 {grammarCount}
-              </span>
-            )}
-            {syntaxCount > 0 && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-medium text-cyan-600 bg-cyan-50 px-1.5 py-0.5 rounded">
-                <Braces className="w-3 h-3" />읽기포인트 {syntaxCount}
-              </span>
-            )}
-            {keySentenceCount > 0 && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-medium text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
-                핵심문장 {keySentenceCount}
-              </span>
-            )}
-            {examPointCount > 0 && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-medium text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">
-                출제포인트 {examPointCount}
-              </span>
+        <div className="mt-auto flex items-end gap-2 pt-2">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+            {isAnalyzed && (
+              <>
+                {vocabCount > 0 && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-medium text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
+                    <BookOpen className="w-3 h-3" />어휘 {vocabCount}
+                  </span>
+                )}
+                {grammarCount > 0 && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-medium text-violet-600 bg-violet-50 px-1.5 py-0.5 rounded">
+                    <PenTool className="w-3 h-3" />어법 {grammarCount}
+                  </span>
+                )}
+                {syntaxCount > 0 && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-medium text-cyan-600 bg-cyan-50 px-1.5 py-0.5 rounded">
+                    <Braces className="w-3 h-3" />읽기포인트 {syntaxCount}
+                  </span>
+                )}
+                {keySentenceCount > 0 && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-medium text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
+                    핵심문장 {keySentenceCount}
+                  </span>
+                )}
+                {examPointCount > 0 && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-medium text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">
+                    출제포인트 {examPointCount}
+                  </span>
+                )}
+              </>
             )}
           </div>
-        )}
-
-        <CardHoverActionLabel />
+          <CardDetailIconButton
+            className="size-7 rounded-md"
+            iconClassName="size-3.5"
+            onClick={(e) => {
+              e.stopPropagation();
+              onViewDetail(passage.id);
+            }}
+          />
+        </div>
     </div>
   );
 }

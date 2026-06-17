@@ -7,7 +7,6 @@ import {
   FileText,
   Loader2,
   AlertCircle,
-  ArrowDownToLine,
   RefreshCw,
   ArrowUpDown,
   Folder,
@@ -27,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
 import { isDraftAnalysisComplete } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/analysis-status";
 import { getDraftDisplayTitle } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/title";
@@ -845,6 +845,14 @@ export function ExtractionDraftGrid({
                         · {pages}
                       </span>
                     ) : null}
+                    <CardDetailIconButton
+                      className="size-7 rounded-md shadow-none"
+                      iconClassName="size-3.5"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelectDraft(draft);
+                      }}
+                    />
                   </div>
 
                   {/* Active overlay */}
@@ -854,12 +862,6 @@ export function ExtractionDraftGrid({
                       className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-blue-500 to-blue-600 rounded-l-xl"
                     />
                   ) : null}
-
-                  {/* Hover hint */}
-                  <span className="absolute right-2 bottom-2 opacity-0 group-hover:opacity-100 transition-opacity inline-flex items-center gap-1 text-[10px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
-                    <ArrowDownToLine className="w-2.5 h-2.5" />
-                    불러오기
-                  </span>
                 </div>
               );
             })}

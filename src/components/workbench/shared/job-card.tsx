@@ -15,7 +15,7 @@ import {
 import { ACTIVE_STATUSES } from "@/components/workbench/task-queue/constants";
 import { TaskStatusBadge } from "@/components/workbench/task-queue/components/task-status-badge";
 import { formatTaskDate } from "@/components/workbench/task-queue/utils/format";
-import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import type { TaskStatus } from "@/components/workbench/task-queue/types";
 import { MODES, type ExtractionMode } from "@/lib/extraction/modes";
 import type { ExtractionJobStatus } from "@/lib/extraction/types";
@@ -187,6 +187,20 @@ export function JobCard({
   const showRename = variant === "compact" && editable && !editing && onRename;
   const showDelete = variant === "detailed" && onDelete;
   const selectionMode = Boolean(onToggleCheck);
+  const detailIconButton = !editing ? (
+    <CardDetailIconButton
+      className={
+        variant === "compact"
+          ? "size-5 rounded shadow-none"
+          : "size-6 rounded-md shadow-none"
+      }
+      iconClassName={variant === "compact" ? "size-2.5" : "size-3"}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+    />
+  ) : null;
 
   const handleCardClick = (event: React.MouseEvent<HTMLElement>) => {
     if (editing || event.detail > 1) return;
@@ -407,10 +421,16 @@ export function JobCard({
           ) : null}
         </div>
         {dateLabel ? (
-          <div className={variant === "compact" ? "mt-0.5 flex" : "mt-1 flex"}>
+          <div
+            className={
+              variant === "compact"
+                ? "mt-0.5 flex items-center gap-1"
+                : "mt-1 flex items-center gap-1.5"
+            }
+          >
             <span
               className={
-                "inline-flex min-w-0 items-center gap-0.5 rounded bg-slate-50 font-medium text-slate-500 " +
+                "inline-flex min-w-0 flex-1 items-center gap-0.5 rounded bg-slate-50 font-medium text-slate-500 " +
                 (variant === "compact"
                   ? "px-1 py-0 text-[9px]"
                   : "px-1.5 py-0.5 text-[10px]")
@@ -426,25 +446,22 @@ export function JobCard({
               />
               <span className="truncate tabular-nums">{dateLabel}</span>
             </span>
+            {detailIconButton}
           </div>
         ) : subLabel ? (
-          <p className="mt-0.5 truncate text-[12px] font-medium text-slate-900">
-            {subLabel}
-          </p>
+          <div className="mt-0.5 flex items-center gap-1.5">
+            <p className="min-w-0 flex-1 truncate text-[12px] font-medium text-slate-900">
+              {subLabel}
+            </p>
+            {detailIconButton}
+          </div>
+        ) : detailIconButton ? (
+          <div className="mt-0.5 flex justify-end">{detailIconButton}</div>
         ) : null}
         {resultSummary ? (
           <p className="mt-0.5 truncate text-[10.5px] font-medium text-slate-500">
             {resultSummary}
           </p>
-        ) : null}
-        {!editing ? (
-          <CardHoverActionLabel
-            className={
-              variant === "compact"
-                ? "bottom-1 left-1/2 right-auto -translate-x-1/2 text-[9px]"
-                : "bottom-2 left-1/2 right-auto -translate-x-1/2"
-            }
-          />
         ) : null}
       </div>
     </article>

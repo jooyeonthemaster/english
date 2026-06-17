@@ -5,7 +5,6 @@ import React, { useState, useRef, useEffect, useMemo } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import {
-  CheckCircle2,
   ChevronDown,
   ChevronUp,
   Trash2,
@@ -14,7 +13,6 @@ import {
   Layers,
   ClipboardList,
   Star,
-  XCircle,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -27,9 +25,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import { DragHandle } from "@/components/ui/drag-handle";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatDateTime } from "@/lib/utils";
 import {
   TYPE_LABELS,
   SUBTYPE_LABELS,
@@ -38,7 +36,6 @@ import {
 import { parseJSON } from "./shared/helpers";
 import { StructuredQuestionRenderer } from "./question-renderers";
 import { ReviewStatusStamp } from "./question-card";
-import { CollapsedPreview } from "./question-bank-card/collapsed-preview";
 import { ExplanationSection } from "./question-bank-card/explanation-section";
 import { parseQuestionSections } from "./question-bank-card/parse-question-sections";
 import { renderFormatted } from "./question-bank-card/render-formatted";
@@ -54,10 +51,7 @@ import {
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
-import {
-  getVisibleQuestionTags,
-  sanitizeAiModelDisclosureText,
-} from "@/lib/question-generation-plans";
+import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 
 export type { QuestionBankItem } from "./question-bank-card/types";
 
@@ -193,10 +187,6 @@ export function QuestionBankCard({
         }))
       : options;
   const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
-  const tags: string[] = Array.isArray(q.tags)
-    ? q.tags
-    : parseJSON<string[]>(q.tags, []);
-  const visibleTags = getVisibleQuestionTags(tags);
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
   const structuredQuestion =
     q.structuredData &&
@@ -215,6 +205,21 @@ export function QuestionBankCard({
   const sections = useMemo(
     () => parseQuestionSections(displayQuestionText, q.subType),
     [displayQuestionText, q.subType],
+  );
+
+  // 헤더에 제목처럼 띄울 문제의 발문(의문문) — 구조화 direction 우선,
+  // 없으면 파싱된 direction 섹션, 그래도 없으면 문제 텍스트.
+  const directionText =
+    (typeof structuredQuestion?.direction === "string" &&
+    structuredQuestion.direction.trim()
+      ? structuredQuestion.direction
+      : sections.find((s) => s.type === "direction")?.content) ||
+    q.questionText ||
+    "";
+  // 본문에서는 발문 섹션을 빼서 헤더 제목과 중복되지 않게 한다(지문·보기만).
+  const bodySections = useMemo(
+    () => sections.filter((s) => s.type !== "direction"),
+    [sections],
   );
 
   // Make card draggable — 단, 네이티브 드래그는 "손잡이(DragHandle)"에만 등록한다.
@@ -362,9 +367,7 @@ export function QuestionBankCard({
       onMouseDown={preventCardDoubleClickTextSelection}
       onClick={handleCardClick}
       onDoubleClick={handleCardDoubleClick}
-      className={`${onDetail || onEdit || (cardClickSelects && !selectionDisabled) ? "cursor-pointer" : ""} group relative flex flex-col ${
-        expanded ? "" : "overflow-hidden"
-      } ${isDragging ? "opacity-40 scale-95" : ""} ${
+      className={`${onDetail || onEdit || (cardClickSelects && !selectionDisabled) ? "cursor-pointer" : ""} group relative flex h-full flex-col gap-0 py-0 ${isDragging ? "opacity-40 scale-95" : ""} ${
         selected && selectedCardHighlight
           ? "ring-2 ring-blue-400 bg-blue-50/30"
           : "hover:shadow-md"
@@ -380,12 +383,12 @@ export function QuestionBankCard({
     >
       <CardContent
         ref={contentRef}
-        className={`p-3 flex flex-col gap-1.5 ${expanded ? "" : "flex-1 min-h-0"}`}
+        className="p-3 flex flex-1 flex-col gap-1.5"
       >
-        {/* Header row */}
-        <div className="flex items-start gap-1.5 shrink-0">
+        {/* Header row — 손잡이~펼치기까지 한 줄에 세로 가운데 정렬 */}
+        <div className="flex items-center gap-1.5 shrink-0">
           {enableDrag && !selectionDisabled && (
-            <DragHandle ref={dragHandleRef} className="mt-0.5 shrink-0" />
+            <DragHandle ref={dragHandleRef} className="shrink-0" />
           )}
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
             <Checkbox
@@ -438,36 +441,45 @@ export function QuestionBankCard({
                   />
                 </span>
               ))}
-            <span className="text-xs font-bold text-slate-400 shrink-0">
-              {num}.
-            </span>
-            <Badge variant="outline" className="text-[10px] shrink-0">
-              {TYPE_LABELS[q.type] || q.type}
-            </Badge>
-            {q.subType && SUBTYPE_LABELS[q.subType] && (
-              <Badge
-                variant="outline"
-                className="text-[10px] shrink-0 bg-slate-50"
+            {/* 삭제 — 즐겨찾기(별표) 바로 오른쪽. 윗줄 일괄 삭제 버튼과 동일 사이즈(h-7 w-7). */}
+            {showManagementActions && onDelete && (
+              <button
+                type="button"
+                aria-label="삭제"
+                title="삭제"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete();
+                }}
+                className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {SUBTYPE_LABELS[q.subType]}
-              </Badge>
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
             )}
-            {diffConfig && (
-              <Badge
-                variant="outline"
-                className={`text-[10px] shrink-0 ${diffConfig.className}`}
+            {/* 지문 참조 토글 — 클릭하면 아래에 원문 지문이 펼쳐진다. */}
+            {q.passage && viewSize !== "sm" && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPassageOpen(!passageOpen);
+                }}
+                title={sanitizeAiModelDisclosureText(q.passage.title)}
+                className="inline-flex h-7 min-w-0 flex-1 items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-100"
               >
-                {diffConfig.label}
-              </Badge>
-            )}
-            {q.aiGenerated && (
-              <Layers className="w-3 h-3 text-blue-400 shrink-0" />
-            )}
-            {q.approved && (
-              <CheckCircle2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <FileText className="h-3 w-3 shrink-0 text-blue-400" />
+                <span className="min-w-0 flex-1 truncate text-left text-[13px] font-semibold">
+                  {sanitizeAiModelDisclosureText(q.passage.title)}
+                </span>
+                {passageOpen ? (
+                  <ChevronUp className="h-3 w-3 shrink-0 text-slate-400" />
+                ) : (
+                  <ChevronDown className="h-3 w-3 shrink-0 text-slate-400" />
+                )}
+              </button>
             )}
           </div>
-          <div className="flex items-center gap-1 shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
             {typeof duplicateCount === "number" && duplicateCount > 1 && (
               <span
                 className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-black tabular-nums text-white shadow-sm"
@@ -476,116 +488,54 @@ export function QuestionBankCard({
                 {duplicateCount}
               </span>
             )}
-            {showManagementActions && onDelete && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6 text-red-500 hover:bg-red-50 hover:text-red-600"
-                aria-label="삭제"
-                title="삭제"
+            {/* 검수 토글 점 — 누르면 검수상태(초록↔빨강)가 실제로 바뀐다. */}
+            {showReviewActions && (
+              <button
+                type="button"
+                aria-label={q.approved ? "검수완료" : "검수필요"}
+                title={
+                  q.approved
+                    ? "검수완료 — 누르면 검수를 취소합니다"
+                    : "검수필요 — 누르면 검수완료로 표시합니다"
+                }
                 onClick={(e) => {
                   e.stopPropagation();
-                  onDelete();
+                  if (q.approved) onUnapprove?.();
+                  else onApprove?.();
                 }}
-              >
-                <Trash2 className="w-3 h-3" />
-              </Button>
+                className={
+                  "ml-2 size-3.5 shrink-0 cursor-pointer rounded-full ring-2 ring-white shadow-sm transition-colors hover:brightness-110 " +
+                  (q.approved ? "bg-emerald-500" : "bg-red-500")
+                }
+              />
             )}
-            {/* Expand/Collapse toggle */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setExpanded(!expanded);
-                if (!expanded) setPassageOpen(false);
-              }}
-              aria-expanded={expanded}
-              title={expanded ? "문제 내용 접기" : "문제 전체 내용 펼치기"}
-              className="group/expand inline-flex shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
-            >
-              {expanded ? (
-                <>
-                  <ChevronUp className="size-3.5" />
-                  접기
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="size-3.5 transition-transform group-hover/expand:translate-y-0.5" />
-                  펼치기
-                </>
-              )}
-            </button>
           </div>
         </div>
 
-        <div
-          className={`flex flex-col ${expanded ? "gap-2" : "gap-1.5 flex-1 min-h-0 overflow-hidden"}`}
-        >
-          {/* Tags — compact view caps at 3 (+N overflow); expanding shows all.
-            Keeps the card from drowning in topic chips. */}
-          {visibleTags.length > 0 && viewSize !== "sm" && (
-            <div className="flex flex-wrap items-center gap-1 shrink-0">
-              {(expanded ? visibleTags : visibleTags.slice(0, 3)).map((tag) => (
-                <span
-                  key={tag}
-                  className="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-50 text-slate-500 ring-1 ring-inset ring-slate-100 whitespace-nowrap"
-                >
-                  {tag}
-                </span>
-              ))}
-              {!expanded && visibleTags.length > 3 && (
-                <span
-                  title={visibleTags.join(", ")}
-                  className="text-[10px] px-1 py-0.5 font-semibold text-slate-400 whitespace-nowrap"
-                >
-                  +{visibleTags.length - 3}
-                </span>
-              )}
+        <div className="flex flex-col gap-2">
+          {/* 지문 참조 펼침 콘텐츠 — 토글은 헤더의 '지문 N' 버튼으로 이동. */}
+          {q.passage && viewSize !== "sm" && passageOpen && q.passage.content && (
+            <div className="shrink-0 rounded-lg border border-slate-100 bg-slate-50 px-2.5 py-2">
+              <p className="text-[11px] text-slate-500 leading-relaxed font-mono whitespace-pre-line max-h-[250px] overflow-y-auto">
+                {q.passage.content}
+              </p>
             </div>
           )}
 
-          {/* Passage reference with independent toggle */}
-          {q.passage && viewSize !== "sm" && (
-            <div className="shrink-0 bg-slate-50 rounded-lg border border-slate-100">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setPassageOpen(!passageOpen);
-                }}
-                className="w-full flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-slate-100 rounded-lg transition-colors"
-              >
-                <FileText className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                <span className="text-[11px] text-slate-600 truncate flex-1 text-left font-medium">
-                  {sanitizeAiModelDisclosureText(q.passage.title)}
-                </span>
-                {passageOpen ? (
-                  <ChevronUp className="w-3 h-3 text-slate-400 shrink-0" />
-                ) : (
-                  <ChevronDown className="w-3 h-3 text-slate-400 shrink-0" />
-                )}
-              </button>
-              {passageOpen && q.passage.content && (
-                <div className="px-2.5 pb-2 border-t border-slate-100">
-                  <p className="text-[11px] text-slate-500 leading-relaxed mt-2 font-mono whitespace-pre-line max-h-[250px] overflow-y-auto">
-                    {q.passage.content}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* ── Question content: collapsed vs expanded ── */}
-          {expanded ? (
+          {/* ── Question content — 접힘/펼침 모두 전체 렌더(해설만 펼침 전용) ── */}
+          {
             <>
-              {/* Expanded: full structured rendering */}
+              {/* 전체 구조화 렌더링 */}
               {structuredQuestion ? (
                 <StructuredQuestionRenderer
                   question={structuredQuestion}
                   index={num - 1}
                   hideHeader
                   sourcePassageContent={q.passage?.content}
+                  answerRevealMode="as-explanation"
                 />
               ) : (
-                <RenderedSections sections={sections} expanded />
+                <RenderedSections sections={bodySections} expanded />
               )}
 
               {/* Options (MC) */}
@@ -630,104 +580,33 @@ export function QuestionBankCard({
                   </div>
                 )}
             </>
-          ) : (
-            /* Collapsed: smart preview */
-            <CollapsedPreview
-              sections={sections}
-              options={displayOptions}
-              correctAnswer={q.correctAnswer}
-              displayCorrectAnswer={displayCorrectAnswer}
-              questionClamp={questionClamp}
+          }
+
+          {/* 해설 보기 — 자체 토글이 있어 항상 렌더. 구조화 문제는 위
+            StructuredQuestionRenderer 가 해설을 직접 제공하므로 비구조화에서만 렌더(중복 방지).
+            rightSlot에는 '분석 정보'(동형 전용)만 별도 액션으로 남긴다. */}
+          {!structuredQuestion && (
+            <ExplanationSection
+              explanation={q.explanation}
+              rightSlot={
+                onShowAnalysis ? (
+                  <button
+                    type="button"
+                    data-drag-select-ignore
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onShowAnalysis();
+                    }}
+                    className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                  >
+                    분석 정보
+                  </button>
+                ) : undefined
+              }
             />
           )}
 
-          {/* Explanation toggle */}
-          {/* 상세 보기는 카드 본문 클릭(+ CardHoverActionLabel 힌트)으로 처리하므로
-            rightSlot에는 두지 않는다. '분석 정보'(동형 전용)만 별도 액션으로 남긴다. */}
-          <ExplanationSection
-            explanation={q.explanation}
-            rightSlot={
-              onShowAnalysis ? (
-                <button
-                  type="button"
-                  data-drag-select-ignore
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onShowAnalysis();
-                  }}
-                  className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                >
-                  분석 정보
-                </button>
-              ) : undefined
-            }
-          />
         </div>
-
-        {/* Footer: review actions (검수완료/취소 + 수정).
-            compactUsageLabel(시험지 빌더)에서는 날짜+스탬프 줄을 생략하고
-            스탬프를 아래 '사용 이력' 밴드 우측으로 옮긴다. */}
-        {(!compactUsageLabel || showReviewActions) && (
-          <div className="space-y-2 pt-1.5 border-t border-slate-100 shrink-0">
-            <div className="flex items-end justify-between gap-2">
-              <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
-                <span>{formatDate(q.createdAt)}</span>
-                {q._count.examLinks > 0 && (
-                  <span>시험 {q._count.examLinks}회 사용</span>
-                )}
-              </div>
-              {!showReviewActions && (
-                <ReviewStatusStamp approved={q.approved} className="shrink-0" />
-              )}
-            </div>
-            {showReviewActions && (
-              <div className="flex items-end gap-1.5">
-                <div className="flex min-w-0 flex-1 items-center gap-1.5">
-                  {q.approved ? (
-                    <Button
-                      type="button"
-                      size="sm"
-                      disabled={!onUnapprove}
-                      className="h-7 flex-1 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 shadow-none hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:bg-slate-50 disabled:text-slate-300 disabled:opacity-100"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onUnapprove?.();
-                      }}
-                    >
-                      <XCircle className="w-3.5 h-3.5 mr-1" />
-                      검수취소
-                    </Button>
-                  ) : (
-                    <Button
-                      type="button"
-                      size="sm"
-                      disabled={!onApprove}
-                      className="h-7 flex-1 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 shadow-none hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-300 disabled:opacity-100"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onApprove?.();
-                      }}
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
-                      검수완료
-                    </Button>
-                  )}
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="h-7 flex-1 justify-center gap-1.5 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
-                    onClick={handleEdit}
-                  >
-                    <Pencil className="w-3 h-3" />
-                    수정하기
-                  </Button>
-                </div>
-                <ReviewStatusStamp approved={q.approved} className="shrink-0" />
-              </div>
-            )}
-          </div>
-        )}
 
         {/* Footer — exam-usage history band: shows whether (and where) this
             question has already been placed on an exam paper. */}
@@ -736,36 +615,28 @@ export function QuestionBankCard({
           const used = usedCount > 0;
           const links = q.examLinks ?? [];
           const hasList = used && links.length > 0;
-          const createdLabel = formatDate(q.createdAt);
 
           const inner = (
             <>
               <ClipboardList
-                className={`w-3.5 h-3.5 shrink-0 ${used ? "text-blue-500" : "text-slate-300"}`}
+                className="h-3 w-3 shrink-0 text-slate-400"
                 aria-hidden="true"
               />
               {compactUsageLabel ? (
-                // 칸이 좁아져도 "N개"는 항상 보이고, "시험지에 사용"만 말줄임
+                // 칸이 좁아져도 "N개"는 항상 보이고, "생성된 시험"만 말줄임
                 // 처리(세로쓰기 방지). min-w-0 로 flex 안에서 줄어들 수 있게 한다.
-                <span
-                  className={`flex min-w-0 items-center gap-0.5 text-[11px] font-semibold ${used ? "text-blue-700" : "text-slate-400"}`}
-                >
+                <span className="flex min-w-0 items-center gap-0.5 text-[11px] font-semibold text-slate-400">
+                  <span className="min-w-0 truncate">생성된 시험</span>
                   <span className="shrink-0">{usedCount}개</span>
-                  <span className="min-w-0 truncate">시험지에 사용</span>
                 </span>
               ) : (
-                <span
-                  className={`text-[11px] font-semibold ${used ? "text-blue-700" : "text-slate-400"}`}
-                >
-                  {used ? `${usedCount}개 시험지에 사용됨` : "아직 사용 안 됨"}
+                <span className="text-[11px] font-medium text-slate-500">
+                  생성된 시험 {usedCount}개
                 </span>
               )}
-              <span className="ml-auto shrink-0 text-[10px] tabular-nums text-slate-400">
-                {createdLabel}
-              </span>
               {hasList && (
                 <ChevronDown
-                  className="w-3 h-3 shrink-0 text-blue-400"
+                  className="ml-auto w-3 h-3 shrink-0 text-slate-400"
                   aria-hidden="true"
                 />
               )}
@@ -779,9 +650,20 @@ export function QuestionBankCard({
             </>
           );
 
-          const bandTone = used
-            ? "border-blue-100 bg-blue-50/70"
-            : "border-slate-100 bg-slate-50/70";
+          // 박스(테두리) 대신 상단 구분선 + 납작한 행(생성된 문제 토글과 동일 톤).
+          const bandHover = "hover:bg-slate-50";
+          const detailButton =
+            showDetailButton && (onDetail || onEdit) ? (
+              <CardDetailIconButton
+                className="size-7 rounded-md"
+                iconClassName="size-3.5"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onDetail) onDetail();
+                  else onEdit?.();
+                }}
+              />
+            ) : null;
 
           if (hasList) {
             const sortedLinks = [...links].sort((a, b) => {
@@ -794,61 +676,110 @@ export function QuestionBankCard({
               return bt - at;
             });
             return (
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button
-                    type="button"
+              <div className="mt-auto flex w-full shrink-0 items-center gap-1.5 border-t border-slate-100 pt-2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label="이 문제가 포함된 시험지 보기"
+                      className={`flex min-w-0 flex-1 items-center gap-1.5 rounded-md px-1 py-1 text-left transition-colors ${bandHover}`}
+                    >
+                      {inner}
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    align="start"
+                    className="w-[var(--radix-popover-trigger-width)] min-w-64 p-1.5"
                     onClick={(e) => e.stopPropagation()}
-                    aria-label="이 문제가 포함된 시험지 보기"
-                    className={`mt-auto flex w-full shrink-0 items-center gap-2 rounded-lg border px-2.5 py-1.5 text-left transition-colors hover:bg-blue-100/70 ${bandTone}`}
                   >
-                    {inner}
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent
-                  align="start"
-                  className="w-64 p-1.5"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="px-2 py-1 text-[11px] font-semibold text-slate-500">
-                    이 문제가 포함된 시험지 {usedCount}개
-                  </div>
-                  <div className="flex max-h-64 flex-col overflow-y-auto">
-                    {sortedLinks.map(({ exam }) => (
-                      <a
-                        key={exam.id}
-                        href={`/director/exams/${exam.id}`}
-                        className="flex items-center gap-1.5 rounded-md px-2 py-1.5 transition-colors hover:bg-slate-100"
-                      >
-                        <FileText className="w-3 h-3 shrink-0 text-slate-400" />
-                        <span className="flex-1 truncate text-[12px] text-slate-700">
-                          {exam.title}
-                        </span>
-                        {exam.createdAt && (
-                          <span className="shrink-0 text-[10px] tabular-nums text-slate-400">
-                            {formatDate(exam.createdAt)}
+                    <div className="flex max-h-64 flex-col overflow-y-auto">
+                      {sortedLinks.map(({ exam }) => (
+                        <a
+                          key={exam.id}
+                          href={`/director/exams/${exam.id}`}
+                          className="flex items-center gap-1.5 rounded-md px-2 py-1.5 transition-colors hover:bg-slate-100"
+                        >
+                          <FileText className="w-3 h-3 shrink-0 text-slate-400" />
+                          <span className="flex-1 truncate text-[12px] text-slate-700">
+                            {exam.title}
                           </span>
-                        )}
-                      </a>
-                    ))}
-                  </div>
-                </PopoverContent>
-              </Popover>
+                          {exam.createdAt && (
+                            <span className="shrink-0 text-[10px] tabular-nums text-slate-400">
+                              {formatDate(exam.createdAt)}
+                            </span>
+                          )}
+                        </a>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                {!showReviewActions && detailButton}
+              </div>
             );
           }
 
           return (
-            <div
-              className={`mt-auto flex w-full shrink-0 items-center gap-2 rounded-lg border px-2.5 py-1.5 ${bandTone}`}
-            >
-              {inner}
+            <div className="mt-auto flex w-full shrink-0 items-center gap-1.5 border-t border-slate-100 pt-2">
+              <div className="flex min-w-0 flex-1 items-center gap-1.5 rounded-md px-1 py-1">
+                {inner}
+              </div>
+              {!showReviewActions && detailButton}
             </div>
           );
         })()}
+
+        {/* Footer: review actions (검수완료/취소 + 수정) — '사용 이력' 밴드 아래로 이동.
+            compactUsageLabel(시험지 빌더)에서는 날짜+스탬프 줄을 생략하고
+            스탬프를 위 '사용 이력' 밴드 우측으로 옮긴다. */}
+        {(!compactUsageLabel || showReviewActions) && (
+          <div className="space-y-2 pt-1.5 border-t border-slate-100 shrink-0">
+            <div className="flex items-end justify-between gap-2">
+              <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
+                <span>{formatDateTime(q.createdAt)}</span>
+                {q._count.examLinks > 0 && (
+                  <span>시험 {q._count.examLinks}회 사용</span>
+                )}
+              </div>
+              {!showReviewActions && (
+                <ReviewStatusStamp approved={q.approved} className="shrink-0" />
+              )}
+            </div>
+            {showReviewActions && (
+              <div className="flex items-end gap-1.5">
+                <div className="flex min-w-0 flex-1 items-center gap-1.5">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 flex-1 justify-center gap-1.5 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                    onClick={handleEdit}
+                  >
+                    <Pencil className="w-3 h-3" />
+                    수정하기
+                  </Button>
+                </div>
+                {showDetailButton && (onDetail || onEdit) ? (
+                  <CardDetailIconButton
+                    className="size-7 shrink-0 rounded-md"
+                    iconClassName="size-3.5"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onDetail) onDetail();
+                      else onEdit?.();
+                    }}
+                  />
+                ) : (
+                  <ReviewStatusStamp
+                    approved={q.approved}
+                    className="shrink-0"
+                  />
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </CardContent>
-      {showDetailButton && (onDetail || onEdit) ? (
-        <CardHoverActionLabel />
-      ) : null}
     </Card>
   );
 

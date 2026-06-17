@@ -9,7 +9,6 @@ import {
   Loader2,
   NotebookPen,
   Save,
-  Undo2,
   Wand2,
   X,
 } from "lucide-react";
@@ -534,26 +533,23 @@ export function ExtractionDetailModal({
               type="button"
               onClick={() => onToggleExtractionReview(passage)}
               disabled={reviewBusy}
+              aria-label={isReviewCommitted ? "검수완료" : "검수필요"}
               title={
                 isReviewCommitted
-                  ? "자료관리 검수완료를 취소합니다"
-                  : "자료관리 검수완료로 표시합니다"
+                  ? "검수완료 — 누르면 검수를 취소합니다"
+                  : "검수필요 — 누르면 검수완료로 표시합니다"
               }
               className={
-                "ml-1 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border px-3 text-[12px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-60 " +
-                (isReviewCommitted
-                  ? "border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-                  : "border-blue-600 bg-blue-600 text-white shadow-sm hover:bg-blue-700")
+                "ml-1 flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-full ring-2 ring-white shadow-sm transition-colors hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 " +
+                (isReviewCommitted ? "bg-emerald-500" : "bg-red-500")
               }
             >
               {reviewBusy ? (
-                <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
-              ) : isReviewCommitted ? (
-                <Undo2 className="size-3.5" aria-hidden="true" />
-              ) : (
-                <CheckCircle2 className="size-3.5" aria-hidden="true" />
-              )}
-              {isReviewCommitted ? "검수취소" : "검수완료"}
+                <Loader2
+                  className="size-3 animate-spin text-white"
+                  aria-hidden="true"
+                />
+              ) : null}
             </button>
           ) : null}
           <button

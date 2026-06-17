@@ -1,8 +1,25 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, Check } from "lucide-react";
+import {
+  Popover,
+  PopoverAnchor,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
+
+/**
+ * AnswerRevealSection / ExplanationSection 의 답안·해설 노출 방식.
+ *  - "default": 기존. "답안 보기/숨기기" 토글로 정답·해설을 접어둔다.
+ *  - "show-all": 토글 없이 정답·해설을 곧장 노출(정답이 보기에 파란색으로
+ *    이미 표시되는 compact 결과 카드용). 해설은 자체 "해설 보기" 토글 유지.
+ *  - "as-explanation": 단일 "해설 보기" 토글 하나로 [밑줄 분석·정답·해설]을
+ *    모두 감싼다(문제 관리 카드용). 내부 해설은 토글 없이 인라인으로 펼친다.
+ */
+export type AnswerRevealMode = "default" | "show-all" | "as-explanation";
+export const AnswerRevealContext = createContext<AnswerRevealMode>("default");
 
 // ============================================================================
 // Shared UI primitives for question renderers
@@ -23,8 +40,11 @@ function circledNumberFromLetter(letter: string) {
   return index >= 0 && index < 26 ? getCircledNumber(index) : letter;
 }
 
-/** 답안 영역을 접어두는 래퍼 — 기본 접힌 상태, 토글로 열기 */
+/** 답안 영역을 접어두는 래퍼 — 기본 접힌 상태, 토글로 열기.
+ *  AnswerRevealContext 가 true 면 토글 없이 정답·해설을 바로 보여 준다
+ *  (정답이 이미 보기에 파란색으로 표시되는 화면에서). */
 export function AnswerRevealSection({ children }: { children: React.ReactNode }) {
+  const mode = useContext(AnswerRevealContext);
   const [open, setOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -38,12 +58,51 @@ export function AnswerRevealSection({ children }: { children: React.ReactNode })
     return () => cancelAnimationFrame(frame);
   }, [open]);
 
+  // 토글 없이 바로 노출 — 정답 줄 + 그 자리의 '해설 보기' 버튼이 곧장 보인다.
+  if (mode === "show-all") {
+    return <div className="space-y-3 pt-1.5">{children}</div>;
+  }
+
+  // as-explanation(문제 관리 카드): "해설 보기"를 팝오버로 띄운다.
+  // 팝오버 폭은 카드 가로폭에 맞춘다(행 전체를 앵커로 사용).
+  if (mode === "as-explanation") {
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverAnchor asChild>
+          <div className="pt-1.5 border-t border-dashed border-slate-200">
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1.5 text-[11px] font-semibold text-blue-500 transition-colors hover:text-blue-700"
+              >
+                {open ? (
+                  <ChevronUp className="w-3 h-3" />
+                ) : (
+                  <ChevronDown className="w-3 h-3" />
+                )}
+                {open ? "해설 접기" : "해설 보기"}
+              </button>
+            </PopoverTrigger>
+          </div>
+        </PopoverAnchor>
+        <PopoverContent
+          align="start"
+          onClick={(e) => e.stopPropagation()}
+          className="max-h-[60vh] w-[var(--radix-popover-trigger-width)] overflow-y-auto p-3"
+        >
+          <div className="space-y-3">{children}</div>
+        </PopoverContent>
+      </Popover>
+    );
+  }
+
   return (
     <div className="pt-1.5 border-t border-dashed border-slate-200">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="text-[11px] font-semibold text-teal-600 hover:text-teal-700 transition-colors flex items-center gap-1.5"
+        className="flex items-center gap-1.5 text-[11px] font-semibold text-teal-600 transition-colors hover:text-teal-700"
       >
         {open ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
         {open ? "답안 숨기기" : "답안 보기"}
@@ -144,6 +203,10 @@ export function renderBlanks(text: string): React.ReactNode {
 
 /** Render passage with underlines, blanks, and numbered markers */
 export function renderPassageFormatted(text: string): React.ReactNode {
+  // 원본(PDF/추출)이 줄 단위로 저장돼 단락 내부에 강제 줄바꿈(\n)이 박혀 있으면
+  // 화면에서 문장이 어색하게 끊긴다 → 단락(\n\n)은 유지하고 단락 내부의 단일
+  // 줄바꿈만 공백으로 합쳐(reflow) 자연스럽게 흐르게 한다. (표시 전용)
+  text = text.replace(/([^\n])\n(?!\n)/g, "$1 ");
   // Match: __content__ (underline), ___+ (blank), circled numbers
   const combinedRegex = new RegExp(`__([^_]+)__|_{3,}|([${CIRCLED_MARKER_PATTERN}])`, "g");
   const parts: React.ReactNode[] = [];
@@ -382,11 +445,11 @@ export function ModelAnswer({ answer, label }: { answer: string; label?: string 
 /** Given sentence highlight box */
 export function GivenSentenceBox({ sentence, label }: { sentence: string; label?: string }) {
   return (
-    <div className="rounded-lg bg-indigo-50 border border-indigo-200 p-3">
-      <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider block mb-1">
+    <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
+      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
         {label || "주어진 문장"}
       </span>
-      <p className="text-[13px] text-indigo-900 leading-relaxed font-medium">
+      <p className="text-[13px] text-slate-900 leading-relaxed font-medium">
         {sentence}
       </p>
     </div>
@@ -403,6 +466,7 @@ export function ExplanationSection({
   keyPoints: string[];
   wrongOptionExplanations?: Record<string, string>;
 }) {
+  const mode = useContext(AnswerRevealContext);
   const [open, setOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -414,6 +478,58 @@ export function ExplanationSection({
     });
     return () => cancelAnimationFrame(frame);
   }, [open]);
+
+  const content = (
+    <div className="space-y-3">
+      {explanation && (
+        <div className="p-3 rounded-lg bg-emerald-50/60 border border-emerald-100">
+          <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">
+            해설
+          </span>
+          <p className="text-[12px] text-slate-700 leading-relaxed">{explanation}</p>
+        </div>
+      )}
+
+      {keyPoints && keyPoints.length > 0 && (
+        <div className="p-3 rounded-lg bg-blue-50/60 border border-blue-100">
+          <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider block mb-1">
+            핵심 포인트
+          </span>
+          <ul className="space-y-1">
+            {keyPoints.map((kp, i) => (
+              <li key={i} className="text-[12px] text-slate-600 flex items-start gap-1.5">
+                <span className="text-blue-400 mt-0.5">-</span>
+                {kp}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {wrongOptionExplanations && Object.keys(wrongOptionExplanations).length > 0 && (
+        <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
+          <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider block mb-1">
+            오답 분석
+          </span>
+          <div className="space-y-1">
+            {Object.entries(wrongOptionExplanations).map(([num, exp]) => (
+              <div key={num} className="text-[12px] text-slate-600 flex items-start gap-1.5">
+                <span className="shrink-0 w-4 h-4 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center text-[9px] font-bold mt-0.5">
+                  {num}
+                </span>
+                <span>{exp}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  // as-explanation: 부모 '해설 보기' 토글이 이미 감싸므로 자체 토글 없이 인라인 노출.
+  if (mode === "as-explanation") {
+    return content;
+  }
 
   return (
     <div className="pt-1 border-t border-slate-100">
@@ -427,49 +543,8 @@ export function ExplanationSection({
       </button>
 
       {open && (
-        <div ref={contentRef} className="space-y-3 pt-2 scroll-mt-4">
-          {explanation && (
-            <div className="p-3 rounded-lg bg-emerald-50/60 border border-emerald-100">
-              <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">
-                해설
-              </span>
-              <p className="text-[12px] text-slate-700 leading-relaxed">{explanation}</p>
-            </div>
-          )}
-
-          {keyPoints && keyPoints.length > 0 && (
-            <div className="p-3 rounded-lg bg-blue-50/60 border border-blue-100">
-              <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider block mb-1">
-                핵심 포인트
-              </span>
-              <ul className="space-y-1">
-                {keyPoints.map((kp, i) => (
-                  <li key={i} className="text-[12px] text-slate-600 flex items-start gap-1.5">
-                    <span className="text-blue-400 mt-0.5">-</span>
-                    {kp}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {wrongOptionExplanations && Object.keys(wrongOptionExplanations).length > 0 && (
-            <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
-              <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider block mb-1">
-                오답 분석
-              </span>
-              <div className="space-y-1">
-                {Object.entries(wrongOptionExplanations).map(([num, exp]) => (
-                  <div key={num} className="text-[12px] text-slate-600 flex items-start gap-1.5">
-                    <span className="shrink-0 w-4 h-4 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center text-[9px] font-bold mt-0.5">
-                      {num}
-                    </span>
-                    <span>{exp}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+        <div ref={contentRef} className="pt-2 scroll-mt-4">
+          {content}
         </div>
       )}
     </div>

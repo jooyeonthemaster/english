@@ -953,5 +953,117 @@ export function useGenerationHandlers({
     ],
   );
 
-  return { handleBatchGenerate, handleGenerate, handleSaveQuestions };
+  // ── 실패한 생성 다시 시도 — 그 카드에 저장된 config(같은 조건)로 재실행 ──
+  // 현재 패널 설정이 아니라 item.config 의 난이도·플랜·유형·프롬프트를 그대로 쓴다.
+  const retryGeneration = useCallback(
+    async (item: QueueItem) => {
+      const config = item.config;
+      const passage: PassageItem =
+        passages.find((p) => p.id === item.passageId) ??
+        ({
+          id: item.passageId,
+          title: item.passageTitle,
+          content: item.passageContent,
+          school: item.passageMeta?.school
+            ? { name: item.passageMeta.school }
+            : undefined,
+          grade: item.passageMeta?.grade ?? null,
+          semester: item.passageMeta?.semester ?? null,
+          unit: item.passageMeta?.unit ?? null,
+        } as unknown as PassageItem);
+
+      const typeId = Object.keys(config.typeCounts).find(
+        (t) => Number(config.typeCounts[t]) > 0,
+      );
+      const isManual = config.mode !== "auto" && Boolean(typeId);
+      const progressKey = isManual && typeId ? typeId : "auto";
+      const plan = config.generationPlan ?? generationPlan;
+
+      // 실패 카드를 그 자리에서 '생성 중'으로 되돌린다(같은 id 유지).
+      setSessionQueue((prev) =>
+        prev.map((q) =>
+          q.id === item.id
+            ? buildOptimisticItem({
+                jobId: item.id,
+                passage,
+                analysisData: item.analysisData,
+                config,
+                progressKey,
+                createdAt: item.createdAt,
+              })
+            : q,
+        ),
+      );
+
+      try {
+        const result = await createFastQuestionGenerationJob({
+          passageId: passage.id,
+          mode: isManual && typeId ? "MANUAL" : "AUTO",
+          count: 1,
+          questionType: isManual && typeId ? typeId : undefined,
+          questionTypeSettings:
+            isManual && typeId
+              ? (config.questionTypeSettings as
+                  | Record<string, unknown>
+                  | undefined)?.[typeId]
+              : undefined,
+          difficulty: config.difficulty,
+          customPrompt: config.prompt?.trim() || undefined,
+          generationPlan: plan,
+        });
+        const doneItem: QueueItem = {
+          ...buildOptimisticItem({
+            jobId: result.jobId,
+            passage,
+            analysisData: item.analysisData,
+            config,
+            progressKey,
+          }),
+          createdAt: result.createdAt || new Date().toISOString(),
+          status: "done",
+          progress: { [progressKey]: "done" },
+          questions: Array.isArray(result.questions) ? result.questions : [],
+          questionIds: Array.isArray(result.questionIds)
+            ? result.questionIds
+            : [],
+        };
+        setSessionQueue((prev) =>
+          replaceQueueItemInPlace(prev, [item.id, result.jobId], doneItem),
+        );
+        triggerRefresh();
+        onGenerationCompleted?.();
+        toast.success("다시 생성했습니다.");
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Question generation failed.";
+        setSessionQueue((prev) =>
+          prev.map((q) =>
+            q.id === item.id
+              ? {
+                  ...q,
+                  status: "error",
+                  progress: { [progressKey]: "error" },
+                  error: message,
+                }
+              : q,
+          ),
+        );
+        toast.error("다시 생성에 실패했습니다.");
+      }
+    },
+    [
+      passages,
+      generationPlan,
+      setSessionQueue,
+      triggerRefresh,
+      onGenerationCompleted,
+    ],
+  );
+
+  return {
+    handleBatchGenerate,
+    handleGenerate,
+    handleSaveQuestions,
+    retryGeneration,
+  };
 }

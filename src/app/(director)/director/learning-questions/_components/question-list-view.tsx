@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   Clock,
   ChevronDown,
-  ChevronUp,
   Trash2,
   SquareCheck,
   Square,
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import {
   getQuestionGenerationPlanFromTags,
   QUESTION_GENERATION_PLANS,
@@ -539,11 +539,16 @@ function QuestionCard({
           <button onClick={onDelete} title="삭제">
             <Trash2 className="w-3.5 h-3.5 text-slate-300 hover:text-red-500" />
           </button>
-          {isExpanded ? (
-            <ChevronUp className="w-4 h-4 text-slate-400" />
-          ) : (
-            <ChevronDown className="w-4 h-4 text-slate-300" />
-          )}
+          <CardDetailIconButton
+            title={isExpanded ? "상세 접기" : "상세보기"}
+            aria-label={isExpanded ? "상세 접기" : "상세보기"}
+            className="size-7 rounded-md shadow-none"
+            iconClassName="size-3.5"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleExpand();
+            }}
+          />
         </div>
       </div>
       {isExpanded && (

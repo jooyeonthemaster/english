@@ -57,6 +57,7 @@ import { DragSelect } from "@/components/ui/drag-select";
 import { DragHandle } from "@/components/ui/drag-handle";
 import type { QuestionCardItem } from "@/components/workbench/question-card";
 import { PassageQuestionsSummary } from "./passage-questions-summary";
+import { PassageReportsSummary } from "./passage-reports-summary";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import {
   clearCardTextSelection,
@@ -221,6 +222,10 @@ interface PassageCardGridProps {
   // opens a plain full-content viewer instead of the analysis/report modal.
   // Omit it (e.g. tutor program builder) to keep the legacy single-modal behavior.
   onViewPassageContent?: (passage: PassageItem) => void;
+  // 카드 우측 상단 검수 토글 점. 누르면 검수상태(빨강↔초록)가 실제로 바뀐다.
+  onToggleExtractionReview?: (passage: PassageItem) => void;
+  // 검수 토글 처리 중인 지문 id (점에 로딩 표시).
+  reviewActionPassageIds?: Set<string>;
 }
 
 // ─── Component ───────────────────────────────────────
@@ -281,6 +286,8 @@ export function PassageCardGrid({
   workspaceActive = false,
   handleOpenAnalysisModal,
   onViewPassageContent,
+  onToggleExtractionReview,
+  reviewActionPassageIds,
 }: PassageCardGridProps) {
   const [showSearch, setShowSearch] = useState(() => passageSearch.length > 0);
   const [folderWindowCollapsed, setFolderWindowCollapsed] = useState(false);
@@ -1688,7 +1695,7 @@ export function PassageCardGrid({
                     onClick={(e) => handlePassageCardClick(p.id, e)}
                     onDoubleClick={(e) => handlePassageCardDoubleClick(p.id, e)}
                     onKeyDown={(e) => handleCardKeyDown(p.id, e)}
-                    className={`group relative flex flex-col overflow-hidden rounded-xl border bg-white p-4 pb-12 transition-all duration-200 hover:shadow-md cursor-pointer ${
+                    className={`group relative flex flex-col overflow-hidden rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
                       isChecked
                         ? "border-blue-400 ring-2 ring-blue-300/30"
                         : hasReviewDraft && !isReviewCommitted
@@ -1721,18 +1728,43 @@ export function PassageCardGrid({
                       />
                     ) : null}
                     {hasReviewDraft ? (
-                      <span
-                        role="img"
-                        aria-label={reviewStampLabel}
-                        className={
-                          "pointer-events-none absolute right-1.5 top-1.5 z-10 flex size-7 -rotate-12 select-none items-center justify-center whitespace-nowrap rounded-full text-[7px] font-bold tracking-tighter " +
-                          (isReviewCommitted
-                            ? "border-2 border-slate-500 bg-white/70 text-slate-600 shadow-sm backdrop-blur-[1px]"
-                            : "border border-dashed border-red-300/70 bg-red-50/30 text-[7.5px] tracking-tight text-red-400/80")
-                        }
-                      >
-                        {reviewStampLabel}
-                      </span>
+                      (() => {
+                        const reviewBusy =
+                          reviewActionPassageIds?.has(p.id) ?? false;
+                        const interactive = !!onToggleExtractionReview;
+                        return (
+                          <button
+                            type="button"
+                            disabled={!interactive || reviewBusy}
+                            aria-label={reviewStampLabel}
+                            title={
+                              interactive
+                                ? isReviewCommitted
+                                  ? "검수완료를 취소합니다"
+                                  : "검수완료로 표시합니다"
+                                : reviewStampLabel
+                            }
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (reviewBusy) return;
+                              onToggleExtractionReview?.(p);
+                            }}
+                            className={
+                              "absolute right-2.5 top-2.5 z-10 flex size-3.5 select-none items-center justify-center rounded-full ring-2 ring-white shadow-sm transition-colors " +
+                              (interactive
+                                ? "cursor-pointer hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 "
+                                : "cursor-default ") +
+                              (isReviewCommitted
+                                ? "bg-emerald-500"
+                                : "bg-red-500")
+                            }
+                          >
+                            {reviewBusy ? (
+                              <Loader2 className="size-2.5 animate-spin text-white" />
+                            ) : null}
+                          </button>
+                        );
+                      })()
                     ) : null}
                     {/* Header with handle + checkbox */}
                     <div
@@ -1786,32 +1818,6 @@ export function PassageCardGrid({
                             {p.title}
                           </h4>
                           <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                            {p.analysis && (
-                              <span className="text-[10px] font-medium text-slate-500">
-                                분석 완료
-                              </span>
-                            )}
-                            {!hasAnalysis && (
-                              <span className="text-[10px] font-medium text-slate-400">
-                                미분석
-                              </span>
-                            )}
-                            {isDirectInputPassage(p.source) && (
-                              <span className="inline-flex items-center rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
-                                직접 입력
-                              </span>
-                            )}
-                            {isInWorkspace && (
-                              <span
-                                title="이미 워크스페이스에 담겨 작업 중인 지문이에요"
-                                className="inline-flex items-center rounded border border-violet-200 bg-white px-1.5 py-0.5 text-[10px] font-semibold text-violet-700"
-                              >
-                                워크스페이스
-                              </span>
-                            )}
-                            <span className="text-[10px] text-slate-400">
-                              {countWords(p.content)} words
-                            </span>
                             {(() => {
                               const created = formatMinuteTimestamp(
                                 p.createdAt,
@@ -1908,17 +1914,26 @@ export function PassageCardGrid({
 
                     <div className="flex-1" />
 
-                    <PassageQuestionsSummary
-                      questions={questionsByPassage?.get(p.id) ?? []}
-                    />
-
-                    <CardDetailIconButton
-                      className="absolute bottom-2 right-2 z-30"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        void openPassageCard(p.id);
-                      }}
-                    />
+                    <div className="mt-3 flex items-end gap-2">
+                      <div className="min-w-0 flex-1">
+                        <PassageQuestionsSummary
+                          questions={questionsByPassage?.get(p.id) ?? []}
+                        />
+                        <PassageReportsSummary
+                          passageId={p.id}
+                          reports={p.reports ?? []}
+                          onOpen={handleOpenAnalysisModal}
+                        />
+                      </div>
+                      <CardDetailIconButton
+                        className="size-7 rounded-md"
+                        iconClassName="size-3.5"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          void openPassageCard(p.id);
+                        }}
+                      />
+                    </div>
                   </div>
                 );
               })}
@@ -1957,8 +1972,8 @@ export function PassageCardGrid({
             <FilePen className="h-5 w-5" aria-hidden="true" />
             <span>
               {workspaceActive
-                ? "워크스페이스에 추가"
-                : "워크스페이스에서 지문 편집"}
+                ? "추가하기"
+                : "다음으로"}
             </span>
             {selectedIds.size > 0 ? (
               <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[12px] font-bold tabular-nums">

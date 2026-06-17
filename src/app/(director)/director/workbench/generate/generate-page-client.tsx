@@ -4,7 +4,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { CheckCircle2, Loader2, X, XCircle } from "lucide-react";
+import { CheckCircle2, Loader2, SquarePen, X, XCircle } from "lucide-react";
 import { QuestionReviewModal } from "@/components/workbench/question-review-modal";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import { PassageContentModal } from "@/components/workbench/passage-content-modal";
@@ -48,7 +48,7 @@ import { ExtractionLoadingCards } from "./intake/extraction-loading-cards";
 import { ExtractionDetailModal } from "./intake/extraction-detail-modal";
 import { useTaskQueue } from "@/components/workbench/task-queue/context";
 import { GenerationConfigPanel } from "./generation-config-panel";
-import { BottomQueueSection } from "./bottom-queue-section";
+import { EmbeddedQuestionBank } from "./embedded-question-bank";
 import { useGenerationHandlers } from "./use-generation-handlers";
 import { useGenerationSessionQueue } from "./generation-session-store";
 import { EditQuestionDialog } from "@/components/workbench/question-bank-client/edit-question-dialog";
@@ -137,7 +137,7 @@ const SAVED_QUESTIONS_DONE_REFRESH_DELAY_MS = 1500;
 
 export function GeneratePageClient({
   academyId,
-  defaultMode = "auto",
+  defaultMode = "manual",
 }: {
   academyId: string;
   defaultMode?: "auto" | "manual";
@@ -644,19 +644,6 @@ export function GeneratePageClient({
     },
     [],
   );
-
-  const removePassageLocally = useCallback((passageId: string) => {
-    setPassages((prev) => prev.filter((passage) => passage.id !== passageId));
-    setSelectedIds((prev) => {
-      if (!prev.has(passageId)) return prev;
-      const next = new Set(prev);
-      next.delete(passageId);
-      return next;
-    });
-    setDetailPassage((prev) => (prev?.id === passageId ? null : prev));
-    setContentModalPassage((prev) => (prev?.id === passageId ? null : prev));
-    setAnalysisModalPassage((prev) => (prev?.id === passageId ? null : prev));
-  }, []);
 
   // 백그라운드 학습자료 생성(서버 분석 잡) 폴링. 잡이 끝나면 해당 지문만
   // 제자리 패치해 새로고침 느낌 없이 카드가 "분석 완료" 모습(배지·글로우)으로
@@ -1498,12 +1485,6 @@ export function GeneratePageClient({
       if (!draft) return;
 
       const isReviewed = draft.reviewStatus === "COMMITTED";
-      if (isReviewed) {
-        const ok = window.confirm(
-          "검수를 취소하면 이 지문이 문제생성 목록에서 제거됩니다. 계속할까요?",
-        );
-        if (!ok) return;
-      }
 
       setReviewActionPassageIds((prev) => {
         const next = new Set(prev);
@@ -1513,8 +1494,10 @@ export function GeneratePageClient({
 
       try {
         if (isReviewed) {
+          // 검수취소는 비파괴적으로 — 지문(Passage)은 문제생성 목록에 그대로
+          // 두고 검수 상태만 REVIEWED 로 되돌린다(점 초록→빨강).
           const res = await fetchReviewAction(
-            `/api/extraction/m1-passages/${draft.id}/unpromote`,
+            `/api/extraction/m1-passages/${draft.id}/uncommit`,
             {
               method: "POST",
               credentials: "include",
@@ -1524,9 +1507,19 @@ export function GeneratePageClient({
           if (!res.ok) {
             throw new Error(data?.error ?? "검수를 취소하지 못했습니다.");
           }
-          removePassageLocally(passage.id);
+          const reviewedAt = new Date().toISOString();
+          patchExtractionReviewState([
+            {
+              passageId: passage.id,
+              draft: {
+                ...draft,
+                reviewStatus: "REVIEWED",
+                confirmedAt: null,
+                updatedAt: reviewedAt,
+              },
+            },
+          ]);
           toast.success("검수완료를 취소했습니다.");
-          void loadPassages();
         } else {
           const res = await fetchReviewAction(
             "/api/extraction/m1-passages/promote",
@@ -1578,12 +1571,7 @@ export function GeneratePageClient({
         });
       }
     },
-    [
-      loadPassages,
-      patchExtractionReviewState,
-      patchPassages,
-      removePassageLocally,
-    ],
+    [patchExtractionReviewState, patchPassages],
   );
 
   const handleBulkCompleteExtractionReview = useCallback(
@@ -2006,8 +1994,12 @@ export function GeneratePageClient({
   }, [passages, selectedIds, workspaceApi, loadPassages]);
 
   // ── Generation handlers (extracted to hook) ──
-  const { handleBatchGenerate, handleGenerate, handleSaveQuestions } =
-    useGenerationHandlers({
+  const {
+    handleBatchGenerate,
+    handleGenerate,
+    handleSaveQuestions,
+    retryGeneration,
+  } = useGenerationHandlers({
       passages,
       selectedIds,
       setSelectedIds,
@@ -2055,15 +2047,6 @@ export function GeneratePageClient({
     loadSavedQuestions,
   });
   const workspaceActive = workspaceApi.rows.length > 0;
-  // 실제로 유형이 설정돼(생성될 문제 수 > 0) 생성 대상이 되는 워크스페이스 지문 수.
-  // '설정한 지문 모두 생성' 보조 버튼은 이 수가 2개 이상일 때만 노출한다 —
-  // 단순히 워크스페이스에 지문이 여러 개 있다고 뜨면 라벨('모두')과 어긋난다.
-  const workspaceActionableRowCount = useMemo(
-    () =>
-      Array.from(workspaceRowStats.values()).filter((s) => s.questions > 0)
-        .length,
-    [workspaceRowStats],
-  );
   // 워크스페이스가 '내 지문함'을 덮어 표시되는 상태.
   // 행이 있고(workspaceActive) 사용자가 워크스페이스를 펼친(workspaceOpen) 동안
   // 가운데 컬럼이 내 지문함 대신 워크스페이스로 교체된다.
@@ -2293,6 +2276,7 @@ export function GeneratePageClient({
           generating={workspaceGenerating}
           sessionQueue={sessionQueue}
           questionCountByPassage={questionCountByPassage}
+          questionsByPassage={questionsByPassage}
           globalDifficulty={difficulty}
           globalGenerationPlan={generationPlan}
           setModeActive={genMode === "set"}
@@ -2301,41 +2285,9 @@ export function GeneratePageClient({
           onOpenRowSettings={handleSetActiveRow}
           onClearActiveRow={() => setActiveRowId(null)}
           rowStats={workspaceRowStats}
+          onAddPassage={() => setWorkspaceOpen(false)}
         />
       </div>
-      {/* 기본 흐름은 각 지문 카드의 '문제 생성' 버튼(→ 지문별 모달)이다.
-          단, '실제로 유형을 설정한' 지문이 둘 이상이면 한 번에 모두 생성하는
-          보조 버튼을 둔다 — 각 지문은 자기 설정대로 독립 생성된다. 설정된 지문
-          수를 라벨에 함께 표기해 '모두'의 범위를 명확히 한다.
-          장문 세트(전역) 모드는 워크스페이스 일괄 생성에서 제외. */}
-      {workspaceVisible &&
-      genMode !== "set" &&
-      workspaceActionableRowCount > 1 ? (
-        <div className="flex shrink-0 items-center gap-2 border-t border-slate-200 bg-white px-3 py-2.5">
-          <button
-            type="button"
-            onClick={() => {
-              dispatchGenerateTourMilestone("question-generation-started");
-              void handleWorkspaceGenerate();
-            }}
-            disabled={workspaceGenerating}
-            data-generate-tour="generate-button"
-            className="flex h-10 min-w-0 flex-1 items-center justify-center gap-2 rounded-lg border border-violet-300 bg-white px-3 text-[13px] font-bold text-violet-700 transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <span className="min-w-0 truncate">
-              {workspaceGenerating
-                ? "생성 중…"
-                : `설정한 지문 ${workspaceActionableRowCount}개 모두 생성 · ${workspaceSummary.totalQuestions}문제`}
-            </span>
-            {!workspaceGenerating && workspaceSummary.creditCost > 0 ? (
-              <CreditCostChip
-                amount={workspaceSummary.creditCost}
-                className="shrink-0 rounded bg-violet-100 px-1.5 py-0.5 text-[10px] text-violet-700"
-              />
-            ) : null}
-          </button>
-        </div>
-      ) : null}
     </div>
   );
 
@@ -2428,6 +2380,8 @@ export function GeneratePageClient({
               workspaceActive={workspaceActive}
               handleOpenAnalysisModal={handleOpenAnalysisModal}
               onViewPassageContent={setDetailPassage}
+              onToggleExtractionReview={handleToggleExtractionReview}
+              reviewActionPassageIds={reviewActionPassageIds}
             />
           </div>
         </div>
@@ -2556,33 +2510,22 @@ export function GeneratePageClient({
           }
         />
 
-        {/* ═══ BOTTOM SECTION: 생성된 문제 (최신순) ═══ */}
+        {/* ═══ 문제 관리 + 생성/검수 결과 (통합) — 결과 박스 위 ═══ */}
+        {/* BottomQueueSection 을 EmbeddedQuestionBank 안으로 병합: 생성 큐는
+            목록 맨 앞에, 완료 문제는 파란 글로우. 튜어/마키 boundary 는
+            이 섹션에 그대로 유지한다. */}
         <section
           ref={bottomQueueBoundaryRef}
           data-generate-tour="results-section"
-          className="relative rounded-lg border border-slate-200 bg-white shadow-sm"
         >
-          <BottomQueueSection
-            marqueeBoundaryRef={bottomQueueBoundaryRef}
+          <EmbeddedQuestionBank
+            academyId={academyId}
             sessionQueue={sessionQueue}
-            filteredQueue={filteredQueue}
+            queueCounts={queueCounts}
             queueFilter={queueFilter}
             setQueueFilter={setQueueFilter}
-            queueCounts={queueCounts}
             autoCount={autoCount}
-            savedQuestions={savedQuestions}
-            loadingSavedQuestions={loadingSavedQuestions}
-            setDetailQuestion={setDetailQuestion}
-            onApproveQuestion={handleApproveQuestion}
-            onUnapproveQuestion={handleUnapproveQuestion}
-            onBatchApproveQuestions={handleBatchApproveQuestions}
-            onBatchDeleteQuestions={handleBatchDeleteQuestions}
-            deletedQuestionIds={deletedQuestionIds}
-            deletedQuestionSignatures={deletedQuestionSignatures}
-            batchDeleting={deletingQuestions}
-            onDeleteQuestion={handleDeleteQuestion}
-            onEditQuestion={editor.openEditor}
-            tourHighlightSessionQuestionCount={generateTourResultHighlightCount}
+            onRetryGeneration={retryGeneration}
           />
         </section>
       </main>
@@ -2670,6 +2613,19 @@ export function GeneratePageClient({
                     검수완료
                   </button>
                 )}
+                {/* 수정하기 — 검수완료 버튼 오른쪽. 상세를 닫고 편집기를 연다. */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const id = detailQuestion.id;
+                    setDetailQuestion(null);
+                    editor.openEditor(id);
+                  }}
+                  className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                >
+                  <SquarePen className="h-3.5 w-3.5" />
+                  수정하기
+                </button>
                 <button
                   onClick={() => setDetailQuestion(null)}
                   className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100"

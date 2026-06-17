@@ -31,7 +31,6 @@ import { formatDate } from "@/lib/utils";
 import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
-import { CardHoverActionLabel } from "@/components/ui/card-hover-action-label";
 import {
   getQuestionGenerationPlanFromTags,
   isQuestionGenerationPlanTag,
@@ -546,7 +545,21 @@ export function QuestionCard({
     displayQuestionText,
     structuredRendererOwnsPassage,
   );
+  // compact 카드 헤더에 띄울 문제의 발문(의문문) — 구조화 direction 우선,
+  // 없으면 문제 텍스트. 뱃지/태그 대신 "무엇을 묻는 문제인지"를 바로 보여준다.
+  const directionText =
+    (typeof structuredData?.direction === "string" &&
+    structuredData.direction.trim()
+      ? structuredData.direction
+      : q.questionText) || "";
+  // compact 본문은 발문을 헤더로 올렸으므로, 본문 텍스트가 발문으로 시작하면
+  // 그 선행 발문을 떼어내 중복 노출을 막는다 (지문/보기만 본문에 남긴다).
+  const compactBodyText =
+    directionText && flatDisplayQuestionText.startsWith(directionText)
+      ? flatDisplayQuestionText.slice(directionText.length).replace(/^\s+/, "")
+      : flatDisplayQuestionText;
   const showFooterActions = showReviewActions && Boolean(q.id);
+  const shouldShowDetailIconButton = showDetailIconButton || showDetailButton;
   const handleEdit = () => {
     if (onEdit) onEdit();
     else router.push(`/director/questions/${q.id}`);
@@ -599,6 +612,17 @@ export function QuestionCard({
         )}
       </div>
     ) : null;
+  const detailIconButton =
+    shouldShowDetailIconButton && onDetail ? (
+      <CardDetailIconButton
+        className="size-7 rounded-md"
+        iconClassName="size-3.5"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDetail();
+        }}
+      />
+    ) : null;
 
   return (
     <Card
@@ -615,10 +639,10 @@ export function QuestionCard({
       <CardContent
         className={
           compactFixed
-            ? `p-3 flex flex-col gap-2 h-full${showDetailIconButton && onDetail ? " pb-11" : ""}`
+            ? "p-3 flex flex-col gap-2 h-full"
             : compact
-              ? `p-3 space-y-2${showDetailIconButton && onDetail ? " pb-11" : ""}`
-              : `p-4 space-y-3${showDetailIconButton && onDetail ? " pb-12" : ""}`
+              ? "p-3 space-y-2"
+              : "p-4 space-y-3"
         }
       >
         <div
@@ -626,65 +650,79 @@ export function QuestionCard({
             compactFixed ? "flex flex-col gap-2 flex-1 min-h-0" : "contents"
           }
         >
-          {/* Top row */}
-          <div className="flex items-start gap-3">
+          {/* Top row — compact 헤더는 한 줄 발문이라 세로 가운데 정렬 */}
+          <div className={`flex gap-3 ${compact ? "items-center" : "items-start"}`}>
             {onToggle && (
-              <div className="pt-0.5">
+              <div className={compact ? "" : "pt-0.5"}>
                 <Checkbox checked={selected} onCheckedChange={onToggle} />
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="text-xs font-bold text-slate-400">{num}.</span>
-                <Badge variant="outline" className="text-[10px]">
-                  {TYPE_LABELS[q.type] || q.type}
-                </Badge>
-                {q.subType && (
-                  <Badge
-                    variant="outline"
-                    className="text-[10px] text-slate-500"
-                  >
-                    {SUBTYPE_LABELS[q.subType] || q.subType}
-                  </Badge>
-                )}
-                {diffConfig && (
-                  <Badge
-                    variant="outline"
-                    className={`text-[10px] ${diffConfig.className}`}
-                  >
-                    {diffConfig.label}
-                  </Badge>
-                )}
-                {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && generationPlan && (
-                  <Badge
-                    variant="outline"
-                    className={`gap-1 text-[10px] font-bold ${
-                      generationPlan === "PREMIUM"
-                        ? "bg-slate-50 text-slate-600 border-slate-200"
-                        : "bg-slate-50 text-slate-600 border-slate-200"
-                    }`}
-                  >
-                    {generationPlan === "PREMIUM" ? (
-                      <Gem className="w-3 h-3" />
-                    ) : (
-                      <Sparkles className="w-3 h-3" />
-                    )}
-                    {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
-                  </Badge>
-                )}
-                {q.aiGenerated && <Layers className="w-3 h-3 text-blue-400" />}
-              </div>
-              {visibleTags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {visibleTags.map((tag, tagIndex) => (
-                    <span
-                      key={`${tag}-${tagIndex}`}
-                      className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500"
-                    >
-                      {tag}
+              {compact ? (
+                /* compact(생성/검수 결과) 카드: 뱃지·태그 대신 문제의 발문(의문문)을
+                   헤더에 바로 노출 — "무엇을 묻는 문제인지"가 한눈에 보인다. */
+                <p className="text-[12.5px] font-bold leading-snug text-slate-800 line-clamp-2">
+                  {directionText}
+                </p>
+              ) : (
+                <>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-xs font-bold text-slate-400">
+                      {num}.
                     </span>
-                  ))}
-                </div>
+                    <Badge variant="outline" className="text-[10px]">
+                      {TYPE_LABELS[q.type] || q.type}
+                    </Badge>
+                    {q.subType && (
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] text-slate-500"
+                      >
+                        {SUBTYPE_LABELS[q.subType] || q.subType}
+                      </Badge>
+                    )}
+                    {diffConfig && (
+                      <Badge
+                        variant="outline"
+                        className={`text-[10px] ${diffConfig.className}`}
+                      >
+                        {diffConfig.label}
+                      </Badge>
+                    )}
+                    {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && generationPlan && (
+                      <Badge
+                        variant="outline"
+                        className={`gap-1 text-[10px] font-bold ${
+                          generationPlan === "PREMIUM"
+                            ? "bg-slate-50 text-slate-600 border-slate-200"
+                            : "bg-slate-50 text-slate-600 border-slate-200"
+                        }`}
+                      >
+                        {generationPlan === "PREMIUM" ? (
+                          <Gem className="w-3 h-3" />
+                        ) : (
+                          <Sparkles className="w-3 h-3" />
+                        )}
+                        {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
+                      </Badge>
+                    )}
+                    {q.aiGenerated && (
+                      <Layers className="w-3 h-3 text-blue-400" />
+                    )}
+                  </div>
+                  {visibleTags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {visibleTags.map((tag, tagIndex) => (
+                        <span
+                          key={`${tag}-${tagIndex}`}
+                          className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </>
               )}
             </div>
             {showHeaderActions && onDelete && (
@@ -701,31 +739,6 @@ export function QuestionCard({
               >
                 <Trash2 className="w-3 h-3" />
               </Button>
-            )}
-            {compact && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCompactExpanded((prev) => !prev);
-                  if (compactExpanded) setPassageOpen(false);
-                }}
-                aria-expanded={compactExpanded}
-                title={compactExpanded ? "접기" : "펼치기"}
-                className="group/expand inline-flex shrink-0 cursor-pointer items-center gap-1 text-[11.5px] font-medium text-blue-400 transition-colors hover:text-blue-600"
-              >
-                {compactExpanded ? (
-                  <>
-                    <ChevronUp className="size-3.5" />
-                    접기
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="size-3.5 transition-transform group-hover/expand:translate-y-0.5" />
-                    펼치기
-                  </>
-                )}
-              </button>
             )}
             {!readonly && (
               <div className="flex items-center gap-1 shrink-0">
@@ -804,6 +817,7 @@ export function QuestionCard({
                 index={num - 1}
                 hideHeader
                 sourcePassageContent={q.passage?.content}
+                answerRevealMode={compact ? "show-all" : "default"}
               />
             </>
           ) : (
@@ -850,7 +864,7 @@ export function QuestionCard({
                     : "text-[13px]"
                 }`}
               >
-                {renderFormatted(flatDisplayQuestionText, {
+                {renderFormatted(compact ? compactBodyText : flatDisplayQuestionText, {
                   underlineMarkedWords: needsUnderline,
                   highlightMarkers: showMarkers,
                 })}
@@ -929,7 +943,7 @@ export function QuestionCard({
                       <div className="flex min-w-0 items-center gap-1.5">
                         {detailExtra}
                       </div>
-                      {q.explanation ? (
+                      {q.explanation && !compact ? (
                         <button
                           type="button"
                           onClick={(e) => {
@@ -951,7 +965,8 @@ export function QuestionCard({
                   </div>
                 ) : null
               ) : (
-                q.explanation && (
+                q.explanation &&
+                !compact && (
                   <div>
                     <button
                       className="text-[11px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
@@ -970,6 +985,36 @@ export function QuestionCard({
               )}
             </>
           )}
+
+          {/* compact 카드: 해설 보기 대신 카드 전체 펼치기/접기 토글.
+              구조화/플랫 분기와 무관하게 항상 노출되도록 ternary 바깥에 둔다. */}
+          {compact && (
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCompactExpanded((prev) => !prev);
+                  if (compactExpanded) setPassageOpen(false);
+                }}
+                aria-expanded={compactExpanded}
+                title={compactExpanded ? "접기" : "펼치기"}
+                className="group/expand -m-1.5 inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+              >
+                {compactExpanded ? (
+                  <>
+                    접기
+                    <ChevronUp className="w-3 h-3" />
+                  </>
+                ) : (
+                  <>
+                    펼치기
+                    <ChevronDown className="w-3 h-3 transition-transform group-hover/expand:translate-y-0.5" />
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Footer */}
@@ -983,9 +1028,18 @@ export function QuestionCard({
                 <span>시험 {q._count.examLinks}회 사용</span>
               )}
             </div>
-            {!showFooterActions && !hideReviewStatusStamp && (
-              <ReviewStatusStamp approved={q.approved} className="shrink-0" />
-            )}
+            {!showFooterActions &&
+            (!hideReviewStatusStamp || detailIconButton) ? (
+              <div className="flex shrink-0 items-center gap-1.5">
+                {!hideReviewStatusStamp ? (
+                  <ReviewStatusStamp
+                    approved={q.approved}
+                    className="shrink-0"
+                  />
+                ) : null}
+                {detailIconButton}
+              </div>
+            ) : null}
           </div>
           {showFooterActions &&
             (q.approved ? (
@@ -1018,7 +1072,7 @@ export function QuestionCard({
                     수정하기
                   </Button>
                 </div>
-                <ReviewStatusStamp approved={q.approved} className="shrink-0" />
+                {detailIconButton}
               </div>
             ) : (
               <div className="flex items-end gap-1.5">
@@ -1050,22 +1104,11 @@ export function QuestionCard({
                     수정하기
                   </Button>
                 </div>
-                <ReviewStatusStamp approved={q.approved} className="shrink-0" />
+                {detailIconButton}
               </div>
             ))}
         </div>
       </CardContent>
-      {showDetailIconButton && onDetail ? (
-        <CardDetailIconButton
-          className="absolute bottom-2 right-2 z-30"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDetail();
-          }}
-        />
-      ) : showDetailButton && onDetail ? (
-        <CardHoverActionLabel />
-      ) : null}
     </Card>
   );
 }

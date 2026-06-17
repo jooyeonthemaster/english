@@ -2,13 +2,16 @@
 
 import { useEffect, useState } from "react";
 import {
+  Check,
   ChevronsDownUp,
   ChevronsUpDown,
   CircleHelp,
   FilePen,
   Info,
   ListStart,
+  Minus,
   PencilLine,
+  Plus,
   Scissors,
   TextCursorInput,
   Trash2,
@@ -23,6 +26,7 @@ import {
   type WholePassageTransformMode,
 } from "@/lib/passage-transform/schema";
 import type { QueueItem } from "../generate-page-types";
+import type { QuestionCardItem } from "@/components/workbench/question-card";
 import { isRowDirty, rowNeedsVariant } from "./workspace-types";
 import type { WorkspaceRowsApi } from "./use-workspace-rows";
 import { WorkspacePassageRow } from "./workspace-passage-row";
@@ -50,8 +54,6 @@ function readCoachmarkDismissed(): boolean {
 interface PassageWorkspaceProps {
   api: WorkspaceRowsApi;
   generating: boolean;
-  sessionQueue: QueueItem[];
-  questionCountByPassage: Map<string, number>;
   /** 전체 공통 난이도 — 행에 개별 난이도가 없을 때 기본 뱃지로 표시. */
   globalDifficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
   /** 전체 공통 생성 플랜 — 행에 개별 플랜이 없을 때 기본 뱃지로 표시. */
@@ -66,15 +68,21 @@ interface PassageWorkspaceProps {
   onOpenRowSettings?: (localId: string) => void;
   /** 워크스페이스 여백 클릭 → 선택 해제. */
   onClearActiveRow?: () => void;
+  /** 진행 큐 — 행 헤더의 문제 히스토리 팝오버에 전달. */
+  sessionQueue: QueueItem[];
+  /** 지문별 저장 문제 수 맵 — 행 히스토리 팝오버용. */
+  questionCountByPassage: Map<string, number>;
+  /** 지문별 저장 문제 목록 맵 — 행 히스토리 팝오버에 실제 목록 표시. */
+  questionsByPassage: Map<string, QuestionCardItem[]>;
   /** 지문별 생성 통계 (문제 수·크레딧) — 카드 푸터 '문제 생성' 버튼 라벨용. */
   rowStats?: Map<string, { questions: number; creditCost: number }>;
+  /** '지문 추가' 버튼 → 내 지문함으로 돌아가 지문을 더 고른다. */
+  onAddPassage?: () => void;
 }
 
 export function PassageWorkspace({
   api,
   generating,
-  sessionQueue,
-  questionCountByPassage,
   globalDifficulty,
   globalGenerationPlan,
   setModeActive = false,
@@ -82,7 +90,11 @@ export function PassageWorkspace({
   onSetActiveRow,
   onOpenRowSettings,
   onClearActiveRow,
+  sessionQueue,
+  questionCountByPassage,
+  questionsByPassage,
   rowStats,
+  onAddPassage,
 }: PassageWorkspaceProps) {
   const { rows } = api;
   const [coachDismissed, setCoachDismissed] = useState(true);
@@ -98,6 +110,52 @@ export function PassageWorkspace({
     }
   };
   const reopenCoach = () => setCoachDismissed(false);
+
+  // ── 다중 선택(일괄 삭제용) — 우측 패널 '설정 대상 선택'(activeRowId)과 별개.
+  //    행이 제거되면 사라진 id 는 선택 집합에서 정리한다.
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  useEffect(() => {
+    setSelectedIds((prev) => {
+      if (prev.size === 0) return prev;
+      const valid = new Set(rows.map((r) => r.localId));
+      const next = new Set<string>();
+      prev.forEach((id) => {
+        if (valid.has(id)) next.add(id);
+      });
+      return next.size === prev.size ? prev : next;
+    });
+  }, [rows]);
+  const selectedCount = selectedIds.size;
+  const allSelected = rows.length > 0 && selectedCount === rows.length;
+  const someSelected = selectedCount > 0 && !allSelected;
+  const toggleAllSelected = () => {
+    setSelectedIds(
+      allSelected ? new Set() : new Set(rows.map((r) => r.localId)),
+    );
+  };
+  const toggleRowSelected = (localId: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(localId)) next.delete(localId);
+      else next.add(localId);
+      return next;
+    });
+  };
+  const handleDeleteSelected = () => {
+    const targets = rows.filter((r) => selectedIds.has(r.localId));
+    if (targets.length === 0) return;
+    const anyDirty = targets.some((r) => isRowDirty(r));
+    if (
+      anyDirty &&
+      !window.confirm(
+        `선택한 ${targets.length}개 지문 중 아직 생성하지 않은 편집·변형 내용이 있어요. 제거하면 사라집니다. 계속할까요?`,
+      )
+    ) {
+      return;
+    }
+    api.removeRows(targets.map((r) => r.localId));
+    setSelectedIds(new Set());
+  };
 
   // 편집·AI 변형이 들어간 행이 있으면 비우기/제거 전에 확인을 받는다 —
   // 크레딧 들여 만든 변형이 한 클릭에 사라지는 사고 방지.
@@ -192,6 +250,42 @@ export function PassageWorkspace({
     >
       {/* ── 헤더 (44px — 3컬럼 공통 끝선) ── */}
       <div className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-100 bg-white pl-3 pr-1.5">
+        {/* 전체선택 체크박스 — 맨 왼쪽. 일부만 선택되면 중간(−) 상태. */}
+        {rows.length > 0 ? (
+          <button
+            type="button"
+            role="checkbox"
+            aria-checked={allSelected ? true : someSelected ? "mixed" : false}
+            aria-label={allSelected ? "전체 선택 해제" : "전체 선택"}
+            onClick={toggleAllSelected}
+            title={allSelected ? "전체 선택 해제" : "지문 전체 선택"}
+            className={
+              "flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center rounded-[5px] border transition-colors " +
+              (allSelected || someSelected
+                ? "border-violet-600 bg-violet-600 text-white"
+                : "border-slate-300 bg-white text-transparent hover:border-violet-400")
+            }
+          >
+            {someSelected ? (
+              <Minus className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
+            ) : (
+              <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
+            )}
+          </button>
+        ) : null}
+        {/* 선택 삭제(아이콘 전용) — 다중 선택된 지문이 있을 때만, 전체선택
+            체크박스 바로 옆 왼쪽에 둔다. 전체 비우기와는 별개. */}
+        {selectedCount > 0 ? (
+          <button
+            type="button"
+            onClick={handleDeleteSelected}
+            disabled={generating}
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-40"
+            title={`선택한 ${selectedCount}개 지문을 워크스페이스에서 제거 (지문은 삭제되지 않음)`}
+          >
+            <Trash2 className="h-4 w-4" aria-hidden="true" />
+          </button>
+        ) : null}
         <FilePen
           className="h-3.5 w-3.5 shrink-0 text-slate-400"
           aria-hidden="true"
@@ -202,11 +296,6 @@ export function PassageWorkspace({
         {rows.length > 0 ? (
           <span className="flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded-full bg-violet-600 px-1 text-[10.5px] font-bold leading-none text-white tabular-nums">
             {rows.length}
-          </span>
-        ) : null}
-        {rows.length > 0 ? (
-          <span className="hidden shrink-0 text-[11px] font-medium text-slate-400 sm:inline">
-            지문 편집 · AI 변형
           </span>
         ) : null}
         <span className="min-w-0 flex-1" aria-hidden="true" />
@@ -262,11 +351,17 @@ export function PassageWorkspace({
           상위에서 컬럼 자체를 렌더하지 않음). ── */}
       {
         <div
+          // 스크롤바를 왼쪽에 두기 위해 컨테이너는 rtl, 내부 콘텐츠는 ltr 로 되돌린다.
+          dir="rtl"
+          className="min-h-0 flex-1 overflow-y-auto"
+        >
+        <div
           // 여백(행이 아닌 배경) 클릭 → 개별 설정 선택 해제. 행/자식 클릭은
           // target !== currentTarget 이라 무시된다 (행 선택과 충돌 없음).
           onClick={(e) => {
             if (e.target === e.currentTarget) onClearActiveRow?.();
           }}
+          dir="ltr"
           className="grid min-h-0 flex-1 grid-cols-1 content-start items-stretch gap-2.5 overflow-y-auto p-3 xl:grid-cols-2"
         >
           {!coachDismissed ? (
@@ -326,6 +421,12 @@ export function PassageWorkspace({
                   ? (questionCountByPassage.get(row.variantOfId) ?? 0)
                   : 0)
               }
+              questions={[
+                ...(questionsByPassage.get(row.passageId) ?? []),
+                ...(row.variantOfId
+                  ? (questionsByPassage.get(row.variantOfId) ?? [])
+                  : []),
+              ]}
               onChangeContent={(content) =>
                 api.setContent(row.localId, content)
               }
@@ -340,12 +441,30 @@ export function PassageWorkspace({
               onToggleCollapsed={() => api.toggleCollapsed(row.localId)}
               onRemove={() => handleRemoveRow(row.localId)}
               onAddVariant={handleAddVariant}
+              selected={selectedIds.has(row.localId)}
+              onToggleSelected={() => toggleRowSelected(row.localId)}
               active={activeRowId === row.localId}
+              dimmed={activeRowId != null && activeRowId !== row.localId}
               onSetActive={() => onSetActiveRow?.(row.localId)}
               onOpenSettings={() => onOpenRowSettings?.(row.localId)}
               genStats={rowStats?.get(row.localId)}
             />
           ))}
+
+          {/* 지문 추가 — 지문 카드와 같은 가로 너비. 내 지문함으로 돌아가
+              지문을 더 고른다. */}
+          {onAddPassage ? (
+            <button
+              type="button"
+              onClick={onAddPassage}
+              disabled={generating}
+              className="flex h-11 w-full shrink-0 items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-300 bg-white text-[12.5px] font-semibold text-slate-500 transition-colors hover:border-violet-300 hover:bg-violet-50 hover:text-violet-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Plus className="h-4 w-4" aria-hidden="true" />
+              지문 추가
+            </button>
+          ) : null}
+        </div>
         </div>
       }
     </div>

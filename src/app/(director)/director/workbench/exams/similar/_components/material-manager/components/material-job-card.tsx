@@ -14,7 +14,7 @@ import { ACTIVE_STATUSES } from "@/components/workbench/task-queue/constants";
 import { TaskStatusBadge } from "@/components/workbench/task-queue/components/task-status-badge";
 import { formatTaskDate } from "@/components/workbench/task-queue/utils/format";
 import type { TaskStatus } from "@/components/workbench/task-queue/types";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import {
   clearCardTextSelection,
   preventCardDoubleClickTextSelection,
@@ -338,50 +338,52 @@ export function MaterialJobCard({
         ) : null}
       </div>
 
-      {!editing ? (
-        <div className="px-2.5 pb-2 pt-2">
-          <DetailActionButton
-            className="w-full justify-center"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}
-          />
-        </div>
-      ) : null}
-
       {/* Analysis-progress footer */}
       <div className={"mt-auto border-t px-2.5 py-1.5 " + progressTone.surface}>
-        <p
-          className={
-            "whitespace-nowrap text-[10.5px] font-bold leading-none " +
-            progressTone.text
-          }
-        >
-          {hasItems ? (
-            <>
-              <span className="tabular-nums">{count}</span>건 중{" "}
-              <span className="tabular-nums">{safeAnalyzed}</span>건 분석 완료
-            </>
-          ) : (
-            "자료 준비 중"
-          )}
-        </p>
-        {hasItems ? (
-          <div
-            className={
-              "mt-1.5 h-1 overflow-hidden rounded-full " + progressTone.track
-            }
-          >
-            <div
+        <div className="flex items-center gap-2">
+          <div className="min-w-0 flex-1">
+            <p
               className={
-                "h-full rounded-full transition-[width] duration-300 " +
-                progressTone.bar
+                "whitespace-nowrap text-[10.5px] font-bold leading-none " +
+                progressTone.text
               }
-              style={{ width: `${pct}%` }}
-            />
+            >
+              {hasItems ? (
+                <>
+                  <span className="tabular-nums">{count}</span>건 중{" "}
+                  <span className="tabular-nums">{safeAnalyzed}</span>건 분석 완료
+                </>
+              ) : (
+                "자료 준비 중"
+              )}
+            </p>
+            {hasItems ? (
+              <div
+                className={
+                  "mt-1.5 h-1 overflow-hidden rounded-full " + progressTone.track
+                }
+              >
+                <div
+                  className={
+                    "h-full rounded-full transition-[width] duration-300 " +
+                    progressTone.bar
+                  }
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+            ) : null}
           </div>
-        ) : null}
+          {!editing ? (
+            <CardDetailIconButton
+              className="size-7 rounded-md"
+              iconClassName="size-3.5"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClick();
+              }}
+            />
+          ) : null}
+        </div>
       </div>
     </article>
   );

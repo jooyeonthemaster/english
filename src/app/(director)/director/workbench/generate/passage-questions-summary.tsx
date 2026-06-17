@@ -3,6 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, FileText } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import type { QuestionCardItem } from "@/components/workbench/question-card";
 import {
   Q_TYPE_LABELS,
@@ -80,7 +85,7 @@ export function PassageQuestionsSummary({
 }: {
   questions: QuestionCardItem[];
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const [open, setOpen] = useState(false);
 
   if (questions.length === 0) return null;
 
@@ -89,27 +94,34 @@ export function PassageQuestionsSummary({
       className="mt-2.5 border-t border-slate-100 pt-2"
       onClick={(e) => e.stopPropagation()}
     >
-      <button
-        type="button"
-        aria-expanded={expanded}
-        onClick={() => setExpanded((v) => !v)}
-        className="flex w-full items-center gap-1.5 rounded-md px-1 py-1 text-left text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-50"
-      >
-        <FileText className="h-3 w-3 text-slate-400" />
-        <span>생성된 문제 {questions.length}개</span>
-        <ChevronDown
-          className={`ml-auto h-3.5 w-3.5 text-slate-400 transition-transform ${
-            expanded ? "rotate-180" : ""
-          }`}
-        />
-      </button>
-      {expanded && (
-        <div className="mt-1.5 space-y-1.5">
-          {questions.map((q, idx) => (
-            <SummaryRow key={q.id} q={q} num={idx + 1} />
-          ))}
-        </div>
-      )}
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            aria-expanded={open}
+            className="flex w-full items-center gap-1.5 rounded-md px-1 py-1 text-left text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-50"
+          >
+            <FileText className="h-3 w-3 text-slate-400" />
+            <span>생성된 문제 {questions.length}개</span>
+            <ChevronDown
+              className={`ml-auto h-3.5 w-3.5 text-slate-400 transition-transform ${
+                open ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent
+          align="start"
+          className="w-80 max-w-[90vw] p-1.5"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex max-h-72 flex-col gap-1.5 overflow-y-auto">
+            {questions.map((q, idx) => (
+              <SummaryRow key={q.id} q={q} num={idx + 1} />
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }

@@ -75,6 +75,7 @@ export {
 
 export {
   getQuestionCollections,
+  getAcademyQuestionCollectionMembership,
   createQuestionCollection,
   updateQuestionCollection,
   deleteQuestionCollection,

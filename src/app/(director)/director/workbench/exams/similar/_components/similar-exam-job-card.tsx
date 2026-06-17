@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import { cn, formatDate } from "@/lib/utils";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 
 export interface SimilarExamJobCardData {
   id: string;
@@ -251,11 +251,12 @@ export function SimilarExamJobCard({
       {/* 상세보기 + 분석 정보 · 날짜 */}
       <div className="mt-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5">
-          <DetailActionButton
+          <CardDetailIconButton
             title="시험지 상세 보기"
             aria-label="시험지 상세 보기"
             disabled={!hasExam}
-            className={!hasExam ? "cursor-not-allowed opacity-50" : undefined}
+            className="size-7 rounded-md"
+            iconClassName="size-3.5"
             onClick={() => examId && router.push(`/director/exams/${examId}`)}
           />
           {isTerminal ? (

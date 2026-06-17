@@ -3,13 +3,12 @@
 
 import React from "react";
 import {
-  CheckCircle2,
+  ArrowLeft,
   Layers,
   Loader2,
   Save,
   Trash2,
   X,
-  XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +24,8 @@ import { DIFFICULTY_OPTIONS, TYPE_OPTIONS } from "./constants";
 interface Props {
   isModal: boolean;
   onClose?: () => void;
+  /** 상세 보기에서 들어온 경우에만 전달 — 좌측 상단에 '뒤로' 버튼을 노출한다. */
+  onBack?: () => void;
   approved: boolean;
   aiGenerated: boolean;
   type: string;
@@ -35,6 +36,7 @@ interface Props {
   setDifficulty: (v: string) => void;
   onDelete: () => void;
   onApprove: () => void;
+  onUnapprove?: () => void;
   onSave: () => void;
   saving: boolean;
   deleting: boolean;
@@ -43,6 +45,7 @@ interface Props {
 export function EditHeader({
   isModal,
   onClose,
+  onBack,
   approved,
   aiGenerated,
   type,
@@ -53,6 +56,7 @@ export function EditHeader({
   setDifficulty,
   onDelete,
   onApprove,
+  onUnapprove,
   onSave,
   saving,
   deleting,
@@ -62,16 +66,36 @@ export function EditHeader({
   return (
     <div className="flex items-center justify-between px-6 py-3 border-b border-slate-200 bg-white shrink-0">
       <div className="flex items-center gap-3">
-        <span className="text-[17px] font-bold tracking-tight text-slate-900">문제 수정</span>
-        {approved ? (
-          <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
-            <CheckCircle2 className="w-3.5 h-3.5" />승인
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
-            <XCircle className="w-3.5 h-3.5" />미승인
-          </span>
+        {/* 검수 토글 점 — 페이지 좌측 끝 첫 번째. 누르면 검수상태(초록↔빨강)가
+            실제로 바뀐다. 오른쪽 텍스트와 세로 중앙 정렬(items-center). */}
+        <button
+          type="button"
+          onClick={approved ? onUnapprove : onApprove}
+          disabled={approved ? !onUnapprove : !onApprove}
+          aria-label={approved ? "검수완료" : "검수필요"}
+          title={
+            approved
+              ? "검수완료 — 누르면 검수를 취소합니다"
+              : "검수필요 — 누르면 검수완료로 표시합니다"
+          }
+          className={
+            "size-4 shrink-0 cursor-pointer rounded-full ring-2 ring-white shadow-sm transition-colors hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60 " +
+            (approved ? "bg-emerald-500" : "bg-red-500")
+          }
+        />
+        {onBack && (
+          <button
+            type="button"
+            onClick={onBack}
+            aria-label="상세로 돌아가기"
+            title="상세로 돌아가기"
+            className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 text-[13px] font-medium text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            뒤로
+          </button>
         )}
+        <span className="text-[17px] font-bold tracking-tight text-slate-900">문제 수정</span>
         {aiGenerated && (
           <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full">
             <Layers className="w-3.5 h-3.5" />AI
@@ -92,11 +116,6 @@ export function EditHeader({
         <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50 h-9 text-[13px] px-3 font-medium" onClick={onDelete} disabled={deleting}>
           <Trash2 className="w-4 h-4 mr-1.5" />삭제
         </Button>
-        {!approved && (
-          <Button variant="ghost" size="sm" className="text-emerald-700 hover:bg-emerald-50 h-9 text-[13px] px-3 font-medium" onClick={onApprove}>
-            <CheckCircle2 className="w-4 h-4 mr-1.5" />승인
-          </Button>
-        )}
         <Button className="bg-blue-600 hover:bg-blue-700 h-9 text-[13px] px-5 font-semibold shadow-sm" size="sm" onClick={onSave} disabled={saving}>
           {saving ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Save className="w-4 h-4 mr-1.5" />}저장
         </Button>

@@ -113,6 +113,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
 import type { ExamDetail } from "./exam-detail-client-parts/types";
 
 interface ExamPaperBuilderClientProps {
@@ -1096,6 +1097,27 @@ export function ExamPaperBuilderClient({
     );
     for (const item of targets) removeItem(item.localId);
   }, [paperItems, removeItem]);
+
+  // 문제 생성 결과에서 '시험지 생성'으로 넘어오면, 그 문제들을 미리보기(시험지)에
+  // 바로 올린다. seed id 는 sessionStorage 로 전달되고 1회 소비 후 비운다.
+  const seededFromGenerateRef = useRef(false);
+  useEffect(() => {
+    if (seededFromGenerateRef.current) return;
+    seededFromGenerateRef.current = true;
+    try {
+      const raw = window.sessionStorage.getItem(EXAM_SEED_QUESTION_IDS_KEY);
+      if (!raw) return;
+      window.sessionStorage.removeItem(EXAM_SEED_QUESTION_IDS_KEY);
+      const ids = JSON.parse(raw);
+      if (Array.isArray(ids) && ids.length > 0) {
+        addQuestionIdsToPaper(
+          ids.filter((value): value is string => typeof value === "string"),
+        );
+      }
+    } catch {
+      // 잘못된 seed 값은 무시한다.
+    }
+  }, [addQuestionIdsToPaper]);
 
   const togglePaperQuestionSelection = useCallback((id: string) => {
     if (selectedPaperQuestionIds.has(id)) {

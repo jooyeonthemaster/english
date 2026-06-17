@@ -19,7 +19,7 @@ import {
 import { isDraftAnalysisComplete } from "../utils/analysis-status";
 import { getDraftDisplayTitle } from "../utils/title";
 import { RestorationBadge } from "./restoration-badge";
-import { DetailActionButton } from "@/components/ui/detail-action-button";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import { DragHandle } from "@/components/ui/drag-handle";
 import {
   clearCardTextSelection,
@@ -467,25 +467,29 @@ export function DraftCard({
       </p>
       <div className="mt-auto flex flex-wrap items-center justify-end gap-1.5 pt-1">
         {onOpenDetail ? (
-          <DetailActionButton
+          <CardDetailIconButton
             icon={Maximize2}
+            title="지문 전체 보기"
+            aria-label="지문 전체 보기"
+            className="size-7 rounded-md"
+            iconClassName="size-3.5"
             onClick={(e) => {
               e.stopPropagation();
               onOpenDetail();
             }}
-          >
-            지문 전체 보기
-          </DetailActionButton>
+          />
         ) : null}
-        <DetailActionButton
+        <CardDetailIconButton
           icon={detailAction?.icon ?? Maximize2}
+          title={detailAction?.label ?? "상세보기"}
+          aria-label={detailAction?.label ?? "상세보기"}
+          className="size-7 rounded-md"
+          iconClassName="size-3.5"
           onClick={(e) => {
             e.stopPropagation();
             onClick();
           }}
-        >
-          {detailAction?.label ?? "상세보기"}
-        </DetailActionButton>
+        />
       </div>
     </div>
   );
