@@ -71,11 +71,13 @@ import {
   readGenericAnswerCountSetting,
   readGenericOptionCountSetting,
   readOptionLanguageSetting,
+  readQuestionTypeGenerationPlanSetting,
   readSentenceInsertSlotCountSetting,
   readStemLanguageSetting,
   readVocabChoiceAnswerCountSetting,
   readVocabChoiceMarkerCountSetting,
   supportsGenericOptionCount,
+  supportsGistAnswerPolarity,
 } from "@/lib/question-type-generation-settings";
 
 const VOCAB_GENERATION_TYPE_IDS = new Set([
@@ -203,6 +205,11 @@ interface GenerationConfigPanelProps {
   workspaceVariantCount?: number;
   workspaceGenerating?: boolean;
   onWorkspaceGenerate?: () => void;
+  /**
+   * 패널 하단의 생성 버튼들을 숨긴다 — 지문별 '문제 생성' 모달처럼 생성 CTA 를
+   * 패널 바깥(모달 푸터)에서 제공할 때 쓴다. 미지정 시 기존처럼 버튼을 렌더한다.
+   */
+  hideGenerateButtons?: boolean;
 }
 
 // ─── Component ───────────────────────────────────────
@@ -211,6 +218,7 @@ export function GenerationConfigPanel({
   genMode,
   setGenMode,
   editingRow = false,
+  hideGenerateButtons = false,
   activePassageId = null,
   setMembers,
   onSetMembersChange,
@@ -857,10 +865,49 @@ export function GenerationConfigPanel({
 
   const renderTypeNumericDetailContent = (typeId: string) => {
     if (typeId === "CONTENT_MATCH") {
+      const contentMatchPolarityOptions: { value: "일치" | "불일치"; label: string }[] = [
+        { value: "불일치", label: "불일치" },
+        { value: "일치", label: "일치" },
+      ];
+      const contentMatchPolarity =
+        contentMatchSettings.matchType === "일치" ? "일치" : "불일치";
       return (
         <div className="space-y-3">
-          {renderNumberSetting({
-            title: "보기 개수",
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <span className="text-[12px] font-bold text-slate-800">정답 유형</span>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                일치하는 것을 고를지, 일치하지 않는 것을 고를지 정합니다. 기본은 불일치입니다.
+              </p>
+            </div>
+            <div className="flex shrink-0 rounded-md border border-slate-200 bg-slate-50 p-0.5">
+              {contentMatchPolarityOptions.map((item) => (
+                <button
+                  key={item.value}
+                  type="button"
+                  onClick={() =>
+                    setQuestionTypeSettings((prev) => ({
+                      ...prev,
+                      CONTENT_MATCH: {
+                        ...(prev.CONTENT_MATCH || {}),
+                        matchType: item.value,
+                      },
+                    }))
+                  }
+                  className={`rounded px-2 py-1 text-[10px] font-bold transition-colors ${
+                    contentMatchPolarity === item.value
+                      ? "bg-white text-blue-700 shadow-sm"
+                      : "text-slate-400 hover:text-slate-600"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="border-t border-slate-100 pt-3">
+            {renderNumberSetting({
+              title: "보기 개수",
             badges: [
               `${CONTENT_MATCH_OPTION_COUNT_MIN} ~ ${CONTENT_MATCH_OPTION_COUNT_MAX}`,
               "진술문",
@@ -873,6 +920,7 @@ export function GenerationConfigPanel({
             onChange: setContentMatchOptionCount,
             ariaBase: "content match option count",
           })}
+          </div>
           <div className="border-t border-slate-100 pt-3">
             {renderNumberSetting({
               title: "정답 개수",
@@ -1019,63 +1067,171 @@ export function GenerationConfigPanel({
               </button>
             </div>
           </div>
+
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[12px] font-bold text-slate-800">
+                  출제 포인트 집중
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  {grammarErrorSettings.pointFocus ? "핵심 6개 집중" : "폭넓게 출제"}
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  관계사·수일치·분사·to/-ing
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                켜면 정답 오류를 기출 최빈출 포인트(관계사·수일치·
+                to부정사/동명사·분사·대명사·형용사/부사)에 집중합니다. 끄면
+                다양한 포인트로 폭넓게 돌려가며 출제합니다.
+              </p>
+              {grammarErrorSettings.pointFocus ? (
+                <p className="mt-1 text-[10px] leading-snug text-amber-600">
+                  ⚠️ 집중 모드는 출제 포인트를 좁히므로, 같은 지문에서 많은
+                  문항을 생성하면 중복 가능성이 높아집니다.
+                </p>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!!grammarErrorSettings.pointFocus}
+              onClick={() =>
+                patchTypeSettings("GRAMMAR_ERROR", {
+                  pointFocus: !grammarErrorSettings.pointFocus,
+                })
+              }
+              className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors ${
+                grammarErrorSettings.pointFocus
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  grammarErrorSettings.pointFocus
+                    ? "translate-x-5"
+                    : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
         </div>
       );
     }
 
     if (typeId === "GRAMMAR_CORRECTION") {
       return (
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[12px] font-bold text-slate-800">
-                틀린 밑줄 개수
-              </span>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[12px] font-bold text-slate-800">
+                  틀린 밑줄 개수
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  1 ~ 5개
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  밑줄=오류
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                지문에 밑줄 칠 문장/절 구간 수입니다. 선택한 모든 밑줄 구간 안에는
+                어법 오류가 숨어 있어야 합니다.
+              </p>
             </div>
-            <div className="mt-1 flex flex-wrap gap-1">
-              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
-                1 ~ 5개
+            <div className="flex items-center gap-0.5 shrink-0">
+              <button
+                type="button"
+                onClick={() =>
+                  setGrammarCorrectionErrorCount(grammarCorrectionErrorCount - 1)
+                }
+                disabled={
+                  grammarCorrectionErrorCount <=
+                  GRAMMAR_CORRECTION_ERROR_COUNT_MIN
+                }
+                className="w-7 h-7 rounded-md flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+                aria-label="틀린 밑줄 개수 줄이기"
+              >
+                <Minus className="w-3 h-3" />
+              </button>
+              <span className="w-6 text-center text-[12px] font-bold tabular-nums text-blue-700">
+                {grammarCorrectionErrorCount}
               </span>
-              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
-                밑줄=오류
-              </span>
+              <button
+                type="button"
+                onClick={() =>
+                  setGrammarCorrectionErrorCount(grammarCorrectionErrorCount + 1)
+                }
+                disabled={
+                  grammarCorrectionErrorCount >=
+                  GRAMMAR_CORRECTION_ERROR_COUNT_MAX
+                }
+                className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
+                aria-label="틀린 밑줄 개수 늘리기"
+              >
+                <Plus className="w-3 h-3" />
+              </button>
             </div>
-            <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
-              지문에 밑줄 칠 문장/절 구간 수입니다. 선택한 모든 밑줄 구간 안에는
-              어법 오류가 숨어 있어야 합니다.
-            </p>
           </div>
-          <div className="flex items-center gap-0.5 shrink-0">
+
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[12px] font-bold text-slate-800">
+                  출제 포인트 집중
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  {grammarCorrectionSettings.pointFocus
+                    ? "핵심 6개 집중"
+                    : "폭넓게 출제"}
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  관계사·수일치·분사·to/-ing
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                켜면 고쳐 쓸 오류를 기출 최빈출 포인트(관계사·수일치·
+                to부정사/동명사·분사·대명사·형용사/부사)에 집중합니다. 끄면
+                다양한 포인트로 폭넓게 돌려가며 출제합니다.
+              </p>
+              {grammarCorrectionSettings.pointFocus ? (
+                <p className="mt-1 text-[10px] leading-snug text-amber-600">
+                  ⚠️ 집중 모드는 출제 포인트를 좁히므로, 같은 지문에서 많은
+                  문항을 생성하면 중복 가능성이 높아집니다.
+                </p>
+              ) : null}
+            </div>
             <button
               type="button"
+              role="switch"
+              aria-checked={!!grammarCorrectionSettings.pointFocus}
               onClick={() =>
-                setGrammarCorrectionErrorCount(grammarCorrectionErrorCount - 1)
+                patchTypeSettings("GRAMMAR_CORRECTION", {
+                  pointFocus: !grammarCorrectionSettings.pointFocus,
+                })
               }
-              disabled={
-                grammarCorrectionErrorCount <=
-                GRAMMAR_CORRECTION_ERROR_COUNT_MIN
-              }
-              className="w-7 h-7 rounded-md flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
-              aria-label="틀린 밑줄 개수 줄이기"
+              className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors ${
+                grammarCorrectionSettings.pointFocus
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
             >
-              <Minus className="w-3 h-3" />
-            </button>
-            <span className="w-6 text-center text-[12px] font-bold tabular-nums text-blue-700">
-              {grammarCorrectionErrorCount}
-            </span>
-            <button
-              type="button"
-              onClick={() =>
-                setGrammarCorrectionErrorCount(grammarCorrectionErrorCount + 1)
-              }
-              disabled={
-                grammarCorrectionErrorCount >=
-                GRAMMAR_CORRECTION_ERROR_COUNT_MAX
-              }
-              className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
-              aria-label="틀린 밑줄 개수 늘리기"
-            >
-              <Plus className="w-3 h-3" />
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  grammarCorrectionSettings.pointFocus
+                    ? "translate-x-5"
+                    : "translate-x-0"
+                }`}
+              />
             </button>
           </div>
         </div>
@@ -1162,6 +1318,55 @@ export function GenerationConfigPanel({
           <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
+                <span className="text-[12px] font-bold text-slate-800">
+                  빈칸 변형
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  정답 패러프레이즈
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  난이도별 어휘
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  오답 균질화
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                정답 선지를 원문 그대로 내지 않고, 지문 의미를 보존한
+                패러프레이즈로 생성합니다.
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!!blankSettings.paraphraseAnswer}
+              onClick={() => {
+                const next = !blankSettings.paraphraseAnswer;
+                updateBlankSetting({
+                  paraphraseAnswer: next,
+                  ...(next ? { doubleNegative: false } : {}),
+                });
+              }}
+              className={`relative h-6 w-11 rounded-full border transition-colors ${
+                blankSettings.paraphraseAnswer
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  blankSettings.paraphraseAnswer
+                    ? "translate-x-5"
+                    : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
                 <span
                   className={`text-[12px] font-bold ${isMultiBlank ? "text-slate-400" : "text-slate-800"}`}
                 >
@@ -1190,11 +1395,13 @@ export function GenerationConfigPanel({
               role="switch"
               aria-checked={!isMultiBlank && !!blankSettings.doubleNegative}
               disabled={isMultiBlank}
-              onClick={() =>
+              onClick={() => {
+                const next = !blankSettings.doubleNegative;
                 updateBlankSetting({
-                  doubleNegative: !blankSettings.doubleNegative,
-                })
-              }
+                  doubleNegative: next,
+                  ...(next ? { paraphraseAnswer: false } : {}),
+                });
+              }}
               className={`relative h-6 w-11 rounded-full border transition-colors ${
                 isMultiBlank
                   ? "cursor-not-allowed border-slate-200 bg-slate-100"
@@ -1217,6 +1424,8 @@ export function GenerationConfigPanel({
     }
 
     if (typeId === "VOCAB_CHOICE") {
+      const vocabSynonymVariants =
+        questionTypeSettings.VOCAB_CHOICE?.synonymVariants === true;
       return (
         <div className="space-y-3">
           {renderNumberSetting({
@@ -1249,24 +1458,141 @@ export function GenerationConfigPanel({
               ariaBase: "vocab choice answer count",
             })}
           </div>
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <span className="text-[12px] font-bold text-slate-800">
+                동의어 변형 (암기 무력화)
+              </span>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  지문 암기 방지
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  난이도 ↑
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                밑줄 친 어휘를 모두 동의어로 바꿔 표시합니다. 지문을 외워도 표면
+                매칭으로는 못 풀고 뜻으로 판단해야 합니다.
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={vocabSynonymVariants}
+              onClick={() =>
+                patchTypeSettings("VOCAB_CHOICE", {
+                  synonymVariants: !vocabSynonymVariants,
+                })
+              }
+              className={`relative h-6 w-11 rounded-full border transition-colors ${
+                vocabSynonymVariants
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  vocabSynonymVariants ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
         </div>
       );
     }
 
     if (typeId === "SENTENCE_INSERT") {
+      const sentenceInsertParaphrasePrefix =
+        questionTypeSettings.SENTENCE_INSERT?.paraphrasePrefix === true;
+      return (
+        <div className="space-y-3">
+          {renderNumberSetting({
+            title: "삽입 위치 개수",
+            badges: [
+              `${SENTENCE_INSERT_SLOT_COUNT_MIN} ~ ${SENTENCE_INSERT_SLOT_COUNT_MAX}`,
+              "①~ 마커",
+            ],
+            description:
+              "지문에 표시할 삽입 위치(①~) 수입니다. 정답은 항상 1곳이며, 위치 수만큼 지문 문장이 필요해 짧은 지문은 생성에 실패할 수 있습니다.",
+            value: sentenceInsertSlotCount,
+            min: SENTENCE_INSERT_SLOT_COUNT_MIN,
+            max: SENTENCE_INSERT_SLOT_COUNT_MAX,
+            onChange: setSentenceInsertSlotCount,
+            ariaBase: "sentence insert slot count",
+          })}
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <span className="text-[12px] font-bold text-slate-800">
+                주어진 문장 앞부분 변형
+              </span>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  지문 암기 방지
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  난이도 ↑
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                주어진(삽입) 문장의 앞부분을 같은 의미로 바꿔, 표면 표현을 외워
+                푸는 것을 막습니다. 정답 위치는 그대로입니다.
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={sentenceInsertParaphrasePrefix}
+              onClick={() =>
+                patchTypeSettings("SENTENCE_INSERT", {
+                  paraphrasePrefix: !sentenceInsertParaphrasePrefix,
+                })
+              }
+              className={`relative h-6 w-11 rounded-full border transition-colors ${
+                sentenceInsertParaphrasePrefix
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  sentenceInsertParaphrasePrefix ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    if (typeId === "SENTENCE_ORDER") {
+      const sentenceOrderPrefixVariationCount = Math.min(
+        3,
+        Math.max(
+          0,
+          Math.round(
+            Number(
+              questionTypeSettings.SENTENCE_ORDER?.prefixVariationCount,
+            ) || 0,
+          ),
+        ),
+      );
       return renderNumberSetting({
-        title: "삽입 위치 개수",
+        title: "앞문장 변형 문단 수",
         badges: [
-          `${SENTENCE_INSERT_SLOT_COUNT_MIN} ~ ${SENTENCE_INSERT_SLOT_COUNT_MAX}`,
-          "①~ 마커",
+          "0 ~ 3",
+          sentenceOrderPrefixVariationCount > 0 ? "암기 무력화" : "끄기",
         ],
         description:
-          "지문에 표시할 삽입 위치(①~) 수입니다. 정답은 항상 1곳이며, 위치 수만큼 지문 문장이 필요해 짧은 지문은 생성에 실패할 수 있습니다.",
-        value: sentenceInsertSlotCount,
-        min: SENTENCE_INSERT_SLOT_COUNT_MIN,
-        max: SENTENCE_INSERT_SLOT_COUNT_MAX,
-        onChange: setSentenceInsertSlotCount,
-        ariaBase: "sentence insert slot count",
+          "(A)(B)(C) 중 앞 문장을 같은 의미로 변형할 문단 수입니다. 0이면 변형하지 않습니다. 주어진 글과 정답 순서는 그대로 유지됩니다.",
+        value: sentenceOrderPrefixVariationCount,
+        min: 0,
+        max: 3,
+        onChange: (next) =>
+          patchTypeSettings("SENTENCE_ORDER", {
+            prefixVariationCount: Math.min(3, Math.max(0, Math.round(next))),
+          }),
+        ariaBase: "sentence order prefix variation count",
       });
     }
 
@@ -1291,8 +1617,48 @@ export function GenerationConfigPanel({
       const genericOptionCount = getGenericOptionCount(typeId);
       const genericAnswerCount = getGenericAnswerCount(typeId);
       const genericAnswerMax = Math.max(1, genericOptionCount - 1);
+      const showGistPolarity = supportsGistAnswerPolarity(typeId);
+      const gistPolarity =
+        (questionTypeSettings[typeId] as { answerPolarity?: string } | undefined)
+          ?.answerPolarity === "NEGATIVE"
+          ? "NEGATIVE"
+          : "POSITIVE";
+      const gistPolarityKind =
+        typeId === "TITLE" ? "제목" : typeId === "MAIN_IDEA" ? "요지" : "주제";
+      const gistPolarityOptions: { value: "POSITIVE" | "NEGATIVE"; label: string }[] = [
+        { value: "POSITIVE", label: "적절한 것" },
+        { value: "NEGATIVE", label: "적절하지 않은 것" },
+      ];
       return (
         <div className="space-y-3">
+          {showGistPolarity ? (
+            <div className="border-b border-slate-100 pb-3">
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <span className="text-[12px] font-bold text-slate-800">정답 유형</span>
+                  <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                    {gistPolarityKind}로 &apos;적절한 것&apos;을 고를지, &apos;적절하지 않은 것&apos;을 고를지 정합니다.
+                  </p>
+                </div>
+                <div className="flex shrink-0 rounded-md border border-slate-200 bg-slate-50 p-0.5">
+                  {gistPolarityOptions.map((item) => (
+                    <button
+                      key={item.value}
+                      type="button"
+                      onClick={() => patchTypeSettings(typeId, { answerPolarity: item.value })}
+                      className={`rounded px-2 py-1 text-[10px] font-bold transition-colors ${
+                        gistPolarity === item.value
+                          ? "bg-white text-blue-700 shadow-sm"
+                          : "text-slate-400 hover:text-slate-600"
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : null}
           {renderNumberSetting({
             title: "보기 개수",
             badges: [
@@ -1333,8 +1699,59 @@ export function GenerationConfigPanel({
   const renderTypeDetailContent = (typeId: string) => {
     const numericContent = renderTypeNumericDetailContent(typeId);
     const languageScope = getQuestionLanguageToggleScope(typeId);
+    // 유형별 생성 플랜 개별지정(예: 어법만 PREMIUM). per-type generationPlan 을
+    // questionTypeSettings[typeId] 에 써넣으면 서버(fast route·워커)가
+    // readQuestionTypeGenerationPlanSetting 으로 전역값 대신 우선 적용한다.
+    const typePlan = readQuestionTypeGenerationPlanSetting(
+      questionTypeSettings[typeId],
+      generationPlan,
+    );
     return (
       <div className="space-y-3">
+        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
+          <div
+            className={
+              numericContent ? "border-b border-slate-100 pb-3" : undefined
+            }
+          >
+            <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              생성 플랜 · 이 유형만
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {(["STANDARD", "PREMIUM"] as const).map((planId) => {
+                const plan = QUESTION_GENERATION_PLANS[planId];
+                const active = typePlan === planId;
+                const Icon = planId === "PREMIUM" ? Gem : Sparkles;
+                return (
+                  <button
+                    key={planId}
+                    type="button"
+                    onClick={() =>
+                      patchTypeSettings(typeId, { generationPlan: planId })
+                    }
+                    className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 transition-colors ${
+                      active
+                        ? "border-blue-300 bg-blue-50 text-blue-800"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                    }`}
+                  >
+                    <Icon
+                      className={`h-3.5 w-3.5 shrink-0 ${active ? "text-blue-600" : "text-slate-400"}`}
+                    />
+                    <span className="truncate text-[12px] font-bold">
+                      {plan.shortLabel}
+                    </span>
+                    <span
+                      className={`ml-auto text-[10px] font-bold tabular-nums ${active ? "text-blue-600" : "text-slate-400"}`}
+                    >
+                      {plan.creditMultiplier}x
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
         {numericContent}
         <div
           className={
@@ -1411,43 +1828,9 @@ export function GenerationConfigPanel({
           </div>
         </div>
 
-        {/* Model selector — 난이도 세그먼트와 동일 디자인(제목 왼쪽 + 흰색 활성) */}
-        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-          <div className="px-4 pb-3 shrink-0">
-            <div className="flex items-center gap-3">
-              <span className="w-14 shrink-0 whitespace-nowrap text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                생성 모델
-              </span>
-              <div className="flex h-8 flex-1 rounded-lg bg-slate-100 p-0.5">
-                {(["STANDARD", "PREMIUM"] as const).map((planId) => {
-                  const plan = QUESTION_GENERATION_PLANS[planId];
-                  const active = generationPlan === planId;
-                  const Icon = planId === "PREMIUM" ? Gem : PearlIcon;
-                  return (
-                    <button
-                      key={planId}
-                      type="button"
-                      onClick={() => setGenerationPlan(planId)}
-                      className={`flex flex-1 items-center justify-center gap-1.5 rounded-[6px] text-[12px] transition-all duration-150 ${
-                        active
-                          ? "bg-white font-bold text-slate-800 shadow-sm"
-                          : "font-semibold text-slate-400 hover:text-slate-600"
-                      }`}
-                    >
-                      <Icon
-                        className={`h-3.5 w-3.5 shrink-0 ${active ? "text-blue-600" : "text-slate-400"}`}
-                      />
-                      {plan.shortLabel}
-                      <span className="text-[10px] font-bold tabular-nums text-slate-400">
-                        {plan.creditMultiplier}x
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        )}
+        {/* 생성 모델(플랜)은 글로벌 셀렉터를 두지 않는다 — 유형별 세부옵션의
+            "생성 플랜 · 이 유형만"에서만 정의한다. 미설정 유형은 기본(STANDARD)으로
+            생성된다. (전역 generationPlan 은 미설정 유형의 fallback 으로만 남는다.) */}
 
         {/* Auto Mode Config */}
         {genMode === "auto" && (
@@ -1797,8 +2180,9 @@ export function GenerationConfigPanel({
       </div>
 
       {/* Generate Button — 워크스페이스 모드.
-          지문별 설정(editingRow)에서는 장문 세트도 이 공용 버튼으로 생성한다. */}
-      {(genMode !== "set" || editingRow) && workspaceActive && (
+          지문별 설정(editingRow)에서는 장문 세트도 이 공용 버튼으로 생성한다.
+          hideGenerateButtons(=지문별 모달) 일 때는 모달 푸터가 CTA 를 제공하므로 숨긴다. */}
+      {!hideGenerateButtons && (genMode !== "set" || editingRow) && workspaceActive && (
         <div className="px-4 py-3 border-t border-slate-100 bg-white shrink-0">
           {workspaceVariantCount > 0 ? (
             <p className="mb-2 rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-slate-500">
@@ -1857,7 +2241,7 @@ export function GenerationConfigPanel({
       )}
 
       {/* Generate Button — 기존 라이브러리 선택 모드 */}
-      {genMode !== "set" && !workspaceActive && (
+      {!hideGenerateButtons && genMode !== "set" && !workspaceActive && (
         <div className="px-4 py-3 border-t border-slate-100 bg-white shrink-0">
           {(() => {
             // 크레딧 비용 계산

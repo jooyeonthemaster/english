@@ -82,13 +82,9 @@ import { useBulkActions } from "./hooks/use-bulk-actions";
 import { useDraftActions } from "./hooks/use-draft-actions";
 import { useDraftDisplay } from "./hooks/use-draft-display";
 import { useDraftsData } from "./hooks/use-drafts-data";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { PASSAGE_ANALYSIS_BASE_CREDIT_COST } from "@/lib/passage-analysis-credit-costs";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
-import { FEATURE_FLAGS } from "@/lib/feature-flags";
-import {
-  getQuestionGenerationCreditCost,
-  type QuestionGenerationPlan,
-} from "@/lib/question-generation-plans";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { M1PassageDraftWithJob } from "./types";
 import { isDraftAnalysisComplete } from "./utils/analysis-status";
 
@@ -652,12 +648,8 @@ export function ExtractionManageClient({
 
   const bulkAnalysisAlreadyAnalyzedCount =
     bulkAnalysisRunnableDrafts.filter(isDraftAnalyzed).length;
-  const bulkAnalysisPlan: QuestionGenerationPlan =
-    FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? "PREMIUM" : "STANDARD";
-  const bulkAnalysisUnitCreditCost = getQuestionGenerationCreditCost(
-    CREDIT_COSTS.PASSAGE_ANALYSIS,
-    bulkAnalysisPlan,
-  );
+  const bulkAnalysisPlan: QuestionGenerationPlan = "STANDARD";
+  const bulkAnalysisUnitCreditCost = PASSAGE_ANALYSIS_BASE_CREDIT_COST;
   const bulkAnalysisTotalCreditCost =
     bulkAnalysisRunnableDrafts.length * bulkAnalysisUnitCreditCost;
   const bulkAnalysisSummaryLabel =

@@ -9,6 +9,16 @@ export const GENERATE_TOUR_SAMPLE_FILE_DRAG_TYPE =
 
 export const GENERATE_TOUR_MILESTONE_EVENT = "smoat:generate-tour:milestone";
 
+// 튜토리얼은 더 이상 자동으로 뜨지 않는다(전 사용자 강제 오버레이 방지).
+// 명시적 "튜토리얼" 버튼이 이 이벤트를 쏘면 그때만 열린다 (opt-in).
+export const GENERATE_TOUR_OPEN_EVENT = "smoat:generate-tour:open";
+
+/** 사용자가 도움말/튜토리얼 버튼을 눌렀을 때만 투어를 연다. */
+export function openGenerateTour() {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new Event(GENERATE_TOUR_OPEN_EVENT));
+}
+
 export const GENERATE_TOUR_SAMPLE_FILE_NAME = "smoat-tutorial-passage.png";
 
 export const GENERATE_TOUR_SAMPLE_TEXT_TITLE = "The Gift of the Magi, 1905";

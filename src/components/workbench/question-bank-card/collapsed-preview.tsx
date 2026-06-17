@@ -13,11 +13,15 @@ export function CollapsedPreview({
   passage,
   options,
   correctAnswer,
+  displayCorrectAnswer = correctAnswer,
+  questionClamp,
 }: {
   direction: string;
   passage: string;
   options: { label: string; text: string }[];
   correctAnswer: string;
+  displayCorrectAnswer?: string;
+  questionClamp: string;
 }) {
   const correctLabels = parseCorrectAnswerLabels(correctAnswer);
   const correctOptions = options.filter((o) =>
@@ -57,12 +61,9 @@ export function CollapsedPreview({
             </div>
           ))}
         </div>
-      ) : correctAnswer ? (
-        <div className="text-[13px] text-slate-700">
-          정답:{" "}
-          <span className="font-bold text-emerald-600">
-            {renderFormatted(correctAnswer)}
-          </span>
+      ) : displayCorrectAnswer ? (
+        <div className="text-[12px] bg-slate-50 text-slate-700 px-2 py-1 rounded border border-slate-200 line-clamp-1">
+          <span className="font-medium">정답:</span> {displayCorrectAnswer}
         </div>
       ) : null}
     </div>

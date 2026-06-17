@@ -17,7 +17,16 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import { toast } from "sonner";
 
+import {
+  variantModeLabel,
+  variantTag,
+  type VariantDirection,
+  type WholePassageTransformMode,
+} from "@/lib/passage-transform/schema";
+import type { QueueItem } from "../generate-page-types";
+import type { QuestionCardItem } from "@/components/workbench/question-card";
 import { isRowDirty, rowNeedsVariant } from "./workspace-types";
 import type { WorkspaceRowsApi } from "./use-workspace-rows";
 import { WorkspacePassageRow } from "./workspace-passage-row";
@@ -51,14 +60,22 @@ interface PassageWorkspaceProps {
   globalGenerationPlan: "STANDARD" | "PREMIUM";
   /** 우측 설정이 '장문 세트' 모드 — 워크스페이스가 생성에 사용되지 않음. */
   setModeActive?: boolean;
-  /** 우측 패널이 개별 설정 중인 행 (null 이면 전체 설정 편집). */
+  /** 개별 설정 대상으로 선택된 행 (선택 링 표시용). */
   activeRowId?: string | null;
-  /** 행 본문 클릭 → 우측 패널을 이 지문에 바인딩 (패널은 열지 않음). */
+  /** 행 본문 클릭 → 이 지문을 선택(설정 대상)으로 바인딩. */
   onSetActiveRow?: (localId: string) => void;
-  /** '지문별 설정' 버튼 → 이 지문 선택 + 설정 패널 펼치기. */
+  /** '문제 생성' 버튼 → 이 지문의 문제 생성 모달을 연다. */
   onOpenRowSettings?: (localId: string) => void;
-  /** 워크스페이스 여백 클릭 → 개별 설정 선택 해제 (전체 설정으로 복귀). */
+  /** 워크스페이스 여백 클릭 → 선택 해제. */
   onClearActiveRow?: () => void;
+  /** 진행 큐 — 행 헤더의 문제 히스토리 팝오버에 전달. */
+  sessionQueue: QueueItem[];
+  /** 지문별 저장 문제 수 맵 — 행 히스토리 팝오버용. */
+  questionCountByPassage: Map<string, number>;
+  /** 지문별 저장 문제 목록 맵 — 행 히스토리 팝오버에 실제 목록 표시. */
+  questionsByPassage: Map<string, QuestionCardItem[]>;
+  /** 지문별 생성 통계 (문제 수·크레딧) — 카드 푸터 '문제 생성' 버튼 라벨용. */
+  rowStats?: Map<string, { questions: number; creditCost: number }>;
   /** '지문 추가' 버튼 → 내 지문함으로 돌아가 지문을 더 고른다. */
   onAddPassage?: () => void;
 }
@@ -73,6 +90,10 @@ export function PassageWorkspace({
   onSetActiveRow,
   onOpenRowSettings,
   onClearActiveRow,
+  sessionQueue,
+  questionCountByPassage,
+  questionsByPassage,
+  rowStats,
   onAddPassage,
 }: PassageWorkspaceProps) {
   const { rows } = api;
@@ -162,6 +183,62 @@ export function PassageWorkspace({
       return;
     }
     api.removeRow(localId);
+  };
+
+  // 전체 변형본을 새 Passage 로 저장하고 워크스페이스에 "새 행"으로 추가한다
+  // (원본 행은 그대로 유지). 변형본은 지문 목록·문제 생성에 그대로 연동된다.
+  const handleAddVariant = async (input: {
+    sourcePassageId: string;
+    title: string;
+    content: string;
+    mode: WholePassageTransformMode;
+    direction?: VariantDirection;
+  }): Promise<boolean> => {
+    const title = input.title.trim();
+    const content = input.content.trim();
+    if (title.length === 0 || content.length < 20) {
+      toast.error("변형본 제목/본문이 비어 있습니다.");
+      return false;
+    }
+    try {
+      const { createDirectInputPassageMaterial } = await import(
+        "@/actions/workbench"
+      );
+      const result = await createDirectInputPassageMaterial({
+        title,
+        content,
+        sourcePassageId: input.sourcePassageId,
+        variantKind: variantModeLabel(input.mode, input.direction),
+        variantDirection: input.direction,
+        tags: [variantTag(input.mode, input.direction)],
+      });
+      if (!result?.success || !result.id) {
+        toast.error(
+          "변형본 저장에 실패했습니다." +
+            (result && "error" in result && result.error
+              ? ` (${result.error})`
+              : ""),
+        );
+        return false;
+      }
+      const added = api.addVariantRow({
+        passageId: result.id,
+        title,
+        content,
+        variantOfId: input.sourcePassageId,
+      });
+      toast.success(
+        added
+          ? "변형본이 새 지문으로 추가됐어요 — 이 지문으로 바로 문제를 생성할 수 있습니다."
+          : "변형본이 저장됐어요 (이미 워크스페이스에 있는 지문).",
+      );
+      return true;
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "변형본 저장 중 오류가 발생했습니다.",
+      );
+      return false;
+    }
   };
 
   const allCollapsed = rows.length > 0 && rows.every((r) => r.collapsed);
@@ -285,10 +362,10 @@ export function PassageWorkspace({
             if (e.target === e.currentTarget) onClearActiveRow?.();
           }}
           dir="ltr"
-          className="space-y-2.5 p-3"
+          className="grid min-h-0 flex-1 grid-cols-1 content-start items-stretch gap-2.5 overflow-y-auto p-3 xl:grid-cols-2"
         >
           {!coachDismissed ? (
-            <div className="flex items-start gap-3 rounded-lg border border-violet-100 bg-violet-50/60 py-2.5 pl-3.5 pr-2">
+            <div className="col-span-full flex items-start gap-3 rounded-lg border border-violet-100 bg-violet-50/60 py-2.5 pl-3.5 pr-2">
               <div className="min-w-0 flex-1">
                 <p className="text-[11.5px] font-bold uppercase tracking-wide text-violet-800/80">
                   이 워크스페이스에서 할 수 있는 것
@@ -337,6 +414,19 @@ export function PassageWorkspace({
               globalDifficulty={globalDifficulty}
               globalGenerationPlan={globalGenerationPlan}
               disabled={generating}
+              sessionQueue={sessionQueue}
+              savedQuestionCount={
+                (questionCountByPassage.get(row.passageId) ?? 0) +
+                (row.variantOfId
+                  ? (questionCountByPassage.get(row.variantOfId) ?? 0)
+                  : 0)
+              }
+              questions={[
+                ...(questionsByPassage.get(row.passageId) ?? []),
+                ...(row.variantOfId
+                  ? (questionsByPassage.get(row.variantOfId) ?? [])
+                  : []),
+              ]}
               onChangeContent={(content) =>
                 api.setContent(row.localId, content)
               }
@@ -350,12 +440,14 @@ export function PassageWorkspace({
               onSetRange={(range) => api.setRange(row.localId, range)}
               onToggleCollapsed={() => api.toggleCollapsed(row.localId)}
               onRemove={() => handleRemoveRow(row.localId)}
+              onAddVariant={handleAddVariant}
               selected={selectedIds.has(row.localId)}
               onToggleSelected={() => toggleRowSelected(row.localId)}
               active={activeRowId === row.localId}
               dimmed={activeRowId != null && activeRowId !== row.localId}
               onSetActive={() => onSetActiveRow?.(row.localId)}
               onOpenSettings={() => onOpenRowSettings?.(row.localId)}
+              genStats={rowStats?.get(row.localId)}
             />
           ))}
 

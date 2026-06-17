@@ -17,6 +17,8 @@ export function processBlankInference(
   const surroundingText = ai.surroundingText as string | undefined;
   const options = ai.options as Array<{ label: string; text: string }>;
   const correctAnswer = ai.correctAnswer as string;
+  // DOUBLE_NEGATIVE(부정 패러프레이즈)·PARAPHRASE(변형 빈칸) 모두 정답 보기가
+  // 원문과 의도적으로 다르다 — verbatim 자동 고정을 건너뛴다.
   const isDoubleNegativeMode = ai.blankAnswerMode === "DOUBLE_NEGATIVE";
   const isParaphraseMode = ai.blankAnswerMode === "PARAPHRASE";
   const isTransformedAnswerMode = isDoubleNegativeMode || isParaphraseMode;

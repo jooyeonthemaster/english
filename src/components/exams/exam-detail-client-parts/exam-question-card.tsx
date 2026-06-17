@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { DIFFICULTY_LABELS, QUESTION_TYPE_LABELS } from "./constants";
 import { renderFormatted, safeParseJSON } from "./format-text";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 import type { ExamQuestion } from "./types";
 
@@ -21,6 +22,7 @@ export function ExamQuestionCard({ eq }: { eq: ExamQuestion }) {
     questionText: q.questionText,
     structuredData: q.structuredData,
   });
+  const displayCorrectAnswer = formatStoredQuestionCorrectAnswer(q);
   const options = safeParseJSON<{ label: string; text: string }[]>(q.options, []);
   const displayOptions =
     q.subType === "SENTENCE_INSERT"
@@ -85,10 +87,10 @@ export function ExamQuestionCard({ eq }: { eq: ExamQuestion }) {
       )}
 
       {/* Non-MC answer */}
-      {displayOptions.length === 0 && q.correctAnswer && (
+      {displayOptions.length === 0 && displayCorrectAnswer && (
         <div className="text-[12px] bg-emerald-50 text-emerald-700 px-2.5 py-1.5 rounded flex items-center gap-1.5">
           <Check className="w-3.5 h-3.5" />
-          <span className="font-medium">정답:</span> {q.correctAnswer}
+          <span className="font-medium">정답:</span> {displayCorrectAnswer}
         </div>
       )}
 

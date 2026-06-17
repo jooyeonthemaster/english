@@ -22,9 +22,10 @@ export const CREDIT_COSTS = {
   AI_CHAT: 1,                 // Student AI tutoring chat (per message)
 
   // Content extraction
-  TEXT_EXTRACTION: 3,          // PDF/image OCR text extraction (verbatim)
+  TEXT_EXTRACTION: 0,          // Pure OCR / Document AI extraction is free.
   PASSAGE_RESTORATION: 1,      // Opt-in AI 복원 (문제화된 지문 → 원문 재구성) — flash-lite 전환으로 인하 (26-06-10)
-  PASSAGE_TRANSFORM: 1,        // AI 지문 변형 (문장 재작성·앞 맥락 추가) — flash-lite 경량 호출
+  PASSAGE_TRANSFORM: 1,        // AI 지문 변형 — 구간(문장 재작성·앞 맥락 추가) flash-lite 경량 호출
+  PASSAGE_VARIANT: 2,          // AI 지문 변형 — 전체(관련/상반 주제·난이도·길이)로 새 지문 한 편 생성
 
   // Webtoon
   WEBTOON_IMAGE: 5,            // 한 지문 → 멀티패널 단일 9:16 웹툰 이미지
@@ -44,9 +45,10 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
   QUESTION_EXPLANATION: "해설 생성",
   QUESTION_MODIFY: "문제 수정",
   AI_CHAT: "AI 튜터링",
-  TEXT_EXTRACTION: "텍스트 추출 (OCR)",
+  TEXT_EXTRACTION: "텍스트 추출 (OCR 무료)",
   PASSAGE_RESTORATION: "AI 지문 복원",
   PASSAGE_TRANSFORM: "AI 지문 변형",
+  PASSAGE_VARIANT: "AI 지문 변형 (전체)",
   WEBTOON_IMAGE: "웹툰 이미지 생성",
 };
 

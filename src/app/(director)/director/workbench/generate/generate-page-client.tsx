@@ -35,6 +35,8 @@ import {
   type PassageSortOrder,
 } from "./generate-page-types";
 import { PassageCardGrid } from "./passage-card-grid";
+import { isDraftPseudoId } from "@/lib/extraction/draft-passage-id";
+import { resolveSelectionToPassageIds } from "@/lib/extraction/resolve-draft-selection";
 import {
   IntakeSurface,
   type IntakeView,
@@ -60,22 +62,17 @@ import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
 import { WorkspaceShell } from "./workspace-shell";
 import {
-  ArrowDownToLine,
-  ChevronLeft,
-  ChevronRight,
-  GripVertical,
-  MousePointer2,
-  Settings2,
-} from "lucide-react";
-import {
+  countWords,
   diffQuestionTypeSettings,
   isOverrideEmpty,
   overrideHasTypeCounts,
+  rowNeedsVariant,
   type RowOverride,
 } from "./workspace/workspace-types";
 import { useWorkspaceRows } from "./workspace/use-workspace-rows";
 import { useWorkspaceGeneration } from "./workspace/use-workspace-generation";
 import { PassageWorkspace } from "./workspace/passage-workspace";
+import { PassageGenerateModal } from "./workspace/passage-generate-modal";
 import { LearningGenerationIndicator } from "@/components/workbench/learning-generation-indicator";
 import { useLearningGenerationTasks } from "@/lib/learning-generation-tracker";
 import {
@@ -87,20 +84,17 @@ import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { notifyCreditsChanged } from "@/lib/credits-client";
 import { GeneratePageTour } from "./tutorial/generate-page-tour";
-import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
+import {
+  dispatchGenerateTourMilestone,
+  openGenerateTour,
+} from "@/lib/generate-tour-demo";
+
+// 튜토리얼(문제 생성 투어) 임시 비활성화 — 미완성 기능이라 배포에서 숨긴다.
+// 재활성화: 아래 값을 true 로 바꾸면 "튜토리얼" 버튼과 투어 오버레이가 다시 노출된다.
+const GENERATE_TUTORIAL_ENABLED = false;
 
 // ─── Helpers ─────────────────────────────────────────────
 
-// 우측 "유형·생성 설정" 컬럼 너비 (드래그 조절 가능).
-// 기본은 지문 입력·선택 칸이 더 넓고 설정 칸이 더 좁게 보이도록 잡는다.
-const CONFIG_PANE_WIDTH_KEY = "smoat:generate:config-pane-width.v2";
-const CONFIG_PANE_MIN = 340;
-const CONFIG_PANE_DEFAULT = 620;
-// 저장값 위생용 절대 상한 — 실제 드래그 한계는 컨테이너 폭에서
-// [지문 입력·선택 최소폭 + 핸들]을 뺀 값으로 동적 계산.
-const CONFIG_PANE_MAX = 1600;
-const INTAKE_PANE_MIN = 420;
-const CONFIG_PANE_HANDLE_WIDTH = 20;
 const REVIEW_ACTION_TIMEOUT_MS = 30_000;
 
 /** Build a passage title from the first non-empty line of pasted content. */
@@ -143,7 +137,7 @@ const SAVED_QUESTIONS_DONE_REFRESH_DELAY_MS = 1500;
 
 export function GeneratePageClient({
   academyId,
-  defaultMode = "auto",
+  defaultMode = "manual",
 }: {
   academyId: string;
   defaultMode?: "auto" | "manual";
@@ -328,105 +322,14 @@ export function GeneratePageClient({
 
   // ── 지문 워크스페이스 (불러오기 → 편집·AI 변형 → 생성) ──
   const workspaceApi = useWorkspaceRows();
-  // 우측 "유형·생성 설정" 컬럼 접힘 상태 (워크스페이스와 나란히 배치).
-  // 영구 저장하지 않는다 — 접힌 채 저장되면 다음 방문에서 생성 버튼·유형
-  // 설정이 통째로 숨겨진 채 시작되는 사고가 난다 (세션 내 토글만 허용).
-  // 설정 패널은 '워크스페이스를 열었을 때만' 자동으로 펼친다(아래 effect):
-  // 유형·난이도·세부옵션은 워크스페이스 지문으로 문제를 만들 때 필요하므로,
-  // 워크스페이스가 없는 내 지문함 화면에서는 접어 가운데 지문함이 전체 폭을
-  // 쓰게 한다. 따라서 초기값은 항상 접힘(워크스페이스는 진입 시 생긴다).
-  const [configPaneOpen, setConfigPaneOpen] = useState(false);
-  // 드래그 리사이즈 중에는 설정 컬럼 width 트랜지션을 꺼서 손을 따라오게 한다.
-  const [configDragging, setConfigDragging] = useState(false);
-  const toggleConfigPane = useCallback(() => {
-    setConfigPaneOpen((prev) => !prev);
-  }, []);
-  // 설정 컬럼 너비 — 좌측 지문 패널과 동일하게 드래그 조절·더블클릭 초기화.
-  // 너비는 영구 저장해도 안전 (접힘 상태와 달리 기능이 숨겨지지 않는다).
-  const [configPaneWidth, setConfigPaneWidth] = useState<number>(() => {
-    if (typeof window === "undefined") return CONFIG_PANE_DEFAULT;
-    try {
-      const raw = window.localStorage.getItem(CONFIG_PANE_WIDTH_KEY);
-      const n = raw ? parseInt(raw, 10) : NaN;
-      if (Number.isNaN(n)) return CONFIG_PANE_DEFAULT;
-      return Math.min(CONFIG_PANE_MAX, Math.max(CONFIG_PANE_MIN, n));
-    } catch {
-      return CONFIG_PANE_DEFAULT;
-    }
-  });
-  // 클릭=접기 / 드래그=너비 조절 — workspace-shell 좌측 핸들과 동일 제스처.
-  const handleConfigHandlePointerDown = useCallback(
-    (e: React.PointerEvent, options?: { toggleOnClick?: boolean }) => {
-      if (e.button !== 0) return;
-      const startX = e.clientX;
-      const startWidth = configPaneWidth;
-      // 드래그 한계는 우측 패널 컨테이너 폭 기준 — 지문 입력·선택 칸의
-      // 최소폭을 남긴다.
-      const containerWidth =
-        e.currentTarget.parentElement?.getBoundingClientRect().width ?? 0;
-      const maxWidth =
-        containerWidth > 0
-          ? Math.max(
-              CONFIG_PANE_MIN,
-              containerWidth - INTAKE_PANE_MIN - CONFIG_PANE_HANDLE_WIDTH,
-            )
-          : CONFIG_PANE_MAX;
-      let didDrag = false;
-      let latest = startWidth;
-      const onMove = (ev: PointerEvent) => {
-        // 설정 컬럼은 오른쪽에 있으므로 왼쪽으로 끌수록 넓어진다.
-        const delta = startX - ev.clientX;
-        if (!didDrag) {
-          if (Math.abs(delta) < 4) return;
-          didDrag = true;
-          setConfigDragging(true);
-          document.body.style.cursor = "col-resize";
-          document.body.style.userSelect = "none";
-        }
-        latest = Math.min(
-          maxWidth,
-          Math.max(CONFIG_PANE_MIN, startWidth + delta),
-        );
-        setConfigPaneWidth(latest);
-      };
-      const onUp = () => {
-        window.removeEventListener("pointermove", onMove);
-        window.removeEventListener("pointerup", onUp);
-        if (didDrag) {
-          setConfigDragging(false);
-          document.body.style.cursor = "";
-          document.body.style.userSelect = "";
-          try {
-            window.localStorage.setItem(CONFIG_PANE_WIDTH_KEY, String(latest));
-          } catch {
-            /* ignore */
-          }
-        } else if (options?.toggleOnClick !== false) {
-          toggleConfigPane();
-        }
-      };
-      window.addEventListener("pointermove", onMove);
-      window.addEventListener("pointerup", onUp);
-    },
-    [configPaneWidth, toggleConfigPane],
-  );
-  const resetConfigPaneWidth = useCallback(() => {
-    setConfigPaneWidth(CONFIG_PANE_DEFAULT);
-    try {
-      window.localStorage.setItem(
-        CONFIG_PANE_WIDTH_KEY,
-        String(CONFIG_PANE_DEFAULT),
-      );
-    } catch {
-      /* ignore */
-    }
-  }, []);
   // 워크스페이스가 '내 지문함'을 덮어 표시되는지 여부. true면 가운데 컬럼이
   // 내 지문함 대신 워크스페이스로 교체된다 (왼쪽 패널 모달 방식 폐기).
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
-  // 우측 '유형·생성 설정'이 개별 설정 중인 워크스페이스 행. null 이면 전체
-  // 설정을 편집한다. 워크스페이스에서 지문 행을 클릭하면 그 행으로 바뀐다.
+  // 지문별 '문제 생성' 모달의 대상 행. 우측 사이드 설정 컬럼을 폐기하고, 각
+  // 지문 카드의 '문제 생성' 버튼으로 이 지문만의 유형·난이도를 설정하는 모달을
+  // 연다 — "어떤 지문의 설정인지" 혼동을 없애는 재설계의 핵심.
   const [activeRowId, setActiveRowId] = useState<string | null>(null);
+  const [genModalOpen, setGenModalOpen] = useState(false);
 
   // ── Analysis detail modal ──
   const [analysisModalPassage, setAnalysisModalPassage] = useState<any>(null);
@@ -657,7 +560,9 @@ export function GeneratePageClient({
   const loadPassages = useCallback(async () => {
     setLoadingPassages(true);
     try {
-      const response = await fetch(`/api/passages/list?academyId=${academyId}`);
+      const response = await fetch(
+        `/api/passages/list?academyId=${academyId}&includeUnreviewed=true`,
+      );
       const data = await response.json();
       setPassages(data.passages || []);
       if (data.filters) setFilterOptions(data.filters);
@@ -874,7 +779,7 @@ export function GeneratePageClient({
 
   const handleCopySelectedPassagesToCollection = useCallback(
     async (collectionId: string) => {
-      const ids = [...selectedIds];
+      const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
       if (ids.length === 0 || passageBulkAction) return;
       setPassageBulkAction("move");
       try {
@@ -954,7 +859,9 @@ export function GeneratePageClient({
 
   const handleMovePassagesToCollection = useCallback(
     async (passageIds: string[], collectionId: string) => {
-      const ids = Array.from(new Set(passageIds));
+      const ids = Array.from(new Set(passageIds)).filter(
+        (id) => !isDraftPseudoId(id),
+      );
       if (ids.length === 0 || passageBulkAction) return;
       setPassageBulkAction("move");
       try {
@@ -1118,7 +1025,7 @@ export function GeneratePageClient({
   );
 
   const handleRemoveSelectedPassagesFromCollection = useCallback(async () => {
-    const ids = [...selectedIds];
+    const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
     const collectionId = selectedCollectionId;
     if (!collectionId || ids.length === 0 || passageBulkAction) return;
 
@@ -1200,7 +1107,7 @@ export function GeneratePageClient({
   ]);
 
   const handleDeleteSelectedPassages = useCallback(async () => {
-    const ids = [...selectedIds];
+    const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
     if (ids.length === 0 || passageBulkAction) return;
     if (!window.confirm(`${ids.length}개 지문을 삭제하시겠습니까?`)) return;
 
@@ -2036,7 +1943,7 @@ export function GeneratePageClient({
   );
 
   // ── 워크스페이스 불러오기 ──
-  const handleLoadSelectedToWorkspace = useCallback(() => {
+  const handleLoadSelectedToWorkspace = useCallback(async () => {
     const selected = passages.filter((p) => selectedIds.has(p.id));
     if (selected.length === 0) {
       toast.error("'내 지문함'에서 워크스페이스로 보낼 지문을 먼저 선택하세요.");
@@ -2044,7 +1951,30 @@ export function GeneratePageClient({
     }
     // 이미 작업 중인 워크스페이스가 있으면 '추가' 어휘로 안내한다.
     const wasActive = workspaceApi.rows.length > 0;
-    const { added, skipped } = workspaceApi.loadPassages(selected);
+    // 검수 전 자료(미승격 draft)는 실제 지문으로 승격한 뒤 워크스페이스로 불러온다.
+    let resolved = selected;
+    if (selected.some((p) => isDraftPseudoId(p.id))) {
+      const { resolvedById, failedCount } = await resolveSelectionToPassageIds(
+        selected.map((p) => p.id),
+      );
+      resolved = selected
+        .map((p) => {
+          const realId = resolvedById[p.id];
+          if (!realId) return null;
+          // 승격된 draft 는 새 실제 passageId 로 교체(검수 메타는 비운다).
+          return isDraftPseudoId(p.id)
+            ? { ...p, id: realId, source: null, extractionReviewDraft: null }
+            : p;
+        })
+        .filter(Boolean);
+      if (failedCount > 0) {
+        toast.warning(`${failedCount}개 자료는 지문으로 준비하지 못해 제외했어요.`);
+      }
+      // 승격된 draft 가 '내 지문'에 실제 카드로 반영되도록 목록 새로고침.
+      void loadPassages();
+      if (resolved.length === 0) return;
+    }
+    const { added, skipped } = workspaceApi.loadPassages(resolved);
     if (added > 0) {
       toast.success(
         (wasActive
@@ -2061,7 +1991,7 @@ export function GeneratePageClient({
       setWorkspaceOpen(true);
       dispatchGenerateTourMilestone("workspace-opened");
     }
-  }, [passages, selectedIds, workspaceApi]);
+  }, [passages, selectedIds, workspaceApi, loadPassages]);
 
   // ── Generation handlers (extracted to hook) ──
   const {
@@ -2091,6 +2021,7 @@ export function GeneratePageClient({
       loadSavedQuestions,
       onGenerationCompleted: () =>
         dispatchGenerateTourMilestone("question-generation-completed"),
+      loadPassages,
     });
 
   // ── 워크스페이스 생성 (변형본 저장 → 행별 설정으로 생성) ──
@@ -2098,6 +2029,7 @@ export function GeneratePageClient({
     generating: workspaceGenerating,
     handleWorkspaceGenerate,
     workspaceSummary,
+    rowStats: workspaceRowStats,
   } = useWorkspaceGeneration({
     api: workspaceApi,
     passages,
@@ -2128,21 +2060,6 @@ export function GeneratePageClient({
     prevWorkspaceActiveRef.current = workspaceActive;
   }, [workspaceActive]);
 
-  // 설정 패널은 '워크스페이스를 열었을 때만' 자동으로 펼친다 — 워크스페이스가
-  // 보이면(workspaceVisible) 펼치고, 닫히면(내 지문함으로 복귀) 다시 접는다.
-  // 펼침/접힘 '전환 순간'에만 손대므로, 워크스페이스가 열린 동안 사용자가
-  // 직접 접거나 편 것은 그대로 둔다(세션 내 수동 토글 허용).
-  const prevWorkspaceVisibleRef = useRef(false);
-  useEffect(() => {
-    if (workspaceVisible === prevWorkspaceVisibleRef.current) return;
-    prevWorkspaceVisibleRef.current = workspaceVisible;
-    setConfigPaneOpen(workspaceVisible);
-    // 워크스페이스에 들어오면 가장 위 지문을 기본 선택한다 — 설정은 무조건
-    // 지문별이므로, 진입 즉시 첫 지문이 편집 대상이 되게 한다.
-    if (workspaceVisible) {
-      setActiveRowId(workspaceApi.rows[0]?.localId ?? null);
-    }
-  }, [workspaceVisible, workspaceApi.rows]);
   // 워크스페이스 행이 모두 비워지면 자동으로 내 지문함을 다시 드러낸다.
   useEffect(() => {
     if (!workspaceActive && workspaceOpen) setWorkspaceOpen(false);
@@ -2173,40 +2090,40 @@ export function GeneratePageClient({
     ? workspaceApi.rows.findIndex((r) => r.localId === activeRow.localId)
     : -1;
 
-  // 워크스페이스가 사라지면 개별 설정 선택을 해제 (전체 설정으로 복귀).
+  // 워크스페이스가 사라지면 개별 설정 선택을 해제하고 생성 모달도 닫는다.
   useEffect(() => {
-    if (!workspaceVisible && activeRowId !== null) setActiveRowId(null);
-  }, [workspaceVisible, activeRowId]);
+    if (!workspaceVisible) {
+      if (activeRowId !== null) setActiveRowId(null);
+      if (genModalOpen) setGenModalOpen(false);
+    }
+  }, [workspaceVisible, activeRowId, genModalOpen]);
 
-  // 지문 선택 → 그 지문을 개별 설정 대상으로. 우측 패널이 '자동 생성'이면
-  // 선택과 동시에 그 설정을 이 지문에 바로 반영한다(아직 개별 모드가 없을
-  // 때만 — 직접 지정한 모드는 덮어쓰지 않는다). 그러면 카드 배지가 곧바로
-  // '자동 생성'으로 바뀌어 설정창 상태가 그대로 비친다.
-  const selectRow = useCallback(
-    (localId: string) => {
-      setActiveRowId(localId);
-      if (genMode === "auto") {
-        const row = workspaceApi.rows.find((r) => r.localId === localId);
-        if (row && !row.override?.mode) {
-          const base: RowOverride = row.override
-            ? { ...row.override }
-            : { typeCounts: {}, difficulty: null };
-          workspaceApi.setOverride(localId, { ...base, mode: "auto" });
-        }
-      }
-    },
-    [genMode, workspaceApi],
-  );
+  // 지문 카드 본문 클릭 → 그 지문을 선택(설정 대상)으로 바인딩 (선택 링 표시).
+  const selectRow = useCallback((localId: string) => {
+    setActiveRowId(localId);
+  }, []);
 
-  // 행 클릭 → 그 지문을 개별 설정 대상으로. 설정 패널이 접혀 있었다면 함께
-  // 펼쳐 편집 UI 가 바로 보이게 한다.
+  // 카드의 '문제 생성' 버튼/설정 배지 클릭 → 이 지문을 선택하고 생성 모달을 연다.
   const handleSetActiveRow = useCallback(
     (localId: string) => {
       selectRow(localId);
-      setConfigPaneOpen(true);
+      setGenModalOpen(true);
     },
     [selectRow],
   );
+
+  // 모달을 닫는다 — 선택(링)은 유지하지 않고 해제해 깔끔하게 비운다.
+  const closeGenModal = useCallback(() => {
+    setGenModalOpen(false);
+    setActiveRowId(null);
+  }, []);
+
+  // 이 지문 하나로 생성 — 생성을 시작(fire-and-forget)하고 모달을 닫는다.
+  const handleGenerateActiveRow = useCallback(() => {
+    if (!activeRowId) return;
+    void handleWorkspaceGenerate(activeRowId);
+    closeGenModal();
+  }, [activeRowId, handleWorkspaceGenerate, closeGenModal]);
 
   // 활성 행의 오버라이드를 부분 수정한다. 결과가 전체 설정과 같아지면(빈
   // 오버라이드) null 로 저장해 '전체 설정 따름'으로 되돌린다.
@@ -2362,6 +2279,9 @@ export function GeneratePageClient({
         <PassageWorkspace
           api={workspaceApi}
           generating={workspaceGenerating}
+          sessionQueue={sessionQueue}
+          questionCountByPassage={questionCountByPassage}
+          questionsByPassage={questionsByPassage}
           globalDifficulty={difficulty}
           globalGenerationPlan={generationPlan}
           setModeActive={genMode === "set"}
@@ -2369,51 +2289,10 @@ export function GeneratePageClient({
           onSetActiveRow={selectRow}
           onOpenRowSettings={handleSetActiveRow}
           onClearActiveRow={() => setActiveRowId(null)}
+          rowStats={workspaceRowStats}
           onAddPassage={() => setWorkspaceOpen(false)}
         />
       </div>
-      {/* 설정 컬럼이 접혀 있어도 생성 버튼은 항상 보이게 — 워크스페이스
-          하단에 미러링한다 (설정을 접었다가 생성을 못 누르는 사고 방지).
-          장문 세트 모드는 설정 패널과 동일하게 워크스페이스 생성 제외. */}
-      {!configPaneOpen && workspaceVisible && genMode !== "set" ? (
-        <div className="flex shrink-0 items-center gap-2 border-t border-slate-200 bg-white px-3 py-2.5">
-          <button
-            type="button"
-            onClick={toggleConfigPane}
-            className="flex h-10 shrink-0 items-center rounded-lg border border-slate-200 px-3 text-[12px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:text-blue-600"
-          >
-            유형·난이도 설정 열기
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              dispatchGenerateTourMilestone("question-generation-started");
-              handleWorkspaceGenerate();
-            }}
-            disabled={
-              workspaceSummary.totalQuestions === 0 || workspaceGenerating
-            }
-            data-generate-tour="generate-button"
-            className="flex h-10 min-w-0 flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
-          >
-            <span className="min-w-0 flex-1 truncate">
-              {workspaceGenerating
-                ? "생성 중…"
-                : workspaceSummary.totalQuestions > 0
-                  ? `${workspaceSummary.totalQuestions}문제 생성`
-                  : "유형을 선택하세요 (설정 열기)"}
-            </span>
-            {!workspaceGenerating &&
-            workspaceSummary.totalQuestions > 0 &&
-            workspaceSummary.creditCost > 0 ? (
-              <CreditCostChip
-                amount={workspaceSummary.creditCost}
-                className="shrink-0 rounded bg-white/20 px-1.5 py-0.5 text-[10px]"
-              />
-            ) : null}
-          </button>
-        </div>
-      ) : null}
     </div>
   );
 
@@ -2515,192 +2394,82 @@ export function GeneratePageClient({
     />
   );
 
-  // 접힘은 configPaneOpen 만 따른다 — 기본(워크스페이스 닫힘)은 접힌 상태라
-  // 가운데 지문함이 전체 폭을 쓰고, 워크스페이스를 열면 자동으로 펼쳐진다.
-  const settingsPaneCollapsed = !configPaneOpen;
-  const settingsPaneWidth = settingsPaneCollapsed
-    ? "0px"
-    : `min(${configPaneWidth}px, calc(100% - ${
-        INTAKE_PANE_MIN + CONFIG_PANE_HANDLE_WIDTH
-      }px))`;
-
-  const settingsPane = (
-    <>
-      {/* 핸들/바는 워크스페이스가 열려 있을 때만 — 내 지문함만 보는 동안에는
-          '설정 열기' 바도 띄우지 않는다. (본문은 항상 마운트해 width 트랜지션으로
-          자연스럽게 슬라이드하므로, 여기서 null 이어도 본문은 0px 로 접혀 있다.) */}
-      {!workspaceVisible ? null : settingsPaneCollapsed ? (
-        <button
-          type="button"
-          // onClick 대신 pointerdown — 설정 닫기 핸들과 거의 같은
-          // 자리에 스왑되므로, 닫기 직후의 잔여 click 이 이 버튼을
-          // 눌러 곧바로 다시 열리는 사고를 막는다.
-          onPointerDown={(e) => {
-            if (e.button !== 0) return;
-            toggleConfigPane();
-          }}
-          title="유형·생성 설정 열기"
-          className="flex min-h-0 w-5 shrink-0 cursor-pointer select-none flex-col items-center justify-center gap-1.5 border-l border-slate-200 bg-slate-50/40 py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
-        >
-          <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
-          <span style={{ writingMode: "vertical-rl" }}>설정 열기</span>
-        </button>
-      ) : (
-        /* 설정 컬럼 리사이즈 핸들 — 워크스페이스 열림 동안만 노출
-            (클릭=닫기, 드래그=너비 조절) */
-        <button
-          type="button"
-          onPointerDown={handleConfigHandlePointerDown}
-          onDoubleClick={resetConfigPaneWidth}
-          title="클릭하여 닫기 · 좌우로 드래그하여 너비 조절 · 더블 클릭하여 초기화"
-          className="group/chandle flex min-h-0 w-5 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1.5 border-l border-slate-200 bg-slate-50/40 py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
-        >
-          <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
-          <span style={{ writingMode: "vertical-rl" }}>설정 닫기</span>
-          <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/chandle:opacity-70" />
-        </button>
-      )}
-      <div
-        className={
-          /* 설정 칸은 저장된 고정폭을 쓰고, 왼쪽 지문 입력·선택 칸이
-             남은 폭을 가져간다. 드래그 중에는 트랜지션을 끈다.
-             지문이 선택돼 있으면 안쪽 헤더+본문을 둥근 보라 테두리 박스로
-             감싸므로, 박스가 가장자리에 붙지 않도록 여백을 준다. */
-          "relative flex h-full min-w-0 flex-col overflow-hidden " +
-          (configDragging
-            ? ""
-            : "transition-[flex-grow,width] duration-500 ease-in-out ") +
-          "shrink-0 grow-0 " +
-          (workspaceVisible && editingRow ? "p-2" : "")
-        }
-        style={{ width: settingsPaneWidth }}
-        aria-hidden={settingsPaneCollapsed}
+  // ── 지문별 '문제 생성' 모달 ──
+  // 우측 사이드 설정 컬럼을 폐기하고, 각 지문 카드의 '문제 생성' 버튼으로 이
+  // 모달을 연다. 어떤 지문을 설정 중인지 헤더에 크게 박아 혼동을 없앤다. 기존
+  // GenerationConfigPanel 을 그대로 호스팅하되(hideGenerateButtons), 생성 CTA 는
+  // 모달 푸터가 소유해 이 지문 하나만 독립 생성한다.
+  const activeRowStats = activeRowId
+    ? workspaceRowStats.get(activeRowId)
+    : undefined;
+  const activeRowIndex = activeRowId
+    ? workspaceApi.rows.findIndex((r) => r.localId === activeRowId)
+    : -1;
+  const genModal =
+    genModalOpen && activeRow ? (
+      <PassageGenerateModal
+        open
+        onClose={closeGenModal}
+        passageNumber={activeRowIndex >= 0 ? activeRowIndex + 1 : 1}
+        title={activeRow.title}
+        contentPreview={activeRow.content.trim().slice(0, 140)}
+        wordCount={countWords(activeRow.content)}
+        questions={activeRowStats?.questions ?? 0}
+        creditCost={activeRowStats?.creditCost ?? 0}
+        needsVariant={rowNeedsVariant(activeRow)}
+        generating={workspaceGenerating}
+        onGenerate={handleGenerateActiveRow}
       >
-        {/* 둥근 보라 테두리 박스 — 지문이 선택돼 있으면 헤더+본문을 한 박스로
-            감싸, 왼쪽 선택 카드(둥근 보라 테두리)와 똑같은 모양의 한 쌍으로
-            묶여 보이게 한다. 미선택 시엔 contents 로 투명해져 기존 풀폭
-            레이아웃(헤더 끝선 정렬)을 그대로 유지한다. */}
-        <div
-          className={
-            workspaceVisible && editingRow
-              ? "flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border-2 border-violet-600 bg-white shadow-sm ring-2 ring-violet-300"
-              : "contents"
-          }
-        >
-        {/* 3컬럼 공통 44px 헤더 — 좌측 탭/워크스페이스 헤더와 끝선 정렬.
-            지문이 선택돼 있으면 헤더가 곧 그 지문의 정체성(◀ + ① + 제목)을
-            띠어, 왼쪽 카드와 같은 번호 배지로 "이 설정은 저 카드의 것"임을
-            한눈에 읽히게 한다. */}
-        {workspaceVisible && editingRow ? (
-          <div className="flex h-11 shrink-0 items-center gap-2 border-b border-violet-100 bg-violet-50/70 pl-2 pr-1.5">
-            <ChevronLeft
-              className="h-4 w-4 shrink-0 text-violet-500"
-              aria-hidden="true"
-            />
-            <span className="flex h-[22px] min-w-[22px] shrink-0 items-center justify-center rounded-md bg-violet-600 px-1 text-[11px] font-bold leading-none text-white tabular-nums">
-              {activeRowIndex >= 0 ? activeRowIndex + 1 : ""}
-            </span>
-            <h3 className="min-w-0 flex-1 truncate text-[12.5px] font-bold text-violet-900">
-              {activeRow.title}
-            </h3>
-            <span className="shrink-0 rounded-md bg-white px-1.5 py-0.5 text-[10.5px] font-semibold text-violet-500 ring-1 ring-inset ring-violet-200">
-              유형·생성 설정
-            </span>
-          </div>
-        ) : (
-          <div className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-100 bg-white pl-3 pr-1.5">
-            <Settings2
-              className="h-3.5 w-3.5 text-slate-400"
-              aria-hidden="true"
-            />
-            <h3 className="min-w-0 flex-1 truncate text-[12.5px] font-bold text-slate-800">
-              유형·생성 설정
-            </h3>
-          </div>
-        )}
-        {/* 지문 미선택 시 설정창을 음영 처리하고 가운데 안내를 띄운다. */}
-        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
-          <div
-            className={
-              "flex min-h-0 flex-1 flex-col overflow-hidden " +
-              (workspaceVisible && !editingRow
-                ? "pointer-events-none select-none opacity-40"
-                : "")
-            }
-            aria-hidden={workspaceVisible && !editingRow}
-          >
-            <GenerationConfigPanel
-            genMode={panelGenMode}
-            setGenMode={panelSetGenMode}
-            editingRow={editingRow}
-            activePassageId={activeRow?.passageId ?? null}
-            setMembers={panelSetMembers}
-            onSetMembersChange={panelOnSetMembersChange}
-            generationPlan={panelGenerationPlan}
-            setGenerationPlan={panelSetGenerationPlan}
-            autoCount={autoCount}
-            setAutoCount={setAutoCount}
-            typeCounts={panelTypeCounts}
-            setTypeCount={panelSetTypeCount}
-            setTypeCounts={panelSetTypeCounts}
-            questionTypeSettings={panelQuestionTypeSettings}
-            setQuestionTypeSettings={panelSetQuestionTypeSettings}
-            totalQuestions={panelTotalQuestions}
-            difficulty={panelDifficulty}
-            setDifficulty={panelSetDifficulty}
-            customPrompt={customPrompt}
-            setCustomPrompt={setCustomPrompt}
-            savedPrompts={savedPrompts}
-            showSavedPrompts={showSavedPrompts}
-            setShowSavedPrompts={setShowSavedPrompts}
-            showSaveInput={showSaveInput}
-            setShowSaveInput={setShowSaveInput}
-            savePromptName={savePromptName}
-            setSavePromptName={setSavePromptName}
-            savingPrompt={savingPrompt}
-            setSavingPrompt={setSavingPrompt}
-            editingPromptId={editingPromptId}
-            setEditingPromptId={setEditingPromptId}
-            editingName={editingName}
-            setEditingName={setEditingName}
-            loadSavedPrompts={loadSavedPrompts}
-            canGenerate={canGenerate}
-            selectedIds={selectedIds}
-            handleBatchGenerate={handleBatchGenerate}
-            workspaceActive={workspaceActive}
-            workspaceSelectedOnlyCount={workspaceSummary.selectedOnlyCount}
-            workspaceRowCount={workspaceSummary.rowCount}
-            workspaceTotalQuestions={workspaceSummary.totalQuestions}
-            workspaceCreditCost={workspaceSummary.creditCost}
-            workspaceVariantCount={workspaceSummary.variantCount}
-            workspaceGenerating={workspaceGenerating}
-            onWorkspaceGenerate={handleWorkspaceGenerate}
-          />
-          </div>
-          {workspaceVisible && !editingRow ? (
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/55 px-6 backdrop-blur-[1px]">
-              <div className="flex max-w-[260px] flex-col items-center gap-2 text-center">
-                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-100">
-                  <MousePointer2
-                    className="h-5 w-5 text-slate-400"
-                    aria-hidden="true"
-                  />
-                </span>
-                <p className="text-[13.5px] font-bold text-slate-700">
-                  지문을 선택해주세요
-                </p>
-                <p className="text-[11.5px] leading-relaxed text-slate-400">
-                  왼쪽 워크스페이스에서 지문을 클릭하면 그 지문의 유형·난이도를
-                  설정할 수 있어요.
-                </p>
-              </div>
-            </div>
-          ) : null}
-        </div>
-        </div>
-      </div>
-    </>
-  );
+        <GenerationConfigPanel
+          genMode={panelGenMode}
+          setGenMode={panelSetGenMode}
+          editingRow={editingRow}
+          activePassageId={activeRow?.passageId ?? null}
+          setMembers={panelSetMembers}
+          onSetMembersChange={panelOnSetMembersChange}
+          generationPlan={panelGenerationPlan}
+          setGenerationPlan={panelSetGenerationPlan}
+          autoCount={autoCount}
+          setAutoCount={setAutoCount}
+          typeCounts={panelTypeCounts}
+          setTypeCount={panelSetTypeCount}
+          setTypeCounts={panelSetTypeCounts}
+          questionTypeSettings={panelQuestionTypeSettings}
+          setQuestionTypeSettings={panelSetQuestionTypeSettings}
+          totalQuestions={panelTotalQuestions}
+          difficulty={panelDifficulty}
+          setDifficulty={panelSetDifficulty}
+          customPrompt={customPrompt}
+          setCustomPrompt={setCustomPrompt}
+          savedPrompts={savedPrompts}
+          showSavedPrompts={showSavedPrompts}
+          setShowSavedPrompts={setShowSavedPrompts}
+          showSaveInput={showSaveInput}
+          setShowSaveInput={setShowSaveInput}
+          savePromptName={savePromptName}
+          setSavePromptName={setSavePromptName}
+          savingPrompt={savingPrompt}
+          setSavingPrompt={setSavingPrompt}
+          editingPromptId={editingPromptId}
+          setEditingPromptId={setEditingPromptId}
+          editingName={editingName}
+          setEditingName={setEditingName}
+          loadSavedPrompts={loadSavedPrompts}
+          canGenerate={canGenerate}
+          selectedIds={selectedIds}
+          handleBatchGenerate={handleBatchGenerate}
+          workspaceActive={workspaceActive}
+          workspaceSelectedOnlyCount={workspaceSummary.selectedOnlyCount}
+          workspaceRowCount={workspaceSummary.rowCount}
+          workspaceTotalQuestions={workspaceSummary.totalQuestions}
+          workspaceCreditCost={workspaceSummary.creditCost}
+          workspaceVariantCount={workspaceSummary.variantCount}
+          workspaceGenerating={workspaceGenerating}
+          onWorkspaceGenerate={handleWorkspaceGenerate}
+          hideGenerateButtons
+        />
+      </PassageGenerateModal>
+    ) : null;
 
   return (
     <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
@@ -2712,27 +2481,36 @@ export function GeneratePageClient({
           leftActive={false}
           rightPaneMin={400}
           header={
-            <div data-generate-tour="page-title">
+            <div
+              data-generate-tour="page-title"
+              className="flex items-start justify-between gap-3"
+            >
               <WorkflowPageTitle
                 icon={QuestionGenerationIcon}
                 title="문제 생성"
                 description="지문을 선택해 편집·AI 변형한 뒤, 유형과 난이도를 설정해 문제를 생성합니다."
               />
+              {GENERATE_TUTORIAL_ENABLED ? (
+                <button
+                  type="button"
+                  onClick={() => openGenerateTour()}
+                  className="mt-1 inline-flex shrink-0 items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1.5 text-[12px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50"
+                  title="문제 생성 튜토리얼을 다시 봅니다"
+                >
+                  튜토리얼
+                </button>
+              ) : null}
             </div>
           }
           left={null}
           right={
             <div className="flex h-full min-h-0 min-w-0">
-              {/* 내 지문함(탭 행 포함)은 항상 렌더 — 워크스페이스는 IntakeSurface
-                  본문만 덮는 오버레이로 들어가 입력·선택 탭 행은 그대로 남는다. */}
+              {/* 우측 사이드 설정 컬럼을 폐기 — 가운데(내 지문함=워크스페이스)가
+                  전체 폭을 쓰고, 유형·생성 설정은 지문별 '문제 생성' 모달에서만
+                  편집한다. 워크스페이스는 IntakeSurface 본문을 덮는 오버레이. */}
               <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
                 {libraryPane}
               </div>
-              {/* 항상 마운트한다 — 워크스페이스 개폐 시 본문 width 가 0↔실폭으로
-                  트랜지션되며 옆으로 밀리듯 슬라이드한다. 핸들/바는 settingsPane
-                  안에서 워크스페이스가 열렸을 때만 노출하므로, 닫혀 있을 때는
-                  0px 로 접혀 아무것도 보이지 않는다. */}
-              {settingsPane}
             </div>
           }
         />
@@ -2756,12 +2534,17 @@ export function GeneratePageClient({
           />
         </section>
       </main>
-      <GeneratePageTour
-        onOpenChange={setGenerateTourOpen}
-        onResultHighlightCountChange={setGenerateTourResultHighlightCount}
-        onFileTutorialStart={() => setDetailQuestion(null)}
-      />
+      {GENERATE_TUTORIAL_ENABLED ? (
+        <GeneratePageTour
+          onOpenChange={setGenerateTourOpen}
+          onResultHighlightCountChange={setGenerateTourResultHighlightCount}
+          onFileTutorialStart={() => setDetailQuestion(null)}
+        />
+      ) : null}
       {/* end vertical stack */}
+
+      {/* ─── 지문별 '문제 생성' 모달 ─── */}
+      {genModal}
 
       {/* ─── Review Modal ─── */}
       {reviewItem && (

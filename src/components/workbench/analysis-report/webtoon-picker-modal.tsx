@@ -16,8 +16,14 @@ interface WebtoonListItem {
   style: WebtoonStyleId;
   language: WebtoonLanguageId;
   imageUrl: string | null;
+  editedImageUrl?: string | null;
   status: string;
   passage: { id: string; title: string };
+}
+
+/** Prefer the re-typeset export when the webtoon's text has been edited. */
+function pickWebtoonUrl(it: WebtoonListItem): string | null {
+  return it.editedImageUrl || it.imageUrl;
 }
 
 /** 선택 시점에 정확한 가로/세로 비율을 디코드해 읽는다(지연 로드 썸네일 의존 제거). */
@@ -75,7 +81,7 @@ export function WebtoonPickerModal({
       if (!res.ok || !data.ok || !Array.isArray(data.items)) {
         throw new Error("웹툰 목록을 불러오지 못했습니다.");
       }
-      setItems(data.items.filter((it) => it.imageUrl));
+      setItems(data.items.filter((it) => pickWebtoonUrl(it)));
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "웹툰 목록을 불러오지 못했습니다.",
@@ -101,7 +107,7 @@ export function WebtoonPickerModal({
   }, [open, onClose]);
 
   const handlePick = async (it: WebtoonListItem) => {
-    const url = it.imageUrl;
+    const url = pickWebtoonUrl(it);
     if (!url) return;
     const ratio = ratios[it.id] ?? (await decodeRatio(url));
     onPick({ imageUrl: url, webtoonId: it.id, ratio });
@@ -225,7 +231,7 @@ export function WebtoonPickerModal({
                   <div className="relative aspect-[9/16] w-full overflow-hidden bg-slate-100">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={it.imageUrl as string}
+                      src={pickWebtoonUrl(it) as string}
                       alt={it.passage.title}
                       loading="lazy"
                       onLoad={(e) => {

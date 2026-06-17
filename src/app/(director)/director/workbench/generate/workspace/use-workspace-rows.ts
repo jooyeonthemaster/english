@@ -51,6 +51,17 @@ export interface WorkspaceRowsApi {
     localId: string,
     next: { passageId: string; title: string; content: string; variantOfId: string },
   ) => void;
+  /**
+   * 전체 변형본을 "새 행"으로 추가한다(원본 행은 그대로). 이미 저장된 Passage 라
+   * dirty 가 아니며, variantOfId 로 원본 계보를 단다. 중복 id 는 건너뛴다.
+   * 추가된 행의 localId 를 반환(없으면 null) — 호출 측이 후처리할 수 있게.
+   */
+  addVariantRow: (next: {
+    passageId: string;
+    title: string;
+    content: string;
+    variantOfId: string;
+  }) => string | null;
 }
 
 export function useWorkspaceRows(): WorkspaceRowsApi {
@@ -280,6 +291,47 @@ export function useWorkspaceRows(): WorkspaceRowsApi {
     [],
   );
 
+  // 전체 변형본을 새 행으로 추가 — loadPassages 와 동일한 순수성 규칙:
+  // dedupe·localId 생성은 updater 밖(rows 클로저)에서, setRows 는 순수 append.
+  const addVariantRow = useCallback(
+    (next: {
+      passageId: string;
+      title: string;
+      content: string;
+      variantOfId: string;
+    }): string | null => {
+      const existing = new Set(
+        rows.flatMap((r) => [r.passageId, r.variantOfId]).filter(Boolean),
+      );
+      if (existing.has(next.passageId)) return null;
+      const localId =
+        typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : `ws-${Math.random().toString(36).slice(2)}`;
+      const row: WorkspaceRow = {
+        localId,
+        passageId: next.passageId,
+        variantOfId: next.variantOfId,
+        title: next.title,
+        content: next.content,
+        savedContent: next.content,
+        range: null,
+        override: null,
+        collapsed: false,
+        highlights: [],
+        past: [],
+        future: [],
+      };
+      setRows((prev) => {
+        // 순수·멱등: prev 기준 재-dedupe (StrictMode 리플레이 안전).
+        if (prev.some((r) => r.passageId === next.passageId)) return prev;
+        return [...prev, row];
+      });
+      return localId;
+    },
+    [rows],
+  );
+
   return {
     rows,
     loadPassages,
@@ -298,5 +350,6 @@ export function useWorkspaceRows(): WorkspaceRowsApi {
     removeRows,
     clear,
     rebindToVariant,
+    addVariantRow,
   };
 }

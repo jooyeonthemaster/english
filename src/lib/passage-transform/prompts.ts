@@ -29,6 +29,10 @@ export function buildParaphrasePrompt({
   selectedText: string;
   avoidTexts?: string[];
 }): string {
+  // 선택 구간의 문장 수 — 모델이 다문장 span 을 한 문장으로 요약·붕괴시키는
+  // 사고를 막기 위해 "같은 문장 수 유지"를 수치로 못박는다.
+  const sentenceCount =
+    (selectedText.match(/[.!?]["'”’)\]]*(?:\s|$)/g) || []).length || 1;
   const idx = passageText.indexOf(selectedText);
   const before =
     idx > 0 ? clip(passageText.slice(0, idx), CONTEXT_WINDOW_CHARS, true) : "";
@@ -55,14 +59,15 @@ export function buildParaphrasePrompt({
     "A teacher selected a span inside a passage. Rewrite ONLY that span so that the MEANING stays exactly the same but the WORDING changes.",
     "",
     "## Hard rules",
-    "1. Preserve the meaning 100%. Do not add, drop, or weaken any information, nuance, or logical connector.",
-    "2. Keep the SAME number of sentences as the selected span.",
-    "3. Replace content words (verbs, nouns, adjectives, adverbs) with natural synonyms; you may also restructure (active↔passive, clause order) when it stays natural.",
-    "4. Keep proper nouns, numbers, years, quoted terms, and technical terms EXACTLY as they are.",
-    "5. Keep vocabulary at the same difficulty level (high-school / CSAT level). No rare or archaic words.",
-    "6. Length must stay within ±25% of the original span.",
-    "7. The rewritten span MUST flow seamlessly with the surrounding context shown below (grammar, tense, pronouns, connectors must still match).",
-    "8. Output plain text only — no markdown, no quotes around the text, no explanations inside rewrittenText.",
+    `1. The selected span contains EXACTLY ${sentenceCount} sentence${sentenceCount > 1 ? "s" : ""}. Your rewrittenText MUST contain the SAME number of sentences (${sentenceCount}), rewriting EVERY sentence in place and in the same order. Count your sentences before answering.`,
+    "2. This is a PARAPHRASE, NOT a summary. NEVER summarize, condense, merge, shorten the count, or drop any sentence — EVEN IF a sentence seems off-topic, unrelated, incoherent, or out of place relative to the others. Rewrite each sentence faithfully right where it is; if one sentence is irrelevant, keep it irrelevant (just reworded).",
+    "3. Preserve the meaning of EACH sentence 100%. Do not add, drop, or weaken any information, nuance, or logical connector.",
+    "4. Replace content words (verbs, nouns, adjectives, adverbs) with natural synonyms; you may also restructure (active↔passive, clause order) when it stays natural.",
+    "5. Keep proper nouns, numbers, years, quoted terms, and technical terms EXACTLY as they are.",
+    "6. Keep vocabulary at the same difficulty level (high-school / CSAT level). No rare or archaic words.",
+    "7. Total length must stay within ±25% of the original span (so a long multi-sentence span stays a long multi-sentence span — do NOT shrink it).",
+    "8. The rewritten span MUST flow seamlessly with the surrounding context shown below (grammar, tense, pronouns, connectors must still match).",
+    "9. Output plain text only — no markdown, no quotes around the text, no explanations inside rewrittenText.",
     "",
     "## Output JSON",
     '{ "rewrittenText": string, "changes": [{ "before": string, "after": string }], "note": string }',
@@ -71,11 +76,16 @@ export function buildParaphrasePrompt({
     '  e.g. [{ "before": "improves", "after": "enhances" }, { "before": "ability to concentrate", "after": "capacity to focus" }]',
     "- note: 한국어 한 문장으로 어떻게 바꿨는지 요약 (반드시 한국어, 예: \"핵심 어휘를 동의어로 바꾸고 마지막 문장을 수동태로 전환했습니다.\").",
     "",
-    "## Example",
+    "## Example (single sentence)",
     "Selected span: \"Reading books regularly improves your ability to concentrate.\"",
     'GOOD rewrittenText: "Regular reading enhances your capacity to focus."',
     'BAD (meaning changed): "Reading books sometimes helps you relax."',
     'BAD (too difficult): "Habitual perusal of tomes ameliorates one\'s faculty of attention."',
+    "",
+    "## Example (multi-sentence — rewrite EVERY sentence, keep the same count)",
+    'Selected span (2 sentences): "Sleep helps the brain store memories. Without enough rest, students forget what they learned."',
+    'GOOD rewrittenText (still 2 sentences): "Sleep enables the brain to retain memories. When students lack sufficient rest, they lose what they studied."',
+    'BAD (collapsed/summarized into 1 sentence — FORBIDDEN): "Sleep is important for memory."',
     ...avoidBlock,
     "",
     "## Context BEFORE the selected span",

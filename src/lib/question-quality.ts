@@ -1,4 +1,4 @@
-import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
+﻿import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
 import {
   normalizeDiversityComparable,
   pickSteeredPositions,
@@ -53,6 +53,16 @@ interface ValidateQuestionQualityInput {
   /** Requested correct-answer count for free-text option types. Omitted = 1. */
   genericAnswerCount?: number;
   /**
+   * 내용 일치 강제 정답 극성("일치"/"불일치"). 주어졌을 때만 극성 일관성 게이트가
+   * 동작한다. Omitted = AUTO(모델 결정) — 게이트 미동작, 기존 동작과 동일.
+   */
+  contentMatchType?: "일치" | "불일치";
+  /**
+   * 대의파악 계열(제목/주제/요지) 강제 정답 극성. "NEGATIVE"일 때만 부정 극성
+   * 게이트가 동작한다. Omitted/"POSITIVE" = 기존 동작과 동일.
+   */
+  answerPolarity?: "POSITIVE" | "NEGATIVE";
+  /**
    * 다양성: 같은 지문에서 이미 사용된 타깃(원문 표현). 전달 시 동일 타깃 재사용을
    * error 로 표시해 strict 재시도를 유도한다 (RELAXED_BLOCKING 미포함 — relaxed
    * 폴백은 통과시키므로 타깃 풀이 고갈된 지문에서도 생성은 성공한다).
@@ -65,6 +75,14 @@ const GRAMMAR_MARKER_COUNT_MIN = 5;
 const GRAMMAR_MARKER_COUNT_MAX = 10;
 const GRAMMAR_CORRECTION_ERROR_COUNT_MIN = 1;
 const GRAMMAR_CORRECTION_ERROR_COUNT_MAX = 5;
+// 객관식 어법(GRAMMAR_ERROR) 밑줄 span 길이 한도. 수능 어법 밑줄은 최소 문법
+// 단위(보통 1~4단어)다. HARD 초과 = 절/문장 통째 밑줄(예: 프리미엄 실측
+// "these digital platforms create a trusting environment" 7단어/53자) → relaxed
+// 폴백에서도 차단. SOFT 초과 = 다소 넓음 → strict에서만 차단(relaxed에선 경고).
+const GRAMMAR_UNDERLINE_HARD_MAX_WORDS = 7;
+const GRAMMAR_UNDERLINE_HARD_MAX_CHARS = 48;
+const GRAMMAR_UNDERLINE_SOFT_MAX_WORDS = 5;
+const GRAMMAR_UNDERLINE_SOFT_MAX_CHARS = 34;
 const VOCAB_CHOICE_MARKER_COUNT_DEFAULT = 5;
 const VOCAB_CHOICE_MARKER_COUNT_MIN = 5;
 const VOCAB_CHOICE_MARKER_COUNT_MAX = 10;
@@ -104,6 +122,7 @@ function normalizeGrammarAnswerCount(answerCount: unknown, markedCount: number):
 const MC_TYPE_IDS = new Set([
   "BLANK_INFERENCE",
   "GRAMMAR_ERROR",
+  "GRAMMAR_CHOICE_COMBO",
   "VOCAB_CHOICE",
   "SENTENCE_ORDER",
   "SENTENCE_INSERT",
@@ -152,6 +171,13 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "The error must test a meaningful grammar point such as agreement, parallelism, modification, tense/aspect, reference, or verb form.",
     "Every non-error marked expression must still be a defensible grammar judgment point with a clear explanation, not padding.",
     "For KILLER, avoid an obvious spelling-level error; the wrong expression should look natural until the sentence structure is checked.",
+  ],
+  GRAMMAR_CHOICE_COMBO: [
+    "Create exactly three boxed slots (A)/(B)/(C) in three different sentences, each testing a different grammar point code.",
+    "Each slot's correctExpression must be verbatim passage text; the wrongExpression must be clearly ungrammatical in that position, not a debatable stylistic preference or a tense-only change.",
+    "Exactly one option combines all three correct expressions. Wrong options must mix single-slot and multi-slot traps, and every slot's wrong candidate must appear in at least one wrong option.",
+    "One slot's judgment must not reveal another slot's answer (keep the three grammar decisions independent).",
+    "For KILLER, use hard points (relatives, participles, parallelism) on at least two slots and include at least two options that are wrong in two or more slots.",
   ],
   VOCAB_CHOICE: [
     "Mark five context-bearing words from the passage. Do not use tiny function words or words whose meaning is obvious without context.",
@@ -338,6 +364,8 @@ export function buildQuestionTargetCandidateBlock(
     variantIndex?: number;
     /** 다양성 모드 활성 여부 (미지정 시 기존 동작 그대로) */
     diversityEnabled?: boolean;
+    /** 핵심 집중(focus) 모드 — 어법 정답 포인트를 고빈출 톱셋으로 좁힘 */
+    pointFocus?: boolean;
   } = {},
 ): string {
   const diversity: CandidateDiversityOptions = {
@@ -346,6 +374,7 @@ export function buildQuestionTargetCandidateBlock(
     usedPointCodes: options.usedPointCodes,
     variantIndex: options.variantIndex,
     diversityEnabled: options.diversityEnabled,
+    pointFocus: options.pointFocus,
   };
   switch (typeId) {
     case "GRAMMAR_ERROR":
@@ -356,11 +385,18 @@ export function buildQuestionTargetCandidateBlock(
         options.requestedDifficulty,
         diversity,
       );
+    case "GRAMMAR_CHOICE_COMBO":
+      return buildGrammarChoiceComboCandidateBlock(
+        passage,
+        options.requestedDifficulty,
+        diversity,
+      );
     case "GRAMMAR_CORRECTION":
       return buildGrammarCorrectionCandidateBlock(
         passage,
         options.grammarCorrectionErrorCount,
         options.requestedDifficulty,
+        diversity,
       );
     case "IRRELEVANT":
       return buildIrrelevantCandidateBlock(
@@ -408,6 +444,8 @@ interface CandidateDiversityOptions {
   usedPointCodes?: string[];
   variantIndex?: number;
   diversityEnabled?: boolean;
+  /** 핵심 집중 모드 — 어법 정답 포인트를 고빈출 톱셋(1000제 상위 6)으로 좁힘. */
+  pointFocus?: boolean;
 }
 
 /** variantIndex 만큼 배열을 회전시켜 병렬 배치의 각 호출이 다른 후보를 먼저 보게 한다. */
@@ -841,9 +879,11 @@ function findGrammarGenerationCandidates(
     for (const match of passage.matchAll(rule.pattern)) {
       const rawExpression = normalizeText(match[0]);
       if (!rawExpression || rawExpression.length < 2) continue;
+      // 후보 expression은 모델이 밑줄로 그대로 복사할 수 있으므로 짧게 유지한다
+      // (긴 후보 → 긴 밑줄 유도). 최소 문법 단위 원칙과 일치.
       const expression =
-        rawExpression.length > 120
-          ? `${rawExpression.slice(0, 117).trim()}...`
+        rawExpression.length > 60
+          ? `${rawExpression.slice(0, 57).trim()}...`
           : rawExpression;
       const index = match.index ?? passage.indexOf(match[0]);
       if (index < 0) continue;
@@ -941,6 +981,65 @@ function extractGrammarPointCode(value: unknown): GrammarPointCode | null {
   return /^[a-m]$/.test(code) ? (code as GrammarPointCode) : null;
 }
 
+// 무접미 불규칙 과거분사(형태 변화 없음/특수형) — -ing/-ed/-en 정규식으로는
+// 못 잡는 분사들. pointCode (c) 진실성 판정 보강용.
+const ZERO_OR_IRREGULAR_PARTICIPLE =
+  /\b(?:cut|put|set|hit|let|shut|spread|cost|read|bet|burst|cast|hurt|quit|split|thrust|made|held|left|found|told|kept|brought|thought|caught|taught|sought|spent|sent|lost|won|met|led|paid|laid|said|built|bound|done|gone|seen|known|grown|thrown|blown|flown|shown|drawn|worn|torn|born|sworn|driven|risen|fallen|chosen|frozen|broken|spoken|stolen|woken|written|hidden|bitten|beaten|forgotten|gotten|begun|sung|swum|run|come|become)\b/i;
+
+// 품사 변경 변형 검출: 형용사/동사 → 명사('likely'→'likelihood', 'important'→
+// 'importance')는 "어간 유지·형태만 변형" 위반(실측: 프리미엄). 명사화 접미사로
+// 한쪽만 갈리고 어간을 공유하는 쌍을 잡는다. 형/부(adj↔adv)는 정상 f 변형이라
+// 둘 다 명사 접미사가 아니므로 걸리지 않는다.
+const NOUN_FORMING_SUFFIX = /(?:hood|ness|ity|ment|tion|sion|ance|ence|ship|dom|cy)$/;
+function isGrammarPosChangeMutation(expression: string, errorExpression: string): boolean {
+  const a = normalizeText(expression).toLowerCase();
+  const b = normalizeText(errorExpression).toLowerCase();
+  if (!a || !b || a === b) return false;
+  // 단일 토큰 쌍만 — 구/절은 다른 게이트가 처리
+  if (/\s/.test(a) || /\s/.test(b)) return false;
+  const aNoun = NOUN_FORMING_SUFFIX.test(a);
+  const bNoun = NOUN_FORMING_SUFFIX.test(b);
+  if (aNoun === bNoun) return false;
+  // 어간 공유(앞 4글자 일치)일 때만 — 무관한 단어 오탐 방지
+  return a.slice(0, 4) === b.slice(0, 4);
+}
+
+/**
+ * pointCode 진실성(휴리스틱): 그 코드가 가리키는 문법은 밑줄 표면에 해당 토큰이
+ * 실제로 있어야 한다. 토큰셋이 닫혀 판정이 안전한 코드(b 관계사, c 분사, k
+ * to-v/v-ing, l 전치사·접속사)만 검사하고, 모호한 코드는 검사하지 않아 오탐을
+ * 피한다. true = 라벨이 표면 토큰과 불일치(가짜 디코이 라벨 의심).
+ */
+function grammarPointCodeSurfaceMismatch(
+  code: GrammarPointCode,
+  surface: string,
+): boolean {
+  const text = normalizeText(surface);
+  if (!text) return false;
+  switch (code) {
+    case "b": // 관계사 — 관계사/명사절 유도어가 표면에 있어야 함
+      return !/\b(?:that|what|which|who|whom|whose|where|when|why)\b/i.test(text);
+    case "c": // 분사 능/수동 — -ing/-ed/-en 또는 무접미 불규칙 분사
+      return (
+        !/\b[A-Za-z]+(?:ing|ed|en)\b/i.test(text) &&
+        !ZERO_OR_IRREGULAR_PARTICIPLE.test(text)
+      );
+    case "g": // 대명사 — 닫힌 대명사 토큰셋
+      return !/\b(?:it|its|they|them|their|theirs|themselves|itself|that|those|this|these|one|ones|he|him|his|she|her|hers|herself|himself|we|us|our|ours|you|your|yours)\b/i.test(text);
+    case "k": // to-v vs v-ing — 'to + 단어' 또는 동명사(-ing)
+      return !/\bto\s+[A-Za-z]/i.test(text) && !/\b[A-Za-z]+ing\b/i.test(text);
+    case "l": // 전치사 vs 접속사 — 닫힌 혼동쌍 어휘
+      return !/\b(?:during|while|despite|although|though|because|since|as|if|unless|before|after|until|when|whereas|whilst)\b/i.test(text) &&
+        !/\b(?:in spite of|due to|owing to|thanks to|because of|on account of)\b/i.test(text);
+    case "m": // 비교·수량/정도 — 비교 표지 또는 기출(m) 수량·정도 한정사(much/many/few/little/very/almost 등)
+      return !/\b(?:more|less|most|least|as|than)\b/i.test(text) &&
+        !/\b[A-Za-z]+(?:er|est)\b/i.test(text) &&
+        !/\b(?:much|many|few|little|fewer|enough|very|almost|so|too|quite)\b/i.test(text);
+    default:
+      return false;
+  }
+}
+
 function hasKillerGrammarStructure(text: string): boolean {
   const normalized = normalizeText(text);
   if (!normalized) return false;
@@ -976,6 +1075,51 @@ function stripAgreementSuffix(value: string): string {
   }
   if (/s$/.test(lower) && lower.length > 3) return lower.slice(0, -1);
   return lower;
+}
+
+/** be/have/do/조동사 — 시제 단독변경 게이트에서 제외(수일치·법조동사 변형은 합법). */
+const TENSE_GATE_EXCLUDED = new Set([
+  "is", "are", "was", "were", "be", "been", "being", "am",
+  "has", "have", "had", "do", "does", "did",
+  "will", "would", "shall", "should", "can", "could", "may", "might", "must",
+]);
+
+/** 동사 어간 후보 — 굴절형마다 가능한 원형 후보를 모은다(묵음 e·중복자음·-ies 대응). */
+function verbStemCandidates(w: string): Set<string> {
+  const c = new Set<string>([w]);
+  if (/ied$/.test(w) && w.length > 3) c.add(`${w.slice(0, -3)}y`);
+  if (/ed$/.test(w) && w.length > 3) {
+    c.add(w.slice(0, -2)); // walked→walk
+    c.add(w.slice(0, -1)); // outpaced→outpace (묵음 e 동사: base+d)
+    c.add(w.slice(0, -2).replace(/([bdgklmnprt])\1$/, "$1")); // stopped→stop
+  }
+  if (/ies$/.test(w) && w.length > 4) c.add(`${w.slice(0, -3)}y`);
+  if (/(?:ches|shes|sses|xes|zes|oes)$/.test(w) && w.length > 4) c.add(w.slice(0, -2));
+  if (/s$/.test(w) && !/ss$/.test(w) && w.length > 3) {
+    c.add(w.slice(0, -1)); // outpaces→outpace, walks→walk
+    c.add(w.slice(0, -2)); // -es 흡수
+  }
+  return c;
+}
+
+/**
+ * 시제 단독변경 감지 — 같은 동사 어간의 현재(3인칭 -s 또는 원형)↔과거(-ed).
+ * 정답 시비를 만드는 비검증 변형(realizes↔realized·outpaces↔outpaced).
+ * 수일치(be/have/do)·법조동사는 제외. 불규칙 과거(spend↔spent)는 미커버.
+ */
+function isTenseOnlyMutation(expression: string, errorExpression: string): boolean {
+  const a = normalizeText(expression).toLowerCase();
+  const b = normalizeText(errorExpression).toLowerCase();
+  if (!/^[a-z]+$/.test(a) || !/^[a-z]+$/.test(b) || a === b) return false;
+  if (TENSE_GATE_EXCLUDED.has(a) || TENSE_GATE_EXCLUDED.has(b)) return false;
+  // 한쪽은 과거(-ed), 다른쪽은 비과거(원형 또는 3인칭 -s)여야 시제 변형.
+  if (/ed$/.test(a) === /ed$/.test(b)) return false;
+  const ca = verbStemCandidates(a);
+  const cb = verbStemCandidates(b);
+  for (const stem of ca) {
+    if (stem.length >= 3 && cb.has(stem)) return true;
+  }
+  return false;
 }
 
 function isThinKillerGrammarErrorTarget(markedExpression: Record<string, unknown>): boolean {
@@ -1037,6 +1181,8 @@ function buildGrammarErrorCandidateBlock(
   return [
     "## GRAMMAR_ERROR target planning guardrail",
     disputedBanLine,
+    "- ⭐ Underline span = the minimal grammatical unit only (usually 1-3 words, never more than 5). expression/errorExpression IS the exact underlined surface, so keep it to the single token that carries the grammar decision (the verb / participle / relative word / pronoun / adjective-adverb / to-V / connector). NEVER underline a full clause (subject + finite verb + object) or a whole sentence — e.g. 'create', not 'these digital platforms create a trusting environment'.",
+    "- ⭐ pointCode must be true to the underlined surface: the code's required token must actually appear inside the underline (b→relative word, c→participle -ing/p.p., k→to-V or -ing, g→pronoun, l→during/while/despite/because, m→comparative marker). Never fabricate a code just to fill decoy diversity.",
     `- The final item must contain ${markedCount} marked expression(s) labeled ${labels}.`,
     `- Exactly ${answerCount} marked expression(s) must be grammatically incorrect.`,
     answerCount >= 2
@@ -1050,10 +1196,12 @@ function buildGrammarErrorCandidateBlock(
       : "",
     // 어법끝 28년 빈도 증류 가이드 — 정답 포인트 코어 풀 + 함정 디코이 카드 +
     // (다양성 모드) variantIndex 로테이션 정답 포인트 지정.
+    // 핵심 집중 모드면 정답 포인트를 고빈출 톱셋(1000제 상위 6)으로 좁힌다.
     buildGrammarPointGuidance({
       variantIndex: diversity?.variantIndex,
       usedPointCodes: diversity?.usedPointCodes,
       diversityEnabled: diversity?.diversityEnabled,
+      pointFocus: diversity?.pointFocus,
       answerCount,
       requestedDifficulty,
       mode: "judgment",
@@ -1086,6 +1234,71 @@ function buildGrammarErrorCandidateBlock(
   ].filter(Boolean).join("\n");
 }
 
+/**
+ * 네모 어법 후보 블록 — GRAMMAR_ERROR 가드레일 골격 + 기출 768문항 역설계
+ * 조합 규칙(오답 믹스 single 1~2 / multi 1~3 / all 0~1, 슬롯 커버리지).
+ */
+function buildGrammarChoiceComboCandidateBlock(
+  passage: string,
+  requestedDifficulty?: string,
+  diversity?: CandidateDiversityOptions,
+): string {
+  const sentences = splitPassageSentences(passage);
+
+  // GRAMMAR_ERROR 와 동일한 규범 논쟁 자리 구체 금지 — 콤보는 두 후보를 나란히
+  // 보여줘 정답 시비 가능성이 더 크다.
+  const disputedSourceMatch = passage.match(
+    /\b(?:and|or)\b[^.;]{0,80}?\beach\s+[A-Za-z]+s(?=[\s.,;])/i,
+  );
+  const disputedBanLine = disputedSourceMatch
+    ? `- 🚫 절대 네모 금지 자리: 지문의 "...${disputedSourceMatch[0].slice(-60)}..." 구간(복수 등위 주어 + each + 동사 — 표준 규범과 실사용이 갈리는 논쟁 자리)에는 네모를 만들지 마세요.`
+    : "";
+
+  // KILLER 는 하드 포인트(b/c/i) 2슬롯이 핵심 변별 장치 — 공유 가이드의 코어 풀
+  // 로테이션 지정이 a/d/f 를 가리키면 캘리브레이션 라인과 충돌해 모델이 지정을
+  // 따른다 (실측: killer1 에서 point-mix 경고 4/6). KILLER 는 지정을 여기서
+  // 하드 우선으로 직접 발행하고, 공유 가이드는 카탈로그/함정 카드만 쓴다.
+  const isKiller = requestedDifficulty === "KILLER";
+  const killerDesignation = (() => {
+    if (!isKiller) return "";
+    const hardPool = ["b", "c", "i"];
+    const vi =
+      typeof diversity?.variantIndex === "number" && Number.isFinite(diversity.variantIndex)
+        ? Math.max(0, Math.floor(diversity.variantIndex))
+        : 0;
+    const first = hardPool[vi % hardPool.length];
+    const second = hardPool[(vi + 1) % hardPool.length];
+    const third = hardPool[(vi + 2) % hardPool.length];
+    return `- ⭐ KILLER 네모 포인트 지정: 두 네모는 하드 포인트 (${first}) ${GRAMMAR_POINT_CATALOG[first as keyof typeof GRAMMAR_POINT_CATALOG].label}, (${second}) ${GRAMMAR_POINT_CATALOG[second as keyof typeof GRAMMAR_POINT_CATALOG].label} 에 배치하세요. 지문에 그 구조가 정말 없으면 (${third}) ${GRAMMAR_POINT_CATALOG[third as keyof typeof GRAMMAR_POINT_CATALOG].label} 로 대체하되, 하드 포인트(b/c/i)가 두 네모 미만이면 안 됩니다. 남은 한 네모는 코어 풀의 다른 포인트를 사용하세요.`;
+  })();
+
+  return [
+    "## GRAMMAR_CHOICE_COMBO target planning guardrail",
+    disputedBanLine,
+    "- The final item must contain exactly 3 boxed slots labeled (A) (B) (C), in three different sentences, each testing a different pointCode.",
+    "- Each slot's correctExpression must be verbatim source text. The wrongExpression must be clearly ungrammatical in that exact position — never a tense-only change or a debatable stylistic preference.",
+    "- 🚫 누설 금지: 네모로 만들 표현(올바른 후보든 틀린 후보든)과 동일한 단어/연어가 지문의 다른 곳에 무마킹으로 그대로 남아 있는 자리는 선택 금지 — 같은 문장의 평행구(예: 동일한 'composed of' 구조 반복)가 있으면 학생이 베껴 풉니다. 그런 자리는 피하고 다른 위치를 고르세요. 위반 시 문항이 거부됩니다.",
+    "- Option mix: exactly one all-correct option; among the four wrong options use 1~2 options wrong in one slot, 1~3 options wrong in two slots, and at most 1 option wrong in all three slots. Every slot's wrongExpression must appear in at least one wrong option.",
+    isKiller
+      ? "- KILLER calibration: at least two slots must test hard points (관계사 b, 분사 능/수동 c, 병렬 i), prefer long-distance dependencies (수식어구 건너 수일치, 절 경계 너머 병렬), and include at least two options wrong in two or more slots."
+      : "",
+    killerDesignation,
+    // 어법끝 빈도 가이드 — 세 슬롯 포인트 지정(answerCount=3 은 폴백 없는
+    // 3포인트 지정) + 다양성 회피. KILLER 는 위의 하드 우선 지정이 대신한다.
+    buildGrammarPointGuidance({
+      variantIndex: diversity?.variantIndex,
+      usedPointCodes: diversity?.usedPointCodes,
+      diversityEnabled: isKiller ? false : diversity?.diversityEnabled,
+      pointFocus: diversity?.pointFocus,
+      answerCount: 3,
+    }),
+    sentences.length
+      ? "Detected passage sentences for slot distribution (pick three different sentences):"
+      : "No reliable sentence split was detected; still choose exact source expressions from the passage.",
+    ...sentences.slice(0, 14).map((sentence, index) => `${index + 1}. ${sentence}`),
+  ].filter(Boolean).join("\n");
+}
+
 function normalizeGrammarCorrectionErrorCount(errorCount: unknown): number {
   const n = typeof errorCount === "number" ? errorCount : Number(errorCount);
   if (!Number.isFinite(n)) return GRAMMAR_CORRECTION_ERROR_COUNT_MIN;
@@ -1099,6 +1312,7 @@ function buildGrammarCorrectionCandidateBlock(
   passage: string,
   requestedErrorCount?: number,
   requestedDifficulty?: string,
+  diversity?: CandidateDiversityOptions,
 ): string {
   const sentences = splitPassageSentences(passage);
   const errorCount = normalizeGrammarCorrectionErrorCount(requestedErrorCount);
@@ -1114,7 +1328,22 @@ function buildGrammarCorrectionCandidateBlock(
     "- correctedParts should list every corrected expression in the same order as underlinedSegments.",
     "- Do NOT print a separate error sentence below the passage. The visible question must show the original passage with the wider underlined segment(s).",
     "- Use wording like \"다음 글의 밑줄 친 부분에서 어법상 틀린 부분을 찾아 바르게 고쳐 쓰시오.\"",
+    // 다양성(반복 생성) 모드 한정 품질 가드 — 지문의 깨끗한 오류 자리가
+    // 고갈되는 천장 부근에서 모델이 '깨진 새 문항'(정답시비·조작된 교정)을
+    // 양산하는 것을 막는다. 캡 없이 꼬리를 '유효한 반복'으로 흡수. baseline
+    // 경로는 이 가드를 받지 않아 동작 불변. (E2E 검증 short-dedup 회귀 대응)
+    diversity?.diversityEnabled
+      ? [
+          "- ⭐ 다양성 한계 가드(반복 생성 시 품질 우선): 변별의 핵심은 '새로운 오류 자리'가 아니라 '명백한 단일 오류'다. 지문에 더 이상 명백하고 논쟁 없는 오류 자리가 남지 않았으면, 모호한 새 자리를 억지로 만들지 말고 앞서 쓴 명백한 오류 자리를 다른 문장·다른 밑줄 범위·다른 해설로 재사용하라. 깨진 새 문항보다 유효한 반복이 낫다.",
+          "- 🚫 다음 자리는 정답시비를 유발하므로 새 오류 타깃으로 쓰지 마라: (1) 'and + 동사'가 동명사 병렬로도 정동사 병렬로도 읽히는 자리(예: tried wearing X and turning↔turned Y), (2) one/it/that 등으로 바꿔도 양쪽이 자연스러운 대명사 자리, (3) 능동/수동·시제가 문맥상 양쪽 다 허용되는 자리.",
+          "- 🚫 correctedPart 무결성: correctedPart 는 네가 errorPart 로 바꾸기 전 sourceText 원문에 실제로 있던 바로 그 단어(들)여야 한다. 원문에도 errorPart 에도 없는 제3의 단어를 정답으로 만들지 마라 — displayedText 에 correctedPart 를 도로 넣으면 정확히 sourceText 가 되어야 한다.",
+        ].join("\n")
+      : "",
     buildGrammarPointGuidance({
+      variantIndex: diversity?.variantIndex,
+      usedPointCodes: diversity?.usedPointCodes,
+      diversityEnabled: diversity?.diversityEnabled,
+      pointFocus: diversity?.pointFocus,
       answerCount: errorCount,
       requestedDifficulty,
       mode: "correction",
@@ -1217,6 +1446,305 @@ function buildImpliedMeaningCandidateBlock(
     sentences.length
       ? "Passage sentence map:\n" + sentences.slice(0, 12).map((sentence, index) => `${index + 1}. ${sentence}`).join("\n")
       : "",
+  ].filter(Boolean).join("\n");
+}
+
+/**
+ * 지문에 2회 이상 등장하는 구(3~6단어 n-gram, 최장 우선)를 수집한다.
+ * 다중 빈칸에서 반복 구를 빈칸으로 잡으면 남은 출현이 정답을 누설하므로,
+ * 소프트 규칙 대신 구체 목록으로 금지한다 (어법 논쟁 자리 금지 라인과 동일 패턴).
+ */
+const REPEATED_PHRASE_STOPWORDS = new Set([
+  "the", "a", "an", "of", "to", "in", "on", "at", "for", "with", "and", "or",
+  "but", "is", "are", "was", "were", "be", "been", "being", "that", "this",
+  "these", "those", "it", "its", "they", "their", "them", "he", "she", "his",
+  "her", "we", "our", "us", "you", "your", "i", "my", "as", "by", "from",
+  "not", "no", "do", "does", "did", "have", "has", "had", "will", "would",
+  "can", "could", "should", "may", "might", "more", "most", "less", "than",
+  "so", "if", "when", "who", "whom", "which", "what", "there", "here", "all",
+  "also", "into", "about", "such", "one", "two", "very", "much", "many",
+]);
+
+function countContentWords(tokens: string[]): number {
+  return tokens.filter(
+    (t) => !REPEATED_PHRASE_STOPWORDS.has(t.toLowerCase()) && t.length >= 3,
+  ).length;
+}
+
+function toLowerTokens(text: string): string[] {
+  return text.toLowerCase().split(/[^a-z'-]+/).filter(Boolean);
+}
+
+/**
+ * 의미가 비어 있는 placeholder 명사 + 경동사 — 이들만으로 이뤄진 빈칸은
+ * 학생이 내용 이해 없이 관용 표현 감으로 채운다 (예: "doing things").
+ */
+const SEMANTICALLY_LIGHT_WORDS = new Set([
+  "thing", "things", "stuff", "way", "ways", "something", "anything", "everything",
+  "someone", "somebody", "one", "ones", "kind", "kinds", "sort", "sorts",
+  "do", "doing", "does", "done", "make", "making", "makes", "made",
+  "get", "getting", "gets", "got", "have", "having", "has", "had",
+  "go", "going", "goes", "gone", "take", "taking", "takes", "taken",
+]);
+
+/**
+ * 빈칸 표현이 placeholder 명사/경동사만으로 이뤄진 의미 빈약 연어인지 검출한다
+ * ("doing things", "get things done"). 내용어가 1개뿐인 단일 표현은 별개라 제외한다.
+ */
+function isSemanticallyLightExpression(expression: string): boolean {
+  const tokens = toLowerTokens(expression).filter(
+    (t) => t.length >= 3 && !REPEATED_PHRASE_STOPWORDS.has(t),
+  );
+  if (tokens.length < 2) return false;
+  return tokens.every((t) => SEMANTICALLY_LIGHT_WORDS.has(t));
+}
+
+/**
+ * 해설이 출제 변형 과정("원문의 X를 Y로 (잘못) 변형/바꿈")을 학생에게 노출하는지
+ * 검출한다. 정답 단어를 정상 인용하는 해설은 통과시키고, 변형 동사가 동반될 때만 잡는다.
+ */
+const EXPLANATION_META_LEAK_PATTERN =
+  /['"]?[A-Za-z][A-Za-z'-]*['"]?\s*(?:을|를)\s*['"]?[A-Za-z][A-Za-z'-]*['"]?\s*(?:로|으로)\s*(?:잘못\s*)?(?:변형|바꾸|바꿔|바꾼|치환|교체)/;
+
+function explanationLeaksMutationProcess(explanation: string): boolean {
+  if (!explanation) return false;
+  return EXPLANATION_META_LEAK_PATTERN.test(explanation) || /잘못\s*변형(?:한|된|하여|해서)/.test(explanation);
+}
+
+/**
+ * 어법 해설의 메타 누출 — 출제 과정 서술 또는 생성 지침 어휘.
+ * 어휘용보다 넓게: 다중어 타깃("to interact")·과거형 어미(변형하였습니다)·
+ * 생성 지침 어휘(지시문/가이드라인/함정으로/유도하는 함정/포인트를 활용/출제 의도).
+ */
+function grammarExplanationLeaksMeta(text: string): boolean {
+  if (!text) return false;
+  // 생성 지침 어휘 — 학생 해설에 절대 등장하면 안 됨.
+  if (/지시문|가이드라인|출제\s*의도|출제\s*포인트|어법\s*포인트\s*(?:관점|측면|차원)|포인트\s*관점에서|유도하는\s*함정|함정으로\s*(?:만들|변형|유도|구성)|포인트를\s*활용|타깃\s*포인트|타고전/.test(text)) {
+    return true;
+  }
+  // 출제 과정 서술: "X(를) Y(로) (잘못) 변형/바꾸/치환/교체 + 하였/했/한/된/하여/해서/시켰/시킨".
+  // 타깃 Y 는 다중어(to interact 등)도 허용.
+  if (/['"]?[A-Za-z][A-Za-z'\- ]*['"]?\s*(?:을|를)\s*['"]?[A-Za-z][A-Za-z'\- ]*['"]?\s*(?:로|으로)\s*(?:잘못\s*)?(?:변형|바꾸|바꿔|바꾼|치환|교체|변경)(?:하였|했|한|된|하여|해서|시켰|시킨)/.test(text)) {
+    return true;
+  }
+  // 한국어 변형 서술 — 주어/대상이 한국어("이를 ~로 변형하였으므로")라 위 영어
+  // 패턴이 놓친 누출. 과거시제 변형 동사(변형하였/했/시켰)는 *이미 변형한* 산출물
+  // 임을 노출 — 클린 해설은 "변형하면"(조건)이지 "변형하였"(완료)을 안 쓴다.
+  if (/(?:로|으로)\s*(?:잘못\s*)?(?:변형|치환|교체|변경)(?:하였|했(?!\s*을\s*때)|시켰|시킨|한\s*것|하므로|하였으므로|하여|해서)/.test(text)) {
+    return true;
+  }
+  // 생성 설계 어휘 + "틀린/잘못된 변형" 명시. (포인트 설정/이번 문항에서는 = 출제 메타)
+  if (/정답\s*설계|출제\s*설계|설계에\s*따라|(?:정답\s*)?포인트\s*설정|이번\s*문항에서는|(?:틀린|잘못된|오답)\s*변형/.test(text)) {
+    return true;
+  }
+  // 내부 생성 필드명 노출 (errorExpression/pointCode 등) — 학생 해설에 절대 금지.
+  if (/\b(errorExpression|correctExpression|wrongExpression|pointCode|_?typeId|slotValues?)\b/i.test(text)) {
+    return true;
+  }
+  // 원형(변형 전) 누설·변형 형태·출제 설계 포인트 — 후처리 청소기와 동일 표면형.
+  if (/원문은|원(?:문|래)\s*표현|정답형(?:인|을|이|은)|변형(?:된|한|인)?\s*형태|(?:정답으로|정답형으로|오답으로)\s*변형|포인트로\s*설계|(?:의도된|의도한)\s*(?:정답\s*)?포인트|변형(?:한|된|인)\s*(?:것|부분|결과|표현|단어)/.test(text)) {
+    return true;
+  }
+  // 출제 프레이밍·원본 노출·수동 변형 서사 (라운드2~3).
+  if (/문제에서(?:는|의)|문제를?\s*설계(?:했|하였|한)|(?:실제\s*)?본문에서(?:의)?\s*올바른|올바른\s*표현은\s*['"]?[A-Za-z]|정답으로\s*지정|(?:정답\s*)?포인트\s*설계|설계\s*지시|(?:정답\s*)?포인트인\b|지정된\s*\d\s*순위|\d\s*순위[^.]*?어법\s*포인트|어법\s*포인트의\s*검토|고친\s*형태|변형(?:되어|되었|됨)|변형하게\s*되면/.test(text)) {
+    return true;
+  }
+  // 조건형 변형 서사 ("…으로 변형하면/바꾸면 … 틀리/비문/오답").
+  // 주의: "틀립니다/틀린"은 음절이 달라 "틀리"로 안 잡힘 → 음절 집합으로.
+  if (/(?:로|으로)\s*(?:잘못\s*)?(?:변형|바꾸|바꿔|치환|고치)(?:하면|면|하여|해서|한|게\s*되면)[^.]*?(?:틀[린립려리렸림]|비문|오류|오답|어긋|없[어이]|사라)/.test(text)) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * 빈칸 값의 의미 핵심부(연속한 내용어 2개 이상 부분구)가 빈칸 처리 후 본문에
+ * 그대로 남아 정답을 부분 누설하는지 검출한다. 전체 일치는 별도 게이트가 잡으므로
+ * 여기서는 부분구만 본다. 잔존 부분구를 찾으면 반환, 없으면 null.
+ */
+function findVisibleContentSubphrase(answer: string, blankedPassage: string): string | null {
+  const tokens = toLowerTokens(answer);
+  if (tokens.length < 2) return null;
+  // 구두점을 제거하고 토큰 단위로 비교 (구두점이 붙은 "situations," 같은 잔존을 놓치지 않도록).
+  const haystack = ` ${toLowerTokens(blankedPassage).join(" ")} `;
+  for (let len = tokens.length - 1; len >= 2; len -= 1) {
+    for (let i = 0; i + len <= tokens.length; i += 1) {
+      const window = tokens.slice(i, i + len);
+      if (countContentWords(window) < 2) continue;
+      const phrase = window.join(" ");
+      if (haystack.includes(` ${phrase} `)) return phrase;
+    }
+  }
+  return null;
+}
+
+/**
+ * 어휘 적절성 정답의 원단어(치환 전 단어)가 본문 마커 밖에 또 등장하면 학생이
+ * 정답을 즉답할 수 있다. 단일 내용어(길이 4+, 기능어 제외)만 검사한다.
+ */
+function sourceWordVisibleOutsideMarkers(
+  passageWithMarkers: string,
+  sourceWord: string,
+): boolean {
+  const lower = sourceWord.toLowerCase();
+  if (lower.length < 4 || REPEATED_PHRASE_STOPWORDS.has(lower) || !isSingleEnglishToken(lower)) {
+    return false;
+  }
+  const stripped = passageWithMarkers.replace(/__\([a-jA-J]\)[^_]*__/g, " ");
+  return toLowerTokens(stripped).includes(lower);
+}
+
+function findRepeatedPassagePhrases(passage: string, cap = 10): string[] {
+  const words = passage
+    .replace(/[^\p{L}\p{N}'\- ]/gu, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+  if (words.length < 6) return [];
+  const lower = words.map((w) => w.toLowerCase());
+
+  // 내용어 시작 위치별 출현 인덱스. 초고빈도 토큰은 비용·노이즈 가드로 제외.
+  const positionsByWord = new Map<string, number[]>();
+  for (const [index, token] of lower.entries()) {
+    if (REPEATED_PHRASE_STOPWORDS.has(token) || token.length < 3) continue;
+    const list = positionsByWord.get(token);
+    if (list) list.push(index);
+    else positionsByWord.set(token, [index]);
+  }
+
+  // 같은 내용어에서 시작하는 출현 쌍을 최대 길이까지 확장해, 겹치는 n-gram
+  // 조각이 아니라 반복 구간 전체를 하나의 후보로 수집한다.
+  const sampleByNorm = new Map<string, string>();
+  for (const positions of positionsByWord.values()) {
+    if (positions.length < 2 || positions.length > 25) continue;
+    for (let a = 0; a < positions.length - 1; a += 1) {
+      for (let b = a + 1; b < positions.length; b += 1) {
+        const start = positions[a];
+        const other = positions[b];
+        let len = 0;
+        while (
+          other + len < lower.length &&
+          start + len < other &&
+          lower[start + len] === lower[other + len]
+        ) {
+          len += 1;
+        }
+        // 꼬리의 기능어는 잘라 구절을 자연스럽게 만든다.
+        while (len > 0 && REPEATED_PHRASE_STOPWORDS.has(lower[start + len - 1])) {
+          len -= 1;
+        }
+        if (len < 2) continue;
+        const tokens = words.slice(start, start + len);
+        if (countContentWords(tokens) < 2) continue;
+        const norm = lower.slice(start, start + len).join(" ");
+        if (!sampleByNorm.has(norm)) sampleByNorm.set(norm, tokens.join(" "));
+      }
+    }
+  }
+
+  // 더 긴 반복 구간에 포함되는 부분 구절은 제거하고 최대 구간만 남긴다.
+  const norms = [...sampleByNorm.keys()].sort((x, y) => y.length - x.length);
+  const collected: string[] = [];
+  const collectedNorm: string[] = [];
+  for (const norm of norms) {
+    if (collectedNorm.some((longer) => longer.includes(norm))) continue;
+    collected.push(sampleByNorm.get(norm)!);
+    collectedNorm.push(norm);
+    if (collected.length >= cap) break;
+  }
+  return collected;
+}
+
+/**
+ * 다중 빈칸 전용 후보 제약 블록 — 단일 빈칸 후보 블록 대신 주입된다.
+ */
+function buildMultiBlankAvoidBlock(passage: string): string {
+  const repeated = findRepeatedPassagePhrases(passage);
+  if (repeated.length === 0) return "";
+  return [
+    "## 다중 빈칸 후보 제약 (지문 자동 스캔)",
+    "다음 표현은 지문에 2회 이상 등장하므로 빈칸(blanks[].originalExpression)으로 선택 금지 — 빈칸을 뚫어도 남은 출현이 정답을 그대로 누설해 문항이 거부됩니다:",
+    ...repeated.map((p) => `- "${p}"`),
+    "위 표현과 그 일부를 포함한 구절도 피하고, 지문에 정확히 1회만 등장하는 표현을 선택하세요.",
+  ].join("\n");
+}
+
+/** 결론/주장 담화 표지 — KILLER 빈칸 위치(핵심 논지부) 후보 점수에 사용. */
+const THESIS_DISCOURSE_MARKERS =
+  /\b(?:therefore|thus|hence|consequently|as a result|in short|in sum|in essence|in other words|in conclusion|ultimately|overall|this means|the point is|what matters|the key|crucially|in fact)\b/i;
+
+function scoreThesisSentence(sentence: string, index: number, total: number): number {
+  let score = 0;
+  if (THESIS_DISCOURSE_MARKERS.test(sentence)) score += 3;
+  if (index >= total - 2) score += 2; // 결론부(마지막 두 문장)
+  if (index === 0) score += 1; // 주제문(첫 문장)
+  // 나열 위주 문장은 간결한 스팬을 잡기 어려워 list-like 거부를 유발한다 — 후순위.
+  if ((sentence.match(/,/g) ?? []).length >= 2) score -= 2;
+  return score;
+}
+
+/**
+ * KILLER 단일 빈칸 전용 설계 블록 — 빈칸을 글의 핵심 논지(주제문·결론·인과의
+ * 귀결)에 두고 정답을 추상 패러프레이즈로 요구한다. 검수 실측(평균 4.0/10)에서
+ * KILLER 빈칸이 지엽 세부 + 원문 verbatim 정답 + 무간섭 오답으로 일관되게
+ * 미달했던 것의 직접 대응. 후보 문장은 thesis 점수순으로 제시·지정한다.
+ */
+function buildKillerBlankCandidateBlock(
+  passage: string,
+  diversity?: CandidateDiversityOptions,
+): string {
+  const sentences = splitPassageSentences(passage);
+  const total = sentences.length;
+  const candidates = filterUsedCandidates(
+    sentences
+      .map((sentence, index) => ({ sentence, index }))
+      .filter(({ sentence }) => countContentTokens(sentence) >= 4),
+    diversity?.usedTargets,
+    ({ sentence }) => sentence,
+  ).items;
+  const ranked = [...candidates].sort(
+    (a, b) =>
+      scoreThesisSentence(b.sentence, b.index, total) -
+      scoreThesisSentence(a.sentence, a.index, total),
+  );
+  // thesis 신호(점수>0)가 있는 문장만 우선 — 설정부/서사 문장이 풀에 섞이면
+  // 결론 명제를 설정부 빈칸에 박는 극성 전도가 발생한다(검수 실측 critical).
+  // 신호 문장이 너무 적으면 0점 문장으로 보충해 다양성 회전은 유지한다.
+  const scored = ranked.filter(
+    ({ sentence, index }) => scoreThesisSentence(sentence, index, total) > 0,
+  );
+  const pool = (scored.length >= 3 ? scored : ranked).slice(0, 8);
+
+  let designated: { sentence: string; index: number } | undefined;
+  if (diversity?.diversityEnabled && pool.length > 0) {
+    const vi =
+      typeof diversity.variantIndex === "number" && Number.isFinite(diversity.variantIndex)
+        ? Math.max(0, Math.floor(diversity.variantIndex))
+        : Math.floor(Math.random() * pool.length);
+    // 재시도 오프셋(attempt×variantCount)이 pool 크기와 배수 관계면 mod 에서
+    // 소거돼 같은 문장이 계속 지정된다(실측: list-like 문장 7연속 거부 → 미생성).
+    // tier(풀을 몇 바퀴 돌았나)를 더해 재시도마다 다음 후보로 이동시킨다.
+    const tier = Math.floor(vi / pool.length);
+    designated = pool[(vi + tier) % pool.length];
+  }
+
+  return [
+    designated
+      ? `⭐ 다양성 지시 (항상 적용): 이번 문항은 되도록 다음 문장에서 빈칸 타깃(originalExpression)을 선택하세요: "${designated.sentence}" 그 문장에 간결한 핵심 술부가 없으면(콤마 나열 구간뿐이면) 주저 없이 아래 다른 후보 문장으로 넘어가고, 매번 같은 표현으로 수렴하지 마세요.`
+      : "",
+    "## KILLER 빈칸 설계 (필수)",
+    "이 문항은 KILLER 난이도입니다. 다음 세 가지를 모두 지키지 않으면 거부됩니다:",
+    "1. 빈칸 위치: 글의 핵심 논지가 담긴 자리 — 주제문, 결론, 인과의 귀결부, 필자 주장의 핵심 술부. 예시·나열·수치·부수적 세부사항(비용, 시간 같은 지엽)을 빈칸으로 만들지 마세요. originalExpression 은 2~7단어의 간결한 술부/구여야 하며 콤마·콜론·세 항목 이상 나열을 포함하면 거부됩니다 — 문장이 길면 핵심 술부만 잘라 선택하세요.",
+    "2. 정답 보기: blankAnswerMode 를 \"PARAPHRASE\" 로 출력하고, 정답 선지는 originalExpression 의 verbatim 복사가 아니라 같은 의미의 **추상적 재진술**이어야 합니다. originalExpression 자체는 여전히 원문 그대로(한 글자도 바꾸지 않고) 출력하세요 — 빈칸 위치 식별용입니다.",
+    "2a. 의미 보존: 정답은 그 스팬이 그 자리에서 말하는 명제를 보존해야 합니다. 스팬이 긍정 외양 진술이면 정답도 같은 명제의 재진술이어야 하며, 글 전체의 결론(반대 극성)을 대신 넣으면 담화가 붕괴되어 거부됩니다.",
+    "2b. 슬롯 문법: 정답을 빈칸에 넣은 문장이 완전한 정문이어야 합니다 — 스팬이 주어로 시작하면 정답도 주어를 포함하고, 'to ___' 자리면 동사원형으로 시작하고(동명사 금지), 스팬의 동사가 3인칭 단수형이면 정답 동사도 수일치를 유지하고, 스팬 뒤에 관계절(, where/, which)이 남으면 그 선행사가 되는 명사로 끝나야 합니다.",
+    "3. 오답 설계 — 두 가지 균형을 모두 지키세요 (위반 시 거부):",
+    "   3a. 극성 균형: 정답이 부정 극성(상실·제약·실패류)이면 오답 중 최소 2개도 부정 극성이어야 합니다. 'Unfortunately' 같은 전환 뒤 빈칸에서 정답만 부정이고 오답이 전부 긍정이면 극성 스캔만으로 즉답됩니다.",
+    "   3b. 추상도 균형: 오답 중 최소 2개는 정답과 같은 추상 수준(논제급 일반 진술)이어야 합니다. 정답만 추상이고 오답이 전부 구체 사실 나열이면 '가장 추상적인 선지 고르기'로 즉답됩니다.",
+    "   매력 오답은 인과 역전, 범위 과장(절대어 purely/entirely 함정), 절반-진실(본문 개념을 빌리되 결론을 비틀기)로 틀리게 만들고, 최소 2개는 본문 어휘·개념을 재활용하세요.",
+    pool.length ? "핵심 논지 후보 문장 (우선순위순):" : "",
+    ...pool.map(
+      ({ sentence, index }) => `${index + 1}. ${sentence}`,
+    ),
   ].filter(Boolean).join("\n");
 }
 
@@ -1735,6 +2263,8 @@ export function validateQuestionQuality({
   blankInferenceParaphraseAnswer,
   genericOptionCount,
   genericAnswerCount,
+  contentMatchType,
+  answerPolarity,
   diversityUsedTargets,
 }: ValidateQuestionQualityInput): QuestionQualityIssue[] {
   const issues: QuestionQualityIssue[] = [];
@@ -1788,6 +2318,23 @@ export function validateQuestionQuality({
     blankInferenceParaphraseAnswer,
     add,
   );
+
+  // ── 정답 극성 토글 게이트 (강제 설정일 때만 동작 — 미설정/기본 경로 불변) ──
+  if (
+    typeId === "CONTENT_MATCH" &&
+    (contentMatchType === "일치" || contentMatchType === "불일치")
+  ) {
+    validateContentMatchPolarity(question, contentMatchType, add);
+  }
+  if (
+    answerPolarity === "NEGATIVE" &&
+    (typeId === "TOPIC" ||
+      typeId === "MAIN_IDEA" ||
+      typeId === "TOPIC_MAIN_IDEA" ||
+      typeId === "TITLE")
+  ) {
+    validateGistNegativePolarity(question, typeId, add);
+  }
 
   if (requestedDifficulty === "KILLER") {
     validateKillerBar(question, typeId, add);
@@ -2240,6 +2787,11 @@ function normalizeVocabChoiceKey(value: unknown, fallbackIndex?: number): string
   return fallback;
 }
 
+function vocabChoiceAnswerLabelFromKey(key: string): string {
+  const index = (VOCAB_CHOICE_KEYS as readonly string[]).indexOf(key);
+  return index >= 0 ? String(index + 1) : key;
+}
+
 function collectVocabChoiceAnswerKeys(question: Record<string, unknown>): string[] {
   const keys: string[] = [];
   const push = (value: unknown) => {
@@ -2342,6 +2894,194 @@ function validateMarkedText(
       if (!hasMarkerTokenBoundaries(value, marker.start, marker.end)) {
         add("error", "mid-word-marker", `${field} contains a marker inside a word: ${marker.inner}`);
       }
+    }
+  }
+}
+
+/** 네모 어법 — 렌더된 "(A) [x / y]" 네모 카운트용. */
+const COMBO_SLOT_RENDER_REGEX = /\([A-C]\)\s*\[[^\[\]]*\/[^\[\]]*\]/g;
+const COMBO_HARD_POINT_CODES = new Set(["b", "c", "i"]);
+// that/what 슬롯의 패턴 누설 검출용 — 명사절 that 보문을 취하는 인지·단언 동사.
+// 관계절·지시사 that 위양성을 막기 위해 동사를 화이트리스트로 한정한다.
+const COGNITION_VERB_THAT_REGEX =
+  /\b(?:know|knows|knew|known|think|thinks|thought|believe|believes|believed|assume|assumes|assumed|realize|realizes|realized|suggest|suggests|suggested|show|shows|showed|shown|find|finds|found|argue|argues|argued|claim|claims|claimed|say|says|said|hope|hopes|hoped|feel|feels|felt|notice|notices|noticed|understand|understands|understood|mean|means|meant|prove|proves|proved|conclude|concludes|concluded|recognize|recognizes|recognized)\s+that\b/i;
+
+/**
+ * 네모 어법 검증 — 모델 메타데이터(slots/options)와 렌더된 지문을 각각 세고
+ * 상호 대조한다. 세 슬롯 전부가 정답 키를 구성하므로 슬롯/조합 결함은 error
+ * (RELAXED 차단 대상), 오답 믹스·포인트 구성은 warning (strict 압력).
+ */
+function validateGrammarChoiceComboQuestion(
+  question: Record<string, unknown>,
+  passage: string | undefined,
+  requestedDifficulty: string | undefined,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const slots = Array.isArray(question.slots)
+    ? question.slots.filter(isRecord)
+    : [];
+  if (slots.length !== 3) {
+    add("error", "combo-slot-count", `Expected exactly 3 combo slots, got ${slots.length}.`);
+  }
+
+  const passageWithMarkers = normalizeText(question.passageWithMarkers);
+  if (passageWithMarkers) {
+    const rendered = passageWithMarkers.match(COMBO_SLOT_RENDER_REGEX) ?? [];
+    if (rendered.length !== 3) {
+      add("error", "combo-render-slot-count", `Expected 3 rendered combo slots "(A) [x / y]", got ${rendered.length}.`);
+    }
+  }
+
+  const slotCandidates: Array<{ correct: string; wrong: string; label: string }> = [];
+  for (const [slotIndex, slot] of slots.entries()) {
+    const correct = normalizeText(slot.correctExpression);
+    const wrong = normalizeText(slot.wrongExpression);
+    if (!correct || !wrong) {
+      add("error", "combo-slot-missing-candidate", `Combo slot ${slotIndex + 1} is missing correctExpression/wrongExpression.`);
+      continue;
+    }
+    slotCandidates.push({
+      correct,
+      wrong,
+      label: normalizeText(slot.label) || `slot ${slotIndex + 1}`,
+    });
+    if (normalizeComparableText(correct) === normalizeComparableText(wrong)) {
+      add("error", "combo-slot-not-mutated", `Combo slot ${slotIndex + 1} candidates are identical: "${correct}".`);
+    }
+    // 원문 실재 검사 — 지문에 오류가 인쇄된 추출/재현 흐름은 passage 를 넘기지
+    // 않으므로 가드 필수 (grammar-error-not-mutated 와 동일 관례).
+    if (passage && !containsLoose(passage, correct)) {
+      add("error", "combo-correct-not-in-source", `Combo slot correctExpression not found in the passage: "${correct.slice(0, 60)}".`);
+    }
+  }
+
+  // 정답 후보 누설 — 네모 밖 지문에 후보와 동일한 내용어 표현이 무마킹으로
+  // 남아 있으면 학생이 평행구를 베껴 푼다 (실측: 'composed of' 평행구 5/8).
+  // wrong 후보의 잔존도 같은 코드로 잡는다 — 오답형이 지문 다른 곳에서 합법
+  // 표현으로 등장하면 "둘 다 가능" 시비의 신호다.
+  // 기능어 후보(that/be 등)는 단독 잔존이 불가피해 면제하되, 직전 단어까지
+  // 같은 연어("know that"·"assume that")가 잔존하면 실질 누설로 잡는다
+  // (실측 라운드2: 기능어 연어 평행 3/8).
+  if (passageWithMarkers) {
+    const outsideSlots = passageWithMarkers.replace(COMBO_SLOT_RENDER_REGEX, " ");
+    const isLeakTarget = (expr: string) =>
+      expr.length >= 4 &&
+      !isTinyFunctionWord(expr) &&
+      !/^(that|what|which|this|these|those|than|then|when|where|while|there|their|they|them|have|has|had|will|would|could|should|must|does|did|not|with|from|into|been|being)$/i.test(expr);
+    const appearsOutside = (expr: string) =>
+      isSingleEnglishToken(expr)
+        ? containsStandaloneToken(outsideSlots, expr)
+        : containsLoose(outsideSlots, expr);
+    const precedingWordByLabel = new Map<string, string>();
+    for (const match of passageWithMarkers.matchAll(/([A-Za-z][A-Za-z'-]*)\s*\(([A-C])\)\s*\[/g)) {
+      precedingWordByLabel.set(`(${match[2]})`, match[1]);
+    }
+    for (const candidate of slotCandidates) {
+      if (isLeakTarget(candidate.correct) && appearsOutside(candidate.correct)) {
+        add("error", "combo-candidate-visible-elsewhere", `Combo slot ${candidate.label} correct candidate "${candidate.correct}" also appears unmarked elsewhere in the passage (answer leak).`);
+        continue;
+      }
+      if (isLeakTarget(candidate.wrong) && appearsOutside(candidate.wrong)) {
+        add("error", "combo-candidate-visible-elsewhere", `Combo slot ${candidate.label} wrong candidate "${candidate.wrong}" appears as legitimate text elsewhere in the passage (dispute risk).`);
+        continue;
+      }
+      const preceding = precedingWordByLabel.get(candidate.label);
+      if (preceding && appearsOutside(`${preceding} ${candidate.correct}`)) {
+        add("error", "combo-candidate-visible-elsewhere", `Combo slot ${candidate.label} collocation "${preceding} ${candidate.correct}" also appears unmarked elsewhere in the passage (answer leak).`);
+        continue;
+      }
+      // that/what 슬롯 전용 패턴 누설: 슬롯 동사와 누설 동사가 달라도(know vs
+      // assume) "인지·단언 동사 + that + 완전절" 패턴이 네모 밖에 남아 있으면
+      // 학생이 그 패턴을 (A)에 전이한다 (실측 R3: 'assume that' 평행 2/8).
+      // 인지동사 화이트리스트로 한정해 관계절·지시사 that 위양성을 배제한다.
+      const pair = new Set([
+        candidate.correct.toLowerCase(),
+        candidate.wrong.toLowerCase(),
+      ]);
+      if (pair.has("that") && pair.has("what") && COGNITION_VERB_THAT_REGEX.test(outsideSlots)) {
+        add("error", "combo-candidate-visible-elsewhere", `Combo slot ${candidate.label} (that/what) is modeled by an unmarked "동사 + that + clause" elsewhere in the passage (pattern leak).`);
+      }
+    }
+  }
+
+  const pointCodes = slots
+    .map((slot) => normalizeText(slot.pointCode).toLowerCase())
+    .filter(Boolean);
+  if (pointCodes.length === slots.length && new Set(pointCodes).size < pointCodes.length) {
+    add("warning", "combo-duplicate-point-code", `Combo slots repeat a pointCode: ${pointCodes.join(", ")}.`);
+  }
+
+  // 조합 선지 검증 — slotValues 가 각 슬롯의 두 후보 중 하나인지, 전부-옳은
+  // 조합이 유일하고 correctAnswer 와 일치하는지.
+  const options = Array.isArray(question.options)
+    ? question.options.filter(isRecord)
+    : [];
+  if (slotCandidates.length !== 3 || options.length !== 5) return;
+
+  const comboKeys: string[] = [];
+  const wrongnessCounts: number[] = [];
+  const wrongCandidateUsed = [false, false, false];
+  let valuesValid = true;
+  for (const [optionIndex, option] of options.entries()) {
+    const values = Array.isArray(option.slotValues)
+      ? option.slotValues.map((value) => normalizeText(value))
+      : [];
+    if (values.length !== 3 || values.some((value) => !value)) {
+      add("error", "combo-option-value-mismatch", `Combo option ${optionIndex + 1} must provide 3 slotValues.`);
+      valuesValid = false;
+      continue;
+    }
+    let wrongness = 0;
+    for (const [slotIndex, value] of values.entries()) {
+      const candidate = slotCandidates[slotIndex];
+      const comparable = normalizeComparableText(value);
+      if (comparable === normalizeComparableText(candidate.wrong)) {
+        wrongness += 1;
+        wrongCandidateUsed[slotIndex] = true;
+      } else if (comparable !== normalizeComparableText(candidate.correct)) {
+        add("error", "combo-option-value-mismatch", `Combo option ${optionIndex + 1} value "${value}" matches neither candidate of slot ${slotIndex + 1}.`);
+        valuesValid = false;
+      }
+    }
+    comboKeys.push(values.map((value) => normalizeComparableText(value)).join("|"));
+    wrongnessCounts.push(wrongness);
+  }
+  if (!valuesValid) return;
+
+  const duplicateCombo = findDuplicate(comboKeys);
+  if (duplicateCombo) {
+    add("error", "combo-duplicate-option", "Combo options repeat the same slotValues combination.");
+  }
+
+  const allCorrectIndices = wrongnessCounts
+    .map((wrongness, index) => ({ wrongness, index }))
+    .filter((entry) => entry.wrongness === 0)
+    .map((entry) => entry.index);
+  const correctLabel = normalizeLabel(question.correctAnswer);
+  if (allCorrectIndices.length !== 1) {
+    add("error", "combo-answer-combo-mismatch", `Expected exactly 1 all-correct combo option, got ${allCorrectIndices.length}.`);
+  } else {
+    const answerOptionLabel = normalizeLabel(options[allCorrectIndices[0]].label);
+    if (answerOptionLabel !== correctLabel) {
+      add("error", "combo-answer-combo-mismatch", `correctAnswer "${normalizeText(question.correctAnswer)}" does not point at the all-correct combination.`);
+    }
+  }
+
+  if (!wrongCandidateUsed.every(Boolean)) {
+    add("warning", "combo-wrong-candidate-unused", "Some slot's wrongExpression never appears in any wrong option.");
+  }
+  if (!wrongnessCounts.some((wrongness) => wrongness === 1)) {
+    add("warning", "combo-missing-single-slot-trap", "No option is wrong in exactly one slot; include at least one near-miss option.");
+  }
+
+  if (requestedDifficulty === "KILLER") {
+    const multiSlotTraps = wrongnessCounts.filter((wrongness) => wrongness >= 2).length;
+    if (multiSlotTraps < 2) {
+      add("warning", "combo-killer-trap-mix", `KILLER combo should include at least 2 options wrong in two or more slots, got ${multiSlotTraps}.`);
+    }
+    const hardPoints = pointCodes.filter((code) => COMBO_HARD_POINT_CODES.has(code)).length;
+    if (pointCodes.length === 3 && hardPoints < 2) {
+      add("warning", "combo-killer-point-mix", `KILLER combo should test hard points (b/c/i) on at least 2 slots, got ${hardPoints}.`);
     }
   }
 }
@@ -2463,6 +3203,10 @@ function validateTypeSpecific(
     }
   }
 
+  if (typeId === "GRAMMAR_CHOICE_COMBO") {
+    validateGrammarChoiceComboQuestion(question, passage, requestedDifficulty, add);
+  }
+
   if (typeId === "GRAMMAR_ERROR") {
     const markedExpressions = Array.isArray(question.markedExpressions)
       ? question.markedExpressions.filter(isRecord)
@@ -2512,6 +3256,23 @@ function validateTypeSpecific(
         "GRAMMAR_ERROR should distribute marked expressions across at least three real grammar point codes; repeated pointCode decoys make the item feel padded.",
       );
     }
+    // 단조 방지: distinct 코드가 3개여도 한 코드가 3회 이상 쓰이면(예: 관계사 b
+    // 4개 — 프리미엄 실측) 한 가지 문법만 반복 검사하는 꼴이라 변별력이 떨어진다.
+    // 코드당 최대 2회. strict 전용(RELAXED 미포함)이라 완전 실패는 유발하지 않는다.
+    if (markedPointCodes.length >= 5) {
+      const codeCounts = new Map<GrammarPointCode, number>();
+      for (const code of markedPointCodes) {
+        codeCounts.set(code, (codeCounts.get(code) ?? 0) + 1);
+      }
+      const worst = [...codeCounts.entries()].sort((a, b) => b[1] - a[1])[0];
+      if (worst && worst[1] >= 3) {
+        add(
+          "error",
+          "grammar-decoy-point-monotony",
+          `pointCode (${worst[0]}) is used ${worst[1]} times across the marks — decoys are monotonous (one grammar point repeated). Use at most 2 marks per code and spread across more grammar points.`,
+        );
+      }
+    }
     // 규범 논쟁 자리 검출: "복수 등위 주어 + 동격 each + 단수동사"(예: A and B
     // each assumes)는 표준 규범과 실사용이 갈리는 자리 — 여기 밑줄(정답·디코이
     // 불문)을 그으면 복수정답 시비가 생긴다 (실측 critical, 프롬프트 소프트
@@ -2532,6 +3293,48 @@ function validateTypeSpecific(
           "error",
           "grammar-disputed-usage-target",
           'A marker underlines a usage-disputed spot ("compound subject + each + singular verb"). Standard and actual usage diverge here — do not underline it as answer or decoy; test a different location.',
+        );
+      }
+    }
+    // 마커 인접 토큰 중복 검출: 모델 errorExpression이 앞/뒤 문맥 단어를 포함해
+    // "which is __(F) is costed__"(앞 'is' 중복) 같은 깨진 텍스트가 렌더된다 —
+    // 후처리는 위치만 맞추고 토큰 중복은 못 막는다(실측 critical). +RELAXED.
+    if (passageWithMarkers) {
+      const dup = findGrammarMarkerAdjacentDuplicate(passageWithMarkers);
+      if (dup) {
+        add(
+          "error",
+          "grammar-marker-adjacent-duplicate",
+          `A grammar marker repeats an adjacent word ("${dup}"), producing broken text; the underlined span likely swallowed a neighboring word.`,
+        );
+      }
+    }
+    // surroundingText 무효 검출: 정상 마커의 surroundingText는 그 마커 단어를
+    // 반드시 포함한다. isError 마커의 surroundingText에 expression/errorExpression/
+    // correction 토큰이 하나도 없으면 모델이 다른 문장을 가리킨 것 — 전역 폴백
+    // 오배치와 해설-오류 불일치의 근원이다(실측: surround가 'maintenance...costly'를
+    // 가리키나 마커는 'realizes that→those'에 박혀 해설이 엉뚱한 오류를 설명). +RELAXED.
+    {
+      const badSurround = findGrammarSurroundingMissingMarker(markedExpressions);
+      if (badSurround) {
+        add(
+          "error",
+          "grammar-surrounding-missing-marker",
+          `Marker ${badSurround}'s surroundingText does not contain its own expression — the position cue points at a different sentence, risking misplacement and a mismatched explanation.`,
+        );
+      }
+    }
+    // 마커 오배치 검출: 모델 surroundingText가 오류 버전이라 윈도우 탐색이 실패하면
+    // 후처리가 전역 폴백으로 엉뚱한 동형 단어에 마커를 박는다(예: 의도 'which is
+    // costly' → 실제 'she is'에 → "she are"). 렌더 위치 주변이 surroundingText와
+    // 전혀 겹치지 않으면 거부한다(실측: 해설과 밑줄이 다른 문장). +RELAXED.
+    if (passageWithMarkers) {
+      const misplaced = findGrammarMisplacedMarker(passageWithMarkers, markedExpressions);
+      if (misplaced) {
+        add(
+          "error",
+          "grammar-marker-context-mismatch",
+          `Marker ${misplaced} is rendered in a context that does not match its surroundingText — it is likely placed on a wrong same-form word.`,
         );
       }
     }
@@ -2564,6 +3367,23 @@ function validateTypeSpecific(
       if (errorExpression && expression && errorExpression === expression) {
         add("error", "grammar-error-not-mutated", "The grammar error surface matches the original expression.");
       }
+      if (expression && errorExpression && isGrammarPosChangeMutation(expression, errorExpression)) {
+        add(
+          "error",
+          "grammar-error-pos-change",
+          `The grammar error mutates a word across part of speech (adjective/verb → noun: "${expression}" → "${errorExpression}"). Keep the same part of speech and mutate form only (e.g. adjective↔adverb, verb agreement, finite↔nonfinite).`,
+        );
+      }
+      // 시제 단독변경(현재 3인칭↔과거, 같은 어간)은 기출 검증 변형이 아니며
+      // 문맥상 두 시제가 모두 가능해 정답 시비가 된다 (실측: outpaces→outpaced).
+      // 수일치(is/are·has/have)는 별도로 제외 — 그건 합법 변형(d).
+      if (expression && errorExpression && isTenseOnlyMutation(expression, errorExpression)) {
+        add(
+          "error",
+          "grammar-tense-only-error",
+          `The grammar error is a tense-only change ("${expression}" ↔ "${errorExpression}"), which is contextually disputable; use a proven mutation type instead.`,
+        );
+      }
       if (correction && expression && correction !== expression) {
         add("warning", "grammar-correction-differs-from-source", "The correction differs from the original expression; verify the model did not rewrite acceptable source text.");
       }
@@ -2578,6 +3398,49 @@ function validateTypeSpecific(
         );
       }
     }
+    // 밑줄 span 길이 + pointCode 진실성 — 모든 밑줄(정답·디코이) 검사.
+    // 화면 밑줄 표면 = 오류는 errorExpression, 디코이는 expression
+    // (getMarkedSurfaceExpression 와 동일). 절/문장 통째 밑줄(프리미엄 실측 결함)을
+    // egregious(relaxed에서도 차단) / wide(strict 전용) 2단으로 막는다.
+    for (const markedExpression of markedExpressions) {
+      const surface = normalizeText(
+        markedExpression.isError === true
+          ? normalizeText(markedExpression.errorExpression) ||
+              normalizeText(markedExpression.expression)
+          : markedExpression.expression,
+      );
+      if (!surface) continue;
+      const markerLabel = normalizeText(markedExpression.label) || "(?)";
+      const surfaceWords = countWordsForQuality(surface);
+      const surfaceChars = surface.length;
+      if (
+        surfaceWords > GRAMMAR_UNDERLINE_HARD_MAX_WORDS ||
+        surfaceChars > GRAMMAR_UNDERLINE_HARD_MAX_CHARS
+      ) {
+        add(
+          "error",
+          "grammar-underline-too-long",
+          `Underline ${markerLabel} spans ${surfaceWords} words / ${surfaceChars} chars ("${surface.slice(0, 60)}") — a full clause or sentence was underlined. Underline only the minimal grammatical unit (usually 1-4 words).`,
+        );
+      } else if (
+        surfaceWords > GRAMMAR_UNDERLINE_SOFT_MAX_WORDS ||
+        surfaceChars > GRAMMAR_UNDERLINE_SOFT_MAX_CHARS
+      ) {
+        add(
+          "error",
+          "grammar-underline-wide",
+          `Underline ${markerLabel} is too wide (${surfaceWords} words / ${surfaceChars} chars: "${surface.slice(0, 60)}"). Tighten it to the core grammar token (usually 1-4 words, max 5).`,
+        );
+      }
+      const surfacePointCode = extractGrammarPointCode(markedExpression.pointCode);
+      if (surfacePointCode && grammarPointCodeSurfaceMismatch(surfacePointCode, surface)) {
+        add(
+          "warning",
+          "grammar-pointcode-span-mismatch",
+          `Underline ${markerLabel} is tagged pointCode (${surfacePointCode}) but its surface "${surface.slice(0, 50)}" has no token matching that grammar point — the label looks fabricated. Move the underline onto the real ${surfacePointCode}-token or fix the code.`,
+        );
+      }
+    }
     const grammarExplanationText = [
       question.explanation,
       question.wrongOptionExplanations,
@@ -2589,6 +3452,29 @@ function validateTypeSpecific(
       /\b(?:ask|asking|require|requires|spend|spent|developing)\b\s*(?:은|는|이|가|을|를|도)?\s*전치사/i.test(grammarExplanationText)
     ) {
       add("error", "grammar-category-mislabel", "Grammar explanation mislabels a verb form as a preposition.");
+    }
+    // 메타 누출: 해설이 출제 과정/생성 지침을 학생에게 노출(실측 u6:
+    // "지시문 가이드라인의 1순위 포인트인 ...를 활용하여 ... 함정으로 X를 Y로
+    // 잘못 변형하였습니다"). 학생 해설은 왜 그 형태가 어법상 틀린지만 설명해야 함.
+    if (grammarExplanationLeaksMeta(grammarExplanationText)) {
+      // error 로 승격(2026-06-15): warning 은 strict 재시도를 안 시켜 그대로 출하됨.
+      // focus/최소대립쌍이 준 내부 framing(1순위·출제 포인트·변형 방향)을 모델이
+      // 해설에 베끼는 누출이 잦아(R2 3/10), strict 재시도로 강제 회피한다.
+      // RELAXED 미등록 — 끈질기면 relaxed 폴백이 출하(0수율 방지).
+      add(
+        "error",
+        "grammar-explanation-meta-leak",
+        "Grammar explanation narrates the generation process or instruction (지시문/가이드라인/출제 포인트/1순위/함정으로/X를 Y로 변형) instead of explaining the grammar from the student's view.",
+      );
+    }
+    // CoT 덤프 백스톱: 정상 어법 해설은 300~500자. 900자 초과는 사고과정
+    // 덤프(정답 번복·무관 내용 나열) 의심 (실측 focus u7: 1012자 자기모순).
+    if (normalizeText(question.explanation).length > 900) {
+      add(
+        "warning",
+        "grammar-explanation-too-long",
+        "Grammar explanation is excessively long (>900 chars), suggesting a chain-of-thought dump rather than a concise student-facing rationale.",
+      );
     }
   }
 
@@ -2961,6 +3847,11 @@ function validateVocabChoiceQuestion(
     : [];
   const passageWithMarkers = normalizeText(question.passageWithMarkers);
 
+  // 동의어 변형 모드: 정답이 아닌 단어도 의도적으로 원문과 다른 동의어로 표시되므로
+  // "정답 외 단어는 원문 그대로" 검사를 완화한다(위치 앵커 originalWord만 본문에 존재 요구).
+  const vocabVariantMode =
+    normalizeText(question.vocabDisplayMode).toUpperCase() === "SYNONYM_VARIANT";
+
   // Expected counts: teacher-requested when provided, otherwise infer a valid
   // 5~10 count from the question itself (legacy default 5).
   const expectedMarkerCount =
@@ -3047,7 +3938,7 @@ function validateVocabChoiceQuestion(
       "error",
       "vocab-answer-label-mismatch",
       `VOCAB_CHOICE correctAnswer must match the inappropriate label set (${inappropriateKeys
-        .map((key) => `(${key})`)
+        .map(vocabChoiceAnswerLabelFromKey)
         .join(", ")}).`,
     );
   }
@@ -3139,6 +4030,27 @@ function validateVocabChoiceQuestion(
           `VOCAB_CHOICE betterWord for (${key}) must exist in the original passage.`,
         );
       }
+      // (g) 원단어 잔존 누설: 치환 전 단어가 본문 마커 밖에 또 보이면 즉답 가능.
+      if (sourceCorrectWord && sourceWordVisibleOutsideMarkers(passageWithMarkers, sourceCorrectWord)) {
+        add(
+          "error",
+          "vocab-source-word-visible",
+          `VOCAB_CHOICE answer (${key}) source word "${sourceCorrectWord}" still appears elsewhere in the passage, revealing the answer.`,
+        );
+      }
+    } else if (vocabVariantMode) {
+      // 변형 모드: 표시 단어는 의도된 동의어(비-verbatim)이므로 원문 일치/본문 존재
+      // 검사를 건너뛰고, 위치 앵커인 originalWord만 본문에 존재하면 된다.
+      if (betterWord) {
+        add("error", "vocab-nonanswer-has-better-word", `VOCAB_CHOICE non-answer (${key}) must not have betterWord.`);
+      }
+      if (passage && originalWord && !containsLoose(passage, originalWord)) {
+        add(
+          "error",
+          "vocab-nonanswer-source-anchor-missing",
+          `VOCAB_CHOICE non-answer (${key}) source word "${originalWord}" must exist in the original passage.`,
+        );
+      }
     } else {
       if (betterWord) {
         add("error", "vocab-nonanswer-has-better-word", `VOCAB_CHOICE non-answer (${key}) must not have betterWord.`);
@@ -3162,6 +4074,73 @@ function validateVocabChoiceQuestion(
         );
       }
     }
+  }
+
+  if (vocabVariantMode) {
+    // 누설 가드: 정답의 정답 단어(source-correct)가 다른 밑줄칸의 "표시 단어"(동의어)로
+    // 우연히 노출되면 학생이 정답을 역추론할 수 있다. 기존 vocab-source-word-visible은
+    // 마커 밖 본문만 검사하므로, 변형 모드에서 새로 생긴 이 벡터를 여기서 막는다.
+    const answerSourceWords = markedWords
+      .filter((markedWord) => markedWord.isInappropriate === true)
+      .map(
+        (markedWord) =>
+          normalizeText(markedWord.betterWord) ||
+          normalizeText(markedWord.originalWord),
+      )
+      .filter(Boolean);
+    markedWords.forEach((markedWord, index) => {
+      if (markedWord.isInappropriate === true) return;
+      const shown =
+        normalizeText(markedWord.word) ||
+        normalizeText(markedWord.substituteWord) ||
+        normalizeText(markedWord.originalWord);
+      if (
+        shown &&
+        answerSourceWords.some(
+          (answerWord) =>
+            normalizeComparableText(answerWord) ===
+            normalizeComparableText(shown),
+        )
+      ) {
+        add(
+          "error",
+          "vocab-variant-answer-word-exposed",
+          `VOCAB_CHOICE 변형 모드: 밑줄 (${normalizeVocabChoiceKey(markedWord.label, index)})의 표시 단어가 정답의 정답 단어와 같아 정답이 노출됩니다.`,
+        );
+      }
+    });
+
+    // 정답 외 단어가 하나도 동의어로 바뀌지 않았으면 암기 무력화 효과가 없으므로 경고한다
+    // (생성 차단은 아님 — 일부 단어는 좋은 동의어가 없을 수 있음).
+    const anyDisguised = markedWords.some((markedWord) => {
+      if (markedWord.isInappropriate === true) return false;
+      const original = normalizeText(markedWord.originalWord);
+      const shown =
+        normalizeText(markedWord.word) ||
+        normalizeText(markedWord.substituteWord) ||
+        original;
+      return (
+        original &&
+        shown &&
+        normalizeComparableText(original) !== normalizeComparableText(shown)
+      );
+    });
+    if (!anyDisguised) {
+      add(
+        "warning",
+        "vocab-variant-not-applied",
+        "VOCAB_CHOICE 동의어 변형 모드인데 정답 외 단어가 모두 원문 그대로입니다. 암기 무력화 효과가 없습니다.",
+      );
+    }
+  }
+
+  // (f) 해설 메타 누출: 출제 변형 과정을 학생용 해설에 노출하지 않는다.
+  if (explanationLeaksMutationProcess(normalizeText(question.explanation))) {
+    add(
+      "warning",
+      "vocab-explanation-meta-leak",
+      "VOCAB_CHOICE explanation should not narrate the mutation process (e.g. \"changed X to Y\"); explain why the word is contextually wrong instead.",
+    );
   }
 }
 
@@ -3539,6 +4518,10 @@ function validateBlankInferenceQuestion(
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const isNegativeParaphraseMode = question.blankAnswerMode === "DOUBLE_NEGATIVE";
+  const isParaphraseMode = question.blankAnswerMode === "PARAPHRASE";
+  // 변형 정답 모드(DN·패러프레이즈)는 빈칸 설계 결함(슬롯 문법)을 error 로 승격한다.
+  const isTransformedMode = isNegativeParaphraseMode || isParaphraseMode;
+  // jooyeon 변형 빈칸 토글 경로 — 정답 패러프레이즈 게이트(not-transformed 등)용.
   const isAnswerParaphraseMode =
     question.blankAnswerMode === "PARAPHRASE" ||
     (blankInferenceParaphraseAnswer === true && !isNegativeParaphraseMode);
@@ -3578,7 +4561,7 @@ function validateBlankInferenceQuestion(
 
   if (crossesStrongContrastBoundary(originalExpression)) {
     add(
-      isNegativeParaphraseMode ? "error" : "warning",
+      isTransformedMode ? "error" : "warning",
       "blank-crosses-contrast",
       "BLANK_INFERENCE blank must not swallow a contrast marker; keep but/rather/instead structure visible.",
     );
@@ -3586,7 +4569,7 @@ function validateBlankInferenceQuestion(
 
   if (requestedDifficulty === "KILLER" && countContentTokens(originalExpression) < 2) {
     add(
-      isNegativeParaphraseMode ? "error" : "warning",
+      isTransformedMode ? "error" : "warning",
       "blank-target-too-small",
       "KILLER BLANK_INFERENCE should target a meaningful phrase or relation, not a single obvious keyword.",
     );
@@ -3605,7 +4588,7 @@ function validateBlankInferenceQuestion(
 
   if (isSingleAbstractNounTarget(originalExpression)) {
     add(
-      isNegativeParaphraseMode ? "error" : "warning",
+      isTransformedMode ? "error" : "warning",
       "blank-single-abstract-noun",
       "BLANK_INFERENCE should avoid targeting a single abstract noun when a logical phrase is available.",
     );
@@ -3663,7 +4646,7 @@ function validateBlankInferenceQuestion(
 
   if (/\b(?:such as|including|for example)\s+_____/.test(blankCarrierText)) {
     add(
-      isNegativeParaphraseMode ? "error" : "warning",
+      isTransformedMode ? "error" : "warning",
       "blank-example-list-slot",
       "Avoid example-list blanks; choose a logical clause, predicate, or relation where passage reasoning decides the answer.",
     );
@@ -3678,16 +4661,99 @@ function validateBlankInferenceQuestion(
     );
     if (attractiveWrongCount === 0) {
       add(
-        isNegativeParaphraseMode ? "error" : "warning",
+        // KILLER 는 간섭 오답이 핵심 변별 장치 — 무간섭이면 모드 무관 error.
+        isTransformedMode || requestedDifficulty === "KILLER" ? "error" : "warning",
         "blank-weak-distractors",
         "BLANK_INFERENCE has no wrong options with passage-keyword, semantic, or polarity overlap.",
       );
     } else if (attractiveWrongCount < 2) {
+      // KILLER 도 warning 유지 — 추상 패러프레이즈 오답은 본문 키워드 재활용이
+      // 적어 검출기가 과소평가한다. error 승격 시 재시도 폭증 실측(iter2 52회).
       add(
         "warning",
         "blank-weak-distractors",
         "BLANK_INFERENCE should have more wrong options with passage-keyword, semantic, or polarity overlap.",
       );
+    }
+  }
+
+  if (isParaphraseMode) {
+    // 슬롯 문법 가드 (검수 실측 critical 2종):
+    // ① 스팬이 주격 대명사로 시작하는 절인데 정답이 무주어 동사로 시작 →
+    //    "As a result, is deprived of..." 비문.
+    if (
+      /^(?:she|he|it|they|we|i|you)\b/i.test(originalExpression) &&
+      // be/조동사/-ing 시작만 — 복수 명사 주어("systems ...")를 오탐하지 않게
+      // 일반 3단수 동사(-s)는 제외하고 프롬프트(2b)에 맡긴다.
+      /^(?:is|are|was|were|has|have|had|[a-z]+ing)\b/.test(correctText)
+    ) {
+      add(
+        "error",
+        "blank-paraphrase-slot-missing-subject",
+        "The blanked span starts with a subject pronoun, so the correct option must also contain a subject; a bare predicate produces a broken sentence.",
+      );
+    }
+    // ② "to ___" 슬롯에 동명사 정답 → "is to sacrificing..." 비문.
+    if (/\bto\s+_____/.test(blankCarrierText) && /^[a-z]+ing\b/.test(correctText)) {
+      add(
+        "error",
+        "blank-paraphrase-slot-to-infinitive",
+        "A to-infinitive blank needs the correct option to start with a base verb, not a gerund.",
+      );
+    }
+    // ③ be 동사가 빈칸 밖에 남았는데 정답이 정동사로 시작 → "is turns out" 비문
+    //    (스팬이 보어인데 패러프레이즈가 술부 전체를 재진술한 스팬 불일치).
+    if (
+      /\b(?:is|are|was|were)\s+_____/.test(blankCarrierText) &&
+      /^(?:turns?|seems?|appears?|becomes?|proves?|remains?|looks?|sounds?|feels?|gets?|grows?|stays?|is|are|was|were|has|have|had)\b/.test(
+        correctText,
+      )
+    ) {
+      add(
+        "error",
+        "blank-paraphrase-slot-double-verb",
+        "The blank follows a be-verb, so the correct option must be a complement phrase, not start with another finite verb.",
+      );
+    }
+    // 극성 지름길 차단: 정답이 부정 극성인데 오답에 부정 극성이 하나도 없으면
+    // 'Unfortunately' 같은 전환 단서 + 극성 스캔만으로 즉답된다 (검수 실측 —
+    // KILLER 미달의 최다 원인). DN 의 negative-distractor 게이트와 동일 패턴.
+    if (hasNegationCue(correctText) && wrongNegationCount < 1) {
+      add(
+        "error",
+        "blank-killer-polarity-shortcut",
+        "PARAPHRASE blank with a negative-polarity answer needs at least 1 negative-polarity wrong option; otherwise polarity scanning alone solves the item.",
+      );
+    } else if (hasNegationCue(correctText) && wrongNegationCount < 2) {
+      add(
+        "warning",
+        "blank-killer-polarity-shortcut",
+        "PARAPHRASE blank should include at least 2 negative-polarity wrong options to block polarity scanning.",
+      );
+    }
+    // KILLER 패러프레이즈 정답 검증 — 원문 verbatim 이면 추론 없이 풀린다.
+    if (
+      originalExpression &&
+      normalizeComparableText(correctText) === normalizeComparableText(originalExpression)
+    ) {
+      add(
+        "error",
+        "blank-paraphrase-answer-not-transformed",
+        "PARAPHRASE blank must use an abstract restatement as the correct option, not the verbatim originalExpression.",
+      );
+    } else if (originalExpression) {
+      const sourceTokens = toLowerTokens(originalExpression).filter(
+        (t) => t.length >= 3 && !REPEATED_PHRASE_STOPWORDS.has(t),
+      );
+      const answerTokens = new Set(toLowerTokens(correctText));
+      const sharedCount = sourceTokens.filter((t) => answerTokens.has(t)).length;
+      if (sourceTokens.length >= 2 && sharedCount / sourceTokens.length > 0.6) {
+        add(
+          "warning",
+          "blank-paraphrase-too-similar",
+          "PARAPHRASE blank correct option reuses most of the source span's content words; restate it more abstractly.",
+        );
+      }
     }
   }
 
@@ -4267,11 +5333,15 @@ function validateMultiBlankInferenceQuestion(
         `Blank ${expectedLabels[index]} expression is not found verbatim in the passage: "${expression.slice(0, 80)}".`,
       );
     }
-    if (countContentTokens(expression) < 1 || isTinyFunctionWord(expression)) {
+    if (
+      countContentTokens(expression) < 1 ||
+      isTinyFunctionWord(expression) ||
+      isSemanticallyLightExpression(expression)
+    ) {
       add(
         "warning",
         "multi-blank-weak-expression",
-        `Blank ${expectedLabels[index]} should blank a meaningful content expression, not a bare function word.`,
+        `Blank ${expectedLabels[index]} should blank a meaningful content expression, not a bare function word or an empty light phrase like "doing things".`,
       );
     }
   }
@@ -4292,11 +5362,21 @@ function validateMultiBlankInferenceQuestion(
     }
   }
   for (const answer of blankAnswers) {
-    if (answer && normalizeComparableText(passageWithBlank).includes(normalizeComparableText(answer))) {
+    if (!answer) continue;
+    if (normalizeComparableText(passageWithBlank).includes(normalizeComparableText(answer))) {
       add(
         "error",
         "multi-blank-answer-visible",
         `A blanked expression is still visible in passageWithBlank: "${answer.slice(0, 60)}".`,
+      );
+      continue;
+    }
+    const leakedSubphrase = findVisibleContentSubphrase(answer, passageWithBlank);
+    if (leakedSubphrase) {
+      add(
+        "error",
+        "multi-blank-answer-partial-visible",
+        `A blanked expression's meaningful core "${leakedSubphrase}" still appears in passageWithBlank, partially revealing the answer.`,
       );
     }
   }
@@ -4389,6 +5469,78 @@ function validateMultiBlankInferenceQuestion(
         "Include at least one wrong option that is correct for all but one blank so students must verify every blank.",
       );
     }
+  }
+}
+
+/**
+ * 내용 일치 강제 극성 검증 — matchType 설정이 주어졌을 때만 호출(AUTO=미호출).
+ * 발문/저장 matchType이 강제 극성과 어긋나면 정답 무효급이므로 error.
+ */
+function validateContentMatchPolarity(
+  question: Record<string, unknown>,
+  matchType: "일치" | "불일치",
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const direction = normalizeText(question.direction);
+  // 부정(불일치) 패턴을 먼저 본다 — "일치"는 "일치하지 않는"의 부분문자열이므로.
+  const asksNonMatch =
+    /일치하지\s*않|불일치|않는\s*것|do(?:es)?\s*not\s*match|not\s*match/i.test(direction);
+  const asksMatch =
+    !asksNonMatch && /일치하는|that\s*match|matches\b/i.test(direction);
+
+  if (matchType === "불일치" && !asksNonMatch) {
+    add(
+      "error",
+      "content-match-direction-polarity",
+      "불일치 설정이지만 발문이 '일치하지 않는 것'을 묻지 않습니다.",
+    );
+  }
+  if (matchType === "일치" && !asksMatch) {
+    add(
+      "error",
+      "content-match-direction-polarity",
+      "일치 설정이지만 발문이 '일치하는 것'을 묻지 않습니다.",
+    );
+  }
+
+  const storedMatchType = normalizeText(question.matchType);
+  if (storedMatchType && storedMatchType !== matchType) {
+    add(
+      "error",
+      "content-match-type-mismatch",
+      `matchType(${storedMatchType})가 강제 설정(${matchType})과 다릅니다.`,
+    );
+  }
+}
+
+/**
+ * 대의파악 계열(제목/주제/요지) 부정 극성("적절하지 않은 것") 검증 —
+ * answerPolarity=NEGATIVE일 때만 호출(POSITIVE/미설정=미호출, 기존 동작 불변).
+ * 발문이 부정형이 아니면 정답 극성이 어긋난 것이므로 error.
+ * (오답 4개의 "적절성"은 의미 판단이라 결정형 검증 불가 → 프롬프트+품질루프로 보강.)
+ */
+function validateGistNegativePolarity(
+  question: Record<string, unknown>,
+  typeId: string,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const direction = normalizeText(question.direction);
+  const asksNegative =
+    /적절하지\s*않|알맞지\s*않|옳지\s*않|않은\s*것|아닌\s*것|\bNOT\b/i.test(direction);
+  if (!asksNegative) {
+    add(
+      "error",
+      "gist-polarity-direction-mismatch",
+      `${typeId} 부정 극성 설정이지만 발문이 '적절하지 않은 것'을 묻지 않습니다.`,
+    );
+  }
+  const storedPolarity = normalizeText(question.answerPolarity).toUpperCase();
+  if (storedPolarity && storedPolarity !== "NEGATIVE") {
+    add(
+      "error",
+      "gist-polarity-field-mismatch",
+      `answerPolarity(${storedPolarity})가 강제 설정(NEGATIVE)과 다릅니다.`,
+    );
   }
 }
 
@@ -6054,6 +7206,103 @@ function findMarkers(text: string): Array<{ start: number; end: number; inner: s
 
 function countUnderlineMarkers(text: string): number {
   return findMarkers(text).length;
+}
+
+/** 합법적으로 인접 반복될 수 있는 영어 단어(중복 게이트 예외). */
+const GRAMMAR_LEGIT_ADJACENT_REPEATS = new Set(["had", "that", "ho"]);
+
+/**
+ * 어법 마커가 앞/뒤 단어를 그대로 중복하는지 검출한다 — "which is __(F) is
+ * costed__"처럼 errorExpression이 이웃 단어를 삼켜 깨진 텍스트가 된 케이스.
+ * 라벨 `(X)`를 제외한 첫/끝 내용 토큰을 마커 밖 이웃 토큰과 비교한다.
+ */
+function findGrammarMarkerAdjacentDuplicate(passageWithMarkers: string): string | null {
+  const re = /([A-Za-z']+)\s+__\([A-Ja-j]\)\s*([^_]+?)__(?:\s+([A-Za-z']+))?/g;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(passageWithMarkers))) {
+    const before = match[1].toLowerCase();
+    const innerTokens = match[2].trim().split(/\s+/).filter(Boolean);
+    const after = match[3]?.toLowerCase();
+    const innerFirst = innerTokens[0]?.toLowerCase();
+    const innerLast = innerTokens[innerTokens.length - 1]?.toLowerCase();
+    if (innerFirst && before === innerFirst && !GRAMMAR_LEGIT_ADJACENT_REPEATS.has(before)) {
+      return `${before} ${innerFirst}`;
+    }
+    if (after && innerLast && after === innerLast && !GRAMMAR_LEGIT_ADJACENT_REPEATS.has(after)) {
+      return `${innerLast} ${after}`;
+    }
+  }
+  return null;
+}
+
+/**
+ * isError 마커의 surroundingText가 자신의 마커 단어(expression/errorExpression/
+ * correction)를 하나도 포함하지 않으면 위치 단서가 무효다 — 모델이 다른 문장을
+ * 가리킨 것으로, 전역 폴백 오배치와 해설-오류 불일치를 유발한다.
+ */
+function findGrammarSurroundingMissingMarker(
+  markedExpressions: Record<string, unknown>[],
+): string | null {
+  for (const me of markedExpressions) {
+    if (me.isError !== true) continue;
+    const surrounding = normalizeText(me.surroundingText);
+    if (!surrounding) continue;
+    const surroundTokens = new Set(toLowerTokens(surrounding));
+    const markerTokens = [
+      normalizeText(me.expression),
+      normalizeText(me.errorExpression),
+      normalizeText(me.correction),
+    ].flatMap((s) => toLowerTokens(s));
+    if (markerTokens.length === 0) continue;
+    if (!markerTokens.some((t) => surroundTokens.has(t))) {
+      return normalizeLabel(me.label) || "(?)";
+    }
+  }
+  return null;
+}
+
+/**
+ * 어법 마커가 surroundingText와 동떨어진 위치에 배치됐는지 검출한다. 각 isError
+ * 마커의 렌더 위치 주변 내용어와 모델 surroundingText의 내용어가 전혀 겹치지
+ * 않으면 오배치로 본다(전역 폴백이 엉뚱한 동형 단어에 박은 케이스). surroundingText
+ * 내용어가 2개 미만이면 신뢰할 수 없어 건너뛴다(위양성 방지).
+ */
+function findGrammarMisplacedMarker(
+  passageWithMarkers: string,
+  markedExpressions: Record<string, unknown>[],
+): string | null {
+  const markers = findMarkers(passageWithMarkers);
+  const labelToMarker = new Map<string, { start: number; end: number }>();
+  for (const marker of markers) {
+    const label = marker.inner.match(/^\(([A-Ja-j])\)/)?.[1]?.toUpperCase();
+    if (label && !labelToMarker.has(label)) labelToMarker.set(label, marker);
+  }
+  for (const me of markedExpressions) {
+    if (me.isError !== true) continue;
+    const label = normalizeLabel(me.label).replace(/[()]/g, "").toUpperCase();
+    const marker = labelToMarker.get(label);
+    const surrounding = normalizeText(me.surroundingText);
+    if (!marker || !surrounding) continue;
+
+    // 마커 단어(expression/errorExpression)는 surrounding 내용어에서 제외 —
+    // 위치 단서가 되는 이웃 내용어만 남긴다.
+    const markerWords = new Set(
+      [normalizeText(me.expression), normalizeText(me.errorExpression)]
+        .flatMap((s) => toLowerTokens(s)),
+    );
+    const surroundContent = toLowerTokens(surrounding).filter(
+      (t) => t.length >= 3 && !REPEATED_PHRASE_STOPWORDS.has(t) && !markerWords.has(t),
+    );
+    if (surroundContent.length < 2) continue;
+
+    const ctxStart = Math.max(0, marker.start - 45);
+    const ctxEnd = Math.min(passageWithMarkers.length, marker.end + 45);
+    const around = `${passageWithMarkers.slice(ctxStart, marker.start)} ${passageWithMarkers.slice(marker.end, ctxEnd)}`;
+    const aroundTokens = new Set(toLowerTokens(around));
+    const overlap = surroundContent.filter((t) => aroundTokens.has(t)).length;
+    if (overlap === 0) return me.label ? normalizeLabel(me.label) : `(${label})`;
+  }
+  return null;
 }
 
 function hasMarkerTokenBoundaries(text: string, start: number, end: number): boolean {

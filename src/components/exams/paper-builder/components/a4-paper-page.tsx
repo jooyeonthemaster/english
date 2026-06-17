@@ -64,12 +64,14 @@ function StructuredBody({
   compact,
   withTopGap,
   visualQuestionClass,
+  passageBoxClass,
 }: {
   rows: StructRow[];
   subType: string | null;
   compact: boolean;
   withTopGap: boolean;
   visualQuestionClass: string;
+  passageBoxClass: string;
 }) {
   if (rows.length === 0) return null;
 
@@ -92,7 +94,9 @@ function StructuredBody({
     }
   }
 
-  const leading = compact ? "leading-[1.52]" : "leading-[1.58]";
+  // 박스 본문 줄높이를 평문 본문(questionLineHeight 1.46)과 통일 — compact 모드에서
+  // 박스(1.52)만 줄 간격이 넓던 불일치 해소. pagination.boxLineHeight 와 1:1 동기.
+  const leading = compact ? "leading-[1.46]" : "leading-[1.58]";
 
   return (
     <div className={cn("space-y-2", withTopGap && "mt-1", visualQuestionClass)}>
@@ -114,7 +118,9 @@ function StructuredBody({
 
         if (group.style === "passage" || group.style === "summary" || group.style === "given") {
           const isSourcePassage = group.style === "passage";
-          const boxTone = isSourcePassage ? "font-normal" : "font-semibold";
+          // 수능 표준: 지문·요약·주어진문장 박스 본문은 일반체(라벨·마커만 강조).
+          // 출처 지문 박스와 동일 weight 로 통일 — 임베드/출처 유형 간 볼드 불일치 해소.
+          const boxTone = "font-normal";
           return (
             <div
               key={groupIndex}
@@ -123,6 +129,8 @@ function StructuredBody({
                 leading,
                 "py-1",
                 boxTone,
+                // 출처 지문 박스만 passageStyle 테두리 적용(요약/주어진문장 제외).
+                isSourcePassage && passageBoxClass,
               )}
             >
               {resumed && (
@@ -152,7 +160,7 @@ function StructuredBody({
 
         if (group.style === "para") {
           return (
-            <p key={groupIndex} className={cn("whitespace-pre-line text-justify font-semibold", leading)}>
+            <p key={groupIndex} className={cn("whitespace-pre-line text-justify", leading)}>
               {!resumed && group.paraLabel && (
                 <span className="mr-1.5 font-black text-slate-950">{group.paraLabel}</span>
               )}
@@ -164,7 +172,7 @@ function StructuredBody({
         }
 
         return (
-          <p key={groupIndex} className="whitespace-pre-line text-justify font-semibold">
+          <p key={groupIndex} className="whitespace-pre-line text-justify">
             {renderFormattedInline(text, subType)}
           </p>
         );
@@ -357,6 +365,7 @@ export function A4PaperPage({
   showAnswerSpace,
   showPassageTitle,
   showQuestionMeta,
+  passageStyle,
   pageColumns,
   activeItemId,
   setActiveItemId,
@@ -386,6 +395,15 @@ export function A4PaperPage({
   const visual = TEMPLATE_VISUALS[template];
   const paperSpec = PAPER_SIZE_SPECS[paperSize];
   void overflowItemIds;
+
+  // 지문 박스 테두리: passageStyle 설정을 실제 border-width 로 배선(기본 plain=선 없음).
+  // pagination 추정이 이미 boxed/underlined 의 chrome 높이를 가정하므로 정합 개선.
+  const passageBoxClass =
+    passageStyle === "boxed"
+      ? cn("rounded-md border px-3", visual.passageClass)
+      : passageStyle === "underlined"
+        ? cn("border-b", visual.passageClass)
+        : "";
 
   const { startDrag } = usePaperItemDrag({
     setActiveItemId,
@@ -484,7 +502,8 @@ export function A4PaperPage({
                         <div
                           className={cn(
                             "mb-3 py-1",
-                            visual.passageClass,
+                            // passageStyle 테두리(boxed/underlined). plain=선 없음.
+                            passageBoxClass,
                           )}
                         >
                           {showPassageTitle &&
@@ -705,8 +724,8 @@ export function A4PaperPage({
                                   )}
                                 >
                                   [{item.points}점
-                                  {subType
-                                    ? ` · ${SUBTYPE_LABELS[subType] || subType}`
+                                  {subType && SUBTYPE_LABELS[subType]
+                                    ? ` · ${SUBTYPE_LABELS[subType]}`
                                     : ""}
                                   ]
                                 </span>
@@ -759,6 +778,7 @@ export function A4PaperPage({
                                   compact={compact}
                                   withTopGap={part.showHeader}
                                   visualQuestionClass={visual.questionClass}
+                                  passageBoxClass={passageBoxClass}
                                 />
                               );
                             }
@@ -778,7 +798,7 @@ export function A4PaperPage({
                               return (
                                 <p
                                   className={cn(
-                                    "mt-1 whitespace-pre-line text-justify font-semibold",
+                                    "mt-1 whitespace-pre-line text-justify",
                                     visual.questionClass,
                                   )}
                                 >
@@ -808,7 +828,7 @@ export function A4PaperPage({
                             return (
                               <p
                                 className={cn(
-                                  "mt-1 whitespace-pre-line text-justify font-semibold",
+                                  "mt-1 whitespace-pre-line text-justify",
                                   visual.questionClass,
                                 )}
                               >

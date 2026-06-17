@@ -553,8 +553,8 @@ export function GenerateUploadPanel({
   const fileOverMax = fileTotalPassages > MAX_PAGES_PER_JOB;
   const creditsPerPassage =
     outputMode === "restored"
-      ? CREDIT_COSTS.TEXT_EXTRACTION + CREDIT_COSTS.PASSAGE_RESTORATION
-      : CREDIT_COSTS.TEXT_EXTRACTION;
+      ? CREDIT_COSTS.PASSAGE_RESTORATION
+      : 0;
   const fileProjectedCredits = fileTotalPassages * creditsPerPassage;
   const fileStartDisabled =
     busy || slots.length === 0 || fileTotalPassages === 0 || fileOverMax;

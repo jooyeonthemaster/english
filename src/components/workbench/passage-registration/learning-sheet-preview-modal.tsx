@@ -7,7 +7,7 @@ import {
   ReportPages,
   REPORT_A4_WIDTH_PX,
 } from "@/components/workbench/analysis-report/report-pages";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { PASSAGE_ANALYSIS_WORKSHEET_EXTRA_CREDIT_COST } from "@/lib/passage-analysis-credit-costs";
 import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import {
   ACTIVITY_CATALOG,
@@ -91,7 +91,7 @@ function ScaledReportPages({
 interface LearningSheetPreviewModalProps {
   open: boolean;
   initialVariant: LearningSheetVariant;
-  /** 기본 학습지 1매 가격(플랜 반영). 실전 포함은 +PASSAGE_ANALYSIS. */
+  /** 기본 학습지 1매 가격. 실전 포함은 학습지 추가분만 더한다. */
   basicUnitCost: number;
   onClose: () => void;
   /** "이 구성으로 생성하기" — 선택을 부모(구성 선택 카드)에 반영하고 닫는다. */
@@ -182,7 +182,8 @@ export function LearningSheetPreviewModal({
   }, [practiceReport]);
   const enabledActivityCount = ACTIVITY_CATALOG.filter((e) => e.enabled).length;
 
-  const practiceUnitCost = basicUnitCost + CREDIT_COSTS.PASSAGE_ANALYSIS;
+  const practiceUnitCost =
+    basicUnitCost + PASSAGE_ANALYSIS_WORKSHEET_EXTRA_CREDIT_COST;
   const activeUnitCost = view === "practice" ? practiceUnitCost : basicUnitCost;
 
   if (!open) return null;
@@ -380,7 +381,7 @@ export function LearningSheetPreviewModal({
             {view === "basic" ? (
               <div className="mt-2 rounded-lg border border-dashed border-slate-200 bg-white/70 px-3 py-2.5">
                 <p className="text-[11px] font-bold text-slate-400">
-                  실전 학습지 포함 시 추가 (+◈{CREDIT_COSTS.PASSAGE_ANALYSIS})
+                  실전 학습지 포함 시 추가 (+◈{PASSAGE_ANALYSIS_WORKSHEET_EXTRA_CREDIT_COST})
                 </p>
                 <div className="mt-1.5 flex flex-col gap-1">
                   {WORKSHEET_ITEMS.map((item) => (

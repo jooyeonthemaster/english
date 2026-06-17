@@ -40,6 +40,7 @@ import {
 } from "@/lib/question-generation-plans";
 import { getCircledNumbers } from "@/lib/question-postprocess/types";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import {
   clearCardTextSelection,
   preventCardDoubleClickTextSelection,
@@ -63,6 +64,7 @@ const TYPE_LABELS: Record<string, string> = {
 const SUBTYPE_LABELS: Record<string, string> = {
   BLANK_INFERENCE: "빈칸 추론",
   GRAMMAR_ERROR: "어법 판단",
+  GRAMMAR_CHOICE_COMBO: "네모 어법",
   VOCAB_CHOICE: "어휘 적절성",
   SENTENCE_ORDER: "글의 순서",
   SENTENCE_INSERT: "문장 삽입",
@@ -497,6 +499,7 @@ export function QuestionCard({
     questionText: q.questionText,
     structuredData: q.structuredData,
   });
+  const displayCorrectAnswer = formatStoredQuestionCorrectAnswer(q);
   const passageMarking = detectPassageMarking(
     q.passage?.content || displayQuestionText,
   );
@@ -506,7 +509,8 @@ export function QuestionCard({
     "IMPLIED_MEANING",
     "ANTONYM",
   ];
-  const MARKER_ONLY_TYPES = ["SENTENCE_INSERT", "IRRELEVANT", "SENTENCE_ORDER"];
+  // 네모 어법은 밑줄 모드 금지 — (A) 뒤 첫 토큰("[후보1")만 밑줄 그어져 깨진다.
+  const MARKER_ONLY_TYPES = ["SENTENCE_INSERT", "IRRELEVANT", "SENTENCE_ORDER", "GRAMMAR_CHOICE_COMBO"];
   const sub = q.subType || "";
   const needsUnderline = UNDERLINE_TYPES.includes(sub);
   const showMarkers =
@@ -924,10 +928,10 @@ export function QuestionCard({
 
               {/* Non-MC answer */}
               {options.length === 0 &&
-                q.correctAnswer &&
-                !flatDisplayQuestionText.includes(q.correctAnswer) && (
+                displayCorrectAnswer &&
+                !flatDisplayQuestionText.includes(displayCorrectAnswer) && (
                   <div className="text-[12px] bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded border border-slate-200">
-                    <span className="font-medium">정답:</span> {q.correctAnswer}
+                    <span className="font-medium">정답:</span> {displayCorrectAnswer}
                   </div>
                 )}
 
@@ -1068,7 +1072,6 @@ export function QuestionCard({
                     수정하기
                   </Button>
                 </div>
-                <ReviewStatusStamp approved={q.approved} className="shrink-0" />
                 {detailIconButton}
               </div>
             ) : (
@@ -1101,7 +1104,6 @@ export function QuestionCard({
                     수정하기
                   </Button>
                 </div>
-                <ReviewStatusStamp approved={q.approved} className="shrink-0" />
                 {detailIconButton}
               </div>
             ))}

@@ -117,11 +117,43 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-correct-answer-labels",
   "grammar-missing-error-expression",
   "grammar-error-not-mutated",
+  "grammar-error-pos-change",
   "grammar-decoy-point-diversity",
   "grammar-killer-thin-answer",
+  // 절/문장 통째 밑줄(예: 프리미엄 실측 "these digital platforms create a trusting
+  // environment" 7단어)은 정답성·가독성을 해치는 명백한 결함 — relaxed 폴백에서도
+  // 출하 금지. ('wide'는 strict 전용이라 의도적으로 제외 — 완전 실패 방지.)
+  "grammar-underline-too-long",
   // 복수정답 시비(규범 논쟁 자리 밑줄)는 relaxed 폴백에서도 출하 금지 —
   // 정답 무효급 결함이라 미생성이 잘못된 문항보다 낫다.
   "grammar-disputed-usage-target",
+  // 정답 노출/타깃 부적격도 같은 이유로 relaxed에서 출하 금지
+  // (2026-06-12 사용자 테스트에서 relaxed 누수 실측: 노출 5건·list-like 1건).
+  "multi-blank-answer-visible",
+  "blank-target-list-like",
+  "vocab-option-word-mismatch",
+  // 부분구 누설(빈칸 값 핵심부 잔존)·어휘 원단어 잔존도 정답 노출이라 차단
+  // (2026-06-12 적대검수 추가 발견).
+  "multi-blank-answer-partial-visible",
+  "vocab-source-word-visible",
+  // 마커 깨짐(인접 중복)·오배치(엉뚱한 동형 단어)도 정답 노출/해설 불일치라
+  // relaxed에서도 차단 (2026-06-12 어법 KILLER 30개 중 실측 2건).
+  "grammar-marker-adjacent-duplicate",
+  "grammar-marker-context-mismatch",
+  "grammar-surrounding-missing-marker",
+  // 시제 단독변경(realizes↔realized)은 문맥상 두 시제 가능 = 정답 시비. 차단.
+  "grammar-tense-only-error",
+  // 네모 어법 — 세 슬롯 전부가 정답 키를 구성하므로 슬롯/조합 결함은 전부
+  // 정답 무효급. relaxed 폴백에서도 출하 금지.
+  "combo-slot-count",
+  "combo-render-slot-count",
+  "combo-slot-missing-candidate",
+  "combo-slot-not-mutated",
+  "combo-correct-not-in-source",
+  "combo-option-value-mismatch",
+  "combo-duplicate-option",
+  "combo-answer-combo-mismatch",
+  "combo-candidate-visible-elsewhere",
   "grammar-correction-underline-count",
   "grammar-correction-missing-underlined-segments",
   "grammar-correction-missing-passage-underline",
@@ -145,6 +177,12 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-correction-debatable-infinitive",
   "grammar-correction-killer-thin-segment",
   "topic-option-language",
+  // 정답 극성 토글(강제 설정 시에만 발생) — 발문/저장 극성이 강제값과 어긋나면
+  // 정답 무효급이라 relaxed 폴백에서도 출하 금지. 미설정(기본) 경로엔 영향 없음.
+  "content-match-direction-polarity",
+  "content-match-type-mismatch",
+  "gist-polarity-direction-mismatch",
+  "gist-polarity-field-mismatch",
   "summary-mc-direction-frame",
   "summary-mc-missing-summary",
   "summary-mc-blank-marker-count",
@@ -308,11 +346,13 @@ export async function runQuestionGeneration(
         irrelevantSlotCount,
         grammarMarkerCount,
         grammarAnswerCount,
+        grammarPointFocus,
         grammarCorrectionErrorCount,
         summaryCompleteMcBlankCount,
         summaryCompleteBlankCount,
         contentMatchOptionCount,
         contentMatchAnswerCount,
+        contentMatchType,
         vocabChoiceMarkerCount,
         vocabChoiceAnswerCount,
         sentenceInsertSlotCount,
@@ -322,6 +362,7 @@ export async function runQuestionGeneration(
         blankInferenceParaphraseAnswer,
         genericOptionCount,
         genericAnswerCount,
+        answerPolarity,
       } = resolvedTypeSettings;
 
       const typeSettingsPrompt = buildQuestionTypeSettingsPrompt(
@@ -369,6 +410,7 @@ export async function runQuestionGeneration(
           usedPointCodes: diversitySignals?.usedPointCodes,
           variantIndex: effectiveVariantIndex,
           diversityEnabled: !!diversity,
+          pointFocus: grammarPointFocus,
         },
       );
       const hasAiSchema = !!AI_QUESTION_SCHEMAS[subType];
@@ -457,6 +499,8 @@ export async function runQuestionGeneration(
         for (const q of generatedQuestions) {
           // 과거에는 "BLANK_INFERENCE 의 typeSettings 프롬프트 존재 = 부정-부정"이었지만,
           // 언어/다중빈칸 블록이 생기면서 그 프록시가 깨졌다. resolved 플래그로만 판정한다.
+          // KILLER 단일 빈칸(비DN)은 PARAPHRASE 모드를 강제한다 — 정답이 원문
+          // verbatim이면 추론 없이 풀려 KILLER가 성립하지 않는다(검수 실측 avg 4.0).
           const normalizedAiQuestion =
             subType === "BLANK_INFERENCE" &&
             resolvedTypeSettings.blankInferenceDoubleNegative
@@ -556,6 +600,8 @@ export async function runQuestionGeneration(
             blankInferenceParaphraseAnswer,
             genericOptionCount,
             genericAnswerCount,
+            contentMatchType,
+            answerPolarity,
           });
           const qualityErrors = qualityIssues.filter(
             (issue) => issue.severity === "error",
@@ -696,6 +742,31 @@ function buildRejectionSample(
     };
   }
 
+  if (subType === "GRAMMAR_CHOICE_COMBO") {
+    const slots = Array.isArray(question.slots)
+      ? question.slots
+          .filter(isRecord)
+          .map((item) => ({
+            label: item.label,
+            correctExpression: item.correctExpression,
+            wrongExpression: item.wrongExpression,
+            pointCode: item.pointCode,
+          }))
+      : [];
+    const passageWithMarkers =
+      typeof question.passageWithMarkers === "string"
+        ? question.passageWithMarkers
+        : "";
+
+    return {
+      slotCount: slots.length,
+      renderedSlotCount: (passageWithMarkers.match(/\([A-C]\)\s*\[[^\[\]]*\/[^\[\]]*\]/g) ?? []).length,
+      slots,
+      correctAnswer: question.correctAnswer,
+      passageWithMarkersPreview: passageWithMarkers.slice(0, 300),
+    };
+  }
+
   if (subType !== "IRRELEVANT") return undefined;
   const sentences = Array.isArray(question.sentences)
     ? question.sentences.filter((sentence): sentence is string => typeof sentence === "string")
@@ -805,9 +876,14 @@ export async function runQuestionGenerationWithEmptyRetry(
   const largestIrrelevantSlotCount = getLargestIrrelevantSlotCount(inputWithUsage);
   const largestGrammarMarkerCount = getLargestGrammarMarkerCount(inputWithUsage);
   const largestGrammarAnswerCount = getLargestGrammarAnswerCount(inputWithUsage);
+  // 네모 어법은 세 슬롯 전부 정합을 요구해 수율이 낮다 — 확장 유형과 동일하게 6회.
+  const hasGrammarChoiceCombo = inputWithUsage.plan.some(
+    (item) => item.subType === "GRAMMAR_CHOICE_COMBO" && item.count > 0,
+  );
   const requestedMaxAttempts = Math.floor(maxAttempts);
   const hasExtendedRetryType =
     hasSummaryCompleteMc ||
+    hasGrammarChoiceCombo ||
     largestIrrelevantSlotCount > 5 ||
     largestGrammarMarkerCount > 5 ||
     largestGrammarAnswerCount > 1;

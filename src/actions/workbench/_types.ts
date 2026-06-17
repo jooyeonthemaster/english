@@ -67,6 +67,13 @@ export interface CreatePassageData {
   source?: string;
   annotations?: PassageAnnotationInput[];
   sourceDraftId?: string;
+  /**
+   * When a `sourceDraftId` is linked, also flip that draft to COMMITTED(검수완료).
+   * Defaults to true (explicit save/analyze = a review). Pass false when the
+   * passage is materialized as a side effect of generation (동형 시험지 등) so the
+   * source material keeps its 검수필요 status — generating is not human review.
+   */
+  markReviewed?: boolean;
 }
 
 export interface SaveQuestionData {

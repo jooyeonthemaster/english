@@ -22,6 +22,20 @@ export function CreditCostChip({
   iconClassName,
   title,
 }: CreditCostChipProps) {
+  // 0(또는 음수) 크레딧은 무료 작업(예: 순수 OCR 추출) — "0" 대신 "무료"로 표기한다.
+  if (amount <= 0) {
+    return (
+      <span
+        title={title ?? "이 작업은 크레딧을 차감하지 않습니다"}
+        className={cn(
+          "inline-flex items-center gap-0.5 font-semibold",
+          className,
+        )}
+      >
+        무료
+      </span>
+    );
+  }
   const formatted = amount.toLocaleString("ko-KR");
   return (
     <span

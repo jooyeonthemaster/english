@@ -55,6 +55,12 @@ export interface GrammarErrorGenerationSettings
   answerCount?: number;
   /** Legacy field name kept for already-saved configs; interpreted as markerCount. */
   errorCount?: number;
+  /**
+   * 핵심 집중 모드 — true 면 정답 포인트를 기출 1000제 고빈출 톱셋(관계사·수일치·
+   * to부정사/동명사·분사·대명사·형부)으로 좁혀 출제 포인트를 집중시킨다.
+   * false/미지정이면 기존 다양성(코어 10개 순회). 기본 false.
+   */
+  pointFocus?: boolean;
 }
 
 export interface VocabChoiceGenerationSettings
@@ -64,6 +70,13 @@ export interface VocabChoiceGenerationSettings
   markerCount?: number;
   /** Number of contextually inappropriate words (= answers). Range 1~markerCount. Default 1. */
   answerCount?: number;
+  /**
+   * 동의어 변형 모드. true면 정답이 아닌 밑줄 단어도 원문 verbatim이 아니라 문맥상
+   * 적절한 동의어로 표시해, 지문을 통째로 외운 학생도 표면 매칭으로는 못 풀게 한다.
+   * 위치 식별용 originalWord는 항상 원문 그대로 유지되고, 정답(부적절 단어)의
+   * originalWord/betterWord 계약도 그대로다. 기본 false.
+   */
+  synonymVariants?: boolean;
 }
 
 export interface SentenceInsertGenerationSettings
@@ -71,6 +84,24 @@ export interface SentenceInsertGenerationSettings
     QuestionTypeQualityGenerationSettings {
   /** Number of insertion-position markers (①~). The answer is always one gap. Range 5~8. Default 5. */
   slotCount?: number;
+  /**
+   * 주어진(삽입) 문장의 앞부분을 같은 의미로 변형(패러프레이즈)한다. true면 도입 절/
+   * 주어구의 표면 표현을 바꾸되, 정답 위치를 결정하는 응집 단서(지시어·연결어 등)의
+   * 기능은 보존해 정답 칸은 그대로 유지된다. 지문 표현을 외워 표면 매칭하는 풀이를 막는다.
+   * 기본 false.
+   */
+  paraphrasePrefix?: boolean;
+}
+
+export interface SentenceOrderGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
+  /**
+   * (A)(B)(C) 문단 중 "앞 문장"을 같은 의미로 변형(패러프레이즈)할 문단 수.
+   * 0 = 변형 없음(기본), 1~3 = 그만큼의 문단 첫 문장을 변형. 주어진 글은 항상 그대로
+   * 두고, 정답 순서·문단 라벨은 변하지 않는다. 지문 암기 표면 매칭을 막는다.
+   */
+  prefixVariationCount?: number;
 }
 
 export interface AntonymGenerationSettings
@@ -94,6 +125,11 @@ export interface GrammarCorrectionGenerationSettings
     QuestionTypeQualityGenerationSettings {
   /** Number of wrong underlined sentence/clause segments. Range 1~5. Default 1. */
   errorCount?: number;
+  /**
+   * 핵심 집중 모드 — true 면 정답 교정 포인트를 기출 1000제 고빈출 톱셋으로 좁힌다.
+   * false/미지정이면 기존 다양성(코어 10개 순회). 기본 false.
+   */
+  pointFocus?: boolean;
 }
 
 export interface SummaryCompleteMcGenerationSettings
@@ -102,6 +138,12 @@ export interface SummaryCompleteMcGenerationSettings
   /** Number of summary blanks. Range 2~4. Default 2. */
   blankCount?: number;
 }
+
+/** 내용 일치 정답 극성. undefined = AUTO(모델 결정, 기존 동작). */
+export type ContentMatchPolarity = "일치" | "불일치";
+
+/** 대의파악 계열(제목/주제/요지) 정답 극성. undefined/POSITIVE = 기존 동작. */
+export type GistAnswerPolarity = "POSITIVE" | "NEGATIVE";
 
 export interface ContentMatchGenerationSettings
   extends QuestionLanguageGenerationSettings,
@@ -112,6 +154,11 @@ export interface ContentMatchGenerationSettings
   answerCount?: number;
   /** Legacy analysis field name; interpreted as answerCount. */
   correctAnswerCount?: number;
+  /**
+   * 정답 극성 토글. "일치" = 일치하는 것 고르기, "불일치" = 일치하지 않는 것 고르기.
+   * 미지정(undefined) = AUTO(모델이 결정) — 기존 동작과 100% 동일.
+   */
+  matchType?: ContentMatchPolarity;
 }
 
 export interface SummaryCompleteGenerationSettings
@@ -163,6 +210,9 @@ export const GENERIC_ANSWER_COUNT_DEFAULT = 1;
 export const SENTENCE_INSERT_SLOT_COUNT_MIN = 5;
 export const SENTENCE_INSERT_SLOT_COUNT_MAX = 8;
 export const SENTENCE_INSERT_SLOT_COUNT_DEFAULT = 5;
+export const SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MIN = 0;
+export const SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MAX = 3;
+export const SENTENCE_ORDER_PREFIX_VARIATION_COUNT_DEFAULT = 0;
 export const ANTONYM_PAIR_COUNT_MIN = 5;
 export const ANTONYM_PAIR_COUNT_MAX = 10;
 export const ANTONYM_PAIR_COUNT_DEFAULT = 5;
@@ -193,12 +243,30 @@ export function supportsGenericOptionCount(typeId: string): boolean {
   return GENERIC_OPTION_COUNT_TYPE_IDS.has(typeId);
 }
 
+/**
+ * 대의파악 계열 — "적절한 것 ↔ 적절하지 않은 것" 정답 극성 토글 지원 유형.
+ * (IMPLIED_MEANING/CONTEXT_MEANING/SYNONYM은 generic 옵션수는 쓰지만 극성 토글
+ *  대상 아님 — 이번 작업 범위에서 제외.)
+ */
+const GIST_POLARITY_TYPE_IDS = new Set<string>([
+  "TOPIC",
+  "MAIN_IDEA",
+  "TOPIC_MAIN_IDEA",
+  "TITLE",
+]);
+
+export function supportsGistAnswerPolarity(typeId: string): boolean {
+  return GIST_POLARITY_TYPE_IDS.has(typeId);
+}
+
 const DEFAULT_QUESTION_LANGUAGE_SETTINGS: Record<
   string,
   Required<QuestionLanguageGenerationSettings>
 > = {
   BLANK_INFERENCE: { stemLanguage: "ko", optionLanguage: "en" },
   GRAMMAR_ERROR: { stemLanguage: "ko", optionLanguage: "ko" },
+  // 네모 어법 보기는 영어 후보 조합(구조적) — 보기 언어 토글 대상 아님.
+  GRAMMAR_CHOICE_COMBO: { stemLanguage: "ko", optionLanguage: "ko" },
   VOCAB_CHOICE: { stemLanguage: "ko", optionLanguage: "en" },
   SENTENCE_ORDER: { stemLanguage: "ko", optionLanguage: "en" },
   SENTENCE_INSERT: { stemLanguage: "ko", optionLanguage: "ko" },
@@ -389,6 +457,54 @@ export function readBlankInferenceParaphraseAnswerSetting(
   return readBooleanSetting(rawSettings, "BLANK_INFERENCE", "paraphraseAnswer");
 }
 
+export function readVocabChoiceSynonymVariantsSetting(
+  rawSettings: unknown,
+): boolean {
+  return readBooleanSetting(rawSettings, "VOCAB_CHOICE", "synonymVariants");
+}
+
+/**
+ * 내용 일치 정답 극성 설정 읽기. flat(rawSettings.matchType) 우선, nested
+ * (rawSettings.CONTENT_MATCH.matchType) 폴백 — 다른 read 헬퍼와 동일 규약.
+ * 강사 선택은 "일치"/"불일치" 둘 중 하나이며, 미지정 시 기본값은 "불일치"
+ * (수능 표준형이자 기존 모델의 사실상 기본 동작). "자동" 개념은 없음.
+ */
+export function readContentMatchTypeSetting(
+  rawSettings: unknown,
+): ContentMatchPolarity {
+  if (!isRecord(rawSettings)) return "불일치";
+  const direct = rawSettings.matchType;
+  const nested = isRecord(rawSettings.CONTENT_MATCH)
+    ? rawSettings.CONTENT_MATCH.matchType
+    : undefined;
+  const value = direct !== undefined ? direct : nested;
+  return value === "일치" ? "일치" : "불일치";
+}
+
+/**
+ * 대의파악 계열 정답 극성 설정 읽기. flat 우선 → nested(typeId) 폴백.
+ * "NEGATIVE"일 때만 반환, 그 외(POSITIVE/미설정/타유형) = undefined(기존 동작).
+ */
+export function readGistAnswerPolaritySetting(
+  rawSettings: unknown,
+  typeId: string,
+): GistAnswerPolarity | undefined {
+  if (!supportsGistAnswerPolarity(typeId)) return undefined;
+  if (!isRecord(rawSettings)) return undefined;
+  const direct = rawSettings.answerPolarity;
+  const nestedRecord = isRecord(rawSettings[typeId])
+    ? (rawSettings[typeId] as Record<string, unknown>)
+    : undefined;
+  const value = direct !== undefined ? direct : nestedRecord?.answerPolarity;
+  return value === "NEGATIVE" ? "NEGATIVE" : undefined;
+}
+
+export function readSentenceInsertParaphrasePrefixSetting(
+  rawSettings: unknown,
+): boolean {
+  return readBooleanSetting(rawSettings, "SENTENCE_INSERT", "paraphrasePrefix");
+}
+
 const IRRELEVANT_SLOT_COUNT_SETTING: NumericSettingSpec = {
   key: "slotCount",
   min: IRRELEVANT_SLOT_COUNT_MIN,
@@ -492,6 +608,13 @@ const SENTENCE_INSERT_SLOT_COUNT_SETTING: NumericSettingSpec = {
   min: SENTENCE_INSERT_SLOT_COUNT_MIN,
   max: SENTENCE_INSERT_SLOT_COUNT_MAX,
   defaultValue: SENTENCE_INSERT_SLOT_COUNT_DEFAULT,
+};
+
+const SENTENCE_ORDER_PREFIX_VARIATION_COUNT_SETTING: NumericSettingSpec = {
+  key: "prefixVariationCount",
+  min: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MIN,
+  max: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MAX,
+  defaultValue: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_DEFAULT,
 };
 
 const ANTONYM_PAIR_COUNT_SETTING: NumericSettingSpec = {
@@ -685,6 +808,23 @@ export function readSentenceInsertSlotCountSetting(rawSettings: unknown): number
   );
 }
 
+export function normalizeSentenceOrderPrefixVariationCount(value: unknown): number {
+  return normalizeNumericSetting(
+    value,
+    SENTENCE_ORDER_PREFIX_VARIATION_COUNT_SETTING,
+  );
+}
+
+export function readSentenceOrderPrefixVariationCountSetting(
+  rawSettings: unknown,
+): number {
+  return readNumericSetting(
+    rawSettings,
+    "SENTENCE_ORDER",
+    SENTENCE_ORDER_PREFIX_VARIATION_COUNT_SETTING,
+  );
+}
+
 export function normalizeAntonymPairCount(value: unknown): number {
   return normalizeNumericSetting(value, ANTONYM_PAIR_COUNT_SETTING);
 }
@@ -786,6 +926,7 @@ export interface QuestionTypeGenerationSettings {
   IRRELEVANT?: IrrelevantGenerationSettings;
   VOCAB_CHOICE?: VocabChoiceGenerationSettings;
   SENTENCE_INSERT?: SentenceInsertGenerationSettings;
+  SENTENCE_ORDER?: SentenceOrderGenerationSettings;
   ANTONYM?: AntonymGenerationSettings;
   [typeId: string]: unknown;
 }
@@ -797,14 +938,24 @@ export interface ResolvedQuestionTypeGenerationSettings {
   irrelevantSlotCount?: number;
   grammarMarkerCount?: number;
   grammarAnswerCount?: number;
+  /** 어법 핵심 집중 모드 — 정답 포인트를 고빈출 톱셋으로 좁힘. */
+  grammarPointFocus?: boolean;
   grammarCorrectionErrorCount?: number;
   summaryCompleteMcBlankCount?: number;
   summaryCompleteBlankCount?: number;
   contentMatchOptionCount?: number;
   contentMatchAnswerCount?: number;
+  /** 내용 일치 강제 극성. undefined = AUTO(모델 결정, 기존 동작). */
+  contentMatchType?: ContentMatchPolarity;
   vocabChoiceMarkerCount?: number;
   vocabChoiceAnswerCount?: number;
+  /** True면 정답 외 밑줄 단어도 동의어로 변형 표시(지문 암기 무력화). */
+  vocabChoiceSynonymVariants?: boolean;
   sentenceInsertSlotCount?: number;
+  /** True면 주어진(삽입) 문장 앞부분을 같은 의미로 변형(지문 암기 무력화). */
+  sentenceInsertParaphrasePrefix?: boolean;
+  /** (A)(B)(C) 중 앞 문장을 변형할 문단 수(0=없음, 1~3). */
+  sentenceOrderPrefixVariationCount?: number;
   antonymPairCount?: number;
   /** 1 = standard single blank (default pipeline); 2~3 = combination-option variant. */
   blankInferenceBlankCount?: number;
@@ -816,6 +967,11 @@ export interface ResolvedQuestionTypeGenerationSettings {
   genericOptionCount?: number;
   /** Resolved correct-answer count for free-text option types. */
   genericAnswerCount?: number;
+  /**
+   * 대의파악 계열(TOPIC/TITLE/MAIN_IDEA/TOPIC_MAIN_IDEA) 강제 정답 극성.
+   * "NEGATIVE" = 적절하지 않은 것 고르기. undefined/"POSITIVE" = 기존 동작.
+   */
+  answerPolarity?: GistAnswerPolarity;
 }
 
 export function normalizeQuestionDifficulty(
@@ -878,26 +1034,36 @@ export function resolveQuestionTypeGenerationSettings(
       rawSettings,
       grammarMarkerCount,
     );
+    const grammarPointFocus = readBooleanSetting(rawSettings, "GRAMMAR_ERROR", "pointFocus");
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         markerCount: grammarMarkerCount,
         answerCount: grammarAnswerCount,
+        pointFocus: grammarPointFocus,
       }),
       ...languageSettings,
       grammarMarkerCount,
       grammarAnswerCount,
+      grammarPointFocus,
     };
   }
 
   if (typeId === "GRAMMAR_CORRECTION") {
     const grammarCorrectionErrorCount =
       readGrammarCorrectionErrorCountSetting(rawSettings);
+    const grammarPointFocus = readBooleanSetting(
+      rawSettings,
+      "GRAMMAR_CORRECTION",
+      "pointFocus",
+    );
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         errorCount: grammarCorrectionErrorCount,
+        pointFocus: grammarPointFocus,
       }),
       ...languageSettings,
       grammarCorrectionErrorCount,
+      grammarPointFocus,
     };
   }
 
@@ -918,14 +1084,18 @@ export function resolveQuestionTypeGenerationSettings(
       rawSettings,
       contentMatchOptionCount,
     );
+    const contentMatchType = readContentMatchTypeSetting(rawSettings);
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         optionCount: contentMatchOptionCount,
         answerCount: contentMatchAnswerCount,
+        // 미지정(AUTO)이면 키를 넣지 않아 프롬프트/스키마 기존 경로 그대로.
+        ...(contentMatchType ? { matchType: contentMatchType } : {}),
       }),
       ...languageSettings,
       contentMatchOptionCount,
       contentMatchAnswerCount,
+      contentMatchType,
     };
   }
 
@@ -959,25 +1129,45 @@ export function resolveQuestionTypeGenerationSettings(
       rawSettings,
       vocabChoiceMarkerCount,
     );
+    const vocabChoiceSynonymVariants =
+      readVocabChoiceSynonymVariantsSetting(rawSettings);
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         markerCount: vocabChoiceMarkerCount,
         answerCount: vocabChoiceAnswerCount,
+        synonymVariants: vocabChoiceSynonymVariants,
       }),
       ...languageSettings,
       vocabChoiceMarkerCount,
       vocabChoiceAnswerCount,
+      vocabChoiceSynonymVariants,
     };
   }
 
   if (typeId === "SENTENCE_INSERT") {
     const sentenceInsertSlotCount = readSentenceInsertSlotCountSetting(rawSettings);
+    const sentenceInsertParaphrasePrefix =
+      readSentenceInsertParaphrasePrefixSetting(rawSettings);
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         slotCount: sentenceInsertSlotCount,
+        paraphrasePrefix: sentenceInsertParaphrasePrefix,
       }),
       ...languageSettings,
       sentenceInsertSlotCount,
+      sentenceInsertParaphrasePrefix,
+    };
+  }
+
+  if (typeId === "SENTENCE_ORDER") {
+    const sentenceOrderPrefixVariationCount =
+      readSentenceOrderPrefixVariationCountSetting(rawSettings);
+    return {
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
+        prefixVariationCount: sentenceOrderPrefixVariationCount,
+      }),
+      ...languageSettings,
+      sentenceOrderPrefixVariationCount,
     };
   }
 
@@ -1022,14 +1212,19 @@ export function resolveQuestionTypeGenerationSettings(
       typeId,
       genericOptionCount,
     );
+    // 대의파악 계열만 극성 토글 대상. 그 외(IMPLIED/CONTEXT/SYNONYM)는 undefined.
+    const answerPolarity = readGistAnswerPolaritySetting(rawSettings, typeId);
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         optionCount: genericOptionCount,
         answerCount: genericAnswerCount,
+        // 미설정(POSITIVE)이면 키 미주입 → 프롬프트/스키마 기존 경로 그대로.
+        ...(answerPolarity ? { answerPolarity } : {}),
       }),
       ...languageSettings,
       genericOptionCount,
       genericAnswerCount,
+      answerPolarity,
     };
   }
 
@@ -1097,7 +1292,8 @@ export function getQuestionTypeGenerationTokenFloor(
     ((resolved.vocabChoiceMarkerCount ?? VOCAB_CHOICE_MARKER_COUNT_DEFAULT) >
       VOCAB_CHOICE_MARKER_COUNT_DEFAULT ||
       (resolved.vocabChoiceAnswerCount ?? VOCAB_CHOICE_ANSWER_COUNT_DEFAULT) >
-        VOCAB_CHOICE_ANSWER_COUNT_DEFAULT)
+        VOCAB_CHOICE_ANSWER_COUNT_DEFAULT ||
+      resolved.vocabChoiceSynonymVariants === true)
   ) {
     return 8_192;
   }
@@ -1176,11 +1372,17 @@ export function getDefaultQuestionTypeGenerationSettings(): QuestionTypeGenerati
     VOCAB_CHOICE: {
       markerCount: VOCAB_CHOICE_MARKER_COUNT_DEFAULT,
       answerCount: VOCAB_CHOICE_ANSWER_COUNT_DEFAULT,
+      synonymVariants: false,
       ...defaultLanguageSettingsForType("VOCAB_CHOICE"),
     },
     SENTENCE_INSERT: {
       slotCount: SENTENCE_INSERT_SLOT_COUNT_DEFAULT,
+      paraphrasePrefix: false,
       ...defaultLanguageSettingsForType("SENTENCE_INSERT"),
+    },
+    SENTENCE_ORDER: {
+      prefixVariationCount: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_DEFAULT,
+      ...defaultLanguageSettingsForType("SENTENCE_ORDER"),
     },
     ANTONYM: {
       pairCount: ANTONYM_PAIR_COUNT_DEFAULT,
@@ -1291,46 +1493,98 @@ export function buildQuestionTypeSettingsPrompt(
     const markerCount = readVocabChoiceMarkerCountSetting(rawSettings);
     const answerCount = readVocabChoiceAnswerCountSetting(rawSettings, markerCount);
     const stemLanguage = readStemLanguageSetting(rawSettings, typeId);
-    if (
+    const synonymVariants = readVocabChoiceSynonymVariantsSetting(rawSettings);
+    const labels = VOCAB_CHOICE_LABELS.slice(0, markerCount).join(" ");
+    const countBlock =
       markerCount === VOCAB_CHOICE_MARKER_COUNT_DEFAULT &&
       answerCount === VOCAB_CHOICE_ANSWER_COUNT_DEFAULT
-    ) {
-      return languagePrompt;
-    }
-    const labels = VOCAB_CHOICE_LABELS.slice(0, markerCount).join(" ");
-    return combinePromptSections(languagePrompt, [
-      "## Type detail setting: VOCAB_CHOICE / underlined word count and answer count",
-      `- The teacher requested exactly ${markerCount} underlined vocabulary positions and exactly ${answerCount} inappropriate word(s).`,
-      `- Output exactly ${markerCount} markedWords and exactly ${markerCount} options, labeled ${labels} in order.`,
-      `- Exactly ${answerCount} markedWords item(s) must have isInappropriate=true. Every other markedWords item must keep the original source word unchanged (substituteWord = originalWord).`,
-      `- For every isInappropriate=true item: originalWord is the source word, substituteWord is the displayed wrong word (different from originalWord), and betterWord equals originalWord.`,
-      answerCount >= 2
-        ? `- correctAnswers must list every isInappropriate=true label (exactly ${answerCount} labels). correctAnswer must be the same labels joined by comma + space, for example "(a), (c)".`
-        : "- correctAnswer must be the single isInappropriate=true label.",
-      answerCount >= 2
-        ? stemLanguage === "en"
-          ? "- The direction must ask students to choose all contextually inappropriate words (for example, 'Choose all the words that are NOT appropriate in context.'), without saying how many answers there are."
-          : "- The direction must ask students to choose all contextually inappropriate words using '모두', without saying how many answers there are."
-        : "- The direction must ask for the single contextually inappropriate word.",
-      "- Every marked word, including appropriate ones, must be a meaningful content word worth testing. Do not pad with articles, prepositions, or trivial function words.",
-      "- wrongOptionExplanations must cover every appropriate (non-answer) label, citing why the source word fits the context.",
-      "- explanation and keyPoints must cover every inappropriate label, naming the displayed wrong word and the source-correct word for each.",
-    ].join("\n"));
+        ? ""
+        : [
+            "## Type detail setting: VOCAB_CHOICE / underlined word count and answer count",
+            `- The teacher requested exactly ${markerCount} underlined vocabulary positions and exactly ${answerCount} inappropriate word(s).`,
+            `- Output exactly ${markerCount} markedWords and exactly ${markerCount} options, labeled ${labels} in order.`,
+            // 변형 모드면 비정답 단어의 표시 규칙은 아래 synonym-disguise 블록이 관장한다.
+            synonymVariants
+              ? `- Exactly ${answerCount} markedWords item(s) must have isInappropriate=true.`
+              : `- Exactly ${answerCount} markedWords item(s) must have isInappropriate=true. Every other markedWords item must keep the original source word unchanged (substituteWord = originalWord).`,
+            `- For every isInappropriate=true item: originalWord is the source word, substituteWord is the displayed wrong word (different from originalWord), and betterWord equals originalWord.`,
+            answerCount >= 2
+              ? `- correctAnswers must list every isInappropriate=true label (exactly ${answerCount} labels). correctAnswer must be the same labels joined by comma + space, for example "(a), (c)".`
+              : "- correctAnswer must be the single isInappropriate=true label.",
+            answerCount >= 2
+              ? stemLanguage === "en"
+                ? "- The direction must ask students to choose all contextually inappropriate words (for example, 'Choose all the words that are NOT appropriate in context.'), without saying how many answers there are."
+                : "- The direction must ask students to choose all contextually inappropriate words using '모두', without saying how many answers there are."
+              : "- The direction must ask for the single contextually inappropriate word.",
+            "- Every marked word, including appropriate ones, must be a meaningful content word worth testing. Do not pad with articles, prepositions, or trivial function words.",
+            "- wrongOptionExplanations must cover every appropriate (non-answer) label, citing why the source word fits the context.",
+            "- explanation and keyPoints must cover every inappropriate label, naming the displayed wrong word and the source-correct word for each.",
+          ].join("\n");
+    const variantBlock = synonymVariants
+      ? [
+          "## Type detail setting: VOCAB_CHOICE / synonym-disguise (anti-memorization)",
+          '- Set vocabDisplayMode to "SYNONYM_VARIANT". This block OVERRIDES the default rule that non-answer marked words keep the source word unchanged.',
+          "- Goal: a student who has memorized the passage word-for-word must NOT be able to answer by surface matching. So NONE of the displayed marked words may be a verbatim copy of the passage word at that position — every appropriate marked word is shown as a synonym, and the answer word is shown as a contextually wrong word.",
+          "- For every isInappropriate=false (appropriate) markedWord: keep originalWord as the EXACT passage word (verbatim — used only to locate the underline). Set substituteWord to a DIFFERENT, contextually-appropriate near-synonym that fits the sentence perfectly: same part of speech, same inflection/number/tense, natural collocation, and the same meaning, so the word stays unambiguously correct in context. Do NOT output betterWord for appropriate words.",
+          "- For every isInappropriate=true (answer) markedWord: keep the standard contract — originalWord is the verbatim source word, substituteWord is the contextually WRONG word (different from originalWord), and betterWord equals originalWord.",
+          "- options[].text for each label must be exactly the displayed word: the synonym for appropriate labels, the wrong word for answer labels — matching the underlined word in the passage.",
+          "- Fairness is critical: the answer(s) must remain the ONLY contextually wrong choice(s). Every appropriate synonym must be clearly correct; never introduce a second word that could be judged inappropriate, and never pick a synonym so odd, archaic, or wrong-register that it reads as an error.",
+          "- Per-synonym self-check: after choosing each appropriate word's synonym, silently re-read the sentence with it and confirm it is unambiguously correct, with no alternative reading that makes it wrong or that a student could debate as a better/worse fit. If unsure, choose a clearer synonym.",
+          "- Never let an appropriate word's displayed synonym equal an answer word's source-correct word (its betterWord/originalWord); that would expose the answer.",
+          "- Keep all displayed words in a similar difficulty/register band. Do not telegraph the answer by making only the wrong word unusual.",
+          "- Do not narrate the substitution in explanation/keyPoints; explain why the answer word is contextually wrong using the passage logic.",
+        ].join("\n")
+      : "";
+    return combinePromptSections(languagePrompt, countBlock, variantBlock);
   }
 
   if (typeId === "SENTENCE_INSERT") {
     if (!isRecord(rawSettings)) return languagePrompt;
     const slotCount = readSentenceInsertSlotCountSetting(rawSettings);
-    if (slotCount === SENTENCE_INSERT_SLOT_COUNT_DEFAULT) return languagePrompt;
+    const paraphrasePrefix =
+      readSentenceInsertParaphrasePrefixSetting(rawSettings);
     const lastMarker = String.fromCodePoint(0x2460 + slotCount - 1);
+    const slotBlock =
+      slotCount === SENTENCE_INSERT_SLOT_COUNT_DEFAULT
+        ? ""
+        : [
+            "## Type detail setting: SENTENCE_INSERT / insertion-position marker count",
+            `- The teacher requested exactly ${slotCount} insertion-position markers (①~${lastMarker}) instead of the default 5.`,
+            `- markerAfterSentenceIndices must contain exactly ${slotCount} distinct 0-based sentence indices in strictly ascending order.`,
+            `- The passage must have at least ${slotCount} sentences available after removing any omitted source sentence; spread the markers across the whole passage flow, not only the first half.`,
+            `- options must contain exactly ${slotCount} entries: label "1"~"${slotCount}", text ①~${lastMarker} in order.`,
+            "- Exactly one gap is correct. The given sentence must fit only that gap; every other gap must break cohesion for a distinct reason.",
+            "- Do not place the correct gap at the first or last marker when an inner gap is possible.",
+          ].join("\n");
+    const prefixBlock = paraphrasePrefix
+      ? [
+          "## Type detail setting: SENTENCE_INSERT / paraphrased given-sentence prefix",
+          "- Paraphrase the OPENING of the given sentence (its introductory phrase, leading clause, or subject phrase) into different surface wording, while keeping the rest of the sentence and its full meaning intact.",
+          "- CRITICAL: preserve the cohesive function that fixes the gap. If the opening uses an anaphoric pronoun or demonstrative (it/they/this/these/that/those/such + noun), the paraphrase MUST keep a pronoun or demonstrative that resolves to the SAME referent — do not nominalize the reference away, because removing the pronoun deletes the cue and can make several gaps fit. If the opening uses a discourse connector (however/therefore/for example/in contrast/as a result), you may reword it (however → by contrast), but its logical direction (reversal vs. cause vs. example) must stay identical.",
+          "- The point is that a student must not be able to locate the gap by surface-matching memorized passage words; they must follow the logical/referential connection.",
+          "- Do NOT change which gap is correct. After paraphrasing, silently re-check that the given sentence still fits only that one gap and every other gap still breaks cohesion.",
+          "- If you omit a source sentence, put its EXACT verbatim passage text in sourceSentenceToOmit (so the server can locate it). The paraphrase applies only to the displayed givenSentence.",
+        ].join("\n")
+      : "";
+    return combinePromptSections(languagePrompt, slotBlock, prefixBlock);
+  }
+
+  if (typeId === "SENTENCE_ORDER") {
+    const prefixVariationCount =
+      readSentenceOrderPrefixVariationCountSetting(rawSettings);
+    if (prefixVariationCount <= 0) return languagePrompt;
+    const scope =
+      prefixVariationCount >= 3
+        ? "all three (A), (B) and (C)"
+        : `the first ${prefixVariationCount} of the (A)/(B)/(C)`;
     return combinePromptSections(languagePrompt, [
-      "## Type detail setting: SENTENCE_INSERT / insertion-position marker count",
-      `- The teacher requested exactly ${slotCount} insertion-position markers (①~${lastMarker}) instead of the default 5.`,
-      `- markerAfterSentenceIndices must contain exactly ${slotCount} distinct 0-based sentence indices in strictly ascending order.`,
-      `- The passage must have at least ${slotCount} sentences available after removing any omitted source sentence; spread the markers across the whole passage flow, not only the first half.`,
-      `- options must contain exactly ${slotCount} entries: label "1"~"${slotCount}", text ①~${lastMarker} in order.`,
-      "- Exactly one gap is correct. The given sentence must fit only that gap; every other gap must break cohesion for a distinct reason.",
-      "- Do not place the correct gap at the first or last marker when an inner gap is possible.",
+      "## Type detail setting: SENTENCE_ORDER / paraphrased paragraph-opening sentences",
+      `- Paraphrase the FIRST sentence of ${scope} paragraph(s) into different surface wording while keeping the same meaning. Leave the given sentence (주어진 글) and every other sentence exactly as in the source.`,
+      "- Apply it to paragraphs in label order (A first, then B, then C) so the selection is deterministic, not random.",
+      "- CRITICAL: identify the single logical cue in each opening that controls its position (e.g. 'However' = reversal, 'Therefore' = cause/result, 'For example' = illustration, 'this/such + noun' or 'it/they' = back-reference to a specific prior idea). Paraphrase the surrounding wording, but keep that cue's TYPE and DIRECTION unchanged and keep any back-reference pointing to the same antecedent. The correct order and the (A)/(B)/(C) labels must NOT change.",
+      "- The point is that a student must not be able to reassemble the order by surface-matching memorized wording; they must follow the logic.",
+      "- Anti-aliasing check: after paraphrasing, silently test whether any OTHER ordering now also reads as coherent. If a paraphrased opening makes a paragraph fit more than one position, revert to a lighter paraphrase. The intended order must remain the unique answer.",
+      "- Paraphrase only the opening sentence of each targeted paragraph; keep that paragraph's remaining sentences verbatim from the source.",
     ].join("\n"));
   }
 
@@ -1352,6 +1606,25 @@ export function buildQuestionTypeSettingsPrompt(
   }
 
   if (supportsGenericOptionCount(typeId)) {
+    // 대의파악 부정 극성('적절하지 않은 것') — 고정 발문/선지 지시를 덮어쓰는
+    // 전용 블록. (이 블록이 generic 카운트 블록보다 먼저 처리되어야 한다.)
+    const gistAnswerPolarity = readGistAnswerPolaritySetting(rawSettings, typeId);
+    if (gistAnswerPolarity === "NEGATIVE") {
+      const kindKo =
+        typeId === "TITLE" ? "제목" : typeId === "MAIN_IDEA" ? "요지" : "주제";
+      const negDirection = `다음 글의 ${kindKo}로 가장 적절하지 않은 것은?`;
+      return combinePromptSections(languagePrompt, [
+        `## ⚠️ 최우선 지시(OVERRIDE) — ${typeId} 정답 극성: '적절하지 않은 것' 고르기`,
+        `- 이 블록은 위에 있는 모든 발문/선지 지시를 덮어씁니다. 위에서 "가장 적절한 것은?"으로 쓰라는 고정 지시가 있어도 반드시 무시하세요.`,
+        `- direction은 반드시 정확히 "${negDirection}" 로 작성하세요. '적절한'이 아니라 '적절하지 않은'입니다(부정형).`,
+        `- 이것은 "${kindKo}로 적절한 선택지 4개 + 부적절한 선택지 1개" 구조이며, 일반 문제와 정답이 정반대입니다.`,
+        `- correctAnswer는 ${kindKo}로 '명백히 부적절한' 단 하나의 선택지 label입니다.`,
+        `- 나머지 4개 선택지는 모두 ${kindKo}로 충분히 타당해야 합니다(각각 다른 근거로 적절). 어느 하나도 정답(부적절)으로 오인될 여지가 없어야 합니다 — 복수정답을 절대 만들지 마세요.`,
+        `- 정답(부적절) 선택지는 길이·추상도·문체를 나머지와 비슷하게 맞추되, 지문 범위를 벗어나거나 핵심 관점을 뒤집거나 지문에 없는 주장을 담아 '명백히' 부적절하게 만드세요. 단순히 덜 포괄적이거나 약간 약한 정도면 복수정답 시비이므로 금지합니다.`,
+        `- wrongOptionExplanations에는 '적절한' 나머지 선택지가 각각 왜 ${kindKo}로 타당한지(=정답이 아닌지) 지문 근거로 설명하세요.`,
+        `- 다시 강조: direction = "${negDirection}", 정답 = 부적절한 1개.`,
+      ].join("\n"));
+    }
     if (!isRecord(rawSettings)) return languagePrompt;
     const optionCount = readGenericOptionCountSetting(rawSettings, typeId);
     const answerCount = readGenericAnswerCountSetting(rawSettings, typeId, optionCount);
@@ -1424,10 +1697,13 @@ export function buildQuestionTypeSettingsPrompt(
     const answerCount = readContentMatchAnswerCountSetting(rawSettings, optionCount);
     const optionLanguage = readOptionLanguageSetting(rawSettings, typeId);
     const stemLanguage = readStemLanguageSetting(rawSettings, typeId);
+    // 정답 극성 강제(일치/불일치). undefined = AUTO → 아래 분기는 모두 기존 문구.
+    const matchType = readContentMatchTypeSetting(rawSettings);
     if (
       optionCount === CONTENT_MATCH_OPTION_COUNT_DEFAULT &&
       answerCount === CONTENT_MATCH_ANSWER_COUNT_DEFAULT &&
-      !languagePrompt
+      !languagePrompt &&
+      !matchType
     ) {
       return languagePrompt;
     }
@@ -1438,15 +1714,29 @@ export function buildQuestionTypeSettingsPrompt(
       `- The teacher requested exactly ${optionCount} numbered statement option(s), labeled ${labelsText}.`,
       `- The teacher requested exactly ${answerCount} correct statement label(s).`,
       `- options must contain exactly ${optionCount} ${languageName(optionLanguage)} statement options. Each option label must be one of ${labelsText}.`,
-      answerCount >= 2
-        ? stemLanguage === "en"
-          ? "- The direction must ask students to choose all matching or all non-matching statements (for example, 'Choose all the statements that match the passage.'). Do not reveal the answer count in the direction."
-          : "- The direction must ask students to choose all matching or all non-matching statements using '모두'. Do not reveal the answer count in the direction."
-        : "- The direction must ask for one best matching or non-matching statement.",
+      // 발문 지시: 극성 강제 시 명시 방향, 미지정(AUTO)이면 기존 모호 지시 그대로.
+      matchType
+        ? answerCount >= 2
+          ? stemLanguage === "en"
+            ? `- The direction MUST ask students to choose ALL statements that ${matchType === "일치" ? "match" : "do NOT match"} the passage, without revealing the answer count.`
+            : `- 발문은 반드시 지문과 ${matchType === "일치" ? "일치하는" : "일치하지 않는"} 진술을 '모두' 고르도록 작성하고, 정답 개수는 드러내지 마세요.`
+          : stemLanguage === "en"
+            ? `- The direction MUST ask for the one statement that ${matchType === "일치" ? "matches" : "does NOT match"} the passage.`
+            : `- 발문은 반드시 지문과 ${matchType === "일치" ? "일치하는" : "일치하지 않는"} 것 하나를 고르도록 작성하세요 (예: "다음 글의 내용과 ${matchType === "일치" ? "일치하는" : "일치하지 않는"} 것은?").`
+        : answerCount >= 2
+          ? stemLanguage === "en"
+            ? "- The direction must ask students to choose all matching or all non-matching statements (for example, 'Choose all the statements that match the passage.'). Do not reveal the answer count in the direction."
+            : "- The direction must ask students to choose all matching or all non-matching statements using '모두'. Do not reveal the answer count in the direction."
+          : "- The direction must ask for one best matching or non-matching statement.",
       answerCount >= 2
         ? `- correctAnswers must contain exactly ${answerCount} labels, and correctAnswer must be the same labels joined by comma + space.`
         : "- correctAnswer must be the single correct option label.",
-      "- Keep matchType polarity consistent: if the direction asks for non-matching statements, every correct label must be false against the passage; if it asks for matching statements, every correct label must be true.",
+      // matchType 강제 시 정답 의미를 명시, 아니면 기존 일관성 지시.
+      matchType === "일치"
+        ? `- Set matchType to "일치". Every correct option must be a statement that is TRUE according to the passage; every wrong option must be false or contradicted by the passage.`
+        : matchType === "불일치"
+          ? `- Set matchType to "불일치". Every correct option must be a statement that is FALSE or contradicted by the passage; every wrong option must be true according to the passage.`
+          : "- Keep matchType polarity consistent: if the direction asks for non-matching statements, every correct label must be false against the passage; if it asks for matching statements, every correct label must be true.",
       "- Every option must be independently checkable from the passage and should be similar in length and specificity.",
       "- wrongOptionExplanations must explain every non-answer label by citing the decisive passage clue.",
     ].join("\n"));
@@ -1510,6 +1800,9 @@ export function buildQuestionTypeSettingsPrompt(
       `- The teacher requested a ${blankInferenceBlankCount}-blank combination item instead of the standard single-blank item. This block overrides the single-blank output rules.`,
       `- Do NOT output originalExpression/surroundingText at the top level. Instead output a "blanks" array with exactly ${blankInferenceBlankCount} entries labeled ${labelsText}, in passage order.`,
       "- Each blanks[].originalExpression must be copied verbatim from the passage (not a paraphrase), must be a meaningful content expression (verb phrase, modified noun phrase, or compact clause-level phrase — never a bare function word), and the blanks must come from different sentences.",
+      "- ⚠️ Never blank an expression whose exact wording also appears elsewhere in the passage (key phrases are often repeated): the remaining occurrence would reveal the answer and the item will be rejected. Before choosing, scan the passage and pick expressions that occur exactly once.",
+      "- ⚠️ This also applies to any meaningful PART of the expression and to close synonyms: do not blank a span if its core content words (e.g. a key noun phrase inside it) or an obvious synonym/paraphrase of them still appears elsewhere in the passage. The blanked answer must not be recoverable by simple word matching against the remaining text.",
+      "- ⚠️ Never blank a semantically empty light phrase such as \"doing things\", \"a way of doing things\", \"get things done\", or \"make something\" — placeholder nouns (thing/way/stuff) and light verbs (do/make/get/have) carry no testable meaning and students just fill them by idiom. Blank the contentful core of the sentence instead.",
       "- Each blanks[].surroundingText must copy 40~60 characters of the passage around that expression for position identification.",
       `- options must contain exactly 5 combination choices labeled "1"~"5". Each option must provide blankValues with exactly ${blankInferenceBlankCount} entries (one per blank, in ${labelsText} order) and text joining the values with " …… ".`,
       useParaphraseAnswer

@@ -3,14 +3,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import {
-  deductCredits,
-  refundCredits,
-  InsufficientCreditsError,
-} from "@/lib/credits";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { errorResponse, requireStaff } from "@/lib/extraction/api-utils";
 import { buildM1SourceMatchRows } from "@/lib/extraction/m1-draft-persistence";
+import {
+  findOrCreateRestorationCharge,
+  recordJobRestorationCharge,
+  refundRestorationCharge,
+  InsufficientCreditsError,
+} from "@/lib/extraction/restoration-credits";
 import { createTextExtractionRequestSchema } from "@/lib/extraction/zod-schemas";
 import { restoreM1Passage } from "@/trigger/_lib/m1-passage-restoration";
 
@@ -51,28 +52,15 @@ export async function POST(req: NextRequest) {
   const originalFileName =
     makeTextSourceName(passages[0]?.title) +
     (pageCount > 1 ? ` 외 ${pageCount - 1}건` : "");
-  const totalReserved = CREDIT_COSTS.TEXT_EXTRACTION * pageCount;
-  const creditTxIds: string[] = [];
+  const shouldRestore = parsed.outputMode !== "verbatim";
+  const totalReserved = shouldRestore
+    ? CREDIT_COSTS.PASSAGE_RESTORATION * pageCount
+    : 0;
+  const restorationCreditTxIds: Array<string | null> = new Array(pageCount).fill(null);
   let jobId: string | null = null;
 
   try {
-    // 지문 1개당 1회 차감(파일 모드와 동일하게 지문 수만큼 과금).
-    for (let i = 0; i < pageCount; i++) {
-      const credit = await deductCredits(
-        staff.academyId,
-        "TEXT_EXTRACTION",
-        staff.id,
-        {
-          sourceType: "TEXT",
-          mode: parsed.mode,
-          originalFileName,
-          textLength: passages[i].text.length,
-          passageIndex: i,
-        },
-      );
-      creditTxIds.push(credit.transactionId);
-    }
-
+    // Verbatim text/OCR is free; restored mode charges once per passage.
     const job = await prisma.$transaction(async (tx) => {
       const created = await tx.extractionJob.create({
         data: {
@@ -80,6 +68,7 @@ export async function POST(req: NextRequest) {
           createdById: staff.id,
           sourceType: "TEXT",
           mode: parsed.mode,
+          outputMode: parsed.outputMode ?? null,
           originalFileName,
           totalPages: pageCount,
           successPages: 0,
@@ -102,7 +91,6 @@ export async function POST(req: NextRequest) {
           status: "PROCESSING" as const,
           attemptCount: 1,
           idempotencyKey: `${created.id}:${i}`,
-          creditTxId: creditTxIds[i],
           extractedText: p.text,
           startedAt: new Date(),
         })),
@@ -112,11 +100,42 @@ export async function POST(req: NextRequest) {
     });
     jobId = job.id;
 
+    if (shouldRestore) {
+      for (let i = 0; i < pageCount; i++) {
+        const charge = await findOrCreateRestorationCharge({
+          academyId: staff.academyId,
+          staffId: staff.id,
+          idempotencyKey: `restore:text:${job.id}:${i}`,
+          metadata: {
+            source: "TEXT_INPUT_RESTORE",
+            jobId: job.id,
+            mode: parsed.mode,
+            originalFileName,
+            textLength: passages[i].text.length,
+            passageIndex: i,
+          },
+        });
+        if (charge.created) {
+          try {
+            await recordJobRestorationCharge({ jobId: job.id });
+          } catch (err) {
+            await refundRestorationCharge({
+              academyId: staff.academyId,
+              transactionId: charge.transactionId,
+              reason: "Text input restoration charge was not recorded on job",
+            }).catch(() => {});
+            throw err;
+          }
+        }
+        restorationCreditTxIds[i] = charge.transactionId;
+      }
+    }
+
     // P7-D2: verbatim이면 AI 복원을 건너뛰고 붙여넣은 텍스트를 그대로 보존.
     // 지문마다 복원(verbatim은 그대로). 복원 호출은 병렬로 처리.
     const restorations = await Promise.all(
       passages.map((p) =>
-        parsed.outputMode === "verbatim"
+        !shouldRestore
           ? Promise.resolve({
               restoredText: p.text,
               status: "NO_RESTORATION_NEEDED" as const,
@@ -137,6 +156,19 @@ export async function POST(req: NextRequest) {
             }),
       ),
     );
+
+    for (let i = 0; i < restorations.length; i++) {
+      const txId = restorationCreditTxIds[i];
+      if (txId && restorations[i].status === "FAILED") {
+        await refundRestorationCharge({
+          academyId: staff.academyId,
+          jobId: job.id,
+          transactionId: txId,
+          reason: "Text input restoration failed",
+        }).catch(() => {});
+        restorationCreditTxIds[i] = null;
+      }
+    }
 
     const draftIds = passages.map(() => randomUUID());
 
@@ -174,6 +206,7 @@ export async function POST(req: NextRequest) {
               restoredText: restoration.restoredText,
               teacherText: restoration.restoredText,
               restorationStatus: restoration.status,
+              restorationCreditTxId: restorationCreditTxIds[i],
               reviewStatus: "DRAFT",
               confidence: restoration.confidence,
               warnings:
@@ -225,7 +258,6 @@ export async function POST(req: NextRequest) {
             status: "COMPLETED",
             successPages: pageCount,
             pendingPages: 0,
-            creditsConsumed: totalReserved,
             completedAt: new Date(),
           },
         });
@@ -240,14 +272,14 @@ export async function POST(req: NextRequest) {
       draftCount: pageCount,
     });
   } catch (err) {
-    for (const txId of creditTxIds) {
+    for (const txId of restorationCreditTxIds.filter((id): id is string => Boolean(id))) {
       try {
-        await refundCredits(
-          staff.academyId,
-          "TEXT_EXTRACTION",
-          txId,
-          "Text extraction failed",
-        );
+        await refundRestorationCharge({
+          academyId: staff.academyId,
+          jobId: jobId ?? undefined,
+          transactionId: txId,
+          reason: "Text input restoration failed",
+        });
       } catch {
         // best-effort refund
       }
@@ -260,7 +292,6 @@ export async function POST(req: NextRequest) {
           status: "FAILED",
           failedPages: pageCount,
           pendingPages: 0,
-          creditsRefunded: creditTxIds.length > 0 ? totalReserved : 0,
           completedAt: new Date(),
           errorSummary: JSON.stringify({
             textExtraction: err instanceof Error ? err.message : String(err),

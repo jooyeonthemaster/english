@@ -3,13 +3,13 @@
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { Eye, Loader2, Plus, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
-import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { usePersistedState } from "@/hooks/use-persisted-state";
+import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
-  getQuestionGenerationCreditCost,
-  type QuestionGenerationPlan,
-} from "@/lib/question-generation-plans";
+  getPassageAnalysisCreditCost,
+  PASSAGE_ANALYSIS_BASE_CREDIT_COST,
+  PASSAGE_ANALYSIS_WORKSHEET_EXTRA_CREDIT_COST,
+} from "@/lib/passage-analysis-credit-costs";
 import {
   LearningSheetPreviewModal,
   type LearningSheetVariant,
@@ -85,16 +85,8 @@ export function PassageInputStack({
   );
   const canAnalyze = validRows.length > 0 && !saving;
 
-  const primaryAnalysisPlan: QuestionGenerationPlan =
-    FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? "PREMIUM" : "STANDARD";
-  const standardUnitCost = getQuestionGenerationCreditCost(
-    CREDIT_COSTS.PASSAGE_ANALYSIS,
-    "STANDARD",
-  );
-  const primaryUnitCost = getQuestionGenerationCreditCost(
-    CREDIT_COSTS.PASSAGE_ANALYSIS,
-    primaryAnalysisPlan,
-  );
+  const primaryAnalysisPlan: QuestionGenerationPlan = "STANDARD";
+  const primaryUnitCost = PASSAGE_ANALYSIS_BASE_CREDIT_COST;
 
   // ── 학습지 구성 선택 — 기본 vs 실전 학습지 포함 (선택은 브라우저에 기억) ──
   const [includeWorksheet, setIncludeWorksheet] = usePersistedState<boolean>(
@@ -105,11 +97,13 @@ export function PassageInputStack({
   const [previewVariant, setPreviewVariant] =
     useState<LearningSheetVariant | null>(null);
 
-  const worksheetUnitCost = CREDIT_COSTS.PASSAGE_ANALYSIS;
+  const worksheetUnitCost = PASSAGE_ANALYSIS_WORKSHEET_EXTRA_CREDIT_COST;
   const n = validRows.length;
-  const worksheetExtra = includeWorksheet ? worksheetUnitCost : 0;
-  const standardTotal = (standardUnitCost + worksheetExtra) * Math.max(1, n);
-  const primaryTotal = (primaryUnitCost + worksheetExtra) * Math.max(1, n);
+  const selectedUnitCost = getPassageAnalysisCreditCost({ includeWorksheet });
+  const primaryTotal = selectedUnitCost * Math.max(1, n);
+  const selectedSheetLabel = includeWorksheet
+    ? "실전 학습지 포함"
+    : "기본 학습지";
 
   const countChip =
     n > 1 ? (
@@ -253,66 +247,25 @@ export function PassageInputStack({
               <p className="pl-5 text-[11px] leading-snug text-slate-500">
                 {option.desc}
               </p>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setPreviewVariant(option.id);
-                }}
-                className="ml-5 mt-0.5 flex w-fit items-center gap-1 text-[11px] font-bold text-blue-600 transition-colors hover:text-blue-700 hover:underline"
-              >
-                <Eye className="size-3" />
-                미리보기
-              </button>
             </div>
           ))}
         </div>
       </div>
 
       {/* Generate footer */}
-      <div
-        className={
-          FEATURE_FLAGS.SHOW_MODEL_SELECTOR
-            ? "mt-2 grid w-full shrink-0 grid-cols-1 gap-2 2xl:grid-cols-2"
-            : "mt-2 w-full shrink-0"
-        }
-      >
-        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
-          <Button
-            variant="outline"
-            onClick={() => onAnalyze("STANDARD", { includeWorksheet })}
-            disabled={!canAnalyze}
-            className="h-9 w-full rounded-lg border-blue-200 px-3 text-[12.5px] font-bold text-blue-700 hover:bg-blue-50 hover:text-blue-800"
-          >
-            {saving ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Wand2 className="size-4" />
-            )}
-            일반 학습지 생성
-            {countChip}
-            <span className="inline-flex items-center gap-0.5 rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700">
-              {standardTotal.toLocaleString("ko-KR")} 크레딧
-            </span>
-          </Button>
-        )}
+      <div className="mt-2 w-full shrink-0">
         <Button
           onClick={() => onAnalyze(primaryAnalysisPlan, { includeWorksheet })}
           disabled={!canAnalyze}
-          className="h-9 w-full rounded-lg bg-blue-600 px-3 text-[12.5px] font-bold hover:bg-blue-700"
+          className="h-10 w-full rounded-lg bg-blue-600 px-3 text-[13px] font-extrabold hover:bg-blue-700"
         >
           {saving ? (
             <Loader2 className="size-4 animate-spin" />
           ) : (
             <Wand2 className="size-4" />
           )}
-          학습지 생성
+          {selectedSheetLabel} 생성하기
           {countChip}
-          {includeWorksheet ? (
-            <span className="inline-flex items-center rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold">
-              실전 포함
-            </span>
-          ) : null}
           <span className="inline-flex items-center gap-0.5 rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold">
             {primaryTotal.toLocaleString("ko-KR")} 크레딧
           </span>

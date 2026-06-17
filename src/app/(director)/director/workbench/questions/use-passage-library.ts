@@ -69,10 +69,13 @@ export function usePassageLibrary({
   const loadPassages = useCallback(async () => {
     setLoadingPassages(true);
     try {
-      const res = await fetch(`/api/passages/list?academyId=${academyId}`, {
-        credentials: "include",
-        cache: "no-store",
-      });
+      const res = await fetch(
+        `/api/passages/list?academyId=${academyId}&includeUnreviewed=true`,
+        {
+          credentials: "include",
+          cache: "no-store",
+        },
+      );
       const data = await res.json();
       setPassages(data.passages || []);
       if (data.filters) setFilterOptions(data.filters);

@@ -6,11 +6,15 @@ import {
   refundCredits,
   InsufficientCreditsError,
 } from "@/lib/credits";
+import type { OperationType } from "@/lib/credit-costs";
 import {
   transformRequestSchema,
+  isWholePassageMode,
+  variantModeLabel,
   type TransformResponse,
 } from "@/lib/passage-transform/schema";
 import { runParaphrase, runPrepend } from "@/lib/passage-transform/generate";
+import { runWholePassageTransform } from "@/lib/passage-transform/whole-passage";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,10 +23,16 @@ export const maxDuration = 60;
 // ============================================================================
 // POST /api/workbench/passage-transform — AI 지문 변형 (◈1)
 //
-// PARAPHRASE: 드래그 선택 구간을 뜻은 그대로, 표현만 바꿔 재작성
-// PREPEND:    지문 맥락에 자연스럽게 이어지는 앞 문단 생성
+// 구간(span) 변형 — 인라인 미리보기, DB 저장 없음:
+//   PARAPHRASE: 드래그 선택 구간을 뜻은 그대로, 표현만 바꿔 재작성
+//   PREPEND:    지문 맥락에 자연스럽게 이어지는 앞 문단 생성
 //
-// 크레딧은 선차감(◈1) 후 AI 실패 시 전액 환불 — restore-passage 와 동일 패턴.
+// 지문 전체(whole-passage) 변형 — 결과는 호출 측이 변형본 Passage 로 저장:
+//   RELATED_TOPIC / OPPOSITE_TOPIC: 같은 분야 새 지문 / 반대 입장 새 지문
+//   DIFFICULTY (EASIER|HARDER) / LENGTH (SHORTER|LONGER): 난이도·분량만 변형
+//
+// 크레딧은 선차감(◈1) 후 AI 실패 시 전액 환불. 구간=PASSAGE_TRANSFORM(1),
+// 전체=PASSAGE_VARIANT(2) 로 과금 타입을 분기한다. — restore-passage 와 동일 패턴.
 // ============================================================================
 
 export async function POST(req: NextRequest) {
@@ -44,7 +54,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { mode, passageText, selectedText, avoidTexts, sentenceCount } =
+  const { mode, passageText, selectedText, avoidTexts, sentenceCount, direction } =
     parsed.data;
 
   if (passageText.trim().length < 20) {
@@ -70,19 +80,40 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // 난이도/길이 변형은 방향이 필수이고 모드와 짝이 맞아야 한다.
+  if (mode === "DIFFICULTY" && !["EASIER", "HARDER"].includes(direction || "")) {
+    return NextResponse.json(
+      { error: "난이도 변형 방향(EASIER/HARDER)을 지정해주세요." },
+      { status: 400 },
+    );
+  }
+  if (mode === "LENGTH" && !["SHORTER", "LONGER"].includes(direction || "")) {
+    return NextResponse.json(
+      { error: "길이 변형 방향(SHORTER/LONGER)을 지정해주세요." },
+      { status: 400 },
+    );
+  }
+
+  const whole = isWholePassageMode(mode);
+  // RELATED_TOPIC/OPPOSITE_TOPIC 는 방향을 쓰지 않는다 — 메타·다운스트림이 깨끗하게
+  // 남도록 그 경우 direction 을 정규화(undefined)한다.
+  const normDirection =
+    mode === "DIFFICULTY" || mode === "LENGTH" ? direction : undefined;
+  const operationType: OperationType = whole
+    ? "PASSAGE_VARIANT"
+    : "PASSAGE_TRANSFORM";
+
   let creditTxId: string;
   try {
-    const credit = await deductCredits(
-      staff.academyId,
-      "PASSAGE_TRANSFORM",
-      staff.id,
-      {
-        source: "WORKBENCH_PASSAGE_TRANSFORM",
-        mode,
-        textLength: passageText.length,
-        selectedLength: selectedText?.length ?? 0,
-      },
-    );
+    const credit = await deductCredits(staff.academyId, operationType, staff.id, {
+      source: whole
+        ? "WORKBENCH_PASSAGE_VARIANT"
+        : "WORKBENCH_PASSAGE_TRANSFORM",
+      mode,
+      direction: normDirection ?? null,
+      textLength: passageText.length,
+      selectedLength: selectedText?.length ?? 0,
+    });
     creditTxId = credit.transactionId;
   } catch (err) {
     if (err instanceof InsufficientCreditsError) {
@@ -99,7 +130,7 @@ export async function POST(req: NextRequest) {
   }
 
   const refund = (reason: string) =>
-    refundCredits(staff.academyId, "PASSAGE_TRANSFORM", creditTxId, reason).catch(
+    refundCredits(staff.academyId, operationType, creditTxId, reason).catch(
       (refundErr) => {
         // 환불 실패는 크레딧 유실 — 추적 가능하게 반드시 남긴다.
         console.error(
@@ -125,12 +156,33 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(response);
     }
 
-    const result = await runPrepend({ passageText, avoidTexts, sentenceCount });
+    if (mode === "PREPEND") {
+      const result = await runPrepend({ passageText, avoidTexts, sentenceCount });
+      const response: TransformResponse = {
+        mode,
+        text: result.paragraph,
+        changes: [],
+        note: result.note || "",
+      };
+      return NextResponse.json(response);
+    }
+
+    // ── 지문 전체 변형 (RELATED_TOPIC / OPPOSITE_TOPIC / DIFFICULTY / LENGTH) ──
+    const result = await runWholePassageTransform({
+      mode,
+      passageText,
+      direction: normDirection,
+      avoidTexts,
+    });
+    // Flash-Lite 가 meta 필드를 자주 비우므로 결정론적 라벨로 폴백한다.
+    const fallbackSummary = `${variantModeLabel(mode, normDirection)} 변형으로 생성한 새 지문`;
     const response: TransformResponse = {
       mode,
-      text: result.paragraph,
+      text: result.passage,
       changes: [],
-      note: result.note || "",
+      note: result.summary || fallbackSummary,
+      title: result.title || "",
+      summary: result.summary || fallbackSummary,
     };
     return NextResponse.json(response);
   } catch (err) {

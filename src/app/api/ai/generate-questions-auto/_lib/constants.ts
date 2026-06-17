@@ -1,6 +1,7 @@
 export const TYPE_LABELS: Record<string, string> = {
   BLANK_INFERENCE: "빈칸 추론",
   GRAMMAR_ERROR: "어법 판단",
+  GRAMMAR_CHOICE_COMBO: "네모 어법",
   VOCAB_CHOICE: "어휘 적절성",
   SENTENCE_ORDER: "글의 순서",
   SENTENCE_INSERT: "문장 삽입",
@@ -45,6 +46,8 @@ export const DIFFICULTY_RUBRIC: Record<string, string> = {
 - 해설은 왜 정답인지뿐 아니라 매력적인 오답이 왜 틀렸는지 핵심 함정을 짚어야 합니다.
 - 어휘형 KILLER는 단순 사전식 synonym/antonym을 피하고, 문맥상 뉘앙스/평가/논리 역할까지 보게 하세요.
 - 함축 의미 추론 KILLER는 밑줄 표현 전후의 최소 두 근거를 연결해야 풀리게 하고, 오답은 지문 개념을 빌린 근접 오답으로 설계하세요.
+- 빈칸 추론 KILLER는 빈칸을 글의 핵심 논지(주제문·결론·인과의 귀결)에 두고, 정답은 원문 복사가 아닌 추상 패러프레이즈로, 오답은 본문 개념을 빌린 동일 극성 근접 오답으로 설계하세요. 비용·시간 같은 지엽 세부를 빈칸으로 만들지 마세요.
+- 네모 어법 KILLER는 세 네모 중 2개 이상을 하드 포인트(관계사·분사·병렬·가정법)로 하고, 판단 근거가 네모에서 멀리 떨어진 장거리 의존을 포함시키며, 두 네모 이상이 틀린 오답 선지를 2개 이상 배치하세요.
 - 지칭 추론은 대명사의 문법적 수/의미 역할/앞뒤 논리를 모두 확인해야 풀리게 하세요.
 - 서술형 KILLER는 한 개 문법 포인트가 아니라 2개 이상의 조건을 동시에 만족하게 하세요.
 - 요약문/영작/배열 문제의 정답은 자연스러운 영어 collocation이어야 하며, 어색한 조합은 금지합니다.
@@ -52,7 +55,7 @@ export const DIFFICULTY_RUBRIC: Record<string, string> = {
 };
 
 export const MARKING_RUBRIC = `## 표시/위치 정확도 필수 규칙
-- underlinedPronoun/underlinedWord/underlinedExpression/originalExpression/markedExpressions, 그리고 VOCAB_CHOICE의 markedWords[].originalWord는 원문에 실제로 존재하는 표현만 쓰세요. VOCAB_CHOICE의 substituteWord는 지문에 표시할 오답 단어이므로 원문에 존재하지 않아도 됩니다.
+- underlinedPronoun/underlinedWord/underlinedExpression/originalExpression/markedExpressions, VOCAB_CHOICE의 markedWords[].originalWord, GRAMMAR_CHOICE_COMBO의 slots[].correctExpression은 원문에 실제로 존재하는 표현만 쓰세요. VOCAB_CHOICE의 substituteWord와 GRAMMAR_CHOICE_COMBO의 slots[].wrongExpression은 지문에 표시할 오답 후보이므로 원문에 존재하지 않아도 됩니다.
 - 특히 "it", "is", "in", "as" 같은 짧은 단어는 반드시 독립 단어로 존재하는 위치만 선택하세요. digital, commitments, within 같은 단어 내부의 일부를 선택하면 실패입니다.
 - surroundingText는 선택한 표현을 포함하는 원문 그대로의 40~80자여야 하며, 철자/공백/문장부호를 바꾸지 마세요.
 - passageWithBlank, passageWithMarkers, passageWithUnderline, passageWithNumbers 같은 지문 전체 복사 필드는 생성하지 마세요.`;

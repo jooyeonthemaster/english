@@ -15,6 +15,7 @@ import {
   Download,
   Trash2,
   RefreshCw,
+  Type,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,11 @@ import {
   type WebtoonStatus,
   type WebtoonStyleId,
 } from "../webtoon-page-types";
+import { WebtoonTextEditor } from "../editor/webtoon-text-editor";
+
+function libraryDisplayUrl(item: WebtoonRow): string | null {
+  return item.editedImageUrl || item.imageUrl;
+}
 
 const PAGE_SIZE = 24;
 const STATUS_FILTERS: { id: WebtoonStatus | "ALL"; label: string }[] = [
@@ -47,6 +53,20 @@ export function WebtoonLibraryClient({ academyId }: { academyId: string }) {
   const [styleFilter, setStyleFilter] = useState<WebtoonStyleId | "ALL">("ALL");
 
   const [previewItem, setPreviewItem] = useState<WebtoonRow | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const editingItem = useMemo(
+    () => items.find((it) => it.id === editingId) ?? null,
+    [items, editingId],
+  );
+
+  const applyEdited = (webtoonId: string, editedImageUrl: string) => {
+    setItems((prev) =>
+      prev.map((it) => (it.id === webtoonId ? { ...it, editedImageUrl } : it)),
+    );
+    setPreviewItem((prev) =>
+      prev && prev.id === webtoonId ? { ...prev, editedImageUrl } : prev,
+    );
+  };
 
   const fetchPage = async (p: number, statusOverride?: WebtoonStatus | "ALL") => {
     const sf = statusOverride ?? statusFilter;
@@ -237,6 +257,7 @@ export function WebtoonLibraryClient({ academyId }: { academyId: string }) {
                     item={item}
                     onPreview={() => setPreviewItem(item)}
                     onDelete={() => handleDelete(item.id)}
+                    onEditText={() => setEditingId(item.id)}
                   />
                 ))}
               </div>
@@ -277,8 +298,22 @@ export function WebtoonLibraryClient({ academyId }: { academyId: string }) {
           item={previewItem}
           onClose={() => setPreviewItem(null)}
           onDelete={() => handleDelete(previewItem.id)}
+          onEditText={() => {
+            setEditingId(previewItem.id);
+            setPreviewItem(null);
+          }}
         />
       )}
+
+      {editingId ? (
+        <WebtoonTextEditor
+          key={editingId}
+          webtoonId={editingId}
+          title={editingItem?.passage.title}
+          onClose={() => setEditingId(null)}
+          onExported={(editedImageUrl) => applyEdited(editingId, editedImageUrl)}
+        />
+      ) : null}
     </main>
   );
 }
@@ -289,10 +324,12 @@ function LibraryCard({
   item,
   onPreview,
   onDelete,
+  onEditText,
 }: {
   item: WebtoonRow;
   onPreview: () => void;
   onDelete: () => void;
+  onEditText: () => void;
 }) {
   const isDone = item.status === "COMPLETED" && item.imageUrl;
   const isError = item.status === "FAILED";
@@ -310,11 +347,26 @@ function LibraryCard({
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={item.imageUrl!}
+              src={libraryDisplayUrl(item)!}
               alt={item.passage.title}
               className="w-full h-full object-cover"
               loading="lazy"
             />
+            {item.editedImageUrl ? (
+              <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-full bg-emerald-600/90">
+                <span className="text-[9px] font-semibold text-white">자막 편집됨</span>
+              </div>
+            ) : null}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEditText();
+              }}
+              className="absolute bottom-2 right-2 w-7 h-7 rounded-full bg-blue-600/90 hover:bg-blue-600 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center"
+              title="텍스트 편집"
+            >
+              <Type className="w-3.5 h-3.5 text-white" />
+            </button>
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3">
               <div className="px-2 py-1 rounded-full bg-white/90 flex items-center gap-1">
                 <Maximize2 className="w-3 h-3 text-slate-700" />
@@ -374,12 +426,15 @@ function PreviewModal({
   item,
   onClose,
   onDelete,
+  onEditText,
 }: {
   item: WebtoonRow;
   onClose: () => void;
   onDelete: () => void;
+  onEditText: () => void;
 }) {
-  if (!item.imageUrl) return null;
+  const url = libraryDisplayUrl(item);
+  if (!url) return null;
 
   return (
     <div
@@ -398,6 +453,12 @@ function PreviewModal({
               {new Date(item.createdAt).toLocaleString("ko-KR")}
             </p>
           </div>
+          <button
+            onClick={onEditText}
+            className="px-3 h-8 rounded-md bg-blue-500/80 hover:bg-blue-500 text-white text-[11px] font-semibold flex items-center gap-1.5 transition-colors"
+          >
+            <Type className="w-3 h-3" />텍스트 편집
+          </button>
           <a
             href={`/api/webtoons/${item.id}/download`}
             className="px-3 h-8 rounded-md bg-white/15 hover:bg-white/25 text-white text-[11px] font-semibold flex items-center gap-1.5 transition-colors"
@@ -420,7 +481,7 @@ function PreviewModal({
 
         <div className="rounded-xl overflow-hidden bg-slate-900">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={item.imageUrl} alt={item.passage.title} className="w-full h-auto" />
+          <img src={url} alt={item.passage.title} className="w-full h-auto" />
         </div>
 
         {item.customPrompt && (

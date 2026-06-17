@@ -13,6 +13,7 @@ import pp from "@/lib/question-postprocess";
 import quality from "@/lib/question-quality";
 import persistence from "@/lib/question-generation-persistence";
 import optionDisplay from "@/components/exams/paper-builder/option-display";
+import answerDisplay from "@/lib/question-answer-display";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import questionRenderers from "../src/components/workbench/question-renderers";
@@ -21,6 +22,7 @@ const { postProcessQuestion } = pp;
 const { validateQuestionQuality } = quality;
 const { buildGeneratedQuestionText } = persistence;
 const { formatInlineMarkersForSubtype, shouldRenderOptionListForSubtype } = optionDisplay;
+const { formatStoredQuestionCorrectAnswer, formatVocabChoiceCorrectAnswer } = answerDisplay;
 const { StructuredQuestionRenderer } = questionRenderers;
 
 const passage = [
@@ -106,7 +108,7 @@ const brokenSavedQuestion = processed.success
             }
       ),
       options: processed.data.options.map((option) =>
-        option.label === "(d)" ? { ...option, text: "presence" } : option
+        option.label === "4" ? { ...option, text: "presence" } : option
       ),
       correctAnswer: "(d)",
     }
@@ -128,6 +130,11 @@ process.stdout.write(JSON.stringify({
   questionText,
   formattedPaperPassage,
   rendersPaperOptionList,
+  formattedLegacyAnswer: formatVocabChoiceCorrectAnswer("(d)"),
+  formattedStoredLegacyAnswer: formatStoredQuestionCorrectAnswer({
+    subType: "VOCAB_CHOICE",
+    correctAnswer: "(d)",
+  }),
   missingSubstitute,
   brokenQuality,
   repairedBrokenSavedHtml,
@@ -161,8 +168,10 @@ test("VOCAB_CHOICE renders the substitute as the underlined answer and preserves
   assert.equal(summary.processed.success, true, summary.processed.error);
   assert.match(summary.processed.data.passageWithMarkers, /__\(d\) absence__/);
   assert.doesNotMatch(summary.processed.data.passageWithMarkers, /__\(d\) presence__/);
-  assert.equal(summary.processed.data.correctAnswer, "(d)");
-  assert.equal(summary.processed.data.options[3].label, "(d)");
+  assert.equal(summary.processed.data.correctAnswer, "4");
+  assert.equal(summary.processed.data.options[3].label, "4");
+  assert.equal(summary.formattedLegacyAnswer, "4");
+  assert.equal(summary.formattedStoredLegacyAnswer, "4");
   assert.equal(summary.processed.data.markedWords[3].word, "absence");
   assert.equal(summary.processed.data.markedWords[3].originalWord, "presence");
   assert.equal(summary.processed.data.markedWords[3].substituteWord, "absence");

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
+import { formatVocabChoiceCorrectAnswer } from "@/lib/question-answer-display";
 import { getVisibleQuestionTags } from "@/lib/question-generation-plans";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 import { normalizePassageWhitespace } from "@/lib/question-postprocess/text-utils";
@@ -11,6 +12,7 @@ import { CustomLayoutRenderer } from "./custom-layout-renderer";
 import {
   BlankInferenceRenderer,
   GrammarErrorRenderer,
+  GrammarChoiceComboRenderer,
   VocabChoiceRenderer,
   SentenceOrderRenderer,
   SentenceInsertRenderer,
@@ -351,11 +353,22 @@ function repairVocabChoiceForDisplay(question: any, sourcePassageContent?: strin
   const existingPassage = typeof question.passageWithMarkers === "string"
     ? question.passageWithMarkers
     : "";
+  const formattedCorrectAnswer = formatVocabChoiceCorrectAnswer(
+    question.correctAnswer,
+    question.correctAnswers,
+  );
+  let changed =
+    !!formattedCorrectAnswer &&
+    formattedCorrectAnswer !== question.correctAnswer;
+
   let repairedPassage = existingPassage || sourcePassageContent || "";
-  if (!repairedPassage) return question;
+  if (!repairedPassage) {
+    return changed
+      ? { ...question, correctAnswer: formattedCorrectAnswer }
+      : question;
+  }
 
   const renderedKeys = vocabChoiceRenderedKeys(repairedPassage);
-  let changed = false;
   const normalizedMarkedWords = question.markedWords.map((markedWord: unknown, index: number) => {
     if (!markedWord || typeof markedWord !== "object" || Array.isArray(markedWord)) {
       return markedWord;
@@ -388,6 +401,7 @@ function repairVocabChoiceForDisplay(question: any, sourcePassageContent?: strin
   if (!changed) return question;
   return {
     ...question,
+    correctAnswer: formattedCorrectAnswer || question.correctAnswer,
     passageWithMarkers: repairedPassage,
     markedWords: normalizedMarkedWords,
   };
@@ -623,6 +637,7 @@ function hasStructuredFields(typeId: string, q: any): boolean {
     case "BLANK_INFERENCE":
       return !!q.passageWithBlank && !!q.direction;
     case "GRAMMAR_ERROR":
+    case "GRAMMAR_CHOICE_COMBO":
     case "VOCAB_CHOICE":
     case "ANTONYM":
       return !!q.passageWithMarkers && !!q.direction;
@@ -677,6 +692,8 @@ function renderTypedQuestion(typeId: string, q: any): React.ReactNode {
       return <BlankInferenceRenderer q={q} />;
     case "GRAMMAR_ERROR":
       return <GrammarErrorRenderer q={q} />;
+    case "GRAMMAR_CHOICE_COMBO":
+      return <GrammarChoiceComboRenderer q={q} />;
     case "VOCAB_CHOICE":
       return <VocabChoiceRenderer q={q} />;
     case "SENTENCE_ORDER":

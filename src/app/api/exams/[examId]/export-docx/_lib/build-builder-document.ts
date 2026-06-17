@@ -50,7 +50,7 @@ import {
   formatSummaryCompleteMcSummaryForDisplay,
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
-import { formatGrammarCorrectionCorrectAnswerForStoredQuestion } from "@/lib/grammar-correction-display";
+import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
 
 /*
@@ -65,6 +65,7 @@ import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
 const SUBTYPE_LABELS_DOCX: Record<string, string> = {
   BLANK_INFERENCE: "빈칸 추론",
   GRAMMAR_ERROR: "어법 판단",
+  GRAMMAR_CHOICE_COMBO: "네모 어법",
   VOCAB_CHOICE: "어휘 적절성",
   SENTENCE_ORDER: "글의 순서",
   SENTENCE_INSERT: "문장 삽입",
@@ -1016,7 +1017,7 @@ function buildQuestionBlock(
   if (includeAnswers) {
     result.push(
       ...buildAnswerBlock({
-        correctAnswer: formatGrammarCorrectionCorrectAnswerForStoredQuestion({
+        correctAnswer: formatStoredQuestionCorrectAnswer({
           ...item.sourceQuestion,
           correctAnswer: item.correctAnswer ?? item.sourceQuestion.correctAnswer ?? "",
         }),

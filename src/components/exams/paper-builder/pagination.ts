@@ -236,7 +236,8 @@ const ITEM_RENDER_OVERHEAD = 12;
 function boxLineHeight(settings: PaginationSettings): number {
   const compact = settings.density === "compact";
   const fontSize = compact ? 10.5 : 11.5;
-  return fontSize * (compact ? 1.52 : 1.58);
+  // 박스 본문 줄높이를 평문(questionLineHeight)과 통일 — a4 StructuredBody leading 과 1:1.
+  return fontSize * (compact ? 1.46 : 1.58);
 }
 
 function structuredBoxChrome(style: Extract<StructRowStyle, "passage" | "summary" | "given">, settings: PaginationSettings): number {

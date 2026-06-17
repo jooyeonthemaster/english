@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   type BlankInferenceQuestion,
   type GrammarErrorQuestion,
+  type GrammarChoiceComboQuestion,
   type VocabChoiceQuestion,
   type SentenceOrderQuestion,
   type SentenceInsertQuestion,
@@ -52,6 +53,7 @@ import {
   formatGrammarCorrectionCorrectAnswer,
   grammarCorrectionErrorSentenceForQuestionText,
 } from "@/lib/grammar-correction-display";
+import { formatVocabChoiceCorrectAnswer } from "@/lib/question-answer-display";
 import { formatInlineMarkersForSubtype } from "@/components/exams/paper-builder/option-display";
 
 // ============================================================================
@@ -133,7 +135,40 @@ export function GrammarErrorRenderer({ q }: { q: GrammarErrorQuestion }) {
   );
 }
 
+export function GrammarChoiceComboRenderer({ q }: { q: GrammarChoiceComboQuestion }) {
+  return (
+    <>
+      <Direction text={q.direction} />
+      <PassageBlock>{renderPassageFormatted(q.passageWithMarkers)}</PassageBlock>
+      <OptionList options={q.options} correctAnswer={q.correctAnswer} />
+      <AnswerRevealSection>
+        {q.slots && (
+          <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2">네모 표현 분석</span>
+            <div className="space-y-1">
+              {q.slots.map((slot, i) => (
+                <div key={i} className="text-[12px] flex items-start gap-2 text-slate-600">
+                  <span className="font-bold text-blue-600 w-6 shrink-0">{slot.label}</span>
+                  <span className="text-emerald-700 font-semibold">{slot.correctExpression}</span>
+                  <span className="text-red-700 line-through">{slot.wrongExpression}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        <AnswerLine answer={q.correctAnswer} />
+        <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />
+      </AnswerRevealSection>
+    </>
+  );
+}
+
 export function VocabChoiceRenderer({ q }: { q: VocabChoiceQuestion }) {
+  const answer = formatVocabChoiceCorrectAnswer(
+    q.correctAnswer,
+    (q as VocabChoiceQuestion & { correctAnswers?: string[] }).correctAnswers,
+  );
+
   return (
     <>
       <Direction text={q.direction} />
@@ -153,7 +188,7 @@ export function VocabChoiceRenderer({ q }: { q: VocabChoiceQuestion }) {
             </div>
           </div>
         )}
-        <AnswerLine answer={q.correctAnswer} />
+        <AnswerLine answer={answer || q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />
       </AnswerRevealSection>
     </>

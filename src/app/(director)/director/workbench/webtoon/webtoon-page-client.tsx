@@ -36,6 +36,7 @@ import {
 import { useWebtoonState } from "./use-webtoon-state";
 import { WebtoonInputStack } from "./webtoon-input-stack";
 import { WebtoonQueueCard } from "./webtoon-queue-card";
+import { WebtoonTextEditor } from "./editor/webtoon-text-editor";
 
 interface WebtoonPageClientProps {
   academyId: string;
@@ -91,7 +92,15 @@ export function WebtoonPageClient({
     handleBatchGenerate,
     handleRetry,
     handleRemove,
+    patchItem,
   } = useWebtoonState({ academyId });
+
+  // ─── 자막 편집기 ───
+  const [editingWebtoonId, setEditingWebtoonId] = useState<string | null>(null);
+  const editingWebtoon = useMemo(
+    () => queue.find((q) => q.id === editingWebtoonId) ?? null,
+    [queue, editingWebtoonId],
+  );
 
   const queueCounts = useMemo(
     () => ({
@@ -394,6 +403,7 @@ export function WebtoonPageClient({
                       item={item}
                       onRetry={handleRetry}
                       onRemove={handleRemove}
+                      onEditText={setEditingWebtoonId}
                     />
                   ))}
                 </div>
@@ -402,6 +412,18 @@ export function WebtoonPageClient({
           </section>
         </main>
       </div>
+
+      {editingWebtoonId ? (
+        <WebtoonTextEditor
+          key={editingWebtoonId}
+          webtoonId={editingWebtoonId}
+          title={editingWebtoon?.passage.title}
+          onClose={() => setEditingWebtoonId(null)}
+          onExported={(editedImageUrl) =>
+            patchItem(editingWebtoonId, { editedImageUrl })
+          }
+        />
+      ) : null}
     </TooltipProvider>
   );
 }

@@ -14,16 +14,23 @@ import {
   getQuestionGenerationCreditCost,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
-import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import {
+  readQuestionTypeGenerationPlanSetting,
+  type QuestionTypeGenerationSettings,
+} from "@/lib/question-type-generation-settings";
 import type { PassageItem, QueueItem } from "../generate-page-types";
 import {
-  FAST_BATCH_CONCURRENCY,
   buildOptimisticItem,
   createFastQuestionGenerationJob,
   createQuestionGenerationJob,
   replaceQueueItemInPlace,
-  runWithConcurrency,
 } from "../use-generation-handlers";
+import {
+  getReservedVariantTitles,
+  nextGenerationRunToken,
+  reserveVariantTitle,
+  scheduleFastGeneration,
+} from "../fast-generation-scheduler";
 import { useTaskQueue } from "@/components/workbench/task-queue";
 import { deriveStructuralMode } from "@/lib/question-sets/composition-ui";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
@@ -98,6 +105,63 @@ function rowAsPassageItem(
     school: original?.school ?? null,
     content: effectiveRowContent(row),
   } as PassageItem;
+}
+
+/**
+ * 한 워크스페이스 행이 '지금 설정'으로 만들어낼 문제 수와 크레딧 비용을 계산한다.
+ * 집계(summary)와 지문별 카드/모달 표시가 동일 로직을 공유해 숫자가 어긋나지
+ * 않도록, 행 단위 계산을 이 순수 함수 하나로 모은다.
+ */
+function computeRowGenStats(
+  row: WorkspaceRow,
+  ctx: {
+    genMode: "auto" | "manual" | "set";
+    autoCount: number;
+    generationPlan: QuestionGenerationPlan;
+    questionTypeSettings: QuestionTypeGenerationSettings;
+    globalQuestionCount: number;
+  },
+): { questions: number; creditCost: number } {
+  const globalCfg = {
+    genMode: ctx.genMode,
+    autoCount: ctx.autoCount,
+    totalQuestions: ctx.globalQuestionCount,
+  };
+  const questions = rowQuestionCount(row, globalCfg);
+  const mode = effectiveRowMode(row.override, ctx.genMode);
+  const plan = row.override?.generationPlan ?? ctx.generationPlan;
+  // 수동(유형 지정)은 유형마다 플랜이 다를 수 있어, 유형별 배수를 이미 적용한
+  // 비용을 따로 누적한다(rowFinal). auto/set 은 행 단위 플랜 배수를 끝에 적용.
+  let rowBase = 0;
+  let rowFinal = 0;
+  if (mode === "manual") {
+    if (overrideHasTypeCounts(row.override)) {
+      for (const [typeId, n] of Object.entries(row.override!.typeCounts)) {
+        if (n <= 0) continue;
+        const unit = VOCAB_GENERATION_TYPE_IDS.has(typeId)
+          ? CREDIT_COSTS.QUESTION_GEN_VOCAB
+          : CREDIT_COSTS.QUESTION_GEN_SINGLE;
+        const typePlan = readQuestionTypeGenerationPlanSetting(
+          row.override?.questionTypeSettings?.[typeId] ??
+            ctx.questionTypeSettings[typeId],
+          plan,
+        );
+        rowFinal += getQuestionGenerationCreditCost(unit * n, typePlan);
+      }
+    }
+  } else if (mode === "auto") {
+    rowBase += CREDIT_COSTS.AUTO_GEN_BATCH * Math.max(0, ctx.autoCount);
+  } else if (mode === "set") {
+    for (const m of row.override?.setMembers ?? []) {
+      rowBase += VOCAB_GENERATION_TYPE_IDS.has(m.typeId)
+        ? CREDIT_COSTS.QUESTION_GEN_VOCAB
+        : CREDIT_COSTS.QUESTION_GEN_SINGLE;
+    }
+  }
+  return {
+    questions,
+    creditCost: rowFinal + getQuestionGenerationCreditCost(rowBase, plan),
+  };
 }
 
 interface UseWorkspaceGenerationParams {
@@ -189,46 +253,43 @@ export function useWorkspaceGeneration({
     }, 0);
   }, [genMode, typeCounts, autoCount]);
 
+  // 지문별(행별) 생성 통계 — 카드 푸터의 '문제 생성' 버튼과 모달 CTA 가 같은
+  // 숫자를 쓰도록 집계와 동일 로직(computeRowGenStats)으로 미리 계산해 맵으로 둔다.
+  const rowStats = useMemo(() => {
+    const map = new Map<string, { questions: number; creditCost: number }>();
+    for (const row of api.rows) {
+      map.set(
+        row.localId,
+        computeRowGenStats(row, {
+          genMode,
+          autoCount,
+          generationPlan,
+          questionTypeSettings,
+          globalQuestionCount,
+        }),
+      );
+    }
+    return map;
+  }, [
+    api.rows,
+    genMode,
+    autoCount,
+    generationPlan,
+    questionTypeSettings,
+    globalQuestionCount,
+  ]);
+
   const summary: WorkspaceGenerationSummary = useMemo(() => {
-    const globalCfg = {
-      genMode,
-      autoCount,
-      totalQuestions: globalQuestionCount,
-    };
     let totalQuestions = 0;
     // 크레딧은 행마다 자신의 플랜(일반/프리미엄) 배수를 곱해 합산한다 —
     // 개별 지문이 서로 다른 플랜을 가질 수 있기 때문.
     let creditCost = 0;
     let variantCount = 0;
     for (const row of api.rows) {
-      totalQuestions += rowQuestionCount(row, globalCfg);
+      const stats = rowStats.get(row.localId) ?? { questions: 0, creditCost: 0 };
+      totalQuestions += stats.questions;
+      creditCost += stats.creditCost;
       if (rowNeedsVariant(row)) variantCount += 1;
-      const mode = effectiveRowMode(row.override, genMode);
-      const plan = row.override?.generationPlan ?? generationPlan;
-      let rowBase = 0;
-      if (mode === "manual") {
-        if (overrideHasTypeCounts(row.override)) {
-          for (const [typeId, n] of Object.entries(row.override!.typeCounts)) {
-            if (n <= 0) continue;
-            const unit = VOCAB_GENERATION_TYPE_IDS.has(typeId)
-              ? CREDIT_COSTS.QUESTION_GEN_VOCAB
-              : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-            rowBase += unit * n;
-          }
-        }
-        // 유형 지정인데 유형이 없는 행은 생성에서 빠지므로 크레딧 0.
-      } else if (mode === "auto") {
-        // 자동 출제는 문제 1개당 단가 — 문제 수(autoCount)만큼.
-        rowBase += CREDIT_COSTS.AUTO_GEN_BATCH * Math.max(0, autoCount);
-      } else if (mode === "set") {
-        // 장문 세트 — 구성한 문항(멤버) 1개당 단가.
-        for (const m of row.override?.setMembers ?? []) {
-          rowBase += VOCAB_GENERATION_TYPE_IDS.has(m.typeId)
-            ? CREDIT_COSTS.QUESTION_GEN_VOCAB
-            : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-        }
-      }
-      creditCost += getQuestionGenerationCreditCost(rowBase, plan);
     }
     const actionableSelectedOnlyCount =
       genMode === "set" || globalQuestionCount <= 0
@@ -249,22 +310,31 @@ export function useWorkspaceGeneration({
     };
   }, [
     api.rows,
+    rowStats,
     genMode,
-    autoCount,
     globalQuestionCount,
     globalBaseCredit,
     selectedOnlyPassages.length,
     generationPlan,
   ]);
 
-  const handleWorkspaceGenerate = useCallback(async () => {
+  // targetLocalId 가 주어지면 그 지문 한 개만 생성한다(지문별 '문제 생성' 모달).
+  // 없으면 워크스페이스 전체(+ 내 지문에서 체크된 선택-only 지문)를 생성한다.
+  const handleWorkspaceGenerate = useCallback(
+    async (targetLocalId?: string) => {
+    const targetRows = targetLocalId
+      ? api.rows.filter((r) => r.localId === targetLocalId)
+      : api.rows;
+    // 단일 지문 생성 시에는 '내 지문 체크' 선택-only 지문을 끌어오지 않는다.
+    const selectedOnlyForRun = targetLocalId ? [] : selectedOnlyPassages;
     if (
-      (api.rows.length === 0 && selectedOnlyPassages.length === 0) ||
+      (targetRows.length === 0 && selectedOnlyForRun.length === 0) ||
       generating
     )
       return;
-    if (genMode === "set") {
-      // 장문 세트는 라이브러리 체크 지문 1개로 동작 — 워크스페이스 생성 금지.
+    if (!targetLocalId && genMode === "set") {
+      // 장문 세트는 라이브러리 체크 지문 1개로 동작 — 워크스페이스 전체 생성 금지.
+      // (지문별 모달에서는 행 override.mode 가 직접 'set' 일 수 있어 막지 않는다.)
       toast.error(
         "장문 세트 모드에서는 워크스페이스 생성을 사용할 수 없습니다. 설정에서 모드를 변경하세요.",
       );
@@ -276,11 +346,11 @@ export function useWorkspaceGeneration({
       autoCount,
       totalQuestions: globalQuestionCount,
     };
-    const actionableRows = api.rows.filter(
+    const actionableRows = targetRows.filter(
       (row) => rowQuestionCount(row, globalCfg) > 0,
     );
     const actionableSelectedOnlyPassages =
-      globalQuestionCount > 0 ? selectedOnlyPassages : [];
+      !targetLocalId && globalQuestionCount > 0 ? selectedOnlyPassages : [];
     if (
       actionableRows.length === 0 &&
       actionableSelectedOnlyPassages.length === 0
@@ -313,7 +383,6 @@ export function useWorkspaceGeneration({
 
       const { createDirectInputPassageMaterial } =
         await import("@/actions/workbench");
-      const usedTitles = new Set<string>();
       for (const row of actionableRows) {
         const content = effectiveRowContent(row);
         if (content.length < 20) {
@@ -330,8 +399,11 @@ export function useWorkspaceGeneration({
           });
           continue;
         }
-        const title = nextVariantTitle(row.title, passages, usedTitles);
-        usedTitles.add(title);
+        const title = nextVariantTitle(
+          row.title,
+          passages,
+          getReservedVariantTitles(),
+        );
         const result = await createDirectInputPassageMaterial({
           title,
           content,
@@ -348,6 +420,9 @@ export function useWorkspaceGeneration({
           continue;
         }
         variantsCreated += 1;
+        // 저장이 실제로 성공한 제목만 예약한다(실패 시 고아 예약 방지). 행은 순차
+        // 처리되므로 같은 배치의 다음 행도 이 예약을 보고 충돌을 피한다.
+        reserveVariantTitle(title);
         api.rebindToVariant(row.localId, {
           passageId: result.id,
           title,
@@ -397,7 +472,7 @@ export function useWorkspaceGeneration({
       }
 
       // ── 2) 생성 유닛 구성 ──
-      const runId = Date.now();
+      const runId = nextGenerationRunToken();
       const prompt = customPrompt.trim();
       type FastUnit = {
         passage: PassageItem;
@@ -488,6 +563,14 @@ export function useWorkspaceGeneration({
             const repeat = Math.max(0, Math.floor(Number(rawCount) || 0));
             const effSettings =
               rowTypeSettings?.[typeId] ?? questionTypeSettings[typeId];
+            // 유형별 생성 플랜(일반/프리미엄)을 우선 반영 — 글로벌 셀렉터 제거 후
+            // 플랜은 유형별 설정에서만 지정된다. 서버도 questionTypeSettings 의
+            // generationPlan 을 effectiveGenerationPlan 으로 해석하므로,
+            // 낙관적 카드 뱃지/페이로드를 여기에 일치시킨다.
+            const effTypePlan = readQuestionTypeGenerationPlanSetting(
+              effSettings,
+              effPlan,
+            );
             for (let i = 0; i < repeat; i += 1) {
               if (rowLocalId) attemptedLocalIds.add(rowLocalId);
               fastUnits.push({
@@ -495,7 +578,7 @@ export function useWorkspaceGeneration({
                 questionType: typeId,
                 settings: effSettings,
                 difficulty: effDifficulty,
-                generationPlan: effPlan,
+                generationPlan: effTypePlan,
                 tempId: `fast:${item.passageId}:${typeId}:${runId}:${i}`,
                 progressKey: typeId,
                 localId: rowLocalId,
@@ -507,7 +590,7 @@ export function useWorkspaceGeneration({
                   difficulty: effDifficulty,
                   prompt,
                   mode: "manual",
-                  generationPlan: effPlan,
+                  generationPlan: effTypePlan,
                 },
               });
             }
@@ -560,7 +643,9 @@ export function useWorkspaceGeneration({
               passageId: item.passageId,
               title: item.title,
               members,
-              structuralMode: deriveStructuralMode(members.map((m) => m.typeId)),
+              structuralMode: deriveStructuralMode(
+                members.map((m) => m.typeId),
+              ),
               generationPlan: effPlan,
               localId: rowLocalId,
             });
@@ -590,180 +675,179 @@ export function useWorkspaceGeneration({
       window.setTimeout(triggerRefresh, 1_000);
       window.setTimeout(triggerRefresh, 3_000);
 
-      // ── 4) 실행 ──
-      let success = 0;
-      let failed = 0;
-
-      if (fastUnits.length > 0) {
-        const results = await runWithConcurrency(
-          fastUnits,
-          FAST_BATCH_CONCURRENCY,
-          async (unit) => {
-            try {
-              const result = await createFastQuestionGenerationJob({
-                passageId: unit.passage.id,
-                mode: unit.questionType ? "MANUAL" : "AUTO",
-                count: 1,
-                questionType: unit.questionType,
-                questionTypeSettings: unit.settings,
-                difficulty: unit.difficulty,
-                customPrompt: prompt || undefined,
-                generationPlan: unit.generationPlan,
-              });
-              const doneItem = {
-                ...buildOptimisticItem({
-                  jobId: result.jobId,
-                  passage: unit.passage,
-                  analysisData: null,
-                  config: unit.config,
-                  progressKey: unit.progressKey,
-                }),
-                createdAt: result.createdAt || new Date().toISOString(),
-                status: "done" as const,
-                progress: { [unit.progressKey]: "done" as const },
-                questions: Array.isArray(result.questions)
-                  ? result.questions
-                  : [],
-                questionIds: Array.isArray(result.questionIds)
-                  ? result.questionIds
-                  : [],
-              };
-              setSessionQueue((prev) =>
-                replaceQueueItemInPlace(
-                  prev,
-                  [unit.tempId, result.jobId],
-                  doneItem,
-                ),
-              );
-              return result;
-            } catch (err) {
-              const message =
-                err instanceof Error
-                  ? err.message
-                  : "문제 생성에 실패했습니다.";
-              if (unit.localId) failedLocalIds.add(unit.localId);
-              setSessionQueue((prev) =>
-                prev.map((q) =>
-                  q.id === unit.tempId
-                    ? {
-                        ...q,
-                        status: "error" as const,
-                        progress: { [unit.progressKey]: "error" as const },
-                        error: message,
-                      }
-                    : q,
-                ),
-              );
-              throw err;
-            }
-          },
-        );
-        success += results.filter((r) => r.status === "fulfilled").length;
-        failed += results.filter((r) => r.status === "rejected").length;
-      }
-
-      for (const job of slowJobs) {
-        try {
-          const jobId = await createQuestionGenerationJob({
-            passageId: job.passage.id,
-            mode: "AUTO",
-            count: job.count,
-            difficulty: job.difficulty,
-            customPrompt: prompt || undefined,
-            generationPlan: job.generationPlan,
-          });
-          setSessionQueue((prev) => [
-            buildOptimisticItem({
-              jobId,
-              passage: job.passage,
-              analysisData: null,
-              config: job.config,
-              progressKey: "auto",
-            }),
-            ...prev,
-          ]);
-          success += 1;
-        } catch (err) {
-          failed += 1;
-          if (job.localId) failedLocalIds.add(job.localId);
-          toast.error(
-            err instanceof Error ? err.message : "문제 생성 작업 시작 실패",
-          );
-        }
-      }
-
-      // 장문 세트 — 전용 엔드포인트로 생성한다. 생성된 문항은 아래 생성/검수
-      // 결과에 그대로 합류한다(triggerRefresh 로 갱신).
-      for (const job of setJobs) {
-        try {
-          const res = await fetch("/api/workbench/ai-jobs/question-set", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({
-              passageId: job.passageId,
-              structuralMode: job.structuralMode,
-              generationPlan: job.generationPlan,
-              customPrompt: prompt || undefined,
-              members: job.members.map((m) => ({
-                typeId: m.typeId,
-                difficulty: m.difficulty,
-              })),
-            }),
-          });
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok) {
-            throw new Error(data?.error || "장문 세트 생성에 실패했습니다.");
-          }
-          if (data.status === "DEGRADED") {
-            toast.warning(
-              `"${job.title}" 세트가 생성됐지만 검수가 필요합니다.`,
-            );
-          }
-          success += Array.isArray(data.questionIds)
-            ? data.questionIds.length
-            : job.members.length;
-        } catch (err) {
-          failed += 1;
-          if (job.localId) failedLocalIds.add(job.localId);
-          toast.error(
-            err instanceof Error
-              ? `"${job.title}" ${err.message}`
-              : "장문 세트 생성에 실패했습니다.",
-          );
-        }
-      }
-
-      // 생성을 제출한 워크스페이스 행 중 '성공'한 행만 비운다(워크스페이스는
-      // 스테이징 영역). 실패한 행은 그대로 남아 같은 조건으로 재시도할 수 있다.
-      const succeededLocalIds = [...attemptedLocalIds].filter(
-        (id) => !failedLocalIds.has(id),
-      );
-      if (succeededLocalIds.length > 0) {
-        api.removeRows(succeededLocalIds);
-      }
-
-      triggerRefresh();
-      // 장문 세트 문항은 optimistic 큐에 없으므로 결과 목록을 직접 다시 읽는다.
-      if (setJobs.length > 0) {
-        void loadSavedQuestions?.();
-      }
-      if (success > 0) {
-        dispatchGenerateTourMilestone("question-generation-completed");
-        toast.success(
-          slowJobs.length > 0
-            ? `${success}개 생성 작업이 시작/완료됐습니다.`
-            : `${success}개 문제가 생성됐습니다.`,
-        );
-      }
-      if (failed > 0) {
-        toast.error(`${failed}개 문제 생성이 실패했습니다.`);
-      }
+      // 선택-only 지문은 이번 배치로 소비됐으니 즉시 선택 해제(다음 배치 오발사 방지).
       if (actionableSelectedOnlyPassages.length > 0) {
         setSelectedIds?.(new Set());
       }
+
+      // ── 4) 실행 (fire-and-forget · 전역 동시성) ──
+      // setup 이 끝났으니 실제 생성은 백그라운드로 띄우고, 동기 흐름은 곧장 finally(락
+      // 해제)로 빠진다. → 생성이 도는 중에도 새 배치를 바로 시작할 수 있다. 동시에 떠 있는
+      // fast 요청 수는 scheduleFastGeneration 이 전역(앱 전체)으로 묶는다.
+      void (async () => {
+        let success = 0;
+        let failed = 0;
+
+        if (fastUnits.length > 0) {
+          const results = await Promise.allSettled(
+            fastUnits.map((unit) =>
+              scheduleFastGeneration(async () => {
+                try {
+                  const result = await createFastQuestionGenerationJob({
+                    passageId: unit.passage.id,
+                    mode: unit.questionType ? "MANUAL" : "AUTO",
+                    count: 1,
+                    questionType: unit.questionType,
+                    questionTypeSettings: unit.settings,
+                    difficulty: unit.difficulty,
+                    customPrompt: prompt || undefined,
+                    generationPlan: unit.generationPlan,
+                  });
+                  const doneItem = {
+                    ...buildOptimisticItem({
+                      jobId: result.jobId,
+                      passage: unit.passage,
+                      analysisData: null,
+                      config: unit.config,
+                      progressKey: unit.progressKey,
+                    }),
+                    createdAt: result.createdAt || new Date().toISOString(),
+                    status: "done" as const,
+                    progress: { [unit.progressKey]: "done" as const },
+                    questions: Array.isArray(result.questions)
+                      ? result.questions
+                      : [],
+                    questionIds: Array.isArray(result.questionIds)
+                      ? result.questionIds
+                      : [],
+                  };
+                  setSessionQueue((prev) =>
+                    replaceQueueItemInPlace(
+                      prev,
+                      [unit.tempId, result.jobId],
+                      doneItem,
+                    ),
+                  );
+                  return result;
+                } catch (err) {
+                  const message =
+                    err instanceof Error
+                      ? err.message
+                      : "문제 생성에 실패했습니다.";
+                  setSessionQueue((prev) =>
+                    prev.map((q) =>
+                      q.id === unit.tempId
+                        ? {
+                            ...q,
+                            status: "error" as const,
+                            progress: { [unit.progressKey]: "error" as const },
+                            error: message,
+                          }
+                        : q,
+                    ),
+                  );
+                  throw err;
+                }
+              }),
+            ),
+          );
+          success += results.filter((r) => r.status === "fulfilled").length;
+          failed += results.filter((r) => r.status === "rejected").length;
+        }
+
+        for (const job of slowJobs) {
+          try {
+            const jobId = await createQuestionGenerationJob({
+              passageId: job.passage.id,
+              mode: "AUTO",
+              count: job.count,
+              difficulty: job.difficulty,
+              customPrompt: prompt || undefined,
+              generationPlan: job.generationPlan,
+            });
+            setSessionQueue((prev) => [
+              buildOptimisticItem({
+                jobId,
+                passage: job.passage,
+                analysisData: null,
+                config: job.config,
+                progressKey: "auto",
+              }),
+              ...prev,
+            ]);
+            success += 1;
+          } catch (err) {
+            failed += 1;
+            toast.error(
+              err instanceof Error ? err.message : "문제 생성 작업 시작 실패",
+            );
+          }
+        }
+
+        // 장문 세트 — 전용 엔드포인트로 생성한다. 생성된 문항은 아래 생성/검수
+        // 결과에 그대로 합류한다(triggerRefresh 로 갱신).
+        for (const job of setJobs) {
+          try {
+            const res = await fetch("/api/workbench/ai-jobs/question-set", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              body: JSON.stringify({
+                passageId: job.passageId,
+                structuralMode: job.structuralMode,
+                generationPlan: job.generationPlan,
+                customPrompt: prompt || undefined,
+                members: job.members.map((m) => ({
+                  typeId: m.typeId,
+                  difficulty: m.difficulty,
+                })),
+              }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+              throw new Error(data?.error || "장문 세트 생성에 실패했습니다.");
+            }
+            if (data.status === "DEGRADED") {
+              toast.warning(
+                `"${job.title}" 세트가 생성됐지만 검수가 필요합니다.`,
+              );
+            }
+            success += Array.isArray(data.questionIds)
+              ? data.questionIds.length
+              : job.members.length;
+          } catch (err) {
+            failed += 1;
+            toast.error(
+              err instanceof Error
+                ? `"${job.title}" ${err.message}`
+                : "장문 세트 생성에 실패했습니다.",
+            );
+          }
+        }
+
+        triggerRefresh();
+        // 장문 세트 문항은 optimistic 큐에 없으므로 결과 목록을 직접 다시 읽는다.
+        if (setJobs.length > 0) {
+          void loadSavedQuestions?.();
+        }
+        if (success > 0) {
+          dispatchGenerateTourMilestone("question-generation-completed");
+          toast.success(
+            slowJobs.length > 0
+              ? `${success}개 생성 작업이 시작/완료됐습니다.`
+              : `${success}개 문제가 생성됐습니다.`,
+          );
+        }
+        if (failed > 0) {
+          toast.error(`${failed}개 문제 생성이 실패했습니다.`);
+        }
+      })().catch((err) => {
+        // 개별 작업 오류는 각 try/catch 에서 이미 처리(큐 상태+토스트)됨. 여기로 오는
+        // 건 예기치 못한 상위 오류뿐이라 콘솔에만 남긴다.
+        console.error("[workspace-generate] background batch error", err);
+      });
     } catch (err) {
-      // 변형본 저장/유닛 구성 단계의 예기치 못한 오류 — 무음 종료 방지.
+      // 변형본 저장/유닛 구성(setup) 단계의 예기치 못한 오류 — 무음 종료 방지.
       toast.error(
         err instanceof Error
           ? err.message
@@ -792,5 +876,10 @@ export function useWorkspaceGeneration({
     triggerRefresh,
   ]);
 
-  return { generating, handleWorkspaceGenerate, workspaceSummary: summary };
+  return {
+    generating,
+    handleWorkspaceGenerate,
+    workspaceSummary: summary,
+    rowStats,
+  };
 }

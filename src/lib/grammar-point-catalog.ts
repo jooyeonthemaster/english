@@ -10,6 +10,8 @@
 // pointCode 체계(a~m)는 기존 스키마/후처리/렌더러와 공유되므로 변경하지 않는다.
 // ============================================================================
 
+import { describeGrammarMinimalPairs } from "./grammar-minimal-pairs";
+
 export type GrammarPointCode =
   | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m";
 
@@ -233,6 +235,16 @@ export const GRAMMAR_CORE_ANSWER_CODES: GrammarPointCode[] = [
   "k", // 내신·학평 기출 1570제 분류 6위(7.0%) — 내신 기준 코어 승격
 ];
 
+/**
+ * 핵심 집중(focus) 모드 정답 포인트 톱셋 — 강사 제공 기출 1000제 실분포 상위 6.
+ * (b 관계사 867 · d 수일치 619 · k to-v/v-ing 519 · c 분사 496 · g 대명사 442 · f 형/부 310)
+ * 다양성(중복방지) 모드는 코어 10개를 순회하지만, focus 모드는 이 6개 안에서만
+ * 정답 포인트를 로테이션해 "고빈출 핵심에 집중"한다(나머지는 디코이로만).
+ * ⚠️ 카탈로그 GRAMMAR_CORE_ANSWER_CODES 는 수능 28년 기준이라 a(정동사)를 1위로
+ * 두지만, 강사 1000제에선 a 가 거의 최하위(98) — focus 셋에서 제외.
+ */
+export const GRAMMAR_HIGH_YIELD_FOCUS_CODES: GrammarPointCode[] = ["b", "d", "k", "c", "g", "f"];
+
 /** 최근 6년 오답 선택률 최상위 — 디코이(함정) 카드 우선순위. */
 export const GRAMMAR_TOP_DECOY_CODES: GrammarPointCode[] = ["b", "f", "c", "g", "d", "i"];
 
@@ -332,6 +344,12 @@ export interface GrammarPointGuidanceOptions {
   answerCount?: number;
   requestedDifficulty?: string;
   mode?: GrammarGenerationMode;
+  /**
+   * 핵심 집중(focus) 모드 — true 면 정답 포인트를 고빈출 톱셋(1000제 상위 6)
+   * 안에서만 로테이션해 출제 포인트를 집중시킨다. false/미지정이면 기존 다양성
+   * (코어 10개 순회). 강사 "출제 포인트 못 잡음" 피드백 대응.
+   */
+  pointFocus?: boolean;
 }
 
 function normalizeAuditDifficultyLevel(difficulty?: string): GrammarAuditDifficultyLevel {
@@ -369,21 +387,26 @@ export function buildGrammarPointGuidance(
     answerCount = 1,
     requestedDifficulty,
     mode = "judgment",
+    pointFocus = false,
   } = options;
 
-  const coreLine = GRAMMAR_CORE_ANSWER_CODES.map((code) => {
+  // 핵심 집중 모드면 정답 포인트 풀을 고빈출 톱셋(1000제 상위 6)으로 좁힌다.
+  // 다양성 모드는 코어 10개 전체 순회(저빈출 a·e·i·h 강제 → 출제 포인트 흩뿌림).
+  const answerPool = pointFocus ? GRAMMAR_HIGH_YIELD_FOCUS_CODES : GRAMMAR_CORE_ANSWER_CODES;
+
+  const coreLine = answerPool.map((code) => {
     const info = GRAMMAR_POINT_CATALOG[code];
     return `(${code}) ${info.label}[${info.rank}위]`;
   }).join(" · ");
 
-  // 정답 포인트 지정: 기사용 코드를 뺀 코어 풀에서 로테이션. 전부 사용됐으면 풀 리셋.
+  // 정답 포인트 지정: 기사용 코드를 뺀 풀에서 로테이션. 전부 사용됐으면 풀 리셋.
   let designated: GrammarPointCode[] = [];
   if (diversityEnabled) {
     const used = new Set(
       (usedPointCodes ?? []).map((code) => code.trim().toLowerCase()),
     );
-    const available = GRAMMAR_CORE_ANSWER_CODES.filter((code) => !used.has(code));
-    const pool = available.length >= answerCount ? available : GRAMMAR_CORE_ANSWER_CODES;
+    const available = answerPool.filter((code) => !used.has(code));
+    const pool = available.length >= answerCount ? available : answerPool;
     const offset =
       typeof variantIndex === "number" && Number.isFinite(variantIndex)
         ? Math.max(0, Math.floor(variantIndex))
@@ -395,11 +418,11 @@ export function buildGrammarPointGuidance(
   }
 
   // 단일 정답일 때는 폴백 2개까지 순위로 지정 — 지문에 1순위 구조가 없을 때
-  // 모델이 빈도 1위 포인트(a)로 일괄 후퇴하며 생기는 편중을 막는다.
+  // 모델이 한 포인트로 일괄 후퇴하며 생기는 편중을 막는다.
   const fallbackChain =
     designated.length === 1 && answerCount === 1
       ? Array.from({ length: 2 }, (_, i) => {
-          const pool = GRAMMAR_CORE_ANSWER_CODES;
+          const pool = answerPool;
           const baseIndex = pool.indexOf(designated[0]);
           return pool[(baseIndex + i + 1) % pool.length];
         }).filter((code) => !designated.includes(code))
@@ -418,11 +441,16 @@ export function buildGrammarPointGuidance(
               } 순서로 시도하세요. 순위를 건너뛰고 다른 포인트로 가지 마세요.`
             : " 지문에 그 문법 구조가 없을 때만 코어 목록의 다른 포인트를 사용하세요."
         } 같은 지문에서 정답 포인트가 반복되지 않게 하세요.`,
-        ...designated.flatMap((code) =>
-          GRAMMAR_POINT_CATALOG[code].traps
+        ...designated.flatMap((code) => {
+          const trapHints = GRAMMAR_POINT_CATALOG[code].traps
             .slice(0, 2)
-            .map((trap) => `  · 지정 포인트 설계 힌트: ${trap}`),
-        ),
+            .map((trap) => `  · 지정 포인트 설계 힌트: ${trap}`);
+          // 기출 1000제 최소대립쌍 — 이 포인트의 검증된 오류 변형 방향.
+          const pairs = describeGrammarMinimalPairs(code);
+          return pairs
+            ? [...trapHints, `  · 기출 검증 오류 변형(이 방향으로 오류를 만드세요): ${pairs}`]
+            : trapHints;
+        }),
       ]
     : [];
 
@@ -433,7 +461,15 @@ export function buildGrammarPointGuidance(
 
   return [
     "## 어법 출제 포인트 가이드 (수능·평가원 28년 기출 빈도 기반)",
-    `- 정답(오류로 변형하는) 포인트는 다음 최빈출 코어에서 선택하세요: ${coreLine}.`,
+    pointFocus
+      ? `- ⭐ 핵심 집중 모드: 정답(오류) 포인트는 반드시 기출 최빈출 톱셋에서만 고르세요: ${coreLine}. 이 6개 밖의 포인트(정동사 단독·능수동태·병렬·목적격보어·비교·전치사 등)는 정답으로 만들지 말고 디코이로만 쓰세요 — 강사 기출 1000제에서 관계사·수일치·to부정사/동명사·분사·대명사·형부가 출제의 대부분입니다.`
+      : `- 정답(오류로 변형하는) 포인트는 다음 최빈출 코어에서 선택하세요: ${coreLine}.`,
+    pointFocus
+      ? "- 같은 지문에서 여러 문항을 만들 때도 정답 포인트는 위 톱셋 안에서만 쓰고, 변화는 '다른 포인트로 바꾸기'가 아니라 '같은 포인트를 다른 문장·다른 자리·다른 디코이 구성으로' 주세요. 엉뚱한 저빈출 포인트로 변별을 시도하지 마세요."
+      : "",
+    pointFocus
+      ? "- ⚠️ 단, 톱셋 포인트를 **깨끗하게(명백한 단일 오류로)** 출제할 자리가 지문에 없으면, 억지로 비문을 만들지 마세요. 예: 소유격 its 를 목적격 them 으로 바꿔 'them parts'(한정사 자리 붕괴)처럼 만들지 말고, its→their(수일치)처럼 깨끗한 변형이 가능할 때만 그 포인트를 정답으로 쓰세요. 깨끗한 톱셋 자리가 정말 없으면 그 지문에서 가장 자연스럽게 틀리는 자리를 정답으로 하고, 톱셋은 디코이로 채우세요."
+      : "",
     mode === "correction"
       ? "- (j) 가정법·법, (m) 비교구문은 수능 객관식 정답 빈도는 낮지만 1000제 내신형에서는 보조 포인트로 자주 보입니다. 단독 암기형 오류로 남발하지 말고, 지문에 if/as/than/법조동사 구조가 명확할 때만 서술형 수정 후보로 쓰세요."
       : "- (j) 가정법, (m) 비교구문은 28년간 정답 출제가 극히 드뭅니다 — 정답으로 만들지 말고 디코이로만 사용하세요. (l) 전치사/접속사도 정답보다는 디코이에 적합합니다.",
@@ -444,6 +480,12 @@ export function buildGrammarPointGuidance(
     "- 디코이는 되도록 서로 다른 문법 포인트의 자리를 고르세요. 단, pointCode 는 **항상 그 자리의 실제 문법 성격대로** 기재해야 합니다 — 코드 중복을 피하려고 다른 코드를 거짓으로 적으면 안 됩니다 (중복되면 중복된 대로 정직하게 기재). '한눈에 옳음이 보이는' 자리(병렬 형용사 바로 옆, 지시 대상이 붙어 있는 대명사 등)는 함정 가치가 없습니다.",
     "- ⚠️ 원문 표현 자체가 표준 규범과 어긋나 보이거나 어법 논쟁이 있는 자리(예: 복수 주어 + 동격 each 뒤 동사의 수, 집합명사 수일치, 사용역에 따라 갈리는 변이형)는 정답으로도 디코이로도 밑줄을 긋지 마세요. 원문을 오류로 판정하지 말고, 의심스러운 자리는 피해서 다른 곳에 출제하세요.",
     "- 자기검증: 각 밑줄의 pointCode 는 그 밑줄의 해설(wrongOptionExplanations/explanation)이 설명하는 문법 범주와 일치해야 합니다. 분사구문 능수동이면 (c), 수일치면 (d), 명사절·관계절의 that/what 은 (b)입니다. 제출 전 5개 밑줄의 코드-해설 일치를 확인하세요.",
-    "- 정답·디코이 모두 문장 전체 구조를 읽어야 판단되는 자리여야 합니다. 단어 하나만 보고 판단되는 자리(관사, 단순 전치사, 철자, 조동사 바로 옆 원형)는 금지.",
-  ].join("\n");
+    mode === "judgment"
+      ? "- ⭐ 밑줄 span은 최소 문법 단위(보통 1~3단어, 최대 5단어)로만 좁히세요. 절 전체(주어+정동사+목적어)나 문장 통째 밑줄은 금지입니다. pointCode 의 필수 토큰(분사면 -ing/p.p., 관계사면 that/which/where 등, 대명사면 it/them/that/those 등, k면 to+원형/-ing, l면 during/while/because 등, m면 비교 표지)이 밑줄 표면 문자열 안에 실제로 있어야 하며, 없는데 코드만 붙이면 가짜 디코이입니다."
+      : "",
+    mode === "judgment"
+      ? "- 🚫 시제만 바꾸는 변형 금지: 기출 1000제 정답 오류에 '현재↔과거 시제 단독 교체'(예: realizes→realized, outpaces→outpaced)는 검증되지 않은 변형입니다. 문맥상 두 시제가 모두 가능해 정답 시비가 됩니다. 오류는 위 기출 검증 변형 방향(수일치·관계사·분사 능수동·형부 등)으로만 만드세요."
+      : "",
+    "- 정답·디코이의 '판단'은 문장 전체 구조(선행사·진주어·의미상 주어·병렬 범위 등)를 읽어야 가능해야 합니다. 단, 그렇다고 밑줄을 길게 긋지 마세요 — 판단 근거는 밑줄 밖 맥락에 두고, 밑줄은 판단이 걸린 한 토큰에만 긋습니다. 단어 하나만 보고 즉답되는 자리(관사, 단순 전치사, 철자, 조동사 바로 옆 원형)는 금지.",
+  ].filter(Boolean).join("\n");
 }

@@ -46,6 +46,16 @@ function canonicalVocabLabel(value: unknown, fallbackIndex: number): string {
   return key ? `(${key})` : clean(value);
 }
 
+function vocabKeyToAnswerLabel(key: string): string {
+  const index = (VOCAB_KEYS as readonly string[]).indexOf(key);
+  return index >= 0 ? String(index + 1) : key;
+}
+
+function canonicalVocabOptionLabel(value: unknown, fallbackIndex: number): string {
+  const key = normalizeVocabKey(value, fallbackIndex);
+  return key ? vocabKeyToAnswerLabel(key) : clean(value);
+}
+
 function collectAnswerKeys(ai: QuestionPostProcessData): string[] {
   const keys: string[] = [];
   const push = (value: unknown) => {
@@ -72,6 +82,11 @@ export function processVocabChoice(
   ai: QuestionPostProcessData,
 ): PostProcessResult {
   const warnings: string[] = [];
+
+  // 동의어 변형 모드: 정답이 아닌 밑줄 단어도 원문과 다른 문맥상 적절한 동의어로
+  // 표시해 "지문 암기"만으로는 못 풀게 한다. 위치 탐색은 항상 verbatim originalWord.
+  const variantMode =
+    clean(ai.vocabDisplayMode).toUpperCase() === "SYNONYM_VARIANT";
 
   const markedWords = ai.markedWords as Array<{
     label: string;
@@ -188,7 +203,13 @@ export function processVocabChoice(
           error: `betterWord for inappropriate VOCAB_CHOICE label ${label} must equal originalWord`,
         };
       }
-    } else if (substituteWord && comparable(substituteWord) !== comparable(originalWord)) {
+    } else if (
+      !variantMode &&
+      substituteWord &&
+      comparable(substituteWord) !== comparable(originalWord)
+    ) {
+      // 일반 모드에서는 정답 외 단어가 원문과 달라선 안 된다. 변형 모드에서는
+      // 동의어 표시를 허용하므로 이 가드를 건너뛴다.
       return {
         success: false,
         data: ai,
@@ -220,7 +241,11 @@ export function processVocabChoice(
       };
     }
 
-    const displayWord = sanitizeExpressionForMarker(isInappropriate ? substituteWord : originalWord);
+    // 정답은 부적절 단어를, 변형 모드의 정답 외 단어는 동의어(substituteWord)를,
+    // 그 밖에는 원문 단어를 표시한다.
+    const showsSubstitute = isInappropriate || (variantMode && !!substituteWord);
+    const displaySource = showsSubstitute ? substituteWord : originalWord;
+    const displayWord = sanitizeExpressionForMarker(displaySource);
     const newText = `__${label} ${displayWord}__`;
 
     replacements.push({
@@ -231,9 +256,9 @@ export function processVocabChoice(
 
     normalizedWords.push({
       label,
-      word: isInappropriate ? substituteWord : originalWord,
+      word: displaySource,
       originalWord,
-      substituteWord: isInappropriate ? substituteWord : originalWord,
+      substituteWord: displaySource,
       isInappropriate,
       betterWord: isInappropriate ? originalWord : undefined,
     });
@@ -264,23 +289,30 @@ export function processVocabChoice(
       data: ai,
       warnings,
       error: `VOCAB_CHOICE correctAnswer must match the inappropriate label set (${inappropriateKeys
-        .map((key) => `(${key})`)
+        .map(vocabKeyToAnswerLabel)
         .join(", ")})`,
     };
   }
 
-  const canonicalAnswerLabels = inappropriateKeys.map((key) => `(${key})`);
+  const canonicalAnswerLabels = inappropriateKeys.map(vocabKeyToAnswerLabel);
 
   const passageWithMarkers = applyReplacementsRTL(passage, replacements);
+  const wordByKey = new Map(
+    normalizedWords.map((mw) => [normalizeVocabKey(mw.label), mw.word]),
+  );
   const normalizedOptions = Array.isArray(ai.options)
-    ? ai.options.map((option, index) =>
-        option && typeof option === "object"
-          ? {
-              ...(option as Record<string, unknown>),
-              label: canonicalVocabLabel((option as Record<string, unknown>).label, index),
-            }
-          : option,
-      )
+    ? ai.options.map((option, index) => {
+        if (!option || typeof option !== "object") return option;
+        const record = option as Record<string, unknown>;
+        const key = normalizeVocabKey(record.label, index);
+        const label = canonicalVocabOptionLabel(record.label, index);
+        // 모델이 보기 text에 "(a) word"처럼 라벨을 중복 포함하는 사례가 있어,
+        // 표시 단어의 진실원본인 markedWords 기준으로 text를 정규화한다.
+        const displayWord = wordByKey.get(key);
+        return displayWord
+          ? { ...record, label, text: displayWord }
+          : { ...record, label };
+      })
     : ai.options;
 
   return {

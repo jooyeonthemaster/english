@@ -100,6 +100,49 @@ export async function uploadRemoteImageToWebtoonBucket(opts: {
   };
 }
 
+export function editedWebtoonStoragePath(academyId: string, webtoonId: string): string {
+  return `${academyId}/${webtoonId}-edited.png`;
+}
+
+/**
+ * Create a one-shot signed upload URL so the BROWSER can PUT the re-typeset export straight
+ * to Supabase. The export image is ~10-16MB at 2160×3840, which exceeds Vercel's ~4.5MB
+ * serverless request-body cap — routing the bytes through our API would 413 in production.
+ */
+export async function createEditedWebtoonUploadTarget(opts: {
+  academyId: string;
+  webtoonId: string;
+}): Promise<{ uploadUrl: string; token: string; storagePath: string }> {
+  await ensureWebtoonBucket();
+  const supabase = getServiceSupabase();
+  const path = editedWebtoonStoragePath(opts.academyId, opts.webtoonId);
+
+  // Remove any prior export so a fresh signed upload always succeeds (no "already exists").
+  try {
+    await supabase.storage.from(WEBTOON_BUCKET).remove([path]);
+  } catch {
+    /* best effort */
+  }
+
+  const { data, error } = await supabase.storage
+    .from(WEBTOON_BUCKET)
+    .createSignedUploadUrl(path);
+  if (error || !data) {
+    throw new Error(`Failed to create signed upload URL: ${error?.message ?? "unknown"}`);
+  }
+  return { uploadUrl: data.signedUrl, token: data.token, storagePath: data.path };
+}
+
+/** Public URL for a stored edited export, cache-busted so the gallery shows the latest. */
+export function editedWebtoonPublicUrl(storagePath: string): string {
+  const supabase = getServiceSupabase();
+  const { data } = supabase.storage.from(WEBTOON_BUCKET).getPublicUrl(storagePath);
+  if (!data?.publicUrl) {
+    throw new Error("Failed to compute Supabase public URL for edited webtoon");
+  }
+  return `${data.publicUrl}?v=${Date.now()}`;
+}
+
 export async function deleteWebtoonImage(storagePath: string): Promise<void> {
   if (!storagePath) return;
   try {

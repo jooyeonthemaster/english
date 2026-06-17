@@ -87,11 +87,11 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
     );
   }
 
-  if (q.referenceSentence) parts.push(`[reference] ${String(q.referenceSentence)}`);
-  if (q.originalSentence) parts.push(`[original] ${String(q.originalSentence)}`);
+  if (q.referenceSentence) parts.push(`[영작할 우리말] ${String(q.referenceSentence)}`);
+  if (q.originalSentence) parts.push(`[원문] ${String(q.originalSentence)}`);
   if (Array.isArray(q.conditions) && q.conditions.length > 0) {
     parts.push(
-      `[conditions]\n${q.conditions
+      `[조건]\n${q.conditions
         .map((c, i) => `${i + 1}. ${String(c)}`)
         .join("\n")}`,
     );
@@ -117,9 +117,9 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
     );
   }
   if (Array.isArray(q.scrambledWords) && q.scrambledWords.length > 0) {
-    parts.push(`[word order] ${q.scrambledWords.map(String).join(" / ")}`);
+    parts.push(`[배열 단어] ${q.scrambledWords.map(String).join(" / ")}`);
   }
-  if (q.contextHint) parts.push(`[hint] ${String(q.contextHint)}`);
+  if (q.contextHint) parts.push(`[힌트] ${String(q.contextHint)}`);
   if (q.sentenceWithError && typeId !== "GRAMMAR_CORRECTION") {
     push(grammarCorrectionErrorSentenceForQuestionText(q));
   }

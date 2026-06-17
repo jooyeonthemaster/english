@@ -5,7 +5,7 @@
 import type { BlockNode, BorderSpec, TableRowNode } from "../types";
 import { txt } from "../types";
 import { COLORS, SIZE } from "../tokens";
-import { formatGrammarCorrectionCorrectAnswerForStoredQuestion } from "@/lib/grammar-correction-display";
+import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
 
 const THIN: BorderSpec = {
@@ -189,5 +189,5 @@ export function renderAnswerKey(
 }
 
 function answerTextForQuestion(eq: ExamQuestionData): string {
-  return formatGrammarCorrectionCorrectAnswerForStoredQuestion(eq.question);
+  return formatStoredQuestionCorrectAnswer(eq.question);
 }

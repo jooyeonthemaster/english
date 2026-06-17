@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import {
   ChevronDown,
   ChevronLeft,
@@ -293,7 +300,15 @@ export function WorkspaceShell({
         <div
           ref={splitContainerRef}
           className="flex w-full min-w-0 max-w-full flex-row gap-0 overflow-hidden"
-          style={{ height: `${bodyHeight}px` }}
+          style={
+            {
+              height: `${bodyHeight}px`,
+              // 워크스페이스 본문(고정) 높이를 자손에게 노출 — 지문 카드가 이 값에
+              // 맞춰 스스로 높이를 바운드해, 본문이 길어도 카드 안에서 스크롤되고
+              // 하단 '문제 생성' 버튼이 항상 보이게 한다.
+              "--ws-body-h": `${bodyHeight}px`,
+            } as CSSProperties
+          }
         >
           {/* LEFT: optional panel (collapsible / resizable) —
               닫기는 unmount 가 아니라 width 트랜지션으로 스르륵 접힌다.

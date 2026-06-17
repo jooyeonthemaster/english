@@ -62,10 +62,18 @@ const GRAMMAR_LABELS = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", 
 
 const grammarMarkedExpressionSchema = z.object({
   label: z.string().describe("(A)~(J) 라벨"),
-  expression: z.string().describe("원문에서의 올바른 표현"),
+  expression: z
+    .string()
+    .describe(
+      "원문에서 밑줄 칠 '최소 문법 단위' — 그 자리의 어법 판단을 결정하는 핵심 토큰만. 수능 어법 밑줄은 보통 1~3단어(최대 4단어). 동사/준동사/분사/관계사/대명사/형용사·부사 등 판단 대상 토큰과 그것을 어법적으로 묶는 최소 수식어까지만 포함한다. ⚠️ 절 전체(주어+정동사+목적어), 문장 전체, 등위로 이어진 두 동사구를 통째로 밑줄 치지 마라 — 예: 'these digital platforms create a trusting environment'(X, 절 전체) → 'create'(O, 동사 1개). 이 문자열의 길이가 곧 화면 밑줄 길이다.",
+    ),
   isError: z.boolean().describe("이 표현이 오류인지 여부"),
-  correction: z.string().optional().describe("오류인 경우 올바른 표현"),
-  errorExpression: z.string().describe("지문에 표시할 어법 오류 표현 (isError=true일 때 틀린 형태, isError=false일 때 원문 그대로)"),
+  correction: z.string().optional().describe("오류인 경우 올바른 표현 (expression과 동일한 최소 단위)"),
+  errorExpression: z
+    .string()
+    .describe(
+      "지문에 표시할 어법 오류 표현. isError=true일 때는 expression의 어간을 유지하고 형태만 틀리게 변형한 같은 길이의 최소 단위(품사 변경·단어 추가 금지), isError=false일 때는 expression과 동일. expression과 같은 최소 span 규칙을 따른다 — 절/문장 통째 금지.",
+    ),
   surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
   pointCode: z
     .enum(GRAMMAR_POINT_CODES)
@@ -138,7 +146,10 @@ export const aiBlankInferenceSchema = z.object({
   ...commonFields,
   originalExpression: z.string().describe("원문에서 빈칸으로 교체할 정확한 표현 (원문 그대로, 한 글자도 변경 금지)"),
   surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
-  blankAnswerMode: z.enum(["SOURCE_EXACT", "PARAPHRASE", "DOUBLE_NEGATIVE"]).optional().describe("빈칸 정답 구성 방식"),
+  blankAnswerMode: z
+    .enum(["SOURCE_EXACT", "PARAPHRASE", "DOUBLE_NEGATIVE"])
+    .optional()
+    .describe("빈칸 정답 구성 방식 (PARAPHRASE는 빈칸 변형 설정이 있을 때)"),
   answerLogic: z.string().optional().describe("부정-부정 빈칸 등 특수 정답 논리 설명"),
   options: z.array(optionSchema).length(5).describe("5개 선지"),
   ...mcWrongExplanations,
@@ -250,6 +261,63 @@ export function buildAiGrammarErrorSchema(markerCount: number, answerCount = 1) 
 }
 
 // ---------------------------------------------------------------------------
+// 2-1. 네모 어법 (GRAMMAR_CHOICE_COMBO)
+// 지문 안 (A)/(B)/(C) 세 네모에 [후보1 / 후보2] 2지선일을 제시하고,
+// 5지선다에서 세 네모 모두 올바른 표현인 조합 하나를 고르는 유형.
+// 선지는 다중빈칸(buildAiMultiBlankInferenceSchema)의 조합 선지 구조를 따름.
+// ---------------------------------------------------------------------------
+
+const GRAMMAR_COMBO_SLOT_LABELS = ["(A)", "(B)", "(C)"] as const;
+
+const grammarComboSlotSchema = z.object({
+  label: z
+    .enum(GRAMMAR_COMBO_SLOT_LABELS)
+    .describe("네모 라벨. (A), (B), (C) 순서대로 지문 등장 순."),
+  correctExpression: z
+    .string()
+    .describe("원문에서의 올바른 표현 (원문 그대로, 한 글자도 변경 금지)"),
+  wrongExpression: z
+    .string()
+    .describe("이 네모에 함께 제시할 틀린 표현. correctExpression을 pointCode의 어법 포인트에 따라 의도적으로 변형한 형태로, correctExpression과 달라야 함."),
+  surroundingText: z
+    .string()
+    .describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용, 원문 그대로 복사)"),
+  pointCode: z
+    .enum(GRAMMAR_POINT_CODES)
+    .describe(
+      "이 네모의 어법 출제 포인트 코드. 세 네모는 서로 다른 코드를 사용. (a)정·준동사 (b)관계사 (c)분사능수동 (d)수일치 (e)능수동태 (f)형부자리 (g)대명사 (h)목적격보어 (i)병렬 (j)가정법 (k)to-v/v-ing (l)전치사vs.접속사 (m)비교구문",
+    ),
+});
+
+export const aiGrammarChoiceComboSchema = z.object({
+  ...commonFields,
+  correctAnswer: z
+    .string()
+    .describe('정답 선지 label ("1"~"5" 중 하나). 세 네모가 모두 correctExpression인 유일한 조합.'),
+  slots: z
+    .array(grammarComboSlotSchema)
+    .length(3)
+    .describe("네모 정의. 정확히 3개, 서로 다른 문장에서 선택, 서로 다른 pointCode."),
+  options: z
+    .array(
+      z.object({
+        label: z.string().describe('선지 라벨 "1"~"5"'),
+        text: z.string().describe('slotValues를 " - "로 연결한 표시 텍스트'),
+        slotValues: z
+          .array(z.string())
+          .length(3)
+          .describe(
+            "각 네모 (A), (B), (C)에서 고른 표현. 정확히 3개, 라벨 순서대로. 각 값은 해당 네모의 correctExpression 또는 wrongExpression과 정확히 일치해야 함.",
+          ),
+      }),
+    )
+    .length(5)
+    .describe("조합 선지 5개. 정확히 1개만 세 네모 모두 correctExpression인 조합이고, 같은 조합은 반복 금지."),
+  ...mcWrongExplanations,
+});
+export type AiGrammarChoiceComboQuestion = z.infer<typeof aiGrammarChoiceComboSchema>;
+
+// ---------------------------------------------------------------------------
 // 3. 어휘 적절성 (VOCAB_CHOICE)
 // ---------------------------------------------------------------------------
 
@@ -264,10 +332,20 @@ const vocabMarkedWordSchema = z.object({
   surroundingText: z.string().describe("이 표현이 위치한 주변 텍스트 40~60자 (위치 식별용)"),
 });
 
+const vocabDisplayModeField = {
+  vocabDisplayMode: z
+    .enum(["SOURCE_EXACT", "SYNONYM_VARIANT"])
+    .optional()
+    .describe(
+      "SYNONYM_VARIANT이면 정답이 아닌 밑줄 단어도 substituteWord에 원문과 다른 문맥상 적절한 동의어를 넣어 표시(지문 암기 무력화). 미지정/SOURCE_EXACT이면 기존 방식(정답 외 단어는 원문 그대로).",
+    ),
+};
+
 export const aiVocabChoiceSchema = z.object({
   ...commonFields,
   markedWords: z.array(vocabMarkedWordSchema).length(5).describe("밑줄 표시할 5개 어휘"),
   options: z.array(optionSchema).length(5).describe("5개 선지"),
+  ...vocabDisplayModeField,
   ...mcWrongExplanations,
 });
 export type AiVocabChoiceQuestion = z.infer<typeof aiVocabChoiceSchema>;
@@ -300,6 +378,7 @@ export function buildAiVocabChoiceSchema(markerCount: number, answerCount = 1) {
       .array(optionSchema)
       .length(count)
       .describe(`선지. 정확히 ${count}개를 생성해야 함.`),
+    ...vocabDisplayModeField,
     wrongOptionExplanations: buildAiWrongOptionExplanationsSchema(count - answers),
   });
 }
@@ -463,6 +542,7 @@ export type AiImpliedMeaningQuestion = z.infer<typeof aiImpliedMeaningSchema>;
 export const AI_MC_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   BLANK_INFERENCE: aiBlankInferenceSchema,
   GRAMMAR_ERROR: aiGrammarErrorSchema,
+  GRAMMAR_CHOICE_COMBO: aiGrammarChoiceComboSchema,
   VOCAB_CHOICE: aiVocabChoiceSchema,
   SENTENCE_ORDER: aiSentenceOrderSchema,
   SENTENCE_INSERT: aiSentenceInsertSchema,

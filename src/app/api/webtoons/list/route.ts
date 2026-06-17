@@ -70,6 +70,7 @@ export async function GET(req: NextRequest) {
         customPrompt: true,
         status: true,
         imageUrl: true,
+        editedImageUrl: true,
         errorMessage: true,
         createdAt: true,
         startedAt: true,

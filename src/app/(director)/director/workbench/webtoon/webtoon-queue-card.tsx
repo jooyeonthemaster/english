@@ -8,6 +8,7 @@ import {
   Loader2,
   Maximize2,
   RefreshCw,
+  Type,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,9 +18,14 @@ interface WebtoonQueueCardProps {
   item: WebtoonRow;
   onRetry: (webtoonId: string) => void;
   onRemove: (webtoonId: string) => void;
+  onEditText?: (webtoonId: string) => void;
 }
 
-export function WebtoonQueueCard({ item, onRetry, onRemove }: WebtoonQueueCardProps) {
+function displayUrl(item: WebtoonRow): string | null {
+  return item.editedImageUrl || item.imageUrl;
+}
+
+export function WebtoonQueueCard({ item, onRetry, onRemove, onEditText }: WebtoonQueueCardProps) {
   const [showPreview, setShowPreview] = useState(false);
 
   const isDone = item.status === "COMPLETED" && item.imageUrl;
@@ -65,11 +71,16 @@ export function WebtoonQueueCard({ item, onRetry, onRemove }: WebtoonQueueCardPr
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={item.imageUrl!}
+                src={displayUrl(item)!}
                 alt={item.passage.title}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
+              {item.editedImageUrl ? (
+                <div className="absolute top-2 left-2 px-2 py-1 rounded-full bg-emerald-600/90 backdrop-blur-sm">
+                  <span className="text-[9.5px] font-semibold text-white">자막 편집됨</span>
+                </div>
+              ) : null}
               <div className="absolute top-2 right-2 px-2 py-1 rounded-full bg-black/60 backdrop-blur-sm flex items-center gap-1">
                 <Maximize2 className="w-3 h-3 text-white" />
                 <span className="text-[9.5px] font-semibold text-white">크게 보기</span>
@@ -101,25 +112,37 @@ export function WebtoonQueueCard({ item, onRetry, onRemove }: WebtoonQueueCardPr
         </div>
 
         {isDone && (
-          <div className="mt-3 flex gap-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className="flex-1 h-8 text-[11px] gap-1.5"
-              onClick={() => setShowPreview(true)}
-            >
-              <Maximize2 className="w-3 h-3" />
-              크게 보기
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className="flex-1 h-8 text-[11px] gap-1.5"
-              onClick={() => downloadImage(item)}
-            >
-              <Download className="w-3 h-3" />
-              다운로드
-            </Button>
+          <div className="mt-3 flex flex-col gap-2">
+            {onEditText ? (
+              <Button
+                size="sm"
+                className="h-8 text-[11px] gap-1.5"
+                onClick={() => onEditText(item.id)}
+              >
+                <Type className="w-3 h-3" />
+                텍스트 편집
+              </Button>
+            ) : null}
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                className="flex-1 h-8 text-[11px] gap-1.5"
+                onClick={() => setShowPreview(true)}
+              >
+                <Maximize2 className="w-3 h-3" />
+                크게 보기
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="flex-1 h-8 text-[11px] gap-1.5"
+                onClick={() => downloadImage(item)}
+              >
+                <Download className="w-3 h-3" />
+                다운로드
+              </Button>
+            </div>
           </div>
         )}
       </div>
@@ -165,7 +188,8 @@ function StatusBadge({ status }: { status: WebtoonRow["status"] }) {
 }
 
 function PreviewModal({ item, onClose }: { item: WebtoonRow; onClose: () => void }) {
-  if (!item.imageUrl) return null;
+  const url = displayUrl(item);
+  if (!url) return null;
 
   return (
     <div
@@ -200,7 +224,7 @@ function PreviewModal({ item, onClose }: { item: WebtoonRow; onClose: () => void
 
         <div className="rounded-xl overflow-hidden bg-slate-900">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={item.imageUrl} alt={item.passage.title} className="w-full h-auto" />
+          <img src={url} alt={item.passage.title} className="w-full h-auto" />
         </div>
       </div>
     </div>

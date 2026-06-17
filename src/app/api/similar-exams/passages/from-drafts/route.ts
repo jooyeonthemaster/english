@@ -71,6 +71,8 @@ export async function POST(req: NextRequest) {
       title: row.title?.trim() || "추출 자료",
       content,
       sourceDraftId: row.id,
+      // 동형 시험지 생성은 사람 검수가 아니므로 원본 자료를 검수완료로 올리지 않는다.
+      markReviewed: false,
     });
     if (created.success && created.id) {
       results.push({ draftId, passageId: created.id });

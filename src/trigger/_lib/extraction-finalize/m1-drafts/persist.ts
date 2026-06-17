@@ -1,6 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { logger } from "@trigger.dev/sdk/v3";
 import type { Prisma } from "@prisma/client";
+import {
+  ensureInitialDraftRestorationCharged,
+  refundRestorationCharge,
+  InsufficientCreditsError,
+} from "@/lib/extraction/restoration-credits";
 import type {
   ExtractionItemSnapshot,
   M1RestorationStatus,
@@ -20,6 +25,7 @@ import { SHORT_CONTENT_THRESHOLD } from "./constants";
 export interface PersistM1PassageDraftsInput {
   jobId: string;
   academyId: string;
+  createdById: string;
   /** P7-D2: "verbatim"이면 자동 복원을 강제로 끈다(Google Search 0콜). null=기존 동작. */
   outputMode?: string | null;
   sourceMaterialId: string | null;
@@ -149,6 +155,51 @@ export async function persistM1PassageDrafts(
   );
 
   // ─── Phase B: per-batch UPDATE as restoration results arrive ────────────
+  const chargeRestorationTargets = async () => {
+    const chargedTargets: typeof restorationTargets = [];
+
+    for (const target of restorationTargets) {
+      const draftId = draftIdByOrder.get(target.index);
+      if (!draftId) continue;
+
+      try {
+        await ensureInitialDraftRestorationCharged({
+          academyId: input.academyId,
+          staffId: input.createdById,
+          jobId: input.jobId,
+          draftId,
+          passageOrder: target.index + passageOrderOffset,
+          metadata: {
+            outputMode: input.outputMode ?? null,
+            sourcePageIndex: target.sourcePageIndex,
+            questionTypes: target.questionTypes,
+          },
+        });
+        chargedTargets.push(target);
+      } catch (err) {
+        if (err instanceof InsufficientCreditsError) {
+          await prisma.extractionM1PassageDraft.update({
+            where: { id: draftId },
+            data: {
+              restorationStatus: "FAILED",
+              warnings: [
+                "AI restoration skipped: insufficient credits.",
+              ] as Prisma.InputJsonValue,
+              metadata: {
+                reason: "insufficient_restoration_credits",
+                requiredCredits: 1,
+              } as Prisma.InputJsonValue,
+            },
+          });
+          continue;
+        }
+        throw err;
+      }
+    }
+
+    return chargedTargets;
+  };
+
   let changeCount = 0;
   const applyRestorationResult = async (
     stageIndex: number,
@@ -247,16 +298,39 @@ export async function persistM1PassageDrafts(
       },
       { timeout: 30_000, maxWait: 10_000 },
     );
+
+    if (restoration.status === "FAILED") {
+      const charged = await prisma.extractionM1PassageDraft.findUnique({
+        where: { id: draftId },
+        select: { restorationCreditTxId: true },
+      });
+      if (charged?.restorationCreditTxId) {
+        await refundRestorationCharge({
+          academyId: input.academyId,
+          jobId: input.jobId,
+          transactionId: charged.restorationCreditTxId,
+          reason: "M1 restoration failed",
+          clearDraftId: draftId,
+        }).catch((err) => {
+          logger.warn("m1 restoration refund failed", {
+            jobId: input.jobId,
+            draftId,
+            err: err instanceof Error ? err.message : String(err),
+          });
+        });
+      }
+    }
   };
 
   let restorationPromise: Promise<number> | null = null;
   if (restorationTargets.length > 0) {
+    const chargedRestorationTargets = await chargeRestorationTargets();
     // Phase B: grounded restoration. Wrapped in an async IIFE so the caller
     // can either await it inline (single-cluster legacy) or detach it for
     // parallel execution across clusters (`deferRestoration=true`).
     const work = (async (): Promise<number> => {
       await restoreM1PassageBatch(
-        restorationTargets.map((s) => ({
+        chargedRestorationTargets.map((s) => ({
           academyId: input.academyId,
           rawText: s.rawText,
           questions: s.questions,
@@ -265,7 +339,7 @@ export async function persistM1PassageDrafts(
         {
           onBatchComplete: async (inputIndices, batchResults) => {
             for (let i = 0; i < inputIndices.length; i += 1) {
-              const target = restorationTargets[inputIndices[i]];
+              const target = chargedRestorationTargets[inputIndices[i]];
               if (!target) continue;
               try {
                 await applyRestorationResult(target.index, batchResults[i]);

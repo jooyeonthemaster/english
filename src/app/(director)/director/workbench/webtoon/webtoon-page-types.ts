@@ -72,6 +72,8 @@ export interface WebtoonRow {
   customPrompt: string | null;
   status: WebtoonStatus;
   imageUrl: string | null;
+  /** Re-typeset export from the in-browser 자막 편집기 (preferred for display when present). */
+  editedImageUrl?: string | null;
   errorMessage: string | null;
   createdAt: string;
   startedAt: string | null;

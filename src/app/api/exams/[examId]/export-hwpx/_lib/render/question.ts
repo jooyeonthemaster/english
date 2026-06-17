@@ -47,7 +47,7 @@ import {
   formatSummaryCompleteMcSummaryForDisplay,
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
-import { formatGrammarCorrectionCorrectAnswerForStoredQuestion } from "@/lib/grammar-correction-display";
+import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
 
 const NO: BorderSpec = { type: "NONE", widthMm: 0.1, color: COLORS.black };
@@ -419,7 +419,7 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   if (includeAnswers) {
     result.push(
       ...renderAnswerBlock({
-        correctAnswer: formatGrammarCorrectionCorrectAnswerForStoredQuestion({
+        correctAnswer: formatStoredQuestionCorrectAnswer({
           ...item.sourceQuestion,
           correctAnswer: item.correctAnswer ?? item.sourceQuestion.correctAnswer ?? "",
         }),

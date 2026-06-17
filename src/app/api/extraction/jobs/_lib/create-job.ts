@@ -2,7 +2,7 @@
 // POST /api/extraction/jobs — create a new extraction job.
 //
 //   1. Validate payload (createJobRequestSchema)
-//   2. Credit pre-flight (no actual deduction — that's per-page)
+//   2. Credit pre-flight (pure OCR is free; restoration is charged later)
 //   3. Insert ExtractionJob + ExtractionPage rows atomically
 //   4. Issue signed upload URLs for each page (and the original PDF) AFTER
 //      the transaction commits, so we never hold a DB connection while
@@ -66,10 +66,15 @@ export async function handleCreateJob(req: NextRequest) {
     return errorResponse("INVALID_PAYLOAD", "요청 본문을 읽을 수 없습니다.", 400);
   }
 
-  // Pre-flight balance check
-  const projected = parsed.totalPages * CREDIT_COSTS.TEXT_EXTRACTION;
+  // Pre-flight balance check. Pure OCR / Document AI is free; only explicit
+  // AI restoration is projected here. The exact restoration count is finalized
+  // later at the draft stage, so this remains a conservative upfront guard.
+  const projected =
+    parsed.outputMode === "restored"
+      ? parsed.totalPages * CREDIT_COSTS.PASSAGE_RESTORATION
+      : 0;
   const balance = await checkBalance(staff.academyId);
-  if (balance.balance < projected) {
+  if (projected > 0 && balance.balance < projected) {
     return NextResponse.json(
       {
         error: "크레딧이 부족합니다.",

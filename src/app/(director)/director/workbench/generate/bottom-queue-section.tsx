@@ -814,7 +814,9 @@ export function BottomQueueSection({
           fixedHeight
           ariaLabel={`${item.passageTitle} - 문제 생성 중`}
           planBadge={
-            FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
+            // 모델 셀렉터가 꺼져 있어도 이미 PREMIUM으로 생성된 항목은 배지를 보인다.
+            FEATURE_FLAGS.SHOW_MODEL_SELECTOR ||
+            planConfig.id === "PREMIUM" ? (
               <span
                 className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
                   planConfig.id === "PREMIUM"
@@ -860,7 +862,8 @@ export function BottomQueueSection({
                 <h4 className="text-[13px] font-bold text-slate-800 truncate">
                   {item.passageTitle}
                 </h4>
-                {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
+                {(FEATURE_FLAGS.SHOW_MODEL_SELECTOR ||
+                  planConfig.id === "PREMIUM") && (
                   <span
                     className={`shrink-0 inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[10px] font-bold ${
                       planConfig.id === "PREMIUM"
@@ -1288,8 +1291,9 @@ export function BottomQueueSection({
               onChange={setReviewStatusFilter}
             />
 
-            {/* 생성 플랜 필터 — 전체 → 일반 생성 → 프리미엄 생성 순환(단일 버튼). */}
-            {FEATURE_FLAGS.SHOW_MODEL_SELECTOR && (
+            {/* 생성 플랜 필터 — 전체 → 일반 생성 → 프리미엄 생성 순환(단일 버튼).
+                PREMIUM 결과가 있으면 모델 셀렉터 플래그와 무관하게 노출(MINE 게이트 보존). */}
+            {(FEATURE_FLAGS.SHOW_MODEL_SELECTOR || savedPlanCounts.PREMIUM > 0) && (
               <ViewModeCycleButton
                 value={savedPlanFilter}
                 options={(

@@ -2528,8 +2528,8 @@ model ExtractionJob {
   pendingPages Int // init = totalPages
 
   creditsReserved Int @default(0) // pre-flight projected cost (not actually charged)
-  creditsConsumed Int @default(0) // sum of successful page charges
-  creditsRefunded Int @default(0) // sum of refunds
+  creditsConsumed Int @default(0) // sum of restoration charges
+  creditsRefunded Int @default(0) // sum of restoration refunds
 
   concurrencyLimit Int     @default(5)
   triggerRunId     String? @db.Text // Trigger.dev orchestrator run handle (cancel/cleanup)
@@ -2615,8 +2615,8 @@ model ExtractionPage {
   /// (LLM tendency overriding prompt). Null when Document AI was not used.
   documentAiRawText String? @db.Text
 
-  // ─── 크레딧 연결 ──────────────────────────────
-  creditTxId String? // CreditTransaction.id for dedup on retry
+  // ─── 크레딧 연결(legacy) ──────────────────────
+  creditTxId String? // Legacy OCR charge link. New pure OCR jobs leave this null.
 
   // ─── 에러 ─────────────────────────────────────
   errorCode    String?
@@ -2910,7 +2910,7 @@ model ExtractionM1PassageDraft {
   confirmedAt    DateTime?
   savedPassageId String?
   /// (P7-D2) AI 복원 차감 CreditTransaction.id. null=미과금. 환불 후 null 복원.
-  /// (ExtractionPage.creditTxId 멱등 패턴과 동일)
+  /// Pure OCR/Document AI does not set a credit transaction.
   restorationCreditTxId String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -3218,6 +3218,13 @@ model Webtoon {
   errorMessage        String? @db.Text
   triggerRunId        String? // Trigger.dev run id for tracking
   creditTransactionId String? @unique // For refunds
+
+  // Editable text layer ("자막 편집"). Layered doc: detected text regions (geometry +
+  // text + style) over the baked image, so users can fix typos/mistranslations in-browser.
+  // Shape = WebtoonTextDoc (src/lib/webtoon-text/types.ts). Added via surgical ALTER.
+  textDoc      Json?   @map("text_doc")
+  editedImageUrl String? @db.Text @map("edited_image_url") // Supabase URL of the re-typeset export
+  editedStoragePath String? @map("edited_storage_path")
 
   createdAt   DateTime  @default(now())
   startedAt   DateTime?

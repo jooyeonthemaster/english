@@ -4,16 +4,15 @@
 // Enforces the 3-way idempotency contract:
 //   1. Trigger.dev idempotencyKey (set by the orchestrator)   → dedupes dispatch
 //   2. DB leaseOwner+leaseExpiresAt + conditional UPDATE       → dedupes execution
-//   3. ExtractionPage.creditTxId                               → dedupes billing
+//   3. ExtractionPage status guard                              → dedupes writes
 //
 // Retry semantics:
 //   - Retryable errors (GEMINI_RATE_LIMIT, SERVER, TIMEOUT, NETWORK, EMPTY_OUTPUT,
 //     PARSE_ERROR) → throw → Trigger.dev backoff-retries the same run (same
-//     creditTxId reused). Before every retry we wipe any ExtractionItem rows
-//     created by the previous attempt on this page so structured runs do not
-//     double-emit blocks.
-//   - Permanent errors (GEMINI_AUTH, INVALID_IMAGE, SAFETY_BLOCKED,
-//     INSUFFICIENT_CREDITS) → mark page DEAD, refund credits if charged, return.
+//     Before every retry we wipe any ExtractionItem rows created by the previous
+//     attempt on this page so structured runs do not double-emit blocks.
+//   - Permanent errors (GEMINI_AUTH, INVALID_IMAGE, SAFETY_BLOCKED)
+//     mark page DEAD and return.
 //
 // Mode routing:
 //   - M1 PASSAGE_ONLY / M2 QUESTION_SET / M4 FULL_EXAM: structured JSON block
@@ -22,12 +21,9 @@
 //   - M3 EXPLANATION: falls back to plain OCR for now (feature gated off).
 //
 // Billing-idempotency invariant (critical):
-//   Between `deductCredits` returning and `extractionPage.creditTxId` being
-//   persisted there is a WRITE-WRITE gap. A crash in that gap would otherwise
-//   leak a charge on retry. We defend with a two-step pre-check in
-//   `ensurePageCharged`: scan CreditTransaction for `metadata.idempotencyKey`
-//   on CONSUMPTION rows before calling deductCredits, and reuse the prior
-//   transactionId when found.
+// Billing:
+//   Pure OCR / Document AI transcription is free. This worker does not deduct
+//   credits. AI restoration is charged later at the M1 passage-draft stage.
 // ============================================================================
 
 import { task, logger } from "@trigger.dev/sdk/v3";
@@ -35,16 +31,10 @@ import {
   EXTRACTION_PAGE_QUEUE_CONCURRENCY,
   EXTRACTION_PAGE_QUEUE_NAME,
 } from "@/lib/concurrency-config";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
-import { refundCredits } from "@/lib/credits";
 import { MAX_PAGE_ATTEMPTS } from "@/lib/extraction/constants";
 import { classifyGeminiError } from "@/lib/extraction/error-classifier";
 import type { ExtractionMode } from "@/lib/extraction/types";
 import { prisma } from "@/lib/prisma";
-import {
-  PageOutOfCreditsError,
-  ensurePageCharged,
-} from "./_lib/extraction-page/charge-credits";
 import { claimPageLease } from "./_lib/extraction-page/claim-lease";
 import {
   getErrorDebugMessage,
@@ -86,44 +76,6 @@ export const extractionPageTask = task({
     const mode: ExtractionMode =
       payload.mode ?? (page.job.mode as ExtractionMode) ?? "PASSAGE_ONLY";
 
-    // ─── (B) Deduct credits (idempotent, skip if already charged) ─────────
-    let creditTxId: string;
-    try {
-      creditTxId = await ensurePageCharged({
-        page,
-        idempotencyKey,
-        jobId,
-        pageIndex,
-        mode,
-      });
-    } catch (err) {
-      if (err instanceof PageOutOfCreditsError) {
-        await prisma.$transaction(async (tx) => {
-          await tx.extractionPage.update({
-            where: { idempotencyKey },
-            data: {
-              status: "DEAD",
-              errorCode: "INSUFFICIENT_CREDITS",
-              errorMessage: err.message,
-              leaseOwner: null,
-              leaseExpiresAt: null,
-              completedAt: new Date(),
-            },
-          });
-          await tx.extractionJob.update({
-            where: { id: jobId },
-            data: {
-              failedPages: { increment: 1 },
-              pendingPages: { decrement: 1 },
-            },
-          });
-        });
-        await maybeTriggerFinalize(jobId);
-        return { error: "INSUFFICIENT_CREDITS" as const };
-      }
-      throw err;
-    }
-
     // ─── (C) Fetch image + call OCR ───────────────────────────────────────
     const startTs = Date.now();
     let extractedText: string;
@@ -161,8 +113,7 @@ export const extractionPageTask = task({
 
       if (classified.retryable && page.attemptCount + 1 < page.maxAttempts) {
         // Release lease + mark FAILED so reaper can re-dispatch if Trigger
-        // retry itself fails. creditTxId is preserved so retry doesn't
-        // double-charge.
+        // retry itself fails.
         await prisma.extractionPage.update({
           where: { idempotencyKey },
           data: {
@@ -197,27 +148,6 @@ export const extractionPageTask = task({
           },
         });
       });
-      if (creditTxId) {
-        try {
-          await refundCredits(
-            page.job.academyId,
-            "TEXT_EXTRACTION",
-            creditTxId,
-            `Page ${pageIndex} permanent fail: ${classified.code}`,
-          );
-          await prisma.extractionJob.update({
-            where: { id: jobId },
-            data: {
-              creditsRefunded: { increment: CREDIT_COSTS.TEXT_EXTRACTION },
-            },
-          });
-        } catch (refundErr) {
-          logger.error("refund failed", {
-            idempotencyKey,
-            err: String(refundErr),
-          });
-        }
-      }
       await maybeTriggerFinalize(jobId);
       return { error: classified.code };
     }

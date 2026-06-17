@@ -37,7 +37,9 @@ export interface QuestionDiversityContext {
   variantCount?: number;
 }
 
-const MAX_USED_TARGETS_PER_TYPE = 8;
+// 순차 wave(앞 배치가 DB에 저장된 뒤 생성)가 직전 배치 전체를 회피 기억하도록
+// 8→24 로 상향(typical 배치 ≤20). 표현 단위 중복방지의 cross-wave 기억 한계 해소.
+const MAX_USED_TARGETS_PER_TYPE = 24;
 const MAX_USED_ANSWER_LABELS_PER_TYPE = 12;
 const MAX_TARGET_DISPLAY_LENGTH = 140;
 
@@ -199,6 +201,37 @@ function extractUsedSignature(
             if (/^[a-m]$/.test(pointCode)) pointCodes.push(pointCode);
           }
         }
+      }
+      break;
+    }
+    case "GRAMMAR_CHOICE_COMBO": {
+      // 세 네모 전부가 출제 지점 — 원문 표현을 타깃으로, 포인트 코드를 회피
+      // 채널로 기록 (default 폴백은 조합 보기 텍스트를 타깃으로 오기록한다).
+      if (Array.isArray(data.slots)) {
+        for (const slot of data.slots) {
+          if (!isRecord(slot)) continue;
+          pushTarget(targets, slot.correctExpression);
+          const pointCode = asTrimmedString(slot.pointCode).toLowerCase();
+          if (/^[a-m]$/.test(pointCode)) pointCodes.push(pointCode);
+        }
+      }
+      break;
+    }
+    case "GRAMMAR_CORRECTION": {
+      // 서술형 어법 수정: 각 오류 구간에서 '학생이 고쳐 쓴 표현(correctedPart)'을
+      // 타깃으로 기록 — 같은 지문 반복 생성 시 같은 교정 포인트가 다시 나오는 것을
+      // 줄인다. 스키마의 폴백 순서(item → correctedParts[i] → correctedPart[0])를 따른다.
+      if (Array.isArray(data.underlinedSegments)) {
+        data.underlinedSegments.forEach((seg, index) => {
+          if (!isRecord(seg) || seg.isError !== true) return;
+          const corrected =
+            asTrimmedString(seg.correctedPart) ||
+            (Array.isArray(data.correctedParts)
+              ? asTrimmedString(data.correctedParts[index])
+              : "") ||
+            (index === 0 ? asTrimmedString(data.correctedPart) : "");
+          pushTarget(targets, corrected);
+        });
       }
       break;
     }
@@ -422,6 +455,8 @@ const TARGET_NOUN_BY_SUBTYPE: Record<string, string> = {
   ANTONYM: "단어-반의어 쌍",
   VOCAB_CHOICE: "밑줄 어휘",
   GRAMMAR_ERROR: "오류로 변형한 표현",
+  GRAMMAR_CHOICE_COMBO: "네모 후보로 변형한 원문 표현",
+  GRAMMAR_CORRECTION: "정답으로 고쳐 쓴 표현",
   SENTENCE_INSERT: "삽입용으로 빼낸 문장",
   REFERENCE: "밑줄 친 대명사",
   SUMMARY_COMPLETE_MC: "요약문 빈칸 정답 어구",
@@ -481,6 +516,9 @@ export const SHUFFLE_OPTION_TYPES = new Set([
   "CONTEXT_MEANING",
   "SYNONYM",
   "SUMMARY_COMPLETE_MC",
+  // 네모 어법 조합 선지는 지문 위치 비결속(선지 = A-B-C 후보 조합) — 셔플 시
+  // slotValues 가 옵션 객체와 함께 이동하므로 안전.
+  "GRAMMAR_CHOICE_COMBO",
 ]);
 
 function fisherYatesPermutation(length: number): number[] {

@@ -87,7 +87,6 @@ import {
   type ViewModeCycleOption,
 } from "@/components/workbench/shared/view-mode-cycle-button";
 import { QuestionCard } from "@/components/workbench/question-card";
-import { QuestionBankCard } from "@/components/workbench/question-bank-card";
 import { PassageGroupedView } from "@/components/workbench/question-bank-passage-view";
 import { CreateExamDialog } from "@/components/workbench/question-bank-client/create-exam-dialog";
 import { EditQuestionDialog } from "@/components/workbench/question-bank-client/edit-question-dialog";
@@ -989,8 +988,6 @@ export function EmbeddedQuestionBank({
     setSelectedIds,
   ]);
 
-  const showingPendingOnly = filters.approved === false;
-
   // ─── Toolbar pieces ───
   const VIEW_MODE_OPTIONS = [
     { value: "ALL", label: "문제별", Icon: Rows3 },
@@ -1290,6 +1287,45 @@ export function EmbeddedQuestionBank({
       </div>
     ) : null;
 
+  // 생성 결과 목록의 모든 문제 카드를 "접힌 콤팩트 카드" 한 가지로 통일한다.
+  // (기존 QuestionBankCard 분기 폐기 — 발문 한 줄·정답 보기만 보이고 '펼치기'로
+  //  전체를 펴며, 검수완료/수정하기·삭제·상세 보기는 그대로 유지한다. 설명 태그는
+  //  compact 카드가 애초에 렌더하지 않으므로 자동으로 빠진다.) 방금 생성 완료된
+  //  문제는 파란 글로우로 강조하고, 카드를 클릭하면 글로우를 해제한다.
+  const renderManagedQuestionCard = (q: any, displayNum: number) => {
+    const card = (
+      <QuestionCard
+        key={q.id}
+        q={q}
+        num={displayNum}
+        selected={selectedIds.has(q.id)}
+        onToggle={() => toggleSelect(q.id)}
+        onApprove={() => handleApprove(q.id)}
+        onUnapprove={() => handleUnapprove(q.id)}
+        onDelete={() => handleDelete(q.id)}
+        onDetail={() => openDetail(q.id)}
+        onEdit={() => editor.openEditor(q.id)}
+        readonly
+        compact
+        showReviewActions
+        showHeaderActions
+        showDetailButton
+        openOnCardClick
+        dragItemId={q.id}
+      />
+    );
+    if (!freshQuestionIds.has(q.id)) return card;
+    return (
+      <div
+        key={q.id}
+        className={FRESH_QUESTION_GLOW_CLASS}
+        onClickCapture={() => acknowledgeFreshQuestion(q.id)}
+      >
+        {card}
+      </div>
+    );
+  };
+
   return (
     <section
       data-generate-embedded-question-bank
@@ -1404,25 +1440,8 @@ export function EmbeddedQuestionBank({
                   setExpandedPassageIds={setExpandedPassageIds}
                   onActivePassageChange={setActivePassageContext}
                   getDragQuestionIds={getDragQuestionIds}
-                  renderQuestion={
-                    showingPendingOnly
-                      ? (q, idx) => (
-                          <QuestionCard
-                            key={q.id}
-                            q={q}
-                            num={idx + 1}
-                            selected={selectedIds.has(q.id)}
-                            onToggle={() => toggleSelect(q.id)}
-                            onApprove={() => handleApprove(q.id)}
-                            onDetail={() => openDetail(q.id)}
-                            onEdit={() => editor.openEditor(q.id)}
-                            readonly
-                            compact
-                            showReviewActions
-                            openOnCardClick
-                          />
-                        )
-                      : undefined
+                  renderQuestion={(q, idx) =>
+                    renderManagedQuestionCard(q, idx + 1)
                   }
                 />
               ) : displayedQuestions.length === 0 && !loading ? (
@@ -1453,57 +1472,7 @@ export function EmbeddedQuestionBank({
                 >
                   {displayedQuestions.map((q, idx) => {
                     const startIdx = (currentPage - 1) * PAGE_SIZE;
-                    if (showingPendingOnly) {
-                      return (
-                        <QuestionCard
-                          key={q.id}
-                          q={q}
-                          num={startIdx + idx + 1}
-                          selected={selectedIds.has(q.id)}
-                          onToggle={() => toggleSelect(q.id)}
-                          onApprove={() => handleApprove(q.id)}
-                          onDetail={() => openDetail(q.id)}
-                          onEdit={() => editor.openEditor(q.id)}
-                          readonly
-                          compact
-                          showReviewActions
-                          openOnCardClick
-                        />
-                      );
-                    }
-                    const card = (
-                      <QuestionBankCard
-                        key={q.id}
-                        q={q}
-                        num={startIdx + idx + 1}
-                        selected={selectedIds.has(q.id)}
-                        onToggle={() => toggleSelect(q.id)}
-                        onDelete={() => handleDelete(q.id)}
-                        onApprove={() => handleApprove(q.id)}
-                        onUnapprove={() => handleUnapprove(q.id)}
-                        onToggleStar={() => handleToggleStar(q.id)}
-                        onDetail={() => openDetail(q.id)}
-                        onEdit={() => editor.openEditor(q.id)}
-                        viewSize={viewSize}
-                        cardClickSelects
-                        showDetailButton
-                        dragRequiresSelection
-                        getDragQuestionIds={getDragQuestionIds}
-                      />
-                    );
-                    // 방금 생성 완료된 문제는 파란 글로우(클릭 시 해제).
-                    if (freshQuestionIds.has(q.id)) {
-                      return (
-                        <div
-                          key={q.id}
-                          className={FRESH_QUESTION_GLOW_CLASS}
-                          onClickCapture={() => acknowledgeFreshQuestion(q.id)}
-                        >
-                          {card}
-                        </div>
-                      );
-                    }
-                    return card;
+                    return renderManagedQuestionCard(q, startIdx + idx + 1);
                   })}
                 </DragSelect>
               )}

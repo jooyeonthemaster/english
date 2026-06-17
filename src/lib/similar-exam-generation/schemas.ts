@@ -34,6 +34,7 @@ export const stimulusTypeSchema = z.enum([
 export const GENERATION_SUB_TYPES = [
   "BLANK_INFERENCE",
   "GRAMMAR_ERROR",
+  "GRAMMAR_CHOICE_COMBO",
   "GRAMMAR_CORRECTION",
   "VOCAB_CHOICE",
   "CONTEXT_MEANING",

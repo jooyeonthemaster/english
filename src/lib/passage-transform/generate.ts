@@ -84,6 +84,10 @@ async function runTransform<T>({
 }
 
 const normalize = (s: string) => s.replace(/\s+/g, " ").trim().toLowerCase();
+const countWords = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
+/** 러프 문장 수 — 종결부호(닫는 따옴표/괄호 포함) + 공백/문장끝 경계로 센다. */
+const countSentences = (s: string) =>
+  (s.match(/[.!?]["'”’)\]]*(?:\s|$)/g) || []).length || (s.trim() ? 1 : 0);
 
 /**
  * changes 정리 — flash-lite 가 자주 내는 쓰레기 쌍을 걸러낸다:
@@ -202,6 +206,24 @@ export async function runParaphrase({
   // (짧은 선택에서도 가드가 무력해지지 않게 바닥값은 160자로 제한)
   if (rewritten.length > Math.max(selectedText.length * 2.5, 160)) {
     throw new Error("변형 결과가 비정상적으로 깁니다. 다시 시도해주세요.");
+  }
+  // ── 붕괴 가드 ──────────────────────────────────────────────────────────
+  // flash-lite 는 주제적으로 이질적인(무관 문장이 섞인) 다문장 span 을 만나면
+  // "충실 재작성" 대신 핵심만 한 문장으로 "요약"해버리는 사고가 잦다(실측 확인).
+  // 그대로 적용하면 선택 구간 전체가 한 문장으로 날아가므로, 결과가 원문 대비
+  // 크게 짧아졌거나(다문장 → 단어 절반 미만) 문장 수가 급감하면 거부해
+  // runTransform 의 재시도/에러로 흘려보낸다(무성 데이터 손실 차단).
+  const srcWords = countWords(selectedText);
+  const outWords = countWords(rewritten);
+  const srcSentences = countSentences(selectedText);
+  const outSentences = countSentences(rewritten);
+  const wordCollapsed = srcWords >= 30 && outWords < srcWords * 0.5;
+  const sentenceCollapsed =
+    srcSentences >= 3 && outSentences <= Math.floor(srcSentences / 2);
+  if (wordCollapsed || sentenceCollapsed) {
+    throw new Error(
+      "변형 결과가 원문보다 크게 줄었습니다(문장이 요약·누락됨). 다시 시도하거나, 한 번에 한두 문장씩 선택해 변형해주세요.",
+    );
   }
   return {
     ...result,

@@ -14,6 +14,7 @@ export const SOLO_ONLY_TYPES: ReadonlySet<string> = new Set([
   "BLANK_INFERENCE",
   "FILL_BLANK_KEY",
   "GRAMMAR_ERROR",
+  "GRAMMAR_CHOICE_COMBO",
   "VOCAB_CHOICE",
   "ANTONYM",
   "IRRELEVANT",
