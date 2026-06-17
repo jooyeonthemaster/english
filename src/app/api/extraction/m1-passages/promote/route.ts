@@ -14,7 +14,9 @@ export const dynamic = "force-dynamic";
 
 const promoteSchema = z.object({
   draftIds: z.array(z.string().min(1)).min(1).max(200),
-  markReviewed: z.boolean().optional().default(true),
+  // 기본값 false — 자료를 승격/사용하는 것만으로 검수완료되면 안 된다. 사람이
+  // 명시적으로 '검수완료' 버튼을 누른 클라이언트만 markReviewed:true 를 보낸다.
+  markReviewed: z.boolean().optional().default(false),
 });
 
 export async function POST(req: NextRequest) {

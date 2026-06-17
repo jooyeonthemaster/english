@@ -408,7 +408,8 @@ export function useDraftActions(params: UseDraftActionsParams) {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ draftIds: [draft.id] }),
+          // 사람이 누른 '검수완료' 액션 — 명시적으로 검수완료 처리.
+          body: JSON.stringify({ draftIds: [draft.id], markReviewed: true }),
         });
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));

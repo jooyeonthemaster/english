@@ -204,9 +204,10 @@ export async function createWorkbenchPassage(
     const session = await requireAuth();
     const academyId = getAcademyId(session);
     const schoolId = data.schoolId && data.schoolId !== "NONE" ? data.schoolId : null;
-    // 생성의 부수효과로 지문을 만들 땐(동형 시험지 from-drafts 등) 원본 draft 를
-    // 검수완료로 올리지 않는다 — 생성은 사람 검수가 아니므로 검수필요를 유지한다.
-    const markDraftReviewed = data.markReviewed ?? true;
+    // 생성의 부수효과로 지문을 만들 땐(동형 시험지 from-drafts·직접입력·웹툰·등록 등)
+    // 원본 draft 를 검수완료로 올리지 않는다 — 생성/저장은 사람 검수가 아니므로
+    // 검수필요를 유지한다. 기본값 false, 사람이 명시적으로 검수완료할 때만 true.
+    const markDraftReviewed = data.markReviewed ?? false;
 
     if (schoolId) {
       const school = await prisma.school.findFirst({
