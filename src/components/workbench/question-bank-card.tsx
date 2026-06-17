@@ -157,7 +157,8 @@ export function QuestionBankCard({
   selectedCardHighlight?: boolean;
 }) {
   const [isDragging, setIsDragging] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+  // 카드 접힘/펼침 — 기본은 접힘(의문문 + 지문 2줄 + 정답만 보이는 미리보기).
+  const [collapsed, setCollapsed] = useState(true);
   const [passageOpen, setPassageOpen] = useState(false);
   const [duplicatePromptOpen, setDuplicatePromptOpen] = useState(false);
   const dragRef = useRef<HTMLDivElement>(null);
@@ -220,6 +221,19 @@ export function QuestionBankCard({
     () => sections.filter((s) => s.type !== "direction"),
     [sections],
   );
+
+  // 접힘 미리보기용 지문 — 파싱된 지문/요약/단락 섹션을 우선 쓰고,
+  // 없으면 본문 첫 섹션, 그래도 없으면 참조 지문(q.passage) 본문을 쓴다.
+  const collapsedPassage = useMemo(() => {
+    const candidate =
+      bodySections.find(
+        (s) =>
+          s.type === "passage" ||
+          s.type === "summary" ||
+          s.type === "paragraphs",
+      ) ?? bodySections.find((s) => typeof s.content === "string" && s.content);
+    return candidate?.content || q.passage?.content || "";
+  }, [bodySections, q.passage]);
 
   // Make card draggable — 단, 네이티브 드래그는 "손잡이(DragHandle)"에만 등록한다.
   // 카드 본문은 draggable 이 아니므로 본문 위에서는 영역 선택(마키)이 동작하고,
@@ -508,6 +522,25 @@ export function QuestionBankCard({
                 }
               />
             )}
+            {/* 카드 접기/펼치기 토글 — 검수 점 오른쪽, 옅은 파란색. */}
+            <button
+              type="button"
+              data-drag-select-ignore
+              onClick={(e) => {
+                e.stopPropagation();
+                setCollapsed((prev) => !prev);
+              }}
+              aria-expanded={!collapsed}
+              aria-label={collapsed ? "카드 펼치기" : "카드 접기"}
+              title={collapsed ? "펼치기" : "접기"}
+              className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-500"
+            >
+              {collapsed ? (
+                <ChevronDown className="size-4.5" />
+              ) : (
+                <ChevronUp className="size-4.5" />
+              )}
+            </button>
           </div>
         </div>
 
@@ -521,8 +554,17 @@ export function QuestionBankCard({
             </div>
           )}
 
-          {/* ── Question content — 접힘/펼침 모두 전체 렌더(해설만 펼침 전용) ── */}
-          {
+          {/* ── Question content ──
+              접힘: 의문문 + 지문 2줄(말줄임) + 정답 선지만 미리보기.
+              펼침: 전체 렌더(구조화 렌더러 또는 섹션/선지). */}
+          {collapsed ? (
+            <CollapsedPreview
+              direction={directionText}
+              passage={collapsedPassage}
+              options={displayOptions}
+              correctAnswer={q.correctAnswer}
+            />
+          ) : (
             <>
               {/* 전체 구조화 렌더링 */}
               {structuredQuestion ? (
@@ -579,12 +621,13 @@ export function QuestionBankCard({
                   </div>
                 )}
             </>
-          }
+          )}
 
-          {/* 해설 보기 — 자체 토글이 있어 항상 렌더. 구조화 문제는 위
+          {/* 해설 보기 — 자체 토글이 있어 항상 렌더. 펼침 상태의 구조화 문제는 위
             StructuredQuestionRenderer 가 해설을 직접 제공하므로 비구조화에서만 렌더(중복 방지).
+            접힘 상태에서는 미리보기가 해설을 포함하지 않으므로 항상 '해설 보기'를 노출한다.
             rightSlot에는 '분석 정보'(동형 전용)만 별도 액션으로 남긴다. */}
-          {!structuredQuestion && (
+          {(collapsed || !structuredQuestion) && (
             <ExplanationSection
               explanation={q.explanation}
               rightSlot={

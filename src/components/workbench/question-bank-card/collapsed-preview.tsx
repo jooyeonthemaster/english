@@ -2,70 +2,67 @@
 "use client";
 
 import React from "react";
-import type { ParsedSection } from "./types";
+import { renderFormatted } from "./render-formatted";
 
+// 카드를 접었을 때 보여줄 미리보기:
+//  · 의문문(발문) — 펼침과 동일하게 전체 노출
+//  · 지문 — 2줄만 남기고 '…'으로 말줄임
+//  · 선지 — 정답(들)만 표시
 export function CollapsedPreview({
-  sections,
+  direction,
+  passage,
   options,
   correctAnswer,
-  questionClamp,
 }: {
-  sections: ParsedSection[];
+  direction: string;
+  passage: string;
   options: { label: string; text: string }[];
   correctAnswer: string;
-  questionClamp: string;
 }) {
-  const direction = sections.find((s) => s.type === "direction");
-  const passage = sections.find(
-    (s) => s.type === "passage" || s.type === "summary",
-  );
   const correctLabels = parseCorrectAnswerLabels(correctAnswer);
+  const correctOptions = options.filter((o) =>
+    correctLabels.has(normalizeAnswerLabel(o.label)),
+  );
 
   return (
-    <div className="space-y-1">
-      {/* Direction */}
+    <div className="space-y-2">
+      {/* 의문문(발문) — 펼침과 동일하게 전체 표시 */}
       {direction && (
-        <div
-          className={`text-[13px] font-bold text-slate-900 leading-relaxed ${questionClamp}`}
-        >
-          {direction.content}
+        <div className="text-[13px] font-bold text-slate-900 leading-relaxed whitespace-pre-line">
+          {renderFormatted(direction)}
         </div>
       )}
 
-      {/* Passage preview (1 line) */}
+      {/* 지문 — 2줄만 남기고 말줄임 */}
       {passage && (
-        <div className="text-[12px] text-slate-500 line-clamp-1 font-mono">
-          {passage.content}
+        <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
+          <div className="font-mono text-[12px] leading-[1.8] text-slate-700 whitespace-pre-wrap line-clamp-2">
+            {renderFormatted(passage)}
+          </div>
         </div>
       )}
 
-      {/* Options preview or answer preview */}
-      {options.length > 0 ? (
-        <div className="space-y-0.5">
-          {/* Show correct answer option */}
-          {options
-            .filter((o) => correctLabels.has(normalizeAnswerLabel(o.label)))
-            .slice(0, 3)
-            .map((correct) => (
-              <div
-                key={correct.label}
-                className="flex items-start gap-2.5 text-[12px] rounded border border-slate-200 bg-slate-50 px-2 py-1 text-slate-700 font-medium"
-              >
-                <span className="shrink-0 text-[13px] font-bold tabular-nums pt-px text-slate-600">
-                  {correct.label}.
-                </span>
-                <div className="truncate pt-0.5">{correct.text}</div>
-              </div>
-            ))}
-          {options.length > 1 && (
-            <span className="text-[10px] text-slate-400 pl-2">
-              외 {options.length - 1}개 선택지
-            </span>
-          )}
+      {/* 선지 — 정답만, 펼침(OptionList)과 동일한 모습(파란 원형 라벨 + 파란 굵은 글씨) */}
+      {correctOptions.length > 0 ? (
+        <div className="space-y-1.5 pl-1">
+          {correctOptions.map((opt) => (
+            <div
+              key={opt.label}
+              className="text-[13px] flex items-start gap-2 text-blue-700 font-semibold"
+            >
+              <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-blue-600 text-white">
+                {opt.label}
+              </span>
+              <span>{renderFormatted(opt.text)}</span>
+            </div>
+          ))}
         </div>
       ) : correctAnswer ? (
-        <div className="text-[12px] bg-slate-50 text-slate-700 px-2 py-1 rounded border border-slate-200 line-clamp-1">
-          <span className="font-medium">정답:</span> {correctAnswer}
+        <div className="text-[13px] text-slate-700">
+          정답:{" "}
+          <span className="font-bold text-emerald-600">
+            {renderFormatted(correctAnswer)}
+          </span>
         </div>
       ) : null}
     </div>
