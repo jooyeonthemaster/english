@@ -303,7 +303,8 @@ export function useBulkActions(params: UseBulkActionsParams) {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ draftIds: ids }),
+          // 사람이 누른 '검수완료' 액션 — 명시적으로 검수완료 처리.
+          body: JSON.stringify({ draftIds: ids, markReviewed: true }),
         });
         if (!res.ok) throw new Error("검수 처리 요청이 실패했습니다.");
         const data = (await res.json()) as {

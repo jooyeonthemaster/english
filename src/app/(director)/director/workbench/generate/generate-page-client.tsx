@@ -1522,7 +1522,8 @@ export function GeneratePageClient({
               method: "POST",
               headers: { "Content-Type": "application/json" },
               credentials: "include",
-              body: JSON.stringify({ draftIds: [draft.id] }),
+              // 사용자가 '검수완료'로 표시 — 명시적으로 검수완료 처리.
+              body: JSON.stringify({ draftIds: [draft.id], markReviewed: true }),
             },
           );
           const data = await res.json().catch(() => ({}));
@@ -1622,7 +1623,8 @@ export function GeneratePageClient({
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
-            body: JSON.stringify({ draftIds }),
+            // 사용자가 '검수완료'로 일괄 표시 — 명시적으로 검수완료 처리.
+            body: JSON.stringify({ draftIds, markReviewed: true }),
           },
         );
         const data = await res.json().catch(() => ({}));
