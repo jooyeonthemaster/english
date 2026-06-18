@@ -10,6 +10,7 @@ import {
 } from "@/lib/grammar-point-catalog";
 import { buildBlankPointGuidance } from "@/lib/blank-point-catalog";
 import { buildSentenceInsertPointGuidance } from "@/lib/sentence-insert-point-catalog";
+import { buildIrrelevantPointGuidance } from "@/lib/irrelevant-point-catalog";
 import { splitPassageSentences as splitSharedPassageSentences } from "@/lib/passage-sentence-utils";
 import { sentenceInsertOptionMarkerIndex } from "@/lib/sentence-insert-options";
 
@@ -450,13 +451,22 @@ export function buildQuestionTargetCandidateBlock(
         options.requestedDifficulty,
         diversity,
       );
-    case "IRRELEVANT":
-      return buildIrrelevantCandidateBlock(
+    case "IRRELEVANT": {
+      // 후보(문장) 블록 + (pointFocus 일 때) 무관성 유형 focus 가이드 주입.
+      // pointFocus 미지정이면 guidance="" → 기존(비-focus) 동작 불변.
+      const irrelevantBlock = buildIrrelevantCandidateBlock(
         passage,
         options.irrelevantSlotCount,
         options.requestedDifficulty,
         diversity,
       );
+      const irrelevantFocus = buildIrrelevantPointGuidance({
+        variantIndex: diversity.variantIndex,
+        pointFocus: diversity.pointFocus,
+        diversityEnabled: diversity.diversityEnabled,
+      });
+      return [irrelevantBlock, irrelevantFocus].filter(Boolean).join("\n\n");
+    }
     case "BLANK_INFERENCE":
       // The candidate block proposes single-blank targets; the multi-blank
       // variant carries its own instructions in the type-settings prompt.

@@ -980,6 +980,8 @@ export interface ResolvedQuestionTypeGenerationSettings {
   blankPointFocus?: boolean;
   /** 문장삽입 핵심 집중 모드 — 정답 응집장치를 검증 고빈출 코어로 좁힘. */
   sentenceInsertPointFocus?: boolean;
+  /** 무관문장 핵심 집중 모드 — 무관성 유형을 검증 고빈출 코어로 좁힘. */
+  irrelevantPointFocus?: boolean;
   /** Resolved option count for free-text option types (TOPIC/TITLE/...). */
   genericOptionCount?: number;
   /** Resolved correct-answer count for free-text option types. */
@@ -1086,12 +1088,19 @@ export function resolveQuestionTypeGenerationSettings(
 
   if (typeId === "IRRELEVANT") {
     const irrelevantSlotCount = readIrrelevantSlotCountSetting(rawSettings);
+    const irrelevantPointFocus = readBooleanSetting(
+      rawSettings,
+      "IRRELEVANT",
+      "pointFocus",
+    );
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         slotCount: irrelevantSlotCount,
+        pointFocus: irrelevantPointFocus,
       }),
       ...languageSettings,
       irrelevantSlotCount,
+      irrelevantPointFocus,
     };
   }
 
