@@ -24,6 +24,7 @@ import {
   buildQuestionTargetCandidateBlock,
   getTypeQualityRubric,
   type QuestionQualityIssue,
+  SHIP_FIRST_WARNING_CODES,
   validateQuestionQuality,
 } from "@/lib/question-quality";
 import {
@@ -34,6 +35,7 @@ import {
 
 import { DIFF_DESCRIPTION, TYPE_LABELS } from "./constants";
 import { generateWithRetry } from "./generate-with-retry";
+import { repairQuestionCandidate } from "./question-repair";
 import { fallbackResponseSchema, type PlanResult } from "./schemas";
 import {
   STRUCTURED_OUTPUT_INSTRUCTIONS,
@@ -273,6 +275,14 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "double-negative-clause-missing-subject",
   "double-negative-because-phrase-slot",
 ]);
+
+// SHIP-FIRST: B(취향/난이도) 코드는 question-quality 에서 warning 으로 강등되어 절대
+// error 로 이 필터에 도달하지 않는다. 단일 진실원(SHIP_FIRST_WARNING_CODES)에서 차감해
+// 두 목록의 동기화를 보장하고 위 리터럴의 중복 항목(blank-target-list-like)도 제거한다.
+// 남는 것 = A(차단 유지) + C(사전 fast-fail) 코드뿐.
+for (const code of SHIP_FIRST_WARNING_CODES) {
+  RELAXED_BLOCKING_QUALITY_CODES.delete(code);
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -514,48 +524,47 @@ export async function runQuestionGeneration(
         const generatedQuestions = generatedQuestionsAll.slice(0, expectedTypeCount);
         const qs: Record<string, unknown>[] = [];
 
-        for (const q of generatedQuestions) {
+        // 후보 1개를 정규화→후처리→매핑→셔플→품질검증까지 끝내 "확정"한다. SHIP-FIRST
+        // repair(교정 재생성)에서 재검증에 그대로 재사용하기 위해 인라인 함수로 추출한다
+        // (루프 스코프 변수 캡처). 동작은 추출 전과 동일.
+        const finalizeCandidate = (
+          rawQ: Record<string, unknown>,
+        ):
+          | {
+              ok: true;
+              finalQuestion: Record<string, unknown>;
+              blockingErrors: QuestionQualityIssue[];
+              allWarnings: QuestionQualityIssue[];
+              hasRelaxedWarnings: boolean;
+              normalizedDraft: Record<string, unknown>;
+            }
+          | { ok: false; error: string; normalizedDraft: Record<string, unknown> } => {
           // 과거에는 "BLANK_INFERENCE 의 typeSettings 프롬프트 존재 = 부정-부정"이었지만,
           // 언어/다중빈칸 블록이 생기면서 그 프록시가 깨졌다. resolved 플래그로만 판정한다.
-          // KILLER 단일 빈칸(비DN)은 PARAPHRASE 모드를 강제한다 — 정답이 원문
-          // verbatim이면 추론 없이 풀려 KILLER가 성립하지 않는다(검수 실측 avg 4.0).
-          const normalizedAiQuestion =
+          // KILLER 단일 빈칸(비DN)은 PARAPHRASE 모드를 강제한다(정답이 원문 verbatim이면
+          // 추론 없이 풀려 KILLER 미성립).
+          const normalizedAiQuestion: Record<string, unknown> =
             subType === "BLANK_INFERENCE" &&
             resolvedTypeSettings.blankInferenceDoubleNegative
-              ? {
-                  ...q,
-                  blankAnswerMode: "DOUBLE_NEGATIVE",
-                }
+              ? { ...rawQ, blankAnswerMode: "DOUBLE_NEGATIVE" }
               : subType === "BLANK_INFERENCE" &&
                   resolvedTypeSettings.blankInferenceParaphraseAnswer
-                ? {
-                    ...q,
-                    blankAnswerMode: "PARAPHRASE",
-                  }
+                ? { ...rawQ, blankAnswerMode: "PARAPHRASE" }
                 : subType === "BLANK_INFERENCE" &&
                     (resolvedTypeSettings.blankInferenceBlankCount ?? 1) === 1
-                  ? {
-                      ...q,
-                      blankAnswerMode: "SOURCE_EXACT",
-                    }
-                : q;
+                  ? { ...rawQ, blankAnswerMode: "SOURCE_EXACT" }
+                  : rawQ;
           const ppResult = postProcessQuestion(
             subType,
             passageContent,
             normalizedAiQuestion,
           );
           if (!ppResult.success) {
-            console.warn(
-              `[AUTO-GEN] Post-process failed for ${subType}: ${ppResult.error}`,
-            );
-            recordRejection(rejectionRecorder, {
-              phase: "postprocess",
-              qualityMode,
-              subType,
-              message: ppResult.error || "Post-process failed",
-              sample: buildRejectionSample(subType, normalizedAiQuestion),
-            });
-            continue;
+            return {
+              ok: false,
+              error: ppResult.error || "Post-process failed",
+              normalizedDraft: normalizedAiQuestion,
+            };
           }
           if (ppResult.warnings.length > 0) {
             console.warn(
@@ -639,39 +648,111 @@ export async function runQuestionGeneration(
                   .filter((issue) => !RELAXED_BLOCKING_QUALITY_CODES.has(issue.code))
                   .map((issue) => ({ ...issue, severity: "warning" as const }))
               : [];
-          if (blockingQualityErrors.length > 0) {
+          return {
+            ok: true,
+            finalQuestion,
+            blockingErrors: blockingQualityErrors,
+            allWarnings: [...qualityWarnings, ...relaxedQualityWarnings],
+            hasRelaxedWarnings: relaxedQualityWarnings.length > 0,
+            normalizedDraft: normalizedAiQuestion,
+          };
+        };
+
+        for (const q of generatedQuestions) {
+          let fin = finalizeCandidate(q);
+          if (!fin.ok) {
+            console.warn(
+              `[AUTO-GEN] Post-process failed for ${subType}: ${fin.error}`,
+            );
+            recordRejection(rejectionRecorder, {
+              phase: "postprocess",
+              qualityMode,
+              subType,
+              message: fin.error,
+              sample: buildRejectionSample(subType, fin.normalizedDraft),
+            });
+            continue;
+          }
+
+          // SHIP-FIRST 부분 repair: A(차단) 결함이 적으면(<=3종) 문항 전체 재생성 전에
+          // "이 초안에서 이 결함만 고쳐라"로 후보당 1회 교정 재생성을 시도한다. 데드라인
+          // 안에서만. 성공 시 교체, 실패 시 원래 탈락 경로로 폴백(무회귀·happy-path 0영향).
+          if (
+            fin.blockingErrors.length > 0 &&
+            fin.blockingErrors.length <= 3 &&
+            (!deadlineAt || Date.now() < deadlineAt)
+          ) {
+            const repaired = await repairQuestionCandidate({
+              subType,
+              draft: fin.normalizedDraft,
+              blockingIssues: fin.blockingErrors,
+              passageContent,
+              responseSchema,
+              generationPlan: effectiveGenerationPlan,
+              perQuestionTokenFloor,
+              deadlineAt,
+              system: generationSystem,
+              onModelUsage: (result) => {
+                onModelUsage?.({
+                  phase: "question_generation",
+                  subType,
+                  qualityMode,
+                  difficulty: effectiveDiffLabel,
+                  generationPlan: effectiveGenerationPlan,
+                  usage: result.usage,
+                  provider: result.provider,
+                  modelId: result.modelId,
+                  attempts: result.attempts,
+                  durationMs: result.durationMs,
+                });
+              },
+            });
+            if (repaired) {
+              const repairedFin = finalizeCandidate(repaired);
+              if (repairedFin.ok && repairedFin.blockingErrors.length === 0) {
+                console.log(
+                  `[AUTO-GEN] ${subType} candidate repaired (was: ${fin.blockingErrors
+                    .map((issue) => issue.code)
+                    .join(",")})`,
+                );
+                fin = repairedFin;
+              }
+            }
+          }
+
+          if (fin.blockingErrors.length > 0) {
             console.warn(
               `[AUTO-GEN] Quality errors for ${subType}: ${formatIssuesForLog(
-                blockingQualityErrors,
+                fin.blockingErrors,
               )}`,
             );
             recordRejection(rejectionRecorder, {
               phase: "quality",
               qualityMode,
               subType,
-              message: summarizeQualityIssues(blockingQualityErrors),
-              codes: blockingQualityErrors.map((issue) => issue.code),
-              sample: buildRejectionSample(subType, finalQuestion),
+              message: summarizeQualityIssues(fin.blockingErrors),
+              codes: fin.blockingErrors.map((issue) => issue.code),
+              sample: buildRejectionSample(subType, fin.finalQuestion),
             });
             continue;
           }
-          const allQualityWarnings = [
-            ...qualityWarnings,
-            ...relaxedQualityWarnings,
-          ];
-          if (relaxedQualityWarnings.length > 0) {
-            finalQuestion._qualityMode = "relaxed";
-            finalQuestion._qualityWarnings = allQualityWarnings;
-          }
-          if (allQualityWarnings.length > 0) {
+
+          // SHIP-FIRST: 취향/난이도 경고(강등된 B 코드 포함)도 검수 UI 가시성을 위해
+          // strict 모드에서까지 항상 부착한다. 단 _qualityMode='relaxed'(저품질 신호)는
+          // 실제 relaxed 폴백 경로에서만 — 취향 경고에 저품질 배지를 달지 않는다.
+          if (fin.allWarnings.length > 0) {
+            fin.finalQuestion._qualityWarnings = fin.allWarnings;
             console.warn(
               `[AUTO-GEN] Quality warnings for ${subType}: ${formatIssuesForLog(
-                allQualityWarnings,
+                fin.allWarnings,
               )}`,
             );
           }
+          if (fin.hasRelaxedWarnings) {
+            fin.finalQuestion._qualityMode = "relaxed";
+          }
 
-          qs.push(finalQuestion);
+          qs.push(fin.finalQuestion);
         }
 
         console.log(`[AUTO-GEN] ${subType} done: ${qs.length} questions`);

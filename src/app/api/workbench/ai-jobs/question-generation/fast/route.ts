@@ -32,6 +32,7 @@ import { runQuestionGenerationWithEmptyRetry } from "@/app/api/ai/generate-quest
 import { type PlanResult } from "@/app/api/ai/generate-questions-auto/_lib/schemas";
 import { toUserFacingQuestionGenerationError } from "@/lib/question-generation-llm";
 import { countPassageSentences } from "@/lib/passage-sentence-utils";
+import { preflightQuestionFeasibility } from "@/lib/question-quality";
 import {
   buildQuestionDiversityContext,
   type QuestionDiversityContext,
@@ -219,6 +220,22 @@ export async function POST(req: NextRequest) {
           requestedSlotCount,
           maxSlotCount: v.effective,
         },
+        { status: 400 },
+      );
+    }
+  }
+
+  // ── SHIP-FIRST 사전 적합성 게이트: 기계적 불가(예: SENTENCE_ORDER 문장수 부족)만
+  // 차감·잡 생성 전에 거른다. 출제 포인트 품질 판단이 아니라 형식 불가능만 차단. ──
+  if (config.mode === "MANUAL") {
+    const feas = preflightQuestionFeasibility(
+      config.questionType,
+      effectiveDifficulty,
+      passage.content,
+    );
+    if (!feas.ok) {
+      return NextResponse.json(
+        { error: feas.error, code: feas.code, ...feas.detail },
         { status: 400 },
       );
     }

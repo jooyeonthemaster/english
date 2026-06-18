@@ -9,6 +9,7 @@ import {
 } from "@/lib/concurrency-config";
 import { prisma } from "@/lib/prisma";
 import { normalizeQuestionGenerationPlan } from "@/lib/question-generation-plans";
+import { preflightQuestionFeasibility } from "@/lib/question-quality";
 import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 import {
@@ -107,6 +108,23 @@ export async function POST(req: NextRequest) {
           parsed.data.difficulty,
         )
       : readQuestionTypeDifficultySetting(undefined, parsed.data.difficulty);
+
+  // ── SHIP-FIRST 사전 적합성 게이트: 기계적 불가(예: SENTENCE_ORDER 문장수 부족)만
+  // 잡 생성·트리거 전에 거른다. 출제 포인트 품질 판단이 아니라 형식 불가능만 차단. ──
+  if (parsed.data.mode === "MANUAL") {
+    const feas = preflightQuestionFeasibility(
+      parsed.data.questionType,
+      effectiveDifficulty,
+      passage.content,
+    );
+    if (!feas.ok) {
+      return NextResponse.json(
+        { error: feas.error, code: feas.code, ...feas.detail },
+        { status: 400 },
+      );
+    }
+  }
+
   const job = await prisma.workbenchAiJob.create({
     data: {
       academyId: staff.academyId,

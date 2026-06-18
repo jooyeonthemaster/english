@@ -18,6 +18,7 @@ import {
   recordPlatformApiUsageCost,
 } from "@/lib/platform-api-costs";
 import { toUserFacingQuestionGenerationError } from "@/lib/question-generation-llm";
+import { preflightQuestionFeasibility } from "@/lib/question-quality";
 import {
   getQuestionGenerationCreditCost,
   mergeQuestionGenerationPlanTag,
@@ -186,6 +187,27 @@ export const workbenchQuestionGenerationTask = task({
             config.difficulty,
           )
         : readQuestionTypeDifficultySetting(undefined, config.difficulty);
+
+    // ── SHIP-FIRST 사전 적합성 백스톱: 기계적 불가만 차감 전에 거른다(재시도 0).
+    // sync/async 라우트가 이미 거르지만 직접 트리거·구버전 잡 방어용. 차감 전이라 환불 불필요. ──
+    const feasibility = preflightQuestionFeasibility(
+      config.questionType,
+      effectiveDifficulty,
+      job.passage.content,
+    );
+    if (!feasibility.ok) {
+      await prisma.workbenchAiJob.update({
+        where: { id: jobId },
+        data: {
+          status: "FAILED",
+          failedCount: 1,
+          errorMessage: feasibility.error,
+          completedAt: new Date(),
+        },
+      });
+      return { error: "PREFLIGHT_INFEASIBLE" as const, code: feasibility.code };
+    }
+
     const operationType = getOperationType(config);
     const creditCost = getQuestionGenerationCreditCost(
       CREDIT_COSTS[operationType],
