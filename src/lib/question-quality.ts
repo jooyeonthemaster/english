@@ -4714,6 +4714,22 @@ function validateBlankInferenceQuestion(
     }
   }
 
+  // 등위 명사열 중간절단 누설: 빈칸이 "_____, X, Y, and Z" 형태로 등위 나열의 첫
+  // 항목 자리에 carve되면, 정답의 꼬리 단어가 뒤따르는 명사열을 문법적으로 헤드한다
+  // → 학생이 의미 추론 없이 "명사로 끝나는 보기"를 문법만으로 고를 수 있다(실측
+  // BLANK_INFERENCE 누설). 정답 무효급 → 차단(repair/재시도가 다른 자리를 고르게).
+  if (
+    /_____,\s+(?!(?:which|who|whom|whose|that|where|when|while|and|or|but|so|because|although|though|since|if|unless|as|to)\b)[A-Za-z][^.!?]{1,80}?,\s+(?:and|or)\s+[A-Za-z]/i.test(
+      blankCarrierText,
+    )
+  ) {
+    add(
+      "error",
+      "blank-mid-coordinated-list-carve",
+      'The blank is carved at the head of a coordinated list ("_____, X, Y, and Z"); the answer tail completes the list grammatically and is selectable without comprehension. Blank a logical clause/predicate/relation instead.',
+    );
+  }
+
   if (/\b(?:such as|including|for example)\s+_____/.test(blankCarrierText)) {
     add(
       isTransformedMode ? "error" : "warning",
