@@ -32,6 +32,7 @@ export const MC_PROMPTS: Record<string, string> = {
 - answerLogic: 빈칸 변형/부정-부정 설정이 있을 때, 정답 논리를 한국어로 간단히 설명
 - correctAnswer: 정답 선지의 label ("1"~"5")
 - options: label "1"~"5", text는 영어 표현. 기본 모드에서는 정답 선지의 text가 반드시 originalExpression과 동일
+- ⚠️ 보기 병렬성(정답·오답 모두): 모든 보기는 빈칸 자리에 그대로 끼워 넣었을 때 문법적으로 자연스러운 "대체 표현"이어야 합니다. 정답과 같은 구조(품사·절 형태·시제·태)로 맞추고, 빈칸 **바로 앞에 이미 있는 주어/동사/단어를 보기에서 반복하지 마세요**. 예: "...so we _____"의 빈칸은 술어(동사구)가 들어갈 자리이므로 보기를 "we will not..."처럼 주어로 시작하면 "we we will not..."가 되어 정답이 문법만으로 드러납니다 — 술어구("will not be unduly troubled...")로 시작하세요. 보기를 끼운 문장이 한 번에 매끄럽게 읽혀야 하며, 문법 형태만으로 정답이 가려지면 안 됩니다.
 - ⚠️ passageWithBlank 필드는 생성하지 마세요 (서버에서 자동 생성)
 - direction 예시: "다음 글의 빈칸에 들어갈 말로 가장 적절한 것은?"`,
 
