@@ -1,11 +1,18 @@
 import { splitIntoSentences } from "../sentence-splitter";
-import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-options";
+import {
+  buildCanonicalSentenceInsertOptions,
+  sentenceInsertOptionMarkerIndex,
+} from "@/lib/sentence-insert-options";
 import { CIRCLED_NUMBERS, type PostProcessResult, type QuestionPostProcessData } from "../types";
 
 const OMITTED_SENTENCE_SIMILARITY_THRESHOLD = 0.72;
 // 표시되는(잔류) 지문 문장과 givenSentence 가 이 임계 이상으로 겹치면 정답 누설로 본다.
 // 누설 케이스는 ~0.95(거의 통째 포함), 정상 어휘사슬은 ≪0.85 라 보수적으로 둔다.
 const GIVEN_SENTENCE_LEAK_THRESHOLD = 0.85;
+// 정답을 omission gap 으로 덮어쓰려면, 주어진 문장이 '빼낸 그 문장'(원형 또는 기능보존
+// 패러프레이즈)이어야 한다. 모델이 문장 X 를 빼고 무관한 새 문장 Y 를 given 으로 쓰면
+// X 의 자리 ≠ Y 의 자리이므로 override 금지(이때만 모델 자기보고 정답을 신뢰).
+const ANSWER_OVERRIDE_SIMILARITY_THRESHOLD = 0.5;
 const SLOT_COUNT_MIN = 5;
 const SLOT_COUNT_MAX = 8;
 
@@ -113,6 +120,42 @@ export function processSentenceInsert(
     markerMap.set(sentenceIndex, CIRCLED_NUMBERS[i]);
   }
 
+  // ── Answer key from the omission site (mis-key was the #1 SI defect) ──────────
+  // When the given sentence was extracted from the passage (omittedMatch), the
+  // correct gap is deterministically where it was removed — the marker right after
+  // the sentence that now precedes that gap (display index = omittedMatch.index-1;
+  // unchanged by omission adjustment because it sits before the removed sentence,
+  // and a marker the model placed either just before OR just after the source both
+  // collapse to this gap). The model self-reports correctAnswer but frequently
+  // miscounts the marker number, so we override it with the deterministic value.
+  // Freshly-authored given sentences (no omittedMatch) keep the model's answer.
+  let answerOverride: string | undefined;
+  const givenMatchesOmitted =
+    !!omittedMatch &&
+    sentenceSimilarityScore(cleanSentence(givenSentence), omittedMatch.sentence) >=
+      ANSWER_OVERRIDE_SIMILARITY_THRESHOLD;
+  if (omittedMatch && givenMatchesOmitted) {
+    answerOverride = markerMap.get(omittedMatch.index - 1);
+    if (!answerOverride) {
+      return {
+        success: false,
+        data: ai,
+        warnings,
+        error:
+          "SENTENCE_INSERT has no insertion marker at the removed-sentence gap; the answer cannot be keyed. Regenerate with a marker at that position.",
+      };
+    }
+    if (
+      typeof ai.correctAnswer === "string" &&
+      sentenceInsertOptionMarkerIndex(ai.correctAnswer) !==
+        sentenceInsertOptionMarkerIndex(answerOverride)
+    ) {
+      warnings.push(
+        `Re-keyed SENTENCE_INSERT answer to the omission gap (${answerOverride}); model reported "${ai.correctAnswer}".`,
+      );
+    }
+  }
+
   // Reconstruct passage with markers inserted after specified sentences
   const parts: string[] = [];
   for (let si = 0; si < displaySentences.length; si++) {
@@ -137,6 +180,7 @@ export function processSentenceInsert(
     success: true,
     data: {
       ...ai,
+      correctAnswer: answerOverride ?? ai.correctAnswer,
       givenSentence: givenSentence || ai.givenSentence,
       sourceSentenceToOmit: omittedMatch?.sentence ?? ai.sourceSentenceToOmit,
       omittedSourceSentence: omittedMatch?.sentence,
