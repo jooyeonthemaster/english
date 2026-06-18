@@ -4,6 +4,7 @@ import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
+import { buildMultiBlankPointGuidance } from "@/lib/blank-point-catalog";
 
 export type QuestionGenerationLanguage = "ko" | "en";
 
@@ -37,6 +38,12 @@ export interface BlankInferenceGenerationSettings
    * to the single-blank mode.
    */
   blankCount?: number;
+  /**
+   * 핵심 집중 모드 — true 면 정답이 빈칸에서 완성하는 추론 논리를 기출 716문항 LLM
+   * 검증 고빈출 코어(인과·개념명명·재진술·대조전환 + 보조 전체주제문)로 좁힌다.
+   * false/미지정이면 기존 동작. 기본 false.
+   */
+  pointFocus?: boolean;
 }
 
 export interface IrrelevantGenerationSettings
@@ -91,6 +98,12 @@ export interface SentenceInsertGenerationSettings
    * 기본 false.
    */
   paraphrasePrefix?: boolean;
+  /**
+   * 핵심 집중 모드 — true 면 정답 자리를 고정하는 응집장치를 기출 456문항 LLM 검증
+   * 고빈출 코어(참조 해소·대조 전환 + 보조 인과)로 좁힌다. false/미지정이면 기존
+   * 동작. 기본 false.
+   */
+  pointFocus?: boolean;
 }
 
 export interface SentenceOrderGenerationSettings
@@ -963,6 +976,10 @@ export interface ResolvedQuestionTypeGenerationSettings {
   blankInferenceDoubleNegative?: boolean;
   /** True when the correct blank option must be a non-verbatim paraphrase. */
   blankInferenceParaphraseAnswer?: boolean;
+  /** 빈칸 핵심 집중 모드 — 정답논리를 검증 고빈출 코어로 좁힘. */
+  blankPointFocus?: boolean;
+  /** 문장삽입 핵심 집중 모드 — 정답 응집장치를 검증 고빈출 코어로 좁힘. */
+  sentenceInsertPointFocus?: boolean;
   /** Resolved option count for free-text option types (TOPIC/TITLE/...). */
   genericOptionCount?: number;
   /** Resolved correct-answer count for free-text option types. */
@@ -1148,14 +1165,21 @@ export function resolveQuestionTypeGenerationSettings(
     const sentenceInsertSlotCount = readSentenceInsertSlotCountSetting(rawSettings);
     const sentenceInsertParaphrasePrefix =
       readSentenceInsertParaphrasePrefixSetting(rawSettings);
+    const sentenceInsertPointFocus = readBooleanSetting(
+      rawSettings,
+      "SENTENCE_INSERT",
+      "pointFocus",
+    );
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         slotCount: sentenceInsertSlotCount,
         paraphrasePrefix: sentenceInsertParaphrasePrefix,
+        pointFocus: sentenceInsertPointFocus,
       }),
       ...languageSettings,
       sentenceInsertSlotCount,
       sentenceInsertParaphrasePrefix,
+      sentenceInsertPointFocus,
     };
   }
 
@@ -1190,10 +1214,16 @@ export function resolveQuestionTypeGenerationSettings(
       blankInferenceBlankCount === 1 &&
       isRecord(rawSettings) &&
       rawSettings.doubleNegative === true;
+    const blankPointFocus = readBooleanSetting(
+      rawSettings,
+      "BLANK_INFERENCE",
+      "pointFocus",
+    );
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         blankCount: blankInferenceBlankCount,
         paraphraseAnswer: blankInferenceParaphraseAnswer,
+        pointFocus: blankPointFocus,
       }),
       ...languageSettings,
       blankInferenceBlankCount,
@@ -1202,6 +1232,7 @@ export function resolveQuestionTypeGenerationSettings(
       blankInferenceDoubleNegative,
       blankInferenceParaphraseAnswer:
         blankInferenceParaphraseAnswer && !blankInferenceDoubleNegative,
+      blankPointFocus,
     };
   }
 
@@ -1795,9 +1826,15 @@ export function buildQuestionTypeSettingsPrompt(
     // single-blank-only feature and is intentionally ignored here.
     const labels = MULTI_BLANK_LABELS.slice(0, blankInferenceBlankCount);
     const labelsText = labels.join(", ");
+    // 다중빈칸은 candidate block 이 suppress 되므로 focus(출제포인트 집중)를 이 프롬프트
+    // 경로에 주입한다 — 빈칸별로 서로 다른 코어 논리축에 분산(A 분산형).
+    const blankPointFocus = readBooleanSetting(rawSettings, "BLANK_INFERENCE", "pointFocus");
     return combinePromptSections(languagePrompt, [
       "## Type detail setting: BLANK_INFERENCE / multi-blank combination item",
       `- The teacher requested a ${blankInferenceBlankCount}-blank combination item instead of the standard single-blank item. This block overrides the single-blank output rules.`,
+      ...(blankPointFocus
+        ? [buildMultiBlankPointGuidance(blankInferenceBlankCount, { pointFocus: true })]
+        : []),
       `- Do NOT output originalExpression/surroundingText at the top level. Instead output a "blanks" array with exactly ${blankInferenceBlankCount} entries labeled ${labelsText}, in passage order.`,
       "- Each blanks[].originalExpression must be copied verbatim from the passage (not a paraphrase), must be a meaningful content expression (verb phrase, modified noun phrase, or compact clause-level phrase — never a bare function word), and the blanks must come from different sentences.",
       "- ⚠️ Never blank an expression whose exact wording also appears elsewhere in the passage (key phrases are often repeated): the remaining occurrence would reveal the answer and the item will be rejected. Before choosing, scan the passage and pick expressions that occur exactly once.",

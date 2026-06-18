@@ -72,16 +72,17 @@ class AlreadyPromotedError extends Error {
  * Promote a single draft to a Passage. Throws on unexpected DB errors (caller
  * maps to a `failed` outcome); never throws for the expected skip cases.
  *
- * `markReviewed` (default true): also flips the draft to COMMITTED(검수완료).
- * Pass false to materialize the Passage WITHOUT marking it reviewed — e.g. when
- * a teacher generates from an un-reviewed material (the material is now usable
- * but still needs human 검수, so it keeps its 검수필요 status / red border).
+ * `markReviewed` (default FALSE): by default we materialize the Passage WITHOUT
+ * marking it reviewed — promotion/generation is not human review, so the draft
+ * keeps its 검수필요 status (red border) until a person explicitly reviews it.
+ * Only pass true from an explicit human "검수완료" action.
  */
 export async function promoteM1Draft(
   draft: PromotableDraft,
   opts?: { markReviewed?: boolean },
 ): Promise<PromoteOutcome> {
-  const markReviewed = opts?.markReviewed ?? true;
+  // "자료를 쓴다 ≠ 검수완료." 기본값 false — 사람이 명시적으로 검수완료할 때만 true.
+  const markReviewed = opts?.markReviewed ?? false;
   if (draft.savedPassageId) {
     return {
       draftId: draft.id,
