@@ -9,9 +9,9 @@ import {
   Gem,
   Loader2,
   Plus,
-  Sparkles,
   X,
 } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -345,7 +345,7 @@ export function QuestionEditClient({
                 {generationPlan === "PREMIUM" ? (
                   <Gem className="w-3.5 h-3.5" />
                 ) : (
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <PearlIcon className="w-3.5 h-3.5" />
                 )}
                 {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
               </span>

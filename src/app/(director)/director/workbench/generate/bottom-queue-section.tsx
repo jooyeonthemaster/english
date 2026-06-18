@@ -21,6 +21,7 @@ import {
   Sparkles,
   Trash2,
 } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
 import { Checkbox } from "@/components/ui/checkbox";
 import { usePersistedState } from "@/hooks/use-persisted-state";
@@ -825,7 +826,7 @@ export function BottomQueueSection({
                 {planConfig.id === "PREMIUM" ? (
                   <Gem className="w-3 h-3" />
                 ) : (
-                  <Sparkles className="w-3 h-3" />
+                  <PearlIcon className="w-3 h-3" />
                 )}
                 {planConfig.shortLabel}
               </span>
@@ -872,7 +873,7 @@ export function BottomQueueSection({
                     {planConfig.id === "PREMIUM" ? (
                       <Gem className="w-3 h-3" />
                     ) : (
-                      <Sparkles className="w-3 h-3" />
+                      <PearlIcon className="w-3 h-3" />
                     )}
                     {planConfig.shortLabel}
                   </span>
@@ -1306,7 +1307,7 @@ export function BottomQueueSection({
                       value: "STANDARD",
                       label: QUESTION_GENERATION_PLAN_TAGS.STANDARD,
                       count: savedPlanCounts.STANDARD,
-                      Icon: Sparkles,
+                      Icon: PearlIcon,
                     },
                     {
                       value: "PREMIUM",

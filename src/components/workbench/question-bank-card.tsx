@@ -10,11 +10,12 @@ import {
   Trash2,
   FileText,
   Pencil,
-  Layers,
+  Gem,
   ClipboardList,
   Star,
   CheckCircle2,
 } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Popover,
@@ -56,7 +57,12 @@ import {
   optionDisplayTextForSubtype,
   shouldRenderOptionListForSubtype,
 } from "@/components/exams/paper-builder/option-display";
-import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
+import {
+  sanitizeAiModelDisclosureText,
+  getQuestionGenerationPlanFromTags,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 export type { QuestionBankItem } from "./question-bank-card/types";
 
@@ -214,6 +220,44 @@ export function QuestionBankCard({
     structuredData: q.structuredData,
   });
   const displayCorrectAnswer = formatStoredQuestionCorrectAnswer(q);
+
+  // 생성 플랜(일반/프리미엄) — 태그 우선, 없으면 구조화 데이터(_generationPlan) 폴백.
+  const planTags: string[] = Array.isArray(q.tags)
+    ? (q.tags as string[])
+    : parseJSON<string[]>(q.tags, []);
+  const structuredPlan =
+    q.structuredData &&
+    typeof q.structuredData === "object" &&
+    "_generationPlan" in q.structuredData
+      ? ((q.structuredData as { _generationPlan?: unknown })._generationPlan as
+          | QuestionGenerationPlan
+          | undefined)
+      : undefined;
+  const generationPlan: QuestionGenerationPlan | null =
+    getQuestionGenerationPlanFromTags(planTags) ??
+    (structuredPlan === "PREMIUM" || structuredPlan === "STANDARD"
+      ? structuredPlan
+      : null);
+  // 프리미엄은 항상, 일반은 플래그(SHOW_MODEL_SELECTOR) ON일 때 노출 — 코드베이스 공통 게이트.
+  const planBadge =
+    generationPlan &&
+    (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) ? (
+      <Badge
+        variant="outline"
+        className={`shrink-0 gap-1 text-[10px] font-bold ${
+          generationPlan === "PREMIUM"
+            ? "border-violet-200 bg-violet-50 text-violet-700"
+            : "border-slate-200 bg-slate-50 text-slate-500"
+        }`}
+      >
+        {generationPlan === "PREMIUM" ? (
+          <Gem className="h-3 w-3" />
+        ) : (
+          <PearlIcon className="h-3 w-3" />
+        )}
+        {generationPlan === "PREMIUM" ? "프리미엄" : "일반"}
+      </Badge>
+    ) : null;
 
   // Parse questionText into structured sections
   const sections = useMemo(
@@ -507,6 +551,7 @@ export function QuestionBankCard({
             )}
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
+            {planBadge}
             {typeof duplicateCount === "number" && duplicateCount > 1 && (
               <span
                 className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-black tabular-nums text-white shadow-sm"

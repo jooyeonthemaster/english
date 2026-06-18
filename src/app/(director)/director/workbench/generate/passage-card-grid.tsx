@@ -194,9 +194,6 @@ interface PassageCardGridProps {
   // 인페이지 문제 상세 팝업을 연다.
   onOpenQuestionDetail?: (q: QuestionCardItem) => void;
 
-  // "생성된 문제" 요약 행 클릭 시 개별 편집 페이지 대신 '문제 상세' 모달을 연다.
-  onOpenQuestionDetail?: (q: QuestionCardItem) => void;
-
   // 학습지 생성(다른 화면)에서 학습자료가 백그라운드로 생성 중인 지문 id.
   // 카드 테두리에 초록 글로우가 빙글 도는 모션을 띄운다.
   learningGeneratingPassageIds?: Set<string>;

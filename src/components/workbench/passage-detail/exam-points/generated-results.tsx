@@ -1,6 +1,7 @@
 "use client";
 
-import { Gem, Save, Sparkles } from "lucide-react";
+import { Gem, Save } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { StructuredQuestionRenderer } from "../../question-renderers";
@@ -22,7 +23,7 @@ export function GeneratedResults({
 }: GeneratedResultsProps) {
   if (!(generatedQuestions && generatedQuestions.length > 0)) return null;
   const plan = QUESTION_GENERATION_PLANS[generationPlan];
-  const PlanIcon = generationPlan === "PREMIUM" ? Gem : Sparkles;
+  const PlanIcon = generationPlan === "PREMIUM" ? Gem : PearlIcon;
   return (
     <div className="space-y-4 pt-2">
       <Separator />

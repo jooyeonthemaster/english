@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown, Gem, Sparkles } from "lucide-react";
+import { ChevronDown, Gem } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { formatDate } from "@/lib/utils";
 import {
@@ -82,7 +83,7 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
               {generationPlan === "PREMIUM" ? (
                 <Gem className="w-3 h-3" />
               ) : (
-                <Sparkles className="w-3 h-3" />
+                <PearlIcon className="w-3 h-3" />
               )}
               {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
             </span>

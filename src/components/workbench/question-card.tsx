@@ -14,6 +14,7 @@ import {
   Layers,
   XCircle,
 } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -525,7 +526,7 @@ export function QuestionCard({
     getQuestionGenerationPlanFromTags(tags) ??
     readGenerationPlanFromStructuredData(q.structuredData);
   // 생성 플랜(일반/프리미엄) 태그 — 프리미엄은 보라(프리미엄 톤), 일반은 슬레이트.
-  // 카드 헤더(콤팩트·비콤팩트 공통)에 노출한다. (Sparkles 금지 → Layers 사용)
+  // 카드 헤더(콤팩트·비콤팩트 공통)에 노출한다. (일반=PearlIcon)
   const planBadge =
     FEATURE_FLAGS.SHOW_MODEL_SELECTOR && generationPlan ? (
       <Badge
@@ -539,7 +540,7 @@ export function QuestionCard({
         {generationPlan === "PREMIUM" ? (
           <Gem className="h-3 w-3" />
         ) : (
-          <Layers className="h-3 w-3" />
+          <PearlIcon className="h-3 w-3" />
         )}
         {generationPlan === "PREMIUM" ? "프리미엄" : "일반"}
       </Badge>

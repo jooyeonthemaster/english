@@ -1,6 +1,7 @@
 "use client";
 
-import { Gem, Sparkles } from "lucide-react";
+import { Gem } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 import {
@@ -30,7 +31,7 @@ export function GenerationPlanSelector({
       {(["STANDARD", "PREMIUM"] as const).map((planId) => {
         const plan = QUESTION_GENERATION_PLANS[planId];
         const active = value === planId;
-        const Icon = planId === "PREMIUM" ? Gem : Sparkles;
+        const Icon = planId === "PREMIUM" ? Gem : PearlIcon;
 
         return (
           <button

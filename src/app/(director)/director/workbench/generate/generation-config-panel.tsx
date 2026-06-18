@@ -10,10 +10,10 @@ import {
   Plus,
   Target,
   Gem,
-  Layers,
   Settings2,
   ChevronDown,
 } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Button } from "@/components/ui/button";
 import { EXAM_TYPE_GROUPS } from "./generate-page-types";
 import { PromptSection } from "./prompt-section";
@@ -1829,7 +1829,7 @@ export function GenerationConfigPanel({
               {(["STANDARD", "PREMIUM"] as const).map((planId) => {
                 const plan = QUESTION_GENERATION_PLANS[planId];
                 const active = typePlan === planId;
-                const Icon = planId === "PREMIUM" ? Gem : Layers;
+                const Icon = planId === "PREMIUM" ? Gem : PearlIcon;
                 return (
                   <button
                     key={planId}
@@ -2196,8 +2196,7 @@ export function GenerationConfigPanel({
                                           <Plus className="h-3.5 w-3.5" />
                                         </button>
                                       </div>
-                                      {/* 세부 옵션 토글 — 아이콘만 있던 것을 라벨 pill 로
-                                        키워 발견성을 높인다(접힘 시 selector 부착). */}
+                                      {/* 세부 옵션 토글 — 카드 접기 버튼과 동일한 단순 셰브론 아이콘 토글. */}
                                       <button
                                         type="button"
                                         onClick={() => {
@@ -2215,18 +2214,13 @@ export function GenerationConfigPanel({
                                             ? undefined
                                             : "type-detail-toggle"
                                         }
-                                        className={`flex h-7 shrink-0 items-center gap-1 rounded-full border pl-2 pr-1.5 text-[10px] font-semibold transition-colors ${
-                                          expanded
-                                            ? "border-blue-200 bg-blue-50 text-blue-600"
-                                            : "border-slate-200 bg-slate-50 text-slate-500 group-hover:text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
-                                        }`}
+                                        className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-500"
                                         title={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
                                         aria-label={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
                                         aria-expanded={expanded}
                                       >
-                                        <span>{expanded ? "접기" : "설정"}</span>
                                         <ChevronDown
-                                          className={`h-3 w-3 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
+                                          className={`size-4.5 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
                                           aria-hidden="true"
                                         />
                                       </button>

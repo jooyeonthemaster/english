@@ -15,8 +15,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Gem,
-  Sparkles,
 } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
@@ -524,7 +524,7 @@ function QuestionCard({
               {plan === "PREMIUM" ? (
                 <Gem className="w-3 h-3" />
               ) : (
-                <Sparkles className="w-3 h-3" />
+                <PearlIcon className="w-3 h-3" />
               )}
               {QUESTION_GENERATION_PLAN_TAGS[plan]}
             </span>

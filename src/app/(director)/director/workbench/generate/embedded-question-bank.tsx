@@ -38,9 +38,9 @@ import {
   Loader2,
   RotateCcw,
   Rows3,
-  Sparkles,
   Trash2,
 } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 
 import {
   getWorkbenchQuestions,
@@ -211,7 +211,7 @@ function QueueStripCard({
               {planConfig.id === "PREMIUM" ? (
                 <Gem className="w-3 h-3" />
               ) : (
-                <Sparkles className="w-3 h-3" />
+                <PearlIcon className="w-3 h-3" />
               )}
               {planConfig.shortLabel}
             </span>
@@ -248,7 +248,7 @@ function QueueStripCard({
                   {planConfig.id === "PREMIUM" ? (
                     <Gem className="w-3 h-3" />
                   ) : (
-                    <Sparkles className="w-3 h-3" />
+                    <PearlIcon className="w-3 h-3" />
                   )}
                   {planConfig.shortLabel}
                 </span>
