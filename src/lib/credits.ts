@@ -3,8 +3,8 @@
 // Concurrency-safe atomic operations with PostgreSQL row-level locking
 // ============================================================================
 
-import { prisma } from "@/lib/prisma";
 import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
+import { prisma } from "@/lib/prisma";
 
 // ─── Error Classes ───────────────────────────────────────────────────────────
 
@@ -130,10 +130,16 @@ export async function refundCredits(
   originalTransactionId: string,
   reason?: string,
   costOverride?: number,
-): Promise<void> {
+): Promise<number> {
   if (CREDIT_COSTS[operationType] === undefined) throw new Error(`Unknown operation type: ${operationType}`);
 
-  await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx) => {
+    await tx.$queryRaw`
+      SELECT id FROM credit_transactions
+      WHERE id = ${originalTransactionId}
+      FOR UPDATE
+    `;
+
     // Verify original transaction exists and belongs to this academy
     const original = await tx.creditTransaction.findUnique({
       where: { id: originalTransactionId },
@@ -142,22 +148,49 @@ export async function refundCredits(
       throw new Error("Invalid refund: original transaction not found or mismatched");
     }
 
-    const cost = costOverride ?? Math.abs(original.amount);
-    if (!Number.isFinite(cost) || cost <= 0) throw new Error(`Invalid refund cost: ${cost}`);
+    const originalCost = Math.abs(original.amount);
+    const requestedCost = costOverride ?? originalCost;
+    if (!Number.isFinite(requestedCost) || requestedCost <= 0) {
+      throw new Error(`Invalid refund cost: ${requestedCost}`);
+    }
 
-    // Check for duplicate refund
-    const existingRefund = await tx.creditTransaction.findFirst({
-      where: { referenceId: originalTransactionId, type: "REFUND" },
+    const description = reason || `Auto-refund for failed ${operationType}`;
+
+    // Idempotency is by refund reason, not just by the original transaction:
+    // one charge can have a partial worksheet refund and later a remaining
+    // full-failure refund, but repeating the same path must not add credits.
+    const existingSameReason = await tx.creditTransaction.findFirst({
+      where: {
+        referenceId: originalTransactionId,
+        referenceType: "CREDIT_TRANSACTION",
+        type: "REFUND",
+        description,
+      },
     });
-    if (existingRefund) {
-      return; // Already refunded, skip silently
+    if (existingSameReason) {
+      return 0;
+    }
+
+    const refunded = await tx.creditTransaction.aggregate({
+      where: {
+        referenceId: originalTransactionId,
+        referenceType: "CREDIT_TRANSACTION",
+        type: "REFUND",
+      },
+      _sum: { amount: true },
+    });
+    const alreadyRefunded = refunded._sum.amount ?? 0;
+    const remainingRefundable = Math.max(0, originalCost - alreadyRefunded);
+    const refundAmount = Math.min(requestedCost, remainingRefundable);
+    if (refundAmount <= 0) {
+      return 0;
     }
 
     await tx.creditBalance.update({
       where: { academyId },
       data: {
-        balance: { increment: cost },
-        totalConsumed: { decrement: cost },
+        balance: { increment: refundAmount },
+        totalConsumed: { decrement: refundAmount },
       },
     });
 
@@ -169,14 +202,15 @@ export async function refundCredits(
       data: {
         academyId,
         type: "REFUND",
-        amount: cost,
+        amount: refundAmount,
         balanceAfter: updated!.balance,
         operationType,
-        description: reason || `Auto-refund for failed ${operationType}`,
+        description,
         referenceId: originalTransactionId,
         referenceType: "CREDIT_TRANSACTION",
       },
     });
+    return refundAmount;
   });
 }
 

@@ -468,6 +468,8 @@ export function useWorkspaceGeneration({
         tempId: string;
         config: QueueItem["config"];
         progressKey: string;
+        /** 워크스페이스 행의 localId — 생성 성공 시 그 행을 비우는 데 쓴다. */
+        localId?: string;
       };
       const fastUnits: FastUnit[] = [];
       // 장문 세트 잡 — 유형지정과 같은 공용 '생성' 흐름에 합류한다.
@@ -477,7 +479,11 @@ export function useWorkspaceGeneration({
         members: { typeId: string; difficulty: string }[];
         structuralMode: string;
         generationPlan: QuestionGenerationPlan;
+        localId?: string;
       }[] = [];
+      // 생성을 시도한 워크스페이스 행과, 그중 실패한 행 — 성공 행만 비운다.
+      const attemptedLocalIds = new Set<string>();
+      const failedLocalIds = new Set<string>();
 
       for (const item of resolved) {
         const passageLike =
@@ -494,6 +500,8 @@ export function useWorkspaceGeneration({
                 title: item.title,
                 content: item.content,
               } as PassageItem);
+        const rowLocalId =
+          item.kind === "workspace" ? item.row.localId : undefined;
         const effDifficulty =
           item.kind === "workspace"
             ? (item.row.override?.difficulty ?? difficulty)
@@ -541,6 +549,7 @@ export function useWorkspaceGeneration({
               effPlan,
             );
             for (let i = 0; i < repeat; i += 1) {
+              if (rowLocalId) attemptedLocalIds.add(rowLocalId);
               fastUnits.push({
                 passage: passageLike,
                 questionType: typeId,
@@ -549,6 +558,7 @@ export function useWorkspaceGeneration({
                 generationPlan: effTypePlan,
                 tempId: `fast:${item.passageId}:${typeId}:${runId}:${i}`,
                 progressKey: typeId,
+                localId: rowLocalId,
                 config: {
                   typeCounts: { [typeId]: 1 },
                   questionTypeSettings: {
@@ -566,6 +576,7 @@ export function useWorkspaceGeneration({
           // 장문 세트 — 구성한 멤버로 세트를 생성한다(공용 '생성' 흐름).
           const members = item.row.override?.setMembers ?? [];
           if (members.length > 0) {
+            if (rowLocalId) attemptedLocalIds.add(rowLocalId);
             setJobs.push({
               passageId: item.passageId,
               title: item.title,
@@ -574,6 +585,7 @@ export function useWorkspaceGeneration({
                 members.map((m) => m.typeId),
               ),
               generationPlan: effPlan,
+              localId: rowLocalId,
             });
           }
         }

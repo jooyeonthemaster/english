@@ -10,10 +10,12 @@ import {
   Trash2,
   FileText,
   Pencil,
-  Layers,
+  Gem,
   ClipboardList,
   Star,
+  CheckCircle2,
 } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Popover,
@@ -36,11 +38,11 @@ import {
 import { parseJSON } from "./shared/helpers";
 import { StructuredQuestionRenderer } from "./question-renderers";
 import { ReviewStatusStamp } from "./question-card";
+import { CollapsedPreview } from "./question-bank-card/collapsed-preview";
 import { ExplanationSection } from "./question-bank-card/explanation-section";
 import { parseQuestionSections } from "./question-bank-card/parse-question-sections";
 import { renderFormatted } from "./question-bank-card/render-formatted";
 import { RenderedSections } from "./question-bank-card/rendered-sections";
-import { CollapsedPreview } from "./question-bank-card/collapsed-preview";
 import type { QuestionBankItem } from "./question-bank-card/types";
 import {
   clearCardTextSelection,
@@ -55,7 +57,12 @@ import {
   optionDisplayTextForSubtype,
   shouldRenderOptionListForSubtype,
 } from "@/components/exams/paper-builder/option-display";
-import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
+import {
+  sanitizeAiModelDisclosureText,
+  getQuestionGenerationPlanFromTags,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 export type { QuestionBankItem } from "./question-bank-card/types";
 
@@ -164,7 +171,8 @@ export function QuestionBankCard({
   collapsible?: boolean;
 }) {
   const [isDragging, setIsDragging] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+  // 카드 접힘/펼침 — 기본은 접힘(의문문 + 지문 2줄 + 정답만 보이는 미리보기).
+  const [collapsed, setCollapsed] = useState(true);
   const [passageOpen, setPassageOpen] = useState(false);
   const [duplicatePromptOpen, setDuplicatePromptOpen] = useState(false);
   const dragRef = useRef<HTMLDivElement>(null);
@@ -213,6 +221,44 @@ export function QuestionBankCard({
   });
   const displayCorrectAnswer = formatStoredQuestionCorrectAnswer(q);
 
+  // 생성 플랜(일반/프리미엄) — 태그 우선, 없으면 구조화 데이터(_generationPlan) 폴백.
+  const planTags: string[] = Array.isArray(q.tags)
+    ? (q.tags as string[])
+    : parseJSON<string[]>(q.tags, []);
+  const structuredPlan =
+    q.structuredData &&
+    typeof q.structuredData === "object" &&
+    "_generationPlan" in q.structuredData
+      ? ((q.structuredData as { _generationPlan?: unknown })._generationPlan as
+          | QuestionGenerationPlan
+          | undefined)
+      : undefined;
+  const generationPlan: QuestionGenerationPlan | null =
+    getQuestionGenerationPlanFromTags(planTags) ??
+    (structuredPlan === "PREMIUM" || structuredPlan === "STANDARD"
+      ? structuredPlan
+      : null);
+  // 프리미엄은 항상, 일반은 플래그(SHOW_MODEL_SELECTOR) ON일 때 노출 — 코드베이스 공통 게이트.
+  const planBadge =
+    generationPlan &&
+    (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) ? (
+      <Badge
+        variant="outline"
+        className={`shrink-0 gap-1 text-[10px] font-bold ${
+          generationPlan === "PREMIUM"
+            ? "border-violet-200 bg-violet-50 text-violet-700"
+            : "border-slate-200 bg-slate-50 text-slate-500"
+        }`}
+      >
+        {generationPlan === "PREMIUM" ? (
+          <Gem className="h-3 w-3" />
+        ) : (
+          <PearlIcon className="h-3 w-3" />
+        )}
+        {generationPlan === "PREMIUM" ? "프리미엄" : "일반"}
+      </Badge>
+    ) : null;
+
   // Parse questionText into structured sections
   const sections = useMemo(
     () => parseQuestionSections(displayQuestionText, q.subType),
@@ -233,6 +279,19 @@ export function QuestionBankCard({
     () => sections.filter((s) => s.type !== "direction"),
     [sections],
   );
+
+  // 접힘 미리보기용 지문 — 파싱된 지문/요약/단락 섹션을 우선 쓰고,
+  // 없으면 본문 첫 섹션, 그래도 없으면 참조 지문(q.passage) 본문을 쓴다.
+  const collapsedPassage = useMemo(() => {
+    const candidate =
+      bodySections.find(
+        (s) =>
+          s.type === "passage" ||
+          s.type === "summary" ||
+          s.type === "paragraphs",
+      ) ?? bodySections.find((s) => typeof s.content === "string" && s.content);
+    return candidate?.content || q.passage?.content || "";
+  }, [bodySections, q.passage]);
 
   // Make card draggable — 단, 네이티브 드래그는 "손잡이(DragHandle)"에만 등록한다.
   // 카드 본문은 draggable 이 아니므로 본문 위에서는 영역 선택(마키)이 동작하고,
@@ -326,8 +385,6 @@ export function QuestionBankCard({
   }, [enableDrag, q.id, selectionDisabled]);
 
   const questionClamp = viewSize === "lg" ? "line-clamp-3" : "line-clamp-2";
-  // 접힘 모드: collapsible 이고 아직 펼치지 않았을 때만 콤팩트 미리보기를 보여준다.
-  const collapsed = collapsible && !expanded;
 
   // Review action footer (검수완료/검수취소 + 수정하기 + stamp) — only in managed contexts
   const showReviewActions =
@@ -494,30 +551,7 @@ export function QuestionBankCard({
             )}
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
-            {collapsible && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setExpanded((prev) => !prev);
-                }}
-                aria-expanded={expanded}
-                title={expanded ? "접기" : "펼치기"}
-                className="group/expand -m-1 inline-flex shrink-0 cursor-pointer items-center gap-1 whitespace-nowrap rounded-md p-1 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-              >
-                {expanded ? (
-                  <>
-                    접기
-                    <ChevronUp className="w-3 h-3" />
-                  </>
-                ) : (
-                  <>
-                    펼치기
-                    <ChevronDown className="w-3 h-3 transition-transform group-hover/expand:translate-y-0.5" />
-                  </>
-                )}
-              </button>
-            )}
+            {planBadge}
             {typeof duplicateCount === "number" && duplicateCount > 1 && (
               <span
                 className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-black tabular-nums text-white shadow-sm"
@@ -526,27 +560,26 @@ export function QuestionBankCard({
                 {duplicateCount}
               </span>
             )}
-            {/* 검수 토글 점 — 누르면 검수상태(초록↔빨강)가 실제로 바뀐다. */}
-            {showReviewActions && (
-              <button
-                type="button"
-                aria-label={q.approved ? "검수완료" : "검수필요"}
-                title={
-                  q.approved
-                    ? "검수완료 — 누르면 검수를 취소합니다"
-                    : "검수필요 — 누르면 검수완료로 표시합니다"
-                }
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (q.approved) onUnapprove?.();
-                  else onApprove?.();
-                }}
-                className={
-                  "ml-2 size-3.5 shrink-0 cursor-pointer rounded-full ring-2 ring-white shadow-sm transition-colors hover:brightness-110 " +
-                  (q.approved ? "bg-emerald-500" : "bg-red-500")
-                }
-              />
-            )}
+            {/* 검수 토글 — 상단 점 대신 하단 '검수완료' 버튼으로 이동. */}
+            {/* 카드 접기/펼치기 토글 — 옅은 파란색. */}
+            <button
+              type="button"
+              data-drag-select-ignore
+              onClick={(e) => {
+                e.stopPropagation();
+                setCollapsed((prev) => !prev);
+              }}
+              aria-expanded={!collapsed}
+              aria-label={collapsed ? "카드 펼치기" : "카드 접기"}
+              title={collapsed ? "펼치기" : "접기"}
+              className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-500"
+            >
+              {collapsed ? (
+                <ChevronDown className="size-4.5" />
+              ) : (
+                <ChevronUp className="size-4.5" />
+              )}
+            </button>
           </div>
         </div>
 
@@ -560,14 +593,17 @@ export function QuestionBankCard({
             </div>
           )}
 
-          {/* ── Question content — collapsible(시험지 빌더 등)이면 접힘 미리보기, 아니면 전체 ── */}
+          {/* ── Question content ──
+              접힘: 의문문 + 지문 2줄(말줄임) + 정답 선지만 미리보기.
+              펼침: 전체 렌더(구조화 렌더러 또는 섹션/선지).
+              마커 유형(어법·어휘 등)은 선지를 숨긴다(shouldRenderOptionListForSubtype). */}
           {collapsed ? (
             <CollapsedPreview
-              sections={sections}
+              direction={directionText}
+              passage={collapsedPassage}
               options={visibleOptions}
               correctAnswer={q.correctAnswer}
               displayCorrectAnswer={hideOptionList ? "" : displayCorrectAnswer}
-              questionClamp={questionClamp}
             />
           ) : (
             <>
@@ -579,6 +615,7 @@ export function QuestionBankCard({
                   hideHeader
                   sourcePassageContent={q.passage?.content}
                   answerRevealMode="as-explanation"
+                  hideAnswerLine
                 />
               ) : (
                 <RenderedSections sections={bodySections} expanded />
@@ -625,28 +662,32 @@ export function QuestionBankCard({
                     {renderFormatted(displayCorrectAnswer)}
                   </div>
                 )}
-              {/* 해설 보기 — 비구조화에서만(구조화는 위 렌더러가 직접 제공). */}
-              {!structuredQuestion && (
-                <ExplanationSection
-                  explanation={q.explanation}
-                  rightSlot={
-                    onShowAnalysis ? (
-                      <button
-                        type="button"
-                        data-drag-select-ignore
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onShowAnalysis();
-                        }}
-                        className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
-                      >
-                        분석 정보
-                      </button>
-                    ) : undefined
-                  }
-                />
-              )}
             </>
+          )}
+
+          {/* 해설 보기 — 자체 토글이 있어 항상 렌더. 펼침 상태의 구조화 문제는 위
+            StructuredQuestionRenderer 가 해설을 직접 제공하므로 비구조화에서만 렌더(중복 방지).
+            접힘 상태에서는 미리보기가 해설을 포함하지 않으므로 항상 '해설 보기'를 노출한다.
+            rightSlot에는 '분석 정보'(동형 전용)만 별도 액션으로 남긴다. */}
+          {(collapsed || !structuredQuestion) && (
+            <ExplanationSection
+              explanation={q.explanation}
+              rightSlot={
+                onShowAnalysis ? (
+                  <button
+                    type="button"
+                    data-drag-select-ignore
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onShowAnalysis();
+                    }}
+                    className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                  >
+                    분석 정보
+                  </button>
+                ) : undefined
+              }
+            />
           )}
 
         </div>
@@ -783,6 +824,35 @@ export function QuestionBankCard({
             </div>
             {showReviewActions && (
               <div className="flex items-end gap-1.5">
+                {/* 검수완료 토글 — 수정하기 왼쪽.
+                    미검수=카드 미검수 테두리와 같은 분홍색(red-200/80) 테두리+아이콘+텍스트.
+                      hover 시엔 검수완료(초록) 모습으로 미리보기 → 떼면 분홍 복귀.
+                    검수완료=초록 테두리+아이콘+텍스트. 배경은 흰색. */}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  aria-pressed={q.approved}
+                  title={
+                    q.approved
+                      ? "검수완료 — 누르면 검수를 취소합니다"
+                      : "검수필요 — 누르면 검수완료로 표시합니다"
+                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (q.approved) onUnapprove?.();
+                    else onApprove?.();
+                  }}
+                  className={
+                    "h-7 flex-1 justify-center gap-1.5 px-2 text-[11px] font-semibold bg-white " +
+                    (q.approved
+                      ? "border border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+                      : "border border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
+                  }
+                >
+                  <CheckCircle2 className="w-3 h-3" />
+                  검수완료
+                </Button>
                 <div className="flex min-w-0 flex-1 items-center gap-1.5">
                   <Button
                     type="button"

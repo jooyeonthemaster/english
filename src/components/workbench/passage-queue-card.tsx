@@ -19,6 +19,7 @@ import {
   Sparkles,
   CalendarClock,
 } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
@@ -295,7 +296,7 @@ export const PassageQueueCard = memo(function PassageQueueCard({
               {planConfig.id === "PREMIUM" ? (
                 <Gem className="w-3 h-3" />
               ) : (
-                <Sparkles className="w-3 h-3" />
+                <PearlIcon className="w-3 h-3" />
               )}
               {planConfig.shortLabel}
             </span>
@@ -415,7 +416,7 @@ export const PassageQueueCard = memo(function PassageQueueCard({
                   {planConfig.id === "PREMIUM" ? (
                     <Gem className="w-3 h-3" />
                   ) : (
-                    <Sparkles className="w-3 h-3" />
+                    <PearlIcon className="w-3 h-3" />
                   )}
                   {planConfig.shortLabel}
                 </span>

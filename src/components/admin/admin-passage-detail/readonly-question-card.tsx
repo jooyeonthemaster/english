@@ -10,8 +10,8 @@ import {
   Star,
   ChevronDown,
   ChevronUp,
-  Sparkles,
 } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Badge } from "@/components/ui/badge";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn, formatDate } from "@/lib/utils";
@@ -77,7 +77,7 @@ export function ReadonlyQuestionCard({
             {generationPlan === "PREMIUM" ? (
               <Gem className="w-3 h-3" />
             ) : (
-              <Sparkles className="w-3 h-3" />
+              <PearlIcon className="w-3 h-3" />
             )}
             {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
           </Badge>

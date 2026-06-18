@@ -2,7 +2,8 @@
 "use client";
 
 import React from "react";
-import { Gem, Loader2, Save, Sparkles } from "lucide-react";
+import { Gem, Loader2, Save } from "lucide-react";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Button } from "@/components/ui/button";
 import { StructuredQuestionRenderer } from "../question-renderers";
 import { QUESTION_TYPE_GROUPS as EXAM_TYPE_GROUPS } from "@/lib/question-type-ui";
@@ -33,7 +34,7 @@ export function ResultsStep({
   onSave,
 }: Props) {
   const plan = QUESTION_GENERATION_PLANS[generationPlan];
-  const PlanIcon = generationPlan === "PREMIUM" ? Gem : Sparkles;
+  const PlanIcon = generationPlan === "PREMIUM" ? Gem : PearlIcon;
 
   return (
     <div className="space-y-4">

@@ -2,11 +2,9 @@
 
 import { type ReactNode } from "react";
 import {
-  ArrowLeft,
-  ArrowRight,
+  ChevronRight,
   ClipboardPaste,
   FilePen,
-  FileText,
   FolderOpen,
   ImageUp,
 } from "lucide-react";
@@ -96,105 +94,61 @@ export function IntakeSurface({
 
   return (
     <div className="flex h-full min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white">
-      {/* Single tab row: 직접 입력 · 이미지·PDF | 내 지문 */}
+      {/* 탭 행 — 파일 경로(브레드크럼)처럼:
+          직접 입력 · 파일업로드  ›  내 지문함  ›  워크스페이스 */}
       <div
-        className="flex h-11 shrink-0 items-center gap-3 border-b border-slate-100 px-3"
+        className="flex h-11 shrink-0 items-center gap-1.5 overflow-x-auto border-b border-slate-100 px-3"
         data-generate-tour="intake-tabs"
       >
-        <div className="flex w-[128px] shrink-0 items-center gap-1.5 text-[12.5px] font-bold text-slate-700">
-          <FileText
-            className="h-3.5 w-3.5 shrink-0 text-slate-400"
-            aria-hidden="true"
-          />
-          <span className="truncate">지문 입력·선택</span>
-        </div>
-        <div className="flex shrink-0 items-center gap-1">
-          {showPasteTab ? (
-            <Tab
-              active={pasteActive && !overlay}
-              onClick={() => {
-                dismissOverlay();
-                setIntakeView("intake");
-                setIntakeTab("paste");
-                dispatchGenerateTourMilestone("paste-tab-opened");
-              }}
-              icon={<ClipboardPaste className="h-3.5 w-3.5" />}
-              label="직접 입력"
-              tourKey="intake-paste"
-            />
-          ) : null}
+        {showPasteTab ? (
           <Tab
-            active={uploadActive && !overlay}
+            active={pasteActive && !overlay}
             onClick={() => {
               dismissOverlay();
               setIntakeView("intake");
-              setIntakeTab("upload");
-              dispatchGenerateTourMilestone("upload-tab-opened");
+              setIntakeTab("paste");
+              dispatchGenerateTourMilestone("paste-tab-opened");
             }}
-            icon={<ImageUp className="h-3.5 w-3.5" />}
-            label="파일업로드"
-            tourKey="intake-upload"
+            icon={<ClipboardPaste className="h-3.5 w-3.5" />}
+            label="직접 입력"
+            tourKey="intake-paste"
           />
-          <span
-            className="mx-1.5 h-4 w-px self-center bg-slate-200"
-            aria-hidden="true"
-          />
-          <Tab
-            active={libraryActive && !overlay}
-            onClick={() => {
-              dismissOverlay();
-              setIntakeView("library");
-            }}
-            icon={<FolderOpen className="h-3.5 w-3.5" />}
-            label={`${libraryLabel} ${libraryCount > 0 ? `(${libraryCount})` : ""}`.trim()}
-            tourKey="intake-library"
-          />
-        </div>
-        {/* 워크스페이스 ↔ 지문함 이동 버튼은 탭 행 오른쪽 끝에 고정 — 탭은
-            왼쪽 정렬, 이 버튼 그룹만 ml-auto 로 우측에 붙인다. */}
-        <div className="ml-auto flex shrink-0 items-center gap-1">
-          {/* 워크스페이스 ↔ 지문함 이동 버튼 — 같은 줄(탭 행) 오른쪽 끝에
-              현재 위치에 따라 하나만 보인다.
-              · 워크스페이스 안: '지문함으로' (닫고 지문함 보기)
-              · 지문함: '워크스페이스로' (작업 중인 워크스페이스로 복귀) */}
-          {overlay ? (
-            <>
-              <span
-                className="mx-1 h-4 w-px self-center bg-slate-200"
-                aria-hidden="true"
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  dismissOverlay();
-                  setIntakeView("library");
-                }}
-                title="워크스페이스를 닫고 내 지문함을 봅니다"
-                className="inline-flex h-8 shrink-0 cursor-pointer items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-800"
-              >
-                <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>지문함으로</span>
-              </button>
-            </>
-          ) : workspaceActive && onReopenWorkspace ? (
-            <>
-              <span
-                className="mx-1 h-4 w-px self-center bg-slate-200"
-                aria-hidden="true"
-              />
-              <button
-                type="button"
-                onClick={onReopenWorkspace}
-                title="작업 중인 워크스페이스로 돌아가 지문을 편집합니다"
-                className="inline-flex h-8 shrink-0 cursor-pointer items-center gap-1 rounded-md border border-violet-300 bg-violet-600 px-2.5 text-[11px] font-semibold text-white shadow-sm transition-colors hover:bg-violet-700"
-              >
-                <FilePen className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>워크스페이스로</span>
-                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-              </button>
-            </>
-          ) : null}
-        </div>
+        ) : null}
+        <Tab
+          active={uploadActive && !overlay}
+          onClick={() => {
+            dismissOverlay();
+            setIntakeView("intake");
+            setIntakeTab("upload");
+            dispatchGenerateTourMilestone("upload-tab-opened");
+          }}
+          icon={<ImageUp className="h-3.5 w-3.5" />}
+          label="파일업로드"
+          tourKey="intake-upload"
+        />
+        <BreadcrumbSep />
+        <Tab
+          active={libraryActive && !overlay}
+          onClick={() => {
+            dismissOverlay();
+            setIntakeView("library");
+          }}
+          icon={<FolderOpen className="h-3.5 w-3.5" />}
+          label={`${libraryLabel} ${libraryCount > 0 ? `(${libraryCount})` : ""}`.trim()}
+          tourKey="intake-library"
+        />
+        {onReopenWorkspace ? (
+          <>
+            <BreadcrumbSep />
+            <Tab
+              active={!!overlay}
+              title="워크스페이스 열기"
+              onClick={() => onReopenWorkspace()}
+              icon={<FilePen className="h-3.5 w-3.5" />}
+              label="워크스페이스"
+            />
+          </>
+        ) : null}
       </div>
 
       <div className="relative flex min-h-0 flex-1 flex-col">
@@ -231,29 +185,45 @@ export function IntakeSurface({
   );
 }
 
+/** 브레드크럼 구분자 — 탭 사이의 '›' 셰브론. */
+function BreadcrumbSep() {
+  return (
+    <ChevronRight
+      className="size-3.5 shrink-0 text-slate-300"
+      aria-hidden="true"
+    />
+  );
+}
+
 function Tab({
   active,
   onClick,
   icon,
   label,
   tourKey,
+  disabled = false,
+  title,
 }: {
   active: boolean;
   onClick: () => void;
   icon: ReactNode;
   label: string;
   tourKey?: string;
+  disabled?: boolean;
+  title?: string;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      disabled={disabled}
+      title={title}
       data-generate-tour={tourKey}
       className={
-        "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+        "inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-slate-300 " +
         (active
           ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
-          : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")
+          : "cursor-pointer border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")
       }
     >
       {icon}

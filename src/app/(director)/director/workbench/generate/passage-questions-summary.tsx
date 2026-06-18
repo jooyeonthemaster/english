@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, FileText } from "lucide-react";
+import { ChevronDown, History } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -31,11 +31,12 @@ function stripText(value: string): string {
 function SummaryRow({
   q,
   num,
-  onOpenDetail,
+  onOpen,
 }: {
   q: QuestionCardItem;
   num: number;
-  onOpenDetail?: (q: QuestionCardItem) => void;
+  // 전달되면 페이지 이동 대신 이 콜백으로 인페이지 문제 상세 팝업을 연다.
+  onOpen?: (q: QuestionCardItem) => void;
 }) {
   const router = useRouter();
   const typeLabel = Q_TYPE_LABELS[q.type] || q.type;
@@ -44,10 +45,10 @@ function SummaryRow({
   const examLinks = q._count?.examLinks ?? 0;
   const text = stripText(q.questionText || subLabel || typeLabel);
 
-  // 행 클릭 시 개별 편집 페이지(/director/questions/[id])로 이동하지 않고,
-  // 부모가 소유한 '문제 상세' 모달을 연다. 핸들러가 없을 때만 레거시 폴백.
-  const openDetail = () =>
-    onOpenDetail ? onOpenDetail(q) : router.push(`/director/questions/${q.id}`);
+  const openDetail = () => {
+    if (onOpen) onOpen(q);
+    else router.push(`/director/questions/${q.id}`);
+  };
 
   return (
     <div
@@ -93,11 +94,11 @@ function SummaryRow({
 
 export function PassageQuestionsSummary({
   questions,
-  onOpenDetail,
+  onOpenQuestion,
 }: {
   questions: QuestionCardItem[];
-  /** 행 클릭 시 '문제 상세' 모달을 여는 핸들러. 생략 시 개별 페이지로 폴백. */
-  onOpenDetail?: (q: QuestionCardItem) => void;
+  // 전달되면 문제 행 클릭 시 페이지 이동 대신 인페이지 상세 팝업을 연다.
+  onOpenQuestion?: (q: QuestionCardItem) => void;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -115,7 +116,8 @@ export function PassageQuestionsSummary({
             aria-expanded={open}
             className="flex w-full items-center gap-1.5 rounded-md px-1 py-1 text-left text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-50"
           >
-            <FileText className="h-3 w-3 text-slate-400" />
+            {/* History 아이콘 — "이미 생성된" 상징. */}
+            <History className="h-3 w-3 shrink-0 text-slate-400" />
             <span>생성된 문제 {questions.length}개</span>
             <ChevronDown
               className={`ml-auto h-3.5 w-3.5 text-slate-400 transition-transform ${
@@ -135,11 +137,11 @@ export function PassageQuestionsSummary({
                 key={q.id}
                 q={q}
                 num={idx + 1}
-                onOpenDetail={
-                  onOpenDetail
+                onOpen={
+                  onOpenQuestion
                     ? (question) => {
                         setOpen(false);
-                        onOpenDetail(question);
+                        onOpenQuestion(question);
                       }
                     : undefined
                 }

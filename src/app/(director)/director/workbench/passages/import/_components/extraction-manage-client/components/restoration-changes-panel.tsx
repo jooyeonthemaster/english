@@ -17,6 +17,9 @@ interface RestorationChangesPanelProps {
   activeChangeId: string | null;
   onHoverChange: (id: string | null) => void;
   onSelectChange: (id: string | null) => void;
+  /** 지문이 '그대로 추출(NO_RESTORATION_NEEDED)'인지 'AI 복원(RESTORED/PARTIAL)'
+   *  인지 제목 옆 뱃지로 표시한다. 미지정이면 뱃지를 숨긴다. */
+  restorationStatus?: string | null;
 }
 
 /** `change.after` is empty (after trim) → AI deliberately removed text from
@@ -35,7 +38,16 @@ export function RestorationChangesPanel({
   activeChangeId,
   onHoverChange,
   onSelectChange,
+  restorationStatus,
 }: RestorationChangesPanelProps) {
+  // 추출 방식 뱃지: 그대로 추출 vs AI 복원. PENDING/FAILED 등은 헤더 상태
+  // 뱃지가 따로 다루므로 여기선 숨긴다.
+  const methodKind =
+    restorationStatus === "NO_RESTORATION_NEEDED"
+      ? "verbatim"
+      : restorationStatus === "RESTORED" || restorationStatus === "PARTIAL"
+        ? "ai"
+        : null;
   let teacherEditedCount = 0;
   let aiRemovalCount = 0;
   for (const change of changes) {
@@ -50,6 +62,22 @@ export function RestorationChangesPanel({
       <div className="flex h-12 shrink-0 items-center justify-between border-b border-slate-100 px-4">
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="text-[13px] font-bold text-slate-900">복원 근거</span>
+          {methodKind === "verbatim" ? (
+            <span
+              className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-600 ring-1 ring-slate-200/60"
+              title="원문을 그대로 추출한 자료입니다 (AI 복원 없음)"
+            >
+              그대로 추출
+            </span>
+          ) : methodKind === "ai" ? (
+            <span
+              className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[10px] font-bold text-sky-700 ring-1 ring-sky-200/60"
+              title="AI 가 원문을 복원한 자료입니다"
+            >
+              <Sparkles className="size-2.5" aria-hidden="true" />
+              AI 복원
+            </span>
+          ) : null}
           {aiRemovalCount > 0 ? (
             <span
               className="inline-flex items-center gap-1 rounded bg-amber-100 px-1.5 py-0.5 text-[10.5px] font-bold text-amber-800"
@@ -75,7 +103,7 @@ export function RestorationChangesPanel({
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
         {changes.length === 0 ? (
-          <EmptyState />
+          <EmptyState methodKind={methodKind} />
         ) : (
           <ol className="flex flex-col gap-2 px-3 py-3">
             {changes.map((change, index) => {
@@ -101,18 +129,40 @@ export function RestorationChangesPanel({
   );
 }
 
-function EmptyState() {
+function EmptyState({
+  methodKind,
+}: {
+  methodKind: "verbatim" | "ai" | null;
+}) {
+  // 복원 방식별로 "왜 비어 있는지"를 정확히 설명한다. AI 복원인데 문장 단위
+  // 변경이 없는 경우는 보통 발문·선지 같은 시험 문항 구조만 제거한 경우다.
+  const message =
+    methodKind === "ai" ? (
+      <>
+        발문·선지 제거 등 구조 정리만 수행했고
+        <br />
+        개별 문장 변경은 없습니다.
+      </>
+    ) : methodKind === "verbatim" ? (
+      <>
+        원문을 그대로 추출한 자료라
+        <br />
+        복원 변경이 없습니다.
+      </>
+    ) : (
+      <>
+        이 자료는 전체 본문 단위로만 복원되었거나
+        <br />
+        AI 가 세부 변경 사유를 남기지 않았습니다.
+      </>
+    );
   return (
     <div className="flex h-full flex-col items-center justify-center gap-2 px-6 py-10 text-center">
       <Sparkles className="size-5 text-slate-300" aria-hidden="true" />
       <p className="text-[12px] font-semibold text-slate-500">
         개별 복원 근거가 없습니다
       </p>
-      <p className="text-[11px] leading-5 text-slate-400">
-        이 자료는 전체 본문 단위로만 복원되었거나
-        <br />
-        AI 가 세부 변경 사유를 남기지 않았습니다.
-      </p>
+      <p className="text-[11px] leading-5 text-slate-400">{message}</p>
     </div>
   );
 }

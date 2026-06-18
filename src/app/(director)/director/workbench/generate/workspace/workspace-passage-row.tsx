@@ -30,6 +30,7 @@ import {
   Undo2,
   Wand2,
   X,
+  Zap,
 } from "lucide-react";
 import { PearlIcon } from "@/components/icons/pearl-icon";
 import { toast } from "sonner";
@@ -1923,17 +1924,17 @@ export function WorkspacePassageRow({
               : "이 지문의 유형을 선택하고 문제를 생성합니다"
           }
           className={
-            "flex h-11 w-full items-center gap-2 rounded-lg px-3 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50 " +
+            // 유형 지정 완료(문제생성) → 파랑, 유형선택 단계 → 보라.
+            "flex h-11 w-full items-center justify-center gap-2 rounded-lg px-3 text-[13px] font-bold text-white shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
             (genStats && genStats.questions > 0
-              ? "bg-violet-600"
-              : "justify-center bg-violet-600")
+              ? "bg-blue-600 hover:bg-blue-700"
+              : "bg-violet-600 hover:bg-violet-700")
           }
         >
           <Cpu className="h-4 w-4 shrink-0" aria-hidden="true" />
           {genStats && genStats.questions > 0 ? (
             <>
-              <span className="shrink-0">문제 생성</span>
-              <span className="min-w-0 flex-1" aria-hidden="true" />
+              <span className="shrink-0">다음으로 (문제생성)</span>
               <span className="shrink-0 rounded-md bg-white/20 px-1.5 py-0.5 text-[11px] font-bold tabular-nums">
                 {genStats.questions}문제
               </span>
@@ -1945,7 +1946,7 @@ export function WorkspacePassageRow({
               ) : null}
             </>
           ) : (
-            <span>유형 선택하고 문제 생성하기</span>
+            <span>다음으로 (유형선택)</span>
           )}
         </button>
       </div>

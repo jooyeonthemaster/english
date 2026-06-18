@@ -2042,10 +2042,10 @@ export function GeneratePageClient({
     loadSavedQuestions,
   });
   const workspaceActive = workspaceApi.rows.length > 0;
-  // 워크스페이스가 '내 지문함'을 덮어 표시되는 상태.
-  // 행이 있고(workspaceActive) 사용자가 워크스페이스를 펼친(workspaceOpen) 동안
-  // 가운데 컬럼이 내 지문함 대신 워크스페이스로 교체된다.
-  const workspaceVisible = workspaceActive && workspaceOpen;
+  // 워크스페이스가 '내 지문함'을 덮어 표시되는 상태. 브레드크럼의 '워크스페이스'
+  // 탭으로 비어 있어도 진입할 수 있고(빈 상태엔 '지문 추가' 버튼만 표시),
+  // 행 유무와 무관하게 workspaceOpen 만 본다.
+  const workspaceVisible = workspaceOpen;
   // 워크스페이스가 처음 생기면 자동으로 펼쳐 내 지문함을 덮는다.
   const prevWorkspaceActiveRef = useRef(false);
   useEffect(() => {
@@ -2054,11 +2054,6 @@ export function GeneratePageClient({
     }
     prevWorkspaceActiveRef.current = workspaceActive;
   }, [workspaceActive]);
-
-  // 워크스페이스 행이 모두 비워지면 자동으로 내 지문함을 다시 드러낸다.
-  useEffect(() => {
-    if (!workspaceActive && workspaceOpen) setWorkspaceOpen(false);
-  }, [workspaceActive, workspaceOpen]);
   const workspacePassageIds = useMemo(
     () =>
       new Set(
@@ -2079,6 +2074,11 @@ export function GeneratePageClient({
       ? (workspaceApi.rows.find((r) => r.localId === activeRowId) ?? null)
       : null;
   const editingRow = activeRow !== null;
+  // 설정 패널 헤더에 카드와 똑같은 ① 번호 배지를 비추기 위한 인덱스
+  // (왼쪽 선택 지문 ↔ 오른쪽 설정의 정체성 일치 신호).
+  const activeRowIndex = activeRow
+    ? workspaceApi.rows.findIndex((r) => r.localId === activeRow.localId)
+    : -1;
 
   // 워크스페이스가 사라지면 개별 설정 선택을 해제하고 생성 모달도 닫는다.
   useEffect(() => {
@@ -2111,9 +2111,20 @@ export function GeneratePageClient({
   // 이 지문 하나로 생성 — 생성을 시작(fire-and-forget)하고 모달을 닫는다.
   const handleGenerateActiveRow = useCallback(() => {
     if (!activeRowId) return;
+    // 생성은 시작 시점에 행 설정을 동기적으로 캡처하므로(setOverride 는 불변
+    // 업데이트라 캡처된 참조에 영향 없음), 호출 직후 이 지문의 유형 지정을
+    // 비워 초기화해도 안전하다. 난이도·유형별 세부 설정은 보존한다.
     void handleWorkspaceGenerate(activeRowId);
+    const row = workspaceApi.rows.find((r) => r.localId === activeRowId);
+    if (row?.override && overrideHasTypeCounts(row.override)) {
+      const next = { ...row.override, typeCounts: {} };
+      workspaceApi.setOverride(
+        activeRowId,
+        isOverrideEmpty(next) ? null : next,
+      );
+    }
     closeGenModal();
-  }, [activeRowId, handleWorkspaceGenerate, closeGenModal]);
+  }, [activeRowId, handleWorkspaceGenerate, closeGenModal, workspaceApi]);
 
   // 활성 행의 오버라이드를 부분 수정한다. 결과가 전체 설정과 같아지면(빈
   // 오버라이드) null 로 저장해 '전체 설정 따름'으로 되돌린다.
@@ -2292,6 +2303,7 @@ export function GeneratePageClient({
       intakeTab={intakeTab}
       setIntakeTab={setIntakeTab}
       libraryCount={passages.length}
+      libraryLabel="내 지문함"
       onSubmitPastedRows={handleCreatePastedPassages}
       pasteSaving={pasteSaving}
       suppressTutorial={generateTourOpen}
@@ -2358,7 +2370,7 @@ export function GeneratePageClient({
               handleBatchGenerate={handleBatchGenerate}
               questionCountByPassage={questionCountByPassage}
               questionsByPassage={questionsByPassage}
-              onOpenQuestionDetail={(q) => setDetailQuestion(q)}
+              onOpenQuestionDetail={setDetailQuestion}
               learningGeneratingPassageIds={learningGeneratingPassageIds}
               learningCompletedPassageIds={freshLearningPassageIds}
               freshAnalysisPassageIds={freshAnalysisPassageIds}
@@ -2392,9 +2404,6 @@ export function GeneratePageClient({
   const activeRowStats = activeRowId
     ? workspaceRowStats.get(activeRowId)
     : undefined;
-  const activeRowIndex = activeRowId
-    ? workspaceApi.rows.findIndex((r) => r.localId === activeRowId)
-    : -1;
   const genModal =
     genModalOpen && activeRow ? (
       <PassageGenerateModal

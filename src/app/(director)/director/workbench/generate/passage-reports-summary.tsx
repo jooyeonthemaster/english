@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { BookOpen, ChevronDown } from "lucide-react";
+import { BookOpen, ChevronDown, Clock } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -101,7 +101,15 @@ export function PassageReportsSummary({
             aria-expanded={open}
             className="flex w-full items-center gap-1.5 rounded-md px-1 py-1 text-left text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-50"
           >
-            <BookOpen className="h-3 w-3 text-slate-400" />
+            {/* 책 아이콘 + 우하단 시계 배지 — "이미 생성된" 상징. */}
+            <span className="relative inline-flex shrink-0 text-slate-400">
+              <BookOpen className="h-3 w-3" />
+              <Clock
+                className="absolute -bottom-0.5 -right-0.5 h-[7px] w-[7px] rounded-full bg-white"
+                strokeWidth={3}
+                aria-hidden="true"
+              />
+            </span>
             <span>생성된 학습자료 {reports.length}개</span>
             <ChevronDown
               className={`ml-auto h-3.5 w-3.5 text-slate-400 transition-transform ${

@@ -108,6 +108,8 @@ export function TextInputBoard({
   const [draftTitle, setDraftTitle] = useState("");
   const [draftText, setDraftText] = useState("");
   const [passages, setPassages] = useState<TextPassageDraft[]>([]);
+  // 막 등록된 지문 id — 해당 블록에 1회성 파란 글로우를 입히기 위해 추적한다.
+  const [justAddedId, setJustAddedId] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dropIdx, setDropIdx] = useState<number | null>(null);
@@ -233,6 +235,8 @@ export function TextInputBoard({
     if (!draftValid) return;
     const id = crypto.randomUUID();
     const added = { id, title: draftTitle.trim(), text: draftText.trim() };
+    // 방금 추가한 블록에 등록 글로우를 한 번 입힌다(애니메이션 종료 시 해제).
+    setJustAddedId(id);
     setPassages((prev) => {
       const next = [...prev, added];
       if (isGenerateTourSampleText(added.title, added.text)) {
@@ -358,18 +362,14 @@ export function TextInputBoard({
                 disabled={locked}
                 placeholder="제목(선택). 예: 2026 고1 3월 모의고사"
                 aria-label="제목"
-                className="h-9 min-w-0 flex-1 rounded-md border border-slate-200 bg-white px-3 text-[13px] text-slate-900 shadow-sm outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
-              />
-              <span
                 className={
-                  "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 " +
-                  (draftValid
-                    ? "bg-emerald-50 text-emerald-700 ring-emerald-100"
-                    : "bg-white text-slate-500 ring-slate-200")
+                  "h-9 min-w-0 flex-1 rounded-md border-2 bg-white px-3 text-[13px] text-slate-900 shadow-sm outline-none transition-colors placeholder:text-slate-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 " +
+                  // 비어 있으면 파란 테두리로 입력을 유도, 내용이 있으면 회색.
+                  (draftTitle
+                    ? "border-slate-200 focus:border-blue-400"
+                    : "border-blue-500 focus:border-blue-500")
                 }
-              >
-                {draftLen.toLocaleString()}자
-              </span>
+              />
             </div>
             <textarea
               value={draftText}
@@ -384,7 +384,13 @@ export function TextInputBoard({
               }}
               placeholder={placeholder}
               aria-label="본문"
-              className="min-h-0 flex-1 resize-none rounded-md border border-dashed border-slate-300 bg-white px-4 py-3 text-[13px] leading-7 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50"
+              className={
+                "min-h-0 flex-1 resize-none rounded-md border-2 bg-white px-4 py-3 text-[13px] leading-7 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 " +
+                // 비어 있으면 파란 테두리로 입력을 유도, 내용이 있으면 회색.
+                (draftText
+                  ? "border-slate-200 focus:border-blue-400"
+                  : "border-blue-500 focus:border-blue-500")
+              }
             />
             <button
               type="button"
@@ -485,10 +491,19 @@ export function TextInputBoard({
                   const isOpen = !collapsed.has(p.id);
                   const isDragging = dragIdx === idx;
                   const isDropTarget = dropIdx === idx && dragIdx !== idx;
+                  const isJustAdded = p.id === justAddedId;
                   const len = p.text.trim().length;
                   return (
                     <div
                       key={p.id}
+                      onAnimationEnd={(e) => {
+                        if (
+                          isJustAdded &&
+                          e.animationName === "passage-added-glow"
+                        ) {
+                          setJustAddedId(null);
+                        }
+                      }}
                       onDragOver={(e) => {
                         if (dragIdx === null) return;
                         e.preventDefault();
@@ -510,7 +525,8 @@ export function TextInputBoard({
                           ? "border-blue-300 opacity-40 "
                           : isDropTarget
                             ? "border-blue-500 ring-2 ring-blue-200 "
-                            : "border-slate-200 hover:border-slate-300 ")
+                            : "border-slate-200 hover:border-slate-300 ") +
+                        (isJustAdded ? "passage-added-glow " : "")
                       }
                     >
                       <div className="flex items-center gap-1.5 border-b border-slate-100 px-2 py-1.5">

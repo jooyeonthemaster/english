@@ -394,8 +394,8 @@ export function PassageAnalysisModal({
                   className={
                     "h-8 text-xs font-bold " +
                     (isReviewCommitted
-                      ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:border-emerald-300 hover:bg-emerald-100 hover:text-emerald-800"
-                      : "border-emerald-600 bg-emerald-600 text-white shadow-sm hover:bg-emerald-700 hover:text-white")
+                      ? "border-emerald-500 bg-white text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+                      : "border-red-200/80 bg-white text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
                   }
                   onClick={() => onToggleExtractionReview(passage)}
                   disabled={reviewBusy}

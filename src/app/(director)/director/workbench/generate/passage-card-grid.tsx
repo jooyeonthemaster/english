@@ -43,7 +43,6 @@ import {
 } from "@/components/ui/popover";
 import { isDirectInputPassage } from "@/lib/passage-source";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
-import { PassageQuestionBreakdownModal } from "@/components/workbench/passage-question-breakdown-modal";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import {
   type PassageItem,
@@ -191,8 +190,8 @@ interface PassageCardGridProps {
 
   // 지문별 생성된 문제 목록. 지문 카드 하단의 "생성된 문제" 요약 토글에 쓴다.
   questionsByPassage?: Map<string, QuestionCardItem[]>;
-
-  // "생성된 문제" 요약 행 클릭 시 개별 편집 페이지 대신 '문제 상세' 모달을 연다.
+  // 전달되면 "생성된 문제" 목록의 문제 행 클릭 시 페이지 이동 대신
+  // 인페이지 문제 상세 팝업을 연다.
   onOpenQuestionDetail?: (q: QuestionCardItem) => void;
 
   // 학습지 생성(다른 화면)에서 학습자료가 백그라운드로 생성 중인 지문 id.
@@ -275,7 +274,6 @@ export function PassageCardGrid({
   handleBatchGenerate,
   selectionActionText,
   selectionActionDisabled,
-  questionCountByPassage,
   questionsByPassage,
   onOpenQuestionDetail,
   learningGeneratingPassageIds,
@@ -319,11 +317,6 @@ export function PassageCardGrid({
   // 네이티브 드래그(폴더 이동)는 손잡이 엘리먼트에만 등록한다 → 카드 본문은 영역 선택용.
   const passageHandleRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const [mountedAtMs] = useState(() => Date.now());
-  // "문제 N" 배지 클릭 시 유형별 생성 현황 모달을 띄울 대상 지문.
-  const [breakdownPassage, setBreakdownPassage] = useState<{
-    id: string;
-    title: string;
-  } | null>(null);
   const [acknowledgedAnalysisGlowKeys, setAcknowledgedAnalysisGlowKeys] =
     useState<Set<string>>(() => {
       if (typeof window === "undefined") return new Set();
@@ -1311,7 +1304,14 @@ export function PassageCardGrid({
                         ? `검수필요 ${selectedPendingReviewPassages.length}개 검수완료`
                         : "선택한 자료 중 검수필요 항목이 없습니다"
                     }
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-medium text-slate-600 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    className={
+                      // per-card 토글과 동일한 빨강/초록 언어: 선택 중 검수필요가
+                      // 있으면 빨강(클릭 시 완료, hover 초록 미리보기), 없으면 초록(완료).
+                      "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border bg-white px-2.5 text-[11px] font-semibold shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
+                      (selectedPendingReviewPassages.length > 0
+                        ? "border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
+                        : "border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700")
+                    }
                   >
                     {reviewBulkActionRunning ? (
                       <Loader2
@@ -1653,7 +1653,6 @@ export function PassageCardGrid({
                   } catch {}
                 }
                 const mainIdea = aData?.structure?.mainIdea;
-
                 const isChecked = selectedIds.has(p.id);
                 const isInWorkspace = workspacePassageIds?.has(p.id) ?? false;
                 const hasAnalysis = !!p.analysis;
@@ -1727,52 +1726,8 @@ export function PassageCardGrid({
                         className="pointer-events-none absolute inset-y-0 left-0 z-10 w-1 bg-violet-500"
                       />
                     ) : null}
-                    {hasReviewDraft ? (
-                      (() => {
-                        const reviewBusy =
-                          reviewActionPassageIds?.has(p.id) ?? false;
-                        const interactive = !!onToggleExtractionReview;
-                        return (
-                          <button
-                            type="button"
-                            disabled={!interactive || reviewBusy}
-                            aria-label={reviewStampLabel}
-                            title={
-                              interactive
-                                ? isReviewCommitted
-                                  ? "검수완료를 취소합니다"
-                                  : "검수완료로 표시합니다"
-                                : reviewStampLabel
-                            }
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              if (reviewBusy) return;
-                              onToggleExtractionReview?.(p);
-                            }}
-                            className={
-                              "absolute right-2.5 top-2.5 z-10 flex size-3.5 select-none items-center justify-center rounded-full ring-2 ring-white shadow-sm transition-colors " +
-                              (interactive
-                                ? "cursor-pointer hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 "
-                                : "cursor-default ") +
-                              (isReviewCommitted
-                                ? "bg-emerald-500"
-                                : "bg-red-500")
-                            }
-                          >
-                            {reviewBusy ? (
-                              <Loader2 className="size-2.5 animate-spin text-white" />
-                            ) : null}
-                          </button>
-                        );
-                      })()
-                    ) : null}
                     {/* Header with handle + checkbox */}
-                    <div
-                      className={
-                        "flex items-start justify-between gap-2 " +
-                        (hasReviewDraft ? "pr-8" : "")
-                      }
-                    >
+                    <div className="flex items-start justify-between gap-2">
                       <div className="flex items-start gap-2.5 min-w-0 flex-1">
                         {/* Drag handle (folder 이동) — passageBulkAction 중에는 숨김 */}
                         {passageBulkAction === null && (
@@ -1896,20 +1851,69 @@ export function PassageCardGrid({
 
                     <div className="flex-1" />
 
-                    <div className="mt-3 flex items-end gap-2">
-                      <div className="min-w-0 flex-1">
-                        <PassageQuestionsSummary
-                          questions={questionsByPassage?.get(p.id) ?? []}
-                          onOpenDetail={onOpenQuestionDetail}
-                        />
-                        <PassageReportsSummary
-                          passageId={p.id}
-                          reports={p.reports ?? []}
-                          onOpen={handleOpenAnalysisModal}
-                        />
-                      </div>
+                    {/* 생성된 문제 · 학습자료 토글 — 카드 가로 전체 폭으로 한 줄 위 */}
+                    <div className="w-full">
+                      <PassageQuestionsSummary
+                        questions={questionsByPassage?.get(p.id) ?? []}
+                        onOpenQuestion={onOpenQuestionDetail}
+                      />
+                      <PassageReportsSummary
+                        passageId={p.id}
+                        reports={p.reports ?? []}
+                        onOpen={handleOpenAnalysisModal}
+                      />
+                    </div>
+
+                    {/* 카드 맨 아래 액션 줄: 검수(완료/취소) · 상세보기 */}
+                    <div className="mt-3 flex items-end gap-1.5">
+                      {hasReviewDraft
+                        ? (() => {
+                            const reviewBusy =
+                              reviewActionPassageIds?.has(p.id) ?? false;
+                            const interactive = !!onToggleExtractionReview;
+                            return (
+                              <button
+                                type="button"
+                                aria-pressed={isReviewCommitted}
+                                aria-label={reviewStampLabel}
+                                disabled={!interactive || reviewBusy}
+                                title={
+                                  interactive
+                                    ? isReviewCommitted
+                                      ? "검수완료 — 누르면 검수필요로 되돌립니다"
+                                      : "검수필요 — 누르면 검수완료로 표시합니다"
+                                    : reviewStampLabel
+                                }
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (reviewBusy) return;
+                                  onToggleExtractionReview?.(p);
+                                }}
+                                className={
+                                  "inline-flex h-7 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-md border px-2 text-[11px] font-semibold bg-white transition-colors disabled:pointer-events-none disabled:opacity-50 " +
+                                  (isReviewCommitted
+                                    ? "border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+                                    : "border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
+                                }
+                              >
+                                {reviewBusy ? (
+                                  <Loader2
+                                    className="w-3 h-3 animate-spin"
+                                    aria-hidden="true"
+                                  />
+                                ) : (
+                                  <CheckCircle2
+                                    className="w-3 h-3"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                                검수완료
+                              </button>
+                            );
+                          })()
+                        : null}
                       <CardDetailIconButton
-                        className="size-7 rounded-md"
+                        className="size-7 shrink-0 rounded-md"
                         iconClassName="size-3.5"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -1925,14 +1929,6 @@ export function PassageCardGrid({
         )}
       </div>
 
-      {breakdownPassage && (
-        <PassageQuestionBreakdownModal
-          open={!!breakdownPassage}
-          passageId={breakdownPassage.id}
-          passageTitle={breakdownPassage.title}
-          onClose={() => setBreakdownPassage(null)}
-        />
-      )}
       {/* ── 내 지문함 하단 액션 바 — 가로 전체 보라색 버튼 ──
           선택한 지문을 워크스페이스로 보내 편집하거나(없을 때) 작업 중인
           워크스페이스에 추가한다(있을 때). 목록 아래 항상 보이는 큰 버튼. */}
@@ -1956,7 +1952,7 @@ export function PassageCardGrid({
             <span>
               {workspaceActive
                 ? "추가하기"
-                : "다음으로"}
+                : "다음으로 (지문수정·문제생성)"}
             </span>
             {selectedIds.size > 0 ? (
               <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[12px] font-bold tabular-nums">

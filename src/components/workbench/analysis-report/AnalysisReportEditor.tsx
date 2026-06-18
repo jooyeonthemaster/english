@@ -22,7 +22,6 @@ import {
   ImagePlus,
   Italic,
   Languages,
-  ListChecks,
   Loader2,
   Minus,
   Plus,
@@ -1438,21 +1437,6 @@ export function AnalysisReportEditor({
   );
 
   // 추가된 유형의 팔레트 카드 클릭 — 또 추가하지 않고 기존 첫 블록을 선택·스크롤해 설정을 연다.
-  const focusActivityKind = useCallback(
-    (activityKind: ActivityKind) => {
-      const block = (report.customBlocks ?? []).find(
-        (b) => b.kind === "activity" && b.activityKind === activityKind,
-      );
-      if (!block) return;
-      setActiveId(block.id);
-      scrollToBlockRef.current(block.id);
-      setActivityActivateNonce((n) => n + 1);
-      // 설정 섹션이 보이도록 편집 패널을 연다(접혀 있던 경우).
-      setPropertiesPanelCollapsed(false);
-    },
-    [report.customBlocks],
-  );
-
   // 블록 위 컨트롤: 다시 섞기(seed+1 재생성)·밀도·정답 토글·삭제. AI 호출 없음.
   const onActivity = useCallback(
     (id: string, action: ActivityAction) => {
@@ -1629,8 +1613,10 @@ export function AnalysisReportEditor({
   const [activePageIndex, setActivePageIndex] = useState(0);
   const [pagesPanelCollapsed, setPagesPanelCollapsed] = useState(false);
   const [propertiesPanelCollapsed, setPropertiesPanelCollapsed] = useState(false);
-  // 학습 활동 팔레트는 우측 속성 패널 바로 왼쪽에 붙는 독립 칼럼(우측 2단). 기본 펼침.
+  // 학습 활동 팔레트는 창 가장 왼쪽(페이지 패널보다 왼쪽)에 붙는 독립 칼럼. 기본 펼침.
   const [activityPanelCollapsed, setActivityPanelCollapsed] = useState(false);
+  // 폭 드래그 중에는 너비 트랜지션을 꺼서(여닫힘 애니메이션과 충돌 방지) 즉각 반응하게 한다.
+  const [widthDragging, setWidthDragging] = useState(false);
   // '단어 시험지' 카드를 누른 적 있으면 우측 패널에 단어 시험지 설정 섹션이 떠 있는다(활동 설정과 동일).
   const [vocabTestFocused, setVocabTestFocused] = useState(false);
   // 카드를 누를 때마다 +1 — 설정 섹션이 접혀 있어도 다시 펼치고 그 위치로 스크롤하는 신호.
@@ -1685,12 +1671,14 @@ export function AnalysisReportEditor({
       const prevSelect = document.body.style.userSelect;
       document.body.style.cursor = "col-resize";
       document.body.style.userSelect = "none";
+      setWidthDragging(true);
 
       const move = (moveEvent: PointerEvent) => {
         moveEvent.preventDefault();
         const delta = moveEvent.clientX - startX;
+        // 학습 활동 패널은 창 왼쪽에 있어 핸들이 오른쪽 모서리 → 오른쪽 드래그가 폭 증가(+delta).
         if (side === "rail") setRailWidth(clampRailWidth(startRail + delta));
-        else if (side === "activity") setActivityWidth(clampActivityWidth(startActivity - delta));
+        else if (side === "activity") setActivityWidth(clampActivityWidth(startActivity + delta));
         else setPanelWidth(clampPanelWidth(startPanel - delta));
       };
       const finish = () => {
@@ -1699,6 +1687,7 @@ export function AnalysisReportEditor({
         window.removeEventListener("pointercancel", finish);
         document.body.style.cursor = prevCursor;
         document.body.style.userSelect = prevSelect;
+        setWidthDragging(false);
       };
       window.addEventListener("pointermove", move, { passive: false });
       window.addEventListener("pointerup", finish, { once: true });
@@ -2543,6 +2532,132 @@ export function AnalysisReportEditor({
       </div>
 
       <div className="flex min-h-0 flex-1 overflow-hidden bg-white">
+        {/* 좌측 끝 — 학습 활동 팔레트 (편집 패널과 같은 세로 탭 여닫힘 매커니즘 + 부드러운 폭 애니메이션) */}
+        <div
+          aria-hidden={activityPanelCollapsed}
+          className="no-print flex h-full min-h-0 shrink-0 overflow-hidden"
+          style={{
+            width: activityPanelCollapsed ? 0 : activityWidth,
+            transition: widthDragging ? "none" : "width 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+          }}
+        >
+          <aside
+            style={{ width: activityWidth }}
+            className="flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white"
+          >
+            <div className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-200 bg-white px-3.5">
+              <div className="min-w-0">
+                <p className="truncate text-[12px] font-black text-slate-800">학습 활동 패널</p>
+                <p className="truncate text-[10.5px] font-semibold text-slate-400">지문으로 즉석 생성 · AI 없음</p>
+              </div>
+            </div>
+            {/* dir=rtl 로 스크롤바를 왼쪽에 두고, 내용은 dir=ltr 래퍼로 정상 방향 유지 */}
+            <div dir="rtl" className="min-h-0 flex-1 overflow-y-auto p-2.5 [scrollbar-gutter:stable]">
+              <div dir="ltr">
+              {/* 지문 웹툰 삽입 — 생성한 웹툰을 문서/인쇄물에 이미지로 추가 */}
+              <button
+                type="button"
+                onClick={() => setWebtoonPickerOpen(true)}
+                className="mb-2.5 flex w-full items-center gap-2.5 rounded-xl border border-blue-200 bg-blue-50/40 px-3 py-2.5 text-left transition-colors hover:border-blue-300 hover:bg-blue-50/70"
+              >
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+                  <ImagePlus className="size-4" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[12.5px] font-bold text-slate-800">
+                    지문 웹툰 삽입
+                  </span>
+                  <span className="block text-[11px] leading-snug text-slate-500">
+                    생성한 웹툰을 골라 문서에 추가합니다.
+                  </span>
+                </span>
+                <Plus className="size-3.5 shrink-0 text-blue-500" />
+              </button>
+              <WebtoonPickerModal
+                open={webtoonPickerOpen}
+                passageId={passageId}
+                onClose={() => setWebtoonPickerOpen(false)}
+                onPick={insertImageBlock}
+              />
+              <ActivityPalettePanel
+                report={report}
+                onPick={insertActivity}
+                activityCounts={activityCountByKind}
+                onToggleOffKind={removeActivityKind}
+                vocabTestSlot={
+                  canToggleToolbarVocabTestOnly ? (
+                    // 헤더의 스위치가 실제 <button> 이라 카드 자체는 div[role=button] 으로(중첩 버튼 금지).
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => (toolbarVocabTestEnabled ? deactivateVocabTest() : activateVocabTest())}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          if (toolbarVocabTestEnabled) deactivateVocabTest();
+                          else activateVocabTest();
+                        }
+                      }}
+                      title={toolbarVocabTestEnabled ? "단어 시험지 끄기" : "단어 시험지 켜기"}
+                      className={`group flex w-full cursor-pointer flex-col gap-1.5 rounded-xl border p-3 text-left transition-colors ${
+                        toolbarVocabTestEnabled
+                          ? "border-blue-200 bg-blue-50/30 hover:border-blue-300 hover:bg-blue-50/60"
+                          : "border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/40"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[12.5px] font-bold text-slate-800">단어 시험지</span>
+                        <ActivityToggleSwitch
+                          on={toolbarVocabTestEnabled}
+                          title={toolbarVocabTestEnabled ? "단어 시험지 끄기" : "단어 시험지 켜기"}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            if (toolbarVocabTestEnabled) deactivateVocabTest();
+                            else activateVocabTest();
+                          }}
+                        />
+                      </div>
+                      <p className="text-[11px] leading-snug text-slate-500">뜻·단어·동의어·반의어 시험 + 난이도 단계 선택 — 지문 단어로 시험지 페이지 생성</p>
+                      <div className="mt-0.5 rounded-md border border-slate-100 bg-slate-50/80 px-2 py-1.5">
+                        <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">현재</span>
+                        <p className="mt-0.5 text-[11px] font-semibold text-slate-700">
+                          {toolbarVocabTestEnabled ? `${VOCAB_TEST_MODE_LABEL[toolbarVocabMode]}${report.vocabTestOnly ? " · 시험지만" : ""}` : "꺼짐 — 누르면 켜져요"}
+                        </p>
+                      </div>
+                    </div>
+                  ) : null
+                }
+              />
+              </div>
+            </div>
+          </aside>
+        </div>
+        {/* 학습 활동 세로 탭 — 항상 보임(편집 패널과 동일). 누르면 여닫힘. */}
+        <button
+          type="button"
+          onClick={() => setActivityPanelCollapsed((v) => !v)}
+          title={activityPanelCollapsed ? "학습 활동 패널 열기" : "학습 활동 패널 닫기"}
+          aria-label={activityPanelCollapsed ? "학습 활동 패널 열기" : "학습 활동 패널 닫기"}
+          aria-expanded={!activityPanelCollapsed}
+          className="no-print hidden h-full min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 border-r border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600 lg:flex"
+        >
+          {activityPanelCollapsed ? (
+            <ChevronRight className="h-3.5 w-3.5" />
+          ) : (
+            <ChevronLeft className="h-3.5 w-3.5" />
+          )}
+          <span style={{ writingMode: "vertical-rl" }}>학습 활동 패널</span>
+        </button>
+        {/* 학습 활동 폭 조절 핸들 — 펼쳤을 때만(핸들이 오른쪽 모서리) */}
+        {!activityPanelCollapsed ? (
+          <div
+            onPointerDown={(event) => startWidthDrag(event, "activity")}
+            title="학습 활동 폭 조절"
+            aria-hidden
+            className="no-print hidden w-1.5 shrink-0 cursor-col-resize touch-none bg-slate-100 transition-colors hover:bg-blue-200 active:bg-blue-300 lg:block"
+          />
+        ) : null}
+
         {/* 좌측 — 페이지 인디케이터 */}
         {pagesPanelCollapsed ? (
           <button
@@ -2731,161 +2846,42 @@ export function AnalysisReportEditor({
             )
           : null}
 
-        {/* 우측 2단 — (왼) 학습 활동 팔레트 칼럼 */}
-        {activityPanelCollapsed ? (
-          <button
-            type="button"
-            onClick={() => setActivityPanelCollapsed(false)}
-            title="학습 활동 열기"
-            aria-label="학습 활동 열기"
-            aria-expanded={false}
-            className="no-print hidden h-full min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 border-l border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-blue-400 transition-colors hover:bg-blue-50 hover:text-blue-600 lg:flex"
-          >
-            <ListChecks className="h-3.5 w-3.5" />
-            <span style={{ writingMode: "vertical-rl" }}>학습 활동</span>
-          </button>
-        ) : (
-          <>
-            <div
-              onPointerDown={(event) => startWidthDrag(event, "activity")}
-              title="학습 활동 폭 조절"
-              aria-hidden
-              className="no-print hidden w-1.5 shrink-0 cursor-col-resize touch-none bg-slate-100 transition-colors hover:bg-blue-200 active:bg-blue-300 lg:block"
-            />
-            <aside style={{ width: activityWidth }} className="no-print flex shrink-0 flex-col overflow-hidden border-l border-slate-200 bg-white">
-              <div className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-slate-200 bg-white px-3.5">
-                <div className="min-w-0">
-                  <p className="truncate text-[12px] font-black text-slate-800">학습 활동</p>
-                  <p className="truncate text-[10.5px] font-semibold text-slate-400">지문으로 즉석 생성 · AI 없음</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setActivityPanelCollapsed(true)}
-                  title="학습 활동 닫기"
-                  aria-label="학습 활동 닫기"
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
-                >
-                  <ChevronRight className="h-3.5 w-3.5" />
-                </button>
-              </div>
-              <div className="min-h-0 flex-1 overflow-y-auto p-2.5 [scrollbar-gutter:stable]">
-                {/* 지문 웹툰 삽입 — 생성한 웹툰을 문서/인쇄물에 이미지로 추가 */}
-                <button
-                  type="button"
-                  onClick={() => setWebtoonPickerOpen(true)}
-                  className="mb-2.5 flex w-full items-center gap-2.5 rounded-xl border border-blue-200 bg-blue-50/40 px-3 py-2.5 text-left transition-colors hover:border-blue-300 hover:bg-blue-50/70"
-                >
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                    <ImagePlus className="size-4" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-[12.5px] font-bold text-slate-800">
-                      지문 웹툰 삽입
-                    </span>
-                    <span className="block text-[11px] leading-snug text-slate-500">
-                      생성한 웹툰을 골라 문서에 추가합니다.
-                    </span>
-                  </span>
-                  <Plus className="size-3.5 shrink-0 text-blue-500" />
-                </button>
-                <WebtoonPickerModal
-                  open={webtoonPickerOpen}
-                  passageId={passageId}
-                  onClose={() => setWebtoonPickerOpen(false)}
-                  onPick={insertImageBlock}
-                />
-                <ActivityPalettePanel
-                  report={report}
-                  onPick={insertActivity}
-                  activityCounts={activityCountByKind}
-                  onToggleOffKind={removeActivityKind}
-                  onFocusKind={focusActivityKind}
-                  vocabTestSlot={
-                    canToggleToolbarVocabTestOnly ? (
-                      // 헤더의 스위치가 실제 <button> 이라 카드 자체는 div[role=button] 으로(중첩 버튼 금지).
-                      <div
-                        role="button"
-                        tabIndex={0}
-                        onClick={activateVocabTest}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter" || event.key === " ") {
-                            event.preventDefault();
-                            activateVocabTest();
-                          }
-                        }}
-                        title={toolbarVocabTestEnabled ? "단어 시험지 설정 열기" : "단어 시험지 켜기"}
-                        className={`group flex w-full cursor-pointer flex-col gap-1.5 rounded-xl border p-3 text-left transition-colors ${
-                          toolbarVocabTestEnabled
-                            ? "border-blue-200 bg-blue-50/30 hover:border-blue-300 hover:bg-blue-50/60"
-                            : "border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/40"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-[12.5px] font-bold text-slate-800">단어 시험지</span>
-                          {toolbarVocabTestEnabled ? (
-                            <ActivityToggleSwitch
-                              on
-                              title="단어 시험지 끄기"
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                deactivateVocabTest();
-                              }}
-                            />
-                          ) : (
-                            <span className="inline-flex items-center gap-0.5 rounded-md bg-blue-50 px-1.5 py-0.5 text-[10px] font-semibold text-blue-600 ring-1 ring-blue-100 transition-colors group-hover:bg-blue-100">
-                              <Plus className="h-3 w-3" /> 추가
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[11px] leading-snug text-slate-500">뜻·단어·동의어·반의어 시험 + 난이도 단계 선택 — 지문 단어로 시험지 페이지 생성</p>
-                        <div className="mt-0.5 rounded-md border border-slate-100 bg-slate-50/80 px-2 py-1.5">
-                          <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">현재</span>
-                          <p className="mt-0.5 text-[11px] font-semibold text-slate-700">
-                            {toolbarVocabTestEnabled ? `${VOCAB_TEST_MODE_LABEL[toolbarVocabMode]}${report.vocabTestOnly ? " · 시험지만" : ""}` : "꺼짐 — 누르면 켜져요"}
-                          </p>
-                        </div>
-                      </div>
-                    ) : null
-                  }
-                />
-              </div>
-            </aside>
-          </>
-        )}
-
-        {/* 우측 2단 — (오) 속성 패널 */}
-        {propertiesPanelCollapsed ? (
-          <button
-            type="button"
-            onClick={() => setPropertiesPanelCollapsed(false)}
-            title="편집 패널 열기"
-            aria-label="편집 패널 열기"
-            aria-expanded={false}
-            className="no-print hidden h-full min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 border-l border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 lg:flex"
-          >
+        {/* 우측 — 속성(편집) 패널 (세로 탭 여닫힘 + 부드러운 폭 애니메이션) */}
+        {/* 편집 패널 폭 조절 핸들 — 펼쳤을 때만(핸들이 왼쪽 모서리) */}
+        {!propertiesPanelCollapsed ? (
+          <div
+            onPointerDown={(event) => startWidthDrag(event, "panel")}
+            title="편집 패널 폭 조절"
+            aria-hidden
+            className="no-print hidden w-1.5 shrink-0 cursor-col-resize touch-none bg-slate-100 transition-colors hover:bg-blue-200 active:bg-blue-300 lg:block"
+          />
+        ) : null}
+        {/* 편집 패널 세로 탭 — 항상 보임. 누르면 여닫힘. */}
+        <button
+          type="button"
+          onClick={() => setPropertiesPanelCollapsed((v) => !v)}
+          title={propertiesPanelCollapsed ? "편집 패널 열기" : "편집 패널 닫기"}
+          aria-label={propertiesPanelCollapsed ? "편집 패널 열기" : "편집 패널 닫기"}
+          aria-expanded={!propertiesPanelCollapsed}
+          className="no-print hidden h-full min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 border-l border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 lg:flex"
+        >
+          {propertiesPanelCollapsed ? (
             <ChevronLeft className="h-3.5 w-3.5" />
-            <span style={{ writingMode: "vertical-rl" }}>편집 패널</span>
-          </button>
-        ) : (
-          <>
-            <div
-              onPointerDown={(event) => startWidthDrag(event, "panel")}
-              title="편집 패널 폭 조절"
-              aria-hidden
-              className="no-print hidden w-1.5 shrink-0 cursor-col-resize touch-none bg-slate-100 transition-colors hover:bg-blue-200 active:bg-blue-300 lg:block"
-            />
-            <button
-              type="button"
-              onClick={() => setPropertiesPanelCollapsed(true)}
-              title="편집 패널 닫기"
-              aria-label="편집 패널 닫기"
-              aria-expanded
-              className="no-print hidden h-full min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 border-l border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 lg:flex"
-            >
-              <ChevronRight className="h-3.5 w-3.5" />
-              <span style={{ writingMode: "vertical-rl" }}>편집 패널</span>
-            </button>
-            <aside style={{ width: panelWidth }} className="no-print flex shrink-0 flex-col overflow-hidden border-l border-slate-200 bg-slate-50/80">
+          ) : (
+            <ChevronRight className="h-3.5 w-3.5" />
+          )}
+          <span style={{ writingMode: "vertical-rl" }}>편집 패널</span>
+        </button>
+        {/* 애니메이션 컨테이너 — 폭을 0↔패널폭으로 부드럽게 전환 */}
+        <div
+          aria-hidden={propertiesPanelCollapsed}
+          className="no-print flex h-full min-h-0 shrink-0 overflow-hidden"
+          style={{
+            width: propertiesPanelCollapsed ? 0 : panelWidth,
+            transition: widthDragging ? "none" : "width 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+          }}
+        >
+            <aside style={{ width: panelWidth }} className="flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-l border-slate-200 bg-slate-50/80">
               <div className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-slate-200 bg-white px-3.5">
                 <div className="min-w-0">
                   <p className="truncate text-[12px] font-black text-slate-800">
@@ -2981,8 +2977,7 @@ export function AnalysisReportEditor({
                 />
               </div>
             </aside>
-          </>
-        )}
+        </div>
       </div>
     </div>
   );
@@ -3798,9 +3793,6 @@ function ToggleRow({
           }`}
         />
       </span>
-      <span className={`shrink-0 text-[10px] font-bold ${on ? "text-sky-700" : "text-slate-400"}`}>
-        {on ? "ON" : "OFF"}
-      </span>
     </button>
   );
 }
@@ -4160,7 +4152,7 @@ function PropertiesPanel({
             <div className="mb-2.5">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[12px] text-slate-600">글자 크기</span>
-                <span className="text-[11px] font-semibold text-slate-500">{Math.round(fontScale * 100)}%</span>
+                <span className="text-[11px] font-semibold text-slate-500 tabular-nums">{Math.round(fontScale * 10)}pt</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <button
@@ -4173,9 +4165,9 @@ function PropertiesPanel({
                 <button
                   type="button"
                   onClick={() => onMetaPatch({ fontScale: 1 })}
-                  className="px-2.5 h-8 rounded-md border border-slate-200 text-[11px] text-slate-500 hover:bg-slate-50"
+                  className="px-2.5 h-8 rounded-md border border-slate-200 text-[11px] text-slate-500 hover:bg-slate-50 tabular-nums"
                 >
-                  100%
+                  10pt
                 </button>
                 <button
                   type="button"

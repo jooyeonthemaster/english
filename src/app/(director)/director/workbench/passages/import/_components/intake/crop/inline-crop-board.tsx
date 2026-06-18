@@ -370,6 +370,8 @@ export const InlineCropBoard = forwardRef<
   const [pendingScrollGroup, setPendingScrollGroup] = useState<number | null>(
     null,
   );
+  // 막 새로 추가된 지문(그룹) — 우측 카드에 1회성 파란 글로우를 입힌다.
+  const [justAddedGroup, setJustAddedGroup] = useState<number | null>(null);
   // 검수(추출될 지문) 패널 스크롤 컨테이너 — 방금 만진 지문을 보이게 스크롤.
   const reviewScrollRef = useRef<HTMLDivElement>(null);
   // 검수 지문 카드 드래그 재정렬(좌측 이미지 카드와 동일한 네이티브 드래그 패턴).
@@ -770,6 +772,8 @@ export const InlineCropBoard = forwardRef<
         const newGroup = activeGroup ?? maxGroup + 1;
         nextGroups = [...prevGroups, newGroup];
         focusGroup = newGroup;
+        // 기존 그룹에 합치는 게 아니라 "새 지문"이 만들어질 때만 글로우.
+        if (activeGroup === undefined) setJustAddedGroup(newGroup);
         if (meta?.action === "create") {
           dispatchGenerateTourMilestone(
             meta.joinWithActiveGroup && activeGroup !== undefined
@@ -1719,11 +1723,20 @@ export const InlineCropBoard = forwardRef<
                 const collapsed = collapsedGroups.has(p.group);
                 const isDragging = passDragIdx === idx;
                 const isDropTarget = passDropIdx === idx && passDragIdx !== idx;
+                const isJustAdded = p.group === justAddedGroup;
                 return (
                   <div
                     key={`g-${p.group}`}
                     data-group={p.group}
                     data-review-passage-group={p.group}
+                    onAnimationEnd={(event) => {
+                      if (
+                        isJustAdded &&
+                        event.animationName === "passage-added-glow"
+                      ) {
+                        setJustAddedGroup(null);
+                      }
+                    }}
                     onClickCapture={(event) => {
                       if (!suppressNextPassageClickRef.current) return;
                       event.preventDefault();
@@ -1754,7 +1767,8 @@ export const InlineCropBoard = forwardRef<
                           : selected
                             ? "border-blue-500 ring-2 ring-blue-300 "
                             : "border-slate-200 hover:border-slate-300 ") +
-                      (passageSelectDrag?.active ? "select-none " : "")
+                      (passageSelectDrag?.active ? "select-none " : "") +
+                      (isJustAdded ? "passage-added-glow " : "")
                     }
                   >
                     <div

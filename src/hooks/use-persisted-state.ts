@@ -20,7 +20,12 @@ export function usePersistedState<T>(
   isValid?: (value: unknown) => value is T,
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
   const [value, setValue] = useState<T>(defaultValue);
-  const hydrated = useRef(false);
+  // Skip the very first persist run. The restore effect below and this persist
+  // effect both fire on mount; without this guard the persist effect would run
+  // with the still-default `value` and overwrite the stored value before the
+  // restore re-render lands (losing the user's last choice if the component
+  // unmounts in that window).
+  const skipFirstPersist = useRef(true);
 
   // Restore once, after hydration, to avoid SSR/client markup mismatches.
   useEffect(() => {
@@ -35,15 +40,17 @@ export function usePersistedState<T>(
     } catch {
       /* ignore malformed / unavailable storage */
     }
-    hydrated.current = true;
     // storageKey is expected to be stable for the lifetime of the component.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storageKey]);
 
-  // Persist on change, but not before the restore pass has run (so we don't
-  // clobber the stored value with the default on first render).
+  // Persist on change. The first invocation (initial mount, value still the
+  // default) is skipped so it never clobbers a value being restored from storage.
   useEffect(() => {
-    if (!hydrated.current) return;
+    if (skipFirstPersist.current) {
+      skipFirstPersist.current = false;
+      return;
+    }
     try {
       window.localStorage.setItem(storageKey, JSON.stringify(value));
     } catch {
