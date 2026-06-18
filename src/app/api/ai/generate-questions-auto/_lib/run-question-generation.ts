@@ -361,6 +361,7 @@ export async function runQuestionGeneration(
         blankInferenceDoubleNegative,
         blankInferenceParaphraseAnswer,
         blankPointFocus,
+        sentenceInsertPointFocus,
         genericOptionCount,
         genericAnswerCount,
         answerPolarity,
@@ -411,8 +412,10 @@ export async function runQuestionGeneration(
           usedPointCodes: diversitySignals?.usedPointCodes,
           variantIndex: effectiveVariantIndex,
           diversityEnabled: !!diversity,
-          // 어법류는 grammarPointFocus, 빈칸은 blankPointFocus — subType별 상호배타.
-          pointFocus: grammarPointFocus ?? blankPointFocus,
+          // 어법류는 grammarPointFocus, 빈칸은 blankPointFocus, 문장삽입은
+          // sentenceInsertPointFocus — 리졸버가 subType별로만 세팅하므로 상호배타.
+          pointFocus:
+            grammarPointFocus ?? blankPointFocus ?? sentenceInsertPointFocus,
         },
       );
       const hasAiSchema = !!AI_QUESTION_SCHEMAS[subType];

@@ -3,6 +3,9 @@ import { buildCanonicalSentenceInsertOptions } from "@/lib/sentence-insert-optio
 import { CIRCLED_NUMBERS, type PostProcessResult, type QuestionPostProcessData } from "../types";
 
 const OMITTED_SENTENCE_SIMILARITY_THRESHOLD = 0.72;
+// 표시되는(잔류) 지문 문장과 givenSentence 가 이 임계 이상으로 겹치면 정답 누설로 본다.
+// 누설 케이스는 ~0.95(거의 통째 포함), 정상 어휘사슬은 ≪0.85 라 보수적으로 둔다.
+const GIVEN_SENTENCE_LEAK_THRESHOLD = 0.85;
 const SLOT_COUNT_MIN = 5;
 const SLOT_COUNT_MAX = 8;
 
@@ -64,6 +67,21 @@ export function processSentenceInsert(
     warnings.push(
       `Removed omitted SENTENCE_INSERT source sentence ${omittedMatch.index + 1} from displayed passage.`,
     );
+  }
+
+  // Answer-leak guard: when the given sentence is derived from passage text but the
+  // omitted source was only partially matched (or spans two sentences), a near-verbatim
+  // copy can remain among the DISPLAYED sentences — duplicating the answer text and
+  // trivially leaking the position. Reject so the engine regenerates a clean item.
+  const leakMatch = bestSentenceSimilarityMatch(displaySentences, cleanSentence(givenSentence));
+  if (leakMatch && leakMatch.score >= GIVEN_SENTENCE_LEAK_THRESHOLD) {
+    return {
+      success: false,
+      data: ai,
+      warnings,
+      error:
+        "SENTENCE_INSERT given sentence still overlaps a displayed passage sentence (answer leak); regenerate with the source sentence fully removed.",
+    };
   }
 
   // Sort indices and pair with circled numbers

@@ -98,6 +98,12 @@ export interface SentenceInsertGenerationSettings
    * 기본 false.
    */
   paraphrasePrefix?: boolean;
+  /**
+   * 핵심 집중 모드 — true 면 정답 자리를 고정하는 응집장치를 기출 456문항 LLM 검증
+   * 고빈출 코어(참조 해소·대조 전환 + 보조 인과)로 좁힌다. false/미지정이면 기존
+   * 동작. 기본 false.
+   */
+  pointFocus?: boolean;
 }
 
 export interface SentenceOrderGenerationSettings
@@ -972,6 +978,8 @@ export interface ResolvedQuestionTypeGenerationSettings {
   blankInferenceParaphraseAnswer?: boolean;
   /** 빈칸 핵심 집중 모드 — 정답논리를 검증 고빈출 코어로 좁힘. */
   blankPointFocus?: boolean;
+  /** 문장삽입 핵심 집중 모드 — 정답 응집장치를 검증 고빈출 코어로 좁힘. */
+  sentenceInsertPointFocus?: boolean;
   /** Resolved option count for free-text option types (TOPIC/TITLE/...). */
   genericOptionCount?: number;
   /** Resolved correct-answer count for free-text option types. */
@@ -1157,14 +1165,21 @@ export function resolveQuestionTypeGenerationSettings(
     const sentenceInsertSlotCount = readSentenceInsertSlotCountSetting(rawSettings);
     const sentenceInsertParaphrasePrefix =
       readSentenceInsertParaphrasePrefixSetting(rawSettings);
+    const sentenceInsertPointFocus = readBooleanSetting(
+      rawSettings,
+      "SENTENCE_INSERT",
+      "pointFocus",
+    );
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         slotCount: sentenceInsertSlotCount,
         paraphrasePrefix: sentenceInsertParaphrasePrefix,
+        pointFocus: sentenceInsertPointFocus,
       }),
       ...languageSettings,
       sentenceInsertSlotCount,
       sentenceInsertParaphrasePrefix,
+      sentenceInsertPointFocus,
     };
   }
 
