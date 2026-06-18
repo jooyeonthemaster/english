@@ -5,14 +5,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
-  Building2,
-  UserPlus,
   Users,
   Coins,
   CreditCard,
   ChartNoAxesCombined,
   Radar,
-  Settings,
   LogOut,
   PanelLeftClose,
   PanelLeftOpen,
@@ -48,16 +45,15 @@ interface AdminShellProps {
   admin: AdminSession;
 }
 
+// 회원 관리 = 학원 관리 통합 뷰(회원 1명 = 학원 1곳, 상세에서 학원 콘텐츠까지).
+// 가입 신청·설정 메뉴는 제거(설정은 빈 404였음). 라우트/데이터는 보존.
 const NAV_ITEMS = [
   { label: "대시보드", icon: LayoutDashboard, href: "/admin" },
   { label: "회원 관리", icon: Users, href: "/admin/members" },
   { label: "활동 모니터링", icon: Radar, href: "/admin/activity" },
-  { label: "가입 신청", icon: UserPlus, href: "/admin/registrations" },
-  { label: "학원 관리", icon: Building2, href: "/admin/academies" },
   { label: "크레딧", icon: Coins, href: "/admin/credits" },
   { label: "원가 분석", icon: ChartNoAxesCombined, href: "/admin/costs" },
   { label: "요금제", icon: CreditCard, href: "/admin/plans" },
-  { label: "설정", icon: Settings, href: "/admin/settings" },
 ];
 
 const SIDEBAR_STORAGE_KEY = "yshin-admin-sidebar-collapsed";

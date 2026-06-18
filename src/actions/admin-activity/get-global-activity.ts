@@ -13,12 +13,12 @@ import {
 } from "@/actions/admin-members/_shared";
 import {
   fetchActivityUnion,
-  type ActivityCategory,
+  type ActivityFilter,
   type ActivityItem,
 } from "./_sources";
 
 export interface GlobalActivityFilters {
-  category?: ActivityCategory | "all";
+  category?: ActivityFilter;
   /** 학원명 부분일치 검색 */
   academyQuery?: string;
   /** ISO timestamp — 이 시각 이전 항목을 요청 */

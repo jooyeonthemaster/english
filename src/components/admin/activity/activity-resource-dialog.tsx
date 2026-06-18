@@ -7,7 +7,7 @@
 // ============================================================================
 
 import { useEffect, useState, useTransition } from "react";
-import { Download, Loader2 } from "lucide-react";
+import { Download, Loader2, Printer } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +21,7 @@ import {
   getActivityResourceDetail,
   type ResourceDetail,
 } from "@/actions/admin-activity";
+import { ExamBuilderQuestions } from "./exam-builder-questions";
 import {
   examTypeLabel,
   extractionModeLabel,
@@ -103,9 +104,16 @@ function DetailBody({ detail }: { detail: ResourceDetail }) {
               ["학년", detail.grade ? `${detail.grade}학년` : "—"],
               ["등록일", formatDateTime(detail.createdAt)],
               ["길이", `${detail.content.length.toLocaleString("ko-KR")}자`],
+              ["문제", `${detail.questions.length}개`],
             ]}
           />
-          <TextBox text={detail.content} maxHeight="max-h-96" />
+          <SectionLabel>지문 원문</SectionLabel>
+          <TextBox text={detail.content} maxHeight="max-h-56" />
+          <SectionLabel>문제 · 시험지 만들기</SectionLabel>
+          <ExamBuilderQuestions
+            questions={detail.questions}
+            defaultTitle={detail.title}
+          />
         </div>
       );
     case "workbench":
@@ -117,6 +125,7 @@ function DetailBody({ detail }: { detail: ResourceDetail }) {
               ["상태", statusLabel(detail.status)],
               ["실행 위치", originText(detail.origin)],
               ["지문", detail.passageTitle ?? "—"],
+              ["문제", `${detail.questions.length}개`],
             ]}
           />
           {detail.errorMessage && (
@@ -124,12 +133,17 @@ function DetailBody({ detail }: { detail: ResourceDetail }) {
               {detail.errorMessage}
             </div>
           )}
-          {detail.config && (
-            <JsonBox label="설정" value={detail.config} />
+          {detail.passageContent && (
+            <>
+              <SectionLabel>지문 원문</SectionLabel>
+              <TextBox text={detail.passageContent} maxHeight="max-h-48" />
+            </>
           )}
-          {detail.result && (
-            <JsonBox label="결과" value={detail.result} />
-          )}
+          <SectionLabel>문제 · 시험지 만들기</SectionLabel>
+          <ExamBuilderQuestions
+            questions={detail.questions}
+            defaultTitle={detail.passageTitle || detail.title}
+          />
         </div>
       );
     case "report":
@@ -160,27 +174,34 @@ function DetailBody({ detail }: { detail: ResourceDetail }) {
               ["생성일", formatDateTime(detail.createdAt)],
             ]}
           />
-          <div>
-            <div className="text-[11px] text-gray-400 font-medium mb-1.5">
-              실물 다운로드 (현재 데이터로 재생성)
-            </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <ExportButton examId={detail.examId} format="docx" label="DOCX" />
-              <ExportButton
-                examId={detail.examId}
-                format="docx"
-                answers
-                label="DOCX (정답)"
-              />
-              <ExportButton examId={detail.examId} format="hwpx" label="HWPX" />
-              <ExportButton
-                examId={detail.examId}
-                format="hwpx"
-                answers
-                label="HWPX (정답)"
-              />
-            </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              asChild
+              size="sm"
+              className="h-9 text-[12px] bg-blue-600 hover:bg-blue-700"
+            >
+              <a
+                href={`/admin/exam-print?examId=${detail.examId}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Printer className="size-4 mr-1.5" strokeWidth={2} aria-hidden />
+                시험지 보기·인쇄
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="sm" className="h-9 text-[12px]">
+              <a
+                href={`/admin/exam-print?examId=${detail.examId}&answers=1`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                정답 포함 보기
+              </a>
+            </Button>
           </div>
+          <p className="text-[11px] text-gray-400">
+            새 탭에서 시험지를 보고 인쇄(또는 PDF 저장)·DOCX 다운로드할 수 있어요.
+          </p>
         </div>
       );
   }
@@ -345,42 +366,9 @@ function TextBox({
   );
 }
 
-function JsonBox({
-  label,
-  value,
-}: {
-  label: string;
-  value: Record<string, unknown>;
-}) {
+function SectionLabel({ children }: { children: string }) {
   return (
-    <div>
-      <div className="text-[11px] text-gray-400 font-medium mb-1">{label}</div>
-      <pre className="rounded-lg bg-gray-50 border border-gray-100 px-3 py-2 text-[11px] text-gray-600 font-mono whitespace-pre-wrap break-all max-h-48 overflow-y-auto">
-        {JSON.stringify(value, null, 2)}
-      </pre>
-    </div>
-  );
-}
-
-function ExportButton({
-  examId,
-  format,
-  answers = false,
-  label,
-}: {
-  examId: string;
-  format: "docx" | "hwpx";
-  answers?: boolean;
-  label: string;
-}) {
-  const href = `/api/exams/${examId}/export-${format}${answers ? "?answers=true" : ""}`;
-  return (
-    <Button asChild variant="outline" size="sm" className="h-8 text-[12px]">
-      <a href={href}>
-        <Download className="size-3.5 mr-1.5" strokeWidth={2} aria-hidden />
-        {label}
-      </a>
-    </Button>
+    <div className="text-[11px] text-gray-400 font-medium pt-1">{children}</div>
   );
 }
 

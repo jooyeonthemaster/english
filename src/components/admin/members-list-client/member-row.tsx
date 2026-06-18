@@ -10,6 +10,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { ProviderBadge } from "@/components/admin/provider-badge";
 import type { MemberListItem } from "@/actions/admin-members";
 import { updateMemberMemo } from "@/actions/admin-members";
+import { SmsToggle } from "./sms-toggle";
 import { formatDate, formatRelative, getInitials, tierBadgeClass } from "./formatters";
 
 const MAX_MEMO_LENGTH = 5000;
@@ -106,13 +107,20 @@ export function MemberRow({
         {formatDate(member.createdAt)}
       </TableCell>
       <TableCell className="text-[12px] text-gray-600 tabular-nums">
-        {member.lastLoginAt ? (
-          <span title={formatDate(member.lastLoginAt)}>
-            {formatRelative(member.lastLoginAt, now)}
+        {member.lastActiveAt ? (
+          <span title={formatDate(member.lastActiveAt)}>
+            {formatRelative(member.lastActiveAt, now)}
           </span>
         ) : (
-          <span className="text-gray-300">로그인 없음</span>
+          <span className="text-gray-300">활동 없음</span>
         )}
+      </TableCell>
+      <TableCell>
+        <SmsToggle
+          memberId={member.id}
+          optOut={member.smsOptOut}
+          isInternal={member.isInternal}
+        />
       </TableCell>
       <TableCell className="pr-5 text-right">
         <ChevronRight

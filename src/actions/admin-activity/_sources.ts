@@ -14,6 +14,7 @@ import { prisma } from "@/lib/prisma";
 import {
   ACTIVITY_CATEGORY_LABELS,
   type ActivityCategory,
+  type ActivityFilter,
   type ActivityItem,
   type ActivityStatus,
 } from "@/lib/admin-activity-types";
@@ -25,7 +26,7 @@ import {
   workbenchModeLabel,
 } from "@/lib/admin-activity-labels";
 
-export type { ActivityCategory, ActivityItem };
+export type { ActivityCategory, ActivityFilter, ActivityItem };
 
 export interface FetchActivityParams {
   academyId?: string;
@@ -33,7 +34,7 @@ export interface FetchActivityParams {
   academyIds?: string[];
   before?: Date;
   limit: number;
-  category?: ActivityCategory | "all";
+  category?: ActivityFilter;
 }
 
 interface RawItem
@@ -374,6 +375,19 @@ const ALL_SOURCES = [
   fromPassageReports,
 ];
 
+// "생성물" 복합 필터 — 유저가 실제로 만든/올린 것만(페이지 이동·로그인·내보내기
+// 같은 app_events 노이즈 제외). EXTRACTION + AI_GENERATION + CONTENT 전부.
+const CREATED_SOURCES = [
+  fromExtractionJobs,
+  fromWorkbenchJobs,
+  fromSimilarExamJobs,
+  fromSimilarQuestionJobs,
+  fromCustomQuestionJobs,
+  fromPassages,
+  fromExams,
+  fromPassageReports,
+];
+
 export interface FetchActivityResult {
   items: ActivityItem[];
   /** 다음 페이지 커서 (이 시각 이전을 요청) — 더 없으면 null */
@@ -386,7 +400,9 @@ export async function fetchActivityUnion(
   const fetchers =
     !params.category || params.category === "all"
       ? ALL_SOURCES
-      : SOURCES_BY_CATEGORY[params.category];
+      : params.category === "CREATED"
+        ? CREATED_SOURCES
+        : SOURCES_BY_CATEGORY[params.category];
 
   const settled = await Promise.all(
     fetchers.map((fn) =>

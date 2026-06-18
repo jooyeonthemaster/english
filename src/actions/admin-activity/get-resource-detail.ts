@@ -36,6 +36,62 @@ export interface ExtractionPageDetail {
   textLength: number;
 }
 
+/** 자료 뷰어에서 바로 보여줄 생성 문제 요약 (시험지 만들기 선택용) */
+export interface QuestionBrief {
+  id: string;
+  number: number | null;
+  type: string;
+  questionText: string;
+  options: Array<{ label: string; text: string }> | null;
+  correctAnswer: string;
+  explanation: string | null;
+}
+
+function parseOptions(
+  raw: string | null,
+): Array<{ label: string; text: string }> | null {
+  if (!raw) return null;
+  try {
+    const arr = JSON.parse(raw);
+    if (!Array.isArray(arr)) return null;
+    return arr.map((o, i) => ({
+      label: String(o?.label ?? `${i + 1}`),
+      text: String(o?.text ?? o ?? ""),
+    }));
+  } catch {
+    return null;
+  }
+}
+
+/** 지문에 달린 문제들을 시험지 만들기용 요약으로 가져온다. */
+async function fetchPassageQuestions(
+  passageId: string,
+): Promise<QuestionBrief[]> {
+  const rows = await prisma.question.findMany({
+    where: { passageId },
+    orderBy: [{ questionNumber: "asc" }, { createdAt: "asc" }],
+    take: 100,
+    select: {
+      id: true,
+      type: true,
+      questionNumber: true,
+      questionText: true,
+      options: true,
+      correctAnswer: true,
+      explanation: { select: { content: true } },
+    },
+  });
+  return rows.map((q) => ({
+    id: q.id,
+    number: q.questionNumber,
+    type: q.type,
+    questionText: q.questionText,
+    options: parseOptions(q.options),
+    correctAnswer: q.correctAnswer,
+    explanation: q.explanation?.content ?? null,
+  }));
+}
+
 export type ResourceDetail =
   | { kind: "forbidden" }
   | { kind: "not_found" }
@@ -54,10 +110,12 @@ export type ResourceDetail =
     }
   | {
       kind: "passage";
+      passageId: string;
       title: string;
       grade: number | null;
       createdAt: Date;
       content: string;
+      questions: QuestionBrief[];
     }
   | {
       kind: "workbench";
@@ -67,9 +125,9 @@ export type ResourceDetail =
       errorMessage: string | null;
       passageId: string | null;
       passageTitle: string | null;
+      passageContent: string | null;
+      questions: QuestionBrief[];
       origin: OriginInfo | null;
-      config: Record<string, unknown> | null;
-      result: Record<string, unknown> | null;
     }
   | {
       kind: "report";
@@ -236,7 +294,8 @@ export async function getActivityResourceDetail(
         select: { title: true, grade: true, createdAt: true, content: true },
       });
       if (!p) return { kind: "not_found" };
-      return { kind: "passage", ...p };
+      const questions = await fetchPassageQuestions(rowId);
+      return { kind: "passage", passageId: rowId, ...p, questions };
     }
 
     case "workbench": {
@@ -245,17 +304,20 @@ export async function getActivityResourceDetail(
         select: {
           academyId: true, createdById: true, createdAt: true,
           title: true, domain: true, status: true, errorMessage: true,
-          passageId: true, config: true, result: true,
+          passageId: true,
         },
       });
       if (!j) return { kind: "not_found" };
-      const [passage, origin] = await Promise.all([
+      const [passage, questions, origin] = await Promise.all([
         j.passageId
           ? prisma.passage.findUnique({
               where: { id: j.passageId },
-              select: { title: true },
+              select: { title: true, content: true },
             })
           : Promise.resolve(null),
+        j.passageId
+          ? fetchPassageQuestions(j.passageId)
+          : Promise.resolve([] as QuestionBrief[]),
         resolveOrigin({
           academyId: j.academyId,
           actorId: j.createdById,
@@ -270,9 +332,9 @@ export async function getActivityResourceDetail(
         errorMessage: j.errorMessage,
         passageId: j.passageId,
         passageTitle: passage?.title ?? null,
+        passageContent: passage?.content ?? null,
+        questions,
         origin,
-        config: (j.config ?? null) as Record<string, unknown> | null,
-        result: (j.result ?? null) as Record<string, unknown> | null,
       };
     }
 
