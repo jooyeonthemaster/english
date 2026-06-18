@@ -299,6 +299,7 @@ export async function runQuestionGeneration(
     rejectionRecorder,
     attemptIndex = 0,
     previousAttemptFeedback,
+    deadlineAt,
   }: {
     qualityMode?: QualityMode;
     rejectionRecorder?: RejectionRecorder;
@@ -306,6 +307,8 @@ export async function runQuestionGeneration(
     attemptIndex?: number;
     /** 직전 시도의 거절 사유 — 다음 프롬프트에 교정 지시로 주입(맹목 재시도 방지). */
     previousAttemptFeedback?: string;
+    /** 시간예산 데드라인(epoch ms) — provider 호출 abort 를 남은예산으로 좁힌다. */
+    deadlineAt?: number;
   } = {},
 ): Promise<Record<string, unknown>[]> {
   // NBSP·빈줄 잔재가 모델 출력(원문 복사 스팬)과 게이트 문자열 비교, 저장본
@@ -449,8 +452,7 @@ export async function runQuestionGeneration(
       );
 
       try {
-        const object = await generateWithRetry(
-          responseSchema,
+        const { system: generationSystem, prompt: generationPrompt } =
           buildGenerationPrompt({
             schoolType,
             gradeInfo,
@@ -471,7 +473,10 @@ export async function runQuestionGeneration(
                   .filter(Boolean)
                   .join("\n\n")
               : mergedCustomPrompt,
-          }),
+          });
+        const object = await generateWithRetry(
+          responseSchema,
+          generationPrompt,
           effectiveGenerationPlan,
           Math.min(20_000, Math.max(perQuestionTokenFloor, (Number(typeCount) || 1) * perQuestionTokenFloor)),
           undefined,
@@ -489,6 +494,7 @@ export async function runQuestionGeneration(
               durationMs: result.durationMs,
             });
           },
+          { system: generationSystem, deadlineAt },
         );
 
         const generatedQuestionsAll =
@@ -937,11 +943,22 @@ export async function runQuestionGenerationWithEmptyRetry(
     largestIrrelevantSlotCount > 5 ||
     largestGrammarMarkerCount > 5 ||
     largestGrammarAnswerCount > 1;
-  const attempts = hasKillerSingleBlankInference
+  const rawAttempts = hasKillerSingleBlankInference
     ? Math.max(10, requestedMaxAttempts)
     : hasNegativeParaphraseBlank || hasBlankParaphraseAnswer || hasExtendedRetryType
       ? Math.max(6, requestedMaxAttempts)
       : Math.max(4, requestedMaxAttempts);
+  // PREMIUM(Claude)은 1회 호출이 실측 ~25~35s(긴 지문은 더)로 느려 strict 다회 재시도가
+  // 누적되면 시간 벽을 넘긴다. 데드라인(fast 270s/trigger 540s)이 실제 한계라 상한은
+  // 그 안에서 교정 재시도(buildCorrectiveRetryFeedback)+relaxed 폴백이 충분히 돌도록
+  // 5로 둔다(5×~33s≈165s + relaxed, 270s 예산 내). 성공은 평균 1.22회라 정상 케이스는
+  // 영향 없고, 긴/어려운 지문에서 품질 게이트(list-like·too-easy) 통과 기회를 늘린다.
+  // STANDARD(Gemini ~9s)는 기존 상한을 유지한다.
+  const PREMIUM_STRICT_ATTEMPT_CAP = 5;
+  const attempts =
+    inputWithUsage.generationPlan === "PREMIUM"
+      ? Math.max(1, Math.min(rawAttempts, PREMIUM_STRICT_ATTEMPT_CAP))
+      : rawAttempts;
 
   let pendingFeedback: string | undefined;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
@@ -959,6 +976,7 @@ export async function runQuestionGenerationWithEmptyRetry(
       rejectionRecorder,
       attemptIndex: attempt - 1,
       previousAttemptFeedback: pendingFeedback,
+      deadlineAt,
     });
     const shouldRequireFullRequestedCount =
       hasNegativeParaphraseBlank || hasBlankParaphraseAnswer;
@@ -1008,6 +1026,7 @@ export async function runQuestionGenerationWithEmptyRetry(
     rejectionRecorder,
     attemptIndex: attempts,
     previousAttemptFeedback: pendingFeedback,
+    deadlineAt,
   });
   return {
     questions: relaxedQuestions,

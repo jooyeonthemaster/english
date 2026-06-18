@@ -136,6 +136,11 @@ async function generateWithRetry(
   return result;
 }
 
+// Vercel 함수 벽. 미설정 시 계정 기본 한도(180s anthropic abort보다 짧을 수 있음)에
+// 걸려 PREMIUM 단일 생성이 함수강제종료→잡 고아→환불 누락될 수 있다. 워크벤치 fast
+// 경로와 동일하게 300s로 고정하고, 아래 deadlineAt(270s)로 호출 abort 를 좁힌다.
+export const maxDuration = 300;
+
 // ─── Single-type question generation (called in parallel) ───
 export async function POST(request: NextRequest) {
   const requestStartedAt = Date.now();
@@ -328,7 +333,7 @@ export async function POST(request: NextRequest) {
             ? ({ [questionType]: typeSettingsForType } as Record<string, unknown>)
             : undefined,
         },
-        { logPrefix: "SINGLE-GEN" },
+        { logPrefix: "SINGLE-GEN", deadlineAt: requestStartedAt + 270_000 },
       );
       const questions = generationResult.questions.slice(0, requestedQuestionCount);
       const taggedQuestions = questions.map((question) =>
