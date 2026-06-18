@@ -299,6 +299,7 @@ export async function runQuestionGeneration(
     rejectionRecorder,
     attemptIndex = 0,
     previousAttemptFeedback,
+    deadlineAt,
   }: {
     qualityMode?: QualityMode;
     rejectionRecorder?: RejectionRecorder;
@@ -306,6 +307,8 @@ export async function runQuestionGeneration(
     attemptIndex?: number;
     /** 직전 시도의 거절 사유 — 다음 프롬프트에 교정 지시로 주입(맹목 재시도 방지). */
     previousAttemptFeedback?: string;
+    /** 시간예산 데드라인(epoch ms) — provider 호출 abort 를 남은예산으로 좁힌다. */
+    deadlineAt?: number;
   } = {},
 ): Promise<Record<string, unknown>[]> {
   // NBSP·빈줄 잔재가 모델 출력(원문 복사 스팬)과 게이트 문자열 비교, 저장본
@@ -449,8 +452,7 @@ export async function runQuestionGeneration(
       );
 
       try {
-        const object = await generateWithRetry(
-          responseSchema,
+        const { system: generationSystem, prompt: generationPrompt } =
           buildGenerationPrompt({
             schoolType,
             gradeInfo,
@@ -471,7 +473,10 @@ export async function runQuestionGeneration(
                   .filter(Boolean)
                   .join("\n\n")
               : mergedCustomPrompt,
-          }),
+          });
+        const object = await generateWithRetry(
+          responseSchema,
+          generationPrompt,
           effectiveGenerationPlan,
           Math.min(20_000, Math.max(perQuestionTokenFloor, (Number(typeCount) || 1) * perQuestionTokenFloor)),
           undefined,
@@ -489,6 +494,7 @@ export async function runQuestionGeneration(
               durationMs: result.durationMs,
             });
           },
+          { system: generationSystem, deadlineAt },
         );
 
         const generatedQuestionsAll =
@@ -937,11 +943,22 @@ export async function runQuestionGenerationWithEmptyRetry(
     largestIrrelevantSlotCount > 5 ||
     largestGrammarMarkerCount > 5 ||
     largestGrammarAnswerCount > 1;
-  const attempts = hasKillerSingleBlankInference
+  const rawAttempts = hasKillerSingleBlankInference
     ? Math.max(10, requestedMaxAttempts)
     : hasNegativeParaphraseBlank || hasBlankParaphraseAnswer || hasExtendedRetryType
       ? Math.max(6, requestedMaxAttempts)
       : Math.max(4, requestedMaxAttempts);
+  // PREMIUM(Claude)은 1회 호출이 실측 ~52s(최대 179s)로 느려 strict 다회 재시도가
+  // Vercel 120s 벽을 넘겨 함수강제종료→잡 고아→"Stale" 실패를 낳는다(BLANK PREMIUM
+  // 최다 실패 모드). 성공은 평균 1.22회에 끝나므로 strict 상한을 3으로 낮춰도
+  // 수율 손실은 미미하고, 교정 재시도(buildCorrectiveRetryFeedback)+relaxed 폴백이
+  // 데드라인(deadlineAt) 안에서 정상 종료/환불되도록 한다. STANDARD(Gemini ~9s)는
+  // 기존 상한을 유지한다.
+  const PREMIUM_STRICT_ATTEMPT_CAP = 3;
+  const attempts =
+    inputWithUsage.generationPlan === "PREMIUM"
+      ? Math.max(1, Math.min(rawAttempts, PREMIUM_STRICT_ATTEMPT_CAP))
+      : rawAttempts;
 
   let pendingFeedback: string | undefined;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
@@ -959,6 +976,7 @@ export async function runQuestionGenerationWithEmptyRetry(
       rejectionRecorder,
       attemptIndex: attempt - 1,
       previousAttemptFeedback: pendingFeedback,
+      deadlineAt,
     });
     const shouldRequireFullRequestedCount =
       hasNegativeParaphraseBlank || hasBlankParaphraseAnswer;
@@ -1008,6 +1026,7 @@ export async function runQuestionGenerationWithEmptyRetry(
     rejectionRecorder,
     attemptIndex: attempts,
     previousAttemptFeedback: pendingFeedback,
+    deadlineAt,
   });
   return {
     questions: relaxedQuestions,

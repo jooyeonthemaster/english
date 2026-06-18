@@ -247,6 +247,84 @@ export function findExpressionInPassage(
 }
 
 /**
+ * 빈칸/표현 매칭 보강 폴백. findExpressionInPassage 가 verbatim/정규화로 못 찾을
+ * 때에만 호출한다(통과 케이스 동작 불변 — 회귀 없음). 두 단계로 near-verbatim 선택을
+ * 구제한다:
+ *  1) 앞뒤 말줄임표(…/...)·따옴표·구두점을 떼고 verbatim/정규화 재시도.
+ *  2) 여전히 실패 + 다단어면, 내용 토큰을 순서대로 `\b토큰[\s구두점]+토큰\b` 로 묶어
+ *     원문에서 토큰 사이의 구두점/공백 차이만 허용해 연속 매칭한다. 토큰 사이에
+ *     다른 "단어"가 삽입된 경우는 매칭하지 않으며(분리자 클래스는 글자를 못 먹음),
+ *     매칭 길이가 표현 길이+여유를 넘으면 과매칭으로 보고 거부한다.
+ * 모델이 빈칸 정답 구간을 고를 때 내부 쉼표/공백/하이픈을 빠뜨린 사례
+ * (prod "Expression not found" 다수)를 안전하게 살린다.
+ */
+export function findExpressionInPassageFuzzy(
+  passage: string,
+  expression: string,
+  surroundingText?: string,
+): FoundPosition | null {
+  if (!expression || !passage) return null;
+
+  // 1) 앞뒤 말줄임표/따옴표/구두점 트림 후 재시도(정규화 경로 포함, surroundingText 존중)
+  const trimmed = expression
+    .replace(/^[\s"'“”‘’.…]+/u, "")
+    .replace(/[\s"'“”‘’.…]+$/u, "")
+    .trim();
+  if (trimmed && trimmed !== expression) {
+    const retried = findExpressionInPassage(passage, trimmed, surroundingText);
+    if (retried) return retried;
+  }
+
+  // 2) 구두점/공백 관용 연속 매칭 (다단어 전용)
+  const base = trimmed || expression;
+  const tokens = base.match(/[A-Za-z0-9][A-Za-z0-9'’-]*/g) ?? [];
+  if (tokens.length < 2) return null;
+
+  let re: RegExp;
+  try {
+    const pattern =
+      "\\b" +
+      tokens
+        .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+        .join("[\\s\\p{P}]+") +
+      "\\b";
+    re = new RegExp(pattern, "iu");
+  } catch {
+    // 정규식 구성 실패 시 폴백 포기 (거부 유지)
+    return null;
+  }
+
+  const maxLen = base.length + Math.max(8, tokens.length * 2);
+  const tryMatch = (text: string, offset: number): FoundPosition | null => {
+    const m = re.exec(text);
+    if (!m) return null;
+    // 문장/문단 경계(.!? 또는 줄바꿈)를 가로지르는 매치는 거부한다 — 이 폴백은
+    // 토큰 사이의 쉼표/공백/하이픈 누락만 구제하려는 것이고, 문장 경계를 넘는 빈칸은
+    // T3 프롬프트가 금지하는 결함(과매칭으로 엉뚱한 구간 빈칸화)이기 때문.
+    if (m[0].length > maxLen || /[.!?\n\r]/.test(m[0])) return null;
+    return { index: offset + m.index, length: m[0].length };
+  };
+
+  // surroundingText 가 있으면 그 윈도우 안에서 먼저 찾는다(동형 표현 다중 출현 시
+  // 모델의 위치 힌트를 존중 — 첫 출현을 무조건 집어 엉뚱한 곳을 빈칸화하는 것 방지).
+  // 못 찾으면 전역 폴백.
+  if (surroundingText && surroundingText.trim().length > 0) {
+    let ctxIdx = passage.indexOf(surroundingText);
+    if (ctxIdx === -1) {
+      ctxIdx = passage.toLowerCase().indexOf(surroundingText.toLowerCase());
+    }
+    if (ctxIdx !== -1) {
+      const start = Math.max(0, ctxIdx - 20);
+      const end = Math.min(passage.length, ctxIdx + surroundingText.length + 20);
+      const inWindow = tryMatch(passage.slice(start, end), start);
+      if (inWindow) return inWindow;
+    }
+  }
+
+  return tryMatch(passage, 0);
+}
+
+/**
  * Find an expression using word-boundary awareness (for single words/pronouns).
  * Prefers exact word boundaries over substring matches.
  */

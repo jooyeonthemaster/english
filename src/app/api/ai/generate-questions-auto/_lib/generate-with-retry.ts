@@ -12,6 +12,14 @@ export async function generateWithRetry(
   maxTokens: number,
   maxRetries = GEMINI_QUESTION_MAX_RETRIES,
   onUsage?: (result: GenerateQuestionObjectResult<unknown>) => void,
+  opts?: {
+    /** PREMIUM 캐시용 정적 system 프리앰블 */
+    system?: string;
+    /** 호출별 abort 상한(ms) */
+    timeoutMs?: number;
+    /** 시간예산 데드라인(epoch ms) — abort 를 남은예산으로 좁힘 */
+    deadlineAt?: number;
+  },
 ) {
   const result = await generateQuestionObject({
     schema,
@@ -20,6 +28,9 @@ export async function generateWithRetry(
     logPrefix: "AUTO-GEN",
     maxRetries,
     maxTokens,
+    system: opts?.system,
+    timeoutMs: opts?.timeoutMs,
+    deadlineAt: opts?.deadlineAt,
   });
   onUsage?.(result);
   return result.object;

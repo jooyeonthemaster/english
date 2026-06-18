@@ -1,4 +1,9 @@
-import { applyReplacementsRTL, findExpressionInPassage, replaceAtPosition } from "../text-utils";
+import {
+  applyReplacementsRTL,
+  findExpressionInPassage,
+  findExpressionInPassageFuzzy,
+  replaceAtPosition,
+} from "../text-utils";
 import { BLANK, type PostProcessResult, type QuestionPostProcessData, type Replacement } from "../types";
 
 export function processBlankInference(
@@ -27,8 +32,12 @@ export function processBlankInference(
     return { success: false, data: ai, warnings, error: "Missing originalExpression field" };
   }
 
-  // Find the expression in the passage
-  const found = findExpressionInPassage(passage, originalExpression, surroundingText);
+  // Find the expression in the passage. verbatim/정규화로 못 찾으면 near-verbatim
+  // 폴백(앞뒤 말줄임표 트림 + 토큰 사이 구두점/공백 관용 매칭, surroundingText 윈도우
+  // 우선)으로 구제한다.
+  const found =
+    findExpressionInPassage(passage, originalExpression, surroundingText) ??
+    findExpressionInPassageFuzzy(passage, originalExpression, surroundingText);
   if (!found) {
     return {
       success: false,
@@ -38,14 +47,25 @@ export function processBlankInference(
     };
   }
 
-  // Validate: in default mode the correct answer option's text should equal originalExpression.
-  // In transformed modes, originalExpression is still the source span to blank,
-  // but the visible correct option is intentionally transformed.
+  // 폴백(fuzzy)이 구두점/공백이 다른 실제 지문 구간을 잡았을 수 있다. 기본
+  // (SOURCE_EXACT) 모드에서는 빈칸으로 제거되는 "실제 지문 텍스트"를 정답 표현의
+  // 기준으로 삼아, 정답 선지와 빈칸 처리된 구간이 글자 단위로 일치하게 한다
+  // (멀티 빈칸 경로가 passage.slice 로 정합하는 것과 동일). 변형 모드(PARAPHRASE/
+  // DOUBLE_NEGATIVE)는 정답 선지가 의도적으로 다르므로 건드리지 않는다.
+  const locatedText = passage.slice(found.index, found.index + found.length);
+  const canonicalExpression =
+    !isTransformedAnswerMode && locatedText && locatedText !== originalExpression
+      ? locatedText
+      : originalExpression;
+
+  // Validate: in default mode the correct answer option's text should equal the
+  // canonical (actually-blanked) expression. In transformed modes, the source span
+  // is still blanked but the visible correct option is intentionally transformed.
   if (options && Array.isArray(options)) {
     const correctOption = options.find((o) => o.label === correctAnswer);
-    if (!isTransformedAnswerMode && correctOption && correctOption.text !== originalExpression) {
+    if (!isTransformedAnswerMode && correctOption && correctOption.text !== canonicalExpression) {
       // Auto-fix: check if any other option matches
-      const matchingOption = options.find((o) => o.text === originalExpression);
+      const matchingOption = options.find((o) => o.text === canonicalExpression);
       if (matchingOption) {
         warnings.push(
           `correctAnswer "${correctAnswer}" option text doesn't match originalExpression. ` +
@@ -55,9 +75,9 @@ export function processBlankInference(
         // Fix the correct option's text to match
         warnings.push(
           `correctAnswer option "${correctAnswer}" text "${correctOption.text}" ` +
-            `doesn't match originalExpression "${originalExpression}". Auto-fixed option text.`,
+            `doesn't match originalExpression "${canonicalExpression}". Auto-fixed option text.`,
         );
-        correctOption.text = originalExpression;
+        correctOption.text = canonicalExpression;
       }
     } else if (isTransformedAnswerMode && correctOption?.text === originalExpression) {
       warnings.push(
@@ -73,6 +93,7 @@ export function processBlankInference(
     success: true,
     data: {
       ...ai,
+      originalExpression: canonicalExpression,
       passageWithBlank,
     },
     warnings,
@@ -125,7 +146,9 @@ function processMultiBlankInference(
         error: `Multi-blank BLANK_INFERENCE blank ${blankIndex + 1} is missing originalExpression`,
       };
     }
-    const found = findExpressionInPassage(passage, expression, cleanText(blank.surroundingText));
+    const found =
+      findExpressionInPassage(passage, expression, cleanText(blank.surroundingText)) ??
+      findExpressionInPassageFuzzy(passage, expression, cleanText(blank.surroundingText));
     if (!found) {
       return {
         success: false,
