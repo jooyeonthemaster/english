@@ -948,13 +948,13 @@ export async function runQuestionGenerationWithEmptyRetry(
     : hasNegativeParaphraseBlank || hasBlankParaphraseAnswer || hasExtendedRetryType
       ? Math.max(6, requestedMaxAttempts)
       : Math.max(4, requestedMaxAttempts);
-  // PREMIUM(Claude)은 1회 호출이 실측 ~52s(최대 179s)로 느려 strict 다회 재시도가
-  // Vercel 120s 벽을 넘겨 함수강제종료→잡 고아→"Stale" 실패를 낳는다(BLANK PREMIUM
-  // 최다 실패 모드). 성공은 평균 1.22회에 끝나므로 strict 상한을 3으로 낮춰도
-  // 수율 손실은 미미하고, 교정 재시도(buildCorrectiveRetryFeedback)+relaxed 폴백이
-  // 데드라인(deadlineAt) 안에서 정상 종료/환불되도록 한다. STANDARD(Gemini ~9s)는
-  // 기존 상한을 유지한다.
-  const PREMIUM_STRICT_ATTEMPT_CAP = 3;
+  // PREMIUM(Claude)은 1회 호출이 실측 ~25~35s(긴 지문은 더)로 느려 strict 다회 재시도가
+  // 누적되면 시간 벽을 넘긴다. 데드라인(fast 270s/trigger 540s)이 실제 한계라 상한은
+  // 그 안에서 교정 재시도(buildCorrectiveRetryFeedback)+relaxed 폴백이 충분히 돌도록
+  // 5로 둔다(5×~33s≈165s + relaxed, 270s 예산 내). 성공은 평균 1.22회라 정상 케이스는
+  // 영향 없고, 긴/어려운 지문에서 품질 게이트(list-like·too-easy) 통과 기회를 늘린다.
+  // STANDARD(Gemini ~9s)는 기존 상한을 유지한다.
+  const PREMIUM_STRICT_ATTEMPT_CAP = 5;
   const attempts =
     inputWithUsage.generationPlan === "PREMIUM"
       ? Math.max(1, Math.min(rawAttempts, PREMIUM_STRICT_ATTEMPT_CAP))

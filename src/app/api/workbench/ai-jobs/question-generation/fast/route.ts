@@ -45,7 +45,10 @@ import {
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 120;
+// 300s = 같은 앱의 다른 무거운 inline 경로(passage-analysis/fast·question-set·
+// generate-questions-auto)와 동일. PREMIUM(Claude)은 1회 ~25~35s, 긴/어려운 지문은
+// 교정 재시도+relaxed 폴백까지 다회 필요해 120s로는 데드라인에 잘려 실패했다.
+export const maxDuration = 300;
 
 const VOCAB_TYPES = new Set(["CONTEXT_MEANING", "SYNONYM", "ANTONYM"]);
 
@@ -390,10 +393,10 @@ export async function POST(req: NextRequest) {
       },
       {
         logPrefix: "WORKBENCH-FAST-Q-GEN",
-        // Vercel maxDuration 120s. 100s 후엔 새 시도를 멈춰 함수 강제종료(잡 고아
-        // → 환불 누락)를 막고, catch 에서 정상 실패+환불로 흐르게 한다. 느린
-        // PREMIUM(Claude) 다수 재시도 타임아웃의 핵심 안전판.
-        deadlineAt: requestStartedAt + 100_000,
+        // Vercel maxDuration 300s. 270s 후엔 새 시도를 멈춰 함수 강제종료(잡 고아
+        // → 환불 누락)를 막고, catch 에서 정상 실패+환불로 흐르게 한다. 30s 여유로
+        // 후처리·저장·환불을 마친다. 느린 PREMIUM(Claude) 다수 재시도의 핵심 안전판.
+        deadlineAt: requestStartedAt + 270_000,
       },
     );
     const questions = generationResult.questions;
