@@ -14,7 +14,6 @@ import {
   readAiUsageTokens,
   recordPlatformApiUsageCost,
 } from "@/lib/platform-api-costs";
-import { generateQuestionObject } from "@/lib/question-generation-llm";
 import {
   getQuestionGenerationCreditCost,
   mergeQuestionGenerationPlanTag,
@@ -29,12 +28,9 @@ import {
   extractTeacherAnnotations,
 } from "@/app/api/ai/generate-questions-auto/_lib/build-analysis-context";
 import { DIFF_DESCRIPTION } from "@/app/api/ai/generate-questions-auto/_lib/constants";
-import { buildPlanningPrompt } from "@/app/api/ai/generate-questions-auto/_lib/prompts";
 import { runQuestionGenerationWithEmptyRetry } from "@/app/api/ai/generate-questions-auto/_lib/run-question-generation";
-import {
-  planSchema,
-  type PlanResult,
-} from "@/app/api/ai/generate-questions-auto/_lib/schemas";
+import { type PlanResult } from "@/app/api/ai/generate-questions-auto/_lib/schemas";
+import { toUserFacingQuestionGenerationError } from "@/lib/question-generation-llm";
 import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import {
   buildQuestionDiversityContext,
@@ -55,7 +51,7 @@ const VOCAB_TYPES = new Set(["CONTEXT_MEANING", "SYNONYM", "ANTONYM"]);
 
 const requestSchema = z.object({
   passageId: z.string().min(1),
-  mode: z.enum(["AUTO", "MANUAL"]).default("MANUAL"),
+  mode: z.literal("MANUAL").default("MANUAL"),
   count: z.number().int().min(1).max(1).default(1),
   questionType: z.string().optional(),
   questionTypeSettings: z.unknown().optional(),
@@ -68,13 +64,10 @@ const requestSchema = z.object({
 });
 
 function getOperationType({
-  mode,
   questionType,
 }: {
-  mode: "AUTO" | "MANUAL";
   questionType?: string;
 }): OperationType {
-  if (mode === "AUTO") return "AUTO_GEN_BATCH";
   return questionType && VOCAB_TYPES.has(questionType)
     ? "QUESTION_GEN_VOCAB"
     : "QUESTION_GEN_SINGLE";
@@ -98,25 +91,6 @@ function buildManualPlan({
       targetPoints: [],
     },
   ];
-}
-
-function capPlanToCount(
-  plan: PlanResult["plan"],
-  requestedCount: number,
-): PlanResult["plan"] {
-  let remaining = Math.max(1, Math.floor(requestedCount));
-  const capped: PlanResult["plan"] = [];
-
-  for (const item of plan) {
-    if (remaining <= 0) break;
-    const itemCount = Math.max(0, Math.floor(Number(item.count) || 0));
-    const nextCount = Math.min(itemCount, remaining);
-    if (nextCount <= 0) continue;
-    capped.push({ ...item, count: nextCount });
-    remaining -= nextCount;
-  }
-
-  return capped;
 }
 
 function readQuestionTags(rawTags: unknown): string[] {
@@ -250,6 +224,34 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // ── 사전 잔액 게이트 ──────────────────────────────────────────────
+  // 잡 레코드를 만들기 전에 비차감(read-only) 잔액을 확인한다. 잔액이
+  // 부족하면 FAILED 잡 행을 남기지 않고 즉시 402로 거절한다. (크레딧 0
+  // 학원이 "전체 유형 일괄 생성"을 눌러 수천 건의 FAILED 행을 양산하던
+  // 폭주 패턴을 차단 — 2026-06-09 단일 학원 1,482건 사건이 그 예.)
+  // 최종 권위는 여전히 ensureWorkbenchAiJobCharged 의 원자적 차감(balance
+  // gte)이며, 이 사전 체크는 doomed 잡 생성을 피하는 최적화일 뿐이다.
+  const operationType = getOperationType(config);
+  const creditCost = getQuestionGenerationCreditCost(
+    CREDIT_COSTS[operationType],
+    effectiveGenerationPlan,
+  );
+  const preflightBalance = await prisma.creditBalance.findUnique({
+    where: { academyId: staff.academyId },
+    select: { balance: true },
+  });
+  const availableBalance = preflightBalance?.balance ?? 0;
+  if (availableBalance < creditCost) {
+    return NextResponse.json(
+      {
+        error: "Insufficient credits",
+        balance: availableBalance,
+        required: creditCost,
+      },
+      { status: 402 },
+    );
+  }
+
   const now = new Date();
   const job = await prisma.workbenchAiJob.create({
     data: {
@@ -278,14 +280,9 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  const operationType = getOperationType(config);
-  const creditCost = getQuestionGenerationCreditCost(
-    CREDIT_COSTS[operationType],
-    effectiveGenerationPlan,
-  );
   let creditTxId: string | null = null;
   let creditMs = 0;
-  let planningMs = 0;
+  const planningMs = 0;
   let generationMs = 0;
   let generationAttempts = 0;
   let persistenceMs = 0;
@@ -325,58 +322,13 @@ export async function POST(req: NextRequest) {
     const diffInstruction =
       DIFF_DESCRIPTION[diffLabel] || DIFF_DESCRIPTION.INTERMEDIATE;
 
-    let plan: PlanResult["plan"];
-    let rationale = "";
-    if (config.mode === "AUTO") {
-      const planningStartedAt = Date.now();
-      const planningResult = await generateQuestionObject({
-        schema: planSchema,
-        prompt: buildPlanningPrompt({
-          schoolType,
-          gradeInfo,
-          count: config.count,
-          passageContent: passage.content,
-          teacherIntentBlock,
-          analysisContext,
-          customPrompt: config.customPrompt,
-          diffLabel,
-          generationPlan: effectiveGenerationPlan,
-        }),
-        generationPlan: effectiveGenerationPlan,
-        logPrefix: "WORKBENCH-FAST-AUTO-GEN-PLAN",
-        maxTokens: 4_096,
-      });
-      const planResult = planningResult.object;
-      const planUsage = readAiUsageTokens(planningResult.usage);
-      await recordCostSafely({
-        sourceKey: `workbench_ai_job:${job.id}:planning`,
-        sourceId: job.id,
-        sourceDetail: "QUESTION_PLANNING",
-        academyId: job.academyId,
-        provider: providerFromModel(planningResult.modelId),
-        model: planningResult.modelId,
-        operationType,
-        inputTokens: planUsage.inputTokens,
-        outputTokens: planUsage.outputTokens,
-        usageAt: new Date(),
-        metadata: {
-          passageId: passage.id,
-          generationPlan: effectiveGenerationPlan,
-          difficulty: diffLabel,
-          fastPath: true,
-          attempts: planningResult.attempts,
-          durationMs: planningResult.durationMs,
-        },
-      });
-      planningMs = Date.now() - planningStartedAt;
-      plan = capPlanToCount(planResult.plan, config.count);
-      rationale = planResult.rationale;
-    } else {
-      plan = buildManualPlan({
-        questionType: config.questionType,
-        count: config.count,
-      });
-    }
+    // AUTO(플래너가 유형을 정하는) 모드는 제거됨 — 항상 교사가 지정한 단일
+    // 유형으로 생성한다. (AUTO 는 프로덕션 실패율 48.9% 의 최악 경로였다.)
+    const plan: PlanResult["plan"] = buildManualPlan({
+      questionType: config.questionType,
+      count: config.count,
+    });
+    const rationale = "";
 
     if (plan.length === 0) {
       throw new Error("No question generation plan was produced.");
@@ -436,7 +388,13 @@ export async function POST(req: NextRequest) {
             : undefined,
         diversity,
       },
-      { logPrefix: "WORKBENCH-FAST-Q-GEN" },
+      {
+        logPrefix: "WORKBENCH-FAST-Q-GEN",
+        // Vercel maxDuration 120s. 100s 후엔 새 시도를 멈춰 함수 강제종료(잡 고아
+        // → 환불 누락)를 막고, catch 에서 정상 실패+환불로 흐르게 한다. 느린
+        // PREMIUM(Claude) 다수 재시도 타임아웃의 핵심 안전판.
+        deadlineAt: requestStartedAt + 100_000,
+      },
     );
     const questions = generationResult.questions;
     for (const [idx, event] of generationResult.usageEvents.entries()) {
@@ -584,11 +542,12 @@ export async function POST(req: NextRequest) {
       data: {
         status: "FAILED",
         failedCount: 1,
-        errorMessage: message,
+        errorMessage: toUserFacingQuestionGenerationError(message),
         result: JSON.parse(JSON.stringify({
           passageId: passage.id,
           generationPlan: effectiveGenerationPlan,
           difficulty: effectiveDifficulty,
+          rawError: message,
           debugTiming: {
             queueWaitMs: 0,
             creditMs,

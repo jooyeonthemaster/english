@@ -298,11 +298,14 @@ export async function runQuestionGeneration(
     qualityMode = "strict",
     rejectionRecorder,
     attemptIndex = 0,
+    previousAttemptFeedback,
   }: {
     qualityMode?: QualityMode;
     rejectionRecorder?: RejectionRecorder;
     /** 재시도 회차 (0-based) — 다양성 스티어링 위치가 재시도마다 바뀌게 한다. */
     attemptIndex?: number;
+    /** 직전 시도의 거절 사유 — 다음 프롬프트에 교정 지시로 주입(맹목 재시도 방지). */
+    previousAttemptFeedback?: string;
   } = {},
 ): Promise<Record<string, unknown>[]> {
   // NBSP·빈줄 잔재가 모델 출력(원문 복사 스팬)과 게이트 문자열 비교, 저장본
@@ -463,7 +466,11 @@ export async function runQuestionGeneration(
             diffLabel: effectiveDiffLabel,
             diffInstruction: effectiveDiffInstruction,
             generationPlan: effectiveGenerationPlan,
-            customPrompt: mergedCustomPrompt,
+            customPrompt: previousAttemptFeedback
+              ? [mergedCustomPrompt, previousAttemptFeedback]
+                  .filter(Boolean)
+                  .join("\n\n")
+              : mergedCustomPrompt,
           }),
           effectiveGenerationPlan,
           Math.min(20_000, Math.max(perQuestionTokenFloor, (Number(typeCount) || 1) * perQuestionTokenFloor)),
@@ -827,14 +834,57 @@ function buildRejectionSummary(
   };
 }
 
+/**
+ * 직전 시도에서 새로 기록된 거절 사유를 다음 프롬프트에 주입할 짧은 한국어
+ * 교정 지시 블록으로 만든다. 같은 실수를 반복하는 "맹목 재시도"를 구체적 사유를
+ * 본 "교정 재생성"으로 바꿔 수율을 올리고 재시도 횟수를 줄인다.
+ */
+function buildCorrectiveRetryFeedback(
+  issues: QuestionGenerationRejectionIssue[],
+): string | undefined {
+  if (issues.length === 0) return undefined;
+  const seen = new Set<string>();
+  const lines: string[] = [];
+  for (const issue of issues) {
+    const key =
+      issue.codes && issue.codes.length > 0
+        ? issue.codes.join(",")
+        : issue.message;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    // 따옴표 안 내용(정답·표현 파생 텍스트)은 다음 프롬프트로의 누설 경로가 될 수
+    // 있어 …로 가린다. 게이트 이름·구조적 사유는 보존돼 교정 신호로는 충분하다.
+    const detail = issue.message
+      .replace(/[“”"][^“”"]*[“”"]|'[^']*'/g, "…")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 200);
+    if (detail) lines.push(`- ${detail}`);
+    if (lines.length >= 4) break;
+  }
+  if (lines.length === 0) return undefined;
+  return [
+    "## 직전 생성 실패 — 아래 사유를 반드시 교정해서 다시 출제",
+    ...lines,
+    "위와 동일한 실수를 반복하지 마세요. 형식·정답 개수·밑줄/표현의 원문 일치·오답 선지의 매력도(지문 어휘에 기반한 그럴듯한 near-miss, 정답과 길이·문체가 비슷할 것)를 모두 충족하는 새 문항을 생성하세요.",
+  ].join("\n");
+}
+
 export async function runQuestionGenerationWithEmptyRetry(
   input: RunGenerationInput,
   {
     maxAttempts = GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS,
     logPrefix = "AUTO-GEN",
+    deadlineAt,
   }: {
     maxAttempts?: number;
     logPrefix?: string;
+    /**
+     * 절대 시각(epoch ms). 이 시각이 지나면 새 시도를 시작하지 않고 조기 종료한다.
+     * 느린 PREMIUM(Claude)이 다수 재시도로 Vercel 120s/trigger 600s 한도를 넘겨
+     * 함수가 강제종료→잡 고아→환불 누락되는 것을 막는다. 미전달 시 기존 동작과 동일.
+     */
+    deadlineAt?: number;
   } = {},
 ): Promise<{
   questions: Record<string, unknown>[];
@@ -893,10 +943,22 @@ export async function runQuestionGenerationWithEmptyRetry(
       ? Math.max(6, requestedMaxAttempts)
       : Math.max(4, requestedMaxAttempts);
 
+  let pendingFeedback: string | undefined;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    // 시간 예산 가드: 1회는 반드시 시도하되(크레딧 차감됨), 이후 시도는 남은
+    // 시간이 없으면 시작하지 않는다 — 함수 강제종료로 잡이 고아가 되어 환불이
+    // 누락되는 것을 막고, 호출자의 catch 에서 정상 실패+환불로 흐르게 한다.
+    if (deadlineAt && attempt > 1 && Date.now() >= deadlineAt) {
+      console.warn(
+        `[${logPrefix}] Time budget reached before attempt ${attempt}/${attempts}; stopping strict retries early.`,
+      );
+      break;
+    }
+    const issueCountBeforeAttempt = rejectionRecorder.issues.length;
     const questions = await runQuestionGeneration(inputWithUsage, {
       rejectionRecorder,
       attemptIndex: attempt - 1,
+      previousAttemptFeedback: pendingFeedback,
     });
     const shouldRequireFullRequestedCount =
       hasNegativeParaphraseBlank || hasBlankParaphraseAnswer;
@@ -912,12 +974,30 @@ export async function runQuestionGenerationWithEmptyRetry(
         usageEvents,
       };
     }
+    // 이번 시도에서 새로 기록된 거절 사유를 다음 시도 프롬프트에 교정 지시로
+    // 주입한다 (맹목 재시도 → 교정 재생성).
+    pendingFeedback = buildCorrectiveRetryFeedback(
+      rejectionRecorder.issues.slice(issueCountBeforeAttempt),
+    );
     if (attempt === attempts) {
       break;
     }
     console.warn(
       `[${logPrefix}] Generation result did not pass quality/count gate (${questions.length}/${requestedCount}); retrying (${attempt + 1}/${attempts})`,
     );
+  }
+
+  if (deadlineAt && Date.now() >= deadlineAt) {
+    console.warn(
+      `[${logPrefix}] Time budget reached; skipping relaxed fallback, returning empty (caller refunds).`,
+    );
+    return {
+      questions: [],
+      attempts,
+      relaxedFallback: false,
+      rejectionSummary: buildRejectionSummary(rejectionRecorder),
+      usageEvents,
+    };
   }
 
   console.warn(
@@ -927,6 +1007,7 @@ export async function runQuestionGenerationWithEmptyRetry(
     qualityMode: "relaxed",
     rejectionRecorder,
     attemptIndex: attempts,
+    previousAttemptFeedback: pendingFeedback,
   });
   return {
     questions: relaxedQuestions,

@@ -52,7 +52,10 @@ import {
 } from "./shared/card-click";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
-import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
+import {
+  optionDisplayTextForSubtype,
+  shouldRenderOptionListForSubtype,
+} from "@/components/exams/paper-builder/option-display";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 
 export type { QuestionBankItem } from "./question-bank-card/types";
@@ -116,6 +119,8 @@ export function QuestionBankCard({
   duplicateCount,
   onDuplicateSelectConfirm,
   selectedCardHighlight = true,
+  // 접힘(콤팩트) 모드 — 시험지 빌더 등 목록을 콤팩트하게 볼 때. 기본은 펼침(전체) 유지.
+  collapsible = false,
 }: {
   q: QuestionBankItem;
   num: number;
@@ -157,6 +162,7 @@ export function QuestionBankCard({
   onDuplicateSelectConfirm?: () => void;
   // 시험지 빌더처럼 체크박스/순서 뱃지만으로 선택 상태를 표시할 때 카드 배경 강조를 끈다.
   selectedCardHighlight?: boolean;
+  collapsible?: boolean;
 }) {
   const [isDragging, setIsDragging] = useState(false);
   // 카드 접힘/펼침 — 기본은 접힘(의문문 + 지문 2줄 + 정답만 보이는 미리보기).
@@ -189,6 +195,11 @@ export function QuestionBankCard({
           text: optionDisplayTextForSubtype(q.subType, index, option.text),
         }))
       : options;
+  // 지문 마커형(어법·어휘·삽입·무관)은 시험지와 동일하게 하단 보기 리스트를 숨긴다
+  // (마커는 지문에만). 같은 게이트(shouldRenderOptionListForSubtype) 공유 — 접힘/펼침 모두.
+  const hideOptionList =
+    !!q.subType && !shouldRenderOptionListForSubtype(q.subType);
+  const visibleOptions = hideOptionList ? [] : displayOptions;
   const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
   const structuredQuestion =
@@ -539,14 +550,15 @@ export function QuestionBankCard({
 
           {/* ── Question content ──
               접힘: 의문문 + 지문 2줄(말줄임) + 정답 선지만 미리보기.
-              펼침: 전체 렌더(구조화 렌더러 또는 섹션/선지). */}
+              펼침: 전체 렌더(구조화 렌더러 또는 섹션/선지).
+              마커 유형(어법·어휘 등)은 선지를 숨긴다(shouldRenderOptionListForSubtype). */}
           {collapsed ? (
             <CollapsedPreview
               direction={directionText}
               passage={collapsedPassage}
-              options={displayOptions}
+              options={visibleOptions}
               correctAnswer={q.correctAnswer}
-              displayCorrectAnswer={displayCorrectAnswer}
+              displayCorrectAnswer={hideOptionList ? "" : displayCorrectAnswer}
             />
           ) : (
             <>
@@ -565,9 +577,9 @@ export function QuestionBankCard({
               )}
 
               {/* Options (MC) */}
-              {!structuredQuestion && displayOptions.length > 0 && (
+              {!structuredQuestion && visibleOptions.length > 0 && (
                 <div className="space-y-1 pl-1">
-                  {displayOptions.map((opt) => {
+                  {visibleOptions.map((opt) => {
                     const isCorrect = correctAnswerLabels.has(
                       normalizeAnswerLabel(opt.label),
                     );
@@ -665,13 +677,6 @@ export function QuestionBankCard({
                 <ChevronDown
                   className="ml-auto w-3 h-3 shrink-0 text-slate-400"
                   aria-hidden="true"
-                />
-              )}
-              {/* 시험지 빌더: 검수 도장을 밴드(카드 오른쪽 아래)로 옮겨 표시 */}
-              {compactUsageLabel && (
-                <ReviewStatusStamp
-                  approved={q.approved}
-                  className="ml-1 shrink-0"
                 />
               )}
             </>

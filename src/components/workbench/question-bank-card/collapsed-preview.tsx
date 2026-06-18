@@ -14,14 +14,12 @@ export function CollapsedPreview({
   options,
   correctAnswer,
   displayCorrectAnswer = correctAnswer,
-  questionClamp,
 }: {
   direction: string;
   passage: string;
   options: { label: string; text: string }[];
   correctAnswer: string;
   displayCorrectAnswer?: string;
-  questionClamp: string;
 }) {
   const correctLabels = parseCorrectAnswerLabels(correctAnswer);
   const correctOptions = options.filter((o) =>

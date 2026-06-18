@@ -36,7 +36,7 @@ interface UseGenerationHandlersParams {
   passages: PassageItem[];
   selectedIds: Set<string>;
   setSelectedIds: (v: Set<string>) => void;
-  genMode: "auto" | "manual" | "set";
+  genMode: "manual" | "set";
   generationPlan: QuestionGenerationPlan;
   typeCounts: Record<string, number>;
   setTypeCounts: Dispatch<SetStateAction<Record<string, number>>>;
@@ -44,7 +44,6 @@ interface UseGenerationHandlersParams {
   difficulty: string;
   customPrompt: string;
   questionTypeSettings: QuestionTypeGenerationSettings;
-  autoCount: number;
   selectedPassage: PassageItem | null;
   analysisData: any;
   totalQuestions: number;
@@ -85,7 +84,7 @@ export async function createQuestionGenerationJob({
   generationPlan,
 }: {
   passageId: string;
-  mode: "AUTO" | "MANUAL";
+  mode: "MANUAL";
   count: number;
   questionType?: string;
   questionTypeSettings?: unknown;
@@ -128,7 +127,7 @@ export async function createFastQuestionGenerationJob({
   variantCount,
 }: {
   passageId: string;
-  mode: "AUTO" | "MANUAL";
+  mode: "MANUAL";
   count: 1;
   questionType?: string;
   questionTypeSettings?: unknown;
@@ -280,17 +279,6 @@ interface ManualGenerationUnit {
   variantCount: number;
 }
 
-function parsePassageAnalysis(p: PassageItem) {
-  if (!p.analysis?.analysisData) return null;
-  try {
-    return typeof p.analysis.analysisData === "string"
-      ? JSON.parse(p.analysis.analysisData)
-      : p.analysis.analysisData;
-  } catch {
-    return null;
-  }
-}
-
 export function useGenerationHandlers({
   passages,
   selectedIds,
@@ -303,7 +291,6 @@ export function useGenerationHandlers({
   difficulty,
   customPrompt,
   questionTypeSettings,
-  autoCount,
   selectedPassage,
   analysisData,
   totalQuestions,
@@ -440,7 +427,7 @@ export function useGenerationHandlers({
       progressKey,
     }: {
       passage: PassageItem;
-      mode: "AUTO" | "MANUAL";
+      mode: "MANUAL";
       count: number;
       questionType?: string;
       questionTypeSettings?: unknown;
@@ -557,153 +544,8 @@ export function useGenerationHandlers({
       return;
     }
 
-    const canUseFastPath =
-      selectedPassages.length > 0 && genMode === "auto" && autoCount === 1;
-
-    if (canUseFastPath) {
-      const progressKey = "auto";
-      const baseConfig = {
-        typeCounts: {},
-        questionTypeSettings: {},
-        difficulty,
-        prompt: customPrompt.trim(),
-        mode: genMode,
-        generationPlan,
-      };
-      const runId = nextGenerationRunToken();
-      const optimisticItems = selectedPassages.map((passage, index) => {
-        const tempId = `fast:${passage.id}:${runId}:${index}`;
-        return {
-          tempId,
-          passage,
-        };
-      });
-      const batchCreatedAt = new Date().toISOString();
-
-      setSessionQueue((prev) => [
-        ...optimisticItems.map(({ tempId, passage }) =>
-          buildOptimisticItem({
-            jobId: tempId,
-            passage,
-            analysisData: null,
-            config: baseConfig,
-            progressKey,
-            createdAt: batchCreatedAt,
-          }),
-        ),
-        ...prev,
-      ]);
-      refreshTaskQueueSoon();
-
-      const results = await Promise.allSettled(
-        optimisticItems.map(({ tempId, passage }) =>
-          scheduleFastGeneration(async () => {
-            try {
-              const result = await createFastQuestionGenerationJob({
-                passageId: passage.id,
-                mode: "AUTO",
-                count: 1,
-                questionType: undefined,
-                difficulty,
-                customPrompt: baseConfig.prompt || undefined,
-                generationPlan,
-              });
-              const doneItem = {
-                ...buildOptimisticItem({
-                  jobId: result.jobId,
-                  passage,
-                  analysisData: null,
-                  config: baseConfig,
-                  progressKey,
-                }),
-                createdAt: result.createdAt || new Date().toISOString(),
-                status: "done" as const,
-                progress: { [progressKey]: "done" as const },
-                questions: Array.isArray(result.questions)
-                  ? result.questions
-                  : [],
-                questionIds: Array.isArray(result.questionIds)
-                  ? result.questionIds
-                  : [],
-              };
-              setSessionQueue((prev) =>
-                replaceQueueItemInPlace(prev, [tempId, result.jobId], doneItem),
-              );
-              return result;
-            } catch (err) {
-              const message =
-                err instanceof Error
-                  ? err.message
-                  : "Question generation failed.";
-              setSessionQueue((prev) =>
-                prev.map((item) =>
-                  item.id === tempId
-                    ? {
-                        ...item,
-                        status: "error" as const,
-                        progress: { [progressKey]: "error" as const },
-                        error: message,
-                      }
-                    : item,
-                ),
-              );
-              throw err;
-            }
-          }),
-        ),
-      );
-      const success = results.filter((r) => r.status === "fulfilled").length;
-      const failed = results.length - success;
-
-      setSelectedIds(new Set());
-      triggerRefresh();
-      if (success > 0) onGenerationCompleted?.();
-      if (success > 0) {
-        toast.success(
-          `${success}\uac1c \ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.`,
-        );
-      }
-      if (failed > 0) {
-        toast.error(
-          `${failed}\uac1c \ubb38\uc81c \uc0dd\uc131\uc774 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4.`,
-        );
-      }
-      return;
-    }
-
-    const jobs: Promise<unknown>[] = [];
-
-    for (const p of selectedPassages) {
-      const pAnalysis = parsePassageAnalysis(p);
-      const baseConfig = {
-        typeCounts: {},
-        questionTypeSettings: {},
-        difficulty,
-        prompt: customPrompt.trim(),
-        mode: genMode,
-        generationPlan,
-      };
-
-      jobs.push(
-        enqueueJob({
-          passage: p,
-          mode: "AUTO",
-          count: autoCount,
-          pAnalysis,
-          config: baseConfig,
-          progressKey: "auto",
-        }),
-      );
-    }
-
-    const results = await Promise.allSettled(jobs);
-    const success = results.filter((r) => r.status === "fulfilled").length;
-    const failed = results.length - success;
-
-    setSelectedIds(new Set());
-    if (success > 0) onGenerationCompleted?.();
-    if (success > 0) toast.info(`${success}개 문제 생성 작업을 시작했습니다.`);
-    if (failed > 0) toast.error(`${failed}개 문제 생성 작업 시작 실패`);
+    // 자동 생성 모드 제거 — 라이브러리 직접 선택 배치 생성은 '유형 지정'만
+    // 지원한다. ('set'/장문 세트는 워크스페이스 흐름에서만 동작.)
   }, [
     selectedIds,
     passages,
@@ -714,7 +556,6 @@ export function useGenerationHandlers({
     questionTypeSettings,
     difficulty,
     customPrompt,
-    autoCount,
     activeTypes,
     enqueueJob,
     setSelectedIds,
@@ -785,79 +626,8 @@ export function useGenerationHandlers({
         return;
       }
 
-      const canUseFastPath = genMode === "auto" && autoCount === 1;
-
-      if (canUseFastPath) {
-        const progressKey = "auto";
-        const result = await createFastQuestionGenerationJob({
-          passageId: selectedPassage.id,
-          mode: "AUTO",
-          count: 1,
-          questionType: undefined,
-          difficulty,
-          customPrompt: baseConfig.prompt || undefined,
-          generationPlan,
-        });
-        const doneItem = {
-          ...buildOptimisticItem({
-            jobId: result.jobId,
-            passage: selectedPassage,
-            analysisData: null,
-            config: baseConfig,
-            progressKey,
-          }),
-          createdAt: result.createdAt || new Date().toISOString(),
-          status: "done" as const,
-          progress: { [progressKey]: "done" as const },
-          questions: Array.isArray(result.questions) ? result.questions : [],
-          questionIds: Array.isArray(result.questionIds)
-            ? result.questionIds
-            : [],
-        };
-        setSessionQueue((prev) => [
-          doneItem,
-          ...prev.filter((item) => item.id !== result.jobId),
-        ]);
-        triggerRefresh();
-        onGenerationCompleted?.();
-        toast.success(
-          "\ubb38\uc81c\uac00 \uc0dd\uc131\ub418\uc5c8\uc2b5\ub2c8\ub2e4.",
-        );
-        return;
-      }
-
-      if (genMode === "auto") {
-        await enqueueJob({
-          passage: selectedPassage,
-          mode: "AUTO",
-          count: autoCount,
-          pAnalysis: analysisData,
-          config: baseConfig,
-          progressKey: "auto",
-        });
-        onGenerationCompleted?.();
-        toast.info("문제 생성 작업을 시작했습니다.");
-      } else {
-        const jobs = activeTypes.map((typeId) =>
-          enqueueJob({
-            passage: selectedPassage,
-            mode: "MANUAL",
-            count: typeCounts[typeId],
-            questionType: typeId,
-            questionTypeSettings: questionTypeSettings[typeId],
-            pAnalysis: analysisData,
-            config: {
-              ...baseConfig,
-              typeCounts: { [typeId]: typeCounts[typeId] },
-              questionTypeSettings: { [typeId]: questionTypeSettings[typeId] },
-            },
-            progressKey: typeId,
-          }),
-        );
-        await Promise.all(jobs);
-        if (jobs.length > 0) onGenerationCompleted?.();
-        toast.info(`${jobs.length}개 문제 생성 작업을 시작했습니다.`);
-      }
+      // 자동 생성 모드 제거 — 단일 지문 생성은 '유형 지정'만 지원한다.
+      // 위 manual 분기에서 처리되며, 그 외 모드(set)는 워크스페이스 흐름 전용.
     } catch (err) {
       toast.error(
         err instanceof Error ? err.message : "문제 생성 작업 시작 실패",
@@ -873,7 +643,6 @@ export function useGenerationHandlers({
     questionTypeSettings,
     difficulty,
     customPrompt,
-    autoCount,
     analysisData,
     enqueueJob,
     setSessionQueue,
@@ -975,8 +744,8 @@ export function useGenerationHandlers({
       const typeId = Object.keys(config.typeCounts).find(
         (t) => Number(config.typeCounts[t]) > 0,
       );
-      const isManual = config.mode !== "auto" && Boolean(typeId);
-      const progressKey = isManual && typeId ? typeId : "auto";
+      // 자동 생성 제거 — 재시도는 항상 '유형 지정'(MANUAL) 으로 동작한다.
+      const progressKey = typeId ?? "manual";
       const plan = config.generationPlan ?? generationPlan;
 
       // 실패 카드를 그 자리에서 '생성 중'으로 되돌린다(같은 id 유지).
@@ -998,15 +767,14 @@ export function useGenerationHandlers({
       try {
         const result = await createFastQuestionGenerationJob({
           passageId: passage.id,
-          mode: isManual && typeId ? "MANUAL" : "AUTO",
+          mode: "MANUAL",
           count: 1,
-          questionType: isManual && typeId ? typeId : undefined,
-          questionTypeSettings:
-            isManual && typeId
-              ? (config.questionTypeSettings as
-                  | Record<string, unknown>
-                  | undefined)?.[typeId]
-              : undefined,
+          questionType: typeId,
+          questionTypeSettings: typeId
+            ? (config.questionTypeSettings as
+                | Record<string, unknown>
+                | undefined)?.[typeId]
+            : undefined,
           difficulty: config.difficulty,
           customPrompt: config.prompt?.trim() || undefined,
           generationPlan: plan,

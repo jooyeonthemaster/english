@@ -98,7 +98,7 @@ export interface QueueItem {
     typeCounts: Record<string, number>;
     difficulty: string;
     prompt: string;
-    mode: "auto" | "manual" | "set";
+    mode: "manual" | "set";
     generationPlan?: QuestionGenerationPlan;
     questionTypeSettings?: QuestionTypeGenerationSettings;
   };

@@ -12,12 +12,12 @@ import {
   InsufficientCreditsError,
   refundCredits,
 } from "@/lib/credits";
-import { generateQuestionObject } from "@/lib/question-generation-llm";
 import {
   providerFromModel,
   readAiUsageTokens,
   recordPlatformApiUsageCost,
 } from "@/lib/platform-api-costs";
+import { toUserFacingQuestionGenerationError } from "@/lib/question-generation-llm";
 import {
   getQuestionGenerationCreditCost,
   mergeQuestionGenerationPlanTag,
@@ -32,9 +32,8 @@ import {
   extractTeacherAnnotations,
 } from "@/app/api/ai/generate-questions-auto/_lib/build-analysis-context";
 import { DIFF_DESCRIPTION } from "@/app/api/ai/generate-questions-auto/_lib/constants";
-import { buildPlanningPrompt } from "@/app/api/ai/generate-questions-auto/_lib/prompts";
 import { runQuestionGenerationWithEmptyRetry } from "@/app/api/ai/generate-questions-auto/_lib/run-question-generation";
-import { planSchema, type PlanResult } from "@/app/api/ai/generate-questions-auto/_lib/schemas";
+import { type PlanResult } from "@/app/api/ai/generate-questions-auto/_lib/schemas";
 import {
   readQuestionTypeDifficultySetting,
   readQuestionTypeGenerationPlanSetting,
@@ -45,7 +44,7 @@ type Input = { jobId: string };
 const VOCAB_TYPES = new Set(["CONTEXT_MEANING", "SYNONYM", "ANTONYM"]);
 
 interface QuestionJobConfig {
-  mode: "AUTO" | "MANUAL";
+  mode: "MANUAL";
   count: number;
   questionType?: string;
   questionTypeSettings?: unknown;
@@ -59,9 +58,8 @@ function parseConfig(value: unknown, fallbackPlan: unknown): QuestionJobConfig {
     value && typeof value === "object" && !Array.isArray(value)
       ? (value as Record<string, unknown>)
       : {};
-  const mode = raw.mode === "MANUAL" ? "MANUAL" : "AUTO";
   return {
-    mode,
+    mode: "MANUAL" as const,
     count:
       typeof raw.count === "number" && Number.isFinite(raw.count)
         ? Math.max(1, Math.floor(raw.count))
@@ -80,7 +78,6 @@ function parseConfig(value: unknown, fallbackPlan: unknown): QuestionJobConfig {
 }
 
 function getOperationType(config: QuestionJobConfig): OperationType {
-  if (config.mode === "AUTO") return "AUTO_GEN_BATCH";
   return config.questionType && VOCAB_TYPES.has(config.questionType)
     ? "QUESTION_GEN_VOCAB"
     : "QUESTION_GEN_SINGLE";
@@ -137,7 +134,7 @@ export const workbenchQuestionGenerationTask = task({
     const now = new Date();
     const taskStartedAt = Date.now();
     let creditMs = 0;
-    let planningMs = 0;
+    const planningMs = 0;
     let generationMs = 0;
     let persistenceMs = 0;
     let generationAttempts = 0;
@@ -190,14 +187,8 @@ export const workbenchQuestionGenerationTask = task({
           )
         : readQuestionTypeDifficultySetting(undefined, config.difficulty);
     const operationType = getOperationType(config);
-    // 자동 출제는 문제 1개당 단가 — 이 잡이 만드는 문제 수(config.count)만큼
-    // 청구한다. (수동은 기존대로 잡당 1회 — 수동은 보통 fast 경로로 1문제씩.)
-    const baseCost =
-      config.mode === "AUTO"
-        ? CREDIT_COSTS[operationType] * Math.max(1, config.count)
-        : CREDIT_COSTS[operationType];
     const creditCost = getQuestionGenerationCreditCost(
-      baseCost,
+      CREDIT_COSTS[operationType],
       effectiveGenerationPlan,
     );
 
@@ -242,55 +233,9 @@ export const workbenchQuestionGenerationTask = task({
       const diffInstruction =
         DIFF_DESCRIPTION[diffLabel] || DIFF_DESCRIPTION.INTERMEDIATE;
 
-      let plan: PlanResult["plan"];
-      let rationale = "";
-      if (config.mode === "AUTO") {
-        const planningStartedAt = Date.now();
-        const planningResult = await generateQuestionObject({
-          schema: planSchema,
-          prompt: buildPlanningPrompt({
-            schoolType,
-            gradeInfo,
-            count: config.count,
-            passageContent: job.passage.content,
-            teacherIntentBlock,
-            analysisContext,
-            customPrompt: config.customPrompt,
-            diffLabel,
-            generationPlan: effectiveGenerationPlan,
-          }),
-          generationPlan: effectiveGenerationPlan,
-          logPrefix: "WORKBENCH-AUTO-GEN-PLAN",
-          maxTokens: 4_096,
-        });
-        const planUsage = readAiUsageTokens(planningResult.usage);
-        await recordPlatformApiUsageCost({
-          sourceKey: `workbench_ai_job:${jobId}:planning`,
-          sourceType: "WORKBENCH_AI_JOB",
-          sourceId: jobId,
-          sourceDetail: "QUESTION_PLANNING",
-          academyId: job.academyId,
-          provider: providerFromModel(planningResult.modelId),
-          model: planningResult.modelId,
-          operationType,
-          unitType: "TOKENS",
-          inputTokens: planUsage.inputTokens,
-          outputTokens: planUsage.outputTokens,
-          usageAt: new Date(),
-          metadata: {
-            passageId: job.passage.id,
-            generationPlan: effectiveGenerationPlan,
-            difficulty: diffLabel,
-            attempts: planningResult.attempts,
-            durationMs: planningResult.durationMs,
-          },
-        });
-        planningMs = Date.now() - planningStartedAt;
-        plan = planningResult.object.plan;
-        rationale = planningResult.object.rationale;
-      } else {
-        plan = buildManualPlan(config);
-      }
+      // AUTO(플래너) 모드는 제거됨 — 항상 교사가 지정한 단일 유형으로 생성.
+      const plan: PlanResult["plan"] = buildManualPlan(config);
+      const rationale = "";
 
       const generationStartedAt = Date.now();
       const generationResult = await runQuestionGenerationWithEmptyRetry(
@@ -313,6 +258,9 @@ export const workbenchQuestionGenerationTask = task({
         {
           logPrefix: "WORKBENCH-Q-GEN",
           maxAttempts: GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS,
+          // trigger maxDuration 600s. 540s 후엔 새 시도를 멈춰 강제종료(잡 고아
+          // → 환불 누락)를 막고 catch 에서 정상 실패+환불로 흐르게 한다.
+          deadlineAt: generationStartedAt + 540_000,
         },
       );
       const questions = generationResult.questions;
@@ -453,11 +401,12 @@ export const workbenchQuestionGenerationTask = task({
         data: {
           status: "FAILED",
           failedCount: 1,
-          errorMessage: message,
+          errorMessage: toUserFacingQuestionGenerationError(message),
           result: JSON.parse(JSON.stringify({
             passageId: job.passage?.id,
             generationPlan: effectiveGenerationPlan,
             difficulty: effectiveDifficulty,
+            rawError: message,
             debugTiming: {
               queueWaitMs: now.getTime() - job.createdAt.getTime(),
               creditMs,

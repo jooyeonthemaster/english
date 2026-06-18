@@ -293,6 +293,47 @@ export function findWordInPassage(
     // If regex fails, fall through
   }
 
+  // --- Strategy 4: Normalized word-boundary match ---
+  // 모델이 ASCII 따옴표/하이픈을 쓰는데 지문은 유니코드 변종(곡선따옴표 ’,
+  // en/em 대시 –—, NBSP)을 가진 경우를 메운다 (don't↔don’t, co-op↔co–op).
+  // 정규화한 사본 위에서 \b...\b 단어 경계를 그대로 요구하므로 dig__it__al
+  // 같은 부분문자열 homograph 스냅은 여전히 차단된다. 매치 인덱스는
+  // mapNormalizedIndexToOriginal 로 원문 위치로 되돌린다(따옴표/대시 치환은
+  // 1:1 이라 인덱스 불변, 공백 축약만 매핑이 보정).
+  const normPassage = normalizeForComparison(passage);
+  const normWord = normalizeForComparison(word);
+  if (normWord.length > 0) {
+    try {
+      const escaped = normWord.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const wbRegex = new RegExp(`\\b${escaped}\\b`, "i");
+      const match = wbRegex.exec(normPassage);
+      if (match) {
+        const mappedIdx = mapNormalizedIndexToOriginal(passage, match.index);
+        if (mappedIdx !== null) {
+          // mapNormalizedIndexToOriginal 은 다중 공백 런 뒤를 가리킬 때 시작
+          // 인덱스를 공백 위에 둘 수 있다(off-by-one). 단일 토큰 단어이므로
+          // 실제 첫 글자까지 전진하고, 끝 인덱스의 후행 공백은 트림한다.
+          let startIdx = mappedIdx;
+          while (startIdx < passage.length && /\s/.test(passage[startIdx])) {
+            startIdx += 1;
+          }
+          const mappedEnd = mapNormalizedIndexToOriginal(
+            passage,
+            match.index + match[0].length,
+          );
+          let endIdx = mappedEnd !== null ? mappedEnd : startIdx + word.length;
+          while (endIdx > startIdx && /\s/.test(passage[endIdx - 1])) {
+            endIdx -= 1;
+          }
+          const origLen = Math.max(1, endIdx - startIdx);
+          return { index: startIdx, length: origLen };
+        }
+      }
+    } catch {
+      // If regex fails, fall through
+    }
+  }
+
   // Do not fall back to plain substring matching for word/pronoun targets.
   // A failed lookup is safer than producing dig__it__al / comm__it__ments.
   return null;

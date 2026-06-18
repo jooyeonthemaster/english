@@ -169,7 +169,7 @@ async function requestTransform(body: {
 }
 
 /** 선택 액션 팝오버 추정 크기 — 좌우 클램프·상하 플립 판정용. */
-const SELECTION_POPUP_W = 268;
+const SELECTION_POPUP_W = 320;
 const SELECTION_POPUP_H = 48;
 
 interface SelectionAnchor {
@@ -295,6 +295,8 @@ interface WorkspacePassageRowProps {
   savedQuestionCount: number;
   /** 이 지문(원본+변형)으로 저장된 문제 목록 — 히스토리 팝오버에 실제 표시. */
   questions: QuestionCardItem[];
+  /** 히스토리 팝오버의 문제 행 클릭 시 '문제 상세' 모달을 연다. */
+  onOpenQuestionDetail?: (q: QuestionCardItem) => void;
   /**
    * 전체 변형본을 새 Passage 로 저장하고 워크스페이스에 새 행으로 추가한다.
    * 성공하면 true 를 반환 — 행은 그때 미리보기를 닫는다.
@@ -332,6 +334,7 @@ export function WorkspacePassageRow({
   sessionQueue,
   savedQuestionCount,
   questions,
+  onOpenQuestionDetail,
   onChangeContent,
   onPushHistory,
   onApplyAi,
@@ -478,55 +481,48 @@ export function WorkspacePassageRow({
   const hasTypes = overrideHasTypeCounts(row.override);
   // 이 지문에 개별 지정된 생성 모드 — 없으면 '미설정'(전체 공통 설정을 따름).
   // 우측 패널에서 이 지문을 선택해 모드를 고르면 여기에 반영된다.
-  const rowMode: "auto" | "manual" | "set" | null =
+  const rowMode: "manual" | "set" | null =
     row.override?.mode ?? (hasTypes ? "manual" : null);
   // 헤더 설정 배지 — 이 지문에 적용될 생성 설정을 한눈에 보여준다.
-  // 미설정/자동 생성/유형(요약)/장문 세트, 그리고 유형 지정인데 아직 유형이
-  // 없는 미완성 상태(생성 제외)는 점선 슬레이트(미설정) 톤으로 또렷하게 구분한다.
+  // 미설정/유형(요약)/장문 세트, 그리고 유형 지정인데 아직 유형이 없는
+  // 미완성 상태(생성 제외)는 점선 슬레이트(미설정) 톤으로 또렷하게 구분한다.
   const settingsBadge: {
     Icon: typeof SlidersHorizontal;
     label: string;
     title: string;
     tone: "neutral" | "configured" | "warn";
   } =
-    rowMode === "auto"
+    rowMode === "set"
       ? {
-          Icon: Wand2,
-          label: "자동 생성",
-          title: "이 지문은 자동 생성됩니다 — 클릭해 설정 변경",
+          Icon: FileText,
+          label:
+            row.override?.setMembers && row.override.setMembers.length > 0
+              ? `장문 세트 ${row.override.setMembers.length}`
+              : "장문 세트",
+          title: "이 지문으로 장문 세트를 구성합니다 — 클릭해 편집",
           tone: "configured",
         }
-      : rowMode === "set"
-        ? {
-            Icon: FileText,
-            label:
-              row.override?.setMembers && row.override.setMembers.length > 0
-                ? `장문 세트 ${row.override.setMembers.length}`
-                : "장문 세트",
-            title: "이 지문으로 장문 세트를 구성합니다 — 클릭해 편집",
-            tone: "configured",
-          }
-        : rowMode === "manual"
-          ? hasTypes
-            ? {
-                Icon: SlidersHorizontal,
-                label: overrideTypeSummary(row.override),
-                title: "이 지문의 유형 설정 — 클릭해 편집",
-                tone: "configured",
-              }
-            : {
-                Icon: CircleAlert,
-                label: "유형 지정 필요",
-                title:
-                  "유형 지정 모드인데 아직 유형이 없어요 (생성 제외) — 클릭해 지정",
-                tone: "warn",
-              }
+      : rowMode === "manual"
+        ? hasTypes
+          ? {
+              Icon: SlidersHorizontal,
+              label: overrideTypeSummary(row.override),
+              title: "이 지문의 유형 설정 — 클릭해 편집",
+              tone: "configured",
+            }
           : {
               Icon: CircleAlert,
               label: "유형 지정 필요",
-              title: "아직 유형이 지정되지 않았어요 — 클릭해 지정",
+              title:
+                "유형 지정 모드인데 아직 유형이 없어요 (생성 제외) — 클릭해 지정",
               tone: "warn",
-            };
+            }
+        : {
+            Icon: CircleAlert,
+            label: "유형 지정 필요",
+            title: "아직 유형이 지정되지 않았어요 — 클릭해 지정",
+            tone: "warn",
+          };
   const locked =
     disabled || busy !== null || preview !== null || variantPreview !== null;
   const editorLocked =
@@ -1224,6 +1220,7 @@ export function WorkspacePassageRow({
           sessionQueue={sessionQueue}
           savedQuestionCount={savedQuestionCount}
           questions={questions}
+          onOpenDetail={onOpenQuestionDetail}
         />
         <button
           type="button"

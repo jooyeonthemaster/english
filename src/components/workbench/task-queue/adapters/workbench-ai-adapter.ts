@@ -51,7 +51,7 @@ function buildSubtitle(job: WorkbenchAiJobRow, domain: TaskDomain): string {
     return `${prefix}학습지 생성 진행 중`;
   }
 
-  const typeLabel = job.mode === "AUTO" ? "자동 생성" : job.questionType || "수동 생성";
+  const typeLabel = job.questionType || "수동 생성";
   if (job.status === "COMPLETED") return `${prefix}${typeLabel} 완료`;
   if (job.status === "FAILED") return `${prefix}${typeLabel} 실패`;
   if (job.status === "PENDING") return `${prefix}${typeLabel} 대기 중`;

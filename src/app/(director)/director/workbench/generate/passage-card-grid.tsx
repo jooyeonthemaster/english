@@ -176,6 +176,9 @@ interface PassageCardGridProps {
   passageBulkAction?: "move" | "remove" | "delete" | null;
 
   // Generation
+  // NOTE: PassageCardGrid 는 문제 생성 외 페이지(튜터 프로그램 빌더 등)에서도
+  // 재사용된다. 그쪽은 여전히 "auto" 를 넘기고 이 prop 은 본문에서 쓰이지 않으므로,
+  // 문제 생성의 genMode 좁히기와 무관하게 넓은 유니온을 유지한다.
   genMode: "auto" | "manual" | "set";
   totalQuestions: number;
   handleBatchGenerate: () => void;
@@ -189,6 +192,9 @@ interface PassageCardGridProps {
   questionsByPassage?: Map<string, QuestionCardItem[]>;
   // 전달되면 "생성된 문제" 목록의 문제 행 클릭 시 페이지 이동 대신
   // 인페이지 문제 상세 팝업을 연다.
+  onOpenQuestionDetail?: (q: QuestionCardItem) => void;
+
+  // "생성된 문제" 요약 행 클릭 시 개별 편집 페이지 대신 '문제 상세' 모달을 연다.
   onOpenQuestionDetail?: (q: QuestionCardItem) => void;
 
   // 학습지 생성(다른 화면)에서 학습자료가 백그라운드로 생성 중인 지문 id.
