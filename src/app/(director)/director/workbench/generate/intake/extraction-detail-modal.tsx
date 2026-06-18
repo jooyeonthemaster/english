@@ -866,6 +866,7 @@ function InlineStudyAnalysisWorkspace({
         activeChangeId={activeChangeId}
         onHoverChange={setHoveredChangeId}
         onSelectChange={setActiveChangeId}
+        restorationStatus={draft.restorationStatus}
       />
     </div>
   );
