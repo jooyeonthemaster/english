@@ -734,7 +734,6 @@ export function CustomTypeGeneratePanel({
           queueFilter="all"
           setQueueFilter={() => {}}
           queueCounts={ZERO_QUEUE_COUNTS}
-          autoCount={0}
           savedQuestions={savedQuestions}
           loadingSavedQuestions={loadingSavedQuestions}
           setDetailQuestion={setDetailQuestion}

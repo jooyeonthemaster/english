@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { History, Loader2, XCircle } from "lucide-react";
 
@@ -114,6 +114,8 @@ interface RowHistoryPopoverProps {
   savedQuestionCount: number;
   /** 이 지문(원본+변형)으로 저장된 문제들 — 팝오버에 실제 목록으로 보여준다. */
   questions: QuestionCardItem[];
+  /** 행 클릭 시 '문제 상세' 모달을 여는 핸들러. 생략 시 개별 페이지로 폴백. */
+  onOpenDetail?: (q: QuestionCardItem) => void;
 }
 
 export function RowHistoryPopover({
@@ -121,8 +123,10 @@ export function RowHistoryPopover({
   sessionQueue,
   savedQuestionCount,
   questions,
+  onOpenDetail,
 }: RowHistoryPopoverProps) {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   const idSet = useMemo(() => new Set(passageIds), [passageIds]);
   // 진행 중/실패한 세션 잡만 라이브 상태로 위에 보여준다(완료분은 저장 목록과 중복).
   const liveJobs = useMemo(
@@ -141,7 +145,7 @@ export function RowHistoryPopover({
   const hasAny = count > 0 || liveJobs.length > 0;
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
           type="button"
@@ -225,7 +229,16 @@ export function RowHistoryPopover({
                 key={q.id}
                 q={q}
                 num={idx + 1}
-                onOpen={(id) => router.push(`/director/questions/${id}`)}
+                // 개별 편집 페이지로 이동하지 않고 '문제 상세' 모달을 연다.
+                // 팝오버를 먼저 닫아 모달 위로 포털이 겹치지 않게 한다.
+                onOpen={() => {
+                  if (onOpenDetail) {
+                    setOpen(false);
+                    onOpenDetail(q);
+                  } else {
+                    router.push(`/director/questions/${q.id}`);
+                  }
+                }}
               />
             ))}
           </div>

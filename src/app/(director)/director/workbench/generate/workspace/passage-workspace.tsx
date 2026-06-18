@@ -74,6 +74,8 @@ interface PassageWorkspaceProps {
   questionCountByPassage: Map<string, number>;
   /** 지문별 저장 문제 목록 맵 — 행 히스토리 팝오버에 실제 목록 표시. */
   questionsByPassage: Map<string, QuestionCardItem[]>;
+  /** 행 히스토리 팝오버의 문제 클릭 시 '문제 상세' 모달을 연다. */
+  onOpenQuestionDetail?: (q: QuestionCardItem) => void;
   /** 지문별 생성 통계 (문제 수·크레딧) — 카드 푸터 '문제 생성' 버튼 라벨용. */
   rowStats?: Map<string, { questions: number; creditCost: number }>;
   /** '지문 추가' 버튼 → 내 지문함으로 돌아가 지문을 더 고른다. */
@@ -93,6 +95,7 @@ export function PassageWorkspace({
   sessionQueue,
   questionCountByPassage,
   questionsByPassage,
+  onOpenQuestionDetail,
   rowStats,
   onAddPassage,
 }: PassageWorkspaceProps) {
@@ -427,6 +430,7 @@ export function PassageWorkspace({
                   ? (questionsByPassage.get(row.variantOfId) ?? [])
                   : []),
               ]}
+              onOpenQuestionDetail={onOpenQuestionDetail}
               onChangeContent={(content) =>
                 api.setContent(row.localId, content)
               }

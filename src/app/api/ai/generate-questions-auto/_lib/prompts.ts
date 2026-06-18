@@ -110,23 +110,25 @@ export function buildGenerationPrompt({
   diffInstruction,
   generationPlan,
   customPrompt,
-}: GenerationPromptInput): string {
+}: GenerationPromptInput): { system?: string; prompt: string } {
   if (generationPlan === "STANDARD") {
-    return buildGeminiCompactGenerationPrompt({
-      schoolType,
-      gradeInfo,
-      passageContent,
-      teacherIntentBlock,
-      analysisContext,
-      targetPoints,
-      targetCandidateBlock,
-      typePrompt,
-      typeQualityRubric,
-      count: typeCount,
-      difficulty: diffLabel,
-      difficultyInstruction: diffInstruction,
-      customPrompt,
-    });
+    return {
+      prompt: buildGeminiCompactGenerationPrompt({
+        schoolType,
+        gradeInfo,
+        passageContent,
+        teacherIntentBlock,
+        analysisContext,
+        targetPoints,
+        targetCandidateBlock,
+        typePrompt,
+        typeQualityRubric,
+        count: typeCount,
+        difficulty: diffLabel,
+        difficultyInstruction: diffInstruction,
+        customPrompt,
+      }),
+    };
   }
 
   const hasAnalysisContext = analysisContext.trim().length > 0;
@@ -145,7 +147,32 @@ export function buildGenerationPrompt({
   const providerQualityContract =
     buildQuestionGenerationPromptContract(generationPlan);
 
-  return `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신/수능 시험 출제 전문가입니다.
+  // 정적 system 프리앰블: 유형 지시·루브릭·계약·고정 출력 규칙만. 학교급/학년·지문·
+  // 분석·난이도 값 등 호출마다 바뀌는 것은 전부 user 프롬프트로 내려 prefix 를
+  // byte-identical 로 유지한다 → 동일 (유형·난이도) 반복 호출에서 학교/학년이 달라도
+  // anthropic prompt cache 적중(학년을 system 맨 앞에 두면 그 뒤 거대한 루브릭 전체가
+  // 캐시 미스). (LLM 레이어에서 cache_control 부착.)
+  const system = `당신은 한국 영어 내신/수능 시험 출제 전문가입니다.
+
+## 출제 유형 지시사항
+${typePrompt}${typeQualityRubric ? `\n${typeQualityRubric}` : ""}
+${structuredInstructions}
+
+## 난이도 기준
+${DIFFICULTY_RUBRIC[diffLabel] || DIFFICULTY_RUBRIC.INTERMEDIATE}
+${MARKING_RUBRIC}
+${providerQualityContract}
+
+## 공통 출력 규칙
+- 객관식은 해당 유형이 요구하는 개수의 선택지(options 배열에 {label, text} 형태)를 만드세요. 대부분은 5개이고, 무관한 문장과 확장 어법 판단의 밑줄 표현 수는 상세 설정의 개수를 따릅니다.
+- 해설(explanation)은 왜 정답인지 지문 근거와 함께 한국어로 작성하세요.
+- keyPoints는 3개의 학습 포인트로 작성하세요.
+- wrongOptionExplanations는 객관식 문제마다 반드시 정답을 제외한 모든 오답에 대해 작성하세요. 복수 정답 문항은 전체 선지 수에서 정답 수를 뺀 만큼 작성합니다. 확장 어법 판단에서 정답 수가 전체 선지 수와 같으면 오답 분석은 비워도 됩니다.
+- wrongOptionExplanations가 배열 스키마이면 각 항목은 {label, explanation} 형태로 작성하세요.
+- tags는 관련 문법/어휘/유형 태그를 한국어로 작성하세요.
+- If saved passage analysis is "None", treat targetPoints as passage evidence rather than analysis items.`;
+
+  const prompt = `대상: 한국 ${schoolType} ${gradeInfo} 영어 시험.
 
 ## 지문
 ${passageContent}
@@ -156,28 +183,14 @@ ${teacherIntentBlock ? `\n${teacherIntentBlock}\n` : ""}${analysisBlock}
 ${sourcePolicy}
 ${targetContext}
 
-## 출제 유형 지시사항
-${typePrompt}
-${typeQualityRubric ? `\n${typeQualityRubric}` : ""}
-${structuredInstructions}
-
 ## 생성 조건
 - 문제 수: ${typeCount}문제
 - 난이도: ${diffLabel} (${diffInstruction})
-${DIFFICULTY_RUBRIC[diffLabel] || DIFFICULTY_RUBRIC.INTERMEDIATE}
-${MARKING_RUBRIC}
-${providerQualityContract}
-${customPrompt ? `\n## Teacher instructions\n${customPrompt}` : ""}
-- If saved passage analysis is "None", treat targetPoints as passage evidence rather than analysis items.
-- difficulty 필드에 반드시 "${diffLabel}"을 입력하세요. 다른 값을 넣지 마세요.
-- 객관식은 해당 유형이 요구하는 개수의 선택지(options 배열에 {label, text} 형태)를 만드세요. 대부분은 5개이고, 무관한 문장과 확장 어법 판단의 밑줄 표현 수는 상세 설정의 개수를 따릅니다.
-- 해설(explanation)은 왜 정답인지 지문 근거와 함께 한국어로 작성하세요.
-- keyPoints는 3개의 학습 포인트로 작성하세요.
-- wrongOptionExplanations는 객관식 문제마다 반드시 정답을 제외한 모든 오답에 대해 작성하세요. 복수 정답 문항은 전체 선지 수에서 정답 수를 뺀 만큼 작성합니다. 확장 어법 판단에서 정답 수가 전체 선지 수와 같으면 오답 분석은 비워도 됩니다.
-- wrongOptionExplanations가 배열 스키마이면 각 항목은 {label, explanation} 형태로 작성하세요.
-- tags는 관련 문법/어휘/유형 태그를 한국어로 작성하세요.
+- difficulty 필드에 반드시 "${diffLabel}"을 입력하세요. 다른 값을 넣지 마세요.${customPrompt ? `\n\n## Teacher instructions\n${customPrompt}` : ""}
 
 위의 분석 포인트를 반드시 문제에 반영하고, 정확히 ${typeCount}문제를 생성하세요.`;
+
+  return { system, prompt };
 }
 
 export const STRUCTURED_OUTPUT_INSTRUCTIONS = `\n## 출력 형식 안내

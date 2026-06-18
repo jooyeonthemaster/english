@@ -47,6 +47,7 @@ import { useGenerateExtraction } from "./intake/use-generate-extraction";
 import { ExtractionLoadingCards } from "./intake/extraction-loading-cards";
 import { ExtractionDetailModal } from "./intake/extraction-detail-modal";
 import { useTaskQueue } from "@/components/workbench/task-queue/context";
+import { countPassageSentences } from "@/lib/passage-sentence-utils";
 import { GenerationConfigPanel } from "./generation-config-panel";
 import { EmbeddedQuestionBank } from "./embedded-question-bank";
 import { useGenerationHandlers } from "./use-generation-handlers";
@@ -140,7 +141,7 @@ export function GeneratePageClient({
   defaultMode = "manual",
 }: {
   academyId: string;
-  defaultMode?: "auto" | "manual";
+  defaultMode?: "manual";
 }) {
   const searchParams = useSearchParams();
   const taskQueue = useTaskQueue();
@@ -192,12 +193,9 @@ export function GeneratePageClient({
       return out;
     })(),
   );
-  const initialModeRef = useRef<"auto" | "manual">(
-    searchParams.get("mode") === "auto"
-      ? "auto"
-      : searchParams.get("mode") === "manual"
-        ? "manual"
-        : defaultMode,
+  // 자동 생성 제거 — ?mode=auto 딥링크는 더 이상 지원하지 않고 '유형 지정'으로 연다.
+  const initialModeRef = useRef<"manual">(
+    searchParams.get("mode") === "manual" ? "manual" : defaultMode,
   );
   const prefillAppliedRef = useRef(false);
 
@@ -260,15 +258,12 @@ export function GeneratePageClient({
   const [analysisData, setAnalysisData] = useState<any>(null);
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);
 
-  // ── Mode: auto vs manual (seeded from ?mode= URL param) ──
-  const [genMode, setGenMode] = useState<"auto" | "manual" | "set">(
+  // ── Mode: 유형 지정 vs 장문 세트 (seeded from ?mode= URL param) ──
+  const [genMode, setGenMode] = useState<"manual" | "set">(
     initialModeRef.current,
   );
   const [generationPlan, setGenerationPlan] =
     useState<QuestionGenerationPlan>("STANDARD");
-
-  // ── Auto mode config ──
-  const [autoCount, setAutoCount] = useState(1);
 
   // ── Manual mode config ──
   const [typeCounts, setTypeCounts] = useState<Record<string, number>>({});
@@ -2013,7 +2008,6 @@ export function GeneratePageClient({
       difficulty,
       customPrompt,
       questionTypeSettings,
-      autoCount,
       selectedPassage,
       analysisData,
       totalQuestions,
@@ -2041,7 +2035,6 @@ export function GeneratePageClient({
     questionTypeSettings,
     difficulty,
     customPrompt,
-    autoCount,
     selectedIds,
     setSelectedIds,
     setSessionQueue,
@@ -2221,7 +2214,7 @@ export function GeneratePageClient({
     ? (activeRow.override?.mode ?? genMode)
     : genMode;
   const panelSetGenMode = editingRow
-    ? (m: "auto" | "manual" | "set") =>
+    ? (m: "manual" | "set") =>
         writeActiveOverride((o) => ({ ...o, mode: m }))
     : setGenMode;
   const panelGenerationPlan = editingRow
@@ -2246,9 +2239,7 @@ export function GeneratePageClient({
     : undefined;
 
   // ── Can generate? ──
-  const canGenerate =
-    selectedIds.size > 0 &&
-    (genMode === "auto" ? autoCount > 0 : totalQuestions > 0);
+  const canGenerate = selectedIds.size > 0 && totalQuestions > 0;
 
   useEffect(() => {
     if (intakeView !== "library" || selectedIds.size === 0) return;
@@ -2279,6 +2270,7 @@ export function GeneratePageClient({
           sessionQueue={sessionQueue}
           questionCountByPassage={questionCountByPassage}
           questionsByPassage={questionsByPassage}
+          onOpenQuestionDetail={(q) => setDetailQuestion(q)}
           globalDifficulty={difficulty}
           globalGenerationPlan={generationPlan}
           setModeActive={genMode === "set"}
@@ -2366,6 +2358,7 @@ export function GeneratePageClient({
               handleBatchGenerate={handleBatchGenerate}
               questionCountByPassage={questionCountByPassage}
               questionsByPassage={questionsByPassage}
+              onOpenQuestionDetail={(q) => setDetailQuestion(q)}
               learningGeneratingPassageIds={learningGeneratingPassageIds}
               learningCompletedPassageIds={freshLearningPassageIds}
               freshAnalysisPassageIds={freshAnalysisPassageIds}
@@ -2426,14 +2419,15 @@ export function GeneratePageClient({
           onSetMembersChange={panelOnSetMembersChange}
           generationPlan={panelGenerationPlan}
           setGenerationPlan={panelSetGenerationPlan}
-          autoCount={autoCount}
-          setAutoCount={setAutoCount}
           typeCounts={panelTypeCounts}
           setTypeCount={panelSetTypeCount}
           setTypeCounts={panelSetTypeCounts}
           questionTypeSettings={panelQuestionTypeSettings}
           setQuestionTypeSettings={panelSetQuestionTypeSettings}
           totalQuestions={panelTotalQuestions}
+          passageSentenceCount={
+            activeRow ? countPassageSentences(activeRow.content) : undefined
+          }
           difficulty={panelDifficulty}
           setDifficulty={panelSetDifficulty}
           customPrompt={customPrompt}
@@ -2464,6 +2458,7 @@ export function GeneratePageClient({
           workspaceGenerating={workspaceGenerating}
           onWorkspaceGenerate={handleWorkspaceGenerate}
           hideGenerateButtons
+          tourActive={generateTourOpen}
         />
       </PassageGenerateModal>
     ) : null;
@@ -2526,8 +2521,8 @@ export function GeneratePageClient({
             queueCounts={queueCounts}
             queueFilter={queueFilter}
             setQueueFilter={setQueueFilter}
-            autoCount={autoCount}
             onRetryGeneration={retryGeneration}
+            marqueeBoundaryRef={bottomQueueBoundaryRef}
           />
         </section>
       </main>
@@ -2559,16 +2554,13 @@ export function GeneratePageClient({
             const p = passages.find((pp) => pp.id === reviewItem.passageId);
             if (p) {
               handleSelectPassage(p);
-              if (reviewItem.config.mode === "manual") {
-                setGenMode("manual");
-                setTypeCounts(reviewItem.config.typeCounts);
-                setQuestionTypeSettings(
-                  reviewItem.config.questionTypeSettings ||
-                    getDefaultQuestionTypeGenerationSettings(),
-                );
-              } else {
-                setGenMode("auto");
-              }
+              // 자동 생성 제거 — 재생성은 '유형 지정'으로 연다.
+              setGenMode("manual");
+              setTypeCounts(reviewItem.config.typeCounts);
+              setQuestionTypeSettings(
+                reviewItem.config.questionTypeSettings ||
+                  getDefaultQuestionTypeGenerationSettings(),
+              );
               setGenerationPlan(reviewItem.config.generationPlan || "STANDARD");
               setDifficulty(reviewItem.config.difficulty as any);
               setCustomPrompt(reviewItem.config.prompt);

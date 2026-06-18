@@ -62,7 +62,8 @@ function jobToQueueItem(
 
   const config = parseRecord(job.config);
   const result = parseRecord(job.result);
-  const mode = config.mode === "MANUAL" ? "manual" : "auto";
+  // 자동 생성 제거 — 문제 생성 잡은 항상 '유형 지정'(MANUAL) 으로 해석한다.
+  const mode = "manual" as const;
   const questionType =
     typeof config.questionType === "string"
       ? config.questionType
@@ -80,7 +81,7 @@ function jobToQueueItem(
   const passageId = job.passage?.id ?? job.passageId ?? "";
   if (!passageId) return null;
 
-  const progressKey = mode === "auto" ? "auto" : questionType || "manual";
+  const progressKey = questionType || "manual";
   const progressValue =
     job.status === "COMPLETED" || job.status === "PARTIAL"
       ? "done"
@@ -112,10 +113,9 @@ function jobToQueueItem(
     questionIds,
     error: job.errorMessage ?? undefined,
     config: {
-      typeCounts:
-        mode === "manual" && questionType
-          ? { [questionType]: Number(config.count ?? job.requestedCount ?? 1) }
-          : {},
+      typeCounts: questionType
+        ? { [questionType]: Number(config.count ?? job.requestedCount ?? 1) }
+        : {},
       difficulty:
         typeof config.difficulty === "string"
           ? config.difficulty
@@ -125,10 +125,9 @@ function jobToQueueItem(
       mode,
       generationPlan:
         config.generationPlan === "PREMIUM" ? "PREMIUM" : "STANDARD",
-      questionTypeSettings:
-        mode === "manual" && questionType
-          ? { [questionType]: rawQuestionTypeSettings }
-          : rawQuestionTypeSettings,
+      questionTypeSettings: questionType
+        ? { [questionType]: rawQuestionTypeSettings }
+        : rawQuestionTypeSettings,
     },
   };
 }

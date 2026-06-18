@@ -22,7 +22,6 @@ import type { PassageItem, QueueItem } from "../generate-page-types";
 import {
   buildOptimisticItem,
   createFastQuestionGenerationJob,
-  createQuestionGenerationJob,
   replaceQueueItemInPlace,
 } from "../use-generation-handlers";
 import {
@@ -115,8 +114,7 @@ function rowAsPassageItem(
 function computeRowGenStats(
   row: WorkspaceRow,
   ctx: {
-    genMode: "auto" | "manual" | "set";
-    autoCount: number;
+    genMode: "manual" | "set";
     generationPlan: QuestionGenerationPlan;
     questionTypeSettings: QuestionTypeGenerationSettings;
     globalQuestionCount: number;
@@ -124,14 +122,13 @@ function computeRowGenStats(
 ): { questions: number; creditCost: number } {
   const globalCfg = {
     genMode: ctx.genMode,
-    autoCount: ctx.autoCount,
     totalQuestions: ctx.globalQuestionCount,
   };
   const questions = rowQuestionCount(row, globalCfg);
   const mode = effectiveRowMode(row.override, ctx.genMode);
   const plan = row.override?.generationPlan ?? ctx.generationPlan;
   // 수동(유형 지정)은 유형마다 플랜이 다를 수 있어, 유형별 배수를 이미 적용한
-  // 비용을 따로 누적한다(rowFinal). auto/set 은 행 단위 플랜 배수를 끝에 적용.
+  // 비용을 따로 누적한다(rowFinal). set 은 행 단위 플랜 배수를 끝에 적용.
   let rowBase = 0;
   let rowFinal = 0;
   if (mode === "manual") {
@@ -149,8 +146,6 @@ function computeRowGenStats(
         rowFinal += getQuestionGenerationCreditCost(unit * n, typePlan);
       }
     }
-  } else if (mode === "auto") {
-    rowBase += CREDIT_COSTS.AUTO_GEN_BATCH * Math.max(0, ctx.autoCount);
   } else if (mode === "set") {
     for (const m of row.override?.setMembers ?? []) {
       rowBase += VOCAB_GENERATION_TYPE_IDS.has(m.typeId)
@@ -167,13 +162,12 @@ function computeRowGenStats(
 interface UseWorkspaceGenerationParams {
   api: WorkspaceRowsApi;
   passages: PassageItem[];
-  genMode: "auto" | "manual" | "set";
+  genMode: "manual" | "set";
   generationPlan: QuestionGenerationPlan;
   typeCounts: Record<string, number>;
   questionTypeSettings: QuestionTypeGenerationSettings;
   difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
   customPrompt: string;
-  autoCount: number;
   selectedIds?: Set<string>;
   setSelectedIds?: Dispatch<SetStateAction<Set<string>>>;
   setSessionQueue: Dispatch<SetStateAction<QueueItem[]>>;
@@ -204,7 +198,6 @@ export function useWorkspaceGeneration({
   questionTypeSettings,
   difficulty,
   customPrompt,
-  autoCount,
   selectedIds,
   setSelectedIds,
   setSessionQueue,
@@ -233,16 +226,11 @@ export function useWorkspaceGeneration({
   );
 
   const globalQuestionCount =
-    genMode === "auto"
-      ? Math.max(0, autoCount)
-      : genMode === "manual"
-        ? Object.values(typeCounts).reduce((a, b) => a + b, 0)
-        : 0;
+    genMode === "manual"
+      ? Object.values(typeCounts).reduce((a, b) => a + b, 0)
+      : 0;
 
   const globalBaseCredit = useMemo(() => {
-    // 자동 출제는 문제 1개당 단가 — 문제 수(autoCount)만큼.
-    if (genMode === "auto")
-      return CREDIT_COSTS.AUTO_GEN_BATCH * Math.max(0, autoCount);
     if (genMode !== "manual") return 0;
     return Object.entries(typeCounts).reduce((sum, [typeId, n]) => {
       if (n <= 0) return sum;
@@ -251,7 +239,7 @@ export function useWorkspaceGeneration({
         : CREDIT_COSTS.QUESTION_GEN_SINGLE;
       return sum + unit * n;
     }, 0);
-  }, [genMode, typeCounts, autoCount]);
+  }, [genMode, typeCounts]);
 
   // 지문별(행별) 생성 통계 — 카드 푸터의 '문제 생성' 버튼과 모달 CTA 가 같은
   // 숫자를 쓰도록 집계와 동일 로직(computeRowGenStats)으로 미리 계산해 맵으로 둔다.
@@ -262,7 +250,6 @@ export function useWorkspaceGeneration({
         row.localId,
         computeRowGenStats(row, {
           genMode,
-          autoCount,
           generationPlan,
           questionTypeSettings,
           globalQuestionCount,
@@ -273,7 +260,6 @@ export function useWorkspaceGeneration({
   }, [
     api.rows,
     genMode,
-    autoCount,
     generationPlan,
     questionTypeSettings,
     globalQuestionCount,
@@ -343,7 +329,6 @@ export function useWorkspaceGeneration({
 
     const globalCfg = {
       genMode,
-      autoCount,
       totalQuestions: globalQuestionCount,
     };
     const actionableRows = targetRows.filter(
@@ -476,7 +461,7 @@ export function useWorkspaceGeneration({
       const prompt = customPrompt.trim();
       type FastUnit = {
         passage: PassageItem;
-        questionType?: string; // undefined → AUTO
+        questionType: string;
         settings?: unknown;
         difficulty: string;
         generationPlan: QuestionGenerationPlan;
@@ -485,14 +470,7 @@ export function useWorkspaceGeneration({
         progressKey: string;
       };
       const fastUnits: FastUnit[] = [];
-      const slowJobs: {
-        passage: PassageItem;
-        count: number;
-        difficulty: string;
-        generationPlan: QuestionGenerationPlan;
-        config: QueueItem["config"];
-      }[] = [];
-      // 장문 세트 잡 — 자동/유형지정과 같은 공용 '생성' 흐름에 합류한다.
+      // 장문 세트 잡 — 유형지정과 같은 공용 '생성' 흐름에 합류한다.
       const setJobs: {
         passageId: string;
         title: string;
@@ -526,7 +504,7 @@ export function useWorkspaceGeneration({
             ? (item.row.override?.generationPlan ?? generationPlan)
             : generationPlan;
         // 이 지문에 적용될 생성 모드 — 워크스페이스 행은 개별 모드(없으면 전체),
-        // 선택-only 지문(내 지문 체크)은 전체 공통 모드를 따른다.
+        // 선택-only 지문(내 지문 체크)은 전체 공통 모드를 따른다. (manual | set)
         const effMode =
           item.kind === "workspace"
             ? effectiveRowMode(item.row.override, genMode)
@@ -583,41 +561,6 @@ export function useWorkspaceGeneration({
                 },
               });
             }
-          }
-        } else if (effMode === "auto") {
-          // 자동 생성 — 개별 유형 지정이 없어도 autoCount 만큼.
-          if (autoCount === 1) {
-            fastUnits.push({
-              passage: passageLike,
-              questionType: undefined,
-              difficulty: effDifficulty,
-              generationPlan: effPlan,
-              tempId: `fast:${item.passageId}:${runId}:0`,
-              progressKey: "auto",
-              config: {
-                typeCounts: {},
-                questionTypeSettings: {},
-                difficulty: effDifficulty,
-                prompt,
-                mode: "auto",
-                generationPlan: effPlan,
-              },
-            });
-          } else {
-            slowJobs.push({
-              passage: passageLike,
-              count: autoCount,
-              difficulty: effDifficulty,
-              generationPlan: effPlan,
-              config: {
-                typeCounts: {},
-                questionTypeSettings: {},
-                difficulty: effDifficulty,
-                prompt,
-                mode: "auto",
-                generationPlan: effPlan,
-              },
-            });
           }
         } else if (effMode === "set" && item.kind === "workspace") {
           // 장문 세트 — 구성한 멤버로 세트를 생성한다(공용 '생성' 흐름).
@@ -678,7 +621,7 @@ export function useWorkspaceGeneration({
                 try {
                   const result = await createFastQuestionGenerationJob({
                     passageId: unit.passage.id,
-                    mode: unit.questionType ? "MANUAL" : "AUTO",
+                    mode: "MANUAL",
                     count: 1,
                     questionType: unit.questionType,
                     questionTypeSettings: unit.settings,
@@ -738,35 +681,6 @@ export function useWorkspaceGeneration({
           failed += results.filter((r) => r.status === "rejected").length;
         }
 
-        for (const job of slowJobs) {
-          try {
-            const jobId = await createQuestionGenerationJob({
-              passageId: job.passage.id,
-              mode: "AUTO",
-              count: job.count,
-              difficulty: job.difficulty,
-              customPrompt: prompt || undefined,
-              generationPlan: job.generationPlan,
-            });
-            setSessionQueue((prev) => [
-              buildOptimisticItem({
-                jobId,
-                passage: job.passage,
-                analysisData: null,
-                config: job.config,
-                progressKey: "auto",
-              }),
-              ...prev,
-            ]);
-            success += 1;
-          } catch (err) {
-            failed += 1;
-            toast.error(
-              err instanceof Error ? err.message : "문제 생성 작업 시작 실패",
-            );
-          }
-        }
-
         // 장문 세트 — 전용 엔드포인트로 생성한다. 생성된 문항은 아래 생성/검수
         // 결과에 그대로 합류한다(triggerRefresh 로 갱신).
         for (const job of setJobs) {
@@ -815,11 +729,7 @@ export function useWorkspaceGeneration({
         }
         if (success > 0) {
           dispatchGenerateTourMilestone("question-generation-completed");
-          toast.success(
-            slowJobs.length > 0
-              ? `${success}개 생성 작업이 시작/완료됐습니다.`
-              : `${success}개 문제가 생성됐습니다.`,
-          );
+          toast.success(`${success}개 문제가 생성됐습니다.`);
         }
         if (failed > 0) {
           toast.error(`${failed}개 문제 생성이 실패했습니다.`);
@@ -848,7 +758,6 @@ export function useWorkspaceGeneration({
     questionTypeSettings,
     difficulty,
     customPrompt,
-    autoCount,
     globalQuestionCount,
     selectedOnlyPassages,
     generating,

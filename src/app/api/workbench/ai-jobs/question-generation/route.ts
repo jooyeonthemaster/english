@@ -23,7 +23,7 @@ export const dynamic = "force-dynamic";
 
 const requestSchema = z.object({
   passageId: z.string().min(1),
-  mode: z.enum(["AUTO", "MANUAL"]).default("AUTO"),
+  mode: z.literal("MANUAL").default("MANUAL"),
   count: z.number().int().min(1).max(50).default(1),
   questionType: z.string().optional(),
   questionTypeSettings: z.unknown().optional(),

@@ -177,6 +177,9 @@ interface PassageCardGridProps {
   passageBulkAction?: "move" | "remove" | "delete" | null;
 
   // Generation
+  // NOTE: PassageCardGrid 는 문제 생성 외 페이지(튜터 프로그램 빌더 등)에서도
+  // 재사용된다. 그쪽은 여전히 "auto" 를 넘기고 이 prop 은 본문에서 쓰이지 않으므로,
+  // 문제 생성의 genMode 좁히기와 무관하게 넓은 유니온을 유지한다.
   genMode: "auto" | "manual" | "set";
   totalQuestions: number;
   handleBatchGenerate: () => void;
@@ -188,6 +191,9 @@ interface PassageCardGridProps {
 
   // 지문별 생성된 문제 목록. 지문 카드 하단의 "생성된 문제" 요약 토글에 쓴다.
   questionsByPassage?: Map<string, QuestionCardItem[]>;
+
+  // "생성된 문제" 요약 행 클릭 시 개별 편집 페이지 대신 '문제 상세' 모달을 연다.
+  onOpenQuestionDetail?: (q: QuestionCardItem) => void;
 
   // 학습지 생성(다른 화면)에서 학습자료가 백그라운드로 생성 중인 지문 id.
   // 카드 테두리에 초록 글로우가 빙글 도는 모션을 띄운다.
@@ -271,6 +277,7 @@ export function PassageCardGrid({
   selectionActionDisabled,
   questionCountByPassage,
   questionsByPassage,
+  onOpenQuestionDetail,
   learningGeneratingPassageIds,
   learningCompletedPassageIds,
   loadingCards,
@@ -1646,13 +1653,6 @@ export function PassageCardGrid({
                   } catch {}
                 }
                 const mainIdea = aData?.structure?.mainIdea;
-                // 이 지문으로 이미 생성된 문제 수. 서버 _count(로드 시점 총계)와
-                // 실시간 집계(savedQuestions 기반) 중 큰 값 — 새로고침 없이 방금
-                // 생성한 문제도 반영된다.
-                const generatedQuestionCount = Math.max(
-                  p._count?.questions ?? 0,
-                  questionCountByPassage?.get(p.id) ?? 0,
-                );
 
                 const isChecked = selectedIds.has(p.id);
                 const isInWorkspace = workspacePassageIds?.has(p.id) ?? false;
@@ -1847,24 +1847,6 @@ export function PassageCardGrid({
                                 학습자료 생성중
                               </span>
                             )}
-                            {generatedQuestionCount > 0 && (
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  setBreakdownPassage({
-                                    id: p.id,
-                                    title: p.title,
-                                  });
-                                }}
-                                className="inline-flex items-center gap-1 rounded border border-indigo-200 bg-indigo-50 px-1.5 py-0.5 text-[10px] font-semibold text-indigo-600 transition-colors hover:bg-indigo-100 hover:border-indigo-300"
-                                title={`이 지문으로 생성된 문제 ${generatedQuestionCount}개 — 클릭하면 유형별 현황`}
-                              >
-                                <FileText className="w-3 h-3" /> 문제{" "}
-                                {generatedQuestionCount}
-                              </button>
-                            )}
                           </div>
                         </div>
                       </div>
@@ -1918,6 +1900,7 @@ export function PassageCardGrid({
                       <div className="min-w-0 flex-1">
                         <PassageQuestionsSummary
                           questions={questionsByPassage?.get(p.id) ?? []}
+                          onOpenDetail={onOpenQuestionDetail}
                         />
                         <PassageReportsSummary
                           passageId={p.id}
