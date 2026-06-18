@@ -982,6 +982,8 @@ export interface ResolvedQuestionTypeGenerationSettings {
   sentenceInsertPointFocus?: boolean;
   /** 무관문장 핵심 집중 모드 — 무관성 유형을 검증 고빈출 코어로 좁힘. */
   irrelevantPointFocus?: boolean;
+  /** 글의순서 핵심 집중 모드 — 순서 응집장치를 검증 고빈출 코어로 좁힘. */
+  sentenceOrderPointFocus?: boolean;
   /** Resolved option count for free-text option types (TOPIC/TITLE/...). */
   genericOptionCount?: number;
   /** Resolved correct-answer count for free-text option types. */
@@ -1195,12 +1197,19 @@ export function resolveQuestionTypeGenerationSettings(
   if (typeId === "SENTENCE_ORDER") {
     const sentenceOrderPrefixVariationCount =
       readSentenceOrderPrefixVariationCountSetting(rawSettings);
+    const sentenceOrderPointFocus = readBooleanSetting(
+      rawSettings,
+      "SENTENCE_ORDER",
+      "pointFocus",
+    );
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         prefixVariationCount: sentenceOrderPrefixVariationCount,
+        pointFocus: sentenceOrderPointFocus,
       }),
       ...languageSettings,
       sentenceOrderPrefixVariationCount,
+      sentenceOrderPointFocus,
     };
   }
 

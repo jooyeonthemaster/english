@@ -11,6 +11,7 @@ import {
 import { buildBlankPointGuidance } from "@/lib/blank-point-catalog";
 import { buildSentenceInsertPointGuidance } from "@/lib/sentence-insert-point-catalog";
 import { buildIrrelevantPointGuidance } from "@/lib/irrelevant-point-catalog";
+import { buildSentenceOrderPointGuidance } from "@/lib/sentence-order-point-catalog";
 import { splitPassageSentences as splitSharedPassageSentences } from "@/lib/passage-sentence-utils";
 import { sentenceInsertOptionMarkerIndex } from "@/lib/sentence-insert-options";
 
@@ -495,6 +496,13 @@ export function buildQuestionTargetCandidateBlock(
       // 문장삽입은 후보 스팬을 열거하지 않으므로(다중빈칸과 동일) focus 가이드만 주입.
       // pointFocus 미지정이면 "" 반환 → 기존(비-focus) 동작 불변.
       return buildSentenceInsertPointGuidance({
+        variantIndex: diversity.variantIndex,
+        pointFocus: diversity.pointFocus,
+        diversityEnabled: diversity.diversityEnabled,
+      });
+    case "SENTENCE_ORDER":
+      // 글의순서도 후보 스팬 열거 없이 focus 가이드만 주입(문장삽입과 동형).
+      return buildSentenceOrderPointGuidance({
         variantIndex: diversity.variantIndex,
         pointFocus: diversity.pointFocus,
         diversityEnabled: diversity.diversityEnabled,
