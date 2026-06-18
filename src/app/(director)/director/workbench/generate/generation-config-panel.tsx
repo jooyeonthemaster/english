@@ -2096,9 +2096,13 @@ export function GenerationConfigPanel({
                             onClick={(event) =>
                               handleTypeSurfaceClick(event, item.id)
                             }
-                            className="border-t border-slate-100 bg-slate-50/60 px-3.5 py-3"
+                            className="border-t border-slate-100 bg-slate-50/60 py-3 pl-3.5 pr-3.5"
                           >
-                            {renderTypeDetailContent(item.id)}
+                            {/* 좌측 가이드 라인 + 들여쓰기 — 이 옵션들이 위 유형의
+                                하위 항목임을 시각적으로 드러낸다. */}
+                            <div className="border-l-2 border-slate-200 pl-4">
+                              {renderTypeDetailContent(item.id)}
+                            </div>
                           </div>
                         ) : null}
                       </section>

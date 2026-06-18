@@ -273,6 +273,7 @@ export async function GET(req: NextRequest) {
         job: {
           select: {
             id: true,
+            sourceType: true,
             originalFileName: true,
             displayName: true,
             totalPages: true,
@@ -383,6 +384,7 @@ export async function GET(req: NextRequest) {
       job: {
         select: {
           id: true,
+          sourceType: true,
           originalFileName: true,
           displayName: true,
           totalPages: true,

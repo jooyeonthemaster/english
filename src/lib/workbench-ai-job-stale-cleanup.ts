@@ -1,3 +1,7 @@
+import type { Prisma } from "@prisma/client";
+
+import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
+import { refundCredits } from "@/lib/credits";
 import { prisma } from "@/lib/prisma";
 
 const FAST_PATH_STALE_MS = 10 * 60 * 1000;
@@ -15,6 +19,93 @@ type CleanupStaleWorkbenchAiJobsInput = {
   passageId?: string;
   now?: Date;
 };
+
+type StaleJobForRefund = {
+  id: string;
+  academyId: string;
+  creditTxId: string | null;
+};
+
+function isOperationType(value: unknown): value is OperationType {
+  return typeof value === "string" && value in CREDIT_COSTS;
+}
+
+async function refundStaleJobCharge(job: StaleJobForRefund): Promise<boolean> {
+  if (!job.creditTxId) return false;
+
+  const original = await prisma.creditTransaction.findUnique({
+    where: { id: job.creditTxId },
+    select: {
+      academyId: true,
+      type: true,
+      operationType: true,
+    },
+  });
+  if (
+    !original ||
+    original.academyId !== job.academyId ||
+    original.type !== "CONSUMPTION" ||
+    !isOperationType(original.operationType)
+  ) {
+    throw new Error(`Invalid stale job credit transaction: ${job.creditTxId}`);
+  }
+
+  const refundedAmount = await refundCredits(
+    job.academyId,
+    original.operationType,
+    job.creditTxId,
+    STALE_JOB_MESSAGE,
+  );
+  return refundedAmount > 0;
+}
+
+async function failStaleJobsWithRefund({
+  where,
+  data,
+}: {
+  where: Prisma.WorkbenchAiJobWhereInput;
+  data: Prisma.WorkbenchAiJobUpdateManyMutationInput;
+}) {
+  const jobs = await prisma.workbenchAiJob.findMany({
+    where,
+    select: {
+      id: true,
+      academyId: true,
+      creditTxId: true,
+    },
+  });
+
+  let failed = 0;
+  let refunded = 0;
+  let refundFailed = 0;
+
+  for (const job of jobs) {
+    const updated = await prisma.workbenchAiJob.updateMany({
+      where: {
+        ...where,
+        id: job.id,
+      },
+      data,
+    });
+    if (updated.count === 0) continue;
+    failed += 1;
+
+    try {
+      if (await refundStaleJobCharge(job)) {
+        refunded += 1;
+      }
+    } catch (error) {
+      refundFailed += 1;
+      console.error("[workbench-ai-job-stale-cleanup] refund failed", {
+        jobId: job.id,
+        creditTxId: job.creditTxId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  return { failed, refunded, refundFailed };
+}
 
 export async function cleanupStaleWorkbenchAiJobs({
   academyId,
@@ -42,41 +133,44 @@ export async function cleanupStaleWorkbenchAiJobs({
     now.getTime() - TRIGGER_BACKED_STALE_MS,
   );
 
-  const [fastPath, triggerless, triggerBacked] = await prisma.$transaction([
-    prisma.workbenchAiJob.updateMany({
-      where: {
-        ...baseWhere,
-        triggerRunId: null,
-        startedAt: { lt: fastPathCutoff },
-        config: { path: ["fastPath"], equals: true },
-      },
-      data: failData,
-    }),
-    prisma.workbenchAiJob.updateMany({
-      where: {
-        ...baseWhere,
-        triggerRunId: null,
-        createdAt: { lt: triggerlessCutoff },
-      },
-      data: failData,
-    }),
-    prisma.workbenchAiJob.updateMany({
-      where: {
-        ...baseWhere,
-        triggerRunId: { not: null },
-        OR: [
-          { startedAt: { lt: triggerBackedCutoff } },
-          { startedAt: null, createdAt: { lt: triggerBackedCutoff } },
-        ],
-      },
-      data: failData,
-    }),
-  ]);
+  const fastPath = await failStaleJobsWithRefund({
+    where: {
+      ...baseWhere,
+      triggerRunId: null,
+      startedAt: { lt: fastPathCutoff },
+      config: { path: ["fastPath"], equals: true },
+    },
+    data: failData,
+  });
+  const triggerless = await failStaleJobsWithRefund({
+    where: {
+      ...baseWhere,
+      triggerRunId: null,
+      createdAt: { lt: triggerlessCutoff },
+    },
+    data: failData,
+  });
+  const triggerBacked = await failStaleJobsWithRefund({
+    where: {
+      ...baseWhere,
+      triggerRunId: { not: null },
+      OR: [
+        { startedAt: { lt: triggerBackedCutoff } },
+        { startedAt: null, createdAt: { lt: triggerBackedCutoff } },
+      ],
+    },
+    data: failData,
+  });
 
   return {
-    failed: fastPath.count + triggerless.count + triggerBacked.count,
-    fastPath: fastPath.count,
-    triggerless: triggerless.count,
-    triggerBacked: triggerBacked.count,
+    failed: fastPath.failed + triggerless.failed + triggerBacked.failed,
+    fastPath: fastPath.failed,
+    triggerless: triggerless.failed,
+    triggerBacked: triggerBacked.failed,
+    refunded: fastPath.refunded + triggerless.refunded + triggerBacked.refunded,
+    refundFailed:
+      fastPath.refundFailed +
+      triggerless.refundFailed +
+      triggerBacked.refundFailed,
   };
 }

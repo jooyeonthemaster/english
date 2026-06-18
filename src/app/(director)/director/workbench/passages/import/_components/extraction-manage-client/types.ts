@@ -33,6 +33,9 @@ export interface JobDetailResponse {
 
 export interface M1DraftJobSummary {
   id: string;
+  /** 추출 소스 타입: "PDF" | "IMAGES" | "TEXT". 원문 패널이 이미지/텍스트
+   *  중 무엇을 보여줄지 정하는 데 쓴다. */
+  sourceType?: string | null;
   originalFileName: string | null;
   displayName: string | null;
   totalPages: number;

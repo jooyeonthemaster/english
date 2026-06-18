@@ -30,7 +30,7 @@ export function CollapsedPreview({
 
   return (
     <div className="space-y-2">
-      {/* 의문문(발문) — 펼침과 동일하게 전체 표시 */}
+      {/* 의문문(발문) — 접힘 상태에서도 전체 노출. */}
       {direction && (
         <div className="text-[13px] font-bold text-slate-900 leading-relaxed whitespace-pre-line">
           {renderFormatted(direction)}
@@ -46,7 +46,7 @@ export function CollapsedPreview({
         </div>
       )}
 
-      {/* 선지 — 정답만, 펼침(OptionList)과 동일한 모습(파란 원형 라벨 + 파란 굵은 글씨) */}
+      {/* 선지 — 정답만, 파란 원형 라벨 + 파란 굵은 글씨. */}
       {correctOptions.length > 0 ? (
         <div className="space-y-1.5 pl-1">
           {correctOptions.map((opt) => (
@@ -62,8 +62,9 @@ export function CollapsedPreview({
           ))}
         </div>
       ) : displayCorrectAnswer ? (
-        <div className="text-[12px] bg-slate-50 text-slate-700 px-2 py-1 rounded border border-slate-200 line-clamp-1">
-          <span className="font-medium">정답:</span> {displayCorrectAnswer}
+        <div className="text-[12px] bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded border border-slate-200">
+          <span className="font-medium">정답:</span>{" "}
+          {renderFormatted(displayCorrectAnswer)}
         </div>
       ) : null}
     </div>

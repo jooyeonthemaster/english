@@ -44,7 +44,6 @@ export {
   getWorkbenchQuestions,
   getWorkbenchQuestionsGroupedByPassage,
   getWorkbenchQuestionStatusCounts,
-  getPassageQuestionTypeBreakdown,
   getWorkbenchQuestion,
   getWorkbenchQuestionIds,
   saveGeneratedQuestions,
@@ -56,8 +55,6 @@ export {
   bulkApproveWorkbenchQuestions,
   toggleQuestionStar,
 } from "./workbench/questions";
-
-export type { PassageQuestionTypeBreakdown } from "./workbench/questions";
 
 export {
   getPendingQuestionDrafts,

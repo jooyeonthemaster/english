@@ -596,10 +596,6 @@ export function GenerateUploadPanel({
       ),
     },
   ];
-  const controlRowClass =
-    "flex h-11 shrink-0 items-center gap-3 border-b border-slate-100 px-3";
-  const controlLabelClass =
-    "w-[128px] shrink-0 text-[12.5px] font-bold text-slate-700";
 
   // 검수 패널 하단에 고정되는 시작 버튼(보드 footer로 주입).
   const fileStartArea = (
@@ -631,8 +627,8 @@ export function GenerateUploadPanel({
         ) : (
           <>
             <PlayCircle className="mr-2 size-5" aria-hidden="true" />
-            {outputMode === "restored" ? "복원하여 추출 시작" : "추출 시작"}
-            {fileTotalPassages > 0 ? ` (지문 ${fileTotalPassages}개)` : ""}
+            {outputMode === "restored" ? "AI로 원문 복원 추출" : "그대로 추출"}
+            {` (지문 ${fileTotalPassages}개)`}
             {fileTotalPassages > 0 ? (
               <CreditCostChip
                 amount={fileProjectedCredits}
@@ -651,7 +647,6 @@ export function GenerateUploadPanel({
       className="flex min-w-0 items-center gap-3"
       data-generate-tour="output-mode"
     >
-      <span className={controlLabelClass}>출력 방식</span>
       <div className="flex shrink-0 items-center gap-1">
         {outputModeOptions.map((opt) => {
           const active = outputMode === opt.v;
@@ -664,7 +659,7 @@ export function GenerateUploadPanel({
               aria-pressed={active}
               data-generate-tour={`output-mode-${opt.v}`}
               className={
-                "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
+                "inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
                 (active
                   ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
                   : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")
@@ -776,8 +771,18 @@ export function GenerateUploadPanel({
 
   return (
     <section className="flex h-full min-h-0 flex-col overflow-hidden">
-      <div className={controlRowClass}>
-        <div className="min-w-0">{outputModeToggle}</div>
+      {/* 출력 방식 — 위 '파일업로드' 탭에서 말풍선처럼 뻗어나온 하위 선택임을
+          드러낸다(파일업로드 > 그대로 추출/AI 복원의 계층감). */}
+      <div className="flex items-center gap-3 border-b border-slate-100 px-3 pb-2 pt-2">
+        <div className="relative w-fit rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 shadow-sm">
+          {/* 말풍선 박스는 직접입력과 같은 위치(ml-0)에 고정하고, 꼬리만 '파일업로드'
+              탭 중앙 아래를 가리키게 한다(모드별로 화살표 위치만 다름). */}
+          <span
+            aria-hidden="true"
+            className="absolute -top-[6px] left-[156px] z-10 h-3 w-3 -translate-x-1/2 rotate-45 rounded-[2px] border-l border-t border-blue-200 bg-blue-50"
+          />
+          <div className="min-w-0">{outputModeToggle}</div>
+        </div>
         {inFlightCount > 0 ? (
           <span className="inline-flex items-center gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-semibold text-blue-700">
             <Loader2 className="size-3 animate-spin" aria-hidden="true" />

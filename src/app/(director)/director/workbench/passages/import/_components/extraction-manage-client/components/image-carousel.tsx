@@ -27,13 +27,17 @@ export function ImagePages({
   loading,
   error,
   expectedCount,
-  overlayEl,
+  controlsEl = null,
+  overlayEl = null,
 }: {
   pages: PageImage[];
   loading: boolean;
   error: string | null;
   expectedCount: number;
-  overlayEl: HTMLDivElement | null;
+  // 헤더 슬롯에 정적으로 컨트롤을 portal(우선). 주어지면 플로팅 대신 이 슬롯 사용.
+  controlsEl?: HTMLElement | null;
+  // 이미지 위에 떠 있는(드래그 가능) 플로팅 컨트롤용 오버레이 레이어(레거시).
+  overlayEl?: HTMLElement | null;
 }) {
   if (loading && pages.length === 0) {
     // Reserve one placeholder per expected source page so the layout
@@ -72,21 +76,23 @@ export function ImagePages({
     );
   }
 
-  return <ImageCarousel pages={pages} overlayEl={overlayEl} />;
+  return (
+    <ImageCarousel pages={pages} controlsEl={controlsEl} overlayEl={overlayEl} />
+  );
 }
 
 function ImageCarousel({
   pages,
+  controlsEl,
   overlayEl,
 }: {
   pages: PageImage[];
-  overlayEl: HTMLDivElement | null;
+  controlsEl: HTMLElement | null;
+  overlayEl: HTMLElement | null;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [zoom, setZoom] = useState(1);
-  // Controls panel position — measured from the overlay layer (which sits
-  // outside the scroll container), so the controls stay fixed in place no
-  // matter how far the image is scrolled. Drag the grip handle to move.
+  // 플로팅(레거시) 모드에서 드래그로 위치를 옮길 수 있게 top/right를 추적.
   const [controlsPos, setControlsPos] = useState<{
     top: number;
     right: number;
@@ -146,9 +152,8 @@ function ImageCarousel({
     document.addEventListener("mouseup", onUp);
   };
 
-  // Drag the floating controls panel itself. We track right/top (relative
-  // to the scroll container) so the panel stays visually anchored even as
-  // the user resizes the modal.
+  // 플로팅(레거시) 컨트롤 패널 자체를 드래그. right/top 을 추적해 모달 리사이즈에도
+  // 시각적으로 고정되게 한다.
   const handleControlsDragStart = (e: React.MouseEvent<HTMLSpanElement>) => {
     if (e.button !== 0) return;
     e.preventDefault();
@@ -176,20 +181,9 @@ function ImageCarousel({
     document.addEventListener("mouseup", onUp);
   };
 
-  const controlsNode = (
-    <div
-      className="pointer-events-auto absolute inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white/95 p-1 shadow-md backdrop-blur-sm"
-      style={{ top: controlsPos.top, right: controlsPos.right }}
-    >
-      <span
-        onMouseDown={handleControlsDragStart}
-        className="inline-flex size-6 cursor-grab items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-700 active:cursor-grabbing"
-        title="드래그해서 이동"
-        aria-label="컨트롤 이동"
-      >
-        <GripVertical className="size-4" aria-hidden="true" />
-      </span>
-      <span className="h-4 w-px bg-slate-200" />
+  // 줌/페이지 버튼 묶음 — 헤더(정적)·플로팅 양쪽에서 공유.
+  const controlButtons = (
+    <>
       {pages.length > 1 ? (
         <>
           <ZoomButton onClick={goPrev} disabled={!hasPrev} label="이전 페이지">
@@ -222,12 +216,40 @@ function ImageCarousel({
       <ZoomButton onClick={reset} disabled={zoom === 1} label="화면에 맞추기">
         <Maximize2 className="size-3.5" aria-hidden="true" />
       </ZoomButton>
+    </>
+  );
+
+  // 헤더 슬롯용 정적 컨트롤.
+  const staticControls = (
+    <div className="inline-flex items-center gap-1">{controlButtons}</div>
+  );
+
+  // 이미지 위 플로팅(드래그 가능) 컨트롤 — 레거시 overlayEl 소비처용.
+  const floatingControls = (
+    <div
+      className="pointer-events-auto absolute inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white/95 p-1 shadow-md backdrop-blur-sm"
+      style={{ top: controlsPos.top, right: controlsPos.right }}
+    >
+      <span
+        onMouseDown={handleControlsDragStart}
+        className="inline-flex size-6 cursor-grab items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-700 active:cursor-grabbing"
+        title="드래그해서 이동"
+        aria-label="컨트롤 이동"
+      >
+        <GripVertical className="size-4" aria-hidden="true" />
+      </span>
+      <span className="h-4 w-px bg-slate-200" />
+      {controlButtons}
     </div>
   );
 
   return (
     <>
-      {overlayEl ? createPortal(controlsNode, overlayEl) : null}
+      {controlsEl
+        ? createPortal(staticControls, controlsEl)
+        : overlayEl
+          ? createPortal(floatingControls, overlayEl)
+          : null}
       {/* No `overflow-hidden` on the figure — that was clipping the
           zoomed wrapper's horizontal overflow and preventing the scroll
           container above from generating a horizontal scrollbar. */}

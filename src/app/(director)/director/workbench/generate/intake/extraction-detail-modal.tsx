@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   CheckCircle2,
+  ChevronDown,
   FileText,
   GraduationCap,
   Loader2,
@@ -34,6 +35,11 @@ import { AnalysisToneSelector } from "@/components/workbench/analysis-prompt-pan
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import type { PassageItem } from "../generate-page-types";
 import {
@@ -42,8 +48,14 @@ import {
 } from "@/lib/passage-analysis-options";
 import { OriginalProblemBox } from "../../passages/import/_components/extraction-manage-client/components/original-problem-box";
 import { RestorationBadge } from "../../passages/import/_components/extraction-manage-client/components/restoration-badge";
+import { RestorationChangesPanel } from "../../passages/import/_components/extraction-manage-client/components/restoration-changes-panel";
 import type { M1PassageDraftWithJob } from "../../passages/import/_components/extraction-manage-client/types";
 import { formatExtractedTextForDisplay } from "../../passages/import/_components/extraction-manage-client/utils/display-text";
+import {
+  isHighlightableChange,
+  mapChangesToOffsets,
+  selectInlineChanges,
+} from "../../passages/import/_components/extraction-manage-client/utils/restoration-changes";
 
 function reportDraftStorageKey(passageId: string) {
   return `smoat.generate.extractionDetail.primeReportDraft.${passageId}`;
@@ -131,6 +143,8 @@ export function ExtractionDetailModal({
     null,
   );
   const [reportEditorOpen, setReportEditorOpen] = useState(false);
+  // 학습자료 생성 설정(분석 말투·노하우)은 헤더 버튼에서 내려오는 팝오버로 입력한다.
+  const [genPopoverOpen, setGenPopoverOpen] = useState(false);
 
   const sourceLabel =
     draft?.job?.displayName?.trim() ||
@@ -140,6 +154,8 @@ export function ExtractionDetailModal({
   const analysisCreditCost = CREDIT_COSTS.PASSAGE_ANALYSIS;
   const reviewDraft = passage.extractionReviewDraft ?? null;
   const isReviewCommitted = reviewDraft?.reviewStatus === "COMMITTED";
+  const hasGeneratedReport = !!generatedReport;
+  const hasContent = editorContent.trim().length >= 20;
 
   const openReportEditor = useCallback(() => {
     setReportEditorOpen(true);
@@ -479,7 +495,7 @@ export function ExtractionDetailModal({
       />
 
       <div
-        className="relative z-10 mx-4 my-4 flex max-h-[calc(100vh-2rem)] w-full max-w-[1440px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#F8FAFB] shadow-2xl"
+        className="relative z-10 mx-4 my-4 flex max-h-[calc(100vh-2rem)] w-full max-w-[1760px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#F8FAFB] shadow-2xl"
         data-generate-tour="passage-learning-detail-modal"
       >
         {/* Header */}
@@ -517,22 +533,126 @@ export function ExtractionDetailModal({
               <ArrowLeft className="size-3.5" aria-hidden="true" />
               뒤로가기
             </button>
-          ) : generatedReport ? (
-            // 학습자료가 이미 생성된 지문에만 노출 — 바로 보고서를 연다.
-            <button
-              type="button"
-              onClick={openReportEditor}
-              className="ml-2 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 text-[12px] font-bold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100"
-            >
-              <GraduationCap className="size-3.5" aria-hidden="true" />
-              학습자료 열기
-            </button>
-          ) : null}
+          ) : (
+            <>
+              {/* 학습자료 열기 — 생성된 지문에만, 생성 버튼 왼쪽으로 밀어둔다. */}
+              {generatedReport ? (
+                <button
+                  type="button"
+                  onClick={openReportEditor}
+                  className="ml-2 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 text-[12px] font-bold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100"
+                >
+                  <GraduationCap className="size-3.5" aria-hidden="true" />
+                  학습자료 열기
+                </button>
+              ) : null}
+              {/* 학습자료 생성 — 헤더 우측 주요 액션. 누르면 분석 말투·노하우
+                  설정 팝오버가 버튼 아래로 펼쳐지고, 그 안에서 생성을 시작한다. */}
+              {draft ? (
+                <Popover open={genPopoverOpen} onOpenChange={setGenPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <button
+                      type="button"
+                      disabled={analysisRunning}
+                      title="분석 말투·노하우를 설정하고 학습자료를 생성합니다"
+                      className="ml-2 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg bg-blue-600 px-3 text-[12px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {analysisRunning ? (
+                        <Loader2
+                          className="size-3.5 animate-spin"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <Wand2 className="size-3.5" aria-hidden="true" />
+                      )}
+                      {analysisRunning
+                        ? "생성 중..."
+                        : hasGeneratedReport
+                          ? "학습자료 추가생성"
+                          : "학습자료 생성"}
+                      <CreditCostChip
+                        amount={analysisCreditCost}
+                        className="rounded bg-white/20 px-1.5 py-0.5 text-[10px]"
+                      />
+                      <ChevronDown
+                        className="size-3 opacity-80"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    align="end"
+                    sideOffset={10}
+                    className="w-[340px] overflow-hidden rounded-xl border-slate-200 p-0 shadow-xl"
+                  >
+                    <div className="flex items-center gap-2 border-b border-slate-100 px-4 py-3">
+                      <span className="flex size-6 items-center justify-center rounded-md bg-blue-50 text-blue-600">
+                        <NotebookPen className="size-3.5" aria-hidden="true" />
+                      </span>
+                      <span className="text-[13px] font-bold text-slate-900">
+                        학습자료 생성 설정
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-3 px-4 py-3">
+                      <AnalysisToneSelector
+                        value={analysisTone}
+                        onChange={setAnalysisTone}
+                        compact
+                      />
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-[11px] font-bold uppercase text-slate-500">
+                          선생님의 노하우
+                        </span>
+                        <Textarea
+                          value={customPrompt}
+                          onChange={(event) =>
+                            setCustomPrompt(event.target.value)
+                          }
+                          className="min-h-[110px] resize-none border-slate-200 text-[12px] leading-relaxed placeholder:text-slate-300"
+                          spellCheck={false}
+                          placeholder="예: 빈칸 출제 가능한 논리 전환, 관계대명사, 핵심 어휘를 중심으로 분석"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2 border-t border-slate-100 p-3">
+                      {reportJobError ? (
+                        <p className="rounded-md bg-rose-50 px-2.5 py-2 text-[11px] font-semibold leading-relaxed text-rose-600">
+                          {reportJobError}
+                        </p>
+                      ) : null}
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          setGenPopoverOpen(false);
+                          handleRunInlineAnalysis();
+                        }}
+                        disabled={analysisRunning || !hasContent}
+                        className="h-10 w-full rounded-lg bg-blue-600 text-[12.5px] font-bold hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-55"
+                      >
+                        <Wand2 className="size-4" aria-hidden="true" />
+                        {hasGeneratedReport ? "추가생성 시작" : "생성 시작"}
+                        <CreditCostChip
+                          amount={analysisCreditCost}
+                          className="rounded bg-white/20 px-1.5 py-0.5 text-[10px]"
+                        />
+                      </Button>
+                      {!hasContent ? (
+                        <p className="text-center text-[10.5px] text-slate-400">
+                          복원문이 너무 짧아 생성할 수 없습니다
+                        </p>
+                      ) : null}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              ) : null}
+            </>
+          )}
           {reviewDraft && onToggleExtractionReview ? (
             <button
               type="button"
               onClick={() => onToggleExtractionReview(passage)}
               disabled={reviewBusy}
+              aria-pressed={isReviewCommitted}
               aria-label={isReviewCommitted ? "검수완료" : "검수필요"}
               title={
                 isReviewCommitted
@@ -540,16 +660,18 @@ export function ExtractionDetailModal({
                   : "검수필요 — 누르면 검수완료로 표시합니다"
               }
               className={
-                "ml-1 flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-full ring-2 ring-white shadow-sm transition-colors hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 " +
-                (isReviewCommitted ? "bg-emerald-500" : "bg-red-500")
+                "ml-1 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border bg-white px-3 text-[12px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-70 " +
+                (isReviewCommitted
+                  ? "border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+                  : "border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
               }
             >
               {reviewBusy ? (
-                <Loader2
-                  className="size-3 animate-spin text-white"
-                  aria-hidden="true"
-                />
-              ) : null}
+                <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+              ) : (
+                <CheckCircle2 className="size-3.5" aria-hidden="true" />
+              )}
+              검수완료
             </button>
           ) : null}
           <button
@@ -589,21 +711,12 @@ export function ExtractionDetailModal({
               title={editorTitle}
               content={editorContent}
               annotations={annotations}
-              customPrompt={customPrompt}
-              analysisTone={analysisTone}
               analysisRunning={analysisRunning}
-              analysisCreditCost={analysisCreditCost}
-              reportJobError={reportJobError}
               saving={saving}
               onTitleChange={setEditorTitle}
               onContentChange={setEditorContent}
               onAnnotationsChange={setAnnotations}
-              onCustomPromptChange={setCustomPrompt}
-              onAnalysisToneChange={setAnalysisTone}
-              onRunAnalysis={handleRunInlineAnalysis}
               onSaveEdits={handleSaveEdits}
-              onOpenResult={openReportEditor}
-              hasGeneratedReport={!!generatedReport}
               hasActiveReportJob={!!activeReportJobId}
             />
           ) : (
@@ -624,57 +737,75 @@ function InlineStudyAnalysisWorkspace({
   title,
   content,
   annotations,
-  customPrompt,
-  analysisTone,
   analysisRunning,
-  analysisCreditCost,
-  reportJobError,
-  hasGeneratedReport,
   hasActiveReportJob,
   saving,
   onTitleChange,
   onContentChange,
   onAnnotationsChange,
-  onCustomPromptChange,
-  onAnalysisToneChange,
-  onRunAnalysis,
   onSaveEdits,
-  onOpenResult,
 }: {
   draft: M1PassageDraftWithJob;
   title: string;
   content: string;
   annotations: Annotation[];
-  customPrompt: string;
-  analysisTone: AnalysisTone;
   analysisRunning: boolean;
-  analysisCreditCost: number;
-  reportJobError: string | null;
-  hasGeneratedReport: boolean;
   hasActiveReportJob: boolean;
   saving: boolean;
   onTitleChange: (value: string) => void;
   onContentChange: (value: string) => void;
   onAnnotationsChange: (annotations: Annotation[]) => void;
-  onCustomPromptChange: (value: string) => void;
-  onAnalysisToneChange: (value: AnalysisTone) => void;
-  onRunAnalysis: () => void;
   onSaveEdits: () => void;
-  onOpenResult: () => void;
 }) {
   const [hoveredChangeId, setHoveredChangeId] = useState<string | null>(null);
   const [activeChangeId, setActiveChangeId] = useState<string | null>(null);
   const hasContent = content.trim().length >= 20;
 
+  // ─── 복원 근거 (원문/복원문 형광펜 + 변경 카드) ───
+  // 자료 추출 페이지의 PassageCompare 와 동일하게 draft.changes 로부터 인라인
+  // 변경 목록을 만들어, 원문 패널 형광펜과 우측 복원 근거 카드를 동기화한다.
+  // teacherText 기준으로 계산(원본 복원 의미 보존) — 라이브 편집은 추적하지 않음.
+  const displayTeacherText = useMemo(
+    () => formatExtractedTextForDisplay(draft.teacherText),
+    [draft.teacherText],
+  );
+  const inlineChanges = useMemo(
+    () =>
+      selectInlineChanges(
+        draft.changes ?? [],
+        draft.rawText,
+        displayTeacherText,
+      ),
+    [draft.changes, draft.rawText, displayTeacherText],
+  );
+  const highlightableChanges = useMemo(
+    () => inlineChanges.filter(isHighlightableChange),
+    [inlineChanges],
+  );
+  const orphanChangeIds = useMemo(() => {
+    if (highlightableChanges.length === 0) return new Set<string>();
+    const spans = mapChangesToOffsets(
+      displayTeacherText,
+      highlightableChanges.map((c) => ({ id: c.id, text: c.after })),
+    );
+    const matched = new Set(spans.map((s) => s.changeId));
+    const orphans = new Set<string>();
+    for (const change of highlightableChanges) {
+      if (!matched.has(change.id)) orphans.add(change.id);
+    }
+    return orphans;
+  }, [highlightableChanges, displayTeacherText]);
+
   return (
-    <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.04fr)_320px]">
+    <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.92fr)]">
       <OriginalProblemBox
         draft={draft}
-        changes={[]}
+        changes={highlightableChanges}
         hoveredChangeId={hoveredChangeId}
         activeChangeId={activeChangeId}
         onHoverChange={setHoveredChangeId}
         onSelectChange={setActiveChangeId}
+        sourceType={draft.job?.sourceType}
       />
 
       <div className="flex min-h-0 flex-col rounded-lg border border-blue-200 bg-white shadow-[0_0_0_1px_rgba(59,130,246,0.08)]">
@@ -690,11 +821,6 @@ function InlineStudyAnalysisWorkspace({
               <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-bold text-blue-600">
                 <Loader2 className="size-3 animate-spin" aria-hidden="true" />
                 생성 중
-              </span>
-            ) : hasGeneratedReport ? (
-              <span className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-1 text-[11px] font-bold text-slate-600">
-                <CheckCircle2 className="size-3" aria-hidden="true" />
-                생성 완료
               </span>
             ) : null}
             <button
@@ -733,70 +859,14 @@ function InlineStudyAnalysisWorkspace({
         </div>
       </div>
 
-      <aside className="flex min-h-0 flex-col rounded-lg border border-slate-200 bg-white">
-        <div className="flex h-12 shrink-0 items-center gap-2 border-b border-slate-100 px-4">
-          <span className="flex size-6 items-center justify-center rounded-md bg-blue-50 text-blue-600">
-            <NotebookPen className="size-3.5" aria-hidden="true" />
-          </span>
-          <span className="text-[13px] font-bold text-slate-900">
-            학습자료 생성
-          </span>
-        </div>
-        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 py-3">
-          <AnalysisToneSelector
-            value={analysisTone}
-            onChange={onAnalysisToneChange}
-            compact
-          />
-          <div className="flex min-h-0 flex-1 flex-col gap-1.5">
-            <span className="text-[11px] font-bold uppercase text-slate-500">
-              선생님의 노하우
-            </span>
-            <Textarea
-              value={customPrompt}
-              onChange={(event) => onCustomPromptChange(event.target.value)}
-              className="min-h-[120px] flex-1 resize-none border-slate-200 text-[12px] leading-relaxed placeholder:text-slate-300"
-              spellCheck={false}
-              placeholder="예: 빈칸 출제 가능한 논리 전환, 관계대명사, 핵심 어휘를 중심으로 분석"
-            />
-          </div>
-        </div>
-        <div className="shrink-0 space-y-2 border-t border-slate-100 p-3">
-          {reportJobError ? (
-            <p className="rounded-md bg-rose-50 px-2.5 py-2 text-[11px] font-semibold leading-relaxed text-rose-600">
-              {reportJobError}
-            </p>
-          ) : null}
-          {hasGeneratedReport ? (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onOpenResult}
-              className="h-9 w-full rounded-lg border-blue-200 text-[12.5px] font-bold text-blue-700 hover:bg-blue-50"
-            >
-              <CheckCircle2 className="size-4" aria-hidden="true" />
-              학습자료 다시 열기
-            </Button>
-          ) : null}
-          <Button
-            type="button"
-            onClick={onRunAnalysis}
-            disabled={analysisRunning || !hasContent}
-            className="h-10 w-full rounded-lg bg-blue-600 text-[12.5px] font-bold hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-55"
-          >
-            {analysisRunning ? (
-              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-            ) : (
-              <Wand2 className="size-4" aria-hidden="true" />
-            )}
-            {analysisRunning ? "백그라운드 생성 중..." : "학습자료 생성"}
-            <CreditCostChip
-              amount={analysisCreditCost}
-              className="rounded bg-white/20 px-1.5 py-0.5 text-[10px]"
-            />
-          </Button>
-        </div>
-      </aside>
+      <RestorationChangesPanel
+        changes={inlineChanges}
+        orphanChangeIds={orphanChangeIds}
+        hoveredChangeId={hoveredChangeId}
+        activeChangeId={activeChangeId}
+        onHoverChange={setHoveredChangeId}
+        onSelectChange={setActiveChangeId}
+      />
     </div>
   );
 }

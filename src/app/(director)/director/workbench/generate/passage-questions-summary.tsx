@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, FileText } from "lucide-react";
+import { ChevronDown, History } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -28,7 +28,16 @@ function stripText(value: string): string {
     .trim();
 }
 
-function SummaryRow({ q, num }: { q: QuestionCardItem; num: number }) {
+function SummaryRow({
+  q,
+  num,
+  onOpen,
+}: {
+  q: QuestionCardItem;
+  num: number;
+  // 전달되면 페이지 이동 대신 이 콜백으로 인페이지 문제 상세 팝업을 연다.
+  onOpen?: (q: QuestionCardItem) => void;
+}) {
   const router = useRouter();
   const typeLabel = Q_TYPE_LABELS[q.type] || q.type;
   const subLabel = q.subType ? Q_SUBTYPE_LABELS[q.subType] || q.subType : null;
@@ -36,7 +45,10 @@ function SummaryRow({ q, num }: { q: QuestionCardItem; num: number }) {
   const examLinks = q._count?.examLinks ?? 0;
   const text = stripText(q.questionText || subLabel || typeLabel);
 
-  const openDetail = () => router.push(`/director/questions/${q.id}`);
+  const openDetail = () => {
+    if (onOpen) onOpen(q);
+    else router.push(`/director/questions/${q.id}`);
+  };
 
   return (
     <div
@@ -82,8 +94,11 @@ function SummaryRow({ q, num }: { q: QuestionCardItem; num: number }) {
 
 export function PassageQuestionsSummary({
   questions,
+  onOpenQuestion,
 }: {
   questions: QuestionCardItem[];
+  // 전달되면 문제 행 클릭 시 페이지 이동 대신 인페이지 상세 팝업을 연다.
+  onOpenQuestion?: (q: QuestionCardItem) => void;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -101,7 +116,8 @@ export function PassageQuestionsSummary({
             aria-expanded={open}
             className="flex w-full items-center gap-1.5 rounded-md px-1 py-1 text-left text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-50"
           >
-            <FileText className="h-3 w-3 text-slate-400" />
+            {/* History 아이콘 — "이미 생성된" 상징. */}
+            <History className="h-3 w-3 shrink-0 text-slate-400" />
             <span>생성된 문제 {questions.length}개</span>
             <ChevronDown
               className={`ml-auto h-3.5 w-3.5 text-slate-400 transition-transform ${
@@ -117,7 +133,19 @@ export function PassageQuestionsSummary({
         >
           <div className="flex max-h-72 flex-col gap-1.5 overflow-y-auto">
             {questions.map((q, idx) => (
-              <SummaryRow key={q.id} q={q} num={idx + 1} />
+              <SummaryRow
+                key={q.id}
+                q={q}
+                num={idx + 1}
+                onOpen={
+                  onOpenQuestion
+                    ? (question) => {
+                        setOpen(false);
+                        onOpenQuestion(question);
+                      }
+                    : undefined
+                }
+              />
             ))}
           </div>
         </PopoverContent>

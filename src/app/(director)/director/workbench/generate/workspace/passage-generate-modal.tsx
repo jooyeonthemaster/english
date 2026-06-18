@@ -144,7 +144,7 @@ export function PassageGenerateModal({
             ) : questions > 0 ? (
               <>
                 <Cpu className="size-5" aria-hidden="true" />
-                <span>이 지문으로 {questions}문제 생성하기</span>
+                <span>다음으로 ({questions}문제생성)</span>
                 {creditCost > 0 ? (
                   <CreditCostChip
                     amount={creditCost}

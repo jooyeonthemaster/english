@@ -86,7 +86,7 @@ import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
 } from "@/components/workbench/shared/view-mode-cycle-button";
-import { QuestionCard } from "@/components/workbench/question-card";
+import { QuestionBankCard } from "@/components/workbench/question-bank-card";
 import { PassageGroupedView } from "@/components/workbench/question-bank-passage-view";
 import { CreateExamDialog } from "@/components/workbench/question-bank-client/create-exam-dialog";
 import { EditQuestionDialog } from "@/components/workbench/question-bank-client/edit-question-dialog";
@@ -1061,6 +1061,14 @@ export function EmbeddedQuestionBank({
     );
   })();
 
+  // 선택 항목 중 아직 검수완료되지 않은(미검수) 문항 수 — bulk 검수완료 버튼의
+  // 빨강(검수필요 있음)/초록(모두 완료) 상태와 활성/비활성 판정에 쓴다.
+  const selectedPendingApprovalCount = useMemo(
+    () =>
+      flatQuestions.filter((q) => selectedIds.has(q.id) && !q.approved).length,
+    [flatQuestions, selectedIds],
+  );
+
   const selectionExtraActions = (
     <>
       <MoveOrCopyFolderPicker
@@ -1075,8 +1083,20 @@ export function EmbeddedQuestionBank({
       <button
         type="button"
         onClick={() => void handleBulkApprove()}
-        disabled={selectedIds.size === 0 || bulkApproving}
-        className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-medium text-slate-600 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        disabled={selectedPendingApprovalCount === 0 || bulkApproving}
+        title={
+          selectedPendingApprovalCount > 0
+            ? `미검수 ${selectedPendingApprovalCount}개 검수완료`
+            : "선택한 문항이 모두 검수완료입니다"
+        }
+        className={
+          // per-card 토글과 동일한 빨강/초록 언어: 선택 중 미검수가 있으면
+          // 빨강(클릭 시 완료, hover 초록 미리보기), 없으면 초록(모두 완료).
+          "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border bg-white px-2.5 text-[11px] font-semibold shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
+          (selectedPendingApprovalCount > 0
+            ? "border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
+            : "border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700")
+        }
       >
         {bulkApproving ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1287,14 +1307,14 @@ export function EmbeddedQuestionBank({
       </div>
     ) : null;
 
-  // 생성 결과 목록의 모든 문제 카드를 "접힌 콤팩트 카드" 한 가지로 통일한다.
-  // (기존 QuestionBankCard 분기 폐기 — 발문 한 줄·정답 보기만 보이고 '펼치기'로
-  //  전체를 펴며, 검수완료/수정하기·삭제·상세 보기는 그대로 유지한다. 설명 태그는
-  //  compact 카드가 애초에 렌더하지 않으므로 자동으로 빠진다.) 방금 생성 완료된
-  //  문제는 파란 글로우로 강조하고, 카드를 클릭하면 글로우를 해제한다.
+  // 생성 결과 목록의 모든 문제 카드를 QuestionBankCard "접힌 콤팩트 카드"
+  // 한 가지로 통일한다(그룹/플랫 보기 공통). 기본 접힘 — 지문 2줄 + 정답 보기만
+  // 보이고 '펼치기'로 전체를 펴며, 검수완료/수정하기·삭제·상세 보기는 그대로
+  // 유지한다. 방금 생성 완료된 문제는 파란 글로우로 강조하고, 카드를 클릭하면
+  // 글로우를 해제한다.
   const renderManagedQuestionCard = (q: any, displayNum: number) => {
     const card = (
-      <QuestionCard
+      <QuestionBankCard
         key={q.id}
         q={q}
         num={displayNum}
@@ -1302,24 +1322,31 @@ export function EmbeddedQuestionBank({
         onToggle={() => toggleSelect(q.id)}
         onApprove={() => handleApprove(q.id)}
         onUnapprove={() => handleUnapprove(q.id)}
+        onToggleStar={() => handleToggleStar(q.id)}
         onDelete={() => handleDelete(q.id)}
         onDetail={() => openDetail(q.id)}
         onEdit={() => editor.openEditor(q.id)}
-        readonly
-        compact
-        showReviewActions
-        showHeaderActions
+        viewSize={viewSize}
+        cardClickSelects
         showDetailButton
-        openOnCardClick
-        dragItemId={q.id}
+        getDragQuestionIds={getDragQuestionIds}
       />
     );
-    if (!freshQuestionIds.has(q.id)) return card;
+    // 각 카드를 content 높이 래퍼(self-start)로 감싸 그리드 행 stretch 를 막는다.
+    // 래퍼가 없으면 카드의 h-full 이 행 높이(가장 큰 카드)를 따라가, 같은 줄의
+    // 접힌 카드들까지 함께 길어진다. self-start 로 내가 펼친 카드만 길어지고
+    // 나머지는 원래 접힌 높이를 유지한다.
+    const isFresh = freshQuestionIds.has(q.id);
     return (
       <div
         key={q.id}
-        className={FRESH_QUESTION_GLOW_CLASS}
-        onClickCapture={() => acknowledgeFreshQuestion(q.id)}
+        className={
+          "min-w-0 self-start" +
+          (isFresh ? " " + FRESH_QUESTION_GLOW_CLASS : "")
+        }
+        onClickCapture={
+          isFresh ? () => acknowledgeFreshQuestion(q.id) : undefined
+        }
       >
         {card}
       </div>
@@ -1462,7 +1489,7 @@ export function EmbeddedQuestionBank({
                 <DragSelect
                   value={selectedIds}
                   onChange={setSelectedIds}
-                  className={`grid gap-3 ${
+                  className={`grid items-start gap-3 ${
                     gridCols === 2
                       ? "grid-cols-1 md:grid-cols-2"
                       : gridCols === 3

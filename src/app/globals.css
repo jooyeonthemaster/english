@@ -318,6 +318,15 @@
   70% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
   100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
 }
+/* 지문이 막 등록됐을 때 블록 뒤로 파란 글로우가 반짝 떴다가 서서히 사라짐 */
+@keyframes passage-added-glow {
+  0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+  18% { box-shadow: 0 0 18px 4px rgba(37, 99, 235, 0.55); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+}
+.passage-added-glow {
+  animation: passage-added-glow 1.5s ease-out;
+}
 /* 크레딧 뱃지 변화 강조: 폰트가 살짝 커졌다가 원래대로, 색이 잠깐 변했다가 복귀 */
 @keyframes credit-flash-down {
   0% { transform: scale(1); }

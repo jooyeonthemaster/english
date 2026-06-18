@@ -21,6 +21,10 @@ import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/
 export type AnswerRevealMode = "default" | "show-all" | "as-explanation";
 export const AnswerRevealContext = createContext<AnswerRevealMode>("default");
 
+/** true 면 AnswerLine("정답: N" 줄)을 렌더하지 않는다. 문제 관리 카드처럼
+ *  정답이 이미 다른 방식으로 드러나는 표면에서 중복 줄을 숨길 때 사용. */
+export const HideAnswerLineContext = createContext(false);
+
 // ============================================================================
 // Shared UI primitives for question renderers
 // ============================================================================
@@ -553,6 +557,8 @@ export function ExplanationSection({
 
 /** Answer line with correct answer */
 export function AnswerLine({ answer }: { answer: string }) {
+  // 문제 관리 카드 등 일부 표면에서는 정답 줄을 숨긴다.
+  if (useContext(HideAnswerLineContext)) return null;
   return (
     <div className="flex items-center gap-2 pt-1 border-t border-slate-100">
       <Check className="w-3.5 h-3.5 text-emerald-500" />

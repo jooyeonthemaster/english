@@ -20,6 +20,10 @@ interface OriginalProblemBoxProps {
   activeChangeId: string | null;
   onHoverChange: (id: string | null) => void;
   onSelectChange: (id: string | null) => void;
+  // 추출 소스 타입을 주면 텍스트/이미지 토글을 숨기고 소스에 맞는 단일 뷰만
+  // 보여준다: "TEXT" → 텍스트, "PDF"/"IMAGES" → 원본 이미지. 미지정(null/undefined)
+  // 이면 토글을 유지한다(검수 비교에서 복원 변경점을 텍스트로 확인해야 하므로).
+  sourceType?: string | null;
 }
 
 export function OriginalProblemBox({
@@ -29,15 +33,21 @@ export function OriginalProblemBox({
   activeChangeId,
   onHoverChange,
   onSelectChange,
+  sourceType,
 }: OriginalProblemBoxProps) {
-  const [mode, setMode] = useState<ViewMode>("text");
+  // 소스 타입이 주어지면 그에 맞는 단일 모드로 고정하고 토글을 감춘다.
+  const lockedMode: ViewMode | null =
+    sourceType == null ? null : sourceType === "TEXT" ? "text" : "image";
+  const [mode, setMode] = useState<ViewMode>(lockedMode ?? "text");
+  const effectiveMode = lockedMode ?? mode;
+  const showToggle = lockedMode === null;
   const [pages, setPages] = useState<PageImage[]>([]);
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
-  // Ref-as-state so children can portal their floating controls into a
-  // layer that lives OUTSIDE the scroll container — guarantees the
-  // controls don't move when the image is scrolled.
-  const [overlayEl, setOverlayEl] = useState<HTMLDivElement | null>(null);
+  // Ref-as-state so the image carousel can portal its zoom/page controls
+  // into the header's right slot (instead of floating over the image).
+  const [headerControlsEl, setHeaderControlsEl] =
+    useState<HTMLDivElement | null>(null);
 
   // The draft carries `sourcePageIndex: number[]` — one or more page indices
   // that this passage was extracted from. When the teacher toggles into
@@ -52,7 +62,7 @@ export function OriginalProblemBox({
   // signed URL generation and image preloading otherwise compete with the
   // first paint of the popup.
   useEffect(() => {
-    if (mode !== "image") return;
+    if (effectiveMode !== "image") return;
     if (!draft.jobId) return;
     if (!indicesKey) return;
     if (pages.length > 0) return;
@@ -92,39 +102,44 @@ export function OriginalProblemBox({
     return () => {
       cancelled = true;
     };
-  }, [draft.jobId, indicesKey, mode, pages.length]);
+  }, [draft.jobId, indicesKey, effectiveMode, pages.length]);
 
   return (
     <div className="flex h-full min-h-0 min-w-0 flex-col rounded-lg border border-slate-200 bg-white">
-      <div className="flex h-12 shrink-0 items-center justify-between border-b border-slate-100 px-4">
+      <div className="flex h-12 shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-4">
         <span className="text-[13px] font-bold text-slate-900">
           문제 원문
         </span>
-        <div className="inline-flex items-center gap-0.5 rounded-md border border-slate-200 bg-slate-50 p-0.5">
-          <ViewModeButton
-            active={mode === "text"}
-            onClick={() => setMode("text")}
-            icon={<FileText className="size-3" aria-hidden="true" />}
-            label="텍스트"
-          />
-          <ViewModeButton
-            active={mode === "image"}
-            onClick={() => setMode("image")}
-            icon={<ImageIcon className="size-3" aria-hidden="true" />}
-            label="이미지"
-          />
+        <div className="flex items-center gap-2">
+          {showToggle && (
+            <div className="inline-flex items-center gap-0.5 rounded-md border border-slate-200 bg-slate-50 p-0.5">
+              <ViewModeButton
+                active={mode === "text"}
+                onClick={() => setMode("text")}
+                icon={<FileText className="size-3" aria-hidden="true" />}
+                label="텍스트"
+              />
+              <ViewModeButton
+                active={mode === "image"}
+                onClick={() => setMode("image")}
+                icon={<ImageIcon className="size-3" aria-hidden="true" />}
+                label="이미지"
+              />
+            </div>
+          )}
+          {/* 이미지 모드 줌/페이지 컨트롤이 portal 되는 헤더 우측 슬롯. */}
+          <div ref={setHeaderControlsEl} className="inline-flex items-center" />
         </div>
       </div>
-      {/* Body wrapper — relative parent for both the scroll container and
-          the floating-controls overlay. Constraining the overlay to this
-          wrapper (instead of the entire box) keeps the default controls
-          position over the image area, not on top of the header toggle. */}
+      {/* Body wrapper — relative parent for the scroll container. The
+          zoom/page controls now live in the header (portaled to the
+          header slot), not floating over the image. */}
       <div className="relative flex min-h-0 min-w-0 flex-1">
         <div
           data-pannable-scroll
           className="absolute inset-0 overflow-auto px-4 py-3"
         >
-          {mode === "text" ? (
+          {effectiveMode === "text" ? (
             <div className="whitespace-pre-wrap text-[14px] leading-7 text-slate-800">
               <HighlightedRawText
                 rawText={draft.rawText}
@@ -142,19 +157,10 @@ export function OriginalProblemBox({
               loading={loading}
               error={fetchError}
               expectedCount={draft.sourcePageIndex.length}
-              overlayEl={overlayEl}
+              controlsEl={headerControlsEl}
             />
           )}
         </div>
-        {/* Overlay layer for floating controls — sits OUTSIDE the scroll
-            container as a sibling, so children that portal here are not
-            scrolled with the image. `pointer-events-none` lets clicks pass
-            through except where the controls themselves opt back in. */}
-        <div
-          ref={setOverlayEl}
-          className="pointer-events-none absolute inset-0 z-10"
-          aria-hidden="true"
-        />
       </div>
     </div>
   );

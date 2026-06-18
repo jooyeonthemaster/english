@@ -364,7 +364,7 @@ export function PassageWorkspace({
           dir="ltr"
           className="grid min-h-0 flex-1 grid-cols-1 content-start items-stretch gap-2.5 overflow-y-auto p-3 xl:grid-cols-2"
         >
-          {!coachDismissed ? (
+          {!coachDismissed && rows.length > 0 ? (
             <div className="col-span-full flex items-start gap-3 rounded-lg border border-violet-100 bg-violet-50/60 py-2.5 pl-3.5 pr-2">
               <div className="min-w-0 flex-1">
                 <p className="text-[11.5px] font-bold uppercase tracking-wide text-violet-800/80">
@@ -463,6 +463,15 @@ export function PassageWorkspace({
               <Plus className="h-4 w-4" aria-hidden="true" />
               지문 추가
             </button>
+          ) : null}
+
+          {/* 빈 워크스페이스 안내 — 추가 버튼 아래 빈 공간 가운데에 회색 문구. */}
+          {rows.length === 0 ? (
+            <div className="col-span-full flex min-h-[320px] items-center justify-center">
+              <p className="text-[13px] font-medium text-slate-400">
+                지문을 먼저 추가해주세요
+              </p>
+            </div>
           ) : null}
         </div>
         </div>
