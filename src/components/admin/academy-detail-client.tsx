@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { adjustCredits } from "@/actions/admin";
 import { AcademyContentBrowser } from "./academy-content-browser";
+import { AcademyActivityTimeline } from "./academy-detail-client/activity-timeline";
 import type { AcademyDetailData } from "./academy-detail-client/types";
 import { InfoCards } from "./academy-detail-client/info-cards";
 import { TransactionsTable } from "./academy-detail-client/transactions-table";
@@ -121,6 +122,9 @@ export function AcademyDetailClient({ data }: AcademyDetailClientProps) {
         questionCount={usageStats.questionCount}
         examCount={usageStats.examCount}
       />
+
+      {/* 활동 · 생성 콘텐츠 — 만든 시험지/지문/업로드 자료를 바로 보고 다운로드 */}
+      <AcademyActivityTimeline academyId={data.id} />
 
       {/* Credit Adjustment Dialog */}
       <AdjustCreditDialog

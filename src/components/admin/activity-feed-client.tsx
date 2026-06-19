@@ -21,7 +21,7 @@ import {
 import { getGlobalActivity } from "@/actions/admin-activity";
 import {
   ACTIVITY_CATEGORY_OPTIONS,
-  type ActivityCategory,
+  type ActivityFilter,
   type ActivityItem,
 } from "@/lib/admin-activity-types";
 import { ActivityList } from "@/components/admin/activity/activity-list";
@@ -35,13 +35,13 @@ export function ActivityFeedClient({ initial }: ActivityFeedClientProps) {
   const [nextBefore, setNextBefore] = useState<string | null>(
     initial.nextBefore,
   );
-  const [category, setCategory] = useState<ActivityCategory | "all">("all");
+  const [category, setCategory] = useState<ActivityFilter>("all");
   const [academyQuery, setAcademyQuery] = useState("");
   const [appliedQuery, setAppliedQuery] = useState("");
   const [isPending, startTransition] = useTransition();
 
   function reload(
-    nextCategory: ActivityCategory | "all",
+    nextCategory: ActivityFilter,
     nextQuery: string,
   ) {
     setNextBefore(null);
@@ -124,7 +124,7 @@ export function ActivityFeedClient({ initial }: ActivityFeedClientProps) {
             <Select
               value={category}
               onValueChange={(v) => {
-                const next = v as ActivityCategory | "all";
+                const next = v as ActivityFilter;
                 setCategory(next);
                 reload(next, appliedQuery);
               }}

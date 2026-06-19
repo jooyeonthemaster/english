@@ -14,7 +14,14 @@ export {
 } from "./get-global-activity";
 
 export {
+  getAcademyActivity,
+  type AcademyActivityFilters,
+  type AcademyActivityResult,
+} from "./get-academy-activity";
+
+export {
   getActivityResourceDetail,
   type ResourceDetail,
   type ExtractionPageDetail,
+  type QuestionBrief,
 } from "./get-resource-detail";
