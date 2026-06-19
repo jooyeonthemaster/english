@@ -95,6 +95,7 @@ export async function exportMembers(
     "가입일",
     "최근로그인",
     "활성",
+    "마케팅동의",
     "SMS발송대상",
     "제외사유",
     "메모",
@@ -120,6 +121,11 @@ export async function exportMembers(
 
     const optedOut = academy.academyFeatureFlags[0]?.enabled ?? false;
     const phone = (s.phone ?? "").trim();
+    // 마케팅 수신 동의 — 광고성 발송의 법적 전제(정보통신망법 제50조 opt-in)
+    const consented = s.marketingConsent === true;
+    const consentLabel = consented
+      ? `Y${s.marketingConsentAt ? ` (${formatDate(s.marketingConsentAt)})` : ""}`
+      : "N";
 
     let isTarget: boolean;
     let reason = "";
@@ -132,6 +138,10 @@ export async function exportMembers(
     } else if (!s.isActive) {
       isTarget = false;
       reason = "비활성 회원";
+    } else if (!consented) {
+      // 동의하지 않은 회원에게 광고성 문자를 보내면 위법 — 발송 대상에서 제외
+      isTarget = false;
+      reason = "마케팅 미동의";
     } else {
       isTarget = true;
     }
@@ -154,6 +164,7 @@ export async function exportMembers(
         formatDate(s.createdAt),
         formatDate(s.lastLoginAt),
         s.isActive ? "활성" : "비활성",
+        consentLabel,
         isTarget ? "Y" : "N",
         reason,
         academy.memo ?? "",

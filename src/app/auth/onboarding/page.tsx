@@ -8,7 +8,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { decodeJwt } from "jose";
-import { ArrowRight, CheckCircle2, Loader2, MapPin, ShieldAlert, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, Gift, Loader2, MapPin, ShieldAlert, Sparkles } from "lucide-react";
 import { BrandIcon } from "@/components/brand/brand-mark";
 
 const phoneRegex = /^(0\d{1,2}-?\d{3,4}-?\d{4})$/;
@@ -22,6 +22,9 @@ const onboardingSchema = z.object({
   address: z.string().min(1, "학원 주소를 입력해주세요.").max(160, "주소는 160자 이하여야 합니다."),
   estimatedStudents: z.string().optional(),
   agree: z.boolean().refine(Boolean, "무료 이용 및 개인정보 수집 안내에 동의해주세요."),
+  // 선택 — 마케팅 정보 수신 동의. 동의 시 SMS·카카오톡·이메일로 신규 기능/혜택 안내를 받는다.
+  // (defaultValues로 false 초기화 — react-hook-form resolver 타입 일치를 위해 .default()는 쓰지 않는다)
+  agreeMarketing: z.boolean(),
 });
 
 type OnboardingForm = z.infer<typeof onboardingSchema>;
@@ -99,11 +102,20 @@ function OnboardingInner() {
       address: "",
       estimatedStudents: "",
       agree: false,
+      agreeMarketing: false,
     },
   });
 
   const phoneValue = useWatch({ control, name: "directorPhone" }) ?? "";
+  const agreeRequired = useWatch({ control, name: "agree" }) ?? false;
+  const agreeMarketing = useWatch({ control, name: "agreeMarketing" }) ?? false;
+  const allAgreed = agreeRequired && agreeMarketing;
   const isKakao = decoded?.provider === "kakao";
+
+  function toggleAgreeAll(next: boolean) {
+    setValue("agree", next, { shouldValidate: true });
+    setValue("agreeMarketing", next, { shouldValidate: true });
+  }
 
   useEffect(() => {
     if (!decoded) return;
@@ -186,11 +198,11 @@ function OnboardingInner() {
               <h1 className="mt-2 text-[28px] font-black tracking-tight text-slate-950">
                 학원 정보 입력
               </h1>
-              <p className="mt-2 text-[14px] font-semibold leading-6 text-slate-500">
+              <p className="mt-2 break-keep text-[14px] font-semibold leading-6 text-slate-500">
                 {isKakao ? "카카오" : "Google"} 인증이 완료되었습니다. 아래 정보로 학원 워크스페이스를 생성합니다.
               </p>
             </div>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-black text-white">
+            <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-black text-white">
               7월 1일까지 무료
             </span>
           </div>
@@ -239,7 +251,7 @@ function OnboardingInner() {
                 {...register("directorEmail")}
               />
               {!isKakao && (
-                <p className="mt-1.5 text-[11px] font-semibold text-slate-400">
+                <p className="mt-1.5 break-keep text-[11px] font-semibold text-slate-400">
                   Google 계정 이메일은 보안을 위해 변경할 수 없습니다.
                 </p>
               )}
@@ -258,7 +270,7 @@ function OnboardingInner() {
               </div>
             </Field>
 
-            <Field label="예상 재원생 수" optional error={errors.estimatedStudents?.message}>
+            <Field label="대략적인 재원생 수" optional error={errors.estimatedStudents?.message}>
               <select className={inputClass} {...register("estimatedStudents")}>
                 {STUDENT_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -268,17 +280,51 @@ function OnboardingInner() {
               </select>
             </Field>
 
-            <label className="flex cursor-pointer select-none items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-              <input
-                type="checkbox"
-                className="mt-0.5 size-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500/30"
-                {...register("agree")}
-              />
-              <span className="text-[13px] font-semibold leading-5 text-slate-600">
-                <strong className="font-black text-slate-900">7월 1일까지 무료 이용</strong> 및 학원 계정 생성에 필요한
-                개인정보 수집·이용에 동의합니다.
-              </span>
-            </label>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-2">
+              {/* 모두 동의 (마스터) — 한 번에 필수+선택 동의. 각 항목은 아래에서 개별 해제 가능. */}
+              <label className="flex cursor-pointer select-none items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-[0_1px_0_rgba(15,23,42,0.04)]">
+                <input
+                  type="checkbox"
+                  checked={allAgreed}
+                  onChange={(e) => toggleAgreeAll(e.target.checked)}
+                  className="size-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500/30"
+                />
+                <span className="text-[14px] font-black text-slate-900">약관에 모두 동의</span>
+              </label>
+
+              <div className="mt-1 space-y-0.5 px-1.5">
+                {/* 필수 — 이용약관 + 개인정보 수집·이용 */}
+                <label className="flex cursor-pointer select-none items-start gap-3 px-3 py-2.5">
+                  <input
+                    type="checkbox"
+                    className="mt-0.5 size-[18px] rounded border-slate-300 text-blue-600 focus:ring-blue-500/30"
+                    {...register("agree")}
+                  />
+                  <span className="break-keep text-[13px] font-semibold leading-5 text-slate-600">
+                    <span className="mr-1 font-black text-blue-600">[필수]</span>
+                    <strong className="font-black text-slate-900">7월 1일까지 무료 이용</strong> 및 학원 계정 생성에 필요한
+                    개인정보 수집·이용에 동의합니다.
+                  </span>
+                </label>
+
+                {/* 선택 — 마케팅 수신 동의. 혜택을 매력적으로(사실대로) 강조. */}
+                <label className="flex cursor-pointer select-none items-start gap-3 rounded-xl border border-blue-100 bg-blue-50/60 px-3 py-2.5">
+                  <input
+                    type="checkbox"
+                    className="mt-0.5 size-[18px] rounded border-slate-300 text-blue-600 focus:ring-blue-500/30"
+                    {...register("agreeMarketing")}
+                  />
+                  <span className="break-keep text-[13px] font-semibold leading-5 text-slate-600">
+                    <span className="mr-1 font-black text-blue-500">[선택]</span>
+                    <strong className="font-black text-slate-900">새 기능 출시·학원 맞춤 기능 제안·무료 혜택</strong> 소식을
+                    SMS·카카오톡·이메일로 가장 먼저 받아볼게요. (광고)
+                    <span className="mt-1 block break-keep text-[11px] font-semibold text-slate-400">
+                      미동의해도 서비스 이용에는 제한이 없으며, 언제든 수신을 해지할 수 있습니다.
+                    </span>
+                  </span>
+                </label>
+              </div>
+            </div>
             {errors.agree && <p className="text-[12px] font-bold text-rose-500">{errors.agree.message}</p>}
 
             {error && (
@@ -318,20 +364,21 @@ function OnboardingInner() {
             비용 0원.
           </h2>
           <p className="mt-5 max-w-[620px] text-[16px] font-semibold leading-7 text-slate-600 break-keep">
-            신규 계정은 온보딩 완료 시 학원, 원장 계정, 체험 구독, 크레딧 잔액이 한 번에 생성됩니다. 기존 계정은
-            이 화면을 거치지 않고 계속 기존 로그인 흐름을 사용합니다.
+            지문 하나만 넣으면 AI가 수능 동형 모의고사부터 내신형 문항·어휘·문법·해설까지 만들어 드립니다. 완성된 문제는
+            클릭 한 번에 실물 시험지로. 결제 없이 7월 1일까지 모든 기능을 무료로 써보세요.
           </p>
 
           <div className="mt-7 grid gap-3">
             {[
-              "학원 DB와 원장 권한을 즉시 생성",
-              "무료 체험 구독 종료일을 2026년 7월 1일로 고정",
-              "Google은 이메일 검증, Kakao는 온보딩 이메일 입력으로 처리",
-              "중복 이메일·중복 소셜 계정은 서버에서 차단",
+              "지문만 넣으면 수능·내신형 문항이 자동 생성",
+              "수능 동형 모의고사를 통째로 자동 출제",
+              "PDF·사진 속 기출문제를 그대로 추출·복원",
+              "클릭 한 번에 실물 시험지로 완성",
+              "어휘·문법·해설·웹툰 학습자료까지 한 번에",
             ].map((item) => (
               <div key={item} className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3">
                 <CheckCircle2 className="size-4 shrink-0 text-blue-600" />
-                <span className="text-[13px] font-black text-slate-700">{item}</span>
+                <span className="break-keep text-[13px] font-black text-slate-700">{item}</span>
               </div>
             ))}
           </div>
@@ -341,9 +388,21 @@ function OnboardingInner() {
               <Sparkles className="size-4" />
               지금은 요금제 고르지 마세요
             </div>
-            <p className="mt-2 text-[13px] font-semibold leading-6 text-white/70">
-              실제 지문을 넣고, 문항을 만들고, Word 시험지까지 뽑아본 뒤에 결제 여부를 판단하면 됩니다.
+            <p className="mt-2 break-keep text-[13px] font-semibold leading-6 text-white/70">
+              실제 지문을 넣고, 동형 모의고사를 만들고, 실물 시험지까지 뽑아본 뒤에 결제 여부를 판단하면 됩니다.
             </p>
+          </div>
+
+          {/* 7/1 이후 리워드 티저 — 구체 약속이 아니라 "기대" 느낌으로 */}
+          <div className="mt-3 flex items-start gap-3 rounded-3xl border border-amber-200 bg-amber-50 p-5">
+            <Gift className="mt-0.5 size-5 shrink-0 text-amber-500" />
+            <div>
+              <div className="text-[13px] font-black text-amber-700">7월 1일, 끝이 아니라 새 시작 🎁</div>
+              <p className="mt-1.5 break-keep text-[13px] font-semibold leading-6 text-amber-900/70">
+                먼저 함께해주신 가입자·무료 사용자분들께는 7월 1일부터 다양한 무료 리워드가 준비될 예정이에요.
+                지금 들어온 분들만 누리는 혜택, 기대해 주세요.
+              </p>
+            </div>
           </div>
         </section>
       </div>
