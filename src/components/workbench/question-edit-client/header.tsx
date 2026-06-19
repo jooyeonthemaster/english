@@ -4,6 +4,7 @@
 import React from "react";
 import {
   ArrowLeft,
+  Bot,
   Layers,
   Loader2,
   Save,
@@ -40,6 +41,8 @@ interface Props {
   onSave: () => void;
   saving: boolean;
   deleting: boolean;
+  /** AI 문제 수정 오버레이 열기 — 전달되면 헤더에 눈에 띄는 진입 버튼 노출. */
+  onOpenAiEdit?: () => void;
 }
 
 export function EditHeader({
@@ -60,6 +63,7 @@ export function EditHeader({
   onSave,
   saving,
   deleting,
+  onOpenAiEdit,
 }: Props) {
   const diffConfig = DIFFICULTY_OPTIONS.find((d) => d.value === difficulty);
 
@@ -100,6 +104,17 @@ export function EditHeader({
           <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full">
             <Layers className="w-3.5 h-3.5" />AI
           </span>
+        )}
+        {onOpenAiEdit && (
+          <button
+            type="button"
+            onClick={onOpenAiEdit}
+            title="AI로 선지·정답·해설을 자연어 지시로 다시 만들기"
+            className="ml-1 inline-flex h-9 items-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3.5 text-[13px] font-semibold text-white shadow-sm transition-all hover:from-blue-700 hover:to-indigo-700 hover:shadow-md"
+          >
+            <Bot className="h-4 w-4" />
+            AI로 수정
+          </button>
         )}
       </div>
       <div className="flex items-center gap-2">

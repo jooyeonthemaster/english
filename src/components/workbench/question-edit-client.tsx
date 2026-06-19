@@ -1,7 +1,7 @@
 // @ts-nocheck
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowDown,
@@ -34,6 +34,7 @@ import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { EditHeader } from "./question-edit-client/header";
 import { ExplanationPanel } from "./question-edit-client/explanation-panel";
 import { PassagePanel } from "./question-edit-client/passage-panel";
+import { AiEditOverlay } from "./question-ai-edit/ai-edit-overlay";
 
 interface Option {
   label: string;
@@ -166,6 +167,30 @@ export function QuestionEditClient({
     wrongExplanations: initialWrongExplanations,
   });
   const [baseline, setBaseline] = useState(initialSnapshot);
+  const [aiEditOpen, setAiEditOpen] = useState(false);
+
+  // AI 적용(덮어쓰기)·router.refresh() 등으로 question prop 이 갱신되면 폼 상태를 다시
+  // 초기화한다(아니면 useState 가 갱신 전 값을 붙들어, 스테일 폼에서 '저장'을 누르면 방금
+  // 적용한 AI 수정이 옛 값으로 되돌아가는 데이터 손실이 발생). 최초 마운트는 건너뛴다.
+  const didMountRef = useRef(false);
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    setType(question.type);
+    setSubType(question.subType || "");
+    setQuestionText(question.questionText);
+    setOptions(initialOptions);
+    setCorrectAnswer(question.correctAnswer);
+    setDifficulty(question.difficulty);
+    setTags(initialTags);
+    setExplanation(question.explanation?.content || "");
+    setKeyPoints(initialKeyPoints);
+    setWrongExplanations(initialWrongExplanations);
+    setBaseline(initialSnapshot);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [question]);
   const currentSnapshot = JSON.stringify({
     type,
     subType,
@@ -315,6 +340,14 @@ export function QuestionEditClient({
         onSave={handleSave}
         saving={saving}
         deleting={deleting}
+        onOpenAiEdit={question.subType ? () => setAiEditOpen(true) : undefined}
+      />
+
+      <AiEditOverlay
+        questionId={question.id}
+        open={aiEditOpen}
+        onClose={() => setAiEditOpen(false)}
+        onApplied={() => router.refresh()}
       />
 
       {/* ─── 3-Column Body ─── */}
