@@ -39,6 +39,8 @@ export interface ActivityListProps {
   /** 전역 피드에서만 학원 컬럼 표시 */
   showAcademy?: boolean;
   emptyMessage?: string;
+  /** 다른 모달 안에 임베드될 때 자료 뷰어(중첩 Dialog) 비활성화 */
+  disableResourceViewer?: boolean;
 }
 
 const CATEGORY_BADGE: Record<string, string> = {
@@ -61,6 +63,7 @@ export function ActivityList({
   items,
   showAcademy = false,
   emptyMessage = "활동 내역이 없습니다",
+  disableResourceViewer = false,
 }: ActivityListProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [viewer, setViewer] = useState<{ id: string; title: string } | null>(
@@ -199,7 +202,7 @@ export function ActivityList({
                     </span>
                   </TableCell>
                   <TableCell className="pr-5 align-top">
-                    {isDetailable(item.id) ? (
+                    {isDetailable(item.id) && !disableResourceViewer ? (
                       <Button
                         variant="ghost"
                         size="sm"
@@ -233,11 +236,13 @@ export function ActivityList({
         </TableBody>
       </Table>
 
-      <ActivityResourceDialog
-        itemId={viewer?.id ?? null}
-        itemTitle={viewer?.title ?? ""}
-        onClose={() => setViewer(null)}
-      />
+      {!disableResourceViewer && (
+        <ActivityResourceDialog
+          itemId={viewer?.id ?? null}
+          itemTitle={viewer?.title ?? ""}
+          onClose={() => setViewer(null)}
+        />
+      )}
     </div>
   );
 }
