@@ -63,11 +63,9 @@ export function AnswerRevealSection({ children }: { children: React.ReactNode })
   const [open, setOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // "hidden": 답안/해설 영역을 통째로 숨긴다(카드가 바깥에서 직접 렌더).
-  if (mode === "hidden") return null;
-
   // 답안을 펼치면 화면이 튀지 않게 부드럽게 스크롤해서 펼쳐진 답안을 보여 준다.
   // block: "nearest" — 이미 보이면 움직이지 않고, 가려져 있을 때만 최소한으로 내려간다.
+  // (훅은 조건부 return 보다 위에 둬야 한다 — rules-of-hooks.)
   useEffect(() => {
     if (!open) return;
     const frame = requestAnimationFrame(() => {
@@ -75,6 +73,9 @@ export function AnswerRevealSection({ children }: { children: React.ReactNode })
     });
     return () => cancelAnimationFrame(frame);
   }, [open]);
+
+  // "hidden": 답안/해설 영역을 통째로 숨긴다(카드가 바깥에서 직접 렌더).
+  if (mode === "hidden") return null;
 
   // 토글 없이 바로 노출 — 정답 줄 + 그 자리의 '해설 보기' 버튼이 곧장 보인다.
   if (mode === "show-all") {

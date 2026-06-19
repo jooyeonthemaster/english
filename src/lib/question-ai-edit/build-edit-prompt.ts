@@ -30,6 +30,8 @@ export interface BuildEditPromptInput {
   passageContent: string;
   baseline: StructuredQuestionLike;
   instruction: string;
+  /** 사용자가 클릭으로 지정한 수정 대상 블럭 — 프롬프트 타깃 섹션. 선택. */
+  targets?: { label: string; field?: string }[];
   difficulty: string;
   generationPlan: QuestionGenerationPlan;
   /** 직전 시도의 거절 사유 — 교정 지시로 주입(맹목 재시도 방지). */
@@ -65,6 +67,7 @@ export function buildEditPrompt({
   passageContent,
   baseline,
   instruction,
+  targets,
   difficulty,
   generationPlan,
   previousFeedback,
@@ -107,6 +110,14 @@ ${providerContract}
 
   const baselineBlock = serializeBaselineForEdit(baseline);
 
+  const targetLabels = (targets ?? [])
+    .map((t) => t.label?.trim())
+    .filter((l): l is string => !!l);
+  const targetBlock =
+    targetLabels.length > 0
+      ? `\n## 선생님이 클릭으로 지정한 수정 대상 블럭\n다음 부분을 중심으로 수정하세요(나머지 부분은 지시가 없으면 그대로 유지): ${targetLabels.join(", ")}\n`
+      : "";
+
   const prompt = `대상: 한국 ${schoolType}${gradeInfo ? ` ${gradeInfo}` : ""} 영어 시험.
 
 ## 연결된 지문
@@ -114,7 +125,7 @@ ${passageContent?.trim() ? passageContent.trim() : "(이 문제는 지문에 직
 
 ## 현재 문제 (이것을 베이스라인으로 두고 수정)
 ${baselineBlock}
-
+${targetBlock}
 ## 선생님의 수정 지시
 ${instruction.trim()}
 ${previousFeedback ? `\n## 직전 시도의 문제점(반드시 교정)\n${previousFeedback}` : ""}
