@@ -17,8 +17,14 @@ import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/
  *    이미 표시되는 compact 결과 카드용). 해설은 자체 "해설 보기" 토글 유지.
  *  - "as-explanation": 단일 "해설 보기" 토글 하나로 [밑줄 분석·정답·해설]을
  *    모두 감싼다(문제 관리 카드용). 내부 해설은 토글 없이 인라인으로 펼친다.
+ *  - "hidden": 답안/해설 영역을 렌더하지 않는다. 카드가 정답 배지·해설을
+ *    렌더러 바깥에서 직접 그릴 때(마커 유형 정답 배지를 본문 아래로 두기 위함).
  */
-export type AnswerRevealMode = "default" | "show-all" | "as-explanation";
+export type AnswerRevealMode =
+  | "default"
+  | "show-all"
+  | "as-explanation"
+  | "hidden";
 export const AnswerRevealContext = createContext<AnswerRevealMode>("default");
 
 /** true 면 AnswerLine("정답: N" 줄)을 렌더하지 않는다. 문제 관리 카드처럼
@@ -51,6 +57,9 @@ export function AnswerRevealSection({ children }: { children: React.ReactNode })
   const mode = useContext(AnswerRevealContext);
   const [open, setOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // "hidden": 답안/해설 영역을 통째로 숨긴다(카드가 바깥에서 직접 렌더).
+  if (mode === "hidden") return null;
 
   // 답안을 펼치면 화면이 튀지 않게 부드럽게 스크롤해서 펼쳐진 답안을 보여 준다.
   // block: "nearest" — 이미 보이면 움직이지 않고, 가려져 있을 때만 최소한으로 내려간다.

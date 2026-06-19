@@ -1,7 +1,6 @@
 import * as React from "react";
 import NextImage from "next/image";
 import {
-  BookImage,
   ChevronDown,
   ChevronUp,
   Columns2,
@@ -70,6 +69,25 @@ function readStoredDesignTemplateCollapsed(): boolean {
   return window.localStorage.getItem(DESIGN_TEMPLATE_COLLAPSED_STORAGE_KEY) === "true";
 }
 
+function ToggleSwitch({ checked }: { checked: boolean }) {
+  return (
+    <span
+      className={cn(
+        "relative h-4 w-7 shrink-0 rounded-full transition-colors",
+        checked ? "bg-blue-500" : "bg-slate-300",
+      )}
+      aria-hidden="true"
+    >
+      <span
+        className={cn(
+          "absolute left-0 top-0.5 h-3 w-3 rounded-full bg-white shadow-sm transition-transform",
+          checked ? "translate-x-3.5" : "translate-x-0.5",
+        )}
+      />
+    </span>
+  );
+}
+
 export function TemplateSettingsPanel({
   template,
   setTemplate,
@@ -104,7 +122,6 @@ export function TemplateSettingsPanel({
   const [designTemplatesCollapsed, setDesignTemplatesCollapsed] = React.useState(
     readStoredDesignTemplateCollapsed,
   );
-  const [coverCollapsed, setCoverCollapsed] = React.useState(false);
   const [logoDropActive, setLogoDropActive] = React.useState(false);
   const [savedSettingsAvailable, setSavedSettingsAvailable] = React.useState(
     () => Boolean(readSavedTemplateSettings()),
@@ -539,69 +556,36 @@ export function TemplateSettingsPanel({
               )}
             >
               {item.label}
-              <span className={cn("h-2 w-2 rounded-full", item.checked ? "bg-blue-500" : "bg-slate-300")} />
+              <ToggleSwitch checked={item.checked} />
             </button>
           ))}
         </div>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white">
+      <div
+        className={cn(
+          "rounded-md border transition-colors",
+          cover.enabled ? "border-blue-300 bg-blue-50" : "border-slate-200",
+        )}
+      >
         <button
           type="button"
-          onClick={() => setCoverCollapsed((current) => !current)}
-          aria-expanded={!coverCollapsed}
+          onClick={() => {
+            setCover({ enabled: !cover.enabled });
+            markDirty();
+          }}
           className={cn(
-            "flex w-full items-center justify-between gap-2 rounded-t-xl px-3 transition-colors hover:bg-slate-50",
-            sidebar ? "h-9" : "h-10",
-            coverCollapsed && "rounded-b-xl",
+            "flex w-full items-center justify-between px-2.5 text-[12px] font-bold",
+            sidebar ? "h-8" : "h-9 px-3",
+            cover.enabled ? "text-blue-700" : "text-slate-500",
           )}
-          title={`표지 ${coverCollapsed ? "펼치기" : "접기"}`}
         >
-          <span className="flex items-center gap-1.5">
-            <BookImage className="h-3.5 w-3.5 text-slate-400" />
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-              표지 (COVER)
-            </span>
-          </span>
-          <span className="flex h-6 w-6 shrink-0 items-center justify-center text-slate-400">
-            {coverCollapsed ? (
-              <ChevronDown className="h-3.5 w-3.5" />
-            ) : (
-              <ChevronUp className="h-3.5 w-3.5" />
-            )}
-          </span>
+          표지 페이지
+          <ToggleSwitch checked={cover.enabled} />
         </button>
-        {!coverCollapsed && (
-          <div className="space-y-3 px-3 pb-3">
-            <button
-              type="button"
-              onClick={() => {
-                setCover({ enabled: !cover.enabled });
-                markDirty();
-              }}
-              className={cn(
-                "flex w-full items-center gap-2 rounded-md border px-2.5 text-[12px] font-bold transition-colors",
-                sidebar ? "h-9" : "h-10",
-                cover.enabled
-                  ? "border-blue-300 bg-blue-50 text-blue-700"
-                  : "border-slate-200 text-slate-600 hover:bg-slate-50",
-              )}
-            >
-              <BookImage className="h-3.5 w-3.5" />
-              <span className="flex-1 text-left">표지 페이지 사용</span>
-              <span className={cn("text-[10px]", cover.enabled ? "text-blue-600" : "text-slate-300")}>
-                {cover.enabled ? "ON" : "OFF"}
-              </span>
-            </button>
 
-            {!cover.enabled ? (
-              <p className="text-[10.5px] leading-relaxed text-slate-400">
-                켜면 첫 페이지에 표지가 생깁니다.{" "}
-                <b className="text-slate-500">끄면 설정은 보존</b>돼요(페이지 번호에는
-                미포함).
-              </p>
-            ) : (
-              <div className="space-y-3">
+        {cover.enabled && (
+          <div className="space-y-3 rounded-b-md border-t border-blue-200 bg-white px-2.5 py-3">
                 <div>
                   <p className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
                     표지 디자인
@@ -677,8 +661,6 @@ export function TemplateSettingsPanel({
                 </p>
               </div>
             )}
-          </div>
-        )}
       </div>
 
       <div>

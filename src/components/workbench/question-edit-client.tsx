@@ -4,18 +4,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  ArrowDown,
-  ArrowUp,
-  Gem,
+  GripVertical,
   Loader2,
   Plus,
   X,
 } from "lucide-react";
-import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   updateWorkbenchQuestion,
   deleteWorkbenchQuestion,
@@ -23,10 +19,7 @@ import {
   unapproveWorkbenchQuestion,
 } from "@/actions/workbench";
 import {
-  getQuestionGenerationPlanFromTags,
   getVisibleQuestionTags,
-  isQuestionGenerationPlanTag,
-  QUESTION_GENERATION_PLAN_TAGS,
 } from "@/lib/question-generation-plans";
 import { buildCanonicalSentenceInsertOptionsFrom } from "@/lib/sentence-insert-options";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
@@ -132,7 +125,6 @@ export function QuestionEditClient({
       ? buildCanonicalSentenceInsertOptionsFrom(question.options)
       : question.options ? JSON.parse(question.options) : [];
   const rawInitialTags: string[] = question.tags ? JSON.parse(question.tags) : [];
-  const generationPlan = getQuestionGenerationPlanFromTags(rawInitialTags);
   const initialTags: string[] = getVisibleQuestionTags(rawInitialTags);
   const initialKeyPoints: string[] = question.explanation?.keyPoints ? JSON.parse(question.explanation.keyPoints) : [];
   const initialWrongExplanations: Record<string, string> = question.explanation?.wrongOptionExplanations
@@ -143,10 +135,13 @@ export function QuestionEditClient({
   const [subType, setSubType] = useState(question.subType || "");
   const [questionText, setQuestionText] = useState(question.questionText);
   const [options, setOptions] = useState<Option[]>(initialOptions);
+  // 선택지 드래그 정렬 — 손잡이(GripVertical)에서만 드래그 시작
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const [correctAnswer, setCorrectAnswer] = useState(question.correctAnswer);
   const [difficulty, setDifficulty] = useState(question.difficulty);
-  const [tags, setTags] = useState<string[]>(initialTags);
-  const [tagInput, setTagInput] = useState("");
+  // 내용 태그 편집 UI는 제거됨 — 기존 값은 저장 시 보존만 한다.
+  const [tags] = useState<string[]>(initialTags);
   const [explanation, setExplanation] = useState(question.explanation?.content || "");
   const [keyPoints, setKeyPoints] = useState<string[]>(initialKeyPoints);
   const [wrongExplanations, setWrongExplanations] = useState<Record<string, string>>(initialWrongExplanations);
@@ -199,25 +194,17 @@ export function QuestionEditClient({
   function removeOption(idx: number) {
     setOptions(options.filter((_, i) => i !== idx));
   }
-  function moveOption(idx: number, dir: "up" | "down") {
+  function reorderOption(from: number, to: number) {
+    if (from === to || from < 0 || to < 0) return;
     const a = [...options];
-    const t = dir === "up" ? idx - 1 : idx + 1;
-    if (t < 0 || t >= a.length) return;
-    [a[idx], a[t]] = [a[t], a[idx]];
+    const [moved] = a.splice(from, 1);
+    a.splice(to, 0, moved);
     a.forEach((o, i) => (o.label = String(i + 1)));
     setOptions(a);
   }
   function updateOptionText(idx: number, text: string) {
     setOptions(options.map((o, i) => (i === idx ? { ...o, text } : o)));
   }
-  function addTag() {
-    const tag = tagInput.trim();
-    if (tag && !isQuestionGenerationPlanTag(tag) && !tags.includes(tag)) {
-      setTags([...tags, tag]);
-      setTagInput("");
-    }
-  }
-
   async function handleSave() {
     if (!questionText.trim()) {
       toast.error("문제 내용을 입력해주세요.");
@@ -332,46 +319,6 @@ export function QuestionEditClient({
 
         {/* ── CENTER: Question Editor ── */}
         <div className="flex-1 min-w-[340px] overflow-hidden flex min-h-0 flex-col bg-white">
-          {/* Tags bar */}
-          <div className="flex items-center gap-2 px-6 py-3 border-b border-slate-200 bg-white shrink-0 flex-wrap">
-            {generationPlan && (generationPlan === "PREMIUM" || FEATURE_FLAGS.SHOW_MODEL_SELECTOR) && (
-              <span
-                className={`inline-flex items-center gap-1.5 text-[12.5px] font-bold border px-2.5 py-1 rounded-md ${
-                  generationPlan === "PREMIUM"
-                    ? "border-violet-200 bg-violet-50 text-violet-700"
-                    : "border-sky-200 bg-sky-50 text-sky-700"
-                }`}
-              >
-                {generationPlan === "PREMIUM" ? (
-                  <Gem className="w-3.5 h-3.5" />
-                ) : (
-                  <PearlIcon className="w-3.5 h-3.5" />
-                )}
-                {QUESTION_GENERATION_PLAN_TAGS[generationPlan]}
-              </span>
-            )}
-            {tags.map((tag) => (
-              <span key={tag} className="inline-flex items-center gap-1.5 text-[12.5px] font-medium bg-blue-50 text-blue-700 border border-blue-100 px-2.5 py-1 rounded-md">
-                {tag}
-                <button onClick={() => setTags(tags.filter((t) => t !== tag))} className="hover:text-red-500">
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </span>
-            ))}
-            <input
-              placeholder="태그 추가..."
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  addTag();
-                }
-              }}
-              className="h-8 w-[120px] text-[12.5px] px-2.5 rounded-md border border-dashed border-slate-300 bg-transparent outline-none focus:border-blue-400 placeholder:text-slate-400"
-            />
-          </div>
-
           {/* Editor area — fills remaining space */}
           <div className="flex-1 min-h-0 overflow-y-auto px-6 py-5 bg-white">
             <div className="min-h-full flex flex-col gap-6">
@@ -395,65 +342,86 @@ export function QuestionEditClient({
                   <div className="flex-1 min-h-0 flex flex-col gap-2 overflow-y-auto">
                     {options.map((opt, idx) => {
                       const isCorrect = correctAnswerLabels.has(normalizeAnswerLabel(opt.label));
+                      const isMC = type === "MULTIPLE_CHOICE";
                       return (
-                        <div key={idx} className={`rounded-xl border px-2.5 py-2 transition-colors ${
-                          isCorrect ? "border-emerald-200 bg-emerald-50/40" : "border-transparent hover:border-slate-200 hover:bg-slate-50/70"
-                        }`}>
-                          <div className="flex items-start gap-3">
-                            <button
-                              className={`mt-0.5 w-10 h-10 rounded-full text-[15px] font-bold flex items-center justify-center shrink-0 transition-all ${
-                                isCorrect ? "bg-emerald-500 text-white shadow-md ring-2 ring-emerald-200" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                              }`}
-                              onClick={() => setCorrectAnswer(opt.label)}
-                              title="정답으로 설정"
-                            >
-                              {opt.label}
-                            </button>
-                            <textarea
-                              value={opt.text}
-                              onChange={(e) => updateOptionText(idx, e.target.value)}
-                              placeholder={`${opt.label}번 선택지`}
-                              rows={4}
-                              className={`flex-1 min-h-[96px] resize-y rounded-lg border px-3.5 py-2.5 text-[14.5px] leading-[1.65] outline-none transition-[color,box-shadow] focus-visible:border-blue-400 focus-visible:ring-2 focus-visible:ring-blue-500/10 shadow-sm ${
-                                isCorrect
-                                  ? "border-emerald-300 bg-white font-medium text-emerald-950"
-                                  : "border-slate-200 bg-white text-slate-800"
-                              }`}
-                            />
-                          </div>
-                          <div className="mt-2 flex justify-end items-center gap-1 pl-[52px]">
-                            <button
-                              type="button"
-                              onClick={() => moveOption(idx, "up")}
-                              disabled={idx === 0}
-                              className="w-8 h-8 rounded-md border border-slate-200 bg-white flex items-center justify-center text-slate-600 shadow-sm hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-35"
-                              title="위로 이동"
-                            >
-                              <ArrowUp className="w-4 h-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => moveOption(idx, "down")}
-                              disabled={idx === options.length - 1}
-                              className="w-8 h-8 rounded-md border border-slate-200 bg-white flex items-center justify-center text-slate-600 shadow-sm hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-35"
-                              title="아래로 이동"
-                            >
-                              <ArrowDown className="w-4 h-4" />
-                            </button>
+                        <div
+                          key={idx}
+                          onDragOver={(e) => {
+                            if (dragIndex === null) return;
+                            e.preventDefault();
+                            setDragOverIndex(idx);
+                          }}
+                          onDrop={(e) => {
+                            if (dragIndex === null) return;
+                            e.preventDefault();
+                            reorderOption(dragIndex, idx);
+                            setDragIndex(null);
+                            setDragOverIndex(null);
+                          }}
+                          className={`rounded-xl border px-3 py-2 transition-colors ${
+                            isCorrect
+                              ? "border-blue-300 bg-blue-50/40"
+                              : "border-slate-200 bg-white hover:border-slate-300"
+                          } ${dragIndex === idx ? "opacity-50" : ""} ${
+                            dragOverIndex === idx && dragIndex !== idx ? "ring-2 ring-blue-300" : ""
+                          }`}
+                        >
+                          {/* 헤더 — 손잡이 + 선지번호(객관식) ··· 닫기 */}
+                          <div className="flex items-center justify-between gap-2 mb-1.5">
+                            <div className="flex items-center gap-1.5">
+                              <span
+                                draggable
+                                onDragStart={(e) => {
+                                  setDragIndex(idx);
+                                  e.dataTransfer.effectAllowed = "move";
+                                }}
+                                onDragEnd={() => {
+                                  setDragIndex(null);
+                                  setDragOverIndex(null);
+                                }}
+                                className="cursor-grab active:cursor-grabbing text-slate-300 hover:text-slate-500 shrink-0"
+                                title="드래그하여 순서 변경"
+                              >
+                                <GripVertical className="w-4 h-4" />
+                              </span>
+                              {isMC && (
+                                <button
+                                  type="button"
+                                  className={`w-6 h-6 aspect-square leading-none rounded-full text-[11px] font-bold flex items-center justify-center shrink-0 transition-all ${
+                                    isCorrect ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                  }`}
+                                  onClick={() => setCorrectAnswer(opt.label)}
+                                  title="정답으로 설정"
+                                >
+                                  {normalizeAnswerLabel(opt.label)}
+                                </button>
+                              )}
+                            </div>
                             <button
                               type="button"
                               onClick={() => removeOption(idx)}
-                              className="w-8 h-8 rounded-md border border-red-100 bg-white flex items-center justify-center text-red-500 shadow-sm hover:bg-red-50 hover:text-red-600"
+                              className="w-7 h-7 rounded-md flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 shrink-0"
                               title="선택지 삭제"
                             >
                               <X className="w-4 h-4" />
                             </button>
                           </div>
+                          <textarea
+                            value={opt.text}
+                            onChange={(e) => updateOptionText(idx, e.target.value)}
+                            placeholder={`${opt.label}번 선택지`}
+                            rows={4}
+                            className={`w-full min-h-[96px] resize-y rounded-lg border px-3.5 py-2.5 text-[14.5px] leading-[1.65] outline-none transition-[color,box-shadow] focus-visible:border-blue-400 focus-visible:ring-2 focus-visible:ring-blue-500/10 shadow-sm ${
+                              isCorrect
+                                ? "border-blue-300 bg-white font-semibold text-blue-700"
+                                : "border-slate-200 bg-white text-slate-800"
+                            }`}
+                          />
                         </div>
                       );
                     })}
-                    <button onClick={addOption} className="flex items-center gap-1.5 text-[13px] text-blue-600 font-semibold hover:text-blue-700 shrink-0 mt-1 self-start">
-                      <Plus className="w-4 h-4" />선택지 추가
+                    <button onClick={addOption} className="flex h-11 w-full shrink-0 items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-300 bg-white text-[12.5px] font-semibold text-slate-500 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 mt-1">
+                      <Plus className="h-4 w-4" />선택지 추가
                     </button>
                   </div>
                 </div>

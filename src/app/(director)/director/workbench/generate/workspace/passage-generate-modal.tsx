@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
-import { Cpu, FileText, Loader2, Target, X } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import { ChevronDown, Cpu, FileText, Loader2, Target, X } from "lucide-react";
 
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 
@@ -22,6 +22,8 @@ interface PassageGenerateModalProps {
   title: string;
   /** 본문 앞부분 미리보기 (어떤 지문인지 즉시 식별). */
   contentPreview: string;
+  /** 지문 전문 — 헤더를 토글하면 팝오버로 펼쳐 보여준다. */
+  fullContent: string;
   wordCount: number;
   /** 현재 설정으로 만들어질 문제 수. */
   questions: number;
@@ -42,6 +44,7 @@ export function PassageGenerateModal({
   passageNumber,
   title,
   contentPreview,
+  fullContent,
   wordCount,
   questions,
   creditCost,
@@ -59,6 +62,13 @@ export function PassageGenerateModal({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
+
+  // 헤더 지문 미리보기 → 클릭 시 전문 팝오버 토글.
+  const [showFull, setShowFull] = useState(false);
+  // 모달이 닫히면 다음에 열 때 접힌 상태로 시작.
+  useEffect(() => {
+    if (!open) setShowFull(false);
+  }, [open]);
 
   if (!open) return null;
 
@@ -79,25 +89,35 @@ export function PassageGenerateModal({
         aria-label={`${title} 문제 생성 설정`}
       >
         {/* ── 헤더: 어떤 지문을 설정 중인지 크게 ── */}
-        <div className="flex shrink-0 items-start gap-3 border-b border-slate-200 bg-white px-5 py-3.5">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-600 ring-1 ring-violet-100">
-            <FileText className="size-4" aria-hidden="true" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <span className="flex h-[20px] min-w-[20px] shrink-0 items-center justify-center rounded-md bg-violet-600 px-1 text-[11px] font-bold leading-none text-white tabular-nums">
-                {passageNumber}
-              </span>
-              <h2 className="min-w-0 flex-1 truncate text-[15px] font-bold text-slate-900">
+        <div className="flex shrink-0 items-center gap-3 border-b border-slate-200 bg-white px-5 py-3.5">
+          <div className="relative min-w-0 flex-1">
+            <button
+              type="button"
+              onClick={() => setShowFull((v) => !v)}
+              aria-expanded={showFull}
+              title="클릭하면 지문 전문을 볼 수 있어요"
+              className="inline-flex h-9 w-full min-w-0 cursor-pointer items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-2.5 transition-colors hover:bg-slate-100"
+            >
+              <FileText className="h-4 w-4 shrink-0 text-blue-500" aria-hidden="true" />
+              <span className="min-w-0 flex-1 truncate text-left text-[14.5px] font-semibold text-slate-900">
                 {title}
-              </h2>
-              <span className="shrink-0 whitespace-nowrap text-[11px] tabular-nums text-slate-400">
-                {wordCount} words
               </span>
-            </div>
-            <p className="mt-1 line-clamp-2 text-[12px] leading-relaxed text-slate-400">
-              {contentPreview}
-            </p>
+              <ChevronDown
+                className={`h-4 w-4 shrink-0 text-slate-400 transition-transform ${
+                  showFull ? "rotate-180" : ""
+                }`}
+                aria-hidden="true"
+              />
+            </button>
+
+            {/* 지문 전문 팝오버 */}
+            {showFull ? (
+              <div className="absolute left-0 right-0 top-full z-20 mt-2 max-h-[50vh] overflow-y-auto rounded-lg border border-slate-200 bg-white p-4 shadow-xl">
+                <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-slate-700">
+                  {fullContent}
+                </p>
+              </div>
+            ) : null}
           </div>
           <button
             type="button"

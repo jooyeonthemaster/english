@@ -87,6 +87,18 @@ function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
   return labels;
 }
 
+// 뱃지에 찍을 라벨 표시용 — 동그라미 숫자(①②③)는 평문 숫자(1,2,3)로 풀고,
+// 괄호·구두점은 떼되 영문 라벨(A/B)은 대소문자를 그대로 둔다.
+// (저장 데이터는 건드리지 않고 '표시'만 정규화 — 동그라미 안 동그라미 방지)
+export function optionBadgeLabel(value: unknown): string {
+  if (typeof value !== "string") return "";
+  const text = value.trim();
+  const circled = "①②③④⑤⑥⑦⑧⑨⑩";
+  const circledIndex = circled.indexOf(text);
+  if (circledIndex >= 0) return String(circledIndex + 1);
+  return text.replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1");
+}
+
 function normalizeAnswerLabel(value: unknown): string {
   if (typeof value !== "string") return "";
   const text = value.trim();
@@ -127,6 +139,15 @@ export function QuestionBankCard({
   selectedCardHighlight = true,
   // 접힘(콤팩트) 모드 — 시험지 빌더 등 목록을 콤팩트하게 볼 때. 기본은 펼침(전체) 유지.
   collapsible = false,
+  // 접힌(콤팩트) 카드일 때만 적용할 min-height 클래스. 같은 줄의 접힌 카드들을
+  // 동일 높이로 맞춰 footer(검수완료/수정하기)를 정렬한다. 펼치면 해제되어 카드가
+  // 콘텐츠대로 자라므로 self-start 래퍼의 "옆 카드 안 늘어남" 동작과 공존한다.
+  // (min-height는 바닥값이라 더 큰 카드엔 영향이 없어 부작용이 없다.)
+  collapsedMinHeightClass,
+  // 임베드(상세 팝업 등) 표시 전용 — 본문 영역만 카드 스타일로 노출한다.
+  // 손잡이/체크박스/별/삭제/접기 토글과 하단 footer(사용 이력·검수 버튼)를 모두 숨기고
+  // 항상 펼친 상태로 시작한다. (지문 제목 토글·발문·지문·선지·해설 보기는 유지)
+  embedded = false,
 }: {
   q: QuestionBankItem;
   num: number;
@@ -169,10 +190,13 @@ export function QuestionBankCard({
   // 시험지 빌더처럼 체크박스/순서 뱃지만으로 선택 상태를 표시할 때 카드 배경 강조를 끈다.
   selectedCardHighlight?: boolean;
   collapsible?: boolean;
+  collapsedMinHeightClass?: string;
+  embedded?: boolean;
 }) {
   const [isDragging, setIsDragging] = useState(false);
   // 카드 접힘/펼침 — 기본은 접힘(의문문 + 지문 2줄 + 정답만 보이는 미리보기).
-  const [collapsed, setCollapsed] = useState(true);
+  // 임베드 모드는 항상 펼친 상태로 시작한다.
+  const [collapsed, setCollapsed] = useState(!embedded);
   const [passageOpen, setPassageOpen] = useState(false);
   const [duplicatePromptOpen, setDuplicatePromptOpen] = useState(false);
   const dragRef = useRef<HTMLDivElement>(null);
@@ -450,7 +474,7 @@ export function QuestionBankCard({
         !selectionDisabled && !q.approved
           ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]"
           : ""
-      }`}
+      }${collapsed && collapsedMinHeightClass ? ` ${collapsedMinHeightClass}` : ""}`}
     >
       <CardContent
         ref={contentRef}
@@ -458,22 +482,24 @@ export function QuestionBankCard({
       >
         {/* Header row — 손잡이~펼치기까지 한 줄에 세로 가운데 정렬 */}
         <div className="flex items-center gap-1.5 shrink-0">
-          {enableDrag && !selectionDisabled && (
+          {enableDrag && !selectionDisabled && !embedded && (
             <DragHandle ref={dragHandleRef} className="shrink-0" />
           )}
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
-            <Checkbox
-              checked={selected}
-              aria-disabled={selectionDisabled}
-              onCheckedChange={() => {
-                if (selectionDisabled) {
-                  if (onDuplicateSelectConfirm) setDuplicatePromptOpen(true);
-                  return;
-                }
-                onToggle();
-              }}
-              className="shrink-0"
-            />
+            {!embedded && (
+              <Checkbox
+                checked={selected}
+                aria-disabled={selectionDisabled}
+                onCheckedChange={() => {
+                  if (selectionDisabled) {
+                    if (onDuplicateSelectConfirm) setDuplicatePromptOpen(true);
+                    return;
+                  }
+                  onToggle();
+                }}
+                className="shrink-0"
+              />
+            )}
             {selected && typeof selectionIndex === "number" && (
               <span
                 className="inline-flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-bold tabular-nums text-white"
@@ -482,7 +508,7 @@ export function QuestionBankCard({
                 {selectionIndex}
               </span>
             )}
-            {showStar &&
+            {showStar && !embedded &&
               (onToggleStar ? (
                 <button
                   onClick={(e) => {
@@ -513,7 +539,7 @@ export function QuestionBankCard({
                 </span>
               ))}
             {/* 삭제 — 즐겨찾기(별표) 바로 오른쪽. 윗줄 일괄 삭제 버튼과 동일 사이즈(h-7 w-7). */}
-            {showManagementActions && onDelete && (
+            {showManagementActions && onDelete && !embedded && (
               <button
                 type="button"
                 aria-label="삭제"
@@ -561,25 +587,27 @@ export function QuestionBankCard({
               </span>
             )}
             {/* 검수 토글 — 상단 점 대신 하단 '검수완료' 버튼으로 이동. */}
-            {/* 카드 접기/펼치기 토글 — 옅은 파란색. */}
-            <button
-              type="button"
-              data-drag-select-ignore
-              onClick={(e) => {
-                e.stopPropagation();
-                setCollapsed((prev) => !prev);
-              }}
-              aria-expanded={!collapsed}
-              aria-label={collapsed ? "카드 펼치기" : "카드 접기"}
-              title={collapsed ? "펼치기" : "접기"}
-              className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-500"
-            >
-              {collapsed ? (
-                <ChevronDown className="size-4.5" />
-              ) : (
-                <ChevronUp className="size-4.5" />
-              )}
-            </button>
+            {/* 카드 접기/펼치기 토글 — 옅은 파란색. (임베드 모드는 항상 펼침이라 숨김) */}
+            {!embedded && (
+              <button
+                type="button"
+                data-drag-select-ignore
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCollapsed((prev) => !prev);
+                }}
+                aria-expanded={!collapsed}
+                aria-label={collapsed ? "카드 펼치기" : "카드 접기"}
+                title={collapsed ? "펼치기" : "접기"}
+                className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-500"
+              >
+                {collapsed ? (
+                  <ChevronDown className="size-4.5" />
+                ) : (
+                  <ChevronUp className="size-4.5" />
+                )}
+              </button>
+            )}
           </div>
         </div>
 
@@ -600,10 +628,13 @@ export function QuestionBankCard({
           {collapsed ? (
             <CollapsedPreview
               direction={directionText}
+              // 접힘 미리보기는 '정답 보기만' 렌더하므로(전체 리스트가 아님)
+              // 마커 유형(어법·어휘·삽입·무관)도 전체 옵션을 넘겨 정답 배지 +
+              // 정답 단어/구를 함께 보여준다. 옵션이 비면 번호 배지로 폴백된다.
               passage={collapsedPassage}
-              options={visibleOptions}
+              options={displayOptions}
               correctAnswer={q.correctAnswer}
-              displayCorrectAnswer={hideOptionList ? "" : displayCorrectAnswer}
+              displayCorrectAnswer={displayCorrectAnswer}
             />
           ) : (
             <>
@@ -614,7 +645,12 @@ export function QuestionBankCard({
                   index={num - 1}
                   hideHeader
                   sourcePassageContent={q.passage?.content}
-                  answerRevealMode="as-explanation"
+                  // 임베드(상세 팝업) 마커 유형은 정답 배지를 본문 아래에 직접 그리고
+                  // 해설은 바깥 ExplanationSection 으로 내려, 렌더러 내부 '해설 보기'를
+                  // 숨긴다(정답 배지가 '해설 보기' 위로 오도록). 일반 목록 카드는 기존 유지.
+                  answerRevealMode={
+                    embedded && hideOptionList ? "hidden" : "as-explanation"
+                  }
                   hideAnswerLine
                 />
               ) : (
@@ -631,18 +667,20 @@ export function QuestionBankCard({
                     return (
                       <div
                         key={opt.label}
-                        className={`flex items-start gap-2.5 text-[12px] rounded px-2 py-1 ${
+                        className={`flex items-start gap-2 text-[12px] rounded px-2 py-1 ${
                           isCorrect
-                            ? "bg-slate-100 text-slate-800 font-medium"
+                            ? "bg-blue-50 text-blue-700 font-semibold"
                             : "text-slate-600"
                         }`}
                       >
                         <span
-                          className={`shrink-0 text-[13px] font-bold tabular-nums pt-px ${
-                            isCorrect ? "text-slate-600" : "text-slate-400"
+                          className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                            isCorrect
+                              ? "bg-blue-600 text-white"
+                              : "border border-slate-300 bg-white text-slate-400"
                           }`}
                         >
-                          {opt.label}.
+                          {optionBadgeLabel(opt.label)}
                         </span>
                         <span className="pt-0.5">
                           {renderFormatted(opt.text)}
@@ -662,6 +700,51 @@ export function QuestionBankCard({
                     {renderFormatted(displayCorrectAnswer)}
                   </div>
                 )}
+
+              {/* 마커 유형(어법·어휘·삽입·무관): 보기 리스트는 숨기되(마커는 지문에)
+                  정답만 파란 배지 + 정답 단어/구로 노출 — 접힘 미리보기와 동일 디자인.
+                  구조화 렌더러는 정답을 '해설 보기' 토글 뒤에 숨기므로(hideAnswerLine),
+                  구조화/비구조화 무관하게 여기서 정답 배지를 항상 직접 노출한다. */}
+              {hideOptionList &&
+                (() => {
+                  const correctOpts = displayOptions.filter((opt) =>
+                    correctAnswerLabels.has(normalizeAnswerLabel(opt.label)),
+                  );
+                  if (correctOpts.length > 0) {
+                    return (
+                      <div className="space-y-1 pl-1">
+                        {correctOpts.map((opt) => (
+                          <div
+                            key={opt.label}
+                            className="flex items-start gap-2 text-[12px] rounded px-2 py-1 bg-blue-50 text-blue-700 font-semibold"
+                          >
+                            <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-blue-600 text-white">
+                              {optionBadgeLabel(opt.label)}
+                            </span>
+                            <span className="pt-0.5">
+                              {renderFormatted(opt.text)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  }
+                  if (correctAnswerLabels.size > 0) {
+                    return (
+                      <div className="flex flex-wrap items-center gap-1.5 pl-1">
+                        {Array.from(correctAnswerLabels).map((label) => (
+                          <span
+                            key={label}
+                            className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-blue-600 text-white"
+                          >
+                            {optionBadgeLabel(label)}
+                          </span>
+                        ))}
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
             </>
           )}
 
@@ -669,7 +752,7 @@ export function QuestionBankCard({
             StructuredQuestionRenderer 가 해설을 직접 제공하므로 비구조화에서만 렌더(중복 방지).
             접힘 상태에서는 미리보기가 해설을 포함하지 않으므로 항상 '해설 보기'를 노출한다.
             rightSlot에는 '분석 정보'(동형 전용)만 별도 액션으로 남긴다. */}
-          {(collapsed || !structuredQuestion) && (
+          {(collapsed || !structuredQuestion || (embedded && hideOptionList)) && (
             <ExplanationSection
               explanation={q.explanation}
               rightSlot={
@@ -694,7 +777,7 @@ export function QuestionBankCard({
 
         {/* Footer — exam-usage history band: shows whether (and where) this
             question has already been placed on an exam paper. */}
-        {(() => {
+        {!embedded && (() => {
           const usedCount = q._count?.examLinks ?? 0;
           const used = usedCount > 0;
           const links = q.examLinks ?? [];
@@ -809,19 +892,22 @@ export function QuestionBankCard({
         {/* Footer: review actions (검수완료/취소 + 수정) — '사용 이력' 밴드 아래로 이동.
             compactUsageLabel(시험지 빌더)에서는 날짜+스탬프 줄을 생략하고
             스탬프를 위 '사용 이력' 밴드 우측으로 옮긴다. */}
-        {(!compactUsageLabel || showReviewActions) && (
+        {(embedded ? showReviewActions : !compactUsageLabel || showReviewActions) && (
           <div className="space-y-2 pt-1.5 border-t border-slate-100 shrink-0">
-            <div className="flex items-end justify-between gap-2">
-              <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
-                <span>{formatDateTime(q.createdAt)}</span>
-                {q._count.examLinks > 0 && (
-                  <span>시험 {q._count.examLinks}회 사용</span>
+            {/* 임베드(상세 팝업)는 날짜/도장 줄을 숨기고 검수·수정 버튼만 노출한다. */}
+            {!embedded && (
+              <div className="flex items-end justify-between gap-2">
+                <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
+                  <span>{formatDateTime(q.createdAt)}</span>
+                  {q._count.examLinks > 0 && (
+                    <span>시험 {q._count.examLinks}회 사용</span>
+                  )}
+                </div>
+                {!showReviewActions && (
+                  <ReviewStatusStamp approved={q.approved} className="shrink-0" />
                 )}
               </div>
-              {!showReviewActions && (
-                <ReviewStatusStamp approved={q.approved} className="shrink-0" />
-              )}
-            </div>
+            )}
             {showReviewActions && (
               <div className="flex items-end gap-1.5">
                 {/* 검수완료 토글 — 수정하기 왼쪽.
@@ -875,12 +961,12 @@ export function QuestionBankCard({
                       else onEdit?.();
                     }}
                   />
-                ) : (
+                ) : !embedded ? (
                   <ReviewStatusStamp
                     approved={q.approved}
                     className="shrink-0"
                   />
-                )}
+                ) : null}
               </div>
             )}
           </div>

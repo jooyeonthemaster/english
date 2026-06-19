@@ -33,7 +33,6 @@ import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 import {
   getQuestionGenerationPlanFromTags,
-  isQuestionGenerationPlanTag,
   sanitizeAiModelDisclosureText,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
@@ -545,7 +544,6 @@ export function QuestionCard({
         {generationPlan === "PREMIUM" ? "프리미엄" : "일반"}
       </Badge>
     ) : null;
-  const visibleTags = tags.filter((tag) => !isQuestionGenerationPlanTag(tag));
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
   const keyPoints = parseJSON<string[]>(q.explanation?.keyPoints || null, []);
 
@@ -729,18 +727,6 @@ export function QuestionCard({
                       <Layers className="w-3 h-3 text-blue-400" />
                     )}
                   </div>
-                  {visibleTags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {visibleTags.map((tag, tagIndex) => (
-                        <span
-                          key={`${tag}-${tagIndex}`}
-                          className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
                 </>
               )}
             </div>

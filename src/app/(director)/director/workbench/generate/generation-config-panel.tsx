@@ -15,6 +15,12 @@ import {
 } from "lucide-react";
 import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverAnchor,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { EXAM_TYPE_GROUPS } from "./generate-page-types";
 import { PromptSection } from "./prompt-section";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
@@ -2032,6 +2038,34 @@ export function GenerationConfigPanel({
               );
             })}
           </div>
+          {/* 총 문제 수 / 안내 — 유형 지정/장문 세트 버튼 바로 아래. */}
+          {genMode === "manual" ? (
+            totalQuestions > 0 ? (
+              <div className="mt-2 flex h-9 items-center justify-between rounded-lg border border-slate-200 bg-slate-50 pl-3 pr-1.5">
+                <span className="text-[12px] font-semibold text-slate-700">
+                  총{" "}
+                  <strong className="font-bold text-slate-900">
+                    {totalQuestions}
+                  </strong>
+                  문제
+                  <span className="ml-1 font-medium text-slate-500">
+                    · {activeTypeItems.length}개 유형
+                  </span>
+                </span>
+                <button
+                  onClick={() => setTypeCounts({})}
+                  className="h-6 rounded-md px-2 text-[11px] font-semibold text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                >
+                  초기화
+                </button>
+              </div>
+            ) : (
+              <div className="mt-2 flex items-center gap-2 rounded-lg border border-dashed border-blue-200 bg-blue-50/50 px-3 py-2 text-[11px] font-semibold text-blue-700">
+                <Plus className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                <span>유형 이름이나 + 를 눌러 문제 수를 더하세요.</span>
+              </div>
+            )
+          ) : null}
         </div>
 
         {/* 생성 모델(플랜)은 글로벌 셀렉터를 두지 않는다 — 유형별 세부옵션의
@@ -2090,172 +2124,170 @@ export function GenerationConfigPanel({
                           />
                         </button>
                         <Collapsible open={groupOpen}>
-                          <div className="divide-y divide-slate-100">
-                            {group.items.map((item) => {
-                              const count = typeCounts[item.id] || 0;
-                              const active = count > 0;
-                              const itemDisabled = isTypeDisabledForPassage(
-                                item.id,
-                              );
-                              // 모든 유형에 세부옵션이 있어 모든 행이 펼쳐진다.
-                              const expanded = expandedTypeId === item.id;
-                              const dragging = draggingTypeId === item.id;
-                              const dragOver =
-                                dragOverTypeId === item.id &&
-                                draggingTypeId !== item.id;
-                              // 이 유형의 실제 난이도(미설정이면 기본 난이도).
-                              // 기본 난이도와 다를 때만 이름 옆에 컬러 점으로 표시한다.
-                              const effDiff =
-                                (questionTypeSettings[item.id]?.difficulty as
-                                  | "BASIC"
-                                  | "INTERMEDIATE"
-                                  | "KILLER"
-                                  | undefined) ?? difficulty;
-                              const overrideDot =
-                                effDiff === difficulty
-                                  ? ""
-                                  : effDiff === "BASIC"
-                                    ? "bg-blue-500"
-                                    : effDiff === "INTERMEDIATE"
-                                      ? "bg-amber-500"
-                                      : "bg-red-500";
+                          <div className="p-2">
+                            {/* 유형 타일 그리드 — 블록형 선택 UI */}
+                            <div className="grid grid-cols-2 gap-2">
+                              {group.items.map((item) => {
+                                const count = typeCounts[item.id] || 0;
+                                const active = count > 0;
+                                const itemDisabled = isTypeDisabledForPassage(
+                                  item.id,
+                                );
+                                const expanded = expandedTypeId === item.id;
+                                const dragging = draggingTypeId === item.id;
+                                const dragOver =
+                                  dragOverTypeId === item.id &&
+                                  draggingTypeId !== item.id;
+                                // 이 유형의 실제 난이도(미설정이면 기본 난이도).
+                                const effDiff =
+                                  (questionTypeSettings[item.id]?.difficulty as
+                                    | "BASIC"
+                                    | "INTERMEDIATE"
+                                    | "KILLER"
+                                    | undefined) ?? difficulty;
+                                const overrideDot =
+                                  effDiff === difficulty
+                                    ? ""
+                                    : effDiff === "BASIC"
+                                      ? "bg-blue-500"
+                                      : effDiff === "INTERMEDIATE"
+                                        ? "bg-amber-500"
+                                        : "bg-red-500";
 
-                              return (
-                                <section
-                                  key={item.id}
-                                  data-question-type-id={item.id}
-                                  onClick={(event) =>
-                                    handleTypeSectionClick(event, item.id)
-                                  }
-                                  onDragOver={(event) => {
-                                    event.preventDefault();
-                                    if (
-                                      !draggingTypeId ||
-                                      draggingTypeId === item.id
-                                    )
-                                      return;
-                                    // 같은 카테고리 안에서만 정렬 — 그룹 간 이동 차단.
-                                    const src = allTypeItems.find(
-                                      (t) => t.id === draggingTypeId,
-                                    );
-                                    if (
-                                      src &&
-                                      item.groupLabel &&
-                                      src.groupLabel !== item.groupLabel
-                                    )
-                                      return;
-                                    setDragOverTypeId(item.id);
-                                  }}
-                                  onDrop={(event) => {
-                                    event.preventDefault();
-                                    const sourceId =
-                                      draggingTypeId ||
-                                      event.dataTransfer.getData("text/plain");
-                                    const src = allTypeItems.find(
-                                      (t) => t.id === sourceId,
-                                    );
-                                    if (
-                                      !src ||
-                                      !item.groupLabel ||
-                                      src.groupLabel === item.groupLabel
-                                    ) {
-                                      dropTypeBlock(sourceId, item.id);
-                                    }
-                                    setDraggingTypeId(null);
-                                    setDragOverTypeId(null);
-                                  }}
-                                  className={`group relative cursor-pointer overflow-hidden transition-colors ${
-                                    dragOver
-                                      ? "bg-blue-100 ring-1 ring-inset ring-blue-300"
-                                      : active || expanded
-                                        ? "bg-blue-100"
-                                        : "hover:bg-slate-50/80"
-                                  } ${dragging ? "opacity-50" : ""}`}
-                                >
-                                  {/* 좌측 액센트 바 — 선택(파랑) 또는 펼침(연파랑)
-                                    시 헤더~우물 전체를 관통해 '열린 한 덩어리'로 묶는다. */}
-                                  {active || expanded ? (
-                                    <span
-                                      className={`absolute left-0 top-0 h-full w-0.5 ${active ? "bg-blue-500/70" : "bg-blue-400/50"}`}
-                                      aria-hidden="true"
-                                    />
-                                  ) : null}
-                                  <div
-                                    onClick={(event) =>
-                                      handleTypeSurfaceClick(event, item.id)
-                                    }
-                                    className="flex h-10 items-center gap-0.5 pl-1 pr-1.5"
-                                  >
-                                    <button
-                                      type="button"
-                                      draggable
-                                      onDragStart={(event) => {
-                                        setDraggingTypeId(item.id);
-                                        event.dataTransfer.effectAllowed =
-                                          "move";
-                                        event.dataTransfer.setData(
-                                          "text/plain",
-                                          item.id,
+                                return (
+                                  <Popover
+                                    key={item.id}
+                                    open={expanded}
+                                    onOpenChange={(o) => {
+                                      if (o) {
+                                        dispatchGenerateTourMilestone(
+                                          "type-detail-opened",
                                         );
-                                      }}
-                                      onDragEnd={() => {
-                                        setDraggingTypeId(null);
-                                        setDragOverTypeId(null);
-                                      }}
-                                      className="flex h-7 w-6 shrink-0 cursor-grab items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 active:cursor-grabbing"
-                                      title={`${item.label} 순서 드래그`}
-                                      aria-label={`${item.label} 순서 드래그`}
-                                    >
-                                      <GripVertical className="h-3.5 w-3.5" />
-                                    </button>
-
-                                    <button
-                                      type="button"
-                                      onClick={(event) => {
-                                        event.stopPropagation();
-                                        applyTypeCount(item.id, count + 1);
-                                      }}
-                                      disabled={itemDisabled}
-                                      title={
-                                        itemDisabled
-                                          ? `이 지문은 문장이 적어 문장삽입에 적합하지 않아요 (최소 ${sentenceInsertRequiredSentences}문장 필요).`
-                                          : undefined
                                       }
-                                      className={`flex h-7 min-w-0 flex-1 items-center gap-1.5 rounded-md px-1 text-left ${
-                                        itemDisabled
-                                          ? "cursor-not-allowed opacity-40"
-                                          : ""
-                                      }`}
-                                      aria-label={`${item.label} 1개 추가`}
-                                    >
-                                      <span
-                                        className={`min-w-0 truncate text-[12px] ${
-                                          active
-                                            ? "font-bold text-slate-800"
-                                            : "font-semibold text-slate-600"
-                                        }`}
+                                      setExpandedTypeId(o ? item.id : null);
+                                    }}
+                                  >
+                                    <PopoverAnchor asChild>
+                                  <div
+                                    data-question-type-id={item.id}
+                                    onDragOver={(event) => {
+                                      event.preventDefault();
+                                      if (
+                                        !draggingTypeId ||
+                                        draggingTypeId === item.id
+                                      )
+                                        return;
+                                      // 같은 카테고리 안에서만 정렬 — 그룹 간 이동 차단.
+                                      const src = allTypeItems.find(
+                                        (t) => t.id === draggingTypeId,
+                                      );
+                                      if (
+                                        src &&
+                                        item.groupLabel &&
+                                        src.groupLabel !== item.groupLabel
+                                      )
+                                        return;
+                                      setDragOverTypeId(item.id);
+                                    }}
+                                    onDrop={(event) => {
+                                      event.preventDefault();
+                                      const sourceId =
+                                        draggingTypeId ||
+                                        event.dataTransfer.getData("text/plain");
+                                      const src = allTypeItems.find(
+                                        (t) => t.id === sourceId,
+                                      );
+                                      if (
+                                        !src ||
+                                        !item.groupLabel ||
+                                        src.groupLabel === item.groupLabel
+                                      ) {
+                                        dropTypeBlock(sourceId, item.id);
+                                      }
+                                      setDraggingTypeId(null);
+                                      setDragOverTypeId(null);
+                                    }}
+                                    className={`relative flex flex-col overflow-hidden rounded-lg border transition-colors ${
+                                      dragOver
+                                        ? "border-blue-300 bg-blue-100 ring-1 ring-inset ring-blue-300"
+                                        : active
+                                          ? "border-blue-300 bg-blue-50/70"
+                                          : expanded
+                                            ? "border-blue-300 bg-blue-50/40"
+                                            : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80"
+                                    } ${dragging ? "opacity-50" : ""} ${expanded ? "rounded-b-none" : ""}`}
+                                  >
+                                    {/* 타일 헤더 — 손잡이 + 유형명 + 펼치기 토글 */}
+                                    <div className="flex items-center gap-0.5 pl-1 pr-1.5 pt-1.5">
+                                      <button
+                                        type="button"
+                                        draggable
+                                        onDragStart={(event) => {
+                                          setDraggingTypeId(item.id);
+                                          event.dataTransfer.effectAllowed =
+                                            "move";
+                                          event.dataTransfer.setData(
+                                            "text/plain",
+                                            item.id,
+                                          );
+                                        }}
+                                        onDragEnd={() => {
+                                          setDraggingTypeId(null);
+                                          setDragOverTypeId(null);
+                                        }}
+                                        className="flex h-6 w-4 shrink-0 cursor-grab items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 active:cursor-grabbing"
+                                        title={`${item.label} 순서 드래그`}
+                                        aria-label={`${item.label} 순서 드래그`}
                                       >
-                                        {item.label}
-                                      </span>
-                                      {active && overrideDot ? (
+                                        <GripVertical className="h-3.5 w-3.5" />
+                                      </button>
+                                      <PopoverTrigger asChild>
+                                      <button
+                                        type="button"
+                                        data-generate-tour={
+                                          expanded
+                                            ? undefined
+                                            : "type-detail-toggle"
+                                        }
+                                        className="flex min-w-0 flex-1 items-center gap-1 text-left"
+                                        title={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
+                                      >
                                         <span
-                                          className={`h-1.5 w-1.5 shrink-0 rounded-full ${overrideDot}`}
-                                          title="이 유형만 개별 난이도"
+                                          className={`min-w-0 truncate text-[12px] ${
+                                            active
+                                              ? "font-bold text-slate-800"
+                                              : "font-semibold text-slate-600"
+                                          }`}
+                                        >
+                                          {item.label}
+                                        </span>
+                                        {active && overrideDot ? (
+                                          <span
+                                            className={`h-1.5 w-1.5 shrink-0 rounded-full ${overrideDot}`}
+                                            title="이 유형만 개별 난이도"
+                                            aria-hidden="true"
+                                          />
+                                        ) : null}
+                                        <ChevronDown
+                                          className={`ml-auto size-4 shrink-0 text-blue-300 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
                                           aria-hidden="true"
                                         />
-                                      ) : null}
-                                      {itemDisabled ? (
-                                        <span className="shrink-0 whitespace-nowrap rounded bg-slate-100 px-1 text-[9px] font-semibold text-slate-400">
-                                          문장 부족
-                                        </span>
-                                      ) : null}
-                                    </button>
+                                      </button>
+                                      </PopoverTrigger>
+                                    </div>
 
-                                    <div className="flex shrink-0 items-center gap-1.5">
-                                      {/* 문항 수(=생성할 문제 수). 박스형 수량 컨트롤 +
-                                        '문항' 라벨로, 세부옵션의 테두리 없는 설정 스테퍼
-                                        (빈칸 개수 등)와 한눈에 구분되게 한다. */}
-                                      <span className="whitespace-nowrap text-[10px] font-semibold text-slate-400">
+                                    {itemDisabled ? (
+                                      <span
+                                        className="ml-1.5 mt-1 inline-flex w-fit shrink-0 whitespace-nowrap rounded bg-slate-100 px-1 text-[9px] font-semibold text-slate-400"
+                                        title={`이 지문은 문장이 적어 문장삽입에 적합하지 않아요 (최소 ${sentenceInsertRequiredSentences}문장 필요).`}
+                                      >
+                                        문장 부족
+                                      </span>
+                                    ) : null}
+
+                                    {/* 문항 수 스테퍼 */}
+                                    <div className="mt-1 flex items-center justify-between gap-1 px-1.5 pb-1.5">
+                                      <span className="whitespace-nowrap pl-0.5 text-[10px] font-semibold text-slate-400">
                                         문항 수
                                       </span>
                                       <div className="flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white">
@@ -2295,45 +2327,25 @@ export function GenerationConfigPanel({
                                           <Plus className="h-3.5 w-3.5" />
                                         </button>
                                       </div>
-                                      {/* 세부 옵션 토글 — 카드 접기 버튼과 동일한 단순 셰브론 아이콘 토글. */}
-                                      <button
-                                        type="button"
-                                        onClick={() => {
-                                          if (!expanded) {
-                                            dispatchGenerateTourMilestone(
-                                              "type-detail-opened",
-                                            );
-                                          }
-                                          setExpandedTypeId(
-                                            expanded ? null : item.id,
-                                          );
-                                        }}
-                                        data-generate-tour={
-                                          expanded
-                                            ? undefined
-                                            : "type-detail-toggle"
-                                        }
-                                        className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-500"
-                                        title={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
-                                        aria-label={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
-                                        aria-expanded={expanded}
-                                      >
-                                        <ChevronDown
-                                          className={`size-4.5 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
-                                          aria-hidden="true"
-                                        />
-                                      </button>
                                     </div>
                                   </div>
-
-                                  <Collapsible open={expanded}>
-                                    <div
-                                      onClick={(event) =>
-                                        handleTypeSurfaceClick(event, item.id)
-                                      }
-                                      className="border-t-2 border-slate-200 bg-slate-100 px-3 pb-3 pt-2.5 shadow-[inset_0_2px_4px_-2px_rgba(15,23,42,0.12)]"
+                                    </PopoverAnchor>
+                                    <PopoverContent
+                                      align="start"
+                                      sideOffset={0}
+                                      collisionPadding={12}
+                                      className="max-h-[60vh] w-[var(--radix-popover-trigger-width)] overflow-y-auto rounded-t-none border border-t-0 border-blue-300 p-0 shadow-lg"
                                     >
-                                      <div className="space-y-2.5">
+                                      <div className="flex h-9 items-center gap-2 border-b border-slate-200 bg-white px-3">
+                                        <Settings2
+                                          className="h-3.5 w-3.5 shrink-0 text-blue-500"
+                                          aria-hidden="true"
+                                        />
+                                        <span className="min-w-0 flex-1 truncate text-[12px] font-bold text-slate-800">
+                                          {item.label} 세부 설정
+                                        </span>
+                                      </div>
+                                      <div className="space-y-2.5 bg-slate-100 px-3 pb-3 pt-2.5">
                                         <div className="rounded-lg border border-slate-200 bg-white px-2.5 py-2">
                                           {renderPerTypeDifficulty(item.id)}
                                         </div>
@@ -2341,11 +2353,11 @@ export function GenerationConfigPanel({
                                           {renderTypeDetailContent(item.id)}
                                         </div>
                                       </div>
-                                    </div>
-                                  </Collapsible>
-                                </section>
-                              );
-                            })}
+                                    </PopoverContent>
+                                  </Popover>
+                                );
+                              })}
+                            </div>
                           </div>
                         </Collapsible>
                       </div>
@@ -2354,31 +2366,6 @@ export function GenerationConfigPanel({
                 </div>
               </div>
 
-              {totalQuestions > 0 ? (
-                <div className="flex h-9 items-center justify-between rounded-lg border border-slate-200 bg-slate-50 pl-3 pr-1.5">
-                  <span className="text-[12px] font-semibold text-slate-700">
-                    총{" "}
-                    <strong className="font-bold text-slate-900">
-                      {totalQuestions}
-                    </strong>
-                    문제
-                    <span className="ml-1 font-medium text-slate-500">
-                      · {activeTypeItems.length}개 유형
-                    </span>
-                  </span>
-                  <button
-                    onClick={() => setTypeCounts({})}
-                    className="h-6 rounded-md px-2 text-[11px] font-semibold text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
-                  >
-                    초기화
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 rounded-lg border border-dashed border-blue-200 bg-blue-50/50 px-3 py-2 text-[11px] font-semibold text-blue-700">
-                  <Plus className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  <span>유형 이름이나 + 를 눌러 문제 수를 더하세요.</span>
-                </div>
-              )}
             </div>
 
             {/* Custom prompt */}

@@ -37,29 +37,26 @@ export function ExplanationSection({
           (--radix-popover-trigger-width = 앵커 너비). */}
       <PopoverAnchor asChild>
         <div className="flex items-center justify-between gap-2">
-          {/* rightSlot(상세 보기)이 있으면 왼쪽에 두고, 해설보기는 항상 오른쪽 정렬. */}
-          {rightSlot ? (
-            <div className="shrink-0">{rightSlot}</div>
-          ) : (
-            <span aria-hidden="true" />
-          )}
+          {/* 해설 보기는 항상 왼쪽 정렬 + 파란색(AnswerRevealSection 과 통일).
+              상세 보기(rightSlot)가 있으면 오른쪽에 둔다. */}
           {hasExplanation ? (
             <PopoverTrigger asChild>
               <button
                 onClick={(e) => e.stopPropagation()}
-                className="-m-1.5 flex items-center gap-1 rounded-md p-1.5 text-[11px] font-medium text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-700"
+                className="flex items-center gap-1.5 text-[11px] font-semibold text-blue-500 transition-colors hover:text-blue-700"
               >
-                {explanationOpen ? "해설 접기" : "해설 보기"}
                 {explanationOpen ? (
                   <ChevronUp className="w-3 h-3" />
                 ) : (
                   <ChevronDown className="w-3 h-3" />
                 )}
+                {explanationOpen ? "해설 접기" : "해설 보기"}
               </button>
             </PopoverTrigger>
           ) : (
             <span aria-hidden="true" />
           )}
+          {rightSlot ? <div className="shrink-0">{rightSlot}</div> : null}
         </div>
       </PopoverAnchor>
       {hasExplanation && (
