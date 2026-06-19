@@ -26,6 +26,7 @@ import { TYPE_LABELS } from "@/app/api/ai/generate-questions-auto/_lib/constants
 
 import { buildEditPrompt } from "./build-edit-prompt";
 import { computeEditChanges } from "./change-summary";
+import { computeDetailedDiff } from "./detailed-diff";
 import { deriveEditSchemaOptions } from "./derive-type-settings";
 import { runEditModel } from "./edit-llm";
 import { editModelProvider, resolveEditModelId } from "./model-config";
@@ -122,6 +123,7 @@ export async function runQuestionEdit(
     ok: false,
     before: baseline,
     changes: [],
+    detailedChanges: [],
     qualityWarnings: [],
     acceptedWithWarnings: false,
     meta: { modelId, provider, attempts: 0, durationMs: 0 },
@@ -302,6 +304,7 @@ export async function runQuestionEdit(
       before: baseline,
       after,
       changes: computeEditChanges(baseline, after),
+      detailedChanges: computeDetailedDiff(baseline, after),
       questionText,
       qualityWarnings: warnings,
       acceptedWithWarnings,

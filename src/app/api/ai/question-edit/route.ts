@@ -225,6 +225,7 @@ export async function POST(request: NextRequest) {
       before: result.before,
       after: result.after,
       changes: result.changes,
+      detailedChanges: result.detailedChanges,
       questionText: result.questionText,
       qualityWarnings: result.qualityWarnings,
       acceptedWithWarnings: result.acceptedWithWarnings,

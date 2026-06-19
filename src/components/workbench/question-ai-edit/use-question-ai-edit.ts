@@ -16,6 +16,16 @@ export interface EditChange {
   kind: "added" | "removed" | "changed" | "reordered";
 }
 
+export interface DetailedDiffEntry {
+  id: string;
+  category: string;
+  ref?: string;
+  kind: "added" | "removed" | "changed" | "reordered";
+  before?: string;
+  after?: string;
+  note?: string;
+}
+
 export interface EditQualityWarning {
   code: string;
   message: string;
@@ -27,6 +37,7 @@ export interface EditVersion {
   instruction: string;
   after: Rec;
   changes: EditChange[];
+  detailedChanges: DetailedDiffEntry[];
   warnings: EditQualityWarning[];
   questionText: string;
   acceptedWithWarnings: boolean;
@@ -144,6 +155,7 @@ export function useQuestionAiEdit({
           instruction: trimmed,
           after: data.after,
           changes: data.changes ?? [],
+          detailedChanges: data.detailedChanges ?? [],
           warnings: data.qualityWarnings ?? [],
           questionText: data.questionText ?? "",
           acceptedWithWarnings: !!data.acceptedWithWarnings,

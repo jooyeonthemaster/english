@@ -9,6 +9,7 @@
 
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { QuestionQualityIssue } from "@/lib/question-quality";
+import type { DiffEntry } from "./detailed-diff";
 
 /** 수정에 사용할 모델 식별자 — model-config.ts 의 후보 풀과 1:1. */
 export type EditModelId =
@@ -63,6 +64,8 @@ export interface RunQuestionEditResult {
   after?: StructuredQuestionLike;
   /** 결정론 필드 diff(변경 요약 칩 렌더용). */
   changes: EditFieldChange[];
+  /** 상세 변경 내역(필드/항목별 before→after) — "수정 내역" 패널 렌더용. */
+  detailedChanges: DiffEntry[];
   /** 저장용으로 직렬화한 questionText(buildGeneratedQuestionText). */
   questionText?: string;
   /** 품질 게이트 경고(에러는 재시도, 최종 경고만 노출). */

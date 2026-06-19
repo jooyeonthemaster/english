@@ -19,6 +19,7 @@ import { StructuredQuestionRenderer } from "@/components/workbench/question-rend
 import { getEditFocusPresets } from "@/lib/question-ai-edit/focus-presets";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 
+import { ChangeLogPanel } from "./change-log-panel";
 import { useQuestionAiEdit, type EditChange } from "./use-question-ai-edit";
 
 const CHANGE_STYLE: Record<EditChange["kind"], { cls: string; verb: string }> = {
@@ -49,6 +50,8 @@ export function AiEditOverlay({ questionId, open, onClose, onApplied }: Props) {
 
 function AiEditOverlayInner({ questionId, onClose, onApplied }: Omit<Props, "open">) {
   const [input, setInput] = useState("");
+  // 우측 패널: 수정본 미리보기 ↔ 상세 수정 내역.
+  const [rightTab, setRightTab] = useState<"preview" | "changelog">("preview");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const {
@@ -224,24 +227,47 @@ function AiEditOverlayInner({ questionId, onClose, onApplied }: Omit<Props, "ope
                       </span>
                     )}
                   </div>
-                  {versions.length > 1 && (
-                    <div className="flex items-center gap-1">
-                      {versions.map((v, i) => (
+                  <div className="flex items-center gap-2">
+                    {/* 미리보기 ↔ 상세 수정 내역 토글 */}
+                    {activeVersion && (
+                      <div className="flex rounded-md bg-white p-0.5 text-[11px] font-semibold ring-1 ring-blue-200">
                         <button
-                          key={v.id}
-                          onClick={() => selectVersion(i)}
-                          title={v.instruction}
-                          className={`h-6 min-w-6 rounded-md px-1.5 text-[11px] font-semibold transition-colors ${
-                            i === activeIndex
-                              ? "bg-blue-600 text-white"
-                              : "bg-white text-blue-600 ring-1 ring-blue-200 hover:bg-blue-50"
+                          onClick={() => setRightTab("preview")}
+                          className={`rounded px-2 py-0.5 transition-colors ${
+                            rightTab === "preview" ? "bg-blue-600 text-white" : "text-blue-600 hover:bg-blue-50"
                           }`}
                         >
-                          v{i + 1}
+                          미리보기
                         </button>
-                      ))}
-                    </div>
-                  )}
+                        <button
+                          onClick={() => setRightTab("changelog")}
+                          className={`rounded px-2 py-0.5 transition-colors ${
+                            rightTab === "changelog" ? "bg-blue-600 text-white" : "text-blue-600 hover:bg-blue-50"
+                          }`}
+                        >
+                          수정 내역{activeVersion.detailedChanges.length > 0 ? ` ${activeVersion.detailedChanges.length}` : ""}
+                        </button>
+                      </div>
+                    )}
+                    {versions.length > 1 && (
+                      <div className="flex items-center gap-1">
+                        {versions.map((v, i) => (
+                          <button
+                            key={v.id}
+                            onClick={() => selectVersion(i)}
+                            title={v.instruction}
+                            className={`h-6 min-w-6 rounded-md px-1.5 text-[11px] font-semibold transition-colors ${
+                              i === activeIndex
+                                ? "bg-blue-600 text-white"
+                                : "bg-white text-blue-600 ring-1 ring-blue-200 hover:bg-blue-50"
+                            }`}
+                          >
+                            v{i + 1}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
                   {sending && !activeVersion ? (
@@ -285,12 +311,16 @@ function AiEditOverlayInner({ questionId, onClose, onApplied }: Omit<Props, "ope
                           </ul>
                         </div>
                       )}
-                      <StructuredQuestionRenderer
-                        question={activeVersion.after}
-                        index={0}
-                        sourcePassageContent={context?.passageContent}
-                        answerRevealMode="show-all"
-                      />
+                      {rightTab === "changelog" ? (
+                        <ChangeLogPanel entries={activeVersion.detailedChanges} />
+                      ) : (
+                        <StructuredQuestionRenderer
+                          question={activeVersion.after}
+                          index={0}
+                          sourcePassageContent={context?.passageContent}
+                          answerRevealMode="show-all"
+                        />
+                      )}
                     </div>
                   ) : (
                     <EmptyAfter />

@@ -22,6 +22,7 @@ import { getEditFocusPresets } from "../src/lib/question-ai-edit/focus-presets";
 import { buildEditPrompt } from "../src/lib/question-ai-edit/build-edit-prompt";
 import { deriveEditSchemaOptions } from "../src/lib/question-ai-edit/derive-type-settings";
 import { computeEditChanges } from "../src/lib/question-ai-edit/change-summary";
+import { computeDetailedDiff } from "../src/lib/question-ai-edit/detailed-diff";
 import { serializeBaselineForEdit } from "../src/lib/question-ai-edit/serialize-baseline";
 
 type Rec = Record<string, unknown>;
@@ -247,6 +248,59 @@ async function main() {
   check("leak:student-no-modelAnswer", !studentText.includes(String(sw.modelAnswer)));
   const serverText = serializeBaselineForEdit(sw);
   check("baseline:server-includes-answer", serverText.includes("CURIOSITY") && serverText.includes("INNOVATION"));
+
+  // G) 상세 변경 내역 — 필드/항목별 before→after
+  console.log("\n[G] detailed diff (per-field/item)");
+  {
+    const before: Rec = {
+      _typeId: "GRAMMAR_ERROR",
+      direction: "어법상 틀린 것은?",
+      options: [
+        { label: "1", text: "alpha" },
+        { label: "2", text: "beta" },
+        { label: "3", text: "gamma" },
+      ],
+      correctAnswer: "2",
+      explanation: "원래 해설입니다.",
+      markedExpressions: [
+        { label: "A", expression: "go", isError: false, pointCode: "a" },
+        { label: "B", expression: "runs", isError: true, pointCode: "d" },
+      ],
+    };
+    // 선지 ② 텍스트 변경 + 정답 2→3 + 해설 변경 + 밑줄 B 변경.
+    const after: Rec = {
+      ...before,
+      options: [
+        { label: "1", text: "alpha" },
+        { label: "2", text: "BETA-changed" },
+        { label: "3", text: "gamma" },
+      ],
+      correctAnswer: "3",
+      explanation: "원래 해설입니다 더 자세히.",
+      markedExpressions: [
+        { label: "A", expression: "go", isError: false, pointCode: "a" },
+        { label: "B", expression: "run", isError: true, pointCode: "d" },
+      ],
+    };
+    const d = computeDetailedDiff(before, after);
+    const find = (cat: string, ref?: string) =>
+      d.find((e) => e.category === cat && (ref === undefined || e.ref === ref));
+    check("diff:option ② changed", !!find("선택지", "②") && find("선택지", "②")!.kind === "changed");
+    check("diff:option ② before/after", find("선택지", "②")?.before === "beta" && find("선택지", "②")?.after === "BETA-changed");
+    check("diff:answer changed ②→③", !!find("정답") && find("정답")!.before === "②" && find("정답")!.after === "③");
+    check("diff:explanation changed", !!find("해설") && find("해설")!.kind === "changed");
+    check("diff:marked B changed", !!find("밑줄 표현", "(B)"));
+    check("diff:no spurious option ① change", !d.some((e) => e.category === "선택지" && e.ref === "①"));
+
+    // 순서만 변경 → reordered 한 줄.
+    const reBefore: Rec = { _typeId: "SENTENCE_ORDER", options: [{ label: "1", text: "x" }, { label: "2", text: "y" }] };
+    const reAfter: Rec = { _typeId: "SENTENCE_ORDER", options: [{ label: "1", text: "y" }, { label: "2", text: "x" }] };
+    const rd = computeDetailedDiff(reBefore, reAfter);
+    check("diff:reordered single entry", rd.filter((e) => e.category === "선택지").length === 1 && rd[0]?.kind === "reordered");
+
+    // 변화 없음 → 빈 배열.
+    check("diff:identical → empty", computeDetailedDiff(before, before).length === 0);
+  }
 
   console.log(`\n========== RESULT: ${pass} pass / ${fail} fail ==========`);
   if (fail > 0) {

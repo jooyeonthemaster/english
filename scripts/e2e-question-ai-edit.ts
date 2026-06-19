@@ -83,6 +83,14 @@ async function main() {
 
   console.log(`    model=${res.meta.modelId} ${res.meta.durationMs}ms attempts=${res.meta.attempts} warnings=${res.qualityWarnings.length}`);
   console.log(`    changes: ${res.changes.map((c) => `${c.label}:${c.kind}`).join(", ")}`);
+  console.log(`    --- 상세 수정 내역 (${res.detailedChanges.length}건) ---`);
+  for (const e of res.detailedChanges.slice(0, 8)) {
+    const ref = e.ref ? ` ${e.ref}` : "";
+    const b = e.before ? `\n        전: ${e.before.slice(0, 80)}` : "";
+    const a = e.after ? `\n        후: ${e.after.slice(0, 80)}` : "";
+    console.log(`    [${e.category}${ref}] ${e.kind}${b}${a}`);
+  }
+  checks.push(["detailed diff non-empty", res.detailedChanges.length > 0]);
 
   // [2] save-as create + [3] apply update — 실 스키마 검증, 롤백.
   console.log(`[2/3] persistence shape validation via rollback transaction…`);
