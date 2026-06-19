@@ -323,7 +323,13 @@ export async function runQuestionGeneration(
 ): Promise<Record<string, unknown>[]> {
   // NBSP·빈줄 잔재가 모델 출력(원문 복사 스팬)과 게이트 문자열 비교, 저장본
   // 렌더링까지 전파되므로 엔진 입구에서 한 번 정규화한다.
-  const passageContent = normalizePassageWhitespace(rawPassageContent);
+  // 추가: 지문에 이미 들어있는 밑줄 런(`____` 빈칸·이중언어 워크시트 잔재)은 마커
+  // (`__(A) ...__`) 카운트·렌더를 오염시킨다 — 긴/워크시트 지문 GRAMMAR 마커가
+  // "5개 기대, 24개 렌더"로 결정론적 소진하던 실측 원인. 엔진 입구에서 제거해
+  // 모델·후처리·게이트가 모두 깨끗한 지문을 보게 한다(전 마커 유형 공통).
+  const passageContent = normalizePassageWhitespace(rawPassageContent)
+    .replace(/_{2,}/g, " ")
+    .replace(/[ \t]{2,}/g, " ");
   const generatedGroups = await Promise.all(
     plan.map(async (item) => {
       const { subType, count: typeCount, targetPoints } = item;
@@ -378,6 +384,8 @@ export async function runQuestionGeneration(
         blankInferenceParaphraseAnswer,
         blankPointFocus,
         sentenceInsertPointFocus,
+        irrelevantPointFocus,
+        sentenceOrderPointFocus,
         genericOptionCount,
         genericAnswerCount,
         answerPolarity,
@@ -428,10 +436,15 @@ export async function runQuestionGeneration(
           usedPointCodes: diversitySignals?.usedPointCodes,
           variantIndex: effectiveVariantIndex,
           diversityEnabled: !!diversity,
-          // 어법류는 grammarPointFocus, 빈칸은 blankPointFocus, 문장삽입은
-          // sentenceInsertPointFocus — 리졸버가 subType별로만 세팅하므로 상호배타.
+          // 어법류=grammarPointFocus, 빈칸=blankPointFocus, 문장삽입=
+          // sentenceInsertPointFocus, 무관문장=irrelevantPointFocus, 글의순서=
+          // sentenceOrderPointFocus — 리졸버가 subType별로만 세팅하므로 상호배타.
           pointFocus:
-            grammarPointFocus ?? blankPointFocus ?? sentenceInsertPointFocus,
+            grammarPointFocus ??
+            blankPointFocus ??
+            sentenceInsertPointFocus ??
+            irrelevantPointFocus ??
+            sentenceOrderPointFocus,
         },
       );
       const hasAiSchema = !!AI_QUESTION_SCHEMAS[subType];

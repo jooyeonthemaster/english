@@ -10,6 +10,8 @@ import {
 } from "@/lib/grammar-point-catalog";
 import { buildBlankPointGuidance } from "@/lib/blank-point-catalog";
 import { buildSentenceInsertPointGuidance } from "@/lib/sentence-insert-point-catalog";
+import { buildIrrelevantPointGuidance } from "@/lib/irrelevant-point-catalog";
+import { buildSentenceOrderPointGuidance } from "@/lib/sentence-order-point-catalog";
 import { splitPassageSentences as splitSharedPassageSentences } from "@/lib/passage-sentence-utils";
 import { sentenceInsertOptionMarkerIndex } from "@/lib/sentence-insert-options";
 
@@ -450,13 +452,22 @@ export function buildQuestionTargetCandidateBlock(
         options.requestedDifficulty,
         diversity,
       );
-    case "IRRELEVANT":
-      return buildIrrelevantCandidateBlock(
+    case "IRRELEVANT": {
+      // 후보(문장) 블록 + (pointFocus 일 때) 무관성 유형 focus 가이드 주입.
+      // pointFocus 미지정이면 guidance="" → 기존(비-focus) 동작 불변.
+      const irrelevantBlock = buildIrrelevantCandidateBlock(
         passage,
         options.irrelevantSlotCount,
         options.requestedDifficulty,
         diversity,
       );
+      const irrelevantFocus = buildIrrelevantPointGuidance({
+        variantIndex: diversity.variantIndex,
+        pointFocus: diversity.pointFocus,
+        diversityEnabled: diversity.diversityEnabled,
+      });
+      return [irrelevantBlock, irrelevantFocus].filter(Boolean).join("\n\n");
+    }
     case "BLANK_INFERENCE":
       // The candidate block proposes single-blank targets; the multi-blank
       // variant carries its own instructions in the type-settings prompt.
@@ -485,6 +496,13 @@ export function buildQuestionTargetCandidateBlock(
       // 문장삽입은 후보 스팬을 열거하지 않으므로(다중빈칸과 동일) focus 가이드만 주입.
       // pointFocus 미지정이면 "" 반환 → 기존(비-focus) 동작 불변.
       return buildSentenceInsertPointGuidance({
+        variantIndex: diversity.variantIndex,
+        pointFocus: diversity.pointFocus,
+        diversityEnabled: diversity.diversityEnabled,
+      });
+    case "SENTENCE_ORDER":
+      // 글의순서도 후보 스팬 열거 없이 focus 가이드만 주입(문장삽입과 동형).
+      return buildSentenceOrderPointGuidance({
         variantIndex: diversity.variantIndex,
         pointFocus: diversity.pointFocus,
         diversityEnabled: diversity.diversityEnabled,
@@ -4712,6 +4730,22 @@ function validateBlankInferenceQuestion(
       );
       break;
     }
+  }
+
+  // 등위 명사열 중간절단 누설: 빈칸이 "_____, X, Y, and Z" 형태로 등위 나열의 첫
+  // 항목 자리에 carve되면, 정답의 꼬리 단어가 뒤따르는 명사열을 문법적으로 헤드한다
+  // → 학생이 의미 추론 없이 "명사로 끝나는 보기"를 문법만으로 고를 수 있다(실측
+  // BLANK_INFERENCE 누설). 정답 무효급 → 차단(repair/재시도가 다른 자리를 고르게).
+  if (
+    /_____,\s+(?!(?:which|who|whom|whose|that|where|when|while|and|or|but|so|because|although|though|since|if|unless|as|to)\b)[A-Za-z][^.!?]{1,80}?,\s+(?:and|or)\s+[A-Za-z]/i.test(
+      blankCarrierText,
+    )
+  ) {
+    add(
+      "error",
+      "blank-mid-coordinated-list-carve",
+      'The blank is carved at the head of a coordinated list ("_____, X, Y, and Z"); the answer tail completes the list grammatically and is selectable without comprehension. Blank a logical clause/predicate/relation instead.',
+    );
   }
 
   if (/\b(?:such as|including|for example)\s+_____/.test(blankCarrierText)) {
