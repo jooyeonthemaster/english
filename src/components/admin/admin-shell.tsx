@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
+  Gift,
   Coins,
   CreditCard,
   ChartNoAxesCombined,
@@ -50,6 +51,7 @@ interface AdminShellProps {
 const NAV_ITEMS = [
   { label: "대시보드", icon: LayoutDashboard, href: "/admin" },
   { label: "회원 관리", icon: Users, href: "/admin/members" },
+  { label: "추천·미션", icon: Gift, href: "/admin/referrals" },
   { label: "활동 모니터링", icon: Radar, href: "/admin/activity" },
   { label: "크레딧", icon: Coins, href: "/admin/credits" },
   { label: "원가 분석", icon: ChartNoAxesCombined, href: "/admin/costs" },

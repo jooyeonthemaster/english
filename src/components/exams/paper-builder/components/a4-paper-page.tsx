@@ -118,19 +118,35 @@ function StructuredBody({
 
         if (group.style === "passage" || group.style === "summary" || group.style === "given") {
           const isSourcePassage = group.style === "passage";
+          const isSummaryWriting = subType === "SUMMARY_WRITING";
+          // 요약문 영작의 보조 박스(해석/보기/앞글자)는 회색 슬레이트 톤.
+          // [요약문] 박스는 본문 가독성을 위해 본문 색을 유지한다.
+          const isSwSecondaryBox = isSummaryWriting && group.style === "given";
           // 수능 표준: 지문·요약·주어진문장 박스 본문은 일반체(라벨·마커만 강조).
           // 출처 지문 박스와 동일 weight 로 통일 — 임베드/출처 유형 간 볼드 불일치 해소.
           const boxTone = "font-normal";
+          // 요약문 영작은 [해석]/[보기]/[앞글자] 라벨이 본문 앞에 포함돼 있으므로
+          // SUMMARY_COMPLETE 처럼 별도 [요약문] 헤더를 덧붙이지 않고, 라벨만 굵게 분리한다.
+          const swLabelMatch =
+            isSummaryWriting && !resumed
+              ? text.match(/^(\[[^\]\n]{1,8}\])\s*([\s\S]*)$/)
+              : null;
+          const swLabel = swLabelMatch ? swLabelMatch[1] : "";
+          const swBody = swLabelMatch ? swLabelMatch[2] : text;
+          const isSwFirstLetterBox = isSummaryWriting && /^\[앞글자\]/.test(text);
           return (
             <div
               key={groupIndex}
               className={cn(
-                "whitespace-pre-line text-justify text-slate-950",
+                "whitespace-pre-line text-justify",
+                isSwSecondaryBox ? "text-slate-600" : "text-slate-950",
                 leading,
                 "py-1",
                 boxTone,
                 // 출처 지문 박스만 passageStyle 테두리 적용(요약/주어진문장 제외).
                 isSourcePassage && passageBoxClass,
+                // 요약문 영작의 [앞글자] 단서 줄은 작게.
+                isSwFirstLetterBox && "text-[10px]",
               )}
             >
               {resumed && (
@@ -138,7 +154,7 @@ function StructuredBody({
                   {"(\uC774\uC5B4\uC11C)"}
                 </span>
               )}
-              {group.style === "given" && !resumed && (
+              {group.style === "given" && !isSummaryWriting && !resumed && (
                 <span className="mb-0.5 block text-[9px] font-bold uppercase tracking-wider text-slate-500">
                   주어진 문장
                 </span>
@@ -146,7 +162,10 @@ function StructuredBody({
               {group.style === "summary" && subType === "SUMMARY_COMPLETE" && !resumed && (
                 <span className="font-bold">{"[\uC694\uC57D\uBB38] "}</span>
               )}
-              {renderFormattedInline(text, subType, {
+              {swLabel && (
+                <span className="font-bold text-slate-700">{`${swLabel} `}</span>
+              )}
+              {renderFormattedInline(isSummaryWriting ? swBody : text, subType, {
                 alphabetMarkerClassName: "font-semibold text-slate-950",
               })}
               {continues && (

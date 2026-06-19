@@ -42,6 +42,8 @@ export interface ActivityListProps {
   /** 전역 피드에서만 학원 컬럼 표시 */
   showAcademy?: boolean;
   emptyMessage?: string;
+  /** 다른 모달 안에 임베드될 때 자료 뷰어(중첩 Dialog) 비활성화 */
+  disableResourceViewer?: boolean;
 }
 
 const CATEGORY_BADGE: Record<string, string> = {
@@ -64,6 +66,7 @@ export function ActivityList({
   items,
   showAcademy = false,
   emptyMessage = "활동 내역이 없습니다",
+  disableResourceViewer = false,
 }: ActivityListProps) {
   const [viewer, setViewer] = useState<{ id: string; title: string } | null>(
     null,
@@ -113,18 +116,19 @@ export function ActivityList({
         <TableBody>
           {items.map((item) => {
             const detailable = isDetailable(item.id);
+            const canView = detailable && !disableResourceViewer;
             const status = STATUS_META[item.status] ?? STATUS_META.INFO;
             return (
               <TableRow
                 key={item.id}
                 className={cn(
                   "border-b border-gray-50/60 last:border-0",
-                  detailable
+                  canView
                     ? "cursor-pointer hover:bg-gray-50/50"
                     : "hover:bg-gray-50/30",
                 )}
                 onClick={
-                  detailable
+                  canView
                     ? () => setViewer({ id: item.id, title: item.title })
                     : undefined
                 }
@@ -182,7 +186,7 @@ export function ActivityList({
                   </span>
                 </TableCell>
                 <TableCell className="pr-5 align-top">
-                  {detailable ? (
+                  {canView ? (
                     <Button
                       variant="ghost"
                       size="sm"
@@ -203,11 +207,13 @@ export function ActivityList({
         </TableBody>
       </Table>
 
-      <ActivityResourceDialog
-        itemId={viewer?.id ?? null}
-        itemTitle={viewer?.title ?? ""}
-        onClose={() => setViewer(null)}
-      />
+      {!disableResourceViewer && (
+        <ActivityResourceDialog
+          itemId={viewer?.id ?? null}
+          itemTitle={viewer?.title ?? ""}
+          onClose={() => setViewer(null)}
+        />
+      )}
     </div>
   );
 }

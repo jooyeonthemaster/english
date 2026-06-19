@@ -32,10 +32,15 @@ import {
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
 import { loadPersistedAnnotations } from "@/app/api/ai/passage-analysis/[passageId]/_lib/annotations";
 import { classifyAnalysisError } from "@/app/api/ai/passage-analysis/[passageId]/_lib/error-classification";
+import { generateLearningWorksheetResilient } from "@/lib/passage-report/analysis-report/generate";
 import {
-  generateAnalysisReportCore,
-  generateLearningWorksheet,
-} from "@/lib/passage-report/analysis-report/generate";
+  generateAnalysisReportResilient,
+  type ResilientCheckpoint,
+} from "@/lib/passage-report/analysis-report/resilient-generate";
+import {
+  loadPriorCheckpoint,
+  persistCheckpoint,
+} from "@/lib/passage-report/analysis-report/resilient-checkpoint";
 import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import { derivePassageAnalysisFromReport } from "@/lib/passage-report/analysis-report/derive-legacy";
 
@@ -203,6 +208,7 @@ export async function POST(req: NextRequest) {
   let generationMs = 0;
   let generationStartedAt: number | null = null;
   let persistenceMs = 0;
+  let resilientCheckpoint: ResilientCheckpoint | null = null;
 
   try {
     // 실전 학습지 포함 요청은 캐시 단락을 타지 않는다 — 사용자가 명시적으로
@@ -285,39 +291,116 @@ export async function POST(req: NextRequest) {
       .join("\n\n");
 
     generationStartedAt = Date.now();
-    // 기본 분석 = 메인 보고서(5섹션)만 1회 호출. 실전 학습지(06)는 옵트인 별도 생성.
-    const primeResult = await generateAnalysisReportCore({
-      passageContent: passage.content,
-      schoolType: (passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
-      grade: passage.grade,
-      customPrompt: mergedPrompt || undefined,
+    // 회복형 생성: 전체 초안으로 통과 섹션을 부분 구제 → 실패/누락 섹션만 정확히 골라
+    // 섹션 단위로 다시 생성(직전 실패를 교정 지시로 주입) → 완성된 섹션은 건너뛰고
+    // 진전마다 체크포인트를 남겨 다음 시도가 이어받게 하며, 필수(passage)는 무조건 채워
+    // 항상 렌더 가능한 보고서를 완성한다. (기존 all-or-nothing generateAnalysisReportCore 대체)
+    const priorCheckpoint = await loadPriorCheckpoint(prisma, {
+      academyId: staff.academyId,
+      passageId: passage.id,
+      contentHash: currentHash,
+      excludeJobId: job.id,
     });
+    const resilient = await generateAnalysisReportResilient(
+      {
+        passageContent: passage.content,
+        schoolType: (passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
+        grade: passage.grade,
+        customPrompt: mergedPrompt || undefined,
+      },
+      {
+        contentHash: currentHash,
+        // Vercel maxDuration(300s) 벽 안에서 마치고 부분 결과를 남기도록 데드라인을 둔다.
+        // 실전 학습지(includeWorksheet)까지 한 요청에서 생성하면 코어 뒤로 워크북+추론
+        // 호출이 더 붙으므로, 코어 데드라인을 낮춰 학습지 몫(≈135s)을 벽 안에 남겨 둔다.
+        deadlineAt: requestStartedAt + (includeWorksheet ? 150_000 : 255_000),
+        checkpoint: priorCheckpoint,
+        // promise 를 반환해 resilient 가 await — fire-and-forget 시 지연 쓰기가 최종
+        // COMPLETED 결과를 덮어쓰는 레이스를 차단(쓰기 직렬화).
+        onCheckpoint: (cp) => {
+          resilientCheckpoint = cp;
+          return persistCheckpoint(prisma, job.id, cp);
+        },
+      },
+    );
     generationMs = Date.now() - generationStartedAt;
-    if (!primeResult.ok) {
-      throw new Error(`PRIME 생성 실패: ${primeResult.error}`);
-    }
-    const usageEvent = primeResult.usage;
-    if (usageEvent) {
-      const usage = readAiUsageTokens(usageEvent.usage);
+    let primeReport = resilient.report;
+
+    // 회복형 분석의 모든 LLM 호출(초안+섹션) 토큰을 합산해 비용 회계에 기록 — 기존
+    // 단일 호출 회계와 parity. (사용자 과금이 아니라 플랫폼 원가 추적용.)
+    const analysisTokens = resilient.usages.reduce(
+      (acc, u) => {
+        const t = readAiUsageTokens(u.usage);
+        acc.input += t.inputTokens;
+        acc.output += t.outputTokens;
+        return acc;
+      },
+      { input: 0, output: 0 },
+    );
+    if (analysisTokens.input > 0 || analysisTokens.output > 0) {
+      const usageModelId = resilient.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.5-flash";
       await recordCostSafely({
         sourceKey: `workbench_ai_job:${job.id}:analysis`,
         sourceId: job.id,
         sourceDetail: "PASSAGE_ANALYSIS",
         academyId: job.academyId,
-        provider: providerFromModel(usageEvent.modelId),
-        model: usageEvent.modelId,
-        inputTokens: usage.inputTokens,
-        outputTokens: usage.outputTokens,
+        provider: providerFromModel(usageModelId),
+        model: usageModelId,
+        inputTokens: analysisTokens.input,
+        outputTokens: analysisTokens.output,
         usageAt: new Date(),
-        metadata: {
-          passageId: passage.id,
-          generationPlan,
-          fastPath: true,
-          durationMs: usageEvent.durationMs,
-        },
+        metadata: { passageId: passage.id, generationPlan, fastPath: true, calls: resilient.usages.length },
       });
     }
-    let primeReport = primeResult.report;
+
+    // 품질 게이트: 본문(passage)이 결정론 폴백이거나 확보 섹션이 너무 적으면(=AI 사실상 실패)
+    // COMPLETED·과금하지 않고 환불 + FAILED 로 흘린다. 체크포인트는 보존돼 재시도가 완성분을 이어받는다.
+    const degraded =
+      resilient.completeness.fallback.includes("passage") ||
+      resilient.completeness.present.length < 4;
+    if (degraded) {
+      const refundCost = getPassageAnalysisCreditCost({ includeWorksheet });
+      if (creditTxId) {
+        await refundCredits(
+          job.academyId,
+          "PASSAGE_ANALYSIS",
+          creditTxId,
+          "Resilient passage analysis incomplete — refunded",
+          refundCost,
+        ).catch((refundErr) => console.error("Fast analysis incomplete refund failed", refundErr));
+      }
+      await prisma.workbenchAiJob.update({
+        where: { id: job.id },
+        data: {
+          status: "FAILED",
+          failedCount: 1,
+          errorMessage:
+            "일시적인 AI 문제로 분석을 완성하지 못했어요. 크레딧은 환불됐어요. 잠시 후 다시 시도하면 만들어 둔 부분을 이어서 완성합니다.",
+          result: JSON.parse(JSON.stringify({
+            debugTiming: { queueWaitMs: 0, creditMs, generationMs, persistenceMs: 0, totalRunMs: Date.now() - requestStartedAt, fastPath: true },
+            checkpoint: resilientCheckpoint,
+            partial: true,
+            resilient: {
+              complete: resilient.completeness.complete,
+              present: resilient.completeness.present,
+              missing: resilient.completeness.missing,
+              fallback: resilient.completeness.fallback,
+              rounds: resilient.rounds,
+            },
+          })),
+          completedAt: new Date(),
+        },
+      });
+      return NextResponse.json(
+        {
+          error: "Passage analysis incomplete",
+          code: "PASSAGE_ANALYSIS_INCOMPLETE",
+          details: "일시적인 AI 문제로 분석을 완성하지 못했어요. 크레딧은 환불됐어요. 다시 시도해주세요.",
+          completeness: resilient.completeness,
+        },
+        { status: 502 },
+      );
+    }
 
     // ── 실전 학습지 한 번에 생성 (옵트인) ──────────────────────────────
     // 기본 분석 성공 후 워크북(어법 선택·어휘 빈칸·배열) + 수능추론을 생성해
@@ -325,67 +408,66 @@ export async function POST(req: NextRequest) {
     // 기본 학습지는 그대로 저장하고 워크시트 몫만 환불한다.
     let worksheetFailed = false;
     if (includeWorksheet) {
-      try {
-        const worksheet = await generateLearningWorksheet(
-          {
-            passageContent: passage.content,
-            schoolType: (passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
-            grade: passage.grade,
-          },
-          primeReport,
-        );
-        if (worksheet.ok) {
-          primeReport = {
-            ...primeReport,
-            sections: [
-              ...primeReport.sections.filter((s) => s.kind !== "learning-worksheet"),
-              worksheet.section,
-            ],
-          } as AnalysisReport;
-          const wUsage = worksheet.usage;
-          if (wUsage) {
-            const usage = readAiUsageTokens(wUsage.usage);
-            await recordCostSafely({
-              sourceKey: `workbench_ai_job:${job.id}:worksheet`,
-              sourceId: job.id,
-              sourceDetail: "PASSAGE_ANALYSIS_WORKSHEET",
-              academyId: job.academyId,
-              provider: providerFromModel(wUsage.modelId),
-              model: wUsage.modelId,
-              inputTokens: usage.inputTokens,
-              outputTokens: usage.outputTokens,
-              usageAt: new Date(),
-              metadata: {
-                passageId: passage.id,
-                generationPlan,
-                fastPath: true,
-                durationMs: wUsage.durationMs,
-              },
-            });
-          }
-        } else {
-          worksheetFailed = true;
-          console.warn(
-            `[workbench-fast-analysis] worksheet generation failed (core kept): ${worksheet.error}`,
-          );
-        }
-      } catch (worksheetErr) {
-        worksheetFailed = true;
-        console.warn(
-          "[workbench-fast-analysis] worksheet generation threw (core kept)",
-          worksheetErr,
-        );
+      // 학습지도 코어와 동일한 회복형 — 워크북·수능추론 유닛을 다중 라운드로 끝까지 완성한다.
+      // 같은 300s 벽을 공유하므로 데드라인(285s)을 두고 내부 호출이 self-abort 하게 한다.
+      const worksheet = await generateLearningWorksheetResilient(
+        {
+          passageContent: passage.content,
+          schoolType: (passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
+          grade: passage.grade,
+        },
+        primeReport,
+        { deadlineAt: requestStartedAt + 285_000 },
+      );
+      // 유효한 학습지 섹션일 때만 교체한다. null(유효한 학습지 생성 실패)이면 기존 코어
+      // learning-worksheet(있으면)를 그대로 두거나 섹션을 비운다 — 무효 섹션 저장 금지.
+      if (worksheet.section) {
+        primeReport = {
+          ...primeReport,
+          sections: [
+            ...primeReport.sections.filter((s) => s.kind !== "learning-worksheet"),
+            worksheet.section,
+          ],
+        } as AnalysisReport;
       }
-      if (worksheetFailed && creditTxId) {
-        await refundCredits(
-          job.academyId,
-          "PASSAGE_ANALYSIS",
-          creditTxId,
-          "실전 학습지 생성 실패 — 기본 학습지는 저장, 워크시트 몫 환불",
-          worksheetCost,
-        ).catch((refundErr) => {
-          console.error("Fast analysis worksheet refund failed", refundErr);
+      // 학습지 LLM 호출(워크북+추론, 라운드별) 토큰 합산 기록.
+      const wsTokens = worksheet.usages.reduce(
+        (acc, u) => {
+          const t = readAiUsageTokens(u.usage);
+          acc.input += t.inputTokens;
+          acc.output += t.outputTokens;
+          return acc;
+        },
+        { input: 0, output: 0 },
+      );
+      if (wsTokens.input > 0 || wsTokens.output > 0) {
+        const wsModelId = worksheet.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.5-flash";
+        await recordCostSafely({
+          sourceKey: `workbench_ai_job:${job.id}:worksheet`,
+          sourceId: job.id,
+          sourceDetail: "PASSAGE_ANALYSIS_WORKSHEET",
+          academyId: job.academyId,
+          provider: providerFromModel(wsModelId),
+          model: wsModelId,
+          inputTokens: wsTokens.input,
+          outputTokens: wsTokens.output,
+          usageAt: new Date(),
+          metadata: { passageId: passage.id, generationPlan, fastPath: true, calls: worksheet.usages.length },
         });
+      }
+      // 두 유닛 모두 못 만든 경우(=실전 학습지 가치 전무)에만 워크시트 몫 환불. 부분(워크북/추론
+      // 하나라도 확보)은 제공된 것으로 본다. 기본 분석은 항상 그대로 저장된다.
+      if (worksheet.present.length === 0) {
+        worksheetFailed = true;
+        if (creditTxId) {
+          await refundCredits(
+            job.academyId,
+            "PASSAGE_ANALYSIS",
+            creditTxId,
+            "실전 학습지 생성 실패 — 기본 학습지는 저장, 워크시트 몫 환불",
+            worksheetCost,
+          ).catch((refundErr) => console.error("Fast analysis worksheet refund failed", refundErr));
+        }
       }
     }
 
@@ -450,6 +532,15 @@ export async function POST(req: NextRequest) {
           worksheetFailed,
           debugTiming,
           fastPath: true,
+          // 회복형 생성 진단 — 어느 섹션을 부분구제/재생성/폴백했는지, 완성 여부.
+          resilient: {
+            complete: resilient.completeness.complete,
+            present: resilient.completeness.present,
+            missing: resilient.completeness.missing,
+            fallback: resilient.completeness.fallback,
+            rounds: resilient.rounds,
+            draftUsed: resilient.draftUsed,
+          },
         })),
         completedAt,
       },
@@ -517,7 +608,7 @@ export async function POST(req: NextRequest) {
         status: "FAILED",
         failedCount: 1,
         errorMessage: classified.message,
-        result: {
+        result: JSON.parse(JSON.stringify({
           debugTiming: {
             queueWaitMs: 0,
             creditMs,
@@ -526,7 +617,9 @@ export async function POST(req: NextRequest) {
             totalRunMs: Date.now() - requestStartedAt,
             fastPath: true,
           },
-        },
+          // 부분 진행분 보존 — 다음 시도가 완성된 섹션을 건너뛰고 이어받게.
+          ...(resilientCheckpoint ? { checkpoint: resilientCheckpoint, partial: true } : {}),
+        })),
         completedAt: new Date(),
       },
     });

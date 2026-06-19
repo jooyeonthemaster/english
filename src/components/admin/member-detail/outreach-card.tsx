@@ -13,7 +13,7 @@ import {
   Copy,
   Phone,
   RefreshCw,
-  Sparkles,
+  Info,
   Check,
   CircleSlash,
 } from "lucide-react";
@@ -137,7 +137,7 @@ export function OutreachCard({ member }: { member: MemberDetail }) {
           />
           <FeatureRow
             label="안 쓰는 기능"
-            empty="주요 기능을 모두 활용 중이에요 🎉"
+            empty="주요 기능을 모두 활용 중이에요"
             items={profile.unused.map((f) => f.label)}
             tone="unused"
           />
@@ -190,7 +190,7 @@ export function OutreachCard({ member }: { member: MemberDetail }) {
                   "ml-1.5 border-0 text-[10px] px-1.5 font-medium",
                   len.type === "SMS"
                     ? "bg-emerald-50 text-emerald-700"
-                    : "bg-amber-50 text-amber-700",
+                    : "bg-blue-50 text-blue-700",
                 )}
               >
                 {len.type}
@@ -212,7 +212,7 @@ export function OutreachCard({ member }: { member: MemberDetail }) {
         </div>
 
         <p className="flex items-start gap-1.5 text-[11px] text-gray-400 leading-relaxed">
-          <Sparkles className="size-3.5 mt-0.5 shrink-0 text-gray-300" strokeWidth={2} aria-hidden />
+          <Info className="size-3.5 mt-0.5 shrink-0 text-gray-300" strokeWidth={2} aria-hidden />
           이 회원의 실제 사용 내역으로 자동 작성된 초안이에요. 그대로 복사해 솔라피·문자 앱에
           붙여넣어 보내거나, 위에서 직접 다듬어 사용하세요.
         </p>

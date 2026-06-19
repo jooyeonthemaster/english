@@ -12,6 +12,7 @@ import {
   learningWorksheetCoreGenerationSectionSchema,
   learningWorksheetInferenceGenerationSchema,
   learningWorksheetGenerationSectionSchema,
+  learningWorksheetSectionSchema,
   type AnalysisReport,
   type LearningWorksheetSection,
   type ReportThemeId,
@@ -192,11 +193,12 @@ export type GenerateLearningWorksheetResult =
 export async function generateLearningWorksheet(
   input: GenerateAnalysisReportInput,
   report: AnalysisReport,
+  opts?: { deadlineAt?: number },
 ): Promise<GenerateLearningWorksheetResult> {
-  const core = await generateLearningWorksheetCore(input, report);
+  const core = await generateLearningWorksheetCore(input, report, opts?.deadlineAt);
   if (!core.ok) return core;
 
-  const inference = await generateLearningWorksheetInference(input, report, core.section);
+  const inference = await generateLearningWorksheetInference(input, report, core.section, opts?.deadlineAt);
   if (!inference.ok) {
     return {
       ok: false,
@@ -243,7 +245,117 @@ export async function generateLearningWorksheet(
   };
 }
 
-type LearningWorksheetInferenceSet = NonNullable<LearningWorksheetSection["inferenceSet"]>;
+export type LearningWorksheetInferenceSet = NonNullable<LearningWorksheetSection["inferenceSet"]>;
+
+export interface ResilientWorksheetResult {
+  ok: true;
+  /** 유효한 학습지 섹션. 유효한 것을 못 만들면 null — 호출자는 섹션을 비워야 한다(무효 섹션 저장 금지). */
+  section: LearningWorksheetSection | null;
+  /** 워크북·수능추론 두 유닛이 모두 완성됐는가. */
+  complete: boolean;
+  /** 확보한 유닛 목록(['workbook','inference']). */
+  present: string[];
+  rounds: number;
+  usages: AnalysisReportUsage[];
+}
+
+/**
+ * 회복형 실전 학습지 생성 — 코어 분석과 동일 철학.
+ *
+ * 기존 generateLearningWorksheet 는 워크북(1콜)→추론(1콜) 직렬에서 한 단계가 2시도 안에
+ * 실패하면 학습지 '전체'가 실패(all-or-nothing)였다. 이 함수는:
+ *   - 워크북·수능추론을 **독립 유닛**으로 보고, 실패한 유닛만 **다중 라운드로 다시 생성**(각 유닛
+ *     호출은 내부에 2시도 교정 루프가 있어 라운드당 최대 2시도 → maxRounds 라운드).
+ *   - 완성된 유닛은 건너뛰고, 데드라인 안에서 끝까지 시도한다.
+ *   - 최종 조립은 **관대한 base 스키마**(learningWorksheetSectionSchema)로 검증 — 부분만 돼도
+ *     항상 유효·렌더 가능한 섹션을 반환한다(절대 throw·fail 하지 않음). 둘 다 실패하면 코어
+ *     분석의 logicRows-only 학습지(이미 유효)로 폴백.
+ */
+export async function generateLearningWorksheetResilient(
+  input: GenerateAnalysisReportInput,
+  report: AnalysisReport,
+  opts?: {
+    deadlineAt?: number;
+    maxRounds?: number;
+    /** 테스트 전용 유닛 주입(기본=실제 생성기). 오케스트레이션을 결정론으로 검증할 때만 쓴다. */
+    _genWorkbook?: () => Promise<{ ok: boolean; section?: LearningWorksheetSection; usage?: AnalysisReportUsage }>;
+    _genInference?: () => Promise<{ ok: boolean; inferenceSet?: LearningWorksheetInferenceSet; usage?: AnalysisReportUsage }>;
+  },
+): Promise<ResilientWorksheetResult> {
+  const deadlineAt = opts?.deadlineAt;
+  const maxRounds = opts?.maxRounds ?? 3;
+  const baseLW = report.sections.find((s) => s.kind === "learning-worksheet");
+  const baseSection: LearningWorksheetSection =
+    baseLW && baseLW.kind === "learning-worksheet"
+      ? baseLW
+      : ({ kind: "learning-worksheet", title: "지문 논리 구조 분석", logicRows: [], hiddenAnswers: false } as unknown as LearningWorksheetSection);
+
+  let workbookSection: LearningWorksheetSection | null = null;
+  let inferenceSet: LearningWorksheetInferenceSet | null = null;
+  const usages: AnalysisReportUsage[] = [];
+  let rounds = 0;
+
+  const genWorkbook =
+    opts?._genWorkbook ?? (() => generateLearningWorksheetCore(input, report, deadlineAt));
+  const genInference =
+    opts?._genInference ??
+    (() => generateLearningWorksheetInference(input, report, workbookSection ?? baseSection, deadlineAt));
+
+  for (; rounds < maxRounds; rounds += 1) {
+    if (deadlineAt && Date.now() >= deadlineAt) break;
+    if (workbookSection && inferenceSet) break;
+
+    // 유닛 1: 워크북(어법선택·어휘빈칸·배열·주제요지)
+    if (!workbookSection) {
+      const c = await genWorkbook();
+      if (c.ok && c.section) {
+        workbookSection = c.section;
+        if (c.usage) usages.push(c.usage);
+      }
+    }
+    if (deadlineAt && Date.now() >= deadlineAt) break;
+
+    // 유닛 2: 수능추론 5문항(워크북 있으면 그걸, 없으면 코어 logicRows 를 컨텍스트로 — 디커플링)
+    if (!inferenceSet) {
+      const inf = await genInference();
+      if (inf.ok && inf.inferenceSet) {
+        inferenceSet = inf.inferenceSet;
+        if (inf.usage) usages.push(inf.usage);
+      }
+    }
+  }
+
+  // 조립(관대) — 확보한 유닛만 얹는다. 둘 다 없으면 코어 logicRows-only 로 자연 폴백.
+  const combined: LearningWorksheetSection = {
+    ...(workbookSection ?? baseSection),
+    inferenceSet: inferenceSet ?? undefined,
+    questions: workbookSection?.questions ?? [],
+  } as LearningWorksheetSection;
+  normalizeWorkbookTestSurface(combined);
+  if (inferenceSet) {
+    normalizeInferenceQuestions(combined);
+    normalizeInferenceAnswerPositions(combined);
+  }
+  const qualityIssues = validateLearningWorksheetQuality(combined);
+  if (qualityIssues.length > 0) {
+    console.warn(`[RESILIENT_WORKSHEET] 품질 경고(완성 우선, 비차단): ${qualityIssues.slice(0, 6).join(" | ")}`);
+  }
+
+  // 유효한 섹션만 반환한다. combined 가 base 스키마를 못 통과하면(예: baseLW 도 없고 두 유닛도
+  // 실패해 logicRows 가 비어 min(3) 위반) 코어의 유효한 logicRows 섹션으로, 그것도 없으면 null —
+  // 무효 섹션을 보고서에 끼워 넣어 저장 로더(analysisReportSchema)가 통째로 깨지는 것을 막는다.
+  const v = learningWorksheetSectionSchema.safeParse(combined);
+  let section: LearningWorksheetSection | null;
+  if (v.success) {
+    section = v.data;
+  } else if (baseLW && baseLW.kind === "learning-worksheet" && learningWorksheetSectionSchema.safeParse(baseLW).success) {
+    section = baseLW;
+  } else {
+    section = null;
+  }
+  const present = [workbookSection ? "workbook" : null, inferenceSet ? "inference" : null].filter(Boolean) as string[];
+  return { ok: true, section, complete: Boolean(workbookSection && inferenceSet), present, rounds, usages };
+}
 
 type GenerateLearningWorksheetCoreResult =
   | { ok: true; section: LearningWorksheetSection; raw: string; usage: AnalysisReportUsage }
@@ -256,6 +368,7 @@ type GenerateLearningWorksheetInferenceResult =
 async function generateLearningWorksheetCore(
   input: GenerateAnalysisReportInput,
   report: AnalysisReport,
+  deadlineAt?: number,
 ): Promise<GenerateLearningWorksheetCoreResult> {
   const basePrompt = buildLearningWorksheetPrompt(input, report);
   let lastFailure = "";
@@ -263,9 +376,12 @@ async function generateLearningWorksheetCore(
   let lastParsed: unknown;
 
   for (let qualityAttempt = 0; qualityAttempt < 2; qualityAttempt += 1) {
+    // 재시도는 데드라인을 넘겼으면 시작하지 않는다(Vercel 벽 초과·잡 고아 방지).
+    if (qualityAttempt > 0 && deadlineAt && Date.now() >= deadlineAt) break;
     const result = await runWorksheetTextGeneration(
       qualityAttempt === 0 ? basePrompt : buildRepairPrompt(basePrompt, lastFailure),
       qualityAttempt === 0 ? "REPORT_WORKSHEET_CORE" : "REPORT_WORKSHEET_CORE_REPAIR",
+      deadlineAt,
     ).catch((error: unknown) => {
       lastFailure = `모델 호출 실패: ${error instanceof Error ? error.message : String(error)}`;
       return null;
@@ -318,6 +434,7 @@ async function generateLearningWorksheetInference(
   input: GenerateAnalysisReportInput,
   report: AnalysisReport,
   worksheet: LearningWorksheetSection,
+  deadlineAt?: number,
 ): Promise<GenerateLearningWorksheetInferenceResult> {
   const basePrompt = buildLearningWorksheetInferencePrompt(input, report, worksheet);
   let lastFailure = "";
@@ -325,9 +442,12 @@ async function generateLearningWorksheetInference(
   let lastParsed: unknown;
 
   for (let qualityAttempt = 0; qualityAttempt < 2; qualityAttempt += 1) {
+    // 재시도는 데드라인을 넘겼으면 시작하지 않는다(Vercel 벽 초과·잡 고아 방지).
+    if (qualityAttempt > 0 && deadlineAt && Date.now() >= deadlineAt) break;
     const result = await runWorksheetTextGeneration(
       qualityAttempt === 0 ? basePrompt : buildRepairPrompt(basePrompt, lastFailure),
       qualityAttempt === 0 ? "REPORT_WORKSHEET_INFERENCE" : "REPORT_WORKSHEET_INFERENCE_REPAIR",
+      deadlineAt,
     ).catch((error: unknown) => {
       lastFailure = `모델 호출 실패: ${error instanceof Error ? error.message : String(error)}`;
       return null;
@@ -390,7 +510,9 @@ ${lastFailure}
 이번 출력은 누락 없이 수정해서 JSON 객체 하나만 다시 생성하세요.`;
 }
 
-function runWorksheetTextGeneration(prompt: string, logPrefix: string) {
+function runWorksheetTextGeneration(prompt: string, logPrefix: string, deadlineAt?: number) {
+  // 데드라인이 있으면 호출 abort 를 남은 예산으로 좁힌다(없으면 기존 120s — 무회귀).
+  const timeoutMs = deadlineAt ? Math.max(1_000, Math.min(120_000, deadlineAt - Date.now())) : 120_000;
   return generateQuestionText({
     prompt,
     generationPlan: "STANDARD",
@@ -401,7 +523,7 @@ function runWorksheetTextGeneration(prompt: string, logPrefix: string) {
     responseFormat: "json_object",
     isRecoverableJsonText: canRecover,
     thinkingBudget: 0,
-    timeoutMs: 120_000,
+    timeoutMs,
     temperature: 0.12,
   });
 }

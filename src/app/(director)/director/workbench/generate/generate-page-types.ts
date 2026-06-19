@@ -11,6 +11,7 @@ import {
   buildGrammarCorrectionQuestionTextForDisplay,
   grammarCorrectionErrorSentenceForQuestionText,
 } from "@/lib/grammar-correction-display";
+import { isSummaryWriting, summaryWritingStudentParts } from "@/lib/summary-writing";
 
 // ─── Constants ───────────────────────────────────────────
 
@@ -143,6 +144,12 @@ export function buildQuestionText(q: any): string {
   }
   // 발문 (모든 유형 공통)
   if (q.direction) parts.push(q.direction);
+  // SW-LEAK-1: SUMMARY_WRITING 은 학생 안전 블록만 직렬화([빈칸 정답]·modelAnswer 미포함)
+  if (isSummaryWriting(q?._typeId) || isSummaryWriting(q?.subType)) {
+    parts.push(...summaryWritingStudentParts(q));
+    if (q.questionText && !q.direction) parts.push(q.questionText);
+    return parts.join("\n\n");
+  }
   // CONTENT_MATCH: 일치/불일치 유형 표시
   if (q.matchType) parts.push(`[유형: ${q.matchType}]`);
 

@@ -63,6 +63,13 @@ export function parseQuestionSections(
     "[summary]": { type: "summary", label: "요약문" },
     "[빈칸 정답]": { type: "blanks", label: "빈칸 정답" },
     "[blank answers]": { type: "blanks", label: "빈칸 정답" },
+    // 요약문 영작(SUMMARY_WRITING) 학생 안전 블록 — 정답계열은 직렬화에 미포함.
+    //   [해석]/[빈칸 해석] → 회색 해석(context), [보기] → 단어 보기(scrambled 재사용), [앞글자] → 힌트(hint).
+    //   [요약문] 은 위 "[요약문]" 매핑(summary)을 그대로 재사용한다.
+    "[해석]": { type: "context", label: "해석" },
+    "[빈칸 해석]": { type: "context", label: "빈칸 해석" },
+    "[보기]": { type: "scrambled", label: "보기" },
+    "[앞글자]": { type: "hint", label: "앞글자" },
     "[배열 단어]": { type: "scrambled", label: "배열 단어" },
     "[word order]": { type: "scrambled", label: "배열 단어" },
     "[힌트]": { type: "hint", label: "힌트" },
@@ -87,7 +94,9 @@ export function parseQuestionSections(
           content = content.replace(/\]$/, "");
         }
 
-        if (config.type === "target" || config.type === "context") {
+        // 레거시 내부 메타([대상 단어]=target, [문맥]=context)는 학생지에서 드롭한다.
+        // 단, 요약문 영작의 [해석]/[빈칸 해석](context 재사용)은 렌더해야 하므로 보존한다.
+        if (config.type === "target" || (config.type === "context" && config.label === "문맥")) {
           matched = true;
           break;
         }

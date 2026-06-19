@@ -32,6 +32,7 @@ import {
   SentenceTransformRenderer,
   FillBlankKeyRenderer,
   SummaryCompleteRenderer,
+  SummaryWritingRenderer,
   WordOrderRenderer,
   GrammarCorrectionRenderer,
   ContextMeaningRenderer,
@@ -683,6 +684,8 @@ function hasStructuredFields(typeId: string, q: any): boolean {
       return !!q.sentenceWithBlank;
     case "SUMMARY_COMPLETE":
       return !!q.summaryWithBlanks && !!q.blanks;
+    case "SUMMARY_WRITING":
+      return !!q.summaryWithBlanks && !!q.blanks;
     case "WORD_ORDER":
       return !!q.scrambledWords;
     case "GRAMMAR_CORRECTION":
@@ -740,6 +743,8 @@ function renderTypedQuestion(typeId: string, q: any): React.ReactNode {
       return <FillBlankKeyRenderer q={q} />;
     case "SUMMARY_COMPLETE":
       return <SummaryCompleteRenderer q={q} />;
+    case "SUMMARY_WRITING":
+      return <SummaryWritingRenderer q={q} />;
     case "WORD_ORDER":
       return <WordOrderRenderer q={q} />;
     case "GRAMMAR_CORRECTION":

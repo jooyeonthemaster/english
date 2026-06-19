@@ -28,6 +28,9 @@ export const QUESTION_PASSAGE_FLOW_RULES: Record<string, PassageFlow> = {
   SENTENCE_TRANSFORM: "source",
   FILL_BLANK_KEY: "embedded",
   SUMMARY_COMPLETE: "source",
+  // 요약문 영작: 원본 지문을 시험지에 "무조건 함께" 포함한다(사용자 요구·레퍼런스 형식).
+  // SUMMARY_COMPLETE 와 동일하게 source + INLINE_SOURCE — 지문이 문제 안(요약문 위)에 인라인 렌더된다.
+  SUMMARY_WRITING: "source",
   WORD_ORDER: "source",
   GRAMMAR_CORRECTION: "embedded",
   CONTEXT_MEANING: "embedded",
@@ -49,6 +52,7 @@ const INLINE_SOURCE_PASSAGE_SUBTYPES = new Set([
   "CONDITIONAL_WRITING",
   "SENTENCE_TRANSFORM",
   "SUMMARY_COMPLETE",
+  "SUMMARY_WRITING",
   "WORD_ORDER",
   "SYNONYM",
 ]);

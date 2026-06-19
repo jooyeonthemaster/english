@@ -8,16 +8,24 @@ import {
   buildGrammarCorrectionQuestionTextForDisplay,
   grammarCorrectionErrorSentenceForQuestionText,
 } from "@/lib/grammar-correction-display";
+import { isSummaryWriting, summaryWritingStudentParts } from "@/lib/summary-writing";
 
 export function buildQuestionText(q: any): string {
   const parts: string[] = [];
   const isSummaryCompleteMc = q?._typeId === "SUMMARY_COMPLETE_MC" || q?.subType === "SUMMARY_COMPLETE_MC";
   const isGrammarCorrection = q?._typeId === "GRAMMAR_CORRECTION" || q?.subType === "GRAMMAR_CORRECTION";
+  const isSwriting = isSummaryWriting(q?._typeId) || isSummaryWriting(q?.subType);
   if (isGrammarCorrection) {
     const text = buildGrammarCorrectionQuestionTextForDisplay(q);
     if (text) return text;
   }
   if (q.direction) parts.push(q.direction);
+  // SW-LEAK-1: SUMMARY_WRITING 은 학생 안전 블록만 직렬화([빈칸 정답]·modelAnswer 미포함)
+  if (isSwriting) {
+    parts.push(...summaryWritingStudentParts(q));
+    if (q.questionText) parts.push(q.questionText);
+    return parts.join("\n\n") || "";
+  }
   if (q.matchType) parts.push(`[유형: ${q.matchType}]`);
   // 주어진 문장은 지문 '위'에 와야 한다(문장삽입·글의 순서). 직렬화 순서를 통일.
   if (q.givenSentence) parts.push(`[주어진 문장] ${q.givenSentence}`);

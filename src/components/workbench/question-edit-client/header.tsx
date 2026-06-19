@@ -4,6 +4,8 @@
 import React from "react";
 import {
   ArrowLeft,
+  Bot,
+  Layers,
   Loader2,
   Save,
   Trash2,
@@ -38,6 +40,8 @@ interface Props {
   onSave: () => void;
   saving: boolean;
   deleting: boolean;
+  /** AI 문제 수정 오버레이 열기 — 전달되면 헤더에 눈에 띄는 진입 버튼 노출. */
+  onOpenAiEdit?: () => void;
 }
 
 export function EditHeader({
@@ -58,6 +62,7 @@ export function EditHeader({
   onSave,
   saving,
   deleting,
+  onOpenAiEdit,
 }: Props) {
   const diffConfig = DIFFICULTY_OPTIONS.find((d) => d.value === difficulty);
 
@@ -95,6 +100,24 @@ export function EditHeader({
             일반 생성
           </span>
         )}
+        {onOpenAiEdit && (
+          <button
+            type="button"
+            onClick={onOpenAiEdit}
+            title="AI로 선지·정답·해설을 자연어 지시로 다시 만들기"
+            className="ml-1 inline-flex h-9 items-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3.5 text-[13px] font-semibold text-white shadow-sm transition-all hover:from-blue-700 hover:to-indigo-700 hover:shadow-md"
+          >
+            <Bot className="h-4 w-4" />
+            AI로 수정
+          </button>
+        )}
+      </div>
+      <div className="flex items-center gap-2">
+        <Select value={type} onValueChange={setType}>
+          <SelectTrigger className="h-9 w-[104px] text-[13px] font-medium"><SelectValue /></SelectTrigger>
+          <SelectContent>{TYPE_OPTIONS.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}</SelectContent>
+        </Select>
+        <Input value={subType} onChange={(e) => setSubType(e.target.value)} placeholder="세부유형" className="h-9 w-[140px] text-[13px]" />
         <Select value={difficulty} onValueChange={setDifficulty}>
           <SelectTrigger className={`h-7! w-[88px] text-[13px] font-semibold ${diffConfig?.color || ""}`}><SelectValue /></SelectTrigger>
           <SelectContent>{DIFFICULTY_OPTIONS.map((d) => <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>)}</SelectContent>

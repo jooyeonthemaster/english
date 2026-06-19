@@ -113,6 +113,71 @@ export function renderSummary(
   return result;
 }
 
+// =============================================================================
+// SUMMARY_WRITING (요약문 영작) 전용 학생노출 블록
+//   - 해석 / 보기 / 앞글자. 정답계열(modelAnswer/answer 등)은 절대 들어오지 않는다
+//     (호출부가 summary-writing.ts 의 학생안전 헬퍼만 넘긴다).
+//   - 색 규칙: 회색(slate)만. orange/amber 금지, Sparkles/emoji 금지.
+// =============================================================================
+
+/** 👁[해석] 박스 — 회색 본문(slate). renderSummary/renderContext 패턴 미러. */
+export function renderGloss(content: string): BlockNode[] {
+  const text = (content || "").trim();
+  if (!text) return [];
+  const result: BlockNode[] = [labelPara("해석")];
+  result.push(
+    ...bodyParas(text).map<ParagraphNode>((para) => ({
+      ...para,
+      runs: para.runs.map((run) =>
+        run.kind === "text"
+          ? { ...run, style: { ...run.style, color: COLORS.gray } }
+          : run,
+      ),
+    })),
+  );
+  result.push({ kind: "p", style: { spaceAfter: 120 }, runs: [] });
+  return result;
+}
+
+/** 👁[보기] 칩 — WordOrder(배열 단어) 칩 스타일 미러. "/" 구분, 굵게. 미끼 구분 없음. */
+export function renderWordBank(content: string): BlockNode[] {
+  const items = (content || "")
+    .split(/\s*\/\s*/)
+    .map((w) => w.trim())
+    .filter(Boolean);
+  if (items.length === 0) return [];
+  return [
+    labelPara("보기"),
+    {
+      kind: "p",
+      style: { spaceAfter: 80, lineSpacingPct: 170, indentFirst: 0 },
+      runs: items.flatMap<RunNode>((w, i) => [
+        ...(i > 0 ? [txt(" / ", { size: SIZE.body, color: COLORS.gray })] : []),
+        txt(w, { size: SIZE.body, bold: true }),
+      ]),
+    },
+  ];
+}
+
+/** 👁[앞글자] 단서 — 회색 작은 텍스트. renderHint 패턴 미러. */
+export function renderFirstLetter(content: string): BlockNode[] {
+  const text = (content || "").trim();
+  if (!text) return [];
+  return [
+    labelPara("앞글자"),
+    {
+      kind: "p",
+      style: { spaceAfter: 60, leftMargin: 200 },
+      runs: [
+        txt(text, {
+          size: SIZE.continued,
+          color: COLORS.gray,
+        }),
+      ],
+    },
+  ];
+}
+
 export function renderScrambled(section: ParsedSection): BlockNode[] {
   const items = section.items ?? [];
   return [

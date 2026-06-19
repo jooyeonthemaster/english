@@ -7,6 +7,7 @@ import {
   BarChart3,
   Wallet,
   Coins,
+  Gift,
   Megaphone,
   MessageSquare,
   Mail,
@@ -177,6 +178,7 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           ? [{ label: "학습 현황", icon: Activity, href: `${basePath}/tutor/monitor`, directorOnly: true }]
           : []),
         { label: "크레딧 관리", icon: Coins, href: `${basePath}/credits`, directorOnly: true },
+        { label: "리워드", icon: Gift, href: `${basePath}/rewards`, directorOnly: true },
         { label: "공지사항", icon: Megaphone, href: `${basePath}/notices` },
       ],
     },

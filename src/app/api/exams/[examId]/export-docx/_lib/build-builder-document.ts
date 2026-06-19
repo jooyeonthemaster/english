@@ -50,6 +50,7 @@ import {
   formatSummaryCompleteMcSummaryForDisplay,
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
+import { isSummaryWriting } from "@/lib/summary-writing";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
 
@@ -82,6 +83,7 @@ const SUBTYPE_LABELS_DOCX: Record<string, string> = {
   SENTENCE_TRANSFORM: "문장 전환",
   FILL_BLANK_KEY: "핵심 표현 빈칸",
   SUMMARY_COMPLETE: "요약문 완성",
+  SUMMARY_WRITING: "요약문 영작",
   WORD_ORDER: "배열 영작",
   GRAMMAR_CORRECTION: "문법 오류 수정",
   CONTEXT_MEANING: "문맥 속 의미",
@@ -616,6 +618,42 @@ function buildGivenBox(text: string, bodySize: number, lh: number): DocChild[] {
 }
 
 // =============================================================================
+// 요약문 영작 (SUMMARY_WRITING) — questionText 블록 파싱
+// =============================================================================
+// 직렬화 형태(SW-LEAK-1, summaryWritingStudentParts):
+//   {direction}\n\n[해석] ...\n\n[빈칸 해석] (A) ...\n\n[요약문] (A) _____ , ...\n\n[보기] w1 / w2\n\n[앞글자] (A) p s d
+// 정답계열([빈칸 정답]/modelAnswer 등)은 직렬화에 미포함이므로 여기서 절대 등장하지 않는다.
+
+interface SummaryWritingDocBlocks {
+  gloss: string;        // [해석] (회색 slate)
+  blankGloss: string;   // [빈칸 해석] (회색 slate)
+  summary: string;      // [요약문] ((A)(B) 마커 + 빈칸선)
+  wordBank: string;     // [보기] (칩/인라인)
+  firstLetters: string; // [앞글자] (작은 회색)
+}
+
+function parseSummaryWritingBlocks(questionText: string): SummaryWritingDocBlocks {
+  const blocks = questionText.split(/\n{2,}/).map((b) => b.trim()).filter(Boolean);
+  const result: SummaryWritingDocBlocks = {
+    gloss: "",
+    blankGloss: "",
+    summary: "",
+    wordBank: "",
+    firstLetters: "",
+  };
+  const take = (block: string, marker: string) =>
+    block.slice(marker.length).replace(/^\s*/, "").trim();
+  for (const block of blocks) {
+    if (block.startsWith("[해석]")) result.gloss = take(block, "[해석]");
+    else if (block.startsWith("[빈칸 해석]")) result.blankGloss = take(block, "[빈칸 해석]");
+    else if (block.startsWith("[요약문]")) result.summary = take(block, "[요약문]");
+    else if (block.startsWith("[보기]")) result.wordBank = take(block, "[보기]");
+    else if (block.startsWith("[앞글자]")) result.firstLetters = take(block, "[앞글자]");
+  }
+  return result;
+}
+
+// =============================================================================
 // 문항 (번호 + 메타 + 본문 + 옵션 + 답란)
 // =============================================================================
 
@@ -650,6 +688,7 @@ function buildQuestionBlock(
   const lh = compact ? BODY_LINE_HEIGHT_COMPACT : BODY_LINE_HEIGHT;
   const summaryComplete = isSummaryCompleteSubtype(subType);
   const summaryMc = isSummaryCompleteMc(subType);
+  const summaryWriting = isSummaryWriting(subType);
   const passageContent = (item.passageContent ?? item.sourceQuestion.passage?.content ?? "").trim();
   const hasEmbeddedSourcePassage = questionHasEmbeddedPassage({
     ...item.sourceQuestion,
@@ -712,7 +751,116 @@ function buildQuestionBlock(
   );
 
   if (questionText) {
-    if (summaryComplete) {
+    if (summaryWriting) {
+      // 요약문 영작: 헤더(번호+배점+발문) 아래에
+      //   [지문](테두리 박스) → [해석](회색) → [요약문]((A)(B)+빈칸선) → [보기](인라인) → [앞글자]
+      // 지문은 "무조건" 함께 렌더한다(사용자 요구·레퍼런스 형식, SUMMARY_COMPLETE 미러).
+      // 정답계열([빈칸 정답]/modelAnswer 등)은 직렬화에 없으므로 절대 렌더되지 않는다(SW-LEAK-1).
+      const sw = parseSummaryWritingBlocks(questionText);
+
+      if (passageContent) {
+        result.push(
+          ...buildPassage({
+            passageTitle: "",
+            passageContent: inlinePassageContent || passageContent,
+            passageStyle: "plain",
+            showPassageTitle: false,
+            compact,
+            usesSentenceInsertMarkers: false,
+          }),
+        );
+      }
+
+      if (sw.gloss) {
+        result.push(
+          new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            spacing: { before: 0, after: 60, ...exactLineSpacing(bodySize, lh) },
+            children: [
+              new TextRun({
+                text: "[해석] ",
+                font: KR_FONT,
+                size: bodySize,
+                bold: true,
+                color: COLOR.gray,
+              }),
+              ...parseFormattedText(sw.gloss, {
+                font: KR_FONT,
+                size: bodySize,
+                color: COLOR.gray,
+              }),
+            ],
+          }),
+        );
+      }
+
+      if (sw.summary) {
+        result.push(
+          new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            spacing: { after: 90, ...exactLineSpacing(bodySize, lh) },
+            children: [
+              new TextRun({
+                text: "[요약문] ",
+                font: KR_FONT,
+                size: bodySize,
+                bold: true,
+              }),
+              // (A)(B) 마커는 파랑, _____ 빈칸선·본문은 영문 폰트로(parseFormattedText)
+              ...parseFormattedText(sw.summary, {
+                font: FONT,
+                size: bodySize,
+                bold: true,
+              }),
+            ],
+          }),
+        );
+      }
+
+      if (sw.wordBank) {
+        result.push(
+          new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            spacing: { before: 0, after: 70, ...exactLineSpacing(bodySize, lh) },
+            children: [
+              new TextRun({
+                text: "[보기] ",
+                font: KR_FONT,
+                size: bodySize,
+                bold: true,
+              }),
+              ...parseFormattedText(sw.wordBank, {
+                font: FONT,
+                size: bodySize,
+              }),
+            ],
+          }),
+        );
+      }
+
+      if (sw.firstLetters) {
+        result.push(
+          new Paragraph({
+            spacing: { before: 0, after: 70, ...exactLineSpacing(SIZE_META, lh) },
+            children: [
+              new TextRun({
+                text: "[앞글자] ",
+                font: KR_FONT,
+                size: SIZE_META,
+                bold: true,
+                color: COLOR.gray,
+              }),
+              ...parseFormattedText(sw.firstLetters, {
+                font: FONT,
+                size: SIZE_META,
+                color: COLOR.gray,
+                markerColor: COLOR.black,
+              }),
+            ],
+          }),
+        );
+      }
+    } else if (summaryComplete) {
       const { summary } = summaryPartsForHeader ?? splitSummaryCompleteMcQuestionText(questionText);
       const maskedSummary = formatSummaryCompleteMcSummaryForDisplay(
         summary,

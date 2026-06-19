@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, Megaphone, Ticket } from "lucide-react";
+import { Megaphone, Ticket } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -10,6 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { CreditBadge } from "@/components/credits/credit-badge";
+import { NotificationBell } from "@/components/growth/notification-bell";
 import { getSpecialAccount } from "@/lib/special-accounts";
 import { requestOpenFeedback } from "@/lib/feedback-store";
 import { UserMenu } from "./user-menu";
@@ -114,32 +115,12 @@ export function SidebarTopActions({
           popoverSide="right"
           popoverAlign="start"
         />
-        {collapsed ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                className="flex items-center justify-center h-9 w-10 mx-auto rounded-xl text-gray-400 hover:text-gray-600 hover:bg-black/[0.04] transition-all duration-200"
-                aria-label="알림"
-              >
-                <Bell className="size-[16px]" strokeWidth={1.7} />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="right"
-              sideOffset={12}
-              className="text-[12px] font-medium"
-            >
-              알림
-            </TooltipContent>
-          </Tooltip>
-        ) : (
-          <button
-            className="flex items-center justify-center h-9 w-9 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-black/[0.04] transition-all duration-200"
-            aria-label="알림"
-          >
-            <Bell className="size-[16px]" strokeWidth={1.7} />
-          </button>
-        )}
+        <NotificationBell
+          collapsed={collapsed}
+          popoverSide="right"
+          popoverAlign="start"
+          fullPageHref={isDirector ? "/director/notifications" : undefined}
+        />
       </div>
 
       {/* 무료 크레딧 신청 (협업 피드백 이벤트) — opens the contact modal */}

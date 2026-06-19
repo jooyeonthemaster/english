@@ -15,6 +15,7 @@ import {
   formatSummaryCompleteMcSummaryForDisplay,
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
+import { isSummaryWriting, summaryWritingStudentParts } from "@/lib/summary-writing";
 
 function toPrismaJson(value: unknown): Prisma.InputJsonValue | undefined {
   if (value === undefined || value === null) return undefined;
@@ -65,6 +66,12 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
   }
 
   push(q.direction);
+  // SW-LEAK-1: SUMMARY_WRITING 은 학생 안전 블록만 직렬화([빈칸 정답]·modelAnswer 미포함)
+  if (isSummaryWriting(typeId)) {
+    for (const part of summaryWritingStudentParts(q)) push(part);
+    if (q.questionText && !q.direction) push(q.questionText);
+    return parts.filter(Boolean).join("\n\n");
+  }
   // 주어진 문장(문장삽입·글의 순서)은 지문/단락 '위'에 박스로 와야 한다.
   // 한글 라벨 '[주어진 문장]'으로 통일해 DOCX/HWPX 파서(parseQuestionSections)·
   // 시험지 렌더(splitSentenceInsertGivenBlock)와 일치시킨다. (이전: '[given]'을

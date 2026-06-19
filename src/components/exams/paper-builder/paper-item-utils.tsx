@@ -11,6 +11,7 @@ import {
   shouldIncludeSourcePassageByDefault,
   shouldRenderSourcePassageInsideQuestion,
 } from "./passage-policy";
+import { isSummaryWritingSubtype } from "./summary-complete-mc-layout";
 import {
   normalizeInlineText,
   normalizePassageText,
@@ -149,7 +150,13 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     ? normalizeQuestionText(normalizedFields.questionText)
     : normalizedQuestionTextForPaper(question);
   const passageContent = normalizePassageText(question.passage?.content || "");
-  const includeSourcePassage = shouldIncludeSourcePassageByDefault(question);
+  // 요약문 영작(SUMMARY_WRITING)은 원본 지문을 시험지에 "무조건 함께" 가져온다(사용자 요구).
+  // 레퍼런스(내신 논술형 영작)도 지문을 문제에 포함하며, 학생은 지문을 읽고 요약문을 영작한다.
+  // SUMMARY_COMPLETE 와 동일하게 INLINE_SOURCE 로 처리 — 지문은 structuredSegments() 가
+  // 문제 안(요약문 위)에 박스로 인라인 렌더하고, 별도 출처 지문 블록은 억제된다.
+  const includeSourcePassage = isSummaryWritingSubtype(question.subType)
+    ? true
+    : shouldIncludeSourcePassageByDefault(question);
   const normalizedQuestion = {
     ...effectiveQuestion,
     questionText: normalizedQuestionText,
@@ -211,6 +218,8 @@ function questionWithPaperItemPassage(item: PaperItem): BuilderQuestion {
 
 export function shouldRenderSourcePassageForItem(item: PaperItem): boolean {
   if (item.blockType !== "question") return false;
+  // 요약문 영작은 INLINE_SOURCE(SUMMARY_COMPLETE 와 동일) — 지문은 structuredSegments() 가 문제
+  // 안에 인라인으로 그리므로 여기(별도 출처 지문 블록)에서는 그리지 않는다(중복 방지).
   if (shouldRenderSourcePassageInsideQuestion(item.sourceQuestion.subType)) return false;
   const sourceQuestion = questionWithPaperItemPassage(item);
   return (
@@ -527,6 +536,11 @@ function normalizeSummaryCompletionQuestionText(
   text: string,
   subType: string | null | undefined,
 ) {
+  // \uC694\uC57D\uBB38 \uC601\uC791(SUMMARY_WRITING): questionText \uC5D0\uB294 [\uD574\uC11D]/[\uC694\uC57D\uBB38]/[\uBCF4\uAE30]/[\uC55E\uAE00\uC790]\uB9CC
+  // \uB4E4\uC5B4\uC788\uACE0 \uC815\uB2F5\uACC4\uC5F4([\uBE48\uCE78 \uC815\uB2F5]/modelAnswer \uB4F1)\uC740 \uC560\uCD08\uC5D0 \uC9C1\uB82C\uD654\uB418\uC9C0 \uC54A\uB294\uB2E4.
+  // \uB530\uB77C\uC11C \uC815\uB2F5 \uC81C\uAC70\uAC00 \uBD88\uD544\uC694\uD558\uBA70, \uD559\uC0DD\uB178\uCD9C \uB9C8\uCEE4\uB97C \uADF8\uB300\uB85C \uBCF4\uC874\uD55C\uB2E4.
+  if (subType === "SUMMARY_WRITING") return text;
+
   if (subType !== "SUMMARY_COMPLETE_MC") return text;
 
   return text

@@ -15,6 +15,8 @@ import {
   renderDirection,
   renderError,
   renderFallback,
+  renderFirstLetter,
+  renderGloss,
   renderHint,
   renderMarker,
   renderMatchType,
@@ -22,6 +24,7 @@ import {
   renderScrambled,
   renderSummary,
   renderTarget,
+  renderWordBank,
 } from "./section-types";
 import { renderPassage } from "./passage";
 import { renderAnswerBlock } from "./answer";
@@ -47,6 +50,11 @@ import {
   formatSummaryCompleteMcSummaryForDisplay,
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
+import {
+  isSummaryWriting,
+  summaryWritingMaskedSummary,
+  summaryWritingWordBankText,
+} from "@/lib/summary-writing";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
 
@@ -118,6 +126,75 @@ function stripOriginalBlock(text: string) {
     .trim();
 }
 
+// ---------------------------------------------------------------------------
+// SUMMARY_WRITING (\uC694\uC57D\uBB38 \uC601\uC791) \uD559\uC0DD\uB178\uCD9C \uBE14\uB85D \uCD94\uCD9C.
+//   \uC815\uB2F5\uACC4\uC5F4(modelAnswer / blanks[].answer / acceptableVariants / requiredLemmas /
+//   wordBankDistractors / scoringCriteria)\uC740 \uC808\uB300 \uB9CC\uC9C0\uC9C0 \uC54A\uB294\uB2E4(SW-LEAK-1).
+//   1\uCC28: structuredData(\uD83D\uDC41\uD544\uB4DC)\uC5D0\uC11C summary-writing.ts \uC758 \uD559\uC0DD\uC548\uC804 \uD5EC\uD37C\uB85C \uC9C1\uC811 \uC0DD\uC131.
+//   2\uCC28(\uD3F4\uBC31): \uC774\uBBF8 \uD559\uC0DD\uC548\uC804\uD558\uAC8C \uC9C1\uB82C\uD654\uB41C questionText \uC758 [\uD574\uC11D]/[\uBCF4\uAE30]/[\uC55E\uAE00\uC790] \uBE14\uB85D\uB9CC \uD30C\uC2F1.
+// ---------------------------------------------------------------------------
+
+interface SummaryWritingStudentBlocks {
+  gloss: string;
+  summary: string;
+  wordBank: string;
+  firstLetters: string;
+}
+
+function asPlainRecord(value: unknown): Record<string, unknown> {
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+        ? (parsed as Record<string, unknown>)
+        : {};
+    } catch {
+      return {};
+    }
+  }
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+}
+
+// questionText \uD3F4\uBC31 \u2014 \uC774\uBBF8 \uD559\uC0DD\uC548\uC804 \uC9C1\uB82C\uD654\uB41C [\uD574\uC11D]/[\uBCF4\uAE30]/[\uC55E\uAE00\uC790] \uBE14\uB85D\uB9CC \uBF51\uB294\uB2E4.
+// (\uC815\uB2F5\uACC4\uC5F4 \uB9C8\uCEE4 [\uBE48\uCE78 \uC815\uB2F5] \uC740 SUMMARY_WRITING \uC9C1\uB82C\uD654\uC5D0 \uC560\uCD08\uC5D0 \uC5C6\uB2E4.)
+function extractSummaryWritingBlocksFromText(text: string): SummaryWritingStudentBlocks {
+  const blocks = (text || "").split(/\n{2,}/).map((b) => b.trim()).filter(Boolean);
+  const pick = (marker: string) => {
+    const block = blocks.find((b) => b.startsWith(marker));
+    return block ? block.slice(marker.length).replace(/^\s*/, "").trim() : "";
+  };
+  return {
+    gloss: pick("[\uD574\uC11D]"),
+    summary: pick("[\uC694\uC57D\uBB38]"),
+    wordBank: pick("[\uBCF4\uAE30]"),
+    firstLetters: pick("[\uC55E\uAE00\uC790]"),
+  };
+}
+
+function resolveSummaryWritingBlocks(
+  sourceQuestion: ExamQuestionData["question"],
+  questionText: string,
+): SummaryWritingStudentBlocks {
+  const structured = asPlainRecord(sourceQuestion.structuredData);
+  const hasStructured =
+    typeof structured.summaryWithBlanks === "string" &&
+    structured.summaryWithBlanks.trim().length > 0;
+
+  if (hasStructured) {
+    return {
+      gloss: typeof structured.koreanGloss === "string" ? structured.koreanGloss.trim() : "",
+      // 앞글자 단서는 별도 줄이 아니라 [요약문] 빈칸이 단어별 슬롯(칸마다 앞글자)으로 렌더된다
+      // (summaryWritingMaskedSummary 가 clueMode=firstLetter 면 "(A) p____ s____ ..." 생성).
+      summary: summaryWritingMaskedSummary(structured),
+      wordBank: summaryWritingWordBankText(structured),
+      firstLetters: "",
+    };
+  }
+  return extractSummaryWritingBlocksFromText(questionText);
+}
+
 export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   const { item, layout, includeAnswers, contentWidthHpu } = opts;
   const compact = layout.density === "compact";
@@ -146,6 +223,125 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   const result: BlockNode[] = [];
   const qNumSize = compact ? SIZE.qNumCompact : SIZE.qNum;
   const bodySize = compact ? SIZE.bodyCompact : SIZE.body;
+
+  // ── SUMMARY_WRITING (요약문 영작) 전용 렌더 ──
+  //   SUMMARY_COMPLETE 의 헤더/박스 구조를 미러하되, 정답 자동채움(maskSummary +
+  //   readSummaryBlankAnswers) 경로를 절대 타지 않는다. 학생노출 블록만 그린다.
+  //   순서: 헤더(번호+배점+stem) → [해석] → [요약문]((A)(B)빈칸선) → [보기] →
+  //         [앞글자] → 영작 답란(border-bottom 줄). 화살표 없음.
+  //   isSummaryWriting 를 isSummaryCompleteSubtype 보다 먼저 검사해, 후자가 확장돼
+  //   SUMMARY_WRITING 을 포함하게 되더라도 누설 경로로 빠지지 않게 한다(SW-LEAK-1).
+  if (isSummaryWriting(subType)) {
+    const swSections = parseQuestionSections(displayQuestionText, subType);
+    const swDirection = swSections.find((s) => s.type === "direction");
+    const swStem = (swDirection?.content ?? "").trim();
+    const blocks = resolveSummaryWritingBlocks(item.sourceQuestion, displayQuestionText);
+
+    // 1. 헤더 (번호 + [배점 · 유형] + 발문)
+    const headerRuns: RunNode[] = [
+      txt(`${orderNum}. `, { size: qNumSize, bold: true, color: COLORS.black }),
+    ];
+    if (showMeta) {
+      headerRuns.push(
+        txt("  ", { size: qNumSize }),
+        txt(subTypeLabel ? `[${points}점 · ${subTypeLabel}]` : `[${points}점]`, {
+          size: SIZE.meta,
+          color: COLORS.gray,
+        }),
+      );
+    }
+    if (swStem) {
+      headerRuns.push(
+        txt(" ", { size: bodySize }),
+        ...parseFormattedToRuns(swStem, {
+          size: compact ? SIZE.bodyCompact : SIZE.body,
+          bold: true,
+        }),
+      );
+    }
+    result.push({
+      kind: "p",
+      style: { spaceBefore: 80, spaceAfter: 100, lineSpacingPct: 158 },
+      runs: headerRuns,
+    });
+
+    // 2. [지문] — "무조건" 함께 렌더(사용자 요구·레퍼런스 형식, SUMMARY_COMPLETE 미러). 요약문 위에.
+    const swPassage = (item.passageContent ?? item.sourceQuestion.passage?.content ?? "").trim();
+    if (swPassage) {
+      result.push(
+        ...renderPassage({
+          passageTitle: "",
+          passageContent: swPassage,
+          passageStyle: "plain",
+          showPassageTitle: false,
+          compact,
+          usesSentenceInsertMarkers: false,
+          contentWidthHpu,
+        }),
+      );
+    }
+
+    // 3. [해석] (있으면) — 회색 박스
+    if (blocks.gloss) result.push(...renderGloss(blocks.gloss));
+
+    // 3. [요약문] ((A)(B) 파란 배지 + 고정폭 빈칸선) — renderSummary 재사용
+    if (blocks.summary) {
+      result.push(
+        ...renderSummary({ type: "summary", label: "요약문", content: blocks.summary }, contentWidthHpu),
+      );
+    }
+
+    // 4. [보기] (있으면) — WordOrder 칩 스타일
+    if (blocks.wordBank) result.push(...renderWordBank(blocks.wordBank));
+
+    // 5. [앞글자] (있으면) — 회색 작은 텍스트
+    if (blocks.firstLetters) result.push(...renderFirstLetter(blocks.firstLetters));
+
+    // 6. 영작 답란 (서술형 writing space) — 정답 미포함 경로에서만. 화살표 없음.
+    if (showAnswerSpace && (item.answerSpaceLines ?? 0) > 0) {
+      const lines = Math.max(1, Math.min(12, item.answerSpaceLines ?? 3));
+      for (let i = 0; i < lines; i++) {
+        result.push({
+          kind: "tbl",
+          colWidthsHpu: [contentWidthHpu],
+          borders: { left: NO, right: NO, top: NO, bottom: ANSWER_LINE },
+          rows: [
+            {
+              heightHpu: 720,
+              cells: [
+                {
+                  widthHpu: contentWidthHpu,
+                  heightHpu: 720,
+                  vAlign: "BOTTOM",
+                  borders: { left: NO, right: NO, top: NO, bottom: ANSWER_LINE },
+                  margins: { left: 0, right: 0, top: i === 0 ? 80 : 120, bottom: 0 },
+                  blocks: [{ kind: "p", style: { spaceAfter: 0 }, runs: [] }],
+                },
+              ],
+            },
+          ],
+        });
+      }
+    }
+
+    // 7. 정답·해설 (교사면, includeAnswers=true 일 때만). 정답계열은 여기서만.
+    if (includeAnswers) {
+      result.push(
+        ...renderAnswerBlock({
+          correctAnswer: formatStoredQuestionCorrectAnswer({
+            ...item.sourceQuestion,
+            correctAnswer: item.correctAnswer ?? item.sourceQuestion.correctAnswer ?? "",
+          }),
+          explanation: item.sourceQuestion.explanation,
+          hasOptions: false,
+          contentWidthHpu,
+        }),
+      );
+    }
+
+    void GIVEN_BORDER;
+    return result;
+  }
 
   // 본문 텍스트 파싱
   const sections = parseQuestionSections(displayQuestionText, subType);
