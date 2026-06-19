@@ -169,6 +169,20 @@ export function QuestionEditClient({
   const [baseline, setBaseline] = useState(initialSnapshot);
   const [aiEditOpen, setAiEditOpen] = useState(false);
 
+  const currentSnapshot = JSON.stringify({
+    type,
+    subType,
+    questionText,
+    options,
+    correctAnswer,
+    difficulty,
+    tags,
+    explanation,
+    keyPoints,
+    wrongExplanations,
+  });
+  const isDirty = currentSnapshot !== baseline;
+
   // AI 적용(덮어쓰기)·router.refresh() 등으로 question prop 이 갱신되면 폼 상태를 다시
   // 초기화한다(아니면 useState 가 갱신 전 값을 붙들어, 스테일 폼에서 '저장'을 누르면 방금
   // 적용한 AI 수정이 옛 값으로 되돌아가는 데이터 손실이 발생). 최초 마운트는 건너뛴다.
@@ -176,6 +190,11 @@ export function QuestionEditClient({
   useEffect(() => {
     if (!didMountRef.current) {
       didMountRef.current = true;
+      return;
+    }
+    // 미저장 수동편집(폼 dirty)이 있으면 재초기화를 건너뛴다 — 승인/검수 토글·저장의
+    // router.refresh() 로 question 참조가 바뀌어도 입력 중인 내용을 폐기하지 않도록 보호.
+    if (isDirty) {
       return;
     }
     setType(question.type);
@@ -191,19 +210,6 @@ export function QuestionEditClient({
     setBaseline(initialSnapshot);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question]);
-  const currentSnapshot = JSON.stringify({
-    type,
-    subType,
-    questionText,
-    options,
-    correctAnswer,
-    difficulty,
-    tags,
-    explanation,
-    keyPoints,
-    wrongExplanations,
-  });
-  const isDirty = currentSnapshot !== baseline;
   const [closeConfirmOpen, setCloseConfirmOpen] = useState(false);
 
   function performClose() {
