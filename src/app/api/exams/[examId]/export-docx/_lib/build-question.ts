@@ -1,4 +1,4 @@
-import { Paragraph, TextRun } from "docx";
+import { AlignmentType, Paragraph, TextRun } from "docx";
 import { COLOR, FONT, KR_FONT, PASSAGE_SIZE, QUESTION_NUM_SIZE, SMALL_SIZE } from "./styles";
 import { hrule } from "./borders";
 import { parseFormattedText } from "./parse-formatted-text";
@@ -15,7 +15,6 @@ import {
   renderDirection,
   renderScrambled,
   renderTarget,
-  renderContext,
   renderParagraphs,
   renderBlanks,
   renderHint,
@@ -23,7 +22,7 @@ import {
 } from "./render-section-inline";
 import { renderOptions } from "./render-options";
 import { renderAnswer } from "./render-answer";
-import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
+import type { DocChild, ExamQuestionData, ParsedOption, ParsedSection } from "./types";
 import { formatInlineMarkersForSubtype } from "@/components/exams/paper-builder/option-display";
 import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
 import { isSummaryCompleteSubtype } from "@/components/exams/paper-builder/summary-complete-mc-layout";
@@ -40,6 +39,32 @@ function stripOriginalBlock(text: string) {
     .filter((block) => block && !/^\[(?:original|\uC6D0\uBB38)\]\s*/i.test(block))
     .join("\n\n")
     .trim();
+}
+
+// SUMMARY_WRITING(요약문 영작)의 [해석]/[빈칸 해석] — 회색(slate) 인라인 해석 줄.
+// orange/amber 금지, 정답계열 미포함. parseFormattedText 의 마커는 검정으로 둔다.
+function renderSummaryWritingGloss(section: ParsedSection): DocChild[] {
+  return [
+    new Paragraph({
+      alignment: AlignmentType.JUSTIFIED,
+      spacing: { before: 40, after: 80, line: 312 },
+      children: [
+        new TextRun({
+          text: `[${section.label}] `,
+          font: KR_FONT,
+          size: PASSAGE_SIZE,
+          bold: true,
+          color: COLOR.gray,
+        }),
+        ...parseFormattedText(section.content, {
+          font: KR_FONT,
+          size: PASSAGE_SIZE,
+          color: COLOR.gray,
+          markerColor: COLOR.black,
+        }),
+      ],
+    }),
+  ];
 }
 
 export function buildQuestionElements(
@@ -135,7 +160,9 @@ export function buildQuestionElements(
         elements.push(...renderTarget(section));
         break;
       case "context":
-        elements.push(...renderContext(section));
+        // [해석]/[빈칸 해석](요약문 영작) — 회색(slate) 인라인 해석. 정답계열 없음.
+        // ([문맥] 등 레거시 내부 메타는 parseQuestionSections 에서 이미 드롭됨.)
+        elements.push(...renderSummaryWritingGloss(section));
         break;
       case "paragraphs":
         elements.push(...renderParagraphs(section));

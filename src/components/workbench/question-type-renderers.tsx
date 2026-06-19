@@ -21,6 +21,7 @@ import {
   type SentenceTransformQuestion,
   type FillBlankKeyQuestion,
   type SummaryCompleteQuestion,
+  type SummaryWritingQuestion,
   type WordOrderQuestion,
   type GrammarCorrectionQuestion,
   type ContextMeaningQuestion,
@@ -48,6 +49,7 @@ import {
   readSummaryPairOption,
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
+import { summaryWritingMaskedSummary } from "@/lib/summary-writing";
 import {
   buildGrammarCorrectionAnswerSlots,
   formatGrammarCorrectionCorrectAnswer,
@@ -477,6 +479,70 @@ export function SummaryCompleteRenderer({ q }: { q: SummaryCompleteQuestion }) {
             </div>
           ))}
         </div>
+        <AnswerLine answer={q.correctAnswer} />
+        <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} />
+      </AnswerRevealSection>
+    </>
+  );
+}
+
+export function SummaryWritingRenderer({ q }: { q: SummaryWritingQuestion }) {
+  // 👁학생노출: 마스킹 통과한 요약문 / 해석 / 보기 / 앞글자. 정답계열은 AnswerRevealSection 안에서만.
+  const maskedSummary = summaryWritingMaskedSummary(q);
+  const koreanGloss = typeof q.koreanGloss === "string" ? q.koreanGloss.trim() : "";
+  // 칩은 wordBank 배열을 직접 사용한다(' / ' join→split 왕복 금지 — chunk 모드에서 슬래시 든 칩이 잘못 분할됨).
+  const wordBank = Array.isArray(q.wordBank)
+    ? q.wordBank.map((w) => (typeof w === "string" ? w.trim() : "")).filter(Boolean)
+    : [];
+  // 앞글자 단서는 별도 줄이 아니라 [요약문]의 빈칸이 단어별 슬롯(칸마다 앞글자)으로 렌더된다
+  // (summaryWritingMaskedSummary 가 clueMode=firstLetter 면 "(A) p____ s____ ..." 생성).
+  // [빈칸 해석](blankGlosses)는 v1 학생면에 노출하지 않는다 — 빈칸별 1:1 직역이 [보기]와 결합 시
+  // 정답을 노출(시각검수 발견). 전체 의미는 [해석](koreanGloss)만. (방어: 설령 structuredData에
+  // blankGlosses가 있어도 렌더하지 않는다.)
+  // 🔒비밀: 빈칸별 모범 영작/동치답은 AnswerRevealSection 내부에서만 렌더.
+  const blanks = Array.isArray(q.blanks) ? q.blanks : [];
+
+  return (
+    <>
+      <Direction text={q.direction} />
+      {/* [해석] — 회색(slate) 박스. orange/amber 금지. PassageBlock=slate-50 */}
+      {koreanGloss && <PassageBlock label="해석">{koreanGloss}</PassageBlock>}
+      {/* [요약문] — (A)(B) 파란 배지 + 파란 밑줄선. 마스킹 통과본만(정답어구 미포함) */}
+      <PassageBlock label="요약문">{renderSummaryBlankMarkers(maskedSummary)}</PassageBlock>
+      {/* [보기] — WordOrder 칩 스타일. 미끼도 동일 스타일(시각 구분 없음). 비밀 미끼목록 미노출 */}
+      {wordBank.length > 0 && (
+        <div className="flex flex-wrap gap-2 p-3 rounded-lg bg-slate-50 border border-slate-200">
+          {wordBank.map((word, i) => (
+            <span key={i} className="inline-block px-2.5 py-1 rounded-md bg-white border border-slate-300 text-[12px] font-medium text-slate-700 shadow-sm">
+              {word}
+            </span>
+          ))}
+        </div>
+      )}
+      <AnswerRevealSection>
+        <ModelAnswer answer={q.modelAnswer} />
+        {blanks.length > 0 && (
+          <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 space-y-1">
+            <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">빈칸 정답</span>
+            {blanks.map((b, i) => (
+              <div key={i} className="text-[12px] text-emerald-800 flex items-start gap-2">
+                <span className="font-bold shrink-0">{b.label}</span>
+                <span>
+                  {b.answer}
+                  {Array.isArray(b.acceptableVariants) && b.acceptableVariants.length > 0 && (
+                    <span className="text-emerald-600"> / {b.acceptableVariants.join(" / ")}</span>
+                  )}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+        {Array.isArray(q.acceptableVariants) && q.acceptableVariants.length > 0 && (
+          <ConditionsBox conditions={q.acceptableVariants} label="동치 정답" />
+        )}
+        {Array.isArray(q.scoringCriteria) && q.scoringCriteria.length > 0 && (
+          <ConditionsBox conditions={q.scoringCriteria} label="채점 기준" />
+        )}
         <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} />
       </AnswerRevealSection>

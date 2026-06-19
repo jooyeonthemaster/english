@@ -1,7 +1,9 @@
 import {
   isSummaryCompleteMc,
   isSummaryCompleteSubtype,
+  isSummaryWritingSubtype,
   splitSummaryCompleteMcQuestionText,
+  splitSummaryWritingQuestionText,
   summaryCompleteMcPassageForItem,
   summaryCompleteMcSummaryForItem,
 } from "./summary-complete-mc-layout";
@@ -45,6 +47,9 @@ const STRUCTURED_ATOMIC_SUBTYPES = new Set([
   ...INLINE_SOURCE_PASSAGE_SUBTYPES,
   "SUMMARY_COMPLETE_MC",
   "SUMMARY_COMPLETE",
+  // 요약문 영작: [해석]/[요약문]/[보기]/[앞글자] 박스와 영작 답란이 칸 경계에서
+  // 쪼개지지 않도록 SUMMARY_COMPLETE 와 동일하게 원자 배치한다.
+  "SUMMARY_WRITING",
   "SENTENCE_ORDER",
 ]);
 
@@ -80,6 +85,13 @@ export function questionStemAndBody(item: PaperItem): { stem: string; body: stri
 
   if (isSummaryCompleteSubtype(subType)) {
     const { stem } = splitSummaryCompleteMcQuestionText(item.questionText);
+    return { stem, body: "" };
+  }
+
+  // 요약문 영작: 지시문(stem)만 헤더에 두고, [해석]/[요약문]/[보기]/[앞글자] 본문은
+  // structuredSegments() 가 박스로 그린다.
+  if (isSummaryWritingSubtype(subType)) {
+    const { stem } = splitSummaryWritingQuestionText(item.questionText);
     return { stem, body: "" };
   }
 
@@ -242,6 +254,23 @@ export function structuredSegments(item: PaperItem): StructSegment[] {
     if (passage) segs.push({ kind: "box", boxStyle: "passage", text: passage });
     if (isSummaryCompleteMc(subType)) segs.push({ kind: "arrow" });
     if (summary) segs.push({ kind: "box", boxStyle: "summary", text: summary });
+    return segs;
+  }
+
+  // 요약문 영작: [지문](테두리 박스) → [해석](회색) → [요약문]((A)(B) 빈칸선) → [보기](회색 칩).
+  // 지문은 "무조건" 문제 안(요약문 위)에 인라인 렌더한다(사용자 요구·레퍼런스 형식, SUMMARY_COMPLETE 미러).
+  // 화살표(↓)는 SUMMARY_COMPLETE_MC 전용이라 쓰지 않는다.
+  // 정답계열은 questionText 에 애초에 직렬화되지 않으므로(이미 안전 직렬화) 마스킹 불필요.
+  if (isSummaryWritingSubtype(subType)) {
+    const passage = summaryCompleteMcPassageForItem(item);
+    const sw = splitSummaryWritingQuestionText(item.questionText);
+    const segs: StructSegment[] = [];
+    if (passage) segs.push({ kind: "box", boxStyle: "passage", text: passage });
+    if (sw.gloss) segs.push({ kind: "box", boxStyle: "given", text: `[해석] ${sw.gloss}` });
+    if (sw.summary) segs.push({ kind: "box", boxStyle: "summary", text: `[요약문] ${sw.summary}` });
+    if (sw.wordBank) segs.push({ kind: "box", boxStyle: "given", text: `[보기] ${sw.wordBank}` });
+    if (sw.firstLetter)
+      segs.push({ kind: "box", boxStyle: "given", text: `[앞글자] ${sw.firstLetter}` });
     return segs;
   }
 

@@ -79,6 +79,115 @@ export function buildSummaryCompleteSchema(blankCount: number) {
   });
 }
 
+// ── 요약문 영작 (SUMMARY_WRITING) ──
+// 요약문 완성(SUMMARY_COMPLETE)의 한 단계 상위: 학생이 [보기]·해석·단서를 활용해
+// 빈칸을 "영작(작문)"한다. 한 빈칸에 다단어 어구 전체가 들어간다(레퍼런스: 내신 논술형 영작).
+// 🔒비밀(학생 비노출): answer / acceptableVariants / requiredLemmas / modelAnswer /
+//   wordBankDistractors / scoringCriteria. 👁학생노출: summaryWithBlanks / koreanGloss /
+//   blankGlosses / wordBank / firstLetterHint / targetWordCount / connectorFrameAfter.
+
+const summaryWritingBlankSchema = z.object({
+  label: z.string().describe("(A), (B), (C) — 요약문 빈칸 라벨 (학생노출)"),
+  answer: z.string().describe("🔒비밀: 이 빈칸의 모범 영작 (다단어 어구, 영어)"),
+  acceptableVariants: z
+    .array(z.string())
+    .optional()
+    .describe("🔒비밀: 동치 정답(어순/동의 구문 — 분사구문↔관계절 등). 채점 폭주 방지"),
+  requiredLemmas: z
+    .array(z.string())
+    .optional()
+    .describe("🔒비밀: 부분점수 채점에 반드시 포함돼야 할 표제어"),
+  firstLetterHint: z
+    .string()
+    .optional()
+    .describe("👁학생노출(clueMode=firstLetter): 각 단어 첫 글자만 소문자로, answer 토큰과 1:1 (예: 'p s d')"),
+  targetWordCount: z
+    .number()
+    .int()
+    .optional()
+    .describe("이 빈칸 목표 단어 수. targetWordsMode=approx면 '약 N단어'로 표시"),
+  connectorFrameAfter: z
+    .string()
+    .optional()
+    .describe("👁학생노출: 빈칸 뒤에 이어지는 고정 프레임 (예: ', which can lead to greater bias')"),
+});
+
+const summaryWritingFields = {
+  ...commonFields,
+  // ── 재사용: SUMMARY_COMPLETE 인프라 ──
+  summaryWithBlanks: z
+    .string()
+    .describe("👁학생노출: (A)(B) placeholder만 담은 영어 요약문. 정답 어구를 절대 포함하지 말 것"),
+  // ── 신규: 요약문 영작 전용 ──
+  koreanGloss: z
+    .string()
+    .optional()
+    .describe("👁학생노출(glossEnabled): [해석] 박스 한국어 뜻. 보기 단어를 1:1로 직역 나열하지 말 것(누수)"),
+  blankGlosses: z
+    .array(z.object({ label: z.string(), gloss: z.string() }))
+    .optional()
+    .describe("👁학생노출(partial/koreanChunk): 빈칸별 한국어 토막 해석"),
+  wordBank: z
+    .array(z.string())
+    .optional()
+    .describe("👁학생노출(wordBankEnabled): [보기] 칩(셔플됨, 미끼 포함). 중복 필요 단어는 같은 문자열 2개로"),
+  wordBankDistractors: z
+    .array(z.string())
+    .optional()
+    .describe("🔒비밀: wordBank 중 정답에 쓰이지 않는 미끼 목록 (검수/교사면 전용)"),
+  wordBankPolicy: z.enum(["useAll", "usePartial", "freeCount"]).optional(),
+  wordBankFidelity: z.enum(["verbatim", "inflected", "mixed"]).optional(),
+  blankAssignment: z.enum(["separate", "shared"]).optional(),
+  clueMode: z
+    .enum(["none", "firstLetter", "firstLetterDashes", "skeleton", "wordCount", "koreanChunk"])
+    .optional(),
+  targetWordsMode: z.enum(["exact", "approx", "hidden"]).optional(),
+  connectorFrame: z.enum(["full", "partial", "bare"]).optional(),
+  summarySourceMode: z.enum(["paraphrase", "inference"]).optional(),
+  sourceSentenceParaphrase: z.boolean().optional(),
+  modelAnswer: z
+    .string()
+    .describe("🔒비밀: 빈칸을 모두 채운 전체 모범 요약문(영어). correctAnswer와 동기화"),
+  acceptableVariants: z
+    .array(z.string())
+    .optional()
+    .describe("🔒비밀: 전체 답안 수준의 동치 정답"),
+  scoringCriteria: z
+    .array(z.string())
+    .optional()
+    .describe("🔒비밀: 부분점수 채점 기준(한국어, 교사면 전용)"),
+  scoringMode: z.enum(["EXACT", "LEMMA", "LLM_RUBRIC"]).optional(),
+};
+
+export const summaryWritingSchema = z.object({
+  ...summaryWritingFields,
+  blanks: z.array(summaryWritingBlankSchema).min(1).max(3).describe("요약문 빈칸 1~3개"),
+});
+export type SummaryWritingQuestion = z.infer<typeof summaryWritingSchema>;
+
+export function buildSummaryWritingSchema(blankCount: number) {
+  const n = Math.min(3, Math.max(1, Math.round(blankCount)));
+  const labels = Array.from({ length: n }, (_, index) => `(${String.fromCharCode(65 + index)})`);
+  const labelSchema = z.enum(labels as [string, ...string[]]);
+
+  return z.object({
+    ...summaryWritingFields,
+    summaryWithBlanks: z
+      .string()
+      .describe(
+        `👁학생노출: ${labels.join(", ")}를 각 1회 포함하는 영어 요약문. 정답 어구 포함 금지`,
+      ),
+    blanks: z
+      .array(
+        summaryWritingBlankSchema.extend({
+          label: labelSchema,
+        }),
+      )
+      .length(n)
+      .describe(`${n}개 요약문 영작 빈칸`),
+  });
+}
+
 // ── 배열 영작 ──
 
 export const wordOrderSchema = z.object({

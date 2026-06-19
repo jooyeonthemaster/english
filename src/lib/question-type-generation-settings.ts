@@ -183,6 +183,58 @@ export interface SummaryCompleteGenerationSettings
   summaryBlankCount?: number;
 }
 
+/**
+ * 요약문 영작(SUMMARY_WRITING) 세부옵션. 학생이 [보기]·해석·단서를 활용해 요약문
+ * 빈칸을 영어로 직접 영작한다(SUMMARY_COMPLETE의 한 단계 상위). 여기 있는 값은
+ * 전부 👁학생노출 출제 옵션 또는 결정론 발문/프롬프트 합성용이며, 정답계열
+ * (modelAnswer/blanks[].answer/acceptableVariants/...)은 이 인터페이스에 없다.
+ * v1 범위: sourceSpanHint는 항상 false 고정(렌더 복잡·KILLER off), 어법수정형 제외.
+ */
+export interface SummaryWritingGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
+  /** 해석([해석] 박스) 제공 여부. 기본 true. */
+  glossEnabled?: boolean;
+  /** 해석 정밀도. KILLER에서 literal 금지(번역 역행). */
+  glossLooseness?: "literal" | "natural" | "gist" | "partial";
+  /** [보기] 칩 제공 여부. 기본 true. */
+  wordBankEnabled?: boolean;
+  /** 보기 사용 규칙. useAll=모두 사용, usePartial=필요한 것만(미끼 포함). */
+  wordBankUsage?: "useAll" | "usePartial" | "freeCount";
+  /** 미끼(정답에 안 쓰이는) 단어 수. 0~4. usePartial일 때만 유효. */
+  boxDistractors?: number;
+  /** 보기 어형 충실도. verbatim=원형 그대로, inflected=어형변형 필요(시제·수 한정). */
+  wordBankFidelity?: "verbatim" | "inflected" | "mixed";
+  /** 보기 배열 순서. */
+  wordBankOrder?: "random" | "alphabetical" | "scrambleStrong";
+  /** 보기 입도(단어 단위/구 단위). */
+  wordBankChunking?: "word" | "chunk" | "mixed";
+  /** 빈칸 개수. 1~3, 기본 1. */
+  blankCount?: number;
+  /** 보기 배분 방식. blankCount>=2일 때만 유효. separate=빈칸별 분리, shared=공유. */
+  blankAssignment?: "separate" | "shared";
+  /** 목표 단어수 표시. exact=정확히 N단어(useAll 금지), approx=약 N단어, hidden=미표시. */
+  targetWordsMode?: "exact" | "approx" | "hidden";
+  /** 빈칸당 목표 단어수. 3~17, 기본 7. 채점 메타·표시용(빈칸선 길이에 반영 금지). */
+  targetWordsPerBlank?: number;
+  /** 단서 방식. v1 실동작: none/firstLetter/skeleton/wordCount. */
+  clueMode?:
+    | "none"
+    | "firstLetter"
+    | "firstLetterDashes"
+    | "skeleton"
+    | "wordCount"
+    | "koreanChunk";
+  /** 빈칸 주변 프레임 제공 수준. */
+  connectorFrame?: "full" | "partial" | "bare";
+  /** 요약문 출처. paraphrase=환언, inference=상위명제 추론. */
+  summarySourceMode?: "paraphrase" | "inference";
+  /** 빈칸 밖 문장도 변형할지. 기본 false. */
+  sourceSentenceParaphrase?: boolean;
+  /** 채점 단위(메타). exact/keyword/rubric. */
+  scoringGranularity?: "exact" | "keyword" | "rubric";
+}
+
 export const IRRELEVANT_SLOT_COUNT_MIN = 5;
 export const IRRELEVANT_SLOT_COUNT_MAX = 10;
 export const IRRELEVANT_SLOT_COUNT_DEFAULT = 5;
@@ -232,6 +284,15 @@ export const ANTONYM_PAIR_COUNT_DEFAULT = 5;
 export const BLANK_INFERENCE_BLANK_COUNT_MIN = 1;
 export const BLANK_INFERENCE_BLANK_COUNT_MAX = 3;
 export const BLANK_INFERENCE_BLANK_COUNT_DEFAULT = 1;
+export const SUMMARY_WRITING_BLANK_COUNT_MIN = 1;
+export const SUMMARY_WRITING_BLANK_COUNT_MAX = 3;
+export const SUMMARY_WRITING_BLANK_COUNT_DEFAULT = 1;
+export const SUMMARY_WRITING_DISTRACTOR_COUNT_MIN = 0;
+export const SUMMARY_WRITING_DISTRACTOR_COUNT_MAX = 4;
+export const SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT = 0;
+export const SUMMARY_WRITING_TARGET_WORDS_MIN = 3;
+export const SUMMARY_WRITING_TARGET_WORDS_MAX = 17;
+export const SUMMARY_WRITING_TARGET_WORDS_DEFAULT = 7;
 
 const GRAMMAR_LABELS = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"] as const;
 const VOCAB_CHOICE_LABELS = ["(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)", "(i)", "(j)"] as const;
@@ -296,6 +357,9 @@ const DEFAULT_QUESTION_LANGUAGE_SETTINGS: Record<
   IRRELEVANT: { stemLanguage: "ko", optionLanguage: "ko" },
   GRAMMAR_CORRECTION: { stemLanguage: "ko", optionLanguage: "ko" },
   SUMMARY_COMPLETE: { stemLanguage: "ko", optionLanguage: "en" },
+  // 요약문 영작 — 서술형(options=null). 발문은 한국어, 보기·요약문은 영어 고정.
+  // getQuestionLanguageToggleScope 가 'stem' 을 반환하므로 optionLanguage 는 노출 안 됨.
+  SUMMARY_WRITING: { stemLanguage: "ko", optionLanguage: "en" },
   CONDITIONAL_WRITING: { stemLanguage: "ko", optionLanguage: "ko" },
   SENTENCE_TRANSFORM: { stemLanguage: "ko", optionLanguage: "ko" },
   FILL_BLANK_KEY: { stemLanguage: "ko", optionLanguage: "ko" },
@@ -645,6 +709,28 @@ const BLANK_INFERENCE_BLANK_COUNT_SETTING: NumericSettingSpec = {
   defaultValue: BLANK_INFERENCE_BLANK_COUNT_DEFAULT,
 };
 
+const SUMMARY_WRITING_BLANK_COUNT_SETTING: NumericSettingSpec = {
+  key: "blankCount",
+  aliases: ["summaryBlankCount"],
+  min: SUMMARY_WRITING_BLANK_COUNT_MIN,
+  max: SUMMARY_WRITING_BLANK_COUNT_MAX,
+  defaultValue: SUMMARY_WRITING_BLANK_COUNT_DEFAULT,
+};
+
+const SUMMARY_WRITING_DISTRACTOR_COUNT_SETTING: NumericSettingSpec = {
+  key: "boxDistractors",
+  min: SUMMARY_WRITING_DISTRACTOR_COUNT_MIN,
+  max: SUMMARY_WRITING_DISTRACTOR_COUNT_MAX,
+  defaultValue: SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT,
+};
+
+const SUMMARY_WRITING_TARGET_WORDS_SETTING: NumericSettingSpec = {
+  key: "targetWordsPerBlank",
+  min: SUMMARY_WRITING_TARGET_WORDS_MIN,
+  max: SUMMARY_WRITING_TARGET_WORDS_MAX,
+  defaultValue: SUMMARY_WRITING_TARGET_WORDS_DEFAULT,
+};
+
 function getIrrelevantLabel(index: number): string {
   if (index >= 0 && index < 20) return String.fromCodePoint(0x2460 + index);
   if (index >= 20 && index < 35) return String.fromCodePoint(0x3251 + (index - 20));
@@ -858,6 +944,88 @@ export function readBlankInferenceBlankCountSetting(rawSettings: unknown): numbe
   );
 }
 
+export function normalizeSummaryWritingBlankCount(value: unknown): number {
+  return normalizeNumericSetting(value, SUMMARY_WRITING_BLANK_COUNT_SETTING);
+}
+
+/** U2가 import하는 정식 이름 — 절대 변경 금지. */
+export function readSummaryWritingBlankCountSetting(rawSettings: unknown): number {
+  return readNumericSetting(
+    rawSettings,
+    "SUMMARY_WRITING",
+    SUMMARY_WRITING_BLANK_COUNT_SETTING,
+  );
+}
+
+export function normalizeSummaryWritingDistractorCount(value: unknown): number {
+  return normalizeNumericSetting(value, SUMMARY_WRITING_DISTRACTOR_COUNT_SETTING);
+}
+
+export function readSummaryWritingDistractorCountSetting(
+  rawSettings: unknown,
+): number {
+  return readNumericSetting(
+    rawSettings,
+    "SUMMARY_WRITING",
+    SUMMARY_WRITING_DISTRACTOR_COUNT_SETTING,
+  );
+}
+
+export function normalizeSummaryWritingTargetWords(value: unknown): number {
+  return normalizeNumericSetting(value, SUMMARY_WRITING_TARGET_WORDS_SETTING);
+}
+
+export function readSummaryWritingTargetWordsSetting(
+  rawSettings: unknown,
+): number {
+  return readNumericSetting(
+    rawSettings,
+    "SUMMARY_WRITING",
+    SUMMARY_WRITING_TARGET_WORDS_SETTING,
+  );
+}
+
+/**
+ * SUMMARY_WRITING 열거형/불리언 옵션을 안전하게 읽는다(flat 우선 → nested(typeId) 폴백,
+ * 다른 read 헬퍼와 동일 규약). 허용값 밖이면 fallback 반환.
+ */
+function readSummaryWritingEnumSetting<T extends string>(
+  rawSettings: unknown,
+  key: string,
+  allowed: readonly T[],
+  fallback: T,
+): T {
+  const allow = (v: unknown): v is T =>
+    typeof v === "string" && (allowed as readonly string[]).includes(v);
+  if (isRecord(rawSettings) && allow(rawSettings[key])) {
+    return rawSettings[key] as T;
+  }
+  const nested = isRecord(rawSettings) ? rawSettings.SUMMARY_WRITING : undefined;
+  if (isRecord(nested) && allow(nested[key])) {
+    return nested[key] as T;
+  }
+  return fallback;
+}
+
+/**
+ * SUMMARY_WRITING boolean 읽기. 기본값(미설정 시)을 호출자가 지정한다(해석/보기 토글은
+ * 기본 ON 이므로 기존 readBooleanSetting(기본 false 고정)을 그대로 쓰지 못한다).
+ */
+function readSummaryWritingBooleanSetting(
+  rawSettings: unknown,
+  key: string,
+  fallback: boolean,
+): boolean {
+  if (isRecord(rawSettings) && typeof rawSettings[key] === "boolean") {
+    return rawSettings[key] as boolean;
+  }
+  const nested = isRecord(rawSettings) ? rawSettings.SUMMARY_WRITING : undefined;
+  if (isRecord(nested) && typeof nested[key] === "boolean") {
+    return nested[key] as boolean;
+  }
+  return fallback;
+}
+
 export function readGenericOptionCountSetting(
   rawSettings: unknown,
   typeId: string,
@@ -935,6 +1103,7 @@ export interface QuestionTypeGenerationSettings {
   GRAMMAR_ERROR?: GrammarErrorGenerationSettings;
   GRAMMAR_CORRECTION?: GrammarCorrectionGenerationSettings;
   SUMMARY_COMPLETE?: SummaryCompleteGenerationSettings;
+  SUMMARY_WRITING?: SummaryWritingGenerationSettings;
   SUMMARY_COMPLETE_MC?: SummaryCompleteMcGenerationSettings;
   IRRELEVANT?: IrrelevantGenerationSettings;
   VOCAB_CHOICE?: VocabChoiceGenerationSettings;
@@ -956,6 +1125,14 @@ export interface ResolvedQuestionTypeGenerationSettings {
   grammarCorrectionErrorCount?: number;
   summaryCompleteMcBlankCount?: number;
   summaryCompleteBlankCount?: number;
+  /** SUMMARY_WRITING 빈칸 개수(1~3). U2 schema builder(options.summaryWritingBlankCount)가 사용. */
+  summaryWritingBlankCount?: number;
+  /** SUMMARY_WRITING 미끼 단어 수(0~4). usePartial일 때만 의미. */
+  summaryWritingDistractorCount?: number;
+  /** SUMMARY_WRITING 빈칸당 목표 단어수(3~17). 채점·표시 메타(빈칸선 길이 무관). */
+  summaryWritingTargetWords?: number;
+  /** SUMMARY_WRITING 결정론 합성 발문(directionAutoText). AI 자유문구 금지. */
+  summaryWritingDirection?: string;
   contentMatchOptionCount?: number;
   contentMatchAnswerCount?: number;
   /** 내용 일치 강제 극성. undefined = AUTO(모델 결정, 기존 동작). */
@@ -1039,11 +1216,392 @@ function effectiveSettingsWithLanguage(
   };
 }
 
+// ── SUMMARY_WRITING(요약문 영작) 결정론 해석 + 발문 합성 ──
+
+export type SummaryWritingGlossLooseness =
+  SummaryWritingGenerationSettings["glossLooseness"];
+export type SummaryWritingWordBankUsage =
+  SummaryWritingGenerationSettings["wordBankUsage"];
+export type SummaryWritingFidelity =
+  SummaryWritingGenerationSettings["wordBankFidelity"];
+export type SummaryWritingClueMode = SummaryWritingGenerationSettings["clueMode"];
+export type SummaryWritingTargetWordsMode =
+  SummaryWritingGenerationSettings["targetWordsMode"];
+
+/** 호환성 매트릭스(바이블 §3)를 적용한 SUMMARY_WRITING 옵션의 최종 확정본. */
+export interface ResolvedSummaryWritingSettings {
+  difficulty: QuestionDifficulty;
+  glossEnabled: boolean;
+  glossLooseness: NonNullable<SummaryWritingGlossLooseness>;
+  wordBankEnabled: boolean;
+  wordBankUsage: NonNullable<SummaryWritingWordBankUsage>;
+  boxDistractors: number;
+  wordBankFidelity: NonNullable<SummaryWritingFidelity>;
+  wordBankOrder: NonNullable<SummaryWritingGenerationSettings["wordBankOrder"]>;
+  wordBankChunking: NonNullable<
+    SummaryWritingGenerationSettings["wordBankChunking"]
+  >;
+  blankCount: number;
+  blankAssignment: NonNullable<SummaryWritingGenerationSettings["blankAssignment"]>;
+  targetWordsMode: NonNullable<SummaryWritingTargetWordsMode>;
+  targetWordsPerBlank: number;
+  clueMode: NonNullable<SummaryWritingClueMode>;
+  connectorFrame: NonNullable<SummaryWritingGenerationSettings["connectorFrame"]>;
+  summarySourceMode: NonNullable<
+    SummaryWritingGenerationSettings["summarySourceMode"]
+  >;
+  sourceSentenceParaphrase: boolean;
+  scoringGranularity: NonNullable<
+    SummaryWritingGenerationSettings["scoringGranularity"]
+  >;
+}
+
+/** 난이도별 기본 프리셋(바이블 §0/§4). 옵션 미설정 시 이 값으로 채운다. */
+function summaryWritingDifficultyPreset(
+  difficulty: QuestionDifficulty,
+): ResolvedSummaryWritingSettings {
+  if (difficulty === "BASIC") {
+    return {
+      difficulty,
+      glossEnabled: true,
+      glossLooseness: "literal",
+      wordBankEnabled: true,
+      wordBankUsage: "useAll",
+      boxDistractors: 0,
+      wordBankFidelity: "verbatim",
+      wordBankOrder: "random",
+      wordBankChunking: "chunk",
+      blankCount: 1,
+      blankAssignment: "separate",
+      targetWordsMode: "approx",
+      targetWordsPerBlank: 4,
+      clueMode: "none",
+      connectorFrame: "full",
+      summarySourceMode: "paraphrase",
+      sourceSentenceParaphrase: false,
+      scoringGranularity: "keyword",
+    };
+  }
+  if (difficulty === "KILLER") {
+    return {
+      difficulty,
+      glossEnabled: false,
+      glossLooseness: "natural",
+      wordBankEnabled: true,
+      wordBankUsage: "usePartial",
+      boxDistractors: 2,
+      wordBankFidelity: "inflected",
+      wordBankOrder: "scrambleStrong",
+      wordBankChunking: "word",
+      blankCount: 2,
+      blankAssignment: "shared",
+      targetWordsMode: "hidden",
+      targetWordsPerBlank: SUMMARY_WRITING_TARGET_WORDS_DEFAULT,
+      clueMode: "none",
+      connectorFrame: "partial",
+      summarySourceMode: "inference",
+      sourceSentenceParaphrase: true,
+      scoringGranularity: "rubric",
+    };
+  }
+  // INTERMEDIATE (기본)
+  return {
+    difficulty,
+    glossEnabled: true,
+    glossLooseness: "natural",
+    wordBankEnabled: true,
+    wordBankUsage: "usePartial",
+    boxDistractors: 1,
+    wordBankFidelity: "verbatim",
+    wordBankOrder: "scrambleStrong",
+    wordBankChunking: "word",
+    blankCount: 2,
+    blankAssignment: "separate",
+    targetWordsMode: "approx",
+    targetWordsPerBlank: SUMMARY_WRITING_TARGET_WORDS_DEFAULT,
+    clueMode: "none",
+    connectorFrame: "partial",
+    summarySourceMode: "paraphrase",
+    sourceSentenceParaphrase: false,
+    scoringGranularity: "keyword",
+  };
+}
+
+/**
+ * SUMMARY_WRITING 세부옵션을 호환성 매트릭스(바이블 §3)대로 해석한다.
+ * 강사 설정값 우선, 미설정은 난이도 프리셋, 그 위에 모순 제거(F=강제) 규칙을 적용.
+ * 결정론적이라 같은 입력 → 같은 출력(발문 합성·프롬프트 양쪽에서 동일하게 쓰임).
+ */
+export function resolveSummaryWritingSettings(
+  rawSettings: unknown,
+  fallbackDifficulty: string | null | undefined = "INTERMEDIATE",
+): ResolvedSummaryWritingSettings {
+  const difficulty = readQuestionTypeDifficultySetting(
+    getQuestionTypeSettingsForType(rawSettings, "SUMMARY_WRITING"),
+    fallbackDifficulty,
+  );
+  const preset = summaryWritingDifficultyPreset(difficulty);
+
+  const glossEnabled = readSummaryWritingBooleanSetting(
+    rawSettings,
+    "glossEnabled",
+    preset.glossEnabled,
+  );
+  const wordBankEnabled = readSummaryWritingBooleanSetting(
+    rawSettings,
+    "wordBankEnabled",
+    preset.wordBankEnabled,
+  );
+  const glossLooseness = readSummaryWritingEnumSetting(
+    rawSettings,
+    "glossLooseness",
+    ["literal", "natural", "gist", "partial"] as const,
+    preset.glossLooseness,
+  );
+  let wordBankUsage = readSummaryWritingEnumSetting(
+    rawSettings,
+    "wordBankUsage",
+    ["useAll", "usePartial", "freeCount"] as const,
+    preset.wordBankUsage,
+  );
+  const wordBankFidelity = readSummaryWritingEnumSetting(
+    rawSettings,
+    "wordBankFidelity",
+    ["verbatim", "inflected", "mixed"] as const,
+    preset.wordBankFidelity,
+  );
+  const wordBankOrder = readSummaryWritingEnumSetting(
+    rawSettings,
+    "wordBankOrder",
+    ["random", "alphabetical", "scrambleStrong"] as const,
+    preset.wordBankOrder,
+  );
+  const wordBankChunking = readSummaryWritingEnumSetting(
+    rawSettings,
+    "wordBankChunking",
+    ["word", "chunk", "mixed"] as const,
+    preset.wordBankChunking,
+  );
+  const blankCount = readNumericSetting(
+    rawSettings,
+    "SUMMARY_WRITING",
+    SUMMARY_WRITING_BLANK_COUNT_SETTING,
+  );
+  const blankAssignment = readSummaryWritingEnumSetting(
+    rawSettings,
+    "blankAssignment",
+    ["separate", "shared"] as const,
+    preset.blankAssignment,
+  );
+  let targetWordsMode = readSummaryWritingEnumSetting(
+    rawSettings,
+    "targetWordsMode",
+    ["exact", "approx", "hidden"] as const,
+    preset.targetWordsMode,
+  );
+  const targetWordsPerBlank = readNumericSetting(
+    rawSettings,
+    "SUMMARY_WRITING",
+    SUMMARY_WRITING_TARGET_WORDS_SETTING,
+  );
+  const clueMode = readSummaryWritingEnumSetting(
+    rawSettings,
+    "clueMode",
+    [
+      "none",
+      "firstLetter",
+      "firstLetterDashes",
+      "skeleton",
+      "wordCount",
+      "koreanChunk",
+    ] as const,
+    preset.clueMode,
+  );
+  const connectorFrame = readSummaryWritingEnumSetting(
+    rawSettings,
+    "connectorFrame",
+    ["full", "partial", "bare"] as const,
+    preset.connectorFrame,
+  );
+  const summarySourceMode = readSummaryWritingEnumSetting(
+    rawSettings,
+    "summarySourceMode",
+    ["paraphrase", "inference"] as const,
+    preset.summarySourceMode,
+  );
+  const sourceSentenceParaphrase = readSummaryWritingBooleanSetting(
+    rawSettings,
+    "sourceSentenceParaphrase",
+    preset.sourceSentenceParaphrase,
+  );
+  const scoringGranularity = readSummaryWritingEnumSetting(
+    rawSettings,
+    "scoringGranularity",
+    ["exact", "keyword", "rubric"] as const,
+    preset.scoringGranularity,
+  );
+
+  let boxDistractors = readNumericSetting(
+    rawSettings,
+    "SUMMARY_WRITING",
+    SUMMARY_WRITING_DISTRACTOR_COUNT_SETTING,
+  );
+
+  // ── 호환성 매트릭스 강제(F) 규칙 적용 ──
+  // #1: 보기 off → 보기 하위옵션 무의미(미끼 0·배분 separate 등은 어차피 미사용).
+  if (!wordBankEnabled) {
+    wordBankUsage = "useAll";
+    boxDistractors = 0;
+  }
+  // #6: useAll/freeCount엔 미끼 개념 없음 → 0 강제.
+  if (wordBankUsage !== "usePartial") {
+    boxDistractors = 0;
+  }
+  // #5: useAll → exact 표시 금지(칩 개수=정답 단어수 + 정확수 = 이중 누설) → approx 로 강등.
+  if (wordBankEnabled && wordBankUsage === "useAll" && targetWordsMode === "exact") {
+    targetWordsMode = "approx";
+  }
+
+  return {
+    difficulty,
+    glossEnabled,
+    glossLooseness,
+    wordBankEnabled,
+    wordBankUsage,
+    boxDistractors,
+    wordBankFidelity,
+    wordBankOrder,
+    wordBankChunking,
+    blankCount,
+    blankAssignment,
+    targetWordsMode,
+    targetWordsPerBlank,
+    clueMode,
+    connectorFrame,
+    summarySourceMode,
+    sourceSentenceParaphrase,
+    scoringGranularity,
+  };
+}
+
+/** 빈칸 라벨 목록 "(A)" "(B)" ... blankCount개. */
+function summaryWritingBlankLabels(blankCount: number): string[] {
+  const n = normalizeSummaryWritingBlankCount(blankCount);
+  return Array.from({ length: n }, (_, i) => `(${String.fromCharCode(65 + i)})`);
+}
+
+function summaryWritingDifficultyPoints(difficulty: QuestionDifficulty): string {
+  if (difficulty === "BASIC") return "[2점]";
+  if (difficulty === "KILLER") return "[4점]";
+  return "[3점]";
+}
+
+/**
+ * 결정론 발문 합성(directionAutoText, 바이블 §5). 옵션 조합 → 한국어 발문 문자열.
+ * AI 자유문구를 막기 위해 항상 같은 입력 → 같은 출력. U2 프롬프트가 이 결과를 참조.
+ * 모순 가드(SW-LEAK-DIR): 미끼/어형변형이 있으면 "변형 없이 한 번씩 모두 사용" 문구를
+ * 절대 붙이지 않는다(매트릭스 #4).
+ */
+export function buildSummaryWritingDirection(
+  settings: ResolvedSummaryWritingSettings,
+): string {
+  const labels = summaryWritingBlankLabels(settings.blankCount).join(", ");
+  const clauses: string[] = [];
+
+  // 머리: 해석 참고 안내(해석 제공 시).
+  if (settings.glossEnabled) {
+    clauses.push("[해석]을 참고하여");
+  }
+
+  // 보기 활용 안내.
+  if (settings.wordBankEnabled) {
+    const verbatimAll =
+      settings.wordBankUsage === "useAll" &&
+      settings.wordBankFidelity === "verbatim" &&
+      settings.boxDistractors === 0;
+    if (verbatimAll) {
+      // 모순 없음 — 모두 그대로 한 번씩.
+      clauses.push("[보기]의 단어를 변형 없이 한 번씩 모두 사용하여");
+    } else if (settings.wordBankUsage === "usePartial") {
+      if (settings.boxDistractors > 0) {
+        clauses.push("[보기]에서 필요한 단어만 골라(쓰지 않는 단어가 포함됨)");
+      } else {
+        clauses.push("[보기]에서 필요한 단어만 골라");
+      }
+      if (settings.wordBankFidelity !== "verbatim") {
+        clauses.push("(필요시 어형을 바꿔)");
+      }
+    } else {
+      // useAll/freeCount인데 어형변형이 섞인 경우 — "모두 그대로" 문구 금지.
+      clauses.push("[보기]의 단어를 활용하여");
+      if (settings.wordBankFidelity !== "verbatim") {
+        clauses.push("(필요시 어형을 바꿔)");
+      }
+    }
+  }
+
+  // 목표 단어수 안내. 단/복수 분기(빈칸 1개면 "빈칸을", 여러 개면 "각 빈칸을").
+  // 앞글자 단서(firstLetter)는 단어 수를 이미 노출하므로 단어수 문구를 붙이지 않는다(모순 방지).
+  const blankWord = settings.blankCount >= 2 ? "각 빈칸을" : "빈칸을";
+  const perWordClue = settings.clueMode === "firstLetter" || settings.clueMode === "firstLetterDashes";
+  if (!perWordClue) {
+    if (settings.targetWordsMode === "exact") {
+      clauses.push(`${blankWord} ${settings.targetWordsPerBlank}단어로`);
+    } else if (settings.targetWordsMode === "approx") {
+      clauses.push(`${blankWord} 약 ${settings.targetWordsPerBlank}단어로`);
+    }
+  }
+
+  const prefix = clauses.length ? `${clauses.join(" ")} ` : "";
+  const points = summaryWritingDifficultyPoints(settings.difficulty);
+  return `다음 글의 요약문 빈칸 ${labels}에 들어갈 말을 ${prefix}영작하시오. ${points}`;
+}
+
 export function resolveQuestionTypeGenerationSettings(
   typeId: string,
   rawSettings: unknown,
+  // 전역(GLOBAL) 난이도 폴백. 유형별 난이도 오버라이드(rawSettings.difficulty)가 없으면
+  // 이 값을 쓴다. SUMMARY_WRITING 프리셋(gloss/distractors/blankCount/...)과 배점이
+  // 모델 지시(effectiveDiffLabel)·question.difficulty 와 동일 난이도로 정렬되게 한다.
+  fallbackDifficulty: string | null | undefined = "INTERMEDIATE",
 ): ResolvedQuestionTypeGenerationSettings {
   const languageSettings = languageSettingsForType(typeId, rawSettings);
+
+  if (typeId === "SUMMARY_WRITING") {
+    const sw = resolveSummaryWritingSettings(rawSettings, fallbackDifficulty);
+    const summaryWritingDirection = buildSummaryWritingDirection(sw);
+    return {
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
+        // 해석된 난이도를 effectiveTypeSettings 에 박아 둔다 — 이 객체를 받는
+        // buildQuestionTypeSettingsPrompt 가 (fallback 인자와 무관하게) 같은 난이도로
+        // 재해석해 EXACT-direction 프롬프트가 발문·배점·프리셋과 어긋나지 않게 한다.
+        difficulty: sw.difficulty,
+        glossEnabled: sw.glossEnabled,
+        glossLooseness: sw.glossLooseness,
+        wordBankEnabled: sw.wordBankEnabled,
+        wordBankUsage: sw.wordBankUsage,
+        boxDistractors: sw.boxDistractors,
+        wordBankFidelity: sw.wordBankFidelity,
+        wordBankOrder: sw.wordBankOrder,
+        wordBankChunking: sw.wordBankChunking,
+        blankCount: sw.blankCount,
+        blankAssignment: sw.blankAssignment,
+        targetWordsMode: sw.targetWordsMode,
+        targetWordsPerBlank: sw.targetWordsPerBlank,
+        clueMode: sw.clueMode,
+        connectorFrame: sw.connectorFrame,
+        summarySourceMode: sw.summarySourceMode,
+        sourceSentenceParaphrase: sw.sourceSentenceParaphrase,
+        scoringGranularity: sw.scoringGranularity,
+        directionAutoText: summaryWritingDirection,
+      }),
+      ...languageSettings,
+      summaryWritingBlankCount: sw.blankCount,
+      summaryWritingDistractorCount: sw.boxDistractors,
+      summaryWritingTargetWords: sw.targetWordsPerBlank,
+      summaryWritingDirection,
+    };
+  }
 
   if (typeId === "GRAMMAR_ERROR") {
     const grammarMarkerCount = readGrammarMarkerCountSetting(rawSettings);
@@ -1302,6 +1860,14 @@ export function getQuestionTypeGenerationTokenFloor(
   }
 
   if (
+    typeId === "SUMMARY_WRITING" &&
+    (resolved.summaryWritingBlankCount ?? SUMMARY_WRITING_BLANK_COUNT_DEFAULT) >
+      SUMMARY_WRITING_BLANK_COUNT_DEFAULT
+  ) {
+    return 8_192;
+  }
+
+  if (
     typeId === "IRRELEVANT" &&
     (resolved.irrelevantSlotCount ?? IRRELEVANT_SLOT_COUNT_DEFAULT) >
       IRRELEVANT_SLOT_COUNT_DEFAULT
@@ -1391,6 +1957,28 @@ export function getDefaultQuestionTypeGenerationSettings(): QuestionTypeGenerati
     SUMMARY_COMPLETE: {
       blankCount: SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT,
       ...defaultLanguageSettingsForType("SUMMARY_COMPLETE"),
+    },
+    SUMMARY_WRITING: {
+      // INTERMEDIATE 프리셋(전역 기본 난이도)을 기본값으로 노출. 강사가 모달에서
+      // 바꾸지 않아도 resolveSummaryWritingSettings 가 난이도별로 재해석한다.
+      glossEnabled: true,
+      glossLooseness: "natural",
+      wordBankEnabled: true,
+      wordBankUsage: "usePartial",
+      boxDistractors: SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT,
+      wordBankFidelity: "verbatim",
+      wordBankOrder: "scrambleStrong",
+      wordBankChunking: "word",
+      blankCount: SUMMARY_WRITING_BLANK_COUNT_DEFAULT,
+      blankAssignment: "separate",
+      targetWordsMode: "approx",
+      targetWordsPerBlank: SUMMARY_WRITING_TARGET_WORDS_DEFAULT,
+      clueMode: "none",
+      connectorFrame: "partial",
+      summarySourceMode: "paraphrase",
+      sourceSentenceParaphrase: false,
+      scoringGranularity: "keyword",
+      ...defaultLanguageSettingsForType("SUMMARY_WRITING"),
     },
     SUMMARY_COMPLETE_MC: {
       blankCount: SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT,
@@ -1486,6 +2074,10 @@ function buildQuestionLanguageSettingsPrompt(
 export function buildQuestionTypeSettingsPrompt(
   typeId: string,
   rawSettings: unknown,
+  // 전역(GLOBAL) 난이도 폴백 — resolveQuestionTypeGenerationSettings 와 동일 의미.
+  // SUMMARY_WRITING 의 EXACT-direction 프롬프트가 resolve 결과(발문·배점)와
+  // 어긋나지 않도록 같은 난이도로 resolveSummaryWritingSettings 를 호출한다.
+  fallbackDifficulty: string | null | undefined = "INTERMEDIATE",
 ): string {
   const languagePrompt = buildQuestionLanguageSettingsPrompt(typeId, rawSettings);
 
@@ -1771,6 +2363,132 @@ export function buildQuestionTypeSettingsPrompt(
       "- Every option must be independently checkable from the passage and should be similar in length and specificity.",
       "- wrongOptionExplanations must explain every non-answer label by citing the decisive passage clue.",
     ].join("\n"));
+  }
+
+  if (typeId === "SUMMARY_WRITING") {
+    const sw = resolveSummaryWritingSettings(rawSettings, fallbackDifficulty);
+    const labels = summaryWritingBlankLabels(sw.blankCount);
+    const labelsText = labels.join(", ");
+    const direction = buildSummaryWritingDirection(sw);
+    const lines: string[] = [
+      "## Type detail setting: SUMMARY_WRITING / 요약문 영작 (English summary blank writing)",
+      "- This is a short-answer English WRITING item. options must be null/empty; do NOT create multiple-choice options.",
+      // 결정론 발문(SW-GATE-VERBATIM) — AI가 발문을 새로 쓰지 못하게 정확히 지정.
+      `- direction must be EXACTLY: "${direction}". Do not paraphrase, translate, or change the score bracket.`,
+      `- summaryWithBlanks must be one natural English summary sentence containing each marker ${labelsText} exactly once, and must NOT contain the answer phrases.`,
+      `- blanks must contain exactly ${sw.blankCount} entries with labels ${labelsText}, in order. Each blanks[].answer is a multi-word English phrase that completes that blank (this is the secret model writing for that blank).`,
+      "- modelAnswer must be the full summary sentence with every blank filled in (English), and correctAnswer must equal each label and its answer joined in order, for example \"(A) ..., (B) ...\".",
+      // 요약문 출처.
+      sw.summarySourceMode === "inference"
+        ? "- summarySourceMode = inference: the summary must be a higher-level claim inferred from the passage, not a sentence copied or lightly reworded from it."
+        : "- summarySourceMode = paraphrase: the summary must paraphrase the passage's core; never let the answer be recoverable by copying a passage span verbatim.",
+    ];
+
+    // 빈칸 밖 문장 변형.
+    if (sw.sourceSentenceParaphrase) {
+      lines.push(
+        "- Reword the non-blank parts of the summary in different surface wording from the passage while keeping the meaning, so students cannot surface-match memorized text.",
+      );
+    }
+
+    // 해석(gloss).
+    if (sw.glossEnabled) {
+      lines.push(
+        `- Provide koreanGloss (Korean meaning for the [해석] box) as ONE natural Korean sentence conveying the whole summary's meaning (reference [해석] format). NEVER list the [보기] words 1:1 as a direct translation, never render the blank answer phrase word-for-word, and never reveal the English answer order.`,
+      );
+      // v1: blankGlosses(빈칸별 1:1 직역)는 [보기]와 결합 시 정답을 노출하므로 생성 금지.
+      lines.push(
+        "- Do NOT produce blankGlosses (leave it empty). Per-blank Korean fragments expose the answer when combined with [보기]; give meaning only via the whole-summary koreanGloss.",
+      );
+    } else {
+      lines.push("- Do NOT provide koreanGloss/blankGlosses (no Korean meaning is given).");
+    }
+
+    // 보기(wordBank).
+    if (sw.wordBankEnabled) {
+      lines.push(
+        "- Provide wordBank: the [보기] chips students may use, normalized lowercase and SHUFFLED. The shuffled order must NOT match the modelAnswer word order (an in-order list leaks the answer).",
+      );
+      lines.push(
+        "- If the answer needs the same word twice, include that string twice in wordBank (×2 rule).",
+      );
+      if (sw.wordBankChunking === "chunk") {
+        lines.push(
+          "- wordBank entries may be short chunks, but never give a key phrase as one whole chip that solves the blank by arrangement alone.",
+        );
+      }
+      if (sw.wordBankUsage === "useAll" && sw.boxDistractors === 0) {
+        lines.push(
+          "- wordBankUsage = useAll: the wordBank multiset must equal exactly the answer tokens (no distractors). wordBankDistractors must be empty.",
+        );
+      } else if (sw.wordBankUsage === "usePartial") {
+        lines.push(
+          `- wordBankUsage = usePartial: include exactly ${sw.boxDistractors} distractor word(s) in wordBank that are NOT used in any answer, and list them in wordBankDistractors. Each distractor must be a synonym, confusable, or inflected form of an answer word (never an unrelated word, which would be trivially eliminated).`,
+        );
+      }
+      lines.push(
+        sw.wordBankFidelity === "verbatim"
+          ? "- wordBankFidelity = verbatim: students use the given word forms as-is; the answers must use those exact forms."
+          : "- wordBankFidelity = inflected: students may need to change tense/number/agreement of a given base form to fit the blank. Do NOT give an incorrect form to be corrected (that is a separate grammar-correction task and is out of scope).",
+      );
+    } else {
+      lines.push("- Do NOT provide wordBank/wordBankDistractors (no word bank is given).");
+    }
+
+    // 빈칸 배분.
+    if (sw.blankCount >= 2) {
+      lines.push(
+        sw.blankAssignment === "shared"
+          ? "- blankAssignment = shared: when a word bank is shared across blanks, ensure the distribution yields a SINGLE unambiguous correct assignment per blank."
+          : "- blankAssignment = separate: each blank draws from its own portion of the word bank.",
+      );
+    }
+
+    // 단서(clueMode).
+    if (sw.clueMode === "firstLetter") {
+      lines.push(
+        "- clueMode = firstLetter: for each blank, provide firstLetterHint = the lowercase first letter of each answer word, space-separated, 1:1 aligned to the answer tokens (e.g. \"p s d\"). One letter per word only; never reveal more letters or word lengths.",
+      );
+    } else if (sw.clueMode === "skeleton") {
+      lines.push(
+        "- clueMode = skeleton: you may provide a light structural skeleton, but never reveal content words of the answer.",
+      );
+    } else if (sw.clueMode === "wordCount") {
+      lines.push(
+        "- clueMode = wordCount: students are told the number of words only (use targetWordCount); never reveal letters.",
+      );
+    }
+
+    // 목표 단어수.
+    if (sw.targetWordsMode === "hidden") {
+      lines.push("- targetWordsMode = hidden: do NOT reveal a target word count to students; omit targetWordCount display.");
+    } else {
+      lines.push(
+        `- targetWordsMode = ${sw.targetWordsMode}: each blank targets about ${sw.targetWordsPerBlank} word(s). Set blanks[].targetWordCount accordingly, but never make blank line length proportional to the answer.`,
+      );
+    }
+
+    // 연결 프레임.
+    if (sw.connectorFrame !== "bare") {
+      lines.push(
+        `- connectorFrame = ${sw.connectorFrame}: keep a fixed surrounding frame around each blank (e.g. \", which can lead to ...\") so the clause boundary is clear; put it in connectorFrameAfter when it follows a blank.`,
+      );
+    }
+
+    lines.push(
+      `- scoringGranularity = ${sw.scoringGranularity}: scoring is teacher/AI passthrough. Provide scoringCriteria (Korean rubric, teacher-only) and acceptableVariants (equivalent answers) so partial credit is possible. These are SECRET — never put them in student-facing text.`,
+    );
+
+    // 스키마 메타 필드 echo — 산문 지시(wordBankUsage 등)와 모델이 실제로 emit 해야 하는
+    // 스키마 필드명(wordBankPolicy 등)을 1:1로 못박는다. 품질게이트(sw-distractor-semantic 등)가
+    // 이 필드를 읽으므로 누락되면 검증이 무력화된다.
+    lines.push(
+      `- Echo these as structured metadata fields exactly: wordBankPolicy = "${sw.wordBankUsage}", wordBankFidelity = "${sw.wordBankFidelity}"${
+        sw.blankCount >= 2 ? `, blankAssignment = "${sw.blankAssignment}"` : ""
+      }, clueMode = "${sw.clueMode}", targetWordsMode = "${sw.targetWordsMode}", summarySourceMode = "${sw.summarySourceMode}". These record the constraints for grading and must match the instructions above.`,
+    );
+
+    return combinePromptSections(languagePrompt, lines.join("\n"));
   }
 
   if (typeId === "SUMMARY_COMPLETE") {

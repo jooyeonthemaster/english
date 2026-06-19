@@ -534,7 +534,7 @@ const GENERATION_DETAILS_TOUR_STEPS: TourStep[] = [
   },
   {
     title: "유형별 세부 옵션은 토글 안에 있습니다",
-    body: "각 유형 행 오른쪽의 펼침 토글을 열면 발문 언어, 보기 언어, 삽입 문장 수, 빈칸 개수처럼 유형별 옵션을 조정할 수 있습니다. 여기서는 직접 열지 않아도 됩니다.",
+    body: "각 유형 행 오른쪽의 펼침 토글을 열면 질문 언어, 보기 언어, 삽입 문장 수, 빈칸 개수처럼 유형별 옵션을 조정할 수 있습니다. 여기서는 직접 열지 않아도 됩니다.",
     video: "results",
     targets: ["type-detail-toggle", "type-list"],
     glowTargets: ["type-detail-toggle"],

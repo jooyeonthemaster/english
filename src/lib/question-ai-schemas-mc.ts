@@ -573,6 +573,8 @@ import {
   fillBlankKeySchema,
   summaryCompleteSchema,
   buildSummaryCompleteSchema,
+  summaryWritingSchema,
+  buildSummaryWritingSchema,
   wordOrderSchema,
   grammarCorrectionSchema,
 } from "./question-schemas-essay";
@@ -582,6 +584,7 @@ const AI_ESSAY_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   SENTENCE_TRANSFORM: sentenceTransformSchema,
   FILL_BLANK_KEY: fillBlankKeySchema,
   SUMMARY_COMPLETE: summaryCompleteSchema,
+  SUMMARY_WRITING: summaryWritingSchema,
   WORD_ORDER: wordOrderSchema,
   GRAMMAR_CORRECTION: grammarCorrectionSchema,
 };
@@ -654,6 +657,7 @@ export function getAiResponseSchema(
     grammarCorrectionErrorCount?: number;
     summaryCompleteMcBlankCount?: number;
     summaryCompleteBlankCount?: number;
+    summaryWritingBlankCount?: number;
     contentMatchOptionCount?: number;
     contentMatchAnswerCount?: number;
     vocabChoiceMarkerCount?: number;
@@ -701,6 +705,13 @@ export function getAiResponseSchema(
     options.summaryCompleteBlankCount !== 2
   ) {
     schema = buildSummaryCompleteSchema(options.summaryCompleteBlankCount);
+  }
+  if (
+    typeId === "SUMMARY_WRITING" &&
+    options?.summaryWritingBlankCount &&
+    options.summaryWritingBlankCount !== 1
+  ) {
+    schema = buildSummaryWritingSchema(options.summaryWritingBlankCount);
   }
   if (
     typeId === "CONTENT_MATCH" &&

@@ -17,6 +17,7 @@ import {
   getQuestionTypeGenerationTokenFloor,
   readQuestionTypeDifficultySetting,
   readQuestionTypeGenerationPlanSetting,
+  readSummaryWritingBlankCountSetting,
   resolveQuestionTypeGenerationSettings,
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
@@ -195,6 +196,14 @@ const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "summary-mc-option-pair-shape",
   "summary-mc-option-language",
   "summary-mc-missing-half-correct-traps",
+  // 요약문 영작(SUMMARY_WRITING) — 누수/구조 무효 게이트는 relaxed 폴백에서도
+  // 출하 금지(정답 노출·placeholder 깨짐·비영어 정답은 미생성이 잘못 생성보다 낫다).
+  // sw-distractor-semantic 은 warning 이라 여기 미포함.
+  "sw-answer-not-in-summary",
+  "sw-wordbank-no-answer-order",
+  "sw-summary-blank-marker-count",
+  "sw-modelanswer-present",
+  "sw-answer-language",
   "implied-meaning-missing-expression",
   "implied-meaning-missing-underline",
   "implied-meaning-underline-count",
@@ -346,6 +355,9 @@ export async function runQuestionGeneration(
       const resolvedTypeSettings = resolveQuestionTypeGenerationSettings(
         subType,
         rawTypeSettings,
+        // 전역 난이도 전달 — 유형별 오버라이드가 없을 때 SUMMARY_WRITING 프리셋·배점이
+        // effectiveDiffLabel(모델 지시·question.difficulty)과 같은 난이도로 정렬되게 한다.
+        effectiveDiffLabel,
       );
       const {
         effectiveTypeSettings,
@@ -376,6 +388,8 @@ export async function runQuestionGeneration(
       const typeSettingsPrompt = buildQuestionTypeSettingsPrompt(
         subType,
         effectiveTypeSettings,
+        // 동일 전역 난이도 — EXACT-direction 프롬프트가 resolve 결과(발문·배점)와 일치하도록.
+        effectiveDiffLabel,
       );
       const diversitySignals = diversity?.bySubType?.[subType];
       // 재시도마다 다른 위치/후보 순서를 받도록 attempt 오프셋을 가산한다
@@ -426,6 +440,14 @@ export async function runQuestionGeneration(
       );
       const hasAiSchema = !!AI_QUESTION_SCHEMAS[subType];
       const isStructured = hasAiSchema || !!QUESTION_SCHEMAS[subType];
+      // SUMMARY_WRITING(요약문 영작)은 SUMMARY_COMPLETE 의 blankCount 경로를 미러한다.
+      // 동적 빌더(buildSummaryWritingSchema)가 (A)~(C) 라벨 enum·blanks.length 를
+      // blankCount(1~3)로 고정하도록 getAiResponseSchema 에 전달. PASSTHROUGH 라
+      // 후처리 분기는 불필요(스키마 검증만으로 충분).
+      const summaryWritingBlankCount =
+        subType === "SUMMARY_WRITING"
+          ? readSummaryWritingBlankCountSetting(rawTypeSettings)
+          : undefined;
       const responseSchema = hasAiSchema
         ? getAiResponseSchema(subType, {
             irrelevantSlotCount,
@@ -434,6 +456,7 @@ export async function runQuestionGeneration(
             grammarCorrectionErrorCount,
             summaryCompleteMcBlankCount,
             summaryCompleteBlankCount,
+            summaryWritingBlankCount,
             contentMatchOptionCount,
             contentMatchAnswerCount,
             vocabChoiceMarkerCount,
@@ -930,6 +953,12 @@ export async function runQuestionGenerationWithEmptyRetry(
   const hasSummaryCompleteMc = inputWithUsage.plan.some(
     (item) => item.subType === "SUMMARY_COMPLETE_MC" && item.count > 0,
   );
+  // 요약문 영작(서술형, PASSTHROUGH)은 객관식 SUMMARY_COMPLETE_MC 만큼 정합 제약이
+  // 빡빡하지 않으므로 재시도 상한을 기본(4)에서 한 단계만(5) 올린다 — 누수/엔트로피
+  // 게이트(sw-*)가 strict 재시도에서 교정될 기회를 약간 더 준다.
+  const hasSummaryWriting = inputWithUsage.plan.some(
+    (item) => item.subType === "SUMMARY_WRITING" && item.count > 0,
+  );
   const requestedCount = inputWithUsage.plan.reduce(
     (sum, item) => sum + Math.max(0, Math.floor(Number(item.count) || 0)),
     0,
@@ -952,7 +981,9 @@ export async function runQuestionGenerationWithEmptyRetry(
     ? Math.max(10, requestedMaxAttempts)
     : hasNegativeParaphraseBlank || hasBlankParaphraseAnswer || hasExtendedRetryType
       ? Math.max(6, requestedMaxAttempts)
-      : Math.max(4, requestedMaxAttempts);
+      : hasSummaryWriting
+        ? Math.max(5, requestedMaxAttempts)
+        : Math.max(4, requestedMaxAttempts);
   // PREMIUM(Claude)은 1회 호출이 실측 ~25~35s(긴 지문은 더)로 느려 strict 다회 재시도가
   // 누적되면 시간 벽을 넘긴다. 데드라인(fast 270s/trigger 540s)이 실제 한계라 상한은
   // 그 안에서 교정 재시도(buildCorrectiveRetryFeedback)+relaxed 폴백이 충분히 돌도록
