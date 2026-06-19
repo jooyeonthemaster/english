@@ -18,7 +18,7 @@ export const notebookTemplate: DesignTemplate = {
     surface: "#F0FDFA",
     textOnSurface: "#1F2937",
     muted: "#6B7280",
-    fontFamily: "Pretendard",
+    fontFamily: '"Paperlogy", "Pretendard", sans-serif',
     fontScale: 1,
   },
   pages: [

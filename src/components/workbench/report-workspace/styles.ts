@@ -19,7 +19,7 @@ export const REPORT_WORKSPACE_STYLES = `
     overflow: hidden;
     flex: 0 0 auto;
     color: rgb(15, 23, 42);
-    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    font-family: "Paperlogy", "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
   }
 
   .report-page-canvas.report-page-bg-grid {

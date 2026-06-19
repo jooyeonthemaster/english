@@ -8,7 +8,7 @@
  */
 export const ANALYSIS_REPORT_CSS = `
 .par-root {
-  --font-ko: "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --font-ko: "Paperlogy", "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
   color: var(--text, #1a2233);
   font-family: var(--font-ko);
   font-size: calc(10pt * var(--par-fs, 1));

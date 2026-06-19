@@ -82,6 +82,13 @@ export default function RootLayout({
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
         />
+        {/* Paperlogy (SIL OFL) — 본문 기본 글꼴. 시험지 출력물은 맑은 고딕 유지. */}
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css"
+        />
       </head>
       <body className={`${geistMono.variable} smoat-large-ui font-sans antialiased`}>
         <Providers>

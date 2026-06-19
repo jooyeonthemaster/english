@@ -17,7 +17,7 @@ export const magazineTemplate: DesignTemplate = {
     surface: "#FFF7ED",
     textOnSurface: "#171717",
     muted: "#737373",
-    fontFamily: "Pretendard",
+    fontFamily: '"Paperlogy", "Pretendard", sans-serif',
     fontScale: 1.05,
   },
   pages: [
