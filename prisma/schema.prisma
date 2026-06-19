@@ -132,6 +132,12 @@ model Staff {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
+  // 마케팅 정보 수신 동의 (정보통신망법 제50조 opt-in 근거).
+  // 선택 항목 — 동의해야만 SMS·카카오톡(브랜드메시지)·이메일 등 광고성 발송 대상이 된다.
+  // marketingConsentAt 은 "언제 동의했는지" 증빙용 타임스탬프(미동의면 null).
+  marketingConsent   Boolean   @default(false) @map("marketing_consent")
+  marketingConsentAt DateTime? @map("marketing_consent_at") @db.Timestamptz(6)
+
   // Relations
   academy                Academy              @relation(fields: [academyId], references: [id])
   classes                Class[] // Classes taught
