@@ -43,6 +43,8 @@ export interface EditVersion {
   detailedChanges: DetailedDiffEntry[];
   warnings: EditQualityWarning[];
   questionText: string;
+  /** 모델이 서술한 "요청대로 무엇을 어떻게 바꿨는지" 한국어 변경 요약. */
+  editSummary: string;
   acceptedWithWarnings: boolean;
 }
 
@@ -133,11 +135,11 @@ export function useQuestionAiEdit({
   const editBaseline: Rec | null = activeVersion?.after ?? context?.before ?? null;
 
   const submit = useCallback(
-    async (instruction: string, options?: SubmitOptions) => {
+    async (instruction: string, options?: SubmitOptions): Promise<boolean> => {
       const trimmed = instruction.trim();
       // 동기 가드 우선 — sending(state)은 다음 렌더에야 반영되므로 같은 프레임 중복 전송은
       // inFlightRef 로만 막을 수 있다(이중 과금 방지).
-      if (!trimmed || inFlightRef.current || !context) return;
+      if (!trimmed || inFlightRef.current || !context) return false;
       inFlightRef.current = true;
       userPinnedRef.current = false;
       setSending(true);
@@ -161,7 +163,7 @@ export function useQuestionAiEdit({
         const data = await res.json();
         if (!res.ok || !data.ok) {
           setSendError(data?.error || "수정 생성에 실패했습니다.");
-          return;
+          return false;
         }
         const v: EditVersion = {
           id: ++versionCounter.current,
@@ -172,6 +174,7 @@ export function useQuestionAiEdit({
           detailedChanges: data.detailedChanges ?? [],
           warnings: data.qualityWarnings ?? [],
           questionText: data.questionText ?? "",
+          editSummary: typeof data.editSummary === "string" ? data.editSummary : "",
           acceptedWithWarnings: !!data.acceptedWithWarnings,
         };
         setVersions((prev) => {
@@ -183,9 +186,11 @@ export function useQuestionAiEdit({
         if (typeof data.creditsRemaining === "number") {
           setCreditsRemaining(data.creditsRemaining);
         }
+        return true;
       } catch (e) {
-        if (e instanceof DOMException && e.name === "AbortError") return;
+        if (e instanceof DOMException && e.name === "AbortError") return false;
         setSendError(e instanceof Error ? e.message : "요청 중 오류가 발생했습니다.");
+        return false;
       } finally {
         inFlightRef.current = false;
         setSending(false);

@@ -12,6 +12,7 @@
 // ============================================================================
 
 import React, { createContext, useContext } from "react";
+import { Check } from "lucide-react";
 
 /** 클릭으로 첨부된 "수정 대상" 블럭 한 개. */
 export interface SelectedBlock {
@@ -98,16 +99,18 @@ export function SelectableBlock({
           : "ring-1 ring-transparent hover:bg-blue-50/40 hover:ring-blue-300 focus-visible:ring-blue-400"
       } ${className ?? ""}`}
     >
-      {/* 라벨 핀 — hover/selected 시에만 노출(평소엔 미리보기 깔끔하게). */}
-      <span
-        className={`pointer-events-none absolute -top-2 right-2 z-10 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold shadow-sm transition-opacity ${
-          selected
-            ? "bg-blue-600 text-white opacity-100"
-            : "bg-blue-600 text-white opacity-0 group-hover/sb:opacity-100"
-        }`}
-      >
-        {selected ? "✓ 수정 대상" : label}
-      </span>
+      {/* 표식 — 블럭 내부 우상단(블럭 간 겹침 방지). selected=수정대상 배지(상시),
+          hover=라벨 핀. pointer-events-none 으로 클릭은 래퍼가 받는다. */}
+      {selected ? (
+        <span className="pointer-events-none absolute right-1.5 top-1.5 z-10 inline-flex items-center gap-1 rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
+          <Check className="h-3 w-3" />
+          수정 대상
+        </span>
+      ) : (
+        <span className="pointer-events-none absolute right-1.5 top-1.5 z-10 inline-flex items-center rounded-full bg-blue-600 px-2 py-0.5 text-[10px] font-bold text-white opacity-0 shadow-sm transition-opacity group-hover/sb:opacity-100">
+          {label}
+        </span>
+      )}
       {children}
     </div>
   );

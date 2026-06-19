@@ -95,8 +95,9 @@ export function AiEditView({
     questionId,
     onApplied: () => {
       toast.success("수정본을 현재 문제에 적용했습니다.");
+      // 적용 후 닫기/유지는 워크스페이스(onApplied)가 모드별로 결정한다
+      // (모달=닫고 목록 갱신, 페이지=머무르며 갱신). 여기서 onClose 호출 금지.
       onApplied?.();
-      onClose();
     },
     onSavedAsNew: (newQuestionId) => {
       toast.success("수정본을 새 문제로 저장했습니다.");
@@ -114,6 +115,9 @@ export function AiEditView({
     const out: string[] = [];
     for (const c of config.controls) {
       const v = controlValues[c.id] ?? c.defaultValue;
+      // 기본값(미선택)은 무지시 — directive 를 수집하지 않는다(빈 입력으로 전송 활성화·
+      // 조용한 자동 적용 방지).
+      if (v === c.defaultValue) continue;
       const opt = c.options.find((o) => o.value === v);
       if (opt?.directive) out.push(opt.directive);
     }
@@ -154,12 +158,9 @@ export function AiEditView({
     const blockLabels = attachedBlocks.map((b) => b.label);
     const directives = [...controlDirectives, ...quickChips.map((c) => c.instruction)];
     const free = freeText.trim();
-    const headerLine = blockLabels.length
-      ? `[수정 대상] ${blockLabels.join(", ")} — 이 부분을 중심으로 수정하고, 나머지는 최대한 유지해 줘.`
-      : "";
-    const instruction = [headerLine, [free, ...directives].filter(Boolean).join("\n")]
-      .filter(Boolean)
-      .join("\n");
+    // 첨부 블럭은 targets 로 구조화 전송되어 서버 프롬프트의 "수정 대상" 섹션으로 주입되므로
+    // instruction 본문에 라벨을 중복 주입하지 않는다.
+    const instruction = [free, ...directives].filter(Boolean).join("\n");
     const targets = attachedBlocks.map((b) => ({ label: b.label, field: b.field }));
     const label =
       free || quickChips[0]?.label || (blockLabels.length ? `${blockLabels[0]} 외 수정` : "수정");
@@ -169,12 +170,14 @@ export function AiEditView({
   async function handleSend() {
     if (!canSend) return;
     const { instruction, targets, label } = compose();
-    // 다음 수정을 위해 자유 프롬프트·빠른지시·컨트롤은 초기화(조용한 재적용 방지).
-    // 첨부 블럭은 유지(같은 블럭을 이어서 다듬을 수 있게).
-    setFreeText("");
-    setQuickChips([]);
-    setControlValues({});
-    await submit(instruction, { targets, label });
+    const ok = await submit(instruction, { targets, label });
+    // 성공했을 때만 입력 초기화 — 실패(크레딧부족·게이트실패·네트워크) 시 입력을 보존한다.
+    // 첨부 블럭은 성공 후에도 유지(같은 블럭을 이어서 다듬을 수 있게).
+    if (ok) {
+      setFreeText("");
+      setQuickChips([]);
+      setControlValues({});
+    }
   }
 
   const headerToggle = (
@@ -265,6 +268,7 @@ export function AiEditView({
                     <StructuredQuestionRenderer
                       question={context.before}
                       index={0}
+                      hideHeader
                       sourcePassageContent={context.passageContent}
                       answerRevealMode="show-all"
                     />
@@ -343,7 +347,7 @@ export function AiEditView({
                         <Loader2 className="h-3.5 w-3.5 animate-spin" /> 다음 수정본 생성 중…
                       </div>
                     )}
-                    {activeVersion.changes.length > 0 && (
+                    {rightTab !== "changelog" && activeVersion.changes.length > 0 && (
                       <div className="flex flex-wrap items-center gap-1.5">
                         <span className="text-[11px] font-semibold text-slate-500">변경:</span>
                         {activeVersion.changes.map((c, i) => {
@@ -374,11 +378,17 @@ export function AiEditView({
                       </div>
                     )}
                     {rightTab === "changelog" ? (
-                      <ChangeLogPanel entries={activeVersion.detailedChanges} />
+                      <ChangeLogPanel
+                        entries={activeVersion.detailedChanges}
+                        editSummary={activeVersion.editSummary}
+                        instruction={activeVersion.instruction}
+                        changes={activeVersion.changes}
+                      />
                     ) : (
                       <StructuredQuestionRenderer
                         question={activeVersion.after}
                         index={0}
+                        hideHeader
                         sourcePassageContent={context?.passageContent}
                         answerRevealMode="show-all"
                       />
@@ -481,7 +491,7 @@ export function AiEditView({
                   void handleSend();
                 }
               }}
-              rows={2}
+              rows={3}
               disabled={loading || !!loadError}
               placeholder={
                 attachedBlocks.length
@@ -490,7 +500,8 @@ export function AiEditView({
                     ? "이어서 수정할 내용을 입력하세요. (예: 정답을 3번으로 바꾸고 해설도 맞춰줘)"
                     : "어떻게 수정할지 입력하거나, 위에서 블럭·빠른 지시를 선택하세요."
               }
-              className="max-h-[140px] min-h-[56px] w-full resize-y rounded-xl border border-slate-300 px-4 py-3 pr-12 text-[14px] leading-relaxed text-slate-800 outline-none transition-[box-shadow,border-color] placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-50"
+              // 높이를 우측 액션 버튼 컬럼(h-10 두 개 + gap-2 = 88px)에 맞춘다.
+              className="h-[88px] max-h-[160px] min-h-[88px] w-full resize-y rounded-xl border border-slate-300 px-4 py-3 pr-12 text-[14px] leading-relaxed text-slate-800 outline-none transition-[box-shadow,border-color] placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-50"
             />
             <button
               type="button"

@@ -1,8 +1,8 @@
 "use client";
 
-import { Minus, Pencil, Plus, ArrowLeftRight } from "lucide-react";
+import { ArrowLeftRight, ListChecks, Minus, Pencil, Plus, Quote } from "lucide-react";
 
-import type { DetailedDiffEntry } from "./use-question-ai-edit";
+import type { DetailedDiffEntry, EditChange } from "./use-question-ai-edit";
 
 // 회사 디자인 가드: Sparkles/이모지·주황/앰버 금지 → slate/blue/rose/emerald/violet.
 const KIND_META: Record<
@@ -124,15 +124,112 @@ function BeforeAfter({ entry }: { entry: DetailedDiffEntry }) {
   );
 }
 
-export function ChangeLogPanel({ entries }: { entries: DetailedDiffEntry[] }) {
+// ── 최상단 요약: "무엇을 요청했고, 핵심적으로 무엇이 바뀌었나" ──────────────
+const CHANGE_VERB: Record<EditChange["kind"], string> = {
+  added: "추가",
+  removed: "삭제",
+  changed: "수정",
+  reordered: "순서",
+};
+const CHANGE_CHIP: Record<EditChange["kind"], string> = {
+  added: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  removed: "border-rose-200 bg-rose-50 text-rose-700",
+  changed: "border-blue-200 bg-blue-50 text-blue-700",
+  reordered: "border-violet-200 bg-violet-50 text-violet-700",
+};
+
+function EditSummaryHeader({
+  editSummary,
+  instruction,
+  changes,
+}: {
+  editSummary?: string;
+  instruction?: string;
+  changes?: EditChange[];
+}) {
+  const narrative = editSummary?.trim();
+  const req = instruction?.trim();
+  const list = changes ?? [];
+  if (!narrative && !req && list.length === 0) return null;
+
+  return (
+    <div className="rounded-xl border border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50/50 p-3.5">
+      <div className="flex items-center gap-1.5 text-[12px] font-bold text-blue-700">
+        <ListChecks className="h-4 w-4" />
+        이번 수정 요약
+      </div>
+
+      {/* AI 서술(주인공) — "요청대로 무엇을 어떻게 바꿨는지". */}
+      {narrative ? (
+        <p className="mt-2 whitespace-pre-line text-[13px] font-medium leading-relaxed text-slate-800">
+          {narrative}
+        </p>
+      ) : (
+        <p className="mt-2 text-[12.5px] leading-relaxed text-slate-400">
+          모델이 변경 서술을 제공하지 않았습니다. 아래 핵심 변경과 상세 내역을 참고하세요.
+        </p>
+      )}
+
+      {/* 보조 컨텍스트 — 요청한 지시 + 핵심 변경 칩(muted). */}
+      {(req || list.length > 0) && (
+        <div className="mt-3 space-y-2 border-t border-blue-100 pt-2.5">
+          {req && (
+            <div className="flex items-start gap-1.5">
+              <span className="mt-px inline-flex shrink-0 items-center gap-1 rounded bg-white/70 px-1.5 py-0.5 text-[9.5px] font-bold text-blue-500 ring-1 ring-blue-100">
+                <Quote className="h-2.5 w-2.5" />
+                요청
+              </span>
+              <span className="whitespace-pre-line text-[11.5px] leading-relaxed text-slate-500">{req}</span>
+            </div>
+          )}
+          {list.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-[9.5px] font-bold uppercase tracking-wider text-slate-400">
+                변경 {list.length}곳
+              </span>
+              {list.map((c, i) => (
+                <span
+                  key={`${c.field}-${i}`}
+                  className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] font-semibold ${CHANGE_CHIP[c.kind]}`}
+                >
+                  {c.label}
+                  <span className="font-medium opacity-60">{CHANGE_VERB[c.kind]}</span>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function ChangeLogPanel({
+  entries,
+  editSummary,
+  instruction,
+  changes,
+}: {
+  entries: DetailedDiffEntry[];
+  editSummary?: string;
+  instruction?: string;
+  changes?: EditChange[];
+}) {
+  const summary = (
+    <EditSummaryHeader editSummary={editSummary} instruction={instruction} changes={changes} />
+  );
+
   if (!entries.length) {
     return (
-      <div className="flex h-full flex-col items-center justify-center px-8 text-center">
-        <Pencil className="mb-2 h-5 w-5 text-slate-300" />
-        <p className="text-[13px] font-semibold text-slate-500">변경된 내용이 없습니다</p>
-        <p className="mt-1 text-[12px] text-slate-400">
-          AI가 기존 문제와 동일한 결과를 냈어요. 지시를 더 구체적으로 입력해 보세요.
-        </p>
+      <div className="flex flex-col gap-3">
+        {summary}
+        <div className="flex flex-col items-center justify-center px-8 py-6 text-center">
+          <Pencil className="mb-2 h-5 w-5 text-slate-300" />
+          <p className="text-[13px] font-semibold text-slate-500">세부 변경 내역이 없습니다</p>
+          <p className="mt-1 text-[12px] text-slate-400">
+            필드 단위로 추적된 변경이 없어요. 위 요약을 참고하거나 지시를 더 구체적으로 입력해 보세요.
+          </p>
+        </div>
       </div>
     );
   }
@@ -159,7 +256,9 @@ export function ChangeLogPanel({ entries }: { entries: DetailedDiffEntry[] }) {
   });
 
   return (
-    <ol className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2.5">
+      {summary}
+      <ol className="flex flex-col gap-2">
       {sorted.map((entry) => {
         const meta = KIND_META[entry.kind];
         const Icon = meta.Icon;
@@ -184,6 +283,7 @@ export function ChangeLogPanel({ entries }: { entries: DetailedDiffEntry[] }) {
           </li>
         );
       })}
-    </ol>
+      </ol>
+    </div>
   );
 }

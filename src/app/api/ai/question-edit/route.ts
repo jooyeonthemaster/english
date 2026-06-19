@@ -239,6 +239,7 @@ export async function POST(request: NextRequest) {
       changes: result.changes,
       detailedChanges: result.detailedChanges,
       questionText: result.questionText,
+      editSummary: result.editSummary,
       qualityWarnings: result.qualityWarnings,
       acceptedWithWarnings: result.acceptedWithWarnings,
       meta: result.meta,

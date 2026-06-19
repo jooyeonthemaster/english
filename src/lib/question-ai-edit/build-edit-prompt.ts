@@ -106,7 +106,14 @@ ${providerContract}
 7. passageWithBlank·passageWithMarkers·passageWithUnderline·passageWithNumbers 같은 "지문 전체 복사" 필드는 생성하지 마세요. 서버가 자동 생성합니다.
 8. 난이도 변경 지시가 없으면 difficulty 는 "${difficulty}"를 유지하세요.${typeGuard ? `\n9. ${typeGuard}` : ""}
 
-반드시 questions 배열에 **정확히 1개**의 수정된 문제만 담아 출력하세요.`;
+## 변경 서술 (editSummary — 매우 중요)
+수정본과 **함께**, 최상위 \`editSummary\` 필드에 **선생님의 수정 지시를 어떻게 반영했는지** 2~3문장의 자연스러운 한국어로 서술하세요.
+- 형식 예: "요청하신 대로 [무엇]을 [어떻게] 바꿨습니다. 그에 맞춰 [선지/정답/해설 등]을 [어떻게] 조정했습니다."
+- "무엇을·왜·어떻게" 바꿨는지가 한눈에 들어오게, 정량 나열이 아니라 의도 중심으로 서술하세요.
+- 이 설명은 **선생님(교사)께만** 보이므로 정답·핵심 표현을 언급해도 됩니다(학생에게 노출되지 않음).
+- 실질적 변경이 거의 없으면 그 사실(예: "지시한 부분에 해당하는 변경이 크지 않았습니다")을 적으세요.
+
+출력은 \`{ "editSummary": "...", "questions": [ <수정된 문제 1개> ] }\` 형태입니다. questions 배열에는 **정확히 1개**의 수정된 문제만 담으세요.`;
 
   const baselineBlock = serializeBaselineForEdit(baseline);
 

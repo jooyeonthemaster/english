@@ -201,7 +201,7 @@ export function QuestionEditClient({
     setOptions(initialOptions);
     setCorrectAnswer(question.correctAnswer);
     setDifficulty(question.difficulty);
-    setTags(initialTags);
+    // tags 는 읽기전용(편집 UI 제거됨) — 재초기화 시 setter 호출 불필요.
     setExplanation(question.explanation?.content || "");
     setKeyPoints(initialKeyPoints);
     setWrongExplanations(initialWrongExplanations);

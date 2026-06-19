@@ -79,9 +79,13 @@ export function QuestionEditWorkspace({
       onClose={closeWorkspace}
       onBack={onBack}
       onApplied={() => {
-        // 페이지 모드: 서버 컴포넌트 갱신. 모달(임베드): 목록 재조회.
         router.refresh();
-        onSaved?.();
+        if (isModal) {
+          // 모달: 목록 재조회 후 모달을 닫아 갱신된 카드를 보여 준다.
+          onSaved?.();
+          onClose?.();
+        }
+        // 페이지 모드: 머무르며 갱신(직접 수정 '저장'과 동일 — 이탈하지 않음).
       }}
       onSavedAsNew={onSavedAsNew}
     />

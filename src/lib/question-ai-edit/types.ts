@@ -70,6 +70,8 @@ export interface RunQuestionEditResult {
   detailedChanges: DiffEntry[];
   /** 저장용으로 직렬화한 questionText(buildGeneratedQuestionText). */
   questionText?: string;
+  /** 모델이 서술한 "요청대로 무엇을 어떻게 바꿨는지" 한국어 변경 요약(교사용·미저장). */
+  editSummary?: string;
   /** 품질 게이트 경고(에러는 재시도, 최종 경고만 노출). */
   qualityWarnings: QuestionQualityIssue[];
   /** 마지막 시도가 품질 에러를 안고 통과(완화 수락)했는지. */

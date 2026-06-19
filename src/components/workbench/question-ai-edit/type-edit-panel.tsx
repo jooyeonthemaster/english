@@ -8,7 +8,7 @@
 // ============================================================================
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, SlidersHorizontal, Zap } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Plus, SlidersHorizontal, Zap } from "lucide-react";
 
 import type { EditControl, TypeEditConfig } from "@/lib/question-ai-edit/type-edit-config";
 
@@ -94,13 +94,13 @@ export function TypeEditPanel({
                       onClick={() => onQuickAction(p.instruction, p.label)}
                       disabled={disabled || active}
                       title={p.instruction}
-                      className={`rounded-full border px-2.5 py-1 text-[11.5px] font-medium transition-colors disabled:cursor-not-allowed ${
+                      className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11.5px] font-medium transition-colors disabled:cursor-not-allowed ${
                         active
                           ? "border-blue-300 bg-blue-100 text-blue-700"
                           : "border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 disabled:opacity-50"
                       }`}
                     >
-                      {active ? "✓ " : "+ "}
+                      {active ? <Check className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
                       {p.label}
                     </button>
                   );

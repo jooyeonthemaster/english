@@ -5,7 +5,7 @@
 //   - tagline : 패널 상단 한 줄 유형 특성 요약
 //   - controls: 유형 전용 구조화 컨트롤(세그먼트/토글) — 선택 시 자연어 directive 조각
 //   - quickActions: 빠른 지시 칩(focus-presets 재사용)
-//   - blocks  : 데이터에서 동적 파생(deriveBlocksForQuestion) — 칩 레일/클릭 첨부용
+//   (블럭 클릭 첨부는 렌더러 내장 SelectableBlock 으로 처리 — question-renderer-blocks.tsx)
 //
 // ⭐ 제약 (run-edit.ts 수정 계약과 정합 — directive 작성 시 반드시 준수):
 //   1) 유형 고정 — 다른 유형으로 바꾸는 directive 금지.
@@ -19,6 +19,7 @@
 // ============================================================================
 
 import { getEditFocusPresets } from "./focus-presets";
+import { FANOUT_TYPE_CONTROLS } from "./type-edit-controls.generated";
 
 export interface EditControlOption {
   value: string;
@@ -41,15 +42,6 @@ export interface EditControl {
   options: EditControlOption[];
   /** 기본값(보통 options[0].value). */
   defaultValue: string;
-}
-
-export interface EditBlockDef {
-  id: string;
-  label: string;
-  field?: string;
-  group: "문항" | "정답·해설";
-  /** 현재 값 짧은 발췌(선택). */
-  excerpt?: string;
 }
 
 export interface TypeEditConfig {
@@ -97,7 +89,9 @@ export const TYPE_TAGLINES: Record<string, string> = {
 // ---------------------------------------------------------------------------
 const off = (value = "off"): EditControlOption => ({ value, label: "끄기", directive: null });
 
-export const TYPE_CONTROLS: Record<string, EditControl[]> = {
+// 견본으로 직접 작성한 유형(SENTENCE_INSERT). 나머지 24개 유형은 팬아웃 산출물
+// (type-edit-controls.generated.ts)에서 병합한다.
+const EXEMPLAR_CONTROLS: Record<string, EditControl[]> = {
   // ── 견본: 문장 삽입 ──────────────────────────────────────────────────────
   SENTENCE_INSERT: [
     {
@@ -181,102 +175,11 @@ export const TYPE_CONTROLS: Record<string, EditControl[]> = {
   ],
 };
 
-// ---------------------------------------------------------------------------
-// 데이터 기반 블럭 파생 — 칩 레일/클릭 첨부용. 존재하는 필드만 노출.
-//   (수정 모달은 교사 전용 표면이므로 정답·해설 라벨 노출은 누설 아님.)
-// ---------------------------------------------------------------------------
-type Rec = Record<string, unknown>;
-
-function clip(value: unknown, max = 70): string | undefined {
-  if (typeof value !== "string") return undefined;
-  const cleaned = value.replace(/\s+/g, " ").trim();
-  if (!cleaned) return undefined;
-  return cleaned.length > max ? `${cleaned.slice(0, max)}…` : cleaned;
-}
-
-const GIVEN_SENTENCE_LABELS: Record<string, string> = {
-  SENTENCE_INSERT: "삽입할 문장",
-  SENTENCE_ORDER: "주어진 문장",
-  CONDITIONAL_WRITING: "영작할 우리말",
-  SENTENCE_TRANSFORM: "원래 문장",
+/** 견본(SENTENCE_INSERT) + 팬아웃 24개 유형 컨트롤 병합. 견본이 우선(중복 시 덮어씀). */
+export const TYPE_CONTROLS: Record<string, EditControl[]> = {
+  ...FANOUT_TYPE_CONTROLS,
+  ...EXEMPLAR_CONTROLS,
 };
-
-const PASSAGE_BEARING = new Set([
-  "BLANK_INFERENCE", "GRAMMAR_ERROR", "GRAMMAR_CHOICE_COMBO", "VOCAB_CHOICE",
-  "SENTENCE_ORDER", "SENTENCE_INSERT", "IMPLIED_MEANING", "REFERENCE",
-  "IRRELEVANT", "CONTEXT_MEANING", "ANTONYM", "SYNONYM", "FILL_BLANK_KEY",
-  "TOPIC", "MAIN_IDEA", "TOPIC_MAIN_IDEA", "TITLE", "CONTENT_MATCH", "SUMMARY_COMPLETE_MC",
-]);
-
-/** 현재 문제(before) 데이터에서 클릭 첨부 가능한 블럭 목록을 만든다. */
-export function deriveBlocksForQuestion(subType: string, before: Rec | null | undefined): EditBlockDef[] {
-  const q = (before ?? {}) as Rec;
-  const blocks: EditBlockDef[] = [];
-
-  // 발문
-  const direction = q.direction ?? q.questionText;
-  blocks.push({ id: "direction", label: "발문", field: "direction", group: "문항", excerpt: clip(direction) });
-
-  // 주어진/원본 문장
-  if (typeof q.givenSentence === "string" && q.givenSentence.trim()) {
-    const label = GIVEN_SENTENCE_LABELS[subType] || "주어진 문장";
-    blocks.push({ id: `given:${label}`, label, field: "givenSentence", group: "문항", excerpt: clip(q.givenSentence) });
-  }
-  if (typeof q.referenceSentence === "string" && q.referenceSentence.trim()) {
-    blocks.push({ id: "given:영작할 우리말", label: "영작할 우리말", field: "referenceSentence", group: "문항", excerpt: clip(q.referenceSentence) });
-  }
-  if (typeof q.originalSentence === "string" && q.originalSentence.trim()) {
-    blocks.push({ id: "given:원래 문장", label: "원래 문장", field: "originalSentence", group: "문항", excerpt: clip(q.originalSentence) });
-  }
-
-  // 지문 / 요약문
-  if (PASSAGE_BEARING.has(subType)) {
-    blocks.push({ id: "passage", label: "지문", field: "passage", group: "문항" });
-  }
-  if (typeof q.summaryWithBlanks === "string" && q.summaryWithBlanks.trim()) {
-    blocks.push({ id: "passage:요약문", label: "요약문", field: "summaryWithBlanks", group: "문항" });
-  }
-  if (typeof q.koreanGloss === "string" && q.koreanGloss.trim()) {
-    blocks.push({ id: "passage:해석", label: "해석", field: "koreanGloss", group: "문항", excerpt: clip(q.koreanGloss) });
-  }
-
-  // 조건(서술형)
-  if (Array.isArray(q.conditions) && q.conditions.length > 0) {
-    blocks.push({ id: "conditions", label: "조건", field: "conditions", group: "문항", excerpt: clip(q.conditions.join(" · ")) });
-  }
-
-  // 선지(개별)
-  if (Array.isArray(q.options)) {
-    for (const opt of q.options as Rec[]) {
-      const label = typeof opt?.label === "string" ? opt.label : "";
-      if (!label) continue;
-      blocks.push({
-        id: `option:${label}`,
-        label: `선지 ${label}`,
-        field: "options",
-        group: "문항",
-        excerpt: clip(typeof opt?.text === "string" ? opt.text : undefined),
-      });
-    }
-  }
-
-  // 정답·해설 그룹
-  blocks.push({ id: "correctAnswer", label: "정답", field: "correctAnswer", group: "정답·해설", excerpt: clip(q.correctAnswer) });
-  if (typeof q.modelAnswer === "string" && q.modelAnswer.trim()) {
-    blocks.push({ id: "modelAnswer", label: "모범 답안", field: "modelAnswer", group: "정답·해설", excerpt: clip(q.modelAnswer) });
-  }
-  if (typeof q.explanation === "string" && q.explanation.trim()) {
-    blocks.push({ id: "explanation", label: "해설", field: "explanation", group: "정답·해설", excerpt: clip(q.explanation) });
-  }
-  if (Array.isArray(q.keyPoints) && q.keyPoints.length > 0) {
-    blocks.push({ id: "keyPoints", label: "핵심 포인트", field: "keyPoints", group: "정답·해설", excerpt: clip(q.keyPoints.join(" · ")) });
-  }
-  if (q.wrongOptionExplanations && typeof q.wrongOptionExplanations === "object" && !Array.isArray(q.wrongOptionExplanations) && Object.keys(q.wrongOptionExplanations).length > 0) {
-    blocks.push({ id: "wrongOptionExplanations", label: "오답 해설", field: "wrongOptionExplanations", group: "정답·해설" });
-  }
-
-  return blocks;
-}
 
 /** 유형별 편집 설정을 반환(없는 유형은 quickActions 만으로 동작). */
 export function getTypeEditConfig(subType: string): TypeEditConfig {
