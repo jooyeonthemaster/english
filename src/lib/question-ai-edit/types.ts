@@ -30,6 +30,8 @@ export interface RunQuestionEditInput {
   baseline: StructuredQuestionLike;
   /** 사용자가 자연어로 입력한 수정 지시. */
   instruction: string;
+  /** 사용자가 클릭으로 지정한 수정 대상 블럭(프롬프트 타깃 섹션). 선택. */
+  targets?: { label: string; field?: string }[];
   /** 학교급("중학교"/"고등학교") — 발문 톤·난이도 보정. */
   schoolType: string;
   /** 학년/학기 등 메타(프롬프트 컨텍스트용, 없으면 빈 문자열). */

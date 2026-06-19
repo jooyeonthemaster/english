@@ -34,7 +34,6 @@ import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { EditHeader } from "./question-edit-client/header";
 import { ExplanationPanel } from "./question-edit-client/explanation-panel";
 import { PassagePanel } from "./question-edit-client/passage-panel";
-import { AiEditOverlay } from "./question-ai-edit/ai-edit-overlay";
 
 interface Option {
   label: string;
@@ -100,6 +99,10 @@ interface QuestionEditProps {
   onSaved?: () => void;
   onApproved?: () => void;
   onBack?: () => void;
+  /** AI '새 문제로 저장' 성공 시 새 문제 id — 임베드 목록 갱신·강조용. */
+  onSavedAsNew?: (newQuestionId: string) => void;
+  /** "AI로 수정" 버튼 — 워크스페이스가 AI 수정 뷰로 전환. 미지원 유형이면 미전달. */
+  onOpenAiEdit?: () => void;
 }
 
 function safeParseJSON<T>(str: unknown, fallback: T): T {
@@ -121,6 +124,7 @@ export function QuestionEditClient({
   onSaved,
   onApproved,
   onBack,
+  onOpenAiEdit,
 }: QuestionEditProps) {
   const router = useRouter();
   const isModal = mode === "modal";
@@ -167,7 +171,6 @@ export function QuestionEditClient({
     wrongExplanations: initialWrongExplanations,
   });
   const [baseline, setBaseline] = useState(initialSnapshot);
-  const [aiEditOpen, setAiEditOpen] = useState(false);
 
   const currentSnapshot = JSON.stringify({
     type,
@@ -346,14 +349,7 @@ export function QuestionEditClient({
         onSave={handleSave}
         saving={saving}
         deleting={deleting}
-        onOpenAiEdit={question.subType ? () => setAiEditOpen(true) : undefined}
-      />
-
-      <AiEditOverlay
-        questionId={question.id}
-        open={aiEditOpen}
-        onClose={() => setAiEditOpen(false)}
-        onApplied={() => router.refresh()}
+        onOpenAiEdit={question.subType ? onOpenAiEdit : undefined}
       />
 
       {/* ─── 3-Column Body ─── */}

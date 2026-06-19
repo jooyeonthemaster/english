@@ -34,13 +34,24 @@ export interface EditQualityWarning {
 
 export interface EditVersion {
   id: number;
+  /** 모델에 전달된 합성 지시(전문). */
   instruction: string;
+  /** 버전 칩 표시용 짧은 라벨(자유 프롬프트 또는 지시 요약). */
+  label: string;
   after: Rec;
   changes: EditChange[];
   detailedChanges: DetailedDiffEntry[];
   warnings: EditQualityWarning[];
   questionText: string;
   acceptedWithWarnings: boolean;
+}
+
+/** submit 시 함께 전달할 구조화 옵션. */
+export interface SubmitOptions {
+  /** 사용자가 클릭으로 지정한 수정 대상 블럭(백엔드 프롬프트 타깃 섹션). */
+  targets?: { label: string; field?: string }[];
+  /** 버전 칩 표시용 짧은 라벨. */
+  label?: string;
 }
 
 export interface EditContext {
@@ -122,7 +133,7 @@ export function useQuestionAiEdit({
   const editBaseline: Rec | null = activeVersion?.after ?? context?.before ?? null;
 
   const submit = useCallback(
-    async (instruction: string) => {
+    async (instruction: string, options?: SubmitOptions) => {
       const trimmed = instruction.trim();
       // 동기 가드 우선 — sending(state)은 다음 렌더에야 반영되므로 같은 프레임 중복 전송은
       // inFlightRef 로만 막을 수 있다(이중 과금 방지).
@@ -135,6 +146,7 @@ export function useQuestionAiEdit({
       const ac = new AbortController();
       abortRef.current = ac;
       try {
+        const targets = options?.targets?.length ? options.targets : undefined;
         const res = await fetch("/api/ai/question-edit", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -142,6 +154,7 @@ export function useQuestionAiEdit({
             questionId,
             instruction: trimmed,
             baseline: editBaseline ?? undefined,
+            targets,
           }),
           signal: ac.signal,
         });
@@ -153,6 +166,7 @@ export function useQuestionAiEdit({
         const v: EditVersion = {
           id: ++versionCounter.current,
           instruction: trimmed,
+          label: (options?.label || trimmed).slice(0, 60),
           after: data.after,
           changes: data.changes ?? [],
           detailedChanges: data.detailedChanges ?? [],

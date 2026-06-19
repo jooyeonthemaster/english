@@ -1306,6 +1306,7 @@ export function QuestionBankClient({
         }}
         onDeleted={editor.handleEditorDeleted}
         onRetry={editor.openEditor}
+        onSavedAsNew={() => router.refresh()}
         onBack={editorCameFromDetail ? backToDetail : undefined}
       />
 

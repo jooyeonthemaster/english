@@ -9,6 +9,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
+import {
+  SelectableBlock,
+  useBlockSelection,
+  blockExcerpt,
+} from "./question-renderer-blocks";
 
 /**
  * AnswerRevealSection / ExplanationSection 의 답안·해설 노출 방식.
@@ -123,25 +128,44 @@ export function AnswerRevealSection({ children }: { children: React.ReactNode })
 /** Direction (발문) — bold, dark, clearly separated. __text__ 밑줄 패턴도 처리. */
 export function Direction({ text }: { text: string }) {
   return (
-    <div className="text-[13px] font-bold text-slate-900 leading-relaxed whitespace-pre-line">
-      {renderPassageFormatted(text)}
-    </div>
+    <SelectableBlock blockId="direction" label="발문" field="direction" excerpt={blockExcerpt(text)}>
+      <div className="text-[13px] font-bold text-slate-900 leading-relaxed whitespace-pre-line">
+        {renderPassageFormatted(text)}
+      </div>
+    </SelectableBlock>
   );
 }
 
 /** Passage section — light gray bg, monospace, with inline highlights */
-export function PassageBlock({ children, label }: { children: React.ReactNode; label?: string }) {
+export function PassageBlock({
+  children,
+  label,
+  /** 텍스트 발췌(선택) — 블럭 첨부 컨텍스트용. children 이 이미 렌더된 노드라 텍스트를
+   *  자동 추출할 수 없으므로, 호출부가 알면 전달한다. */
+  excerpt,
+}: {
+  children: React.ReactNode;
+  label?: string;
+  excerpt?: string;
+}) {
   return (
-    <div className="rounded-lg bg-slate-50 border border-slate-200 p-4 space-y-1">
-      {label && (
-        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
-          {label}
-        </span>
-      )}
-      <div className="font-mono text-[12.5px] leading-[1.9] text-slate-700 whitespace-pre-wrap">
-        {children}
+    <SelectableBlock
+      blockId={label ? `passage:${label}` : "passage"}
+      label={label || "지문"}
+      field="passage"
+      excerpt={excerpt}
+    >
+      <div className="rounded-lg bg-slate-50 border border-slate-200 p-4 space-y-1">
+        {label && (
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+            {label}
+          </span>
+        )}
+        <div className="font-mono text-[12.5px] leading-[1.9] text-slate-700 whitespace-pre-wrap">
+          {children}
+        </div>
       </div>
-    </div>
+    </SelectableBlock>
   );
 }
 
@@ -369,23 +393,31 @@ export function OptionList({
       {options.map((opt, i) => {
         const isCorrect = correctLabels.has(normalizeAnswerLabel(opt.label));
         return (
-          <div
+          <SelectableBlock
             key={i}
-            className={`text-[13px] flex items-start gap-2 ${
-              isCorrect ? "text-blue-700 font-semibold" : "text-slate-600"
-            }`}
+            blockId={`option:${opt.label}`}
+            label={`선지 ${opt.label}`}
+            field="options"
+            excerpt={blockExcerpt(opt.text)}
+            className="px-1 py-0.5"
           >
-            <span
-              className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                isCorrect
-                  ? "bg-blue-600 text-white"
-                  : "bg-slate-100 text-slate-400"
+            <div
+              className={`text-[13px] flex items-start gap-2 ${
+                isCorrect ? "text-blue-700 font-semibold" : "text-slate-600"
               }`}
             >
-              {opt.label}
-            </span>
-            <span>{opt.text}</span>
-          </div>
+              <span
+                className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                  isCorrect
+                    ? "bg-blue-600 text-white"
+                    : "bg-slate-100 text-slate-400"
+                }`}
+              >
+                {opt.label}
+              </span>
+              <span>{opt.text}</span>
+            </div>
+          </SelectableBlock>
         );
       })}
     </div>
@@ -417,46 +449,67 @@ function normalizeAnswerLabel(value: unknown): string {
 /** Conditions box (서술형 조건 목록) */
 export function ConditionsBox({ conditions, label }: { conditions: string[]; label?: string }) {
   return (
-    <div className="rounded-lg border-2 border-dashed border-amber-300 bg-amber-50/50 p-3 space-y-1.5">
-      <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider block">
-        {label || "조건"}
-      </span>
-      <ol className="space-y-1 list-decimal list-inside">
-        {conditions.map((c, i) => (
-          <li key={i} className="text-[12px] text-slate-700 leading-relaxed">
-            {c}
-          </li>
-        ))}
-      </ol>
-    </div>
+    <SelectableBlock
+      blockId={label ? `conditions:${label}` : "conditions"}
+      label={label || "조건"}
+      field="conditions"
+      excerpt={blockExcerpt(conditions.join(" · "))}
+    >
+      <div className="rounded-lg border-2 border-dashed border-amber-300 bg-amber-50/50 p-3 space-y-1.5">
+        <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider block">
+          {label || "조건"}
+        </span>
+        <ol className="space-y-1 list-decimal list-inside">
+          {conditions.map((c, i) => (
+            <li key={i} className="text-[12px] text-slate-700 leading-relaxed">
+              {c}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </SelectableBlock>
   );
 }
 
 /** Model answer display */
 export function ModelAnswer({ answer, label }: { answer: string; label?: string }) {
   return (
-    <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3">
-      <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">
-        {label || "모범 답안"}
-      </span>
-      <p className="text-[13px] font-semibold text-emerald-800 leading-relaxed">
-        {answer}
-      </p>
-    </div>
+    <SelectableBlock
+      blockId="modelAnswer"
+      label={label || "모범 답안"}
+      field="modelAnswer"
+      excerpt={blockExcerpt(answer)}
+    >
+      <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3">
+        <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">
+          {label || "모범 답안"}
+        </span>
+        <p className="text-[13px] font-semibold text-emerald-800 leading-relaxed">
+          {answer}
+        </p>
+      </div>
+    </SelectableBlock>
   );
 }
 
 /** Given sentence highlight box */
 export function GivenSentenceBox({ sentence, label }: { sentence: string; label?: string }) {
   return (
-    <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
-      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
-        {label || "주어진 문장"}
-      </span>
-      <p className="text-[13px] text-slate-900 leading-relaxed font-medium">
-        {sentence}
-      </p>
-    </div>
+    <SelectableBlock
+      blockId={label ? `given:${label}` : "givenSentence"}
+      label={label || "주어진 문장"}
+      field="givenSentence"
+      excerpt={blockExcerpt(sentence)}
+    >
+      <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
+        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
+          {label || "주어진 문장"}
+        </span>
+        <p className="text-[13px] text-slate-900 leading-relaxed font-medium">
+          {sentence}
+        </p>
+      </div>
+    </SelectableBlock>
   );
 }
 
@@ -471,6 +524,7 @@ export function ExplanationSection({
   wrongOptionExplanations?: Record<string, string>;
 }) {
   const mode = useContext(AnswerRevealContext);
+  const selectionEnabled = !!useBlockSelection()?.enabled;
   const [open, setOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -486,52 +540,60 @@ export function ExplanationSection({
   const content = (
     <div className="space-y-3">
       {explanation && (
-        <div className="p-3 rounded-lg bg-emerald-50/60 border border-emerald-100">
-          <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">
-            해설
-          </span>
-          <p className="text-[12px] text-slate-700 leading-relaxed">{explanation}</p>
-        </div>
+        <SelectableBlock blockId="explanation" label="해설" field="explanation" excerpt={blockExcerpt(explanation)}>
+          <div className="p-3 rounded-lg bg-emerald-50/60 border border-emerald-100">
+            <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">
+              해설
+            </span>
+            <p className="text-[12px] text-slate-700 leading-relaxed">{explanation}</p>
+          </div>
+        </SelectableBlock>
       )}
 
       {keyPoints && keyPoints.length > 0 && (
-        <div className="p-3 rounded-lg bg-blue-50/60 border border-blue-100">
-          <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider block mb-1">
-            핵심 포인트
-          </span>
-          <ul className="space-y-1">
-            {keyPoints.map((kp, i) => (
-              <li key={i} className="text-[12px] text-slate-600 flex items-start gap-1.5">
-                <span className="text-blue-400 mt-0.5">-</span>
-                {kp}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <SelectableBlock blockId="keyPoints" label="핵심 포인트" field="keyPoints" excerpt={blockExcerpt(keyPoints.join(" · "))}>
+          <div className="p-3 rounded-lg bg-blue-50/60 border border-blue-100">
+            <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider block mb-1">
+              핵심 포인트
+            </span>
+            <ul className="space-y-1">
+              {keyPoints.map((kp, i) => (
+                <li key={i} className="text-[12px] text-slate-600 flex items-start gap-1.5">
+                  <span className="text-blue-400 mt-0.5">-</span>
+                  {kp}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </SelectableBlock>
       )}
 
       {wrongOptionExplanations && Object.keys(wrongOptionExplanations).length > 0 && (
-        <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
-          <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider block mb-1">
-            오답 분석
-          </span>
-          <div className="space-y-1">
-            {Object.entries(wrongOptionExplanations).map(([num, exp]) => (
-              <div key={num} className="text-[12px] text-slate-600 flex items-start gap-1.5">
-                <span className="shrink-0 w-4 h-4 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center text-[9px] font-bold mt-0.5">
-                  {num}
-                </span>
-                <span>{exp}</span>
-              </div>
-            ))}
+        <SelectableBlock blockId="wrongOptionExplanations" label="오답 분석" field="wrongOptionExplanations">
+          <div className="p-3 rounded-lg bg-amber-50/60 border border-amber-100">
+            <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider block mb-1">
+              오답 분석
+            </span>
+            <div className="space-y-1">
+              {Object.entries(wrongOptionExplanations).map(([num, exp]) => (
+                <div key={num} className="text-[12px] text-slate-600 flex items-start gap-1.5">
+                  <span className="shrink-0 w-4 h-4 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center text-[9px] font-bold mt-0.5">
+                    {num}
+                  </span>
+                  <span>{exp}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </SelectableBlock>
       )}
     </div>
   );
 
   // as-explanation: 부모 '해설 보기' 토글이 이미 감싸므로 자체 토글 없이 인라인 노출.
-  if (mode === "as-explanation") {
+  // 블럭 선택 모드(AI 수정 미리보기): 토글 없이 인라인 노출 → 해설/핵심포인트/오답분석을
+  // 곧장 클릭해 수정 대상으로 지정할 수 있게 한다.
+  if (mode === "as-explanation" || selectionEnabled) {
     return content;
   }
 
@@ -560,11 +622,13 @@ export function AnswerLine({ answer }: { answer: string }) {
   // 문제 관리 카드 등 일부 표면에서는 정답 줄을 숨긴다.
   if (useContext(HideAnswerLineContext)) return null;
   return (
-    <div className="flex items-center gap-2 pt-1 border-t border-slate-100">
-      <Check className="w-3.5 h-3.5 text-emerald-500" />
-      <span className="text-[12px] text-slate-400">
-        정답: <span className="font-bold text-emerald-600">{answer}</span>
-      </span>
-    </div>
+    <SelectableBlock blockId="correctAnswer" label="정답" field="correctAnswer" excerpt={blockExcerpt(answer)}>
+      <div className="flex items-center gap-2 pt-1 border-t border-slate-100">
+        <Check className="w-3.5 h-3.5 text-emerald-500" />
+        <span className="text-[12px] text-slate-400">
+          정답: <span className="font-bold text-emerald-600">{answer}</span>
+        </span>
+      </div>
+    </SelectableBlock>
   );
 }

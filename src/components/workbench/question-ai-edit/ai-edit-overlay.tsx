@@ -35,20 +35,23 @@ interface Props {
   onClose: () => void;
   /** 적용(덮어쓰기) 성공 후 — 편집 폼 새로고침. */
   onApplied?: () => void;
+  /** 새 문제로 저장 성공 후 — 새 문제 id 전달(목록 갱신·강조용). */
+  onSavedAsNew?: (newQuestionId: string) => void;
 }
 
-export function AiEditOverlay({ questionId, open, onClose, onApplied }: Props) {
+export function AiEditOverlay({ questionId, open, onClose, onApplied, onSavedAsNew }: Props) {
   if (!open) return null;
   return (
     <AiEditOverlayInner
       questionId={questionId}
       onClose={onClose}
       onApplied={onApplied}
+      onSavedAsNew={onSavedAsNew}
     />
   );
 }
 
-function AiEditOverlayInner({ questionId, onClose, onApplied }: Omit<Props, "open">) {
+function AiEditOverlayInner({ questionId, onClose, onApplied, onSavedAsNew }: Omit<Props, "open">) {
   const [input, setInput] = useState("");
   // 우측 패널: 수정본 미리보기 ↔ 상세 수정 내역.
   const [rightTab, setRightTab] = useState<"preview" | "changelog">("preview");
@@ -78,8 +81,9 @@ function AiEditOverlayInner({ questionId, onClose, onApplied }: Omit<Props, "ope
       onApplied?.();
       onClose();
     },
-    onSavedAsNew: () => {
+    onSavedAsNew: (newQuestionId) => {
       toast.success("수정본을 새 문제로 저장했습니다.");
+      onSavedAsNew?.(newQuestionId);
     },
   });
 

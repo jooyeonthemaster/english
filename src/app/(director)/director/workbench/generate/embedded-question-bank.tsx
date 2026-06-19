@@ -753,6 +753,19 @@ export function EmbeddedQuestionBank({
     void refreshCollections();
   }, [loadQuestions, refreshCollections]);
 
+  // AI '새 문제로 저장' → 새 문제를 방금 생성된 문제와 동일하게 파란 글로우로 강조하고,
+  // 첫 페이지로 이동해 목록을 재조회한다(새 문제는 createdAt 최신이라 맨 앞에 나타남).
+  const handleAiSavedAsNew = useCallback(
+    (newId: string) => {
+      if (newId) {
+        setFreshQuestionIds((prev) => new Set(prev).add(newId));
+      }
+      setFilters((prev) => ({ ...prev, page: 1 }));
+      void loadQuestions();
+    },
+    [loadQuestions],
+  );
+
   async function handleDelete(id: string) {
     if (!confirm("이 문제를 삭제하시겠습니까?")) return;
     const result = await deleteWorkbenchQuestion(id);
@@ -1571,6 +1584,9 @@ export function EmbeddedQuestionBank({
         }}
         onDeleted={editor.handleEditorDeleted}
         onRetry={editor.openEditor}
+        onSaved={refreshAfterMutation}
+        onApproved={refreshAfterMutation}
+        onSavedAsNew={handleAiSavedAsNew}
         onBack={editorCameFromDetail ? backToDetail : undefined}
       />
 

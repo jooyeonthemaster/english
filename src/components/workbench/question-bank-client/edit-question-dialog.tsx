@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { QuestionEditClient } from "../question-edit-client";
+import { QuestionEditWorkspace } from "../question-ai-edit/question-edit-workspace";
 
 interface Props {
   open: boolean;
@@ -24,6 +24,8 @@ interface Props {
   onRetry: (id: string) => void;
   onSaved?: () => void;
   onApproved?: () => void;
+  /** AI '새 문제로 저장' 성공 시 새 문제 id — 목록 갱신·강조용. */
+  onSavedAsNew?: (newQuestionId: string) => void;
   /** 상세 보기에서 들어온 경우에만 전달 — 헤더에 '뒤로' 버튼을 노출한다. */
   onBack?: () => void;
 }
@@ -40,6 +42,7 @@ export function EditQuestionDialog({
   onRetry,
   onSaved,
   onApproved,
+  onSavedAsNew,
   onBack,
 }: Props) {
   return (
@@ -78,7 +81,7 @@ export function EditQuestionDialog({
             </div>
           </div>
         ) : editingQuestion ? (
-          <QuestionEditClient
+          <QuestionEditWorkspace
             key={editingQuestion.id}
             question={editingQuestion}
             mode="modal"
@@ -86,6 +89,7 @@ export function EditQuestionDialog({
             onDeleted={onDeleted}
             onSaved={onSaved}
             onApproved={onApproved}
+            onSavedAsNew={onSavedAsNew}
             onBack={onBack}
           />
         ) : null}
