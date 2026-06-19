@@ -199,9 +199,9 @@ export function TransactionTable({
             : "아직 거래 내역이 없습니다"}
         </div>
       ) : (
-        <div className="overflow-x-auto">
+        <div className="max-h-[420px] overflow-auto">
           <Table>
-            <TableHeader>
+            <TableHeader className="sticky top-0 z-10 bg-white">
               <TableRow className="hover:bg-transparent border-b border-gray-50">
                 <TableHead className="text-[11px] text-gray-400 font-medium h-9 pl-5 w-[140px]">
                   일시

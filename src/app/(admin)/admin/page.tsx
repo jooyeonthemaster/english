@@ -1,5 +1,8 @@
 import { Suspense } from "react";
-import { getSystemStats, getRegistrations } from "@/actions/admin";
+import Link from "next/link";
+import { getSystemStats } from "@/actions/admin";
+import { getMembers } from "@/actions/admin-members";
+import { getProviderLabel } from "@/lib/admin-members-labels";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Building2,
@@ -16,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatNumber, formatRelativeTime } from "@/lib/utils";
 import { DirectorProviderCard } from "@/components/admin/director-provider-card";
 
@@ -37,12 +39,10 @@ function DashboardSkeleton() {
 }
 
 async function DashboardContent() {
-  const [stats, allRegistrations] = await Promise.all([
+  const [stats, recentMembers] = await Promise.all([
     getSystemStats(),
-    getRegistrations(),
+    getMembers({ limit: 5 }),
   ]);
-
-  const recentRegistrations = allRegistrations.slice(0, 5);
 
   const kpiCards = [
     {
@@ -110,12 +110,11 @@ async function DashboardContent() {
       </div>
 
       {/* Secondary stats row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         {[
           { label: "지문", value: stats.totalPassages },
           { label: "시험", value: stats.totalExams },
           { label: "문제", value: stats.totalQuestions },
-          { label: "대기 중인 가입 신청", value: stats.pendingRegistrations },
         ].map((item) => (
           <div
             key={item.label}
@@ -130,66 +129,72 @@ async function DashboardContent() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Recent Registrations */}
+        {/* Recent Members */}
         <div className="bg-white rounded-xl border border-gray-100 lg:col-span-2">
           <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
             <div className="flex items-center gap-2">
               <Clock className="size-4 text-gray-400" strokeWidth={1.8} />
               <h3 className="text-[14px] font-semibold text-gray-800">
-                최근 가입 신청
+                최근 가입 회원
               </h3>
             </div>
-            {stats.pendingRegistrations > 0 && (
-              <Badge
-                variant="secondary"
-                className="bg-blue-50 text-blue-600 border-0 text-[11px] px-2"
-              >
-                {stats.pendingRegistrations}건 대기 중
-              </Badge>
-            )}
+            <Link
+              href="/admin/members"
+              className="text-[12px] text-blue-600 hover:underline"
+            >
+              전체 보기
+            </Link>
           </div>
           <div className="p-0">
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="text-[12px] text-gray-400 font-medium h-9 pl-5">
-                    학원명
+                    회원
                   </TableHead>
                   <TableHead className="text-[12px] text-gray-400 font-medium h-9">
-                    원장
+                    학원
                   </TableHead>
                   <TableHead className="text-[12px] text-gray-400 font-medium h-9">
-                    상태
+                    가입 경로
                   </TableHead>
                   <TableHead className="text-[12px] text-gray-400 font-medium h-9 pr-5">
-                    날짜
+                    가입일
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {recentRegistrations.length === 0 ? (
+                {recentMembers.length === 0 ? (
                   <TableRow>
                     <TableCell
                       colSpan={4}
                       className="text-center text-[13px] text-gray-400 py-8"
                     >
-                      가입 신청이 없습니다
+                      회원이 없습니다
                     </TableCell>
                   </TableRow>
                 ) : (
-                  recentRegistrations.map((reg) => (
-                    <TableRow key={reg.id} className="hover:bg-gray-50/50">
-                      <TableCell className="text-[13px] font-medium text-gray-800 pl-5">
-                        {reg.academyName}
+                  recentMembers.map((m) => (
+                    <TableRow
+                      key={m.id}
+                      className="hover:bg-gray-50/50"
+                    >
+                      <TableCell className="pl-5">
+                        <Link
+                          href={`/admin/members/${m.id}`}
+                          className="text-[13px] font-medium text-gray-800 hover:text-blue-600"
+                        >
+                          {m.name}
+                        </Link>
                       </TableCell>
                       <TableCell className="text-[13px] text-gray-600">
-                        {reg.directorName}
+                        {m.academy.name}
                       </TableCell>
-                      <TableCell>
-                        <RegistrationStatusBadge status={reg.status} />
+                      <TableCell className="text-[12px] text-gray-500">
+                        {getProviderLabel(m.authProvider)}
                       </TableCell>
                       <TableCell className="text-[12px] text-gray-400 pr-5">
-                        {formatRelativeTime(reg.createdAt)}
+                        {formatRelativeTime(m.createdAt)}
                       </TableCell>
                     </TableRow>
                   ))
@@ -202,34 +207,6 @@ async function DashboardContent() {
         <DirectorProviderCard stats={stats.directorsByProvider} />
       </div>
     </div>
-  );
-}
-
-function RegistrationStatusBadge({ status }: { status: string }) {
-  const config: Record<string, { label: string; className: string }> = {
-    PENDING: {
-      label: "대기 중",
-      className: "bg-blue-50 text-blue-600 border-0",
-    },
-    APPROVED: {
-      label: "승인됨",
-      className: "bg-emerald-50 text-emerald-600 border-0",
-    },
-    REJECTED: {
-      label: "거절됨",
-      className: "bg-red-50 text-red-600 border-0",
-    },
-    CANCELLED: {
-      label: "취소됨",
-      className: "bg-gray-100 text-gray-500 border-0",
-    },
-  };
-
-  const c = config[status] || config.PENDING;
-  return (
-    <Badge variant="secondary" className={`text-[11px] px-2 ${c.className}`}>
-      {c.label}
-    </Badge>
   );
 }
 

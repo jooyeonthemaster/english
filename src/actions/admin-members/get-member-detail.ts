@@ -79,6 +79,22 @@ export async function getMemberDetail(memberId: string) {
     total: Number(r.total),
   }));
 
+  // "최근 활동" = 마지막 로그인과 마지막 실제 사용(크레딧 소비) 중 더 최근 것.
+  // lastLoginAt만 보면 세션이 길게 유지될 때(매일 써도 로그인은 몇 주 전) 활동이
+  // 없는 것처럼 잘못 보인다 — 맞춤 문자/리텐션 판단은 이 값을 쓴다.
+  const lastConsumption = await prisma.creditTransaction.findFirst({
+    where: { academyId: academy.id, type: "CONSUMPTION" },
+    orderBy: { createdAt: "desc" },
+    select: { createdAt: true },
+  });
+  const activeDates = [staff.lastLoginAt, lastConsumption?.createdAt].filter(
+    (d): d is Date => Boolean(d),
+  );
+  const lastActiveAt =
+    activeDates.length > 0
+      ? activeDates.reduce((a, b) => (a > b ? a : b))
+      : null;
+
   return {
     kind: "ok" as const,
     member: {
@@ -92,6 +108,7 @@ export async function getMemberDetail(memberId: string) {
       isActive: staff.isActive,
       createdAt: staff.createdAt,
       lastLoginAt: staff.lastLoginAt,
+      lastActiveAt,
       kakaoId: elevated ? staff.kakaoId : null,
       supabaseUserId: elevated ? staff.supabaseUserId : null,
       academy: {

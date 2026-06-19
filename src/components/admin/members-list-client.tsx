@@ -20,6 +20,7 @@ import type {
   SortOrder,
 } from "@/actions/admin-members";
 import { MemberRow } from "./members-list-client/member-row";
+import { MembersExportButtons } from "./members-list-client/export-button";
 import {
   EmptyState,
   SegmentedTabs,
@@ -48,7 +49,7 @@ const ACTIVE_TABS: Array<{ key: ActiveFilter; label: string }> = [
 // credit (intervention candidates); desc on time columns highlights newest.
 const SORT_DEFAULT_DIRECTION: Record<MemberSortKey, SortOrder> = {
   createdAt: "desc",
-  lastLoginAt: "desc",
+  lastActiveAt: "desc",
   balance: "asc",
 };
 
@@ -106,9 +107,9 @@ export function MembersListClient({ members }: MembersListClientProps) {
         const bv = b.creditBalance?.balance ?? 0;
         return (av - bv) * dir;
       }
-      if (filters.sortKey === "lastLoginAt") {
-        const av = a.lastLoginAt ? new Date(a.lastLoginAt).getTime() : 0;
-        const bv = b.lastLoginAt ? new Date(b.lastLoginAt).getTime() : 0;
+      if (filters.sortKey === "lastActiveAt") {
+        const av = a.lastActiveAt ? new Date(a.lastActiveAt).getTime() : 0;
+        const bv = b.lastActiveAt ? new Date(b.lastActiveAt).getTime() : 0;
         return (av - bv) * dir;
       }
       const av = new Date(a.createdAt).getTime();
@@ -212,7 +213,7 @@ export function MembersListClient({ members }: MembersListClientProps) {
 
       {/* Table */}
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-50">
+        <div className="flex items-center justify-between gap-3 px-5 py-3 border-b border-gray-50">
           <span className="text-[12px] text-gray-500">
             <span className="font-semibold text-gray-800 tabular-nums">
               {sorted.length}
@@ -222,6 +223,7 @@ export function MembersListClient({ members }: MembersListClientProps) {
               · 전체 {members.length}명 중
             </span>
           </span>
+          <MembersExportButtons />
         </div>
 
         {sorted.length === 0 ? (
@@ -280,7 +282,7 @@ export function MembersListClient({ members }: MembersListClientProps) {
                   <TableHead
                     className="text-[11px] text-gray-400 font-medium h-9 w-[120px]"
                     aria-sort={
-                      filters.sortKey === "lastLoginAt"
+                      filters.sortKey === "lastActiveAt"
                         ? filters.sortOrder === "asc"
                           ? "ascending"
                           : "descending"
@@ -288,11 +290,14 @@ export function MembersListClient({ members }: MembersListClientProps) {
                     }
                   >
                     <SortHeader
-                      label="최근 로그인"
-                      active={filters.sortKey === "lastLoginAt"}
+                      label="최근 활동"
+                      active={filters.sortKey === "lastActiveAt"}
                       order={filters.sortOrder}
-                      onClick={() => toggleSort("lastLoginAt")}
+                      onClick={() => toggleSort("lastActiveAt")}
                     />
+                  </TableHead>
+                  <TableHead className="text-[11px] text-gray-400 font-medium h-9 w-[88px]">
+                    문자
                   </TableHead>
                   <TableHead className="text-[11px] text-gray-400 font-medium h-9 w-[60px] pr-5" />
                 </TableRow>

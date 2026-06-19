@@ -30,3 +30,10 @@ export { adjustMemberCredits } from "./adjust-member-credits";
 export { toggleMemberActive } from "./toggle-member-active";
 
 export { updateMemberMemo } from "./update-member-memo";
+
+export { toggleMemberSmsOptOut } from "./toggle-sms-opt-out";
+
+export {
+  exportMembers,
+  type ExportMembersResult,
+} from "./export-members";

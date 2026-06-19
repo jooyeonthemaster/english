@@ -6,6 +6,8 @@ import { requireAdminAuth } from "@/lib/auth-admin";
 import {
   MAX_SEARCH_LENGTH,
   REDACTED,
+  SMS_OPT_OUT_FLAG_KEY,
+  isInternalAccount,
   isSuperAdmin,
   maskEmail,
   type MemberListFilters,
@@ -58,12 +60,12 @@ export async function getMembers(filters: MemberListFilters = {}) {
   // `limit`. For typical admin-side member counts this is acceptable. If the
   // member table grows past low-thousands, migrate to a raw join with
   // ORDER BY credit_balances.balance DESC.
+  // lastActiveAt(=로그인/사용 중 최근)은 파생값이라 DB 정렬이 불가 — 화면(클라이언트)
+  // 에서 정렬한다. balance와 동일하게 넓게 떠서 메모리 정렬(회원 수가 수천 미만 가정).
   const dbOrderBy: Prisma.StaffOrderByWithRelationInput =
-    sortKey === "balance"
+    sortKey === "balance" || sortKey === "lastActiveAt"
       ? { createdAt: "desc" }
-      : sortKey === "lastLoginAt"
-        ? { lastLoginAt: { sort: sortOrder, nulls: "last" } }
-        : { createdAt: sortOrder };
+      : { createdAt: sortOrder };
 
   const staffRows = await prisma.staff.findMany({
     where: { AND: conditions },
@@ -94,10 +96,30 @@ export async function getMembers(filters: MemberListFilters = {}) {
               totalAllocated: true,
             },
           },
+          // SMS 발송 제외 플래그 — academy_feature_flags 재사용(마이그레이션 불필요)
+          academyFeatureFlags: {
+            where: { key: SMS_OPT_OUT_FLAG_KEY },
+            select: { enabled: true },
+            take: 1,
+          },
         },
       },
     },
   });
+
+  // "최근 활동" = 마지막 로그인과 마지막 실제 사용(크레딧 소비) 중 더 최근 것.
+  // lastLoginAt만 보면 세션 유지 회원이 매일 써도 "오래 전"으로 보이는 문제 해결.
+  const academyIds = [...new Set(staffRows.map((s) => s.academyId))];
+  const lastUsageRows = academyIds.length
+    ? await prisma.creditTransaction.groupBy({
+        by: ["academyId"],
+        where: { academyId: { in: academyIds }, type: "CONSUMPTION" },
+        _max: { createdAt: true },
+      })
+    : [];
+  const lastUsageMap = new Map(
+    lastUsageRows.map((r) => [r.academyId, r._max.createdAt]),
+  );
 
   const mapped = staffRows.map((s) => ({
     id: s.id,
@@ -112,6 +134,19 @@ export async function getMembers(filters: MemberListFilters = {}) {
     isActive: s.isActive,
     createdAt: s.createdAt,
     lastLoginAt: s.lastLoginAt,
+    lastActiveAt: (() => {
+      const dates = [s.lastLoginAt, lastUsageMap.get(s.academyId)].filter(
+        (d): d is Date => Boolean(d),
+      );
+      return dates.length ? dates.reduce((a, b) => (a > b ? a : b)) : null;
+    })(),
+    // 문자 발송 대상 관리용 플래그 — 화면 목록에서 바로 토글/표시한다.
+    smsOptOut: s.academy.academyFeatureFlags[0]?.enabled ?? false,
+    isInternal: isInternalAccount({
+      name: s.name,
+      academyName: s.academy.name,
+      email: s.email,
+    }),
     academy: {
       id: s.academy.id,
       name: s.academy.name,

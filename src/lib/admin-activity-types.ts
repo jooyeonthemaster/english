@@ -21,11 +21,17 @@ export const ACTIVITY_CATEGORY_LABELS: Record<ActivityCategory, string> = {
   EXPORT: "내보내기",
 };
 
+// 필터 전용 값. "CREATED"는 단일 카테고리가 아니라 "유저가 실제로 만든 것"
+// (콘텐츠 생성 + 자료 추출 + AI 생성)을 한 번에 보는 복합 필터다 — 페이지 이동/
+// 로그인 같은 노이즈에 생성물이 묻히는 문제를 해결한다.
+export type ActivityFilter = ActivityCategory | "all" | "CREATED";
+
 export const ACTIVITY_CATEGORY_OPTIONS: Array<{
-  value: ActivityCategory | "all";
+  value: ActivityFilter;
   label: string;
 }> = [
   { value: "all", label: "전체" },
+  { value: "CREATED", label: "생성물(콘텐츠·추출·AI)" },
   ...(
     Object.entries(ACTIVITY_CATEGORY_LABELS) as Array<
       [ActivityCategory, string]

@@ -2,11 +2,12 @@
 
 // ============================================================================
 // ActivityList — 활동 타임라인 표 (회원 상세 + 전역 피드 공용 프레젠테이션).
-// 행 클릭 시 metadata(JSON) 확장 — SUPER_ADMIN에게만 metadata가 내려온다.
+// 행(또는 '자료' 버튼) 클릭 시 실물 자료 뷰어를 연다. 원시 메타데이터(JSON)는
+// 운영자에게 노이즈라 표에 펼치지 않는다 — 필요한 값은 뷰어가 정리해서 보여준다.
 // ============================================================================
 
-import { Fragment, useState } from "react";
-import { ChevronDown, ChevronRight, Eye } from "lucide-react";
+import { useState } from "react";
+import { Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,13 +22,15 @@ import {
 import type { ActivityItem } from "@/lib/admin-activity-types";
 import { ActivityResourceDialog } from "./activity-resource-dialog";
 
-// 실물 자료 뷰어가 지원하는 소스 (id 접두사 기준)
+// '자료 보기'를 띄울 소스 — 실제로 열어볼 결과물이 있는 것만:
+//   extraction(업로드 원본·페이지 이미지), exam(시험지 DOCX/HWP),
+//   passage(지문 원문 + 문제), workbench(문제 생성 → 지문·생성 문제 + 시험지 만들기).
+// report 등 메타데이터뿐인 소스는 아이콘을 달지 않는다(노이즈 방지).
 const DETAILABLE_PREFIXES = new Set([
   "extraction",
+  "exam",
   "passage",
   "workbench",
-  "report",
-  "exam",
 ]);
 
 function isDetailable(itemId: string): boolean {
@@ -65,7 +68,6 @@ export function ActivityList({
   emptyMessage = "활동 내역이 없습니다",
   disableResourceViewer = false,
 }: ActivityListProps) {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [viewer, setViewer] = useState<{ id: string; title: string } | null>(
     null,
   );
@@ -113,124 +115,93 @@ export function ActivityList({
         </TableHeader>
         <TableBody>
           {items.map((item) => {
-            const expandable = item.metadata !== null;
-            const expanded = expandedId === item.id;
+            const detailable = isDetailable(item.id);
+            const canView = detailable && !disableResourceViewer;
             const status = STATUS_META[item.status] ?? STATUS_META.INFO;
             return (
-              <Fragment key={item.id}>
-                <TableRow
-                  className={cn(
-                    "border-b border-gray-50/60 last:border-0",
-                    expandable
-                      ? "cursor-pointer hover:bg-gray-50/50"
-                      : "hover:bg-gray-50/30",
-                  )}
-                  onClick={
-                    expandable
-                      ? () => setExpandedId(expanded ? null : item.id)
-                      : undefined
-                  }
-                >
-                  <TableCell className="pl-5 text-[12px] text-gray-700 tabular-nums align-top">
-                    {formatDateTime(item.createdAt)}
-                  </TableCell>
-                  {showAcademy && (
-                    <TableCell className="text-[12px] text-gray-700 align-top">
-                      <span className="line-clamp-1">
-                        {item.academyName ?? "—"}
-                      </span>
-                    </TableCell>
-                  )}
-                  <TableCell className="align-top">
-                    <Badge
-                      variant="secondary"
-                      className={cn(
-                        "text-[11px] font-medium border-0 px-2 whitespace-nowrap",
-                        CATEGORY_BADGE[item.category] ??
-                          "bg-gray-100 text-gray-600",
-                      )}
-                    >
-                      {item.categoryLabel}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-[12px] text-gray-800 align-top">
-                    <div className="flex items-start gap-1">
-                      {expandable &&
-                        (expanded ? (
-                          <ChevronDown
-                            className="size-3.5 mt-0.5 shrink-0 text-gray-400"
-                            strokeWidth={2}
-                            aria-hidden
-                          />
-                        ) : (
-                          <ChevronRight
-                            className="size-3.5 mt-0.5 shrink-0 text-gray-400"
-                            strokeWidth={2}
-                            aria-hidden
-                          />
-                        ))}
-                      <div className="min-w-0">
-                        <div
-                          className={cn(
-                            "line-clamp-1 break-all",
-                            item.category === "PAGE_VIEW" &&
-                              "font-mono text-[11px] text-gray-600",
-                          )}
-                        >
-                          {item.title}
-                        </div>
-                        {item.detail && (
-                          <div className="text-[11px] text-gray-400 line-clamp-1 mt-0.5">
-                            {item.detail}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-[12px] text-gray-600 align-top">
-                    {item.actorName ?? (
-                      <span className="text-gray-300">—</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="align-top">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] text-gray-600 whitespace-nowrap">
-                      <span
-                        className={cn("size-1.5 rounded-full", status.dot)}
-                        aria-hidden
-                      />
-                      {status.label}
+              <TableRow
+                key={item.id}
+                className={cn(
+                  "border-b border-gray-50/60 last:border-0",
+                  canView
+                    ? "cursor-pointer hover:bg-gray-50/50"
+                    : "hover:bg-gray-50/30",
+                )}
+                onClick={
+                  canView
+                    ? () => setViewer({ id: item.id, title: item.title })
+                    : undefined
+                }
+              >
+                <TableCell className="pl-5 text-[12px] text-gray-700 tabular-nums align-top">
+                  {formatDateTime(item.createdAt)}
+                </TableCell>
+                {showAcademy && (
+                  <TableCell className="text-[12px] text-gray-700 align-top">
+                    <span className="line-clamp-1">
+                      {item.academyName ?? "—"}
                     </span>
                   </TableCell>
-                  <TableCell className="pr-5 align-top">
-                    {isDetailable(item.id) && !disableResourceViewer ? (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 w-7 p-0 text-gray-400 hover:text-blue-600"
-                        aria-label="자료 보기"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setViewer({ id: item.id, title: item.title });
-                        }}
-                      >
-                        <Eye className="size-3.5" strokeWidth={2} aria-hidden />
-                      </Button>
-                    ) : null}
-                  </TableCell>
-                </TableRow>
-                {expanded && item.metadata && (
-                  <TableRow className="hover:bg-transparent border-b border-gray-50/60">
-                    <TableCell
-                      colSpan={showAcademy ? 7 : 6}
-                      className="bg-gray-50/60 px-5 py-3"
-                    >
-                      <pre className="text-[11px] text-gray-600 font-mono whitespace-pre-wrap break-all max-h-48 overflow-y-auto">
-                        {JSON.stringify(item.metadata, null, 2)}
-                      </pre>
-                    </TableCell>
-                  </TableRow>
                 )}
-              </Fragment>
+                <TableCell className="align-top">
+                  <Badge
+                    variant="secondary"
+                    className={cn(
+                      "text-[11px] font-medium border-0 px-2 whitespace-nowrap",
+                      CATEGORY_BADGE[item.category] ??
+                        "bg-gray-100 text-gray-600",
+                    )}
+                  >
+                    {item.categoryLabel}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-[12px] text-gray-800 align-top">
+                  <div className="min-w-0">
+                    <div
+                      className={cn(
+                        "line-clamp-1 break-all",
+                        item.category === "PAGE_VIEW" &&
+                          "font-mono text-[11px] text-gray-600",
+                      )}
+                    >
+                      {item.title}
+                    </div>
+                    {item.detail && (
+                      <div className="text-[11px] text-gray-400 line-clamp-1 mt-0.5">
+                        {item.detail}
+                      </div>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell className="text-[12px] text-gray-600 align-top">
+                  {item.actorName ?? <span className="text-gray-300">—</span>}
+                </TableCell>
+                <TableCell className="align-top">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] text-gray-600 whitespace-nowrap">
+                    <span
+                      className={cn("size-1.5 rounded-full", status.dot)}
+                      aria-hidden
+                    />
+                    {status.label}
+                  </span>
+                </TableCell>
+                <TableCell className="pr-5 align-top">
+                  {canView ? (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 w-7 p-0 text-gray-400 hover:text-blue-600"
+                      aria-label="자료 보기"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setViewer({ id: item.id, title: item.title });
+                      }}
+                    >
+                      <Eye className="size-3.5" strokeWidth={2} aria-hidden />
+                    </Button>
+                  ) : null}
+                </TableCell>
+              </TableRow>
             );
           })}
         </TableBody>

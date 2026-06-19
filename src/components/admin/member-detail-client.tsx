@@ -23,6 +23,8 @@ import { UsageBreakdown } from "@/components/admin/member-detail/usage-breakdown
 import { UsageSparkline } from "@/components/admin/member-detail/usage-sparkline";
 import { TransactionTable } from "@/components/admin/member-detail/transaction-table";
 import { ActivityTimeline } from "@/components/admin/member-detail/activity-timeline";
+import { OutreachCard } from "@/components/admin/member-detail/outreach-card";
+import { AcademyContentBrowser } from "@/components/admin/academy-content-browser";
 import type { ActivityItem } from "@/lib/admin-activity-types";
 import {
   Avatar,
@@ -100,6 +102,8 @@ export function MemberDetailClient({
       />
 
       <MemoSection memberId={member.id} initialMemo={member.academy.memo} />
+
+      <OutreachCard member={member} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-1 space-y-4">
@@ -205,6 +209,14 @@ export function MemberDetailClient({
           />
         </div>
       </div>
+
+      {/* 학원 콘텐츠 (회원·학원 통합 뷰) — 지문/문제/시험 폴더로 바로 이동 */}
+      <AcademyContentBrowser
+        academyId={member.academy.id}
+        passageCount={member.academy.counts.passages}
+        questionCount={member.academy.counts.questions}
+        examCount={member.academy.counts.exams}
+      />
 
       {/* 활동 타임라인 — 제목/경로가 길어 우측 컬럼이 아닌 전체 폭 사용.
           페이지 래퍼(space-y-6)가 위 간격을 잡아준다. */}
