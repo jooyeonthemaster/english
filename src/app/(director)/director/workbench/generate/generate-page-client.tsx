@@ -2412,6 +2412,7 @@ export function GeneratePageClient({
         passageNumber={activeRowIndex >= 0 ? activeRowIndex + 1 : 1}
         title={activeRow.title}
         contentPreview={activeRow.content.trim().slice(0, 140)}
+        fullContent={activeRow.content}
         wordCount={countWords(activeRow.content)}
         questions={activeRowStats?.questions ?? 0}
         creditCost={activeRowStats?.creditCost ?? 0}

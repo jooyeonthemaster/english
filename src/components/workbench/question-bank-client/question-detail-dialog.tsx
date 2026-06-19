@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Pencil, Sparkles, Trash2, X } from "lucide-react";
+import { Loader2, Sparkles, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatDateTime } from "@/lib/utils";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
+import { type QuestionCardItem } from "@/components/workbench/question-card";
 import {
-  QuestionCard,
-  ReviewStatusStamp,
-  type QuestionCardItem,
-} from "@/components/workbench/question-card";
+  QuestionBankCard,
+  type QuestionBankItem,
+} from "@/components/workbench/question-bank-card";
 import {
   SimilarQuestionAnalysisModal,
   type QAnalysis,
@@ -88,45 +89,18 @@ export function QuestionDetailDialog({
         <div className="relative z-10 mx-4 my-4 flex w-full max-w-[1680px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
           <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 px-6 py-3">
             <div className="flex min-w-0 items-center gap-2.5">
-              {/* 검수 토글 점 — 좌측 끝 첫 번째. 누르면 검수상태(초록↔빨강)가
-                  실제로 바뀐다. 제목과 세로 중앙 정렬(items-center). */}
-              {question ? (
-                <button
-                  type="button"
-                  onClick={() =>
-                    question.approved
-                      ? onUnapprove(question.id)
-                      : onApprove(question.id)
-                  }
-                  aria-label={question.approved ? "검수완료" : "검수필요"}
-                  title={
-                    question.approved
-                      ? "검수완료 — 누르면 검수를 취소합니다"
-                      : "검수필요 — 누르면 검수완료로 표시합니다"
-                  }
-                  className={
-                    "size-3.5 shrink-0 cursor-pointer rounded-full ring-2 ring-white shadow-sm transition-colors hover:brightness-110 " +
-                    (question.approved ? "bg-emerald-500" : "bg-red-500")
-                  }
-                />
-              ) : null}
               <h2 className="text-[15px] font-bold text-slate-800">
                 문제 상세
               </h2>
+              {question?.createdAt ? (
+                <span className="text-[12px] font-medium tabular-nums text-slate-400">
+                  {formatDateTime(question.createdAt)}
+                </span>
+              ) : null}
             </div>
             <div className="flex shrink-0 items-center gap-2">
               {question ? (
                 <>
-                  {onEdit ? (
-                    <button
-                      type="button"
-                      onClick={() => onEdit(question.id)}
-                      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-blue-600 bg-blue-600 px-2.5 text-[11px] font-semibold text-white shadow-sm transition-colors hover:border-blue-700 hover:bg-blue-700"
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                      문제 수정
-                    </button>
-                  ) : null}
                   {similarAnalysis ? (
                     <button
                       type="button"
@@ -201,22 +175,29 @@ export function QuestionDetailDialog({
               </div>
               <div className="relative overflow-hidden">
                 <div className="h-full overflow-y-auto px-6 py-5">
-                  <QuestionCard
-                    q={{
-                      ...question,
-                      _count: question._count ?? { examLinks: 0 },
-                    }}
+                  {/* 본문 영역만 카드 스타일로(embedded) — 손잡이/체크박스/별/삭제/사용이력 숨김.
+                      하단에는 문제 카드와 동일한 검수완료/수정하기 버튼을 같은 메커니즘으로 노출한다.
+                      auto 높이 래퍼로 감싸 카드 h-full 이 빈 공간으로 늘어나지 않게 한다. */}
+                  <div>
+                  <QuestionBankCard
+                    q={
+                      {
+                        ...question,
+                        _count: question._count ?? { examLinks: 0 },
+                      } as unknown as QuestionBankItem
+                    }
                     num={1}
-                    readonly
-                    hideReviewStatusStamp
+                    selected={false}
+                    onToggle={() => {}}
+                    onApprove={() => onApprove(question.id)}
+                    onUnapprove={() => onUnapprove(question.id)}
+                    onEdit={onEdit ? () => onEdit(question.id) : undefined}
+                    embedded
+                    showStar={false}
+                    enableDrag={false}
                   />
+                  </div>
                 </div>
-                {/* 검수 도장 — 이 팝업 전용으로 우측 문제 박스 우측 상단에 고정 + 확대.
-                  ReviewStatusStamp는 공용이라 컴포넌트를 바꾸지 않고 transform scale로만 키운다. */}
-                <ReviewStatusStamp
-                  approved={question.approved}
-                  className="absolute right-9 top-9 z-10 origin-top-right scale-125"
-                />
               </div>
             </div>
           ) : null}

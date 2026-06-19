@@ -11,6 +11,7 @@ import {
   normalizeQuestionGenerationPlan,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
+import { QUESTION_PERSISTENCE_TRANSACTION_TIMEOUT_MS } from "@/lib/concurrency-config";
 import type {
   WorkbenchQuestionFilters,
   ActionResult,
@@ -463,7 +464,11 @@ export async function saveGeneratedQuestions(
       }
     }
 
-    // Use $transaction to batch all question + explanation creates in one roundtrip
+    // Use $transaction to batch all question + explanation creates in one roundtrip.
+    // 명시적 timeout 필수: 옵션을 안 주면 Prisma 기본 5s interactive tx 라, 문항 수가
+    // 많거나 모델이 느릴 때(특히 PREMIUM) question+explanation create 루프가 5s를 넘겨
+    // "Transaction not found / already closed" 롤백 → 생성 성공분 전체 유실로 이어졌다.
+    // 백그라운드 잡 저장(saveGeneratedQuestionsForJob)과 동일한 30s 상한으로 맞춘다.
     await prisma.$transaction(async (tx) => {
       for (const q of questions) {
         const planMetadata = enrichGeneratedQuestionPlanMetadata(q);
@@ -499,7 +504,7 @@ export async function saveGeneratedQuestions(
           });
         }
       }
-    });
+    }, { maxWait: 10_000, timeout: QUESTION_PERSISTENCE_TRANSACTION_TIMEOUT_MS });
 
     revalidateQuestionBankPaths();
     return { success: true };

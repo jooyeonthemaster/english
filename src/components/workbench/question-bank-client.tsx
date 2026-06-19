@@ -817,17 +817,6 @@ export function QuestionBankClient({
     />
   );
 
-  const filtersToolbar = (
-    <QuestionFiltersToolbar
-      filters={filters}
-      searchValue={searchValue}
-      onSearchChange={setSearchValue}
-      onSearchSubmit={handleSearch}
-      updateFilter={updateFilter}
-      updateFilters={updateFilters}
-    />
-  );
-
   const reviewStatusSegment = (() => {
     const segments = [
       {
@@ -881,14 +870,42 @@ export function QuestionBankClient({
     );
   })();
 
+  // 선택 항목 중 아직 검수완료되지 않은(미검수) 문항 수 — bulk 검수완료 버튼의
+  // 빨강(검수필요 있음)/초록(모두 완료) 상태와 활성/비활성 판정에 쓴다.
+  const selectedPendingApprovalCount = useMemo(
+    () =>
+      flatQuestions.filter((q) => selectedIds.has(q.id) && !q.approved).length,
+    [flatQuestions, selectedIds],
+  );
+
   const selectionExtraActions = (
     <>
-      {/* 검수완료 (선택 문항 일괄 검수) */}
+      <MoveOrCopyFolderPicker
+        collections={folders.collections}
+        activeFolder={folders.activeFolder}
+        selectedCount={selectedIds.size}
+        onCopy={handleAddToFolder}
+        onMove={handleMoveToFolder}
+        compact
+      />
+
       <button
         type="button"
         onClick={() => void handleBulkApprove()}
-        disabled={selectedIds.size === 0 || bulkApproving}
-        className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-300 disabled:opacity-100"
+        disabled={selectedPendingApprovalCount === 0 || bulkApproving}
+        title={
+          selectedPendingApprovalCount > 0
+            ? `미검수 ${selectedPendingApprovalCount}개 검수완료`
+            : "선택한 문항이 모두 검수완료입니다"
+        }
+        className={
+          // per-card 토글과 동일한 빨강/초록 언어: 선택 중 미검수가 있으면
+          // 빨강(클릭 시 완료, hover 초록 미리보기), 없으면 초록(모두 완료).
+          "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border bg-white px-2.5 text-[11px] font-semibold shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
+          (selectedPendingApprovalCount > 0
+            ? "border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
+            : "border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700")
+        }
       >
         {bulkApproving ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -898,39 +915,19 @@ export function QuestionBankClient({
         검수완료
       </button>
 
-      <MoveOrCopyFolderPicker
-        collections={folders.collections}
-        activeFolder={folders.activeFolder}
-        selectedCount={selectedIds.size}
-        onCopy={handleAddToFolder}
-        onMove={handleMoveToFolder}
-      />
-
-      {/* Create exam */}
-      <button
-        onClick={() => {
-          setExamTitle("");
-          setCreateExamOpen(true);
-        }}
-        className="flex items-center gap-1.5 h-7 px-2.5 text-[11px] font-medium text-blue-700 bg-white border border-blue-200 rounded-md hover:bg-blue-50"
-      >
-        <ClipboardList className="w-3.5 h-3.5" />
-        시험지 만들기
-      </button>
-
-      {/* Bulk delete */}
       <button
         type="button"
         onClick={() => setBulkDeleteOpen(true)}
         disabled={selectedIds.size === 0 || bulkDeleting}
-        className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+        title="삭제"
+        aria-label="삭제"
+        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {bulkDeleting ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
         ) : (
           <Trash2 className="w-3.5 h-3.5" />
         )}
-        삭제
       </button>
     </>
   );
@@ -938,6 +935,44 @@ export function QuestionBankClient({
   const gridToggle = (
     <GridToggle gridCols={gridCols} setGridCols={setGridCols} />
   );
+
+  // 전체 선택·검수 상태·보기(문제별/지문별)를 '줄 세개' 필터 팝오버 안으로 모은다.
+  const filterPopoverExtra = (
+    <div className="flex flex-col gap-3">
+      <button
+        type="button"
+        onClick={() => void handleSelectAllPages()}
+        disabled={selectingAllPages || totalCount === 0}
+        className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-medium text-slate-600 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {selectingAllPages ? (
+          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+        ) : null}
+        전체 선택
+      </button>
+      <div className="flex flex-col gap-1.5">
+        <span className="text-[11px] font-medium text-slate-600">검수 상태</span>
+        {reviewStatusSegment}
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <span className="text-[11px] font-medium text-slate-600">보기</span>
+        {viewModeToggle}
+      </div>
+    </div>
+  );
+
+  const filtersToolbar = (
+    <QuestionFiltersToolbar
+      filters={filters}
+      searchValue={searchValue}
+      onSearchChange={setSearchValue}
+      onSearchSubmit={handleSearch}
+      updateFilter={updateFilter}
+      updateFilters={updateFilters}
+      popoverExtra={filterPopoverExtra}
+    />
+  );
+
   const toggleActivePassage = useCallback(() => {
     if (!activePassageContext) return;
     if (activePassageContext.isOpen) {
@@ -997,7 +1032,7 @@ export function QuestionBankClient({
 
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-1 items-center gap-2 min-w-0">
         <SelectAllCheckbox
           checked={isCurrentPageSelected && selectedIds.size > 0}
           indeterminate={selectedIds.size > 0 && !isCurrentPageSelected}
@@ -1010,7 +1045,7 @@ export function QuestionBankClient({
         />
         <div
           className={
-            "flex items-center gap-3 " +
+            "flex shrink-0 items-center gap-3 " +
             (selectedIds.size > 0 ? "" : "pointer-events-none opacity-50")
           }
           aria-disabled={selectedIds.size === 0}
@@ -1022,17 +1057,34 @@ export function QuestionBankClient({
               onClick={handleRemoveFromFolder}
               title="폴더에서 삭제"
               aria-label="폴더에서 삭제"
-              className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-red-300 bg-red-50 px-2.5 text-[11px] font-semibold text-red-700 transition-colors hover:border-red-400 hover:bg-red-100 hover:text-red-800"
+              className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-red-50 px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700"
             >
               <FolderX className="h-3.5 w-3.5" />
               폴더에서 삭제
             </button>
           ) : null}
         </div>
+        {/* 시험지 만들기 — 흐림 처리되는 액션 클러스터 밖에 둬 비활성 시
+            또렷한 회색으로 보이게 한다. */}
+        <button
+          type="button"
+          disabled={selectedIds.size === 0 || creatingExam}
+          title={
+            selectedIds.size === 0
+              ? "문항을 선택하면 시험지를 만들 수 있어요"
+              : undefined
+          }
+          onClick={() => {
+            setExamTitle("");
+            setCreateExamOpen(true);
+          }}
+          className="flex h-7 grow cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-blue-600 bg-blue-600 px-2.5 text-[11px] font-bold text-white shadow-sm transition-colors hover:border-blue-700 hover:bg-blue-700 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-200 disabled:text-slate-400 disabled:opacity-100 disabled:shadow-none"
+        >
+          <ClipboardList className="w-3.5 h-3.5" />
+          다음으로 (시험지 생성)
+        </button>
       </div>
       <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
-        {reviewStatusSegment}
-        {viewModeToggle}
         {filtersToolbar}
         {gridToggle}
       </div>

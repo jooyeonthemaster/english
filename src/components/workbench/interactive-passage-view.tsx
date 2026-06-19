@@ -397,10 +397,20 @@ export function InteractivePassageView({
             <div className="flex shrink-0 items-center gap-2">
               {headerExtra}
               {hasAnalysis && (
-                <button onClick={() => setShowTranslation(v => !v)}
-                  className={`h-8 rounded-lg border px-2.5 text-[11px] font-semibold shadow-sm transition-colors ${showTranslation ? "border-slate-200 bg-slate-100 text-slate-700" : "border-slate-200 bg-white text-slate-400 hover:text-slate-600"}`}>
-                  번역 {showTranslation ? "ON" : "OFF"}
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] font-semibold text-slate-600">번역</span>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={showTranslation}
+                    onClick={() => setShowTranslation(v => !v)}
+                    className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors ${showTranslation ? "border-blue-300 bg-blue-500" : "border-slate-200 bg-slate-200"}`}
+                  >
+                    <span
+                      className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${showTranslation ? "translate-x-5" : "translate-x-0"}`}
+                    />
+                  </button>
+                </div>
               )}
               <span className="rounded-lg bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium text-slate-400">{wordCount} words</span>
             </div>

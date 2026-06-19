@@ -25,6 +25,12 @@ export function CollapsedPreview({
   const correctOptions = options.filter((o) =>
     correctLabels.has(normalizeAnswerLabel(o.label)),
   );
+  // 보기 텍스트가 없는 마커 유형(어법·어휘·삽입·무관) — 정답을 회색 박스 대신
+  // 파란 원형 배지(숫자)로 표시해 일반 선지 배지와 디자인을 통일한다.
+  const answerBadgeLabels =
+    correctOptions.length === 0
+      ? Array.from(parseCorrectAnswerLabels(displayCorrectAnswer || correctAnswer))
+      : [];
 
   return (
     <div className="space-y-2">
@@ -53,10 +59,21 @@ export function CollapsedPreview({
               className="text-[13px] flex items-start gap-2 text-blue-700 font-semibold"
             >
               <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-blue-600 text-white">
-                {opt.label}
+                {optionBadgeLabel(opt.label)}
               </span>
               <span>{renderFormatted(opt.text)}</span>
             </div>
+          ))}
+        </div>
+      ) : answerBadgeLabels.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-1.5 pl-1">
+          {answerBadgeLabels.map((label) => (
+            <span
+              key={label}
+              className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-blue-600 text-white"
+            >
+              {optionBadgeLabel(label)}
+            </span>
           ))}
         </div>
       ) : displayCorrectAnswer ? (
@@ -84,6 +101,16 @@ function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
     if (label) labels.add(label);
   }
   return labels;
+}
+
+// 뱃지 표시용 — 동그라미 숫자(①②③)를 평문(1,2,3)으로 풀어 동그라미 안 동그라미를 막는다.
+function optionBadgeLabel(value: unknown): string {
+  if (typeof value !== "string") return "";
+  const text = value.trim();
+  const circled = "①②③④⑤⑥⑦⑧⑨⑩";
+  const circledIndex = circled.indexOf(text);
+  if (circledIndex >= 0) return String(circledIndex + 1);
+  return text.replace(/^[\(\[]?\s*([A-Ja-j]|10|[1-9])\s*[\)\].:]?\s*$/, "$1");
 }
 
 function normalizeAnswerLabel(value: unknown): string {

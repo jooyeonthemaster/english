@@ -1273,7 +1273,7 @@ export function EmbeddedQuestionBank({
           className="flex h-7 grow cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-blue-600 bg-blue-600 px-2.5 text-[11px] font-bold text-white shadow-sm transition-colors hover:border-blue-700 hover:bg-blue-700 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-200 disabled:text-slate-400 disabled:opacity-100 disabled:shadow-none"
         >
           <ClipboardList className="w-3.5 h-3.5" />
-          시험지 만들기
+          다음으로 (시험지 생성)
         </button>
       </div>
       <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
@@ -1323,6 +1323,18 @@ export function EmbeddedQuestionBank({
   // 보이고 '펼치기'로 전체를 펴며, 검수완료/수정하기·삭제·상세 보기는 그대로
   // 유지한다. 방금 생성 완료된 문제는 파란 글로우로 강조하고, 카드를 클릭하면
   // 글로우를 해제한다.
+  // 같은 줄의 접힌 카드 높이를 통일해 footer(검수완료/수정하기)를 정렬한다.
+  // 열 너비가 좁을수록 카드가 길어지므로 단(col) 수에 맞춰 바닥값을 달리한다.
+  // 1열(list)은 카드가 각자 한 행이라 정렬 대상이 아니므로 적용하지 않는다.
+  // 펼친 카드는 self-start 래퍼로 독립적으로 길어진다(옆 카드 영향 없음).
+  // min-height는 바닥값이라 더 큰 카드(긴 발문 등)엔 영향이 없다.
+  // 카드 폭(=뷰포트/단 수)이 좁을수록 발문·정답줄이 더 줄바꿈되어 길어지므로,
+  // 같은 단 수라도 Tailwind 폭 구간(md/lg/xl/2xl)별로 floor를 달리한다.
+  // (3단은 lg부터, 2단은 md부터 시작. 값은 실측 자연 최대 높이로 보정.)
+  // 접힌 카드 바닥 높이(행 footer 정렬용)는 콘텐츠보다 과도하게 커서 해설보기와
+  // footer 사이에 빈 공간이 크게 남았다 → 제거하고 콘텐츠 높이로 맞춘다.
+  const collapsedMinHeightClass: string | undefined = undefined;
+
   const renderManagedQuestionCard = (q: any, displayNum: number) => {
     const card = (
       <QuestionBankCard
@@ -1341,6 +1353,7 @@ export function EmbeddedQuestionBank({
         cardClickSelects
         showDetailButton
         getDragQuestionIds={getDragQuestionIds}
+        collapsedMinHeightClass={collapsedMinHeightClass}
       />
     );
     // 각 카드를 content 높이 래퍼(self-start)로 감싸 그리드 행 stretch 를 막는다.

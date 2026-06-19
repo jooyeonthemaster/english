@@ -1952,7 +1952,7 @@ export function PassageCardGrid({
             <span>
               {workspaceActive
                 ? "추가하기"
-                : "다음으로 (지문수정·문제생성)"}
+                : "다음으로 (워크스페이스)"}
             </span>
             {selectedIds.size > 0 ? (
               <span className="rounded-md bg-white/20 px-1.5 py-0.5 text-[12px] font-bold tabular-nums">

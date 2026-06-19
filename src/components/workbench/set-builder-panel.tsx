@@ -12,6 +12,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
+  ChevronDown,
   GripVertical,
   Layers,
   Loader2,
@@ -209,6 +210,27 @@ export function SetBuilderPanel({
     for (const t of ALL_SET_TYPES) if (!ordered.includes(t)) ordered.push(t);
     return ordered;
   }, [typeOrder]);
+
+  // 유형 지정과 동일하게 카탈로그 그룹(구조/밑줄형/지문 이해/단독)으로 묶는다.
+  const groupedTypes = useMemo(
+    () =>
+      SET_CATALOG.map((c) => ({
+        group: c.group,
+        dot: GROUP_DOT[c.group] || "bg-slate-300",
+        items: orderedTypes.filter((t) => c.typeIds.includes(t)),
+      })).filter((g) => g.items.length > 0),
+    [orderedTypes],
+  );
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
+    () => new Set(),
+  );
+  const toggleGroup = (group: string) =>
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(group)) next.delete(group);
+      else next.add(group);
+      return next;
+    });
 
   const memberTypeIds = useMemo(() => items.map((i) => i.typeId), [items]);
   const locked = isSetLocked(memberTypeIds);
@@ -409,16 +431,57 @@ export function SetBuilderPanel({
             ))}
           </div>
         </div>
-        <div className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-          {orderedTypes.map((typeId) => {
-            const count = countByType.get(typeId) ?? 0;
-            const active = count > 0;
-            const addability = getAddability(typeId, memberTypeIds);
-            const canAdd = addability.ok;
-            const dragging = draggingType === typeId;
-            const dragOver = dragOverType === typeId && draggingType !== typeId;
+        {/* 유형 지정과 동일한 카테고리 그룹 + 타일 그리드 UI */}
+        <div className="space-y-2">
+          {groupedTypes.map((g) => {
+            const groupOpen = !collapsedGroups.has(g.group);
+            const selectedCount = g.items.filter(
+              (t) => (countByType.get(t) ?? 0) > 0,
+            ).length;
             return (
-              <section
+              <div
+                key={g.group}
+                className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
+              >
+                <button
+                  type="button"
+                  onClick={() => toggleGroup(g.group)}
+                  className="flex h-10 w-full items-center gap-2 border-b border-slate-200 bg-slate-50/80 px-3 text-left transition-colors hover:bg-slate-100/80"
+                  aria-expanded={groupOpen}
+                  title={`${g.group} ${groupOpen ? "접기" : "펼치기"}`}
+                >
+                  <span
+                    className={`h-2 w-2 shrink-0 rounded-full ${g.dot}`}
+                    aria-hidden="true"
+                  />
+                  <span className="text-[12px] font-bold text-slate-700">
+                    {g.group}
+                  </span>
+                  {selectedCount > 0 ? (
+                    <span className="ml-1 rounded-full bg-white px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-slate-600 ring-1 ring-inset ring-slate-200">
+                      선택 {selectedCount}
+                    </span>
+                  ) : null}
+                  <span className="text-[10px] font-medium tabular-nums text-slate-300">
+                    {g.items.length}
+                  </span>
+                  <ChevronDown
+                    className={`ml-auto h-4 w-4 shrink-0 text-slate-400 transition-transform duration-300 ${groupOpen ? "" : "-rotate-90"}`}
+                    aria-hidden="true"
+                  />
+                </button>
+                {groupOpen ? (
+                  <div className="grid grid-cols-2 gap-2 p-2">
+                    {g.items.map((typeId) => {
+                      const count = countByType.get(typeId) ?? 0;
+                      const active = count > 0;
+                      const addability = getAddability(typeId, memberTypeIds);
+                      const canAdd = addability.ok;
+                      const dragging = draggingType === typeId;
+                      const dragOver =
+                        dragOverType === typeId && draggingType !== typeId;
+                      return (
+              <div
                 key={typeId}
                 onDragOver={(e) => {
                   e.preventDefault();
@@ -434,15 +497,16 @@ export function SetBuilderPanel({
                   setDraggingType(null);
                   setDragOverType(null);
                 }}
-                className={`transition-colors ${
+                className={`relative flex flex-col overflow-hidden rounded-lg border transition-colors ${
                   dragOver
-                    ? "bg-blue-50 ring-1 ring-inset ring-blue-300"
+                    ? "border-blue-300 bg-blue-100 ring-1 ring-inset ring-blue-300"
                     : active
-                      ? "bg-blue-50/70"
-                      : "hover:bg-slate-50/80"
+                      ? "border-blue-300 bg-blue-50/70"
+                      : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80"
                 } ${dragging ? "opacity-50" : ""}`}
               >
-                <div className="flex h-10 items-center gap-0.5 pl-1 pr-1.5">
+                {/* 헤더 — 손잡이 + 유형명 + 기준 지문 배지 */}
+                <div className="flex items-center gap-0.5 pl-1 pr-1.5 pt-1.5">
                   <button
                     type="button"
                     draggable
@@ -455,7 +519,7 @@ export function SetBuilderPanel({
                       setDraggingType(null);
                       setDragOverType(null);
                     }}
-                    className="flex h-7 w-6 shrink-0 cursor-grab items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 active:cursor-grabbing"
+                    className="flex h-6 w-4 shrink-0 cursor-grab items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 active:cursor-grabbing"
                     title={`${typeLabel(typeId)} 순서 드래그`}
                     aria-label={`${typeLabel(typeId)} 순서 드래그`}
                   >
@@ -468,7 +532,7 @@ export function SetBuilderPanel({
                     title={
                       canAdd ? `${typeLabel(typeId)} 추가` : addability.reason
                     }
-                    className="flex h-7 min-w-0 flex-1 items-center gap-2 rounded-md px-1 text-left disabled:cursor-not-allowed"
+                    className="flex min-w-0 flex-1 items-center gap-1.5 text-left disabled:cursor-not-allowed"
                   >
                     <span
                       className={`h-1.5 w-1.5 shrink-0 rounded-full ${groupDotClass(typeId)}`}
@@ -477,7 +541,7 @@ export function SetBuilderPanel({
                     <span
                       className={`min-w-0 flex-1 truncate text-[12px] ${
                         active
-                          ? "font-bold text-blue-800"
+                          ? "font-bold text-slate-800"
                           : canAdd
                             ? "font-semibold text-slate-600"
                             : "font-semibold text-slate-300"
@@ -491,19 +555,28 @@ export function SetBuilderPanel({
                       </span>
                     ) : null}
                   </button>
-                  <div className="flex shrink-0 items-center justify-end gap-0.5">
+                </div>
+
+                {/* 문항 수 스테퍼 */}
+                <div className="mt-1 flex items-center justify-between gap-1 px-1.5 pb-1.5">
+                  <span className="whitespace-nowrap pl-0.5 text-[10px] font-semibold text-slate-400">
+                    문항 수
+                  </span>
+                  <div className="flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white">
                     <button
                       type="button"
                       onClick={() => decType(typeId)}
                       disabled={count <= 0}
-                      className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent disabled:hover:text-slate-200"
+                      className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
                       aria-label={`${typeLabel(typeId)} 줄이기`}
                     >
                       <Minus className="h-3.5 w-3.5" />
                     </button>
                     <span
-                      className={`w-5 text-center text-[12.5px] font-bold tabular-nums ${
-                        count > 0 ? "text-blue-700" : "text-slate-300"
+                      className={`flex h-7 w-7 items-center justify-center border-x border-slate-200 text-[12.5px] font-bold tabular-nums ${
+                        count > 0
+                          ? "bg-blue-50/50 text-blue-700"
+                          : "bg-slate-50/60 text-slate-300"
                       }`}
                     >
                       {count}
@@ -513,14 +586,19 @@ export function SetBuilderPanel({
                       onClick={() => incType(typeId)}
                       disabled={!canAdd}
                       title={canAdd ? undefined : addability.reason}
-                      className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent disabled:hover:text-slate-200"
+                      className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
                       aria-label={`${typeLabel(typeId)} 늘리기`}
                     >
                       <Plus className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </div>
-              </section>
+              </div>
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </div>
             );
           })}
         </div>

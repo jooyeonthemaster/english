@@ -64,7 +64,7 @@ export function StructuredQuestionRenderer({
   sourcePassageContent?: string;
   /** 답안·해설 노출 방식 (AnswerRevealContext). "show-all"=토글 없이 즉시 노출,
    *  "as-explanation"=단일 '해설 보기' 토글로 밑줄분석·정답·해설을 모두 감쌈. */
-  answerRevealMode?: "default" | "show-all" | "as-explanation";
+  answerRevealMode?: "default" | "show-all" | "as-explanation" | "hidden";
   /** true 면 "정답: N" 줄(AnswerLine)을 숨긴다. 문제 관리 카드용. */
   hideAnswerLine?: boolean;
 }) {

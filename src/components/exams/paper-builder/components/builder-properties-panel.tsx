@@ -11,7 +11,7 @@ import {
   AlignCenter,
   AlignLeft,
   AlignRight,
-  ArrowDownToLine,
+  Link2,
   BookOpen,
   ChevronDown,
   ChevronUp,
@@ -1085,10 +1085,18 @@ export function BuilderPropertiesPanel({
                 </span>
                 <span
                   className={cn(
-                    "h-2 w-2 shrink-0 rounded-full",
+                    "relative h-4 w-7 shrink-0 rounded-full transition-colors",
                     toggle.checked ? "bg-blue-500" : "bg-slate-300",
                   )}
-                />
+                  aria-hidden="true"
+                >
+                  <span
+                    className={cn(
+                      "absolute left-0 top-0.5 h-3 w-3 rounded-full bg-white shadow-sm transition-transform",
+                      toggle.checked ? "translate-x-3.5" : "translate-x-0.5",
+                    )}
+                  />
+                </span>
               </button>
             ))}
           </div>
@@ -1291,7 +1299,7 @@ export function BuilderPropertiesPanel({
                   title="앞 블록과 묶기"
                   onClick={() => onToggleKeepWithPrev(activeItem.localId)}
                 >
-                  <ArrowDownToLine className="h-3.5 w-3.5" />
+                  <Link2 className="h-3.5 w-3.5" />
                   묶기
                 </IconToggleButton>
                 <IconToggleButton
