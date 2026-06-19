@@ -21,6 +21,56 @@ export interface QuestionQualityIssue {
   message: string;
 }
 
+/**
+ * SHIP-FIRST 정책: 강사가 고른 지문+유형+난이도는 확정된 의도다. 아래 코드들은
+ * "정답 무효/노출/형식 깨짐" 같은 명백한 결함이 아니라 **난이도·취향**(KILLER치고
+ * 쉬움·이상적 타깃 아님·미관·학생 비노출 메타 완성도)만 가리킨다. 151개 차단코드
+ * 전수 감사(적대검증 0 flip)에서 B로 분류된 36개 — `validateQuestionQuality` 반환
+ * 직전에 severity:'error'→'warning' 으로 강등해 strict/relaxed 양쪽에서 비차단으로
+ * 만든다(삭제 아님 — 검수 UI 가시성은 _qualityWarnings 로 보존). 정답 유효성/명료성을
+ * 해치는 인접 코드(implied-meaning-direct-answer-leak, irrelevant-too-many-new-terms,
+ * grammar-debatable-infinitive 등)는 의도적으로 제외 — 정확한 문자열 집합으로만 강등한다.
+ * 근거: docs/GENERATION-ENGINE-REDESIGN-ROADMAP.md §4 WS1.
+ */
+export const SHIP_FIRST_WARNING_CODES = new Set<string>([
+  "wrong-option-explanation-count",
+  "grammar-decoy-point-diversity",
+  "grammar-killer-thin-answer",
+  "grammar-correction-killer-thin-segment",
+  "grammar-correction-underline-too-narrow",
+  "grammar-correction-underlined-segment-short",
+  "blank-killer-target-too-easy",
+  "blank-target-too-small",
+  "blank-target-list-like",
+  "blank-awkward-correct-option",
+  "blank-awkward-option",
+  "blank-paraphrase-correct-too-thin",
+  "blank-paraphrase-difficulty-mismatch",
+  "blank-paraphrase-killer-giveaway-distractors",
+  "blank-paraphrase-killer-too-easy",
+  "blank-paraphrase-missing-answer-logic",
+  "blank-paraphrase-option-imbalance",
+  "blank-paraphrase-option-source-copy",
+  "blank-paraphrase-subject-slot-mismatch",
+  "blank-paraphrase-target-too-wide",
+  "blank-paraphrase-target-trailing-function",
+  "irrelevant-too-unrelated",
+  "irrelevant-obvious-counterclaim-cue",
+  "irrelevant-prescriptive-giveaway",
+  "sentence-order-given-too-long",
+  "sentence-order-given-too-long-relative",
+  "sentence-order-paragraph-imbalance",
+  "implied-meaning-missing-surface-meaning",
+  "implied-meaning-noncentral-target",
+  "implied-meaning-rhetorical-question-target",
+  "implied-meaning-single-word-target",
+  "implied-meaning-target-too-short",
+  "implied-meaning-thin-evidence-chain",
+  "implied-meaning-thin-reasoning-gap",
+  "summary-mc-awkward-collocation",
+  "summary-mc-missing-half-correct-traps",
+]);
+
 type VisibleQuestionLanguage = "ko" | "en";
 
 interface ValidateQuestionQualityInput {
@@ -2354,7 +2404,13 @@ export function validateQuestionQuality({
     validateKillerBar(question, typeId, add);
   }
 
-  return issues;
+  // SHIP-FIRST 강등: 취향/난이도 게이트(B 36종)는 차단(error)이 아니라 경고로만
+  // 남긴다 — 강사 의도 우선, 명백한 오류만 차단. 단일 진실원(개별 emit 사이트 무수정).
+  return issues.map((issue) =>
+    issue.severity === "error" && SHIP_FIRST_WARNING_CODES.has(issue.code)
+      ? { ...issue, severity: "warning" as const }
+      : issue,
+  );
 }
 
 function findReferenceCandidates(passage: string): Array<{ pronoun: string; surroundingText: string }> {
@@ -7370,6 +7426,55 @@ function countWords(value: string): number {
   if (!text) return 0;
   const words = text.match(/[A-Za-z]+(?:['-][A-Za-z]+)?|\d+(?:[.,]\d+)*/g);
   return words?.length ?? 0;
+}
+
+export interface PassageFeasibility {
+  ok: boolean;
+  /** 기계적 불가 시 내부 게이트 코드(예: sentence-order-paragraph-too-short) */
+  code?: string;
+  /** 강사에게 보여줄 한국어 안내 */
+  error?: string;
+  detail?: Record<string, number>;
+}
+
+/**
+ * SHIP-FIRST 사전 적합성 게이트 — 차감 전에 **기계적 불가능**만 빠르게 거른다.
+ * ⚠️ 출제 포인트의 품질/적합성 판단은 절대 여기서 하지 않는다. 강사가 고른 지문+유형+
+ * 난이도는 확정된 의도이며, "포인트가 약하다"는 결코 실패 사유가 아니다(= ship-first).
+ * 오직 모델 출력과 무관하게 지문 기하가 그 유형의 형식을 물리적으로 못 만드는 경우만
+ * 거른다. 현재 SENTENCE_ORDER 만 활성(3단락 A·B·C, 각 >=2문장/>=24단어가 필요 →
+ * <6문장 또는 <72단어면 어떤 출력으로도 불가). 그 외 모든 유형/난이도는 ok(기본 개방).
+ * 난이도는 시그니처에만 받아두고 게이트하지 않는다(KILLER를 불가로 취급 금지).
+ * 근거: docs/GENERATION-ENGINE-REDESIGN-ROADMAP.md §4 WS6.
+ */
+export function preflightQuestionFeasibility(
+  typeId: string | undefined,
+  _difficulty: string | undefined,
+  passage: string,
+): PassageFeasibility {
+  if (typeId === "SENTENCE_ORDER") {
+    const minSentences = SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES * 3;
+    const sentences = countDisplaySentences(passage);
+    if (sentences < minSentences) {
+      return {
+        ok: false,
+        code: "sentence-order-paragraph-too-short",
+        error: `글의 순서 유형은 지문을 세 단락(A·B·C)으로 나눠야 하므로 최소 ${minSentences}문장 이상이 필요합니다. 현재 지문은 ${sentences}문장입니다. 더 긴 지문을 선택하거나 다른 유형을 사용해 주세요.`,
+        detail: { sentences, minSentences },
+      };
+    }
+    const minWords = SENTENCE_ORDER_MIN_PARAGRAPH_WORDS * 3;
+    const words = countWords(passage);
+    if (words < minWords) {
+      return {
+        ok: false,
+        code: "sentence-order-paragraph-too-thin",
+        error: `글의 순서 유형은 세 단락으로 나눌 만큼 충분한 분량이 필요합니다(최소 약 ${minWords}단어). 현재 지문은 ${words}단어입니다. 더 긴 지문을 선택하거나 다른 유형을 사용해 주세요.`,
+        detail: { words, minWords },
+      };
+    }
+  }
+  return { ok: true };
 }
 
 function validateKillerBar(
