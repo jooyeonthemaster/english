@@ -1,12 +1,13 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { CheckCircle2, Loader2, LogIn, ShieldCheck, Zap } from "lucide-react";
+import { CheckCircle2, Gift, Loader2, LogIn, ShieldCheck, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { BrandIcon } from "@/components/brand/brand-mark";
 import { createSupabaseBrowserClient } from "@/lib/supabase-auth-browser";
+import { REFERRAL_COOKIE, REFERRAL_COOKIE_MAX_AGE } from "@/lib/growth/constants";
 
 const SOCIAL_ERROR_MESSAGES: Record<string, string> = {
   missing_code: "인증 코드가 전달되지 않았습니다. 다시 시도해주세요.",
@@ -33,6 +34,28 @@ function RegisterInner() {
   const [socialLoading, setSocialLoading] = useState<"google" | "kakao" | null>(null);
   const errorCode = searchParams.get("error");
   const error = errorCode ? SOCIAL_ERROR_MESSAGES[errorCode] ?? "회원가입 처리 중 오류가 발생했습니다." : null;
+
+  // Derived directly from the URL — no effect/setState needed for the badge.
+  const referralCode = searchParams.get("ref")?.trim() || null;
+
+  // Side effects for an incoming referral code (?ref=CODE): persist it in a
+  // cookie so it survives the social-OAuth round trip, and record the click
+  // best-effort. Never blocks signup if anything here fails.
+  useEffect(() => {
+    if (!referralCode) return;
+    try {
+      document.cookie = `${REFERRAL_COOKIE}=${encodeURIComponent(referralCode)};path=/;max-age=${REFERRAL_COOKIE_MAX_AGE};samesite=lax`;
+    } catch {
+      // cookie write best-effort
+    }
+    void fetch("/api/referral/click", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: referralCode }),
+    }).catch(() => {
+      // best-effort click tracking
+    });
+  }, [referralCode]);
 
   async function startGoogleSignup() {
     setSocialLoading("google");
@@ -118,6 +141,13 @@ function RegisterInner() {
               <p className="mt-2 text-[14px] font-semibold leading-6 text-slate-500">
                 소셜 인증 후 온보딩을 완료하면 원장 계정으로 바로 입장합니다.
               </p>
+
+              {referralCode && (
+                <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-[12.5px] font-black text-blue-700">
+                  <Gift className="size-4 shrink-0" />
+                  추천 코드 적용됨 · 가입 시 +30 크레딧
+                </div>
+              )}
 
               {error && (
                 <div className="mt-5 flex items-start gap-2 rounded-2xl border border-rose-100 bg-rose-50 px-4 py-3 text-[13px] font-bold leading-5 text-rose-700">

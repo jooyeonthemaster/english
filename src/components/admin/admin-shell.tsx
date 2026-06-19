@@ -8,6 +8,7 @@ import {
   Building2,
   UserPlus,
   Users,
+  Gift,
   Coins,
   CreditCard,
   ChartNoAxesCombined,
@@ -51,6 +52,7 @@ interface AdminShellProps {
 const NAV_ITEMS = [
   { label: "대시보드", icon: LayoutDashboard, href: "/admin" },
   { label: "회원 관리", icon: Users, href: "/admin/members" },
+  { label: "추천·미션", icon: Gift, href: "/admin/referrals" },
   { label: "활동 모니터링", icon: Radar, href: "/admin/activity" },
   { label: "가입 신청", icon: UserPlus, href: "/admin/registrations" },
   { label: "학원 관리", icon: Building2, href: "/admin/academies" },

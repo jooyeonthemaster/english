@@ -7,6 +7,7 @@ import { createUniqueAcademyCode } from "@/lib/tutor/academy-code";
 import { verifyOnboardingToken } from "@/lib/onboarding-token";
 import { signSocialBridgeToken } from "@/lib/social-bridge";
 import { SIGNUP_CREDITS } from "@/lib/feedback-program";
+import { processReferralOnSignup } from "@/lib/growth/referral";
 
 const FREE_TRIAL_END = new Date("2026-07-01T23:59:59+09:00");
 
@@ -21,6 +22,7 @@ const onboardingSchema = z.object({
   directorPhone: z.string().regex(phoneRegex, "invalid_phone"),
   address: z.string().min(1, "address_required").max(160),
   estimatedStudents: z.string().optional().default(""),
+  referralCode: z.string().optional(),
   agree: z.boolean().refine(Boolean, "agreement_required"),
 });
 
@@ -129,7 +131,7 @@ export async function POST(request: NextRequest) {
     academySlug = slugify(academyName);
   }
 
-  const staff = await prisma.$transaction(async (tx) => {
+  const { academy, staff } = await prisma.$transaction(async (tx) => {
     const academy = await tx.academy.create({
       data: {
         name: academyName,
@@ -202,8 +204,31 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return createdStaff;
+    return { academy, staff: createdStaff };
   });
+
+  // Referral attribution — runs AFTER the onboarding transaction commits so both
+  // academies' CreditBalance rows exist. The code can arrive via the onboarding
+  // form (parsed) or the smoat_ref cookie carried through the OAuth round trip.
+  // Strictly best-effort: referral logic must NEVER block or fail signup.
+  const referralCodeCandidate =
+    parsed.data.referralCode?.trim() || request.cookies.get("smoat_ref")?.value;
+  if (referralCodeCandidate) {
+    try {
+      await processReferralOnSignup({
+        code: referralCodeCandidate,
+        referredAcademyId: academy.id,
+        referredStaffId: staff.id,
+        referredAcademyName: academyName,
+        referredDirectorPhone: directorPhone,
+        referredDirectorEmail: directorEmail,
+        signupIp: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null,
+        signupUserAgent: request.headers.get("user-agent"),
+      });
+    } catch (referralError) {
+      console.error("[onboarding] referral attribution failed", referralError);
+    }
+  }
 
   const bridgeToken = await signSocialBridgeToken({
     staffId: staff.id,

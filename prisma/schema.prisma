@@ -102,6 +102,12 @@ model Academy {
   academyTheme              AcademyTheme?
   academyFeatureFlags       AcademyFeatureFlag[]
   passageReports            PassageReport[]
+  // ── Growth: referral / credit missions / notifications ──
+  referralCode              ReferralCode?
+  referralsMade             Referral[]                @relation("ReferralsMade")
+  referralReceived          Referral?                 @relation("ReferralReceived")
+  missionClaims             AcademyMissionClaim[]
+  notifications             Notification[]
 
   @@map("academies")
 }
@@ -146,6 +152,10 @@ model Staff {
   passageReportsCreated  PassageReport[]         @relation("PassageReportCreator")
   passageReportsEdited   PassageReport[]         @relation("PassageReportEditor")
   passageReportRevisions PassageReportRevision[] @relation("PassageReportRevisionAuthor")
+
+  // ── Growth: per-staff notification inbox ──
+  notifications     Notification[]
+  notificationState NotificationState?
 
   @@index([academyId])
   @@map("staff")
@@ -2428,6 +2438,147 @@ model PortOneWebhookEvent {
   @@index([subscriptionPaymentId])
   @@index([status, receivedAt])
   @@map("portone_webhook_events")
+}
+
+// ============================================================================
+// 22-b. GROWTH — REFERRAL, CREDIT MISSIONS, NOTIFICATIONS
+// ============================================================================
+
+/// ReferralCode — one stable, shareable referral code per academy.
+/// Credits are on-platform-only (자기적립 마일리지 → VAT-excluded, no 기타소득 withholding).
+model ReferralCode {
+  id               String   @id @default(cuid())
+  academyId        String   @unique
+  code             String   @unique
+  createdByStaffId String?
+  totalClicks      Int      @default(0)
+  totalSignups     Int      @default(0)
+  totalRewarded    Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  academy   Academy    @relation(fields: [academyId], references: [id])
+  referrals Referral[]
+
+  @@index([code])
+  @@map("referral_codes")
+}
+
+/// Referral — one referred-academy conversion + reward state machine.
+/// Single-hop give-get only (no multi-tier → outside 다단계판매법).
+/// status: "GRANTED" | "HELD" | "APPROVED" | "REJECTED" | "CLAWED_BACK"
+model Referral {
+  id                String    @id @default(cuid())
+  referralCodeId    String
+  referrerAcademyId String
+  referredAcademyId String    @unique // idempotency: each new academy can be referred at most once
+  referredStaffId   String?
+  referrerReward    Int       @default(0)
+  referredReward    Int       @default(0)
+  status            String    @default("GRANTED")
+  fraudScore        Int       @default(0)
+  fraudSignals      Json?
+  referrerTxId      String? // CreditTransaction id of the referrer grant
+  referredTxId      String? // CreditTransaction id of the new academy welcome grant
+  signupIp          String?
+  signupUserAgent   String?   @db.Text
+  grantedAt         DateTime?
+  reviewedByAdminId String?
+  reviewNote        String?   @db.Text
+  reviewedAt        DateTime?
+  clawedBackAt      DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  referralCode    ReferralCode @relation(fields: [referralCodeId], references: [id])
+  referrerAcademy Academy      @relation("ReferralsMade", fields: [referrerAcademyId], references: [id])
+  referredAcademy Academy      @relation("ReferralReceived", fields: [referredAcademyId], references: [id])
+
+  @@index([referrerAcademyId, createdAt])
+  @@index([status, createdAt])
+  @@index([referralCodeId])
+  @@map("referrals")
+}
+
+/// CreditMission — admin-managed catalog of credit-earning missions.
+/// cadence: "ONCE" | "DAILY" | "EVENT"   category: "ONBOARDING" | "DAILY" | "REFERRAL" | "EXPLORE"
+model CreditMission {
+  id                String   @id @default(cuid())
+  key               String   @unique
+  title             String
+  description       String?  @db.Text
+  category          String
+  cadence           String
+  rewardCredits     Int
+  iconKey           String?
+  actionUrl         String?
+  ctaLabel          String?
+  sortOrder         Int      @default(0)
+  isActive          Boolean  @default(true)
+  maxRewardPerMonth Int?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("credit_missions")
+}
+
+/// AcademyMissionClaim — idempotent per-academy mission completion.
+/// periodKey = "ONCE" for one-time missions, or KST date "2026-06-18" for DAILY.
+model AcademyMissionClaim {
+  id               String   @id @default(cuid())
+  academyId        String
+  missionKey       String
+  periodKey        String
+  rewardCredits    Int
+  creditTxId       String?
+  claimedByStaffId String?
+  createdAt        DateTime @default(now())
+
+  academy Academy @relation(fields: [academyId], references: [id])
+
+  @@unique([academyId, missionKey, periodKey])
+  @@index([academyId, createdAt])
+  @@map("academy_mission_claims")
+}
+
+/// Notification — per-staff inbox (fan-out-on-write).
+/// category: "MISSION" | "REFERRAL" | "SYSTEM" | "BILLING"
+model Notification {
+  id               String    @id @default(cuid())
+  academyId        String
+  recipientStaffId String
+  category         String
+  type             String
+  title            String
+  body             String?   @db.Text
+  iconKey          String?
+  actionUrl        String?
+  data             Json?
+  groupKey         String?
+  readAt           DateTime?
+  archivedAt       DateTime?
+  expiresAt        DateTime?
+  createdAt        DateTime  @default(now())
+
+  academy        Academy @relation(fields: [academyId], references: [id])
+  recipientStaff Staff   @relation(fields: [recipientStaffId], references: [id])
+
+  @@index([recipientStaffId, createdAt])
+  @@index([recipientStaffId, readAt])
+  @@index([academyId, createdAt])
+  @@map("notifications")
+}
+
+/// NotificationState — per-staff badge state. Bell "unseen" count = notifications created after lastSeenAt.
+model NotificationState {
+  staffId    String    @id
+  lastSeenAt DateTime?
+  updatedAt  DateTime  @updatedAt
+
+  staff Staff @relation(fields: [staffId], references: [id])
+
+  @@map("notification_states")
 }
 
 // ============================================================================

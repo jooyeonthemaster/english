@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { decodeJwt } from "jose";
 import { ArrowRight, CheckCircle2, Loader2, MapPin, ShieldAlert, Sparkles } from "lucide-react";
 import { BrandIcon } from "@/components/brand/brand-mark";
+import { REFERRAL_COOKIE } from "@/lib/growth/constants";
 
 const phoneRegex = /^(0\d{1,2}-?\d{3,4}-?\d{4})$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -21,6 +22,7 @@ const onboardingSchema = z.object({
   directorPhone: z.string().regex(phoneRegex, "올바른 전화번호 형식이 아닙니다."),
   address: z.string().min(1, "학원 주소를 입력해주세요.").max(160, "주소는 160자 이하여야 합니다."),
   estimatedStudents: z.string().optional(),
+  referralCode: z.string().optional(),
   agree: z.boolean().refine(Boolean, "무료 이용 및 개인정보 수집 안내에 동의해주세요."),
 });
 
@@ -98,6 +100,7 @@ function OnboardingInner() {
       directorPhone: "",
       address: "",
       estimatedStudents: "",
+      referralCode: "",
       agree: false,
     },
   });
@@ -110,6 +113,18 @@ function OnboardingInner() {
     if (decoded.email) setValue("directorEmail", decoded.email, { shouldValidate: true });
     if (decoded.name) setValue("directorName", decoded.name, { shouldValidate: true });
   }, [decoded, setValue]);
+
+  // Pre-fill the referral code from the smoat_ref cookie captured on /register.
+  useEffect(() => {
+    const match = document.cookie.match(new RegExp(`(?:^|;\\s*)${REFERRAL_COOKIE}=([^;]*)`));
+    if (!match) return;
+    try {
+      const code = decodeURIComponent(match[1]).trim().toUpperCase();
+      if (code) setValue("referralCode", code);
+    } catch {
+      // ignore malformed cookie value
+    }
+  }, [setValue]);
 
   if (!token || !decoded) {
     return (
@@ -266,6 +281,20 @@ function OnboardingInner() {
                   </option>
                 ))}
               </select>
+            </Field>
+
+            <Field label="추천 코드" optional error={errors.referralCode?.message}>
+              <input
+                type="text"
+                placeholder="추천받은 코드가 있다면 입력하세요"
+                className={`${inputClass} uppercase tracking-[0.18em]`}
+                autoComplete="off"
+                spellCheck={false}
+                {...register("referralCode")}
+              />
+              <p className="mt-1.5 text-[11px] font-semibold text-blue-500">
+                추천 코드 입력 시 가입 환영 +30 크레딧이 적립됩니다.
+              </p>
             </Field>
 
             <label className="flex cursor-pointer select-none items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
