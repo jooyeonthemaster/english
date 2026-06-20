@@ -2290,7 +2290,11 @@ export function GeneratePageClient({
           onOpenRowSettings={handleSetActiveRow}
           onClearActiveRow={() => setActiveRowId(null)}
           rowStats={workspaceRowStats}
-          onAddPassage={() => setWorkspaceOpen(false)}
+          onAddPassage={() => {
+            // 워크스페이스를 닫고 내 지문함으로 돌아가 지문을 골라 담는다.
+            setWorkspaceOpen(false);
+            setIntakeView("library");
+          }}
         />
       </div>
     </div>
@@ -2632,10 +2636,10 @@ export function GeneratePageClient({
                 </button>
                 <button
                   onClick={() => setDetailQuestion(null)}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100"
+                  className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
                   aria-label="닫기"
                 >
-                  <X className="w-4 h-4 text-slate-400" />
+                  <X className="h-4 w-4" />
                 </button>
               </div>
             </div>

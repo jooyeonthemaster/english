@@ -127,7 +127,7 @@ export function PassageGenerateModal({
           <button
             type="button"
             onClick={onClose}
-            className="-mr-1 flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+            className="-mr-1 flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
             aria-label="닫기"
           >
             <X className="size-4" aria-hidden="true" />

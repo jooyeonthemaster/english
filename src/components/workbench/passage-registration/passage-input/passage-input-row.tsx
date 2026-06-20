@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
   AlertTriangle,
+  Check,
   ChevronDown,
   ChevronUp,
   HelpCircle,
@@ -114,6 +115,14 @@ interface PassageInputRowProps {
   justAdded?: boolean;
   /** 글로우 애니메이션이 끝났을 때 호출 — 부모가 표시 상태를 해제한다. */
   onGlowEnd?: () => void;
+  /** 선택 체크박스 상태 + 토글. 주어지면 헤더 좌상단(번호 왼쪽)에 체크박스를 띄운다. */
+  selected?: boolean;
+  onToggleSelected?: () => void;
+  /**
+   * AI 변형 도구(AI 문장 변형·앞 맥락 추가·변형 지문 생성)를 노출할지. 학습지
+   * 워크스페이스만 켠다 — 웹툰 등 재사용 경로는 끄도록 기본 false.
+   */
+  enableAiTransforms?: boolean;
   /**
    * 변형 지문 생성 → 새 Passage 로 저장하고 새 행으로 추가한다(부모가 처리).
    * 주어지지 않으면 '변형 지문 생성' 버튼을 숨긴다.
@@ -147,6 +156,9 @@ export function PassageInputRow({
   editorHeightPx,
   justAdded,
   onGlowEnd,
+  selected,
+  onToggleSelected,
+  enableAiTransforms = false,
   onAddVariant,
 }: PassageInputRowProps) {
   const [restoring, setRestoring] = useState(false);
@@ -514,6 +526,27 @@ export function PassageInputRow({
         title={collapsed ? "펼치기" : "접기"}
         className="flex cursor-pointer select-none items-center gap-2 border-b border-slate-100 px-3 py-2 transition-colors hover:bg-slate-50/70"
       >
+        {onToggleSelected ? (
+          <button
+            type="button"
+            role="checkbox"
+            aria-checked={!!selected}
+            aria-label="지문 선택"
+            title="이 지문 선택"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleSelected();
+            }}
+            className={
+              "flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center rounded-[5px] border transition-colors " +
+              (selected
+                ? "border-blue-500 bg-blue-500 text-white"
+                : "border-slate-300 bg-white text-transparent hover:border-blue-400")
+            }
+          >
+            <Check className="h-3 w-3" aria-hidden="true" />
+          </button>
+        ) : null}
         <span className="flex h-6 min-w-6 items-center justify-center rounded-md bg-blue-600 px-1.5 text-[11px] font-bold text-white">
           {index + 1}
         </span>
@@ -655,85 +688,25 @@ export function PassageInputRow({
               }
             >
           {/* Title */}
-          <input
-            value={row.title}
-            onChange={(e) => onChange({ title: e.target.value })}
-            disabled={busy}
-            placeholder="제목 (비워두면 본문에서 자동 생성)"
-            className="mb-2 h-8 w-full rounded-lg border border-slate-200 bg-slate-50/80 px-3 text-[12.5px] outline-none transition-all placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 disabled:opacity-50"
-          />
-
-          {/* Content label */}
+          {/* Content label (글자수는 입력창 우측하단으로 이동) */}
           <div className="mb-1.5 flex items-center justify-between">
             <label className="text-[11.5px] font-medium text-slate-500">
               {inReview ? "복원된 지문 (수정·마킹 가능)" : "지문 내용"}{" "}
               <span className="text-red-500">*</span>
             </label>
-            {charCount > 0 && (
-              <span className="text-[11px] tabular-nums text-slate-400">
-                {charCount.toLocaleString()}자
-              </span>
-            )}
           </div>
 
-          {/* ── AI 변형 도구 (문제생성 워크스페이스 메커니즘) ──
-              변형 지문 생성 · 앞 맥락 추가 · (선택 시) AI 문장 변형. */}
-          <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
-            {onAddVariant ? (
+          {/* ── AI 변형 도구 (학습지 워크스페이스 전용) ── 변형 지문 생성 ·
+              (선택 시) AI 문장 변형. 앞 맥락 추가는 입력창 위 가로 바(아래). */}
+          {enableAiTransforms ? (
+            <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
+              {onAddVariant ? (
               <VariantMenuButton
                 disabled={!canTransform || anyPreview}
                 busy={txBusy === "variant"}
                 onPick={handleVariantPick}
               />
             ) : null}
-            {/* 앞 맥락 추가 + 문장 수 스테퍼 (1~5) */}
-            <div className="flex items-stretch overflow-hidden rounded-md border border-blue-300 bg-white shadow-sm">
-              <button
-                type="button"
-                onClick={() => void runPrepend([])}
-                disabled={!canTransform || anyPreview}
-                title="지문 앞에 자연스럽게 이어지는 앞 문단을 AI가 생성해 맨 앞에 끼워 넣습니다"
-                className="flex items-center gap-1.5 px-2.5 text-[11.5px] font-bold text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {txBusy === "prepend" ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Plus className="h-3.5 w-3.5" />
-                )}
-                앞 맥락 추가
-                <CreditCostChip
-                  amount={CREDIT_COSTS.PASSAGE_TRANSFORM}
-                  className="rounded-sm bg-blue-50 px-1 py-px text-[10px]"
-                />
-              </button>
-              <span className="my-1 w-px shrink-0 bg-blue-200" aria-hidden="true" />
-              <div
-                className="flex shrink-0 items-center gap-0.5 px-1"
-                title="생성할 앞 문단의 문장 수 (1~5)"
-              >
-                <button
-                  type="button"
-                  onClick={() => changePrependCount(-1)}
-                  disabled={busy || prependCount <= 1}
-                  aria-label="앞 문단 문장 수 줄이기"
-                  className="flex h-5 w-5 items-center justify-center rounded-full text-blue-400 transition-colors hover:bg-blue-100/70 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-35"
-                >
-                  <Minus className="h-3 w-3" />
-                </button>
-                <span className="w-[34px] text-center text-[11px] font-bold tabular-nums text-blue-700">
-                  {prependCount}문장
-                </span>
-                <button
-                  type="button"
-                  onClick={() => changePrependCount(1)}
-                  disabled={busy || prependCount >= 5}
-                  aria-label="앞 문단 문장 수 늘리기"
-                  className="flex h-5 w-5 items-center justify-center rounded-full text-blue-400 transition-colors hover:bg-blue-100/70 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-35"
-                >
-                  <Plus className="h-3 w-3" />
-                </button>
-              </div>
-            </div>
             {/* AI 문장 변형 — 본문에서 문장을 드래그 선택하면 활성화 */}
             <button
               type="button"
@@ -758,34 +731,115 @@ export function PassageInputRow({
               />
             </button>
           </div>
+          ) : null}
 
-          {/* Annotation editor — marks flow into analysis on 분석 시작.
-              fill(단일 행)은 높이를 채우고, 그 외에는 실제 텍스트 길이에 맞춰
-              높이가 줄어들도록 height 고정 대신 min/max 만 둔다 (짧은 지문일 때
-              아래 여백이 크게 남던 문제 해결). 길어지면 maxHeight 에서 내부 스크롤. */}
+          {/* 입력 박스 — [앞 맥락 추가 바(학습지)] + [에디터] + [글자수 우측하단].
+              바깥 박스가 테두리·라운드를 갖고, 안쪽 조각은 구분선만 둔다(에디터
+              높이 로직은 그대로 유지). */}
           <div
             className={
               "overflow-hidden rounded-lg border border-slate-200 bg-white" +
               (fill ? " flex flex-1 flex-col" : "")
             }
-            style={
-              fill
-                ? { minHeight: editorHeightPx ?? 320 }
-                : { minHeight: 160, maxHeight: editorHeightPx ?? 460 }
-            }
           >
-            <PassageAnnotationEditor
-              key={`${row.localId}:${row.editorSeed}`}
-              content={row.content}
-              onContentChange={handleContentChange}
-              annotations={row.annotations}
-              onAnnotationsChange={handleAnnotationsChange}
-              onEditorReady={handleEditorReady}
-              editable={!busy}
-              placeholder={
-                "여기에 영어 지문을 붙여넣으세요...\n\n텍스트를 드래그하면 핵심 어휘·어법·출제 포인트를 마킹할 수 있어요. 빈칸·선지 마커가 섞인 '문제 형태'면 'AI 복원'으로 원문을 복구하세요."
+            {/* 앞 맥락 추가 — 입력창 위에 가로로 길게 붙는 insertion-point 바
+                (문제생성 워크스페이스와 동일). 점선 가운데 [추가 | 문장 수] 알약. */}
+            {enableAiTransforms ? (
+              <div className="flex shrink-0 items-center gap-2 border-b border-dashed border-blue-200/80 bg-blue-50/40 px-2.5 py-1.5">
+                <span
+                  className="h-0 min-w-3 flex-1 border-t border-dashed border-blue-300/80"
+                  aria-hidden="true"
+                />
+                <div className="flex shrink-0 items-stretch overflow-hidden rounded-full border border-blue-300 bg-white shadow-sm">
+                  <button
+                    type="button"
+                    onClick={() => void runPrepend([])}
+                    disabled={!canTransform || anyPreview}
+                    title={`지문 맥락과 자연스럽게 이어지는 앞 문단(${prependCount}문장)을 AI가 생성해 맨 앞에 끼워 넣습니다`}
+                    className="flex min-w-0 cursor-pointer items-center gap-1.5 py-0.5 pl-2.5 pr-2 text-[11.5px] font-bold text-blue-600 transition-colors hover:bg-blue-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {txBusy === "prepend" ? (
+                      <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin" />
+                    ) : (
+                      <Plus className="h-3.5 w-3.5 shrink-0" />
+                    )}
+                    <span className="truncate">
+                      {txBusy === "prepend"
+                        ? "앞 문단을 생성하고 있어요…"
+                        : "앞 맥락 문단 추가"}
+                    </span>
+                    <CreditCostChip
+                      amount={CREDIT_COSTS.PASSAGE_TRANSFORM}
+                      className="shrink-0 rounded-sm bg-white px-1 py-px text-[10px] text-blue-500 ring-1 ring-inset ring-blue-200"
+                    />
+                  </button>
+                  <span
+                    className="my-1 w-px shrink-0 bg-blue-200"
+                    aria-hidden="true"
+                  />
+                  <div
+                    className="flex shrink-0 items-center gap-0.5 px-1"
+                    title="생성할 앞 문단의 문장 수 (1~5)"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => changePrependCount(-1)}
+                      disabled={busy || prependCount <= 1}
+                      aria-label="앞 문단 문장 수 줄이기"
+                      className="flex h-5 w-5 items-center justify-center rounded-full text-blue-400 transition-colors hover:bg-blue-100/70 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-35"
+                    >
+                      <Minus className="h-3 w-3" />
+                    </button>
+                    <span className="w-[38px] text-center text-[11px] font-bold tabular-nums text-blue-700">
+                      {prependCount}문장
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => changePrependCount(1)}
+                      disabled={busy || prependCount >= 5}
+                      aria-label="앞 문단 문장 수 늘리기"
+                      className="flex h-5 w-5 items-center justify-center rounded-full text-blue-400 transition-colors hover:bg-blue-100/70 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-35"
+                    >
+                      <Plus className="h-3 w-3" />
+                    </button>
+                  </div>
+                </div>
+                <span
+                  className="h-0 min-w-3 flex-1 border-t border-dashed border-blue-300/80"
+                  aria-hidden="true"
+                />
+              </div>
+            ) : null}
+
+            {/* 에디터 영역 — 본문 길이에 맞춰 높이 (fill 은 채움). */}
+            <div
+              className={fill ? "flex min-h-0 flex-1 flex-col" : ""}
+              style={
+                fill
+                  ? { minHeight: editorHeightPx ?? 320 }
+                  : { minHeight: 160, maxHeight: editorHeightPx ?? 460 }
               }
-            />
+            >
+              <PassageAnnotationEditor
+                key={`${row.localId}:${row.editorSeed}`}
+                content={row.content}
+                onContentChange={handleContentChange}
+                annotations={row.annotations}
+                onAnnotationsChange={handleAnnotationsChange}
+                onEditorReady={handleEditorReady}
+                editable={!busy}
+                placeholder={
+                  "여기에 영어 지문을 붙여넣으세요...\n\n텍스트를 드래그하면 핵심 어휘·어법·출제 포인트를 마킹할 수 있어요. 빈칸·선지 마커가 섞인 '문제 형태'면 'AI 복원'으로 원문을 복구하세요."
+                }
+              />
+            </div>
+
+            {/* 글자수 — 입력창 우측하단 (문제생성 워크스페이스와 동일) */}
+            {charCount > 0 ? (
+              <div className="flex shrink-0 justify-end border-t border-slate-100 px-2.5 py-1 text-[10.5px] tabular-nums text-slate-400">
+                {charCount.toLocaleString()}자
+              </div>
+            ) : null}
           </div>
 
           {/* AI 변형 미리보기 패널 (한 번에 하나만) — 문제생성과 동일 UI */}

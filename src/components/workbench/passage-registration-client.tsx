@@ -248,6 +248,8 @@ export function PassageRegistrationClient({
           title: p.title,
           content: formatExtractedTextForDisplay(p.content),
           source: p.source ?? null,
+          // 불러온 지문은 기본적으로 모두 펼쳐 둔다.
+          collapsed: false,
         }),
       );
     if (incoming.length === 0) {
@@ -256,10 +258,9 @@ export function PassageRegistrationClient({
       return;
     }
     const wasActive = prev.some((r) => !isPristineEmptyRow(r));
-    const base = (
-      prev.length === 1 && isPristineEmptyRow(prev[0]) ? [] : prev
-    ).map((r) => (r.collapsed ? r : { ...r, collapsed: true }));
-    incoming[0] = { ...incoming[0], collapsed: false };
+    // 기존 행은 사용자가 둔 상태 그대로 두고(강제로 접지 않음), 새로 불러온 지문만
+    // 펼친 채로 뒤에 붙인다.
+    const base = prev.length === 1 && isPristineEmptyRow(prev[0]) ? [] : prev;
     const next = [...base, ...incoming];
     rowsRef.current = next;
     setRows(next);
@@ -394,11 +395,10 @@ export function PassageRegistrationClient({
   const mergeIntoWorkspace = useCallback((incoming: PassageInputRow[]) => {
     if (incoming.length === 0) return;
     const prev = rowsRef.current;
-    const base = (
-      prev.length === 1 && isPristineEmptyRow(prev[0]) ? [] : prev
-    ).map((r) => (r.collapsed ? r : { ...r, collapsed: true }));
-    incoming[0] = { ...incoming[0], collapsed: false };
-    const next = [...base, ...incoming];
+    // 기존 행은 그대로 두고, 새로 불러온 지문은 모두 펼친 채로 붙인다.
+    const base = prev.length === 1 && isPristineEmptyRow(prev[0]) ? [] : prev;
+    const expanded = incoming.map((r) => ({ ...r, collapsed: false }));
+    const next = [...base, ...expanded];
     rowsRef.current = next;
     setRows(next);
     setFormCollapsed(false);

@@ -4,14 +4,13 @@
 import React from "react";
 import {
   ArrowLeft,
-  Bot,
-  Layers,
   Loader2,
   Save,
   Trash2,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -19,7 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DIFFICULTY_OPTIONS } from "./constants";
+import { DIFFICULTY_OPTIONS, TYPE_OPTIONS } from "./constants";
+import { EditViewToggle } from "./edit-view-toggle";
+import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 
 interface Props {
   isModal: boolean;
@@ -65,6 +66,8 @@ export function EditHeader({
   onOpenAiEdit,
 }: Props) {
   const diffConfig = DIFFICULTY_OPTIONS.find((d) => d.value === difficulty);
+  // AI 수정 헤더와 동일한 유형 뱃지(예: 빈칸추론) — subType → 유형 라벨.
+  const typeLabel = (subType && QUESTION_TYPE_META[subType]?.label) || subType || "";
 
   return (
     <div className="flex items-center justify-between px-6 py-3 border-b border-slate-200 bg-white shrink-0">
@@ -82,6 +85,15 @@ export function EditHeader({
           </button>
         )}
         <span className="text-[17px] font-bold tracking-tight text-slate-900">문제 수정</span>
+        {/* 토글 — AI 수정 헤더와 동일 위치(타이틀 바로 옆)에 고정: 뷰 전환 시 위치가 바뀌지 않도록 뱃지보다 앞에 둔다. */}
+        {onOpenAiEdit && (
+          <EditViewToggle active="manual" onAi={onOpenAiEdit} onManual={() => {}} />
+        )}
+        {typeLabel && (
+          <span className="inline-flex shrink-0 items-center rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-[12px] font-semibold text-blue-700">
+            {typeLabel}
+          </span>
+        )}
         {aiGenerated && (
           <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold border px-2.5 py-1 rounded-md border-sky-200 bg-sky-50 text-sky-700">
             <svg
@@ -99,17 +111,6 @@ export function EditHeader({
             </svg>
             일반 생성
           </span>
-        )}
-        {onOpenAiEdit && (
-          <button
-            type="button"
-            onClick={onOpenAiEdit}
-            title="AI로 선지·정답·해설을 자연어 지시로 다시 만들기"
-            className="ml-1 inline-flex h-9 items-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3.5 text-[13px] font-semibold text-white shadow-sm transition-all hover:from-blue-700 hover:to-indigo-700 hover:shadow-md"
-          >
-            <Bot className="h-4 w-4" />
-            AI로 수정
-          </button>
         )}
       </div>
       <div className="flex items-center gap-2">

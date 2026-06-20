@@ -8,7 +8,18 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { Eye, Loader2, Plus, Wand2 } from "lucide-react";
+import {
+  Check,
+  ChevronsDownUp,
+  Eye,
+  FilePen,
+  HelpCircle,
+  Loader2,
+  Plus,
+  Trash2,
+  Wand2,
+} from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
 import { usePersistedState } from "@/hooks/use-persisted-state";
@@ -169,8 +180,118 @@ export function PassageInputStack({
   // 학습지 구성·생성 푸터는 숨긴다 — 문제생성 워크스페이스의 빈 상태와 동일.
   const isEmpty = rows.length === 0;
 
+  // ── 카드 선택 (체크박스) ──
+  // 제거된 행의 잔여 id 는 무해(localId 는 재사용되지 않음). 개수는 현재 행 기준
+  // 으로 라이브 계산해 정확도를 유지한다.
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
+  const toggleSelected = (localId: string) =>
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(localId)) next.delete(localId);
+      else next.add(localId);
+      return next;
+    });
+  const selectedCount = useMemo(
+    () => rows.reduce((n, r) => n + (selectedIds.has(r.localId) ? 1 : 0), 0),
+    [rows, selectedIds],
+  );
+  const allSelected = rows.length > 0 && selectedCount === rows.length;
+  const toggleSelectAll = () =>
+    setSelectedIds(allSelected ? new Set() : new Set(rows.map((r) => r.localId)));
+
+  // ── 워크스페이스 헤더 동작 ──
+  const setAllCollapsed = (collapsed: boolean) =>
+    setRows((prev) =>
+      prev.map((r) => (r.collapsed === collapsed ? r : { ...r, collapsed })),
+    );
+  // 선택된 카드가 있으면 그것만 워크스페이스에서 빼고, 없으면 전체를 비운다.
+  const clearWorkspace = () => {
+    if (saving) return;
+    if (selectedCount > 0) {
+      setRows((prev) => prev.filter((r) => !selectedIds.has(r.localId)));
+      setSelectedIds(new Set());
+      return;
+    }
+    if (
+      window.confirm("워크스페이스를 비울까요? (불러온 지문은 삭제되지 않습니다)")
+    ) {
+      setRows([]);
+    }
+  };
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
+      {/* 워크스페이스 헤더 — 전체 펼치기 · 제목/개수 · 모두 접기 · 비우기
+          (문제생성 지문 워크스페이스 헤더와 동일 구성). */}
+      {!isEmpty ? (
+        <div className="mb-2.5 flex h-11 shrink-0 items-center gap-2 rounded-lg border border-slate-200 bg-white pl-3 pr-1.5 shadow-sm">
+          <button
+            type="button"
+            role="checkbox"
+            aria-checked={allSelected}
+            aria-label="전체 선택"
+            title="지문 전체 선택 / 해제"
+            onClick={toggleSelectAll}
+            className={
+              "flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center rounded-[5px] border transition-colors " +
+              (allSelected
+                ? "border-blue-500 bg-blue-500 text-white"
+                : "border-slate-300 bg-white text-transparent hover:border-blue-400")
+            }
+          >
+            <Check className="h-3 w-3" aria-hidden="true" />
+          </button>
+          <FilePen
+            className="h-3.5 w-3.5 shrink-0 text-slate-400"
+            aria-hidden="true"
+          />
+          <h3 className="shrink-0 text-[12.5px] font-bold text-slate-800">
+            지문 워크스페이스
+          </h3>
+          <span className="flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded-full bg-blue-600 px-1 text-[10.5px] font-bold leading-none text-white tabular-nums">
+            {rows.length}
+          </span>
+          <span className="min-w-0 flex-1" aria-hidden="true" />
+          <span
+            className="mx-0.5 h-4 w-px shrink-0 bg-slate-200"
+            aria-hidden="true"
+          />
+          <button
+            type="button"
+            onClick={() =>
+              toast.info(
+                "지문을 펼쳐 마킹·AI 변형하고, 아래 '생성하기'로 학습지를 만드세요.",
+              )
+            }
+            title="기능 안내"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-blue-600"
+          >
+            <HelpCircle className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setAllCollapsed(true)}
+            title="모두 접기"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+          >
+            <ChevronsDownUp className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={clearWorkspace}
+            disabled={saving}
+            title={
+              selectedCount > 0
+                ? `선택한 지문 ${selectedCount}개 빼기 (지문은 삭제되지 않음)`
+                : "워크스페이스 비우기 (지문은 삭제되지 않음)"
+            }
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
+          >
+            <Trash2 className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+      ) : null}
+
       {/* Rows (scrollable). With a single row, it stretches to fill the height. */}
       <div
         ref={rowsZoneRef}
@@ -192,6 +313,9 @@ export function PassageInputStack({
             onSplit={(chunks) => splitRow(row.localId, chunks)}
             justAdded={glowingIds.has(row.localId)}
             onGlowEnd={() => clearGlow(row.localId)}
+            selected={selectedIds.has(row.localId)}
+            onToggleSelected={() => toggleSelected(row.localId)}
+            enableAiTransforms
             onAddVariant={onAddVariant}
           />
         ))}
