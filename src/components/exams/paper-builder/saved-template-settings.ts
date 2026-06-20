@@ -18,6 +18,7 @@ export type SavedTemplateSettings = {
   paperSize: PaperSize;
   columns: 1 | 2;
   density: Density;
+  forceTwoPerPage: boolean;
   passageStyle: PassageStyle;
   showPassageTitle: boolean;
   showQuestionMeta: boolean;
@@ -32,6 +33,7 @@ export const DEFAULT_TEMPLATE_SETTINGS: SavedTemplateSettings = {
   paperSize: "A4",
   columns: 2,
   density: "comfortable",
+  forceTwoPerPage: false,
   passageStyle: "plain",
   showPassageTitle: DEFAULT_SHOW_PASSAGE_TITLE,
   showQuestionMeta: false,
@@ -116,6 +118,10 @@ export function normalizeSavedTemplateSettings(input: unknown): SavedTemplateSet
     paperSize: asPaperSize(candidate.paperSize),
     columns: candidate.columns === 1 ? 1 : 2,
     density: asDensity(candidate.density),
+    forceTwoPerPage:
+      typeof candidate.forceTwoPerPage === "boolean"
+        ? candidate.forceTwoPerPage
+        : DEFAULT_TEMPLATE_SETTINGS.forceTwoPerPage,
     passageStyle: asPassageStyle(candidate.passageStyle),
     showPassageTitle:
       typeof candidate.showPassageTitle === "boolean"

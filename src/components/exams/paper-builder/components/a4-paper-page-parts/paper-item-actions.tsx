@@ -1,6 +1,5 @@
 import type * as React from "react";
 import {
-  ArrowDownToLine,
   BookOpen,
   Columns2,
   FileText,
@@ -12,6 +11,7 @@ import {
 
 import { cn } from "@/lib/utils";
 
+import { KeepTogetherIcon } from "../keep-together-icon";
 import type { BreakBefore, PaperItem } from "../../types";
 import {
   isSourcePassageForcedForItem,
@@ -89,7 +89,7 @@ export function PaperItemActions({
             : "한 덩어리로 유지 — 다음 칸/페이지로 통째 이동 (클릭 → 켜짐)"
         }
       >
-        <ArrowDownToLine className="h-3 w-3" />
+        <KeepTogetherIcon className="h-3.5 w-3.5" />
       </button>
       <button
         onClick={(event) => {

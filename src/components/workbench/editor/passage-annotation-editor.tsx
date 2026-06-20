@@ -80,6 +80,13 @@ interface PassageAnnotationEditorProps {
    *  editor. Off when the host renders its own (e.g. a single shared popover
    *  for a multi-passage stack). Defaults to true. */
   showAnnotationHint?: boolean;
+  /**
+   * Expose the underlying TipTap editor so the host can read the current
+   * selection and apply AI transforms (문장 변형·앞 맥락 추가) via editor
+   * transactions — keeping existing marks intact. Called with the editor on
+   * mount and `null` on unmount.
+   */
+  onEditorReady?: (editor: Editor | null) => void;
 }
 
 // ─── Floating popup state ────────────────────────────────
@@ -130,7 +137,7 @@ function deriveAnnotationsFromDoc(editor: Editor, memoMap: Map<string, string>):
 export function PassageAnnotationEditor({
   content, onContentChange, annotations, onAnnotationsChange,
   editable = true, placeholder = "영어 지문을 붙여넣으세요...",
-  showAnnotationHint = true,
+  showAnnotationHint = true, onEditorReady,
 }: PassageAnnotationEditorProps) {
   const [popup, setPopup] = useState<PopupState | null>(null);
   const [popupPos, setPopupPos] = useState({ x: 0, y: 0, below: false });
@@ -244,6 +251,12 @@ export function PassageAnnotationEditor({
       },
     },
   });
+
+  // Hand the editor instance to the host (for AI transform transactions).
+  useEffect(() => {
+    onEditorReady?.(editor);
+    return () => onEditorReady?.(null);
+  }, [editor, onEditorReady]);
 
   useEffect(() => {
     if (!editor) return;

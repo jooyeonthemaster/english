@@ -1,6 +1,6 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { AnalysisTone } from "@/lib/passage-analysis-options";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
@@ -8,6 +8,7 @@ import type {
   IntakeView,
   IntakeTab,
 } from "@/app/(director)/director/workbench/generate/intake/intake-surface";
+import type { PastedPassageInput } from "@/app/(director)/director/workbench/generate/intake/multi-passage-paste";
 import type { PendingExtraction } from "../use-create-extraction";
 import type { DraftCollectionItem, SavedPrompt } from "../types";
 import type { PassageInputRow } from "../passage-input/types";
@@ -29,6 +30,14 @@ interface FormSectionContainerProps {
   setRows: Dispatch<SetStateAction<PassageInputRow[]>>;
   analyzing: boolean;
   onAnalyze: (plan: QuestionGenerationPlan) => void;
+  onAddPassage?: () => void;
+  onAddVariant?: (args: {
+    sourcePassageId: string | null;
+    title: string;
+    content: string;
+    mode: import("@/lib/passage-transform/schema").WholePassageTransformMode;
+    direction?: import("@/lib/passage-transform/schema").VariantDirection;
+  }) => Promise<boolean>;
 
   // Metadata
   schools: Array<{ id: string; name: string; type: string; publisher: string | null }>;
@@ -66,14 +75,19 @@ interface FormSectionContainerProps {
   savingPrompt: boolean;
   setSavingPrompt: (v: boolean) => void;
 
-  // 자료 관리 picker
-  draftRefreshToken: number;
-  onSelectDraft: (draft: M1PassageDraftWithJob) => void;
-  onLoadSelectedDrafts: (drafts: M1PassageDraftWithJob[]) => void;
+  /** 라이브러리 탭 라벨. 기본 "자료 관리". 학습지는 "내 지문함". */
+  libraryLabel?: string;
+  /** 라이브러리(내 지문함) override. 없으면 추출 드래프트 그리드로 폴백. */
+  library?: ReactNode;
+
+  // 자료 관리 picker (ExtractionManageEmbed 폴백 전용)
+  draftRefreshToken?: number;
+  onSelectDraft?: (draft: M1PassageDraftWithJob) => void;
+  onLoadSelectedDrafts?: (drafts: M1PassageDraftWithJob[]) => void;
   /** 우측 워크스페이스에 이미 불러온 드래프트 id — 자료 카드 '불러옴' 표시. */
   loadedDraftIds?: string[];
-  draftCollections: DraftCollectionItem[];
-  draftMembership: Record<string, string[]>;
+  draftCollections?: DraftCollectionItem[];
+  draftMembership?: Record<string, string[]>;
 
   // Intake (이미지·PDF)
   intakeView: IntakeView;
@@ -83,6 +97,16 @@ interface FormSectionContainerProps {
   onExtractionBegin: (id: string, count: number) => void;
   onExtractionResult: (id: string, jobId: string | null) => void;
   extractionPending: PendingExtraction[];
+
+  // 워크스페이스 (지문 입력 및 필기창) 오버레이 제어
+  workspaceOpen: boolean;
+  setWorkspaceOpen: (v: boolean) => void;
+  workspaceActive: boolean;
+  // 직접 입력 탭 제출 → 워크스페이스 스택에 적재
+  onSubmitPastedRows: (
+    rows: PastedPassageInput[],
+  ) => boolean | void | Promise<boolean | void>;
+  pasteSaving: boolean;
 }
 
 export function FormSectionContainer(p: FormSectionContainerProps) {
@@ -95,6 +119,8 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       setRows={p.setRows}
       analyzing={p.analyzing}
       onAnalyze={p.onAnalyze}
+      onAddPassage={p.onAddPassage}
+      onAddVariant={p.onAddVariant}
       draftRefreshToken={p.draftRefreshToken}
       schools={p.schools}
       schoolId={p.schoolId}
@@ -136,6 +162,8 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
         })
       }
       onDeletePrompt={(id) => deletePrompt({ id, setSavedPrompts: p.setSavedPrompts })}
+      libraryLabel={p.libraryLabel}
+      library={p.library}
       onSelectDraft={p.onSelectDraft}
       onLoadSelectedDrafts={p.onLoadSelectedDrafts}
       loadedDraftIds={p.loadedDraftIds}
@@ -148,6 +176,11 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       onExtractionBegin={p.onExtractionBegin}
       onExtractionResult={p.onExtractionResult}
       extractionPending={p.extractionPending}
+      workspaceOpen={p.workspaceOpen}
+      setWorkspaceOpen={p.setWorkspaceOpen}
+      workspaceActive={p.workspaceActive}
+      onSubmitPastedRows={p.onSubmitPastedRows}
+      pasteSaving={p.pasteSaving}
     />
   );
 }

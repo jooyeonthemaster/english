@@ -10,7 +10,7 @@ import {
 } from "react";
 import {
   AlertCircle,
-  ArrowDownToLine,
+  LogIn,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
@@ -58,10 +58,12 @@ import { DraftDetailModal } from "./components/draft-detail-modal";
 import { DraftFolderSection } from "./components/draft-folder-section";
 import { DraftGrid, type GridCols } from "./components/draft-grid";
 import { DraftSelectionToolbar } from "./components/draft-selection-toolbar";
+import { triggerHintGlowWithin } from "@/lib/hint-glow";
 import { JobCard } from "@/components/workbench/shared/job-card";
 import { MaterialJobCard } from "./components/material-job-card";
 import { DragSelect } from "@/components/ui/drag-select";
 import { JobReviewModal } from "./components/job-review-modal";
+import { JobReviewToggleButton } from "./components/job-review-toggle-button";
 import {
   ManageFiltersBar,
   ManageFiltersPanel,
@@ -228,7 +230,7 @@ export function ExtractionManageClient({
 }: ExtractionManageClientProps) {
   const draftDetailAction =
     draftDetailActionMode === "import"
-      ? { label: "가져오기", icon: ArrowDownToLine }
+      ? { label: "가져오기", icon: LogIn }
       : undefined;
   void academyId;
 
@@ -300,9 +302,12 @@ export function ExtractionManageClient({
   // ─── Job row (추출 작업 목록) collapse + resize state ───
   const JOB_ROW_COLLAPSE_KEY = "smoat:extraction-manage:job-row:collapsed";
   const JOB_ROW_HEIGHT_KEY = "smoat:extraction-manage:job-row:height";
-  const JOB_ROW_MIN = 40;
-  const JOB_ROW_MAX = 320;
-  const JOB_ROW_DEFAULT = 96;
+  // 자료 카드(JobCard compact)가 A4 썸네일 + 제목·날짜까지 한눈에 보이려면
+  // ~180px 가 필요하다. 최소도 그만큼 올려 두면, 예전 96px 로 저장돼 있던
+  // 사용자도 읽기 값을 [MIN,MAX] 로 클램프할 때 자동으로 따라 올라간다.
+  const JOB_ROW_MIN = 192;
+  const JOB_ROW_MAX = 380;
+  const JOB_ROW_DEFAULT = 208;
   const [jobRowCollapsed, setJobRowCollapsed] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     try {
@@ -508,6 +513,20 @@ export function ExtractionManageClient({
       const arr = map.get(jobId);
       if (arr) arr.push(d.id);
       else map.set(jobId, [d.id]);
+    }
+    return map;
+  }, [data.drafts]);
+
+  // 작업(자료 카드) 단위로 그 작업에 속한 복원 자료들을 모아 둔다 — 카드의
+  // "검수완료" 토글이 작업 단위로 모든 draft 의 검수 상태를 뒤집는 데 쓴다.
+  const draftsByJobId = useMemo(() => {
+    const map = new Map<string, M1PassageDraftWithJob[]>();
+    for (const d of data.drafts) {
+      const jobId = d.job?.id;
+      if (!jobId) continue;
+      const arr = map.get(jobId);
+      if (arr) arr.push(d);
+      else map.set(jobId, [d]);
     }
     return map;
   }, [data.drafts]);
@@ -886,6 +905,13 @@ export function ExtractionManageClient({
   const anyBulkRunning = bulk.bulkActionRunning !== null;
   const noSelection = actionTargetIds.size === 0;
 
+  // 일괄 버튼(복원·삭제)이 비활(선택 0개)일 때 눌리면 자료 카드들을 글로우해
+  // "자료를 먼저 고르세요"를 유도한다.
+  const draftZoneRef = useRef<HTMLDivElement>(null);
+  const hintSelectDrafts = useCallback(() => {
+    triggerHintGlowWithin(draftZoneRef.current);
+  }, []);
+
   const selectionExtraActions = (
     <>
       <MoveOrCopyFolderPicker
@@ -900,16 +926,23 @@ export function ExtractionManageClient({
 
       <button
         type="button"
-        onClick={() =>
-          void bulk.bulkRerestore(actionTargetIds, clearActionSelection)
-        }
-        disabled={anyBulkRunning || noSelection}
+        onClick={() => {
+          if (anyBulkRunning) return;
+          if (noSelection) {
+            hintSelectDrafts();
+            return;
+          }
+          void bulk.bulkRerestore(actionTargetIds, clearActionSelection);
+        }}
+        // 실행 중엔 진짜 비활, 미선택은 aria-disabled(눌리면 힌트 글로우).
+        disabled={anyBulkRunning}
+        aria-disabled={noSelection}
         title={embedded ? "AI 복원 다시" : undefined}
         aria-label={embedded ? "AI 복원 다시" : undefined}
         className={
           embedded
-            ? "flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-            : "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-medium text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            ? "flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+            : "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-medium text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
         }
       >
         {isRerestoring ? (
@@ -922,16 +955,22 @@ export function ExtractionManageClient({
 
       <button
         type="button"
-        onClick={() =>
-          void bulk.bulkDelete(actionTargetIds, clearActionSelection)
-        }
-        disabled={anyBulkRunning || noSelection}
+        onClick={() => {
+          if (anyBulkRunning) return;
+          if (noSelection) {
+            hintSelectDrafts();
+            return;
+          }
+          void bulk.bulkDelete(actionTargetIds, clearActionSelection);
+        }}
+        disabled={anyBulkRunning}
+        aria-disabled={noSelection}
         title={embedded ? "삭제" : undefined}
         aria-label={embedded ? "삭제" : undefined}
         className={
           embedded
-            ? "flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
-            : "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+            ? "flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+            : "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
         }
       >
         {isDeleting ? (
@@ -988,6 +1027,9 @@ export function ExtractionManageClient({
     />
   ) : null;
 
+  const pendingReviewSelectedCount = bulkAnalysisCandidateDrafts.filter(
+    (draft) => draft.reviewStatus !== "COMMITTED",
+  ).length;
   const promoteAction = embedded ? null : (
     <button
       type="button"
@@ -995,7 +1037,12 @@ export function ExtractionManageClient({
         void bulk.bulkPromote(actionTargetIds, clearActionSelection)
       }
       disabled={anyBulkRunning || noSelection}
-      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md bg-emerald-600 px-2.5 text-[11px] font-medium text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+      title={
+        pendingReviewSelectedCount > 0
+          ? `미검수 ${pendingReviewSelectedCount}개 검수완료`
+          : "검수완료"
+      }
+      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border bg-white px-2.5 text-[11px] font-semibold shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
     >
       {isPromoting ? (
         <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
@@ -1352,6 +1399,17 @@ export function ExtractionManageClient({
                           next.length > 0 ? next : null,
                         )
                       }
+                      renderTaskActions={(task) => {
+                        const jobDrafts = draftsByJobId.get(task.id);
+                        if (!jobDrafts?.length) return null;
+                        return (
+                          <JobReviewToggleButton
+                            drafts={jobDrafts}
+                            onPromote={actions.promoteDraft}
+                            onUnpromote={actions.unpromoteDraft}
+                          />
+                        );
+                      }}
                       marqueeSelectedTaskIds={checkedTaskIds}
                       onMarqueeChange={handleTaskMarqueeChange}
                       marqueeBoundaryRef={marqueeBoundaryRef}
@@ -1360,6 +1418,7 @@ export function ExtractionManageClient({
                 )
               ) : (
                 <div
+                  ref={draftZoneRef}
                   className={
                     "flex min-w-0 flex-col rounded-b-2xl border-t border-slate-200 bg-slate-50/40 px-4 pb-3 sm:px-5" +
                     (embedded
@@ -1473,7 +1532,7 @@ export function ExtractionManageClient({
                   }
                   className="flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 text-[12.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-white"
                 >
-                  <ArrowDownToLine className="size-4" aria-hidden="true" />
+                  <LogIn className="size-4" aria-hidden="true" />
                   <span>선택 지문 불러오기</span>
                   {bulkAnalysisRunnableDrafts.length > 0 ? (
                     <span className="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums">
@@ -1555,6 +1614,8 @@ export function ExtractionManageClient({
             onPromoteDrafts={(draftIds, clearModalChecks) =>
               bulk.bulkPromote(draftIds, clearModalChecks)
             }
+            onPromoteDraft={actions.promoteDraft}
+            onUnpromoteDraft={actions.unpromoteDraft}
             onDeleteDrafts={(draftIds, clearModalChecks) =>
               bulk.bulkDelete(draftIds, clearModalChecks)
             }

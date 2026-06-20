@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 
 import { ExtractionTaskListIcon } from "@/components/icons/workflow-icons";
+import { triggerHintGlow } from "@/lib/hint-glow";
 import { MAX_PAGES_PER_JOB, MAX_PDF_BYTES } from "@/lib/extraction/constants";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
@@ -140,6 +141,8 @@ export function UploadPanel({
   onOutputModeChange?: (mode: "verbatim" | "restored") => void;
 }) {
   const boardRef = useRef<InlineCropBoardHandle>(null);
+  // 파일이 아직 없을 때 '추출 시작'을 누르면 글로우시킬 업로드 영역.
+  const uploadZoneRef = useRef<HTMLDivElement>(null);
   const [boardCounts, setBoardCounts] =
     useState<InlineCropBoardCounts>(EMPTY_COUNTS);
   // 보드가 박스를 실제 지문 슬롯으로 굽는 동안의 짧은 잠금(업로드 busy와 별개).
@@ -269,8 +272,19 @@ export function UploadPanel({
   }, [inputMode, selectedOutput, slots.length]);
 
   // 파일 모드 추출 시작 — 보드 결과를 굽고(없으면 기존 slots), onStart에 넘긴다.
+  // 비활(처럼 보이는) 상태에서 눌리면 막힌 이유에 맞는 영역을 글로우해 행동을 유도한다.
   const handleFileStart = async () => {
-    if (slots.length === 0) return;
+    if (startBusy) return;
+    if (slots.length === 0) {
+      // 파일이 없음 → 업로드 영역을 글로우해 "파일을 먼저 올리세요" 유도.
+      triggerHintGlow(uploadZoneRef.current);
+      return;
+    }
+    if (fileTotalPassages === 0 || fileOverMax) {
+      // 파일은 있으나 지문 영역 미설정/초과 → 좌측 캔버스를 글로우해 드래그 유도.
+      boardRef.current?.hintDragArea();
+      return;
+    }
     // 버튼 누르자마자 큐 패널을 열어 즉시 반응(굽기·업로드는 그 뒤에).
     onBeforeStart?.();
     if (boardRef.current) {
@@ -329,7 +343,7 @@ export function UploadPanel({
       <button
         type="button"
         onClick={handleFileStart}
-        disabled={fileStartDisabled}
+        aria-disabled={fileStartDisabled}
         className={
           "relative inline-flex h-12 w-full items-center justify-center overflow-hidden rounded-lg border text-[14px] font-extrabold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
           (startBusy
@@ -355,21 +369,19 @@ export function UploadPanel({
           ) : (
             <>
               <PlayCircle className="mr-2 size-5" aria-hidden="true" />
-              {selectedOutput === "restored" ? "복원하여 추출 시작" : "추출 시작"}
+              {"다음으로 (내 지문함)"}
               {fileTotalPassages > 0 ? ` (지문 ${fileTotalPassages}개)` : ""}
               {fileTotalPassages > 0 ? (
-                <span
-                  className="ml-2 inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-bold"
+                <CreditCostChip
+                  amount={fileProjectedCredits}
+                  className="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-[11px]"
+                  iconClassName="size-3"
                   title={
                     creditsPerPassage > 0
-                      ? `지문당 ◈${creditsPerPassage} × ${fileTotalPassages}개 = ◈${fileProjectedCredits} 소모`
+                      ? `지문당 ${creditsPerPassage} × ${fileTotalPassages}개 = ${fileProjectedCredits} 크레딧 소모`
                       : "순수 OCR은 크레딧을 차감하지 않습니다"
                   }
-                >
-                  {creditsPerPassage > 0
-                    ? `◈${fileProjectedCredits.toLocaleString("ko-KR")} 소모`
-                    : "무료"}
-                </span>
+                />
               ) : null}
             </>
           )}
@@ -378,7 +390,7 @@ export function UploadPanel({
     </div>
   );
 
-  // ── P7-D2 출력 방식 토글 (컴팩트 1줄 세그먼트) — 헤더 아래 컨트롤바 공용 ──
+  // ── 출력 방식 토글 — 문제 생성 인테이크와 동일한 말풍선 칩 스타일 ──
   const restoredCredits = CREDIT_COSTS.PASSAGE_RESTORATION;
   const outputModeOptions = [
     {
@@ -397,58 +409,40 @@ export function UploadPanel({
       ),
     },
   ];
-  const controlRowClass =
-    "flex shrink-0 items-center gap-3 border-b border-slate-100 px-4 py-2.5";
-  const controlLabelClass =
-    "w-[64px] shrink-0 text-[11px] font-bold text-slate-600";
   const outputModeToggle = onOutputModeChange ? (
-    <div className="flex min-w-0 items-center gap-3">
-      <span className={controlLabelClass}>출력 방식</span>
-      <div className="inline-flex h-9 items-center rounded-lg border border-slate-200 bg-slate-50 p-0.5">
-        {outputModeOptions.map((opt) => {
-          const active = selectedOutput === opt.v;
-          return (
-            <button
-              key={opt.v}
-              type="button"
-              onClick={() => onOutputModeChange(opt.v)}
-              disabled={startBusy}
-              aria-pressed={active}
+    <div className="flex shrink-0 items-center gap-1">
+      {outputModeOptions.map((opt) => {
+        const active = selectedOutput === opt.v;
+        return (
+          <button
+            key={opt.v}
+            type="button"
+            onClick={() => onOutputModeChange(opt.v)}
+            disabled={startBusy}
+            aria-pressed={active}
+            className={
+              "inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
+              (active
+                ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
+                : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")
+            }
+          >
+            {opt.label}
+            <span
               className={
-                "inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-[11.5px] font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
+                "rounded px-1 py-0.5 text-[9.5px] font-bold " +
                 (active
-                  ? "bg-white text-blue-700 shadow-sm ring-1 ring-blue-100"
-                  : "cursor-pointer text-slate-500 hover:text-slate-700")
+                  ? opt.v === "restored"
+                    ? "bg-blue-100 text-blue-700"
+                    : "bg-slate-100 text-slate-500"
+                  : "bg-slate-100 text-slate-400")
               }
             >
-              <span
-                className={
-                  "inline-flex size-3 shrink-0 items-center justify-center rounded-full border " +
-                  (active ? "border-blue-600" : "border-slate-300")
-                }
-                aria-hidden="true"
-              >
-                {active ? (
-                  <span className="size-1.5 rounded-full bg-blue-600" />
-                ) : null}
-              </span>
-              {opt.label}
-              <span
-                className={
-                  "rounded px-1 py-0.5 text-[9.5px] font-bold " +
-                  (active
-                    ? opt.v === "restored"
-                      ? "bg-blue-100 text-blue-700"
-                      : "bg-slate-100 text-slate-500"
-                    : "bg-slate-100 text-slate-400")
-                }
-              >
-                {opt.badge}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+              {opt.badge}
+            </span>
+          </button>
+        );
+      })}
     </div>
   ) : null;
 
@@ -528,19 +522,18 @@ export function UploadPanel({
     )
   ) : null;
 
+  // 문제 생성 인테이크(IntakeSurface)의 탭과 동일한 스타일.
   const inputTabClass = (active: boolean) =>
-    "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+    "inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
     (active
       ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
-      : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600");
+      : "cursor-pointer border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600");
 
   return (
     <section className="flex min-h-0 flex-col overflow-hidden">
-      {/* ── 입력 방식 탭: 직접 입력 · 이미지/PDF ─────────────────────── */}
-      <div className={controlRowClass}>
-        <span className={controlLabelClass}>입력 방식</span>
-        <div className="flex min-w-0 items-center gap-1.5">
-          <div className="relative shrink-0">
+      {/* ── 입력 방식 탭(문제 생성 인테이크와 동일): 직접 입력 · 파일업로드 ── */}
+      <div className="flex h-11 shrink-0 items-center gap-1.5 overflow-x-auto border-b border-slate-100 px-3">
+        <div className="relative shrink-0">
           <button
             type="button"
             onClick={() => onInputModeChange("text")}
@@ -604,13 +597,26 @@ export function UploadPanel({
             className={inputTabClass(inputMode === "file")}
           >
             <ImageUp className="size-3.5" aria-hidden="true" />
-            이미지·PDF
+            파일업로드
           </button>
-        </div>
       </div>
 
+      {/* 출력 방식 — 위 입력 탭에서 말풍선처럼 뻗어나온 하위 선택임을 드러낸다
+          (직접 입력/파일업로드 > 그대로 추출·AI 복원의 계층감). 꼬리는 현재
+          활성 탭 중앙 아래를 가리킨다. */}
       {outputModeToggle ? (
-        <div className={controlRowClass}>{outputModeToggle}</div>
+        <div className="flex items-center gap-3 border-b border-slate-100 px-3 pb-2 pt-2">
+          <div className="relative w-fit rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 shadow-sm">
+            <span
+              aria-hidden="true"
+              className={
+                "absolute -top-[6px] z-10 h-3 w-3 -translate-x-1/2 rotate-45 rounded-[2px] border-l border-t border-blue-200 bg-blue-50 " +
+                (inputMode === "file" ? "left-[156px]" : "left-12")
+              }
+            />
+            <div className="min-w-0">{outputModeToggle}</div>
+          </div>
+        </div>
       ) : null}
 
       {/* ── 본문 ─────────────────────────────────────────────────── */}
@@ -661,6 +667,7 @@ export function UploadPanel({
               <div className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 p-3.5 lg:border-b-0">
                 {fileTutorialPopup}
                 <div
+                  ref={uploadZoneRef}
                   className={
                     "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors " +
                     (dragActive

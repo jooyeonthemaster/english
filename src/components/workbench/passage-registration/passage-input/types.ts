@@ -26,6 +26,12 @@ export interface PassageInputRow {
   preRestoreAnnotations: Annotation[] | null;
   /** The extraction M1 draft this row was loaded from (자료 관리 → 불러오기). */
   sourceDraftId: string | null;
+  /**
+   * The saved Passage this row was loaded from (내 지문함 → 워크스페이스). When set,
+   * analysis UPDATES that existing Passage instead of creating a new one — the
+   * 내 지문함 카드와 1:1 로 묶여 중복 생성을 막는다.
+   */
+  passageId: string | null;
   /** Source filename label carried from the draft's job (passes into metadata). */
   source: string | null;
   /** Collapsed in the stack — the editor is lazily mounted only when expanded. */
@@ -59,6 +65,7 @@ export function makeEmptyRow(content = ""): PassageInputRow {
     preRestoreContent: null,
     preRestoreAnnotations: null,
     sourceDraftId: null,
+    passageId: null,
     source: null,
     collapsed: false,
     editorSeed: 0,
@@ -82,18 +89,45 @@ export function makeRowFromDraft(args: {
     preRestoreContent: null,
     preRestoreAnnotations: null,
     sourceDraftId: args.sourceDraftId,
+    passageId: null,
     source: args.source,
     collapsed: args.collapsed ?? true,
     editorSeed: 0,
   };
 }
 
-/** A blank row the teacher hasn't touched — safe to drop when loading drafts. */
+/** Build a row from a saved Passage loaded via 내 지문함 → 워크스페이스. */
+export function makeRowFromSavedPassage(args: {
+  passageId: string;
+  title: string;
+  content: string;
+  annotations?: Annotation[];
+  source?: string | null;
+  collapsed?: boolean;
+}): PassageInputRow {
+  return {
+    localId: newRowId(),
+    title: args.title,
+    content: args.content,
+    annotations: args.annotations ?? [],
+    restoration: null,
+    preRestoreContent: null,
+    preRestoreAnnotations: null,
+    sourceDraftId: null,
+    passageId: args.passageId,
+    source: args.source ?? null,
+    collapsed: args.collapsed ?? true,
+    editorSeed: 0,
+  };
+}
+
+/** A blank row the teacher hasn't touched — safe to drop when loading. */
 export function isPristineEmptyRow(row: PassageInputRow): boolean {
   return (
     row.content.trim().length === 0 &&
     row.title.trim().length === 0 &&
     row.annotations.length === 0 &&
-    row.sourceDraftId === null
+    row.sourceDraftId === null &&
+    row.passageId === null
   );
 }

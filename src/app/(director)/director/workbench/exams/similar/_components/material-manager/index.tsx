@@ -269,9 +269,12 @@ export function ExtractionManageClient({
   // ─── Job row (추출 작업 목록) collapse + resize state ───
   const JOB_ROW_COLLAPSE_KEY = "smoat:extraction-manage:job-row:collapsed";
   const JOB_ROW_HEIGHT_KEY = "smoat:extraction-manage:job-row:height";
-  const JOB_ROW_MIN = 40;
-  const JOB_ROW_MAX = 320;
-  const JOB_ROW_DEFAULT = 96;
+  // 자료 카드(JobCard compact)가 A4 썸네일 + 제목·날짜까지 한눈에 보이려면
+  // ~180px 가 필요하다. 최소도 그만큼 올려 두면, 예전 96px 로 저장돼 있던
+  // 사용자도 읽기 값을 [MIN,MAX] 로 클램프할 때 자동으로 따라 올라간다.
+  const JOB_ROW_MIN = 192;
+  const JOB_ROW_MAX = 380;
+  const JOB_ROW_DEFAULT = 208;
   const [jobRowCollapsed, setJobRowCollapsed] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     try {

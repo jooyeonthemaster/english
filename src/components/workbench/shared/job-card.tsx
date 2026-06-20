@@ -191,10 +191,10 @@ export function JobCard({
     <CardDetailIconButton
       className={
         variant === "compact"
-          ? "size-5 rounded shadow-none"
+          ? "size-6 rounded shadow-none"
           : "size-6 rounded-md shadow-none"
       }
-      iconClassName={variant === "compact" ? "size-2.5" : "size-3"}
+      iconClassName={variant === "compact" ? "size-3" : "size-3"}
       onClick={(e) => {
         e.stopPropagation();
         onClick();
@@ -243,7 +243,7 @@ export function JobCard({
       title={label}
       className={
         "group relative flex shrink-0 flex-col overflow-hidden rounded-lg border bg-white motion-safe:transition-all motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
-        (variant === "compact" ? "w-[78px] " : "w-[150px] ") +
+        (variant === "compact" ? "w-[120px] " : "w-[150px] ") +
         (selectionMode
           ? "cursor-pointer "
           : canDrag
@@ -257,7 +257,7 @@ export function JobCard({
       <div
         className={
           "relative aspect-[210/297] shrink-0 self-center overflow-hidden bg-white " +
-          (variant === "compact" ? "w-[58px]" : "w-[150px]")
+          (variant === "compact" ? "w-[96px]" : "w-[150px]")
         }
       >
         {thumbnailUrl ? (
@@ -271,7 +271,7 @@ export function JobCard({
           />
         ) : (
           <div className="flex size-full items-center justify-center bg-slate-50 text-slate-300">
-            <Icon className="size-7" aria-hidden="true" />
+            <Icon className="size-8" aria-hidden="true" />
           </div>
         )}
         {onToggleCheck ? (
@@ -309,7 +309,7 @@ export function JobCard({
             className={
               "rounded-full bg-slate-900/75 font-bold text-white shadow-sm " +
               (variant === "compact"
-                ? "px-1 py-0 text-[9px]"
+                ? "px-1.5 py-0.5 text-[10.5px]"
                 : "px-1.5 py-0.5 text-[10.5px]")
             }
           >
@@ -351,7 +351,7 @@ export function JobCard({
       </div>
       <div
         className={
-          "min-w-0 " + (variant === "compact" ? "px-1 py-0.5" : "px-2 py-1.5")
+          "min-w-0 " + (variant === "compact" ? "px-1.5 py-1" : "px-2 py-1.5")
         }
       >
         <div className="flex min-w-0 items-start gap-0.5">
@@ -379,7 +379,7 @@ export function JobCard({
             <h4
               className={
                 "min-w-0 flex-1 truncate font-bold text-slate-900 " +
-                (variant === "compact" ? "text-[10.5px]" : "text-[13px]")
+                (variant === "compact" ? "text-[12px]" : "text-[13px]")
               }
             >
               {label}
@@ -393,11 +393,11 @@ export function JobCard({
                 setDraft(label);
                 setEditing(true);
               }}
-              className="-mr-0.5 inline-flex size-4 shrink-0 cursor-pointer items-center justify-center rounded text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 focus-visible:bg-slate-100 focus-visible:text-slate-700"
+              className="-mr-0.5 inline-flex size-5 shrink-0 cursor-pointer items-center justify-center rounded text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 focus-visible:bg-slate-100 focus-visible:text-slate-700"
               aria-label="작업 이름 편집"
               title="이름 편집"
             >
-              <Pencil className="size-2.5" />
+              <Pencil className="size-3" />
             </button>
           ) : null}
           {showDelete ? (
@@ -432,14 +432,14 @@ export function JobCard({
               className={
                 "inline-flex min-w-0 flex-1 items-center gap-0.5 rounded bg-slate-50 font-medium text-slate-500 " +
                 (variant === "compact"
-                  ? "px-1 py-0 text-[9px]"
+                  ? "px-1.5 py-0.5 text-[10px]"
                   : "px-1.5 py-0.5 text-[10px]")
               }
             >
               <CalendarClock
                 className={
                   variant === "compact"
-                    ? "size-2.5 shrink-0"
+                    ? "size-3 shrink-0"
                     : "size-3 shrink-0"
                 }
                 aria-hidden="true"

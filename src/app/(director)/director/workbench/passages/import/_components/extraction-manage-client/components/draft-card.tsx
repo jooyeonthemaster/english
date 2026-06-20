@@ -20,6 +20,7 @@ import { isDraftAnalysisComplete } from "../utils/analysis-status";
 import { getDraftDisplayTitle } from "../utils/title";
 import { RestorationBadge } from "./restoration-badge";
 import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
+import { JobReviewToggleButton } from "./job-review-toggle-button";
 import { DragHandle } from "@/components/ui/drag-handle";
 import {
   clearCardTextSelection,
@@ -73,6 +74,11 @@ interface DraftCardProps {
    *  "지문 전체 보기" button next to the primary action. Used by the 학습지 생성
    *  embed where the primary action picks the draft into the editor. */
   onOpenDetail?: () => void;
+  /** Optional 검수완료 토글. 둘 다 주어지면 카드 푸터에 "검수완료" 버튼이
+   *  가로를 채우며 들어가고, 상세보기 주 액션은 정사각 아이콘으로 줄어든다.
+   *  자료 관리/검수 패널의 per-draft promote/unpromote 핸들러를 그대로 쓴다. */
+  onPromote?: (draft: M1PassageDraftWithJob) => Promise<void>;
+  onUnpromote?: (draft: M1PassageDraftWithJob) => Promise<void>;
 }
 
 export function DraftCard({
@@ -89,7 +95,10 @@ export function DraftCard({
   statusBadgeMode = "review",
   detailAction,
   onOpenDetail,
+  onPromote,
+  onUnpromote,
 }: DraftCardProps) {
+  const hasReviewToggle = Boolean(onPromote && onUnpromote);
   const dragRef = useRef<HTMLDivElement>(null);
   const dragHandleRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -465,7 +474,34 @@ export function DraftCard({
       <p className="line-clamp-2 text-[11px] leading-snug text-slate-600">
         {preview || "추출된 본문이 비어있습니다."}
       </p>
-      <div className="mt-auto flex flex-wrap items-center justify-end gap-1.5 pt-1">
+      <div className="mt-auto flex items-center gap-1.5 pt-1">
+        {/* 검수완료 버튼이 있으면 가로를 채우고, 상세보기 주 액션은 정사각
+            아이콘으로 줄인다. 없으면 기존대로 가져오기/상세보기가 가로를 채운다. */}
+        {hasReviewToggle ? (
+          <JobReviewToggleButton
+            drafts={[draft]}
+            onPromote={onPromote!}
+            onUnpromote={onUnpromote!}
+          />
+        ) : null}
+        <CardDetailIconButton
+          icon={detailAction?.icon ?? Maximize2}
+          title={detailAction?.label ?? "상세보기"}
+          aria-label={detailAction?.label ?? "상세보기"}
+          label={
+            hasReviewToggle ? undefined : detailAction ? "불러오기" : undefined
+          }
+          className={
+            hasReviewToggle
+              ? "size-7 shrink-0 rounded-md"
+              : "h-7 w-auto flex-1 rounded-md text-[11.5px]"
+          }
+          iconClassName="size-3.5"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClick();
+          }}
+        />
         {onOpenDetail ? (
           <CardDetailIconButton
             icon={Maximize2}
@@ -479,17 +515,6 @@ export function DraftCard({
             }}
           />
         ) : null}
-        <CardDetailIconButton
-          icon={detailAction?.icon ?? Maximize2}
-          title={detailAction?.label ?? "상세보기"}
-          aria-label={detailAction?.label ?? "상세보기"}
-          className="size-7 rounded-md"
-          iconClassName="size-3.5"
-          onClick={(e) => {
-            e.stopPropagation();
-            onClick();
-          }}
-        />
       </div>
     </div>
   );

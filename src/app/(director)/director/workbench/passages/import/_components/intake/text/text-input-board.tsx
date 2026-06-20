@@ -14,6 +14,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
@@ -31,6 +32,7 @@ import {
 } from "lucide-react";
 
 import { MAX_PAGES_PER_JOB } from "@/lib/extraction/constants";
+import { triggerHintGlow, triggerHintGlowWithin } from "@/lib/hint-glow";
 import {
   GENERATE_TOUR_CLEAR_SAMPLE_TEXT_EVENT,
   GENERATE_TOUR_FILL_SAMPLE_TEXT_EVENT,
@@ -100,8 +102,8 @@ export function TextInputBoard({
   reviewLabel = "추출될 지문",
   emptyTitle = "텍스트를 붙여넣고 지문을 쌓아요",
   guideStartLabel = "추출 시작",
-  startLabel = "텍스트 추출 시작",
-  restoredStartLabel = "복원하여 추출 시작",
+  startLabel = "다음으로 (내 지문함)",
+  restoredStartLabel = "다음으로 (내 지문함)",
   busyLabel = "작업 중",
   suppressTutorial = false,
 }: TextInputBoardProps) {
@@ -114,6 +116,10 @@ export function TextInputBoard({
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dropIdx, setDropIdx] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  // 비활 버튼('지문 추가'·'지문 등록하고 선택') 클릭 시 글로우할 대상:
+  // 입력칸(본문 미입력) / 누적 목록(한도 초과 시 줄이라고).
+  const inputBoxRef = useRef<HTMLDivElement>(null);
+  const reviewListRef = useRef<HTMLDivElement>(null);
   const [textTutorialClosed, setTextTutorialClosed] = useState(false);
   const [textTutorialHidden, setTextTutorialHidden] = useState(() => {
     if (typeof window === "undefined") return false;
@@ -294,6 +300,17 @@ export function TextInputBoard({
   }, []);
 
   const handleStart = useCallback(async () => {
+    if (locked) return;
+    if (effectiveCount === 0) {
+      // 추출할 지문 없음 → 입력칸을 글로우해 "본문을 먼저 입력하세요" 유도.
+      triggerHintGlow(inputBoxRef.current);
+      return;
+    }
+    if (overMax) {
+      // 한도 초과 → 누적 목록 카드들을 글로우해 "지문을 줄이세요" 유도.
+      triggerHintGlowWithin(reviewListRef.current, ":scope > div");
+      return;
+    }
     const all = [...passages];
     if (draftValid)
       all.push({
@@ -318,7 +335,16 @@ export function TextInputBoard({
     } finally {
       setSubmitting(false);
     }
-  }, [passages, draftValid, draftTitle, draftText, onStart]);
+  }, [
+    locked,
+    effectiveCount,
+    overMax,
+    passages,
+    draftValid,
+    draftTitle,
+    draftText,
+    onStart,
+  ]);
 
   const placeholder = useMemo(
     () =>
@@ -354,7 +380,10 @@ export function TextInputBoard({
         {/* ── 좌: 입력창 (제목 + 본문 + 지문 추가) ───────────────────────── */}
         <div className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 p-3.5 lg:border-b-0">
           {textTutorialPopup}
-          <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-50/70 p-3">
+          <div
+            ref={inputBoxRef}
+            className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-50/70 p-3"
+          >
             <div className="mb-2 flex items-center gap-2">
               <input
                 value={draftTitle}
@@ -394,15 +423,28 @@ export function TextInputBoard({
             />
             <button
               type="button"
-              onClick={addDraft}
-              disabled={!draftValid || locked || overMax}
+              // aria-disabled — 비활처럼 보이되 클릭은 살려, 막힌 이유에 맞는 영역을
+              // 글로우해 행동을 유도한다(본문 미입력→입력칸 / 한도 초과→누적 목록).
+              onClick={() => {
+                if (locked) return;
+                if (overMax) {
+                  triggerHintGlowWithin(reviewListRef.current, ":scope > div");
+                  return;
+                }
+                if (!draftValid) {
+                  triggerHintGlow(inputBoxRef.current);
+                  return;
+                }
+                addDraft();
+              }}
+              aria-disabled={!draftValid || locked || overMax}
               data-generate-tour="paste-add-button"
               title={
                 draftValid
                   ? "이 지문을 오른쪽 목록에 추가"
                   : `최소 ${TEXT_EXTRACTION_MIN_LENGTH}자 이상 입력하세요`
               }
-              className="mt-2 inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-blue-500 bg-white px-4 text-[13px] font-extrabold text-blue-700 transition-colors hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
+              className="mt-2 inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md border border-blue-500 bg-white px-4 text-[13px] font-extrabold text-blue-700 transition-colors hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 aria-disabled:cursor-not-allowed aria-disabled:border-slate-200 aria-disabled:text-slate-300 aria-disabled:hover:bg-white"
             >
               <Plus className="size-4" aria-hidden="true" />
               지문 추가
@@ -486,7 +528,7 @@ export function TextInputBoard({
                 </ol>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div ref={reviewListRef} className="space-y-2">
                 {passages.map((p, idx) => {
                   const isOpen = !collapsed.has(p.id);
                   const isDragging = dragIdx === idx;
@@ -727,7 +769,9 @@ function StartButton({
     <button
       type="button"
       onClick={onClick}
-      disabled={disabled}
+      // aria-disabled — 비활처럼 보이되 클릭은 살려, onClick(handleStart)이 막힌
+      // 사유에 맞는 영역을 글로우해 행동을 유도한다.
+      aria-disabled={disabled}
       data-generate-tour="paste-register-button"
       className={
         "inline-flex h-12 w-full items-center justify-center rounded-lg border text-[14px] font-extrabold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +

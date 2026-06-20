@@ -327,6 +327,37 @@
 .passage-added-glow {
   animation: passage-added-glow 1.5s ease-out;
 }
+/* 클릭 유도 힌트 — 비활성 버튼을 눌렀을 때 "이걸 먼저 하세요" 대상 요소를
+   파란색으로 두 번 글로우시켜 다음 행동을 유도한다. (lib/hint-glow.ts 가 부여) */
+@keyframes smoat-hint-glow {
+  0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+  12% {
+    box-shadow:
+      0 0 0 3px rgba(37, 99, 235, 0.55),
+      0 0 18px 5px rgba(37, 99, 235, 0.35);
+    background-color: rgba(191, 219, 254, 0.7);
+  }
+  38% { box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.15); }
+  60% {
+    box-shadow:
+      0 0 0 3px rgba(37, 99, 235, 0.55),
+      0 0 18px 5px rgba(37, 99, 235, 0.35);
+    background-color: rgba(191, 219, 254, 0.7);
+  }
+  100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+}
+.smoat-hint-glow {
+  /* 글로우가 이웃 카드 위로 떠 보이도록 (정적 배치 카드도 안전) */
+  position: relative;
+  z-index: 1;
+  animation: smoat-hint-glow 1.5s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .smoat-hint-glow {
+    animation: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.45);
+  }
+}
 /* 크레딧 뱃지 변화 강조: 폰트가 살짝 커졌다가 원래대로, 색이 잠깐 변했다가 복귀 */
 @keyframes credit-flash-down {
   0% { transform: scale(1); }

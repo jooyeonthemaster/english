@@ -39,6 +39,7 @@ interface SaveDraftInput {
   paperSize: PaperSize;
   columns: 1 | 2;
   density: Density;
+  forceTwoPerPage: boolean;
   showAnswerSpace: boolean;
   showPassageTitle: boolean;
   showQuestionMeta: boolean;
@@ -136,6 +137,7 @@ export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Prom
       paperSize: input.paperSize,
       columns: input.columns,
       density: input.density,
+      forceTwoPerPage: input.forceTwoPerPage,
       showAnswerSpace: input.showAnswerSpace,
       showPassageTitle: input.showPassageTitle,
       showQuestionMeta: input.showQuestionMeta,

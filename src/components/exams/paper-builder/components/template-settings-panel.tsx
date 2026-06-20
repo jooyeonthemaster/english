@@ -43,6 +43,8 @@ interface TemplateSettingsPanelProps {
   setColumns: (columns: 1 | 2) => void;
   density: Density;
   setDensity: (density: Density) => void;
+  forceTwoPerPage: boolean;
+  setForceTwoPerPage: (value: boolean) => void;
   passageStyle: PassageStyle;
   setPassageStyle: (style: PassageStyle) => void;
   showPassageTitle: boolean;
@@ -100,6 +102,8 @@ export function TemplateSettingsPanel({
   setColumns,
   density,
   setDensity,
+  forceTwoPerPage,
+  setForceTwoPerPage,
   passageStyle,
   setPassageStyle,
   showPassageTitle,
@@ -160,6 +164,7 @@ export function TemplateSettingsPanel({
       paperSize,
       columns,
       density,
+      forceTwoPerPage,
       passageStyle,
       showPassageTitle,
       showQuestionMeta,
@@ -175,6 +180,7 @@ export function TemplateSettingsPanel({
     setPaperSize(settings.paperSize);
     setColumns(settings.columns);
     setDensity(settings.density);
+    setForceTwoPerPage(settings.forceTwoPerPage);
     setPassageStyle(settings.passageStyle);
     setShowPassageTitle(settings.showPassageTitle);
     setShowQuestionMeta(settings.showQuestionMeta);
@@ -289,12 +295,13 @@ export function TemplateSettingsPanel({
         </div>
       )}
 
-      <div className={cn("grid grid-cols-3", sidebar ? "gap-2" : "gap-3")}>
+      <div className={cn(sidebar ? "space-y-2" : "space-y-3")}>
         <div>
           <p className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">용지 크기</p>
           <div className={cn("grid grid-cols-2", sidebar ? "gap-1" : "gap-1.5")}>
             {(["A4", "B4"] as const).map((value) => (
               <button
+                type="button"
                 key={value}
                 onClick={() => {
                   setPaperSize(value);
@@ -320,16 +327,45 @@ export function TemplateSettingsPanel({
           <div className={cn("grid grid-cols-2", sidebar ? "gap-1" : "gap-1.5")}>
             {([1, 2] as const).map((value) => (
               <button
+                type="button"
                 key={value}
-                onClick={() => { setColumns(value); markDirty(); }}
+                onClick={() => {
+                  setColumns(value);
+                  setForceTwoPerPage(false);
+                  markDirty();
+                }}
                 className={cn(
                   "flex items-center justify-center gap-1 rounded-md border text-[12px] font-bold",
                   sidebar ? "h-8" : "h-9",
-                  columns === value ? "border-blue-300 bg-blue-50 text-blue-700" : "border-slate-200 text-slate-500",
+                  !forceTwoPerPage && columns === value
+                    ? "border-blue-300 bg-blue-50 text-blue-700"
+                    : "border-slate-200 text-slate-500",
                 )}
               >
                 <Columns2 className="h-3.5 w-3.5" />
                 {value}단
+              </button>
+            ))}
+            {([1, 2] as const).map((value) => (
+              <button
+                type="button"
+                key={`per-page-${value}`}
+                onClick={() => {
+                  setColumns(value);
+                  setForceTwoPerPage(true);
+                  markDirty();
+                }}
+                className={cn(
+                  "flex items-center justify-center gap-1 rounded-md border text-[12px] font-bold",
+                  sidebar ? "h-8" : "h-9",
+                  forceTwoPerPage && columns === value
+                    ? "border-blue-300 bg-blue-50 text-blue-700"
+                    : "border-slate-200 text-slate-500",
+                )}
+                title={`쪽당 ${value}문제씩 강제 배치`}
+              >
+                <Columns2 className="h-3.5 w-3.5" />
+                쪽당 {value}문제
               </button>
             ))}
           </div>
@@ -342,6 +378,7 @@ export function TemplateSettingsPanel({
               ["compact", "압축"],
             ] as const).map(([value, label]) => (
               <button
+                type="button"
                 key={value}
                 onClick={() => { setDensity(value); markDirty(); }}
                 className={cn(

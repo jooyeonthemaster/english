@@ -39,6 +39,10 @@ interface JobReviewModalProps {
     draftIds: Set<string>,
     clearSelection: () => void,
   ) => Promise<void> | void;
+  /** Per-draft 검수완료/검수취소 토글 핸들러 — 카드 푸터의 "검수완료" 버튼에
+   *  쓰인다. 둘 다 주어질 때만 카드에 버튼이 렌더된다. */
+  onPromoteDraft?: (draft: M1PassageDraftWithJob) => Promise<void>;
+  onUnpromoteDraft?: (draft: M1PassageDraftWithJob) => Promise<void>;
   onDeleteDrafts?: (
     draftIds: Set<string>,
     clearSelection: () => void,
@@ -76,6 +80,8 @@ export function JobReviewModal({
   onAddToFolder,
   onMoveToFolder,
   onPromoteDrafts,
+  onPromoteDraft,
+  onUnpromoteDraft,
   onDeleteDrafts,
   bulkActionRunning = null,
   onRenameDraft,
@@ -362,6 +368,18 @@ export function JobReviewModal({
   const anyBulkRunning = bulkActionRunning !== null;
   const isPromoting = bulkActionRunning === "promote";
   const isDeleting = bulkActionRunning === "delete";
+  const [reviewToggleBusy, setReviewToggleBusy] = useState(false);
+
+  // 선택된 자료의 검수 상태 — 카드의 검수완료 버튼과 같은 토글 매커니즘.
+  // 하나라도 미검수면 누르면 검수완료, 전부 검수완료면 누르면 검수취소.
+  const checkedDrafts = useMemo(
+    () => orderedDrafts.filter((d) => modalCheckedIds.has(d.id)),
+    [orderedDrafts, modalCheckedIds],
+  );
+  const pendingReviewCount = checkedDrafts.filter(
+    (d) => d.reviewStatus !== "COMMITTED",
+  ).length;
+  const allCheckedReviewed = hasModalSelection && pendingReviewCount === 0;
 
   useEffect(() => {
     if (!selectAllCheckboxRef.current) return;
@@ -413,6 +431,22 @@ export function JobReviewModal({
   async function handlePromote() {
     if (!onPromoteDrafts || modalCheckedIds.size === 0) return;
     await onPromoteDrafts(new Set(modalCheckedIds), clearModalChecks);
+  }
+
+  async function handleReviewToggle() {
+    if (!hasModalSelection) return;
+    if (allCheckedReviewed) {
+      if (!onUnpromoteDraft) return;
+      setReviewToggleBusy(true);
+      try {
+        for (const draft of checkedDrafts) await onUnpromoteDraft(draft);
+        clearModalChecks();
+      } finally {
+        setReviewToggleBusy(false);
+      }
+    } else {
+      await handlePromote();
+    }
   }
 
   async function handleDelete() {
@@ -520,13 +554,27 @@ export function JobReviewModal({
               {onPromoteDrafts ? (
                 <button
                   type="button"
-                  onClick={() => void handlePromote()}
-                  disabled={anyBulkRunning || !hasModalSelection}
-                  title="검수완료"
+                  onClick={() => void handleReviewToggle()}
+                  disabled={
+                    anyBulkRunning || reviewToggleBusy || !hasModalSelection
+                  }
+                  aria-pressed={allCheckedReviewed}
+                  title={
+                    allCheckedReviewed
+                      ? "검수완료 — 누르면 검수를 취소합니다"
+                      : pendingReviewCount > 0
+                        ? `미검수 ${pendingReviewCount}개 검수완료`
+                        : "검수완료"
+                  }
                   aria-label="검수완료"
-                  className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md bg-emerald-600 text-white shadow-sm transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  className={
+                    "flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border bg-white shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
+                    (allCheckedReviewed
+                      ? "border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+                      : "border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
+                  }
                 >
-                  {isPromoting ? (
+                  {isPromoting || reviewToggleBusy ? (
                     <Loader2
                       className="h-3.5 w-3.5 animate-spin"
                       aria-hidden="true"
@@ -609,6 +657,8 @@ export function JobReviewModal({
                     onTitleChange={onRenameDraft}
                     statusBadgeMode={statusBadgeMode}
                     detailAction={detailAction}
+                    onPromote={onPromoteDraft}
+                    onUnpromote={onUnpromoteDraft}
                   />
                 ))}
               </DragSelect>

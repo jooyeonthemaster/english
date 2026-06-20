@@ -212,8 +212,8 @@ export function MultiPassagePaste({
           guideStartLabel={
             outputMode === "restored" ? "복원 후 등록" : "등록하고 선택"
           }
-          startLabel="지문 등록하고 선택"
-          restoredStartLabel="복원하여 등록하고 선택"
+          startLabel="다음으로 (내 지문함)"
+          restoredStartLabel="다음으로 (내 지문함)"
           busyLabel={restoring ? "복원 중" : "등록 중"}
         />
       </div>

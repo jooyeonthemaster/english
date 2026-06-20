@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
   AlertTriangle,
@@ -8,11 +8,15 @@ import {
   ChevronUp,
   HelpCircle,
   Loader2,
+  Minus,
+  Plus,
   RotateCcw,
   Scissors,
+  Sparkles,
   Undo2,
   X,
 } from "lucide-react";
+import type { Editor } from "@tiptap/react";
 import { Button } from "@/components/ui/button";
 import {
   PassageAnnotationEditor,
@@ -21,15 +25,36 @@ import {
 import { detectProblemFormArtifacts } from "@/lib/passage-source";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { usePersistedState } from "@/hooks/use-persisted-state";
 import { countWords } from "@/app/(director)/director/workbench/generate/generate-page-types";
 import { splitPastedPassages } from "@/app/(director)/director/workbench/generate/intake/smart-split";
 import {
   RestoreIntroDialog,
   readRestoreIntroDismissed,
 } from "@/app/(director)/director/workbench/generate/intake/restore-intro-dialog";
+import {
+  ParaphrasePreviewPanel,
+  PrependPreviewPanel,
+} from "@/app/(director)/director/workbench/generate/workspace/transform-panels";
+import {
+  VariantMenuButton,
+  WholePassageVariantPreviewPanel,
+  type VariantAction,
+} from "@/app/(director)/director/workbench/generate/workspace/whole-passage-variant-controls";
+import {
+  defaultVariantTitle,
+  variantModeLabel,
+  type VariantDirection,
+  type WholePassageTransformMode,
+} from "@/lib/passage-transform/schema";
 import { formatExtractedTextForDisplay } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/display-text";
 import type { RestorationResult } from "@/app/(director)/director/workbench/generate/intake/passage-row";
 import { MIN_CONTENT_CHARS, type PassageInputRow as RowData } from "./types";
+import { requestPassageTransform } from "./passage-transform-request";
+
+/** 최소 선택 길이(문장 변형) / 최소 변형 가능 본문 길이(API 요건). */
+const MIN_PARAPHRASE_CHARS = 12;
+const MIN_TRANSFORM_CHARS = 20;
 
 /** Korean labels for the restoration change `type` codes shown as a badge. */
 const CHANGE_TYPE_LABEL_KO: Record<string, string> = {
@@ -85,6 +110,21 @@ interface PassageInputRowProps {
    * Lets reuse contexts (웹툰 생성) use a shorter editor without a flex-squeeze.
    */
   editorHeightPx?: number;
+  /** 막 추가/불러온 행이면 파란 글로우를 한 번 반짝이고 사라진다. */
+  justAdded?: boolean;
+  /** 글로우 애니메이션이 끝났을 때 호출 — 부모가 표시 상태를 해제한다. */
+  onGlowEnd?: () => void;
+  /**
+   * 변형 지문 생성 → 새 Passage 로 저장하고 새 행으로 추가한다(부모가 처리).
+   * 주어지지 않으면 '변형 지문 생성' 버튼을 숨긴다.
+   */
+  onAddVariant?: (args: {
+    sourcePassageId: string | null;
+    title: string;
+    content: string;
+    mode: WholePassageTransformMode;
+    direction?: VariantDirection;
+  }) => Promise<boolean>;
 }
 
 /**
@@ -105,11 +145,21 @@ export function PassageInputRow({
   onSplit,
   grow,
   editorHeightPx,
+  justAdded,
+  onGlowEnd,
+  onAddVariant,
 }: PassageInputRowProps) {
   const [restoring, setRestoring] = useState(false);
   const [introOpen, setIntroOpen] = useState(false);
 
   const collapsed = row.collapsed;
+  // 한 번이라도 펼쳐진 적이 있으면 본문을 DOM 에 남겨 둔다 — 닫힐 때도 높이가
+  // 부드럽게 줄어드는 애니메이션을 주기 위함이고, 한 번도 안 연 행은 그대로
+  // lazy 하게 둬서 대량 불러오기 비용을 아낀다.
+  const [hasOpened, setHasOpened] = useState(!collapsed);
+  useEffect(() => {
+    if (!collapsed) setHasOpened(true);
+  }, [collapsed]);
   const trimmed = row.content.trim();
   const wordCount = useMemo(() => (trimmed ? countWords(trimmed) : 0), [trimmed]);
   const charCount = trimmed.length;
@@ -211,6 +261,234 @@ export function PassageInputRow({
     });
   };
 
+  // ─── AI 변형 (문제생성 워크스페이스 메커니즘 이식) ───
+  // 마킹(annotations)을 보존하기 위해, 본문 치환은 editorSeed remount 대신 TipTap
+  // 트랜잭션(insertContentAt)으로 부분 적용한다 — 변형 구간 밖 마크는 그대로 유지.
+  const [editor, setEditor] = useState<Editor | null>(null);
+  const [selection, setSelection] = useState<{
+    from: number;
+    to: number;
+    text: string;
+  } | null>(null);
+  const [txBusy, setTxBusy] = useState<
+    "paraphrase" | "prepend" | "variant" | null
+  >(null);
+  const [prependCount, setPrependCount] = usePersistedState<number>(
+    "smoat:generate:prepend-sentence-count",
+    3,
+    (v): v is number => typeof v === "number" && v >= 1 && v <= 5,
+  );
+  const [paraPreview, setParaPreview] = useState<{
+    from: number;
+    to: number;
+    original: string;
+    text: string;
+    note: string;
+  } | null>(null);
+  const [prependPreview, setPrependPreview] = useState<{
+    text: string;
+    note: string;
+  } | null>(null);
+  const [variantPreview, setVariantPreview] = useState<{
+    mode: WholePassageTransformMode;
+    direction?: VariantDirection;
+    label: string;
+    text: string;
+    title: string;
+    summary: string;
+  } | null>(null);
+  const [variantAdding, setVariantAdding] = useState(false);
+  const variantAvoidRef = useRef<string[]>([]);
+
+  const anyPreview = !!paraPreview || !!prependPreview || !!variantPreview;
+  const canTransform = charCount >= MIN_TRANSFORM_CHARS && !busy && !txBusy;
+
+  const handleEditorReady = useCallback((ed: Editor | null) => setEditor(ed), []);
+
+  // 선택 변경 추적 — '문장 변형' 버튼 활성화 + 적용 위치 확보.
+  useEffect(() => {
+    if (!editor) {
+      setSelection(null);
+      return;
+    }
+    const update = () => {
+      const { from, to } = editor.state.selection;
+      const text = editor.state.doc.textBetween(from, to, " ");
+      setSelection(
+        to > from && text.trim().length >= MIN_PARAPHRASE_CHARS
+          ? { from, to, text }
+          : null,
+      );
+    };
+    update();
+    editor.on("selectionUpdate", update);
+    editor.on("transaction", update);
+    return () => {
+      editor.off("selectionUpdate", update);
+      editor.off("transaction", update);
+    };
+  }, [editor]);
+
+  const runParaphrase = useCallback(
+    async (avoidTexts: string[]) => {
+      const ed = editor;
+      if (!ed) return;
+      const { from, to } = ed.state.selection;
+      const text = ed.state.doc.textBetween(from, to, " ");
+      if (to <= from || text.trim().length < MIN_PARAPHRASE_CHARS) {
+        toast.info("본문에서 바꿀 문장을 드래그로 선택하세요.");
+        return;
+      }
+      setTxBusy("paraphrase");
+      try {
+        const r = await requestPassageTransform({
+          mode: "PARAPHRASE",
+          passageText: row.content,
+          selectedText: text,
+          avoidTexts: avoidTexts.length ? avoidTexts : undefined,
+        });
+        setParaPreview({ from, to, original: text, text: r.text, note: r.note });
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "AI 문장 변형에 실패했습니다.",
+        );
+      } finally {
+        setTxBusy(null);
+      }
+    },
+    [editor, row.content],
+  );
+
+  const applyParaphrase = useCallback(() => {
+    const ed = editor;
+    if (!paraPreview || !ed) return;
+    const cur = ed.state.doc.textBetween(paraPreview.from, paraPreview.to, " ");
+    if (cur !== paraPreview.original) {
+      toast.error("본문이 변경돼 변형을 적용할 수 없어요. 문장을 다시 선택하세요.");
+      setParaPreview(null);
+      return;
+    }
+    // insertContentAt 으로 구간만 치환 → 바깥 마크는 자동 보존(ProseMirror 매핑).
+    ed.chain()
+      .focus()
+      .insertContentAt(
+        { from: paraPreview.from, to: paraPreview.to },
+        { type: "text", text: paraPreview.text.replace(/\s+/g, " ").trim() },
+      )
+      .run();
+    setParaPreview(null);
+    setSelection(null);
+  }, [editor, paraPreview]);
+
+  const runPrepend = useCallback(
+    async (avoidTexts: string[]) => {
+      if (row.content.trim().length < MIN_TRANSFORM_CHARS) return;
+      setTxBusy("prepend");
+      try {
+        const r = await requestPassageTransform({
+          mode: "PREPEND",
+          passageText: row.content,
+          sentenceCount: prependCount,
+          avoidTexts: avoidTexts.length ? avoidTexts : undefined,
+        });
+        setPrependPreview({ text: r.text, note: r.note });
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "앞 문단 생성에 실패했습니다.",
+        );
+      } finally {
+        setTxBusy(null);
+      }
+    },
+    [row.content, prependCount],
+  );
+
+  const applyPrepend = useCallback(() => {
+    const ed = editor;
+    if (!prependPreview || !ed) return;
+    // 맨 앞에 새 문단을 끼워 넣는다 — 기존 마크는 뒤로 밀리며 보존된다.
+    ed.chain()
+      .focus()
+      .insertContentAt(0, {
+        type: "paragraph",
+        content: [
+          { type: "text", text: prependPreview.text.replace(/\s+/g, " ").trim() },
+        ],
+      })
+      .run();
+    setPrependPreview(null);
+  }, [editor, prependPreview]);
+
+  const changePrependCount = (d: number) =>
+    setPrependCount(Math.min(5, Math.max(1, prependCount + d)));
+
+  const runVariant = useCallback(
+    async (
+      mode: WholePassageTransformMode,
+      direction: VariantDirection | undefined,
+      avoidTexts: string[],
+    ) => {
+      setTxBusy("variant");
+      try {
+        const r = await requestPassageTransform({
+          mode,
+          passageText: row.content,
+          direction,
+          avoidTexts: avoidTexts.length ? avoidTexts : undefined,
+        });
+        if (!r.text.trim()) throw new Error("변형 결과가 비어 있습니다.");
+        variantAvoidRef.current = [...variantAvoidRef.current, r.text].slice(-5);
+        setVariantPreview((prev) => ({
+          mode,
+          direction,
+          label: variantModeLabel(mode, direction),
+          text: r.text,
+          title:
+            prev?.title?.trim() ||
+            r.title.trim() ||
+            defaultVariantTitle(row.title, mode, direction),
+          summary: r.summary,
+        }));
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "변형 지문 생성에 실패했습니다.",
+        );
+      } finally {
+        setTxBusy(null);
+      }
+    },
+    [row.content, row.title],
+  );
+
+  const handleVariantPick = useCallback(
+    (action: VariantAction) => {
+      variantAvoidRef.current = [];
+      setVariantPreview(null);
+      void runVariant(action.mode, action.direction, []);
+    },
+    [runVariant],
+  );
+
+  const applyVariant = useCallback(async () => {
+    if (!variantPreview || !onAddVariant || variantAdding) return;
+    setVariantAdding(true);
+    try {
+      const ok = await onAddVariant({
+        sourcePassageId: row.passageId,
+        title: variantPreview.title.trim(),
+        content: variantPreview.text,
+        mode: variantPreview.mode,
+        direction: variantPreview.direction,
+      });
+      if (ok) {
+        setVariantPreview(null);
+        variantAvoidRef.current = [];
+      }
+    } finally {
+      setVariantAdding(false);
+    }
+  }, [variantPreview, onAddVariant, variantAdding, row.passageId]);
+
   const preview =
     trimmed.slice(0, 48).replace(/\s+/g, " ") + (trimmed.length > 48 ? "…" : "");
 
@@ -219,9 +497,15 @@ export function PassageInputRow({
 
   return (
     <div
+      onAnimationEnd={(e) => {
+        if (justAdded && e.animationName === "passage-added-glow") {
+          onGlowEnd?.();
+        }
+      }}
       className={
         "rounded-xl border border-slate-200 bg-white shadow-sm" +
-        (fill ? " flex min-h-0 flex-1 flex-col" : "")
+        (fill ? " flex min-h-0 flex-1 flex-col" : "") +
+        (justAdded ? " passage-added-glow" : "")
       }
     >
       {/* Row header — click anywhere on the bar to expand/collapse */}
@@ -346,8 +630,30 @@ export function PassageInputRow({
         )}
       </div>
 
-      {!collapsed && (
-        <div className={"px-3 py-3" + (fill ? " flex min-h-0 flex-1 flex-col" : "")}>
+      {/* 본문 영역 — grid-rows 0fr↔1fr 트릭으로 펼침/접힘을 부드럽게 애니메이션한다.
+          grow(단일 행)일 때는 wrapper 를 flex-1 로 늘려 에디터가 높이를 채운다.
+          grid 레이아웃을 항상 써야 grow→일반 전환(2번째 지문 불러오기) 순간에도
+          1fr→0fr 트랜지션이 끊기지 않는다. */}
+      {hasOpened && (
+        <div
+          className={
+            "grid transition-[grid-template-rows,opacity] duration-300 ease-out " +
+            (collapsed
+              ? "grid-rows-[0fr] opacity-0"
+              : "grid-rows-[1fr] opacity-100") +
+            (fill ? " min-h-0 flex-1" : "")
+          }
+        >
+          <div
+            className={
+              "min-h-0 overflow-hidden" + (fill ? " flex flex-col" : "")
+            }
+          >
+            <div
+              className={
+                "px-3 py-3" + (fill ? " flex min-h-0 flex-1 flex-col" : "")
+              }
+            >
           {/* Title */}
           <input
             value={row.title}
@@ -370,7 +676,93 @@ export function PassageInputRow({
             )}
           </div>
 
-          {/* Annotation editor — marks flow into analysis on 분석 시작 */}
+          {/* ── AI 변형 도구 (문제생성 워크스페이스 메커니즘) ──
+              변형 지문 생성 · 앞 맥락 추가 · (선택 시) AI 문장 변형. */}
+          <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
+            {onAddVariant ? (
+              <VariantMenuButton
+                disabled={!canTransform || anyPreview}
+                busy={txBusy === "variant"}
+                onPick={handleVariantPick}
+              />
+            ) : null}
+            {/* 앞 맥락 추가 + 문장 수 스테퍼 (1~5) */}
+            <div className="flex items-stretch overflow-hidden rounded-md border border-blue-300 bg-white shadow-sm">
+              <button
+                type="button"
+                onClick={() => void runPrepend([])}
+                disabled={!canTransform || anyPreview}
+                title="지문 앞에 자연스럽게 이어지는 앞 문단을 AI가 생성해 맨 앞에 끼워 넣습니다"
+                className="flex items-center gap-1.5 px-2.5 text-[11.5px] font-bold text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {txBusy === "prepend" ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Plus className="h-3.5 w-3.5" />
+                )}
+                앞 맥락 추가
+                <CreditCostChip
+                  amount={CREDIT_COSTS.PASSAGE_TRANSFORM}
+                  className="rounded-sm bg-blue-50 px-1 py-px text-[10px]"
+                />
+              </button>
+              <span className="my-1 w-px shrink-0 bg-blue-200" aria-hidden="true" />
+              <div
+                className="flex shrink-0 items-center gap-0.5 px-1"
+                title="생성할 앞 문단의 문장 수 (1~5)"
+              >
+                <button
+                  type="button"
+                  onClick={() => changePrependCount(-1)}
+                  disabled={busy || prependCount <= 1}
+                  aria-label="앞 문단 문장 수 줄이기"
+                  className="flex h-5 w-5 items-center justify-center rounded-full text-blue-400 transition-colors hover:bg-blue-100/70 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-35"
+                >
+                  <Minus className="h-3 w-3" />
+                </button>
+                <span className="w-[34px] text-center text-[11px] font-bold tabular-nums text-blue-700">
+                  {prependCount}문장
+                </span>
+                <button
+                  type="button"
+                  onClick={() => changePrependCount(1)}
+                  disabled={busy || prependCount >= 5}
+                  aria-label="앞 문단 문장 수 늘리기"
+                  className="flex h-5 w-5 items-center justify-center rounded-full text-blue-400 transition-colors hover:bg-blue-100/70 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-35"
+                >
+                  <Plus className="h-3 w-3" />
+                </button>
+              </div>
+            </div>
+            {/* AI 문장 변형 — 본문에서 문장을 드래그 선택하면 활성화 */}
+            <button
+              type="button"
+              onClick={() => void runParaphrase([])}
+              disabled={!selection || !canTransform || anyPreview}
+              title={
+                selection
+                  ? "선택한 문장을 뜻은 그대로, 표현만 바꿔 재작성합니다"
+                  : "본문에서 바꿀 문장을 드래그로 선택하세요"
+              }
+              className="flex h-7 items-center gap-1.5 rounded-md bg-blue-600 px-2.5 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
+            >
+              {txBusy === "paraphrase" ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Sparkles className="h-3.5 w-3.5" />
+              )}
+              AI 문장 변형
+              <CreditCostChip
+                amount={CREDIT_COSTS.PASSAGE_TRANSFORM}
+                className="rounded-sm bg-white/20 px-1 py-px text-[10px]"
+              />
+            </button>
+          </div>
+
+          {/* Annotation editor — marks flow into analysis on 분석 시작.
+              fill(단일 행)은 높이를 채우고, 그 외에는 실제 텍스트 길이에 맞춰
+              높이가 줄어들도록 height 고정 대신 min/max 만 둔다 (짧은 지문일 때
+              아래 여백이 크게 남던 문제 해결). 길어지면 maxHeight 에서 내부 스크롤. */}
           <div
             className={
               "overflow-hidden rounded-lg border border-slate-200 bg-white" +
@@ -379,7 +771,7 @@ export function PassageInputRow({
             style={
               fill
                 ? { minHeight: editorHeightPx ?? 320 }
-                : { height: editorHeightPx ?? 460 }
+                : { minHeight: 160, maxHeight: editorHeightPx ?? 460 }
             }
           >
             <PassageAnnotationEditor
@@ -388,12 +780,68 @@ export function PassageInputRow({
               onContentChange={handleContentChange}
               annotations={row.annotations}
               onAnnotationsChange={handleAnnotationsChange}
+              onEditorReady={handleEditorReady}
               editable={!busy}
               placeholder={
                 "여기에 영어 지문을 붙여넣으세요...\n\n텍스트를 드래그하면 핵심 어휘·어법·출제 포인트를 마킹할 수 있어요. 빈칸·선지 마커가 섞인 '문제 형태'면 'AI 복원'으로 원문을 복구하세요."
               }
             />
           </div>
+
+          {/* AI 변형 미리보기 패널 (한 번에 하나만) — 문제생성과 동일 UI */}
+          {paraPreview ? (
+            <div className="mt-2">
+              <ParaphrasePreviewPanel
+                original={paraPreview.original}
+                rewritten={paraPreview.text}
+                note={paraPreview.note}
+                busy={txBusy === "paraphrase"}
+                disabled={busy}
+                onApply={applyParaphrase}
+                onRegenerate={() => void runParaphrase([paraPreview.text])}
+                onCancel={() => setParaPreview(null)}
+              />
+            </div>
+          ) : null}
+          {prependPreview ? (
+            <div className="mt-2">
+              <PrependPreviewPanel
+                paragraph={prependPreview.text}
+                firstSentence={trimmed.slice(0, 60)}
+                note={prependPreview.note}
+                busy={txBusy === "prepend"}
+                disabled={busy}
+                onApply={applyPrepend}
+                onRegenerate={() => void runPrepend([prependPreview.text])}
+                onCancel={() => setPrependPreview(null)}
+              />
+            </div>
+          ) : null}
+          {variantPreview ? (
+            <div className="mt-2">
+              <WholePassageVariantPreviewPanel
+                label={variantPreview.label}
+                variantText={variantPreview.text}
+                sourceWords={wordCount}
+                title={variantPreview.title}
+                summary={variantPreview.summary}
+                busy={txBusy === "variant" || variantAdding}
+                disabled={busy}
+                onTitleChange={(v) =>
+                  setVariantPreview((p) => (p ? { ...p, title: v } : p))
+                }
+                onApply={() => void applyVariant()}
+                onRegenerate={() =>
+                  void runVariant(
+                    variantPreview.mode,
+                    variantPreview.direction,
+                    variantAvoidRef.current,
+                  )
+                }
+                onCancel={() => setVariantPreview(null)}
+              />
+            </div>
+          ) : null}
 
           {/* Split affordance */}
           {canSplit && split && (
@@ -509,6 +957,8 @@ export function PassageInputRow({
               </div>
             </div>
           )}
+            </div>
+          </div>
         </div>
       )}
 

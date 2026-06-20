@@ -483,6 +483,9 @@ export function SetBuilderPanel({
                       return (
               <div
                 key={typeId}
+                // 비활 버튼('유형을 선택하세요') 클릭 시 힌트 글로우 대상 — 유형 지정
+                // 탭 카드와 동일 선택자로 잡히게 한다.
+                data-question-type-id={typeId}
                 onDragOver={(e) => {
                   e.preventDefault();
                   if (draggingType && draggingType !== typeId) {

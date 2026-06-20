@@ -268,6 +268,30 @@ function buildHighlightSegments(
   return segments;
 }
 
+/**
+ * 본문을 문장 단위 구간으로 쪼갠다 — 호버 하이라이트(드래그 유도)용.
+ * 구간들은 content 를 빈틈없이 덮어, 백드롭에서 원문을 그대로 재구성한다
+ * (종결부호 뒤 공백·줄바꿈은 앞 문장에 포함). 실제 선택은 드래그가 하고,
+ * 이 하이라이트는 "문장 위에 올리면 강조"로 행동을 유도만 한다.
+ */
+function buildSentenceSegments(
+  content: string,
+): { start: number; end: number }[] {
+  const segments: { start: number; end: number }[] = [];
+  const terminator = /[.!?]+[)"'’”\]]*/g;
+  let pos = 0;
+  let m: RegExpExecArray | null;
+  while ((m = terminator.exec(content)) !== null) {
+    let end = m.index + m[0].length;
+    while (end < content.length && /\s/.test(content[end])) end += 1;
+    if (end > pos) segments.push({ start: pos, end });
+    pos = end;
+    terminator.lastIndex = end;
+  }
+  if (pos < content.length) segments.push({ start: pos, end: content.length });
+  return segments;
+}
+
 interface WorkspacePassageRowProps {
   index: number;
   row: WorkspaceRow;
@@ -356,6 +380,12 @@ export function WorkspacePassageRow({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const rangeBackdropRef = useRef<HTMLDivElement>(null);
+  const sentenceBackdropRef = useRef<HTMLDivElement>(null);
+  // 커서가 올라간 문장 구간 — 살짝 음영으로 강조해 드래그 선택을 유도한다.
+  const [hoverSentence, setHoverSentence] = useState<{
+    start: number;
+    end: number;
+  } | null>(null);
   const [selection, setSelection] = useState<SelectionState | null>(null);
   const [selectionAnchor, setSelectionAnchor] =
     useState<SelectionAnchor | null>(null);
@@ -535,6 +565,11 @@ export function WorkspacePassageRow({
   const hasPrependHl = row.highlights.some((h) => h.kind === "prepend");
   const hasParaphraseHl = row.highlights.some((h) => h.kind === "paraphrase");
 
+  const sentenceSegments = useMemo(
+    () => buildSentenceSegments(row.content),
+    [row.content],
+  );
+
   // textarea 는 글자 단위 hover 이벤트가 없으므로, 동일 메트릭으로 뒤에 깔린
   // 앞 맥락(prepend) / 출제 범위(range) 하이라이트를 삭제·해제한다.
   // 영역 텍스트를 잘라내면 setContent 의 하이라이트 보정으로 그 표시도 사라진다.
@@ -547,10 +582,47 @@ export function WorkspacePassageRow({
     [row.content, onPushHistory, onChangeContent],
   );
 
+  // textarea 는 글자 단위 hover 가 없으므로, 동일 메트릭의 문장 백드롭 span 들에
+  // 커서를 히트테스트해 "지금 올라간 문장"을 찾는다. 선택/잠금 중에는 끈다
+  // (드래그 유도가 목적이라 선택이 시작되면 더는 필요 없다).
+  const updateHoverSentence = useCallback(
+    (e: React.MouseEvent) => {
+      const container = textareaRef.current?.parentElement;
+      if (!container || editorLocked || selection) {
+        setHoverSentence(null);
+        return;
+      }
+      const spans =
+        container.querySelectorAll<HTMLElement>("span[data-sent-start]");
+      for (const span of spans) {
+        for (const rect of span.getClientRects()) {
+          if (
+            e.clientX >= rect.left &&
+            e.clientX <= rect.right &&
+            e.clientY >= rect.top &&
+            e.clientY <= rect.bottom
+          ) {
+            const start = Number(span.dataset.sentStart);
+            const end = Number(span.dataset.sentEnd);
+            setHoverSentence((prev) =>
+              prev && prev.start === start && prev.end === end
+                ? prev
+                : { start, end },
+            );
+            return;
+          }
+        }
+      }
+      setHoverSentence(null);
+    },
+    [editorLocked, selection],
+  );
+
   // 백드롭의 하이라이트 mark 들에 마우스 좌표를 히트테스트한다. 변형(paraphrase)
   // 은 원문 미리보기 툴팁, 앞 맥락/출제 범위는 삭제·해제 액션 메뉴를 띄운다.
   const handleEditorMouseMove = useCallback(
     (e: React.MouseEvent) => {
+      updateHoverSentence(e);
       const container = textareaRef.current?.parentElement;
       if (!container) {
         setOriginalTip(null);
@@ -615,7 +687,7 @@ export function WorkspacePassageRow({
       setOriginalTip(null);
       scheduleHlHide();
     },
-    [scheduleHlHide, cancelHlHide],
+    [scheduleHlHide, cancelHlHide, updateHoverSentence],
   );
 
   const syncBackdropScroll = useCallback(() => {
@@ -629,6 +701,11 @@ export function WorkspacePassageRow({
     if (el && rbd) {
       rbd.scrollTop = el.scrollTop;
       rbd.scrollLeft = el.scrollLeft;
+    }
+    const sbd = sentenceBackdropRef.current;
+    if (el && sbd) {
+      sbd.scrollTop = el.scrollTop;
+      sbd.scrollLeft = el.scrollLeft;
     }
     // 내부 스크롤 시 선택 팝오버 위치도 따라가야 한다.
     if (el && selection) {
@@ -1070,8 +1147,8 @@ export function WorkspacePassageRow({
       className={
         "relative flex h-full flex-col overflow-hidden rounded-lg border bg-white shadow-sm transition-[box-shadow,opacity,border-color] " +
         (active
-          ? "border-2 border-violet-600 ring-2 ring-violet-300"
-          : "border-slate-200 hover:border-violet-200 ") +
+          ? "border-2 border-blue-600 ring-2 ring-blue-300"
+          : "border-slate-200 hover:border-blue-200 ") +
         // 스포트라이트 — 다른 지문이 설정 대상일 때 이 행은 흐리게 물러나
         // 선택 지문 ↔ 우측 설정이 한 쌍으로 도드라진다(호버하면 다시 또렷).
         (dimmed && !active ? "opacity-45 hover:opacity-100" : "")
@@ -1084,7 +1161,7 @@ export function WorkspacePassageRow({
       {active && !row.collapsed ? (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute right-0 top-1/2 z-10 flex h-8 w-[18px] -translate-y-1/2 items-center justify-center rounded-l-full bg-violet-600 text-white shadow-sm"
+          className="pointer-events-none absolute right-0 top-1/2 z-10 flex h-8 w-[18px] -translate-y-1/2 items-center justify-center rounded-l-full bg-blue-600 text-white shadow-sm"
         >
           <ChevronRight className="h-4 w-4" aria-hidden="true" />
         </span>
@@ -1116,13 +1193,13 @@ export function WorkspacePassageRow({
             className={
               "flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center rounded-[5px] border transition-colors " +
               (selected
-                ? "border-violet-600 bg-violet-600 text-white"
-                : "border-slate-300 bg-white text-transparent hover:border-violet-400")
+                ? "border-blue-600 bg-blue-600 text-white"
+                : "border-slate-300 bg-white text-transparent hover:border-blue-400")
             }
           >
             <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
           </button>
-          <span className="flex h-[22px] min-w-[22px] shrink-0 items-center justify-center rounded-md bg-violet-600 px-1 text-[11px] font-bold leading-none text-white tabular-nums">
+          <span className="flex h-[22px] min-w-[22px] shrink-0 items-center justify-center rounded-md bg-blue-600 px-1 text-[11px] font-bold leading-none text-white tabular-nums">
             {index + 1}
           </span>
           <span className="min-w-[72px] shrink truncate text-[12.5px] font-semibold text-slate-700">
@@ -1130,7 +1207,7 @@ export function WorkspacePassageRow({
           </span>
           {row.variantOfId ? (
             <span
-              className="shrink-0 rounded-sm bg-violet-600 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white"
+              className="shrink-0 rounded-sm bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white"
               title="편집된 본문이 새 지문(변형본)으로 저장됐습니다. 원본 지문은 그대로 보존됩니다."
             >
               변형본
@@ -1138,7 +1215,7 @@ export function WorkspacePassageRow({
           ) : null}
           {dirty ? (
             <span
-              className="shrink-0 rounded-sm bg-violet-50 px-1.5 py-0.5 text-[10px] font-bold leading-none text-violet-600 ring-1 ring-inset ring-violet-200"
+              className="shrink-0 rounded-sm bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold leading-none text-blue-600 ring-1 ring-inset ring-blue-200"
               title="본문이 수정됐습니다. 생성 시 변형본이 새 지문으로 저장됩니다."
             >
               수정됨
@@ -1165,8 +1242,8 @@ export function WorkspacePassageRow({
                   "flex h-7 shrink-0 items-center gap-1 rounded-md border px-1.5 text-[10.5px] font-semibold " +
                   (isPremium
                     ? custom
-                      ? "border-violet-300 bg-violet-100 text-violet-700"
-                      : "border-violet-200 bg-violet-50 text-violet-600"
+                      ? "border-blue-300 bg-blue-100 text-blue-700"
+                      : "border-blue-200 bg-blue-50 text-blue-600"
                     : custom
                       ? "border-slate-200 bg-slate-50 text-slate-600"
                       : "border-slate-200 bg-white text-slate-400")
@@ -1257,7 +1334,7 @@ export function WorkspacePassageRow({
               onClick={handleRestoreClick}
               disabled={locked || row.content.trim().length < 20}
               title="문제 형태 지문을 원문으로 AI 복원"
-              className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-violet-600 px-4 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-4 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {busy === "restore" ? (
                 <Loader2
@@ -1336,27 +1413,27 @@ export function WorkspacePassageRow({
               "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border transition-colors " +
               (editorLocked
                 ? "border-slate-200 bg-slate-50"
-                : "border-slate-200 bg-white focus-within:border-violet-300 focus-within:ring-2 focus-within:ring-violet-100")
+                : "border-slate-200 bg-white focus-within:border-blue-300 focus-within:ring-2 focus-within:ring-blue-100")
             }
           >
             {/* 앞 맥락 삽입 지점 — 점선 가운데 '+' 알약이 떠 있는 insertion
                 point 패턴. "클릭하면 이 줄 자리에 문단이 끼워 넣어진다"가
                 모양만으로 읽히도록 본문 첫 글자 바로 위에 둔다. */}
-            <div className="relative flex items-center gap-2 border-b border-dashed border-violet-200/80 bg-violet-50/30 px-2.5 py-1.5">
+            <div className="relative flex items-center gap-2 border-b border-dashed border-blue-200/80 bg-blue-50/30 px-2.5 py-1.5">
               <span
-                className="h-0 min-w-3 flex-1 border-t border-dashed border-violet-300/80"
+                className="h-0 min-w-3 flex-1 border-t border-dashed border-blue-300/80"
                 aria-hidden="true"
               />
               {/* 알약 하나에 [추가 버튼 | 문장 수 스테퍼]를 함께 담는다 —
                   button 안에 button 을 중첩할 수 없어 컨테이너는 div. */}
-              <div className="flex shrink-0 items-stretch overflow-hidden rounded-full border border-violet-300 bg-white shadow-sm">
+              <div className="flex shrink-0 items-stretch overflow-hidden rounded-full border border-blue-300 bg-white shadow-sm">
                 <button
                   type="button"
                   onClick={handlePrependClick}
                   disabled={locked}
                   data-generate-tour="workspace-prepend-button"
                   title={`지문 맥락과 자연스럽게 이어지는 앞 문단(${prependCount}문장)을 AI가 생성해 이 위치에 끼워 넣습니다`}
-                  className="flex min-w-0 cursor-pointer items-center gap-1.5 py-0.5 pl-2 pr-2 text-[11.5px] font-bold text-violet-600 transition-colors hover:bg-violet-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex min-w-0 cursor-pointer items-center gap-1.5 py-0.5 pl-2 pr-2 text-[11.5px] font-bold text-blue-600 transition-colors hover:bg-blue-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {busy === "prepend" ? (
                     <Loader2
@@ -1373,11 +1450,11 @@ export function WorkspacePassageRow({
                   </span>
                   <CreditCostChip
                     amount={CREDIT_COSTS.PASSAGE_TRANSFORM}
-                    className="shrink-0 rounded-sm bg-white px-1 py-px text-[10px] text-violet-500 ring-1 ring-inset ring-violet-200"
+                    className="shrink-0 rounded-sm bg-white px-1 py-px text-[10px] text-blue-500 ring-1 ring-inset ring-blue-200"
                   />
                 </button>
                 <span
-                  className="my-1 w-px shrink-0 bg-violet-200"
+                  className="my-1 w-px shrink-0 bg-blue-200"
                   aria-hidden="true"
                 />
                 <div
@@ -1388,19 +1465,19 @@ export function WorkspacePassageRow({
                     type="button"
                     onClick={() => changePrependCount(-1)}
                     disabled={locked || prependCount <= 1}
-                    className="flex h-5 w-5 items-center justify-center rounded-full text-violet-400 transition-colors hover:bg-violet-100/70 hover:text-violet-600 disabled:cursor-not-allowed disabled:opacity-35"
+                    className="flex h-5 w-5 items-center justify-center rounded-full text-blue-400 transition-colors hover:bg-blue-100/70 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-35"
                     aria-label="앞 문단 문장 수 줄이기"
                   >
                     <Minus className="h-3 w-3" aria-hidden="true" />
                   </button>
-                  <span className="w-[38px] text-center text-[11px] font-bold tabular-nums text-violet-700">
+                  <span className="w-[38px] text-center text-[11px] font-bold tabular-nums text-blue-700">
                     {prependCount}문장
                   </span>
                   <button
                     type="button"
                     onClick={() => changePrependCount(1)}
                     disabled={locked || prependCount >= 5}
-                    className="flex h-5 w-5 items-center justify-center rounded-full text-violet-400 transition-colors hover:bg-violet-100/70 hover:text-violet-600 disabled:cursor-not-allowed disabled:opacity-35"
+                    className="flex h-5 w-5 items-center justify-center rounded-full text-blue-400 transition-colors hover:bg-blue-100/70 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-35"
                     aria-label="앞 문단 문장 수 늘리기"
                   >
                     <Plus className="h-3 w-3" aria-hidden="true" />
@@ -1408,7 +1485,7 @@ export function WorkspacePassageRow({
                 </div>
               </div>
               <span
-                className="h-0 min-w-3 flex-1 border-t border-dashed border-violet-300/80"
+                className="h-0 min-w-3 flex-1 border-t border-dashed border-blue-300/80"
                 aria-hidden="true"
               />
 
@@ -1420,16 +1497,16 @@ export function WorkspacePassageRow({
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-0 z-[2]"
                 >
-                  <div className="ws-prepcoach-wash absolute inset-0 bg-violet-400/20 opacity-0" />
-                  <span className="ws-prepcoach-ring absolute left-[96px] top-1/2 h-7 w-7 rounded-full border-2 border-violet-500/70 opacity-0" />
-                  <MousePointer2 className="ws-prepcoach-cursor absolute left-[96px] top-[7px] h-4 w-4 text-violet-700 opacity-0 drop-shadow-sm" />
+                  <div className="ws-prepcoach-wash absolute inset-0 bg-blue-400/20 opacity-0" />
+                  <span className="ws-prepcoach-ring absolute left-[96px] top-1/2 h-7 w-7 rounded-full border-2 border-blue-500/70 opacity-0" />
+                  <MousePointer2 className="ws-prepcoach-cursor absolute left-[96px] top-[7px] h-4 w-4 text-blue-700 opacity-0 drop-shadow-sm" />
                   {/* 클릭 결과로 삽입되는 고스트 문단 */}
-                  <div className="ws-prepcoach-ghost absolute inset-x-2 top-full mt-1.5 origin-top rounded-md border border-violet-200 bg-white opacity-0 shadow-lg shadow-violet-100/70">
+                  <div className="ws-prepcoach-ghost absolute inset-x-2 top-full mt-1.5 origin-top rounded-md border border-blue-200 bg-white opacity-0 shadow-lg shadow-blue-100/70">
                     <div className="flex items-center gap-1.5 px-3 pt-2">
-                      <span className="rounded-sm bg-violet-600 px-1 py-px text-[9px] font-bold leading-none text-white">
+                      <span className="rounded-sm bg-blue-600 px-1 py-px text-[9px] font-bold leading-none text-white">
                         AI
                       </span>
-                      <span className="text-[10.5px] font-bold text-violet-600">
+                      <span className="text-[10.5px] font-bold text-blue-600">
                         이어지는 앞 문단이 이 자리에 생성돼요
                       </span>
                     </div>
@@ -1485,6 +1562,38 @@ export function WorkspacePassageRow({
             </div>
 
             <div className="relative flex min-h-0 flex-1 flex-col">
+              {/* 문장 호버 백드롭 — 커서가 올라간 문장만 살짝 음영으로 강조해
+                  드래그 선택을 유도한다. 가장 아래 레이어라 AI/출제 범위
+                  하이라이트가 위에 덮인다. 글자는 투명, 배경만 칠한다. */}
+              {row.content.length > 0 ? (
+                <div
+                  ref={sentenceBackdropRef}
+                  aria-hidden="true"
+                  style={EDITOR_TEXT_STYLE}
+                  className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words py-2 pl-3 pr-16 text-transparent"
+                >
+                  {sentenceSegments.map((s) => {
+                    const hovered =
+                      hoverSentence !== null &&
+                      hoverSentence.start === s.start &&
+                      hoverSentence.end === s.end;
+                    return (
+                      <span
+                        key={s.start}
+                        data-sent-start={s.start}
+                        data-sent-end={s.end}
+                        className={
+                          hovered
+                            ? "rounded-[2px] bg-slate-200/70 transition-colors"
+                            : undefined
+                        }
+                      >
+                        {row.content.slice(s.start, s.end)}
+                      </span>
+                    );
+                  })}
+                </div>
+              ) : null}
               {/* 출제 범위 백드롭 — 지정된 구간을 형광펜처럼 칠한다.
                   AI 하이라이트 백드롭과 같은 메트릭의 별도 레이어. */}
               {row.range ? (
@@ -1550,7 +1659,7 @@ export function WorkspacePassageRow({
                           className={
                             "rounded-[2px] text-transparent " +
                             (seg.kind === "prepend"
-                              ? "bg-violet-100"
+                              ? "bg-blue-100"
                               : "bg-orange-200/80")
                           }
                         >
@@ -1582,17 +1691,20 @@ export function WorkspacePassageRow({
                   }, TYPING_BURST_MS);
                   onChangeContent(e.target.value);
                   setSelection(null);
+                  setHoverSentence(null);
                 }}
                 onSelect={handleSelect}
                 onScroll={() => {
                   syncBackdropScroll();
                   setOriginalTip(null);
                   setHlMenu(null);
+                  setHoverSentence(null);
                 }}
                 onMouseMove={handleEditorMouseMove}
                 onMouseLeave={() => {
                   setOriginalTip(null);
                   scheduleHlHide();
+                  setHoverSentence(null);
                 }}
                 readOnly={editorLocked}
                 disabled={disabled}
@@ -1656,7 +1768,7 @@ export function WorkspacePassageRow({
                     "absolute z-[4] flex items-center gap-1 rounded-lg border bg-white px-1.5 py-1 shadow-lg " +
                     (hlMenu.kind === "range"
                       ? "border-amber-200 shadow-amber-100/60"
-                      : "border-violet-200 shadow-violet-100/60")
+                      : "border-blue-200 shadow-blue-100/60")
                   }
                   style={{ left: hlMenu.left, top: hlMenu.top }}
                 >
@@ -1665,7 +1777,7 @@ export function WorkspacePassageRow({
                       "pl-1 pr-0.5 text-[10.5px] font-bold " +
                       (hlMenu.kind === "range"
                         ? "text-amber-700"
-                        : "text-violet-700")
+                        : "text-blue-700")
                     }
                   >
                     {hlMenu.kind === "range" ? "출제 범위" : "추가된 앞 맥락"}
@@ -1697,13 +1809,13 @@ export function WorkspacePassageRow({
                   className="pointer-events-none absolute inset-x-0 top-0 z-[2]"
                 >
                   <div className="relative mx-3 mt-2 h-[21px]">
-                    <div className="ws-dragcoach-band absolute left-0 top-0 h-full rounded-[3px] bg-violet-500/25 ring-1 ring-inset ring-violet-400/30" />
+                    <div className="ws-dragcoach-band absolute left-0 top-0 h-full rounded-[3px] bg-blue-500/25 ring-1 ring-inset ring-blue-400/30" />
                     <MousePointer2
-                      className="ws-dragcoach-cursor absolute top-[3px] h-4 w-4 text-violet-700 drop-shadow-sm"
+                      className="ws-dragcoach-cursor absolute top-[3px] h-4 w-4 text-blue-700 drop-shadow-sm"
                       aria-hidden="true"
                     />
                   </div>
-                  <div className="ws-dragcoach-chip pointer-events-auto mx-3 mt-1.5 inline-flex items-center gap-1.5 rounded-md border border-violet-300 bg-white py-1 pl-2.5 pr-1 text-[11.5px] font-bold text-violet-700 shadow-md shadow-violet-100/70">
+                  <div className="ws-dragcoach-chip pointer-events-auto mx-3 mt-1.5 inline-flex items-center gap-1.5 rounded-md border border-blue-300 bg-white py-1 pl-2.5 pr-1 text-[11.5px] font-bold text-blue-700 shadow-md shadow-blue-100/70">
                     <TextCursorInput
                       className="h-3.5 w-3.5 shrink-0"
                       aria-hidden="true"
@@ -1712,7 +1824,7 @@ export function WorkspacePassageRow({
                     <button
                       type="button"
                       onClick={() => dismissDragCoach(true)}
-                      className="ml-0.5 flex h-5 w-5 items-center justify-center rounded text-violet-300 transition-colors hover:bg-violet-50 hover:text-violet-600"
+                      className="ml-0.5 flex h-5 w-5 items-center justify-center rounded text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-600"
                       title="알겠어요 — 다시 보지 않기"
                     >
                       <X className="h-3 w-3" aria-hidden="true" />
@@ -1793,16 +1905,16 @@ export function WorkspacePassageRow({
                       <div className="absolute z-[3]" style={{ left, top }}>
                         {below && !clamped ? (
                           <div style={{ paddingLeft: arrowX - 4 }}>
-                            <div className="-mb-1 h-2 w-2 rotate-45 border-l border-t border-violet-300 bg-white" />
+                            <div className="-mb-1 h-2 w-2 rotate-45 border-l border-t border-blue-300 bg-white" />
                           </div>
                         ) : null}
-                        <div className="flex items-center gap-1.5 rounded-lg border border-violet-300 bg-white p-1.5 shadow-lg shadow-violet-200/60 duration-150 animate-in fade-in zoom-in-95">
+                        <div className="flex items-center gap-1.5 rounded-lg border border-blue-300 bg-white p-1.5 shadow-lg shadow-blue-200/60 duration-150 animate-in fade-in zoom-in-95">
                           <button
                             type="button"
                             onClick={handleParaphraseClick}
                             data-generate-tour="workspace-paraphrase-button"
                             title="뜻은 그대로, 단어·표현만 바꿔 재작성합니다"
-                            className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-violet-600 pl-2.5 pr-2 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-violet-700"
+                            className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 pl-2.5 pr-2 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700"
                           >
                             <Wand2 className="h-3.5 w-3.5" aria-hidden="true" />
                             AI 문장 변형
@@ -1827,7 +1939,7 @@ export function WorkspacePassageRow({
                         </div>
                         {!below && !clamped ? (
                           <div style={{ paddingLeft: arrowX - 4 }}>
-                            <div className="-mt-1 h-2 w-2 rotate-45 border-b border-r border-violet-300 bg-white" />
+                            <div className="-mt-1 h-2 w-2 rotate-45 border-b border-r border-blue-300 bg-white" />
                           </div>
                         ) : null}
                       </div>
@@ -1857,7 +1969,7 @@ export function WorkspacePassageRow({
               {hasPrependHl ? (
                 <span className="flex items-center gap-1">
                   <span
-                    className="h-2.5 w-2.5 rounded-[2px] bg-violet-100 ring-1 ring-inset ring-violet-200"
+                    className="h-2.5 w-2.5 rounded-[2px] bg-blue-100 ring-1 ring-inset ring-blue-200"
                     aria-hidden="true"
                   />
                   AI가 추가한 앞 맥락
@@ -1887,7 +1999,7 @@ export function WorkspacePassageRow({
           ) : null}
 
           {busy === "paraphrase" ? (
-            <div className="flex items-center gap-2 rounded-lg border border-violet-200 bg-violet-50/50 px-3 py-2.5 text-[12px] font-semibold text-violet-600">
+            <div className="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50/50 px-3 py-2.5 text-[12px] font-semibold text-blue-600">
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
               선택한 문장을 변형하고 있어요…
             </div>
@@ -1928,7 +2040,7 @@ export function WorkspacePassageRow({
             "flex h-11 w-full items-center justify-center gap-2 rounded-lg px-3 text-[13px] font-bold text-white shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
             (genStats && genStats.questions > 0
               ? "bg-blue-600 hover:bg-blue-700"
-              : "bg-violet-600 hover:bg-violet-700")
+              : "bg-blue-600 hover:bg-blue-700")
           }
         >
           <Cpu className="h-4 w-4 shrink-0" aria-hidden="true" />

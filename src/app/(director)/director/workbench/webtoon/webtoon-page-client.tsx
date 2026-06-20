@@ -160,6 +160,7 @@ export function WebtoonPageClient({
     rowsRef.current = next;
     setRows(next);
     setFormCollapsed(false);
+    setWorkspaceOpen(true);
     toast.success(`${incoming.length}개 지문을 불러왔어요. 웹툰을 생성하세요.`);
   }, []);
 
@@ -171,6 +172,13 @@ export function WebtoonPageClient({
   // ─── Intake (이미지·PDF) ───
   const [intakeView, setIntakeView] = useState<IntakeView>("library");
   const [intakeTab, setIntakeTab] = useState<IntakeTab>("upload");
+
+  // ─── 워크스페이스 (지문 입력 스택) — 자료함 위 오버레이 ───
+  const [workspaceOpen, setWorkspaceOpen] = useState(false);
+  const workspaceActive = useMemo(
+    () => rows.some((r) => !isPristineEmptyRow(r)),
+    [rows],
+  );
 
   const clearExtractionPendingRef = useRef<(jobId: string) => void>(() => {});
   const handleExtractionPromoted = useCallback(
@@ -270,6 +278,8 @@ export function WebtoonPageClient({
           const fresh = [makeEmptyRow()];
           rowsRef.current = fresh;
           setRows(fresh);
+          setWorkspaceOpen(false);
+          setIntakeView("library");
         }
         bumpDraftRefresh();
         triggerRefresh();
@@ -334,6 +344,9 @@ export function WebtoonPageClient({
             onExtractionBegin={handleExtractionBegin}
             onExtractionResult={handleExtractionResult}
             extractionPending={extractionPending}
+            workspaceOpen={workspaceOpen}
+            setWorkspaceOpen={setWorkspaceOpen}
+            workspaceActive={workspaceActive}
           />
 
           {/* ─── 생성한 웹툰 ─── */}

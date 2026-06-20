@@ -53,6 +53,7 @@ import {
   countWords,
 } from "./generate-page-types";
 import { DragSelect } from "@/components/ui/drag-select";
+import { triggerHintGlow } from "@/lib/hint-glow";
 import { DragHandle } from "@/components/ui/drag-handle";
 import type { QuestionCardItem } from "@/components/workbench/question-card";
 import { PassageQuestionsSummary } from "./passage-questions-summary";
@@ -348,6 +349,9 @@ export function PassageCardGrid({
     }
   });
   const selectAllCheckboxRef = useRef<HTMLInputElement>(null);
+  // '다음으로(워크스페이스)'가 비활(선택 0개)일 때 눌리면 이 안의 지문 카드들을
+  // 글로우해 "지문을 먼저 고르세요"를 유도한다.
+  const cardZoneRef = useRef<HTMLDivElement>(null);
   const allVisibleSelected =
     filteredPassages.length > 0 &&
     filteredPassages.every((passage) => selectedIds.has(passage.id));
@@ -1613,7 +1617,7 @@ export function PassageCardGrid({
       </div>
 
       {/* Passage card grid -- scrollable */}
-      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+      <div ref={cardZoneRef} className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
         {/* 이미지·PDF 추출 중 지문 로딩 카드(완료되면 실제 카드로 교체) */}
         {loadingCards}
         {loadingPassages ? (
@@ -1723,7 +1727,7 @@ export function PassageCardGrid({
                     {isInWorkspace ? (
                       <span
                         aria-hidden="true"
-                        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-1 bg-violet-500"
+                        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-1 bg-blue-500"
                       />
                     ) : null}
                     {/* Header with handle + checkbox */}
@@ -1936,8 +1940,33 @@ export function PassageCardGrid({
         <div className="shrink-0 border-t border-slate-100 bg-white px-5 py-3">
           <button
             type="button"
-            onClick={onEditSelected}
-            disabled={selectedIds.size === 0 || passageBulkAction !== null}
+            // aria-disabled — 비활처럼 보이되 클릭은 살려, 선택 0개일 때 누르면 지문
+            // 카드들을 글로우해 "지문을 먼저 고르세요"를 유도한다.
+            aria-disabled={selectedIds.size === 0 || passageBulkAction !== null}
+            onClick={() => {
+              if (passageBulkAction !== null) return;
+              if (selectedIds.size === 0) {
+                // 이미 워크스페이스에 들어가 있는 지문은 제외하고, '추가할 수 있는'
+                // 카드만 글로우해 선택을 유도한다(시각적 소음 방지로 앞 24개만).
+                const root = cardZoneRef.current;
+                const cards = root
+                  ? Array.from(
+                      root.querySelectorAll<HTMLElement>("[data-drag-item-id]"),
+                    )
+                      .filter((el) => {
+                        const id = el.getAttribute("data-drag-item-id");
+                        return (
+                          id != null &&
+                          !(workspacePassageIds?.has(id) ?? false)
+                        );
+                      })
+                      .slice(0, 24)
+                  : [];
+                triggerHintGlow(cards);
+                return;
+              }
+              onEditSelected();
+            }}
             data-generate-tour="library-edit-selected"
             title={
               selectedIds.size > 0
@@ -1946,7 +1975,13 @@ export function PassageCardGrid({
                   : `선택한 ${selectedIds.size}개 지문을 워크스페이스에서 편집합니다. 편집·AI 변형 후 문제를 생성하세요.`
                 : "워크스페이스에서 편집할 지문을 선택하세요"
             }
-            className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 text-[14px] font-bold text-white shadow-sm transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none"
+            // 비활 상태도 회색이 아니라 흐릿한 파란색으로(다른 '다음으로' 버튼과 통일).
+            className={
+              "flex h-12 w-full items-center justify-center gap-2 rounded-xl px-4 text-[14px] font-bold text-white shadow-sm transition-colors " +
+              (selectedIds.size === 0 || passageBulkAction !== null
+                ? "cursor-not-allowed bg-blue-300 shadow-none"
+                : "cursor-pointer bg-blue-600 hover:bg-blue-700")
+            }
           >
             <FilePen className="h-5 w-5" aria-hidden="true" />
             <span>

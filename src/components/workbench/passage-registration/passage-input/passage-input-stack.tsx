@@ -1,8 +1,16 @@
 "use client";
 
-import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { Eye, Loader2, Plus, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { triggerHintGlowWithin } from "@/lib/hint-glow";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import {
@@ -16,7 +24,6 @@ import {
 } from "../learning-sheet-preview-modal";
 import { PassageInputRow } from "./passage-input-row";
 import {
-  isPristineEmptyRow,
   makeEmptyRow,
   MIN_CONTENT_CHARS,
   type PassageInputRow as RowData,
@@ -32,6 +39,19 @@ interface PassageInputStackProps {
     plan: QuestionGenerationPlan,
     options: { includeWorksheet: boolean },
   ) => void;
+  /**
+   * '지문 추가' 클릭 동작. 주어지면 내 지문함으로 돌아가 지문을 골라 담는다
+   * (문제생성 워크스페이스와 동일). 없으면 빈 행을 직접 추가하는 폴백.
+   */
+  onAddPassage?: () => void;
+  /** 변형 지문 생성 → 새 Passage 저장 + 새 행 추가 (부모가 처리). */
+  onAddVariant?: (args: {
+    sourcePassageId: string | null;
+    title: string;
+    content: string;
+    mode: import("@/lib/passage-transform/schema").WholePassageTransformMode;
+    direction?: import("@/lib/passage-transform/schema").VariantDirection;
+  }) => Promise<boolean>;
 }
 
 /**
@@ -47,7 +67,13 @@ export function PassageInputStack({
   setRows,
   saving,
   onAnalyze,
+  onAddPassage,
+  onAddVariant,
 }: PassageInputStackProps) {
+  // 지문 입력 행 영역 — '생성하기'가 비활(유효 지문 0개)일 때 눌리면 이 안의
+  // 행 카드들을 글로우해 "지문을 먼저 입력하세요"를 유도한다.
+  const rowsZoneRef = useRef<HTMLDivElement>(null);
+
   const updateRow = (localId: string, patch: Partial<RowData>) =>
     setRows((prev) =>
       prev.map((r) => (r.localId === localId ? { ...r, ...patch } : r)),
@@ -56,14 +82,10 @@ export function PassageInputStack({
   const addRow = () =>
     setRows((prev) => [...prev, makeEmptyRow()]);
 
+  // 문제생성 워크스페이스처럼 행은 0개까지 비울 수 있다 — 마지막 카드를 지우면
+  // 빈 워크스페이스('지문 추가' 버튼만)로 돌아간다.
   const removeRow = (localId: string) =>
-    setRows((prev) => {
-      // With more than one row, drop it. The LAST remaining row can't be
-      // dropped (the stack always keeps one input), so clearing it resets to a
-      // blank row — this is the "끄기/비우기" affordance for a single loaded 지문.
-      if (prev.length > 1) return prev.filter((r) => r.localId !== localId);
-      return [makeEmptyRow()];
-    });
+    setRows((prev) => prev.filter((r) => r.localId !== localId));
 
   // Replace one row with N rows built from its detected chunks (smart-split).
   const splitRow = (localId: string, chunks: string[]) =>
@@ -77,6 +99,37 @@ export function PassageInputStack({
         return row;
       });
       return [...prev.slice(0, idx), ...built, ...prev.slice(idx + 1)];
+    });
+
+  // ── 새로 추가/불러온 행에 파란 글로우를 한 번 반짝인다 ──
+  // 처음 마운트된 행들은 미리 "본 적 있음"으로 등록해 두어 글로우가 뜨지 않게
+  // 하고, 이후 새로 등장하는 localId(불러오기·지문 추가·스마트 분할)에만 글로우를
+  // 붙인다. 애니메이션이 끝나면 해당 행의 글로우 상태를 해제한다.
+  const seenIdsRef = useRef<Set<string> | null>(null);
+  if (seenIdsRef.current === null) {
+    seenIdsRef.current = new Set(rows.map((r) => r.localId));
+  }
+  const [glowingIds, setGlowingIds] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    const fresh = rows
+      .map((r) => r.localId)
+      .filter((id) => !seenIdsRef.current!.has(id));
+    if (fresh.length === 0) return;
+    fresh.forEach((id) => seenIdsRef.current!.add(id));
+    setGlowingIds((prev) => {
+      const next = new Set(prev);
+      fresh.forEach((id) => next.add(id));
+      return next;
+    });
+  }, [rows]);
+
+  const clearGlow = (localId: string) =>
+    setGlowingIds((prev) => {
+      if (!prev.has(localId)) return prev;
+      const next = new Set(prev);
+      next.delete(localId);
+      return next;
     });
 
   const validRows = useMemo(
@@ -112,21 +165,20 @@ export function PassageInputStack({
       </span>
     ) : null;
 
+  // 워크스페이스가 비어 있으면(불러온/입력한 지문 0개) '지문 추가' 버튼만 남기고
+  // 학습지 구성·생성 푸터는 숨긴다 — 문제생성 워크스페이스의 빈 상태와 동일.
+  const isEmpty = rows.length === 0;
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      {/* Intro */}
-      <div className="mb-2 shrink-0">
-        <p className="text-[12px] leading-relaxed text-slate-500">
-          왼쪽 <b className="text-slate-600">자료 관리</b>에서 지문을 체크해{" "}
-          <b className="text-blue-600">불러오거나</b>, 여기에 영어 지문을 직접
-          붙여넣으세요. 여러 지문은 <b className="text-blue-600">“지문 추가”</b>로
-          늘리고, 텍스트를 드래그해 핵심 어휘·어법·출제 포인트를 마킹하면 분석에
-          그대로 반영됩니다.
-        </p>
-      </div>
-
       {/* Rows (scrollable). With a single row, it stretches to fill the height. */}
-      <div className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto pb-1 pr-0.5">
+      <div
+        ref={rowsZoneRef}
+        // 반응형 그리드 — 넓은 화면에서 카드가 2열로 동일 폭 타일된다(펼침/접힘
+        // 무관). items-start 로 둬서 접힌(짧은) 카드가 옆의 펼친(긴) 카드 높이에
+        // 맞춰 늘어나 '빈 카드'처럼 보이지 않게 한다.
+        className="grid min-h-0 flex-1 grid-cols-1 content-start items-start gap-2.5 overflow-y-auto pb-1 pr-0.5 xl:grid-cols-2"
+      >
         {rows.map((row, i) => (
           <PassageInputRow
             key={row.localId}
@@ -134,30 +186,32 @@ export function PassageInputStack({
             row={row}
             onChange={(patch) => updateRow(row.localId, patch)}
             onRemove={() => removeRow(row.localId)}
-            // Show the X when there's more than one row (delete), OR on the last
-            // row once it holds something (clear it back to empty).
-            canRemove={rows.length > 1 || !isPristineEmptyRow(row)}
-            removeMode={rows.length > 1 ? "delete" : "clear"}
+            canRemove
+            removeMode="delete"
             disabled={saving}
             onSplit={(chunks) => splitRow(row.localId, chunks)}
-            grow={rows.length === 1}
+            justAdded={glowingIds.has(row.localId)}
+            onGlowEnd={() => clearGlow(row.localId)}
+            onAddVariant={onAddVariant}
           />
         ))}
-      </div>
 
-      {/* 지문 추가 — 스크롤 밖, 분석 버튼 바로 위 */}
-      <div className="shrink-0 pt-2">
+        {/* 지문 추가 — 지문 카드와 같은 가로 폭(2열이면 반쪽), 높이는 고정
+            (self-start 로 옆 카드 높이에 맞춰 늘어나지 않게). 클릭하면 내
+            지문함으로 돌아가 지문을 골라 담는다(문제생성 워크스페이스와 동일). */}
         <button
           type="button"
-          onClick={addRow}
+          onClick={onAddPassage ?? addRow}
           disabled={saving}
-          className="flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-blue-300 bg-blue-50/60 py-2.5 text-[13px] font-bold text-blue-700 transition-colors hover:border-blue-400 hover:bg-blue-100/70 disabled:opacity-50"
+          className="flex h-11 w-full shrink-0 items-center justify-center gap-1.5 self-start rounded-xl border-2 border-dashed border-blue-300 bg-blue-50/60 text-[13px] font-bold text-blue-700 transition-colors hover:border-blue-400 hover:bg-blue-100/70 disabled:opacity-50"
         >
           <Plus className="h-4 w-4" />
           지문 추가
         </button>
       </div>
 
+      {!isEmpty && (
+        <>
       {/* ── 학습지 구성 선택 — 무엇이 만들어지는지 실물로 보고 고른다 ── */}
       <div className="mt-2.5 shrink-0">
         <div className="mb-1.5 flex items-center justify-between">
@@ -255,9 +309,23 @@ export function PassageInputStack({
       {/* Generate footer */}
       <div className="mt-2 w-full shrink-0">
         <Button
-          onClick={() => onAnalyze(primaryAnalysisPlan, { includeWorksheet })}
-          disabled={!canAnalyze}
-          className="h-10 w-full rounded-lg bg-blue-600 px-3 text-[13px] font-extrabold hover:bg-blue-700"
+          // aria-disabled — 비활처럼 보이되 클릭은 살려, 유효 지문이 없을 때 누르면
+          // 입력 행을 글로우해 "지문을 먼저 입력하세요"를 유도한다.
+          aria-disabled={!canAnalyze}
+          onClick={() => {
+            if (saving) return;
+            if (validRows.length === 0) {
+              triggerHintGlowWithin(rowsZoneRef.current, ":scope > div");
+              return;
+            }
+            onAnalyze(primaryAnalysisPlan, { includeWorksheet });
+          }}
+          className={
+            "h-10 w-full rounded-lg px-3 text-[13px] font-extrabold " +
+            (canAnalyze
+              ? "bg-blue-600 hover:bg-blue-700"
+              : "cursor-not-allowed bg-blue-300 hover:bg-blue-300")
+          }
         >
           {saving ? (
             <Loader2 className="size-4 animate-spin" />
@@ -271,6 +339,8 @@ export function PassageInputStack({
           </span>
         </Button>
       </div>
+        </>
+      )}
 
       {/* 실제 학습지 미리보기 — 기본/실전 비교는 실제 생성 데이터 그대로 */}
       <LearningSheetPreviewModal
