@@ -7,7 +7,7 @@ import {
 import { FinanceDashboardClient } from "./finance-dashboard-client";
 
 export const metadata = {
-  title: "재무 관리 | SMOAT",
+  title: "재무 관리",
 };
 
 interface PageProps {

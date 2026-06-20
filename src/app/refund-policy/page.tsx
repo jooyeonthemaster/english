@@ -21,8 +21,9 @@ const SUBSCRIPTION_BILLING_ENABLED = FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING;
 
 export const metadata: Metadata = {
   title: SUBSCRIPTION_BILLING_ENABLED
-    ? "크레딧 및 구독 환불 정책 | SMOAT"
-    : "크레딧 환불 정책 | SMOAT",
+    ? "크레딧 및 구독 환불 정책"
+    : "크레딧 환불 정책",
+  alternates: { canonical: "/refund-policy" },
   description: SUBSCRIPTION_BILLING_ENABLED
     ? "SMOAT 크레딧과 구독 요금제의 구매, 사용, 청약철회, 환불 기준을 안내합니다."
     : "SMOAT 크레딧의 구매, 사용, 청약철회, 환불 기준을 안내합니다.",

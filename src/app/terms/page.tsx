@@ -10,7 +10,8 @@ import {
 const SUBSCRIPTION_BILLING_ENABLED = FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING;
 
 export const metadata: Metadata = {
-  title: "이용약관 | SMOAT",
+  title: "이용약관",
+  alternates: { canonical: "/terms" },
   description: SUBSCRIPTION_BILLING_ENABLED
     ? "SMOAT 서비스 이용, 구독 요금제, 크레딧 구매와 사용, 계정 해지 및 제한 기준을 안내합니다."
     : "SMOAT 서비스 이용, 크레딧 구매와 사용, 계정 해지 및 제한 기준을 안내합니다.",

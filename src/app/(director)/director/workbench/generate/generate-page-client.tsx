@@ -43,6 +43,8 @@ import {
   type IntakeTab,
 } from "./intake/intake-surface";
 import { GenerateUploadPanel } from "./intake/generate-upload-panel";
+import { ExamPassageLibrary } from "@/components/workbench/exam-passage-library";
+import type { ExamPassagePick } from "@/lib/exam-passages/types";
 import { useGenerateExtraction } from "./intake/use-generate-extraction";
 import { ExtractionLoadingCards } from "./intake/extraction-loading-cards";
 import { ExtractionDetailModal } from "./intake/extraction-detail-modal";
@@ -1366,6 +1368,53 @@ export function GeneratePageClient({
     [loadPassages],
   );
 
+  // ── 수능·모평 기출 지문 → 내 지문함 일괄 등록 ──
+  // 기출 브라우저에서 고른 지문(picks)을 id 만 서버로 보내 등록(본문은 서버가
+  // 코퍼스에서 해석). 직접 입력과 같은 후처리: 목록 재조회 → 새 지문 선택 → 내
+  // 지문함으로 전환. 멱등(이미 등록분은 서버가 건너뜀).
+  const [examImporting, setExamImporting] = useState(false);
+  const handleImportExamPassages = useCallback(
+    async (picks: ExamPassagePick[]) => {
+      if (!picks || picks.length === 0) return false;
+      setExamImporting(true);
+      try {
+        const { importExamPassages } = await import("@/actions/workbench");
+        const result = await importExamPassages(picks.map((p) => p.id));
+        if (!result.success) {
+          toast.error(result.error || "기출 지문 등록에 실패했습니다.");
+          return false;
+        }
+        const created = result.createdIds;
+        const skipped = result.skippedExamIds.length;
+
+        await loadPassages();
+        setPassageSearch("");
+        setSelectedCollectionId("");
+        setAnalysisStatusFilter("all");
+
+        if (created.length > 0) {
+          setSelectedIds(new Set(created));
+          setIntakeView("library");
+          toast.success(
+            skipped > 0
+              ? `기출 지문 ${created.length}개를 내 지문함에 담았어요. (이미 등록된 ${skipped}개 제외) 유형·난이도를 설정해 문제를 생성하세요.`
+              : `기출 지문 ${created.length}개를 내 지문함에 담았어요. 유형·난이도를 설정해 문제를 생성하세요.`,
+          );
+        } else if (skipped > 0) {
+          setIntakeView("library");
+          toast.info("선택한 기출 지문은 이미 내 지문함에 있어요.");
+        }
+        return true;
+      } catch {
+        toast.error("기출 지문 등록 중 오류가 발생했습니다.");
+        return false;
+      } finally {
+        setExamImporting(false);
+      }
+    },
+    [loadPassages],
+  );
+
   // ── Image/PDF extraction completion → drafts promoted to Passages ──
   // Refetch the list in place so the new passages appear as cards, drop the
   // job's loading cards (after the real ones are loaded → seamless), flip to the
@@ -2321,6 +2370,13 @@ export function GeneratePageClient({
           onResult={handleExtractionResult}
           inFlightCount={extractionPending.length}
           suppressTutorial={generateTourOpen}
+        />
+      }
+      examBrowser={
+        <ExamPassageLibrary
+          onPick={handleImportExamPassages}
+          busy={examImporting}
+          headerHint="고른 지문이 내 지문함에 담겨요"
         />
       }
       library={

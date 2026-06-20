@@ -285,14 +285,26 @@ function mergeQueueItems(
       merged.push(local);
       continue;
     }
+    // The poll (`passage-list` view) refreshes status/content but stays light —
+    // it never carries analysisData. So take the job's live fields, but keep the
+    // seeded item's richer analysisData/analysis and never let an (unexpectedly)
+    // empty poll content blank out a passage we already have text for.
+    const jobAnalysisHasData = !!job.passageData.analysis?.analysisData;
     merged.push({
       ...local,
       ...job,
       createdAt: local.createdAt,
       promptConfig: local.promptConfig,
+      analysisData: job.analysisData ?? local.analysisData,
+      wordCount: job.wordCount || local.wordCount,
+      contentPreview: job.contentPreview || local.contentPreview,
       passageData: {
         ...local.passageData,
         ...job.passageData,
+        content: job.passageData.content || local.passageData.content,
+        analysis: jobAnalysisHasData
+          ? job.passageData.analysis
+          : local.passageData.analysis ?? job.passageData.analysis,
       },
     });
   }
@@ -474,6 +486,11 @@ function queueItemFromJob(job: AiJobRow): QueuedPassage | null {
       },
     };
   }
+  // The `passage-list` poll view is intentionally light: it carries content +
+  // scalar metadata + analysis {id,updatedAt} but OMITS questions, notes, and
+  // analysis.analysisData. Read every relation defensively (??) so a lighter
+  // projection can never crash, and let mergeQueueItems below restore the
+  // seeded item's richer analysisData/questions when the poll omits them.
   const analysisData = parseAnalysis(passage.analysis?.analysisData);
   return {
     id: passage.id,
@@ -487,7 +504,8 @@ function queueItemFromJob(job: AiJobRow): QueuedPassage | null {
     analysisData,
     error: job.errorMessage,
     promptConfig: promptConfigFromJobConfig(job.config),
-    createdAt: new Date(job.createdAt),
+    // "생성일시" = the passage's own creation time (not the analysis job's).
+    createdAt: new Date(passage.createdAt),
     schoolName: passage.school?.name,
     grade: passage.grade ?? undefined,
     semester: passage.semester ?? undefined,
@@ -495,12 +513,28 @@ function queueItemFromJob(job: AiJobRow): QueuedPassage | null {
     publisher: passage.publisher ?? undefined,
     tags: typeof passage.tags === "string" ? safeParseTags(passage.tags) : undefined,
     passageData: {
-      ...passage,
+      id: passage.id,
+      title: passage.title,
+      content: passage.content,
+      grade: passage.grade,
+      semester: passage.semester,
+      unit: passage.unit,
+      publisher: passage.publisher,
+      difficulty: passage.difficulty,
+      tags: passage.tags,
+      source: passage.source,
       createdAt: new Date(passage.createdAt),
+      school: passage.school,
       analysis: passage.analysis
-        ? { ...passage.analysis, updatedAt: new Date(passage.analysis.updatedAt) }
+        ? {
+            id: passage.analysis.id,
+            analysisData: passage.analysis.analysisData ?? "",
+            contentHash: passage.analysis.contentHash ?? "",
+            updatedAt: new Date(passage.analysis.updatedAt),
+          }
         : null,
-      questions: passage.questions.map((q) => ({
+      notes: passage.notes ?? [],
+      questions: (passage.questions ?? []).map((q) => ({
         ...q,
         createdAt: new Date(q.createdAt),
       })),
@@ -596,7 +630,7 @@ export function usePassageQueue(
       run: async (signal) => {
         try {
           const res = await fetch(
-            "/api/workbench/ai-jobs?domain=PASSAGE_ANALYSIS&limit=100&view=summary",
+            "/api/workbench/ai-jobs?domain=PASSAGE_ANALYSIS&limit=100&view=passage-list",
             { credentials: "include", cache: "no-store", signal },
           );
           if (!res.ok) return null;

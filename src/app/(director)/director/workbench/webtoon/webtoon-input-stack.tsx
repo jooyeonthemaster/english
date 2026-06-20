@@ -2,12 +2,16 @@
 
 import { useMemo, type Dispatch, type SetStateAction } from "react";
 import { Loader2, Palette, Plus, Languages, Wand2 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { ExamPassagePickerModal } from "@/components/workbench/exam-passage-library/exam-passage-picker-modal";
+import type { ExamPassagePick } from "@/lib/exam-passages/types";
 import { PassageInputRow } from "@/components/workbench/passage-registration/passage-input/passage-input-row";
 import {
   isPristineEmptyRow,
   makeEmptyRow,
+  mergeExamPicksIntoRows,
   MIN_CONTENT_CHARS,
   type PassageInputRow as RowData,
 } from "@/components/workbench/passage-registration/passage-input/types";
@@ -59,6 +63,21 @@ export function WebtoonInputStack({
 
   const addRow = () => setRows((prev) => [...prev, makeEmptyRow()]);
 
+  // 수능·모평 기출 지문 불러오기 → 입력 스택 행으로 병합(중복·빈행 정리).
+  const handleLoadExamPicks = (picks: ExamPassagePick[]) => {
+    const res = mergeExamPicksIntoRows(rows, picks);
+    setRows(res.rows);
+    if (res.added > 0) {
+      toast.success(
+        res.skipped > 0
+          ? `기출 지문 ${res.added}개를 불러왔어요. (이미 있는 ${res.skipped}개 제외)`
+          : `기출 지문 ${res.added}개를 불러왔어요.`,
+      );
+    } else if (res.skipped > 0) {
+      toast.info("선택한 기출 지문은 이미 불러와 있어요.");
+    }
+  };
+
   const removeRow = (localId: string) =>
     setRows((prev) => {
       if (prev.length > 1) return prev.filter((r) => r.localId !== localId);
@@ -102,8 +121,10 @@ export function WebtoonInputStack({
         <p className="text-[12px] leading-relaxed text-slate-500">
           왼쪽 <b className="text-slate-600">자료 관리</b>에서 지문을 체크해{" "}
           <b className="text-blue-600">불러오거나</b>, 여기에 영어 지문을 직접
-          붙여넣으세요. 여러 지문은 <b className="text-blue-600">“지문 추가”</b>로
-          늘리면, 각 지문이 한 장의 세로형 웹툰으로 생성됩니다.
+          붙여넣으세요. 여러 지문은 아래{" "}
+          <b className="text-blue-600">“수능·모평 기출에서 불러오기”</b> 또는{" "}
+          <b className="text-blue-600">“빈 지문 추가”</b>로 늘리면, 각 지문이 한 장의
+          세로형 웹툰으로 생성됩니다.
         </p>
       </div>
 
@@ -126,16 +147,23 @@ export function WebtoonInputStack({
         ))}
       </div>
 
-      {/* 지문 추가 */}
-      <div className="shrink-0 pt-2">
+      {/* 지문 불러오기 / 추가 */}
+      <div className="shrink-0 space-y-2 pt-2">
+        <ExamPassagePickerModal
+          onPick={handleLoadExamPicks}
+          busy={saving}
+          triggerLabel="수능·모평 기출 지문에서 불러오기"
+          pickLabel="선택한 지문 불러오기"
+          triggerClassName="h-auto w-full justify-center rounded-xl border-blue-200 bg-blue-50/70 py-2.5 text-[13px] font-bold"
+        />
         <button
           type="button"
           onClick={addRow}
           disabled={saving}
-          className="flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-blue-300 bg-blue-50/60 py-2.5 text-[13px] font-bold text-blue-700 transition-colors hover:border-blue-400 hover:bg-blue-100/70 disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-blue-300 bg-blue-50/40 py-2.5 text-[13px] font-bold text-blue-700 transition-colors hover:border-blue-400 hover:bg-blue-100/70 disabled:opacity-50"
         >
           <Plus className="h-4 w-4" />
-          지문 추가
+          빈 지문 추가
         </button>
       </div>
 

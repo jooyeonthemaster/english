@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { ExamPassagePickerModal } from "@/components/workbench/exam-passage-library/exam-passage-picker-modal";
+import type { ExamPassagePick } from "@/lib/exam-passages/types";
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
@@ -36,6 +38,7 @@ import {
 import { PassageInputRow } from "./passage-input-row";
 import {
   makeEmptyRow,
+  mergeExamPicksIntoRows,
   MIN_CONTENT_CHARS,
   type PassageInputRow as RowData,
 } from "./types";
@@ -92,6 +95,21 @@ export function PassageInputStack({
 
   const addRow = () =>
     setRows((prev) => [...prev, makeEmptyRow()]);
+
+  // 수능·모평 기출 지문 불러오기 → 입력 스택 행으로 병합(중복·빈행 정리).
+  const handleLoadExamPicks = (picks: ExamPassagePick[]) => {
+    const res = mergeExamPicksIntoRows(rows, picks);
+    setRows(res.rows);
+    if (res.added > 0) {
+      toast.success(
+        res.skipped > 0
+          ? `기출 지문 ${res.added}개를 불러왔어요. (이미 있는 ${res.skipped}개 제외)`
+          : `기출 지문 ${res.added}개를 불러왔어요.`,
+      );
+    } else if (res.skipped > 0) {
+      toast.info("선택한 기출 지문은 이미 불러와 있어요.");
+    }
+  };
 
   // 문제생성 워크스페이스처럼 행은 0개까지 비울 수 있다 — 마지막 카드를 지우면
   // 빈 워크스페이스('지문 추가' 버튼만)로 돌아간다.
@@ -320,6 +338,14 @@ export function PassageInputStack({
           />
         ))}
 
+        {/* 수능·모평 기출 지문 불러오기 — 추가 버튼과 같은 그리드 타일(2열이면 반쪽). */}
+        <ExamPassagePickerModal
+          onPick={handleLoadExamPicks}
+          busy={saving}
+          triggerLabel="수능·모평 기출에서 불러오기"
+          pickLabel="선택한 지문 불러오기"
+          triggerClassName="flex h-11 w-full shrink-0 items-center justify-center gap-1.5 self-start rounded-xl border border-blue-200 bg-blue-50/70 text-[13px] font-bold text-blue-700 hover:bg-blue-100/70"
+        />
         {/* 지문 추가 — 지문 카드와 같은 가로 폭(2열이면 반쪽), 높이는 고정
             (self-start 로 옆 카드 높이에 맞춰 늘어나지 않게). 클릭하면 내
             지문함으로 돌아가 지문을 골라 담는다(문제생성 워크스페이스와 동일). */}
@@ -330,7 +356,7 @@ export function PassageInputStack({
           className="flex h-11 w-full shrink-0 items-center justify-center gap-1.5 self-start rounded-xl border-2 border-dashed border-blue-300 bg-blue-50/60 text-[13px] font-bold text-blue-700 transition-colors hover:border-blue-400 hover:bg-blue-100/70 disabled:opacity-50"
         >
           <Plus className="h-4 w-4" />
-          지문 추가
+          빈 지문 추가
         </button>
       </div>
 
