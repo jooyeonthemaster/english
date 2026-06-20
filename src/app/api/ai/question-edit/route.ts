@@ -56,10 +56,21 @@ function readTags(raw: unknown): string[] {
 
 const requestSchema = z.object({
   questionId: z.string().min(1),
-  instruction: z.string().min(1).max(2000),
+  // 블럭 클릭·유형 컨트롤·자유 프롬프트가 합성되므로 상한을 넉넉히 둔다.
+  instruction: z.string().min(1).max(4000),
   // 반복 수정(누적): 직전 수정본을 베이스라인으로 넘긴다. subType·지문·플랜은 항상 DB
   // 문제에서 읽으므로(아래) 클라이언트가 유형을 바꿀 수는 없다(유형 고정 보장).
   baseline: z.record(z.string(), z.unknown()).optional(),
+  // 사용자가 클릭으로 지정한 수정 대상 블럭(프롬프트 타깃 섹션용). 선택.
+  targets: z
+    .array(
+      z.object({
+        label: z.string().min(1).max(40),
+        field: z.string().max(40).optional(),
+      }),
+    )
+    .max(20)
+    .optional(),
 });
 // 수정 모델은 서버가 결정한다(resolveEditModelId: env QUESTION_EDIT_MODEL → bake-off 기본).
 // 클라이언트가 modelId 를 보내 PREMIUM(Claude)을 STANDARD 가격에 호출하는 우회를 차단하기
@@ -76,7 +87,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: "잘못된 요청입니다." }, { status: 400 });
     }
-    const { questionId, instruction, baseline: baselineOverride } = parsed.data;
+    const { questionId, instruction, baseline: baselineOverride, targets } = parsed.data;
 
     const question = await prisma.question.findFirst({
       where: { id: questionId, academyId: staff.academyId },
@@ -194,6 +205,7 @@ export async function POST(request: NextRequest) {
         passageContent: question.passage?.content ?? "",
         baseline,
         instruction,
+        targets,
         schoolType,
         gradeInfo: question.passage?.grade ? String(question.passage.grade) : "",
         generationPlan,
@@ -227,6 +239,7 @@ export async function POST(request: NextRequest) {
       changes: result.changes,
       detailedChanges: result.detailedChanges,
       questionText: result.questionText,
+      editSummary: result.editSummary,
       qualityWarnings: result.qualityWarnings,
       acceptedWithWarnings: result.acceptedWithWarnings,
       meta: result.meta,

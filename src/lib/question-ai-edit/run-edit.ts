@@ -86,6 +86,7 @@ export async function runQuestionEdit(
     subType,
     baseline,
     instruction,
+    targets,
     schoolType,
     gradeInfo,
     generationPlan,
@@ -131,20 +132,21 @@ export async function runQuestionEdit(
   });
 
   // 스키마: 베이스라인 구조에 맞춘 유형별 정확 스키마(없으면 구조 스키마 폴백).
+  // + editSummary(교사용 변경 서술)를 같은 호출로 받도록 래퍼를 확장한다(질문 스키마 불변).
   const schemaOptions = deriveEditSchemaOptions(subType, baseline);
-  let responseSchema: z.ZodType<{ questions: unknown[] }>;
+  let responseSchema: z.ZodType<{ questions: unknown[]; editSummary?: string }>;
   try {
+    let baseSchema: z.ZodTypeAny;
     if (AI_QUESTION_SCHEMAS[subType]) {
-      responseSchema = getAiResponseSchema(subType, schemaOptions) as z.ZodType<{
-        questions: unknown[];
-      }>;
+      baseSchema = getAiResponseSchema(subType, schemaOptions);
     } else if (QUESTION_SCHEMAS[subType]) {
-      responseSchema = z.object({
-        questions: z.array(QUESTION_SCHEMAS[subType]),
-      }) as unknown as z.ZodType<{ questions: unknown[] }>;
+      baseSchema = z.object({ questions: z.array(QUESTION_SCHEMAS[subType]) });
     } else {
       throw new Error(`지원하지 않는 유형입니다: ${subType}`);
     }
+    responseSchema = (baseSchema as unknown as z.ZodObject<z.ZodRawShape>).extend({
+      editSummary: z.string().optional(),
+    }) as unknown as z.ZodType<{ questions: unknown[]; editSummary?: string }>;
   } catch (err) {
     return baseResult({
       error: err instanceof Error ? err.message : `스키마 구성 실패: ${subType}`,
@@ -153,6 +155,7 @@ export async function runQuestionEdit(
 
   let previousFeedback: string | undefined;
   let lastPostProcessed: Record<string, unknown> | null = null;
+  let lastEditSummary: string | undefined;
   let lastWarnings: QuestionQualityIssue[] = [];
   let lastErrors: QuestionQualityIssue[] = [];
   let totalAttempts = 0;
@@ -168,14 +171,15 @@ export async function runQuestionEdit(
       passageContent,
       baseline,
       instruction,
+      targets,
       difficulty,
       generationPlan,
       previousFeedback,
     });
 
-    let modelObject: { questions?: unknown[] };
+    let modelObject: { questions?: unknown[]; editSummary?: string };
     try {
-      const res = await runEditModel<{ questions?: unknown[] }>({
+      const res = await runEditModel<{ questions?: unknown[]; editSummary?: string }>({
         schema: responseSchema,
         // google 경로는 system 미사용 → system 을 prompt 앞에 붙인다.
         prompt: provider === "google" && system ? `${system}\n\n${prompt}` : prompt,
@@ -185,6 +189,9 @@ export async function runQuestionEdit(
         deadlineAt,
       });
       modelObject = res.object;
+      if (typeof modelObject.editSummary === "string" && modelObject.editSummary.trim()) {
+        lastEditSummary = modelObject.editSummary.trim();
+      }
       totalAttempts += res.attempts;
       durationMs += res.durationMs;
       inputTokens = res.inputTokens ?? inputTokens;
@@ -306,6 +313,7 @@ export async function runQuestionEdit(
       changes: computeEditChanges(baseline, after),
       detailedChanges: computeDetailedDiff(baseline, after),
       questionText,
+      editSummary: lastEditSummary,
       qualityWarnings: warnings,
       acceptedWithWarnings,
       meta: {

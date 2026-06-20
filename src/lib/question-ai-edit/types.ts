@@ -30,6 +30,8 @@ export interface RunQuestionEditInput {
   baseline: StructuredQuestionLike;
   /** 사용자가 자연어로 입력한 수정 지시. */
   instruction: string;
+  /** 사용자가 클릭으로 지정한 수정 대상 블럭(프롬프트 타깃 섹션). 선택. */
+  targets?: { label: string; field?: string }[];
   /** 학교급("중학교"/"고등학교") — 발문 톤·난이도 보정. */
   schoolType: string;
   /** 학년/학기 등 메타(프롬프트 컨텍스트용, 없으면 빈 문자열). */
@@ -68,6 +70,8 @@ export interface RunQuestionEditResult {
   detailedChanges: DiffEntry[];
   /** 저장용으로 직렬화한 questionText(buildGeneratedQuestionText). */
   questionText?: string;
+  /** 모델이 서술한 "요청대로 무엇을 어떻게 바꿨는지" 한국어 변경 요약(교사용·미저장). */
+  editSummary?: string;
   /** 품질 게이트 경고(에러는 재시도, 최종 경고만 노출). */
   qualityWarnings: QuestionQualityIssue[];
   /** 마지막 시도가 품질 에러를 안고 통과(완화 수락)했는지. */

@@ -34,13 +34,26 @@ export interface EditQualityWarning {
 
 export interface EditVersion {
   id: number;
+  /** 모델에 전달된 합성 지시(전문). */
   instruction: string;
+  /** 버전 칩 표시용 짧은 라벨(자유 프롬프트 또는 지시 요약). */
+  label: string;
   after: Rec;
   changes: EditChange[];
   detailedChanges: DetailedDiffEntry[];
   warnings: EditQualityWarning[];
   questionText: string;
+  /** 모델이 서술한 "요청대로 무엇을 어떻게 바꿨는지" 한국어 변경 요약. */
+  editSummary: string;
   acceptedWithWarnings: boolean;
+}
+
+/** submit 시 함께 전달할 구조화 옵션. */
+export interface SubmitOptions {
+  /** 사용자가 클릭으로 지정한 수정 대상 블럭(백엔드 프롬프트 타깃 섹션). */
+  targets?: { label: string; field?: string }[];
+  /** 버전 칩 표시용 짧은 라벨. */
+  label?: string;
 }
 
 export interface EditContext {
@@ -122,11 +135,11 @@ export function useQuestionAiEdit({
   const editBaseline: Rec | null = activeVersion?.after ?? context?.before ?? null;
 
   const submit = useCallback(
-    async (instruction: string) => {
+    async (instruction: string, options?: SubmitOptions): Promise<boolean> => {
       const trimmed = instruction.trim();
       // 동기 가드 우선 — sending(state)은 다음 렌더에야 반영되므로 같은 프레임 중복 전송은
       // inFlightRef 로만 막을 수 있다(이중 과금 방지).
-      if (!trimmed || inFlightRef.current || !context) return;
+      if (!trimmed || inFlightRef.current || !context) return false;
       inFlightRef.current = true;
       userPinnedRef.current = false;
       setSending(true);
@@ -135,6 +148,7 @@ export function useQuestionAiEdit({
       const ac = new AbortController();
       abortRef.current = ac;
       try {
+        const targets = options?.targets?.length ? options.targets : undefined;
         const res = await fetch("/api/ai/question-edit", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -142,22 +156,25 @@ export function useQuestionAiEdit({
             questionId,
             instruction: trimmed,
             baseline: editBaseline ?? undefined,
+            targets,
           }),
           signal: ac.signal,
         });
         const data = await res.json();
         if (!res.ok || !data.ok) {
           setSendError(data?.error || "수정 생성에 실패했습니다.");
-          return;
+          return false;
         }
         const v: EditVersion = {
           id: ++versionCounter.current,
           instruction: trimmed,
+          label: (options?.label || trimmed).slice(0, 60),
           after: data.after,
           changes: data.changes ?? [],
           detailedChanges: data.detailedChanges ?? [],
           warnings: data.qualityWarnings ?? [],
           questionText: data.questionText ?? "",
+          editSummary: typeof data.editSummary === "string" ? data.editSummary : "",
           acceptedWithWarnings: !!data.acceptedWithWarnings,
         };
         setVersions((prev) => {
@@ -169,9 +186,11 @@ export function useQuestionAiEdit({
         if (typeof data.creditsRemaining === "number") {
           setCreditsRemaining(data.creditsRemaining);
         }
+        return true;
       } catch (e) {
-        if (e instanceof DOMException && e.name === "AbortError") return;
+        if (e instanceof DOMException && e.name === "AbortError") return false;
         setSendError(e instanceof Error ? e.message : "요청 중 오류가 발생했습니다.");
+        return false;
       } finally {
         inFlightRef.current = false;
         setSending(false);

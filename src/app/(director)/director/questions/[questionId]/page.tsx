@@ -1,7 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
 import { getWorkbenchQuestion } from "@/actions/workbench";
-import { QuestionEditClient } from "@/components/workbench/question-edit-client";
+import { QuestionEditWorkspace } from "@/components/workbench/question-ai-edit/question-edit-workspace";
 
 interface PageProps {
   params: Promise<{ questionId: string }>;
@@ -16,5 +16,5 @@ export default async function QuestionDetailPage({ params }: PageProps) {
 
   if (!question) notFound();
 
-  return <QuestionEditClient question={question} />;
+  return <QuestionEditWorkspace question={question} mode="page" />;
 }
