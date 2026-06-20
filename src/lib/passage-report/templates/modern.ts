@@ -21,7 +21,7 @@ export const modernTemplate: DesignTemplate = {
     surface: "#F8FAFC",
     textOnSurface: "#0F172A",
     muted: "#64748B",
-    fontFamily: '"Paperlogy", "Pretendard", sans-serif',
+    fontFamily: "Pretendard",
     fontScale: 1,
   },
   pages: [

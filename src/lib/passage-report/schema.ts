@@ -314,7 +314,7 @@ export const DEFAULT_REPORT_THEME: ReportTheme = {
   surface: "#F8FAFC",
   textOnSurface: "#0F172A",
   muted: "#64748B",
-  fontFamily: '"Paperlogy", "Pretendard", sans-serif',
+  fontFamily: "Pretendard",
   fontScale: 1,
 };
 

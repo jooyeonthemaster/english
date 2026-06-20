@@ -26,6 +26,9 @@ export {
   bulkUpdatePassageTags,
 } from "./workbench/passages";
 
+export { importExamPassages } from "./workbench/exam-passages";
+export type { ImportExamPassagesResult } from "./workbench/exam-passages";
+
 export {
   getSourceMaterialSummary,
   getPassageCollectionSummary,

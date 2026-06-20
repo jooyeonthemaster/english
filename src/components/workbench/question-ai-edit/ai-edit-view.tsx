@@ -27,7 +27,10 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
 import {
+  BlockChangeContext,
   BlockSelectionContext,
+  type BlockChange,
+  type BlockChangeApi,
   type BlockSelectionApi,
   type SelectedBlock,
 } from "@/components/workbench/question-renderer-blocks";
@@ -36,7 +39,11 @@ import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 
 import { ChangeLogPanel } from "./change-log-panel";
 import { TypeEditPanel } from "./type-edit-panel";
-import { useQuestionAiEdit, type EditChange } from "./use-question-ai-edit";
+import {
+  useQuestionAiEdit,
+  type DetailedDiffEntry,
+  type EditChange,
+} from "./use-question-ai-edit";
 
 const CHANGE_STYLE: Record<EditChange["kind"], { cls: string; verb: string }> = {
   added: { cls: "bg-emerald-50 text-emerald-700 border-emerald-200", verb: "추가" },
@@ -44,6 +51,35 @@ const CHANGE_STYLE: Record<EditChange["kind"], { cls: string; verb: string }> = 
   changed: { cls: "bg-blue-50 text-blue-700 border-blue-200", verb: "수정" },
   reordered: { cls: "bg-violet-50 text-violet-700 border-violet-200", verb: "순서" },
 };
+
+/** detailedChanges(blockId 부여됨)를 수정본 미리보기의 블럭별 변경 마크 맵으로 변환. */
+function buildBlockChangeMap(detailed: DetailedDiffEntry[]): BlockChangeApi {
+  const byId: Record<string, BlockChange> = {};
+  for (const e of detailed) {
+    if (!e.blockId) continue;
+    const entry = { kind: e.kind, ref: e.ref, before: e.before, after: e.after, note: e.note };
+    const existing = byId[e.blockId];
+    if (existing) {
+      existing.entries.push(entry);
+      if (existing.kind !== e.kind) existing.kind = "changed"; // 혼합 → 수정
+    } else {
+      byId[e.blockId] = {
+        kind: e.kind,
+        // 단일 항목이면 항목 식별자까지(예: "선택지 ②"), 여러 항목이면 카테고리만.
+        label: e.ref ? `${e.category} ${e.ref}` : e.category,
+        entries: [entry],
+      };
+    }
+  }
+  // 여러 항목이 모인 블럭은 라벨에서 ref 제거(예: 오답 해설 여러 개 → "오답 해설").
+  for (const [id, change] of Object.entries(byId)) {
+    if (change.entries.length > 1) {
+      const cat = detailed.find((e) => e.blockId === id)?.category;
+      if (cat) change.label = cat;
+    }
+  }
+  return { byId };
+}
 
 interface Props {
   questionId: string;
@@ -148,6 +184,14 @@ export function AiEditView({
     }),
     [attachedBlocks],
   );
+
+  // 수정본 미리보기의 블럭별 변경 마크 맵(활성 버전 기준).
+  const changeMap = useMemo<BlockChangeApi>(
+    () => buildBlockChangeMap(activeVersion?.detailedChanges ?? []),
+    [activeVersion],
+  );
+  const changedBlockCount = Object.keys(changeMap.byId).length;
+  const [expandAllChanges, setExpandAllChanges] = useState(false);
 
   function addQuick(instruction: string, label: string) {
     setQuickChips((prev) => (prev.some((c) => c.label === label) ? prev : [...prev, { label, instruction }]));
@@ -385,13 +429,34 @@ export function AiEditView({
                         changes={activeVersion.changes}
                       />
                     ) : (
-                      <StructuredQuestionRenderer
-                        question={activeVersion.after}
-                        index={0}
-                        hideHeader
-                        sourcePassageContent={context?.passageContent}
-                        answerRevealMode="show-all"
-                      />
+                      <>
+                        {changedBlockCount > 0 && (
+                          <div className="flex items-center justify-between gap-2 rounded-lg bg-blue-50/70 px-2.5 py-1.5">
+                            <span className="flex items-center gap-1.5 text-[11.5px] font-medium text-blue-700">
+                              <MousePointerClick className="h-3.5 w-3.5" />
+                              색칠된 {changedBlockCount}개 블럭이 변경됐어요. 좌측 색 막대 블럭의 배지를 눌러 바뀐 내용을 확인하세요.
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setExpandAllChanges((v) => !v)}
+                              className="shrink-0 rounded-md border border-blue-300 bg-white px-2 py-0.5 text-[11px] font-semibold text-blue-700 transition-colors hover:bg-blue-50"
+                            >
+                              {expandAllChanges ? "모두 접기" : "모두 펼치기"}
+                            </button>
+                          </div>
+                        )}
+                        <BlockChangeContext.Provider
+                          value={{ byId: changeMap.byId, expandAll: expandAllChanges }}
+                        >
+                          <StructuredQuestionRenderer
+                            question={activeVersion.after}
+                            index={0}
+                            hideHeader
+                            sourcePassageContent={context?.passageContent}
+                            answerRevealMode="show-all"
+                          />
+                        </BlockChangeContext.Provider>
+                      </>
                     )}
                   </div>
                 ) : (

@@ -17,7 +17,7 @@ export const examSheetTemplate: DesignTemplate = {
     surface: "#FFFFFF",
     textOnSurface: "#0F172A",
     muted: "#475569",
-    fontFamily: '"Paperlogy", "Pretendard", sans-serif',
+    fontFamily: "Pretendard",
     fontScale: 0.95,
   },
   pages: [

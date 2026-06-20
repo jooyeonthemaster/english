@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -19,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DIFFICULTY_OPTIONS } from "./constants";
+import { DIFFICULTY_OPTIONS, TYPE_OPTIONS } from "./constants";
 
 interface Props {
   isModal: boolean;

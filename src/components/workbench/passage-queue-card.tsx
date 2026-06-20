@@ -18,6 +18,9 @@ import {
   Gem,
   Sparkles,
   CalendarClock,
+  FileText,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Badge } from "@/components/ui/badge";
@@ -50,6 +53,22 @@ function formatAnalysisDateTime(value: Date | string | null | undefined) {
   return date.toLocaleString("ko-KR", {
     month: "numeric",
     day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+}
+
+// "생성일시" — 지문이 등록된 날짜+시각(연도 포함). 분석일시(formatAnalysisDateTime)와
+// 달리 오래된 지문도 구분되도록 연도를 함께 보여준다.
+function formatCreatedDateTime(value: Date | string | null | undefined) {
+  if (!value) return "";
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleString("ko-KR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
@@ -174,6 +193,9 @@ export const PassageQueueCard = memo(function PassageQueueCard({
   onRemove,
 }: PassageQueueCardProps) {
   const [confirmDelete, setConfirmDelete] = useState(false);
+  // 지문 토글 — 문제 생성(문제 관리) 카드의 '지문 참조 토글' UI 를 그대로 재활용해
+  // 카드 안에서 원문 지문을 펼쳐 볼 수 있게 한다.
+  const [passageOpen, setPassageOpen] = useState(false);
   const config = STATUS_CONFIG[passage.status];
   const StatusIcon = config.icon;
   const displayTitle = sanitizeAiModelDisclosureText(passage.title);
@@ -190,6 +212,8 @@ export const PassageQueueCard = memo(function PassageQueueCard({
     passage.status === "done"
       ? formatAnalysisDateTime(passage.passageData.analysis?.updatedAt)
       : "";
+  const createdAtLabel = formatCreatedDateTime(passage.passageData.createdAt);
+  const passageContent = passage.passageData.content?.trim() || "";
   const loadingClass = isLoading
     ? passage.status === "analyzing"
       ? "workbench-loading-card workbench-loading-card--analyzing"
@@ -424,6 +448,13 @@ export const PassageQueueCard = memo(function PassageQueueCard({
               <span className="text-[10px] text-slate-400">
                 {passage.wordCount} words
               </span>
+              {createdAtLabel ? (
+                <span className="inline-flex min-w-0 items-center gap-0.5 text-[10px] font-medium text-slate-400">
+                  <Clock className="h-3 w-3 shrink-0" aria-hidden="true" />
+                  <span className="shrink-0">생성</span>
+                  <span className="shrink-0 tabular-nums">{createdAtLabel}</span>
+                </span>
+              ) : null}
               {analysisDateLabel ? (
                 <span className="inline-flex min-w-0 items-center gap-0.5 text-[10px] font-medium text-slate-400">
                   <CalendarClock className="h-3 w-3 shrink-0" aria-hidden="true" />
@@ -505,10 +536,52 @@ export const PassageQueueCard = memo(function PassageQueueCard({
         </div>
       </div>
 
-      {/* Content preview */}
-      <p className="text-[11px] text-slate-500 leading-relaxed mt-2.5 line-clamp-3">
-        {passage.contentPreview}
-      </p>
+      {/* Content preview — 지문을 펼치면 전체 본문이 아래에 보이므로 미리보기는 숨긴다. */}
+      {!passageOpen && (
+        <p className="text-[11px] text-slate-500 leading-relaxed mt-2.5 line-clamp-3">
+          {passage.contentPreview}
+        </p>
+      )}
+
+      {/* 지문 토글 — 문제 생성(문제 관리) 카드의 '지문 참조 토글' UI 를 그대로 재활용.
+          클릭하면 카드 안에서 원문 지문을 펼쳐 볼 수 있다. */}
+      {passageContent ? (
+        <>
+          <button
+            type="button"
+            data-drag-select-ignore
+            onClick={(e) => {
+              e.stopPropagation();
+              setPassageOpen((prev) => !prev);
+            }}
+            aria-expanded={passageOpen}
+            title={passageOpen ? "지문 접기" : "지문 보기"}
+            className="mt-2.5 inline-flex h-7 w-full min-w-0 items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-100"
+          >
+            <FileText className="h-3 w-3 shrink-0 text-blue-400" />
+            <span className="min-w-0 flex-1 truncate text-left text-[12px] font-semibold">
+              {passageOpen ? "지문 접기" : "지문 보기"}
+            </span>
+            {passageOpen ? (
+              <ChevronUp className="h-3 w-3 shrink-0 text-slate-400" />
+            ) : (
+              <ChevronDown className="h-3 w-3 shrink-0 text-slate-400" />
+            )}
+          </button>
+          {passageOpen ? (
+            <div
+              data-drag-select-ignore
+              onClick={(e) => e.stopPropagation()}
+              onDoubleClick={(e) => e.stopPropagation()}
+              className="mt-2 rounded-lg border border-slate-100 bg-slate-50 px-2.5 py-2"
+            >
+              <p className="max-h-[250px] overflow-y-auto whitespace-pre-line font-mono text-[11px] leading-relaxed text-slate-500">
+                {passageContent}
+              </p>
+            </div>
+          ) : null}
+        </>
+      ) : null}
 
       {/* Metadata tags */}
       {(passage.schoolName || passage.grade || passage.unit || passage.publisher) && (

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/popover";
 import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
 import {
+  BlockChangeContext,
   SelectableBlock,
   useBlockSelection,
   blockExcerpt,
@@ -457,10 +458,20 @@ function normalizeAnswerLabel(value: unknown): string {
 }
 
 /** Conditions box (서술형 조건 목록) */
-export function ConditionsBox({ conditions, label }: { conditions: string[]; label?: string }) {
+export function ConditionsBox({
+  conditions,
+  label,
+  /** blockId 강제 지정 — 표시 label 과 diff blockId 가 다를 때(예: "전환 조건" 박스가
+   *  diff 의 conditions 필드와 매칭되도록 "conditions" 고정). 미지정 시 label 기반 파생. */
+  blockId,
+}: {
+  conditions: string[];
+  label?: string;
+  blockId?: string;
+}) {
   return (
     <SelectableBlock
-      blockId={label ? `conditions:${label}` : "conditions"}
+      blockId={blockId ?? (label ? `conditions:${label}` : "conditions")}
       label={label || "조건"}
       field="conditions"
       excerpt={blockExcerpt(conditions.join(" · "))}
@@ -535,6 +546,9 @@ export function ExplanationSection({
 }) {
   const mode = useContext(AnswerRevealContext);
   const selectionEnabled = !!useBlockSelection()?.enabled;
+  // 변경 마크 모드(수정본 미리보기)에서도 토글 없이 인라인 노출 → 해설/핵심포인트/오답해설의
+  // 변경 마크가 곧장 보이게 한다.
+  const changeActive = !!useContext(BlockChangeContext);
   const [open, setOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -603,7 +617,7 @@ export function ExplanationSection({
   // as-explanation: 부모 '해설 보기' 토글이 이미 감싸므로 자체 토글 없이 인라인 노출.
   // 블럭 선택 모드(AI 수정 미리보기): 토글 없이 인라인 노출 → 해설/핵심포인트/오답분석을
   // 곧장 클릭해 수정 대상으로 지정할 수 있게 한다.
-  if (mode === "as-explanation" || selectionEnabled) {
+  if (mode === "as-explanation" || selectionEnabled || changeActive) {
     return content;
   }
 

@@ -17,6 +17,9 @@ import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { CREDIT_TOP_UP_COMPLETION_TEXT } from "@/lib/legal/payment-processor";
 import { prisma } from "@/lib/prisma";
 import { getPlanPricingPreview } from "@/lib/subscription-plan-pricing";
+import { JsonLd } from "@/components/seo/json-ld";
+import { absoluteUrl } from "@/lib/seo/config";
+import { productSchema } from "@/lib/seo/structured-data";
 
 export const dynamic = "force-dynamic";
 
@@ -24,11 +27,12 @@ const SUBSCRIPTION_BILLING_ENABLED = FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING;
 
 export const metadata: Metadata = {
   title: SUBSCRIPTION_BILLING_ENABLED
-    ? "SMOAT 구독 및 크레딧 상품 정보 | SMOAT"
-    : "SMOAT 크레딧 상품 정보 | SMOAT",
+    ? "구독 및 크레딧 상품 정보"
+    : "크레딧 상품 정보",
   description: SUBSCRIPTION_BILLING_ENABLED
     ? "SMOAT 구독 요금제, 크레딧 상품 가격, 기능별 차감 크레딧, 지급 및 배송 정책을 안내합니다."
     : "SMOAT 크레딧 상품 가격, 기능별 차감 크레딧, 지급 및 배송 정책을 안내합니다.",
+  alternates: { canonical: "/credits/products" },
 };
 
 export default async function CreditProductsPage() {
@@ -45,6 +49,19 @@ export default async function CreditProductsPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
+      {products.length > 0 && (
+        <JsonLd
+          id="ld-credit-products"
+          data={products.map((product) =>
+            productSchema({
+              name: product.name,
+              description: product.description ?? undefined,
+              price: product.price,
+              url: absoluteUrl("/credits/products"),
+            }),
+          )}
+        />
+      )}
       <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
         <nav className="mb-8 flex items-center justify-between gap-4">
           <Link href="/" className="text-[14px] font-black tracking-widest">

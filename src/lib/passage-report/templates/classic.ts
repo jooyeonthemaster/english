@@ -15,7 +15,7 @@ export const classicTemplate: DesignTemplate = {
     surface: "#FAFAF9",
     textOnSurface: "#1C1917",
     muted: "#78716C",
-    fontFamily: '"Paperlogy", "Pretendard", sans-serif',
+    fontFamily: "Pretendard",
     fontScale: 1,
   },
   pages: [

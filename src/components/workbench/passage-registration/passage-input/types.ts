@@ -88,6 +88,70 @@ export function makeRowFromDraft(args: {
   };
 }
 
+/**
+ * Build a row from a 수능·모평 기출 지문 pick (기출 라이브러리 → 불러오기).
+ * sourceDraftId 는 null — 추출 draft 가 아니므로 분석 시 새 Passage 로 저장된다.
+ * source 는 라벨용("수능 기출"). 같은 본문 중복은 mergeExamPicksIntoRows 가 거른다.
+ */
+export function makeRowFromExamPick(args: {
+  title: string;
+  content: string;
+  collapsed?: boolean;
+}): PassageInputRow {
+  return {
+    localId: newRowId(),
+    title: args.title,
+    content: args.content,
+    annotations: [],
+    restoration: null,
+    preRestoreContent: null,
+    preRestoreAnnotations: null,
+    sourceDraftId: null,
+    source: "수능 기출",
+    collapsed: args.collapsed ?? true,
+    editorSeed: 0,
+  };
+}
+
+export interface ExamPickLike {
+  id: string;
+  title: string;
+  content: string;
+}
+
+/**
+ * 기출 picks 를 입력 스택 rows 에 병합한다(학습지생성·웹툰 공용).
+ * 본문 동일(trim) 한 지문은 중복 추가하지 않고, 손 안 댄 빈 행은 비워준다.
+ * 정확히 1개만 추가되면 펼친 상태로(바로 확인), 여러 개면 접힌 상태로 추가.
+ */
+export function mergeExamPicksIntoRows(
+  prev: PassageInputRow[],
+  picks: ExamPickLike[],
+): { rows: PassageInputRow[]; added: number; skipped: number } {
+  const existing = new Set(prev.map((r) => (r.content ?? "").trim()));
+  const fresh = picks.filter((p) => {
+    const c = (p.content ?? "").trim();
+    if (c.length < MIN_CONTENT_CHARS) return false;
+    if (existing.has(c)) return false;
+    existing.add(c);
+    return true;
+  });
+  const added = fresh.length;
+  const skipped = picks.length - added;
+  if (added === 0) return { rows: prev, added: 0, skipped };
+
+  const newRows = fresh.map((p) =>
+    makeRowFromExamPick({
+      title: p.title,
+      content: p.content,
+      collapsed: added > 1,
+    }),
+  );
+  // 손 안 댄 빈 행은 제거하고 새 행을 이어붙인다.
+  const kept = prev.filter((r) => !isPristineEmptyRow(r));
+  return { rows: [...kept, ...newRows], added, skipped };
+}
+
 /** A blank row the teacher hasn't touched — safe to drop when loading drafts. */
 export function isPristineEmptyRow(row: PassageInputRow): boolean {
   return (

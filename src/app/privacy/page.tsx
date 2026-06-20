@@ -12,7 +12,8 @@ import {
 const SUBSCRIPTION_BILLING_ENABLED = FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING;
 
 export const metadata: Metadata = {
-  title: "개인정보처리방침 | SMOAT",
+  title: "개인정보처리방침",
+  alternates: { canonical: "/privacy" },
   description:
     "SMOAT의 개인정보 수집, 이용, 보관, 위탁, 결제 및 환불 처리 기준을 안내합니다.",
 };

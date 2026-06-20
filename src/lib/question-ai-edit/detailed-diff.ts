@@ -22,6 +22,64 @@ export interface DiffEntry {
   after?: string;
   /** 부가 설명(예: "정답 표시 변경", "pointCode a→d"). */
   note?: string;
+  /** 렌더러 SelectableBlock 의 blockId 와 일치 — 수정본 미리보기에 변경 마크를 입힌다.
+   *  미리보기에서 마크되지 않는 항목(분석 테이블 등)은 생략. */
+  blockId?: string;
+}
+
+// ── 필드/항목 → 렌더러 blockId 매핑(프리미티브 SelectableBlock 의 blockId 와 일치) ──
+function scalarBlockId(field: string, subType: string): string | undefined {
+  switch (field) {
+    case "direction":
+      return "direction";
+    case "summaryWithBlanks":
+      return "passage:요약문";
+    case "koreanGloss":
+      return "passage:해석";
+    case "sentenceWithBlank":
+    case "passageWithBlank":
+    case "passageWithMarkers":
+    case "passageWithUnderline":
+    case "passageWithNumbers":
+    case "contextSentence":
+    case "targetWord":
+      return "passage";
+    case "underlinedWord":
+      return "underlinedWord";
+    case "underlinedPronoun":
+      return "underlinedPronoun";
+    case "givenSentence":
+      return subType === "SENTENCE_INSERT" ? "given:삽입할 문장" : "givenSentence";
+    case "referenceSentence":
+      return "given:영작할 우리말";
+    case "originalSentence":
+      return "given:원래 문장";
+    case "modelAnswer":
+    case "answer":
+      // FILL_BLANK_KEY 의 정답 표현(answer)은 ModelAnswer("정답") 블럭으로 렌더된다.
+      return "modelAnswer";
+    case "explanation":
+      return "explanation";
+    default:
+      // underlinedExpression(IMPLIED_MEANING 의 함축 근거)·impliedMeaning·surfaceMeaning·
+      // difficulty 등은 별도 블럭으로 렌더되지 않으므로 미마크.
+      return undefined;
+  }
+}
+
+// 배열 전체가 한 블럭으로 렌더되는 필드(개별 항목 마크 아님).
+const WHOLE_BLOCK_ARRAY: Record<string, string> = {
+  conditions: "conditions",
+  keyPoints: "keyPoints",
+  scrambledWords: "scrambled",
+};
+
+function arrayItemBlockId(field: string, itemKey: string): string | undefined {
+  if (WHOLE_BLOCK_ARRAY[field]) return WHOLE_BLOCK_ARRAY[field];
+  if (field === "options") return `option:${itemKey}`;
+  if (field === "paragraphs") return `paragraph:${itemKey}`;
+  // markedExpressions/markedWords/slots/underlinedSegments/blanks 는 미리보기 마크 대상 아님.
+  return undefined;
 }
 
 type Rec = Record<string, unknown>;
@@ -146,6 +204,7 @@ const SCALAR_FIELDS: Array<{ key: string; category: string }> = [
   { key: "impliedMeaning", category: "함축 의미" },
   { key: "surfaceMeaning", category: "표면 의미" },
   { key: "modelAnswer", category: "모범답안" },
+  { key: "answer", category: "정답" },
   { key: "explanation", category: "해설" },
   { key: "difficulty", category: "난이도" },
 ];
@@ -190,6 +249,7 @@ export function computeDetailedDiff(before: Rec, after: Rec): DiffEntry[] {
   const out: DiffEntry[] = [];
   let n = 0;
   const id = () => `d${n++}`;
+  const subType = s(after._typeId) || s(before._typeId);
 
   // 1) 스칼라 텍스트 필드.
   for (const { key, category } of SCALAR_FIELDS) {
@@ -202,6 +262,7 @@ export function computeDetailedDiff(before: Rec, after: Rec): DiffEntry[] {
       kind: !b ? "added" : !a ? "removed" : "changed",
       before: b || undefined,
       after: a || undefined,
+      blockId: scalarBlockId(key, subType),
     });
   }
 
@@ -216,6 +277,7 @@ export function computeDetailedDiff(before: Rec, after: Rec): DiffEntry[] {
         kind: !b ? "added" : !a ? "removed" : "changed",
         before: b || undefined,
         after: a || undefined,
+        blockId: "correctAnswer",
       });
     }
   }
@@ -226,11 +288,11 @@ export function computeDetailedDiff(before: Rec, after: Rec): DiffEntry[] {
     const aArr = Array.isArray(after[key]) ? (after[key] as unknown[]) : null;
     if (!bArr && !aArr) continue;
     if (bArr && !aArr) {
-      out.push({ id: id(), category, kind: "removed", before: `${bArr.length}개 항목` });
+      out.push({ id: id(), category, kind: "removed", before: `${bArr.length}개 항목`, blockId: WHOLE_BLOCK_ARRAY[key] });
       continue;
     }
     if (!bArr && aArr) {
-      out.push({ id: id(), category, kind: "added", after: `${aArr.length}개 항목` });
+      out.push({ id: id(), category, kind: "added", after: `${aArr.length}개 항목`, blockId: WHOLE_BLOCK_ARRAY[key] });
       continue;
     }
     const b = indexArray(key, bArr!);
@@ -250,6 +312,7 @@ export function computeDetailedDiff(before: Rec, after: Rec): DiffEntry[] {
         before: b.map((x) => x.ref).join(" → "),
         after: a.map((x) => x.ref).join(" → "),
         note: "순서만 변경",
+        blockId: WHOLE_BLOCK_ARRAY[key],
       });
       continue;
     }
@@ -263,12 +326,12 @@ export function computeDetailedDiff(before: Rec, after: Rec): DiffEntry[] {
       const ai = aMap.get(k);
       if (bi && ai) {
         if (bi.text !== ai.text) {
-          out.push({ id: id(), category, ref: ai.ref || bi.ref, kind: "changed", before: bi.text, after: ai.text });
+          out.push({ id: id(), category, ref: ai.ref || bi.ref, kind: "changed", before: bi.text, after: ai.text, blockId: arrayItemBlockId(key, k) });
         }
       } else if (bi && !ai) {
-        out.push({ id: id(), category, ref: bi.ref, kind: "removed", before: bi.text });
+        out.push({ id: id(), category, ref: bi.ref, kind: "removed", before: bi.text, blockId: arrayItemBlockId(key, k) });
       } else if (!bi && ai) {
-        out.push({ id: id(), category, ref: ai.ref, kind: "added", after: ai.text });
+        out.push({ id: id(), category, ref: ai.ref, kind: "added", after: ai.text, blockId: arrayItemBlockId(key, k) });
       }
     }
   }
@@ -287,6 +350,7 @@ export function computeDetailedDiff(before: Rec, after: Rec): DiffEntry[] {
         kind: !b[k] ? "added" : !a[k] ? "removed" : "changed",
         before: b[k] || undefined,
         after: a[k] || undefined,
+        blockId: "wrongOptionExplanations",
       });
     }
   }

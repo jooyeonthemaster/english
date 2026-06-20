@@ -33,6 +33,55 @@ export async function GET(req: NextRequest) {
     : 50;
   const view = req.nextUrl.searchParams.get("view");
 
+  // `?view=passage-list` — the 학습지 생성 지문 목록 poll (usePassageQueue). It needs
+  // each passage's CONTENT (for word count, preview, and the inline 지문 토글) plus
+  // light metadata, but deliberately OMITS the heavy parts that made the summary
+  // poll necessary in the first place:
+  //   • passage.questions (+ explanations) — 86–89% of the payload, unused here.
+  //   • passage.notes — read by no consumer.
+  //   • analysis.analysisData (the 5-layer JSON, multiple KB each) — the card's
+  //     mini-summary comes from the server-seeded items / detail modal, not the poll.
+  // So this view carries only content + scalar metadata + analysis {id,updatedAt}:
+  // a few KB/passage, no question fan-out → egress stays bounded.
+  if (view === "passage-list") {
+    const passageJobs = await prisma.workbenchAiJob.findMany({
+      where: {
+        academyId: staff.academyId,
+        deletedAt: null,
+        ...(domain ? { domain } : {}),
+      },
+      select: {
+        id: true,
+        status: true,
+        title: true,
+        passageId: true,
+        errorMessage: true,
+        config: true,
+        createdAt: true,
+        passage: {
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            grade: true,
+            semester: true,
+            unit: true,
+            publisher: true,
+            difficulty: true,
+            tags: true,
+            source: true,
+            createdAt: true,
+            school: { select: { id: true, name: true, type: true } },
+            analysis: { select: { id: true, updatedAt: true } },
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+      take: limit,
+    });
+    return NextResponse.json({ jobs: passageJobs });
+  }
+
   // `?view=summary` — scalar-only projection for poll-only consumers (the global
   // task-queue badge/list adapters) that read counts + status and never touch
   // the passage, questions, result, or config. Skips the passage include AND the

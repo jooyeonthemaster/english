@@ -144,7 +144,7 @@ export const REPORT_LAYOUT = {
   bodyFontPt: 10,
   smallFontPt: 8.5,
   // 한글 산세리프 / 영문 세리프 — 레퍼런스의 클래식 학술 톤
-  fontKo: `"Paperlogy", "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif`,
+  fontKo: `"Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif`,
   fontEnSerif: `"Noto Serif", "Times New Roman", serif`,
 } as const;
 

@@ -6,6 +6,7 @@ import {
   ClipboardPaste,
   FilePen,
   FolderOpen,
+  GraduationCap,
   ImageUp,
 } from "lucide-react";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
@@ -15,7 +16,7 @@ import {
 } from "./multi-passage-paste";
 
 export type IntakeView = "intake" | "library";
-export type IntakeTab = "paste" | "upload";
+export type IntakeTab = "paste" | "upload" | "exam";
 
 interface IntakeSurfaceProps {
   intakeView: IntakeView;
@@ -43,6 +44,11 @@ interface IntakeSurfaceProps {
   suppressTutorial?: boolean;
   /** Image/PDF extraction surface. Falls back to a placeholder. */
   upload?: ReactNode;
+  /**
+   * 수능·모평 기출 지문 라이브러리 브라우저(ExamPassageLibrary). 주면 "수능 기출"
+   * 탭이 노출된다 — 문제 생성 페이지에서만 마운트한다.
+   */
+  examBrowser?: ReactNode;
   /**
    * 콘텐츠 영역을 덮는 오버레이 (지문 워크스페이스). 탭 행은 그대로 두고
    * 본문만 가린다 — 워크스페이스에 들어가도 입력·선택 탭이 남는다.
@@ -79,6 +85,7 @@ export function IntakeSurface({
   showPasteTab = true,
   suppressTutorial = false,
   upload,
+  examBrowser,
   overlay,
   onDismissOverlay,
   workspaceActive = false,
@@ -90,6 +97,8 @@ export function IntakeSurface({
   const pasteActive =
     showPasteTab && intakeView === "intake" && intakeTab === "paste";
   const uploadActive = intakeView === "intake" && intakeTab === "upload";
+  const examActive =
+    !!examBrowser && intakeView === "intake" && intakeTab === "exam";
   const libraryActive = intakeView === "library";
 
   return (
@@ -126,6 +135,19 @@ export function IntakeSurface({
           label="파일업로드"
           tourKey="intake-upload"
         />
+        {examBrowser ? (
+          <Tab
+            active={examActive && !overlay}
+            onClick={() => {
+              dismissOverlay();
+              setIntakeView("intake");
+              setIntakeTab("exam");
+            }}
+            icon={<GraduationCap className="h-3.5 w-3.5" />}
+            label="수능 기출"
+            tourKey="intake-exam"
+          />
+        ) : null}
         <BreadcrumbSep />
         <Tab
           active={libraryActive && !overlay}
@@ -159,7 +181,9 @@ export function IntakeSurface({
         >
           {upload ?? <UploadPlaceholder />}
         </div>
-        {libraryActive ? (
+        {examActive ? (
+          <div className="flex min-h-0 flex-1 flex-col">{examBrowser}</div>
+        ) : libraryActive ? (
           // isolate: 지문함 카드의 '상세보기' 버튼(z-30)이 워크스페이스
           // 오버레이(z-10) 위로 새어 보이지 않도록 그리드의 stacking context 를
           // 가둔다. 오버레이가 닫혀 지문함이 다시 드러나면 버튼은 정상 노출된다.
