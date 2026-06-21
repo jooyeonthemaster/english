@@ -16,7 +16,7 @@ const PATH = "/features/exam-builder";
 export const metadata = buildMetadata({
   title: "영어 시험지 제작 — Word·한글 자동 조판",
   description:
-    "생성한 문항을 편집 가능한 Word(.docx) 영어 시험지로 자동 조판해 바로 내려받습니다. 학생용 시험지와 강사용 영어 해설지를 한 번에 분리 생성하고, 정답표 자동 생성·한글(HWPX, 베타)·PDF 출력까지. 웹 미리보기 그대로 인쇄되는 학원 영어 내신 시험지를 SMOAT에서 만들어 보세요.",
+    "생성한 영어 문항을 Word·한글 시험지로 자동 조판하고, 학생용·강사용 해설지와 정답표까지 만드는 SMOAT.",
   path: PATH,
   keywords: [
     "영어 시험지 제작",

@@ -169,6 +169,8 @@ function ActiveChip({
 
 export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
   const { facets, filters } = api;
+  const grades = facets?.grades ?? ["고3", "고2", "고1"];
+  const gradeCounts = facets?.counts.grade ?? {};
   const exams = facets?.exams ?? DEFAULT_EXAMS;
   const examCounts = facets?.counts.exam ?? {};
   const typeGroups = facets?.typeGroups ?? [];
@@ -179,6 +181,11 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
 
   // '적용된 필터' 칩 — 어떤 조건이 걸렸는지 한눈에 보고 개별 제거.
   const activeChips: { key: string; label: string; remove: () => void }[] = [
+    ...[...filters.grades].map((v) => ({
+      key: `grade-${v}`,
+      label: v,
+      remove: () => api.toggleGrade(v),
+    })),
     ...[...filters.exams].map((v) => ({
       key: `exam-${v}`,
       label: examLabel(v),
@@ -228,6 +235,17 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
 
       {/* facet 드롭다운 행 */}
       <div className="flex flex-wrap items-center gap-1.5">
+        <FilterMenu
+          label="학년"
+          options={grades.map((g) => ({
+            value: g,
+            label: g,
+            count: gradeCounts[g],
+          }))}
+          selected={filters.grades}
+          onToggle={api.toggleGrade}
+          onClear={() => filters.grades.forEach((v) => api.toggleGrade(v))}
+        />
         <FilterMenu
           label="회차"
           options={exams.map((ex) => ({

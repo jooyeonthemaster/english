@@ -78,13 +78,17 @@ export function formatExamTitle(p: {
   qNumbers: number[];
   type: string;
   form?: string;
+  grade?: string;
+  board?: string;
 }): string {
   const q = qLabel(p.qNumbers);
   const formTag = p.form ? ` ${p.form}형` : "";
   const qPart = q ? ` ${q}번` : "";
   // 장문 유형은 type 자체가 "장문(41-42)" 처럼 범위를 품어 q번과 중복되므로 괄호 범위 제거.
   const typeText = p.type.replace(/\s*\([^)]*\)\s*$/, "");
-  return `${p.year}학년도 ${examLabel(p.exam)}${formTag} 영어${qPart} · ${typeText}`;
+  // 교육청 학평은 학년이 핵심이라 앞에 붙인다(수능·모평은 고3 자명 → 생략).
+  const gradeTag = p.board === "학력평가" && p.grade ? `${p.grade} ` : "";
+  return `${p.year}학년도 ${gradeTag}${examLabel(p.exam)}${formTag} 영어${qPart} · ${typeText}`;
 }
 
 /** ExamPassage → 호스트가 받는 pick(제목 부여 + 본문). */
@@ -127,6 +131,19 @@ export function typeBadgeClass(typeGroup: string): string {
       return "text-emerald-700 bg-emerald-50 border-emerald-200";
     default:
       // 주장/요지/주제/제목/함축의미/지칭 등 일반 독해.
+      return "text-slate-700 bg-slate-100 border-slate-200";
+  }
+}
+
+/** 학년 → 카드 배지 색(주황/앰버 금지, 한색 계열). */
+export function gradeBadgeClass(grade: string | undefined): string {
+  switch (grade) {
+    case "고1":
+      return "text-emerald-700 bg-emerald-50 border-emerald-200";
+    case "고2":
+      return "text-sky-700 bg-sky-50 border-sky-200";
+    case "고3":
+    default:
       return "text-slate-700 bg-slate-100 border-slate-200";
   }
 }
