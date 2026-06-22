@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import type { Prisma } from "@prisma/client";
 import { requireAuth, getAcademyId } from "./_helpers";
 import { buildCanonicalSentenceInsertOptionsFrom } from "@/lib/sentence-insert-options";
+import { buildGeneratedQuestionText } from "@/lib/question-generation-persistence";
 import {
   getQuestionGenerationPlanFromTags,
   mergeQuestionGenerationPlanTag,
@@ -25,6 +26,10 @@ function toPrismaJson(value: unknown): Prisma.InputJsonValue | undefined {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
+}
+
+function normalizeQuestionTextForCompare(value: unknown): string {
+  return String(value ?? "").replace(/\s+/g, " ").trim();
 }
 
 function readQuestionTags(rawTags: unknown): string[] {
@@ -524,13 +529,13 @@ export async function updateWorkbenchQuestion(
   try {
     await requireAuth();
 
-    const currentQuestion =
-      data.tags !== undefined || data.structuredData !== undefined
-        ? await prisma.question.findUnique({
-            where: { id: questionId },
-            select: { tags: true, structuredData: true },
-          })
-        : null;
+    // 직접 수정 반영을 위해 항상 현재 스냅샷을 읽는다. AI 생성 문제의 카드는
+    // structuredData(JSON 컬럼)로 렌더되므로, flat 컬럼만 갱신하면 검수 화면에
+    // 편집이 보이지 않는다(직접수정 미반영 버그). 여기서 스냅샷을 함께 맞춘다.
+    const currentQuestion = await prisma.question.findUnique({
+      where: { id: questionId },
+      select: { tags: true, structuredData: true },
+    });
     const incomingTags =
       data.tags !== undefined ? readQuestionTags(data.tags) : undefined;
     const existingTags = readQuestionTags(currentQuestion?.tags);
@@ -547,24 +552,93 @@ export async function updateWorkbenchQuestion(
           ? mergeQuestionGenerationPlanTag(incomingTags, plan)
           : incomingTags
         : undefined;
-    const updateStructuredData =
-      data.structuredData !== undefined
-        ? plan && isRecord(data.structuredData)
+
+    // ── structuredData / questionText 재조정 ──
+    // 1) 명시 structuredData 가 오면 기존 경로(플랜 메타 보정).
+    // 2) 직접 수정(구조화 문제, structuredData 미전달): 옵션/정답/난이도/해설을
+    //    스냅샷에 병합해 구조화 렌더를 유지하고 편집을 반영. 단, 발문/지문 텍스트를
+    //    자유 편집한 경우(파생 questionText 와 불일치) 구조화 하위필드로 역매핑이
+    //    불가하므로 스냅샷의 _typeId 를 떼어 카드가 편집된 flat 컬럼으로 렌더하게 한다.
+    let finalStructuredData: Prisma.InputJsonValue | undefined;
+    let finalQuestionText: string | undefined = data.questionText;
+
+    const existingSnapshot = currentQuestion?.structuredData;
+    if (data.structuredData !== undefined) {
+      finalStructuredData = toPrismaJson(
+        plan && isRecord(data.structuredData)
           ? {
               ...data.structuredData,
               _generationPlan: plan,
-              tags: updateTags ?? mergeQuestionGenerationPlanTag(existingTags, plan),
+              tags:
+                updateTags ?? mergeQuestionGenerationPlanTag(existingTags, plan),
             }
-          : data.structuredData
-        : undefined;
+          : data.structuredData,
+      );
+    } else if (
+      isRecord(existingSnapshot) &&
+      typeof existingSnapshot._typeId === "string"
+    ) {
+      const merged: Record<string, unknown> = { ...existingSnapshot };
+      if (data.options !== undefined) {
+        const edited = Array.isArray(data.options) ? data.options : [];
+        const existingOpts = Array.isArray(existingSnapshot.options)
+          ? (existingSnapshot.options as unknown[])
+          : [];
+        // 편집된 옵션이 이미 정본(label/text + slotValues/blankValues 등 하위필드)을
+        // 담고 있다(폼 initialOptions = JSON.parse(options 플랫컬럼), updateOptionText 가
+        // {...o} 로 보존). 따라서 편집 객체를 그대로 신뢰하고(=재정렬 시 하위필드도
+        // 함께 이동), base 는 신규 추가 옵션이 빠뜨린 필드만 백필. 인덱스-zip 으로
+        // base 의 하위필드를 덮어쓰면 재정렬 시 slotValues 가 엉뚱한 선지에 붙는다.
+        merged.options = edited.map((opt, i) => {
+          const base = isRecord(existingOpts[i])
+            ? (existingOpts[i] as Record<string, unknown>)
+            : {};
+          return { ...base, ...(opt as Record<string, unknown>) };
+        });
+      }
+      if (data.correctAnswer !== undefined)
+        merged.correctAnswer = data.correctAnswer;
+      if (data.difficulty !== undefined) merged.difficulty = data.difficulty;
+      if (data.explanation !== undefined) merged.explanation = data.explanation;
+      if (data.keyPoints !== undefined) merged.keyPoints = data.keyPoints;
+      if (data.wrongOptionExplanations !== undefined)
+        merged.wrongOptionExplanations = data.wrongOptionExplanations;
+      if (plan) merged._generationPlan = plan;
+      if (updateTags !== undefined) merged.tags = updateTags;
+
+      const derivedText = buildGeneratedQuestionText(merged);
+      const userEditedQuestionText =
+        data.questionText !== undefined &&
+        normalizeQuestionTextForCompare(data.questionText) !==
+          normalizeQuestionTextForCompare(derivedText);
+
+      if (userEditedQuestionText) {
+        finalStructuredData = toPrismaJson({
+          ...(plan ? { _generationPlan: plan } : {}),
+          ...(updateTags !== undefined
+            ? { tags: updateTags }
+            : existingSnapshot.tags
+              ? { tags: existingSnapshot.tags }
+              : {}),
+          _manualEditedFlat: true,
+        });
+        finalQuestionText = data.questionText;
+      } else {
+        finalStructuredData = toPrismaJson(merged);
+        finalQuestionText = derivedText;
+      }
+    } else {
+      // 레거시/수동 문제(스냅샷 없음) — 기존 동작(flat 컬럼만 갱신).
+      finalStructuredData = undefined;
+    }
 
     await prisma.question.update({
       where: { id: questionId },
       data: {
         type: data.type,
         subType: data.subType,
-        questionText: data.questionText,
-        structuredData: toPrismaJson(updateStructuredData),
+        questionText: finalQuestionText,
+        structuredData: finalStructuredData,
         options: stringifyOptionsForUpdate(data.subType, data.options),
         correctAnswer: data.correctAnswer,
         points: data.points,

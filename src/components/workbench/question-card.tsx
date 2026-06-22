@@ -50,6 +50,7 @@ import {
 import {
   optionDisplayTextForSubtype,
   shouldRenderOptionListForSubtype,
+  grammarMarkerDisplayLabel,
 } from "@/components/exams/paper-builder/option-display";
 
 // ─── Constants ───────────────────────────────────────────
@@ -337,10 +338,16 @@ function formatOption(
 
 export function renderFormatted(
   text: string,
-  opts?: { underlineMarkedWords?: boolean; highlightMarkers?: boolean },
+  opts?: {
+    underlineMarkedWords?: boolean;
+    highlightMarkers?: boolean;
+    /** GRAMMAR_ERROR 일 때만 지문 마커 (A)→① 로 표시(시험지 렌더 동일). 타 유형 무영향. */
+    subType?: string | null;
+  },
 ): React.ReactNode {
   const underline = opts?.underlineMarkedWords ?? false;
   const highlightMarkers = opts?.highlightMarkers ?? false;
+  const isGrammarError = opts?.subType === "GRAMMAR_ERROR";
 
   // Build regex based on options
   let pattern: string;
@@ -365,15 +372,33 @@ export function renderFormatted(
       parts.push(<span key={key++}>{text.slice(lastIndex, match.index)}</span>);
     }
     if (match[1]) {
-      // __word__ → underline
-      parts.push(
-        <span
-          key={key++}
-          className="underline decoration-2 decoration-blue-500 underline-offset-4 font-semibold text-slate-900"
-        >
-          {match[1]}
-        </span>,
-      );
+      // 어법 판단(GRAMMAR_ERROR): __(A) expression__ → 원형숫자(①) 마커 + 밑줄 표현
+      // (시험지 렌더와 동일). 타 유형은 isGrammarError=false 라 기존 통밑줄 유지.
+      const grammarMarker = isGrammarError
+        ? match[1].match(/^\(([a-jA-J])\)\s*(.+)$/)
+        : null;
+      if (grammarMarker) {
+        parts.push(
+          <span key={key++}>
+            <span className="font-bold text-blue-600">
+              {grammarMarkerDisplayLabel(grammarMarker[1])}
+            </span>{" "}
+            <span className="underline decoration-2 decoration-blue-500 underline-offset-4 font-semibold text-slate-900">
+              {grammarMarker[2]}
+            </span>
+          </span>,
+        );
+      } else {
+        // __word__ → underline
+        parts.push(
+          <span
+            key={key++}
+            className="underline decoration-2 decoration-blue-500 underline-offset-4 font-semibold text-slate-900"
+          >
+            {match[1]}
+          </span>,
+        );
+      }
     } else if (match[2]) {
       // Circled number -> bold blue
       parts.push(
@@ -838,6 +863,7 @@ export function QuestionCard({
                       {renderFormatted(q.passage.content, {
                         underlineMarkedWords: needsUnderline,
                         highlightMarkers: showMarkers,
+                        subType: sub,
                       })}
                     </p>
                   )}
@@ -880,6 +906,7 @@ export function QuestionCard({
                       {renderFormatted(q.passage.content, {
                         underlineMarkedWords: needsUnderline,
                         highlightMarkers: showMarkers,
+                        subType: sub,
                       })}
                     </p>
                   </div>
@@ -902,6 +929,7 @@ export function QuestionCard({
                   {
                     underlineMarkedWords: needsUnderline,
                     highlightMarkers: showMarkers,
+                    subType: sub,
                   },
                 )}
               </div>

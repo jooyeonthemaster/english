@@ -56,6 +56,7 @@ import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display
 import {
   optionDisplayTextForSubtype,
   shouldRenderOptionListForSubtype,
+  grammarMarkerDisplayLabel,
 } from "@/components/exams/paper-builder/option-display";
 import {
   sanitizeAiModelDisclosureText,
@@ -230,6 +231,11 @@ export function QuestionBankCard({
   const hideOptionList =
     !!q.subType && !shouldRenderOptionListForSubtype(q.subType);
   const visibleOptions = hideOptionList ? [] : displayOptions;
+  // 어법 판단(GRAMMAR_ERROR)만 라벨/마커를 원형숫자(①)로 표시(시험지 렌더 동일). 타 유형 무영향.
+  const isGrammarError = q.subType === "GRAMMAR_ERROR";
+  // 배지(파란 원) 안엔 평문 숫자가 들어가므로(이중 동그라미 방지) 어법 라벨 (A)→①→"1"로 푼다.
+  const badgeLabel = (label: unknown) =>
+    optionBadgeLabel(isGrammarError ? grammarMarkerDisplayLabel(label) : label);
   const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
   const structuredQuestion =
@@ -635,6 +641,7 @@ export function QuestionBankCard({
               options={displayOptions}
               correctAnswer={q.correctAnswer}
               displayCorrectAnswer={displayCorrectAnswer}
+              subType={q.subType}
             />
           ) : (
             <>
@@ -680,10 +687,10 @@ export function QuestionBankCard({
                               : "border border-slate-300 bg-white text-slate-400"
                           }`}
                         >
-                          {optionBadgeLabel(opt.label)}
+                          {badgeLabel(opt.label)}
                         </span>
                         <span className="pt-0.5">
-                          {renderFormatted(opt.text)}
+                          {renderFormatted(opt.text, q.subType)}
                         </span>
                       </div>
                     );
@@ -697,7 +704,7 @@ export function QuestionBankCard({
                 displayCorrectAnswer && (
                   <div className="text-[12px] bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded border border-slate-200">
                     <span className="font-medium">정답:</span>{" "}
-                    {renderFormatted(displayCorrectAnswer)}
+                    {renderFormatted(displayCorrectAnswer, q.subType)}
                   </div>
                 )}
 
@@ -719,10 +726,10 @@ export function QuestionBankCard({
                             className="flex items-start gap-2 text-[12px] rounded px-2 py-1 bg-blue-50 text-blue-700 font-semibold"
                           >
                             <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-blue-600 text-white">
-                              {optionBadgeLabel(opt.label)}
+                              {badgeLabel(opt.label)}
                             </span>
                             <span className="pt-0.5">
-                              {renderFormatted(opt.text)}
+                              {renderFormatted(opt.text, q.subType)}
                             </span>
                           </div>
                         ))}
@@ -737,7 +744,7 @@ export function QuestionBankCard({
                             key={label}
                             className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-blue-600 text-white"
                           >
-                            {optionBadgeLabel(label)}
+                            {badgeLabel(label)}
                           </span>
                         ))}
                       </div>

@@ -28,6 +28,14 @@ import { buildEditPrompt } from "./build-edit-prompt";
 import { computeEditChanges } from "./change-summary";
 import { computeDetailedDiff } from "./detailed-diff";
 import { deriveEditSchemaOptions } from "./derive-type-settings";
+import {
+  checkEditLengthIssues,
+  hasBlockingError,
+  isNoRealChange,
+  isSchemaMismatchError,
+  NO_CHANGE_EDIT_SUMMARY,
+  SCHEMA_MISMATCH_USER_MESSAGE,
+} from "./edit-guards";
 import { runEditModel } from "./edit-llm";
 import { editModelProvider, resolveEditModelId } from "./model-config";
 import type { RunQuestionEditInput, RunQuestionEditResult } from "./types";
@@ -50,6 +58,11 @@ function scrubForFeedback(text: string): string {
  *  null = 카운트 개념이 없는 유형(검사 생략). */
 function structuralCount(subType: string, q: Record<string, unknown>): number | null {
   const len = (v: unknown) => (Array.isArray(v) ? v.length : null);
+  // 빈칸 개수 = 문자열 안의 _____ (밑줄 3개 이상) 런 수. 스키마/Zod 로 못 막는 단답형
+  // (FILL_BLANK_KEY) 의 빈칸 인플레이션을 결정론으로 잠근다. _____ 가 없으면 null →
+  // 가드 자체 생략(현행 동작 유지=무회귀).
+  const blankRuns = (v: unknown) =>
+    typeof v === "string" ? (v.match(/_{3,}/g)?.length ?? null) : null;
   switch (subType) {
     case "GRAMMAR_ERROR":
     case "VOCAB_CHOICE":
@@ -67,6 +80,12 @@ function structuralCount(subType: string, q: Record<string, unknown>): number | 
     case "IRRELEVANT":
     case "CONTENT_MATCH":
       return len(q.options);
+    case "FILL_BLANK_KEY":
+      // 단답형 빈칸 개수 = sentenceWithBlank 의 _____ 런 수(스키마에 blanks 배열 없음).
+      return blankRuns(q.sentenceWithBlank);
+    case "BLANK_INFERENCE":
+      // 다중빈칸(후처리 분기 기준 blanks.length>=2)은 blanks 수, 단일빈칸은 개념상 1.
+      return Array.isArray(q.blanks) && q.blanks.length >= 2 ? q.blanks.length : 1;
     default:
       return null;
   }
@@ -198,11 +217,11 @@ export async function runQuestionEdit(
       outputTokens = res.outputTokens ?? outputTokens;
     } catch (err) {
       // provider 호출 자체 실패 — 비재시도 에러는 즉시 전파(호출자 환불).
+      // 스키마 미스매치(선지/밑줄/빈칸 개수·유형 변경 등 구조 위반)는 원시 영어 메시지
+      // ("No object generated: response did not match schema") 대신 한국어 안내로 변환한다(M6).
+      const raw = err instanceof Error ? err.message : String(err);
       return baseResult({
-        error:
-          err instanceof Error
-            ? `모델 호출 실패: ${err.message}`
-            : "모델 호출 실패",
+        error: isSchemaMismatchError(raw) ? SCHEMA_MISMATCH_USER_MESSAGE : `모델 호출 실패: ${raw}`,
         meta: { modelId, provider, attempts: totalAttempts, durationMs },
       });
     }
@@ -266,8 +285,12 @@ export async function runQuestionEdit(
       ...schemaOptions,
       ...qualitySignals,
     });
-    const errors = issues.filter((i) => i.severity === "error");
-    const warnings = issues.filter((i) => i.severity === "warning");
+    // 편집 전용 길이 가드(M1 선지 폭증 → error 재시도 · M2 정답-길이 식별 → warning).
+    // 베이스라인 상대값이라 생성 게이트와 무관하며 정상 길이 편집은 통과한다.
+    const lengthIssues = checkEditLengthIssues(subType, baseline, finalQuestion);
+    const allIssues = [...issues, ...lengthIssues];
+    const errors = allIssues.filter((i) => i.severity === "error");
+    const warnings = allIssues.filter((i) => i.severity === "warning");
 
     lastPostProcessed = finalQuestion;
     lastWarnings = warnings;
@@ -281,13 +304,24 @@ export async function runQuestionEdit(
     previousFeedback = buildCorrectiveFeedback(errors);
   }
 
-  // 모든 시도 소진 — 후처리는 성공했지만 품질 에러가 남았다면 경고 수락(사용자 검토).
-  if (lastPostProcessed) {
+  // 모든 시도 소진 — 후처리는 성공했지만 품질 에러가 남은 경우.
+  // 무결성 치명(정답 소실/무효/누설/유형변형, BLOCKING_EDIT_CODES) error 가 남았으면
+  // "경고와 함께 수락"으로 조용히 출시하지 않고 하드 실패시킨다(결함품 출시보다 환불·
+  // 재시도 유도가 안전). 그 외(난이도·취향·길이 등 "쓸 수는 있는" 결함)는 종전대로 경고
+  // 수락 → 97.8% 정상 수율 보존(정상경로는 errors.length===0 으로 폴백을 애초에 안 탐).
+  if (lastPostProcessed && !hasBlockingError(lastErrors)) {
     return finalize(
       lastPostProcessed,
       [...lastWarnings, ...lastErrors.map((e) => ({ ...e, severity: "warning" as const }))],
       true,
     );
+  }
+  if (lastPostProcessed && hasBlockingError(lastErrors)) {
+    return baseResult({
+      error:
+        "정답이 학생에게 노출되거나 정답 표시가 누락되는 등 안전하게 출시할 수 없는 수정본입니다. 지시를 더 구체적으로 입력해 다시 시도해 주세요.",
+      meta: { modelId, provider, attempts: totalAttempts, durationMs, inputTokens, outputTokens },
+    });
   }
 
   return baseResult({
@@ -306,14 +340,22 @@ export async function runQuestionEdit(
     } catch {
       questionText = "";
     }
+    const changes = computeEditChanges(baseline, after);
+    const detailedChanges = computeDetailedDiff(baseline, after);
+    // editSummary 환각 억제(M4): 결정론 diff 가 완전히 비었으면(=실제로 아무것도 안
+    // 바뀜) 모델의 "전면 정밀화/지문 두 배 확장" 같은 단언을 신뢰하지 않고 사실(변경
+    // 없음)로 대체한다. diff 가 비지 않은 일반 케이스는 모델 서술을 그대로 둔다(과교정 회피).
+    const editSummary = isNoRealChange(detailedChanges, changes)
+      ? NO_CHANGE_EDIT_SUMMARY
+      : lastEditSummary;
     return {
       ok: true,
       before: baseline,
       after,
-      changes: computeEditChanges(baseline, after),
-      detailedChanges: computeDetailedDiff(baseline, after),
+      changes,
+      detailedChanges,
       questionText,
-      editSummary: lastEditSummary,
+      editSummary,
       qualityWarnings: warnings,
       acceptedWithWarnings,
       meta: {

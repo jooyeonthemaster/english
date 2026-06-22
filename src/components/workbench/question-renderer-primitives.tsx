@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/popover";
 import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
 import {
+  BlockChangeContext,
   SelectableBlock,
   useBlockSelection,
   blockExcerpt,
@@ -35,9 +36,6 @@ export const AnswerRevealContext = createContext<AnswerRevealMode>("default");
 /** true 면 AnswerLine("정답: N" 줄)을 렌더하지 않는다. 문제 관리 카드처럼
  *  정답이 이미 다른 방식으로 드러나는 표면에서 중복 줄을 숨길 때 사용. */
 export const HideAnswerLineContext = createContext(false);
-
-/** true 면 해설 섹션을 토글 없이 항상 펼친 채로 노출한다(예: AI 수정본 미리보기). */
-export const ForceExplanationOpenContext = createContext(false);
 
 // ============================================================================
 // Shared UI primitives for question renderers
@@ -243,13 +241,26 @@ export function renderBlanks(text: string): React.ReactNode {
 }
 
 /** Render passage with underlines, blanks, and numbered markers */
-export function renderPassageFormatted(text: string): React.ReactNode {
+export function renderPassageFormatted(
+  text: string,
+  subType?: string | null,
+): React.ReactNode {
   // 원본(PDF/추출)이 줄 단위로 저장돼 단락 내부에 강제 줄바꿈(\n)이 박혀 있으면
   // 화면에서 문장이 어색하게 끊긴다 → 단락(\n\n)은 유지하고 단락 내부의 단일
   // 줄바꿈만 공백으로 합쳐(reflow) 자연스럽게 흐르게 한다. (표시 전용)
   text = text.replace(/([^\n])\n(?!\n)/g, "$1 ");
+  // 네모 어법(GRAMMAR_CHOICE_COMBO)은 "(A) [좌 / 우]" 평문 — 다른 유형의 문제 부분처럼
+  // (A) 마커와 [좌/우] 네모를 파란 텍스트로 강조한다(시험지 renderFormattedInline 과 색 통일).
+  // 다른 유형의 [조건]/[요약문] 대괄호는 평문을 유지해야 하므로 subType 으로만 켠다.
+  const isCombo = subType === "GRAMMAR_CHOICE_COMBO";
   // Match: __content__ (underline), ___+ (blank), circled numbers
-  const combinedRegex = new RegExp(`__([^_]+)__|_{3,}|([${CIRCLED_MARKER_PATTERN}])`, "g");
+  // (combo) + [좌/우] 네모(그룹3) + (A) 마커(그룹4)
+  const combinedRegex = isCombo
+    ? new RegExp(
+        `__([^_]+)__|_{3,}|([${CIRCLED_MARKER_PATTERN}])|(\\[[^\\]]+\\])|\\(([a-jA-J])\\)`,
+        "g",
+      )
+    : new RegExp(`__([^_]+)__|_{3,}|([${CIRCLED_MARKER_PATTERN}])`, "g");
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match;
@@ -264,10 +275,16 @@ export function renderPassageFormatted(text: string): React.ReactNode {
       // __content__ → check if content starts with a marker like (A), (a)
       const markerMatch = match[1].match(/^\(([a-jA-J])\)\s*(.+)$/);
       if (markerMatch) {
-        // __(A) expression__ → bold blue marker + underlined expression
+        // __(A) expression__ → bold blue marker + underlined expression.
+        // 어법 판단(GRAMMAR_ERROR)만 시험지 렌더와 동일하게 마커를 원형숫자(①②③)로 표시한다.
+        // (저장 데이터는 (A) 유지 — 표시 시점에만 변환. subType 미전달/타 유형은 (A) 보존 → 반의어 등 무영향.)
+        const markerDisplay =
+          subType === "GRAMMAR_ERROR"
+            ? circledNumberFromLetter(markerMatch[1])
+            : `(${markerMatch[1]})`;
         parts.push(
           <span key={key++}>
-            <span className="font-bold text-blue-600">({markerMatch[1]})</span>
+            <span className="font-bold text-blue-600">{markerDisplay}</span>
             {" "}
             <span className="underline decoration-2 decoration-blue-500 underline-offset-4 font-semibold text-slate-900">
               {markerMatch[2]}
@@ -293,6 +310,20 @@ export function renderPassageFormatted(text: string): React.ReactNode {
           className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold mx-0.5"
         >
           {match[2]}
+        </span>
+      );
+    } else if (isCombo && match[3]) {
+      // 네모 [좌 / 우] → 파란 굵은 텍스트(문제 부분 강조)
+      parts.push(
+        <span key={key++} className="font-semibold text-blue-700">
+          {match[3]}
+        </span>
+      );
+    } else if (isCombo && match[4]) {
+      // (A)(B)(C) 슬롯 마커 → 파란 굵은 텍스트
+      parts.push(
+        <span key={key++} className="font-bold text-blue-600">
+          ({match[4]})
         </span>
       );
     } else {
@@ -460,10 +491,20 @@ function normalizeAnswerLabel(value: unknown): string {
 }
 
 /** Conditions box (서술형 조건 목록) */
-export function ConditionsBox({ conditions, label }: { conditions: string[]; label?: string }) {
+export function ConditionsBox({
+  conditions,
+  label,
+  /** blockId 강제 지정 — 표시 label 과 diff blockId 가 다를 때(예: "전환 조건" 박스가
+   *  diff 의 conditions 필드와 매칭되도록 "conditions" 고정). 미지정 시 label 기반 파생. */
+  blockId,
+}: {
+  conditions: string[];
+  label?: string;
+  blockId?: string;
+}) {
   return (
     <SelectableBlock
-      blockId={label ? `conditions:${label}` : "conditions"}
+      blockId={blockId ?? (label ? `conditions:${label}` : "conditions")}
       label={label || "조건"}
       field="conditions"
       excerpt={blockExcerpt(conditions.join(" · "))}
@@ -538,7 +579,9 @@ export function ExplanationSection({
 }) {
   const mode = useContext(AnswerRevealContext);
   const selectionEnabled = !!useBlockSelection()?.enabled;
-  const forceOpen = useContext(ForceExplanationOpenContext);
+  // 변경 마크 모드(수정본 미리보기)에서도 토글 없이 인라인 노출 → 해설/핵심포인트/오답해설의
+  // 변경 마크가 곧장 보이게 한다.
+  const changeActive = !!useContext(BlockChangeContext);
   const [open, setOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -607,8 +650,7 @@ export function ExplanationSection({
   // as-explanation: 부모 '해설 보기' 토글이 이미 감싸므로 자체 토글 없이 인라인 노출.
   // 블럭 선택 모드(AI 수정 미리보기): 토글 없이 인라인 노출 → 해설/핵심포인트/오답분석을
   // 곧장 클릭해 수정 대상으로 지정할 수 있게 한다.
-  // forceOpen: AI 수정본 미리보기처럼 토글 없이 항상 펼쳐 두어야 하는 표면.
-  if (mode === "as-explanation" || selectionEnabled || forceOpen) {
+  if (mode === "as-explanation" || selectionEnabled || changeActive) {
     return content;
   }
 

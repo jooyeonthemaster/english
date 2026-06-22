@@ -18,7 +18,10 @@ import { safeParseJSON } from "./utils";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { renderFormatted } from "@/components/workbench/question-bank-card/render-formatted";
-import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
+import {
+  optionDisplayTextForSubtype,
+  circleGrammarLabelMentions,
+} from "@/components/exams/paper-builder/option-display";
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
@@ -47,7 +50,12 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
     getQuestionGenerationPlanFromTags(rawTags) ??
     readGenerationPlanFromStructuredData(q.structuredData);
   const tags = getVisibleQuestionTags(rawTags);
-  const keyPoints = safeParseJSON<string[]>(q.explanation?.keyPoints, []);
+  // 어법 판단(GRAMMAR_ERROR)만 라벨/마커를 원형숫자(①)로 표시(시험지 렌더 동일). 타 유형 무영향.
+  const isGrammarError = q.subType === "GRAMMAR_ERROR";
+  const rawKeyPoints = safeParseJSON<string[]>(q.explanation?.keyPoints, []);
+  const keyPoints = isGrammarError
+    ? rawKeyPoints.map((kp) => circleGrammarLabelMentions(kp))
+    : rawKeyPoints;
   const displayQuestionText = repairGrammarCorrectionQuestionText({
     subType: q.subType,
     questionText: q.questionText,
@@ -109,7 +117,7 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
       {/* Question text */}
       <div className="px-4 py-3">
         <p className="text-[13px] text-slate-800 leading-relaxed whitespace-pre-wrap">
-          {renderFormatted(displayQuestionText)}
+          {renderFormatted(displayQuestionText, q.subType)}
         </p>
       </div>
 
@@ -162,7 +170,9 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
           {showExplanation && (
             <div className="px-4 pb-4 space-y-2">
               <p className="text-[12px] text-slate-600 leading-relaxed whitespace-pre-wrap">
-                {q.explanation.content}
+                {isGrammarError
+                  ? circleGrammarLabelMentions(q.explanation.content)
+                  : q.explanation.content}
               </p>
               {keyPoints.length > 0 && (
                 <div className="space-y-1 pt-1">

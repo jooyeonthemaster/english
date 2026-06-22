@@ -8,6 +8,13 @@ import { buildMultiBlankPointGuidance } from "@/lib/blank-point-catalog";
 
 export type QuestionGenerationLanguage = "ko" | "en";
 
+/**
+ * 빈칸 추론 빈칸 단위. "auto" = 모델이 지문 논리에 맞춰 자유 선택(기존 동작, 무회귀 기본값).
+ * "word" = 단일 핵심 단어, "phrase" = 2~4단어 구, "clause" = 주어+동사 절(5~10단어).
+ */
+export type BlankInferenceGranularity = "auto" | "word" | "phrase" | "clause";
+export const BLANK_INFERENCE_GRANULARITY_DEFAULT: BlankInferenceGranularity = "auto";
+
 export interface QuestionTypeQualityGenerationSettings {
   /** Optional per-type override. Falls back to the global generation difficulty. */
   difficulty?: QuestionDifficulty;
@@ -44,6 +51,12 @@ export interface BlankInferenceGenerationSettings
    * false/미지정이면 기존 동작. 기본 false.
    */
   pointFocus?: boolean;
+  /**
+   * 빈칸 단위 — 빈칸으로 잡는 표현의 크기를 단어/구/절로 강제한다.
+   * "auto"(기본)면 모델이 자유 선택(기존 동작, 무회귀). word/phrase/clause 는
+   * originalExpression 의 길이를 해당 단위로 유도하고 선지도 그 단위에 맞춘다.
+   */
+  blankGranularity?: BlankInferenceGranularity;
 }
 
 export interface IrrelevantGenerationSettings
@@ -66,6 +79,17 @@ export interface GrammarErrorGenerationSettings
    * 핵심 집중 모드 — true 면 정답 포인트를 기출 1000제 고빈출 톱셋(관계사·수일치·
    * to부정사/동명사·분사·대명사·형부)으로 좁혀 출제 포인트를 집중시킨다.
    * false/미지정이면 기존 다양성(코어 10개 순회). 기본 false.
+   */
+  pointFocus?: boolean;
+}
+
+export interface GrammarChoiceComboGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
+  /**
+   * 핵심 집중 모드 — true 면 세 네모의 정답(올바른 표현) 어법 포인트를 기출 최빈출
+   * 톱셋(관계사·수일치·분사·to/-ing 등)에 집중시킨다. false/미지정이면 기존 동작
+   * (코어 a~m 순회). 기본 true(어법 판단과 동일).
    */
   pointFocus?: boolean;
 }
@@ -532,6 +556,65 @@ export function readBlankInferenceParaphraseAnswerSetting(
   rawSettings: unknown,
 ): boolean {
   return readBooleanSetting(rawSettings, "BLANK_INFERENCE", "paraphraseAnswer");
+}
+
+/**
+ * 빈칸 단위(단어/구/절) 설정 읽기. flat(rawSettings.blankGranularity) 우선 →
+ * nested(rawSettings.BLANK_INFERENCE.blankGranularity) 폴백. 미설정/비정상값은
+ * "auto"(기존 자유 선택 동작) — 무회귀 기본값.
+ */
+export function readBlankInferenceGranularitySetting(
+  rawSettings: unknown,
+): BlankInferenceGranularity {
+  const direct = isRecord(rawSettings) ? rawSettings.blankGranularity : undefined;
+  const nested =
+    isRecord(rawSettings) && isRecord(rawSettings.BLANK_INFERENCE)
+      ? rawSettings.BLANK_INFERENCE.blankGranularity
+      : undefined;
+  const value = direct !== undefined ? direct : nested;
+  return value === "word" || value === "phrase" || value === "clause"
+    ? value
+    : "auto";
+}
+
+/**
+ * 빈칸 단위(단어/구/절) 프롬프트 블록. "auto"면 빈 문자열(기존 경로, 무회귀).
+ * originalExpression(빈칸으로 잡는 표현)의 "크기"와 선지 단위만 강제하고
+ * 추론 논리·정답 규칙은 바꾸지 않는다.
+ */
+export function buildBlankGranularityPromptBlock(
+  granularity: BlankInferenceGranularity,
+): string {
+  if (granularity === "auto") return "";
+  const header = "## Type detail setting: BLANK_INFERENCE / blank unit (teacher-selected)";
+  const common =
+    "- This setting controls ONLY the SIZE of the blanked span (originalExpression) and the option unit. It OVERRIDES any earlier length guidance about how long the blank should be. Keep every other blank rule (verbatim originalExpression, single-occurrence in the passage, passage-grounded near-miss distractors, identical grammatical slot for all options).";
+  if (granularity === "word") {
+    return [
+      header,
+      "- 빈칸 단위 = 단어(WORD). Blank exactly ONE key content word (a noun, verb, adjective, or adverb) — never a multi-word phrase, never a function word.",
+      "- originalExpression must be a single word copied verbatim from the passage.",
+      "- All five options must be single words of the SAME part of speech as the answer, similar in length/register; distractors are passage-plausible but logically wrong content words.",
+      common,
+    ].join("\n");
+  }
+  if (granularity === "phrase") {
+    return [
+      header,
+      "- 빈칸 단위 = 구(PHRASE). Blank a short phrase of 2~4 words (noun phrase, verb phrase, or prepositional phrase) with NO finite subject+verb — not a single word, not a full clause.",
+      "- originalExpression must be a 2~4 word phrase copied verbatim from the passage.",
+      "- All five options must be 2~4 word phrases in the same grammatical slot and register.",
+      common,
+    ].join("\n");
+  }
+  // clause
+  return [
+    header,
+    "- 빈칸 단위 = 절(CLAUSE). Blank a clause that contains its own subject and verb (about 5~10 words) and states a full proposition — not a single word, not a bare 2~4 word phrase.",
+    "- originalExpression must be a clause copied verbatim from the passage (subject + finite or relative verb).",
+    "- All five options must be clause-shaped (subject + verb), similar in length/register, fitting the same slot.",
+    common,
+  ].join("\n");
 }
 
 export function readVocabChoiceSynonymVariantsSetting(
@@ -1101,6 +1184,7 @@ export interface QuestionTypeGenerationSettings {
   BLANK_INFERENCE?: BlankInferenceGenerationSettings;
   CONTENT_MATCH?: ContentMatchGenerationSettings;
   GRAMMAR_ERROR?: GrammarErrorGenerationSettings;
+  GRAMMAR_CHOICE_COMBO?: GrammarChoiceComboGenerationSettings;
   GRAMMAR_CORRECTION?: GrammarCorrectionGenerationSettings;
   SUMMARY_COMPLETE?: SummaryCompleteGenerationSettings;
   SUMMARY_WRITING?: SummaryWritingGenerationSettings;
@@ -1155,6 +1239,8 @@ export interface ResolvedQuestionTypeGenerationSettings {
   blankInferenceParaphraseAnswer?: boolean;
   /** 빈칸 핵심 집중 모드 — 정답논리를 검증 고빈출 코어로 좁힘. */
   blankPointFocus?: boolean;
+  /** 빈칸 단위(단어/구/절). "auto" = 기존 자유 선택. */
+  blankInferenceGranularity?: BlankInferenceGranularity;
   /** 문장삽입 핵심 집중 모드 — 정답 응집장치를 검증 고빈출 코어로 좁힘. */
   sentenceInsertPointFocus?: boolean;
   /** 무관문장 핵심 집중 모드 — 무관성 유형을 검증 고빈출 코어로 좁힘. */
@@ -1627,6 +1713,23 @@ export function resolveQuestionTypeGenerationSettings(
     };
   }
 
+  if (typeId === "GRAMMAR_CHOICE_COMBO") {
+    // 네모 어법도 어법 판단과 동일한 grammarPointFocus 신호를 사용한다 — 후보 블록의
+    // buildGrammarPointGuidance({ pointFocus: diversity?.pointFocus }) 가 이미 소비한다.
+    const grammarPointFocus = readBooleanSetting(
+      rawSettings,
+      "GRAMMAR_CHOICE_COMBO",
+      "pointFocus",
+    );
+    return {
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
+        pointFocus: grammarPointFocus,
+      }),
+      ...languageSettings,
+      grammarPointFocus,
+    };
+  }
+
   if (typeId === "GRAMMAR_CORRECTION") {
     const grammarCorrectionErrorCount =
       readGrammarCorrectionErrorCountSetting(rawSettings);
@@ -1795,11 +1898,17 @@ export function resolveQuestionTypeGenerationSettings(
       "BLANK_INFERENCE",
       "pointFocus",
     );
+    const blankInferenceGranularity =
+      readBlankInferenceGranularitySetting(rawSettings);
     return {
       effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
         blankCount: blankInferenceBlankCount,
         paraphraseAnswer: blankInferenceParaphraseAnswer,
         pointFocus: blankPointFocus,
+        // "auto"는 기존 경로(키 미주입). word/phrase/clause 만 프롬프트에 신호.
+        ...(blankInferenceGranularity !== "auto"
+          ? { blankGranularity: blankInferenceGranularity }
+          : {}),
       }),
       ...languageSettings,
       blankInferenceBlankCount,
@@ -1809,6 +1918,7 @@ export function resolveQuestionTypeGenerationSettings(
       blankInferenceParaphraseAnswer:
         blankInferenceParaphraseAnswer && !blankInferenceDoubleNegative,
       blankPointFocus,
+      blankInferenceGranularity,
     };
   }
 
@@ -1966,7 +2076,14 @@ export function getDefaultQuestionTypeGenerationSettings(): QuestionTypeGenerati
     GRAMMAR_ERROR: {
       markerCount: GRAMMAR_MARKER_COUNT_DEFAULT,
       answerCount: GRAMMAR_ANSWER_COUNT_DEFAULT,
+      // 기본값 ON — 정답 오류 포인트를 기출 최빈출 톱셋(관계사·수일치·분사·to/-ing 등)에 집중.
+      pointFocus: true,
       ...defaultLanguageSettingsForType("GRAMMAR_ERROR"),
+    },
+    GRAMMAR_CHOICE_COMBO: {
+      // 네모 어법도 어법 판단과 동일하게 포인트 집중 기본 ON.
+      pointFocus: true,
+      ...defaultLanguageSettingsForType("GRAMMAR_CHOICE_COMBO"),
     },
     GRAMMAR_CORRECTION: {
       errorCount: GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT,
@@ -2557,6 +2674,14 @@ export function buildQuestionTypeSettingsPrompt(
   const useParaphraseAnswer =
     readBlankInferenceParaphraseAnswerSetting(rawSettings) &&
     rawSettings.doubleNegative !== true;
+  // 빈칸 단위(단어/구/절) — 모든 빈칸 모드(기본/변형/부정/다중)에 공통 적용. "auto"면 무주입.
+  const blankGranularityBlock = buildBlankGranularityPromptBlock(
+    readBlankInferenceGranularitySetting(rawSettings),
+  );
+  const withGranularity = (base: string): string =>
+    blankGranularityBlock
+      ? combinePromptSections(base, blankGranularityBlock)
+      : base;
   if (blankInferenceBlankCount >= 2) {
     // Multi-blank combination variant. The double-negative mode is a
     // single-blank-only feature and is intentionally ignored here.
@@ -2565,7 +2690,7 @@ export function buildQuestionTypeSettingsPrompt(
     // 다중빈칸은 candidate block 이 suppress 되므로 focus(출제포인트 집중)를 이 프롬프트
     // 경로에 주입한다 — 빈칸별로 서로 다른 코어 논리축에 분산(A 분산형).
     const blankPointFocus = readBooleanSetting(rawSettings, "BLANK_INFERENCE", "pointFocus");
-    return combinePromptSections(languagePrompt, [
+    return withGranularity(combinePromptSections(languagePrompt, [
       "## Type detail setting: BLANK_INFERENCE / multi-blank combination item",
       `- The teacher requested a ${blankInferenceBlankCount}-blank combination item instead of the standard single-blank item. This block overrides the single-blank output rules.`,
       ...(blankPointFocus
@@ -2603,11 +2728,11 @@ export function buildQuestionTypeSettingsPrompt(
         : "- blankAnswerMode must be omitted or \"SOURCE_EXACT\"; the double-negative mode does not apply to multi-blank items.",
       "- ⚠️ Do not generate passageWithBlank (the server builds it).",
       `- direction example: "다음 글의 빈칸 ${labelsText}에 들어갈 말로 가장 적절한 것은?"`,
-    ].join("\n"));
+    ].join("\n")));
   }
 
   if (useParaphraseAnswer) {
-    return combinePromptSections(languagePrompt, [
+    return withGranularity(combinePromptSections(languagePrompt, [
       "## Type detail setting: BLANK_INFERENCE / paraphrased answer blank",
       "- Apply the teacher-selected blank paraphrase mode. Keep originalExpression copied verbatim from the passage only for locating the blank, but the visible correct option must be a non-verbatim paraphrase of that source expression.",
       "- Set blankAnswerMode to \"PARAPHRASE\".",
@@ -2630,12 +2755,12 @@ export function buildQuestionTypeSettingsPrompt(
       "- Use native, exam-grade paraphrases. Avoid stilted phrases such as 'carrying out following evaluations or estimations', 'act as an active filter', 'active filter amidst...', 'sovereignly filtering', 'cultural influxes', 'moral terrains', 'property of shared choices', 'synergistic channels', 'collective boundaries', 'compassionate comprehension', 'compromising alternatives', 'reality that envelopes us', 'degraders', or 'degraders internalize'.",
       "- Add answerLogic in Korean explaining the original source meaning, the paraphrased correct option, and the decisive trap in each wrong option.",
       "- Use the tag '빈칸 변형'.",
-    ].join("\n"));
+    ].join("\n")));
   }
 
-  if (rawSettings.doubleNegative !== true) return languagePrompt;
+  if (rawSettings.doubleNegative !== true) return withGranularity(languagePrompt);
 
-  return combinePromptSections(languagePrompt, [
+  return withGranularity(combinePromptSections(languagePrompt, [
     "## Type detail setting: BLANK_INFERENCE / negative paraphrase blank",
     "- Apply the teacher-selected negative-paraphrase blank mode. The passage itself does NOT need to contain a negative cue.",
     "- The difficulty comes from the answer option: choose a central source expression from the passage, blank that exact expression, and make the correct option a semantically equivalent negative or privative paraphrase.",
@@ -2665,7 +2790,7 @@ export function buildQuestionTypeSettingsPrompt(
     "- Add answerLogic in Korean explaining how the negative/privative paraphrase preserves the original passage meaning and why each tempting wrong option fails.",
     "- Use the tag '부정 패러프레이즈' for this setting. Use '이중 부정' only when the correct option truly combines two negative mechanisms such as not + independent/immune/free or cannot + trivial; do not tag simple not + negative noun as double negative.",
     "- Wrong-option explanations must cite the decisive passage clue or blank-sentence logic, not merely say the option is positive/negative or close to the author's ideal. For conclusion blanks, explicitly connect the rejection to the conclusion signal such as 'remain in that position for long', 'when viewed at the timescales...', or the sentence immediately before/after the blank.",
-    ].join("\n"));
+    ].join("\n")));
   }
 
 export function getQuestionTypeSettingsForType(

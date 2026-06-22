@@ -88,6 +88,35 @@ export const FANOUT_TYPE_CONTROLS: Record<string, EditControl[]> = {
         }
       ],
       "defaultValue": "keep"
+    },
+    {
+      "id": "blankUnitSegmented",
+      "kind": "segmented",
+      "label": "빈칸 단위",
+      "hint": "빈칸으로 잡는 표현의 크기를 단어·구·절로 강제",
+      "options": [
+        {
+          "value": "keep",
+          "label": "유지",
+          "directive": null
+        },
+        {
+          "value": "word",
+          "label": "단어",
+          "directive": "빈칸을 단일 핵심 단어(WORD) 단위로 다시 구성해. originalExpression을 원문의 핵심 내용어(명사·동사·형용사·부사) 한 단어로 잡고, 다섯 선지도 모두 같은 품사의 한 단어로 작성. 추론 논리·정답 의미는 유지하되 표현의 크기만 단어로 좁혀. 빈칸 주변 문맥은 그대로 둬."
+        },
+        {
+          "value": "phrase",
+          "label": "구",
+          "directive": "빈칸을 2~4단어 구(PHRASE) 단위로 다시 구성해. originalExpression을 명사구·동사구·전치사구 같은 2~4단어 구(주어+동사 절은 제외)로 잡고, 다섯 선지도 모두 같은 문법 자리의 2~4단어 구로 작성. 추론 논리·정답 의미는 유지."
+        },
+        {
+          "value": "clause",
+          "label": "절",
+          "directive": "빈칸을 주어와 동사를 갖춘 절(CLAUSE, 약 5~10단어) 단위로 다시 구성해. originalExpression을 한 명제를 이루는 절로 잡고, 다섯 선지도 모두 주어+동사 형태의 절로 작성. 추론 논리·정답 의미는 유지."
+        }
+      ],
+      "defaultValue": "keep"
     }
   ],
   "GRAMMAR_ERROR": [

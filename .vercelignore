@@ -64,3 +64,12 @@ strategy-report
 ir-deck
 english-exam-passages
 sw-gen-page-initial.jpeg
+# AI수정 감사·재검증 평가결과(jsonl·리포트) — 앱 미사용, 배포 제외
+/results
+# 스크래치/프로브 스크립트(키 포함 가능) — _diag/_dump/_step/_probe 규약 연장
+scripts/_ai-edit-*
+scripts/_feature-*
+scripts/_gate-fix-test.ts
+scripts/_nemo-relclause-probe.ts
+scripts/_reverify-analyze.mjs
+scripts/_sc-leak-test.ts
