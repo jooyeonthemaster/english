@@ -150,7 +150,7 @@ export function GrammarChoiceComboRenderer({ q }: { q: GrammarChoiceComboQuestio
   return (
     <>
       <Direction text={q.direction} />
-      <PassageBlock>{renderPassageFormatted(q.passageWithMarkers)}</PassageBlock>
+      <PassageBlock>{renderPassageFormatted(q.passageWithMarkers, "GRAMMAR_CHOICE_COMBO")}</PassageBlock>
       <OptionList options={q.options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
         {q.slots && (

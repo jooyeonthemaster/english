@@ -54,6 +54,40 @@ function correctCandidateFirst(correct: string, wrong: string): boolean {
   return hash % 2 === 0;
 }
 
+function isWordChar(ch: string): boolean {
+  // 글자/숫자만 단어문자로 본다. 하이픈·아포스트로피를 포함하면 "well-being"의
+  // "well"만 매치됐을 때 "-being"까지 확장해 치환으로 삭제(데이터 손실)될 수 있다.
+  // 글자만 보면 진짜 버그(매치 안쪽의 남은 글자 "...]ning")는 그대로 해결되고,
+  // 하이픈/아포스트로피 경계에서는 멈춰 인접 텍스트를 삼키지 않는다.
+  return /[A-Za-z0-9]/.test(ch);
+}
+
+/**
+ * 네모 치환 스팬을 단어 경계까지 확장한다.
+ *
+ * findExpressionInPassage 가 후보보다 짧은 길이를 돌려주는 경우(정규화/퍼지/OCR
+ * 매칭, 또는 모델 후보가 지문 단어 형태와 미세하게 다른 경우) 단어의 일부 글자가
+ * 네모 밖에 남아 "(A) [x / y]ning" 처럼 스펠링이 괄호 밖으로 새는 버그가 난다.
+ * 매치의 양끝이 단어 한가운데(앞/뒤 문자가 모두 단어문자)면 그 단어의 나머지
+ * 글자까지 포함하도록 경계를 넓혀 항상 온전한 단어(들)를 네모로 치환한다.
+ * 공백·구두점에서는 멈추므로 인접 단어를 삼키지 않는다.
+ */
+export function expandMatchToWordBoundaries(
+  passage: string,
+  index: number,
+  length: number,
+): { index: number; length: number } {
+  let start = index;
+  let end = index + length;
+  while (start > 0 && isWordChar(passage[start - 1]) && isWordChar(passage[start])) {
+    start -= 1;
+  }
+  while (end < passage.length && isWordChar(passage[end - 1]) && isWordChar(passage[end])) {
+    end += 1;
+  }
+  return { index: start, length: end - start };
+}
+
 export function processGrammarChoiceCombo(
   passage: string,
   ai: QuestionPostProcessData,
@@ -132,9 +166,11 @@ export function processGrammarChoiceCombo(
         error: `GRAMMAR_CHOICE_COMBO slot expression not found in passage: "${correct.slice(0, 80)}"`,
       };
     }
+    // 단어 경계까지 확장 — 스펠링이 네모 밖으로 새는 버그 방지.
+    const expanded = expandMatchToWordBoundaries(passage, found.index, found.length);
     located.push({
-      index: found.index,
-      length: found.length,
+      index: expanded.index,
+      length: expanded.length,
       correct,
       wrong,
       pointCode: typeof slot.pointCode === "string" ? slot.pointCode : undefined,

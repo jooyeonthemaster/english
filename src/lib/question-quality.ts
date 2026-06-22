@@ -102,6 +102,8 @@ interface ValidateQuestionQualityInput {
   blankInferenceBlankCount?: number;
   /** Requested BLANK_INFERENCE paraphrased answer mode. */
   blankInferenceParaphraseAnswer?: boolean;
+  /** Requested BLANK_INFERENCE blank unit. "word" intentionally allows single-word blanks. */
+  blankInferenceGranularity?: "auto" | "word" | "phrase" | "clause";
   /** Requested option count for free-text option types (TOPIC/TITLE/...). */
   genericOptionCount?: number;
   /** Requested correct-answer count for free-text option types. Omitted = 1. */
@@ -1337,9 +1339,12 @@ function buildGrammarChoiceComboCandidateBlock(
   // 따른다 (실측: killer1 에서 point-mix 경고 4/6). KILLER 는 지정을 여기서
   // 하드 우선으로 직접 발행하고, 공유 가이드는 카탈로그/함정 카드만 쓴다.
   const isKiller = requestedDifficulty === "KILLER";
+  // pointFocus 면 정답 포인트가 고빈출 포커스셋(b/d/k/c/g/f — 병렬 i 제외)으로 제한된다.
+  // 그때 하드풀에 i 를 두면 "i를 하드 정답으로" vs "i는 디코이만"이 모순되므로 i 를 뺀다.
+  const comboPointFocus = !!diversity?.pointFocus;
   const killerDesignation = (() => {
     if (!isKiller) return "";
-    const hardPool = ["b", "c", "i"];
+    const hardPool = comboPointFocus ? ["b", "c", "d"] : ["b", "c", "i"];
     const vi =
       typeof diversity?.variantIndex === "number" && Number.isFinite(diversity.variantIndex)
         ? Math.max(0, Math.floor(diversity.variantIndex))
@@ -1347,7 +1352,7 @@ function buildGrammarChoiceComboCandidateBlock(
     const first = hardPool[vi % hardPool.length];
     const second = hardPool[(vi + 1) % hardPool.length];
     const third = hardPool[(vi + 2) % hardPool.length];
-    return `- ⭐ KILLER 네모 포인트 지정: 두 네모는 하드 포인트 (${first}) ${GRAMMAR_POINT_CATALOG[first as keyof typeof GRAMMAR_POINT_CATALOG].label}, (${second}) ${GRAMMAR_POINT_CATALOG[second as keyof typeof GRAMMAR_POINT_CATALOG].label} 에 배치하세요. 지문에 그 구조가 정말 없으면 (${third}) ${GRAMMAR_POINT_CATALOG[third as keyof typeof GRAMMAR_POINT_CATALOG].label} 로 대체하되, 하드 포인트(b/c/i)가 두 네모 미만이면 안 됩니다. 남은 한 네모는 코어 풀의 다른 포인트를 사용하세요.`;
+    return `- ⭐ KILLER 네모 포인트 지정: 두 네모는 하드 포인트 (${first}) ${GRAMMAR_POINT_CATALOG[first as keyof typeof GRAMMAR_POINT_CATALOG].label}, (${second}) ${GRAMMAR_POINT_CATALOG[second as keyof typeof GRAMMAR_POINT_CATALOG].label} 에 배치하세요. 지문에 그 구조가 정말 없으면 (${third}) ${GRAMMAR_POINT_CATALOG[third as keyof typeof GRAMMAR_POINT_CATALOG].label} 로 대체하되, 하드 포인트(${hardPool.join("/")})가 두 네모 미만이면 안 됩니다. 남은 한 네모는 ${comboPointFocus ? "포커스셋의 다른 포인트" : "코어 풀의 다른 포인트"}를 사용하세요.`;
   })();
 
   return [
@@ -1358,7 +1363,9 @@ function buildGrammarChoiceComboCandidateBlock(
     "- 🚫 누설 금지: 네모로 만들 표현(올바른 후보든 틀린 후보든)과 동일한 단어/연어가 지문의 다른 곳에 무마킹으로 그대로 남아 있는 자리는 선택 금지 — 같은 문장의 평행구(예: 동일한 'composed of' 구조 반복)가 있으면 학생이 베껴 풉니다. 그런 자리는 피하고 다른 위치를 고르세요. 위반 시 문항이 거부됩니다.",
     "- Option mix: exactly one all-correct option; among the four wrong options use 1~2 options wrong in one slot, 1~3 options wrong in two slots, and at most 1 option wrong in all three slots. Every slot's wrongExpression must appear in at least one wrong option.",
     isKiller
-      ? "- KILLER calibration: at least two slots must test hard points (관계사 b, 분사 능/수동 c, 병렬 i), prefer long-distance dependencies (수식어구 건너 수일치, 절 경계 너머 병렬), and include at least two options wrong in two or more slots."
+      ? comboPointFocus
+        ? "- KILLER calibration: at least two slots must test hard points (관계사 b, 분사 능/수동 c, 수일치 d), prefer long-distance dependencies (수식어구 건너 수일치, 관계사 절 경계 일치), and include at least two options wrong in two or more slots."
+        : "- KILLER calibration: at least two slots must test hard points (관계사 b, 분사 능/수동 c, 병렬 i), prefer long-distance dependencies (수식어구 건너 수일치, 절 경계 너머 병렬), and include at least two options wrong in two or more slots."
       : "",
     killerDesignation,
     // 어법끝 빈도 가이드 — 세 슬롯 포인트 지정(answerCount=3 은 폴백 없는
@@ -1494,7 +1501,8 @@ function buildImpliedMeaningCandidateBlock(
     return [
       "## IMPLIED_MEANING target planning guardrail",
       "- No strong automatic candidate was detected, but you may still generate a valid item.",
-      "- Choose an exact phrase, clause, or short sentence from the passage whose meaning depends on surrounding logic.",
+      "- Choose an exact SHORT phrase or clause from the passage whose meaning depends on surrounding logic. Keep it ≤6 words (8 words maximum); never underline a whole sentence or a 9+ word clause.",
+      "- The target must be one of: (1) a compressed expression of the passage's keyword/theme, (2) an expression of the OPPOSITE of that theme, or (3) a metaphorical/figurative expression (prefer (3) if any figurative wording exists).",
       "- Do not underline a single vocabulary word, pronoun, function word, or dictionary idiom.",
       "- The answer option must be an English paraphrase of the implied meaning, not a literal translation.",
     ].join("\n");
@@ -1508,7 +1516,8 @@ function buildImpliedMeaningCandidateBlock(
       : "",
     "- Prefer one candidate from this list, or choose another exact source span with the same quality.",
     "- Copy underlinedExpression verbatim from the passage and provide surroundingText that contains it.",
-    "- The underlinedExpression should be a phrase, clause, or short sentence, not one word.",
+    "- ⭐ Keep the underlinedExpression SHORT: ≤6 words by default, 8 words maximum. If a listed candidate is long, underline only its core nucleus (the minimal phrase/clause that carries the implied meaning), not the whole clause. Never underline a full sentence.",
+    "- ⭐ The target must be one of three kinds (prefer (3) when figurative wording exists): (1) a compressed phrase expressing the passage's keyword/theme, (2) a phrase expressing the OPPOSITE of that theme (the writer's critique/negation/contrast), or (3) a metaphorical/figurative expression.",
     "- Treat this type as TOPIC/TITLE/SUMMARY family: prefer a target that restates the passage's central claim in metaphorical, compressed, unfamiliar, or conclusion-like wording.",
     "- Avoid peripheral local details. A good target should be reducible to the passage's topic/gist/title-level meaning.",
     "- Do not choose a rhetorical question or a sentence whose answer is stated in the immediately following sentence.",
@@ -2343,6 +2352,7 @@ export function validateQuestionQuality({
   antonymPairCount,
   blankInferenceBlankCount,
   blankInferenceParaphraseAnswer,
+  blankInferenceGranularity,
   genericOptionCount,
   genericAnswerCount,
   contentMatchType,
@@ -2359,6 +2369,9 @@ export function validateQuestionQuality({
   }
 
   validateDiversityTargetReuse(question, typeId, diversityUsedTargets, add);
+
+  // C5: 유형 변형(이질 필드/발문) 결정형 차단 — typeId 격리, 무조건 호출.
+  validateTypeSignature(question, typeId, add);
 
   validateOptions(question, typeId, genericOptionCount, add);
 
@@ -2398,6 +2411,7 @@ export function validateQuestionQuality({
     antonymPairCount,
     blankInferenceBlankCount,
     blankInferenceParaphraseAnswer,
+    blankInferenceGranularity,
     add,
   );
 
@@ -2407,6 +2421,10 @@ export function validateQuestionQuality({
     (contentMatchType === "일치" || contentMatchType === "불일치")
   ) {
     validateContentMatchPolarity(question, contentMatchType, add);
+  }
+  // C3: 복수정답 휴리스틱 — contentMatchType 신호 무관하게 항상 검사(독립).
+  if (typeId === "CONTENT_MATCH") {
+    validateContentMatchAnswerConsistency(question, add);
   }
   if (
     answerPolarity === "NEGATIVE" &&
@@ -2481,6 +2499,10 @@ function findImpliedMeaningCandidates(
       if (
         seen.has(normalized) ||
         countContentTokens(expression) < 2 ||
+        // 새 규칙(밑줄 ≤6단어, 8 max)과 일관되게: 통문장/긴 절 후보는 제안 목록에서
+        // 제외해 "Suggested underlinedExpression=<긴 span>" 모순을 줄인다. 짧은
+        // 후보가 없어 비면 guardrail 블록(≤6·3갈래 지시)이 대신 안내한다.
+        countContentTokens(expression) > 12 ||
         isSingleEnglishToken(expression) ||
         isTinyFunctionWord(expression)
       ) {
@@ -2607,14 +2629,22 @@ function impliedMeaningCandidateScore(
   sentenceIndex = 0,
   sentenceCount = 1,
 ): number {
-  let score = countContentTokens(expression);
-  if (/\b(?:creatures?|beggar|grave|mirror|lens|map|upstream|downstream|weight|carry|sculpt|sculpting|craft|discipline)\b/i.test(expression)) score += 5;
+  // 짧은 핵심 구/절 선호(6단어 원칙·8단어 상한). 길수록 감점해 긴 절·문장 후보를 뒤로 민다.
+  const tokenCount = countContentTokens(expression);
+  let score = 0;
+  if (tokenCount >= 2 && tokenCount <= 6) score += 6;
+  else if (tokenCount <= 8) score += 2;
+  else score -= (tokenCount - 8) * 2;
+  // (3) 비유·은유 표현 최우선
+  if (/\b(?:creatures?|beggar|grave|mirror|lens|map|upstream|downstream|weight|carry|sculpt|sculpting|craft|discipline)\b/i.test(expression)) score += 6;
   if (/\b(?:long before|based on something|reason and emotion|changed what counted|human responsibility is reorganized|tool that helps learning happen)\b/i.test(expression)) score += 4;
+  // (2) 핵심·주제와 정반대 방향(대조·부정·평가)
   if (/\b(?:not merely|not simply|rather than|instead of|while|although|whereas|but|yet)\b/i.test(expression)) score += 4;
+  // (1) 핵심·주제 함축 동사
   if (/\b(?:means?|suggests?|implies?|reveals?|reflects?|demonstrates?|represents?|serves?|functions?)\b/i.test(expression)) score += 3;
   if (/\b(?:therefore|thus|consequently|as a result|in this way)\b/i.test(sentence)) score += 2;
   score += impliedMeaningCentralityScore(sentence, sentenceIndex, sentenceCount);
-  if (expression.length > 150) score -= 2;
+  if (expression.length > 100) score -= 2;
   return score;
 }
 
@@ -2802,6 +2832,32 @@ function validateOptions(
     const explanationCount = collectWrongOptionExplanations(wrongExplanations).size;
     if (explanationCount < expectedWrongExplanationCount) {
       add("warning", "thin-wrong-option-explanations", "KILLER item should explain every wrong option.");
+    }
+  }
+
+  // M5: 해설 선지개수 환각 — 해설이 "N지선다" 또는 "모두/총/전체 N개의 선택지"라 진술하는데
+  // 실제 선지 수와 다르면 AI 수정이 선지 수를 환각한 것. 객관식(options 존재)에서만.
+  // ⚠️ severity=warning: 부분개수 서술("오답 선택지 2개가 매력적")·비교("3지선다와 다릅니다")
+  //    같은 정상 해설을 완전 배제하긴 어렵고, validateOptions 는 생성 경로에서도 호출되므로
+  //    error 로 두면 정상 후보를 거부·재시도 폭주시킨다. 검토 신호(warning)로 둔다.
+  //    패턴은 '총개수 단정'(모두/총/전체 N개의 선택지) 또는 'N지선다'로 한정해 부분개수 오탐을 줄인다.
+  const optionCount = Array.isArray(question.options) ? question.options.length : 0;
+  if (optionCount > 0) {
+    const allExpl = [
+      normalizeText(question.explanation),
+      ...collectWrongOptionExplanations(question.wrongOptionExplanations).values(),
+    ].join(" ");
+    const choiceCountMatch =
+      /([0-9]+)\s*지\s*선다|(?:모두|총|전체)\s*([0-9]+)\s*개의?\s*선택지/.exec(allExpl);
+    if (choiceCountMatch) {
+      const statedCount = Number(choiceCountMatch[1] ?? choiceCountMatch[2]);
+      if (Number.isFinite(statedCount) && statedCount !== optionCount) {
+        add(
+          "warning",
+          "explanation-choice-count-mismatch",
+          `해설이 ${statedCount}지선다라 진술하나 실제 선지는 ${optionCount}개입니다.`,
+        );
+      }
     }
   }
 }
@@ -3191,6 +3247,7 @@ function validateTypeSpecific(
   antonymPairCount: number | undefined,
   blankInferenceBlankCount: number | undefined,
   blankInferenceParaphraseAnswer: boolean | undefined,
+  blankInferenceGranularity: "auto" | "word" | "phrase" | "clause" | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   if (SHORT_TARGET_TYPES.has(typeId)) {
@@ -3225,6 +3282,7 @@ function validateTypeSpecific(
         passage,
         requestedDifficulty,
         blankInferenceParaphraseAnswer,
+        blankInferenceGranularity,
         add,
       );
     }
@@ -3580,9 +3638,31 @@ function validateTypeSpecific(
     );
   }
 
+  if (typeId === "FILL_BLANK_KEY") {
+    validateFillBlankKeyQuestion(question, passage, add);
+  }
+
   if ((typeId === "CONDITIONAL_WRITING" || typeId === "SENTENCE_TRANSFORM") && Array.isArray(question.conditions)) {
     if (question.difficulty === "KILLER" && question.conditions.length < 2) {
       add("warning", "killer-needs-multiple-conditions", `${typeId} KILLER should require at least two conditions.`);
+    }
+  }
+
+  // M9: SENTENCE_TRANSFORM 전환 미이행 — modelAnswer 가 originalSentence 와 (구두점·대소문자·
+  // 공백 정규화 후) 동일하면 요청한 문장 전환이 적용되지 않은 것. 콤마/마침표만 다른 퇴화형도
+  // 잡는다(실제 전환은 어순·시제·대명사 등 단어가 바뀌므로 구두점 strip 이 오탐을 만들지 않음).
+  // 빈 필드는 스킵.
+  if (typeId === "SENTENCE_TRANSFORM") {
+    const strip = (value: string) =>
+      normalizeComparableText(value).replace(/[^\p{L}\p{N}\s]/gu, "").replace(/\s+/g, " ").trim();
+    const orig = strip(normalizeText(question.originalSentence));
+    const model = strip(normalizeText(question.modelAnswer));
+    if (orig && model && orig === model) {
+      add(
+        "error",
+        "transform-answer-not-transformed",
+        "SENTENCE_TRANSFORM modelAnswer가 originalSentence와 (구두점·대소문자 제외) 동일합니다 — 요청한 문장 전환이 적용되지 않았습니다.",
+      );
     }
   }
 
@@ -4607,8 +4687,12 @@ function validateBlankInferenceQuestion(
   passage: string | undefined,
   requestedDifficulty: string | undefined,
   blankInferenceParaphraseAnswer: boolean | undefined,
+  blankInferenceGranularity: "auto" | "word" | "phrase" | "clause" | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
+  // "단어" 단위는 교사가 일부러 단일 단어 빈칸을 고른 것 — 크기/단일명사 게이트를 건너뛴다
+  // (그렇지 않으면 의도된 단어 빈칸이 거부되어 생성 실패로 이어질 수 있음).
+  const isWordGranularity = blankInferenceGranularity === "word";
   const isNegativeParaphraseMode = question.blankAnswerMode === "DOUBLE_NEGATIVE";
   const isParaphraseMode = question.blankAnswerMode === "PARAPHRASE";
   // 변형 정답 모드(DN·패러프레이즈)는 빈칸 설계 결함(슬롯 문법)을 error 로 승격한다.
@@ -4659,7 +4743,11 @@ function validateBlankInferenceQuestion(
     );
   }
 
-  if (requestedDifficulty === "KILLER" && countContentTokens(originalExpression) < 2) {
+  if (
+    !isWordGranularity &&
+    requestedDifficulty === "KILLER" &&
+    countContentTokens(originalExpression) < 2
+  ) {
     add(
       isTransformedMode ? "error" : "warning",
       "blank-target-too-small",
@@ -4678,7 +4766,7 @@ function validateBlankInferenceQuestion(
     }
   }
 
-  if (isSingleAbstractNounTarget(originalExpression)) {
+  if (!isWordGranularity && isSingleAbstractNounTarget(originalExpression)) {
     add(
       isTransformedMode ? "error" : "warning",
       "blank-single-abstract-noun",
@@ -5622,6 +5710,75 @@ function validateContentMatchPolarity(
 }
 
 /**
+ * C3: CONTENT_MATCH 복수정답 휴리스틱(warning). 일치/불일치 문항은 정답 1개만 지문과
+ * 모순(또는 일치)이고 나머지 선지는 참진술이어야 한다. 오답해설 맵이 정답 라벨을 키로
+ * 갖고 있으면 = 정답 선지를 오답으로 설명한 것 → 복수정답(정답을 오답으로 설명) 의심.
+ * contentMatchType 신호와 무관하게 항상 돌아야 하므로 polarity 게이트와 분리한다.
+ * recall 불명한 휴리스틱이라 warning(차단 아님).
+ */
+function validateContentMatchAnswerConsistency(
+  question: Record<string, unknown>,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const correctLabels = new Set(collectCorrectAnswerLabels(question));
+  if (correctLabels.size === 0) return;
+  const explanationMap = collectWrongOptionExplanations(question.wrongOptionExplanations);
+  for (const label of correctLabels) {
+    if (explanationMap.has(label)) {
+      add(
+        "warning",
+        "content-match-answer-explanation-conflict",
+        "오답 해설에 정답 선지가 포함돼 복수정답(정답을 오답으로 설명)이 의심됩니다. 불일치 문항은 정답 1개만 지문과 모순, 나머지는 참진술이어야 합니다.",
+      );
+      break;
+    }
+  }
+}
+
+/**
+ * C5: 유형 변형 차단. AI 수정이 한 유형을 다른 유형으로 변질시키면(예: TITLE 문항에
+ * BLANK 전용 필드 blanks/passageWithBlank 를 붙이거나, TITLE 발문을 빈칸/순서 발문으로
+ * 바꾸면) 채점·렌더가 깨진다. 결정형으로 이질 필드/발문만 정확 타격한다.
+ * 정상 옵션형 유형은 BLANK 전용 필드를 애초에 안 가지므로 무발화.
+ */
+const TYPE_SIGNATURE_FOREIGN_FIELDS: Record<string, string[]> = {
+  TITLE: ["blanks", "passageWithBlank", "originalExpression", "blankAnswerMode"],
+  TOPIC: ["blanks", "passageWithBlank", "originalExpression", "blankAnswerMode"],
+  MAIN_IDEA: ["blanks", "passageWithBlank", "originalExpression", "blankAnswerMode"],
+  TOPIC_MAIN_IDEA: ["blanks", "passageWithBlank", "originalExpression", "blankAnswerMode"],
+  CONTEXT_MEANING: ["blanks", "passageWithBlank", "originalExpression"],
+  SYNONYM: ["blanks", "passageWithBlank", "originalExpression"],
+  ANTONYM: ["blanks", "passageWithBlank", "originalExpression"],
+};
+
+function validateTypeSignature(
+  question: Record<string, unknown>,
+  typeId: string,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  for (const field of TYPE_SIGNATURE_FOREIGN_FIELDS[typeId] ?? []) {
+    if (question[field] != null) {
+      add(
+        "error",
+        "type-foreign-field",
+        `${typeId} 문항에 다른 유형 전용 필드(${field})가 있어 유형이 변형됐습니다.`,
+      );
+    }
+  }
+
+  if (typeId === "TITLE") {
+    const direction = normalizeText(question.direction);
+    if (/빈칸|들어갈 말|들어가기에|순서로|배열|들어갈 곳/.test(direction)) {
+      add(
+        "error",
+        "title-direction-foreign",
+        "제목 유형인데 발문이 빈칸/순서 유형으로 바뀌었습니다.",
+      );
+    }
+  }
+}
+
+/**
  * 대의파악 계열(제목/주제/요지) 부정 극성("적절하지 않은 것") 검증 —
  * answerPolarity=NEGATIVE일 때만 호출(POSITIVE/미설정=미호출, 기존 동작 불변).
  * 발문이 부정형이 아니면 정답 극성이 어긋난 것이므로 error.
@@ -6258,6 +6415,30 @@ function validateSummaryWritingQuestion(
     }
   }
 
+  // SW-GATE-COVERAGE (sw-wordbank-answer-coverage): [보기] 칩 하나가 '여러 단어로 된 정답
+  // 어구 전체'를 통째로(연속) 담으면 정답이 노출된다(예: wordBank=["depth of conceptual
+  // synthesis and memory encoding"]). BASIC 재배열 영작은 정답을 단어 단위로 흩어 칩으로
+  // 주므로(useAll+미끼0 이어도) 어떤 칩도 다단어 정답을 연속으로 담지 않아 무발화한다.
+  // 단일어 정답은 정상적으로 보기에 들어가는 형식(받아쓰기)이라 검사 대상에서 제외한다.
+  // (이전 '토큰 집합 커버리지' 방식은 BASIC useAll+미끼0 을 오탐 차단해 폐기 — 누설 신호는
+  //  '커버리지'가 아니라 '한 칩 = 다단어 정답 통째'다.)
+  {
+    const deobf = (value: string) =>
+      normalizeComparableText(value).replace(/_+/g, "").replace(/\s+/g, " ").trim();
+    const chipsNorm = wordBank.map((chip) => deobf(chip)).filter(Boolean);
+    const leaked = blanks
+      .map((blank) => deobf(normalizeText(blank.answer)))
+      .filter((ans) => ans.split(" ").filter(Boolean).length >= 2)
+      .find((ans) => chipsNorm.some((chip) => chip === ans || chip.includes(ans)));
+    if (leaked) {
+      add(
+        "error",
+        "sw-wordbank-answer-coverage",
+        "[보기]의 한 칩이 여러 단어로 된 정답 어구를 통째로 담아 정답이 노출됩니다. 정답 어구는 한 칩에 몰아넣지 말고 단어 단위로 흩거나 미끼(wordBankDistractors)를 추가하세요.",
+      );
+    }
+  }
+
   // SW-GATE-FIRSTLETTER (clueMode=firstLetter): 앞글자 단서는 렌더 단계에서 blanks[].answer 의
   // 각 단어 첫 글자를 직접 파생해 "(A) r____ o____ ..." 단어별 슬롯으로 그린다
   // (summaryWritingMaskedSummary). 즉 모델의 firstLetterHint 필드는 표시에 쓰이지 않으므로
@@ -6276,6 +6457,52 @@ function validateSummaryWritingQuestion(
       "warning",
       "sw-distractor-semantic",
       "wordBankPolicy=usePartial 인데 wordBankDistractors(미끼 목록)가 비어 있습니다.",
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 핵심 표현 빈칸 (FILL_BLANK_KEY) — 빈칸 무결성 + 자음골격/언더스코어 난독 누설 게이트.
+// AI 수정이 정확한 빈칸 마커(_____) 대신 자음골격(c_ns_n_nt)·단일밑줄로 정답을
+// 숨기려다 학생 문장에 정답을 노출하는 결함을 막는다(현재 검증기 0개).
+// ---------------------------------------------------------------------------
+function validateFillBlankKeyQuestion(
+  question: Record<string, unknown>,
+  _passage: string | undefined,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const swb = normalizeText(question.sentenceWithBlank);
+  // 빈 문자열이면 두 검사 모두 스킵(가드) — 다른 게이트가 누락을 다룬다.
+  if (!swb) return;
+
+  // (1) 빈칸 무결성: 밑줄 3개 이상(_____)이 없으면 자음골격/단일밑줄 난독으로 의심.
+  if (!/_{3,}/.test(swb)) {
+    add(
+      "error",
+      "fbk-missing-blank-marker",
+      "sentenceWithBlank에 빈칸(_____ , 밑줄 3개 이상)이 없습니다. 자음골격/단일밑줄 난독화 대신 정확한 빈칸 마커를 쓰세요.",
+    );
+  }
+
+  // (2) 자음골격/언더스코어 누설: 알파벳 사이의 _·중점·점·하이픈 1~2개를 제거해
+  // 난독을 복원했을 때 정답 토큰열이 학생 문장에 통째로 나타나면 노출.
+  // ⚠️ deobf 가 실제로 글자 사이 분리자를 제거했을 때(deobf !== swb)에만 비교한다.
+  //   정상 _____(공백 둘러싸임, 알파벳 인접 없음)은 deobf 가 no-op 이므로, 정답 단어가
+  //   문맥에 정상 등장하는 문장('Balance your _____ to balance life.')을 오탐하지 않는다.
+  const deobf = swb.replace(/([A-Za-z])[_·.\-]{1,2}(?=[A-Za-z])/g, "$1");
+  const ans = normalizeText(question.answer ?? question.correctAnswer);
+  const ansTok = summaryWritingComparableTokens(normalizeComparableText(ans));
+  if (
+    deobf !== swb &&
+    ansTok.length &&
+    ` ${summaryWritingComparableTokens(normalizeComparableText(deobf)).join(" ")} `.includes(
+      ` ${ansTok.join(" ")} `,
+    )
+  ) {
+    add(
+      "error",
+      "fbk-answer-skeleton-leak",
+      "정답이 자음골격/언더스코어로 학생 문장에 노출됩니다. 빈칸은 _____ 로만 두세요.",
     );
   }
 }
@@ -6642,11 +6869,13 @@ function validateImpliedMeaningQuestion(
     );
   }
 
-  if (underlinedExpression.length > 190 || expressionTokenCount > 18) {
+  // 함축 의미 밑줄은 짧게(6단어 원칙·최대 8단어). 8단어를 넘으면 경고로 교정 신호를 주되,
+  // 길이만으로는 절대 error 로 막지 않는다(짧은 지문/긴 의미단위에서 생성 실패를 유발하지 않도록).
+  if (underlinedExpression.length > 100 || expressionTokenCount > 8) {
     add(
       "warning",
       "implied-meaning-target-too-long",
-      "IMPLIED_MEANING target is very long and may become a main-idea item rather than a focused underline item.",
+      "IMPLIED_MEANING target is too long: keep the underline to a short phrase/clause (≤6 words, 8 max). A long span loses the implied compression and becomes a main-idea item.",
     );
   }
 
@@ -7311,6 +7540,29 @@ function validateSentenceOrderQuestion(
     const sentenceCount = countDisplaySentences(text);
     const wordCount = countWords(text);
     paragraphWordCounts.push(wordCount);
+
+    // C4-c (1) 라벨 오염: 단락 라벨에 순서 숫자(1/②)가 섞이면 정답 순서가 노출.
+    const rawLabel = normalizeText(paragraph.label);
+    if (/[0-9①-⑳]/.test(rawLabel)) {
+      add(
+        "error",
+        "sentence-order-label-order-leak",
+        "단락 라벨에 순서 숫자가 포함돼 정답 순서가 노출됩니다. 라벨은 (A)/(B)/(C)만 쓰세요.",
+      );
+    }
+    // C4-c (2) 본문 선두 순서표식: 본문 앞에 순서 번호("1."·"②"·"(2)")가 붙으면 순서 노출.
+    //  - bareNum: 1~2자리 숫자 + 구분자(.)·) + 뒤에 영문 → "1. The…". 소수점("3.14": 숫자 뒤
+    //    또 숫자)·콜론("20: ")은 제외해 본문 수치/시각 표기 오탐 방지.
+    //  - circled: 원숫자(①-⑳)/괄호숫자("(2)"/"[2]")는 구분자 없이도 순서표식 → "② Next"·"(2) Then" 포착.
+    const bareNumPrefix = /^\s*[0-9]{1,2}(?![0-9])\s*[.)·]\s*(?=[A-Za-z])/;
+    const circledPrefix = /^\s*(?:[①-⑳]|[(\[][0-9]{1,2}[)\]])\s*[.)·]?\s*(?=[A-Za-z])/;
+    if (bareNumPrefix.test(text) || circledPrefix.test(text)) {
+      add(
+        "error",
+        "sentence-order-text-order-prefix",
+        "단락 본문 앞에 순서 번호(1./②/(2) 등)가 붙어 정답 순서가 노출됩니다. 본문은 순수 텍스트만 두세요.",
+      );
+    }
 
     if (label !== expectedLabel) {
       add(

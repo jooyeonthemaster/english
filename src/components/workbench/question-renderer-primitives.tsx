@@ -241,13 +241,26 @@ export function renderBlanks(text: string): React.ReactNode {
 }
 
 /** Render passage with underlines, blanks, and numbered markers */
-export function renderPassageFormatted(text: string): React.ReactNode {
+export function renderPassageFormatted(
+  text: string,
+  subType?: string | null,
+): React.ReactNode {
   // 원본(PDF/추출)이 줄 단위로 저장돼 단락 내부에 강제 줄바꿈(\n)이 박혀 있으면
   // 화면에서 문장이 어색하게 끊긴다 → 단락(\n\n)은 유지하고 단락 내부의 단일
   // 줄바꿈만 공백으로 합쳐(reflow) 자연스럽게 흐르게 한다. (표시 전용)
   text = text.replace(/([^\n])\n(?!\n)/g, "$1 ");
+  // 네모 어법(GRAMMAR_CHOICE_COMBO)은 "(A) [좌 / 우]" 평문 — 다른 유형의 문제 부분처럼
+  // (A) 마커와 [좌/우] 네모를 파란 텍스트로 강조한다(시험지 renderFormattedInline 과 색 통일).
+  // 다른 유형의 [조건]/[요약문] 대괄호는 평문을 유지해야 하므로 subType 으로만 켠다.
+  const isCombo = subType === "GRAMMAR_CHOICE_COMBO";
   // Match: __content__ (underline), ___+ (blank), circled numbers
-  const combinedRegex = new RegExp(`__([^_]+)__|_{3,}|([${CIRCLED_MARKER_PATTERN}])`, "g");
+  // (combo) + [좌/우] 네모(그룹3) + (A) 마커(그룹4)
+  const combinedRegex = isCombo
+    ? new RegExp(
+        `__([^_]+)__|_{3,}|([${CIRCLED_MARKER_PATTERN}])|(\\[[^\\]]+\\])|\\(([a-jA-J])\\)`,
+        "g",
+      )
+    : new RegExp(`__([^_]+)__|_{3,}|([${CIRCLED_MARKER_PATTERN}])`, "g");
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
   let match;
@@ -291,6 +304,20 @@ export function renderPassageFormatted(text: string): React.ReactNode {
           className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold mx-0.5"
         >
           {match[2]}
+        </span>
+      );
+    } else if (isCombo && match[3]) {
+      // 네모 [좌 / 우] → 파란 굵은 텍스트(문제 부분 강조)
+      parts.push(
+        <span key={key++} className="font-semibold text-blue-700">
+          {match[3]}
+        </span>
+      );
+    } else if (isCombo && match[4]) {
+      // (A)(B)(C) 슬롯 마커 → 파란 굵은 텍스트
+      parts.push(
+        <span key={key++} className="font-bold text-blue-600">
+          ({match[4]})
         </span>
       );
     } else {

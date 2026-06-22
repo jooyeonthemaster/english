@@ -207,6 +207,13 @@ const SCALAR_FIELDS: Array<{ key: string; category: string }> = [
   { key: "answer", category: "정답" },
   { key: "explanation", category: "해설" },
   { key: "difficulty", category: "난이도" },
+  // 모드/극성 신호 — 다른 필드 변화 없이 이것만 바뀌는 NOOP-유사 변경도 diff 에 잡아
+  // editSummary "변경 없음" 오기재(M4)를 막는다. 전용 렌더 블럭은 없어 수정내역 패널에만 표시.
+  { key: "blankAnswerMode", category: "정답 모드" },
+  { key: "vocabDisplayMode", category: "어휘 표시 모드" },
+  { key: "clueMode", category: "단서 모드" },
+  { key: "matchType", category: "일치 유형" },
+  { key: "answerPolarity", category: "정답 극성" },
 ];
 
 const ARRAY_FIELDS: Array<{ key: string; category: string }> = [

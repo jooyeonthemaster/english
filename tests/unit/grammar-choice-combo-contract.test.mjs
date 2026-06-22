@@ -195,6 +195,9 @@ test("GRAMMAR_CHOICE_COMBO serializes the passage into questionText and renders 
   assert.ok(summary.questionText.includes("(A) ["));
   assert.equal(summary.rendersPaperOptionList, true);
   // 정답 섹션(네모 표현 분석)은 토글로 접혀 있어 정적 마크업에는 지문/보기만 나온다.
-  assert.ok(summary.renderedHtml.includes("(A) ["));
+  // 네모 (A) 마커와 [좌 / 우] 박스는 이제 파란 스타일 span 으로 렌더된다(시험지와 색 통일).
+  // 따라서 "(A) [" 가 한 덩어리로 붙어있지 않으므로 마커·박스를 분리해 검증한다.
+  assert.ok(summary.renderedHtml.includes("(A)"));
+  assert.ok(/\[[^\]]*\/[^\]]*\]/.test(summary.renderedHtml));
   assert.ok(summary.renderedHtml.includes("carrying - wearing - be"));
 });
