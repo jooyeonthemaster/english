@@ -19,6 +19,7 @@ import { toExamPick } from "@/lib/exam-passages/format";
 interface MultiFilters {
   years: Set<number>;
   exams: Set<string>;
+  grades: Set<string>;
   types: Set<string>;
   recons: Set<string>;
 }
@@ -26,6 +27,7 @@ interface MultiFilters {
 const EMPTY_FILTERS = (): MultiFilters => ({
   years: new Set(),
   exams: new Set(),
+  grades: new Set(),
   types: new Set(),
   recons: new Set(),
 });
@@ -61,6 +63,7 @@ export function useExamPassageLibrary() {
     if (q) p.set("q", q);
     if (filters.years.size) p.set("years", [...filters.years].join(","));
     if (filters.exams.size) p.set("exams", [...filters.exams].join(","));
+    if (filters.grades.size) p.set("grades", [...filters.grades].join(","));
     if (filters.types.size) p.set("types", [...filters.types].join(","));
     if (filters.recons.size) p.set("recon", [...filters.recons].join(","));
     p.set("page", String(page));
@@ -128,6 +131,16 @@ export function useExamPassageLibrary() {
     setPage(1);
   }, []);
 
+  const toggleGrade = useCallback((grade: string) => {
+    setFilters((prev) => {
+      const grades = new Set(prev.grades);
+      if (grades.has(grade)) grades.delete(grade);
+      else grades.add(grade);
+      return { ...prev, grades };
+    });
+    setPage(1);
+  }, []);
+
   const toggleType = useCallback((type: string) => {
     setFilters((prev) => {
       const types = new Set(prev.types);
@@ -158,6 +171,7 @@ export function useExamPassageLibrary() {
   const activeFilterCount =
     filters.years.size +
     filters.exams.size +
+    filters.grades.size +
     filters.types.size +
     filters.recons.size +
     (q ? 1 : 0);
@@ -252,6 +266,7 @@ export function useExamPassageLibrary() {
     filters,
     toggleYear,
     toggleExam,
+    toggleGrade,
     toggleType,
     toggleRecon,
     clearFilters,

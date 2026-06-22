@@ -38,6 +38,7 @@ export async function GET(request: NextRequest) {
       q: sp.get("q") ?? undefined,
       years: csvInts(sp.get("years")),
       exams: csv(sp.get("exams")),
+      grades: csv(sp.get("grades")),
       boards: csv(sp.get("boards")),
       typeGroups: csv(sp.get("types")),
       reconKinds: csv(sp.get("recon")),

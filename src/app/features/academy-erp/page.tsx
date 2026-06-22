@@ -16,7 +16,7 @@ const PATH = "/features/academy-erp";
 export const metadata = buildMetadata({
   title: "영어학원 관리 프로그램 — 학생·원비·출결 학원 ERP",
   description:
-    "AI 문제 생성·지문 분석부터 학생 관리, 원비 청구, 출결, 급여, 재무까지 한 플랫폼에서. 영어학원 관리 프로그램이 필요한 원장을 위한 SMOAT 올인원 학원 ERP — 원장·강사·학생·학부모 역할별 앱으로 학원 운영을 통합하세요.",
+    "학생·원비·출결·급여·재무까지 한 화면에서 운영하는 영어학원 관리 프로그램, SMOAT 올인원 학원 ERP.",
   path: PATH,
   keywords: [
     "영어학원 관리 프로그램",

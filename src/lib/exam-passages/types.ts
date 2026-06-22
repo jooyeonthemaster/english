@@ -37,6 +37,8 @@ export interface ExamPassage {
   hasDeliberateError: boolean;
   /** 단어 수. */
   wordCount: number;
+  /** 학년: "고1" | "고2" | "고3". 수능·모평은 고3. 교육청 학평은 고1/고2/고3. */
+  grade?: string;
   /** 복원 완료된 완전한 영어 지문 본문. */
   text: string;
 }
@@ -46,6 +48,8 @@ export interface ExamPassageFacets {
   total: number;
   years: number[];
   exams: string[];
+  /** 학년 목록(고3/고2/고1). */
+  grades: string[];
   boards: string[];
   eras: string[];
   typeGroups: string[];
@@ -56,6 +60,7 @@ export interface ExamPassageFacets {
     era: Record<string, number>;
     exam: Record<string, number>;
     board: Record<string, number>;
+    grade: Record<string, number>;
   };
 }
 
@@ -67,6 +72,8 @@ export interface ExamPassageQuery {
   years?: number[];
   /** 시험 회차(복수 가능). */
   exams?: string[];
+  /** 학년(복수 가능). */
+  grades?: string[];
   /** 출처 게시판. */
   boards?: string[];
   /** 묶음 유형(복수 가능). */

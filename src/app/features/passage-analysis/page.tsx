@@ -16,7 +16,7 @@ const PATH = "/features/passage-analysis";
 export const metadata = buildMetadata({
   title: "영어 지문 분석 — 직독직해·구문·어휘 학습지 자동 제작",
   description:
-    "지문 하나를 직독직해, 논리 구조 분석, 핵심 어휘 정리, 구문 분석까지 담은 7개 섹션 A4 분석지로 자동 제작합니다. 11가지 학습 활동과 6가지 지문 변형, 5가지 템플릿·색상 테마와 PDF 출력(인쇄)까지 — 영어 내신 학습지 제작을 SMOAT에서 끝내세요.",
+    "영어 지문 하나를 직독직해·구문·어휘까지 7개 섹션 A4 분석지로 자동 제작하는 SMOAT 지문 분석.",
   path: PATH,
   keywords: [
     "영어 지문 분석",

@@ -63,10 +63,10 @@ export function ExamPassagePickerModal({
             </span>
             <div className="min-w-0">
               <DialogTitle className="text-[14px] font-bold text-slate-800">
-                수능·모평 영어 기출 지문
+                수능·모평·학평 영어 기출 지문
               </DialogTitle>
               <DialogDescription className="text-[11px] text-slate-400">
-                2003~2027학년도 전 회차 · 정답 기반 복원된 완전한 지문
+                고1·고2·고3 · 2003~2027학년도 · 정답 기반 복원된 완전한 지문
               </DialogDescription>
             </div>
           </div>

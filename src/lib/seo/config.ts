@@ -47,7 +47,7 @@ export const SITE = {
   titleTemplate: "%s | SMOAT",
 
   defaultDescription:
-    "SMOAT(스모트)는 지문 분석부터 내신·수능 19유형 영어 문제 생성, Word 시험지·정답지·해설지 자동 조판, 학원 운영까지 한 번에 끝내는 영어학원 AI 올인원입니다. 지금 무료로 사용해 보세요.",
+    "영어 지문 분석, 내신·수능 19유형 문제 생성, Word 시험지 자동 조판까지 끝내는 영어학원 AI 올인원 SMOAT입니다.",
 
   /**
    * 기본 키워드 시드. Google 은 무시하지만 네이버는 일부 참고하며,

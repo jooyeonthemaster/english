@@ -16,7 +16,7 @@ const PATH = "/features/ai-question-generation";
 export const metadata = buildMetadata({
   title: "AI 영어 문제 생성 — 내신·수능 19유형 자동 출제",
   description:
-    "지문 하나로 빈칸·어법·순서·삽입·요지·서술형까지 내신 19유형 영어 변형문제를 1초 만에 자동 생성합니다. 수능·내신·EBS·모의고사 출제 포인트를 반영한 고퀄 문항을 SMOAT에서 무료로 만들어 보세요.",
+    "지문 하나로 빈칸·어법·순서·요약·서술형까지 내신 19유형 영어 변형문제를 자동 생성하는 SMOAT.",
   path: PATH,
   keywords: [
     "AI 영어 문제 생성",

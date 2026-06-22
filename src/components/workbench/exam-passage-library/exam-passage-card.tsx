@@ -9,6 +9,7 @@ import {
   reconLabel,
   isReconstructed,
   typeBadgeClass,
+  gradeBadgeClass,
 } from "@/lib/exam-passages/format";
 
 interface ExamPassageCardProps {
@@ -62,6 +63,16 @@ export function ExamPassageCard({
 
       {/* 메타 행 */}
       <div className="flex flex-wrap items-center gap-1.5 pr-7">
+        {passage.grade && passage.grade !== "고3" ? (
+          <span
+            className={
+              "inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-bold " +
+              gradeBadgeClass(passage.grade)
+            }
+          >
+            {passage.grade}
+          </span>
+        ) : null}
         <span className="inline-flex items-center rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-bold tracking-tight text-slate-600">
           {passage.year} {examShortLabel(passage.exam)}
           {passage.form ? ` ${passage.form}형` : ""}
