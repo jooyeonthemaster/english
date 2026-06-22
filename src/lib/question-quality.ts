@@ -3055,6 +3055,19 @@ const COGNITION_VERB_THAT_REGEX =
  * 상호 대조한다. 세 슬롯 전부가 정답 키를 구성하므로 슬롯/조합 결함은 error
  * (RELAXED 차단 대상), 오답 믹스·포인트 구성은 warning (strict 압력).
  */
+// 네모 후보가 비정형(준동사 — 동명사/현재분사 -ing 또는 to-부정사)인가.
+// 주격 관계대명사·주어 뒤 정동사 자리에서 이 형태가 나오면 즉답 giveaway(평택 1618 피드백).
+// p.p.(수동 시험)는 정오 판별이 모호해 제외하고, 명백한 -ing / to-v 만 잡는다.
+function isNonFiniteComboCandidate(expr: string): boolean {
+  const e = normalizeText(expr).toLowerCase();
+  if (!e) return false;
+  if (/^to\s+[a-z][a-z-]*$/.test(e)) return true; // to 부정사
+  if (/^[a-z][a-z-]*ing$/.test(e)) return true; // 단일 토큰 -ing
+  return false;
+}
+
+const COMBO_SUBJECT_RELATIVE_PRONOUNS = new Set(["who", "which", "that"]);
+
 function validateGrammarChoiceComboQuestion(
   question: Record<string, unknown>,
   passage: string | undefined,
@@ -3144,6 +3157,24 @@ function validateGrammarChoiceComboQuestion(
       ]);
       if (pair.has("that") && pair.has("what") && COGNITION_VERB_THAT_REGEX.test(outsideSlots)) {
         add("error", "combo-candidate-visible-elsewhere", `Combo slot ${candidate.label} (that/what) is modeled by an unmarked "동사 + that + clause" elsewhere in the passage (pattern leak).`);
+      }
+    }
+
+    // 주격 관계대명사(who/which/that) 바로 뒤 동사 자리에 준동사(-ing/to-v) 후보가 있으면
+    // 그 자리는 정동사가 필수라 준동사가 즉답 giveaway다. 그 자리는 수일치(정동사 vs 정동사)
+    // 로 출제돼야 한다(평택 1618 피드백). error 로 잡아 교정 재생성을 유도한다.
+    for (const candidate of slotCandidates) {
+      const preceding = (precedingWordByLabel.get(candidate.label) || "").toLowerCase();
+      if (
+        COMBO_SUBJECT_RELATIVE_PRONOUNS.has(preceding) &&
+        (isNonFiniteComboCandidate(candidate.correct) ||
+          isNonFiniteComboCandidate(candidate.wrong))
+      ) {
+        add(
+          "error",
+          "combo-relative-clause-nonfinite",
+          `Combo slot ${candidate.label} sits right after the subject relative pronoun "${preceding}" but offers a non-finite candidate ([${candidate.correct} / ${candidate.wrong}]). That position requires a finite verb, so the non-finite form is a giveaway — test subject-verb agreement (수일치: finite vs finite, e.g. wears/wear) instead.`,
+        );
       }
     }
   }
