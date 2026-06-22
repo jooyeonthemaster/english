@@ -275,10 +275,16 @@ export function renderPassageFormatted(
       // __content__ → check if content starts with a marker like (A), (a)
       const markerMatch = match[1].match(/^\(([a-jA-J])\)\s*(.+)$/);
       if (markerMatch) {
-        // __(A) expression__ → bold blue marker + underlined expression
+        // __(A) expression__ → bold blue marker + underlined expression.
+        // 어법 판단(GRAMMAR_ERROR)만 시험지 렌더와 동일하게 마커를 원형숫자(①②③)로 표시한다.
+        // (저장 데이터는 (A) 유지 — 표시 시점에만 변환. subType 미전달/타 유형은 (A) 보존 → 반의어 등 무영향.)
+        const markerDisplay =
+          subType === "GRAMMAR_ERROR"
+            ? circledNumberFromLetter(markerMatch[1])
+            : `(${markerMatch[1]})`;
         parts.push(
           <span key={key++}>
-            <span className="font-bold text-blue-600">({markerMatch[1]})</span>
+            <span className="font-bold text-blue-600">{markerDisplay}</span>
             {" "}
             <span className="underline decoration-2 decoration-blue-500 underline-offset-4 font-semibold text-slate-900">
               {markerMatch[2]}

@@ -2,13 +2,19 @@
 "use client";
 
 import React from "react";
+import { grammarMarkerDisplayLabel } from "@/components/exams/paper-builder/option-display";
 
 // ---------------------------------------------------------------------------
 // Render text with __word__ -> underline, _____ -> blank line, markers
 // Enhanced version matching question-card.tsx quality
 // ---------------------------------------------------------------------------
 
-export function renderFormatted(text: string): React.ReactNode {
+export function renderFormatted(
+  text: string,
+  // GRAMMAR_ERROR 일 때만 라벨 (A)→① 로 표시(시험지 렌더 동일). 타 유형은 미전달 → (A) 보존.
+  subType?: string | null,
+): React.ReactNode {
+  const isGrammarError = subType === "GRAMMAR_ERROR";
   // Match: __content__ (underline with possible marker inside), ___+ (blank), circled numbers, (a)/(A) markers
   const regex =
     /__([^_]+)__|_{3,}|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF\u24D0-\u24E9])|\(([a-jA-J])\)/g;
@@ -28,7 +34,9 @@ export function renderFormatted(text: string): React.ReactNode {
       if (markerMatch) {
         parts.push(
           <span key={key++}>
-            <span className="font-bold text-slate-700">({markerMatch[1]})</span>{" "}
+            <span className="font-bold text-slate-700">
+              {isGrammarError ? grammarMarkerDisplayLabel(markerMatch[1]) : `(${markerMatch[1]})`}
+            </span>{" "}
             <span className="underline decoration-2 decoration-blue-500 underline-offset-4 font-semibold text-slate-900">
               {markerMatch[2]}
             </span>
@@ -58,7 +66,7 @@ export function renderFormatted(text: string): React.ReactNode {
       // (a)/(A) markers
       parts.push(
         <span key={key++} className="font-bold text-slate-700">
-          ({match[3]})
+          {isGrammarError ? grammarMarkerDisplayLabel(match[3]) : `(${match[3]})`}
         </span>,
       );
     } else {

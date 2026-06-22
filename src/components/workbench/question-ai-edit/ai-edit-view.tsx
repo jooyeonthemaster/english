@@ -36,6 +36,7 @@ import {
 } from "@/components/workbench/question-renderer-blocks";
 import { getTypeEditConfig } from "@/lib/question-ai-edit/type-edit-config";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
+import { circleGrammarLabelMentions } from "@/components/exams/paper-builder/option-display";
 
 import { ChangeLogPanel } from "./change-log-panel";
 import { TypeEditPanel } from "./type-edit-panel";
@@ -185,10 +186,39 @@ export function AiEditView({
     [attachedBlocks],
   );
 
+  // 어법 판단(GRAMMAR_ERROR)은 미리보기·변경내역의 before→after 텍스트도 라벨을
+  // 원형숫자(①)로 표시한다(시험지/생성 카드와 통일). 저장 데이터는 (A) 유지 — 표시만 변환.
+  // 다른 유형은 isGrammarError=false 라 원문 그대로.
+  const detailedChanges = useMemo<DetailedDiffEntry[]>(() => {
+    const raw = activeVersion?.detailedChanges ?? [];
+    if (subType !== "GRAMMAR_ERROR") return raw;
+    return raw.map((e) => ({
+      ...e,
+      ref: typeof e.ref === "string" ? circleGrammarLabelMentions(e.ref) : e.ref,
+      before: typeof e.before === "string" ? circleGrammarLabelMentions(e.before) : e.before,
+      after: typeof e.after === "string" ? circleGrammarLabelMentions(e.after) : e.after,
+      note: typeof e.note === "string" ? circleGrammarLabelMentions(e.note) : e.note,
+    }));
+  }, [activeVersion?.detailedChanges, subType]);
+
+  // 요약 서술·핵심 변경 칩도 어법이면 라벨을 ①로 표시(저장값은 (A) 유지).
+  const editSummaryDisplay =
+    subType === "GRAMMAR_ERROR" && typeof activeVersion?.editSummary === "string"
+      ? circleGrammarLabelMentions(activeVersion.editSummary)
+      : activeVersion?.editSummary;
+  const changesDisplay = useMemo<EditChange[]>(() => {
+    const raw = activeVersion?.changes ?? [];
+    if (subType !== "GRAMMAR_ERROR") return raw;
+    return raw.map((c) => ({
+      ...c,
+      label: typeof c.label === "string" ? circleGrammarLabelMentions(c.label) : c.label,
+    }));
+  }, [activeVersion?.changes, subType]);
+
   // 수정본 미리보기의 블럭별 변경 마크 맵(활성 버전 기준).
   const changeMap = useMemo<BlockChangeApi>(
-    () => buildBlockChangeMap(activeVersion?.detailedChanges ?? []),
-    [activeVersion],
+    () => buildBlockChangeMap(detailedChanges),
+    [detailedChanges],
   );
   const changedBlockCount = Object.keys(changeMap.byId).length;
   const [expandAllChanges, setExpandAllChanges] = useState(false);
@@ -423,10 +453,10 @@ export function AiEditView({
                     )}
                     {rightTab === "changelog" ? (
                       <ChangeLogPanel
-                        entries={activeVersion.detailedChanges}
-                        editSummary={activeVersion.editSummary}
+                        entries={detailedChanges}
+                        editSummary={editSummaryDisplay}
                         instruction={activeVersion.instruction}
-                        changes={activeVersion.changes}
+                        changes={changesDisplay}
                       />
                     ) : (
                       <>

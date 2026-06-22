@@ -7,7 +7,11 @@ import { DIFFICULTY_LABELS, QUESTION_TYPE_LABELS } from "./constants";
 import { renderFormatted, safeParseJSON } from "./format-text";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
-import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
+import {
+  optionDisplayTextForSubtype,
+  grammarMarkerIndex,
+  circleGrammarLabelMentions,
+} from "@/components/exams/paper-builder/option-display";
 import type { ExamQuestion } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -22,7 +26,18 @@ export function ExamQuestionCard({ eq }: { eq: ExamQuestion }) {
     questionText: q.questionText,
     structuredData: q.structuredData,
   });
-  const displayCorrectAnswer = formatStoredQuestionCorrectAnswer(q);
+  // 어법 판단(GRAMMAR_ERROR)만 라벨/마커를 원형숫자(①)로 표시(시험지 렌더 동일). 타 유형 무영향.
+  const isGrammarError = q.subType === "GRAMMAR_ERROR";
+  const rawCorrectAnswer = formatStoredQuestionCorrectAnswer(q);
+  const displayCorrectAnswer = isGrammarError
+    ? circleGrammarLabelMentions(rawCorrectAnswer)
+    : rawCorrectAnswer;
+  // 배지(원) 안엔 평문 숫자(1,2)를 넣어 동그라미-안-동그라미를 막는다(원 안 "1"이 ①로 읽힘).
+  const badgeLabel = (label: string) => {
+    if (!isGrammarError) return label;
+    const idx = grammarMarkerIndex(label);
+    return idx === null ? label : String(idx + 1);
+  };
   const options = safeParseJSON<{ label: string; text: string }[]>(q.options, []);
   const displayOptions =
     q.subType === "SENTENCE_INSERT"
@@ -57,7 +72,7 @@ export function ExamQuestionCard({ eq }: { eq: ExamQuestion }) {
 
       {/* Question text */}
       <div className="text-[13px] text-[#191F28] leading-relaxed whitespace-pre-line">
-        {renderFormatted(displayQuestionText)}
+        {renderFormatted(displayQuestionText, q.subType)}
       </div>
 
       {/* Options */}
@@ -77,9 +92,9 @@ export function ExamQuestionCard({ eq }: { eq: ExamQuestion }) {
                     isCorrect ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-500"
                   }`}
                 >
-                  {isCorrect ? <Check className="w-3 h-3" /> : opt.label}
+                  {isCorrect ? <Check className="w-3 h-3" /> : badgeLabel(opt.label)}
                 </span>
-                <span className="pt-0.5">{renderFormatted(opt.text)}</span>
+                <span className="pt-0.5">{renderFormatted(opt.text, q.subType)}</span>
               </div>
             );
           })}
@@ -111,7 +126,9 @@ export function ExamQuestionCard({ eq }: { eq: ExamQuestion }) {
           {explanationOpen && (
             <div className="mt-2 bg-amber-50/50 border border-amber-100 rounded-md px-3 py-2">
               <p className="text-[12px] text-slate-700 leading-relaxed whitespace-pre-line">
-                {q.explanation.content}
+                {isGrammarError
+                  ? circleGrammarLabelMentions(q.explanation.content)
+                  : q.explanation.content}
               </p>
             </div>
           )}

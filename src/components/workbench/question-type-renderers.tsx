@@ -60,6 +60,9 @@ import { formatVocabChoiceCorrectAnswer } from "@/lib/question-answer-display";
 import {
   formatInlineMarkersForSubtype,
   shouldRenderOptionListForSubtype,
+  grammarMarkerDisplayLabel,
+  circleGrammarLabelMentions,
+  circleGrammarWrongOptionExplanations,
 } from "@/components/exams/paper-builder/option-display";
 
 // ============================================================================
@@ -108,15 +111,30 @@ function getGrammarCorrection(me: GrammarErrorQuestion["markedExpressions"][numb
 }
 
 export function GrammarErrorRenderer({ q }: { q: GrammarErrorQuestion }) {
+  // 어법 판단은 시험지 렌더와 동일하게 지문/선지/정답/해설의 라벨을 모두 원형숫자(①②③)로
+  // 표시한다. 저장 데이터의 알파벳 라벨 "(A)"는 그대로 두고 표시 시점에만 변환한다.
+  // (다른 유형은 이 렌더러를 거치지 않으므로 영향 없음.)
+  const displayCorrectAnswer = circleGrammarLabelMentions(q.correctAnswer);
+  const displayCorrectAnswers = Array.isArray(q.correctAnswers)
+    ? q.correctAnswers.map((label) => circleGrammarLabelMentions(label))
+    : q.correctAnswers;
+  const displayExplanation = circleGrammarLabelMentions(q.explanation);
+  const displayKeyPoints = Array.isArray(q.keyPoints)
+    ? q.keyPoints.map((kp) => circleGrammarLabelMentions(kp))
+    : q.keyPoints;
+  const displayWrongOptionExplanations = circleGrammarWrongOptionExplanations(
+    q.wrongOptionExplanations,
+  );
+
   return (
     <>
       <Direction text={q.direction} />
-      <PassageBlock>{renderPassageFormatted(q.passageWithMarkers)}</PassageBlock>
+      <PassageBlock>{renderPassageFormatted(q.passageWithMarkers, "GRAMMAR_ERROR")}</PassageBlock>
       {/* 어법 판단은 지문 마커(①②③④⑤)만 쓰는 inline-marked 유형 — 시험지와 동일하게
           하단 보기 리스트를 렌더하지 않는다(같은 게이트 공유). 정답·표현은 아래
           '밑줄 표현 분석'과 정답 줄에 그대로 남는다. */}
       {shouldRenderOptionListForSubtype("GRAMMAR_ERROR") && (
-        <OptionList options={q.options} correctAnswer={q.correctAnswer} correctAnswers={q.correctAnswers} />
+        <OptionList options={q.options} correctAnswer={displayCorrectAnswer} correctAnswers={displayCorrectAnswers} />
       )}
       <AnswerRevealSection>
         {q.markedExpressions && (
@@ -130,7 +148,7 @@ export function GrammarErrorRenderer({ q }: { q: GrammarErrorQuestion }) {
 
                 return (
                   <div key={i} className={`text-[12px] flex items-start gap-2 ${me.isError ? "text-red-700" : "text-slate-600"}`}>
-                    <span className="font-bold text-blue-600 w-6 shrink-0">{me.label}</span>
+                    <span className="font-bold text-blue-600 w-6 shrink-0">{grammarMarkerDisplayLabel(me.label)}</span>
                     <span className={me.isError ? "line-through" : ""}>{displayExpression}</span>
                     {showCorrection && <span className="text-emerald-700 font-semibold">→ {correction}</span>}
                   </div>
@@ -139,8 +157,8 @@ export function GrammarErrorRenderer({ q }: { q: GrammarErrorQuestion }) {
             </div>
           </div>
         )}
-        <AnswerLine answer={q.correctAnswer} />
-        <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} wrongOptionExplanations={q.wrongOptionExplanations} />
+        <AnswerLine answer={displayCorrectAnswer} />
+        <ExplanationSection explanation={displayExplanation} keyPoints={displayKeyPoints} wrongOptionExplanations={displayWrongOptionExplanations} />
       </AnswerRevealSection>
     </>
   );

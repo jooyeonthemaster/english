@@ -156,6 +156,39 @@ export function grammarMarkerDisplayLabel(value: unknown): string {
   return index === null ? String(value ?? "") : getCircledNumber(index);
 }
 
+// 어법 판단(GRAMMAR_ERROR) 전용 — 해설/정답/오답분석 프로즈 안의 알파벳 라벨 참조
+// "(A)"~"(J)" 를 시험지 렌더와 동일한 원형숫자 "①②③" 로 변환한다.
+// GRAMMAR_ERROR 표면(GrammarErrorRenderer 등)에서만 호출하므로 다른 유형은 무영향.
+// 단일 대문자/소문자 알파벳 괄호 토큰만 매칭하므로 사실상 마커 참조에만 적용된다.
+const GRAMMAR_LABEL_MENTION_PATTERN = /\(([A-Ja-j])\)/g;
+
+export function circleGrammarLabelMentions(text: unknown): string {
+  if (typeof text !== "string" || !text) return typeof text === "string" ? text : "";
+  return text.replace(GRAMMAR_LABEL_MENTION_PATTERN, (full, letter: string) => {
+    const display = grammarMarkerDisplayLabel(letter);
+    return display && display !== letter ? display : full;
+  });
+}
+
+/**
+ * 어법 오답분석 Record 의 라벨 키(A→평문 숫자 "2")와 본문 프로즈(A→①)를 변환.
+ * 키를 평문 숫자로 두는 이유: 오답분석 배지가 이미 원형(파란/앰버 원)이라 원형숫자(②)를
+ * 넣으면 동그라미-안-동그라미가 된다(다른 유형 배지도 평문 숫자 규약). 배지 원 안의 "2"가
+ * 곧 ②로 읽힌다. 프로즈는 ①②로 변환해 사용자 요구(해설에 ① 언급)를 충족한다.
+ */
+export function circleGrammarWrongOptionExplanations(
+  value: Record<string, string> | undefined | null,
+): Record<string, string> | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return value ?? undefined;
+  const out: Record<string, string> = {};
+  for (const [key, text] of Object.entries(value)) {
+    const index = grammarMarkerIndex(key);
+    const newKey = index === null ? key : String(index + 1);
+    out[newKey] = circleGrammarLabelMentions(text);
+  }
+  return out;
+}
+
 function formatGrammarUnderlineContent(content: string): string {
   const match = content.match(
     /^\s*(\(([A-Ja-j])\)|([A-Ja-j])[.)]?|\((10|[1-9])\)|(10|[1-9])[.)]?|([\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]))\s+(.+)$/,
