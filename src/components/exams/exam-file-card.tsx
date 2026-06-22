@@ -18,6 +18,7 @@ import { cn, formatDate } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
 import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
+import { ExamCardPaperPreview } from "./exam-paper-thumbnail";
 import {
   clearCardTextSelection,
   preventCardDoubleClickTextSelection,
@@ -117,11 +118,18 @@ export function ExamFileCard({
         onClick(exam.id);
       }}
       className={cn(
-        "group relative rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer",
+        "group relative flex min-h-[232px] flex-row overflow-hidden rounded-xl border bg-white transition-all duration-200 hover:shadow-md cursor-pointer",
         selected ? "ring-2 ring-blue-400 border-blue-300" : "border-slate-200 hover:border-slate-300",
         isDragging && "opacity-40 scale-95",
       )}
     >
+      {/* 좌측: 첫 장 실제 렌더 미리보기 — 카드 높이를 위→아래로 가득 채운다 */}
+      <div className="relative w-[164px] shrink-0 self-stretch overflow-hidden border-r border-slate-100 bg-white">
+        <ExamCardPaperPreview examId={exam.id} />
+      </div>
+
+      {/* 우측: 기존 카드 본문 */}
+      <div className="flex min-w-0 flex-1 flex-col p-4">
       {/* Top row: handle + checkbox + title */}
       <div className="flex items-start gap-2.5 min-w-0">
         <DragHandle ref={dragHandleRef} className="mt-0.5 shrink-0" />
@@ -229,7 +237,7 @@ export function ExamFileCard({
       </div>
 
       {/* Bottom row: 분석 정보(동형 생성 시험지 한정, 좌) · 마지막 수정일 (최우측) */}
-      <div className="flex items-center justify-between gap-2 mt-3">
+      <div className="flex items-center justify-between gap-2 mt-auto pt-3">
         {/* 동형 생성 시험지: 분석 정보 — 카드 클릭(상세 열기)과 구분되는 별도 액션 */}
         {onShowAnalysis && (
           <button
@@ -263,6 +271,7 @@ export function ExamFileCard({
             onClick(exam.id);
           }}
         />
+      </div>
       </div>
     </div>
   );

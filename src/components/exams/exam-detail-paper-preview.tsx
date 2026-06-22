@@ -609,3 +609,127 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
     </section>
   );
 }
+
+// ---------------------------------------------------------------------------
+// ExamFirstPagePreview — 시험지 카드 좌측에 들어가는 "첫 장" 실제 렌더.
+//   상세 미리보기와 동일한 빌더 파이프라인(buildPaperItems → groups → 페이지
+//   분할)을 거친 뒤, 첫 페이지(표지가 켜져 있으면 표지) 한 장만 목표 폭에 맞춰
+//   축소 렌더한다. 툴바/줌/스크롤 없이 종이 한 장만 보여준다.
+// ---------------------------------------------------------------------------
+export function ExamFirstPagePreview({
+  exam,
+  width = 320,
+}: {
+  exam: ExamDetail;
+  width?: number;
+}) {
+  const settings = useMemo(() => parseBuilderSettings(exam.settings), [exam.settings]);
+  const template = asPaperTemplate(settings?.template);
+  const paperSize = asPaperSize(settings?.layout?.paperSize);
+  const columns: 1 | 2 = settings?.layout?.columns === 1 ? 1 : 2;
+  const density = asDensity(settings?.layout?.density);
+  const passageStyle = asPassageStyle(settings?.layout?.passageStyle);
+  const showAnswerSpace = settings?.layout?.showAnswerSpace ?? true;
+  const showPassageTitle = settings?.layout?.showPassageTitle ?? DEFAULT_SHOW_PASSAGE_TITLE;
+  const showQuestionMeta = settings?.layout?.showQuestionMeta ?? false;
+  const cover = normalizePaperCover(settings?.cover);
+
+  const paperItems = useMemo(() => buildPaperItems(exam, settings), [exam, settings]);
+  const paperGroups = useMemo(() => buildGroups(paperItems), [paperItems]);
+  const paginationSettings = useMemo<PaginationSettings>(
+    () => ({
+      paperSize,
+      columns,
+      density,
+      passageStyle,
+      showAnswerSpace,
+      showPassageTitle,
+      showQuestionMeta,
+      template,
+    }),
+    [paperSize, columns, density, passageStyle, showAnswerSpace, showPassageTitle, showQuestionMeta, template],
+  );
+  const paginationResult = useMemo(
+    () => paginateGroups(paperGroups, paginationSettings),
+    [paperGroups, paginationSettings],
+  );
+
+  const baseWidth = PREVIEW_PAGE_WIDTH;
+  const heightRatio = PAPER_SIZE_SPECS[paperSize].heightRatio;
+  const zoom = width / baseWidth;
+  const pageHeight = width * heightRatio;
+
+  // "첫 장": 표지가 켜져 있으면 표지 한 장, 아니면 본문 첫 페이지 한 장만 그린다.
+  const showCover = cover.enabled;
+  const firstPages = showCover ? [] : paginationResult.pages.slice(0, 1);
+  const renderCover = showCover ? cover : { ...cover, enabled: false };
+
+  const classes = exam.class ? [{ id: exam.class.id, name: exam.class.name }] : [];
+  const schools = exam.school ? [{ id: exam.school.id, name: exam.school.name }] : [];
+
+  const noop = () => undefined;
+
+  if (paperItems.length === 0) {
+    return (
+      <div className="flex h-full w-full items-center justify-center text-[11px] text-slate-300">
+        미리보기 없음
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="overflow-hidden bg-white"
+      style={{ width, height: pageHeight }}
+      aria-hidden
+    >
+      <PreviewPages
+        paperItems={paperItems}
+        paperPages={firstPages}
+        overflowItemIds={paginationResult.overflowItems}
+        previewBaseWidth={baseWidth}
+        previewZoom={zoom}
+        previewContentHeight={baseWidth * heightRatio}
+        title={exam.title}
+        paperSize={paperSize}
+        subtitle={settings?.header?.subtitle || ""}
+        instructions={settings?.header?.instructions || DEFAULT_INSTRUCTIONS}
+        studentNameLabel={settings?.header?.studentNameLabel || "이름"}
+        academyLogoDataUrl={settings?.header?.academyLogoDataUrl || null}
+        template={template}
+        columns={columns}
+        density={density}
+        passageStyle={passageStyle}
+        showAnswerSpace={showAnswerSpace}
+        showPassageTitle={showPassageTitle}
+        showQuestionMeta={showQuestionMeta}
+        cover={renderCover}
+        updateCover={noop}
+        activeItemId={null}
+        setActiveItemId={noop}
+        updateHeader={noop}
+        updateItem={noop}
+        updateGroupPassage={noop}
+        moveItemToDropTarget={noop}
+        removeItem={noop}
+        ungroupItem={noop}
+        regroupByPassage={noop}
+        tryToggleKeepWithPrev={noop}
+        draggingItemId={null}
+        setDraggingItemId={noop}
+        dragOverItemId={null}
+        setDragOverItemId={noop}
+        dragOverPartKey={null}
+        setDragOverPartKey={noop}
+        dragPlacement="before"
+        setDragPlacement={noop}
+        schools={schools}
+        classes={classes}
+        schoolId={exam.school?.id || ""}
+        classId={exam.class?.id || ""}
+        examDate={formatExamDate(exam.examDate)}
+        readOnly
+      />
+    </div>
+  );
+}

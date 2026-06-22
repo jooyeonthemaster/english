@@ -23,6 +23,7 @@ import {
   PassageAnnotationEditor,
   type Annotation,
 } from "@/components/workbench/editor";
+import { PassageContentEditor } from "@/components/workbench/editor/passage-content-editor";
 import { detectProblemFormArtifacts } from "@/lib/passage-source";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
@@ -124,6 +125,12 @@ interface PassageInputRowProps {
    */
   enableAiTransforms?: boolean;
   /**
+   * 어휘·어법·출제 포인트 마킹(주석 에디터)을 끄고 일반 텍스트 에디터로 대체한다.
+   * 웹툰 생성처럼 마킹이 필요 없는 경로에서 켠다(기본 false). 켜지면 하단 마킹 안내
+   * 바와 '마킹 N' 배지도 함께 사라진다.
+   */
+  disableMarking?: boolean;
+  /**
    * 변형 지문 생성 → 새 Passage 로 저장하고 새 행으로 추가한다(부모가 처리).
    * 주어지지 않으면 '변형 지문 생성' 버튼을 숨긴다.
    */
@@ -159,6 +166,7 @@ export function PassageInputRow({
   selected,
   onToggleSelected,
   enableAiTransforms = false,
+  disableMarking = false,
   onAddVariant,
 }: PassageInputRowProps) {
   const [restoring, setRestoring] = useState(false);
@@ -811,27 +819,42 @@ export function PassageInputRow({
               </div>
             ) : null}
 
-            {/* 에디터 영역 — 본문 길이에 맞춰 높이 (fill 은 채움). */}
+            {/* 에디터 영역 — 본문 길이에 맞춰 높이 (fill 은 채움).
+                disableMarking(웹툰 등)이면 마킹 없는 일반 텍스트 에디터로 대체한다. */}
             <div
-              className={fill ? "flex min-h-0 flex-1 flex-col" : ""}
+              className={
+                disableMarking || fill ? "flex min-h-0 flex-1 flex-col" : ""
+              }
               style={
-                fill
-                  ? { minHeight: editorHeightPx ?? 320 }
-                  : { minHeight: 160, maxHeight: editorHeightPx ?? 460 }
+                disableMarking
+                  ? { height: editorHeightPx ?? 300 }
+                  : fill
+                    ? { minHeight: editorHeightPx ?? 320 }
+                    : { minHeight: 160, maxHeight: editorHeightPx ?? 460 }
               }
             >
-              <PassageAnnotationEditor
-                key={`${row.localId}:${row.editorSeed}`}
-                content={row.content}
-                onContentChange={handleContentChange}
-                annotations={row.annotations}
-                onAnnotationsChange={handleAnnotationsChange}
-                onEditorReady={handleEditorReady}
-                editable={!busy}
-                placeholder={
-                  "여기에 영어 지문을 붙여넣으세요...\n\n텍스트를 드래그하면 핵심 어휘·어법·출제 포인트를 마킹할 수 있어요. 빈칸·선지 마커가 섞인 '문제 형태'면 'AI 복원'으로 원문을 복구하세요."
-                }
-              />
+              {disableMarking ? (
+                <PassageContentEditor
+                  key={`${row.localId}:${row.editorSeed}`}
+                  content={row.content}
+                  onChange={handleContentChange}
+                  readOnly={busy}
+                  placeholder="여기에 영어 지문을 붙여넣으세요..."
+                />
+              ) : (
+                <PassageAnnotationEditor
+                  key={`${row.localId}:${row.editorSeed}`}
+                  content={row.content}
+                  onContentChange={handleContentChange}
+                  annotations={row.annotations}
+                  onAnnotationsChange={handleAnnotationsChange}
+                  onEditorReady={handleEditorReady}
+                  editable={!busy}
+                  placeholder={
+                    "여기에 영어 지문을 붙여넣으세요...\n\n텍스트를 드래그하면 핵심 어휘·어법·출제 포인트를 마킹할 수 있어요. 빈칸·선지 마커가 섞인 '문제 형태'면 'AI 복원'으로 원문을 복구하세요."
+                  }
+                />
+              )}
             </div>
 
             {/* 글자수 — 입력창 우측하단 (문제생성 워크스페이스와 동일) */}

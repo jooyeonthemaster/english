@@ -66,11 +66,13 @@ export type WebtoonStatus = "PENDING" | "GENERATING" | "COMPLETED" | "FAILED";
 export interface WebtoonRow {
   id: string;
   passageId: string;
-  passage: { id: string; title: string };
+  passage: { id: string; title: string; content?: string };
   style: WebtoonStyleId;
   language: WebtoonLanguageId;
   customPrompt: string | null;
   status: WebtoonStatus;
+  /** 강사 검수완료 상태(검수완료 토글). */
+  approved: boolean;
   imageUrl: string | null;
   /** Re-typeset export from the in-browser 자막 편집기 (preferred for display when present). */
   editedImageUrl?: string | null;

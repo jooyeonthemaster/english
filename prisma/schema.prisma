@@ -3354,6 +3354,7 @@ model Webtoon {
   customPrompt String? @db.Text
 
   status      String  @default("PENDING")
+  approved    Boolean @default(false) // Teacher review status (검수완료)
   imageUrl    String? @db.Text // Supabase public URL (final, permanent)
   storagePath String? // Supabase storage path for cleanup
   rawAtlasUrl String? @db.Text // Original AtlasCloud URL (kept for debug)

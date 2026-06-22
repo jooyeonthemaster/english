@@ -257,7 +257,10 @@ export function FormSection(props: FormSectionProps) {
                 setIntakeTab={props.setIntakeTab}
                 libraryLabel={props.libraryLabel ?? "내 자료함"}
                 libraryCount={0}
-                showPasteTab={!props.rightPane}
+                // 직접 입력 탭은 paste 핸들러가 있으면 노출한다. rightPane(웹툰)
+                // 경로도 onSubmitPastedRows 를 넘기면 직접 입력 › 파일업로드 ›
+                // 자료 관리 › 워크스페이스 흐름을 학습지와 동일하게 갖는다.
+                showPasteTab={!!props.onSubmitPastedRows}
                 onSubmitPastedRows={props.onSubmitPastedRows}
                 pasteSaving={props.pasteSaving}
                 upload={

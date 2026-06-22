@@ -39,6 +39,32 @@ export async function GET(_req: NextRequest, ctx: RouteContext) {
   return NextResponse.json({ ok: true, webtoon });
 }
 
+export async function PATCH(req: NextRequest, ctx: RouteContext) {
+  const staff = await getStaffSession();
+  if (!staff) return NextResponse.json({ error: "인증 필요" }, { status: 401 });
+
+  const { id } = await ctx.params;
+  const body = (await req.json().catch(() => ({}))) as { approved?: unknown };
+  if (typeof body.approved !== "boolean") {
+    return NextResponse.json({ error: "approved(boolean) 필요" }, { status: 400 });
+  }
+
+  const existing = await prisma.webtoon.findFirst({
+    where: { id, academyId: staff.academyId },
+    select: { id: true },
+  });
+  if (!existing) {
+    return NextResponse.json({ error: "찾을 수 없습니다" }, { status: 404 });
+  }
+
+  await prisma.webtoon.update({
+    where: { id: existing.id },
+    data: { approved: body.approved },
+  });
+
+  return NextResponse.json({ ok: true, approved: body.approved });
+}
+
 export async function DELETE(_req: NextRequest, ctx: RouteContext) {
   const staff = await getStaffSession();
   if (!staff) return NextResponse.json({ error: "인증 필요" }, { status: 401 });

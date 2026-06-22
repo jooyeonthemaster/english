@@ -3,187 +3,262 @@
 import { useState } from "react";
 import {
   AlertCircle,
-  Check,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
   Download,
+  FileText,
   Loader2,
   Maximize2,
+  Pencil,
   RefreshCw,
-  Type,
+  Trash2,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { type WebtoonRow, styleLabel, languageLabel } from "./webtoon-page-types";
 
 interface WebtoonQueueCardProps {
   item: WebtoonRow;
+  selected: boolean;
+  onToggleSelected: () => void;
   onRetry: (webtoonId: string) => void;
   onRemove: (webtoonId: string) => void;
   onEditText?: (webtoonId: string) => void;
+  onToggleApprove: (webtoonId: string) => void;
 }
 
 function displayUrl(item: WebtoonRow): string | null {
   return item.editedImageUrl || item.imageUrl;
 }
 
-export function WebtoonQueueCard({ item, onRetry, onRemove, onEditText }: WebtoonQueueCardProps) {
+export function WebtoonQueueCard({
+  item,
+  selected,
+  onToggleSelected,
+  onRetry,
+  onRemove,
+  onEditText,
+  onToggleApprove,
+}: WebtoonQueueCardProps) {
   const [showPreview, setShowPreview] = useState(false);
+  const [passageOpen, setPassageOpen] = useState(false);
 
   const isDone = item.status === "COMPLETED" && item.imageUrl;
   const isError = item.status === "FAILED";
   const isInflight = item.status === "PENDING" || item.status === "GENERATING";
+  const passageContent = item.passage.content?.trim() || "";
 
   return (
     <>
-      <div className="rounded-xl border border-slate-200 bg-white p-4 flex flex-col">
-        <div className="flex items-start justify-between gap-2 mb-3">
-          <div className="min-w-0 flex-1">
-            <h4 className="text-[13px] font-semibold text-slate-800 truncate">
-              {item.passage.title}
-            </h4>
-            <p className="text-[10.5px] text-slate-400 mt-0.5">
-              {styleLabel(item.style)} · {languageLabel(item.language)}
-            </p>
-          </div>
-          <div className="flex items-center gap-1 shrink-0">
-            <StatusBadge status={item.status} />
+      <Card
+        className={`group relative flex h-full flex-col gap-0 py-0 transition-all ${
+          selected
+            ? "bg-blue-50/30 ring-2 ring-blue-400"
+            : "hover:shadow-md"
+        } ${!item.approved && isDone ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]" : ""}`}
+      >
+        <CardContent className="flex flex-1 flex-col gap-1.5 p-3">
+          {/* ── Header row: 체크박스 · 삭제 · 지문 토글 ── */}
+          <div className="flex shrink-0 items-center gap-1.5">
+            <Checkbox
+              checked={selected}
+              onCheckedChange={() => onToggleSelected()}
+              className="shrink-0"
+            />
             <button
-              onClick={() => onRemove(item.id)}
-              disabled={isInflight}
-              className="w-6 h-6 rounded hover:bg-slate-100 flex items-center justify-center transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              type="button"
+              aria-label="삭제"
               title={isInflight ? "생성 중에는 삭제할 수 없습니다." : "삭제"}
+              disabled={isInflight}
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemove(item.id);
+              }}
+              className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              <X className="w-3.5 h-3.5 text-slate-400 hover:text-slate-600" />
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
+            {/* 지문 토글 — 클릭하면 아래에 원문 지문이 펼쳐진다. */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setPassageOpen((v) => !v);
+              }}
+              disabled={!passageContent}
+              title={item.passage.title}
+              className="inline-flex h-7 min-w-0 flex-1 items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 text-slate-600 transition-colors hover:bg-slate-100 disabled:cursor-default disabled:opacity-100"
+            >
+              <FileText className="h-3 w-3 shrink-0 text-blue-400" />
+              <span className="min-w-0 flex-1 truncate text-left text-[13px] font-semibold">
+                {item.passage.title}
+              </span>
+              {passageContent ? (
+                passageOpen ? (
+                  <ChevronUp className="h-3 w-3 shrink-0 text-slate-400" />
+                ) : (
+                  <ChevronDown className="h-3 w-3 shrink-0 text-slate-400" />
+                )
+              ) : null}
             </button>
           </div>
-        </div>
 
-        <div
-          onClick={() => isDone && setShowPreview(true)}
-          className={`relative aspect-[9/16] rounded-lg overflow-hidden border ${
-            isDone
-              ? "border-slate-200 cursor-pointer hover:border-blue-400 hover:shadow-md transition-all"
-              : isError
-                ? "border-rose-200 bg-rose-50"
-                : "border-slate-200 bg-slate-100"
-          }`}
-        >
-          {isDone ? (
-            <>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={displayUrl(item)!}
-                alt={item.passage.title}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-              {item.editedImageUrl ? (
-                <div className="absolute top-2 left-2 px-2 py-1 rounded-full bg-emerald-600/90 backdrop-blur-sm">
-                  <span className="text-[9.5px] font-semibold text-white">자막 편집됨</span>
-                </div>
-              ) : null}
-              <div className="absolute top-2 right-2 px-2 py-1 rounded-full bg-black/60 backdrop-blur-sm flex items-center gap-1">
-                <Maximize2 className="w-3 h-3 text-white" />
-                <span className="text-[9.5px] font-semibold text-white">크게 보기</span>
-              </div>
-            </>
-          ) : isError ? (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4">
-              <AlertCircle className="w-6 h-6 text-rose-500" />
-              <p className="text-[11px] text-rose-700 text-center leading-snug line-clamp-3">
-                {item.errorMessage || "생성에 실패했습니다."}
+          {/* 지문 원문 (토글) */}
+          {passageOpen && passageContent ? (
+            <div className="rounded-md bg-slate-50 px-3 py-2">
+              <p className="max-h-40 overflow-y-auto whitespace-pre-line text-[11px] font-mono leading-relaxed text-slate-500">
+                {passageContent}
               </p>
-              <button
-                onClick={() => onRetry(item.id)}
-                className="mt-1 px-3 py-1.5 rounded-md bg-rose-100 hover:bg-rose-200 text-[11px] font-semibold text-rose-700 transition-colors flex items-center gap-1.5"
-              >
-                <RefreshCw className="w-3 h-3" />
-                다시 시도
-              </button>
             </div>
-          ) : (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-              <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
-              <span className="text-[11px] text-slate-500 font-medium">
-                {item.status === "PENDING" ? "대기 중" : "이미지 생성 중"}
-              </span>
-              <span className="text-[10px] text-slate-400">완료되면 자동으로 표시됩니다.</span>
-            </div>
-          )}
-        </div>
+          ) : null}
 
-        {isDone && (
-          <div className="mt-3 flex flex-col gap-2">
-            {onEditText ? (
+          {/* 메타: 화풍 · 언어 */}
+          <p className="text-[10.5px] text-slate-400">
+            {styleLabel(item.style)} · {languageLabel(item.language)}
+          </p>
+
+          {/* ── 이미지 ── */}
+          <div
+            onClick={() => isDone && setShowPreview(true)}
+            className={`relative aspect-[9/16] overflow-hidden rounded-lg border ${
+              isDone
+                ? "cursor-pointer border-slate-200 transition-all hover:border-blue-400 hover:shadow-md"
+                : isError
+                  ? "border-rose-200 bg-rose-50"
+                  : "border-slate-200 bg-slate-100"
+            }`}
+          >
+            {isDone ? (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={displayUrl(item)!}
+                  alt={item.passage.title}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+                {item.editedImageUrl ? (
+                  <div className="absolute left-2 top-2 rounded-full bg-emerald-600/90 px-2 py-1 backdrop-blur-sm">
+                    <span className="text-[9.5px] font-semibold text-white">
+                      자막 편집됨
+                    </span>
+                  </div>
+                ) : null}
+                <div className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 backdrop-blur-sm">
+                  <Maximize2 className="h-3 w-3 text-white" />
+                  <span className="text-[9.5px] font-semibold text-white">
+                    크게 보기
+                  </span>
+                </div>
+              </>
+            ) : isError ? (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4">
+                <AlertCircle className="h-6 w-6 text-rose-500" />
+                <p className="line-clamp-3 text-center text-[11px] leading-snug text-rose-700">
+                  {item.errorMessage || "생성에 실패했습니다."}
+                </p>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onRetry(item.id);
+                  }}
+                  className="mt-1 flex items-center gap-1.5 rounded-md bg-rose-100 px-3 py-1.5 text-[11px] font-semibold text-rose-700 transition-colors hover:bg-rose-200"
+                >
+                  <RefreshCw className="h-3 w-3" />
+                  다시 시도
+                </button>
+              </div>
+            ) : (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
+                <span className="text-[11px] font-medium text-slate-500">
+                  {item.status === "PENDING" ? "대기 중" : "이미지 생성 중"}
+                </span>
+                <span className="text-[10px] text-slate-400">
+                  완료되면 자동으로 표시됩니다.
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* ── Footer: 검수완료 · 수정하기 · 다운로드 · 상세보기(정사각 아이콘) — 한 줄 ── */}
+          {isDone ? (
+            <div className="mt-auto flex items-center gap-1 pt-1.5">
+              {/* 검수완료 토글 — 미검수=분홍 테두리(hover 시 초록 미리보기), 검수완료=초록. */}
               <Button
+                type="button"
+                variant="ghost"
                 size="sm"
-                className="h-8 text-[11px] gap-1.5"
-                onClick={() => onEditText(item.id)}
+                aria-pressed={item.approved}
+                title={
+                  item.approved
+                    ? "검수완료 — 누르면 검수를 취소합니다"
+                    : "검수필요 — 누르면 검수완료로 표시합니다"
+                }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleApprove(item.id);
+                }}
+                className={
+                  "h-7 flex-1 min-w-0 justify-center gap-1 bg-white px-1.5 text-[11px] font-semibold " +
+                  (item.approved
+                    ? "border border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+                    : "border border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
+                }
               >
-                <Type className="w-3 h-3" />
-                텍스트 편집
+                <CheckCircle2 className="h-3 w-3 shrink-0" />
+                검수완료
               </Button>
-            ) : null}
-            <div className="flex gap-2">
+              {onEditText ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 flex-1 min-w-0 justify-center gap-1 border border-slate-200 bg-white px-1.5 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEditText(item.id);
+                  }}
+                >
+                  <Pencil className="h-3 w-3 shrink-0" />
+                  수정하기
+                </Button>
+              ) : null}
               <Button
+                type="button"
+                variant="ghost"
                 size="sm"
-                variant="outline"
-                className="flex-1 h-8 text-[11px] gap-1.5"
-                onClick={() => setShowPreview(true)}
+                className="h-7 flex-1 min-w-0 justify-center gap-1 border border-slate-200 bg-white px-1.5 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  downloadImage(item);
+                }}
               >
-                <Maximize2 className="w-3 h-3" />
-                크게 보기
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                className="flex-1 h-8 text-[11px] gap-1.5"
-                onClick={() => downloadImage(item)}
-              >
-                <Download className="w-3 h-3" />
+                <Download className="h-3 w-3 shrink-0" />
                 다운로드
               </Button>
+              {/* 상세보기 — 정사각 박스 + 대각선 확장 화살표(Maximize2) */}
+              <CardDetailIconButton
+                className="size-7 shrink-0"
+                iconClassName="size-3.5"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowPreview(true);
+                }}
+              />
             </div>
-          </div>
-        )}
-      </div>
+          ) : null}
+        </CardContent>
+      </Card>
 
       {showPreview && isDone && (
         <PreviewModal item={item} onClose={() => setShowPreview(false)} />
       )}
     </>
-  );
-}
-
-function StatusBadge({ status }: { status: WebtoonRow["status"] }) {
-  if (status === "PENDING") {
-    return (
-      <div className="flex items-center gap-1 px-1.5 h-5 rounded bg-slate-50 border border-slate-200">
-        <Loader2 className="w-2.5 h-2.5 animate-spin text-slate-500" />
-        <span className="text-[9.5px] font-semibold text-slate-600">대기</span>
-      </div>
-    );
-  }
-  if (status === "GENERATING") {
-    return (
-      <div className="flex items-center gap-1 px-1.5 h-5 rounded bg-blue-50 border border-blue-200">
-        <Loader2 className="w-2.5 h-2.5 animate-spin text-blue-600" />
-        <span className="text-[9.5px] font-semibold text-blue-700">생성 중</span>
-      </div>
-    );
-  }
-  if (status === "COMPLETED") {
-    return (
-      <div className="flex items-center gap-1 px-1.5 h-5 rounded bg-emerald-50 border border-emerald-200">
-        <Check className="w-2.5 h-2.5 text-emerald-600" />
-        <span className="text-[9.5px] font-semibold text-emerald-700">완료</span>
-      </div>
-    );
-  }
-  return (
-    <div className="flex items-center gap-1 px-1.5 h-5 rounded bg-rose-50 border border-rose-200">
-      <X className="w-2.5 h-2.5 text-rose-600" />
-      <span className="text-[9.5px] font-semibold text-rose-700">실패</span>
-    </div>
   );
 }
 
@@ -193,38 +268,38 @@ function PreviewModal({ item, onClose }: { item: WebtoonRow; onClose: () => void
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-start justify-center p-4 overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/85 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="relative max-w-[520px] w-full my-6 flex flex-col gap-3"
+        className="relative my-6 flex w-full max-w-[520px] flex-col gap-3"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between gap-3 sticky top-0 z-10 bg-black/30 backdrop-blur-md rounded-lg px-3 py-2">
-          <div className="text-white min-w-0 flex-1">
-            <h3 className="text-[14px] font-bold truncate">{item.passage.title}</h3>
-            <p className="text-[11px] text-white/70 mt-0.5">
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-3 rounded-lg bg-black/30 px-3 py-2 backdrop-blur-md">
+          <div className="min-w-0 flex-1 text-white">
+            <h3 className="truncate text-[14px] font-bold">{item.passage.title}</h3>
+            <p className="mt-0.5 text-[11px] text-white/70">
               {styleLabel(item.style)} · {languageLabel(item.language)}
             </p>
           </div>
           <a
             href={downloadHref(item)}
-            className="px-3 h-8 rounded-md bg-white/15 hover:bg-white/25 text-white text-[11px] font-semibold flex items-center gap-1.5 transition-colors"
+            className="flex h-8 items-center gap-1.5 rounded-md bg-white/15 px-3 text-[11px] font-semibold text-white transition-colors hover:bg-white/25"
           >
-            <Download className="w-3 h-3" />
+            <Download className="h-3 w-3" />
             저장
           </a>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 transition-colors hover:bg-white/25"
           >
-            <X className="w-4 h-4 text-white" />
+            <X className="h-4 w-4 text-white" />
           </button>
         </div>
 
-        <div className="rounded-xl overflow-hidden bg-slate-900">
+        <div className="overflow-hidden rounded-xl bg-slate-900">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={url} alt={item.passage.title} className="w-full h-auto" />
+          <img src={url} alt={item.passage.title} className="h-auto w-full" />
         </div>
       </div>
     </div>

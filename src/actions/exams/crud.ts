@@ -100,6 +100,53 @@ export async function getExam(examId: string) {
   return exam;
 }
 
+// ---------------------------------------------------------------------------
+// getExamPreviewData — 시험지 카드의 "첫 장 미리보기"용 경량 조회.
+//   getExam 과 같은 문항/지문/설정을 가져오되, 무거운 submissions/채점 데이터는
+//   제외한다. 목록 카드가 보일 때마다 examId 별로 lazy 하게 호출된다.
+// ---------------------------------------------------------------------------
+export async function getExamPreviewData(examId: string) {
+  const staff = await requireStaffAuth();
+
+  const exam = await prisma.exam.findFirst({
+    where: { id: examId, academyId: staff.academyId },
+    include: {
+      class: { select: { id: true, name: true } },
+      school: { select: { id: true, name: true } },
+      questions: {
+        include: {
+          question: {
+            include: {
+              passage: {
+                select: {
+                  id: true,
+                  title: true,
+                  content: true,
+                  grade: true,
+                  semester: true,
+                  publisher: true,
+                  school: { select: { id: true, name: true } },
+                },
+              },
+              explanation: true,
+              collectionItems: {
+                select: { collectionId: true },
+              },
+              _count: { select: { examLinks: true } },
+            },
+          },
+        },
+        orderBy: { orderNum: "asc" },
+      },
+    },
+  });
+
+  if (!exam) return null;
+
+  // 미리보기 빌더는 submissions 를 읽지 않으므로 빈 배열로 채워 ExamDetail 형태를 맞춘다.
+  return { ...exam, submissions: [] };
+}
+
 export async function createExam(
   academyId: string,
   data: ExamCreateData,

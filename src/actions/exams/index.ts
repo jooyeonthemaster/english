@@ -13,6 +13,7 @@
 export {
   getExams,
   getExam,
+  getExamPreviewData,
   createExam,
   updateExam,
   deleteExam,

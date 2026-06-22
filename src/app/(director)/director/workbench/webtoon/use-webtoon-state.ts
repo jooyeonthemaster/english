@@ -221,12 +221,43 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
     );
   }, []);
 
+  // 검수완료 토글 — 낙관적 업데이트 후 실패 시 롤백.
+  const handleToggleApprove = useCallback(
+    async (webtoonId: string) => {
+      const target = items.find((it) => it.id === webtoonId);
+      if (!target) return;
+      const next = !target.approved;
+      setItems((prev) =>
+        prev.map((it) => (it.id === webtoonId ? { ...it, approved: next } : it)),
+      );
+      try {
+        const res = await fetch(`/api/webtoons/${webtoonId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ approved: next }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || `patch ${res.status}`);
+      } catch (err) {
+        // 롤백
+        setItems((prev) =>
+          prev.map((it) =>
+            it.id === webtoonId ? { ...it, approved: target.approved } : it,
+          ),
+        );
+        toast.error(err instanceof Error ? err.message : "검수 상태 변경 실패");
+      }
+    },
+    [items],
+  );
+
   return {
     items,
     loading,
     handleBatchGenerate,
     handleRetry,
     handleRemove,
+    handleToggleApprove,
     patchItem,
   };
 }

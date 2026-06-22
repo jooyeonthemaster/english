@@ -69,6 +69,7 @@ export async function GET(req: NextRequest) {
         language: true,
         customPrompt: true,
         status: true,
+        approved: true,
         imageUrl: true,
         editedImageUrl: true,
         errorMessage: true,
@@ -76,7 +77,7 @@ export async function GET(req: NextRequest) {
         startedAt: true,
         completedAt: true,
         updatedAt: true,
-        passage: { select: { id: true, title: true } },
+        passage: { select: { id: true, title: true, content: true } },
         createdBy: { select: { id: true, name: true } },
       };
 

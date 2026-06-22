@@ -139,6 +139,12 @@ interface PassageListProps {
   sourceMaterialBadge?: { id: string; label: string } | null;
   /** when entering from a collection deep-link, show the collection badge */
   collectionBadge?: { id: string; label: string } | null;
+  /**
+   * Route that URL-driven filters/pagination navigate to. Defaults to the
+   * standalone 지문 관리 page. The 학습지 생성 page embeds this client below its
+   * form and passes its own route so filtering stays on that page.
+   */
+  basePath?: string;
 }
 
 // ─── Server action adapters ──────────────────────────────
@@ -217,6 +223,7 @@ export function PassageListClient({
   collectionMembership: initialMembership,
   sourceMaterialBadge = null,
   collectionBadge = null,
+  basePath = "/director/workbench/passages",
 }: PassageListProps) {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(filters.search || "");
@@ -299,9 +306,7 @@ export function PassageListClient({
   }, [visibleDupSummary]);
 
   // ─── Shared hooks ───
-  const { updateFilter, goToPage } = useUrlFilters(
-    "/director/workbench/passages",
-  );
+  const { updateFilter, goToPage } = useUrlFilters(basePath);
 
   const folder = useFolderManager({
     initialCollections,
