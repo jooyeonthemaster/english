@@ -12,7 +12,6 @@ import {
   OptionList,
   AnswerRevealContext,
   HideAnswerLineContext,
-  ForceExplanationOpenContext,
 } from "./question-renderer-primitives";
 import { CustomLayoutRenderer } from "./custom-layout-renderer";
 import {
@@ -57,7 +56,6 @@ export function StructuredQuestionRenderer({
   sourcePassageContent,
   answerRevealMode = "default",
   hideAnswerLine = false,
-  forceExplanationOpen = false,
 }: {
   question: any;
   index: number;
@@ -69,8 +67,6 @@ export function StructuredQuestionRenderer({
   answerRevealMode?: "default" | "show-all" | "as-explanation" | "hidden";
   /** true 면 "정답: N" 줄(AnswerLine)을 숨긴다. 문제 관리 카드용. */
   hideAnswerLine?: boolean;
-  /** true 면 해설 섹션을 토글 없이 항상 펼친다(AI 수정본 미리보기). */
-  forceExplanationOpen?: boolean;
 }) {
   const questionForRender = enrichQuestionForDisplay(question, sourcePassageContent);
   const typeId = questionForRender._typeId as string | undefined;
@@ -86,7 +82,6 @@ export function StructuredQuestionRenderer({
   return (
     <AnswerRevealContext.Provider value={answerRevealMode}>
     <HideAnswerLineContext.Provider value={hideAnswerLine}>
-    <ForceExplanationOpenContext.Provider value={forceExplanationOpen}>
     <div className={hideHeader ? "space-y-3" : "p-4 rounded-lg border border-slate-200 bg-white space-y-3"}>
       {/* Header — 외부 카드가 헤더를 제공할 때 숨김 */}
       {!hideHeader && (
@@ -138,7 +133,6 @@ export function StructuredQuestionRenderer({
         <FallbackRenderer question={questionForRender} />
       )}
     </div>
-    </ForceExplanationOpenContext.Provider>
     </HideAnswerLineContext.Provider>
     </AnswerRevealContext.Provider>
   );

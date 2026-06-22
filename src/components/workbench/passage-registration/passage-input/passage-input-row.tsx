@@ -11,9 +11,9 @@ import {
   Loader2,
   Minus,
   Plus,
+  RefreshCcw,
   RotateCcw,
   Scissors,
-  Sparkles,
   Undo2,
   X,
 } from "lucide-react";
@@ -722,7 +722,7 @@ export function PassageInputRow({
               {txBusy === "paraphrase" ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
               ) : (
-                <Sparkles className="h-3.5 w-3.5" />
+                <RefreshCcw className="h-3.5 w-3.5" />
               )}
               AI 문장 변형
               <CreditCostChip

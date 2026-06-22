@@ -10,42 +10,39 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  ArrowLeft,
   ArrowRight,
   Bot,
   Check,
   CornerDownLeft,
+  FilePlus2,
   Loader2,
   MousePointerClick,
-  Plus,
+  Pencil,
   RotateCcw,
-  Save,
   TriangleAlert,
   X,
-  Zap,
 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
 import {
+  BlockChangeContext,
   BlockSelectionContext,
+  type BlockChange,
+  type BlockChangeApi,
   type BlockSelectionApi,
   type SelectedBlock,
 } from "@/components/workbench/question-renderer-blocks";
-import { EditViewToggle } from "@/components/workbench/question-edit-client/edit-view-toggle";
 import { getTypeEditConfig } from "@/lib/question-ai-edit/type-edit-config";
 import { QUESTION_TYPE_META } from "@/lib/question-schemas";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
-import { triggerHintGlow } from "@/lib/hint-glow";
 
 import { ChangeLogPanel } from "./change-log-panel";
 import { TypeEditPanel } from "./type-edit-panel";
 import {
   useQuestionAiEdit,
+  type DetailedDiffEntry,
   type EditChange,
-  type EditQualityWarning,
 } from "./use-question-ai-edit";
 
 const CHANGE_STYLE: Record<EditChange["kind"], { cls: string; verb: string }> = {
@@ -55,10 +52,37 @@ const CHANGE_STYLE: Record<EditChange["kind"], { cls: string; verb: string }> = 
   reordered: { cls: "bg-violet-50 text-violet-700 border-violet-200", verb: "순서" },
 };
 
+/** detailedChanges(blockId 부여됨)를 수정본 미리보기의 블럭별 변경 마크 맵으로 변환. */
+function buildBlockChangeMap(detailed: DetailedDiffEntry[]): BlockChangeApi {
+  const byId: Record<string, BlockChange> = {};
+  for (const e of detailed) {
+    if (!e.blockId) continue;
+    const entry = { kind: e.kind, ref: e.ref, before: e.before, after: e.after, note: e.note };
+    const existing = byId[e.blockId];
+    if (existing) {
+      existing.entries.push(entry);
+      if (existing.kind !== e.kind) existing.kind = "changed"; // 혼합 → 수정
+    } else {
+      byId[e.blockId] = {
+        kind: e.kind,
+        // 단일 항목이면 항목 식별자까지(예: "선택지 ②"), 여러 항목이면 카테고리만.
+        label: e.ref ? `${e.category} ${e.ref}` : e.category,
+        entries: [entry],
+      };
+    }
+  }
+  // 여러 항목이 모인 블럭은 라벨에서 ref 제거(예: 오답 해설 여러 개 → "오답 해설").
+  for (const [id, change] of Object.entries(byId)) {
+    if (change.entries.length > 1) {
+      const cat = detailed.find((e) => e.blockId === id)?.category;
+      if (cat) change.label = cat;
+    }
+  }
+  return { byId };
+}
+
 interface Props {
   questionId: string;
-  /** AI(일반) 생성 문제 여부 — 좌측 상단 '일반 생성' 뱃지 표시. */
-  aiGenerated?: boolean;
   /** "직접 수정" 뷰로 전환. */
   onSwitchToManual: () => void;
   /** 모달 닫기. */
@@ -73,7 +97,6 @@ interface Props {
 
 export function AiEditView({
   questionId,
-  aiGenerated,
   onSwitchToManual,
   onClose,
   onBack,
@@ -86,8 +109,6 @@ export function AiEditView({
   const [controlValues, setControlValues] = useState<Record<string, string>>({});
   const [quickChips, setQuickChips] = useState<{ label: string; instruction: string }[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  // 비활('다음으로 (AI 수정본 생성)') 클릭 시 글로우할 대상: 프롬프트 입력 박스.
-  const inputBoxRef = useRef<HTMLDivElement>(null);
 
   const {
     loading,
@@ -99,6 +120,7 @@ export function AiEditView({
     activeVersion,
     sending,
     sendError,
+    creditsRemaining,
     applying,
     savingAsNew,
     activeVersionSaved,
@@ -163,6 +185,14 @@ export function AiEditView({
     [attachedBlocks],
   );
 
+  // 수정본 미리보기의 블럭별 변경 마크 맵(활성 버전 기준).
+  const changeMap = useMemo<BlockChangeApi>(
+    () => buildBlockChangeMap(activeVersion?.detailedChanges ?? []),
+    [activeVersion],
+  );
+  const changedBlockCount = Object.keys(changeMap.byId).length;
+  const [expandAllChanges, setExpandAllChanges] = useState(false);
+
   function addQuick(instruction: string, label: string) {
     setQuickChips((prev) => (prev.some((c) => c.label === label) ? prev : [...prev, { label, instruction }]));
     textareaRef.current?.focus();
@@ -194,84 +224,60 @@ export function AiEditView({
     }
   }
 
+  const headerToggle = (
+    <div className="flex rounded-lg bg-slate-100 p-0.5 text-[12.5px] font-bold">
+      <span className="flex items-center gap-1.5 rounded-md bg-white px-3 py-1.5 text-blue-700 shadow-sm">
+        <Bot className="h-4 w-4" />
+        AI 수정
+      </span>
+      <button
+        type="button"
+        onClick={onSwitchToManual}
+        className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-slate-500 transition-colors hover:text-slate-800"
+      >
+        <Pencil className="h-3.5 w-3.5" />
+        직접 수정
+      </button>
+    </div>
+  );
+
   return (
     <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-white">
-      {/* ── Header (직접 수정 헤더와 동일 chrome: 흰 배경·px-6 py-3·ArrowLeft 뒤로·w-7 닫기) ── */}
-      <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-6 py-3">
+      {/* ── Header ── */}
+      <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white px-4 py-2.5">
         <div className="flex min-w-0 items-center gap-3">
           {onBack && (
             <button
               type="button"
               onClick={onBack}
-              aria-label="상세로 돌아가기"
               title="상세로 돌아가기"
-              className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 text-[13px] font-medium text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800"
+              className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 text-[13px] font-medium text-slate-600 transition-colors hover:bg-slate-50"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4 rotate-180" />
               뒤로
             </button>
           )}
-          <span className="text-[17px] font-bold tracking-tight text-slate-900">문제 수정</span>
-          <EditViewToggle active="ai" onAi={() => {}} onManual={onSwitchToManual} />
+          {headerToggle}
           {typeLabel && (
             <span className="inline-flex shrink-0 items-center rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-[12px] font-semibold text-blue-700">
               {typeLabel}
             </span>
           )}
-          {aiGenerated && (
-            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-sky-200 bg-sky-50 px-2.5 py-1 text-[12.5px] font-bold text-sky-700">
-              <svg
-                viewBox="0 0 24 24"
-                className="h-3.5 w-3.5"
-                aria-hidden="true"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="9" />
-                <path d="M8 8.5A5 5 0 0 1 11.5 5.7" />
-              </svg>
-              일반 생성
-            </span>
-          )}
         </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={() => void saveAsNew()}
-            disabled={!activeVersion || applying || savingAsNew || sending || activeVersionSaved}
-            size="sm"
-            className="h-7 gap-1 border-slate-300 px-3 text-[11px] font-semibold text-slate-700"
-          >
-            {savingAsNew ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : activeVersionSaved ? (
-              <Check className="h-3.5 w-3.5 text-emerald-600" />
-            ) : (
-              <SaveAsNewIcon />
+        <div className="flex shrink-0 items-center gap-3">
+          <span className="hidden items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-[12px] font-medium text-slate-600 sm:inline-flex">
+            수정 1회 = 1크레딧
+            {creditsRemaining != null && (
+              <span className="font-semibold text-slate-900">· 잔여 {creditsRemaining}</span>
             )}
-            {activeVersionSaved ? "저장됨" : "새 문제로 저장"}
-          </Button>
-          <Button
-            onClick={apply}
-            disabled={!activeVersion || applying || savingAsNew || sending}
-            size="sm"
-            className="h-7 gap-1 bg-blue-600 px-3 text-[11px] font-semibold shadow-sm hover:bg-blue-700"
-          >
-            {applying ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-            저장
-          </Button>
-          <div className="h-5 w-px bg-slate-200" />
+          </span>
           <button
             type="button"
             onClick={onClose}
             aria-label="닫기"
-            title="닫기"
-            className="ml-2 flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </button>
         </div>
       </div>
@@ -309,7 +315,6 @@ export function AiEditView({
                       hideHeader
                       sourcePassageContent={context.passageContent}
                       answerRevealMode="show-all"
-                      hideAnswerLine
                     />
                   </BlockSelectionContext.Provider>
                 )}
@@ -325,37 +330,16 @@ export function AiEditView({
 
             {/* RIGHT — AI 수정본 */}
             <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-              <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-100 bg-blue-50/60 px-5 py-2">
-                <div className="flex min-w-0 flex-1 items-center gap-2">
-                  <span className="shrink-0 text-[12.5px] font-bold text-blue-700">AI 수정본</span>
+              <div className="flex shrink-0 items-center justify-between border-b border-slate-100 bg-blue-50/60 px-5 py-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-[12.5px] font-bold text-blue-700">AI 수정본</span>
                   {activeVersion && (
-                    <span className="shrink-0 text-[11px] text-blue-500">
+                    <span className="text-[11px] text-blue-500">
                       v{activeIndex + 1} / {versions.length}
                     </span>
                   )}
-                  {/* 버전(지난 지시) 칩 — 버전 표시이므로 제목 오른쪽에 둔다.
-                      좌측 입력 영역에서 이동. */}
-                  {versions.length > 0 && (
-                    <div className="flex min-w-0 items-center gap-1.5 overflow-x-auto">
-                      <RotateCcw className="h-3.5 w-3.5 shrink-0 text-blue-400" />
-                      {versions.map((v, i) => (
-                        <button
-                          key={v.id}
-                          onClick={() => selectVersion(i)}
-                          title={v.instruction}
-                          className={`max-w-[200px] shrink-0 truncate rounded-full border px-2.5 py-0.5 text-[11px] transition-colors ${
-                            i === activeIndex
-                              ? "border-blue-300 bg-blue-100 font-semibold text-blue-700"
-                              : "border-blue-200 bg-white text-blue-500 hover:bg-blue-50"
-                          }`}
-                        >
-                          v{i + 1}. {v.label}
-                        </button>
-                      ))}
-                    </div>
-                  )}
                 </div>
-                <div className="flex shrink-0 items-center gap-2">
+                <div className="flex items-center gap-2">
                   {activeVersion && (
                     <div className="flex rounded-md bg-white p-0.5 text-[11px] font-semibold ring-1 ring-blue-200">
                       <button
@@ -377,6 +361,24 @@ export function AiEditView({
                       </button>
                     </div>
                   )}
+                  {versions.length > 1 && (
+                    <div className="flex items-center gap-1">
+                      {versions.map((v, i) => (
+                        <button
+                          key={v.id}
+                          onClick={() => selectVersion(i)}
+                          title={v.label}
+                          className={`h-6 min-w-6 rounded-md px-1.5 text-[11px] font-semibold transition-colors ${
+                            i === activeIndex
+                              ? "bg-blue-600 text-white"
+                              : "bg-white text-blue-600 ring-1 ring-blue-200 hover:bg-blue-50"
+                          }`}
+                        >
+                          v{i + 1}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
@@ -389,57 +391,71 @@ export function AiEditView({
                         <Loader2 className="h-3.5 w-3.5 animate-spin" /> 다음 수정본 생성 중…
                       </div>
                     )}
+                    {rightTab !== "changelog" && activeVersion.changes.length > 0 && (
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="text-[11px] font-semibold text-slate-500">변경:</span>
+                        {activeVersion.changes.map((c, i) => {
+                          const s = CHANGE_STYLE[c.kind];
+                          return (
+                            <span
+                              key={`${c.field}-${i}`}
+                              className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] font-medium ${s.cls}`}
+                            >
+                              {c.label}
+                              <span className="opacity-70">{s.verb}</span>
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
+                    {activeVersion.warnings.length > 0 && (
+                      <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+                        <div className="mb-0.5 flex items-center gap-1.5 text-[11.5px] font-semibold text-slate-700">
+                          <TriangleAlert className="h-3.5 w-3.5 text-blue-600" />
+                          품질 점검 {activeVersion.acceptedWithWarnings ? "(경고와 함께 수락됨 — 검토 권장)" : ""}
+                        </div>
+                        <ul className="list-disc pl-5 text-[11px] text-slate-600">
+                          {activeVersion.warnings.slice(0, 4).map((w, i) => (
+                            <li key={i}>{w.message}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                     {rightTab === "changelog" ? (
-                      <>
-                        {activeVersion.warnings.length > 0 && (
-                          <QualityCheck
-                            warnings={activeVersion.warnings}
-                            accepted={activeVersion.acceptedWithWarnings}
-                          />
-                        )}
-                        <ChangeLogPanel
-                          entries={activeVersion.detailedChanges}
-                          editSummary={activeVersion.editSummary}
-                          instruction={activeVersion.instruction}
-                          changes={activeVersion.changes}
-                        />
-                      </>
+                      <ChangeLogPanel
+                        entries={activeVersion.detailedChanges}
+                        editSummary={activeVersion.editSummary}
+                        instruction={activeVersion.instruction}
+                        changes={activeVersion.changes}
+                      />
                     ) : (
                       <>
-                        {/* 문제를 먼저 — 좌측 '기존 문제'와 같은 높이에서 시작해 섹션이 위에서부터 정렬 */}
-                        <StructuredQuestionRenderer
-                          question={activeVersion.after}
-                          index={0}
-                          hideHeader
-                          sourcePassageContent={context?.passageContent}
-                          answerRevealMode="show-all"
-                          hideAnswerLine
-                          forceExplanationOpen
-                        />
-                        {/* 변경 요약·품질 점검은 문제 아래로 (좌측엔 없는 메타라 위에 두면 비대칭) */}
-                        {activeVersion.changes.length > 0 && (
-                          <div className="flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-3">
-                            <span className="text-[11px] font-semibold text-slate-500">변경:</span>
-                            {activeVersion.changes.map((c, i) => {
-                              const s = CHANGE_STYLE[c.kind];
-                              return (
-                                <span
-                                  key={`${c.field}-${i}`}
-                                  className={`inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] font-medium ${s.cls}`}
-                                >
-                                  {c.label}
-                                  <span className="opacity-70">{s.verb}</span>
-                                </span>
-                              );
-                            })}
+                        {changedBlockCount > 0 && (
+                          <div className="flex items-center justify-between gap-2 rounded-lg bg-blue-50/70 px-2.5 py-1.5">
+                            <span className="flex items-center gap-1.5 text-[11.5px] font-medium text-blue-700">
+                              <MousePointerClick className="h-3.5 w-3.5" />
+                              색칠된 {changedBlockCount}개 블럭이 변경됐어요. 좌측 색 막대 블럭의 배지를 눌러 바뀐 내용을 확인하세요.
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setExpandAllChanges((v) => !v)}
+                              className="shrink-0 rounded-md border border-blue-300 bg-white px-2 py-0.5 text-[11px] font-semibold text-blue-700 transition-colors hover:bg-blue-50"
+                            >
+                              {expandAllChanges ? "모두 접기" : "모두 펼치기"}
+                            </button>
                           </div>
                         )}
-                        {activeVersion.warnings.length > 0 && (
-                          <QualityCheck
-                            warnings={activeVersion.warnings}
-                            accepted={activeVersion.acceptedWithWarnings}
+                        <BlockChangeContext.Provider
+                          value={{ byId: changeMap.byId, expandAll: expandAllChanges }}
+                        >
+                          <StructuredQuestionRenderer
+                            question={activeVersion.after}
+                            index={0}
+                            hideHeader
+                            sourcePassageContent={context?.passageContent}
+                            answerRevealMode="show-all"
                           />
-                        )}
+                        </BlockChangeContext.Provider>
                       </>
                     )}
                   </div>
@@ -452,189 +468,145 @@ export function AiEditView({
         )}
       </div>
 
-      {/* ── Footer: 좌=입력 / 우=유형 맞춤 · 하단 전체폭 액션 ── */}
-      <div className="shrink-0 space-y-3 border-t border-slate-200 bg-white px-4 py-3">
-        {/* 2분할 — 좌측 입력 / 우측 유형 맞춤 설정 */}
-        <div className="flex max-h-[44vh] min-h-[180px] items-stretch gap-3">
-          {/* LEFT — 입력(칩·버전·프롬프트) */}
-          <div className={`flex min-h-0 min-w-0 flex-col gap-2 ${config ? "w-1/2" : "flex-1"}`}>
+      {/* ── Footer: 유형 패널 + 칩 + 프롬프트 + 액션 ── */}
+      <div className="shrink-0 space-y-2.5 border-t border-slate-200 bg-white px-4 py-3">
+        {config && (
+          <TypeEditPanel
+            config={config}
+            controlValues={controlValues}
+            onControlChange={(id, v) => setControlValues((prev) => ({ ...prev, [id]: v }))}
+            onQuickAction={addQuick}
+            activeQuickLabels={quickChips.map((c) => c.label)}
+            disabled={loading || !!loadError}
+          />
+        )}
 
-        {/* 지난 지시(버전) 칩은 우측 'AI 수정본' 헤더(제목 오른쪽)로 이동. */}
+        {/* 첨부 블럭 + 적용 지시 칩 */}
+        {(attachedBlocks.length > 0 || quickChips.length > 0) && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            {attachedBlocks.map((b) => (
+              <span
+                key={b.id}
+                className="inline-flex items-center gap-1 rounded-full border border-blue-300 bg-blue-50 py-1 pl-2.5 pr-1 text-[11.5px] font-semibold text-blue-700"
+              >
+                <MousePointerClick className="h-3 w-3" />
+                {b.label}
+                <button
+                  type="button"
+                  onClick={() => blockApi.onToggle(b)}
+                  className="ml-0.5 flex h-4 w-4 items-center justify-center rounded-full text-blue-400 hover:bg-blue-200 hover:text-blue-700"
+                  aria-label={`${b.label} 제거`}
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            ))}
+            {quickChips.map((c) => (
+              <span
+                key={c.label}
+                className="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-slate-50 py-1 pl-2.5 pr-1 text-[11.5px] font-medium text-slate-700"
+              >
+                {c.label}
+                <button
+                  type="button"
+                  onClick={() => setQuickChips((prev) => prev.filter((x) => x.label !== c.label))}
+                  className="ml-0.5 flex h-4 w-4 items-center justify-center rounded-full text-slate-400 hover:bg-slate-200 hover:text-slate-700"
+                  aria-label={`${c.label} 제거`}
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* 지난 지시(버전) */}
+        {versions.length > 0 && (
+          <div className="flex items-center gap-2 overflow-x-auto">
+            <RotateCcw className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+            {versions.map((v, i) => (
+              <button
+                key={v.id}
+                onClick={() => selectVersion(i)}
+                className={`max-w-[240px] shrink-0 truncate rounded-full border px-2.5 py-1 text-[11.5px] transition-colors ${
+                  i === activeIndex
+                    ? "border-blue-300 bg-blue-50 font-medium text-blue-700"
+                    : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50"
+                }`}
+                title={v.instruction}
+              >
+                v{i + 1}. {v.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         {sendError && <div className="text-[12px] font-medium text-rose-600">{sendError}</div>}
 
-        {/* 프롬프트 입력 — 빠른지시 뱃지만 입력창 '안' 상단에 표시(수정 대상 블럭은 좌측 문제에만 표시) */}
-        <div
-          ref={inputBoxRef}
-          className="relative flex min-h-0 flex-1 flex-col rounded-xl border border-slate-300 bg-white transition-[box-shadow,border-color] focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-500/15"
-        >
-          {quickChips.length > 0 && (
-            <div className="flex shrink-0 flex-wrap items-center gap-1.5 px-3 pt-3">
-              {quickChips.map((c) => (
-                <span
-                  key={c.label}
-                  className="inline-flex items-center gap-1 rounded-full border border-blue-300 bg-blue-50 py-1 pl-2.5 pr-1 text-[11.5px] font-medium text-blue-700"
-                >
-                  {c.label}
-                  <button
-                    type="button"
-                    onClick={() => setQuickChips((prev) => prev.filter((x) => x.label !== c.label))}
-                    className="ml-0.5 flex h-4 w-4 items-center justify-center rounded-full text-blue-400 hover:bg-blue-200 hover:text-blue-700"
-                    aria-label={`${c.label} 제거`}
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </span>
-              ))}
-            </div>
-          )}
-          <textarea
-            ref={textareaRef}
-            value={freeText}
-            onChange={(e) => setFreeText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                void handleSend();
+        {/* 프롬프트 + 액션 */}
+        <div className="flex items-end gap-3">
+          <div className="relative flex-1">
+            <textarea
+              ref={textareaRef}
+              value={freeText}
+              onChange={(e) => setFreeText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  void handleSend();
+                }
+              }}
+              rows={3}
+              disabled={loading || !!loadError}
+              placeholder={
+                attachedBlocks.length
+                  ? `선택한 블럭(${attachedBlocks.map((b) => b.label).join(", ")})을 어떻게 바꿀지 입력하세요.`
+                  : activeVersion
+                    ? "이어서 수정할 내용을 입력하세요. (예: 정답을 3번으로 바꾸고 해설도 맞춰줘)"
+                    : "어떻게 수정할지 입력하거나, 위에서 블럭·빠른 지시를 선택하세요."
               }
-            }}
-            disabled={loading || !!loadError}
-            placeholder={
-              attachedBlocks.length
-                ? `선택한 블럭(${attachedBlocks.map((b) => b.label).join(", ")})을 어떻게 바꿀지 입력하세요.`
-                : activeVersion
-                  ? "이어서 수정할 내용을 입력하세요. (예: 정답을 3번으로 바꾸고 해설도 맞춰줘)"
-                  : "어떻게 수정할지 입력하거나, 오른쪽 유형 맞춤 설정·블럭을 선택하세요."
-            }
-            className="min-h-[96px] w-full flex-1 resize-none bg-transparent px-4 py-3 pr-12 text-[14px] leading-relaxed text-slate-800 outline-none placeholder:text-slate-400"
-          />
-          <button
-            type="button"
-            onClick={handleSend}
-            disabled={!canSend}
-            aria-label="수정 생성"
-            className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
-          >
-            {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <CornerDownLeft className="h-4 w-4" />}
-          </button>
-        </div>
-
-        {/* 빠른 지시 — 입력창 아래 */}
-        {config && config.quickActions.length > 0 && (
-          <div className="shrink-0">
-            <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold text-slate-500">
-              <Zap className="h-3 w-3 text-blue-500" />
-              빠른 지시
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {config.quickActions.map((p, i) => {
-                const active = quickChips.some((c) => c.label === p.label);
-                return (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => addQuick(p.instruction, p.label)}
-                    disabled={loading || !!loadError || active}
-                    title={p.instruction}
-                    className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11.5px] font-medium transition-colors disabled:cursor-not-allowed ${
-                      active
-                        ? "border-blue-300 bg-blue-100 text-blue-700"
-                        : "border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 disabled:opacity-50"
-                    }`}
-                  >
-                    {active ? <Check className="h-3 w-3" /> : <Plus className="h-3 w-3" />}
-                    {p.label}
-                  </button>
-                );
-              })}
-            </div>
+              // 높이를 우측 액션 버튼 컬럼(h-10 두 개 + gap-2 = 88px)에 맞춘다.
+              className="h-[88px] max-h-[160px] min-h-[88px] w-full resize-y rounded-xl border border-slate-300 px-4 py-3 pr-12 text-[14px] leading-relaxed text-slate-800 outline-none transition-[box-shadow,border-color] placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/15 disabled:bg-slate-50"
+            />
+            <button
+              type="button"
+              onClick={handleSend}
+              disabled={!canSend}
+              aria-label="수정 생성"
+              className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+            >
+              {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <CornerDownLeft className="h-4 w-4" />}
+            </button>
           </div>
-        )}
+
+          <div className="flex shrink-0 flex-col gap-2">
+            <Button
+              onClick={apply}
+              disabled={!activeVersion || applying || savingAsNew || sending}
+              className="h-10 gap-1.5 bg-blue-600 px-4 text-[13px] font-semibold hover:bg-blue-700"
+            >
+              {applying ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+              현재 문제에 적용
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => void saveAsNew()}
+              disabled={!activeVersion || applying || savingAsNew || sending || activeVersionSaved}
+              className="h-10 gap-1.5 border-slate-300 px-4 text-[13px] font-semibold text-slate-700"
+            >
+              {savingAsNew ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : activeVersionSaved ? (
+                <Check className="h-4 w-4 text-emerald-600" />
+              ) : (
+                <FilePlus2 className="h-4 w-4" />
+              )}
+              {activeVersionSaved ? "저장됨" : "새 문제로 저장"}
+            </Button>
           </div>
-          {/* /LEFT */}
-
-          {/* RIGHT — 유형 맞춤 설정 (블럭 카드 + 토글) */}
-          {config && (
-            <div className="w-1/2 min-w-0">
-              <TypeEditPanel
-                config={config}
-                controlValues={controlValues}
-                onControlChange={(id, v) => setControlValues((prev) => ({ ...prev, [id]: v }))}
-                disabled={loading || !!loadError}
-              />
-            </div>
-          )}
         </div>
-
-        {/* 하단 — AI 수정본 생성 (저장/새 문제로 저장은 우측 상단 헤더로 이동) */}
-        <Button
-          type="button"
-          // 네이티브 disabled 대신 aria-disabled — 비활처럼 보이되 클릭은 살려,
-          // 입력이 비어 막혔을 때 누르면 프롬프트 입력 박스를 글로우해 "여기에
-          // 수정 내용을 입력하세요"를 유도한다(loading/sending 중엔 무시).
-          aria-disabled={!canSend}
-          onClick={() => {
-            if (sending || loading || !!loadError) return;
-            if (canSend) {
-              void handleSend();
-              return;
-            }
-            triggerHintGlow(inputBoxRef.current);
-            textareaRef.current?.focus();
-          }}
-          className={
-            "h-10 w-full gap-1.5 px-4 text-[13px] font-semibold text-white " +
-            (canSend
-              ? "bg-blue-600 hover:bg-blue-700"
-              : "cursor-not-allowed bg-blue-300 hover:bg-blue-300")
-          }
-        >
-          {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
-          다음으로 (AI 수정본 생성)
-          <CreditCostChip
-            amount={CREDIT_COSTS.QUESTION_MODIFY}
-            className="rounded bg-white/20 px-1.5 py-0.5 text-[11px]"
-          />
-        </Button>
       </div>
     </div>
-  );
-}
-
-// 품질 점검 박스 — 미리보기·수정내역 양쪽에서 동일하게 사용.
-function QualityCheck({
-  warnings,
-  accepted,
-}: {
-  warnings: EditQualityWarning[];
-  accepted: boolean;
-}) {
-  return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-      <div className="mb-0.5 flex items-center gap-1.5 text-[11.5px] font-semibold text-slate-700">
-        <TriangleAlert className="h-3.5 w-3.5 text-blue-600" />
-        품질 점검 {accepted ? "(경고와 함께 수락됨 — 검토 권장)" : ""}
-      </div>
-      <ul className="list-disc pl-5 text-[11px] text-slate-600">
-        {warnings.slice(0, 4).map((w, i) => (
-          <li key={i}>{w.message}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-// 플로피 디스크 + 우하단 '+' — "새 문제로 저장" 아이콘.
-function SaveAsNewIcon() {
-  return (
-    <span className="relative inline-flex h-3.5 w-3.5 items-center justify-center">
-      <Save className="h-3.5 w-3.5" />
-      {/* 우하단 '+' 배지 — 현재색 원 + 흰 플러스로 작게·또렷하게. 흰 링으로
-          본체와 분리한다. */}
-      <span className="absolute -bottom-0.5 -right-0.5 flex h-2 w-2 items-center justify-center rounded-full bg-current ring-1 ring-white">
-        <Plus className="h-1.5 w-1.5 text-white" strokeWidth={4} />
-      </span>
-    </span>
   );
 }
 
