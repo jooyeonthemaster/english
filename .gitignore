@@ -131,3 +131,19 @@ docs/grammar_1000_analysis/
 /snap1.md
 # login/diagnostic probe scripts — may contain credentials (mirror .vercelignore)
 /scripts/_probe-*
+
+# ── 로컬 작업 산출물 (리포트·DB export·폰트·평가결과) — 소스 아님, 디스크 보존하되 커밋 금지 (2026-06-23) ──
+/BM_Report/
+/strategy-report/
+/english-exam-passages/
+/results/
+/Paperlogy-1.000/
+/ir-deck/*.docx
+/sw-gen-page-initial.jpeg
+# 스크래치/프로브 스크립트 (_diag/_dump/_step/_probe 규약 연장)
+/scripts/_ai-edit-*
+/scripts/_feature-*
+/scripts/_gate-fix-test.ts
+/scripts/_nemo-relclause-probe.ts
+/scripts/_reverify-analyze.mjs
+/scripts/_sc-leak-test.ts
