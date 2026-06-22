@@ -26,7 +26,7 @@ import type {
 // 변형으로 새 지문 한 편을 만들어 "새 행"으로 추가한다(원본 유지).
 //  - VariantMenuButton: 6개 변형 액션 드롭다운 트리거
 //  - WholePassageVariantPreviewPanel: 생성 결과 검토 + 추가/다시생성/취소
-// 디자인 언어는 워크스페이스(violet-600/slate)와 동일. (Sparkles=금지 아이콘이라
+// 디자인 언어는 워크스페이스(blue-600/slate)와 동일. (Sparkles=금지 아이콘이라
 // import 하지 않음 — 의도적으로 제외)
 // ============================================================================
 
@@ -115,7 +115,7 @@ export function VariantMenuButton({
         disabled={disabled}
         aria-expanded={open}
         title="이 지문을 바탕으로 관련/상반 주제·난이도·길이를 바꾼 새 지문을 생성합니다"
-        className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-violet-300 bg-white px-2.5 text-[11.5px] font-bold text-violet-700 shadow-sm transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-blue-300 bg-white px-2.5 text-[11.5px] font-bold text-blue-700 shadow-sm transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {busy ? (
           <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
@@ -126,7 +126,7 @@ export function VariantMenuButton({
         {!busy ? (
           <CreditCostChip
             amount={CREDIT_COSTS.PASSAGE_VARIANT}
-            className="rounded-sm bg-violet-50 px-1 py-px text-[10px] text-violet-500 ring-1 ring-inset ring-violet-200"
+            className="rounded-sm bg-blue-50 px-1 py-px text-[10px] text-blue-500 ring-1 ring-inset ring-blue-200"
           />
         ) : null}
       </button>
@@ -143,7 +143,7 @@ export function VariantMenuButton({
             role="menu"
             className="absolute left-0 top-[calc(100%+4px)] z-30 w-60 overflow-hidden rounded-lg border border-slate-200 bg-white p-1 shadow-xl shadow-slate-300/40"
           >
-            <div className="px-2 py-1.5 text-[10.5px] font-bold uppercase tracking-wide text-violet-700/80">
+            <div className="px-2 py-1.5 text-[10.5px] font-bold uppercase tracking-wide text-blue-700/80">
               새 지문으로 변형
             </div>
             {GROUPS.map((g) => (
@@ -162,10 +162,10 @@ export function VariantMenuButton({
                         setOpen(false);
                         onPick(a);
                       }}
-                      className="flex w-full items-start gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-violet-50"
+                      className="flex w-full items-start gap-2 rounded-md px-2 py-1.5 text-left transition-colors hover:bg-blue-50"
                     >
                       <a.Icon
-                        className="mt-0.5 h-3.5 w-3.5 shrink-0 text-violet-500"
+                        className="mt-0.5 h-3.5 w-3.5 shrink-0 text-blue-500"
                         aria-hidden="true"
                       />
                       <span className="min-w-0">
@@ -220,15 +220,15 @@ export function WholePassageVariantPreviewPanel({
   const blocked = busy || disabled;
   const variantWords = wordCount(variantText);
   return (
-    <div className="overflow-hidden rounded-lg border border-violet-200 bg-violet-50/40 shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-violet-100 bg-white/70 px-3 py-2">
-        <p className="text-[12px] font-bold text-violet-800">
-          AI 변형 지문 — <span className="text-violet-600">{label}</span>{" "}
-          <span className="font-medium text-violet-500">
+    <div className="overflow-hidden rounded-lg border border-blue-200 bg-blue-50/40 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-blue-100 bg-white/70 px-3 py-2">
+        <p className="text-[12px] font-bold text-blue-800">
+          AI 변형 지문 — <span className="text-blue-600">{label}</span>{" "}
+          <span className="font-medium text-blue-500">
             — 새 지문으로 추가하면 원본은 그대로 유지됩니다
           </span>
         </p>
-        <span className="shrink-0 text-[10.5px] font-semibold tabular-nums text-violet-500">
+        <span className="shrink-0 text-[10.5px] font-semibold tabular-nums text-blue-500">
           {sourceWords} → {variantWords} words
         </span>
       </div>
@@ -241,7 +241,7 @@ export function WholePassageVariantPreviewPanel({
             value={title}
             onChange={(e) => onTitleChange(e.target.value)}
             disabled={blocked}
-            className="min-w-0 flex-1 rounded-md border border-slate-200 bg-white px-2 py-1 text-[12px] font-semibold text-slate-700 outline-none focus:border-violet-300 focus:ring-2 focus:ring-violet-100 disabled:opacity-60"
+            className="min-w-0 flex-1 rounded-md border border-slate-200 bg-white px-2 py-1 text-[12px] font-semibold text-slate-700 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 disabled:opacity-60"
             placeholder="변형본 제목"
           />
         </label>
@@ -249,7 +249,7 @@ export function WholePassageVariantPreviewPanel({
           {variantText}
         </div>
         {summary ? (
-          <p className="text-[11px] leading-relaxed text-violet-600/90">
+          <p className="text-[11px] leading-relaxed text-blue-600/90">
             {summary}
           </p>
         ) : null}
@@ -258,7 +258,7 @@ export function WholePassageVariantPreviewPanel({
             type="button"
             onClick={onApply}
             disabled={blocked || !title.trim()}
-            className="flex h-7 items-center gap-1.5 rounded-md bg-violet-600 px-3 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex h-7 items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <Check className="h-3.5 w-3.5" aria-hidden="true" />
             새 지문으로 추가
@@ -267,7 +267,7 @@ export function WholePassageVariantPreviewPanel({
             type="button"
             onClick={onRegenerate}
             disabled={blocked}
-            className="flex h-7 items-center gap-1.5 rounded-md border border-violet-200 bg-white px-2.5 text-[11.5px] font-semibold text-violet-600 transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex h-7 items-center gap-1.5 rounded-md border border-blue-200 bg-white px-2.5 text-[11.5px] font-semibold text-blue-600 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {busy ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
@@ -277,7 +277,7 @@ export function WholePassageVariantPreviewPanel({
             다시 생성
             <CreditCostChip
               amount={CREDIT_COSTS.PASSAGE_VARIANT}
-              className="rounded-sm bg-violet-50 px-1 py-px text-[10px] text-violet-500 ring-1 ring-inset ring-violet-100"
+              className="rounded-sm bg-blue-50 px-1 py-px text-[10px] text-blue-500 ring-1 ring-inset ring-blue-100"
             />
           </button>
           <button

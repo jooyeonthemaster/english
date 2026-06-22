@@ -77,6 +77,7 @@ export interface ExamPaperBuilderSaveInput {
     paperSize?: "A4" | "B4";
     columns: 1 | 2;
     density: "comfortable" | "compact";
+    forceTwoPerPage: boolean;
     showAnswerSpace: boolean;
     showPassageTitle: boolean;
     showQuestionMeta: boolean;

@@ -265,8 +265,8 @@ export function PassageWorkspace({
             className={
               "flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center rounded-[5px] border transition-colors " +
               (allSelected || someSelected
-                ? "border-violet-600 bg-violet-600 text-white"
-                : "border-slate-300 bg-white text-transparent hover:border-violet-400")
+                ? "border-blue-600 bg-blue-600 text-white"
+                : "border-slate-300 bg-white text-transparent hover:border-blue-400")
             }
           >
             {someSelected ? (
@@ -297,7 +297,7 @@ export function PassageWorkspace({
           지문 워크스페이스
         </h3>
         {rows.length > 0 ? (
-          <span className="flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded-full bg-violet-600 px-1 text-[10.5px] font-bold leading-none text-white tabular-nums">
+          <span className="flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded-full bg-blue-600 px-1 text-[10.5px] font-bold leading-none text-white tabular-nums">
             {rows.length}
           </span>
         ) : null}
@@ -311,7 +311,7 @@ export function PassageWorkspace({
             <button
               type="button"
               onClick={reopenCoach}
-              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-violet-600"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-blue-600"
               title="기능 안내 다시 보기"
             >
               <CircleHelp className="h-4 w-4" aria-hidden="true" />
@@ -368,30 +368,30 @@ export function PassageWorkspace({
           className="grid min-h-0 flex-1 grid-cols-1 content-start items-stretch gap-2.5 overflow-y-auto p-3 xl:grid-cols-2"
         >
           {!coachDismissed && rows.length > 0 ? (
-            <div className="col-span-full flex items-start gap-3 rounded-lg border border-violet-100 bg-violet-50/60 py-2.5 pl-3.5 pr-2">
+            <div className="col-span-full flex items-start gap-3 rounded-lg border border-blue-100 bg-blue-50/60 py-2.5 pl-3.5 pr-2">
               <div className="min-w-0 flex-1">
-                <p className="text-[11.5px] font-bold uppercase tracking-wide text-violet-800/80">
+                <p className="text-[11.5px] font-bold uppercase tracking-wide text-blue-800/80">
                   이 워크스페이스에서 할 수 있는 것
                 </p>
                 {/* 1열 고정 — 뷰포트 브레이크포인트는 컨테이너 폭과 무관해
                     좁은 컬럼에서 2열이 글자 단위로 부서진다. */}
-                <ul className="mt-1.5 space-y-1 text-[11.5px] leading-snug text-violet-900/80">
+                <ul className="mt-1.5 space-y-1 text-[11.5px] leading-snug text-blue-900/80">
                   <li className="flex items-center gap-1.5">
-                    <PencilLine className="h-3 w-3 shrink-0 text-violet-500" />
+                    <PencilLine className="h-3 w-3 shrink-0 text-blue-500" />
                     본문 직접 수정 — 생성 시 ‘변형본’으로 저장, 원본 보존
                   </li>
                   <li className="flex items-center gap-1.5">
-                    <TextCursorInput className="h-3 w-3 shrink-0 text-violet-500" />
+                    <TextCursorInput className="h-3 w-3 shrink-0 text-blue-500" />
                     문장 드래그 →{" "}
                     <strong className="font-bold">AI 문장 변형</strong>
                   </li>
                   <li className="flex items-center gap-1.5">
-                    <ListStart className="h-3 w-3 shrink-0 text-violet-500" />
+                    <ListStart className="h-3 w-3 shrink-0 text-blue-500" />
                     <strong className="font-bold">앞 맥락 추가</strong> —
                     이어지는 앞 문단 생성
                   </li>
                   <li className="flex items-center gap-1.5">
-                    <Scissors className="h-3 w-3 shrink-0 text-violet-500" />긴
+                    <Scissors className="h-3 w-3 shrink-0 text-blue-500" />긴
                     지문은 드래그 →{" "}
                     <strong className="font-bold">이 범위만 출제</strong>
                   </li>
@@ -400,7 +400,7 @@ export function PassageWorkspace({
               <button
                 type="button"
                 onClick={dismissCoach}
-                className="shrink-0 rounded-md p-1 text-violet-300 transition-colors hover:bg-violet-100 hover:text-violet-600"
+                className="shrink-0 rounded-md p-1 text-blue-300 transition-colors hover:bg-blue-100 hover:text-blue-600"
                 title="다시 보지 않기"
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
@@ -462,7 +462,7 @@ export function PassageWorkspace({
               type="button"
               onClick={onAddPassage}
               disabled={generating}
-              className="flex h-11 w-full shrink-0 items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-300 bg-white text-[12.5px] font-semibold text-slate-500 transition-colors hover:border-violet-300 hover:bg-violet-50 hover:text-violet-600 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-11 w-full shrink-0 items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-300 bg-white text-[12.5px] font-semibold text-slate-500 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Plus className="h-4 w-4" aria-hidden="true" />
               지문 추가

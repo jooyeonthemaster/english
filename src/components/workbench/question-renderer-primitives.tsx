@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/popover";
 import { getCircledNumber, getCircledNumbers } from "@/lib/question-postprocess/types";
 import {
-  BlockChangeContext,
   SelectableBlock,
   useBlockSelection,
   blockExcerpt,
@@ -36,6 +35,9 @@ export const AnswerRevealContext = createContext<AnswerRevealMode>("default");
 /** true 면 AnswerLine("정답: N" 줄)을 렌더하지 않는다. 문제 관리 카드처럼
  *  정답이 이미 다른 방식으로 드러나는 표면에서 중복 줄을 숨길 때 사용. */
 export const HideAnswerLineContext = createContext(false);
+
+/** true 면 해설 섹션을 토글 없이 항상 펼친 채로 노출한다(예: AI 수정본 미리보기). */
+export const ForceExplanationOpenContext = createContext(false);
 
 // ============================================================================
 // Shared UI primitives for question renderers
@@ -485,20 +487,10 @@ function normalizeAnswerLabel(value: unknown): string {
 }
 
 /** Conditions box (서술형 조건 목록) */
-export function ConditionsBox({
-  conditions,
-  label,
-  /** blockId 강제 지정 — 표시 label 과 diff blockId 가 다를 때(예: "전환 조건" 박스가
-   *  diff 의 conditions 필드와 매칭되도록 "conditions" 고정). 미지정 시 label 기반 파생. */
-  blockId,
-}: {
-  conditions: string[];
-  label?: string;
-  blockId?: string;
-}) {
+export function ConditionsBox({ conditions, label }: { conditions: string[]; label?: string }) {
   return (
     <SelectableBlock
-      blockId={blockId ?? (label ? `conditions:${label}` : "conditions")}
+      blockId={label ? `conditions:${label}` : "conditions"}
       label={label || "조건"}
       field="conditions"
       excerpt={blockExcerpt(conditions.join(" · "))}
@@ -573,9 +565,7 @@ export function ExplanationSection({
 }) {
   const mode = useContext(AnswerRevealContext);
   const selectionEnabled = !!useBlockSelection()?.enabled;
-  // 변경 마크 모드(수정본 미리보기)에서도 토글 없이 인라인 노출 → 해설/핵심포인트/오답해설의
-  // 변경 마크가 곧장 보이게 한다.
-  const changeActive = !!useContext(BlockChangeContext);
+  const forceOpen = useContext(ForceExplanationOpenContext);
   const [open, setOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -644,7 +634,8 @@ export function ExplanationSection({
   // as-explanation: 부모 '해설 보기' 토글이 이미 감싸므로 자체 토글 없이 인라인 노출.
   // 블럭 선택 모드(AI 수정 미리보기): 토글 없이 인라인 노출 → 해설/핵심포인트/오답분석을
   // 곧장 클릭해 수정 대상으로 지정할 수 있게 한다.
-  if (mode === "as-explanation" || selectionEnabled || changeActive) {
+  // forceOpen: AI 수정본 미리보기처럼 토글 없이 항상 펼쳐 두어야 하는 표면.
+  if (mode === "as-explanation" || selectionEnabled || forceOpen) {
     return content;
   }
 

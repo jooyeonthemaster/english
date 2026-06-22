@@ -4,43 +4,47 @@ import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { getCustomPrompts } from "@/actions/custom-prompts";
-import { createWorkbenchPassage } from "@/actions/workbench";
+import {
+  createWorkbenchPassage,
+  updateWorkbenchPassage,
+  savePassageAnnotations,
+} from "@/actions/workbench";
 import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
 import {
   isQuestionGenerationPlanTag,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
-import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import { useTaskQueue } from "@/components/workbench/task-queue";
 import { usePassageQueue } from "@/hooks/use-passage-queue";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
 import { formatExtractedTextForDisplay } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/display-text";
 import { getDraftDisplayTitle } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/title";
+import { PassageCardGrid } from "@/app/(director)/director/workbench/generate/passage-card-grid";
+import type { PassageItem } from "@/app/(director)/director/workbench/generate/generate-page-types";
+import { ExtractionDetailModal } from "@/app/(director)/director/workbench/generate/intake/extraction-detail-modal";
+import {
+  IntakeView,
+  IntakeTab,
+} from "@/app/(director)/director/workbench/generate/intake/intake-surface";
+import {
+  useGenerateExtraction,
+  type ExtractionPromotedResult,
+} from "@/app/(director)/director/workbench/generate/intake/use-generate-extraction";
+import { ExtractionLoadingCards } from "@/app/(director)/director/workbench/generate/intake/extraction-loading-cards";
 import type {
   PassageRegistrationProps,
   SavedPrompt,
 } from "./passage-registration/types";
-import { mapRecentPassagesToQueueItems } from "./passage-registration/utils";
 import { usePassageFormState } from "./passage-registration/use-passage-form-state";
-import { useFilterState } from "./passage-registration/use-filter-state";
-import { useCollectionsState } from "./passage-registration/use-collections-state";
+import { usePassageLibrary } from "./passage-registration/use-passage-library";
 import {
-  useCreateExtraction,
-  type ExtractionPromotedResult,
-} from "./passage-registration/use-create-extraction";
-import {
-  makeEmptyRow,
   makeRowFromDraft,
+  makeRowFromSavedPassage,
   isPristineEmptyRow,
   MIN_CONTENT_CHARS,
   type PassageInputRow,
 } from "./passage-registration/passage-input/types";
 import { FormSectionContainer } from "./passage-registration/sections/form-section-container";
-import { QueueSectionContainer } from "./passage-registration/sections/queue-section-container";
-import type {
-  IntakeView,
-  IntakeTab,
-} from "@/app/(director)/director/workbench/generate/intake/intake-surface";
 
 export type { PassageRegistrationProps } from "./passage-registration/types";
 
@@ -57,10 +61,6 @@ function derivePastedTitle(content: string): string {
 export function PassageRegistrationClient({
   academyId,
   schools,
-  recentPassages,
-  initialCollections,
-  draftCollections,
-  draftMembership,
   initialDraftIds,
   initialPassageIds,
 }: PassageRegistrationProps) {
@@ -70,8 +70,6 @@ export function PassageRegistrationClient({
   const [formCollapsed, setFormCollapsed] = useState(false);
 
   // Metadata + analysis prompt + tags + saved prompts (shared across passages).
-  // The single-passage editor fields the hook also exposes are no longer used —
-  // passage text/marks now live per-row in the `rows` stack below.
   const {
     schoolId,
     setSchoolId,
@@ -105,163 +103,250 @@ export function PassageRegistrationClient({
     setSavingPrompt,
   } = usePassageFormState();
 
-  // ─── Multi-passage input stack (the right "지문" section) ───
-  // Each row carries its own title/content/annotations + optional AI 복원, and
-  // remembers the extraction draft it was loaded from so analysis updates that
-  // Passage instead of forking a duplicate.
-  const [rows, setRows] = useState<PassageInputRow[]>(() => [makeEmptyRow()]);
-  // 워크스페이스에 불러와 있는 드래프트 id — 좌측 자료 카드의 '불러옴' 은은한 표시용.
-  const loadedDraftIds = useMemo(
-    () =>
-      rows
-        .map((r) => r.sourceDraftId)
-        .filter((id): id is string => typeof id === "string" && id.length > 0),
-    [rows],
-  );
-  const rowsRef = useRef(rows);
-  useEffect(() => {
-    rowsRef.current = rows;
-  }, [rows]);
+  // ─── Intake (직접 입력 · 파일업로드 › 내 지문함 › 워크스페이스) ───
+  const [intakeView, setIntakeView] = useState<IntakeView>("library");
+  const [intakeTab, setIntakeTab] = useState<IntakeTab>("paste");
 
-  // Convert server-loaded passages to queue items
-  const initialQueueItems = useMemo(() => {
-    return mapRecentPassagesToQueueItems(recentPassages);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only compute once on mount — server data doesn't change
-  const { triggerRefresh, setScope } = useTaskQueue();
-  const refreshTaskQueueSoon = useCallback(() => {
-    triggerRefresh();
-    window.setTimeout(triggerRefresh, 750);
-    window.setTimeout(triggerRefresh, 2_000);
-    window.setTimeout(triggerRefresh, 4_000);
-  }, [triggerRefresh]);
-
-  // Queue system
+  // ─── 내 지문함 라이브러리 (문제생성 intake 이식) ───
+  const showLibrary = useCallback(() => setIntakeView("library"), []);
+  const library = usePassageLibrary({ academyId, onShowLibrary: showLibrary });
   const {
-    queue,
-    activeCount,
-    hasActiveAnalysis,
-    addManyToQueue,
-    enqueueManyPending,
-    retryAnalysis,
-    removeFromQueue,
-    deletePassages,
-    updateAnalysisData,
-    updateQuestions,
-  } = usePassageQueue(initialQueueItems, {
-    cacheKey: `passage-analysis:${academyId}`,
-    onJobsChanged: refreshTaskQueueSoon,
-  });
-
-  // Modal state
-  const [modalPassageId, setModalPassageId] = useState<string | null>(null);
-  const modalPassage = queue.find((p) => p.id === modalPassageId) || null;
-
-  // ─── Filtering ─── grouped 7 contiguous useStates into one custom hook.
-  const {
-    filterSearch,
-    setFilterSearch,
+    passages,
+    filteredPassages,
+    filterOptions,
+    collections,
+    loadingPassages,
+    passageStatusCounts,
+    activeFilterCount,
+    passageSearch,
+    setPassageSearch,
     filterSchool,
     setFilterSchool,
     filterGrade,
     setFilterGrade,
     filterSemester,
     setFilterSemester,
-    filterPublisher,
-    setFilterPublisher,
-    filterCollection,
-    setFilterCollection,
-    showFilters,
-    setShowFilters,
-  } = useFilterState();
+    analysisStatusFilter,
+    setAnalysisStatusFilter,
+    passageSortOrder,
+    setPassageSortOrder,
+    selectedCollectionId,
+    setSelectedCollectionId,
+    passageBulkAction,
+    selectedIds,
+    setSelectedIds,
+    toggleCheckbox,
+    selectAll,
+    deselectAll,
+    freshAnalysisPassageIds,
+    acknowledgeFreshAnalysisPassage,
+    applyExtractionPromotion,
+    pasteSaving,
+    handleCreatePastedPassages,
+    loadPassages,
+    handleCreatePassageCollection,
+    handleCopySelectedPassagesToCollection,
+    handleMovePassagesToCollection,
+    handleMoveSelectedPassagesToCollection,
+    handleRemoveSelectedPassagesFromCollection,
+    handleDeleteSelectedPassages,
+  } = library;
 
-  // ─── Selection (bottom analyzed-passage queue) ───
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [lastSelectedId, setLastSelectedId] = useState<string | null>(null);
+  // ─── Multi-passage workspace stack (지문 입력 및 필기창) ───
+  // 문제생성 워크스페이스처럼 비어서 시작 — 내 지문함에서 불러오거나 '지문 추가'로
+  // 채운다. 비어 있으면 카드/푸터 없이 '지문 추가' 버튼만 보인다.
+  const [rows, setRows] = useState<PassageInputRow[]>(() => []);
+  const rowsRef = useRef(rows);
+  useEffect(() => {
+    rowsRef.current = rows;
+  }, [rows]);
 
-  // ─── Draft → rows ───
-  const [draftRefreshToken, setDraftRefreshToken] = useState(0);
-  const bumpDraftRefresh = useCallback(
-    () => setDraftRefreshToken((v) => v + 1),
-    [],
+  // 워크스페이스(필기 스택)가 자료함 위를 덮어 떠 있는지.
+  const [workspaceOpen, setWorkspaceOpen] = useState(false);
+  const workspaceActive = useMemo(
+    () => rows.some((r) => !isPristineEmptyRow(r)),
+    [rows],
+  );
+  // 워크스페이스에 이미 담긴 Passage id — 내 지문함 카드 '담김' 표시.
+  const workspacePassageIds = useMemo(
+    () =>
+      new Set(
+        rows
+          .map((r) => r.passageId)
+          .filter((id): id is string => typeof id === "string" && id.length > 0),
+      ),
+    [rows],
   );
 
-  // Load extraction drafts into the right "지문" stack as rows. Used by both the
-  // single-card 가져오기 click and the 자료 관리 checkbox → 불러오기 bulk action.
-  // Deduped by sourceDraftId so re-loading the same draft never duplicates it.
-  const handleLoadDrafts = useCallback((drafts: M1PassageDraftWithJob[]) => {
-    const prev = rowsRef.current;
-    const existing = new Set(
-      prev.map((r) => r.sourceDraftId).filter((id): id is string => !!id),
-    );
-    const incoming = drafts
-      .filter((d) => !existing.has(d.id))
-      .map((d) => ({
-        d,
-        text: formatExtractedTextForDisplay(
-          d.teacherText?.trim() ||
-            d.restoredText?.trim() ||
-            d.rawText?.trim() ||
-            "",
-        ),
-      }))
-      .filter((x) => x.text.length > 0)
-      .map(({ d, text }) =>
-        makeRowFromDraft({
-          title: d.title?.trim() || getDraftDisplayTitle(d),
-          content: text,
-          sourceDraftId: d.id,
-          source:
-            d.job?.displayName?.trim() ||
-            d.job?.originalFileName?.trim() ||
-            null,
-        }),
-      );
+  const { triggerRefresh, setScope } = useTaskQueue();
 
-    if (incoming.length === 0) {
-      toast.info("이미 불러온 지문이거나 본문이 비어 있어요.");
+  // ─── Analysis engine (백그라운드 분석 잡 실행) — 하단 UI 없이 엔진만 사용 ───
+  const {
+    queue,
+    hasActiveAnalysis,
+    addManyToQueue,
+    enqueueManyPending,
+  } = usePassageQueue([], {
+    cacheKey: `passage-analysis:${academyId}`,
+    onJobsChanged: triggerRefresh,
+  });
+
+  // 진행 중(생성중) 지문 — 카드에 '생성중' 표시. 큐 상태에서 파생.
+  const learningGeneratingPassageIds = useMemo(
+    () =>
+      new Set(
+        queue
+          .filter((q) => q.status === "pending" || q.status === "analyzing")
+          .map((q) => q.id),
+      ),
+    [queue],
+  );
+  // 방금 생성(분석) 완료된 지문 — 카드에 초록 글로우.
+  const [freshLearningPassageIds, setFreshLearningPassageIds] = useState<
+    Set<string>
+  >(() => new Set());
+  // 완료된 잡 감지 → 내 지문함 카드를 분석 완료 모습으로 새로고침.
+  const doneIdsRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    const done = new Set(
+      queue.filter((q) => q.status === "done").map((q) => q.id),
+    );
+    const newlyDone = [...done].filter((id) => !doneIdsRef.current.has(id));
+    doneIdsRef.current = done;
+    if (newlyDone.length === 0) return;
+    void loadPassages();
+    setFreshLearningPassageIds((prev) => {
+      const next = new Set(prev);
+      newlyDone.forEach((id) => next.add(id));
+      return next;
+    });
+  }, [queue, loadPassages]);
+
+  // ─── Load saved passages on mount ───
+  useEffect(() => {
+    void loadPassages();
+  }, [loadPassages]);
+
+  // ─── 내 지문함 선택 → 워크스페이스로 불러오기 (분기점) ───
+  // 저장된 Passage 를 필기 스택에 행으로 담는다. passageId 를 함께 실어, 분석 시
+  // 그 Passage 를 업데이트(중복 생성 방지)한다.
+  const handleLoadSelectedToWorkspace = useCallback(() => {
+    const selected = passages.filter((p) => selectedIds.has(p.id));
+    if (selected.length === 0) {
+      toast.error("'내 지문함'에서 워크스페이스로 보낼 지문을 먼저 선택하세요.");
       return;
     }
-    // Drop a single pristine empty row so loaded passages take its place.
+    const prev = rowsRef.current;
+    const existing = new Set(
+      prev.map((r) => r.passageId).filter((id): id is string => !!id),
+    );
+    const incoming = selected
+      .filter((p) => !existing.has(p.id))
+      .map((p) =>
+        makeRowFromSavedPassage({
+          passageId: p.id,
+          title: p.title,
+          content: formatExtractedTextForDisplay(p.content),
+          source: p.source ?? null,
+          // 불러온 지문은 기본적으로 모두 펼쳐 둔다.
+          collapsed: false,
+        }),
+      );
+    if (incoming.length === 0) {
+      toast.info("선택한 지문은 이미 워크스페이스에 있습니다.");
+      setWorkspaceOpen(true);
+      return;
+    }
+    const wasActive = prev.some((r) => !isPristineEmptyRow(r));
+    // 기존 행은 사용자가 둔 상태 그대로 두고(강제로 접지 않음), 새로 불러온 지문만
+    // 펼친 채로 뒤에 붙인다.
     const base = prev.length === 1 && isPristineEmptyRow(prev[0]) ? [] : prev;
-    // Expand the first loaded row when it lands in an empty stack so the teacher
-    // can mark immediately; otherwise loaded rows stay collapsed (loading many
-    // is cheap — the editor mounts lazily on expand).
-    if (base.length === 0) incoming[0] = { ...incoming[0], collapsed: false };
     const next = [...base, ...incoming];
     rowsRef.current = next;
     setRows(next);
+    setSelectedIds(new Set());
+    setWorkspaceOpen(true);
     setFormCollapsed(false);
     toast.success(
-      `${incoming.length}개 지문을 불러왔어요. 마킹 후 분석을 시작하세요.`,
+      (wasActive
+        ? `지문 ${incoming.length}개를 워크스페이스에 추가했어요.`
+        : `지문 ${incoming.length}개를 워크스페이스에 담았어요.`) +
+        " 마킹 후 생성하세요.",
     );
+  }, [passages, selectedIds, setSelectedIds]);
+
+  // '지문 추가'(워크스페이스) → 워크스페이스를 닫고 내 지문함으로 돌아가 지문을
+  // 골라 담는다(문제생성 워크스페이스와 동일). 워크스페이스 자체는 작업 중인 행이
+  // 남아 있으면 탭으로 다시 열 수 있다.
+  const handleAddPassageFromWorkspace = useCallback(() => {
+    setWorkspaceOpen(false);
+    setIntakeView("library");
   }, []);
 
-  const handleSelectDraftLoad = useCallback(
-    (draft: M1PassageDraftWithJob) => handleLoadDrafts([draft]),
-    [handleLoadDrafts],
+  // 변형 지문 생성 → 새 Passage 로 저장하고 워크스페이스에 새 행으로 추가한다.
+  // 원본은 그대로 두고(변형 lineage 만 기록), 내 지문함에도 즉시 반영된다.
+  const handleAddVariant = useCallback(
+    async (args: {
+      sourcePassageId: string | null;
+      title: string;
+      content: string;
+      mode: string;
+      direction?: string;
+    }) => {
+      const content = args.content.trim();
+      const title = args.title.trim() || "변형 지문";
+      if (content.length < MIN_CONTENT_CHARS) {
+        toast.error("변형 지문이 너무 짧습니다.");
+        return false;
+      }
+      try {
+        const { createDirectInputPassageMaterial } = await import(
+          "@/actions/workbench"
+        );
+        const result = await createDirectInputPassageMaterial({
+          title,
+          content,
+          sourcePassageId: args.sourcePassageId ?? undefined,
+          variantKind: args.mode,
+          variantDirection: args.direction,
+        });
+        if (!result?.success || !result.id) {
+          toast.error(result?.error || "변형 지문 저장에 실패했습니다.");
+          return false;
+        }
+        const newRow = makeRowFromSavedPassage({
+          passageId: result.id,
+          title,
+          content,
+          collapsed: false,
+        });
+        setRows((prev) => [...prev, newRow]);
+        void loadPassages();
+        toast.success("변형 지문을 새 지문으로 추가했어요.");
+        return true;
+      } catch {
+        toast.error("변형 지문 저장 중 오류가 발생했습니다.");
+        return false;
+      }
+    },
+    [loadPassages],
   );
 
-  // ─── Intake (이미지·PDF) — 문제 생성 intake 포팅 ───
-  const [intakeView, setIntakeView] = useState<IntakeView>("library");
-  const [intakeTab, setIntakeTab] = useState<IntakeTab>("upload");
-
-  // 추출 완료 → 잡의 draft들이 auto-promote(Passage화) → 자료 목록 즉시 새로고침.
+  // ─── Extraction (이미지·PDF) — 문제생성과 동일하게 자동 승격 후 내 지문함 반영 ───
   const clearExtractionPendingRef = useRef<(jobId: string) => void>(() => {});
   const handleExtractionPromoted = useCallback(
-    ({ jobId, complete }: ExtractionPromotedResult) => {
-      bumpDraftRefresh();
-      triggerRefresh();
-      if (complete) {
-        window.setTimeout(() => clearExtractionPendingRef.current(jobId), 1500);
-      }
+    ({ passageIds, jobId, complete }: ExtractionPromotedResult) => {
+      applyExtractionPromotion(passageIds);
+      void loadPassages().then(() => {
+        if (complete) clearExtractionPendingRef.current(jobId);
+      });
       toast.success(
         complete
-          ? "추출이 완료돼 자료 목록에 추가됐어요. 분석할 자료를 선택해 불러오세요."
-          : "일부 지문이 자료 목록에 추가됐어요. 나머지는 계속 처리 중입니다.",
+          ? "추출된 지문이 '내 지문함'에 추가됐어요. 선택해 워크스페이스로 보내세요."
+          : "일부 지문이 '내 지문함'에 추가됐어요. 나머지는 계속 처리 중입니다.",
       );
     },
-    [bumpDraftRefresh, triggerRefresh],
+    [applyExtractionPromotion, loadPassages],
   );
 
   const {
@@ -270,13 +355,11 @@ export function PassageRegistrationClient({
     failJob: failExtractionJob,
     clearPending: clearExtractionPending,
     pending: extractionPending,
-  } = useCreateExtraction({ onPromoted: handleExtractionPromoted });
+  } = useGenerateExtraction({ onPromoted: handleExtractionPromoted });
   useEffect(() => {
     clearExtractionPendingRef.current = clearExtractionPending;
   }, [clearExtractionPending]);
 
-  // 추출 시작 즉시: 자료 관리(library) 탭으로 전환해 진행 카드를 보여주고, 작업 큐
-  // 드로어 스코프를 추출로 맞춘다.
   const handleExtractionBegin = useCallback(
     (id: string, count: number) => {
       beginExtractionJob(id, count);
@@ -289,19 +372,15 @@ export function PassageRegistrationClient({
     (id: string, jobId: string | null) => {
       if (jobId) {
         attachExtractionJob(id, jobId);
-        bumpDraftRefresh();
         triggerRefresh();
       } else {
         failExtractionJob(id);
       }
     },
-    [attachExtractionJob, failExtractionJob, bumpDraftRefresh, triggerRefresh],
+    [attachExtractionJob, failExtractionJob, triggerRefresh],
   );
 
-  // ─── Deep link (?draftIds= / ?passageIds=) → rows ───
-  // Ported from main's block-based loader: /passages/create?draftIds=… and
-  // ?passageIds=… preload extraction drafts / saved passages into the input
-  // stack on mount. Applied at most once per id (StrictMode-safe via refs).
+  // ─── Deep link (?draftIds=) → workspace rows (extraction drafts) ───
   const initialDraftIdsKey = useMemo(
     () => (initialDraftIds ?? []).join(","),
     [initialDraftIds],
@@ -313,15 +392,26 @@ export function PassageRegistrationClient({
   const appliedInitialDraftIdsRef = useRef<Set<string>>(new Set());
   const appliedInitialPassageIdsRef = useRef<Set<string>>(new Set());
 
+  const mergeIntoWorkspace = useCallback((incoming: PassageInputRow[]) => {
+    if (incoming.length === 0) return;
+    const prev = rowsRef.current;
+    // 기존 행은 그대로 두고, 새로 불러온 지문은 모두 펼친 채로 붙인다.
+    const base = prev.length === 1 && isPristineEmptyRow(prev[0]) ? [] : prev;
+    const expanded = incoming.map((r) => ({ ...r, collapsed: false }));
+    const next = [...base, ...expanded];
+    rowsRef.current = next;
+    setRows(next);
+    setFormCollapsed(false);
+    setWorkspaceOpen(true);
+  }, []);
+
   useEffect(() => {
     const ids = (initialDraftIds ?? []).filter(
       (id) => !appliedInitialDraftIdsRef.current.has(id),
     );
     if (ids.length === 0) return;
-
     let cancelled = false;
     ids.forEach((id) => appliedInitialDraftIdsRef.current.add(id));
-
     void (async () => {
       try {
         const params = new URLSearchParams({
@@ -339,7 +429,6 @@ export function PassageRegistrationClient({
         if (!res.ok || !Array.isArray(data.drafts)) {
           throw new Error("불러올 추출 지문을 찾지 못했습니다.");
         }
-
         const order = new Map(ids.map((id, index) => [id, index]));
         const drafts = data.drafts
           .filter((draft) => order.has(draft.id))
@@ -348,33 +437,50 @@ export function PassageRegistrationClient({
               (order.get(a.id) ?? Number.MAX_SAFE_INTEGER) -
               (order.get(b.id) ?? Number.MAX_SAFE_INTEGER),
           );
-
         if (cancelled || drafts.length === 0) return;
-        handleLoadDrafts(drafts);
+        const incoming = drafts
+          .map((d) => ({
+            d,
+            text: formatExtractedTextForDisplay(
+              d.teacherText?.trim() ||
+                d.restoredText?.trim() ||
+                d.rawText?.trim() ||
+                "",
+            ),
+          }))
+          .filter((x) => x.text.length > 0)
+          .map(({ d, text }) =>
+            makeRowFromDraft({
+              title: d.title?.trim() || getDraftDisplayTitle(d),
+              content: text,
+              sourceDraftId: d.id,
+              source:
+                d.job?.displayName?.trim() ||
+                d.job?.originalFileName?.trim() ||
+                null,
+            }),
+          );
+        mergeIntoWorkspace(incoming);
+        toast.success(`${incoming.length}개 지문을 워크스페이스에 불러왔습니다.`);
       } catch (err) {
         if (cancelled) return;
         toast.error(
-          err instanceof Error
-            ? err.message
-            : "추출 지문을 불러오지 못했습니다.",
+          err instanceof Error ? err.message : "추출 지문을 불러오지 못했습니다.",
         );
       }
     })();
-
     return () => {
       cancelled = true;
     };
-  }, [handleLoadDrafts, initialDraftIds, initialDraftIdsKey]);
+  }, [initialDraftIds, initialDraftIdsKey, mergeIntoWorkspace]);
 
   useEffect(() => {
     const ids = (initialPassageIds ?? []).filter(
       (id) => !appliedInitialPassageIdsRef.current.has(id),
     );
     if (ids.length === 0) return;
-
     let cancelled = false;
     ids.forEach((id) => appliedInitialPassageIdsRef.current.add(id));
-
     void (async () => {
       try {
         const params = new URLSearchParams({ passageIds: ids.join(",") });
@@ -393,7 +499,6 @@ export function PassageRegistrationClient({
         if (!res.ok || !Array.isArray(data.passages)) {
           throw new Error("불러올 지문을 찾지 못했습니다.");
         }
-
         const order = new Map(ids.map((id, index) => [id, index]));
         const incoming = data.passages
           .filter((passage) => order.has(passage.id))
@@ -404,30 +509,20 @@ export function PassageRegistrationClient({
           )
           .map((passage) => ({ passage, text: passage.content?.trim() || "" }))
           .filter((x) => x.text.length > 0)
-          .map(({ passage, text }) => ({
-            ...makeEmptyRow(text),
-            title: passage.title?.trim() || "",
-            source: passage.source?.trim() || null,
-            collapsed: true,
-          }));
-
+          .map(({ passage, text }) =>
+            makeRowFromSavedPassage({
+              passageId: passage.id,
+              title: passage.title?.trim() || "",
+              content: text,
+              source: passage.source?.trim() || null,
+            }),
+          );
         if (cancelled || incoming.length === 0) return;
-        // Mirror handleLoadDrafts' stack-merge: drop a single pristine empty
-        // row; expand the first loaded row when it lands in an empty stack.
-        const prev = rowsRef.current;
-        const base =
-          prev.length === 1 && isPristineEmptyRow(prev[0]) ? [] : prev;
-        if (base.length === 0) {
-          incoming[0] = { ...incoming[0], collapsed: false };
-        }
-        const next = [...base, ...incoming];
-        rowsRef.current = next;
-        setRows(next);
-        setFormCollapsed(false);
+        mergeIntoWorkspace(incoming);
         toast.success(
           incoming.length === 1
-            ? "선택한 지문을 학습지 생성에 불러왔습니다."
-            : `${incoming.length}개 지문을 학습지 생성에 불러왔습니다.`,
+            ? "선택한 지문을 워크스페이스에 불러왔습니다."
+            : `${incoming.length}개 지문을 워크스페이스에 불러왔습니다.`,
         );
       } catch (err) {
         if (cancelled) return;
@@ -436,133 +531,10 @@ export function PassageRegistrationClient({
         );
       }
     })();
-
     return () => {
       cancelled = true;
     };
-  }, [initialPassageIds, initialPassageIdsKey]);
-
-  // ─── Collections (folders) ───
-  const {
-    collections,
-    setCollections,
-    showNewFolder,
-    setShowNewFolder,
-    newFolderName,
-    setNewFolderName,
-    editingFolderId,
-    setEditingFolderId,
-    editingFolderName,
-    setEditingFolderName,
-    showAddToFolder,
-    setShowAddToFolder,
-    addingToFolder,
-    setAddingToFolder,
-    collectionPassageIds,
-    setCollectionPassageIds,
-  } = useCollectionsState({ initialCollections, filterCollection });
-
-  const visibleQueue = useMemo(
-    () => queue.filter((p) => p.status !== "not_analyzed"),
-    [queue],
-  );
-
-  // ─── Filtered queue ───
-  const filteredQueue = useMemo(() => {
-    let items = visibleQueue;
-    if (filterSearch) {
-      const q = filterSearch.toLowerCase();
-      items = items.filter(
-        (p) =>
-          p.title.toLowerCase().includes(q) ||
-          p.contentPreview.toLowerCase().includes(q),
-      );
-    }
-    if (filterSchool)
-      items = items.filter((p) => p.schoolName === filterSchool);
-    if (filterGrade)
-      items = items.filter((p) => p.grade === parseInt(filterGrade));
-    if (filterSemester)
-      items = items.filter((p) => p.semester === filterSemester);
-    if (filterPublisher)
-      items = items.filter((p) => p.publisher === filterPublisher);
-    if (filterCollection) {
-      const ids = collectionPassageIds.get(filterCollection);
-      if (ids) items = items.filter((p) => ids.has(p.id));
-      else items = []; // still loading
-    }
-    return items;
-  }, [
-    filterSearch,
-    filterSchool,
-    filterGrade,
-    filterSemester,
-    filterPublisher,
-    filterCollection,
-    collectionPassageIds,
-    visibleQueue,
-  ]);
-
-  // ─── Unique filter options from queue ───
-  const filterOptions = useMemo(() => {
-    const schoolNames = [
-      ...new Set(
-        visibleQueue.filter((p) => p.schoolName).map((p) => p.schoolName!),
-      ),
-    ];
-    const grades = [
-      ...new Set(visibleQueue.filter((p) => p.grade).map((p) => p.grade!)),
-    ].sort();
-    const publishers = [
-      ...new Set(
-        visibleQueue.filter((p) => p.publisher).map((p) => p.publisher!),
-      ),
-    ];
-    return { schoolNames, grades, publishers };
-  }, [visibleQueue]);
-
-  const hasActiveFilters = !!(
-    filterSearch ||
-    filterSchool ||
-    filterGrade ||
-    filterSemester ||
-    filterPublisher
-  );
-
-  // ─── Selection handlers (bottom queue) ───
-  const toggleSelect = useCallback(
-    (id: string, shiftKey: boolean) => {
-      setSelectedIds((prev) => {
-        const next = new Set(prev);
-        if (shiftKey && lastSelectedId) {
-          const ids = filteredQueue.map((p) => p.id);
-          const startIdx = ids.indexOf(lastSelectedId);
-          const endIdx = ids.indexOf(id);
-          if (startIdx !== -1 && endIdx !== -1) {
-            const [lo, hi] =
-              startIdx < endIdx ? [startIdx, endIdx] : [endIdx, startIdx];
-            for (let i = lo; i <= hi; i++) next.add(ids[i]);
-          }
-        } else {
-          if (next.has(id)) next.delete(id);
-          else next.add(id);
-        }
-        return next;
-      });
-      setLastSelectedId(id);
-    },
-    [lastSelectedId, filteredQueue],
-  );
-
-  const selectAll = useCallback(() => {
-    if (selectedIds.size === filteredQueue.length) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(filteredQueue.map((p) => p.id)));
-    }
-  }, [selectedIds, filteredQueue]);
-
-  const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
+  }, [initialPassageIds, initialPassageIdsKey, mergeIntoWorkspace]);
 
   const effectivePublisher =
     publisher === "__CUSTOM__" ? publisherCustom : publisher;
@@ -574,7 +546,7 @@ export function PassageRegistrationClient({
     });
   }, [setSavedPrompts]);
 
-  // beforeunload warning
+  // beforeunload warning while analyses run
   useEffect(() => {
     if (!hasActiveAnalysis) return;
     const handler = (e: BeforeUnloadEvent) => {
@@ -585,11 +557,9 @@ export function PassageRegistrationClient({
     return () => window.removeEventListener("beforeunload", handler);
   }, [hasActiveAnalysis]);
 
-  // ─── Analyze every row in the stack (each carries its own annotations) ───
-  // Fire all passage writes in parallel and enqueue each as soon as its write
-  // finishes, so the task cards appear before every row completes. Each row's
-  // marks both persist (PassageNote) AND fold into that passage's analysis
-  // prompt; sourceDraftId keeps a loaded draft linked to its Passage.
+  // ─── Analyze every row in the workspace stack ───
+  // passageId 가 있는 행(내 지문함에서 옴)은 그 Passage 를 업데이트하고, 없으면
+  // 새 Passage 를 만든다. 어느 쪽이든 분석 엔진에 큐잉해 백그라운드로 생성한다.
   const handleAnalyzeRows = useCallback(
     async (
       plan: QuestionGenerationPlan,
@@ -621,33 +591,55 @@ export function PassageRegistrationClient({
             const text = row.content.trim();
             const rowTitle = row.title.trim() || derivePastedTitle(text);
             const rowSource = row.source?.trim() || sharedSource || undefined;
+            const annotations =
+              row.annotations.length > 0
+                ? row.annotations.map((a) => ({
+                    id: a.id,
+                    type: a.type,
+                    text: a.text,
+                    memo: a.memo,
+                    from: a.from,
+                    to: a.to,
+                  }))
+                : undefined;
 
-            const result = await createWorkbenchPassage({
-              title: rowTitle,
-              content: text,
-              schoolId: normalizedSchoolId || undefined,
-              grade: parsedGrade,
-              semester: semester || undefined,
-              unit: trimmedUnit || undefined,
-              publisher: effectivePublisher || undefined,
-              source: rowSource,
-              tags: sharedTags,
-              sourceDraftId: row.sourceDraftId ?? undefined,
-              annotations:
-                row.annotations.length > 0
-                  ? row.annotations.map((a) => ({
-                      id: a.id,
-                      type: a.type,
-                      text: a.text,
-                      memo: a.memo,
-                      from: a.from,
-                      to: a.to,
-                    }))
-                  : undefined,
-            });
-
-            if (!result.success || !result.id) {
-              throw new Error(result.error || "CREATE_FAILED");
+            let passageId: string;
+            if (row.passageId) {
+              // 내 지문함에서 온 행 → 기존 Passage 업데이트(중복 생성 방지).
+              const upd = await updateWorkbenchPassage(row.passageId, {
+                title: rowTitle,
+                content: text,
+                schoolId: normalizedSchoolId || undefined,
+                grade: parsedGrade,
+                semester: semester || undefined,
+                unit: trimmedUnit || undefined,
+                publisher: effectivePublisher || undefined,
+                source: rowSource,
+                tags: sharedTags,
+              });
+              if (!upd.success) throw new Error(upd.error || "UPDATE_FAILED");
+              if (annotations) {
+                await savePassageAnnotations(row.passageId, annotations);
+              }
+              passageId = row.passageId;
+            } else {
+              const result = await createWorkbenchPassage({
+                title: rowTitle,
+                content: text,
+                schoolId: normalizedSchoolId || undefined,
+                grade: parsedGrade,
+                semester: semester || undefined,
+                unit: trimmedUnit || undefined,
+                publisher: effectivePublisher || undefined,
+                source: rowSource,
+                tags: sharedTags,
+                sourceDraftId: row.sourceDraftId ?? undefined,
+                annotations,
+              });
+              if (!result.success || !result.id) {
+                throw new Error(result.error || "CREATE_FAILED");
+              }
+              passageId = result.id;
             }
 
             const combinedPrompt = buildAnalysisPrompt(
@@ -657,7 +649,7 @@ export function PassageRegistrationClient({
 
             const queuedItem = {
               passage: {
-                id: result.id,
+                id: passageId,
                 title: rowTitle,
                 content: text,
                 schoolId: normalizedSchoolId || undefined,
@@ -694,16 +686,18 @@ export function PassageRegistrationClient({
 
         if (success > 0) {
           toast.success(
-            `${success}개 지문이 등록되었습니다. 백그라운드에서 학습지 생성 중 (동시 3개씩).`,
+            `${success}개 지문 학습지 생성을 시작했어요. 백그라운드에서 진행됩니다(동시 3개씩).`,
           );
-          const fresh = [makeEmptyRow()];
-          rowsRef.current = fresh;
-          setRows(fresh);
-          bumpDraftRefresh();
+          rowsRef.current = [];
+          setRows([]);
+          // 생성 시작 후 워크스페이스를 닫고 내 지문함으로 복귀해 진행 상황을 본다.
+          setWorkspaceOpen(false);
+          setIntakeView("library");
+          void loadPassages();
           triggerRefresh();
         }
         if (failed > 0) {
-          toast.error(`${failed}개 지문 등록에 실패했습니다.`);
+          toast.error(`${failed}개 지문 처리에 실패했습니다.`);
         }
       } catch (err) {
         toast.error(
@@ -727,7 +721,7 @@ export function PassageRegistrationClient({
       analysisTone,
       addManyToQueue,
       enqueueManyPending,
-      bumpDraftRefresh,
+      loadPassages,
       triggerRefresh,
     ],
   );
@@ -743,31 +737,23 @@ export function PassageRegistrationClient({
   const removeTag = (tag: string) =>
     setTags((prev) => prev.filter((t) => t !== tag));
 
-  // 지문 목록 카드의 휴지통/일괄 삭제 → DB 에서 실제 삭제. 성공해야 화면에서
-  // 사라지므로, 예전처럼 새로고침 시 되살아나지 않는다.
-  const handleDeletePassages = useCallback(
-    async (ids: string[]) => {
-      const targets = ids.filter(Boolean);
-      if (targets.length === 0) return;
-      const result = await deletePassages(targets);
-      if (!result.success) {
-        toast.error(result.error || "지문 삭제에 실패했습니다.");
-        return;
-      }
-      if (result.deleted > 0) {
-        toast.success(`${result.deleted}개 지문을 삭제했습니다.`);
-      } else {
-        toast.error("삭제된 지문이 없습니다.");
-      }
+  // ─── 카드 '상세 보기' → 지문 상세 모달 (문제생성과 동일한 ExtractionDetailModal) ───
+  // 학습지(분석 결과)를 바로 띄우는 게 아니라, 페이지를 떠나지 않고 원문/복원문/
+  // 복원 근거 + '학습자료 열기·추가생성' 팝업을 띄운다.
+  const [detailPassage, setDetailPassage] = useState<PassageItem | null>(null);
+  const openDetailById = useCallback(
+    (passageId: string) => {
+      const p = passages.find((x) => x.id === passageId);
+      if (p) setDetailPassage(p);
     },
-    [deletePassages],
+    [passages],
   );
 
   return (
     <TooltipProvider>
       <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
         <main className="flex w-full min-w-0 flex-col gap-4">
-          {/* ─── Collapsible Form Section ─── */}
+          {/* ─── 직접 입력 · 파일업로드 › 내 지문함 › 워크스페이스 ─── */}
           <FormSectionContainer
             academyId={academyId}
             formCollapsed={formCollapsed}
@@ -776,6 +762,8 @@ export function PassageRegistrationClient({
             setRows={setRows}
             analyzing={bulkAnalyzing}
             onAnalyze={handleAnalyzeRows}
+            onAddPassage={handleAddPassageFromWorkspace}
+            onAddVariant={handleAddVariant}
             schools={schools}
             schoolId={schoolId}
             setSchoolId={setSchoolId}
@@ -808,12 +796,6 @@ export function PassageRegistrationClient({
             setNewPromptName={setNewPromptName}
             savingPrompt={savingPrompt}
             setSavingPrompt={setSavingPrompt}
-            draftRefreshToken={draftRefreshToken}
-            onSelectDraft={handleSelectDraftLoad}
-            onLoadSelectedDrafts={handleLoadDrafts}
-            loadedDraftIds={loadedDraftIds}
-            draftCollections={draftCollections ?? []}
-            draftMembership={draftMembership ?? {}}
             intakeView={intakeView}
             setIntakeView={setIntakeView}
             intakeTab={intakeTab}
@@ -821,73 +803,84 @@ export function PassageRegistrationClient({
             onExtractionBegin={handleExtractionBegin}
             onExtractionResult={handleExtractionResult}
             extractionPending={extractionPending}
-          />
-
-          {/* ─── Toolbar + Card Grid ─── */}
-          <QueueSectionContainer
-            queue={visibleQueue}
-            filteredQueue={filteredQueue}
-            activeCount={activeCount}
-            filterSearch={filterSearch}
-            setFilterSearch={setFilterSearch}
-            filterSchool={filterSchool}
-            setFilterSchool={setFilterSchool}
-            filterGrade={filterGrade}
-            setFilterGrade={setFilterGrade}
-            filterSemester={filterSemester}
-            setFilterSemester={setFilterSemester}
-            filterPublisher={filterPublisher}
-            setFilterPublisher={setFilterPublisher}
-            showFilters={showFilters}
-            setShowFilters={setShowFilters}
-            filterOptions={filterOptions}
-            hasActiveFilters={hasActiveFilters}
-            collections={collections}
-            setCollections={setCollections}
-            filterCollection={filterCollection}
-            setFilterCollection={setFilterCollection}
-            editingFolderId={editingFolderId}
-            setEditingFolderId={setEditingFolderId}
-            editingFolderName={editingFolderName}
-            setEditingFolderName={setEditingFolderName}
-            showNewFolder={showNewFolder}
-            setShowNewFolder={setShowNewFolder}
-            newFolderName={newFolderName}
-            setNewFolderName={setNewFolderName}
-            showAddToFolder={showAddToFolder}
-            setShowAddToFolder={setShowAddToFolder}
-            addingToFolder={addingToFolder}
-            setAddingToFolder={setAddingToFolder}
-            collectionPassageIds={collectionPassageIds}
-            setCollectionPassageIds={setCollectionPassageIds}
-            selectedIds={selectedIds}
-            setSelectedIds={setSelectedIds}
-            toggleSelect={toggleSelect}
-            selectAll={selectAll}
-            clearSelection={clearSelection}
-            setModalPassageId={setModalPassageId}
-            retryAnalysis={retryAnalysis}
-            onDeletePassages={handleDeletePassages}
+            workspaceOpen={workspaceOpen}
+            setWorkspaceOpen={setWorkspaceOpen}
+            workspaceActive={workspaceActive}
+            onSubmitPastedRows={handleCreatePastedPassages}
+            pasteSaving={pasteSaving}
+            libraryLabel="내 지문함"
+            library={
+              <PassageCardGrid
+                loadingCards={
+                  <ExtractionLoadingCards pending={extractionPending} />
+                }
+                passages={passages}
+                filteredPassages={filteredPassages}
+                filterOptions={filterOptions}
+                collections={collections}
+                loadingPassages={loadingPassages}
+                passageSearch={passageSearch}
+                setPassageSearch={setPassageSearch}
+                filterSchool={filterSchool}
+                setFilterSchool={setFilterSchool}
+                filterGrade={filterGrade}
+                setFilterGrade={setFilterGrade}
+                filterSemester={filterSemester}
+                setFilterSemester={setFilterSemester}
+                analysisStatusFilter={analysisStatusFilter}
+                setAnalysisStatusFilter={setAnalysisStatusFilter}
+                passageSortOrder={passageSortOrder}
+                setPassageSortOrder={setPassageSortOrder}
+                passageStatusCounts={passageStatusCounts}
+                activeFilterCount={activeFilterCount}
+                selectedCollectionId={selectedCollectionId}
+                setSelectedCollectionId={setSelectedCollectionId}
+                selectedIds={selectedIds}
+                setSelectedIds={setSelectedIds}
+                toggleCheckbox={toggleCheckbox}
+                selectAll={selectAll}
+                deselectAll={deselectAll}
+                onCopySelectedToCollection={
+                  handleCopySelectedPassagesToCollection
+                }
+                onMoveSelectedToCollection={
+                  handleMoveSelectedPassagesToCollection
+                }
+                onMovePassagesToCollection={handleMovePassagesToCollection}
+                onCreateCollection={handleCreatePassageCollection}
+                onRemoveSelectedFromCollection={
+                  handleRemoveSelectedPassagesFromCollection
+                }
+                onDeleteSelectedPassages={handleDeleteSelectedPassages}
+                passageBulkAction={passageBulkAction}
+                genMode="manual"
+                totalQuestions={0}
+                handleBatchGenerate={handleLoadSelectedToWorkspace}
+                freshAnalysisPassageIds={freshAnalysisPassageIds}
+                onFreshAnalysisAcknowledged={acknowledgeFreshAnalysisPassage}
+                learningGeneratingPassageIds={learningGeneratingPassageIds}
+                learningCompletedPassageIds={freshLearningPassageIds}
+                onEditSelected={handleLoadSelectedToWorkspace}
+                workspacePassageIds={workspacePassageIds}
+                workspaceActive={workspaceActive}
+                handleOpenAnalysisModal={openDetailById}
+                onViewPassageContent={setDetailPassage}
+              />
+            }
           />
         </main>
 
-        {/* ─── Analysis Modal ─── */}
-        {modalPassage && (
-          <PassageAnalysisModal
-            open={!!modalPassageId}
-            onClose={() => setModalPassageId(null)}
-            passage={modalPassage.passageData}
-            initialAnalysis={modalPassage.analysisData}
-            initialPromptConfig={modalPassage.promptConfig}
-            onAnalysisUpdate={(data) => {
-              updateAnalysisData(modalPassage.id, data);
+        {/* ─── 지문 상세 모달 — 원문/복원문/복원 근거 + 학습자료 열기·추가생성.
+            페이지를 떠나지 않고 뜬다(문제생성과 동일). ─── */}
+        {detailPassage && (
+          <ExtractionDetailModal
+            passage={detailPassage}
+            onClose={() => setDetailPassage(null)}
+            onPassageAnalyzed={() => {
+              void loadPassages();
             }}
-            onQuestionsUpdate={(questions) => {
-              updateQuestions(modalPassage.id, questions);
-            }}
-            onDelete={(passageId) => {
-              removeFromQueue(passageId);
-              setModalPassageId(null);
+            onPassageSaved={() => {
+              void loadPassages();
             }}
           />
         )}

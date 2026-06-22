@@ -406,8 +406,6 @@ function TaskGridCard({
   const active = ACTIVE_STATUSES.has(task.status);
   const canDelete =
     Boolean(task.onDelete) && TERMINAL_STATUSES.has(task.status);
-  const DomainIcon =
-    task.domain === "extraction" ? ExtractionTaskListIcon : Database;
 
   useEffect(() => {
     if (!getDragData) return;
@@ -635,6 +633,10 @@ function TaskGridCard({
                     {task.errorBadge}
                   </span>
                 ) : null}
+                <span className="inline-flex items-center gap-1 rounded bg-slate-50 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
+                  <CalendarClock className="size-3.5" aria-hidden="true" />
+                  {formatTaskDate(task.createdAt)}
+                </span>
               </div>
             </div>
           </div>
@@ -678,29 +680,17 @@ function TaskGridCard({
           </p>
         )}
 
-        <div className="mt-auto flex flex-wrap items-center gap-2 pt-3 text-[10px] font-medium">
-          <span className="inline-flex items-center gap-1 rounded bg-slate-50 px-1.5 py-0.5 text-slate-500">
-            <DomainIcon className="size-3.5" aria-hidden="true" />
-            {DOMAIN_LABELS[task.domain]}
-          </span>
-          <span className="inline-flex items-center gap-1 rounded bg-slate-50 px-1.5 py-0.5 text-slate-500">
-            <CalendarClock className="size-3.5" aria-hidden="true" />
-            {formatTaskDate(task.createdAt)}
-          </span>
-          {renderActions || canOpen ? (
-            <div className="ml-auto flex items-center gap-1.5">
-              {renderActions}
-              {canOpen ? (
-                <CardDetailIconButton
-                  className="size-7 rounded-md"
-                  iconClassName="size-3.5"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleOpen();
-                  }}
-                />
-              ) : null}
-            </div>
+        <div className="mt-auto flex items-center gap-1.5 pt-3 text-[10px] font-medium">
+          {renderActions}
+          {canOpen ? (
+            <CardDetailIconButton
+              className="ml-auto size-7 rounded-md"
+              iconClassName="size-3.5"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleOpen();
+              }}
+            />
           ) : null}
         </div>
       </div>

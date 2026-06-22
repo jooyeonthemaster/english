@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ChevronDown, Cpu, FileText, Loader2, Target, X } from "lucide-react";
 
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { triggerHintGlowWithin } from "@/lib/hint-glow";
 
 // ============================================================================
 // 지문별 '문제 생성' 모달 — 한 지문만의 유형·난이도·플랜을 설정하고 그 지문
@@ -62,6 +63,10 @@ export function PassageGenerateModal({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
+
+  // 본문(GenerationConfigPanel) 영역 — '유형을 선택하세요'가 비활일 때 눌리면 이
+  // 안의 유형 카드들을 글로우해 "유형 문항 수를 올리세요"를 유도한다.
+  const bodyRef = useRef<HTMLDivElement>(null);
 
   // 헤더 지문 미리보기 → 클릭 시 전문 팝오버 토글.
   const [showFull, setShowFull] = useState(false);
@@ -122,7 +127,7 @@ export function PassageGenerateModal({
           <button
             type="button"
             onClick={onClose}
-            className="-mr-1 flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+            className="-mr-1 flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
             aria-label="닫기"
           >
             <X className="size-4" aria-hidden="true" />
@@ -130,7 +135,10 @@ export function PassageGenerateModal({
         </div>
 
         {/* ── 본문: 이 지문의 유형·생성 설정 (GenerationConfigPanel) ── */}
-        <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-white">
+        <div
+          ref={bodyRef}
+          className="flex min-h-0 flex-1 flex-col overflow-hidden bg-white"
+        >
           {children}
         </div>
 
@@ -144,15 +152,21 @@ export function PassageGenerateModal({
           ) : null}
           <button
             type="button"
+            // aria-disabled — 비활처럼 보이되 클릭은 살려, 유형 미선택(문제 0)일 때
+            // 누르면 유형 카드들을 글로우해 "문항 수를 올리세요"를 유도한다.
+            aria-disabled={!canGenerate}
             onClick={() => {
-              if (!canGenerate) return;
+              if (generating) return;
+              if (questions === 0) {
+                triggerHintGlowWithin(bodyRef.current, "[data-question-type-id]");
+                return;
+              }
               onGenerate();
             }}
-            disabled={!canGenerate}
             className={
               "flex h-12 w-full items-center justify-center gap-2 rounded-xl px-4 text-[14.5px] font-bold transition-all duration-200 " +
               (canGenerate
-                ? "bg-violet-600 text-white shadow-md shadow-violet-200/50 hover:bg-violet-700 hover:shadow-lg"
+                ? "bg-blue-600 text-white shadow-md shadow-blue-200/50 hover:bg-blue-700 hover:shadow-lg"
                 : "cursor-not-allowed bg-slate-100 text-slate-400")
             }
           >

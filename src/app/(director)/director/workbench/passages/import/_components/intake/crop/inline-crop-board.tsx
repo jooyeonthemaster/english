@@ -50,10 +50,14 @@ import { ACCEPTED } from "../../bulk-extract-client/constants";
 import type { ClientPageSlot, CropBox } from "@/lib/extraction/types";
 import { CropCanvas, type CropCanvasChangeMeta } from "./crop-canvas";
 import { cropImageToBlob, stitchSlotsToBlob } from "./crop-utils";
+import { triggerHintGlowWithin } from "@/lib/hint-glow";
 
 export interface InlineCropBoardHandle {
   /** 현재 박스/그룹을 실제 지문 슬롯으로 굽는다(추출 시작 직전 1회). 빈/초과면 null. */
   buildPassageSlots: () => Promise<ClientPageSlot[] | null>;
+  /** '추출 시작'이 비활(지문 0개/초과)일 때 호출 — 좌측 원본 페이지 카드를 글로우해
+   *  "여기서 지문 영역을 드래그하세요"를 유도한다. */
+  hintDragArea: () => void;
 }
 
 export interface InlineCropBoardCounts {
@@ -1215,7 +1219,15 @@ export const InlineCropBoard = forwardRef<
     }
   }, [totalPassages, maxPassages, flat, images]);
 
-  useImperativeHandle(ref, () => ({ buildPassageSlots }), [buildPassageSlots]);
+  // 좌측 원본 캔버스의 페이지 카드들을 글로우 — "여기서 지문을 드래그하세요" 유도.
+  const hintDragArea = useCallback(() => {
+    triggerHintGlowWithin(scrollerRef.current, "[data-page-index]");
+  }, []);
+
+  useImperativeHandle(ref, () => ({ buildPassageSlots, hintDragArea }), [
+    buildPassageSlots,
+    hintDragArea,
+  ]);
 
   // 캔버스: 가용 폭에 맞춰 이미지 카드를 자동 다열로(자리 넓으면 2열↑). 줌인해서
   // 카드가 컨테이너보다 커지면 1열 + 가로 스크롤(중앙 정렬은 좌측 잘림이라 해제).
@@ -1683,14 +1695,31 @@ export const InlineCropBoard = forwardRef<
           <div className="flex shrink-0 items-center gap-1.5">
             <button
               type="button"
-              onClick={mergeSelected}
-              disabled={selectedGroups.length < 2 || locked}
+              // aria-disabled — 비활처럼 보이되 클릭은 살려, 2개 미만일 때 누르면
+              // 지문 카드들을 글로우해 "2개 이상 고르세요"를 유도한다.
+              aria-disabled={selectedGroups.length < 2 || locked}
+              onClick={() => {
+                if (locked) return;
+                if (selectedGroups.length < 2) {
+                  triggerHintGlowWithin(
+                    reviewScrollRef.current,
+                    "[data-review-passage-group]",
+                  );
+                  return;
+                }
+                mergeSelected();
+              }}
               title={
                 selectedGroups.length < 2
                   ? "합칠 지문 카드를 2개 이상 선택하세요"
                   : "선택한 지문을 하나로 이어붙입니다"
               }
-              className="inline-flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:bg-blue-300"
+              className={
+                "inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md px-3 text-[11.5px] font-bold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+                (selectedGroups.length < 2 || locked
+                  ? "cursor-not-allowed bg-blue-300"
+                  : "cursor-pointer bg-blue-600 hover:bg-blue-700")
+              }
             >
               <Layers className="size-3.5" aria-hidden="true" />한 지문으로
               합치기
@@ -1889,31 +1918,43 @@ export const InlineCropBoard = forwardRef<
                         />
                       </button>
                     </div>
-                    {/* 실제 잘린 모습 — 큰 미리보기(정확한 비율, 검수용). 접으면 헤더만 남는다. */}
-                    {collapsed ? null : (
-                      <div className="space-y-1.5 bg-slate-100/60 p-2">
-                        {p.pieces.map((piece) => {
-                          const img = images[piece.imageOrder];
-                          if (!img) return null;
-                          return (
-                            <div
-                              key={`${piece.slotId}-${piece.j}`}
-                              className="relative w-full overflow-hidden rounded border border-slate-200 bg-white"
-                              style={{
-                                aspectRatio: cropAspect(img, piece.box),
-                                ...cropBgStyle(img.previewUrl, piece.box),
-                              }}
-                            >
-                              {multi ? (
-                                <span className="absolute left-1 top-1 rounded bg-slate-900/70 px-1.5 py-0.5 text-[9.5px] font-bold text-white">
-                                  {piece.imageOrder + 1}장
-                                </span>
-                              ) : null}
-                            </div>
-                          );
-                        })}
+                    {/* 실제 잘린 모습 — 큰 미리보기(정확한 비율, 검수용). 접으면 헤더만
+                        남는다. grid-rows 0fr↔1fr 트릭으로 펼침/접힘을 부드럽게
+                        애니메이션한다(새 지문이 들어오며 이전 카드가 닫힐 때 + 토글 시
+                        모두 동일). 본문은 항상 DOM 에 두어 닫힐 때도 높이가 줄어든다. */}
+                    <div
+                      className={
+                        "grid motion-safe:transition-[grid-template-rows,opacity] motion-safe:duration-300 motion-safe:ease-out " +
+                        (collapsed
+                          ? "grid-rows-[0fr] opacity-0"
+                          : "grid-rows-[1fr] opacity-100")
+                      }
+                    >
+                      <div className="min-h-0 overflow-hidden">
+                        <div className="space-y-1.5 bg-slate-100/60 p-2">
+                          {p.pieces.map((piece) => {
+                            const img = images[piece.imageOrder];
+                            if (!img) return null;
+                            return (
+                              <div
+                                key={`${piece.slotId}-${piece.j}`}
+                                className="relative w-full overflow-hidden rounded border border-slate-200 bg-white"
+                                style={{
+                                  aspectRatio: cropAspect(img, piece.box),
+                                  ...cropBgStyle(img.previewUrl, piece.box),
+                                }}
+                              >
+                                {multi ? (
+                                  <span className="absolute left-1 top-1 rounded bg-slate-900/70 px-1.5 py-0.5 text-[9.5px] font-bold text-white">
+                                    {piece.imageOrder + 1}장
+                                  </span>
+                                ) : null}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                    )}
+                    </div>
                   </div>
                 );
               })}

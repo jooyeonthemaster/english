@@ -43,6 +43,7 @@ import {
   splitPdfToImages,
 } from "@/lib/extraction/pdf-splitter";
 import type { ClientPageSlot } from "@/lib/extraction/types";
+import { triggerHintGlow } from "@/lib/hint-glow";
 import { useExtractionUpload } from "@/hooks/use-extraction-upload";
 import { useExtractionStore } from "@/lib/extraction/store";
 
@@ -259,6 +260,8 @@ export function GenerateUploadPanel({
   );
 
   const boardRef = useRef<InlineCropBoardHandle>(null);
+  // 파일이 아직 없을 때 '추출 시작'을 누르면 글로우시킬 업로드 영역.
+  const uploadZoneRef = useRef<HTMLDivElement>(null);
   const [boardCounts, setBoardCounts] =
     useState<InlineCropBoardCounts>(EMPTY_COUNTS);
   const [baking, setBaking] = useState(false);
@@ -535,7 +538,18 @@ export function GenerateUploadPanel({
 
   // 추출 시작 — 보드 결과를 구운 뒤 업로드(완료 후 '내 지문'으로 넘어가 로딩 카드 표시).
   const handleFileStart = useCallback(async () => {
-    if (slots.length === 0) return;
+    if (busy) return;
+    const totalPassages = slots.length === 0 ? 0 : boardCounts.totalPassages;
+    if (slots.length === 0) {
+      // 파일 없음 → 업로드 영역을 글로우해 "파일을 먼저 올리세요" 유도.
+      triggerHintGlow(uploadZoneRef.current);
+      return;
+    }
+    if (totalPassages === 0 || totalPassages > MAX_PAGES_PER_JOB) {
+      // 지문 영역 미설정/초과 → 좌측 캔버스를 글로우해 드래그 유도.
+      boardRef.current?.hintDragArea();
+      return;
+    }
     if (boardRef.current) {
       setBaking(true);
       try {
@@ -547,7 +561,7 @@ export function GenerateUploadPanel({
       return;
     }
     await startExtraction();
-  }, [slots.length, startExtraction]);
+  }, [busy, slots.length, boardCounts.totalPassages, startExtraction]);
 
   const fileTotalPassages = slots.length === 0 ? 0 : boardCounts.totalPassages;
   const fileOverMax = fileTotalPassages > MAX_PAGES_PER_JOB;
@@ -608,7 +622,7 @@ export function GenerateUploadPanel({
       <button
         type="button"
         onClick={handleFileStart}
-        disabled={fileStartDisabled}
+        aria-disabled={fileStartDisabled}
         data-generate-tour="file-extract-button"
         className={
           "inline-flex h-12 w-full items-center justify-center rounded-lg border text-[14px] font-extrabold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 " +
@@ -627,7 +641,7 @@ export function GenerateUploadPanel({
         ) : (
           <>
             <PlayCircle className="mr-2 size-5" aria-hidden="true" />
-            {outputMode === "restored" ? "AI로 원문 복원 추출" : "그대로 추출"}
+            {"다음으로 (내 지문함)"}
             {` (지문 ${fileTotalPassages}개)`}
             {fileTotalPassages > 0 ? (
               <CreditCostChip
@@ -852,6 +866,7 @@ export function GenerateUploadPanel({
             <div className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 p-3.5 lg:border-b-0">
               {fileTutorialPopup}
               <div
+                ref={uploadZoneRef}
                 data-generate-tour="upload-dropzone"
                 className={
                   "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors " +

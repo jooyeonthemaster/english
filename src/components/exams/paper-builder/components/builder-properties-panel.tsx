@@ -11,7 +11,6 @@ import {
   AlignCenter,
   AlignLeft,
   AlignRight,
-  Link2,
   BookOpen,
   ChevronDown,
   ChevronUp,
@@ -27,18 +26,17 @@ import {
   Minus,
   Plus,
   Rows3,
-  Settings,
   Shuffle,
   Space,
   Trash2,
   Type,
   Ungroup,
   Unlock,
-  X,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+import { KeepTogetherIcon } from "./keep-together-icon";
 import { optionOrdinalLabel } from "../option-display";
 import {
   isSourcePassageForcedForItem,
@@ -59,10 +57,9 @@ interface BuilderPropertiesPanelProps {
   paperItemsCount: number;
   totalPoints: number;
   autoPointTotal: number | null;
-  settingsNudgeActive?: boolean;
-  onDismissSettingsNudge?: () => void;
-  onHideSettingsNudgePermanently?: () => void;
-  onOpenSettings: () => void;
+  activeTab: "edit" | "settings";
+  onTabChange: (tab: "edit" | "settings") => void;
+  settingsPanel: ReactNode;
   onSelectItem: (localId: string) => void;
   onInsertBlock: (type: InsertablePaperBlockType) => void;
   onUploadImageBlock: (dataUrl: string, imageAlt: string) => void;
@@ -656,10 +653,9 @@ export function BuilderPropertiesPanel({
   paperItemsCount,
   totalPoints,
   autoPointTotal,
-  settingsNudgeActive = false,
-  onDismissSettingsNudge,
-  onHideSettingsNudgePermanently,
-  onOpenSettings,
+  activeTab,
+  onTabChange,
+  settingsPanel,
   onSelectItem,
   onInsertBlock,
   onUploadImageBlock,
@@ -1100,7 +1096,16 @@ export function BuilderPropertiesPanel({
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="grid grid-cols-2 gap-1.5">
+            <button
+              type="button"
+              disabled={paperItemsCount < 2}
+              onClick={onRegroupByPassage}
+              className="flex h-8 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white text-[12px] font-bold text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              <Group className="h-3.5 w-3.5" />
+              지문별
+            </button>
             <button
               type="button"
               disabled={paperItemsCount < 2}
@@ -1110,7 +1115,7 @@ export function BuilderPropertiesPanel({
                   anchorBlocks: shuffleAnchorBlocks,
                 })
               }
-              className="flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 text-[12px] font-bold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-45"
+              className="flex h-8 items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 text-[12px] font-bold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-45"
             >
               <Shuffle className="h-3.5 w-3.5" />
               셔플링
@@ -1299,7 +1304,7 @@ export function BuilderPropertiesPanel({
                   title="앞 블록과 묶기"
                   onClick={() => onToggleKeepWithPrev(activeItem.localId)}
                 >
-                  <Link2 className="h-3.5 w-3.5" />
+                  <KeepTogetherIcon className="h-3.5 w-3.5" />
                   묶기
                 </IconToggleButton>
                 <IconToggleButton
@@ -1363,193 +1368,101 @@ export function BuilderPropertiesPanel({
   return (
     <>
       <style jsx global>{`
-        @keyframes exam-builder-settings-neon-glow {
-          0%,
-          100% {
-            opacity: 0.28;
-            transform: scale(0.82);
+        @keyframes exam-builder-tab-panel-enter {
+          from {
+            opacity: 0;
+            transform: translateY(8px);
           }
-          50% {
-            opacity: 0.9;
-            transform: scale(1.16);
-          }
-        }
-
-        @keyframes exam-builder-settings-button-breathe {
-          0%,
-          100% {
-            box-shadow:
-              0 0 0 1px rgba(147, 197, 253, 0.42),
-              0 8px 18px -18px rgba(37, 99, 235, 0.65);
-          }
-          50% {
-            box-shadow:
-              0 0 0 1px rgba(96, 165, 250, 0.82),
-              0 0 22px -7px rgba(37, 99, 235, 0.9);
+          to {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
 
-        @keyframes exam-builder-settings-ring-breathe {
-          0%,
-          100% {
-            opacity: 0.12;
-            transform: scale(0.94);
-          }
-          50% {
-            opacity: 0.58;
-            transform: scale(1.22);
-          }
-        }
-
-        .exam-builder-settings-nudge {
-          isolation: isolate;
-          overflow: visible;
-          animation: exam-builder-settings-button-breathe 3.8s ease-in-out infinite;
-        }
-
-        .exam-builder-settings-nudge::before {
-          content: "";
-          position: absolute;
-          inset: -10px;
-          z-index: -1;
-          border-radius: 9999px;
-          background: radial-gradient(
-            circle,
-            rgba(59, 130, 246, 0.55) 0%,
-            rgba(96, 165, 250, 0.28) 42%,
-            rgba(59, 130, 246, 0) 74%
-          );
-          filter: blur(9px);
-          pointer-events: none;
-          animation: exam-builder-settings-neon-glow 3.8s ease-in-out infinite;
-        }
-
-        .exam-builder-settings-nudge::after {
-          content: "";
-          position: absolute;
-          inset: -4px;
-          z-index: -1;
-          border-radius: 9999px;
-          border: 1px solid rgba(96, 165, 250, 0.44);
-          pointer-events: none;
-          animation: exam-builder-settings-ring-breathe 3.8s ease-in-out infinite;
+        .exam-builder-tab-panel {
+          animation: exam-builder-tab-panel-enter 260ms cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .exam-builder-settings-nudge,
-          .exam-builder-settings-nudge::before,
-          .exam-builder-settings-nudge::after {
+          .exam-builder-tab-panel {
             animation: none;
-          }
-
-          .exam-builder-settings-nudge::before {
-            opacity: 0.48;
-            transform: scale(1.02);
           }
         }
       `}</style>
 
       <aside className="hidden min-w-0 flex-col overflow-hidden border-l border-slate-200 bg-white lg:flex">
-      <input
-        ref={imageInputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleImageSelected}
-      />
+        <input
+          ref={imageInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleImageSelected}
+        />
 
-      <div className="flex h-11 shrink-0 items-center border-b border-slate-200 px-3">
-        <div className="flex w-full items-center justify-between gap-3">
-          <div className="min-w-0 leading-tight">
-            <p className="truncate text-[13px] font-black text-slate-800">편집 패널</p>
-            <p className="text-[11px] font-semibold text-slate-400">
-              {paperItemsCount}블록 · {questionItemsCount}문항 · 총점 {totalPoints}점
-            </p>
-          </div>
-          <div className="relative z-20 shrink-0">
-            <button
-              type="button"
-              onClick={onOpenSettings}
-              title="시험지 설정"
-              aria-label="시험지 설정"
-              className={cn(
-                "relative z-0 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-800",
-                settingsNudgeActive &&
-                  "exam-builder-settings-nudge border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-50 hover:text-blue-800",
-              )}
-            >
-              <Settings className="h-4 w-4" />
-            </button>
-
-            {settingsNudgeActive ? (
-              <div
-                role="status"
-                aria-live="polite"
-                className="absolute right-0 top-[calc(100%+10px)] z-30 w-[246px] rounded-lg border border-blue-200 bg-blue-50 px-3 py-2.5 text-left shadow-2xl shadow-blue-950/15 ring-1 ring-blue-100/70"
-              >
-                <span
-                  aria-hidden="true"
-                  className="absolute -top-1.5 right-3 h-3 w-3 rotate-45 border-l border-t border-blue-200 bg-blue-50"
-                />
-                <div className="relative flex items-start gap-2.5">
-                  <span
-                    aria-hidden="true"
-                    className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500 shadow-[0_0_0_4px_rgba(59,130,246,0.12)]"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[12.5px] font-black text-slate-900">
-                      시험지 설정부터 시작하세요
-                    </p>
-                    <p className="mt-0.5 text-[11px] font-semibold leading-relaxed text-slate-500">
-                      용지, 단 수, 배점을 먼저 정하면 미리보기가 맞춰집니다.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={onDismissSettingsNudge}
-                    className="-mr-1 -mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-blue-400 transition-colors hover:bg-blue-100 hover:text-blue-700"
-                    aria-label="시험지 설정 안내 닫기"
-                    title="안내 닫기"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-                <div className="relative mt-2 flex justify-end">
-                  <button
-                    type="button"
-                    onClick={onHideSettingsNudgePermanently}
-                    className="rounded-md px-1.5 py-1 text-[10.5px] font-bold text-blue-600 transition-colors hover:bg-blue-100 hover:text-blue-800"
-                  >
-                    다시는 보지 않기
-                  </button>
-                </div>
-              </div>
-            ) : null}
-          </div>
-        </div>
-      </div>
-
-      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain px-3 py-3 [scrollbar-gutter:stable]">
-        {sectionOrder.map((sectionId) => (
-          <PanelSection
-            key={sectionId}
-            id={sectionId}
-            title={panelSectionTitle(sectionId)}
-            badge={panelSectionBadge(sectionId)}
-            icon={panelSectionIcon(sectionId)}
-            collapsed={collapsedSections.has(sectionId)}
-            dragging={draggingSectionId === sectionId}
-            dragOver={dragOverSectionId === sectionId && draggingSectionId !== sectionId}
-            onToggle={togglePanelSection}
-            onDragStart={handlePanelSectionDragStart}
-            onDragOver={handlePanelSectionDragOver}
-            onDrop={handlePanelSectionDrop}
-            onDragEnd={handlePanelSectionDragEnd}
+        <div className="shrink-0 border-b border-slate-200 px-3 py-2">
+          <div
+            role="tablist"
+            aria-label="시험지 편집 패널"
+            className="relative grid grid-cols-2 overflow-hidden rounded-md border border-blue-200 bg-white p-1"
           >
-            {renderPanelSectionContent(sectionId)}
-          </PanelSection>
-        ))}
-      </div>
+            <span
+              aria-hidden="true"
+              className={cn(
+                "pointer-events-none absolute bottom-1 left-1 top-1 w-[calc(50%-0.25rem)] rounded bg-blue-600 shadow-sm shadow-blue-600/20 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                activeTab === "settings" && "translate-x-full",
+              )}
+            />
+            {(["edit", "settings"] as const).map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                role="tab"
+                aria-selected={activeTab === tab}
+                onClick={() => onTabChange(tab)}
+                className={cn(
+                  "relative z-10 h-8 rounded px-2 text-[12px] font-black transition-colors duration-200",
+                  activeTab === tab
+                    ? "text-white"
+                    : "text-blue-700 hover:text-blue-900",
+                )}
+              >
+                {tab === "edit" ? "편집" : "시험지 설정"}
+              </button>
+            ))}
+          </div>
+          <p className="mt-1.5 truncate text-[11px] font-semibold text-slate-400">
+            {paperItemsCount}블록 · {questionItemsCount}문항 · 총점 {totalPoints}점
+          </p>
+        </div>
+
+        <div
+          key={activeTab}
+          className="exam-builder-tab-panel min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain px-3 py-3 [scrollbar-gutter:stable]"
+        >
+          {activeTab === "edit" ? (
+            sectionOrder.map((sectionId) => (
+              <PanelSection
+                key={sectionId}
+                id={sectionId}
+                title={panelSectionTitle(sectionId)}
+                badge={panelSectionBadge(sectionId)}
+                icon={panelSectionIcon(sectionId)}
+                collapsed={collapsedSections.has(sectionId)}
+                dragging={draggingSectionId === sectionId}
+                dragOver={dragOverSectionId === sectionId && draggingSectionId !== sectionId}
+                onToggle={togglePanelSection}
+                onDragStart={handlePanelSectionDragStart}
+                onDragOver={handlePanelSectionDragOver}
+                onDrop={handlePanelSectionDrop}
+                onDragEnd={handlePanelSectionDragEnd}
+              >
+                {renderPanelSectionContent(sectionId)}
+              </PanelSection>
+            ))
+          ) : (
+            settingsPanel
+          )}
+        </div>
       </aside>
     </>
   );

@@ -44,7 +44,6 @@ import {
   AnswerLine,
   AnswerRevealSection,
 } from "./question-renderer-primitives";
-import { SelectableBlock, blockExcerpt } from "./question-renderer-blocks";
 import {
   formatSummaryCompleteMcSummaryForDisplay,
   readSummaryPairOption,
@@ -213,18 +212,10 @@ export function SentenceOrderRenderer({ q }: { q: SentenceOrderQuestion }) {
       <GivenSentenceBox sentence={q.givenSentence} />
       <div className="space-y-2">
         {q.paragraphs.map((p, i) => (
-          <SelectableBlock
-            key={i}
-            blockId={`paragraph:${p.label}`}
-            label={`단락 ${p.label}`}
-            field="paragraphs"
-            excerpt={blockExcerpt(p.text)}
-          >
-            <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
-              <span className="text-[11px] font-bold text-blue-600 mr-2">{p.label}</span>
-              <span className="text-[12.5px] text-slate-700 leading-relaxed">{p.text}</span>
-            </div>
-          </SelectableBlock>
+          <div key={i} className="rounded-lg bg-slate-50 border border-slate-200 p-3">
+            <span className="text-[11px] font-bold text-blue-600 mr-2">{p.label}</span>
+            <span className="text-[12.5px] text-slate-700 leading-relaxed">{p.text}</span>
+          </div>
         ))}
       </div>
       <OptionList options={q.options} correctAnswer={q.correctAnswer} />
@@ -297,12 +288,10 @@ export function ReferenceRenderer({ q }: { q: ReferenceQuestion }) {
     <>
       <Direction text={q.direction} />
       {q.underlinedPronoun && (
-        <SelectableBlock blockId="underlinedPronoun" label="밑줄 대명사" field="underlinedPronoun" excerpt={blockExcerpt(q.underlinedPronoun)}>
-          <div className="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-2">
-            <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider">밑줄 대명사</span>
-            <p className="text-[15px] font-bold text-indigo-900 mt-0.5">{q.underlinedPronoun}</p>
-          </div>
-        </SelectableBlock>
+        <div className="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-2">
+          <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider">밑줄 대명사</span>
+          <p className="text-[15px] font-bold text-indigo-900 mt-0.5">{q.underlinedPronoun}</p>
+        </div>
       )}
       <PassageBlock>{renderUnderlinedText(q.passageWithUnderline)}</PassageBlock>
       <OptionList options={q.options} correctAnswer={q.correctAnswer} />
@@ -446,7 +435,7 @@ export function SentenceTransformRenderer({ q }: { q: SentenceTransformQuestion 
     <>
       <Direction text={q.direction} />
       <GivenSentenceBox sentence={q.originalSentence} label="원래 문장" />
-      <ConditionsBox conditions={q.conditions} label="전환 조건" blockId="conditions" />
+      <ConditionsBox conditions={q.conditions} label="전환 조건" />
       <AnswerRevealSection>
         <ModelAnswer answer={q.modelAnswer} />
         {q.scoringCriteria && q.scoringCriteria.length > 0 && (
@@ -568,20 +557,13 @@ export function WordOrderRenderer({ q }: { q: WordOrderQuestion }) {
       {q.contextHint && (
         <div className="text-[12px] text-slate-500 italic">{q.contextHint}</div>
       )}
-      <SelectableBlock
-        blockId="scrambled"
-        label="배열 단어"
-        field="scrambledWords"
-        excerpt={blockExcerpt(Array.isArray(q.scrambledWords) ? q.scrambledWords.join(" · ") : "")}
-      >
-        <div className="flex flex-wrap gap-2 p-3 rounded-lg bg-slate-50 border border-slate-200">
-          {q.scrambledWords.map((word, i) => (
-            <span key={i} className="inline-block px-2.5 py-1 rounded-md bg-white border border-slate-300 text-[12px] font-medium text-slate-700 shadow-sm">
-              {word}
-            </span>
-          ))}
-        </div>
-      </SelectableBlock>
+      <div className="flex flex-wrap gap-2 p-3 rounded-lg bg-slate-50 border border-slate-200">
+        {q.scrambledWords.map((word, i) => (
+          <span key={i} className="inline-block px-2.5 py-1 rounded-md bg-white border border-slate-300 text-[12px] font-medium text-slate-700 shadow-sm">
+            {word}
+          </span>
+        ))}
+      </div>
       <AnswerRevealSection>
         <ModelAnswer answer={q.modelAnswer} />
         <AnswerLine answer={q.correctAnswer} />
@@ -657,12 +639,10 @@ export function ContextMeaningRenderer({ q }: { q: ContextMeaningQuestion }) {
     <>
       <Direction text={q.direction} />
       {q.underlinedWord && (
-        <SelectableBlock blockId="underlinedWord" label="밑줄 단어" field="underlinedWord" excerpt={blockExcerpt(q.underlinedWord)}>
-          <div className="rounded-lg bg-violet-50 border border-violet-200 px-3 py-2">
-            <span className="text-[10px] font-bold text-violet-600 uppercase tracking-wider">밑줄 단어</span>
-            <p className="text-[15px] font-bold text-violet-900 mt-0.5">{q.underlinedWord}</p>
-          </div>
-        </SelectableBlock>
+        <div className="rounded-lg bg-violet-50 border border-violet-200 px-3 py-2">
+          <span className="text-[10px] font-bold text-violet-600 uppercase tracking-wider">밑줄 단어</span>
+          <p className="text-[15px] font-bold text-violet-900 mt-0.5">{q.underlinedWord}</p>
+        </div>
       )}
       <PassageBlock>{renderUnderlinedText(q.passageWithUnderline)}</PassageBlock>
       <OptionList options={q.options} correctAnswer={q.correctAnswer} />

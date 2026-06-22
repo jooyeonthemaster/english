@@ -9,7 +9,7 @@ import {
   type ReactNode,
   type SetStateAction,
 } from "react";
-import { ChevronDown, ChevronUp, GripVertical, type LucideIcon } from "lucide-react";
+import { ChevronDown, ChevronUp, type LucideIcon } from "lucide-react";
 import { ExtractionManageClient } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client";
 import type { M1PassageDraftWithJob } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/types";
 import {
@@ -18,6 +18,7 @@ import {
   type IntakeTab,
 } from "@/app/(director)/director/workbench/generate/intake/intake-surface";
 import { GenerateUploadPanel } from "@/app/(director)/director/workbench/generate/intake/generate-upload-panel";
+import type { PastedPassageInput } from "@/app/(director)/director/workbench/generate/intake/multi-passage-paste";
 import type { PendingExtraction } from "../use-create-extraction";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
@@ -39,6 +40,12 @@ interface FormSectionProps {
   titleIcon?: LucideIcon;
   /** Left-panel library tab label. Defaults to "자료 관리". */
   libraryLabel?: string;
+  /**
+   * 라이브러리(내 지문함) 콘텐츠 override. 주어지면 IntakeSurface 의 library 로 그대로
+   * 쓰고, 없으면 추출 드래프트 그리드(ExtractionManageEmbed)로 폴백한다. 학습지 생성은
+   * 문제생성의 PassageCardGrid 를 넘겨 "내 지문함" 을 그대로 쓴다(웹툰 등은 폴백 유지).
+   */
+  library?: ReactNode;
 
   // ── Right pane override ──
   // When provided, this replaces the built-in PassageInputStack (학습지 분석 액션).
@@ -52,15 +59,26 @@ interface FormSectionProps {
   setRows?: Dispatch<SetStateAction<PassageInputRow[]>>;
   analyzing?: boolean;
   onAnalyze?: (plan: QuestionGenerationPlan) => void;
+  /** '지문 추가' → 내 지문함으로 돌아가 지문을 골라 담는다. */
+  onAddPassage?: () => void;
+  /** 변형 지문 생성 → 새 Passage 저장 + 새 행 추가. */
+  onAddVariant?: (args: {
+    sourcePassageId: string | null;
+    title: string;
+    content: string;
+    mode: import("@/lib/passage-transform/schema").WholePassageTransformMode;
+    direction?: import("@/lib/passage-transform/schema").VariantDirection;
+  }) => Promise<boolean>;
 
-  // 자료 관리 picker (left grid)
-  draftRefreshToken: number;
-  onSelectDraft: (draft: M1PassageDraftWithJob) => void;
-  onLoadSelectedDrafts: (drafts: M1PassageDraftWithJob[]) => void;
+  // 자료 관리 picker (left grid) — ExtractionManageEmbed 폴백에서만 사용. library
+  // override 를 넘기는 경로(학습지 내 지문함)에서는 생략 가능.
+  draftRefreshToken?: number;
+  onSelectDraft?: (draft: M1PassageDraftWithJob) => void;
+  onLoadSelectedDrafts?: (drafts: M1PassageDraftWithJob[]) => void;
   /** 우측 워크스페이스에 이미 불러온 드래프트 id — 자료 카드 '불러옴' 표시. */
   loadedDraftIds?: string[];
-  draftCollections: DraftCollectionItem[];
-  draftMembership: Record<string, string[]>;
+  draftCollections?: DraftCollectionItem[];
+  draftMembership?: Record<string, string[]>;
 
   // Intake (이미지·PDF) — port of the 문제 생성 intake surface so new 자료 can be
   // extracted from image/PDF right here.
@@ -71,6 +89,18 @@ interface FormSectionProps {
   onExtractionBegin: (id: string, count: number) => void;
   onExtractionResult: (id: string, jobId: string | null) => void;
   extractionPending: PendingExtraction[];
+
+  // 워크스페이스 (지문 입력 및 필기창) — 문제생성처럼 자료함 위를 덮는 오버레이.
+  // 기본(학습지) 우측 패널이 아니라 overlay 로 떠, 직접 입력·파일업로드 → 자료함 →
+  // 워크스페이스 흐름을 만든다. rightPane 으로 교체하는 reuse 경로는 영향 없음.
+  workspaceOpen?: boolean;
+  setWorkspaceOpen?: (v: boolean) => void;
+  workspaceActive?: boolean;
+  /** 직접 입력 탭 제출 → 워크스페이스 스택에 적재. */
+  onSubmitPastedRows?: (
+    rows: PastedPassageInput[],
+  ) => boolean | void | Promise<boolean | void>;
+  pasteSaving?: boolean;
 
   // Metadata + Prompt — vestigial (not rendered by FormSection). Optional so
   // reuse paths (웹툰 생성) can omit them; the 학습지 container still passes them.
@@ -113,35 +143,10 @@ interface FormSectionProps {
   onDeletePrompt?: (id: string) => void;
 }
 
-const LEFT_PANE_STORAGE_KEY = "smoat:passage-form:left-pane-width";
-const LEFT_PANE_MIN = 400;
-const LEFT_PANE_DEFAULT = 480;
-const LEFT_PANE_MAX_RATIO = 0.62;
-const RIGHT_PANE_MIN = 480;
-const HANDLE_HIT_WIDTH = 12;
-
 const FORM_PANE_STORAGE_KEY = "smoat:passage-form:pane-height";
 const FORM_PANE_MIN = 500;
 const FORM_PANE_DEFAULT = 700;
 const FORM_PANE_MAX = 1400;
-
-const LEFT_PANE_OPEN_STORAGE_KEY = "smoat:passage-form:left-pane-open";
-
-// 좌측 자료 패널 핸들의 클릭/드래그 구분 임계값(px).
-const OPTIONS_DRAG_THRESHOLD = 4;
-
-function readStoredLeftPaneWidth(): number {
-  if (typeof window === "undefined") return LEFT_PANE_DEFAULT;
-  try {
-    const raw = window.localStorage.getItem(LEFT_PANE_STORAGE_KEY);
-    if (!raw) return LEFT_PANE_DEFAULT;
-    const n = parseInt(raw, 10);
-    if (Number.isNaN(n)) return LEFT_PANE_DEFAULT;
-    return Math.max(LEFT_PANE_MIN, n);
-  } catch {
-    return LEFT_PANE_DEFAULT;
-  }
-}
 
 function readStoredFormHeight(): number {
   if (typeof window === "undefined") return FORM_PANE_DEFAULT;
@@ -156,110 +161,13 @@ function readStoredFormHeight(): number {
   }
 }
 
-function readStoredLeftPaneOpen(): boolean {
-  if (typeof window === "undefined") return true;
-  try {
-    const raw = window.localStorage.getItem(LEFT_PANE_OPEN_STORAGE_KEY);
-    if (raw === null) return true;
-    return raw === "true";
-  } catch {
-    return true;
-  }
-}
-
 export function FormSection(props: FormSectionProps) {
   const { formCollapsed, setFormCollapsed } = props;
 
-  const splitContainerRef = useRef<HTMLDivElement>(null);
-  // 마키(영역 드래그) 시작 영역 = "자료 관리" 좌측 패널 전체. 아래 지문 목록 큐와
+  // 마키(영역 드래그) 시작 영역 = 워크플로 surface 전체. 아래 지문 목록 큐와
   // boundary 가 분리돼 서로 섞이지 않는다(드래그 선택 영역 구분).
   const materialBoundaryRef = useRef<HTMLDivElement>(null);
-  const [leftPaneWidth, setLeftPaneWidth] = useState<number>(
-    readStoredLeftPaneWidth,
-  );
   const [formHeight, setFormHeight] = useState<number>(readStoredFormHeight);
-  const [leftPaneOpen, setLeftPaneOpen] = useState<boolean>(
-    readStoredLeftPaneOpen,
-  );
-
-  const toggleLeftPaneOpen = useCallback(() => {
-    setLeftPaneOpen((prev) => {
-      const next = !prev;
-      try {
-        window.localStorage.setItem(LEFT_PANE_OPEN_STORAGE_KEY, String(next));
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
-  }, []);
-
-  const handleCloseLeftPanePointerDown = useCallback(
-    (e: React.PointerEvent) => {
-      if (e.button !== 0) return;
-      const startX = e.clientX;
-      const startWidth = leftPaneWidth;
-      const containerWidth =
-        splitContainerRef.current?.getBoundingClientRect().width ?? 0;
-      const ratioCap =
-        containerWidth > 0
-          ? Math.floor(containerWidth * LEFT_PANE_MAX_RATIO)
-          : Number.POSITIVE_INFINITY;
-      const maxWidth = Math.max(
-        LEFT_PANE_MIN,
-        Math.min(ratioCap, containerWidth - RIGHT_PANE_MIN - HANDLE_HIT_WIDTH),
-      );
-      let didDrag = false;
-      let latest = startWidth;
-
-      const onMove = (ev: PointerEvent) => {
-        const delta = ev.clientX - startX;
-        if (!didDrag) {
-          if (Math.abs(delta) < OPTIONS_DRAG_THRESHOLD) return;
-          didDrag = true;
-          document.body.style.cursor = "col-resize";
-          document.body.style.userSelect = "none";
-        }
-        latest = Math.min(
-          maxWidth,
-          Math.max(LEFT_PANE_MIN, startWidth + delta),
-        );
-        setLeftPaneWidth(latest);
-      };
-
-      const onUp = () => {
-        window.removeEventListener("pointermove", onMove);
-        window.removeEventListener("pointerup", onUp);
-        if (didDrag) {
-          document.body.style.cursor = "";
-          document.body.style.userSelect = "";
-          try {
-            window.localStorage.setItem(LEFT_PANE_STORAGE_KEY, String(latest));
-          } catch {
-            /* ignore */
-          }
-        } else {
-          toggleLeftPaneOpen();
-        }
-      };
-
-      window.addEventListener("pointermove", onMove);
-      window.addEventListener("pointerup", onUp);
-    },
-    [leftPaneWidth, toggleLeftPaneOpen],
-  );
-
-  const resetLeftPaneWidth = useCallback(() => {
-    setLeftPaneWidth(LEFT_PANE_DEFAULT);
-    try {
-      window.localStorage.setItem(
-        LEFT_PANE_STORAGE_KEY,
-        String(LEFT_PANE_DEFAULT),
-      );
-    } catch {
-      /* ignore */
-    }
-  }, []);
 
   const beginFormResize = useCallback(
     (e: React.PointerEvent) => {
@@ -334,93 +242,78 @@ export function FormSection(props: FormSectionProps) {
       {!formCollapsed ? (
         <>
           <div className="px-4 pt-4 pb-3">
-            {/* ─── 2-Pane Layout: 자료 관리 | 지문 입력 ─── */}
+            {/* ─── 단일 흐름: 직접 입력 · 파일업로드 › 자료함 › 워크스페이스 ───
+                문제생성과 동일하게, 자료를 모으는 탭(직접 입력·파일업로드·자료함)
+                위로 지문 입력·필기 스택(워크스페이스)을 오버레이로 띄운다. */}
             <div
-              ref={splitContainerRef}
-              className="flex w-full min-w-0 max-w-full flex-row gap-0 overflow-hidden"
-              style={
-                {
-                  "--left-pane-w": `${leftPaneWidth}px`,
-                  height: `${formHeight}px`,
-                } as React.CSSProperties
-              }
+              ref={materialBoundaryRef}
+              className="flex w-full min-w-0 max-w-full flex-col overflow-hidden rounded-md border border-slate-200"
+              style={{ height: `${formHeight}px` }}
             >
-              {/* LEFT: 자료 관리 picker (embedded ExtractionManageClient) */}
-              {leftPaneOpen ? (
-                <>
-                  <div
-                    ref={materialBoundaryRef}
-                    className="flex min-h-0 min-w-0 shrink-0 flex-col"
-                    style={{ width: `min(${leftPaneWidth}px, 62%)` }}
-                  >
-                    <IntakeSurface
-                      intakeView={props.intakeView}
-                      setIntakeView={props.setIntakeView}
-                      intakeTab={props.intakeTab}
-                      setIntakeTab={props.setIntakeTab}
-                      libraryLabel={props.libraryLabel ?? "자료 관리"}
-                      libraryCount={0}
-                      showPasteTab={false}
-                      upload={
-                        <GenerateUploadPanel
-                          onBegin={props.onExtractionBegin}
-                          onResult={props.onExtractionResult}
-                          inFlightCount={props.extractionPending.length}
-                        />
-                      }
-                      library={
-                        /* 진행 중 추출 표시는 ExtractionManageClient 내부에서 서버 jobMeta
-                           기반으로(새로고침/다른 기기에도 유지) 자료 그리드 안에 직접 렌더한다. */
-                        <ExtractionManageEmbed
-                          academyId={props.academyId}
-                          draftCollections={props.draftCollections}
-                          draftMembership={props.draftMembership}
-                          onSelectDraft={props.onSelectDraft}
-                          onLoadSelectedDrafts={props.onLoadSelectedDrafts}
-                          loadedDraftIds={props.loadedDraftIds}
-                          marqueeBoundaryRef={materialBoundaryRef}
-                          refreshToken={props.draftRefreshToken}
-                          sessionPending={props.extractionPending}
-                        />
-                      }
+              <IntakeSurface
+                intakeView={props.intakeView}
+                setIntakeView={props.setIntakeView}
+                intakeTab={props.intakeTab}
+                setIntakeTab={props.setIntakeTab}
+                libraryLabel={props.libraryLabel ?? "내 자료함"}
+                libraryCount={0}
+                showPasteTab={!props.rightPane}
+                onSubmitPastedRows={props.onSubmitPastedRows}
+                pasteSaving={props.pasteSaving}
+                upload={
+                  <GenerateUploadPanel
+                    onBegin={props.onExtractionBegin}
+                    onResult={props.onExtractionResult}
+                    inFlightCount={props.extractionPending.length}
+                  />
+                }
+                library={
+                  props.library ??
+                  /* 폴백: 추출 드래프트 그리드(웹툰 등). 진행 중 추출 표시는
+                     ExtractionManageClient 내부에서 서버 jobMeta 기반으로 렌더한다. */
+                  (props.draftCollections && props.onLoadSelectedDrafts ? (
+                    <ExtractionManageEmbed
+                      academyId={props.academyId}
+                      draftCollections={props.draftCollections}
+                      draftMembership={props.draftMembership ?? {}}
+                      onSelectDraft={props.onSelectDraft ?? (() => {})}
+                      onLoadSelectedDrafts={props.onLoadSelectedDrafts}
+                      loadedDraftIds={props.loadedDraftIds}
+                      marqueeBoundaryRef={materialBoundaryRef}
+                      refreshToken={props.draftRefreshToken}
+                      sessionPending={props.extractionPending}
                     />
-                  </div>
-                  <button
-                    type="button"
-                    onPointerDown={handleCloseLeftPanePointerDown}
-                    onDoubleClick={resetLeftPaneWidth}
-                    title="클릭하여 닫기 · 좌우로 드래그하여 너비 조절 · 더블 클릭하여 초기화"
-                    className="group/lhandle mx-1 flex w-4 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 active:bg-sky-100"
-                  >
-                    <span>{"<"}</span>
-                    <span style={{ writingMode: "vertical-rl" }}>자료 닫기</span>
-                    <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/lhandle:opacity-70" />
-                  </button>
-                </>
-              ) : (
-                <button
-                  type="button"
-                  onClick={toggleLeftPaneOpen}
-                  title="클릭하여 자료 패널 열기"
-                  className="mx-1 flex min-h-0 w-4 shrink-0 select-none flex-col items-center justify-center gap-1 rounded-md py-1 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600"
-                >
-                  <span>{">"}</span>
-                  <span style={{ writingMode: "vertical-rl" }}>자료 열기</span>
-                </button>
-              )}
-
-              {/* RIGHT: 지문 입력. 기본은 학습지 분석 스택, rightPane 이 주어지면 그것으로 교체. */}
-              <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-                {props.rightPane ??
-                  (props.rows && props.setRows && props.onAnalyze ? (
-                    <PassageInputStack
-                      rows={props.rows}
-                      setRows={props.setRows}
-                      saving={!!props.analyzing}
-                      onAnalyze={props.onAnalyze}
-                    />
-                  ) : null)}
-              </div>
+                  ) : null)
+                }
+                workspaceActive={props.workspaceActive}
+                onReopenWorkspace={
+                  props.setWorkspaceOpen
+                    ? () => props.setWorkspaceOpen!(true)
+                    : undefined
+                }
+                onDismissOverlay={
+                  props.setWorkspaceOpen
+                    ? () => props.setWorkspaceOpen!(false)
+                    : undefined
+                }
+                overlay={
+                  props.workspaceOpen
+                    ? (props.rightPane ??
+                      (props.rows && props.setRows && props.onAnalyze ? (
+                        <div className="flex min-h-0 flex-1 flex-col p-3">
+                          <PassageInputStack
+                            rows={props.rows}
+                            setRows={props.setRows}
+                            saving={!!props.analyzing}
+                            onAnalyze={props.onAnalyze}
+                            onAddPassage={props.onAddPassage}
+                            onAddVariant={props.onAddVariant}
+                          />
+                        </div>
+                      ) : null))
+                    : undefined
+                }
+              />
             </div>
           </div>
 

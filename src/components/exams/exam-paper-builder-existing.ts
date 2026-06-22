@@ -75,6 +75,7 @@ export type SavedBuilderSettings = {
     columns?: 1 | 2;
     paperSize?: PaperSize;
     density?: Density;
+    forceTwoPerPage?: boolean;
     showAnswerSpace?: boolean;
     showPassageTitle?: boolean;
     showQuestionMeta?: boolean;

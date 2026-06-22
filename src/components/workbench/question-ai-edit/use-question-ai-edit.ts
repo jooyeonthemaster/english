@@ -24,8 +24,6 @@ export interface DetailedDiffEntry {
   before?: string;
   after?: string;
   note?: string;
-  /** 수정본 미리보기의 변경 마크용 — 렌더러 blockId. */
-  blockId?: string;
 }
 
 export interface EditQualityWarning {

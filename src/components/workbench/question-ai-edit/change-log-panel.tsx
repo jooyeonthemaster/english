@@ -2,7 +2,6 @@
 
 import { ArrowLeftRight, ListChecks, Minus, Pencil, Plus, Quote } from "lucide-react";
 
-import { diffWords, type DiffSeg } from "@/lib/question-ai-edit/word-diff";
 import type { DetailedDiffEntry, EditChange } from "./use-question-ai-edit";
 
 // 회사 디자인 가드: Sparkles/이모지·주황/앰버 금지 → slate/blue/rose/emerald/violet.
@@ -16,13 +15,58 @@ const KIND_META: Record<
   reordered: { label: "순서", cls: "bg-violet-50 text-violet-700 ring-violet-200", Icon: ArrowLeftRight },
 };
 
-// 단어 단위 diff 는 @/lib/question-ai-edit/word-diff 로 공유(블럭 변경 마크 펼침과 동일 로직).
+// ── 단어 단위 diff (LCS) — 무엇이 바뀌었는지 인라인 강조 ───────────────────
+interface Seg {
+  text: string;
+  changed: boolean;
+}
+function tokenize(t: string): string[] {
+  // 공백을 유지하면서 토큰화(공백도 토큰) → 재조합 시 원문 보존.
+  return t.split(/(\s+)/).filter((x) => x.length > 0);
+}
+function diffWords(before: string, after: string): { b: Seg[]; a: Seg[] } {
+  const B = tokenize(before);
+  const A = tokenize(after);
+  // 너무 길면(병리적 비용) 강조 생략 — 통짜 표시.
+  if (B.length + A.length > 600) {
+    return { b: [{ text: before, changed: true }], a: [{ text: after, changed: true }] };
+  }
+  const m = B.length;
+  const n = A.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = m - 1; i >= 0; i--) {
+    for (let j = n - 1; j >= 0; j--) {
+      dp[i][j] = B[i] === A[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+    }
+  }
+  const b: Seg[] = [];
+  const a: Seg[] = [];
+  let i = 0;
+  let j = 0;
+  while (i < m && j < n) {
+    if (B[i] === A[j]) {
+      b.push({ text: B[i], changed: false });
+      a.push({ text: A[j], changed: false });
+      i++;
+      j++;
+    } else if (dp[i + 1][j] >= dp[i][j + 1]) {
+      b.push({ text: B[i], changed: true });
+      i++;
+    } else {
+      a.push({ text: A[j], changed: true });
+      j++;
+    }
+  }
+  while (i < m) b.push({ text: B[i++], changed: true });
+  while (j < n) a.push({ text: A[j++], changed: true });
+  return { b, a };
+}
 
 function SegLine({
   segs,
   tone,
 }: {
-  segs: DiffSeg[];
+  segs: Seg[];
   tone: "before" | "after";
 }) {
   const base = tone === "before" ? "text-slate-500" : "text-slate-800";

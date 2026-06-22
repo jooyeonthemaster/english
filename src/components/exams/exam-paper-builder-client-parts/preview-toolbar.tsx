@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   BookOpen,
   ChevronDown,
-  Command,
-  Columns2,
   Copy,
   Download,
   Eye,
@@ -16,7 +14,6 @@ import {
   Save,
   Undo2,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { TEMPLATE_META } from "../paper-builder/templates";
 import type { PaperSize, PaperTemplate } from "../paper-builder/types";
 
@@ -30,9 +27,6 @@ interface PreviewToolbarProps {
   dirty: boolean;
   isPending: boolean;
   paperItemsCount: number;
-  forceTwoPerPage?: boolean;
-  onToggleTwoPerPage?: () => void;
-  onOpenCommandPalette?: () => void;
   canUndo?: boolean;
   canRedo?: boolean;
   onUndo?: () => void;
@@ -53,9 +47,6 @@ export function PreviewToolbar({
   dirty,
   isPending,
   paperItemsCount,
-  forceTwoPerPage,
-  onToggleTwoPerPage,
-  onOpenCommandPalette,
   canUndo,
   canRedo,
   onUndo,
@@ -141,34 +132,6 @@ export function PreviewToolbar({
           <span className="hidden rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 sm:inline-flex">
             저장 필요
           </span>
-        )}
-        {onOpenCommandPalette && (
-          <button
-            type="button"
-            onClick={onOpenCommandPalette}
-            title="빠른 실행 (Ctrl/⌘+K)"
-            aria-label="빠른 실행"
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50"
-          >
-            <Command className="h-3.5 w-3.5" />
-          </button>
-        )}
-        {onToggleTwoPerPage && (
-          <button
-            type="button"
-            onClick={onToggleTwoPerPage}
-            aria-pressed={forceTwoPerPage}
-            title="쪽당 2문제 — 켜면 좌·우 한 문제씩 강제 배치"
-            className={cn(
-              "flex h-8 items-center justify-center gap-1.5 rounded-md border px-3 text-[11px] font-semibold transition-colors",
-              forceTwoPerPage
-                ? "border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100"
-                : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50",
-            )}
-          >
-            <Columns2 className="h-3.5 w-3.5" />
-            {forceTwoPerPage ? "쪽당 1문제" : "쪽당 2문제"}
-          </button>
         )}
         {onUndo && (
           <button

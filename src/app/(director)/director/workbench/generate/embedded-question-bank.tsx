@@ -76,6 +76,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DragSelect } from "@/components/ui/drag-select";
+import { triggerHintGlowWithin } from "@/lib/hint-glow";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 import { useSelection } from "@/hooks/use-selection";
 import { useFolderManager } from "@/hooks/use-folder-manager";
@@ -1211,6 +1212,9 @@ export function EmbeddedQuestionBank({
     ) : null;
 
   const [folderStickyRef, folderStickyHeight] = useMeasuredHeight(open);
+  // 문항 카드 영역 — '다음으로(시험지 생성)'가 비활성(선택 0개)일 때 눌리면 이 안의
+  // 카드들을 글로우시켜 "문항을 먼저 고르세요"를 유도한다.
+  const cardZoneRef = useRef<HTMLDivElement>(null);
 
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
@@ -1250,15 +1254,22 @@ export function EmbeddedQuestionBank({
             다음으로 버튼처럼 또렷한 회색으로 보이게 한다. */}
         <button
           type="button"
-          disabled={selectedIds.size === 0 || creatingExam}
+          // 네이티브 disabled 대신 aria-disabled — 비활성처럼 보이되 클릭은 살려
+          // 둬야, 눌렀을 때 "문항을 먼저 고르세요" 힌트 글로우를 띄울 수 있다.
+          aria-disabled={selectedIds.size === 0 || creatingExam}
           title={
             selectedIds.size === 0
               ? "문항을 선택하면 시험지를 만들 수 있어요"
               : undefined
           }
           onClick={() => {
+            if (creatingExam) return;
             const ids = [...selectedIds];
-            if (ids.length === 0) return;
+            if (ids.length === 0) {
+              // 비활 사유 = 문항 미선택 → 카드들을 글로우시켜 선택을 유도.
+              triggerHintGlowWithin(cardZoneRef.current);
+              return;
+            }
             // 선택한 문제 id 를 sessionStorage 로 넘겨 빌더가 미리보기에 바로 올린다.
             try {
               window.sessionStorage.setItem(
@@ -1270,9 +1281,14 @@ export function EmbeddedQuestionBank({
             }
             router.push("/director/workbench/exams/create");
           }}
-          className="flex h-7 grow cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-blue-600 bg-blue-600 px-2.5 text-[11px] font-bold text-white shadow-sm transition-colors hover:border-blue-700 hover:bg-blue-700 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-200 disabled:text-slate-400 disabled:opacity-100 disabled:shadow-none"
+          className={
+            "flex h-12 grow items-center justify-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[14px] font-bold text-white shadow-sm transition-colors " +
+            (selectedIds.size === 0 || creatingExam
+              ? "cursor-not-allowed border-blue-200 bg-blue-300 shadow-none"
+              : "cursor-pointer border-blue-600 bg-blue-600 hover:border-blue-700 hover:bg-blue-700")
+          }
         >
-          <ClipboardList className="w-3.5 h-3.5" />
+          <ClipboardList className="size-5" />
           다음으로 (시험지 생성)
         </button>
       </div>
@@ -1457,7 +1473,10 @@ export function EmbeddedQuestionBank({
               {toolbarRow}
             </div>
 
-            <div className="relative min-w-0 px-4 pb-3 pt-3 sm:px-5">
+            <div
+              ref={cardZoneRef}
+              className="relative min-w-0 px-4 pb-3 pt-3 sm:px-5"
+            >
               {showNavLoading ? (
                 <div className="absolute inset-0 z-10 flex items-start justify-center bg-white/55 pt-12 backdrop-blur-[1px]">
                   <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[12px] font-medium text-slate-500 shadow-sm">

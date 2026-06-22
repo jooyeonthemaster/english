@@ -123,10 +123,10 @@ export function QuestionDetailDialog({
               ) : null}
               <button
                 onClick={onClose}
-                className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-slate-100"
+                className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
                 aria-label="닫기"
               >
-                <X className="h-4 w-4 text-slate-400" />
+                <X className="h-4 w-4" />
               </button>
             </div>
           </div>

@@ -9,14 +9,12 @@ import {
   useTransition,
   type CSSProperties,
   type FormEvent,
-  type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { useRouter } from "next/navigation";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
   ChevronRight,
-  ChevronUp,
   GripVertical,
   PanelLeftClose,
   RotateCcw,
@@ -126,6 +124,7 @@ interface ExamPaperBuilderClientProps {
 }
 
 const PREVIEW_PAGE_GAP = 20;
+type BuilderPanelTab = "edit" | "settings";
 // v2: bumped so the wider default left panel applies for everyone (old saved
 // widths from v1 are discarded).
 const PANEL_WIDTH_STORAGE_KEY = "smoat.examPaperBuilder.panelWidths.v2";
@@ -133,8 +132,6 @@ const RIGHT_PANEL_COLLAPSED_STORAGE_KEY =
   "smoat.examPaperBuilder.rightPanelCollapsed.v1";
 const LEFT_PANEL_COLLAPSED_STORAGE_KEY =
   "smoat.examPaperBuilder.leftPanelCollapsed.v1";
-const SETTINGS_NUDGE_HIDDEN_STORAGE_KEY =
-  "smoat.examPaperBuilder.settingsNudgeHidden.v1";
 // 패널 여닫기/폭 조절 겸용 세로 핸들의 컬럼 폭(버튼 w-4 + 좌우 mx-1).
 const PANEL_TOGGLE_HANDLE_WIDTH = 24;
 // 핸들 클릭(여닫기)과 드래그(폭 조절)를 구분하는 이동 임계값(px).
@@ -608,118 +605,11 @@ function PageThumbnails({
   );
 }
 
-type QuickCommand = {
-  id: string;
-  label: string;
-  description: string;
-  disabled?: boolean;
-  run: () => void;
-};
-
 type SaveDraftOptions = {
   targetExamId?: string | null;
   titleOverride?: string;
   successMessage?: string;
 };
-
-function CommandBar({
-  open,
-  commands,
-  onClose,
-}: {
-  open: boolean;
-  commands: QuickCommand[];
-  onClose: () => void;
-}) {
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number | null>(null);
-  const scrollDirRef = useRef(0);
-
-  const stopAutoScroll = useCallback(() => {
-    scrollDirRef.current = 0;
-    if (rafRef.current !== null) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    }
-  }, []);
-
-  const startAutoScroll = useCallback(() => {
-    if (rafRef.current !== null) return;
-    const step = () => {
-      const el = scrollerRef.current;
-      if (el && scrollDirRef.current !== 0) {
-        // 한 프레임에 ~4px 씩 — 가장자리에 마우스를 두면 서서히 흐르듯 스크롤된다.
-        el.scrollLeft += scrollDirRef.current * 4;
-        rafRef.current = requestAnimationFrame(step);
-      } else {
-        rafRef.current = null;
-      }
-    };
-    rafRef.current = requestAnimationFrame(step);
-  }, []);
-
-  // 스크롤 영역 위에서 마우스가 좌/우 가장자리(48px) 안에 있으면 그 방향으로
-  // 자동 스크롤하고, 가운데에 있으면 멈춘다. onMouseMove 로 위치를 읽어 버튼
-  // 클릭을 막는 오버레이 없이 동작한다.
-  const handleEdgeHover = useCallback(
-    (event: ReactMouseEvent<HTMLDivElement>) => {
-      const el = scrollerRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const EDGE = 48;
-      const x = event.clientX - rect.left;
-      if (x < EDGE) scrollDirRef.current = -1;
-      else if (x > rect.width - EDGE) scrollDirRef.current = 1;
-      else scrollDirRef.current = 0;
-      if (scrollDirRef.current !== 0) startAutoScroll();
-    },
-    [startAutoScroll],
-  );
-
-  useEffect(() => stopAutoScroll, [stopAutoScroll]);
-
-  if (!open) return null;
-
-  return (
-    <div className="no-print relative shrink-0 border-b border-slate-200 bg-white px-3 py-2 shadow-sm shadow-slate-200/40">
-      <div
-        ref={scrollerRef}
-        onMouseMove={handleEdgeHover}
-        onMouseLeave={stopAutoScroll}
-        className="flex min-w-0 items-center gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {commands.map((command) => (
-          <button
-            key={command.id}
-            type="button"
-            disabled={command.disabled}
-            title={command.description}
-            onClick={() => {
-              command.run();
-            }}
-            className="flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-bold text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded bg-slate-100 text-[9px] font-black text-slate-400">
-              ⌘
-            </span>
-            {command.label}
-          </button>
-        ))}
-      </div>
-
-      {/* 하단 중앙 화살표 — 다시 접어서(닫아서) 빠른 실행을 숨긴다. */}
-      <button
-        type="button"
-        onClick={onClose}
-        title="빠른 실행 닫기"
-        aria-label="빠른 실행 닫기"
-        className="absolute -bottom-2.5 left-1/2 z-10 flex h-5 w-9 -translate-x-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-700"
-      >
-        <ChevronUp className="h-3.5 w-3.5" />
-      </button>
-    </div>
-  );
-}
 
 export function ExamPaperBuilderClient({
   academyId,
@@ -747,6 +637,10 @@ export function ExamPaperBuilderClient({
         : [],
     [initialExam, initialSettings],
   );
+  const initialPaperQuestionCount = useMemo(
+    () => initialPaperItems.filter((item) => item.blockType === "question").length,
+    [initialPaperItems],
+  );
   const initialHeader = initialSettings?.header;
   const isEditingExistingExam = Boolean(initialExam?.id);
   const savedTemplateSettings = useMemo(
@@ -757,6 +651,7 @@ export function ExamPaperBuilderClient({
     () => getExamPaperBuilderDraftKey(academyId),
     [academyId],
   );
+  const previousQuestionItemsCountRef = useRef(initialPaperQuestionCount);
 
   const [savedExamId, setSavedExamId] = useState<string | null>(
     initialExam?.id ?? null,
@@ -779,11 +674,9 @@ export function ExamPaperBuilderClient({
     null,
   );
   const [headerVisible, setHeaderVisible] = useState(true);
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [settingsNudgeDismissed, setSettingsNudgeDismissed] = useState(false);
-  const [settingsNudgePreferenceLoaded, setSettingsNudgePreferenceLoaded] =
-    useState(false);
-  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [rightPanelTab, setRightPanelTab] = useState<BuilderPanelTab>(() =>
+    initialPaperQuestionCount === 0 ? "settings" : "edit",
+  );
   const [paperSize, setPaperSize] = useState<PaperSize>(() =>
     asPaperSize(
       initialSettings?.layout?.paperSize ??
@@ -855,7 +748,12 @@ export function ExamPaperBuilderClient({
     ),
   );
   // 켜면 자동 흐름 대신 한 칸당 문항 1개씩(2단=페이지당 2문제) 강제 배치.
-  const [forceTwoPerPage, setForceTwoPerPage] = useState(false);
+  const [forceTwoPerPage, setForceTwoPerPage] = useState(() =>
+    typeof initialSettings?.layout?.forceTwoPerPage === "boolean"
+      ? initialSettings.layout.forceTwoPerPage
+      : (savedTemplateSettings?.forceTwoPerPage ??
+        DEFAULT_TEMPLATE_SETTINGS.forceTwoPerPage),
+  );
   const [passageStyle, setPassageStyle] = useState<PassageStyle>(() =>
     asPassageStyle(
       initialSettings?.layout?.passageStyle ??
@@ -1029,42 +927,15 @@ export function ExamPaperBuilderClient({
     () => Array.from(paperQuestionCounts.values()).reduce((sum, count) => sum + count, 0),
     [paperQuestionCounts],
   );
-  const shouldNudgeSettingsButton =
-    !isEditingExistingExam &&
-    settingsNudgePreferenceLoaded &&
-    !settingsOpen &&
-    !settingsNudgeDismissed &&
-    paperItems.length === 0;
-
   useEffect(() => {
-    try {
-      setSettingsNudgeDismissed(
-        window.localStorage.getItem(SETTINGS_NUDGE_HIDDEN_STORAGE_KEY) === "true",
-      );
-    } catch {
-      // Keep the normal first-run hint when storage is unavailable.
-    } finally {
-      setSettingsNudgePreferenceLoaded(true);
+    const previousCount = previousQuestionItemsCountRef.current;
+    if (questionItemsCount > previousCount) {
+      setRightPanelTab("edit");
+    } else if (questionItemsCount === 0 && paperItems.length === 0) {
+      setRightPanelTab("settings");
     }
-  }, []);
-
-  const openSettingsPanel = useCallback(() => {
-    setSettingsNudgeDismissed(true);
-    setSettingsOpen(true);
-  }, []);
-
-  const dismissSettingsNudge = useCallback(() => {
-    setSettingsNudgeDismissed(true);
-  }, []);
-
-  const hideSettingsNudgePermanently = useCallback(() => {
-    setSettingsNudgeDismissed(true);
-    try {
-      window.localStorage.setItem(SETTINGS_NUDGE_HIDDEN_STORAGE_KEY, "true");
-    } catch {
-      // The hint can still be dismissed for the current session.
-    }
-  }, []);
+    previousQuestionItemsCountRef.current = questionItemsCount;
+  }, [paperItems.length, questionItemsCount]);
 
   const selectedPaperQuestionIds = useMemo(() => {
     const ids = new Set<string>();
@@ -1326,9 +1197,14 @@ export function ExamPaperBuilderClient({
     setCover(normalizePaperCover(state.cover));
     replacePaperItems(state.paperItems, state.activeItemId, { markAsDirty: false });
     setActivePageIndex(0);
-    setSettingsNudgeDismissed(true);
-    setSettingsOpen(false);
-    setCommandPaletteOpen(false);
+    setRightPanelTab(
+      state.paperItems.some((item) => item.blockType === "question")
+        ? "edit"
+        : "settings",
+    );
+    previousQuestionItemsCountRef.current = state.paperItems.filter(
+      (item) => item.blockType === "question",
+    ).length;
     setPendingBuilderDraft(null);
     setDraftStorageReady(true);
     setDirty(true);
@@ -1847,6 +1723,7 @@ export function ExamPaperBuilderClient({
       paperSize,
       columns,
       density,
+      forceTwoPerPage,
       showAnswerSpace,
       showPassageTitle,
       showQuestionMeta,
@@ -2007,101 +1884,6 @@ export function ExamPaperBuilderClient({
     });
   }
 
-  const openCommandPalette = useCallback(() => {
-    setCommandPaletteOpen(true);
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      const editing =
-        target?.tagName === "INPUT" ||
-        target?.tagName === "TEXTAREA" ||
-        target?.isContentEditable;
-      if (commandPaletteOpen && event.key === "Escape") {
-        event.preventDefault();
-        setCommandPaletteOpen(false);
-        return;
-      }
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        openCommandPalette();
-        return;
-      }
-      if (!editing && event.key === "/") {
-        event.preventDefault();
-        openCommandPalette();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [commandPaletteOpen, openCommandPalette]);
-
-  const quickCommands: QuickCommand[] = [
-    {
-      id: "insert-section",
-      label: "섹션 블록 삽입",
-      description: "선택 블록 바로 뒤에 섹션을 추가",
-      run: () => insertBlock("section"),
-    },
-    {
-      id: "insert-text",
-      label: "텍스트 블록 삽입",
-      description: "안내 문구나 지시문을 추가",
-      run: () => insertBlock("text"),
-    },
-    {
-      id: "insert-divider",
-      label: "구분선 삽입",
-      description: "시험지 흐름을 나누는 선 추가",
-      run: () => insertBlock("divider"),
-    },
-    {
-      id: "regroup",
-      label: "지문별 자동 그룹화",
-      description: "같은 지문 문항을 다시 묶기",
-      disabled: paperItems.length < 2,
-      run: regroupByPassage,
-    },
-    {
-      id: "columns",
-      label: columns === 2 ? "1단으로 전환" : "2단으로 전환",
-      description: "시험지 단 구성을 빠르게 변경",
-      run: () => {
-        setColumns(columns === 2 ? 1 : 2);
-        markDirty();
-      },
-    },
-    {
-      id: "density",
-      label: density === "compact" ? "표준 밀도로 전환" : "압축 밀도로 전환",
-      description: "문항 간격과 글자 흐름을 조정",
-      run: () => {
-        setDensity(density === "compact" ? "comfortable" : "compact");
-        markDirty();
-      },
-    },
-    {
-      id: "save",
-      label: "시험지 저장",
-      description: "현재 시험지 구성을 저장",
-      disabled: isPending || paperItems.length === 0,
-      run: handleSave,
-    },
-    ...(savedExamId
-      ? [
-          {
-            id: "save-as",
-            label: "다른 이름으로 저장",
-            description: "원본은 그대로 두고 새 시험지로 저장",
-            disabled: isPending || paperItems.length === 0,
-            run: openSaveAsDialog,
-          },
-        ]
-      : []),
-  ];
-
   const templateSettingsPanel = (
     <TemplateSettingsPanel
       template={template}
@@ -2115,6 +1897,8 @@ export function ExamPaperBuilderClient({
       setColumns={setColumns}
       density={density}
       setDensity={setDensity}
+      forceTwoPerPage={forceTwoPerPage}
+      setForceTwoPerPage={setForceTwoPerPage}
       passageStyle={passageStyle}
       setPassageStyle={setPassageStyle}
       showPassageTitle={showPassageTitle}
@@ -2273,14 +2057,6 @@ export function ExamPaperBuilderClient({
             dirty={dirty}
             isPending={isPending}
             paperItemsCount={questionItemsCount}
-            forceTwoPerPage={forceTwoPerPage}
-            onToggleTwoPerPage={() => {
-              setForceTwoPerPage((value) => !value);
-              markDirty();
-            }}
-            onOpenCommandPalette={() => {
-              setCommandPaletteOpen((open) => !open);
-            }}
             canUndo={canUndo}
             canRedo={canRedo}
             onUndo={undo}
@@ -2293,12 +2069,6 @@ export function ExamPaperBuilderClient({
             onDownloadHwpxWithAnswers={handleDownloadHwpxWithAnswers}
             onSave={handleSave}
             onSaveAs={savedExamId ? openSaveAsDialog : undefined}
-          />
-
-          <CommandBar
-            open={commandPaletteOpen}
-            commands={quickCommands}
-            onClose={() => setCommandPaletteOpen(false)}
           />
 
           <div
@@ -2501,10 +2271,9 @@ export function ExamPaperBuilderClient({
             paperItemsCount={paperItems.length}
             totalPoints={totalPoints}
             autoPointTotal={autoPointTotal}
-            settingsNudgeActive={shouldNudgeSettingsButton}
-            onDismissSettingsNudge={dismissSettingsNudge}
-            onHideSettingsNudgePermanently={hideSettingsNudgePermanently}
-            onOpenSettings={openSettingsPanel}
+            activeTab={rightPanelTab}
+            onTabChange={setRightPanelTab}
+            settingsPanel={templateSettingsPanel}
             onSelectItem={handleSelectPaperItem}
             onInsertBlock={insertBlock}
             onUploadImageBlock={insertImageBlock}
@@ -2605,38 +2374,6 @@ export function ExamPaperBuilderClient({
               </button>
             </div>
           </div>
-        </div>
-      )}
-
-      {settingsOpen && (
-        <div className="no-print fixed inset-0 z-40 flex justify-end bg-slate-950/25">
-          <button
-            type="button"
-            className="absolute inset-0 cursor-default"
-            aria-label="시험지 설정 닫기"
-            onClick={() => setSettingsOpen(false)}
-          />
-          <aside className="relative z-10 flex h-full w-[360px] max-w-[calc(100vw-32px)] flex-col border-l border-slate-200 bg-white shadow-2xl shadow-slate-900/20">
-            <div className="flex h-12 shrink-0 items-center justify-between border-b border-slate-200 px-4">
-              <div>
-                <p className="text-[13px] font-black text-slate-900">시험지 설정</p>
-                <p className="text-[11px] font-semibold text-slate-400">
-                  배점, 용지, 템플릿
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSettingsOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
-                aria-label="시험지 설정 닫기"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
-              {templateSettingsPanel}
-            </div>
-          </aside>
         </div>
       )}
 
