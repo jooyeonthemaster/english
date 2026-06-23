@@ -4,48 +4,21 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   CheckCircle2,
-  ChevronDown,
   FileText,
   GraduationCap,
   Loader2,
-  NotebookPen,
   Save,
-  Wand2,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
 
-import {
-  savePassageAnnotations,
-  updateWorkbenchPassage,
-} from "@/actions/workbench";
+import { updateWorkbenchPassage } from "@/actions/workbench";
 import { notifyCreditsChanged } from "@/lib/credits-client";
-import {
-  notePassageAnalysisStarted,
-  notePassageAnalysisStartFailed,
-} from "@/hooks/use-passage-analysis-activity";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
-import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { AnalysisReportEditor } from "@/components/workbench/analysis-report/AnalysisReportEditor";
-import {
-  PassageAnnotationEditor,
-  type Annotation,
-} from "@/components/workbench/editor";
-import { AnalysisToneSelector } from "@/components/workbench/analysis-prompt-panel";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import type { PassageItem } from "../generate-page-types";
-import {
-  DEFAULT_ANALYSIS_TONE,
-  type AnalysisTone,
-} from "@/lib/passage-analysis-options";
 import { OriginalProblemBox } from "../../passages/import/_components/extraction-manage-client/components/original-problem-box";
 import { RestorationBadge } from "../../passages/import/_components/extraction-manage-client/components/restoration-badge";
 import { RestorationChangesPanel } from "../../passages/import/_components/extraction-manage-client/components/restoration-changes-panel";
@@ -128,34 +101,34 @@ export function ExtractionDetailModal({
   );
   const [editorTitle, setEditorTitle] = useState(passage.title || "지문");
   const [editorContent, setEditorContent] = useState(passage.content || "");
-  const [annotations, setAnnotations] = useState<Annotation[]>([]);
-  const [customPrompt, setCustomPrompt] = useState("");
-  const [analysisTone, setAnalysisTone] = useState<AnalysisTone>(
-    DEFAULT_ANALYSIS_TONE,
-  );
   const [analysisRunning, setAnalysisRunning] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeReportJobId, setActiveReportJobId] = useState<string | null>(
     null,
   );
-  const [reportJobError, setReportJobError] = useState<string | null>(null);
+  // 학습자료 생성은 이 모달에서 더 이상 시작하지 않지만, 다른 화면에서 시작된
+  // 생성 잡은 폴링으로 완료를 감지해 생성된 학습자료를 열어준다.
+  const [, setReportJobError] = useState<string | null>(null);
   const [generatedReport, setGeneratedReport] = useState<AnalysisReport | null>(
     null,
   );
   const [reportEditorOpen, setReportEditorOpen] = useState(false);
-  // 학습자료 생성 설정(분석 말투·노하우)은 헤더 버튼에서 내려오는 팝오버로 입력한다.
-  const [genPopoverOpen, setGenPopoverOpen] = useState(false);
 
   const sourceLabel =
     draft?.job?.displayName?.trim() ||
     draft?.job?.originalFileName?.trim() ||
     passage.source ||
     "";
-  const analysisCreditCost = CREDIT_COSTS.PASSAGE_ANALYSIS;
+
+  // 기출 지문에서 담은 지문은 직접-입력 계보를 재사용하므로 job 라벨은 "직접 붙여넣은
+  // 지문"으로 같지만, draft.metadata.source 로 기출임을 구분해 출처 표기를 바꾼다.
+  const isExamPassage =
+    !!draft &&
+    typeof draft.metadata === "object" &&
+    draft.metadata !== null &&
+    (draft.metadata as { source?: unknown }).source === "EXAM_PASSAGE";
   const reviewDraft = passage.extractionReviewDraft ?? null;
   const isReviewCommitted = reviewDraft?.reviewStatus === "COMMITTED";
-  const hasGeneratedReport = !!generatedReport;
-  const hasContent = editorContent.trim().length >= 20;
 
   const openReportEditor = useCallback(() => {
     setReportEditorOpen(true);
@@ -240,7 +213,6 @@ export function ExtractionDetailModal({
       "";
     setEditorContent(nextText);
     setEditorTitle(passage.title || draft?.title || "지문");
-    setAnnotations([]);
   }, [draft, passage.content, passage.title]);
 
   useEffect(() => {
@@ -365,7 +337,7 @@ export function ExtractionDetailModal({
     };
   }, [activeReportJobId, onPassageAnalyzed, openReportEditor, passage.id]);
 
-  /** 제목·복원문·마킹을 Passage 에 저장한다. 검증 실패 시 toast 후 null. */
+  /** 제목·복원문을 Passage 에 저장한다. 검증 실패 시 toast 후 null. */
   async function persistPassageEdits(): Promise<{
     title: string;
     content: string;
@@ -395,21 +367,6 @@ export function ExtractionDetailModal({
       throw new Error(updateResult.error || "지문을 저장하지 못했습니다.");
     }
 
-    const annotationResult = await savePassageAnnotations(
-      passage.id,
-      annotations.map((annotation) => ({
-        id: annotation.id,
-        type: annotation.type,
-        text: annotation.text,
-        memo: annotation.memo,
-        from: annotation.from,
-        to: annotation.to,
-      })),
-    );
-    if (!annotationResult.success) {
-      throw new Error(annotationResult.error || "필기를 저장하지 못했습니다.");
-    }
-
     return { title, content };
   }
 
@@ -430,59 +387,6 @@ export function ExtractionDetailModal({
       );
     } finally {
       setSaving(false);
-    }
-  }
-
-  async function handleRunInlineAnalysis() {
-    setAnalysisRunning(true);
-    try {
-      const saved = await persistPassageEdits();
-      if (!saved) {
-        setAnalysisRunning(false);
-        return;
-      }
-      onPassageSaved?.(passage.id, saved);
-
-      // 폴링 딜레이 없이 다른 화면의 "학습자료 생성중" 배지가 바로 켜지도록
-      notePassageAnalysisStarted(passage.id, saved.title);
-      const res = await fetch("/api/workbench/ai-jobs/passage-analysis", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        keepalive: true,
-        body: JSON.stringify({
-          passageId: passage.id,
-          customPrompt,
-          focusAreas: [],
-          targetLevel: "",
-          analysisTone,
-          forcePrimeReport: true,
-        }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || data?.error || !data?.jobId) {
-        notePassageAnalysisStartFailed(passage.id);
-        throw new Error(
-          data?.error || "학습자료 생성 작업을 시작하지 못했습니다.",
-        );
-      }
-
-      setActiveReportJobId(data.jobId as string);
-      setReportJobError(null);
-      clearTemporaryReportDraft(passage.id);
-      setAnalysisRunning(true);
-      toast.success(
-        "학습자료 생성을 백그라운드에서 시작했습니다. 창을 닫아도 계속 진행됩니다.",
-      );
-    } catch (err) {
-      setAnalysisRunning(false);
-      toast.error(
-        err instanceof Error
-          ? err.message
-          : "학습자료 생성 중 오류가 발생했습니다.",
-      );
-    } finally {
-      notifyCreditsChanged();
     }
   }
 
@@ -518,10 +422,12 @@ export function ExtractionDetailModal({
             </div>
             <p className="mt-0.5 truncate text-xs text-slate-500">
               {reportEditorOpen
-                ? "팝업 안에서 학습자료 편집 중 · 뒤로가면 복원문 마킹 단계로 돌아갑니다"
-                : draft?.job?.originalFileName
-                  ? `출처 ${draft.job.originalFileName}`
-                  : "추출·입력된 지문"}
+                ? "팝업 안에서 학습자료 편집 중 · 뒤로가면 복원문 편집 단계로 돌아갑니다"
+                : isExamPassage
+                  ? "출처 기출 지문"
+                  : draft?.job?.originalFileName
+                    ? `출처 ${draft.job.originalFileName}`
+                    : "추출·입력된 지문"}
             </p>
           </div>
           {reportEditorOpen ? (
@@ -545,105 +451,6 @@ export function ExtractionDetailModal({
                   <GraduationCap className="size-3.5" aria-hidden="true" />
                   학습자료 열기
                 </button>
-              ) : null}
-              {/* 학습자료 생성 — 헤더 우측 주요 액션. 누르면 분석 말투·노하우
-                  설정 팝오버가 버튼 아래로 펼쳐지고, 그 안에서 생성을 시작한다. */}
-              {draft ? (
-                <Popover open={genPopoverOpen} onOpenChange={setGenPopoverOpen}>
-                  <PopoverTrigger asChild>
-                    <button
-                      type="button"
-                      disabled={analysisRunning}
-                      title="분석 말투·노하우를 설정하고 학습자료를 생성합니다"
-                      className="ml-2 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg bg-blue-600 px-3 text-[12px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      {analysisRunning ? (
-                        <Loader2
-                          className="size-3.5 animate-spin"
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <Wand2 className="size-3.5" aria-hidden="true" />
-                      )}
-                      {analysisRunning
-                        ? "생성 중..."
-                        : hasGeneratedReport
-                          ? "학습자료 추가생성"
-                          : "학습자료 생성"}
-                      <CreditCostChip
-                        amount={analysisCreditCost}
-                        className="rounded bg-white/20 px-1.5 py-0.5 text-[10px]"
-                      />
-                      <ChevronDown
-                        className="size-3 opacity-80"
-                        aria-hidden="true"
-                      />
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    align="end"
-                    sideOffset={10}
-                    className="w-[340px] overflow-hidden rounded-xl border-slate-200 p-0 shadow-xl"
-                  >
-                    <div className="flex items-center gap-2 border-b border-slate-100 px-4 py-3">
-                      <span className="flex size-6 items-center justify-center rounded-md bg-blue-50 text-blue-600">
-                        <NotebookPen className="size-3.5" aria-hidden="true" />
-                      </span>
-                      <span className="text-[13px] font-bold text-slate-900">
-                        학습자료 생성 설정
-                      </span>
-                    </div>
-                    <div className="flex flex-col gap-3 px-4 py-3">
-                      <AnalysisToneSelector
-                        value={analysisTone}
-                        onChange={setAnalysisTone}
-                        compact
-                      />
-                      <div className="flex flex-col gap-1.5">
-                        <span className="text-[11px] font-bold uppercase text-slate-500">
-                          선생님의 노하우
-                        </span>
-                        <Textarea
-                          value={customPrompt}
-                          onChange={(event) =>
-                            setCustomPrompt(event.target.value)
-                          }
-                          className="min-h-[110px] resize-none border-slate-200 text-[12px] leading-relaxed placeholder:text-slate-300"
-                          spellCheck={false}
-                          placeholder="예: 빈칸 출제 가능한 논리 전환, 관계대명사, 핵심 어휘를 중심으로 분석"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2 border-t border-slate-100 p-3">
-                      {reportJobError ? (
-                        <p className="rounded-md bg-rose-50 px-2.5 py-2 text-[11px] font-semibold leading-relaxed text-rose-600">
-                          {reportJobError}
-                        </p>
-                      ) : null}
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          setGenPopoverOpen(false);
-                          handleRunInlineAnalysis();
-                        }}
-                        disabled={analysisRunning || !hasContent}
-                        className="h-10 w-full rounded-lg bg-blue-600 text-[12.5px] font-bold hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-55"
-                      >
-                        <Wand2 className="size-4" aria-hidden="true" />
-                        {hasGeneratedReport ? "추가생성 시작" : "생성 시작"}
-                        <CreditCostChip
-                          amount={analysisCreditCost}
-                          className="rounded bg-white/20 px-1.5 py-0.5 text-[10px]"
-                        />
-                      </Button>
-                      {!hasContent ? (
-                        <p className="text-center text-[10.5px] text-slate-400">
-                          복원문이 너무 짧아 생성할 수 없습니다
-                        </p>
-                      ) : null}
-                    </div>
-                  </PopoverContent>
-                </Popover>
               ) : null}
             </>
           )}
@@ -671,7 +478,7 @@ export function ExtractionDetailModal({
               ) : (
                 <CheckCircle2 className="size-3.5" aria-hidden="true" />
               )}
-              검수완료
+              {isReviewCommitted ? "검수완료" : "미검수"}
             </button>
           ) : null}
           <button
@@ -710,12 +517,10 @@ export function ExtractionDetailModal({
               draft={draft}
               title={editorTitle}
               content={editorContent}
-              annotations={annotations}
               analysisRunning={analysisRunning}
               saving={saving}
               onTitleChange={setEditorTitle}
               onContentChange={setEditorContent}
-              onAnnotationsChange={setAnnotations}
               onSaveEdits={handleSaveEdits}
               hasActiveReportJob={!!activeReportJobId}
             />
@@ -736,25 +541,21 @@ function InlineStudyAnalysisWorkspace({
   draft,
   title,
   content,
-  annotations,
   analysisRunning,
   hasActiveReportJob,
   saving,
   onTitleChange,
   onContentChange,
-  onAnnotationsChange,
   onSaveEdits,
 }: {
   draft: M1PassageDraftWithJob;
   title: string;
   content: string;
-  annotations: Annotation[];
   analysisRunning: boolean;
   hasActiveReportJob: boolean;
   saving: boolean;
   onTitleChange: (value: string) => void;
   onContentChange: (value: string) => void;
-  onAnnotationsChange: (annotations: Annotation[]) => void;
   onSaveEdits: () => void;
 }) {
   const [hoveredChangeId, setHoveredChangeId] = useState<string | null>(null);
@@ -812,9 +613,6 @@ function InlineStudyAnalysisWorkspace({
         <div className="flex h-12 shrink-0 items-center justify-between border-b border-blue-100 px-4">
           <div className="min-w-0">
             <span className="text-[13px] font-bold text-slate-900">복원문</span>
-            <span className="ml-2 text-[11px] font-semibold text-blue-500">
-              마킹 {annotations.length}
-            </span>
           </div>
           <div className="flex shrink-0 items-center gap-2">
             {hasActiveReportJob ? (
@@ -847,14 +645,13 @@ function InlineStudyAnalysisWorkspace({
             placeholder="제목"
           />
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto">
-          <PassageAnnotationEditor
-            content={content}
-            onContentChange={onContentChange}
-            annotations={annotations}
-            onAnnotationsChange={onAnnotationsChange}
-            showAnnotationHint
-            placeholder="복원문을 확인하고 텍스트를 드래그해 핵심 어휘, 어법, 읽기 포인트, 출제 포인트를 마킹하세요."
+        <div className="min-h-0 flex-1 overflow-y-auto p-3">
+          <Textarea
+            value={content}
+            onChange={(event) => onContentChange(event.target.value)}
+            className="min-h-full resize-none border-slate-200 text-[14.5px] leading-7 text-slate-800"
+            spellCheck={false}
+            placeholder="복원문을 확인하고 필요하면 수정하세요."
           />
         </div>
       </div>

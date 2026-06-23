@@ -12,6 +12,8 @@ import { useTaskQueue } from "@/components/workbench/task-queue";
 import { usePassageLibrary } from "@/components/workbench/passage-registration/use-passage-library";
 import { formatExtractedTextForDisplay } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/display-text";
 import { PassageCardGrid } from "@/app/(director)/director/workbench/generate/passage-card-grid";
+import { ExamPassageLibrary } from "@/components/workbench/exam-passage-library";
+import type { ExamPassagePick } from "@/lib/exam-passages/types";
 import { ExtractionDetailModal } from "@/app/(director)/director/workbench/generate/intake/extraction-detail-modal";
 import { ExtractionLoadingCards } from "@/app/(director)/director/workbench/generate/intake/extraction-loading-cards";
 import {
@@ -250,6 +252,58 @@ export function WebtoonPageClient({ academyId }: WebtoonPageClientProps) {
     );
   }, [passages, selectedIds, setSelectedIds]);
 
+  // ── 수능·모평 기출 지문 → 내 지문함 일괄 등록 (문제생성과 동일 메커니즘) ──
+  // 등록 후 목록 재조회 → 새 지문 선택 → 내 지문함(library) 뷰로 전환. 이어서 왼쪽
+  // 내 지문함에서 '불러오기'로 워크스페이스(지문 입력 스택)에 담아 웹툰을 만든다.
+  const [examImporting, setExamImporting] = useState(false);
+  const handleImportExamPassages = useCallback(
+    async (picks: ExamPassagePick[]) => {
+      if (!picks || picks.length === 0) return false;
+      setExamImporting(true);
+      try {
+        const { importExamPassages } = await import("@/actions/workbench");
+        const result = await importExamPassages(picks.map((p) => p.id));
+        if (!result.success) {
+          toast.error(result.error || "기출 지문 등록에 실패했습니다.");
+          return false;
+        }
+        const created = result.createdIds;
+        const skipped = result.skippedExamIds.length;
+
+        await loadPassages();
+        setPassageSearch("");
+        setSelectedCollectionId("");
+        setAnalysisStatusFilter("all");
+
+        if (created.length > 0) {
+          setSelectedIds(new Set(created));
+          setIntakeView("library");
+          toast.success(
+            skipped > 0
+              ? `기출 지문 ${created.length}개를 내 지문함에 담았어요. (이미 등록된 ${skipped}개 제외)`
+              : `기출 지문 ${created.length}개를 내 지문함에 담았어요.`,
+          );
+        } else if (skipped > 0) {
+          setIntakeView("library");
+          toast.info("선택한 기출 지문은 이미 내 지문함에 있어요.");
+        }
+        return true;
+      } catch {
+        toast.error("기출 지문 등록 중 오류가 발생했습니다.");
+        return false;
+      } finally {
+        setExamImporting(false);
+      }
+    },
+    [
+      loadPassages,
+      setPassageSearch,
+      setSelectedCollectionId,
+      setAnalysisStatusFilter,
+      setSelectedIds,
+    ],
+  );
+
   const { triggerRefresh, setScope } = useTaskQueue();
 
   // ─── Extraction (이미지·PDF) — 학습지와 동일하게 자동 승격 후 내 지문함 반영 ───
@@ -397,6 +451,13 @@ export function WebtoonPageClient({ academyId }: WebtoonPageClientProps) {
             description="자료를 불러오거나 직접 입력한 지문을 한 장의 세로형 웹툰으로 생성합니다."
             titleIcon={Palette}
             libraryLabel="내 지문함"
+            examBrowser={
+              <ExamPassageLibrary
+                onPick={handleImportExamPassages}
+                busy={examImporting}
+                pickLabel="다음으로 (내 지문함)"
+              />
+            }
             rightPane={
               <div className="flex min-h-0 flex-1 flex-col p-3">
                 <WebtoonInputStack

@@ -144,7 +144,7 @@ export function IntakeSurface({
               setIntakeTab("exam");
             }}
             icon={<GraduationCap className="h-3.5 w-3.5" />}
-            label="수능 기출"
+            label="기출 지문"
             tourKey="intake-exam"
           />
         ) : null}

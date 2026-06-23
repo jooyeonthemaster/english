@@ -21,6 +21,8 @@ import { formatExtractedTextForDisplay } from "@/app/(director)/director/workben
 import { getDraftDisplayTitle } from "@/app/(director)/director/workbench/passages/import/_components/extraction-manage-client/utils/title";
 import { PassageCardGrid } from "@/app/(director)/director/workbench/generate/passage-card-grid";
 import type { PassageItem } from "@/app/(director)/director/workbench/generate/generate-page-types";
+import { ExamPassageLibrary } from "@/components/workbench/exam-passage-library";
+import type { ExamPassagePick } from "@/lib/exam-passages/types";
 import { ExtractionDetailModal } from "@/app/(director)/director/workbench/generate/intake/extraction-detail-modal";
 import {
   IntakeView,
@@ -282,6 +284,58 @@ export function PassageRegistrationClient({
     setWorkspaceOpen(false);
     setIntakeView("library");
   }, []);
+
+  // ── 수능·모평 기출 지문 → 내 지문함 일괄 등록 (문제생성과 동일 메커니즘) ──
+  // 본문은 서버가 코퍼스에서 해석(클라는 id 만). 등록 후 목록 재조회 → 새 지문 선택
+  // → 내 지문함(library) 뷰로 전환해 바로 워크스페이스로 불러올 수 있게 한다.
+  const [examImporting, setExamImporting] = useState(false);
+  const handleImportExamPassages = useCallback(
+    async (picks: ExamPassagePick[]) => {
+      if (!picks || picks.length === 0) return false;
+      setExamImporting(true);
+      try {
+        const { importExamPassages } = await import("@/actions/workbench");
+        const result = await importExamPassages(picks.map((p) => p.id));
+        if (!result.success) {
+          toast.error(result.error || "기출 지문 등록에 실패했습니다.");
+          return false;
+        }
+        const created = result.createdIds;
+        const skipped = result.skippedExamIds.length;
+
+        await loadPassages();
+        setPassageSearch("");
+        setSelectedCollectionId("");
+        setAnalysisStatusFilter("all");
+
+        if (created.length > 0) {
+          setSelectedIds(new Set(created));
+          setIntakeView("library");
+          toast.success(
+            skipped > 0
+              ? `기출 지문 ${created.length}개를 내 지문함에 담았어요. (이미 등록된 ${skipped}개 제외)`
+              : `기출 지문 ${created.length}개를 내 지문함에 담았어요.`,
+          );
+        } else if (skipped > 0) {
+          setIntakeView("library");
+          toast.info("선택한 기출 지문은 이미 내 지문함에 있어요.");
+        }
+        return true;
+      } catch {
+        toast.error("기출 지문 등록 중 오류가 발생했습니다.");
+        return false;
+      } finally {
+        setExamImporting(false);
+      }
+    },
+    [
+      loadPassages,
+      setPassageSearch,
+      setSelectedCollectionId,
+      setAnalysisStatusFilter,
+      setSelectedIds,
+    ],
+  );
 
   // 변형 지문 생성 → 새 Passage 로 저장하고 워크스페이스에 새 행으로 추가한다.
   // 원본은 그대로 두고(변형 lineage 만 기록), 내 지문함에도 즉시 반영된다.
@@ -751,7 +805,7 @@ export function PassageRegistrationClient({
 
   return (
     <TooltipProvider>
-      <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
+      <div className="-mx-6 -mt-6 min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
         <main className="flex w-full min-w-0 flex-col gap-4">
           {/* ─── 직접 입력 · 파일업로드 › 내 지문함 › 워크스페이스 ─── */}
           <FormSectionContainer
@@ -809,6 +863,13 @@ export function PassageRegistrationClient({
             onSubmitPastedRows={handleCreatePastedPassages}
             pasteSaving={pasteSaving}
             libraryLabel="내 지문함"
+            examBrowser={
+              <ExamPassageLibrary
+                onPick={handleImportExamPassages}
+                busy={examImporting}
+                pickLabel="다음으로 (내 지문함)"
+              />
+            }
             library={
               <PassageCardGrid
                 loadingCards={

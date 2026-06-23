@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Eye, AlertTriangle } from "lucide-react";
+import { Check, Maximize2, AlertTriangle } from "lucide-react";
 
 import type { ExamPassage } from "@/lib/exam-passages/types";
 import {
@@ -34,6 +34,7 @@ export function ExamPassageCard({
 
   return (
     <div
+      data-exam-card
       onClick={() => onToggle(passage.id)}
       className={
         "group relative flex cursor-pointer flex-col gap-2 rounded-xl border bg-white p-3 text-left shadow-sm transition hover:shadow-md " +
@@ -42,27 +43,32 @@ export function ExamPassageCard({
           : "border-slate-200 hover:border-slate-300")
       }
     >
-      {/* 선택 토글 — 실제 버튼(키보드 접근). 카드 전체 클릭도 토글한다. */}
-      <button
-        type="button"
-        aria-pressed={selected}
-        aria-label={selected ? "선택 해제" : "선택"}
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggle(passage.id);
-        }}
-        className={
-          "absolute right-2.5 top-2.5 flex size-[18px] items-center justify-center rounded-[6px] border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
-          (selected
-            ? "border-blue-600 bg-blue-600 text-white"
-            : "border-slate-300 bg-white text-transparent group-hover:border-slate-400")
-        }
-      >
-        <Check className="size-3" strokeWidth={3} />
-      </button>
+      {/* 메타 행 — 체크박스(맨 왼쪽) + 문제번호 뱃지 + 회차/유형 */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        {/* 선택 토글 — 실제 버튼(키보드 접근). 카드 전체 클릭도 토글한다. */}
+        <button
+          type="button"
+          aria-pressed={selected}
+          aria-label={selected ? "선택 해제" : "선택"}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggle(passage.id);
+          }}
+          className={
+            "flex size-[18px] shrink-0 items-center justify-center rounded-[6px] border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+            (selected
+              ? "border-blue-600 bg-blue-600 text-white"
+              : "border-slate-300 bg-white text-transparent group-hover:border-slate-400")
+          }
+        >
+          <Check className="size-3" strokeWidth={3} />
+        </button>
 
-      {/* 메타 행 */}
-      <div className="flex flex-wrap items-center gap-1.5 pr-7">
+        {/* 문제번호 뱃지 */}
+        <span className="inline-flex items-center rounded-md bg-slate-800 px-1.5 py-0.5 text-[10px] font-bold text-white">
+          {qLabel(passage.qNumbers)}번
+        </span>
+
         {passage.grade && passage.grade !== "고3" ? (
           <span
             className={
@@ -107,21 +113,19 @@ export function ExamPassageCard({
         {passage.text}
       </p>
 
-      {/* 푸터 */}
-      <div className="mt-0.5 flex items-center justify-between">
-        <span className="text-[11px] font-medium text-slate-400">
-          {qLabel(passage.qNumbers)}번 · {passage.wordCount} words
-        </span>
+      {/* 푸터 — 상세 보기(아이콘) */}
+      <div className="mt-0.5 flex items-center justify-end">
         <button
           type="button"
+          aria-label="상세 보기"
+          title="상세 보기"
           onClick={(e) => {
             e.stopPropagation();
             onPreview(passage);
           }}
-          className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+          className="inline-flex size-7 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
         >
-          <Eye className="size-3.5" />
-          전체 보기
+          <Maximize2 className="size-3.5" />
         </button>
       </div>
     </div>

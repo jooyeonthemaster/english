@@ -68,7 +68,7 @@ export function JobReviewToggleButton({
       ) : (
         <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
       )}
-      검수완료
+      {allCommitted ? "검수완료" : "미검수"}
     </button>
   );
 }

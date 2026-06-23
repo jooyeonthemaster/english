@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { GraduationCap, Loader2, CheckSquare, Square, Download } from "lucide-react";
+import { useRef, useState } from "react";
+import { GraduationCap, Loader2, Download } from "lucide-react";
 import { toast } from "sonner";
 
+import { triggerHintGlowWithin } from "@/lib/hint-glow";
 import { Pagination } from "@/components/workbench/shared/pagination";
 import type { ExamPassage, ExamPassagePick } from "@/lib/exam-passages/types";
 import { useExamPassageLibrary } from "./use-exam-passage-library";
 import { ExamFilterBar } from "./exam-filter-bar";
 import { ExamPassageCard } from "./exam-passage-card";
+import { ExamPaperCard } from "./exam-paper-card";
 import { ExamPassagePreviewModal } from "./exam-passage-preview-modal";
 
 export interface ExamPassageLibraryProps {
@@ -34,11 +36,12 @@ export function ExamPassageLibrary({
   onPick,
   pickLabel = "내 지문함에 담기",
   busy = false,
-  headerHint,
 }: ExamPassageLibraryProps) {
   const api = useExamPassageLibrary();
   const [preview, setPreview] = useState<ExamPassage | null>(null);
   const [picking, setPicking] = useState(false);
+  // 비활(처럼 보이는) 담기 버튼을 눌렀을 때 어디를 골라야 하는지 카드들을 글로우.
+  const bodyRef = useRef<HTMLDivElement>(null);
 
   const handlePick = async () => {
     if (api.selectedCount === 0 || picking || busy) return;
@@ -66,43 +69,10 @@ export function ExamPassageLibrary({
     <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-white">
       <ExamFilterBar api={api} />
 
-      {/* 결과 헤더 */}
-      <div className="flex shrink-0 items-center justify-between border-b border-slate-100 px-3 py-1.5">
-        <span className="text-[11.5px] font-medium text-slate-500">
-          {api.loading ? (
-            "불러오는 중…"
-          ) : (
-            <>
-              <span className="font-bold text-slate-700">
-                {api.total.toLocaleString()}
-              </span>
-              개 기출 지문
-              {headerHint ? (
-                <span className="ml-1.5 text-slate-400">· {headerHint}</span>
-              ) : null}
-            </>
-          )}
-        </span>
-        {api.items.length > 0 ? (
-          <button
-            type="button"
-            onClick={api.toggleSelectPage}
-            className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[11.5px] font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
-          >
-            {api.pageAllSelected ? (
-              <CheckSquare className="size-3.5 text-blue-600" />
-            ) : (
-              <Square className="size-3.5" />
-            )}
-            이 페이지 전체
-          </button>
-        ) : null}
-      </div>
-
       {/* 본문 — 스크롤 영역 */}
-      <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
+      <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
         {api.loading ? (
-          <div className="grid gap-2.5 [grid-template-columns:repeat(auto-fill,minmax(270px,1fr))]">
+          <div className="grid gap-2.5 [grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
@@ -119,16 +89,58 @@ export function ExamPassageLibrary({
               잠시 후 다시 시도해주세요.
             </p>
           </div>
-        ) : api.items.length === 0 ? (
+        ) : api.browsingProblems ? (
+          api.items.length === 0 ? (
+            <div className="flex h-full flex-col items-center justify-center gap-2.5 px-6 text-center">
+              <span className="flex size-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+                <GraduationCap className="size-6" />
+              </span>
+              <p className="text-[13px] font-semibold text-slate-600">
+                조건에 맞는 기출 지문이 없습니다
+              </p>
+              <p className="text-[11.5px] leading-relaxed text-slate-400">
+                검색어나 필터를 바꿔보세요.
+                {api.activeFilterCount > 0 ? (
+                  <button
+                    type="button"
+                    onClick={api.clearFilters}
+                    className="ml-1 font-semibold text-blue-600 hover:underline"
+                  >
+                    필터 초기화
+                  </button>
+                ) : null}
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="grid gap-2.5 [grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
+                {api.items.map((p) => (
+                  <ExamPassageCard
+                    key={p.id}
+                    passage={p}
+                    selected={api.isSelected(p.id)}
+                    onToggle={api.toggleSelect}
+                    onPreview={setPreview}
+                  />
+                ))}
+              </div>
+              <Pagination
+                page={api.page}
+                totalPages={api.totalPages}
+                onGoToPage={api.setPage}
+              />
+            </>
+          )
+        ) : api.papers.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-2.5 px-6 text-center">
             <span className="flex size-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
               <GraduationCap className="size-6" />
             </span>
             <p className="text-[13px] font-semibold text-slate-600">
-              조건에 맞는 기출 지문이 없습니다
+              조건에 맞는 시험지가 없습니다
             </p>
             <p className="text-[11.5px] leading-relaxed text-slate-400">
-              검색어나 필터를 바꿔보세요.
+              연도·회차 필터를 바꿔보세요.
               {api.activeFilterCount > 0 ? (
                 <button
                   type="button"
@@ -142,14 +154,14 @@ export function ExamPassageLibrary({
           </div>
         ) : (
           <>
-            <div className="grid gap-2.5 [grid-template-columns:repeat(auto-fill,minmax(270px,1fr))]">
-              {api.items.map((p) => (
-                <ExamPassageCard
-                  key={p.id}
-                  passage={p}
-                  selected={api.isSelected(p.id)}
-                  onToggle={api.toggleSelect}
-                  onPreview={setPreview}
+            <div className="grid gap-2.5 [grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
+              {api.papers.map((paper) => (
+                <ExamPaperCard
+                  key={paper.examId}
+                  paper={paper}
+                  onOpen={(p) => api.drillIntoPaper(p.examId, p.title)}
+                  selected={api.isPaperSelected(paper.examId)}
+                  onToggleSelect={api.togglePaper}
                 />
               ))}
             </div>
@@ -162,14 +174,16 @@ export function ExamPassageLibrary({
         )}
       </div>
 
-      {/* 선택 바 — 페이지·필터 넘나들어 누적 */}
-      {api.selectedCount > 0 ? (
-        <div className="flex shrink-0 items-center justify-between gap-3 border-t border-slate-200 bg-white px-3 py-2.5 shadow-[0_-3px_10px_rgba(15,23,42,0.05)]">
-          <div className="flex min-w-0 items-center gap-2 text-[12.5px] text-slate-600">
-            <span className="font-bold text-blue-700">
-              {api.selectedCount}개
+      {/* 선택 바 — 상시 노출. 가로로 긴 담기 버튼, 하나라도 고르면 활성화. */}
+      <div className="shrink-0 border-t border-slate-200 bg-white px-3 py-2.5 shadow-[0_-3px_10px_rgba(15,23,42,0.05)]">
+        {api.selectedCount > 0 ? (
+          <div className="mb-1.5 flex items-center justify-between gap-2 text-[12.5px] text-slate-600">
+            <span>
+              <span className="font-bold text-blue-700">
+                {api.selectedCount}개
+              </span>{" "}
+              선택됨
             </span>
-            선택됨
             <button
               type="button"
               onClick={api.clearSelection}
@@ -178,21 +192,39 @@ export function ExamPassageLibrary({
               선택 해제
             </button>
           </div>
-          <button
-            type="button"
-            onClick={handlePick}
-            disabled={working}
-            className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-4 text-[12.5px] font-bold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {working ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Download className="size-4" />
-            )}
-            {working ? "담는 중…" : `${pickLabel} (${api.selectedCount})`}
-          </button>
-        </div>
-      ) : null}
+        ) : null}
+        <button
+          type="button"
+          aria-disabled={working || api.selectedCount === 0}
+          onClick={() => {
+            if (working) return;
+            // 아무것도 안 골랐으면 → 막지 말고 어디를 골라야 하는지 카드 글로우.
+            if (api.selectedCount === 0) {
+              triggerHintGlowWithin(bodyRef.current, "[data-exam-card]");
+              return;
+            }
+            handlePick();
+          }}
+          className={
+            "inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-md text-[13px] font-bold shadow-sm transition " +
+            (working || api.selectedCount === 0
+              ? "bg-slate-200 text-slate-400 shadow-none " +
+                (working ? "cursor-wait" : "cursor-pointer")
+              : "cursor-pointer bg-blue-600 text-white hover:bg-blue-700")
+          }
+        >
+          {working ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Download className="size-4" />
+          )}
+          {working
+            ? "담는 중…"
+            : api.selectedCount > 0
+              ? `${pickLabel} (${api.selectedCount})`
+              : pickLabel}
+        </button>
+      </div>
 
       <ExamPassagePreviewModal
         passage={preview}

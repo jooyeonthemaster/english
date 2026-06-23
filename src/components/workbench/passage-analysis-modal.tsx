@@ -11,6 +11,8 @@ import {
   RefreshCw,
   Lightbulb,
   Undo2,
+  Pencil,
+  Check,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +22,7 @@ import { notifyCreditsChanged } from "@/lib/credits-client";
 import {
   deleteWorkbenchPassage,
   updatePassageAnalysis,
+  renamePassage,
 } from "@/actions/workbench";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import {
@@ -144,6 +147,50 @@ export function PassageAnalysisModal({
   const [analyzing, setAnalyzing] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
+  // ── 제목 인라인 편집 (헤더 연필 버튼) ──
+  const [title, setTitle] = useState(passage.title);
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState(passage.title);
+  const [savingTitle, setSavingTitle] = useState(false);
+  // 다른 지문으로 모달이 바뀌면 로컬 제목을 동기화한다.
+  useEffect(() => {
+    setTitle(passage.title);
+    setEditingTitle(false);
+  }, [passage.id, passage.title]);
+
+  const startEditTitle = () => {
+    setTitleDraft(title);
+    setEditingTitle(true);
+  };
+  const cancelEditTitle = () => {
+    setEditingTitle(false);
+    setTitleDraft(title);
+  };
+  const saveTitle = async () => {
+    const next = titleDraft.trim();
+    if (!next || next === title) {
+      cancelEditTitle();
+      return;
+    }
+    setSavingTitle(true);
+    const prev = title;
+    setTitle(next); // 낙관적 반영
+    setEditingTitle(false);
+    try {
+      const res = await renamePassage(passage.id, next);
+      if (!res.success) {
+        setTitle(prev);
+        toast.error(res.error || "제목 수정에 실패했습니다.");
+      } else {
+        toast.success("제목을 변경했습니다.");
+      }
+    } catch (err) {
+      setTitle(prev);
+      toast.error(err instanceof Error ? err.message : "제목 수정에 실패했습니다.");
+    } finally {
+      setSavingTitle(false);
+    }
+  };
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastPromptConfig, setLastPromptConfig] =
     useState<AnalysisPromptConfig>(
@@ -348,9 +395,58 @@ export function PassageAnalysisModal({
                 <FileText className="w-4.5 h-4.5 text-blue-600" />
               </div>
               <div className="min-w-0">
-                <h2 className="text-[16px] font-bold text-slate-800 truncate">
-                  {sanitizeAiModelDisclosureText(passage.title)}
-                </h2>
+                {editingTitle ? (
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      autoFocus
+                      value={titleDraft}
+                      onChange={(e) => setTitleDraft(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          void saveTitle();
+                        } else if (e.key === "Escape") {
+                          e.preventDefault();
+                          cancelEditTitle();
+                        }
+                      }}
+                      onBlur={() => void saveTitle()}
+                      disabled={savingTitle}
+                      placeholder="학습지 제목"
+                      className="min-w-0 flex-1 rounded-md border border-blue-300 bg-white px-2 py-1 text-[16px] font-bold text-slate-800 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/15 disabled:opacity-60"
+                    />
+                    <button
+                      type="button"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => void saveTitle()}
+                      disabled={savingTitle}
+                      title="제목 저장"
+                      aria-label="제목 저장"
+                      className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-blue-600 transition-colors hover:bg-blue-50 disabled:opacity-60"
+                    >
+                      {savingTitle ? (
+                        <Loader2 className="size-4 animate-spin" />
+                      ) : (
+                        <Check className="size-4" />
+                      )}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <h2 className="text-[16px] font-bold text-slate-800 truncate">
+                      {sanitizeAiModelDisclosureText(title)}
+                    </h2>
+                    <button
+                      type="button"
+                      onClick={startEditTitle}
+                      title="제목 수정"
+                      aria-label="제목 수정"
+                      className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                    >
+                      <Pencil className="size-3.5" />
+                    </button>
+                  </div>
+                )}
                 <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                   {passage.school && (
                     <Badge variant="outline" className="text-[10px] h-5">
@@ -407,7 +503,7 @@ export function PassageAnalysisModal({
                   ) : (
                     <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
                   )}
-                  {isReviewCommitted ? "검수취소" : "검수완료"}
+                  {isReviewCommitted ? "검수취소" : "미검수"}
                 </Button>
               ) : null}
               {hasUnsavedChanges && (

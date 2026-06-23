@@ -1,14 +1,17 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getStaffSession } from "@/lib/auth";
-import { queryExamPassages } from "@/lib/exam-passages/corpus";
+import { queryExamPapers, queryExamPassages } from "@/lib/exam-passages/corpus";
 import type { ExamPassageQuery } from "@/lib/exam-passages/types";
 import { EXAM_MAX_IDS } from "@/lib/exam-passages/types";
 
 // GET /api/exam-passages — 수능·모평 영어 기출 지문 코퍼스 질의(검색/필터/페이지네이션).
 // 인증 필요(라이선스 콘텐츠). 본문 텍스트를 포함해 반환하므로 staff 세션 게이트.
 //
-// 쿼리: q, years, exams, boards, types(=typeGroup), recon, page, pageSize, ids
-// (복수값은 콤마 구분). ids 를 주면 그 레코드만 반환(선택분 일괄 조회, 필터 무시).
+// 쿼리: q, years, exams, boards, types(=typeGroup), recon, page, pageSize, ids,
+//       examIds, group (복수값은 콤마 구분).
+//  - ids 를 주면 그 레코드만 반환(선택분 일괄 조회, 필터 무시).
+//  - group=paper 면 examId 로 묶은 시험지 카드 목록을 반환(시험지별 보기).
+//  - examIds 는 특정 시험지로 지문을 한정(시험지 드릴인).
 
 function csv(value: string | null): string[] | undefined {
   if (!value) return undefined;
@@ -45,9 +48,14 @@ export async function GET(request: NextRequest) {
       page: sp.get("page") ? Number(sp.get("page")) : undefined,
       pageSize: sp.get("pageSize") ? Number(sp.get("pageSize")) : undefined,
       ids: csv(sp.get("ids"))?.slice(0, EXAM_MAX_IDS),
+      examIds: csv(sp.get("examIds")),
     };
 
-    const result = queryExamPassages(query);
+    // group=paper → 시험지 카드 목록(시험지별 보기), 그 외 → 지문(문제) 목록.
+    const result =
+      sp.get("group") === "paper"
+        ? queryExamPapers(query)
+        : queryExamPassages(query);
     return NextResponse.json(result);
   } catch (err) {
     console.error("[exam-passages] query failed", err);

@@ -1,6 +1,14 @@
 "use client";
 
-import { Search, X, ChevronDown, Check } from "lucide-react";
+import {
+  Search,
+  X,
+  ChevronDown,
+  Check,
+  ChevronLeft,
+  LayoutGrid,
+  FileText,
+} from "lucide-react";
 
 import {
   Popover,
@@ -179,23 +187,8 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
   const reconKinds = facets?.reconKinds ?? [];
   const reconCounts = facets?.counts.reconstructionKind ?? {};
 
-  // '적용된 필터' 칩 — 어떤 조건이 걸렸는지 한눈에 보고 개별 제거.
+  // '적용된 필터' 칩 — 드롭다운과 동일 순서(연도 → 회차 → 학년 → 유형 → 복원).
   const activeChips: { key: string; label: string; remove: () => void }[] = [
-    ...[...filters.grades].map((v) => ({
-      key: `grade-${v}`,
-      label: v,
-      remove: () => api.toggleGrade(v),
-    })),
-    ...[...filters.exams].map((v) => ({
-      key: `exam-${v}`,
-      label: examLabel(v),
-      remove: () => api.toggleExam(v),
-    })),
-    ...[...filters.types].map((v) => ({
-      key: `type-${v}`,
-      label: v,
-      remove: () => api.toggleType(v),
-    })),
     ...[...filters.years]
       .sort((a, b) => b - a)
       .map((v) => ({
@@ -203,6 +196,21 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
         label: `${v}학년도`,
         remove: () => api.toggleYear(v),
       })),
+    ...[...filters.exams].map((v) => ({
+      key: `exam-${v}`,
+      label: examLabel(v),
+      remove: () => api.toggleExam(v),
+    })),
+    ...[...filters.grades].map((v) => ({
+      key: `grade-${v}`,
+      label: v,
+      remove: () => api.toggleGrade(v),
+    })),
+    ...[...filters.types].map((v) => ({
+      key: `type-${v}`,
+      label: v,
+      remove: () => api.toggleType(v),
+    })),
     ...[...filters.recons].map((v) => ({
       key: `recon-${v}`,
       label: reconLabel(v),
@@ -212,39 +220,27 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
 
   return (
     <div className="shrink-0 space-y-2 border-b border-slate-100 bg-white px-3 py-2.5">
-      {/* 검색 */}
-      <div className="relative">
-        <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+      {/* 통합 툴바 한 줄 — 체크박스 | 필터 | 검색창(길게·반응형) | 시험지별·문제별 */}
+      <div className="flex items-center gap-1.5">
+        {/* 전체선택 체크박스 — 상시 노출(시험지별/문제별 공통, 맨 왼쪽) */}
         <input
-          value={api.searchInput}
-          onChange={(e) => api.setSearchInput(e.target.value)}
-          placeholder="지문 내용·연도·유형 검색 (예: climate, 2024, 빈칸)"
-          className="h-9 w-full rounded-lg border border-slate-200 bg-slate-50 pl-8 pr-8 text-[12.5px] text-slate-700 placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/10"
+          type="checkbox"
+          checked={api.allVisibleSelected}
+          onChange={api.toggleSelectAll}
+          disabled={!api.hasVisibleItems}
+          title="전체 선택"
+          aria-label="전체 선택"
+          className="size-4 shrink-0 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
         />
-        {api.searchInput ? (
-          <button
-            type="button"
-            onClick={() => api.setSearchInput("")}
-            className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-            aria-label="검색어 지우기"
-          >
-            <X className="size-3.5" />
-          </button>
-        ) : null}
-      </div>
 
-      {/* facet 드롭다운 행 */}
-      <div className="flex flex-wrap items-center gap-1.5">
+        {/* facet 드롭다운 — 연도 → 회차 → 학년 → 유형 → 복원 */}
         <FilterMenu
-          label="학년"
-          options={grades.map((g) => ({
-            value: g,
-            label: g,
-            count: gradeCounts[g],
-          }))}
-          selected={filters.grades}
-          onToggle={api.toggleGrade}
-          onClear={() => filters.grades.forEach((v) => api.toggleGrade(v))}
+          label="연도"
+          variant="grid"
+          options={years.map((y) => ({ value: y, label: String(y) }))}
+          selected={filters.years}
+          onToggle={api.toggleYear}
+          onClear={() => filters.years.forEach((v) => api.toggleYear(v))}
         />
         <FilterMenu
           label="회차"
@@ -258,6 +254,17 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
           onClear={() => filters.exams.forEach((v) => api.toggleExam(v))}
         />
         <FilterMenu
+          label="학년"
+          options={grades.map((g) => ({
+            value: g,
+            label: g,
+            count: gradeCounts[g],
+          }))}
+          selected={filters.grades}
+          onToggle={api.toggleGrade}
+          onClear={() => filters.grades.forEach((v) => api.toggleGrade(v))}
+        />
+        <FilterMenu
           label="유형"
           options={typeGroups.map((tg) => ({
             value: tg,
@@ -267,14 +274,6 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
           selected={filters.types}
           onToggle={api.toggleType}
           onClear={() => filters.types.forEach((v) => api.toggleType(v))}
-        />
-        <FilterMenu
-          label="연도"
-          variant="grid"
-          options={years.map((y) => ({ value: y, label: String(y) }))}
-          selected={filters.years}
-          onToggle={api.toggleYear}
-          onClear={() => filters.years.forEach((v) => api.toggleYear(v))}
         />
         <FilterMenu
           label="복원"
@@ -287,6 +286,71 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
           onToggle={api.toggleRecon}
           onClear={() => filters.recons.forEach((v) => api.toggleRecon(v))}
         />
+
+        {/* 검색창 — 남는 공간을 채워 길게(반응형) */}
+        <div className="relative min-w-0 flex-1">
+          <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+          <input
+            value={api.searchInput}
+            onChange={(e) => api.setSearchInput(e.target.value)}
+            placeholder="지문 내용·연도·유형 검색 (예: climate, 2024, 빈칸)"
+            className="h-8 w-full rounded-lg border border-slate-200 bg-slate-50 pl-8 pr-8 text-[12.5px] text-slate-700 placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/10"
+          />
+          {api.searchInput ? (
+            <button
+              type="button"
+              onClick={() => api.setSearchInput("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+              aria-label="검색어 지우기"
+            >
+              <X className="size-3.5" />
+            </button>
+          ) : null}
+        </div>
+
+        {/* 시험지별 ⇄ 문제별 (드릴인 중엔 ← 시험지 back) */}
+        {api.drillExamId ? (
+          <button
+            type="button"
+            onClick={api.exitDrill}
+            className="inline-flex h-8 shrink-0 items-center gap-0.5 rounded-lg border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-500 transition hover:border-slate-300 hover:bg-slate-50"
+          >
+            <ChevronLeft className="size-3.5" />
+            시험지
+          </button>
+        ) : (
+          <div className="inline-flex h-8 shrink-0 items-center overflow-hidden rounded-lg border border-slate-200">
+            <button
+              type="button"
+              onClick={api.goToPapers}
+              aria-pressed={!api.browsingProblems}
+              className={
+                "inline-flex h-full items-center gap-1 px-2.5 text-[11.5px] font-semibold transition " +
+                (!api.browsingProblems
+                  ? "bg-blue-50 text-blue-700"
+                  : "bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700")
+              }
+            >
+              <LayoutGrid className="size-3.5" />
+              시험지별
+            </button>
+            <div className="h-full w-px bg-slate-200" />
+            <button
+              type="button"
+              onClick={api.goToProblems}
+              aria-pressed={api.browsingProblems}
+              className={
+                "inline-flex h-full items-center gap-1 px-2.5 text-[11.5px] font-semibold transition " +
+                (api.browsingProblems
+                  ? "bg-blue-50 text-blue-700"
+                  : "bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700")
+              }
+            >
+              <FileText className="size-3.5" />
+              문제별
+            </button>
+          </div>
+        )}
       </div>
 
       {/* 적용된 필터 칩 */}

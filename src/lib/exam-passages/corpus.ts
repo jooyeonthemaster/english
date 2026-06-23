@@ -8,13 +8,15 @@ import "server-only";
 import passagesJson from "@/data/exam-passages/passages.json";
 import facetsJson from "@/data/exam-passages/facets.json";
 import type {
+  ExamPaper,
+  ExamPaperListResponse,
   ExamPassage,
   ExamPassageFacets,
   ExamPassageListResponse,
   ExamPassageQuery,
 } from "./types";
 import { EXAM_MAX_IDS, EXAM_PAGE_SIZE } from "./types";
-import { formatExamTitle } from "./format";
+import { formatExamTitle, formatPaperTitle, qLabel } from "./format";
 
 // 본문이 비어있는 레코드는 방어적으로 제외(빌드 단계에서 이미 드롭하지만, 코퍼스
 // 재생성 시 함정이 재발해도 빈 카드 노출·선택·import 크래시가 없도록 2차 가드).
@@ -125,6 +127,12 @@ export function getExamPassagesByIds(ids: string[]): ExamPassage[] {
 
 function matches(p: ExamPassage, query: ExamPassageQuery, q: string): boolean {
   if (q && !(SEARCH_BLOB.get(p.id) ?? "").includes(q)) return false;
+  if (
+    query.examIds &&
+    query.examIds.length > 0 &&
+    !query.examIds.includes(p.examId)
+  )
+    return false;
   if (query.years && query.years.length > 0 && !query.years.includes(p.year))
     return false;
   if (query.exams && query.exams.length > 0 && !query.exams.includes(p.exam))
@@ -186,6 +194,85 @@ export function queryExamPassages(
 
   return {
     items,
+    total,
+    page,
+    pageSize,
+    totalPages,
+    facets: computeFacets(query, q),
+  };
+}
+
+/** 한 시험지(examId 그룹)의 지문 배열 → 카드용 요약. */
+function buildPaper(arr: ExamPassage[]): ExamPaper {
+  const p0 = arr[0];
+  const qs = arr.flatMap((x) => x.qNumbers);
+  const qFrom = qs.length ? Math.min(...qs) : 0;
+  const qTo = qs.length ? Math.max(...qs) : 0;
+  const tg = new Map<string, number>();
+  let reconCount = 0;
+  for (const x of arr) {
+    tg.set(x.typeGroup, (tg.get(x.typeGroup) ?? 0) + 1);
+    if (x.reconstructionKind !== "none") reconCount += 1;
+  }
+  // 유형 분포는 전역 facet 의 정준 순서를 유지(카드별 들쭉날쭉 방지).
+  const typeGroups = FACETS.typeGroups
+    .filter((t) => tg.has(t))
+    .map((t) => ({ typeGroup: t, count: tg.get(t) as number }));
+  // 카드 A4 썸네일용 — 문항번호 오름차순 앞 8개의 지문 발췌(시험지 첫 페이지 텍스처).
+  const preview = [...arr]
+    .sort((a, b) => (a.qNumbers[0] ?? 0) - (b.qNumbers[0] ?? 0))
+    .slice(0, 8)
+    .map((x) => ({ q: qLabel(x.qNumbers), text: x.text.slice(0, 150) }));
+  return {
+    examId: p0.examId,
+    year: p0.year,
+    exam: p0.exam,
+    board: p0.board,
+    form: p0.form,
+    grade: p0.grade,
+    title: formatPaperTitle(p0),
+    count: arr.length,
+    qFrom,
+    qTo,
+    typeGroups,
+    reconCount,
+    preview,
+  };
+}
+
+/**
+ * 시험지 단위 질의 — 필터(연도/회차/학년/검색 등)로 좁힌 지문을 examId 로 묶어
+ * 시험지 카드 목록으로 반환한다. 데이터가 이미 연도desc→회차→문항 순이라
+ * first-seen 순서를 그대로 쓰면 시간순 정렬이 유지된다. facet 은 지문 질의와 동일.
+ */
+export function queryExamPapers(
+  query: ExamPassageQuery,
+): ExamPaperListResponse {
+  const q = (query.q ?? "").trim().toLowerCase();
+  const filtered = ALL.filter((p) => matches(p, query, q));
+
+  const order: string[] = [];
+  const groups = new Map<string, ExamPassage[]>();
+  for (const p of filtered) {
+    let arr = groups.get(p.examId);
+    if (!arr) {
+      arr = [];
+      groups.set(p.examId, arr);
+      order.push(p.examId);
+    }
+    arr.push(p);
+  }
+  const all = order.map((id) => buildPaper(groups.get(id) as ExamPassage[]));
+
+  const pageSize = Math.min(Math.max(1, query.pageSize ?? EXAM_PAGE_SIZE), 100);
+  const total = all.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const page = Math.min(Math.max(1, query.page ?? 1), totalPages);
+  const start = (page - 1) * pageSize;
+  const papers = all.slice(start, start + pageSize);
+
+  return {
+    papers,
     total,
     page,
     pageSize,

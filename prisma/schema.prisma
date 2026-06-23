@@ -54,6 +54,7 @@ model Academy {
   questionCollections       QuestionCollection[]
   passageCollections        PassageCollection[]
   examCollections           ExamCollection[]
+  webtoonCollections        WebtoonCollection[]
   m1PassageDraftCollections M1PassageDraftCollection[]
   exams                     Exam[]
   vocabLists                VocabularyList[]
@@ -682,6 +683,10 @@ model Passage {
   /// "verbatim" | "restored" — whether the stored content is the raw OCR text
   /// or an AI-restored original. Null for manual passages. (adaptive-intake D2)
   extractionOutput String?
+
+  /// 학습지 검수 완료 시각. null = 미검수, 값 있음 = 검수완료. (학습지 카드 검수완료 토글)
+  reviewedAt   DateTime?
+  reviewedById String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -3387,12 +3392,52 @@ model Webtoon {
   passage   Passage @relation(fields: [passageId], references: [id], onDelete: Cascade)
   createdBy Staff   @relation("WebtoonCreator", fields: [createdById], references: [id])
 
+  collectionItems WebtoonCollectionItem[]
+
   @@index([academyId])
   @@index([passageId])
   @@index([status])
   @@index([academyId, status])
   @@index([createdAt])
   @@map("webtoons")
+}
+
+// ============================================================================
+// WEBTOON COLLECTIONS — Folder-like organization for webtoons
+// ============================================================================
+
+model WebtoonCollection {
+  id          String   @id @default(cuid())
+  academyId   String
+  parentId    String? // Self-reference for nested folders (null = root)
+  name        String
+  description String?  @db.Text
+  color       String? // Hex color for visual distinction
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  academy  Academy                 @relation(fields: [academyId], references: [id])
+  parent   WebtoonCollection?      @relation("WebtoonFolderTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children WebtoonCollection[]     @relation("WebtoonFolderTree")
+  items    WebtoonCollectionItem[]
+
+  @@index([academyId])
+  @@index([parentId])
+  @@map("webtoon_collections")
+}
+
+model WebtoonCollectionItem {
+  id           String @id @default(cuid())
+  collectionId String
+  webtoonId    String
+  orderNum     Int    @default(0)
+
+  collection WebtoonCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  webtoon    Webtoon           @relation(fields: [webtoonId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, webtoonId])
+  @@index([collectionId])
+  @@map("webtoon_collection_items")
 }
 
 // ============================================================================

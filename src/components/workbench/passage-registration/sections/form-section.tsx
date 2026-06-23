@@ -47,6 +47,12 @@ interface FormSectionProps {
    */
   library?: ReactNode;
 
+  /**
+   * 기출 지문 브라우저(ExamPassageLibrary). 주어지면 intake 탭에 "기출 지문"이
+   * 노출된다(직접 입력 · 파일업로드 · 기출 지문). 문제 생성과 동일한 메커니즘.
+   */
+  examBrowser?: ReactNode;
+
   // ── Right pane override ──
   // When provided, this replaces the built-in PassageInputStack (학습지 분석 액션).
   // The 웹툰 생성 page passes its own WebtoonInputStack here so the 자료 관리 + 지문
@@ -263,6 +269,7 @@ export function FormSection(props: FormSectionProps) {
                 showPasteTab={!!props.onSubmitPastedRows}
                 onSubmitPastedRows={props.onSubmitPastedRows}
                 pasteSaving={props.pasteSaving}
+                examBrowser={props.examBrowser}
                 upload={
                   <GenerateUploadPanel
                     onBegin={props.onExtractionBegin}

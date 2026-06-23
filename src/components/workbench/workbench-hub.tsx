@@ -13,6 +13,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { formatRelativeTime } from "@/lib/utils";
+import { ContentWorkflowVisual } from "./content-workflow-visual";
 
 interface WorkbenchStats {
   totalPassages: number;
@@ -73,6 +74,8 @@ export function WorkbenchHub({ stats }: { stats: WorkbenchStats }) {
           </Link>
         </div>
       </div>
+
+      <ContentWorkflowVisual stats={stats} />
 
       {/* Workflow Cards — 2x2 grid */}
       <div className="grid grid-cols-2 gap-5">

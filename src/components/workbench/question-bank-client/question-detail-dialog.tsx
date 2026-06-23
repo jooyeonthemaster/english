@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Sparkles, Trash2, X } from "lucide-react";
+import { FileText, Loader2, Sparkles, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDateTime } from "@/lib/utils";
-import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
 import { type QuestionCardItem } from "@/components/workbench/question-card";
 import {
   QuestionBankCard,
@@ -64,9 +63,6 @@ export function QuestionDetailDialog({
   const [analysisOpen, setAnalysisOpen] = useState(false);
   if (!open) return null;
 
-  const analysisData = parseAnalysisData(
-    question?.passage?.analysis?.analysisData,
-  );
   // 동형 문제 생성물이면 원본 문항 분석(structuredData._similarSourceAnalysis)을 노출.
   const structured = parseAnalysisData(question?.structuredData) as Record<
     string,
@@ -161,11 +157,17 @@ export function QuestionDetailDialog({
               <div className="overflow-y-auto border-b border-slate-200 lg:border-b-0 lg:border-r">
                 {question.passage ? (
                   <div className="px-6 py-5">
-                    <InteractivePassageView
-                      content={question.passage.content}
-                      analysisData={analysisData}
-                      layout="vertical"
-                    />
+                    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                      <div className="flex items-center gap-1.5 border-b border-slate-100 bg-slate-50/70 px-4 py-2.5">
+                        <FileText className="h-3.5 w-3.5 text-slate-400" />
+                        <span className="text-[12px] font-semibold text-slate-600">
+                          지문 본문
+                        </span>
+                      </div>
+                      <div className="whitespace-pre-wrap px-5 py-4 font-mono text-sm leading-[2] text-slate-800">
+                        {question.passage.content}
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <div className="flex h-full items-center justify-center text-sm text-slate-400">

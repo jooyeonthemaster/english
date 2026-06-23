@@ -56,15 +56,12 @@ export default async function PassagesPage({ searchParams }: PageProps) {
     ...filters,
     sourceMaterialId: sourceMaterial ? filters.sourceMaterialId : undefined,
     collectionId: collectionSummary ? filters.collectionId : undefined,
-    // This route is labelled "분석된 학습지 관리하기" in the workbench overview
-    // (`src/app/(director)/director/page.tsx`). Unanalyzed entries belong to
-    // the analysis queue page at /passages/create — we hide them here so the
-    // grid contains only analysis-complete passages.
-    analyzedOnly: true,
-    // …with one exception: passages pasted directly on the question-generation
-    // page ("직접 지문 붙여넣기") are surfaced here immediately even before any
-    // analysis runs, so the material isn't stranded out of the 자료 관리 view.
-    includeDirectInput: true,
+    // 학습지 관리 = 생성이 완료된 학습지(PRIME 분석 보고서가 있는 지문)만 모은다.
+    // 학습지 생성 페이지(`/passages/create`) 하단 "학습지 목록" 블록과 동일한
+    // 기준(hasReport)으로 통일해, 두 화면이 같은 집합·같은 카드 UI(보고서 썸네일 등)를
+    // 보여주도록 한다. (이전엔 analyzedOnly+includeDirectInput 로 분석/직접입력 지문까지
+    // 노출돼 생성 페이지 하단 블록과 목록이 어긋났다.)
+    hasReport: true,
   };
 
   const [passagesData, schools, collections, membershipRaw] = await Promise.all([

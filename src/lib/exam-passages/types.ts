@@ -86,11 +86,50 @@ export interface ExamPassageQuery {
   pageSize?: number;
   /** 특정 id 목록만(선택분 일괄 조회). 주면 페이지네이션·필터 무시. */
   ids?: string[];
+  /** 특정 시험지(examId) 목록으로 한정(시험지 드릴인). */
+  examIds?: string[];
 }
 
 /** 서버 → 브라우저 목록 응답. */
 export interface ExamPassageListResponse {
   items: ExamPassage[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  facets: ExamPassageFacets;
+}
+
+/**
+ * 시험지 한 장(한 회차 시험) 요약 — examId 기준으로 묶인 지문 그룹.
+ * 시험지별 보기에서 카드 1장으로 노출되고, 클릭하면 그 안의 지문(문제)으로 드릴인한다.
+ */
+export interface ExamPaper {
+  /** 시험지 식별자(= 지문들의 공통 examId). */
+  examId: string;
+  year: number;
+  exam: string;
+  board: string;
+  form: string;
+  grade?: string;
+  /** 사람이 읽는 시험지 제목(예: "2026학년도 수능 영어"). */
+  title: string;
+  /** 시험지에 포함된 지문(문제) 수. */
+  count: number;
+  /** 문항번호 범위(최소~최대). */
+  qFrom: number;
+  qTo: number;
+  /** 유형 분포(정준 순서, count>0만). */
+  typeGroups: { typeGroup: string; count: number }[];
+  /** 복원 출제용(원문 변형) 지문 수. */
+  reconCount: number;
+  /** 카드 A4 썸네일용 — 앞 문항 몇 개의 [문항번호, 지문 앞부분 발췌]. */
+  preview: { q: string; text: string }[];
+}
+
+/** 서버 → 브라우저 시험지 목록 응답. */
+export interface ExamPaperListResponse {
+  papers: ExamPaper[];
   total: number;
   page: number;
   pageSize: number;

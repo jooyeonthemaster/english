@@ -13,7 +13,6 @@ import {
   ReviewStatusStamp,
   type QuestionCardItem,
 } from "@/components/workbench/question-card";
-import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
 import { getCustomPrompts } from "@/actions/custom-prompts";
 import {
   addPassagesToCollection,
@@ -2376,6 +2375,7 @@ export function GeneratePageClient({
         <ExamPassageLibrary
           onPick={handleImportExamPassages}
           busy={examImporting}
+          pickLabel="다음으로 (내 지문함)"
           headerHint="고른 지문이 내 지문함에 담겨요"
         />
       }
@@ -2705,23 +2705,9 @@ export function GeneratePageClient({
               <div className="border-r border-slate-200 overflow-y-auto">
                 {detailQuestion.passage ? (
                   <div className="px-6 py-5">
-                    <InteractivePassageView
-                      content={detailQuestion.passage.content}
-                      analysisData={(() => {
-                        const p = passages.find(
-                          (pp) => pp.id === detailQuestion.passage?.id,
-                        );
-                        if (!p?.analysis?.analysisData) return null;
-                        try {
-                          return typeof p.analysis.analysisData === "string"
-                            ? JSON.parse(p.analysis.analysisData)
-                            : p.analysis.analysisData;
-                        } catch {
-                          return null;
-                        }
-                      })()}
-                      layout="vertical"
-                    />
+                    <div className="whitespace-pre-wrap font-mono text-sm leading-[2] text-slate-800">
+                      {detailQuestion.passage.content}
+                    </div>
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full text-slate-400 text-sm">

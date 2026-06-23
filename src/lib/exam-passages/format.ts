@@ -91,6 +91,40 @@ export function formatExamTitle(p: {
   return `${p.year}학년도 ${gradeTag}${examLabel(p.exam)}${formTag} 영어${qPart} · ${typeText}`;
 }
 
+/** 출처 게시판 → 짧은 출제기관 라벨(시험지 카드 배지용). */
+export function boardShortLabel(board: string): string {
+  switch (board) {
+    case "대학수학능력시험":
+    case "수능모의평가":
+      return "평가원";
+    case "학력평가":
+      return "교육청";
+    default:
+      return board;
+  }
+}
+
+/**
+ * 시험지 제목 — "2026학년도 수능 영어" / "2026학년도 고1 3월 학력평가 영어".
+ * 시험지별 보기 카드와 드릴인 헤더의 제목으로 쓴다(문항번호 없는 시험지 단위).
+ */
+export function formatPaperTitle(p: {
+  year: number;
+  exam: string;
+  board?: string;
+  grade?: string;
+  form?: string;
+}): string {
+  const formTag = p.form ? ` ${p.form}형` : "";
+  // 교육청 학평은 회차가 "N월 학력평가"이고 학년이 핵심이라 앞에 붙인다.
+  // (examLabel 은 수능·모평 맥락이라 "6월"→"6월 모평"으로 오인하므로 분기.)
+  if (p.board === "학력평가") {
+    const gradeTag = p.grade ? `${p.grade} ` : "";
+    return `${p.year}학년도 ${gradeTag}${p.exam} 학력평가${formTag} 영어`;
+  }
+  return `${p.year}학년도 ${examLabel(p.exam)}${formTag} 영어`;
+}
+
 /** ExamPassage → 호스트가 받는 pick(제목 부여 + 본문). */
 export function toExamPick(p: ExamPassage): ExamPassagePick {
   return {

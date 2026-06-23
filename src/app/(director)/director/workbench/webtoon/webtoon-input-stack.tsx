@@ -2,14 +2,10 @@
 
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 import { Palette, Plus } from "lucide-react";
-import { toast } from "sonner";
-import { ExamPassagePickerModal } from "@/components/workbench/exam-passage-library/exam-passage-picker-modal";
-import type { ExamPassagePick } from "@/lib/exam-passages/types";
 import { PassageInputRow } from "@/components/workbench/passage-registration/passage-input/passage-input-row";
 import {
   isPristineEmptyRow,
   makeEmptyRow,
-  mergeExamPicksIntoRows,
   MIN_CONTENT_CHARS,
   type PassageInputRow as RowData,
 } from "@/components/workbench/passage-registration/passage-input/types";
@@ -81,21 +77,6 @@ export function WebtoonInputStack({
     );
 
   const addRow = () => setRows((prev) => [...prev, makeEmptyRow()]);
-
-  // 수능·모평 기출 지문 불러오기 → 입력 스택 행으로 병합(중복·빈행 정리).
-  const handleLoadExamPicks = (picks: ExamPassagePick[]) => {
-    const res = mergeExamPicksIntoRows(rows, picks);
-    setRows(res.rows);
-    if (res.added > 0) {
-      toast.success(
-        res.skipped > 0
-          ? `기출 지문 ${res.added}개를 불러왔어요. (이미 있는 ${res.skipped}개 제외)`
-          : `기출 지문 ${res.added}개를 불러왔어요.`,
-      );
-    } else if (res.skipped > 0) {
-      toast.info("선택한 기출 지문은 이미 불러와 있어요.");
-    }
-  };
 
   const removeRow = (localId: string) =>
     setRows((prev) => {
@@ -171,15 +152,8 @@ export function WebtoonInputStack({
           })}
         </div>
 
-        {/* 지문 불러오기 / 추가 */}
+        {/* 지문 추가 — 기출 지문은 상단 "기출 지문" 탭에서 내 지문함으로 담는다. */}
         <div className="shrink-0 space-y-2 pt-2">
-          <ExamPassagePickerModal
-            onPick={handleLoadExamPicks}
-            busy={saving}
-            triggerLabel="수능·모평 기출 지문에서 불러오기"
-            pickLabel="선택한 지문 불러오기"
-            triggerClassName="h-auto w-full justify-center rounded-xl border-blue-200 bg-blue-50/70 py-2.5 text-[13px] font-bold"
-          />
           <button
             type="button"
             onClick={addRow}

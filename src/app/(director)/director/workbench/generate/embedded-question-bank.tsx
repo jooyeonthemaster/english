@@ -343,7 +343,7 @@ export function EmbeddedQuestionBank({
   }>({ all: 0, pending: 0, approved: 0 });
 
   // Collapsible card chrome (mirrors QuestionBankClient's folder collapse).
-  const [open, setOpen] = useState(true);
+  const [open] = useState(true);
 
   // ─── Folder manager (client-side, like QuestionBankClient) ───
   const [collectionsLoaded, setCollectionsLoaded] = useState(false);
@@ -1396,35 +1396,11 @@ export function EmbeddedQuestionBank({
   return (
     <section
       data-generate-embedded-question-bank
-      className="rounded-lg border border-slate-200 bg-white shadow-sm"
+      className="min-w-0"
     >
-      {/* Card header (collapse control) */}
-      <div className="flex items-center gap-2 border-b border-slate-100 px-4 py-2.5">
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-          <Database className="h-3.5 w-3.5" />
-        </span>
-        <h3 className="text-[13px] font-bold text-slate-900">문제 관리</h3>
-        <span className="text-[11px] font-medium text-slate-400">
-          전체 {isGrouped ? "지문" : "문제"} {totalCount}
-        </span>
-        {/* 펼치기는 접힌 상태에서만 헤더에 노출 — 접기는 창 맨 아래 오른쪽으로 이동. */}
-        {!open ? (
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            aria-expanded={false}
-            title="펼치기"
-            className="ml-auto inline-flex cursor-pointer items-center gap-1 text-[12px] font-semibold text-blue-500 transition-colors hover:text-blue-700"
-          >
-            <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
-            펼치기
-          </button>
-        ) : null}
-      </div>
-
       {open ? (
-        <div className="p-3 sm:p-4">
-          <section className="flex flex-col rounded-xl border border-slate-200 bg-white">
+        <>
+          <section className="flex flex-col rounded-xl border border-slate-200 bg-white shadow-sm">
             <div
               ref={folderStickyRef}
               className="sticky top-0 z-20 shrink-0 rounded-t-xl bg-white"
@@ -1556,21 +1532,7 @@ export function EmbeddedQuestionBank({
             totalPages={totalPages}
             onGoToPage={goToPage}
           />
-
-          {/* 창 맨 아래 오른쪽 — 파란 ∧ 접기 */}
-          <div className="mt-2 flex justify-end">
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-expanded
-              title="접기"
-              className="inline-flex cursor-pointer items-center gap-1 text-[12px] font-semibold text-blue-500 transition-colors hover:text-blue-700"
-            >
-              <ChevronUp className="h-3.5 w-3.5" aria-hidden="true" />
-              접기
-            </button>
-          </div>
-        </div>
+        </>
       ) : null}
 
       {/* ─── Dialogs ─── */}

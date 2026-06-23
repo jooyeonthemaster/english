@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   AlertCircle,
+  CheckCircle2,
   Copy,
   CopyMinus,
   FileText,
@@ -45,6 +46,8 @@ import {
   removePassagesFromCollection,
   findWorkbenchPassageDuplicates,
   bulkDeleteWorkbenchPassages,
+  setPassageReviewed,
+  bulkSetPassageReviewed,
 } from "@/actions/workbench";
 
 // Shared modules
@@ -145,6 +148,13 @@ interface PassageListProps {
    * form and passes its own route so filtering stays on that page.
    */
   basePath?: string;
+  /**
+   * When embedded below another page (e.g. 학습지 생성), the client must not own
+   * a viewport-height scroll container. Instead it flows inside the page and its
+   * folder header / toolbar stick to the window scroll so they stay pinned to
+   * the top while the list scrolls.
+   */
+  embedded?: boolean;
 }
 
 // ─── Server action adapters ──────────────────────────────
@@ -224,6 +234,7 @@ export function PassageListClient({
   sourceMaterialBadge = null,
   collectionBadge = null,
   basePath = "/director/workbench/passages",
+  embedded = false,
 }: PassageListProps) {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(filters.search || "");
@@ -236,12 +247,55 @@ export function PassageListClient({
   const [sortOrder, setSortOrder] = useState<PassageSortOrder>("newest");
   const [hideDuplicates, setHideDuplicates] = useState(false);
   const [modalPassageId, setModalPassageId] = useState<string | null>(null);
+  // 학습지 검수완료 토글 — 낙관적 상태. override 맵은 서버 reviewedAt 을 덮어쓰고,
+  // busy 셋은 처리 중인 카드에 스피너를 띄운다.
+  const [reviewOverrides, setReviewOverrides] = useState<Map<string, boolean>>(
+    () => new Map(),
+  );
+  const [reviewBusyIds, setReviewBusyIds] = useState<Set<string>>(
+    () => new Set(),
+  );
+  const handleToggleReview = useCallback(
+    async (passageId: string, next: boolean) => {
+      setReviewOverrides((prev) => {
+        const m = new Map(prev);
+        m.set(passageId, next);
+        return m;
+      });
+      setReviewBusyIds((prev) => new Set(prev).add(passageId));
+      try {
+        const res = await setPassageReviewed(passageId, next);
+        if (!res.success) {
+          // 실패 → 낙관적 상태 롤백
+          setReviewOverrides((prev) => {
+            const m = new Map(prev);
+            m.set(passageId, !next);
+            return m;
+          });
+        }
+      } catch {
+        setReviewOverrides((prev) => {
+          const m = new Map(prev);
+          m.set(passageId, !next);
+          return m;
+        });
+      } finally {
+        setReviewBusyIds((prev) => {
+          const s = new Set(prev);
+          s.delete(passageId);
+          return s;
+        });
+      }
+    },
+    [],
+  );
   const [dupSummary, setDupSummary] = useState<DupSummary | null>(null);
   const [dupLoading, setDupLoading] = useState(false);
   const [dupError, setDupError] = useState<string | null>(null);
   const [pageMode, setPageMode] = useState<"list" | "duplicates">("list");
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
+  const [bulkReviewing, setBulkReviewing] = useState(false);
   // Optimistic local removal — router.refresh() updates server-side props
   // eventually, but we hide deleted rows immediately so the user doesn't have
   // to wait (and so the duplicates view, which has its own client-side cache,
@@ -492,6 +546,7 @@ export function PassageListClient({
       selectedCount={selection.selectedIds.size}
       onCopy={onAddToFolder}
       onMove={onMoveToFolder}
+      compact
     />
   );
 
@@ -531,25 +586,94 @@ export function PassageListClient({
     }
   }, [selection, bulkDeleting, router]);
 
+  // 선택한 학습지 일괄 검수완료 — 미검수가 하나라도 있으면 검수완료로, 모두
+  // 검수완료 상태면 검수취소로 토글한다. 낙관적 상태(reviewOverrides)도 갱신.
+  const handleBulkReview = useCallback(async () => {
+    const ids = Array.from(selection.selectedIds);
+    if (ids.length === 0 || bulkReviewing) return;
+    const allReviewed = ids.every(
+      (id) =>
+        reviewOverrides.get(id) ??
+        !!passagesData.passages.find((p) => p.id === id)?.reviewedAt,
+    );
+    const next = !allReviewed;
+    setBulkReviewing(true);
+    setReviewOverrides((prev) => {
+      const m = new Map(prev);
+      for (const id of ids) m.set(id, next);
+      return m;
+    });
+    try {
+      const result = await bulkSetPassageReviewed(ids, next);
+      if (!result.success) {
+        toast.error(result.error || "검수 상태 변경에 실패했습니다.");
+        setReviewOverrides((prev) => {
+          const m = new Map(prev);
+          for (const id of ids) m.set(id, !next);
+          return m;
+        });
+        return;
+      }
+      toast.success(
+        next
+          ? `${result.count}편을 검수완료 처리했습니다.`
+          : `${result.count}편의 검수를 취소했습니다.`,
+      );
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "검수 상태 변경에 실패했습니다.");
+      setReviewOverrides((prev) => {
+        const m = new Map(prev);
+        for (const id of ids) m.set(id, !next);
+        return m;
+      });
+    } finally {
+      setBulkReviewing(false);
+    }
+  }, [
+    selection.selectedIds,
+    bulkReviewing,
+    reviewOverrides,
+    passagesData.passages,
+  ]);
+
+  const bulkReviewAction = (
+    <button
+      type="button"
+      onClick={handleBulkReview}
+      disabled={selection.selectedIds.size === 0 || bulkReviewing}
+      title="검수완료"
+      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-emerald-300 bg-white px-2.5 text-[11px] font-semibold text-emerald-600 transition-colors hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      {bulkReviewing ? (
+        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+      ) : (
+        <CheckCircle2 className="w-3.5 h-3.5" />
+      )}
+      검수완료
+    </button>
+  );
+
   const bulkDeleteAction = (
     <button
       type="button"
       onClick={() => setBulkDeleteOpen(true)}
       disabled={selection.selectedIds.size === 0 || bulkDeleting}
-      className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+      title="삭제"
+      aria-label="삭제"
+      className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {bulkDeleting ? (
         <Loader2 className="w-3.5 h-3.5 animate-spin" />
       ) : (
         <Trash2 className="w-3.5 h-3.5" />
       )}
-      삭제
     </button>
   );
 
   const selectionActions = (
     <>
       {addToFolderAction}
+      {bulkReviewAction}
       {bulkDeleteAction}
     </>
   );
@@ -613,7 +737,7 @@ export function PassageListClient({
   );
 
   return (
-    <div className="flex flex-col h-[calc(100vh-64px)]">
+    <div className={embedded ? "flex flex-col" : "flex flex-col h-[calc(100vh-64px)]"}>
       {/* ─── Deep-link filter badges (sourceMaterial / collection) ─── */}
       <DeepLinkBadges
         sourceMaterialBadge={sourceMaterialBadge}
@@ -622,7 +746,13 @@ export function PassageListClient({
       />
 
       {/* ─── Content ─── */}
-      <div className="-mx-6 flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pb-4 sm:px-8">
+      <div
+        className={
+          embedded
+            ? "pb-4"
+            : "-mx-6 flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pb-4 sm:px-8"
+        }
+      >
         {passagesData.passages.length === 0 ? (
           <div className="mt-2 bg-white rounded-xl border text-center py-20">
             <Folder className="w-12 h-12 text-slate-200 mx-auto mb-3" />
@@ -668,7 +798,7 @@ export function PassageListClient({
                   selection.clearSelection();
                 }}
                 useCardInsideFolder={true}
-                rootLabel="전체 지문"
+                rootLabel="전체 학습지"
                 enableFolderControls
                 allFolders={folder.collections}
                 storageKey="passages"
@@ -676,7 +806,7 @@ export function PassageListClient({
                 pageHeader={{
                   icon: <FileText className="h-3.5 w-3.5" />,
                   parentLabel: "학습지 관리",
-                  title: "전체 지문",
+                  title: "전체 학습지",
                   totalCount,
                   itemLabel: "지문",
                   itemUnit: "편",
@@ -869,6 +999,10 @@ export function PassageListClient({
                         selected={selection.selectedIds.has(p.id)}
                         onToggleSelect={selection.toggleSelect}
                         onViewDetail={setModalPassageId}
+                        onEdit={setModalPassageId}
+                        reviewed={reviewOverrides.get(p.id) ?? !!p.reviewedAt}
+                        onToggleReview={handleToggleReview}
+                        reviewBusy={reviewBusyIds.has(p.id)}
                         dupCount={dupCountById.get(p.id) ?? 0}
                       />
                     ))}

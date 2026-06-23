@@ -944,7 +944,7 @@ export function QuestionBankCard({
                   }
                 >
                   <CheckCircle2 className="w-3 h-3" />
-                  검수완료
+                  {q.approved ? "검수완료" : "미검수"}
                 </Button>
                 <div className="flex min-w-0 flex-1 items-center gap-1.5">
                   <Button

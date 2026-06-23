@@ -89,9 +89,12 @@ export default async function PassageRegistrationPage({
     ...listFilters,
     sourceMaterialId: sourceMaterial ? listFilters.sourceMaterialId : undefined,
     collectionId: collectionSummary ? listFilters.collectionId : undefined,
-    // Mirror the standalone 지문 관리 페이지: 분석 완료(+직접 입력) 지문만 보여준다.
-    analyzedOnly: true,
-    includeDirectInput: true,
+    // 하단 "학습지 목록"은 생성이 완료된 학습지(PRIME 분석 보고서가 있는 지문)만
+    // 모으는 별도 관리(파일)창이다. 위쪽 "내 지문 선택 → 워크스페이스" 흐름에서
+    // 학습지가 생성되면 이 목록에 쌓인다. hasReport 단독이 충분한 기준 —
+    // analyzedOnly 를 함께 걸면 보고서는 있으나 PassageAnalysis 행이 없는(분석이
+    // 보고서 JSON 안에만 있는) 학습지가 잘못 숨겨지므로 쓰지 않는다.
+    hasReport: true,
   };
 
   const [
@@ -149,9 +152,8 @@ export default async function PassageRegistrationPage({
         initialPassageIds={initialPassageIds}
       />
 
-      {/* ─── 지문 목록 — /director/workbench/passages 페이지를 그대로 이식한 별도 블록 ─── */}
+      {/* ─── 학습지 목록 — /director/workbench/passages 페이지를 그대로 이식한 별도 블록 ─── */}
       <section className="flex flex-col gap-2">
-        <h2 className="text-sm font-semibold text-slate-700">지문 목록</h2>
         <PassageListClient
           academyId={staff.academyId}
           passagesData={listData}
@@ -172,6 +174,7 @@ export default async function PassageRegistrationPage({
               : null
           }
           basePath={PASSAGE_MANAGER_BASE_PATH}
+          embedded
         />
       </section>
     </div>

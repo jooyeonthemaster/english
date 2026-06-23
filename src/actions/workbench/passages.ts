@@ -26,6 +26,11 @@ const DIRECT_INPUT_MATERIAL_HASH = "__SMOAT_DIRECT_INPUT_TEXT__";
 /** `ExtractionJob.sourceType` marker for the text bucket (vs "PDF" | "IMAGES"). */
 const DIRECT_INPUT_SOURCE_TYPE = "TEXT";
 
+/** `PassageReport.generationPlan` marker for the A4 분석 보고서(학습지).
+ *  Mirrors PRIME_MARKER in the prime report API route. A passage "has a
+ *  generated 학습지" iff it owns a non-deleted report with this plan. */
+const PRIME_REPORT_MARKER = "PRIME";
+
 // ---------------------------------------------------------------------------
 // Passage CRUD (Workbench)
 // ---------------------------------------------------------------------------
@@ -49,6 +54,12 @@ export async function getWorkbenchPassages(
   if (filters?.sourceMaterialId) where.sourceMaterialId = filters.sourceMaterialId;
   if (filters?.collectionId) {
     where.collectionItems = { some: { collectionId: filters.collectionId } };
+  }
+  if (filters?.hasReport) {
+    // 생성이 완료된 학습지 = PRIME 분석 보고서가 존재하는 지문(soft-delete 제외).
+    where.reports = {
+      some: { generationPlan: PRIME_REPORT_MARKER, deletedAt: null },
+    };
   }
   if (filters?.search) {
     where.OR = [
@@ -81,6 +92,13 @@ export async function getWorkbenchPassages(
       include: {
         school: { select: { id: true, name: true, type: true } },
         analysis: { select: { id: true, updatedAt: true, analysisData: true } },
+        // 카드에 "학습지 생성/수정 시각"(연월일시분)을 띄우기 위한 최신 PRIME 보고서.
+        reports: {
+          where: { generationPlan: PRIME_REPORT_MARKER, deletedAt: null },
+          orderBy: { updatedAt: "desc" },
+          take: 1,
+          select: { createdAt: true, updatedAt: true, lastEditedAt: true },
+        },
         _count: { select: { questions: true, notes: true } },
       },
       orderBy: { createdAt: "desc" },
@@ -733,6 +751,100 @@ export async function bulkUpdatePassageTags(
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "태그 업데이트 실패";
+    return { success: false as const, error: message };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 학습지 검수완료 토글 — 학습지 카드의 "검수완료/검수취소" 버튼.
+//   reviewed=true  → reviewedAt = now(), reviewedById = 현재 staff
+//   reviewed=false → reviewedAt = null,  reviewedById = null (검수취소)
+// ---------------------------------------------------------------------------
+export async function setPassageReviewed(
+  passageId: string,
+  reviewed: boolean,
+): Promise<
+  | { success: true; reviewedAt: Date | null }
+  | { success: false; error: string }
+> {
+  const staff = await requireAuth();
+  try {
+    // 테넌트 경계: 본인 학원 지문만 갱신한다.
+    const result = await prisma.passage.updateMany({
+      where: { id: passageId, academyId: staff.academyId },
+      data: reviewed
+        ? { reviewedAt: new Date(), reviewedById: staff.id }
+        : { reviewedAt: null, reviewedById: null },
+    });
+    if (result.count === 0) {
+      return { success: false as const, error: "지문을 찾을 수 없습니다." };
+    }
+    revalidatePath("/director/workbench/passages");
+    revalidatePath("/director/workbench/passages/create");
+    return {
+      success: true as const,
+      reviewedAt: reviewed ? new Date() : null,
+    };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "검수 상태 변경 실패";
+    return { success: false as const, error: message };
+  }
+}
+
+/**
+ * 학습지 제목만 변경 — 상세 모달 헤더의 연필(제목 인라인 편집) 버튼.
+ * (updateWorkbenchPassage 는 schoolId 등 다른 필드를 함께 덮어쓰므로 제목 전용으로 분리)
+ */
+export async function renamePassage(
+  passageId: string,
+  title: string,
+): Promise<ActionResult> {
+  const staff = await requireAuth();
+  const trimmed = title.trim();
+  if (!trimmed) return { success: false as const, error: "제목을 입력하세요." };
+  try {
+    const result = await prisma.passage.updateMany({
+      where: { id: passageId, academyId: staff.academyId },
+      data: { title: trimmed },
+    });
+    if (result.count === 0) {
+      return { success: false as const, error: "지문을 찾을 수 없습니다." };
+    }
+    revalidatePath("/director/workbench/passages");
+    revalidatePath("/director/workbench/passages/create");
+    return { success: true as const };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "제목 수정 실패";
+    return { success: false as const, error: message };
+  }
+}
+
+/**
+ * 선택한 학습지 일괄 검수완료/검수취소 — 목록 툴바의 "검수완료" 버튼.
+ */
+export async function bulkSetPassageReviewed(
+  passageIds: string[],
+  reviewed: boolean,
+): Promise<{ success: true; count: number } | { success: false; error: string }> {
+  const staff = await requireAuth();
+  if (passageIds.length === 0) {
+    return { success: false as const, error: "선택한 학습지가 없습니다." };
+  }
+  try {
+    const result = await prisma.passage.updateMany({
+      where: { id: { in: passageIds }, academyId: staff.academyId },
+      data: reviewed
+        ? { reviewedAt: new Date(), reviewedById: staff.id }
+        : { reviewedAt: null, reviewedById: null },
+    });
+    revalidatePath("/director/workbench/passages");
+    revalidatePath("/director/workbench/passages/create");
+    return { success: true as const, count: result.count };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "검수 상태 변경 실패";
     return { success: false as const, error: message };
   }
 }

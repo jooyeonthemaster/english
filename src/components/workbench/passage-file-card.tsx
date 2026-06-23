@@ -5,10 +5,10 @@ import { useState, useRef, useEffect } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
   Check,
-  BookOpen,
-  PenTool,
-  Braces,
   Copy,
+  CheckCircle2,
+  Pencil,
+  Loader2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getSemesterLabel } from "@/lib/utils";
@@ -16,6 +16,9 @@ import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { isDirectInputPassage } from "@/lib/passage-source";
 import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
 import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
+import { PassageReportThumbnail } from "@/components/workbench/passage-report-thumbnail";
+import { renamePassage } from "@/actions/workbench";
+import { toast } from "sonner";
 import {
   clearCardTextSelection,
   preventCardDoubleClickTextSelection,
@@ -39,8 +42,11 @@ interface PassageItem {
   difficulty: string | null;
   tags: string | null;
   createdAt: Date;
+  reviewedAt?: Date | null;
   school: { id: string; name: string; type: string } | null;
   analysis: { id: string; updatedAt: Date; analysisData?: string | null } | null;
+  /** 최신 PRIME 학습지 보고서 — 카드의 "생성/수정 시각" 표기에 사용. */
+  reports?: { createdAt: Date; updatedAt: Date; lastEditedAt?: Date | null }[];
   _count: { questions: number; notes: number };
 }
 
@@ -55,6 +61,15 @@ function parseAnalysis(analysis: PassageItem["analysis"]) {
   } catch { return null; }
 }
 
+/** 연월일시분 — 카드 타임스탬프용(예: 2026.06.20 19:32). 잘못된 값이면 null. */
+function formatMinuteTimestamp(value?: string | Date | null): string | null {
+  if (!value) return null;
+  const d = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(d.getTime())) return null;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 // ---------------------------------------------------------------------------
 // PassageFileCard (Grid view)
 // ---------------------------------------------------------------------------
@@ -64,12 +79,24 @@ export function PassageFileCard({
   selected,
   onToggleSelect,
   onViewDetail,
+  onEdit,
+  reviewed,
+  onToggleReview,
+  reviewBusy,
   dupCount,
 }: {
   passage: PassageItem;
   selected: boolean;
   onToggleSelect: (id: string, shift: boolean) => void;
   onViewDetail: (id: string) => void;
+  /** "수정하기" — 상세 모달(편집 모드)을 연다. 미지정 시 onViewDetail 로 폴백. */
+  onEdit?: (id: string) => void;
+  /** 검수완료 여부. 미지정 시 passage.reviewedAt 으로 추론. */
+  reviewed?: boolean;
+  /** "검수완료/검수취소" 토글. 미지정 시 버튼을 숨긴다. */
+  onToggleReview?: (id: string, next: boolean) => void;
+  /** 검수 토글 처리 중(낙관적 업데이트 진행) — 버튼에 스피너. */
+  reviewBusy?: boolean;
   /** Optional. When this passage is part of a duplicate cluster, the number
    *  of *other* passages that share its normalized content. */
   dupCount?: number;
@@ -77,15 +104,60 @@ export function PassageFileCard({
   const data = parseAnalysis(passage.analysis);
   const isAnalyzed = !!passage.analysis;
   const isDirectInput = isDirectInputPassage(passage.source);
-  const vocabCount = data?.vocabulary?.length ?? 0;
-  const grammarCount = data?.grammarPoints?.length ?? 0;
-  const syntaxCount = data?.syntaxAnalysis?.length ?? 0;
-  const keySentenceCount = data?.structure?.topicSentenceIndex != null ? 1 : 0;
-  const examPointCount = (data?.examDesign?.paraphrasableSegments?.length ?? 0) + (data?.examDesign?.structureTransformPoints?.length ?? 0);
   const mainIdea = data?.structure?.mainIdea;
-  const wordCount = passage.content.trim().split(/\s+/).filter((w: string) => w.length > 0).length;
+  const isReviewed = reviewed ?? !!passage.reviewedAt;
 
-  const borderColor = isAnalyzed ? "border-emerald-200" : "border-slate-200";
+  // ── 학습지 제목 인라인 편집 (제목 오른쪽 연필) ──
+  const [title, setTitle] = useState(passage.title);
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState(passage.title);
+  const [savingTitle, setSavingTitle] = useState(false);
+  useEffect(() => {
+    setTitle(passage.title);
+  }, [passage.id, passage.title]);
+  const saveTitle = async () => {
+    const next = titleDraft.trim();
+    if (!next || next === title) {
+      setEditingTitle(false);
+      setTitleDraft(title);
+      return;
+    }
+    const prev = title;
+    setTitle(next);
+    setEditingTitle(false);
+    setSavingTitle(true);
+    try {
+      const res = await renamePassage(passage.id, next);
+      if (!res.success) {
+        setTitle(prev);
+        toast.error(res.error || "제목 수정에 실패했습니다.");
+      } else {
+        toast.success("제목을 변경했습니다.");
+      }
+    } catch (err) {
+      setTitle(prev);
+      toast.error(err instanceof Error ? err.message : "제목 수정에 실패했습니다.");
+    } finally {
+      setSavingTitle(false);
+    }
+  };
+
+  // 학습지 생성/수정 시각 — 최신 PRIME 보고서의 lastEditedAt > updatedAt > createdAt
+  // 순으로, 보고서가 없으면 지문 생성 시각으로 폴백.
+  const latestReport = passage.reports?.[0];
+  const cardTimestamp = formatMinuteTimestamp(
+    latestReport?.lastEditedAt ??
+      latestReport?.updatedAt ??
+      latestReport?.createdAt ??
+      passage.createdAt,
+  );
+
+  // 미검수 = 분홍(red-200/80) 테두리 + 은은한 빨강 글로우 (question-bank-card 와 동일 언어).
+  // 검수완료 = 초록 테두리.
+  const borderColor = isReviewed ? "border-emerald-300" : "border-red-200/80";
+  const reviewGlow = isReviewed
+    ? "hover:shadow-md"
+    : "shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)] hover:shadow-md";
   const dragRef = useRef<HTMLDivElement>(null);
   const dragHandleRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -139,12 +211,18 @@ export function PassageFileCard({
         e.preventDefault();
         onViewDetail(passage.id);
       }}
-      className={`group relative flex h-full flex-col rounded-xl border ${borderColor} bg-white px-4 py-2.5 transition-all duration-200 hover:shadow-md cursor-pointer ${
+      className={`group relative flex h-full min-h-[212px] flex-row overflow-hidden rounded-xl border ${borderColor} ${reviewGlow} bg-white transition-all duration-200 cursor-pointer ${
         selected ? "ring-2 ring-blue-400" : ""
       } ${isDragging ? "opacity-40 scale-95" : ""}
       `}>
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex items-start gap-2.5 min-w-0 flex-1">
+        {/* ─── 좌측: 분석 보고서(학습지) 첫 장 실제 렌더 미리보기 ─── */}
+        <div className="relative w-[148px] shrink-0 self-stretch overflow-hidden border-r border-slate-100 bg-white">
+          <PassageReportThumbnail passageId={passage.id} />
+        </div>
+
+        {/* ─── 우측: 카드 본문 ─── */}
+        <div className="flex min-w-0 flex-1 flex-col px-3.5 py-2.5">
+          <div className="flex items-start gap-2.5 min-w-0">
             <DragHandle ref={dragHandleRef} className="mt-0.5 shrink-0" />
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleSelect(passage.id, e.shiftKey); }}
@@ -155,93 +233,152 @@ export function PassageFileCard({
               <Check className="w-3 h-3" />
             </button>
             <div className="min-w-0 flex-1">
-              <h4 className="text-[13px] font-semibold text-slate-800 truncate group-hover:text-blue-600 transition-colors">
-                {sanitizeAiModelDisclosureText(passage.title)}
-              </h4>
-              <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                {isAnalyzed ? (
-                  <span className="text-[10px] font-medium text-emerald-600">분석 완료</span>
-                ) : (
-                  <span className="text-[10px] font-medium text-slate-400">분석 대기</span>
-                )}
-                {isDirectInput && (
+              {editingTitle ? (
+                <input
+                  autoFocus
+                  value={titleDraft}
+                  onChange={(e) => setTitleDraft(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => {
+                    e.stopPropagation();
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      void saveTitle();
+                    } else if (e.key === "Escape") {
+                      e.preventDefault();
+                      setEditingTitle(false);
+                      setTitleDraft(title);
+                    }
+                  }}
+                  onBlur={() => void saveTitle()}
+                  disabled={savingTitle}
+                  placeholder="학습지 제목"
+                  className="w-full rounded-md border border-blue-300 bg-white px-1.5 py-0.5 text-[13px] font-semibold text-slate-800 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/15 disabled:opacity-60"
+                />
+              ) : (
+                <div className="flex items-center gap-1 min-w-0">
+                  <h4 className="text-[13px] font-semibold text-slate-800 truncate group-hover:text-blue-600 transition-colors">
+                    {sanitizeAiModelDisclosureText(title)}
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setTitleDraft(title);
+                      setEditingTitle(true);
+                    }}
+                    title="학습지 제목 수정"
+                    aria-label="학습지 제목 수정"
+                    className="inline-flex size-5 shrink-0 items-center justify-center rounded text-slate-400 opacity-0 transition-all hover:bg-slate-100 hover:text-slate-700 group-hover:opacity-100"
+                  >
+                    {savingTitle ? (
+                      <Loader2 className="size-3 animate-spin" />
+                    ) : (
+                      <Pencil className="size-3" />
+                    )}
+                  </button>
+                </div>
+              )}
+              {isDirectInput ? (
+                <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                   <span className="inline-flex items-center text-[10px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
                     직접 입력
                   </span>
-                )}
-                <span className="text-[10px] text-slate-400">{wordCount} words</span>
+                </div>
+              ) : null}
+            </div>
+          </div>
+
+          {(passage.school || passage.grade || passage.unit || passage.publisher) && (
+            <div className="flex items-center gap-1.5 flex-wrap mt-2">
+              {passage.school && <Badge variant="outline" className="text-[9px] h-5 px-1.5 font-medium">{passage.school.name}</Badge>}
+              {passage.grade && <Badge variant="secondary" className="text-[9px] h-5 px-1.5">{passage.grade}학년</Badge>}
+              {passage.semester && <Badge variant="secondary" className="text-[9px] h-5 px-1.5">{getSemesterLabel(passage.semester)}</Badge>}
+              {passage.unit && <Badge variant="secondary" className="text-[9px] h-5 px-1.5">{passage.unit}</Badge>}
+              {passage.publisher && <Badge variant="outline" className="text-[9px] h-5 px-1.5 text-slate-500">{passage.publisher}</Badge>}
+            </div>
+          )}
+
+          {isAnalyzed && mainIdea && (
+            <p className="text-[11px] text-slate-500 leading-relaxed mt-2 line-clamp-2">{mainIdea}</p>
+          )}
+
+          {/* ─── 하단: 생성/수정 시각(연월일시분) + 액션 버튼 행 ─── */}
+          <div className="mt-auto pt-3">
+            {(cardTimestamp || (dupCount && dupCount > 0)) ? (
+              <div className="mb-1.5 flex items-center gap-1.5">
+                {cardTimestamp ? (
+                  <span className="text-[10px] tabular-nums text-slate-400">
+                    {cardTimestamp}
+                  </span>
+                ) : null}
                 {dupCount && dupCount > 0 ? (
                   <span
-                    className="inline-flex items-center gap-0.5 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200 tabular-nums"
+                    className="inline-flex items-center gap-0.5 rounded bg-slate-100 px-1 py-0 text-[9px] font-semibold text-slate-500 tabular-nums"
                     title={`동일한 내용의 지문 ${dupCount}편이 더 존재합니다`}
                   >
-                    <Copy className="w-2.5 h-2.5" />
+                    <Copy className="w-2 h-2" />
                     {dupCount} 중복
                   </span>
                 ) : null}
               </div>
+            ) : null}
+            <div className="flex items-end gap-1.5">
+            <div className="flex min-w-0 flex-1 items-center gap-1.5">
+              {onToggleReview ? (
+                // 검수완료 토글 — 미검수=분홍(red-200/80) 테두리+아이콘+텍스트,
+                // hover 시 검수완료(초록) 미리보기. 검수완료=초록 테두리+아이콘+텍스트.
+                // (question-bank-card 의 검수 토글과 동일 동작 매커니즘)
+                <button
+                  type="button"
+                  disabled={reviewBusy}
+                  aria-pressed={isReviewed}
+                  title={
+                    isReviewed
+                      ? "검수완료 — 누르면 검수를 취소합니다"
+                      : "검수필요 — 누르면 검수완료로 표시합니다"
+                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleReview(passage.id, !isReviewed);
+                  }}
+                  className={
+                    "flex h-7 flex-1 min-w-0 items-center justify-center gap-1.5 rounded-md bg-white px-2 text-[11px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 " +
+                    (isReviewed
+                      ? "border border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+                      : "border border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
+                  }
+                >
+                  {reviewBusy ? (
+                    <Loader2 className="w-3.5 h-3.5 shrink-0 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                  )}
+                  <span className="truncate">{isReviewed ? "검수완료" : "미검수"}</span>
+                </button>
+              ) : null}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  (onEdit ?? onViewDetail)(passage.id);
+                }}
+                className="flex h-7 flex-1 min-w-0 items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+              >
+                <Pencil className="w-3 h-3 shrink-0" />
+                <span className="truncate">수정하기</span>
+              </button>
+            </div>
+            <CardDetailIconButton
+              className="size-7 rounded-md"
+              iconClassName="size-3.5"
+              onClick={(e) => {
+                e.stopPropagation();
+                onViewDetail(passage.id);
+              }}
+            />
             </div>
           </div>
-        </div>
-
-        <p className="text-[11px] text-slate-500 leading-relaxed mt-2.5 line-clamp-3">
-          {passage.content.length > 200 ? passage.content.slice(0, 200) + "..." : passage.content}
-        </p>
-
-        {(passage.school || passage.grade || passage.unit || passage.publisher) && (
-          <div className="flex items-center gap-1.5 flex-wrap mt-2.5">
-            {passage.school && <Badge variant="outline" className="text-[9px] h-5 px-1.5 font-medium">{passage.school.name}</Badge>}
-            {passage.grade && <Badge variant="secondary" className="text-[9px] h-5 px-1.5">{passage.grade}학년</Badge>}
-            {passage.semester && <Badge variant="secondary" className="text-[9px] h-5 px-1.5">{getSemesterLabel(passage.semester)}</Badge>}
-            {passage.unit && <Badge variant="secondary" className="text-[9px] h-5 px-1.5">{passage.unit}</Badge>}
-            {passage.publisher && <Badge variant="outline" className="text-[9px] h-5 px-1.5 text-slate-500">{passage.publisher}</Badge>}
-          </div>
-        )}
-
-        {isAnalyzed && mainIdea && (
-          <p className="text-[11px] text-slate-500 leading-relaxed mt-2 line-clamp-2">{mainIdea}</p>
-        )}
-
-        <div className="mt-auto flex items-end gap-2 pt-2">
-          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-            {isAnalyzed && (
-              <>
-                {vocabCount > 0 && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-medium text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
-                    <BookOpen className="w-3 h-3" />어휘 {vocabCount}
-                  </span>
-                )}
-                {grammarCount > 0 && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-medium text-violet-600 bg-violet-50 px-1.5 py-0.5 rounded">
-                    <PenTool className="w-3 h-3" />어법 {grammarCount}
-                  </span>
-                )}
-                {syntaxCount > 0 && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-medium text-cyan-600 bg-cyan-50 px-1.5 py-0.5 rounded">
-                    <Braces className="w-3 h-3" />읽기포인트 {syntaxCount}
-                  </span>
-                )}
-                {keySentenceCount > 0 && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-medium text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
-                    핵심문장 {keySentenceCount}
-                  </span>
-                )}
-                {examPointCount > 0 && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-medium text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">
-                    출제포인트 {examPointCount}
-                  </span>
-                )}
-              </>
-            )}
-          </div>
-          <CardDetailIconButton
-            className="size-7 rounded-md"
-            iconClassName="size-3.5"
-            onClick={(e) => {
-              e.stopPropagation();
-              onViewDetail(passage.id);
-            }}
-          />
         </div>
     </div>
   );

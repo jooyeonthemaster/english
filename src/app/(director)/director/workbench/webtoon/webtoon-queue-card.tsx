@@ -211,7 +211,7 @@ export function WebtoonQueueCard({
                 }
               >
                 <CheckCircle2 className="h-3 w-3 shrink-0" />
-                검수완료
+                {item.approved ? "검수완료" : "미검수"}
               </Button>
               {onEditText ? (
                 <Button

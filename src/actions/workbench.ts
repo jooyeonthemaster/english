@@ -24,6 +24,9 @@ export {
   deleteWorkbenchPassage,
   bulkDeleteWorkbenchPassages,
   bulkUpdatePassageTags,
+  setPassageReviewed,
+  bulkSetPassageReviewed,
+  renamePassage,
 } from "./workbench/passages";
 
 export { importExamPassages } from "./workbench/exam-passages";
@@ -92,6 +95,16 @@ export {
   removePassagesFromCollection,
   getPassageCollectionItems,
 } from "./workbench/collections-passage";
+
+export {
+  getWebtoonCollections,
+  createWebtoonCollection,
+  updateWebtoonCollection,
+  deleteWebtoonCollection,
+  addWebtoonsToCollection,
+  removeWebtoonsFromCollection,
+  getAcademyWebtoonCollectionMembership,
+} from "./workbench/collections-webtoon";
 
 export {
   getM1DraftCollections,

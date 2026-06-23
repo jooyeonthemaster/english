@@ -79,6 +79,8 @@ interface FormSectionContainerProps {
   libraryLabel?: string;
   /** 라이브러리(내 지문함) override. 없으면 추출 드래프트 그리드로 폴백. */
   library?: ReactNode;
+  /** 기출 지문 브라우저 — 주어지면 "기출 지문" intake 탭 노출. */
+  examBrowser?: ReactNode;
 
   // 자료 관리 picker (ExtractionManageEmbed 폴백 전용)
   draftRefreshToken?: number;
@@ -164,6 +166,7 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       onDeletePrompt={(id) => deletePrompt({ id, setSavedPrompts: p.setSavedPrompts })}
       libraryLabel={p.libraryLabel}
       library={p.library}
+      examBrowser={p.examBrowser}
       onSelectDraft={p.onSelectDraft}
       onLoadSelectedDrafts={p.onLoadSelectedDrafts}
       loadedDraftIds={p.loadedDraftIds}

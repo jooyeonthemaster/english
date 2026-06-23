@@ -75,6 +75,7 @@ export function QuestionEditWorkspace({
   const aiView = (
     <AiEditView
       questionId={question.id}
+      aiGenerated={Boolean(question.aiGenerated)}
       onSwitchToManual={() => setView("manual")}
       onClose={closeWorkspace}
       onBack={onBack}

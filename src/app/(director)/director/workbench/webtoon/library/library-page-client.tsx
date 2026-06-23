@@ -1,38 +1,47 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  ArrowLeft,
-  Palette,
-  Search,
-  Loader2,
+  FolderX,
   Image as ImageIcon,
-  X,
-  AlertCircle,
-  Maximize2,
-  Download,
-  Trash2,
+  Loader2,
+  Palette,
   RefreshCw,
-  Type,
+  Search,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { usePersistedState } from "@/hooks/use-persisted-state";
+import { useFolderManager } from "@/hooks/use-folder-manager";
+import { useSelection } from "@/components/workbench/hooks/use-selection";
+import { FolderSection } from "@/components/workbench/shared/folder-section";
+import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
+import { Pagination } from "@/components/workbench/shared/pagination";
+import type { CollectionItem } from "@/components/workbench/shared/types";
 import {
+  createWebtoonCollection,
+  updateWebtoonCollection,
+  deleteWebtoonCollection,
+  addWebtoonsToCollection,
+  removeWebtoonsFromCollection,
+} from "@/actions/workbench";
+import {
+  DEFAULT_WEBTOON_LANGUAGE,
   WEBTOON_STYLES,
-  styleLabel,
-  languageLabel,
   type WebtoonRow,
   type WebtoonStatus,
   type WebtoonStyleId,
 } from "../webtoon-page-types";
+import { WebtoonQueueCard } from "../webtoon-queue-card";
 import { WebtoonTextEditor } from "../editor/webtoon-text-editor";
 
-function libraryDisplayUrl(item: WebtoonRow): string | null {
-  return item.editedImageUrl || item.imageUrl;
-}
-
 const PAGE_SIZE = 24;
+// API caps `limit` at 100; we pull every page so folder membership filtering
+// (which spans the whole library) stays correct rather than per-page.
+const FETCH_LIMIT = 100;
+
 const STATUS_FILTERS: { id: WebtoonStatus | "ALL"; label: string }[] = [
   { id: "ALL", label: "전체" },
   { id: "COMPLETED", label: "완료" },
@@ -41,269 +50,577 @@ const STATUS_FILTERS: { id: WebtoonStatus | "ALL"; label: string }[] = [
   { id: "FAILED", label: "실패" },
 ];
 
-export function WebtoonLibraryClient({ academyId }: { academyId: string }) {
+type GridCols = "grid3" | "grid4" | "grid5";
+
+const GRID_CLASS: Record<GridCols, string> = {
+  grid3: "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3",
+  grid4: "grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4",
+  grid5: "grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5",
+};
+
+const GRID_OPTIONS: { value: GridCols; label: string }[] = [
+  { value: "grid3", label: "3" },
+  { value: "grid4", label: "4" },
+  { value: "grid5", label: "5" },
+];
+
+// ─── Server-action adapters for the shared folder manager ───
+const folderActions = {
+  createCollection: createWebtoonCollection,
+  updateCollection: updateWebtoonCollection,
+  deleteCollection: deleteWebtoonCollection,
+  addToCollection: addWebtoonsToCollection,
+  removeFromCollection: removeWebtoonsFromCollection,
+};
+
+interface WebtoonLibraryClientProps {
+  academyId: string;
+  collections: CollectionItem[];
+  collectionMembership: Record<string, Set<string>>;
+}
+
+export function WebtoonLibraryClient({
+  academyId,
+  collections: initialCollections,
+  collectionMembership: initialMembership,
+}: WebtoonLibraryClientProps) {
   void academyId;
 
   const [items, setItems] = useState<WebtoonRow[]>([]);
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<WebtoonStatus | "ALL">("ALL");
   const [styleFilter, setStyleFilter] = useState<WebtoonStyleId | "ALL">("ALL");
-
-  const [previewItem, setPreviewItem] = useState<WebtoonRow | null>(null);
+  const [page, setPage] = useState(1);
+  const [gridCols, setGridCols] = usePersistedState<GridCols>(
+    "smoat:view-mode:webtoon-library",
+    "grid4",
+    (v): v is GridCols => v === "grid3" || v === "grid4" || v === "grid5",
+  );
   const [editingId, setEditingId] = useState<string | null>(null);
   const editingItem = useMemo(
     () => items.find((it) => it.id === editingId) ?? null,
     [items, editingId],
   );
 
-  const applyEdited = (webtoonId: string, editedImageUrl: string) => {
-    setItems((prev) =>
-      prev.map((it) => (it.id === webtoonId ? { ...it, editedImageUrl } : it)),
-    );
-    setPreviewItem((prev) =>
-      prev && prev.id === webtoonId ? { ...prev, editedImageUrl } : prev,
-    );
-  };
-
-  const fetchPage = async (p: number, statusOverride?: WebtoonStatus | "ALL") => {
-    const sf = statusOverride ?? statusFilter;
-    setLoading(true);
+  // ─── Data fetch — pull the whole library (all pages) so folder filtering
+  //     works across the entire set, then paginate client-side. ───
+  const fetchAll = useCallback(async (showSpinner = true) => {
+    if (showSpinner) setLoading(true);
     try {
-      const params = new URLSearchParams({
-        page: String(p),
-        limit: String(PAGE_SIZE),
-      });
-      if (sf !== "ALL") params.set("status", sf);
+      const first = await fetch(
+        `/api/webtoons/list?page=1&limit=${FETCH_LIMIT}`,
+      ).then((r) => r.json());
+      if (!first.ok) throw new Error(first.error || "목록 로드 실패");
 
-      const res = await fetch(`/api/webtoons/list?${params.toString()}`);
-      const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error || `${res.status}`);
-
-      setItems(data.items);
-      setTotal(data.total ?? data.items.length);
-      setPage(p);
+      let all: WebtoonRow[] = first.items;
+      const total: number = first.total ?? first.items.length;
+      if (total > FETCH_LIMIT) {
+        const pages = Math.ceil(total / FETCH_LIMIT);
+        const rest = await Promise.all(
+          Array.from({ length: pages - 1 }, (_, i) =>
+            fetch(`/api/webtoons/list?page=${i + 2}&limit=${FETCH_LIMIT}`)
+              .then((r) => r.json())
+              .catch(() => null),
+          ),
+        );
+        for (const r of rest) if (r?.ok) all = all.concat(r.items);
+      }
+      setItems(all);
     } catch (err) {
       const message = err instanceof Error ? err.message : "fetch error";
       toast.error(`목록 로드 실패: ${message}`);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    void fetchPage(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [statusFilter]);
+    void fetchAll();
+  }, [fetchAll]);
 
-  // Auto-refresh every 5s if any active items on this page
+  // Auto-refresh every 5s while any item is still generating.
   useEffect(() => {
     const hasActive = items.some(
       (it) => it.status === "PENDING" || it.status === "GENERATING",
     );
     if (!hasActive) return;
-    const tid = setInterval(() => void fetchPage(page), 5000);
+    const tid = setInterval(() => void fetchAll(false), 5000);
     return () => clearInterval(tid);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, page]);
+  }, [items, fetchAll]);
 
+  // ─── Folder manager (shared with 지문/문제/시험지 관리) ───
+  const folder = useFolderManager({
+    initialCollections,
+    initialMembership,
+    actions: folderActions,
+    itemLabel: "웹툰",
+  });
+  const { filterByActiveFolder } = folder;
+
+  // ─── Filter pipeline: folder → status → style → search ───
   const filtered = useMemo(() => {
-    return items.filter((it) => {
-      if (styleFilter !== "ALL" && it.style !== styleFilter) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        if (!it.passage.title.toLowerCase().includes(q)) return false;
-      }
-      return true;
-    });
-  }, [items, styleFilter, search]);
+    let list = filterByActiveFolder(items);
+    if (statusFilter !== "ALL") {
+      list = list.filter((it) => it.status === statusFilter);
+    }
+    if (styleFilter !== "ALL") {
+      list = list.filter((it) => it.style === styleFilter);
+    }
+    const q = search.trim().toLowerCase();
+    if (q) {
+      list = list.filter((it) => it.passage.title.toLowerCase().includes(q));
+    }
+    return list;
+  }, [items, filterByActiveFolder, statusFilter, styleFilter, search]);
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("이 웹툰을 삭제하시겠습니까? 이미지 파일도 함께 삭제됩니다.")) return;
+  // Reset to page 1 whenever the filtered set changes shape.
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  useEffect(() => {
+    if (page > totalPages) setPage(1);
+  }, [page, totalPages]);
+
+  const pageItems = useMemo(
+    () => filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+    [filtered, page],
+  );
+
+  const filteredIds = useMemo(() => filtered.map((it) => it.id), [filtered]);
+  const selection = useSelection(filteredIds);
+
+  // ─── Folder action wrappers (operate on current selection) ───
+  const onAddToFolder = useCallback(
+    async (collectionId: string) => {
+      const ok = await folder.handleAddToFolder(
+        collectionId,
+        selection.selectedIds,
+      );
+      if (ok) selection.clearSelection();
+    },
+    [folder, selection],
+  );
+
+  const onMoveToFolder = useCallback(
+    async (collectionId: string) => {
+      if (selection.selectedIds.size === 0) return;
+      const anyId = selection.selectedIds.values().next().value as
+        | string
+        | undefined;
+      if (!anyId) return;
+      const ok = await folder.handleDragToFolder(
+        anyId,
+        collectionId,
+        false,
+        selection.selectedIds,
+      );
+      if (ok) selection.clearSelection();
+    },
+    [folder, selection],
+  );
+
+  const onRemoveFromFolder = useCallback(async () => {
+    const ok = await folder.handleRemoveFromFolder(selection.selectedIds);
+    if (ok) selection.clearSelection();
+  }, [folder, selection]);
+
+  const onFolderClick = useCallback(
+    (folderId: string) => {
+      folder.setActiveFolder(folderId);
+      selection.clearSelection();
+      setPage(1);
+    },
+    [folder, selection],
+  );
+
+  // ─── Card action handlers ───
+  const applyEdited = useCallback(
+    (webtoonId: string, editedImageUrl: string) => {
+      setItems((prev) =>
+        prev.map((it) =>
+          it.id === webtoonId ? { ...it, editedImageUrl } : it,
+        ),
+      );
+    },
+    [],
+  );
+
+  const handleDelete = useCallback(async (id: string) => {
+    if (!confirm("이 웹툰을 삭제하시겠습니까? 이미지 파일도 함께 삭제됩니다."))
+      return;
     try {
       const res = await fetch(`/api/webtoons/${id}`, { method: "DELETE" });
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error(data.error || `${res.status}`);
       setItems((prev) => prev.filter((it) => it.id !== id));
-      setTotal((t) => Math.max(0, t - 1));
-      if (previewItem?.id === id) setPreviewItem(null);
       toast.success("삭제됨");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "삭제 실패";
-      toast.error(message);
+      toast.error(err instanceof Error ? err.message : "삭제 실패");
     }
-  };
+  }, []);
 
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const handleToggleApprove = useCallback(
+    async (id: string) => {
+      const target = items.find((it) => it.id === id);
+      if (!target) return;
+      const next = !target.approved;
+      setItems((prev) =>
+        prev.map((it) => (it.id === id ? { ...it, approved: next } : it)),
+      );
+      try {
+        const res = await fetch(`/api/webtoons/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ approved: next }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || `${res.status}`);
+      } catch (err) {
+        setItems((prev) =>
+          prev.map((it) =>
+            it.id === id ? { ...it, approved: target.approved } : it,
+          ),
+        );
+        toast.error(err instanceof Error ? err.message : "검수 상태 변경 실패");
+      }
+    },
+    [items],
+  );
+
+  const handleRetry = useCallback(
+    async (id: string) => {
+      const target = items.find((it) => it.id === id);
+      if (!target) return;
+      try {
+        const res = await fetch("/api/ai/webtoon/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            passageIds: [target.passageId],
+            style: target.style,
+            language: target.language ?? DEFAULT_WEBTOON_LANGUAGE,
+            customPrompt: target.customPrompt ?? "",
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || `${res.status}`);
+        toast.message("웹툰 재생성을 시작했습니다.");
+        await fetchAll(false);
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "재생성 요청 실패");
+      }
+    },
+    [items, fetchAll],
+  );
+
+  const handleBulkDelete = useCallback(async () => {
+    const ids = Array.from(selection.selectedIds).filter((id) => {
+      const it = items.find((x) => x.id === id);
+      return it && it.status !== "PENDING" && it.status !== "GENERATING";
+    });
+    if (ids.length === 0) {
+      toast.info("삭제할 수 있는 웹툰이 없습니다.");
+      return;
+    }
+    if (!confirm(`선택한 웹툰 ${ids.length}개를 삭제하시겠습니까? 이미지 파일도 함께 삭제됩니다.`))
+      return;
+    const results = await Promise.all(
+      ids.map((id) =>
+        fetch(`/api/webtoons/${id}`, { method: "DELETE" })
+          .then((r) => r.json())
+          .then((d) => (d.ok ? id : null))
+          .catch(() => null),
+      ),
+    );
+    const deleted = results.filter((x): x is string => x !== null);
+    if (deleted.length > 0) {
+      const deletedSet = new Set(deleted);
+      setItems((prev) => prev.filter((it) => !deletedSet.has(it.id)));
+      selection.clearSelection();
+      toast.success(`${deleted.length}개 삭제됨`);
+    }
+    if (deleted.length < ids.length) {
+      toast.error(`${ids.length - deleted.length}개는 삭제하지 못했습니다.`);
+    }
+  }, [selection, items]);
+
+  const totalCount = items.length;
+  const [folderStickyRef, folderStickyHeight] = useMeasuredHeight();
+
+  const hasSelection = selection.selectedIds.size > 0;
 
   return (
-    <main className="flex-1 overflow-y-auto p-6 relative">
-      <div className="flex flex-col min-h-[calc(100vh-64px)] bg-slate-50">
-        {/* Header */}
-        <div className="flex items-center gap-4 px-8 py-4 bg-white border-b border-slate-200/80 shrink-0">
-          <Link
-            href="/director/workbench"
-            className="flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all"
-          >
-            <ArrowLeft className="w-4.5 h-4.5 text-slate-600" />
-          </Link>
-          <div className="flex-1">
-            <h1 className="text-[18px] font-bold text-slate-800 tracking-tight flex items-center gap-2.5">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 border border-blue-100">
-                <Palette className="w-4.5 h-4.5 text-blue-600" />
-              </div>
-              웹툰 보관함
-            </h1>
-            <p className="text-[12px] text-slate-500 mt-0.5 ml-10.5">
-              총 {total}개 · Supabase Storage에 영구 보관
+    <div className="flex flex-col h-[calc(100vh-64px)]">
+      <div className="-mx-6 flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pb-4 sm:px-8">
+        {loading && items.length === 0 ? (
+          <div className="mt-2 flex flex-col items-center justify-center gap-3 rounded-xl border bg-white py-24">
+            <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+            <span className="text-[13px] text-slate-500">불러오는 중...</span>
+          </div>
+        ) : items.length === 0 ? (
+          <div className="mt-2 rounded-xl border bg-white py-20 text-center">
+            <ImageIcon className="mx-auto mb-3 h-12 w-12 text-slate-200" />
+            <p className="font-medium text-slate-500">아직 생성된 웹툰이 없습니다</p>
+            <p className="mt-1 text-sm text-slate-400">
+              지문으로 첫 웹툰을 만들어보세요
             </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-9 text-[12px] gap-1.5"
-              onClick={() => fetchPage(page)}
-              disabled={loading}
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-              새로고침
-            </Button>
-            <Link
-              href="/director/workbench/webtoon"
-              className="h-9 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[12px] font-semibold flex items-center gap-1.5 transition-colors"
-            >
-              <Palette className="w-3.5 h-3.5" />새 웹툰 생성
-            </Link>
-          </div>
-        </div>
-
-        {/* Filter bar */}
-        <div className="px-8 py-3 bg-white border-b border-slate-200/60 shrink-0 flex items-center gap-3 flex-wrap">
-          <div className="relative flex-1 min-w-[200px] max-w-[360px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              placeholder="지문 제목으로 검색..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-9 pl-10 pr-4 text-[13px] rounded-lg border border-slate-200 bg-slate-50/80 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
-            />
-          </div>
-
-          {/* Status filter */}
-          <div className="flex gap-1 rounded-lg border border-slate-200 p-0.5 bg-slate-50">
-            {STATUS_FILTERS.map((s) => (
-              <button
-                key={s.id}
-                onClick={() => setStatusFilter(s.id)}
-                className={`h-7 px-2.5 rounded-md text-[11px] font-semibold transition-all ${
-                  statusFilter === s.id
-                    ? "bg-white text-blue-700 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
-                }`}
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Style filter */}
-          <select
-            value={styleFilter}
-            onChange={(e) => setStyleFilter(e.target.value as WebtoonStyleId | "ALL")}
-            className={`h-9 px-3 pr-8 rounded-lg text-[12px] font-semibold border appearance-none cursor-pointer ${
-              styleFilter !== "ALL"
-                ? "bg-blue-50 text-blue-700 border-blue-300"
-                : "bg-white text-slate-500 border-slate-200"
-            }`}
-          >
-            <option value="ALL">화풍 전체</option>
-            {WEBTOON_STYLES.map((s) => (
-              <option key={s.id} value={s.id}>{s.label}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Body */}
-        <div className="flex-1 px-8 py-6 bg-[#F0F2F5]">
-          {loading && items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-24 gap-3">
-              <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
-              <span className="text-[13px] text-slate-500">불러오는 중...</span>
+            <div className="mt-4 flex items-center justify-center">
+              <Link href="/director/workbench/webtoon">
+                <Button className="bg-blue-600 hover:bg-blue-700" size="sm">
+                  <Palette className="mr-1.5 h-3.5 w-3.5" />새 웹툰 생성
+                </Button>
+              </Link>
             </div>
-          ) : filtered.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-24 gap-2">
-              <ImageIcon className="w-10 h-10 text-slate-300" />
-              <p className="text-[14px] text-slate-500 font-medium">
-                {total === 0 ? "아직 생성된 웹툰이 없습니다" : "검색 결과가 없습니다"}
-              </p>
-              {total === 0 && (
-                <Link
-                  href="/director/workbench/webtoon"
-                  className="mt-2 text-[12px] text-blue-600 hover:text-blue-700 font-semibold"
-                >
-                  첫 웹툰 만들기 →
-                </Link>
-              )}
+          </div>
+        ) : (
+          <section className="mt-2 flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
+            {/* ─── 파일창 (folder browser, sticky) ─── */}
+            <div
+              ref={folderStickyRef}
+              className="sticky top-0 z-30 shrink-0 overflow-hidden rounded-t-2xl bg-white"
+            >
+              <FolderSection
+                embedded
+                childFolders={folder.childFolders}
+                activeFolder={folder.activeFolder}
+                dragItemType="passage"
+                dragItemIdKey="webtoonId"
+                itemCountLabel="웹툰"
+                showNewFolder={folder.showNewFolder}
+                newFolderName={folder.newFolderName}
+                onNewFolderNameChange={folder.setNewFolderName}
+                onShowNewFolder={folder.setShowNewFolder}
+                onCreateFolder={folder.handleCreateFolder}
+                onNavigateToFolder={onFolderClick}
+                onRenameFolder={folder.handleRenameFolder}
+                onDeleteFolder={folder.handleDeleteFolder}
+                onDragToFolder={() => {}}
+                onDragToRoot={() => {}}
+                breadcrumbPath={folder.breadcrumbPath}
+                onNavigateToRoot={() => {
+                  folder.setActiveFolder(null);
+                  selection.clearSelection();
+                  setPage(1);
+                }}
+                useCardInsideFolder
+                rootLabel="전체 웹툰"
+                enableFolderControls
+                allFolders={folder.collections}
+                storageKey="webtoon-library"
+                treatRootAsFolder
+                pageHeader={{
+                  icon: <Palette className="h-3.5 w-3.5" />,
+                  parentLabel: "웹툰 관리",
+                  title: "전체 웹툰",
+                  totalCount,
+                  itemLabel: "웹툰",
+                  itemUnit: "개",
+                }}
+                toolbar={
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 gap-1.5 text-[12px]"
+                      onClick={() => fetchAll()}
+                      disabled={loading}
+                    >
+                      <RefreshCw
+                        className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
+                      />
+                      새로고침
+                    </Button>
+                    <Link
+                      href="/director/workbench/webtoon"
+                      className="flex h-8 items-center gap-1.5 rounded-lg bg-blue-600 px-3 text-[12px] font-semibold text-white transition-colors hover:bg-blue-700"
+                    >
+                      <Palette className="h-3.5 w-3.5" />새 웹툰 생성
+                    </Link>
+                  </>
+                }
+              />
             </div>
-          ) : (
-            <>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
-                {filtered.map((item) => (
-                  <LibraryCard
-                    key={item.id}
-                    item={item}
-                    onPreview={() => setPreviewItem(item)}
-                    onDelete={() => handleDelete(item.id)}
-                    onEditText={() => setEditingId(item.id)}
+
+            {/* ─── Toolbar: 선택 · 폴더 작업 · 필터 (sticky) ─── */}
+            <div
+              style={{ top: folderStickyHeight > 0 ? folderStickyHeight - 1 : 0 }}
+              className="sticky z-20 shrink-0 border-y border-slate-200 bg-slate-50 px-4 py-2 shadow-[0_6px_8px_-4px_rgba(15,23,42,0.08)]"
+            >
+              <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
+                <div className="flex items-center gap-2">
+                  <SelectAllCheckbox
+                    checked={selection.isAllSelected && hasSelection}
+                    indeterminate={hasSelection && !selection.isAllSelected}
+                    disabled={filtered.length === 0}
+                    onChange={() =>
+                      hasSelection
+                        ? selection.clearSelection()
+                        : selection.selectAll()
+                    }
+                    title={`${selection.selectedIds.size}개 선택`}
+                    ariaLabel={hasSelection ? "선택 해제" : "전체 선택"}
                   />
-                ))}
-              </div>
+                  <div
+                    className={
+                      "flex items-center gap-3 " +
+                      (hasSelection ? "" : "pointer-events-none opacity-50")
+                    }
+                    aria-disabled={!hasSelection}
+                  >
+                    <MoveOrCopyFolderPicker
+                      collections={folder.collections}
+                      activeFolder={folder.activeFolder}
+                      selectedCount={selection.selectedIds.size}
+                      onCopy={onAddToFolder}
+                      onMove={onMoveToFolder}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleBulkDelete}
+                      disabled={!hasSelection}
+                      className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      삭제
+                    </button>
+                    {folder.activeFolder ? (
+                      <button
+                        type="button"
+                        onClick={onRemoveFromFolder}
+                        title="폴더에서 삭제"
+                        className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-red-300 bg-red-50 px-2.5 text-[11px] font-semibold text-red-700 transition-colors hover:border-red-400 hover:bg-red-100 hover:text-red-800"
+                      >
+                        <FolderX className="h-3.5 w-3.5" />
+                        폴더에서 삭제
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2 mt-8">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-8 text-[11px]"
-                    disabled={page <= 1 || loading}
-                    onClick={() => fetchPage(page - 1)}
+                <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+                  {/* Search */}
+                  <div className="relative w-[200px]">
+                    <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+                    <input
+                      placeholder="지문 제목으로 검색..."
+                      value={search}
+                      onChange={(e) => {
+                        setSearch(e.target.value);
+                        setPage(1);
+                      }}
+                      className="h-8 w-full rounded-lg border border-slate-200 bg-white pl-8 pr-3 text-[12px] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+                    />
+                  </div>
+
+                  {/* Status filter */}
+                  <div className="flex gap-1 rounded-lg border border-slate-200 bg-white p-0.5">
+                    {STATUS_FILTERS.map((s) => (
+                      <button
+                        key={s.id}
+                        onClick={() => {
+                          setStatusFilter(s.id);
+                          setPage(1);
+                        }}
+                        className={`h-7 rounded-md px-2.5 text-[11px] font-semibold transition-all ${
+                          statusFilter === s.id
+                            ? "bg-blue-50 text-blue-700"
+                            : "text-slate-500 hover:text-slate-700"
+                        }`}
+                      >
+                        {s.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Style filter */}
+                  <select
+                    value={styleFilter}
+                    onChange={(e) => {
+                      setStyleFilter(e.target.value as WebtoonStyleId | "ALL");
+                      setPage(1);
+                    }}
+                    className={`h-8 cursor-pointer appearance-none rounded-lg border px-3 pr-7 text-[12px] font-semibold ${
+                      styleFilter !== "ALL"
+                        ? "border-blue-300 bg-blue-50 text-blue-700"
+                        : "border-slate-200 bg-white text-slate-500"
+                    }`}
                   >
-                    이전
-                  </Button>
-                  <span className="text-[12px] text-slate-600 font-medium px-3">
-                    {page} / {totalPages}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-8 text-[11px]"
-                    disabled={page >= totalPages || loading}
-                    onClick={() => fetchPage(page + 1)}
-                  >
-                    다음
-                  </Button>
+                    <option value="ALL">화풍 전체</option>
+                    {WEBTOON_STYLES.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.label}
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* Grid column toggle */}
+                  <div className="flex gap-0.5 rounded-lg border border-slate-200 bg-white p-0.5">
+                    {GRID_OPTIONS.map((g) => (
+                      <button
+                        key={g.value}
+                        onClick={() => setGridCols(g.value)}
+                        title={`${g.label}열 보기`}
+                        className={`h-7 w-7 rounded-md text-[11px] font-bold tabular-nums transition-all ${
+                          gridCols === g.value
+                            ? "bg-blue-50 text-blue-700"
+                            : "text-slate-400 hover:text-slate-600"
+                        }`}
+                      >
+                        {g.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ─── Cards ─── */}
+            <div className="min-w-0 px-4 pb-3 pt-3 sm:px-5">
+              {filtered.length === 0 ? (
+                <div className="py-12 text-center">
+                  <ImageIcon className="mx-auto mb-3 h-10 w-10 text-slate-200" />
+                  <p className="text-[13px] text-slate-400">
+                    {folder.activeFolder
+                      ? "이 폴더에 웹툰이 없습니다."
+                      : "검색 결과가 없습니다."}
+                  </p>
+                  {folder.activeFolder && (
+                    <p className="mt-1 text-[12px] text-slate-400">
+                      웹툰을 선택한 뒤 &quot;이동 / 복사&quot;로 폴더에 담을 수
+                      있습니다.
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className={GRID_CLASS[gridCols]}>
+                  {pageItems.map((item) => (
+                    <WebtoonQueueCard
+                      key={item.id}
+                      item={item}
+                      selected={selection.selectedIds.has(item.id)}
+                      onToggleSelected={() => selection.toggleSelect(item.id)}
+                      onRetry={handleRetry}
+                      onRemove={handleDelete}
+                      onEditText={(id) => setEditingId(id)}
+                      onToggleApprove={handleToggleApprove}
+                    />
+                  ))}
                 </div>
               )}
-            </>
-          )}
-        </div>
-      </div>
+            </div>
+          </section>
+        )}
 
-      {previewItem && (
-        <PreviewModal
-          item={previewItem}
-          onClose={() => setPreviewItem(null)}
-          onDelete={() => handleDelete(previewItem.id)}
-          onEditText={() => {
-            setEditingId(previewItem.id);
-            setPreviewItem(null);
-          }}
-        />
-      )}
+        {/* Pagination */}
+        {filtered.length > 0 ? (
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onGoToPage={(p) => {
+              setPage(p);
+            }}
+          />
+        ) : null}
+      </div>
 
       {editingId ? (
         <WebtoonTextEditor
@@ -314,185 +631,61 @@ export function WebtoonLibraryClient({ academyId }: { academyId: string }) {
           onExported={(editedImageUrl) => applyEdited(editingId, editedImageUrl)}
         />
       ) : null}
-    </main>
-  );
-}
-
-// ─── Library card ────────────────────────────────────
-
-function LibraryCard({
-  item,
-  onPreview,
-  onDelete,
-  onEditText,
-}: {
-  item: WebtoonRow;
-  onPreview: () => void;
-  onDelete: () => void;
-  onEditText: () => void;
-}) {
-  const isDone = item.status === "COMPLETED" && item.imageUrl;
-  const isError = item.status === "FAILED";
-  const isInflight = item.status === "PENDING" || item.status === "GENERATING";
-
-  return (
-    <div className="group relative rounded-xl border border-slate-200 bg-white overflow-hidden hover:shadow-md transition-all">
-      <div
-        onClick={isDone ? onPreview : undefined}
-        className={`relative aspect-[9/16] ${
-          isDone ? "cursor-pointer" : isError ? "bg-rose-50" : "bg-slate-100"
-        }`}
-      >
-        {isDone ? (
-          <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={libraryDisplayUrl(item)!}
-              alt={item.passage.title}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-            {item.editedImageUrl ? (
-              <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-full bg-emerald-600/90">
-                <span className="text-[9px] font-semibold text-white">자막 편집됨</span>
-              </div>
-            ) : null}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onEditText();
-              }}
-              className="absolute bottom-2 right-2 w-7 h-7 rounded-full bg-blue-600/90 hover:bg-blue-600 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center"
-              title="텍스트 편집"
-            >
-              <Type className="w-3.5 h-3.5 text-white" />
-            </button>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-3">
-              <div className="px-2 py-1 rounded-full bg-white/90 flex items-center gap-1">
-                <Maximize2 className="w-3 h-3 text-slate-700" />
-                <span className="text-[10px] font-semibold text-slate-700">크게 보기</span>
-              </div>
-            </div>
-          </>
-        ) : isError ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-3">
-            <AlertCircle className="w-5 h-5 text-rose-500" />
-            <p className="text-[10px] text-rose-700 text-center line-clamp-3">
-              {item.errorMessage || "실패"}
-            </p>
-          </div>
-        ) : isInflight ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-            <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
-            <span className="text-[10px] text-slate-500 font-medium">
-              {item.status === "PENDING" ? "대기" : "생성 중"}
-            </span>
-          </div>
-        ) : null}
-
-        {/* Delete button on hover */}
-        {!isInflight && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 hover:bg-rose-600 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center"
-          >
-            <Trash2 className="w-3.5 h-3.5 text-white" />
-          </button>
-        )}
-      </div>
-
-      <div className="p-2.5">
-        <h4 className="text-[12px] font-semibold text-slate-800 truncate">{item.passage.title}</h4>
-        <div className="flex items-center justify-between gap-2 mt-1">
-          <span className="text-[10px] text-slate-400">{styleLabel(item.style)}</span>
-          <span className="text-[10px] text-slate-400">
-            {new Date(item.createdAt).toLocaleDateString("ko-KR", {
-              month: "numeric",
-              day: "numeric",
-            })}
-          </span>
-        </div>
-      </div>
     </div>
   );
 }
 
-// ─── Preview modal ───────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────
 
-function PreviewModal({
-  item,
-  onClose,
-  onDelete,
-  onEditText,
+function useMeasuredHeight() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () =>
+      setHeight(Math.ceil(el.getBoundingClientRect().height));
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+  return [ref, height] as const;
+}
+
+function SelectAllCheckbox({
+  checked,
+  indeterminate,
+  disabled,
+  onChange,
+  title,
+  ariaLabel,
 }: {
-  item: WebtoonRow;
-  onClose: () => void;
-  onDelete: () => void;
-  onEditText: () => void;
+  checked: boolean;
+  indeterminate: boolean;
+  disabled: boolean;
+  onChange: () => void;
+  title: string;
+  ariaLabel: string;
 }) {
-  const url = libraryDisplayUrl(item);
-  if (!url) return null;
-
+  const ref = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (ref.current) ref.current.indeterminate = indeterminate;
+  }, [indeterminate]);
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-start justify-center p-4 overflow-y-auto"
-      onClick={onClose}
-    >
-      <div
-        className="relative max-w-[560px] w-full my-6 flex flex-col gap-3"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between gap-3 sticky top-0 z-10 bg-black/30 backdrop-blur-md rounded-lg px-3 py-2">
-          <div className="text-white min-w-0 flex-1">
-            <h3 className="text-[14px] font-bold truncate">{item.passage.title}</h3>
-            <p className="text-[11px] text-white/70 mt-0.5">
-              {styleLabel(item.style)} · {languageLabel(item.language)} ·{" "}
-              {new Date(item.createdAt).toLocaleString("ko-KR")}
-            </p>
-          </div>
-          <button
-            onClick={onEditText}
-            className="px-3 h-8 rounded-md bg-blue-500/80 hover:bg-blue-500 text-white text-[11px] font-semibold flex items-center gap-1.5 transition-colors"
-          >
-            <Type className="w-3 h-3" />텍스트 편집
-          </button>
-          <a
-            href={`/api/webtoons/${item.id}/download`}
-            className="px-3 h-8 rounded-md bg-white/15 hover:bg-white/25 text-white text-[11px] font-semibold flex items-center gap-1.5 transition-colors"
-          >
-            <Download className="w-3 h-3" />저장
-          </a>
-          <button
-            onClick={onDelete}
-            className="px-3 h-8 rounded-md bg-rose-500/30 hover:bg-rose-500/60 text-white text-[11px] font-semibold flex items-center gap-1.5 transition-colors"
-          >
-            <Trash2 className="w-3 h-3" />삭제
-          </button>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors"
-          >
-            <X className="w-4 h-4 text-white" />
-          </button>
-        </div>
-
-        <div className="rounded-xl overflow-hidden bg-slate-900">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={url} alt={item.passage.title} className="w-full h-auto" />
-        </div>
-
-        {item.customPrompt && (
-          <div className="rounded-lg bg-white/95 px-4 py-3">
-            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-              추가 지시사항
-            </p>
-            <p className="text-[12px] text-slate-700 leading-relaxed">{item.customPrompt}</p>
-          </div>
-        )}
-      </div>
-    </div>
+    <input
+      ref={ref}
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      disabled={disabled}
+      title={title}
+      aria-label={ariaLabel}
+      className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+    />
   );
 }

@@ -19,6 +19,10 @@ export interface WorkbenchPassageFilters {
    *  included even though they have no analysis yet, so freshly pasted material
    *  shows up in the 자료 관리 list immediately. */
   includeDirectInput?: boolean;
+  /** When true, only passages that already have a *generated* 학습지
+   *  (a PRIME PassageReport, not soft-deleted) are returned. Used by the
+   *  학습지 생성 페이지 하단 "학습지 목록" 패널 — 생성이 완료된 학습지만 모은다. */
+  hasReport?: boolean;
 }
 
 export interface WorkbenchQuestionFilters {

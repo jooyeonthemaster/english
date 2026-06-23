@@ -114,7 +114,7 @@ export function ExamPassagePreviewModal({
                 ) : (
                   <>
                     <Plus className="size-4" />
-                    선택에 추가
+                    다음으로 (내 지문함)
                   </>
                 )}
               </button>

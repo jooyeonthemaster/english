@@ -1911,7 +1911,7 @@ export function PassageCardGrid({
                                     aria-hidden="true"
                                   />
                                 )}
-                                검수완료
+                                {isReviewCommitted ? "검수완료" : "미검수"}
                               </button>
                             );
                           })()

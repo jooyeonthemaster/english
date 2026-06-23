@@ -179,7 +179,7 @@ export function PassageContentModal({
                 ) : (
                   <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                 )}
-                {isReviewCommitted ? "검수취소" : "검수완료"}
+                {isReviewCommitted ? "검수취소" : "미검수"}
               </button>
             ) : null}
             <button
