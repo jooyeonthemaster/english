@@ -67,11 +67,13 @@ export function ExamPaperCard({
           : "border-slate-200 hover:border-slate-300")
       }
     >
-      {/* 카드 전체 클릭 = 열기 (배경 오버레이). 체크박스만 그 위에 떠 있다. */}
+      {/* 배경 오버레이 — 클릭=선택 토글, 더블클릭=열기(드릴인). 우측 화살표 버튼으로도 연다. */}
       <button
         type="button"
-        onClick={() => onOpen(paper)}
-        aria-label={`${paper.title} 열기, ${paper.count}문제`}
+        onClick={() => onToggleSelect(paper)}
+        onDoubleClick={() => onOpen(paper)}
+        aria-label={selected ? `${paper.title} 선택 해제` : `${paper.title} 선택`}
+        title="클릭하여 선택 · 더블클릭하여 열기"
         className="absolute inset-0 z-0 cursor-pointer focus:outline-none"
       />
 
