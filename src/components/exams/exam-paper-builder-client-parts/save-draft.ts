@@ -2,6 +2,7 @@
 
 import { toast } from "sonner";
 import { saveExamPaperDraft } from "@/actions/exam-paper-builder";
+import { resolvePaperItemPassageTitle } from "../paper-builder/paper-item-utils";
 import { shouldForceSourcePassage } from "../paper-builder/passage-policy";
 import type {
   ClassOption,
@@ -69,7 +70,7 @@ function serializePaperBlock(item: PaperItem) {
     points: item.points,
     groupId: item.groupId,
     includePassage,
-    passageTitle: item.passageTitle,
+    passageTitle: resolvePaperItemPassageTitle(item),
     passageContent: item.passageContent,
     questionText: item.questionText,
     options: item.options,
@@ -161,7 +162,7 @@ export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Prom
       points: item.points,
       groupId: item.groupId,
       includePassage: resolveSerializableIncludePassage(item),
-      passageTitle: item.passageTitle,
+      passageTitle: resolvePaperItemPassageTitle(item),
       passageContent: item.passageContent,
       questionText: item.questionText,
       options: item.options,

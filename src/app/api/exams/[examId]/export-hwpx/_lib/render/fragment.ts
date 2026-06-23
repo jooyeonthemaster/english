@@ -24,6 +24,8 @@ import {
   questionStemAndBody,
   isStructuredAtomicSubtype,
 } from "@/components/exams/paper-builder/question-body-layout";
+import { questionHasEmbeddedPassage } from "@/components/exams/paper-builder/passage-policy";
+import { normalizeInlineText } from "@/components/exams/paper-builder/text-normalization";
 import { renderQuestionBlock, type BuilderItemResolved } from "./question";
 import type {
   PassageStyle,
@@ -109,6 +111,27 @@ function italicMarker(text: string): ParagraphNode {
   };
 }
 
+function printablePassageTitle(item: RenderItemPart["source"]): string {
+  const savedTitle = normalizeInlineText(item.passageTitle || "");
+  const sourceTitle = normalizeInlineText(item.sourceQuestion.passage?.title || "");
+  return savedTitle || sourceTitle;
+}
+
+function renderPassageTitleParagraph(passageTitle: string): ParagraphNode {
+  return {
+    kind: "p",
+    style: { align: "LEFT", spaceBefore: 20, spaceAfter: 30, lineSpacingPct: 130 },
+    runs: [
+      txt(passageTitle.toUpperCase(), {
+        size: SIZE.passageTitle,
+        bold: true,
+        color: COLORS.darkGray,
+        letterSpacing: 20,
+      }),
+    ],
+  };
+}
+
 function wrapPassageBox(
   inner: ParagraphNode[],
   passageStyle: PassageStyle,
@@ -179,6 +202,7 @@ function partHasContent(part: RenderItemPart): boolean {
 function renderStructRows(
   rows: StructRow[],
   subType: string,
+  passageTitle: string,
   opts: FragmentRenderOptions,
 ): BlockNode[] {
   if (rows.length === 0) return [];
@@ -231,6 +255,25 @@ function renderStructRows(
     ) {
       const inner: ParagraphNode[] = [];
       if (resumed) inner.push(italicMarker("(\uC774\uC5B4\uC11C)"));
+      if (
+        group.style === "passage" &&
+        opts.showPassageTitle &&
+        passageTitle &&
+        !resumed
+      ) {
+        inner.push({
+          kind: "p",
+          style: { align: "LEFT", spaceAfter: 60, lineSpacingPct: 130 },
+          runs: [
+            txt(passageTitle.toUpperCase(), {
+              size: SIZE.passageTitle,
+              bold: true,
+              color: COLORS.darkGray,
+              letterSpacing: 20,
+            }),
+          ],
+        });
+      }
       if (group.style === "given" && !resumed) {
         inner.push({
           kind: "p",
@@ -302,6 +345,7 @@ export function renderQuestionPart(
         density: compact ? "compact" : "comfortable",
         showAnswerSpace: opts.showAnswerSpace,
         showQuestionMeta: opts.showQuestionMeta,
+        showPassageTitle: opts.showPassageTitle,
         passageStyle: opts.passageStyle,
       },
       includeAnswers: false,
@@ -314,6 +358,24 @@ export function renderQuestionPart(
   // 미리보기(a4-paper-page)와 동일: 지시문(stem=첫 단락)은 번호 옆에 항상 통째로,
   // 본문(body)만 칸 경계에서 분할된다. questionRenderedLines/Total 은 body 좌표다.
   const { stem, body } = questionStemAndBody(item);
+  const bodyPassageTitle = printablePassageTitle(item);
+  const showBodyPassageTitle =
+    part.showHeader &&
+    opts.showPassageTitle &&
+    Boolean(bodyPassageTitle) &&
+    part.structRows.length === 0 &&
+    questionHasEmbeddedPassage({
+      ...item.sourceQuestion,
+      questionText: item.questionText || item.sourceQuestion.questionText,
+      passage: {
+        content:
+          item.passageContent || item.sourceQuestion.passage?.content || "",
+      },
+    });
+
+  if (showBodyPassageTitle) {
+    result.push(renderPassageTitleParagraph(bodyPassageTitle));
+  }
 
   // 1) 번호 + 메타 + 지시문(stem) — 한 줄에 인라인.
   if (part.showHeader) {
@@ -363,7 +425,14 @@ export function renderQuestionPart(
   const bodyIsWhole = part.isStart && startsAtBeginning && endsHere;
 
   if (part.structRows.length > 0) {
-    result.push(...renderStructRows(part.structRows, subType, opts));
+    result.push(
+      ...renderStructRows(
+        part.structRows,
+        subType,
+        printablePassageTitle(item),
+        opts,
+      ),
+    );
   } else if (bodyIsWhole) {
     if (body.trim()) {
       const rendered = formatInlineMarkersForSubtype(body, subType);

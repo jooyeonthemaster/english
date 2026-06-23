@@ -57,6 +57,7 @@ interface BuilderPropertiesPanelProps {
   paperItemsCount: number;
   totalPoints: number;
   autoPointTotal: number | null;
+  showPassageTitle: boolean;
   activeTab: "edit" | "settings";
   onTabChange: (tab: "edit" | "settings") => void;
   settingsPanel: ReactNode;
@@ -65,6 +66,7 @@ interface BuilderPropertiesPanelProps {
   onUploadImageBlock: (dataUrl: string, imageAlt: string) => void;
   onDuplicateItem: (localId: string) => void;
   onToggleLockItem: (localId: string) => void;
+  onTogglePassageTitle: () => void;
   onUpdateItem: (localId: string, patch: Partial<PaperItem>) => void;
   onToggleKeepWithPrev: (localId: string) => void;
   onUngroupItem: (localId: string) => void;
@@ -190,12 +192,14 @@ function IconToggleButton({
   active,
   title,
   disabled,
+  className,
   children,
   onClick,
 }: {
   active?: boolean;
   title: string;
   disabled?: boolean;
+  className?: string;
   children: ReactNode;
   onClick: () => void;
 }) {
@@ -211,6 +215,7 @@ function IconToggleButton({
         active
           ? "border-blue-300 bg-blue-50 text-blue-700"
           : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700",
+        className,
       )}
     >
       {children}
@@ -653,6 +658,7 @@ export function BuilderPropertiesPanel({
   paperItemsCount,
   totalPoints,
   autoPointTotal,
+  showPassageTitle,
   activeTab,
   onTabChange,
   settingsPanel,
@@ -661,6 +667,7 @@ export function BuilderPropertiesPanel({
   onUploadImageBlock,
   onDuplicateItem,
   onToggleLockItem,
+  onTogglePassageTitle,
   onUpdateItem,
   onToggleKeepWithPrev,
   onUngroupItem,
@@ -1298,6 +1305,42 @@ export function BuilderPropertiesPanel({
                   <BookOpen className="h-3.5 w-3.5" />
                   지문
                 </IconToggleButton>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={showPassageTitle}
+                  title="지문 이름 표기 켜기/끄기"
+                  onClick={onTogglePassageTitle}
+                  className={cn(
+                    "col-span-2 flex h-8 items-center justify-between rounded-md border px-2.5 text-[11px] font-bold transition-colors",
+                    showPassageTitle
+                      ? "border-blue-300 bg-blue-50 text-blue-700"
+                      : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-700",
+                  )}
+                >
+                  <span className="flex min-w-0 items-center gap-1.5">
+                    <Type className="h-3.5 w-3.5 shrink-0" />
+                    <span>지문 이름 표기</span>
+                  </span>
+                  <span className="flex shrink-0 items-center gap-1.5">
+                    <span className="text-[10px]">
+                      {showPassageTitle ? "ON" : "OFF"}
+                    </span>
+                    <span
+                      className={cn(
+                        "flex h-4 w-7 items-center rounded-full p-0.5 transition-colors",
+                        showPassageTitle ? "bg-blue-500" : "bg-slate-300",
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "h-3 w-3 rounded-full bg-white shadow-sm transition-transform",
+                          showPassageTitle && "translate-x-3",
+                        )}
+                      />
+                    </span>
+                  </span>
+                </button>
                 <IconToggleButton
                   active={activeItem.keepWithPrev}
                   disabled={activeLocked}

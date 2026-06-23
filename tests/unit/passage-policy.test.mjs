@@ -301,6 +301,12 @@ const metadataLeakResults = allQuestionTypeIds.map((subType, index) => {
   };
 });
 
+const titleFallbackQuestion = question("TOPIC", "Fallback title smoke test.", {});
+titleFallbackQuestion.passage.title = "Source Passage Title";
+const titleFallbackItem = makePaperItem(titleFallbackQuestion, 90, []);
+titleFallbackItem.passageTitle = "";
+const titleFallbackGroup = buildGroups([titleFallbackItem])[0];
+
 process.stdout.write(JSON.stringify({
   synonymIncludePassage: synonymItem.includePassage,
   synonymRenderSource: shouldRenderSourcePassageForItem(synonymItem),
@@ -343,6 +349,7 @@ process.stdout.write(JSON.stringify({
   generatedConditionalWritingText,
   legacyConditionalWritingSections,
   metadataLeakResults,
+  titleFallbackGroupTitle: titleFallbackGroup.passageTitle,
 }));
 `;
 
@@ -505,4 +512,8 @@ test("all question types hide match type metadata in paper item text", () => {
     assert.doesNotMatch(item.questionText, /\bmismatch\b/i);
     assert.doesNotMatch(item.questionText, /\uBD88\uC77C\uCE58|\uC77C\uCE58/);
   }
+});
+
+test("paper groups recover source passage title when saved item title is blank", () => {
+  assert.equal(result.titleFallbackGroupTitle, "Source Passage Title");
 });

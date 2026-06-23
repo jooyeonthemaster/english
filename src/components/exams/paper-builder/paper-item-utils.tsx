@@ -87,6 +87,12 @@ export function makeLocalId(questionId: string): string {
   return `${questionId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
+export function resolvePaperItemPassageTitle(item: PaperItem): string {
+  return normalizeInlineText(
+    item.passageTitle || item.sourceQuestion.passage?.title || "",
+  );
+}
+
 // 커스텀 레이아웃(v2) 문항은 LayoutDoc.answerLineCount 가 서술형 답란 줄 수를
 // 명시한다(원본 문항 양식 캡처값). 있으면 기본값 로직보다 우선한다.
 function customLayoutAnswerSpaceLines(question: BuilderQuestion): number | null {
@@ -173,7 +179,7 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     points: question.points || 1,
     groupId: `single:${localId}`,
     includePassage: includeSourcePassage,
-    passageTitle: "",
+    passageTitle: normalizeInlineText(question.passage?.title || ""),
     passageContent,
     questionText: normalizedQuestionText,
     options,
@@ -200,13 +206,14 @@ function questionWithPaperItemPassage(item: PaperItem): BuilderQuestion {
   const passageContent = normalizePassageText(
     item.passageContent || item.sourceQuestion.passage?.content || "",
   );
+  const passageTitle = resolvePaperItemPassageTitle(item);
   return {
     ...item.sourceQuestion,
     passage: item.sourceQuestion.passage
-      ? { ...item.sourceQuestion.passage, content: passageContent }
+      ? { ...item.sourceQuestion.passage, title: passageTitle, content: passageContent }
       : {
           id: `paper:${item.questionId}`,
-          title: "",
+          title: passageTitle,
           content: passageContent,
           grade: null,
           semester: null,
@@ -354,7 +361,7 @@ export function buildGroups(items: PaperItem[]): PaperGroup[] {
       );
       if (shouldRenderSourcePassageForItem(item) && passageContent) {
         last.includePassage = true;
-        last.passageTitle = item.passageTitle;
+        last.passageTitle = resolvePaperItemPassageTitle(item);
         last.passageContent = formatSourcePassageForQuestionItems(
           passageContent,
           last.items,
@@ -369,7 +376,7 @@ export function buildGroups(items: PaperItem[]): PaperGroup[] {
         id: item.groupId || item.localId,
         items: groupItems,
         includePassage: shouldRenderSourcePassageForItem(item) && Boolean(passageContent),
-        passageTitle: item.passageTitle,
+        passageTitle: resolvePaperItemPassageTitle(item),
         passageContent: formatSourcePassageForQuestionItems(passageContent, groupItems),
       });
     }

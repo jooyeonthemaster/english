@@ -36,7 +36,10 @@ import {
   shouldRenderOptionListForSubtype,
 } from "@/components/exams/paper-builder/option-display";
 import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
-import { normalizeQuestionText } from "@/components/exams/paper-builder/text-normalization";
+import {
+  normalizeInlineText,
+  normalizeQuestionText,
+} from "@/components/exams/paper-builder/text-normalization";
 import {
   questionHasEmbeddedPassage,
   shouldRenderSourcePassageInsideQuestion,
@@ -97,6 +100,7 @@ export interface QuestionRenderOptions {
     density?: "comfortable" | "compact";
     showAnswerSpace?: boolean;
     showQuestionMeta?: boolean;
+    showPassageTitle?: boolean;
     passageStyle?: "boxed" | "underlined" | "plain";
   };
   includeAnswers: boolean;
@@ -124,6 +128,33 @@ function stripOriginalBlock(text: string) {
     .filter((block) => block && !/^\[(?:original|\uC6D0\uBB38)\]\s*/i.test(block))
     .join("\n\n")
     .trim();
+}
+
+function printablePassageTitle(item: BuilderItemResolved): string {
+  const savedTitle = normalizeInlineText(item.passageTitle || "");
+  const sourceTitle = normalizeInlineText(item.sourceQuestion.passage?.title || "");
+  return savedTitle || sourceTitle;
+}
+
+function renderPassageTitleBlock(
+  passageTitle: string,
+  showPassageTitle: boolean,
+): BlockNode[] {
+  if (!showPassageTitle || !passageTitle.trim()) return [];
+  return [
+    {
+      kind: "p",
+      style: { align: "LEFT", spaceBefore: 20, spaceAfter: 30, lineSpacingPct: 130 },
+      runs: [
+        txt(passageTitle.toUpperCase(), {
+          size: SIZE.passageTitle,
+          bold: true,
+          color: COLORS.darkGray,
+          letterSpacing: 20,
+        }),
+      ],
+    },
+  ];
 }
 
 // ---------------------------------------------------------------------------
@@ -223,6 +254,8 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   const result: BlockNode[] = [];
   const qNumSize = compact ? SIZE.qNumCompact : SIZE.qNum;
   const bodySize = compact ? SIZE.bodyCompact : SIZE.body;
+  const showPassageTitle = layout.showPassageTitle === true;
+  const passageTitle = printablePassageTitle(item);
 
   // ── SUMMARY_WRITING (요약문 영작) 전용 렌더 ──
   //   SUMMARY_COMPLETE 의 헤더/박스 구조를 미러하되, 정답 자동채움(maskSummary +
@@ -270,10 +303,10 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     if (swPassage) {
       result.push(
         ...renderPassage({
-          passageTitle: "",
+          passageTitle,
           passageContent: swPassage,
           passageStyle: "plain",
-          showPassageTitle: false,
+          showPassageTitle,
           compact,
           usesSentenceInsertMarkers: false,
           contentWidthHpu,
@@ -369,6 +402,9 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
       ),
     )
     : "";
+  if (hasEmbeddedSourcePassage) {
+    result.push(...renderPassageTitleBlock(passageTitle, showPassageTitle));
+  }
 
   // 1. 번호 + 메타 + (지시문)
   if (summaryComplete) {
@@ -446,10 +482,10 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   if (inlinePassageContent && (summaryMc || inlineSourcePassage)) {
     result.push(
       ...renderPassage({
-        passageTitle: item.passageTitle ?? sourcePassage?.title ?? "",
+        passageTitle,
         passageContent: inlinePassageContent,
         passageStyle: "plain",
-        showPassageTitle: false,
+        showPassageTitle,
         compact,
         usesSentenceInsertMarkers: subType === "SENTENCE_INSERT",
         contentWidthHpu,
@@ -493,10 +529,10 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
       case "passage":
         result.push(
           ...renderPassage({
-            passageTitle: "",
+            passageTitle,
             passageContent: section.content,
             passageStyle: "plain",
-            showPassageTitle: false,
+            showPassageTitle,
             compact,
             usesSentenceInsertMarkers: subType === "SENTENCE_INSERT",
             contentWidthHpu,

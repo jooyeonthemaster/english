@@ -14,6 +14,7 @@ import {
 } from "../option-display";
 import {
   joinRenderedLinesForDisplay,
+  resolvePaperItemPassageTitle,
   renderFormattedInline,
   renderQuestionTextInline,
 } from "../paper-item-utils";
@@ -23,6 +24,7 @@ import {
   questionStemAndBody,
   recombineQuestionText,
 } from "../question-body-layout";
+import { questionHasEmbeddedPassage } from "../passage-policy";
 import { TEMPLATE_VISUALS } from "../templates";
 import type {
   Density,
@@ -64,14 +66,24 @@ function StructuredBody({
   compact,
   withTopGap,
   visualQuestionClass,
+  visualPassageTitleClass,
   passageBoxClass,
+  passageTitle,
+  showPassageTitle,
+  readOnly,
+  onPassageTitleCommit,
 }: {
   rows: StructRow[];
   subType: string | null;
   compact: boolean;
   withTopGap: boolean;
   visualQuestionClass: string;
+  visualPassageTitleClass: string;
   passageBoxClass: string;
+  passageTitle: string;
+  showPassageTitle: boolean;
+  readOnly: boolean;
+  onPassageTitleCommit: (next: string) => void;
 }) {
   if (rows.length === 0) return null;
 
@@ -152,6 +164,22 @@ function StructuredBody({
               {resumed && (
                 <span className="continuation-hint mb-1 block text-[9px] italic text-slate-400">
                   {"(\uC774\uC5B4\uC11C)"}
+                </span>
+              )}
+              {isSourcePassage && showPassageTitle && passageTitle && !resumed && (
+                <span
+                  className={cn(
+                    "mb-1 block text-[10px] font-black uppercase tracking-wide",
+                    visualPassageTitleClass,
+                  )}
+                >
+                  <EditableText
+                    value={passageTitle}
+                    onCommit={onPassageTitleCommit}
+                    readOnly={readOnly}
+                  >
+                    {passageTitle}
+                  </EditableText>
                 </span>
               )}
               {group.style === "given" && !isSummaryWriting && !resumed && (
@@ -619,6 +647,45 @@ export function A4PaperPage({
                         !isCustomBlock && isStructuredAtomicSubtype(subType);
                       const renderOptionList =
                         !isCustomBlock && shouldRenderOptionListForSubtype(subType);
+                      const inlinePassageTitle = !isCustomBlock
+                        ? resolvePaperItemPassageTitle(item)
+                        : "";
+                      const showBodyPassageTitle =
+                        !isCustomBlock &&
+                        !usesStructuredBody &&
+                        part.showHeader &&
+                        !fragment.includePassage &&
+                        showPassageTitle &&
+                        Boolean(inlinePassageTitle) &&
+                        questionHasEmbeddedPassage({
+                          ...item.sourceQuestion,
+                          questionText:
+                            item.questionText || item.sourceQuestion.questionText,
+                          passage: {
+                            content:
+                              item.passageContent ||
+                              item.sourceQuestion.passage?.content ||
+                              "",
+                          },
+                        });
+                      const bodyPassageTitleNode = showBodyPassageTitle ? (
+                        <p
+                          className={cn(
+                            "mt-1 mb-0.5 text-[10px] font-black uppercase tracking-wide",
+                            visual.passageTitleClass,
+                          )}
+                        >
+                          <EditableText
+                            value={inlinePassageTitle}
+                            onCommit={(next) =>
+                              onUpdateItem(item.localId, { passageTitle: next })
+                            }
+                            readOnly={readOnly || item.locked}
+                          >
+                            {inlinePassageTitle}
+                          </EditableText>
+                        </p>
+                      ) : null;
                       // 지문이 문항 본문에 내장된 유형(무관한 문장·문장 삽입·어법 등)도
                       // 출처 지문 박스와 동일하게 "지문 스타일"(박스/밑줄/본문)을 따른다.
                       // (LOCAL이 isStructuredQuestion 을 usesStructuredBody/atomic 으로 분리 →
@@ -719,6 +786,7 @@ export function A4PaperPage({
                           )}
                           {!isCustomBlock && (
                             <>
+                          {bodyPassageTitleNode}
                           {part.showHeader && (
                             <p
                               className={cn(
@@ -797,7 +865,14 @@ export function A4PaperPage({
                                   compact={compact}
                                   withTopGap={part.showHeader}
                                   visualQuestionClass={visual.questionClass}
+                                  visualPassageTitleClass={visual.passageTitleClass}
                                   passageBoxClass={passageBoxClass}
+                                  passageTitle={resolvePaperItemPassageTitle(item)}
+                                  showPassageTitle={showPassageTitle}
+                                  readOnly={readOnly || item.locked}
+                                  onPassageTitleCommit={(next) =>
+                                    onUpdateItem(item.localId, { passageTitle: next })
+                                  }
                                 />
                               );
                             }
@@ -815,54 +890,58 @@ export function A4PaperPage({
                             if (bodyIsWhole) {
                               if (!questionBody.trim()) return null;
                               return (
+                                <>
+                                  <p
+                                    className={cn(
+                                      "mt-1 whitespace-pre-line text-justify",
+                                      visual.questionClass,
+                                    )}
+                                  >
+                                    <EditableText
+                                      value={questionBody}
+                                      onCommit={(next) =>
+                                        onUpdateItem(item.localId, {
+                                          questionText: recombineQuestionText(
+                                            questionStem,
+                                            next,
+                                          ),
+                                        })
+                                      }
+                                      className="block"
+                                      readOnly={readOnly || item.locked}
+                                    >
+                                      {renderQuestionTextInline(
+                                        formatInlineMarkersForSubtype(questionBody, subType),
+                                        subType,
+                                      )}
+                                    </EditableText>
+                                  </p>
+                                </>
+                              );
+                            }
+
+                            if (part.questionRenderedLines.length === 0) return null;
+                            return (
+                              <>
                                 <p
                                   className={cn(
                                     "mt-1 whitespace-pre-line text-justify",
                                     visual.questionClass,
                                   )}
                                 >
-                                  <EditableText
-                                    value={questionBody}
-                                    onCommit={(next) =>
-                                      onUpdateItem(item.localId, {
-                                        questionText: recombineQuestionText(
-                                          questionStem,
-                                          next,
-                                        ),
-                                      })
-                                    }
-                                    className="block"
-                                    readOnly={readOnly || item.locked}
-                                  >
+                                  <span className="block">
                                     {renderQuestionTextInline(
-                                      formatInlineMarkersForSubtype(questionBody, subType),
-                                      subType,
-                                    )}
-                                  </EditableText>
-                                </p>
-                              );
-                            }
-
-                            if (part.questionRenderedLines.length === 0) return null;
-                            return (
-                              <p
-                                className={cn(
-                                  "mt-1 whitespace-pre-line text-justify",
-                                  visual.questionClass,
-                                )}
-                              >
-                                <span className="block">
-                                  {renderQuestionTextInline(
-                                    formatInlineMarkersForSubtype(
-                                      joinRenderedLinesForDisplay(
-                                        part.questionRenderedLines,
+                                      formatInlineMarkersForSubtype(
+                                        joinRenderedLinesForDisplay(
+                                          part.questionRenderedLines,
+                                        ),
+                                        subType,
                                       ),
                                       subType,
-                                    ),
-                                    subType,
-                                  )}
-                                </span>
-                              </p>
+                                    )}
+                                  </span>
+                                </p>
+                              </>
                             );
                           })()}
                           {renderOptionList &&
