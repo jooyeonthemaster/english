@@ -20,6 +20,7 @@ interface StaffSession {
   name: string;
   email: string;
   role: string;
+  displayTitle?: string;
   academyId: string;
   academyName: string;
 }

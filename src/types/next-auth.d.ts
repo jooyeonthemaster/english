@@ -8,6 +8,7 @@ declare module "next-auth" {
       academyId: string;
       academyName: string;
       academySlug: string;
+      displayTitle: string;
     } & DefaultSession["user"];
   }
 
@@ -17,6 +18,7 @@ declare module "next-auth" {
     academyId?: string;
     academyName?: string;
     academySlug?: string;
+    displayTitle?: string;
   }
 }
 
@@ -27,5 +29,6 @@ declare module "next-auth/jwt" {
     academyId: string;
     academyName: string;
     academySlug: string;
+    displayTitle: string;
   }
 }

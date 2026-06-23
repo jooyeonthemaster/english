@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { logAppEvent } from "@/lib/app-events";
 import { verifySocialBridgeToken } from "@/lib/social-bridge";
 import { isJooyeonSpecialAccount } from "@/lib/jooyeon-special-account";
+import { getDefaultStaffDisplayTitle, getStaffDisplayTitle } from "@/lib/staff-display";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -26,7 +27,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const staff = await prisma.staff.findFirst({
           where: { email: { equals: staffEmail, mode: "insensitive" } },
-          include: { academy: { select: { name: true, slug: true } } },
+          include: { academy: { select: { name: true, slug: true, settings: true } } },
         });
 
         if (!staff || !staff.isActive) {
@@ -60,6 +61,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           academyId: staff.academyId,
           academyName: staff.academy.name,
           academySlug: staff.academy.slug,
+          displayTitle: getStaffDisplayTitle(staff.academy.settings, staff.id, staff.role),
         };
       },
     }),
@@ -78,7 +80,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const staff = await prisma.staff.findUnique({
           where: { id: payload.staffId },
-          include: { academy: { select: { name: true, slug: true } } },
+          include: { academy: { select: { name: true, slug: true, settings: true } } },
         });
 
         if (!staff || !staff.isActive) return null;
@@ -101,6 +103,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           academyId: staff.academyId,
           academyName: staff.academy.name,
           academySlug: staff.academy.slug,
+          displayTitle: getStaffDisplayTitle(staff.academy.settings, staff.id, staff.role),
         };
       },
     }),
@@ -120,6 +123,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.academyId = u.academyId as string;
         token.academyName = u.academyName as string;
         token.academySlug = u.academySlug as string;
+        token.displayTitle = u.displayTitle as string;
       }
       // 프로필/학원 정보 수정 후 useSession().update()로 토큰 갱신
       if (trigger === "update" && session) {
@@ -127,6 +131,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (typeof s.name === "string") token.name = s.name;
         if (typeof s.email === "string") token.email = s.email;
         if (typeof s.academyName === "string") token.academyName = s.academyName;
+        if (typeof s.displayTitle === "string") token.displayTitle = s.displayTitle;
       }
       return token;
     },
@@ -138,6 +143,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         su.academyId = token.academyId;
         su.academyName = token.academyName;
         su.academySlug = token.academySlug;
+        su.displayTitle =
+          typeof token.displayTitle === "string" && token.displayTitle.trim()
+            ? token.displayTitle
+            : getDefaultStaffDisplayTitle(typeof token.role === "string" ? token.role : undefined);
       }
       return session;
     },
@@ -149,14 +158,21 @@ export async function getStaffSession() {
   const session = await auth();
   if (!session?.user) return null;
   const user = session.user as unknown as Record<string, unknown>;
+  const role = user.role as string;
+  const displayTitle =
+    typeof user.displayTitle === "string" && user.displayTitle.trim()
+      ? user.displayTitle
+      : getDefaultStaffDisplayTitle(role);
+
   return {
     id: user.id as string,
     email: user.email as string,
     name: user.name as string,
-    role: user.role as string,
+    role,
     academyId: user.academyId as string,
     academyName: user.academyName as string,
     academySlug: user.academySlug as string,
+    displayTitle,
   };
 }
 
