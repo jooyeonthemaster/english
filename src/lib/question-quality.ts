@@ -1202,6 +1202,198 @@ function isTenseOnlyMutation(expression: string, errorExpression: string): boole
   return false;
 }
 
+// do-support 시제 토글(do/does ↔ did) — 현재↔과거. do/does/did 는 TENSE_GATE_EXCLUDED
+// 라 isTenseOnlyMutation 이 못 잡지만, "Only then did/does he realize" 처럼 시제가
+// 문맥상 갈리면 정답 시비다. 수일치(do↔does)는 합법이라 제외 — 과거(did)가 한쪽일 때만.
+const DO_SUPPORT_TENSE_PAIRS = new Set<string>(["did|do", "did|does"]);
+
+/** 시제 시비형 정답 토글 — 규칙동사 현재↔과거(isTenseOnlyMutation) + do-support did↔do/does. */
+function isDisputableTenseToggle(a: string, b: string): boolean {
+  if (isTenseOnlyMutation(a, b)) return true;
+  const key = [normalizeComparableText(a), normalizeComparableText(b)].sort().join("|");
+  return DO_SUPPORT_TENSE_PAIRS.has(key);
+}
+
+// ============================================================================
+// 수량(quantifier) 어법 게이트 — m 코드. 적대검증(2026-06-23) 결과, 시제와 달리
+// 가산성·통사 강제 자리(many/much·a few/a little·much/very 비교급·이중비교급)는
+// 시비 0으로 출제 가능하나, 다음은 복수정답 시비를 낳아 정답으로 쓰면 안 된다:
+//  ① 의미만 다른 토글(little↔a little, few↔a few, much↔little, some↔any) — 둘 다 정문
+//  ② 규범 vs 실사용 논쟁(less/fewer, amount/number)
+//  ③ 가산/불가산 양용 명사(experience/time/room…) 앞 — 가산성 강제가 깨짐
+//  ④ much↔very·이중비교급이 '진짜 비교급(-er) 수식'이 아닌 자리(very surprised 등)
+// isTenseOnlyMutation 과 동일하게 닫힌 리스트로만 매칭해 오탐을 막는다.
+// ============================================================================
+
+/**
+ * 둘 다 정문이고 의미만 다른 토글 — 어법 오류가 아니라 복수정답. 정답 금지.
+ * 정렬키(unordered, 소문자). 필살기 적대검증(2026-06-23)으로 한정사 동의어/극성
+ * 토글을 대거 보강 — all/some·each/every·several/few·both/all·neither/either 등.
+ */
+const QUANTITY_MEANING_TOGGLE_PAIRS = new Set<string>([
+  "a little|little", // 조금 있음 vs 거의 없음 (극성)
+  "a few|few",       // 몇몇 있음 vs 거의 없음 (극성)
+  "little|much",     // 거의 없음 vs 많음 (양 반대)
+  "few|many",        // 거의 없음 vs 많음 (양 반대)
+  "few|much",
+  "little|many",
+  "any|some",        // 화용 극성 — 권유 some·긍정 any 예외가 많아 정답 금지
+  // ── 한정사 동의어/극성 토글(둘 다 정문, 의미·뉘앙스만 다름) ──
+  "all|some",        // 전체 vs 일부
+  "all|both",        // 전체 vs 둘 다(범위)
+  "each|every",      // 개별 강조 vs 전체 — 대부분 호환(시비)
+  "few|several",     // 거의 없음 vs 여럿(뉘앙스)
+  "less|little",     // 비교급 vs 양 한정사(than 없으면 둘 다 정문)
+  "many|numerous",   // 동의어
+  "a few|some",      // 둘 다 '약간 있음'
+  "much|plenty of",  // 동의어(충분/양)
+  "a lot of|lots of",// 문체 변이
+  "a lot of|plenty of",
+  "almost all of the|most of the", // 동의어
+  "either|neither",  // 반대 의미, 둘 다 정문
+  "no|not any",      // 동의 부정
+  "hardly any|very few", // 동의(거의 없음)
+]);
+
+/** 규범 vs 실사용 논쟁쌍 — 정답 시 채점 시비. 정답 금지. */
+const QUANTITY_DEBATABLE_PAIRS = new Set<string>([
+  "fewer|less",
+  "amount|number",
+]);
+
+/**
+ * 가산/불가산이 **같은 표면형**으로 공존해 many/much 둘 다 정문이 되는 명사만.
+ * 필살기 검증(2026-06-23): 네모는 표면형이 고정돼, 복수형(experiences) 앞 much나
+ * 단수 앞 many 는 어차피 비문(clean) — 막으면 가장 흔한 안전 패턴(many+복수 가산)을
+ * 죽이는 과잉차단이다. 따라서 단수/복수 표면이 동일하거나(zero-plural) 같은 표면에
+ * 질량·가산 두 독해가 모두 성립하는 명사만 남긴다(fish/species/fruit/data 등).
+ */
+const QUANTITY_AMBIGUOUS_COUNT_NOUNS = new Set<string>([
+  "fish", "sheep", "deer", "species", "series", "aircraft", "spacecraft",
+  "offspring", "means", "fruit", "data", "media", "salmon", "trout", "cod",
+  "shrimp", "squid", "bison", "moose", "swine", "headquarters", "crossroads",
+]);
+
+/** very 가 오히려 정문인 자리(형용사화 과거분사·-or형 어휘비교급) — much↔very 정답 금지. */
+const QUANTITY_VERY_LICENSED_WORDS = new Set<string>([
+  "surprised", "interested", "pleased", "advanced", "limited", "excited", "tired",
+  "amused", "amazed", "worried", "disappointed", "frightened", "satisfied",
+  "embarrassed", "confused", "bored", "scared", "annoyed", "relaxed", "concerned",
+  "delighted", "exhausted", "experienced", "educated", "detailed", "involved",
+  "senior", "junior", "superior", "inferior", "prior", "major", "minor",
+]);
+
+/** 진짜 비교급 부사 — much 만 정문이고 very 비문(안전 자리). */
+const QUANTITY_COMPARATIVE_ADVERBS = new Set<string>([
+  "later", "sooner", "earlier", "longer", "higher", "lower", "faster", "slower",
+  "harder", "closer", "further", "farther", "more", "less", "better", "worse",
+]);
+
+function quantityPairKey(a: string, b: string): string {
+  return [a, b].sort().join("|");
+}
+
+function isQuantityMeaningToggle(correct: string, wrong: string): boolean {
+  return QUANTITY_MEANING_TOGGLE_PAIRS.has(
+    quantityPairKey(normalizeComparableText(correct), normalizeComparableText(wrong)),
+  );
+}
+
+function isQuantityDebatablePair(correct: string, wrong: string): boolean {
+  return QUANTITY_DEBATABLE_PAIRS.has(
+    quantityPairKey(normalizeComparableText(correct), normalizeComparableText(wrong)),
+  );
+}
+
+/** context(원문 문장)에서 word 바로 뒤 토큰을 소문자로 — 없으면 "". */
+function quantityTokenAfter(context: string, word: string): string {
+  if (!context || !word) return "";
+  const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const m = new RegExp(`\\b${escaped}\\s+([A-Za-z][A-Za-z'-]*)`, "i").exec(context);
+  return m ? m[1].toLowerCase() : "";
+}
+
+/**
+ * many↔much · a few↔a little · few↔little 가산성 강제가 깨지는 자리를 막는다.
+ *  - 직후 명사가 양용(experience/time…)이면 가산성 미고정 → 차단.
+ *  - few↔little 의 'few/little of …'(부분 독해 little of them 이 정문) → 차단.
+ */
+function quantityCountabilityUnsafe(correct: string, wrong: string, context: string): boolean {
+  const key = quantityPairKey(normalizeComparableText(correct), normalizeComparableText(wrong));
+  if (key === "few|little") {
+    // few↔little 은 가산성 강제이나 'few/little of …'는 부분(partitive) 독해로
+    // 'little of them' 이 정문이 되어 시비 → 차단. 직접수식만 안전.
+    if (/\b(?:few|little)\s+of\b/i.test(context)) return true;
+    const head = quantityTokenAfter(context, "few") || quantityTokenAfter(context, "little");
+    if (!head) return true;
+    return QUANTITY_AMBIGUOUS_COUNT_NOUNS.has(head);
+  }
+  if (key !== "many|much" && key !== "a few|a little") return false;
+  const head = quantityTokenAfter(context, correct) || quantityTokenAfter(context, wrong);
+  // 직후 명사를 못 찾으면 보수적으로 막는다(파싱 실패 시 시비 회피).
+  if (!head) return true;
+  return QUANTITY_AMBIGUOUS_COUNT_NOUNS.has(head);
+}
+
+/** much↔very · 이중비교급(much↔more)은 '진짜 비교급(-er) 수식' 자리에서만 안전. */
+function quantityComparativeUnsafe(correct: string, wrong: string, context: string): boolean {
+  const key = quantityPairKey(normalizeComparableText(correct), normalizeComparableText(wrong));
+  if (key !== "much|very" && key !== "more|much") return false;
+  const next =
+    quantityTokenAfter(context, "much") ||
+    quantityTokenAfter(context, key === "much|very" ? "very" : "more");
+  if (!next) return true; // 수식 대상 못 찾으면 보수적 차단
+  // very 가 정문인 자리(형용사화 과거분사·-or형) → 막는다.
+  if (key === "much|very" && QUANTITY_VERY_LICENSED_WORDS.has(next)) return true;
+  // 최상급(-est, very best/latest) → 막는다.
+  if (/[a-z]est$/.test(next)) return true;
+  // 안전 = 직후가 진짜 비교급(-er 굴절 또는 비교급 부사). 아니면 막는다.
+  const isComparative =
+    (/[a-z]er$/.test(next) && !QUANTITY_AMBIGUOUS_COUNT_NOUNS.has(next)) ||
+    QUANTITY_COMPARATIVE_ADVERBS.has(next);
+  return !isComparative;
+}
+
+/**
+ * 수량 정답(correct↔wrong)의 시비성 검사 — 시비형이면 차단 이슈 배열 반환.
+ * GRAMMAR_ERROR(밑줄)·GRAMMAR_CHOICE_COMBO(네모) 양쪽 검증기에서 공유 호출.
+ */
+function collectQuantityAnswerIssues(
+  correct: string,
+  wrong: string,
+  context: string,
+): Array<{ code: string; message: string }> {
+  const issues: Array<{ code: string; message: string }> = [];
+  const a = normalizeText(correct);
+  const b = normalizeText(wrong);
+  if (!a || !b) return issues;
+  if (isQuantityMeaningToggle(a, b)) {
+    issues.push({
+      code: "grammar-quantity-meaning-toggle",
+      message: `Quantity pair "${a}" ↔ "${b}" is a meaning toggle (both grammatical, only the meaning differs), not a grammar error — using it as the answer creates a disputed multiple-answer item.`,
+    });
+  }
+  if (isQuantityDebatablePair(a, b)) {
+    issues.push({
+      code: "grammar-quantity-debatable",
+      message: `Quantity pair "${a}" ↔ "${b}" (less/fewer · amount/number) is a prescriptive-vs-actual usage dispute; do not use it as the grammar answer.`,
+    });
+  }
+  if (quantityCountabilityUnsafe(a, b, context)) {
+    issues.push({
+      code: "grammar-quantity-ambiguous-noun",
+      message: `Quantity error "${a}" ↔ "${b}" modifies a count/mass dual noun whose countability is not fixed; the "wrong" form may be grammatical under another reading.`,
+    });
+  }
+  if (quantityComparativeUnsafe(a, b, context)) {
+    issues.push({
+      code: "grammar-quantity-debatable",
+      message: `Quantity error "${a}" ↔ "${b}" is only safe directly before a true comparative (-er / later); here the "wrong" form (very + participle/superlative, or more + base) can be the grammatical one.`,
+    });
+  }
+  return issues;
+}
+
 function isThinKillerGrammarErrorTarget(markedExpression: Record<string, unknown>): boolean {
   const expression = normalizeText(markedExpression.expression);
   const errorExpression = normalizeText(markedExpression.errorExpression);
@@ -3110,6 +3302,24 @@ function validateGrammarChoiceComboQuestion(
     if (passage && !containsLoose(passage, correct)) {
       add("error", "combo-correct-not-in-source", `Combo slot correctExpression not found in the passage: "${correct.slice(0, 60)}".`);
     }
+    // 수량(m) 정답 시비 게이트 — 네모 후보쌍에도 동일 적용(세 슬롯 전부가 정답 키).
+    for (const qIssue of collectQuantityAnswerIssues(
+      correct,
+      wrong,
+      normalizeText(slot.surroundingText),
+    )) {
+      add("error", qIssue.code, qIssue.message);
+    }
+    // 시제 시비 게이트 — 네모는 학생이 시제를 능동 판단해 고르므로(밑줄 디코이와 달리)
+    // 틀린 시제 후보가 방어 가능하면 즉시 복수정답. 밑줄(정답)과 동일하게 차단한다.
+    // (기존엔 네모 경로에 시제 게이트가 없어 무방비였음 — 적대검증 2026-06-23 갭.)
+    if (isDisputableTenseToggle(correct, wrong)) {
+      add(
+        "error",
+        "grammar-tense-only-error",
+        `Combo slot candidates "${correct}" ↔ "${wrong}" are a tense-only/do-support toggle, which is contextually disputable; a box choice must be unambiguously ungrammatical.`,
+      );
+    }
   }
 
   // 정답 후보 누설 — 네모 밖 지문에 후보와 동일한 내용어 표현이 무마킹으로
@@ -3558,12 +3768,22 @@ function validateTypeSpecific(
       // 시제 단독변경(현재 3인칭↔과거, 같은 어간)은 기출 검증 변형이 아니며
       // 문맥상 두 시제가 모두 가능해 정답 시비가 된다 (실측: outpaces→outpaced).
       // 수일치(is/are·has/have)는 별도로 제외 — 그건 합법 변형(d).
-      if (expression && errorExpression && isTenseOnlyMutation(expression, errorExpression)) {
+      if (expression && errorExpression && isDisputableTenseToggle(expression, errorExpression)) {
         add(
           "error",
           "grammar-tense-only-error",
           `The grammar error is a tense-only change ("${expression}" ↔ "${errorExpression}"), which is contextually disputable; use a proven mutation type instead.`,
         );
+      }
+      // 수량(m) 정답 시비 게이트 — 의미토글·양용명사·규범논쟁·very/more 수식 예외.
+      if (expression && errorExpression) {
+        for (const qIssue of collectQuantityAnswerIssues(
+          expression,
+          errorExpression,
+          normalizeText(markedExpression.surroundingText),
+        )) {
+          add("error", qIssue.code, qIssue.message);
+        }
       }
       if (correction && expression && correction !== expression) {
         add("warning", "grammar-correction-differs-from-source", "The correction differs from the original expression; verify the model did not rewrite acceptable source text.");
@@ -4673,6 +4893,10 @@ function validateGrammarCorrectionQuestion(
     const combined = `${displayedError} ${sourceCorrection}`.toLowerCase();
     if (/\bto\s+(?:be\s+)?(?:gain|gained|lose|lost)\b/.test(combined)) {
       add("error", "grammar-correction-debatable-infinitive", "Do not use active/passive infinitive preference as the grammar-correction target.");
+    }
+    // 수량(m) 정답 시비 게이트 — 서술형 교정에도 동일 적용(의미토글·양용명사·규범논쟁).
+    for (const qIssue of collectQuantityAnswerIssues(sourceCorrection, displayedError, sourceText)) {
+      add("error", qIssue.code, qIssue.message);
     }
     if (
       requestedDifficulty === "KILLER" &&

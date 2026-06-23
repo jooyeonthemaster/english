@@ -117,7 +117,7 @@ export const GRAMMAR_POINT_CATALOG: Record<GrammarPointCode, GrammarPointInfo> =
     recentWrong: 51,
     tier: "core",
     traps: [
-      "보어 자리는 형용사: be/remain/keep/stay, become/get/grow, seem, look/sound/feel + 5형식 OC(make/find/keep/leave + O + 형용사).",
+      "보어 자리는 형용사: be/remain/keep/stay, become/get/grow, seem, look/sound/feel + 5형식 OC(make/find/keep/leave + O + 형용사). 가목적어 구문(find/make/think it + 보어 + to-V/that절)의 보어 자리도 형용사 — *found it impossibly/strangely 는 부사라 비문.",
       "-ly 로 끝나는 형용사(costly, friendly, lively, deadly, lonely, likely)를 부사로 착각하게 하라 (최근 6년 오답 49회 — 최상위 함정 카드).",
       "enough 어순: enough+명사 / 형·부+enough.",
       "혼동 형·부: hard/hardly, late/lately, high/highly, near/nearly, close/closely — 의미가 달라지는 쌍.",
@@ -209,7 +209,7 @@ export const GRAMMAR_POINT_CATALOG: Record<GrammarPointCode, GrammarPointInfo> =
   },
   m: {
     code: "m",
-    label: "비교구문",
+    label: "비교·수량구문",
     rank: 25,
     answerFreq: 11,
     recentAnswer: 0,
@@ -217,6 +217,9 @@ export const GRAMMAR_POINT_CATALOG: Record<GrammarPointCode, GrammarPointInfo> =
     tier: "rare",
     traps: [
       "비교급 수식 부사는 much/even/still/far/a lot (very 불가), as+원급+as 사이 형/부 판단, the 비교급 ~ the 비교급.",
+      "수량 한정사 가산성(적대검증 2026-06-23 안전): many/a few + 가산복수명사(words/products) ↔ much/a little 로 바꾸면 비문(*much words/*a little products, 수일치 위반). most ↔ almost(*almost people, almost는 부사). 단 직후 명사의 가산성이 고정될 때만 — experience/time/room/hair/work/paper/light/glass 같은 가산·불가산 양용 명사 앞은 금지.",
+      "🚫 의미토글 금지(둘 다 정문이라 정답 아님): little↔a little·few↔a few(극성), much↔little·many↔few(양 반대), some↔any(화용), less↔fewer·amount↔number(규범논쟁). these는 어법 오류가 아니라 의미 차이 → 정답으로 만들면 복수정답 시비.",
+      "much↔very·이중비교급은 '진짜 비교급(-er/later) 수식'에서만 안전(*very later·*more safer는 비문). very+최상급(very best)·very+형용사화 과거분사(very surprised/limited)·senior/junior류는 very가 정문이라 정답 금지.",
     ],
   },
 };
@@ -484,8 +487,10 @@ export function buildGrammarPointGuidance(
       ? "- ⭐ 밑줄 span은 최소 문법 단위(보통 1~3단어, 최대 5단어)로만 좁히세요. 절 전체(주어+정동사+목적어)나 문장 통째 밑줄은 금지입니다. pointCode 의 필수 토큰(분사면 -ing/p.p., 관계사면 that/which/where 등, 대명사면 it/them/that/those 등, k면 to+원형/-ing, l면 during/while/because 등, m면 비교 표지)이 밑줄 표면 문자열 안에 실제로 있어야 하며, 없는데 코드만 붙이면 가짜 디코이입니다."
       : "",
     mode === "judgment"
-      ? "- 🚫 시제만 바꾸는 변형 금지: 기출 1000제 정답 오류에 '현재↔과거 시제 단독 교체'(예: realizes→realized, outpaces→outpaced)는 검증되지 않은 변형입니다. 문맥상 두 시제가 모두 가능해 정답 시비가 됩니다. 오류는 위 기출 검증 변형 방향(수일치·관계사·분사 능수동·형부 등)으로만 만드세요."
+      ? "- 🚫 시제를 '정답(틀린 것)'으로 만들지 마세요: '현재↔과거 시제 단독 교체'(realizes→realized, outpaces→outpaced, does→did)는 문맥·미영/영영에 따라 둘 다 가능해 복수정답 시비가 됩니다. 정답 오류는 검증 변형(수일치·관계사·분사 능수동·형부 등)으로만 만드세요. ✅ 단 시제를 '디코이(밑줄만 긋고 어법상 옳은 자리, 정답은 다른 곳)'로는 쓸 수 있습니다 — 시간부사(yesterday/since/already/by then)나 명시적 순서·시제일치로 시제가 단일하게 고정된 동사를 골라 학생이 '이 시제 맞나?'를 점검하게 하세요. ⚠️ the data shows류 모호 주어·집합명사·서사적 현재는 디코이로도 금지(원문 시제가 모호하면 디코이도 시비)."
       : "",
+    "- 🚫 수량 의미토글 금지: little↔a little, few↔a few, much↔little, many↔few, some↔any, less↔fewer, amount↔number 처럼 둘 다 문법적이고 의미만 다른 자리는 어법 오류가 아니라 복수정답이니 정답으로 만들지 마세요. 수량 오류는 가산성·통사가 한 형태를 비문으로 강제할 때만(many/a few + 가산복수명사 ↔ much/a little = *much words, most↔almost = *almost people, 비교급 앞 much↔very·*more safer). experience/time/room/work 같은 가산·불가산 양용 명사 앞, very+최상급/형용사화 과거분사(very surprised) 자리는 정답 금지.",
+    "- 가목적어 it·도치는 신규 포인트가 아니라 기존 포인트의 자리입니다(적대검증 2026-06-23). ✅안전 출제: ①가목적어 구문(find/make/think/consider + it + 보어 + to-V/that절)에서 보어 자리 형용사↔부사(f, *found it impossibly) 또는 가목적어 it↔them·소유격(g) ②도치 구문(Never/Hardly/There/장소부사구 + 동사 + 주어)에서 동사 뒤 진짜 주어와의 수일치(d, *Never has the scientists / *There is many). 🚫금지(복수정답 시비): 가목적어 it 생략·it↔this/that 교체, 도치 어순 자체(Never I have)나 도치 조동사 시제(did↔does)를 정답으로 삼기, 당위절(insist/essential that + S + be/go) be↔is·go↔goes를 정답으로 삼기(미영=원형·영영=직설 허용으로 시제처럼 시비).",
     "- 정답·디코이의 '판단'은 문장 전체 구조(선행사·진주어·의미상 주어·병렬 범위 등)를 읽어야 가능해야 합니다. 단, 그렇다고 밑줄을 길게 긋지 마세요 — 판단 근거는 밑줄 밖 맥락에 두고, 밑줄은 판단이 걸린 한 토큰에만 긋습니다. 단어 하나만 보고 즉답되는 자리(관사, 단순 전치사, 철자, 조동사 바로 옆 원형)는 금지.",
   ].filter(Boolean).join("\n");
 }
