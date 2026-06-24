@@ -17,7 +17,7 @@ import {
   ChevronUp,
   FileText,
   Loader2,
-  Maximize2,
+  Pencil,
   Scissors,
   Trash2,
 } from "lucide-react";
@@ -110,7 +110,7 @@ function MemberBlock({
             size="sm"
             disabled={splitting}
             data-drag-select-ignore
-            title="이 문항을 세트에서 분리해 일반 문제로 빼냅니다"
+            title="이 문항의 복제본을 단독 문항으로 추가합니다(세트는 그대로)"
             onClick={(e) => {
               e.stopPropagation();
               onSplitMember(member.questionId);
@@ -195,7 +195,8 @@ function MemberBlock({
 export function QuestionSetCard({
   set,
   onSplitMember,
-  onExpand,
+  onEdit,
+  onOpenDetail,
   onApprove,
   onDelete,
   compact = false,
@@ -203,8 +204,10 @@ export function QuestionSetCard({
   set: QuestionSetForRender;
   /** 멤버 분리 핸들러 — 누르면 해당 문항을 세트에서 빼낸다. 미지정 시 분리 버튼 숨김. */
   onSplitMember?: (questionId: string) => void | Promise<void>;
-  /** 확대(상세) — 지정 시 헤더·푸터에 '전체 보기' 노출. 보통 모달을 연다. */
-  onExpand?: () => void;
+  /** 수정하기 — 지정 시 푸터 '수정하기' 노출. 일반 문항처럼 편집 모달을 연다. */
+  onEdit?: () => void;
+  /** 상세 — 지정 시 우하단 상세 아이콘 노출. 세트 상세(보기) 모달을 연다. */
+  onOpenDetail?: () => void;
   /** 세트 전체 검수완료(멤버 일괄 승인). 미지정 시 버튼 숨김. */
   onApprove?: () => void | Promise<void>;
   /** 세트 삭제(멤버 일괄). 미지정 시 버튼 숨김. */
@@ -284,17 +287,6 @@ export function QuestionSetCard({
             </button>
           </div>
           <div className="flex shrink-0 items-center gap-1.5">
-            {onExpand && (
-              <button
-                type="button"
-                data-drag-select-ignore
-                onClick={onExpand}
-                title="크게 보기"
-                className="flex size-6 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600"
-              >
-                <Maximize2 className="size-3.5" />
-              </button>
-            )}
             {onDelete && (
               <button
                 type="button"
@@ -343,6 +335,15 @@ export function QuestionSetCard({
             </div>
           )}
 
+          {/* 공유 지문 접힘 미리보기 — 관리 카드 접힘과 동일하게 2줄 노출(지문 토글로 전체). */}
+          {!passageOpen && collapsed && mergedPassage && (
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+              <div className="line-clamp-2 whitespace-pre-wrap font-mono text-[12px] leading-[1.8] text-slate-700">
+                {renderFormatted(mergedPassage, null)}
+              </div>
+            </div>
+          )}
+
           {/* 멤버 문항 */}
           {set.members.map((m, i) => (
             <MemberBlock
@@ -364,7 +365,7 @@ export function QuestionSetCard({
             </div>
             <ReviewStatusStamp approved={allApproved} className="shrink-0" />
           </div>
-          {(onApprove || onExpand) && (
+          {(onApprove || onEdit || onOpenDetail) && (
             <div className="flex items-end gap-1.5">
               {onApprove && (
                 <Button
@@ -392,25 +393,25 @@ export function QuestionSetCard({
                   검수완료
                 </Button>
               )}
-              {onExpand && (
+              {onEdit && (
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  onClick={onExpand}
+                  onClick={onEdit}
                   className="h-7 flex-1 justify-center gap-1.5 border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-slate-800"
                 >
-                  <Maximize2 className="h-3 w-3" />
-                  전체 보기
+                  <Pencil className="h-3 w-3" />
+                  수정하기
                 </Button>
               )}
-              {onExpand && (
+              {onOpenDetail && (
                 <CardDetailIconButton
                   className="size-7 shrink-0 rounded-md"
                   iconClassName="size-3.5"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onExpand();
+                    onOpenDetail();
                   }}
                 />
               )}

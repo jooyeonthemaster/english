@@ -175,6 +175,8 @@ interface UseWorkspaceGenerationParams {
   loadPassages: () => Promise<void> | void;
   /** 장문 세트는 optimistic 큐를 안 거치므로, 생성 후 결과 목록을 다시 읽는다. */
   loadSavedQuestions?: () => Promise<void> | void;
+  /** 지문 세트 생성 완료 시 호출 — 하단 지문 세트 섹션을 자동 갱신하는 신호. */
+  onSetCreated?: () => void;
 }
 
 export interface WorkspaceGenerationSummary {
@@ -204,6 +206,7 @@ export function useWorkspaceGeneration({
   setSessionQueue,
   loadPassages,
   loadSavedQuestions,
+  onSetCreated,
 }: UseWorkspaceGenerationParams) {
   const { triggerRefresh } = useTaskQueue();
   const [generating, setGenerating] = useState(false);
@@ -782,6 +785,7 @@ export function useWorkspaceGeneration({
         // 세트로 묶은 뒤 setId 가 반영된 목록을 다시 읽어 묶음 표시를 갱신한다.
         if (createdAnySet) {
           void loadSavedQuestions?.();
+          onSetCreated?.(); // 하단 지문 세트 섹션 자동 갱신 신호
         }
         if (success > 0) {
           dispatchGenerateTourMilestone("question-generation-completed");

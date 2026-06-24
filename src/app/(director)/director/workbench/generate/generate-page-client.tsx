@@ -2069,6 +2069,9 @@ export function GeneratePageClient({
       loadPassages,
     });
 
+  // 하단 지문 세트 섹션 갱신 신호 — 세트 생성 완료 시 올린다(아래 onSetCreated).
+  const [setRefreshNonce, setSetRefreshNonce] = useState(0);
+
   // ── 워크스페이스 생성 (변형본 저장 → 행별 설정으로 생성) ──
   const {
     generating: workspaceGenerating,
@@ -2089,6 +2092,9 @@ export function GeneratePageClient({
     setSessionQueue,
     loadPassages,
     loadSavedQuestions,
+    // 세트 생성은 일반 큐 카드를 done 으로 안 올리므로(낙관적 카드 제거만) 하단
+    // 지문 세트 섹션이 자동 갱신되도록 별도 신호를 올린다.
+    onSetCreated: () => setSetRefreshNonce((n) => n + 1),
   });
   const workspaceActive = workspaceApi.rows.length > 0;
   // 워크스페이스가 '내 지문함'을 덮어 표시되는 상태. 브레드크럼의 '워크스페이스'
@@ -2615,6 +2621,7 @@ export function GeneratePageClient({
             setQueueFilter={setQueueFilter}
             onRetryGeneration={retryGeneration}
             marqueeBoundaryRef={bottomQueueBoundaryRef}
+            setRefreshKey={setRefreshNonce}
           />
         </section>
       </main>

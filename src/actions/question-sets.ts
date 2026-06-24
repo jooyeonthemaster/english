@@ -49,6 +49,8 @@ export interface QuestionSetForRender {
   createdAt: Date;
   /** 표시용 지문 제목(첫 멤버의 지문). 지문 없는 세트면 null. */
   passageTitle: string | null;
+  /** 공유 지문 id(첫 멤버의 지문). 지문 없는 세트면 null. */
+  passageId: string | null;
   members: QuestionSetMember[];
 }
 
@@ -98,6 +100,7 @@ function mapSet(set: SetWithItems): QuestionSetForRender {
     layout: parseJson<LayoutDescriptor>(set.displayedPassageLayout),
     createdAt: set.createdAt,
     passageTitle: set.items[0]?.question.passage?.title ?? null,
+    passageId: set.items[0]?.question.passage?.id ?? null,
     members: set.items.map((item) => {
       const q = item.question;
       return {
@@ -233,39 +236,66 @@ export async function groupQuestionsIntoSet(opts: {
 }
 
 /**
- * 세트에서 한 멤버를 분리해 독립 문항으로 만든다(setId 제거 → 묶음에서 빠짐). 세트가
- * 비면 세트 자체를 삭제, 아니면 itemCount 갱신.
+ * 세트 멤버를 "분리"한다 — 세트는 그대로 두고(원본 멤버 유지), 그 문항의 복제본을
+ * 단독 문항(inSet=false·setId=null)으로 하나 새로 만든다. 즉 세트에서 빼내는 게 아니라
+ * 일반 단독 문항을 하나 추가하는 동작. 해설도 함께 복제. 새 문항 id 를 반환.
  */
 export async function splitQuestionSetMember(
   questionId: string,
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: boolean; error?: string; newQuestionId?: string }> {
   const staff = await getStaffSession();
   if (!staff) return { success: false, error: "Authentication required" };
 
-  const q = await prisma.question.findFirst({
+  const original = await prisma.question.findFirst({
     where: { id: questionId, academyId: staff.academyId, setId: { not: null } },
-    select: { id: true, setId: true },
+    include: { explanation: true },
   });
-  if (!q || !q.setId) return { success: false, error: "세트 멤버를 찾을 수 없습니다." };
-  const setId = q.setId;
+  if (!original) return { success: false, error: "세트 멤버를 찾을 수 없습니다." };
 
-  await prisma.$transaction(async (tx) => {
-    await tx.questionSetItem.deleteMany({ where: { questionId } });
-    await tx.question.update({
-      where: { id: questionId },
-      data: { inSet: false, setId: null },
-    });
-    const remaining = await tx.questionSetItem.count({ where: { setId } });
-    if (remaining === 0) {
-      await tx.questionSet.delete({ where: { id: setId } });
-    } else {
-      await tx.questionSet.update({
-        where: { id: setId },
-        data: { itemCount: remaining },
-      });
-    }
+  const copy = await prisma.question.create({
+    data: {
+      academyId: original.academyId,
+      passageId: original.passageId,
+      type: original.type,
+      subType: original.subType,
+      questionText: original.questionText,
+      structuredData: original.structuredData ?? undefined,
+      questionImage: original.questionImage,
+      options: original.options,
+      correctAnswer: original.correctAnswer,
+      points: original.points,
+      difficulty: original.difficulty,
+      tags: original.tags,
+      learningCategory: original.learningCategory,
+      aiGenerated: original.aiGenerated,
+      approved: original.approved,
+      starred: false,
+      sourceMaterialId: original.sourceMaterialId,
+      bundleId: original.bundleId,
+      questionNumber: original.questionNumber,
+      similarQuestionGenJobId: original.similarQuestionGenJobId,
+      customTypeId: original.customTypeId,
+      // 단독 문항으로 — 세트와 무관.
+      inSet: false,
+      setId: null,
+      explanation: original.explanation
+        ? {
+            create: {
+              content: original.explanation.content,
+              keyPoints: original.explanation.keyPoints,
+              wrongOptionExplanations: original.explanation.wrongOptionExplanations,
+              relatedGrammar: original.explanation.relatedGrammar,
+              difficulty: original.explanation.difficulty,
+              aiGenerated: original.explanation.aiGenerated,
+              approved: original.explanation.approved,
+            },
+          }
+        : undefined,
+    },
+    select: { id: true },
   });
-  return { success: true };
+
+  return { success: true, newQuestionId: copy.id };
 }
 
 /** Approve every member question in a set. */

@@ -305,6 +305,8 @@ interface EmbeddedQuestionBankProps {
   // (PassageCardGrid)과 동일한 방식. 문제별/지문별 두 뷰의 DragSelect 가 모두
   // 이 boundary 를 공유해, 패널 어디서든 드래그를 시작해 카드를 다중 선택한다.
   marqueeBoundaryRef?: RefObject<HTMLElement | null>;
+  /** 값이 바뀌면 하단 지문 세트 섹션을 다시 불러온다(세트 생성 완료 신호). */
+  setRefreshKey?: number | string;
 }
 
 export function EmbeddedQuestionBank({
@@ -313,6 +315,7 @@ export function EmbeddedQuestionBank({
   queueCounts = { generating: 0, done: 0, error: 0 },
   queueFilter = "all",
   setQueueFilter,
+  setRefreshKey = 0,
   onRetryGeneration,
   marqueeBoundaryRef,
 }: EmbeddedQuestionBankProps) {
@@ -769,6 +772,25 @@ export function EmbeddedQuestionBank({
       }
       setFilters((prev) => ({ ...prev, page: 1 }));
       void loadQuestions();
+    },
+    [loadQuestions],
+  );
+
+  // 세트 멤버 분리 후 — 새 단독 복제본을 파란 글로우로 강조 + 1페이지로 재조회 + 그 카드로
+  // 스크롤해 바로 보이게 한다(세트 카드가 앞에 깔려 밀려나도 사용자가 찾을 수 있게).
+  const handleSplitCreated = useCallback(
+    (newId?: string) => {
+      if (!newId) {
+        void loadQuestions();
+        return;
+      }
+      setFreshQuestionIds((prev) => new Set(prev).add(newId));
+      setFilters((prev) => ({ ...prev, page: 1 }));
+      window.setTimeout(() => {
+        document
+          .querySelector(`[data-drag-item-id="${newId}"]`)
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 900);
     },
     [loadQuestions],
   );
@@ -1495,46 +1517,48 @@ export function EmbeddedQuestionBank({
               {/* 진행 중인 생성 큐 — 항상 목록 맨 앞에 (뷰/폴더/필터와 무관). */}
               {queueStrip}
 
-              <div className="mb-3">
-                <QuestionSetSection
-                  refreshKey={`${open}:${queueCounts.done}`}
-                  onCountChange={setSetCount}
-                  gridClassName={`grid items-stretch gap-3 ${
-                    gridCols === 2
-                      ? "grid-cols-1 md:grid-cols-2"
-                      : gridCols === 3
-                        ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                        : "grid-cols-1"
-                  }`}
-                />
-              </div>
-
               {isGrouped ? (
-                <PassageGroupedView
-                  passages={groupedPassages}
-                  gridCols={gridCols}
-                  viewSize={viewSize}
-                  selectedIds={selectedIds}
-                  setSelectedIds={setSelectedIds}
-                  marqueeBoundaryRef={marqueeBoundaryRef}
-                  onToggleSelect={toggleSelect}
-                  onDelete={handleDelete}
-                  onApprove={handleApprove}
-                  onUnapprove={handleUnapprove}
-                  onToggleStar={handleToggleStar}
-                  onDetail={openDetail}
-                  onEdit={editor.openEditor}
-                  cardClickSelects
-                  showDetailButton
-                  dragRequiresSelection
-                  expandedPassageIds={expandedPassageIds}
-                  setExpandedPassageIds={setExpandedPassageIds}
-                  onActivePassageChange={setActivePassageContext}
-                  getDragQuestionIds={getDragQuestionIds}
-                  renderQuestion={(q, idx) =>
-                    renderManagedQuestionCard(q, idx + 1)
-                  }
-                />
+                <>
+                  <div className="mb-3">
+                    <QuestionSetSection
+                      refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}`}
+                      onCountChange={setSetCount}
+                      onMemberSplit={handleSplitCreated}
+                      gridClassName={`grid items-start gap-3 ${
+                        gridCols === 2
+                          ? "grid-cols-1 md:grid-cols-2"
+                          : gridCols === 3
+                            ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                            : "grid-cols-1"
+                      }`}
+                    />
+                  </div>
+                  <PassageGroupedView
+                    passages={groupedPassages}
+                    gridCols={gridCols}
+                    viewSize={viewSize}
+                    selectedIds={selectedIds}
+                    setSelectedIds={setSelectedIds}
+                    marqueeBoundaryRef={marqueeBoundaryRef}
+                    onToggleSelect={toggleSelect}
+                    onDelete={handleDelete}
+                    onApprove={handleApprove}
+                    onUnapprove={handleUnapprove}
+                    onToggleStar={handleToggleStar}
+                    onDetail={openDetail}
+                    onEdit={editor.openEditor}
+                    cardClickSelects
+                    showDetailButton
+                    dragRequiresSelection
+                    expandedPassageIds={expandedPassageIds}
+                    setExpandedPassageIds={setExpandedPassageIds}
+                    onActivePassageChange={setActivePassageContext}
+                    getDragQuestionIds={getDragQuestionIds}
+                    renderQuestion={(q, idx) =>
+                      renderManagedQuestionCard(q, idx + 1)
+                    }
+                  />
+                </>
               ) : displayedQuestions.length === 0 &&
                 setCount === 0 &&
                 !loading ? (
@@ -1564,10 +1588,23 @@ export function EmbeddedQuestionBank({
                         : "grid-cols-1"
                   }`}
                 >
-                  {displayedQuestions.map((q, idx) => {
-                    const startIdx = (currentPage - 1) * PAGE_SIZE;
-                    return renderManagedQuestionCard(q, startIdx + idx + 1);
-                  })}
+                  {/* 세트 카드 + 일반 카드를 한 그리드에서 createdAt 최신순으로 섞어 렌더
+                      (종류 불문 통합 정렬). 세트는 최신이라 1페이지에서만 끼운다. */}
+                  <QuestionSetSection
+                    inline
+                    showSets={currentPage === 1}
+                    refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}`}
+                    onCountChange={setSetCount}
+                    onMemberSplit={handleSplitCreated}
+                    normalItems={displayedQuestions.map((q, idx) => {
+                      const startIdx = (currentPage - 1) * PAGE_SIZE;
+                      return {
+                        id: q.id,
+                        createdAt: q.createdAt,
+                        node: renderManagedQuestionCard(q, startIdx + idx + 1),
+                      };
+                    })}
+                  />
                 </DragSelect>
               )}
             </div>
