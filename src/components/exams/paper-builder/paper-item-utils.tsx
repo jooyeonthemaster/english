@@ -87,10 +87,27 @@ export function makeLocalId(questionId: string): string {
   return `${questionId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
+// 지문 박스 제목: item 의 passageTitle 이 비면 원본 문항의 지문 제목으로 폴백+정규화(빈칸 방지).
 export function resolvePaperItemPassageTitle(item: PaperItem): string {
   return normalizeInlineText(
     item.passageTitle || item.sourceQuestion.passage?.title || "",
   );
+}
+
+// 장문 세트(수능 43~45처럼 지문 1회 + N문항) 멤버의 그룹 ID.
+// 같은 setId 멤버는 동일한 "set:<setId>" groupId 를 받아 buildGroups 가 연속 항목을
+// 한 그룹으로 묶고(공유 지문 1회 + 멤버들), 페이지네이션도 그룹 단위로 유지한다.
+// 세트가 아닌 솔로 문항은 null 을 반환 → 호출부에서 기존 "single:<localId>" 유지(회귀 0).
+function setGroupIdForQuestion(question: BuilderQuestion): string | null {
+  const setId = question.setId;
+  return setId ? `set:${setId}` : null;
+}
+
+// 이 PaperItem 이 장문 세트 멤버인지(= sourceQuestion.setId 존재).
+// 세트 멤버는 공유 지문을 그룹 첫머리에서 1회만 출력하므로 출처 지문 게이트를
+// 강제로 켠다(아래 shouldRenderSourcePassageForItem·makePaperItem).
+export function isSetMemberItem(item: PaperItem): boolean {
+  return item.blockType === "question" && Boolean(item.sourceQuestion.setId);
 }
 
 // 커스텀 레이아웃(v2) 문항은 LayoutDoc.answerLineCount 가 서술형 답란 줄 수를
@@ -160,9 +177,14 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
   // 레퍼런스(내신 논술형 영작)도 지문을 문제에 포함하며, 학생은 지문을 읽고 요약문을 영작한다.
   // SUMMARY_COMPLETE 와 동일하게 INLINE_SOURCE 로 처리 — 지문은 structuredSegments() 가
   // 문제 안(요약문 위)에 박스로 인라인 렌더하고, 별도 출처 지문 블록은 억제된다.
-  const includeSourcePassage = isSummaryWritingSubtype(question.subType)
-    ? true
-    : shouldIncludeSourcePassageByDefault(question);
+  // 장문 세트(43~45) 멤버는 공유 지문을 그룹 첫머리에서 "1회"만 출력한다 →
+  // 출처 지문 포함을 강제로 켜고(아래 buildGroups 가 그룹 단위로 1회만 그림),
+  // 멤버들은 지시문+보기만 part 로 이어 붙는다.
+  const includeSourcePassage = question.setId
+    ? Boolean(passageContent)
+    : isSummaryWritingSubtype(question.subType)
+      ? true
+      : shouldIncludeSourcePassageByDefault(question);
   const normalizedQuestion = {
     ...effectiveQuestion,
     questionText: normalizedQuestionText,
@@ -177,7 +199,8 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     sourceQuestion: normalizedQuestion,
     orderNum,
     points: question.points || 1,
-    groupId: `single:${localId}`,
+    // 세트 멤버면 "set:<setId>"(같은 세트끼리 한 그룹=지문 1회+N문항), 아니면 솔로 "single:<localId>".
+    groupId: setGroupIdForQuestion(question) ?? `single:${localId}`,
     includePassage: includeSourcePassage,
     passageTitle: normalizeInlineText(question.passage?.title || ""),
     passageContent,
@@ -225,6 +248,14 @@ function questionWithPaperItemPassage(item: PaperItem): BuilderQuestion {
 
 export function shouldRenderSourcePassageForItem(item: PaperItem): boolean {
   if (item.blockType !== "question") return false;
+  // 장문 세트 멤버: 공유 지문을 그룹 첫머리에서 1회만 출력한다(수능 43~45 레이아웃).
+  // 유형별 인라인/임베드 규칙을 우회하고, 지문 내용만 있으면 그룹 출처 지문 블록으로 띄운다.
+  if (isSetMemberItem(item)) {
+    const passageContent = normalizePassageText(
+      item.passageContent || item.sourceQuestion.passage?.content || "",
+    );
+    return Boolean(passageContent.trim());
+  }
   // 요약문 영작은 INLINE_SOURCE(SUMMARY_COMPLETE 와 동일) — 지문은 structuredSegments() 가 문제
   // 안에 인라인으로 그리므로 여기(별도 출처 지문 블록)에서는 그리지 않는다(중복 방지).
   if (shouldRenderSourcePassageInsideQuestion(item.sourceQuestion.subType)) return false;
@@ -324,8 +355,12 @@ export function clonePaperItem(item: PaperItem, orderNum: number): PaperItem {
     localId,
     orderNum,
     locked: false,
+    // 세트("set:")·지문("passage:") 묶음 그룹은 복제해도 같은 그룹에 남도록 prefix 보존.
+    // 그 외 솔로 문항/블록은 새 localId 기반 고유 그룹으로(기존 동작).
     groupId:
-      item.blockType === "question" && item.groupId && item.groupId.startsWith("passage:")
+      item.blockType === "question" &&
+      item.groupId &&
+      (item.groupId.startsWith("passage:") || item.groupId.startsWith("set:"))
         ? item.groupId
         : `${item.blockType === "question" ? "single" : "block"}:${localId}`,
   };

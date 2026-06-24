@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { getStaffSession } from "@/lib/auth";
@@ -12,6 +13,11 @@ import { prisma } from "@/lib/prisma";
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
 import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 import { generateQuestionSet } from "@/lib/question-sets/generate-set";
+import {
+  QUESTION_SET_SAFETY_MAX_ATTEMPTS,
+  passageMeetsPreset,
+  resolvePreset,
+} from "@/lib/question-sets/presets";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 export const runtime = "nodejs";
@@ -22,29 +28,25 @@ const VOCAB_TYPES = new Set(["CONTEXT_MEANING", "SYNONYM", "ANTONYM"]);
 
 const requestSchema = z.object({
   passageId: z.string().min(1),
-  structuralMode: z
-    .enum(["NONE", "SENTENCE_ORDER", "SENTENCE_INSERT"])
-    .default("NONE"),
-  setLabel: z.string().optional(),
+  presetId: z.string().min(1),
+  difficulty: z.enum(["BASIC", "INTERMEDIATE", "KILLER"]).default("INTERMEDIATE"),
   generationPlan: z.unknown().optional(),
   customPrompt: z.string().optional(),
-  members: z
+  /** 멤버별 오버라이드(프리셋 멤버 순서와 평행) — 난이도·세부설정 커스터마이즈. */
+  memberOverrides: z
     .array(
       z.object({
-        typeId: z.string().min(1),
-        difficulty: z
-          .enum(["BASIC", "INTERMEDIATE", "KILLER"])
-          .default("INTERMEDIATE"),
-        typeSettings: z.unknown().optional(),
+        difficulty: z.enum(["BASIC", "INTERMEDIATE", "KILLER"]).optional(),
+        generationPlan: z.enum(["STANDARD", "PREMIUM"]).optional(),
+        typeSettings: z.record(z.string(), z.unknown()).optional(),
       }),
     )
-    .min(1)
-    .max(8),
+    .optional(),
 });
 
 export async function POST(req: NextRequest) {
   if (!FEATURE_FLAGS.ENABLE_LONG_PASSAGE_SETS) {
-    return NextResponse.json({ error: "장문 세트 기능이 비활성화되어 있습니다." }, { status: 403 });
+    return NextResponse.json({ error: "지문 세트 기능이 비활성화되어 있습니다." }, { status: 403 });
   }
 
   const staff = await getStaffSession();
@@ -62,12 +64,23 @@ export async function POST(req: NextRequest) {
   const input = parsed.data;
   const generationPlan = normalizeQuestionGenerationPlan(input.generationPlan);
 
+  const preset = resolvePreset(input.presetId);
+  if (!preset) {
+    return NextResponse.json({ error: "알 수 없는 세트 프리셋입니다." }, { status: 400 });
+  }
+
   const passage = await prisma.passage.findFirst({
     where: { id: input.passageId, academyId: staff.academyId },
-    select: { id: true, title: true },
+    select: { id: true, title: true, content: true },
   });
   if (!passage) {
     return NextResponse.json({ error: "Passage not found" }, { status: 404 });
+  }
+
+  // 최소 분량 사전검증 — 차감 전에 빠르게 거른다(생성기도 한 번 더 검증).
+  const feasibility = passageMeetsPreset(passage.content, preset);
+  if (!feasibility.ok) {
+    return NextResponse.json({ error: feasibility.reason }, { status: 400 });
   }
 
   await cleanupStaleWorkbenchAiJobs({
@@ -76,15 +89,16 @@ export async function POST(req: NextRequest) {
     passageId: passage.id,
   });
 
-  const baseCreditCost = input.members.reduce(
-    (sum, m) =>
-      sum +
-      (VOCAB_TYPES.has(m.typeId)
-        ? CREDIT_COSTS.QUESTION_GEN_VOCAB
-        : CREDIT_COSTS.QUESTION_GEN_SINGLE),
-    0,
-  );
-  const creditCost = getQuestionGenerationCreditCost(baseCreditCost, generationPlan);
+  const baseCreditCost = preset.members.reduce((sum, m, index) => {
+    const unit = VOCAB_TYPES.has(m.typeId)
+      ? CREDIT_COSTS.QUESTION_GEN_VOCAB
+      : CREDIT_COSTS.QUESTION_GEN_SINGLE;
+    const memberPlan = normalizeQuestionGenerationPlan(
+      input.memberOverrides?.[index]?.generationPlan ?? m.generationPlan ?? generationPlan,
+    );
+    return sum + getQuestionGenerationCreditCost(unit, memberPlan);
+  }, 0);
+  const creditCost = baseCreditCost * QUESTION_SET_SAFETY_MAX_ATTEMPTS;
 
   const job = await prisma.workbenchAiJob.create({
     data: {
@@ -96,19 +110,26 @@ export async function POST(req: NextRequest) {
       passageId: passage.id,
       mode: "SET",
       generationPlan,
-      requestedCount: input.members.length,
+      requestedCount: preset.members.length,
       startedAt: new Date(),
       config: {
         mode: "SET",
-        structuralMode: input.structuralMode,
-        members: input.members.map((m) => ({
-          typeId: m.typeId,
-          difficulty: m.difficulty,
-        })),
-        setLabel: input.setLabel ?? null,
+        presetId: preset.id,
+        structuralMode: preset.structuralMode,
+        difficulty: input.difficulty,
+        members: preset.members.map((m, index) => {
+          const ov = input.memberOverrides?.[index];
+          return {
+            typeId: m.typeId,
+            difficulty: ov?.difficulty ?? m.difficulty ?? input.difficulty,
+            generationPlan: ov?.generationPlan ?? m.generationPlan ?? generationPlan,
+            typeSettings: ov?.typeSettings ?? m.typeSettings ?? null,
+          };
+        }),
+        setLabel: preset.label,
         generationPlan,
         customPrompt: input.customPrompt ?? "",
-      },
+      } as Prisma.InputJsonValue,
     },
   });
 
@@ -122,9 +143,12 @@ export async function POST(req: NextRequest) {
       metadata: {
         passageId: passage.id,
         mode: "SET",
-        memberCount: input.members.length,
-        structuralMode: input.structuralMode,
+        presetId: preset.id,
+        memberCount: preset.members.length,
+        structuralMode: preset.structuralMode,
         generationPlan,
+        baseCreditCost,
+        maxSafetyAttempts: QUESTION_SET_SAFETY_MAX_ATTEMPTS,
         creditCost,
       },
       creditCost,
@@ -136,12 +160,28 @@ export async function POST(req: NextRequest) {
       staffId: staff.id,
       jobId: job.id,
       passageId: passage.id,
-      structuralMode: input.structuralMode,
-      setLabel: input.setLabel,
+      presetId: preset.id,
       generationPlan,
       customPrompt: input.customPrompt,
-      members: input.members,
+      difficulty: input.difficulty,
+      memberOverrides: input.memberOverrides,
     });
+    const unusedAttemptCount = Math.max(
+      0,
+      QUESTION_SET_SAFETY_MAX_ATTEMPTS - result.attemptCount,
+    );
+    const unusedCreditCost = unusedAttemptCount * baseCreditCost;
+    let refundedUnusedCredits = 0;
+    if (unusedCreditCost > 0) {
+      refundedUnusedCredits = await refundCredits(
+        job.academyId,
+        "QUESTION_GEN_SINGLE",
+        credit.transactionId,
+        "지문 세트 안전 재시도 미사용분 환불",
+        unusedCreditCost,
+      ).catch(() => 0);
+    }
+    const creditsRemaining = credit.balanceAfter + refundedUnusedCredits;
 
     await prisma.workbenchAiJob.update({
       where: { id: job.id },
@@ -157,7 +197,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       jobId: job.id,
       ...result,
-      creditsRemaining: credit.balanceAfter,
+      creditsRemaining,
     });
   } catch (err) {
     if (err instanceof InsufficientCreditsError) {
@@ -175,11 +215,11 @@ export async function POST(req: NextRequest) {
         job.academyId,
         "QUESTION_GEN_SINGLE",
         creditTxId,
-        "장문 세트 생성 실패",
+        "지문 세트 생성 실패",
         creditCost,
       ).catch(() => {});
     }
-    const message = err instanceof Error ? err.message : "장문 세트 생성에 실패했습니다.";
+    const message = err instanceof Error ? err.message : "지문 세트 생성에 실패했습니다.";
     await prisma.workbenchAiJob.update({
       where: { id: job.id },
       data: { status: "FAILED", errorMessage: message, completedAt: new Date() },

@@ -68,6 +68,12 @@ const PAGE_BOTTOM_GUARD = 20;
 const OPTION_BLOCK_TOP_GAP = 6;
 const OPTION_ROW_GAP = 4;
 
+// 장문 세트(43~45) 멤버인지 — sourceQuestion.setId 존재 여부.
+// paper-item-utils.isSetMemberItem 과 동일 판정(여기선 import 사이클·JSX 의존 회피용 로컬 복제).
+function isSetMemberItem(item: PaperItem): boolean {
+  return item.blockType === "question" && Boolean(item.sourceQuestion.setId);
+}
+
 export function isWideGlyph(char: string): boolean {
   const code = char.charCodeAt(0);
   return (
@@ -321,9 +327,13 @@ export function estimateStructuredBodyHeight(
   }
 
   if (isInlineSourcePassageSubtype(subType)) {
-    const passage = normalizePassageText(
-      item.passageContent || item.sourceQuestion.passage?.content || "",
-    );
+    // 세트 멤버는 공유 지문을 그룹에서 1회만 그리므로(인라인 지문 박스 제거),
+    // 본문 높이 추정에서도 지문 박스 높이를 빼 buildStructLineBlocks 와 일치시킨다.
+    const passage = isSetMemberItem(item)
+      ? ""
+      : normalizePassageText(
+          item.passageContent || item.sourceQuestion.passage?.content || "",
+        );
     const bodyAfterStem = questionBodyAfterStem(item);
     let height = HEADER_BODY_GAP;
     if (bodyAfterStem) {
@@ -379,7 +389,15 @@ function buildStructLineBlocks(
   const textLineH = questionLineHeight(settings);
   const blocks: FlowBlock[] = [];
 
-  structuredSegments(item).forEach((seg, segIndex) => {
+  // 장문 세트 멤버: 공유 지문은 그룹 첫머리에서 1회만 출력하므로(buildGroups·a4 fragment),
+  // 멤버 본문의 인라인 "지문(passage) 박스" 세그먼트는 제거해 중복 출력을 막는다.
+  // (요약/주어진문장 박스·순서 단락 등 멤버 고유 본문은 그대로 둔다.)
+  const isSetMember = isSetMemberItem(item);
+  const segments = structuredSegments(item).filter(
+    (seg) => !(isSetMember && seg.kind === "box" && seg.boxStyle === "passage"),
+  );
+
+  segments.forEach((seg, segIndex) => {
     if (seg.kind === "arrow") {
       const segChrome = STRUCTURE_GAP + ARROW_BLOCK_HEIGHT;
       blocks.push({

@@ -40,6 +40,20 @@ const cases = [
       ],
       correctAnswer: "A",
   } },
+  { type: "GRAMMAR_CORRECTION", field: "passageWithUnderline", ai: {
+      underlinedSegments: [
+        {
+          label: "(A)",
+          sourceText: "The committee will review it carefully.",
+          displayedText: "The committee will reviewing it carefully.",
+          isError: true,
+          errorPart: "will reviewing",
+          correctedPart: "will review",
+          surroundingText: "The committee will review it carefully.",
+        },
+      ],
+      correctAnswer: "(A) will review",
+  } },
   { type: "VOCAB_CHOICE", field: "passageWithMarkers", ai: {
       markedWords: [
         { label: "(a)", originalWord: "Reliable", isInappropriate: false, surroundingText: "Reliable sources confirm" },
@@ -132,11 +146,11 @@ function runHarness() {
 
 const summary = runHarness();
 
-test("render-from-spans parity: reconstructed === baked for all 9 inline types", () => {
+test("render-from-spans parity: reconstructed === baked for all 10 inline types", () => {
   assert.equal(
     summary.failed,
     0,
     `parity failures: ${JSON.stringify(summary.failures, null, 2)}`,
   );
-  assert.equal(summary.passed, 9, `expected 9 parity checks, got ${summary.passed}`);
+  assert.equal(summary.passed, 10, `expected 10 parity checks, got ${summary.passed}`);
 });

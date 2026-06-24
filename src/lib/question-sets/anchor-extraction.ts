@@ -139,6 +139,24 @@ export function extractAnchors(typeId: string, ai: AnyRecord): Anchor[] {
       });
     }
 
+    case "GRAMMAR_CORRECTION": {
+      const segments = Array.isArray(ai.underlinedSegments)
+        ? (ai.underlinedSegments as AnyRecord[])
+        : [];
+      return segments.map((segment, index) => {
+        const sourceText = norm(segment.sourceText);
+        const displayedText = norm(segment.displayedText) || sourceText;
+        return {
+          kind: "MARKER",
+          label: canonicalGrammarLabel(segment.label, index),
+          spanText: sourceText,
+          passageForm: displayedText,
+          surroundingText: norm(segment.surroundingText) || undefined,
+          findStrategy: "expression",
+        } satisfies Anchor;
+      }).filter((anchor) => anchor.spanText);
+    }
+
     case "VOCAB_CHOICE": {
       const mws = Array.isArray(ai.markedWords)
         ? (ai.markedWords as AnyRecord[])

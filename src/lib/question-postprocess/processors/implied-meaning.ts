@@ -40,31 +40,69 @@ export function processImpliedMeaning(
     found.length,
     `__${originalExpression}__`,
   );
-  const correctAnswer = normalizeCorrectAnswerLabel(ai.correctAnswer, ai.options) ?? ai.correctAnswer;
+  const correctAnswerLabels = normalizeCorrectAnswerLabels(
+    ai.correctAnswers,
+    ai.correctAnswer,
+    ai.options,
+  );
+  const correctAnswer =
+    correctAnswerLabels.length > 0
+      ? correctAnswerLabels.join(", ")
+      : normalizeCorrectAnswerLabel(ai.correctAnswer, ai.options) ?? ai.correctAnswer;
+  const multiAnswer = correctAnswerLabels.length >= 2;
+  const data: QuestionPostProcessData = {
+    ...ai,
+    direction: normalizeImpliedMeaningDirection(ai.direction, multiAnswer),
+    correctAnswer,
+    options: normalizeEnglishOptions(ai.options),
+    underlinedExpression: originalExpression,
+    passageWithUnderline,
+  };
+  if (multiAnswer || Array.isArray(ai.correctAnswers)) {
+    data.correctAnswers = correctAnswerLabels;
+  }
 
   return {
     success: true,
-    data: {
-      ...ai,
-      direction: normalizeImpliedMeaningDirection(ai.direction),
-      correctAnswer,
-      options: normalizeEnglishOptions(ai.options),
-      underlinedExpression: originalExpression,
-      passageWithUnderline,
-    },
+    data,
     warnings,
   };
 }
 
-function normalizeImpliedMeaningDirection(value: unknown): string {
+function normalizeImpliedMeaningDirection(value: unknown, multiAnswer: boolean): string {
+  const DEFAULT_MULTI_DIRECTION = "\uB2E4\uC74C \uAE00\uC5D0\uC11C \uBC11\uC904 \uCE5C \uBD80\uBD84\uC774 \uD568\uCD95\uD558\uB294 \uC758\uBBF8\uB85C \uC801\uC808\uD55C \uAC83\uC744 \uBAA8\uB450 \uACE0\uB974\uC2DC\uC624.";
+  const DEFAULT_MULTI_EN_DIRECTION =
+    "Choose all appropriate meanings of the underlined expression.";
   const DEFAULT_DIRECTION =
     "다음 글에서 밑줄 친 부분이 함축 의미하는 바로 가장 적절한 것은?";
-  if (typeof value !== "string") return DEFAULT_DIRECTION;
+  if (typeof value !== "string") return multiAnswer ? DEFAULT_MULTI_DIRECTION : DEFAULT_DIRECTION;
   const text = value.replace(/\s+/g, " ").trim();
   // Teacher-requested English stems must survive post-processing; Korean (or
   // empty/sloppy) stems are normalized to the standard exam wording as before.
-  if (text && !/[가-힣]/.test(text) && /[A-Za-z]/.test(text)) return text;
-  return DEFAULT_DIRECTION;
+  if (text && !/[\uAC00-\uD7A3]/.test(text) && /[A-Za-z]/.test(text)) {
+    if (!multiAnswer) return text;
+    return /\b(?:all|apply)\b/i.test(text) ? text : DEFAULT_MULTI_EN_DIRECTION;
+  }
+  return multiAnswer ? DEFAULT_MULTI_DIRECTION : DEFAULT_DIRECTION;
+}
+
+function normalizeCorrectAnswerLabels(
+  correctAnswers: unknown,
+  correctAnswer: unknown,
+  options: unknown,
+): string[] {
+  const rawLabels: unknown[] = [];
+  if (Array.isArray(correctAnswers)) rawLabels.push(...correctAnswers);
+  if (rawLabels.length === 0 && typeof correctAnswer === "string") {
+    rawLabels.push(...correctAnswer.split(",").map((part) => part.trim()).filter(Boolean));
+  }
+
+  const labels: string[] = [];
+  for (const rawLabel of rawLabels) {
+    const label = normalizeCorrectAnswerLabel(rawLabel, options) ?? normalizeLabel(rawLabel);
+    if (label && !labels.includes(label)) labels.push(label);
+  }
+  return labels;
 }
 
 function normalizeCorrectAnswerLabel(

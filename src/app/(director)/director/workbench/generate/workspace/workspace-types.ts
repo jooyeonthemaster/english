@@ -1,5 +1,6 @@
 import type { PassageItem } from "../generate-page-types";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import { resolvePreset } from "@/lib/question-sets/presets";
 import { formatExtractedTextForDisplay } from "../../passages/import/_components/extraction-manage-client/utils/display-text";
 
 // ============================================================================
@@ -26,14 +27,29 @@ export interface RowOverride {
    * 전체 설정과 다른 유형만 담는다 (없는 유형은 전체 설정을 따른다).
    */
   questionTypeSettings?: QuestionTypeGenerationSettings;
+  /** 지문 세트(mode === "set") — 레거시 단일 프리셋 id. */
+  setPresetId?: string;
+  /** 지문 세트 프리셋별 생성 세트 수. 0/미지정은 생성하지 않는다. */
+  setPresetCounts?: Record<string, number>;
   /**
-   * 장문 세트(mode === "set") 구성 — 이 지문에 묶을 문항들(순서 있음).
-   * 자동/유형지정의 typeCounts 처럼 세트 구성도 지문별로 저장한다.
+   * 지문 세트 멤버별 난이도·세부설정 오버라이드 — 프리셋 멤버 순서와 평행한 배열.
+   * 각 칸 { difficulty?, typeSettings? }. 빈 칸(설정 안 한 멤버)도 순서 보존을 위해
+   * 빈 객체로 자리를 채운다. 세트 POST 의 memberOverrides 로 흘러간다.
    */
-  setMembers?: {
-    typeId: string;
-    difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
-  }[];
+  setMemberOverrides?: Array<{
+    difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
+    generationPlan?: "STANDARD" | "PREMIUM";
+    typeSettings?: Record<string, unknown>;
+  }>;
+  /** 프리셋별 멤버 오버라이드. setMemberOverrides 는 단일 프리셋 레거시 경로. */
+  setMemberOverridesByPreset?: Record<
+    string,
+    Array<{
+      difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
+      generationPlan?: "STANDARD" | "PREMIUM";
+      typeSettings?: Record<string, unknown>;
+    }>
+  >;
 }
 
 /** 출제 범위 — content 기준 문자 오프셋 (start < end). */
@@ -238,6 +254,43 @@ export function overrideHasTypeSettings(override: RowOverride | null): boolean {
   );
 }
 
+/** 세트 멤버 오버라이드가 실제 설정값을 담고 있는지(빈 칸뿐이면 false). */
+export function overrideHasSetMemberOverrides(
+  override: RowOverride | null,
+): boolean {
+  if (!override) return false;
+  const hasLegacy =
+    !!override.setMemberOverrides &&
+    override.setMemberOverrides.some(
+      (m) =>
+        !!m &&
+        (!!m.difficulty ||
+          !!m.generationPlan ||
+          (!!m.typeSettings && Object.keys(m.typeSettings).length > 0)),
+    );
+  if (hasLegacy) return true;
+  return Object.values(override.setMemberOverridesByPreset ?? {}).some((members) =>
+    members.some(
+      (m) =>
+        !!m &&
+        (!!m.difficulty ||
+          !!m.generationPlan ||
+          (!!m.typeSettings && Object.keys(m.typeSettings).length > 0)),
+    ),
+  );
+}
+
+export function setPresetCountEntries(
+  override: RowOverride | null,
+): Array<[string, number]> {
+  const counts = override?.setPresetCounts ?? {};
+  const entries = Object.entries(counts)
+    .map(([presetId, count]) => [presetId, Math.max(0, Math.floor(Number(count) || 0))] as const)
+    .filter(([, count]) => count > 0);
+  if (entries.length > 0) return entries.map(([id, count]) => [id, count]);
+  return override?.setPresetId ? [[override.setPresetId, 1]] : [];
+}
+
 /** 비어 있는(=전체 설정과 동일한) 오버라이드인지 — 비면 null 로 저장한다. */
 export function isOverrideEmpty(override: RowOverride): boolean {
   return (
@@ -245,7 +298,9 @@ export function isOverrideEmpty(override: RowOverride): boolean {
     override.generationPlan == null &&
     Object.keys(override.typeCounts).length === 0 &&
     override.difficulty == null &&
-    (override.setMembers?.length ?? 0) === 0 &&
+    !override.setPresetId &&
+    Object.values(override.setPresetCounts ?? {}).every((n) => Number(n) <= 0) &&
+    !overrideHasSetMemberOverrides(override) &&
     !overrideHasTypeSettings(override)
   );
 }
@@ -296,7 +351,11 @@ export function rowQuestionCount(
       ? Object.values(row.override!.typeCounts).reduce((a, b) => a + b, 0)
       : 0;
   }
-  // 장문 세트 — 구성한 문항(멤버) 수만큼.
-  if (mode === "set") return row.override?.setMembers?.length ?? 0;
+  // 지문 세트 — 선택한 프리셋별 세트 수 × 멤버 수.
+  if (mode === "set") {
+    return setPresetCountEntries(row.override).reduce((sum, [presetId, count]) => {
+      return sum + (resolvePreset(presetId)?.members.length ?? 0) * count;
+    }, 0);
+  }
   return 0;
 }

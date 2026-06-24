@@ -124,6 +124,7 @@ export const TYPE_TO_SPANKIND: Record<string, SpanKind | null> = {
   FILL_BLANK_KEY: "BLANK",
   // MARKER (labeled spans)
   GRAMMAR_ERROR: "MARKER",
+  GRAMMAR_CORRECTION: "MARKER",
   VOCAB_CHOICE: "MARKER",
   ANTONYM: "MARKER",
   // UNDERLINE (bare)
@@ -146,7 +147,6 @@ export const TYPE_TO_SPANKIND: Record<string, SpanKind | null> = {
   CONDITIONAL_WRITING: null,
   SENTENCE_TRANSFORM: null,
   WORD_ORDER: null,
-  GRAMMAR_CORRECTION: null,
 };
 
 /** Types that DEFINE a set's displayed base passage (one per set). */
@@ -161,6 +161,7 @@ export const RECONSTRUCTABLE_TYPES: ReadonlySet<string> = new Set([
   "BLANK_INFERENCE",
   "FILL_BLANK_KEY",
   "GRAMMAR_ERROR",
+  "GRAMMAR_CORRECTION",
   "VOCAB_CHOICE",
   "ANTONYM",
   "REFERENCE",
@@ -180,6 +181,7 @@ export const UNDERLINE_TYPES: ReadonlySet<string> = new Set([
 /** Labeled-marker types — at most ONE marking member per set. */
 export const MARKER_TYPES: ReadonlySet<string> = new Set([
   "GRAMMAR_ERROR",
+  "GRAMMAR_CORRECTION",
   "VOCAB_CHOICE",
   "ANTONYM",
 ]);

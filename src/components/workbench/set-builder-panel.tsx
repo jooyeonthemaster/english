@@ -1,352 +1,332 @@
 "use client";
 
 // ============================================================================
-// 장문 세트 builder — dedicated composition UI
+// 지문 세트 builder — preset selection UI
 // ============================================================================
-// You can only ever build a VALID set: the "문항 추가" menu enables exactly the
-// types that are addable given the current composition, and greys out the rest
-// with a one-line reason. The structural mode (글의 순서 / 문장 삽입) is INFERRED
-// from the members — never picked separately. No raw validation errors.
+// 강사는 자유조합이 아니라 코드로 미리 검증된 PRESET 중에서 고른다. 각 프리셋은
+// 멤버 유형·순서·구조모드·최소 분량이 고정돼 있어 "항상 valid한 세트"만 만들 수
+// 있다. 구성 칸은 프리셋 칩 목록이고, 난이도는 세트 전체 공통값 하나다.
 // ============================================================================
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   ChevronDown,
+  FileText,
   GripVertical,
   Layers,
   Loader2,
-  Lock,
   Minus,
   Plus,
+  Settings2,
 } from "lucide-react";
 
 import { QUESTION_TYPE_UI } from "@/lib/question-type-ui";
-import {
-  deriveStructuralMode,
-  getAddability,
-  isSetLocked,
-  STRUCTURAL_BASE_TYPES,
-} from "@/lib/question-sets/composition-ui";
+import { SET_PRESETS, resolvePreset } from "@/lib/question-sets/presets";
 import { getQuestionSet, type QuestionSetForRender } from "@/actions/question-sets";
+import {
+  Popover,
+  PopoverAnchor,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { QuestionSetCard } from "./question-set-card";
+import {
+  SetMemberSettingsEditor,
+  type SetMemberOverride,
+} from "./set-member-settings-editor";
 
 type Difficulty = "BASIC" | "INTERMEDIATE" | "KILLER";
+type PresetCounts = Record<string, number>;
+type MemberOverridesByPreset = Record<string, SetMemberOverride[]>;
 
-interface SetItem {
-  uid: string;
-  typeId: string;
-  difficulty: Difficulty;
+const DIFFICULTY_LABELS: Record<Difficulty, string> = {
+  BASIC: "기본",
+  INTERMEDIATE: "중급",
+  KILLER: "킬러",
+};
+
+/** memberOverrides 배열이 실제 내용(설정값)을 담고 있는지 — 빈 칸은 무시. */
+function memberOverrideHasContent(o: SetMemberOverride | undefined): boolean {
+  if (!o) return false;
+  if (o.difficulty) return true;
+  if (o.generationPlan) return true;
+  return !!o.typeSettings && Object.keys(o.typeSettings).length > 0;
 }
 
-// Difficulty tones — same palette as 유형 지정: 기본 파랑 / 중급 노랑 / 킬러 빨강.
+/** POST 전송용 — 비어 있는 칸은 빈 객체로 평행 정렬(프리셋 멤버 순서 보존). */
+function serializeMemberOverrides(
+  overrides: SetMemberOverride[],
+  memberCount: number,
+): Array<{
+  difficulty?: Difficulty;
+  generationPlan?: "STANDARD" | "PREMIUM";
+  typeSettings?: Record<string, unknown>;
+}> {
+  const out: Array<{
+    difficulty?: Difficulty;
+    generationPlan?: "STANDARD" | "PREMIUM";
+    typeSettings?: Record<string, unknown>;
+  }> = [];
+  for (let i = 0; i < memberCount; i += 1) {
+    const o = overrides[i];
+    if (memberOverrideHasContent(o)) {
+      out.push({
+        ...(o!.difficulty ? { difficulty: o!.difficulty } : {}),
+        ...(o!.generationPlan ? { generationPlan: o!.generationPlan } : {}),
+        ...(o!.typeSettings && Object.keys(o!.typeSettings).length > 0
+          ? { typeSettings: o!.typeSettings }
+          : {}),
+      });
+    } else {
+      out.push({});
+    }
+  }
+  return out;
+}
+
 const DIFFICULTIES: { value: Difficulty; label: string; on: string }[] = [
   { value: "BASIC", label: "기본", on: "bg-blue-50 text-blue-700" },
   { value: "INTERMEDIATE", label: "중급", on: "bg-amber-50 text-amber-700" },
   { value: "KILLER", label: "킬러", on: "bg-red-50 text-red-700" },
 ];
 
-/** 이 유형이 속한 카탈로그 그룹 이름 (없으면 null). */
-function groupOfType(typeId: string): string | null {
-  for (const c of SET_CATALOG) if (c.typeIds.includes(typeId)) return c.group;
-  return null;
-}
-
-// 유형 앞 색 점 — 어느 역할 그룹인지(유형 지정의 카테고리 닷과 동일 컨셉).
-const GROUP_DOT: Record<string, string> = {
-  "구조 · 기준 지문": "bg-violet-400",
-  밑줄형: "bg-blue-400",
-  "지문 이해": "bg-emerald-400",
-  "단독 출제 전용": "bg-slate-300",
+const DIFFICULTY_DOT: Record<Difficulty, string> = {
+  BASIC: "bg-blue-500",
+  INTERMEDIATE: "bg-amber-500",
+  KILLER: "bg-red-500",
 };
-function groupDotClass(typeId: string): string {
-  const g = groupOfType(typeId);
-  return (g && GROUP_DOT[g]) || "bg-slate-300";
-}
 
-// 색 점 범례 — 유형 지정의 카테고리 범례와 같은 형식(점 + 짧은 라벨).
-const SET_GROUP_LEGEND: { label: string; dot: string }[] = [
-  { label: "구조", dot: "bg-violet-400" },
-  { label: "밑줄형", dot: "bg-blue-400" },
-  { label: "지문 이해", dot: "bg-emerald-400" },
-  { label: "단독", dot: "bg-slate-300" },
-];
-
-// Curated catalog for the set builder, grouped by role.
-const SET_CATALOG: { group: string; hint: string; typeIds: string[] }[] = [
-  {
-    group: "구조 · 기준 지문",
-    hint: "이 유형이 세트의 지문 형태를 정합니다",
-    typeIds: ["SENTENCE_ORDER", "SENTENCE_INSERT"],
-  },
-  {
-    group: "밑줄형",
-    hint: "지문 위 밑줄을 공유합니다 (자유 조합)",
-    typeIds: ["REFERENCE", "IMPLIED_MEANING", "CONTEXT_MEANING", "SYNONYM"],
-  },
-  {
-    group: "지문 이해",
-    hint: "지문을 그대로 읽고 푸는 유형",
-    typeIds: ["TOPIC", "MAIN_IDEA", "TITLE", "CONTENT_MATCH", "SUMMARY_COMPLETE_MC"],
-  },
-  {
-    group: "단독 출제 전용",
-    hint: "지문 표시를 독점해 묶을 수 없는 유형",
-    typeIds: ["BLANK_INFERENCE", "GRAMMAR_ERROR", "VOCAB_CHOICE", "ANTONYM", "FILL_BLANK_KEY", "IRRELEVANT"],
-  },
-];
-
-const TYPE_ORDER_STORAGE_KEY = "smoat.workbench.questionSet.typeOrder.v1";
-// 카탈로그의 모든 세트 가능 유형 — 평면 목록(유형 지정과 동일한 행 리스트).
-const ALL_SET_TYPES: string[] = SET_CATALOG.flatMap((c) => c.typeIds);
-
-function typeLabel(typeId: string): string {
-  return QUESTION_TYPE_UI[typeId]?.label ?? typeId;
-}
-
-let uidCounter = 0;
-function nextUid(): string {
-  uidCounter += 1;
-  return `m${uidCounter}`;
+function memberLabels(presetId: string): string {
+  const preset = resolvePreset(presetId);
+  if (!preset) return "";
+  return preset.members
+    .map((m) => QUESTION_TYPE_UI[m.typeId]?.label ?? m.typeId)
+    .join(" · ");
 }
 
 export function SetBuilderPanel({
   passageId,
   generationPlan = "STANDARD",
-  members,
-  onMembersChange,
+  presetId,
+  onPresetChange,
+  presetCounts,
+  onPresetCountsChange,
+  difficulty,
+  onDifficultyChange,
+  memberOverrides,
+  onMemberOverridesChange,
+  memberOverridesByPreset,
+  onMemberOverridesByPresetChange,
   embedded = false,
 }: {
   passageId: string | null;
   generationPlan?: string;
-  /** 외부에서 세트 구성을 제어할 때(지문별 저장). 주면 controlled 모드. */
-  members?: { typeId: string; difficulty: Difficulty }[];
-  onMembersChange?: (
-    members: { typeId: string; difficulty: Difficulty }[],
-  ) => void;
+  /** 외부에서 프리셋 선택을 제어할 때(지문별 저장). 주면 controlled 모드. */
+  presetId?: string | null;
+  onPresetChange?: (presetId: string | null) => void;
+  /** 프리셋별 생성할 세트 수. 있으면 controlled 다중 선택 모드. */
+  presetCounts?: PresetCounts;
+  onPresetCountsChange?: (next: PresetCounts) => void;
+  difficulty?: Difficulty;
+  onDifficultyChange?: (difficulty: Difficulty) => void;
   /**
-   * 지문별 설정 안에 끼워 쓰는 모드 — 구성만 편집하고, 생성은 공용 '생성'
-   * 버튼이 담당한다. 자체 생성 버튼·결과 미리보기·공통 지시문을 숨긴다.
+   * 멤버별 난이도·세부설정 오버라이드(프리셋 멤버 순서와 평행한 배열). 외부에서
+   * 제어할 때(지문별 저장) 주면 controlled. 미지정이면 내부 state 로 동작한다.
    */
+  memberOverrides?: SetMemberOverride[];
+  onMemberOverridesChange?: (next: SetMemberOverride[]) => void;
+  memberOverridesByPreset?: MemberOverridesByPreset;
+  onMemberOverridesByPresetChange?: (next: MemberOverridesByPreset) => void;
+  /** 지문별 설정 안에 끼워 쓰는 모드 — 구성만 편집, 생성은 공용 '생성' 버튼. */
   embedded?: boolean;
 }) {
-  // controlled(지문별 override) ↔ uncontrolled(라이브러리 단독) 양립.
-  const controlled = members !== undefined && onMembersChange !== undefined;
-  const [internalItems, setInternalItems] = useState<SetItem[]>([]);
-  const items: SetItem[] = controlled
-    ? members!.map((m, i) => ({
-        uid: `m${i}`,
-        typeId: m.typeId,
-        difficulty: m.difficulty,
-      }))
-    : internalItems;
-  const setItems = (
-    updater: SetItem[] | ((prev: SetItem[]) => SetItem[]),
-  ) => {
-    const next =
-      typeof updater === "function"
-        ? (updater as (p: SetItem[]) => SetItem[])(items)
-        : updater;
-    if (controlled) {
-      onMembersChange!(
-        next.map((i) => ({ typeId: i.typeId, difficulty: i.difficulty })),
-      );
+  const presetControlled = presetId !== undefined && onPresetChange !== undefined;
+  const countsControlled =
+    presetCounts !== undefined && onPresetCountsChange !== undefined;
+  const diffControlled = difficulty !== undefined && onDifficultyChange !== undefined;
+  const membersControlled =
+    memberOverrides !== undefined && onMemberOverridesChange !== undefined;
+  const membersByPresetControlled =
+    memberOverridesByPreset !== undefined &&
+    onMemberOverridesByPresetChange !== undefined;
+
+  const [internalPreset, setInternalPreset] = useState<string | null>(null);
+  const [internalPresetCounts, setInternalPresetCounts] = useState<PresetCounts>({});
+  const [focusedPresetId, setFocusedPresetId] = useState<string | null>(null);
+  const [internalDiff, setInternalDiff] = useState<Difficulty>("INTERMEDIATE");
+  const [internalMemberOverrides, setInternalMemberOverrides] = useState<
+    SetMemberOverride[]
+  >([]);
+  const [internalMemberOverridesByPreset, setInternalMemberOverridesByPreset] =
+    useState<MemberOverridesByPreset>({});
+  const selectedPreset = presetControlled ? (presetId ?? null) : internalPreset;
+  const controlledPresetCounts = presetCounts ?? {};
+  const hasControlledPresetCounts = Object.values(controlledPresetCounts).some(
+    (count) => Number(count) > 0,
+  );
+  const selectedPresetCounts = countsControlled
+    ? hasControlledPresetCounts
+      ? controlledPresetCounts
+      : selectedPreset
+        ? { [selectedPreset]: 1 }
+        : {}
+    : Object.keys(internalPresetCounts).length > 0
+      ? internalPresetCounts
+      : selectedPreset
+        ? { [selectedPreset]: 1 }
+        : {};
+  const selectedDiff = diffControlled ? difficulty! : internalDiff;
+  const selectedMemberOverrides = membersControlled
+    ? (memberOverrides ?? [])
+    : internalMemberOverrides;
+  const selectedMemberOverridesByPreset = membersByPresetControlled
+    ? (memberOverridesByPreset ?? {})
+    : internalMemberOverridesByPreset;
+
+  const positivePresetEntries = Object.entries(selectedPresetCounts)
+    .map(([id, count]) => [id, Math.max(0, Math.floor(Number(count) || 0))] as const)
+    .filter(([, count]) => count > 0);
+  const totalSetCount = positivePresetEntries.reduce((sum, [, count]) => sum + count, 0);
+  const effectiveFocusedPresetId =
+    focusedPresetId && (selectedPresetCounts[focusedPresetId] ?? 0) > 0
+      ? focusedPresetId
+      : positivePresetEntries[0]?.[0] ?? selectedPreset ?? null;
+
+  const syncLegacyPreset = (counts: PresetCounts) => {
+    const first = Object.entries(counts).find(([, count]) => Number(count) > 0)?.[0] ?? null;
+    if (presetControlled) onPresetChange!(first);
+    else setInternalPreset(first);
+  };
+  const setPresetCountsValue = (next: PresetCounts) => {
+    const clean = Object.fromEntries(
+      Object.entries(next)
+        .map(([id, count]) => [id, Math.max(0, Math.floor(Number(count) || 0))] as const)
+        .filter(([, count]) => count > 0),
+    );
+    if (countsControlled) {
+      onPresetCountsChange!(clean);
     } else {
-      setInternalItems(next);
+      setInternalPresetCounts(clean);
+      syncLegacyPreset(clean);
     }
   };
+  const applyPresetCount = (id: string, count: number) => {
+    const nextCount = Math.max(0, Math.floor(Number(count) || 0));
+    const next = { ...selectedPresetCounts };
+    if (nextCount <= 0) delete next[id];
+    else next[id] = nextCount;
+    setPresetCountsValue(next);
+    setFocusedPresetId(nextCount > 0 ? id : null);
+    setExpandedMember(null);
+  };
+  const setSelectedDiff = (d: Difficulty) =>
+    diffControlled ? onDifficultyChange!(d) : setInternalDiff(d);
+  const setMemberOverridesValue = (next: SetMemberOverride[]) =>
+    membersControlled
+      ? onMemberOverridesChange!(next)
+      : setInternalMemberOverrides(next);
+  const setMemberOverridesByPresetValue = (next: MemberOverridesByPreset) =>
+    membersByPresetControlled
+      ? onMemberOverridesByPresetChange!(next)
+      : setInternalMemberOverridesByPreset(next);
+
+  /** 멤버 i 의 오버라이드만 갈아끼운다(평행 배열의 한 칸). */
+  const setMemberOverrideAt = (index: number, next: SetMemberOverride) => {
+    const presetKey = effectiveFocusedPresetId;
+    const source =
+      presetKey && selectedMemberOverridesByPreset[presetKey]
+        ? selectedMemberOverridesByPreset[presetKey]
+        : presetKey === selectedPreset
+          ? selectedMemberOverrides
+          : [];
+    const draft = [...source];
+    while (draft.length <= index) draft.push({});
+    draft[index] = next;
+    if (presetKey) {
+      setMemberOverridesByPresetValue({
+        ...selectedMemberOverridesByPreset,
+        [presetKey]: draft,
+      });
+    }
+    if (presetKey === selectedPreset || !membersByPresetControlled) {
+      setMemberOverridesValue(draft);
+    }
+  };
+
+  // 펼친 멤버(상세 편집 중) — 한 번에 하나씩 펼친다. UI 취향이라 내부 state.
+  const [expandedMember, setExpandedMember] = useState<number | null>(null);
+
   const [customPrompt, setCustomPrompt] = useState("");
   const [generating, setGenerating] = useState(false);
   const [result, setResult] = useState<QuestionSetForRender | null>(null);
 
-  // 지문이 바뀌면(지문별 세트 편집에서 다른 카드로 전환) 이전 지문의 생성
-  // 결과 미리보기는 더 이상 유효하지 않으므로 비운다.
+  // 지문이 바뀌면 이전 지문의 생성 결과 미리보기는 비운다.
   useEffect(() => {
     setResult(null);
   }, [passageId]);
 
-  // 유형 표시 순서(persisted) — 손잡이로 위아래 reorder.
-  const [typeOrder, setTypeOrder] = useState<string[]>(() => {
-    if (typeof window === "undefined") return ALL_SET_TYPES;
-    try {
-      const parsed = JSON.parse(
-        window.localStorage.getItem(TYPE_ORDER_STORAGE_KEY) || "[]",
-      );
-      if (Array.isArray(parsed)) {
-        const known = new Set(ALL_SET_TYPES);
-        const stored = parsed.filter(
-          (t) => typeof t === "string" && known.has(t),
-        );
-        return [...stored, ...ALL_SET_TYPES.filter((t) => !stored.includes(t))];
-      }
-    } catch {
-      // 유형 순서는 UI 선호값 — 저장 실패는 무시.
-    }
-    return ALL_SET_TYPES;
-  });
-  // 난이도는 유형 지정처럼 '한 번에' — 세트 전체 공통값. (0개일 때 기억용 로컬
-  // 상태이고, 문항이 있으면 그 값으로 표시·일괄 적용한다.)
-  const [globalDifficulty, setGlobalDifficulty] =
-    useState<Difficulty>("INTERMEDIATE");
-  const [draggingType, setDraggingType] = useState<string | null>(null);
-  const [dragOverType, setDragOverType] = useState<string | null>(null);
-
+  // 프리셋이 바뀌면 펼친 멤버 상태를 닫는다(이전 프리셋 인덱스가 의미 없음).
   useEffect(() => {
-    try {
-      window.localStorage.setItem(
-        TYPE_ORDER_STORAGE_KEY,
-        JSON.stringify(typeOrder),
-      );
-    } catch {
-      // 편의 설정 — 저장 실패는 무시.
-    }
-  }, [typeOrder]);
+    setExpandedMember(null);
+  }, [selectedPreset]);
 
-  const orderedTypes = useMemo(() => {
-    const known = new Set(ALL_SET_TYPES);
-    const ordered = typeOrder.filter(
-      (t, i) => known.has(t) && typeOrder.indexOf(t) === i,
-    );
-    for (const t of ALL_SET_TYPES) if (!ordered.includes(t)) ordered.push(t);
-    return ordered;
-  }, [typeOrder]);
-
-  // 유형 지정과 동일하게 카탈로그 그룹(구조/밑줄형/지문 이해/단독)으로 묶는다.
-  const groupedTypes = useMemo(
-    () =>
-      SET_CATALOG.map((c) => ({
-        group: c.group,
-        dot: GROUP_DOT[c.group] || "bg-slate-300",
-        items: orderedTypes.filter((t) => c.typeIds.includes(t)),
-      })).filter((g) => g.items.length > 0),
-    [orderedTypes],
-  );
-  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
-    () => new Set(),
-  );
-  const toggleGroup = (group: string) =>
-    setCollapsedGroups((prev) => {
-      const next = new Set(prev);
-      if (next.has(group)) next.delete(group);
-      else next.add(group);
-      return next;
-    });
-
-  const memberTypeIds = useMemo(() => items.map((i) => i.typeId), [items]);
-  const locked = isSetLocked(memberTypeIds);
-  const structuralMode = deriveStructuralMode(memberTypeIds);
-
-  const contextHint = useMemo(() => {
-    if (items.length === 0) {
-      return "지문 위에 함께 출제할 문항을 추가하세요. 구조 유형(글의 순서·문장 삽입)을 넣으면 그 지문이 세트의 기준이 됩니다.";
-    }
-    if (structuralMode !== "NONE") {
-      const s = items.find((i) => STRUCTURAL_BASE_TYPES.has(i.typeId));
-      return `${typeLabel(s?.typeId ?? "")} 지문을 기준으로 다른 문항을 묶습니다. 밑줄형·지문 이해 유형을 더할 수 있어요.`;
-    }
-    if (locked) {
-      return `${typeLabel(items[0].typeId)}은(는) 단독 출제 유형입니다.`;
-    }
-    return "밑줄형·지문 이해 유형을 자유롭게 조합할 수 있고, 구조 유형을 하나 더할 수 있습니다.";
-  }, [items, structuralMode, locked]);
-
-  // 유형별 개수 — 멤버 리스트에서 파생(유형 지정의 typeCounts 와 동일 개념).
-  const countByType = useMemo(() => {
-    const m = new Map<string, number>();
-    for (const it of items) m.set(it.typeId, (m.get(it.typeId) ?? 0) + 1);
-    return m;
-  }, [items]);
-  // 세트 전체 공통 난이도 — 문항이 있으면 그 값을, 없으면 기억된 로컬 값을 보여준다.
-  const displayedDifficulty: Difficulty = items[0]?.difficulty ?? globalDifficulty;
-
-  // 멤버를 유형 표시 순서로 정렬해 내보낸다(세트 문항 순서 = 행 순서).
-  const emit = (next: SetItem[], order: string[] = orderedTypes) => {
-    const idx = (t: string) => {
-      const i = order.indexOf(t);
-      return i < 0 ? order.length : i;
-    };
-    setItems([...next].sort((a, b) => idx(a.typeId) - idx(b.typeId)));
-  };
-  const incType = (typeId: string) => {
-    if (!getAddability(typeId, memberTypeIds).ok) return;
-    emit([
-      ...items,
-      { uid: nextUid(), typeId, difficulty: displayedDifficulty },
-    ]);
-  };
-  const decType = (typeId: string) => {
-    // 그 유형의 '마지막 한 개'만 제거.
-    let removed = false;
-    const next: SetItem[] = [];
-    for (let i = items.length - 1; i >= 0; i--) {
-      if (!removed && items[i].typeId === typeId) {
-        removed = true;
-        continue;
-      }
-      next.unshift(items[i]);
-    }
-    emit(next);
-  };
-  // 난이도는 한 번에 — 세트 전체 문항을 같은 난이도로 맞춘다.
-  const setAllDifficulty = (difficulty: Difficulty) => {
-    setGlobalDifficulty(difficulty);
-    if (items.length > 0) {
-      emit(items.map((i) => ({ ...i, difficulty })));
-    }
-  };
-  const reorderTypes = (sourceId: string, targetId: string) => {
-    if (!sourceId || sourceId === targetId) return;
-    const without = orderedTypes.filter((t) => t !== sourceId);
-    const ti = without.indexOf(targetId);
-    if (ti < 0) return;
-    const next = [...without];
-    next.splice(ti, 0, sourceId);
-    setTypeOrder(next);
-    emit(items, next);
-  };
-
-  const applyPreset4345 = () => {
-    setItems([
-      { uid: nextUid(), typeId: "SENTENCE_ORDER", difficulty: "INTERMEDIATE" },
-      { uid: nextUid(), typeId: "REFERENCE", difficulty: "INTERMEDIATE" },
-      { uid: nextUid(), typeId: "CONTENT_MATCH", difficulty: "INTERMEDIATE" },
-    ]);
-  };
-
-  const canGenerate = !!passageId && items.length > 0 && !generating;
+  const presets = SET_PRESETS.filter((p) => p.tier === 1);
+  const focusedPreset = effectiveFocusedPresetId
+    ? resolvePreset(effectiveFocusedPresetId)
+    : null;
+  const canGenerate = !!passageId && totalSetCount > 0 && !generating;
 
   const handleGenerate = async () => {
     if (!passageId) {
       toast.error("지문을 먼저 선택하세요.");
       return;
     }
+    if (totalSetCount <= 0) {
+      toast.error("세트 프리셋을 선택하세요.");
+      return;
+    }
     setGenerating(true);
     setResult(null);
     try {
-      const res = await fetch("/api/workbench/ai-jobs/question-set", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          passageId,
-          structuralMode,
-          generationPlan,
-          customPrompt: customPrompt.trim() || undefined,
-          members: items.map((i) => ({ typeId: i.typeId, difficulty: i.difficulty })),
-        }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        toast.error(data.error || "장문 세트 생성에 실패했습니다.");
-        return;
+      let createdQuestions = 0;
+      let lastSet: QuestionSetForRender | null = null;
+      for (const [presetKey, count] of positivePresetEntries) {
+        const preset = resolvePreset(presetKey);
+        if (!preset) continue;
+        const memberOverridesPayload = serializeMemberOverrides(
+          selectedMemberOverridesByPreset[presetKey] ??
+            (presetKey === selectedPreset ? selectedMemberOverrides : []),
+          preset.members.length,
+        );
+        for (let i = 0; i < count; i += 1) {
+          const res = await fetch("/api/workbench/ai-jobs/question-set", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              passageId,
+              presetId: presetKey,
+              difficulty: selectedDiff,
+              generationPlan,
+              customPrompt: customPrompt.trim() || undefined,
+              memberOverrides: memberOverridesPayload,
+            }),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            toast.error(data.error || "지문 세트 생성에 실패했습니다.");
+            return;
+          }
+          createdQuestions += data.questionIds?.length ?? 0;
+          lastSet = await getQuestionSet(data.setId);
+          if (data.status === "DEGRADED") {
+            toast.warning(`${preset.label} 세트가 생성됐지만 검수가 필요합니다.`);
+          }
+        }
       }
-      const set = await getQuestionSet(data.setId);
-      setResult(set);
-      if (data.status === "DEGRADED") {
-        toast.warning("세트가 생성됐지만 검수가 필요합니다(충돌/모호한 표시).");
-      } else {
-        toast.success(`${data.questionIds?.length ?? 0}문항 세트가 생성됐습니다.`);
-      }
+      setResult(lastSet);
+      toast.success(`${totalSetCount}개 세트 · ${createdQuestions}문항이 생성됐습니다.`);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "생성 중 오류가 발생했습니다.");
     } finally {
@@ -358,20 +338,19 @@ export function SetBuilderPanel({
     <div
       className={`flex flex-1 min-h-0 flex-col gap-3 py-3 ${embedded ? "px-4" : "px-5"}`}
     >
-      {/* 난이도 — 위쪽 '생성 모델' 바로 아래에 오도록 최상단에. 자동/유형지정
-          모드의 난이도 세그먼트와 정렬·디자인을 동일하게 맞춘다(w-14 라벨·gap-3). */}
+      {/* 난이도 — 세트 전체 공통값 하나. */}
       <div className="flex shrink-0 items-center gap-3">
         <span className="w-14 shrink-0 whitespace-nowrap text-[11px] font-bold uppercase tracking-wider text-slate-500">
           난이도
         </span>
         <div className="flex h-8 flex-1 rounded-lg bg-slate-100 p-0.5">
           {DIFFICULTIES.map((d) => {
-            const active = displayedDifficulty === d.value;
+            const active = selectedDiff === d.value;
             return (
               <button
                 key={d.value}
                 type="button"
-                onClick={() => setAllDifficulty(d.value)}
+                onClick={() => setSelectedDiff(d.value)}
                 className={`flex flex-1 items-center justify-center rounded-[6px] text-[12px] transition-all duration-150 ${
                   active
                     ? `font-bold shadow-sm ${d.on}`
@@ -384,233 +363,256 @@ export function SetBuilderPanel({
           })}
         </div>
       </div>
-      {/* Preset + intro */}
-      <div className="flex shrink-0 items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-          <Layers className="h-3.5 w-3.5 text-slate-400" />
-          장문 세트 구성
+
+      {/* 프리셋 선택 — 일반 유형 타일과 같은 0/1 스테퍼 문법. */}
+      <div className="shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex h-10 w-full items-center gap-2 border-b border-slate-200 bg-slate-50/80 px-3 text-left">
+          <span className="h-2 w-2 shrink-0 rounded-full bg-blue-400" aria-hidden="true" />
+          <span className="text-[12px] font-bold text-slate-700">세트 프리셋</span>
+          {positivePresetEntries.length > 0 ? (
+            <span className="ml-1 rounded-full bg-white px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-slate-600 ring-1 ring-inset ring-slate-200">
+              선택 {positivePresetEntries.length}
+            </span>
+          ) : null}
+          {totalSetCount > 0 ? (
+            <span className="rounded-full bg-white px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-blue-600 ring-1 ring-inset ring-blue-100">
+              {totalSetCount}세트
+            </span>
+          ) : null}
+          <span className="text-[10px] font-medium tabular-nums text-slate-300">
+            {presets.length}
+          </span>
+          <Layers className="ml-auto h-3.5 w-3.5 shrink-0 text-slate-400" />
         </div>
-        <button
-          type="button"
-          onClick={applyPreset4345}
-          className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-600 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
-        >
-          수능 43~45형
-        </button>
+        <div className="p-2">
+          <div className="grid grid-cols-2 gap-2">
+            {presets.map((p) => {
+              const count = Math.max(0, Math.floor(Number(selectedPresetCounts[p.id]) || 0));
+              const active = count > 0;
+              const focused = effectiveFocusedPresetId === p.id;
+              return (
+                <div
+                  key={p.id}
+                  className={`relative flex flex-col overflow-hidden rounded-lg border transition-colors ${
+                    focused
+                      ? "border-blue-400 bg-blue-50/80 ring-1 ring-inset ring-blue-200"
+                      : active
+                        ? "border-blue-300 bg-blue-50/70"
+                      : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80"
+                  }`}
+                >
+                  <div className="flex items-center gap-0.5 pl-1 pr-1.5 pt-1.5">
+                    <span className="flex h-6 w-4 shrink-0 items-center justify-center rounded text-slate-300">
+                      <FileText className="h-3.5 w-3.5" />
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!active) applyPresetCount(p.id, 1);
+                        else setFocusedPresetId(p.id);
+                      }}
+                      className="flex min-w-0 flex-1 items-center gap-1 text-left"
+                      title={`${p.label} 선택`}
+                    >
+                      <span
+                        className={`min-w-0 truncate text-[12px] ${
+                          active
+                            ? "font-bold text-slate-800"
+                            : "font-semibold text-slate-600"
+                        }`}
+                      >
+                        {p.label}
+                      </span>
+                    </button>
+                  </div>
+                  <div className="mt-1 min-h-[26px] px-1.5 text-[10px] font-medium leading-snug text-slate-500">
+                    <span className="line-clamp-2">{memberLabels(p.id)}</span>
+                  </div>
+                  <div className="mt-1 flex items-center justify-between gap-1 px-1.5 pb-1.5">
+                    <span className="whitespace-nowrap pl-0.5 text-[10px] font-semibold text-slate-400">
+                      세트 수
+                    </span>
+                    <div className="flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          applyPresetCount(p.id, Math.max(0, count - 1));
+                        }}
+                        disabled={!active}
+                        className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
+                        aria-label={`${p.label} 선택 해제`}
+                      >
+                        <Minus className="h-3.5 w-3.5" />
+                      </button>
+                      <span
+                        className={`flex h-7 w-7 items-center justify-center border-x border-slate-200 text-[12.5px] font-bold tabular-nums ${
+                          active
+                            ? "bg-blue-50/50 text-blue-700"
+                            : "bg-slate-50/60 text-slate-300"
+                        }`}
+                      >
+                        {count}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          applyPresetCount(p.id, count + 1);
+                        }}
+                        className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
+                        aria-label={`${p.label} 선택`}
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
-      {/* 선택 문항 + 추가 카탈로그 — 한 박스 흐름으로(선택은 회색 그룹 안에) */}
-      <div className="shrink-0 space-y-2">
-        {locked && (
-          <div className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-[11.5px] text-slate-500">
-            <Lock className="h-3.5 w-3.5 shrink-0" />이 유형은 단독 출제만
-            가능합니다.
-          </div>
-        )}
-        {/* 문항 유형 — 유형 지정과 동일한 행 디자인(손잡이 + − 0 +).
-            개수만큼 그 유형의 문항이 세트에 들어간다. 세트 규칙(구조 1개·단독
-            출제)은 +의 활성/비활성으로 그대로 강제된다. */}
-        <div className="flex items-center justify-between gap-2 px-0.5">
-          <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-            <Plus className="h-3.5 w-3.5 text-slate-400" />
-            문항 유형
-          </span>
-          {/* 색 점 범례 — 유형 지정처럼 어떤 역할 그룹인지 보여준다. */}
-          <div className="flex items-center gap-2">
-            {SET_GROUP_LEGEND.map((c) => (
-              <span
-                key={c.label}
-                className="flex items-center gap-1 text-[10px] font-medium text-slate-400"
-              >
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${c.dot}`}
-                  aria-hidden="true"
-                />
-                {c.label}
-              </span>
-            ))}
-          </div>
-        </div>
-        {/* 유형 지정과 동일한 카테고리 그룹 + 타일 그리드 UI */}
-        <div className="space-y-2">
-          {groupedTypes.map((g) => {
-            const groupOpen = !collapsedGroups.has(g.group);
-            const selectedCount = g.items.filter(
-              (t) => (countByType.get(t) ?? 0) > 0,
-            ).length;
-            return (
-              <div
-                key={g.group}
-                className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
-              >
-                <button
-                  type="button"
-                  onClick={() => toggleGroup(g.group)}
-                  className="flex h-10 w-full items-center gap-2 border-b border-slate-200 bg-slate-50/80 px-3 text-left transition-colors hover:bg-slate-100/80"
-                  aria-expanded={groupOpen}
-                  title={`${g.group} ${groupOpen ? "접기" : "펼치기"}`}
-                >
-                  <span
-                    className={`h-2 w-2 shrink-0 rounded-full ${g.dot}`}
-                    aria-hidden="true"
-                  />
-                  <span className="text-[12px] font-bold text-slate-700">
-                    {g.group}
-                  </span>
-                  {selectedCount > 0 ? (
-                    <span className="ml-1 rounded-full bg-white px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-slate-600 ring-1 ring-inset ring-slate-200">
-                      선택 {selectedCount}
-                    </span>
-                  ) : null}
-                  <span className="text-[10px] font-medium tabular-nums text-slate-300">
-                    {g.items.length}
-                  </span>
-                  <ChevronDown
-                    className={`ml-auto h-4 w-4 shrink-0 text-slate-400 transition-transform duration-300 ${groupOpen ? "" : "-rotate-90"}`}
-                    aria-hidden="true"
-                  />
-                </button>
-                {groupOpen ? (
-                  <div className="grid grid-cols-2 gap-2 p-2">
-                    {g.items.map((typeId) => {
-                      const count = countByType.get(typeId) ?? 0;
-                      const active = count > 0;
-                      const addability = getAddability(typeId, memberTypeIds);
-                      const canAdd = addability.ok;
-                      const dragging = draggingType === typeId;
-                      const dragOver =
-                        dragOverType === typeId && draggingType !== typeId;
-                      return (
-              <div
-                key={typeId}
-                // 비활 버튼('유형을 선택하세요') 클릭 시 힌트 글로우 대상 — 유형 지정
-                // 탭 카드와 동일 선택자로 잡히게 한다.
-                data-question-type-id={typeId}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  if (draggingType && draggingType !== typeId) {
-                    setDragOverType(typeId);
-                  }
-                }}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  const src =
-                    draggingType || e.dataTransfer.getData("text/plain");
-                  reorderTypes(src, typeId);
-                  setDraggingType(null);
-                  setDragOverType(null);
-                }}
-                className={`relative flex flex-col overflow-hidden rounded-lg border transition-colors ${
-                  dragOver
-                    ? "border-blue-300 bg-blue-100 ring-1 ring-inset ring-blue-300"
-                    : active
-                      ? "border-blue-300 bg-blue-50/70"
-                      : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80"
-                } ${dragging ? "opacity-50" : ""}`}
-              >
-                {/* 헤더 — 손잡이 + 유형명 + 기준 지문 배지 */}
-                <div className="flex items-center gap-0.5 pl-1 pr-1.5 pt-1.5">
-                  <button
-                    type="button"
-                    draggable
-                    onDragStart={(e) => {
-                      setDraggingType(typeId);
-                      e.dataTransfer.effectAllowed = "move";
-                      e.dataTransfer.setData("text/plain", typeId);
-                    }}
-                    onDragEnd={() => {
-                      setDraggingType(null);
-                      setDragOverType(null);
-                    }}
-                    className="flex h-6 w-4 shrink-0 cursor-grab items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 active:cursor-grabbing"
-                    title={`${typeLabel(typeId)} 순서 드래그`}
-                    aria-label={`${typeLabel(typeId)} 순서 드래그`}
-                  >
-                    <GripVertical className="h-3.5 w-3.5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => incType(typeId)}
-                    disabled={!canAdd}
-                    title={
-                      canAdd ? `${typeLabel(typeId)} 추가` : addability.reason
-                    }
-                    className="flex min-w-0 flex-1 items-center gap-1.5 text-left disabled:cursor-not-allowed"
-                  >
-                    <span
-                      className={`h-1.5 w-1.5 shrink-0 rounded-full ${groupDotClass(typeId)}`}
-                      aria-hidden="true"
-                    />
-                    <span
-                      className={`min-w-0 flex-1 truncate text-[12px] ${
-                        active
-                          ? "font-bold text-slate-800"
-                          : canAdd
-                            ? "font-semibold text-slate-600"
-                            : "font-semibold text-slate-300"
-                      }`}
-                    >
-                      {typeLabel(typeId)}
-                    </span>
-                    {STRUCTURAL_BASE_TYPES.has(typeId) ? (
-                      <span className="shrink-0 rounded bg-violet-50 px-1 py-px text-[9px] font-bold text-violet-600 ring-1 ring-inset ring-violet-100">
-                        기준 지문
-                      </span>
-                    ) : null}
-                  </button>
-                </div>
+      <p className="shrink-0 px-0.5 text-[11px] leading-relaxed text-slate-400">
+        {focusedPreset
+          ? focusedPreset.description
+          : "한 지문에 여러 문항을 묶는 세트 프리셋을 고르세요. 지문 분량이 부족하면 생성 시 안내됩니다."}
+      </p>
 
-                {/* 문항 수 스테퍼 */}
-                <div className="mt-1 flex items-center justify-between gap-1 px-1.5 pb-1.5">
-                  <span className="whitespace-nowrap pl-0.5 text-[10px] font-semibold text-slate-400">
-                    문항 수
+      {/* 멤버별 설정 — 프리셋 선택 후, 각 문항을 펼쳐 난이도·세부설정을 일반
+          문제 생성과 동일하게 조정한다. 조정값은 memberOverrides 로 전송된다. */}
+      {effectiveFocusedPresetId
+        ? (() => {
+            const preset = resolvePreset(effectiveFocusedPresetId);
+            if (!preset) return null;
+            const focusedOverrides =
+              selectedMemberOverridesByPreset[preset.id] ??
+              (preset.id === selectedPreset ? selectedMemberOverrides : []);
+            return (
+              <div className="shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                <div className="flex h-10 w-full items-center gap-2 border-b border-slate-200 bg-slate-50/80 px-3 text-left">
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-400" aria-hidden="true" />
+                  <span className="text-[12px] font-bold text-slate-700">문항별 설정</span>
+                  <span className="ml-1 rounded-full bg-white px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-slate-600 ring-1 ring-inset ring-slate-200">
+                    {preset.members.length}문항
                   </span>
-                  <div className="flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white">
-                    <button
-                      type="button"
-                      onClick={() => decType(typeId)}
-                      disabled={count <= 0}
-                      className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
-                      aria-label={`${typeLabel(typeId)} 줄이기`}
-                    >
-                      <Minus className="h-3.5 w-3.5" />
-                    </button>
-                    <span
-                      className={`flex h-7 w-7 items-center justify-center border-x border-slate-200 text-[12.5px] font-bold tabular-nums ${
-                        count > 0
-                          ? "bg-blue-50/50 text-blue-700"
-                          : "bg-slate-50/60 text-slate-300"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => incType(typeId)}
-                      disabled={!canAdd}
-                      title={canAdd ? undefined : addability.reason}
-                      className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
-                      aria-label={`${typeLabel(typeId)} 늘리기`}
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
+                  <Settings2 className="ml-auto h-3.5 w-3.5 shrink-0 text-slate-400" />
                 </div>
-              </div>
-                      );
-                    })}
-                  </div>
-                ) : null}
+                <div className="grid grid-cols-2 gap-2 p-2">
+                  {preset.members.map((member, index) => {
+                    const typeLabel =
+                      QUESTION_TYPE_UI[member.typeId]?.label ?? member.typeId;
+                    const memberOverride = focusedOverrides[index];
+                    const open = expandedMember === index;
+                    const memberDiff = memberOverride?.difficulty;
+                    const inheritedDiff = member.difficulty ?? selectedDiff;
+                    const effDiff = memberDiff ?? inheritedDiff;
+                    const adjusted = memberOverrideHasContent(memberOverride);
+                    return (
+                      <Popover
+                        key={`${member.typeId}-${index}`}
+                        open={open}
+                        onOpenChange={(nextOpen) =>
+                          setExpandedMember(nextOpen ? index : null)
+                        }
+                      >
+                        <PopoverAnchor asChild>
+                          <div
+                            className={`relative flex flex-col overflow-hidden rounded-lg border transition-colors ${
+                              open
+                                ? "rounded-b-none border-blue-300 bg-blue-50/40"
+                                : adjusted
+                                  ? "border-blue-300 bg-blue-50/70"
+                                  : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80"
+                            }`}
+                          >
+                            <div className="flex items-center gap-0.5 pl-1 pr-1.5 pt-1.5">
+                              <span className="flex h-6 w-4 shrink-0 items-center justify-center rounded text-slate-300">
+                                <GripVertical className="h-3.5 w-3.5" />
+                              </span>
+                              <PopoverTrigger asChild>
+                                <button
+                                  type="button"
+                                  className="flex min-w-0 flex-1 items-center gap-1 text-left"
+                                  title={`${typeLabel} 세부 옵션 ${open ? "접기" : "펼치기"}`}
+                                >
+                                  <span className="min-w-0 truncate text-[12px] font-bold text-slate-700">
+                                    {typeLabel}
+                                  </span>
+                                  {adjusted ? (
+                                    <span
+                                      className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                                        memberDiff ? DIFFICULTY_DOT[effDiff] : "bg-blue-500"
+                                      }`}
+                                      title="이 문항만 개별 설정"
+                                    />
+                                  ) : null}
+                                  <ChevronDown
+                                    className={`ml-auto size-4 shrink-0 text-blue-300 transition-transform duration-300 ${
+                                      open ? "rotate-180" : ""
+                                    }`}
+                                    aria-hidden="true"
+                                  />
+                                </button>
+                              </PopoverTrigger>
+                            </div>
+                            <div className="mt-1 flex items-center justify-between gap-1 px-1.5 pb-1.5">
+                              <span className="whitespace-nowrap pl-0.5 text-[10px] font-semibold text-slate-400">
+                                문항 수
+                              </span>
+                              <div className="flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white">
+                                <span className="flex h-7 w-7 items-center justify-center text-slate-200">
+                                  <Minus className="h-3.5 w-3.5" />
+                                </span>
+                                <span className="flex h-7 w-7 items-center justify-center border-x border-slate-200 bg-blue-50/50 text-[12.5px] font-bold tabular-nums text-blue-700">
+                                  1
+                                </span>
+                                <span className="flex h-7 w-7 items-center justify-center text-slate-200">
+                                  <Plus className="h-3.5 w-3.5" />
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </PopoverAnchor>
+                        <PopoverContent
+                          align="start"
+                          sideOffset={0}
+                          collisionPadding={12}
+                          className="max-h-[60vh] w-[var(--radix-popover-trigger-width)] overflow-y-auto rounded-t-none border border-t-0 border-blue-300 p-0 shadow-lg"
+                        >
+                          <div className="flex h-9 items-center gap-2 border-b border-slate-200 bg-white px-3">
+                            <Settings2 className="h-3.5 w-3.5 shrink-0 text-blue-500" />
+                            <span className="min-w-0 flex-1 truncate text-[12px] font-bold text-slate-800">
+                              {typeLabel} 세부 설정
+                            </span>
+                            <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-500">
+                              {DIFFICULTY_LABELS[effDiff]}
+                            </span>
+                          </div>
+                          <div className="bg-slate-100 px-3 pb-3 pt-2.5">
+                            <div className="rounded-lg border border-slate-200 bg-white px-3 py-2.5">
+                            <SetMemberSettingsEditor
+                              typeId={member.typeId}
+                              override={memberOverride}
+                              inheritedGenerationPlan={
+                                member.generationPlan ??
+                                (generationPlan === "PREMIUM" ? "PREMIUM" : "STANDARD")
+                              }
+                              inheritedDifficulty={inheritedDiff}
+                              onChange={(next) =>
+                                setMemberOverrideAt(index, next)
+                              }
+                            />
+                          </div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    );
+                  })}
+                </div>
               </div>
             );
-          })}
-        </div>
-      </div>
-
-      {/* Contextual guidance */}
-      <p className="shrink-0 px-0.5 text-[11px] leading-relaxed text-slate-400">
-        {contextHint}
-      </p>
+          })()
+        : null}
 
       {/* 공통 지시문 — embedded(지문별)에서는 공용 '생성' 흐름이 담당하므로 숨김 */}
       {!embedded && (
@@ -627,9 +629,7 @@ export function SetBuilderPanel({
         </div>
       )}
 
-      {/* 자체 생성 버튼·결과 미리보기는 standalone(라이브러리) 모드에서만.
-          지문별 설정에서는 하단 공용 '생성' 버튼으로 생성하고 결과는
-          아래 생성/검수 결과에서 확인한다. */}
+      {/* 자체 생성 버튼·결과 미리보기는 standalone(라이브러리) 모드에서만. */}
       {!embedded && (
         <>
           <button
@@ -646,10 +646,10 @@ export function SetBuilderPanel({
               <>
                 <Loader2 className="h-4 w-4 animate-spin" /> 세트 생성 중...
               </>
-            ) : items.length === 0 ? (
-              "문항을 추가하세요"
+            ) : totalSetCount <= 0 ? (
+              "프리셋을 선택하세요"
             ) : (
-              `세트 생성 · ${items.length}문항`
+              `세트 생성 · ${totalSetCount}세트`
             )}
           </button>
 
