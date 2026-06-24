@@ -8,6 +8,7 @@ import type {
   InsertablePaperBlockType,
   PaperItem,
 } from "../paper-builder/types";
+import { LINE_GAP_MARKER } from "../paper-builder/types";
 import {
   clonePaperItem,
   makeCustomPaperBlock,
@@ -501,6 +502,67 @@ export function usePaperItems(
     }, () => nextBlock.localId);
   }
 
+  // 워드프로세서식 빈 줄 — afterLocalId(캐럿 위 항목, null=맨 앞) 바로 뒤에 한 줄(lineHeight)
+  // 짜리 보이지 않는 여백 블록을 "한 줄당 하나씩" 새로 끼운다. 캐럿이 함께 내려가도록 새
+  // 블록의 localId 를 반환한다. 블록을 키우지 않고 매번 새로 끼우므로, 칸/페이지 끝에
+  // 닿으면 페이지네이션이 그 블록을 다음 칸·다음 쪽으로 자연스럽게 흘려보낸다(블록 사이
+  // 기본 여백은 line-gap 전용으로 0 처리해 한 줄 높이만 일관되게 차지한다). spacer 블록은
+  // 저장(draft)·내보내기(HWPX/DOCX)에 그대로 흐르므로 빈 줄이 출력물까지 유지된다.
+  function insertLineGap(afterLocalId: string | null, lineHeight: number): string | null {
+    const line = Math.max(8, Math.round(lineHeight));
+    let newAnchor: string | null = afterLocalId;
+    commitItems((current) => {
+      const anchorIndex = afterLocalId
+        ? current.findIndex((item) => item.localId === afterLocalId)
+        : -1;
+      // 지정한 앵커가 사라졌으면(맨 앞 간격은 -1 허용) 변경 없음.
+      if (afterLocalId && anchorIndex < 0) return current;
+      const block = {
+        ...makeCustomPaperBlock("spacer", current.length + 1),
+        // 점선 박스 없이 순수 여백으로 그리도록 line-gap 마커를 단다.
+        blockText: LINE_GAP_MARKER,
+        spacerHeight: line,
+      };
+      newAnchor = block.localId;
+      const next = [...current];
+      next.splice(anchorIndex + 1, 0, block);
+      return next;
+    });
+    return newAnchor;
+  }
+
+  // 캐럿이 놓인 자리(afterLocalId)의 항목이 line-gap 여백이면 그 한 줄을 지우고, 캐럿이 한 줄
+  // 위로 올라가도록 그 앞 항목의 localId(없으면 null)를 반환한다. 여백이 아니면(=실제 문항
+  // 바로 뒤) 변경 없이 ok:false 를 돌려준다(문항은 못 지움).
+  function removeLineGap(afterLocalId: string | null): {
+    ok: boolean;
+    nextAnchor: string | null;
+  } {
+    let result: { ok: boolean; nextAnchor: string | null } = {
+      ok: false,
+      nextAnchor: afterLocalId,
+    };
+    commitItems((current) => {
+      if (!afterLocalId) return current;
+      const idx = current.findIndex((item) => item.localId === afterLocalId);
+      if (idx < 0) return current;
+      const target = current[idx];
+      if (
+        target.blockType !== "spacer" ||
+        target.blockText !== LINE_GAP_MARKER ||
+        target.locked
+      ) {
+        return current;
+      }
+      const prev = current[idx - 1];
+      result = { ok: true, nextAnchor: prev ? prev.localId : null };
+      const next = [...current];
+      next.splice(idx, 1);
+      return next;
+    });
+    return result;
+  }
+
   function duplicateItem(localId: string) {
     let duplicateId: string | null = null;
     commitItems((current) => {
@@ -746,6 +808,8 @@ export function usePaperItems(
     distributeTotalPoints,
     insertBlock,
     insertImageBlock,
+    insertLineGap,
+    removeLineGap,
     duplicateItem,
     toggleLockItem,
     tryToggleKeepWithPrev,

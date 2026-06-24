@@ -24,6 +24,7 @@ import {
   recombineQuestionText,
 } from "../question-body-layout";
 import { TEMPLATE_VISUALS } from "../templates";
+import { LINE_GAP_MARKER, LINE_GAP_MAX_PX, isLineGapItem } from "../types";
 import type {
   Density,
   DropPlacement,
@@ -33,6 +34,7 @@ import type {
   PaperSize,
   PaperTemplate,
   PassageStyle,
+  RenderFragment,
   StructRow,
   StructRowStyle,
 } from "../types";
@@ -43,6 +45,16 @@ import {
 } from "./a4-paper-page-parts/page-header";
 import { PaperItemActions } from "./a4-paper-page-parts/paper-item-actions";
 import { usePaperItemDrag } from "./a4-paper-page-parts/use-paper-item-drag";
+
+// 워드프로세서식 빈 줄(line-gap) 여백 하나만 들어있는 fragment 인지 — space-y 간격 처리에 사용.
+function isLineGapFragmentNode(fragment: RenderFragment | undefined): boolean {
+  return (
+    !!fragment &&
+    fragment.parts.length === 1 &&
+    !!fragment.parts[0]?.source &&
+    isLineGapItem(fragment.parts[0].source)
+  );
+}
 
 function blockTextSizeClass(item: PaperItem) {
   if (item.blockFontSize === "lg") return "text-[14px] leading-[1.65]";
@@ -276,13 +288,20 @@ function CustomPaperBlock({
   }
 
   if (item.blockType === "spacer") {
+    // 워드프로세서식 빈 줄: 점선 박스 없이 순수 여백만 차지한다(아래 내용이 그대로 밀려남).
+    // 일반 여백(8~160)과 달리 한 줄씩 자라므로 더 큰 상한까지 그대로 그린다.
+    if (item.blockText === LINE_GAP_MARKER) {
+      const height = Math.max(8, Math.min(LINE_GAP_MAX_PX, item.spacerHeight || 32));
+      return <div aria-hidden style={{ height }} />;
+    }
+    const spacerHeight = Math.max(8, Math.min(160, item.spacerHeight || 32));
     return (
       <div
         className={cn(
           "rounded border border-dashed border-slate-200 bg-slate-50/60 print:border-transparent print:bg-transparent",
           item.locked && "opacity-70",
         )}
-        style={{ height: Math.max(8, Math.min(160, item.spacerHeight || 32)) }}
+        style={{ height: spacerHeight }}
       />
     );
   }
@@ -339,6 +358,9 @@ export interface A4PaperPageProps {
   pageColumns: PaperPage;
   activeItemId: string | null;
   setActiveItemId: (id: string | null) => void;
+  // 워드프로세서식 빈 줄 캐럿 — 문제 사이 간격 클릭 위치(afterLocalId = 캐럿 위 항목 localId).
+  lineCaret: { afterLocalId: string | null } | null;
+  setLineCaret: (caret: { afterLocalId: string | null } | null) => void;
   onHeaderChange: (patch: HeaderPatch) => void;
   onUpdateItem: (localId: string, patch: Partial<PaperItem>) => void;
   onUpdateGroupPassage: (
@@ -388,6 +410,8 @@ export function A4PaperPage({
   pageColumns,
   activeItemId,
   setActiveItemId,
+  lineCaret,
+  setLineCaret,
   onHeaderChange,
   onUpdateItem,
   onUpdateGroupPassage,
@@ -441,10 +465,9 @@ export function A4PaperPage({
       )}
       style={{
         aspectRatio: `${paperSpec.widthMm} / ${paperSpec.heightMm}`,
-        // 시험지 미리보기 글꼴을 HWPX 다운로드(맑은 고딕)와 통일한다.
-        // Apple SD Gothic Neo 는 Mac 사용자에게 합리적인 미리보기를 제공한다(다운로드 파일은 한글에서 여전히 맑은 고딕 사용).
-        fontFamily:
-          '"Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif',
+        // 시험지 미리보기 글꼴을 다운로드(DOCX/HWPX)와 "Noto Sans KR" 로 통일한다.
+        // 미리보기(브라우저)·Word·한글이 같은 글꼴을 쓰면 줄바꿈·페이지넘김이 일치한다.
+        fontFamily: '"Noto Sans KR Exam", "Noto Sans KR", sans-serif',
       }}
       data-paper-size={paperSize}
     >
@@ -498,8 +521,20 @@ export function A4PaperPage({
         >
           {pageColumns.map((columnFragments, columnIndex) => (
             <div key={columnIndex} className="min-h-0 space-y-4">
-              {columnFragments.map((fragment) => (
-                <div key={fragment.id} className="min-w-0">
+              {columnFragments.map((fragment, fragmentIndex) => {
+                // Tailwind v4 의 space-y-4 는 16px 간격을 각 자식의 margin-BOTTOM 에 넣는다
+                // (margin-top 이 아님). 워드프로세서식 빈 줄(line-gap) 위에는 간격이 없어야
+                // 하므로(페이지네이션 gap=0 과 일치), "바로 다음 형제가 빈 줄"인 fragment 의
+                // margin-bottom 을 0으로 없앤다. 빈 줄→문항 경계는 기본 16px 를 유지(GROUP_GAP).
+                const nextIsLineGap = isLineGapFragmentNode(
+                  columnFragments[fragmentIndex + 1],
+                );
+                return (
+                <div
+                  key={fragment.id}
+                  className="min-w-0"
+                  style={nextIsLineGap ? { marginBottom: 0 } : undefined}
+                >
                   {fragment.includePassage &&
                     fragment.passageRenderedLines.length > 0 &&
                     (() => {
@@ -598,9 +633,21 @@ export function A4PaperPage({
                     })()}
 
                   <div className="space-y-3">
-                    {fragment.parts.map((part) => {
+                    {fragment.parts.map((part, partIdx, partsArr) => {
                       const item = part.source;
                       const isCustomBlock = item.blockType !== "question";
+                      // 워드프로세서식 빈 줄(line-gap) 여백은 선택 테두리·드래그 손잡이 없이
+                      // 순수 여백으로만 보이게 한다(블록처럼 보이지 않도록).
+                      const isLineGapSpacer =
+                        item.blockType === "spacer" &&
+                        item.blockText === LINE_GAP_MARKER;
+                      // 이 part 가 해당 항목의 (이 칸에서) 마지막 조각이면 아래에 빈 줄
+                      // 캐럿 영역을 단다 — 쪼개진 문항의 중간 조각엔 달지 않는다.
+                      const isLastPartOfItem =
+                        partIdx === partsArr.length - 1 ||
+                        partsArr[partIdx + 1].source.localId !== item.localId;
+                      const gapCaretActive =
+                        lineCaret?.afterLocalId === item.localId;
                       const isDropTarget =
                         dragOverPartKey === part.partKey ||
                         (!dragOverPartKey &&
@@ -629,13 +676,16 @@ export function A4PaperPage({
                           data-paper-item-id={item.localId}
                           data-paper-part-key={part.partKey}
                           onClick={() => {
-                            if (!readOnly) setActiveItemId(item.localId);
+                            if (!readOnly && !isLineGapSpacer)
+                              setActiveItemId(item.localId);
                           }}
                           onMouseDownCapture={() => {
-                            if (!readOnly) setActiveItemId(item.localId);
+                            if (!readOnly && !isLineGapSpacer)
+                              setActiveItemId(item.localId);
                           }}
                           onFocusCapture={() => {
-                            if (!readOnly) setActiveItemId(item.localId);
+                            if (!readOnly && !isLineGapSpacer)
+                              setActiveItemId(item.localId);
                           }}
                           style={{
                             breakBefore:
@@ -656,6 +706,7 @@ export function A4PaperPage({
                             item.locked && "cursor-default",
                             visual.itemClass,
                             !readOnly &&
+                              !isLineGapSpacer &&
                               activeItemId === item.localId &&
                               "bg-blue-50/80 ring-2 ring-blue-300",
                             !readOnly &&
@@ -666,7 +717,9 @@ export function A4PaperPage({
                               isDropTarget &&
                               "ring-2 ring-blue-300 ring-offset-2",
                             !readOnly && draggingItemId === item.localId && "opacity-55",
-                            isCustomBlock ? "py-1" : "py-0.5",
+                            // line-gap 빈 줄은 패딩 0 — 한 줄 높이만 정확히 차지하도록
+                            // (페이지네이션 추정도 패딩 없이 spacerHeight 만 계산).
+                            isLineGapSpacer ? "py-0" : isCustomBlock ? "py-1" : "py-0.5",
                           )}
                         >
                           {isDropTarget && (
@@ -691,7 +744,7 @@ export function A4PaperPage({
                               onRemoveItem={onRemoveItem}
                             />
                           )}
-                          {part.isStart && !readOnly && !item.locked && isCustomBlock && (
+                          {part.isStart && !readOnly && !item.locked && isCustomBlock && !isLineGapSpacer && (
                             <button
                               type="button"
                               title="블록 드래그"
@@ -1034,12 +1087,39 @@ export function A4PaperPage({
                             )}
                             </>
                           )}
+                          {/* 워드프로세서식 빈 줄 — 항목 아래 경계의 얇은 클릭 영역.
+                              클릭하면 캐럿이 놓이고, Enter 로 빈 줄(여백 블록)이 추가된다. */}
+                          {!readOnly && isLastPartOfItem && (
+                            <div
+                              data-line-gap-anchor={item.localId}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                setActiveItemId(null);
+                                setLineCaret({ afterLocalId: item.localId });
+                              }}
+                              title="클릭 후 Enter로 빈 줄 추가 · Backspace로 제거"
+                              className={cn(
+                                "no-print group/linegap absolute inset-x-0 -bottom-2 z-10 flex h-4 cursor-text items-center",
+                                draggingItemId && "pointer-events-none opacity-0",
+                              )}
+                            >
+                              {gapCaretActive ? (
+                                <>
+                                  <span className="line-gap-caret absolute left-0 h-[15px] w-0.5 rounded-full bg-blue-500" />
+                                  <span className="block h-px w-full bg-blue-300" />
+                                </>
+                              ) : (
+                                <span className="block h-px w-full bg-transparent transition-colors group-hover/linegap:bg-blue-200" />
+                              )}
+                            </div>
+                          )}
                         </div>
                       );
                     })}
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           ))}
         </main>

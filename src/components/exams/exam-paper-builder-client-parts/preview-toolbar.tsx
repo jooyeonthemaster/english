@@ -37,7 +37,8 @@ interface PreviewToolbarProps {
   onDownloadDocxWithAnswers: () => void;
   onDownloadHwpx: () => void;
   onDownloadHwpxWithAnswers: () => void;
-  onSave: () => void;
+  /** 미지정 시 저장 버튼을 숨긴다 — 읽기 전용 미리보기에서 사용. */
+  onSave?: () => void;
   onSaveAs?: () => void;
 }
 
@@ -155,14 +156,16 @@ export function PreviewToolbar({
             <Redo2 className="h-3.5 w-3.5" />
           </button>
         )}
-        <button
-          onClick={onSave}
-          disabled={actionDisabled}
-          className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md bg-slate-900 px-2 text-[11px] font-bold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
-        >
-          {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-          저장
-        </button>
+        {onSave && (
+          <button
+            onClick={onSave}
+            disabled={actionDisabled}
+            className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md bg-slate-900 px-2 text-[11px] font-bold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
+          >
+            {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+            저장
+          </button>
+        )}
         {onSaveAs && (
           <button
             type="button"

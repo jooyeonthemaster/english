@@ -1,139 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { Check, ChevronDown, ChevronUp } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { DIFFICULTY_LABELS, QUESTION_TYPE_LABELS } from "./constants";
-import { renderFormatted, safeParseJSON } from "./format-text";
-import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
-import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
-import {
-  optionDisplayTextForSubtype,
-  grammarMarkerIndex,
-  circleGrammarLabelMentions,
-} from "@/components/exams/paper-builder/option-display";
+import { QuestionBankCard } from "@/components/workbench/question-bank-card";
+import type { QuestionBankItem } from "@/components/workbench/question-bank-card/types";
 import type { ExamQuestion } from "./types";
 
 // ---------------------------------------------------------------------------
 // 문제 목록 탭의 단일 카드
 // ---------------------------------------------------------------------------
+// 문제 관리 페이지의 문제 카드(QuestionBankCard)를 그대로 재사용해 디자인을 통일한다.
+// 읽기 전용 미리보기이므로 embedded 모드로 띄워 손잡이/체크박스/별/삭제/검수·사용이력
+// footer 등 관리 UI는 모두 숨기고, 발문·지문·선지·해설 본문만 펼친 상태로 보여준다.
 
 export function ExamQuestionCard({ eq }: { eq: ExamQuestion }) {
-  const [explanationOpen, setExplanationOpen] = useState(false);
-  const q = eq.question;
-  const displayQuestionText = repairGrammarCorrectionQuestionText({
-    subType: q.subType,
-    questionText: q.questionText,
-    structuredData: q.structuredData,
-  });
-  // 어법 판단(GRAMMAR_ERROR)만 라벨/마커를 원형숫자(①)로 표시(시험지 렌더 동일). 타 유형 무영향.
-  const isGrammarError = q.subType === "GRAMMAR_ERROR";
-  const rawCorrectAnswer = formatStoredQuestionCorrectAnswer(q);
-  const displayCorrectAnswer = isGrammarError
-    ? circleGrammarLabelMentions(rawCorrectAnswer)
-    : rawCorrectAnswer;
-  // 배지(원) 안엔 평문 숫자(1,2)를 넣어 동그라미-안-동그라미를 막는다(원 안 "1"이 ①로 읽힘).
-  const badgeLabel = (label: string) => {
-    if (!isGrammarError) return label;
-    const idx = grammarMarkerIndex(label);
-    return idx === null ? label : String(idx + 1);
-  };
-  const options = safeParseJSON<{ label: string; text: string }[]>(q.options, []);
-  const displayOptions =
-    q.subType === "SENTENCE_INSERT"
-      ? options.map((option, index) => ({
-          ...option,
-          text: optionDisplayTextForSubtype(q.subType, index, option.text),
-        }))
-      : options;
-  const diffLabel = DIFFICULTY_LABELS[q.difficulty] || q.difficulty;
-  const diffClass =
-    q.difficulty === "KILLER"
-      ? "bg-red-50 text-red-700 border-red-200"
-      : q.difficulty === "INTERMEDIATE"
-        ? "bg-amber-50 text-amber-700 border-amber-200"
-        : "bg-blue-50 text-blue-700 border-blue-200";
-
   return (
-    <div className="rounded-xl border border-[#E5E8EB] bg-white p-4 space-y-3">
-      {/* Header */}
-      <div className="flex items-center gap-2">
-        <span className="flex size-6 items-center justify-center rounded-full bg-[#3182F6] text-white text-[11px] font-bold shrink-0">
-          {eq.orderNum}
-        </span>
-        <Badge variant="outline" className="text-[10px]">
-          {QUESTION_TYPE_LABELS[q.type] || q.type}
-        </Badge>
-        <Badge variant="outline" className={`text-[10px] ${diffClass}`}>
-          {diffLabel}
-        </Badge>
-        <span className="text-[10px] text-[#8B95A1] ml-auto">{eq.points}점</span>
-      </div>
-
-      {/* Question text */}
-      <div className="text-[13px] text-[#191F28] leading-relaxed whitespace-pre-line">
-        {renderFormatted(displayQuestionText, q.subType)}
-      </div>
-
-      {/* Options */}
-      {displayOptions.length > 0 && (
-        <div className="space-y-1 pl-1">
-          {displayOptions.map((opt) => {
-            const isCorrect = opt.label === q.correctAnswer;
-            return (
-              <div
-                key={opt.label}
-                className={`flex items-start gap-2 text-[12px] rounded px-2 py-1 ${
-                  isCorrect ? "bg-emerald-50 text-emerald-800 font-medium" : "text-slate-600"
-                }`}
-              >
-                <span
-                  className={`shrink-0 w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center ${
-                    isCorrect ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-500"
-                  }`}
-                >
-                  {isCorrect ? <Check className="w-3 h-3" /> : badgeLabel(opt.label)}
-                </span>
-                <span className="pt-0.5">{renderFormatted(opt.text, q.subType)}</span>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Non-MC answer */}
-      {displayOptions.length === 0 && displayCorrectAnswer && (
-        <div className="text-[12px] bg-emerald-50 text-emerald-700 px-2.5 py-1.5 rounded flex items-center gap-1.5">
-          <Check className="w-3.5 h-3.5" />
-          <span className="font-medium">정답:</span> {displayCorrectAnswer}
-        </div>
-      )}
-
-      {/* Explanation */}
-      {q.explanation && (
-        <div className="border-t border-[#F2F4F6] pt-2">
-          <button
-            className="text-[11px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
-            onClick={() => setExplanationOpen(!explanationOpen)}
-          >
-            {explanationOpen ? "해설 접기" : "해설 보기"}
-            {explanationOpen ? (
-              <ChevronUp className="w-3 h-3" />
-            ) : (
-              <ChevronDown className="w-3 h-3" />
-            )}
-          </button>
-          {explanationOpen && (
-            <div className="mt-2 bg-amber-50/50 border border-amber-100 rounded-md px-3 py-2">
-              <p className="text-[12px] text-slate-700 leading-relaxed whitespace-pre-line">
-                {isGrammarError
-                  ? circleGrammarLabelMentions(q.explanation.content)
-                  : q.explanation.content}
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+    <QuestionBankCard
+      q={eq.question as unknown as QuestionBankItem}
+      num={eq.orderNum}
+      selected={false}
+      onToggle={() => {}}
+      embedded
+    />
   );
 }

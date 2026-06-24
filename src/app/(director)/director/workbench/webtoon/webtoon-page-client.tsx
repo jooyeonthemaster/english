@@ -1,9 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import { toast } from "sonner";
-import { ImageIcon, Loader2, Palette, Trash2 } from "lucide-react";
+import { ImageIcon, Palette } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { createWorkbenchPassage } from "@/actions/workbench";
@@ -38,11 +37,13 @@ import {
 } from "./webtoon-page-types";
 import { useWebtoonState } from "./use-webtoon-state";
 import { WebtoonInputStack } from "./webtoon-input-stack";
-import { WebtoonQueueCard } from "./webtoon-queue-card";
-import { WebtoonTextEditor } from "./editor/webtoon-text-editor";
+import { WebtoonLibraryClient } from "./library/library-page-client";
+import type { CollectionItem } from "@/components/workbench/shared/types";
 
 interface WebtoonPageClientProps {
   academyId: string;
+  collections: CollectionItem[];
+  collectionMembership: Record<string, Set<string>>;
 }
 
 /** Build a passage title from the first non-empty line of typed content. */
@@ -55,13 +56,37 @@ function derivePastedTitle(content: string): string {
   return base.length > 60 ? base.slice(0, 60) + "…" : base;
 }
 
-export function WebtoonPageClient({ academyId }: WebtoonPageClientProps) {
+export function WebtoonPageClient({
+  academyId,
+  collections: webtoonCollections,
+  collectionMembership: webtoonCollectionMembership,
+}: WebtoonPageClientProps) {
   // ─── 지문 입력 스택 (내 지문함에서 불러온 지문 = 행) ───
   const [rows, setRows] = useState<PassageInputRow[]>([]);
   const rowsRef = useRef(rows);
   useEffect(() => {
     rowsRef.current = rows;
   }, [rows]);
+
+  // ─── '생성한 웹툰' 섹션 헤더 높이 — 임베드된 보관함의 폴더/툴바 sticky 오프셋
+  //     기준점. 헤더·폴더·툴바가 한 덩어리로 상단고정되도록 높이를 측정해 내려준다. ───
+  const [webtoonHeaderHeight, setWebtoonHeaderHeight] = useState(0);
+  const webtoonHeaderCleanup = useRef<(() => void) | null>(null);
+  const webtoonHeaderRef = useCallback((el: HTMLDivElement | null) => {
+    webtoonHeaderCleanup.current?.();
+    webtoonHeaderCleanup.current = null;
+    if (!el) return;
+    const update = () =>
+      setWebtoonHeaderHeight(Math.ceil(el.getBoundingClientRect().height));
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    window.addEventListener("resize", update);
+    webtoonHeaderCleanup.current = () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, []);
 
   // ─── 웹툰 옵션 ───
   const [style, setStyle] = useState<WebtoonStyleId>("KOREAN_WEBTOON");
@@ -71,59 +96,14 @@ export function WebtoonPageClient({ academyId }: WebtoonPageClientProps) {
   const [customPrompt, setCustomPrompt] = useState("");
   const [generating, setGenerating] = useState(false);
 
+  // 새 웹툰을 큐잉한 뒤 임베드된 보관함(WebtoonLibraryClient)을 새로고침하는 신호.
+  const [webtoonRefreshSignal, setWebtoonRefreshSignal] = useState(0);
+
   // ─── 폼 접기 ───
   const [formCollapsed, setFormCollapsed] = useState(false);
 
-  // ─── 웹툰 큐 (DB 폴링) ───
-  const {
-    items: queue,
-    loading: queueLoading,
-    handleBatchGenerate,
-    handleRetry,
-    handleRemove,
-    handleToggleApprove,
-    patchItem,
-  } = useWebtoonState({ academyId });
-
-  // ─── 생성한 웹툰 선택(체크박스) → 일괄 삭제 ───
-  const [selectedWebtoonIds, setSelectedWebtoonIds] = useState<Set<string>>(
-    () => new Set(),
-  );
-  const toggleWebtoonSelected = useCallback((id: string) => {
-    setSelectedWebtoonIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }, []);
-  // 큐에서 사라진 항목은 선택에서도 제거(삭제·재생성 후 정리).
-  useEffect(() => {
-    setSelectedWebtoonIds((prev) => {
-      if (prev.size === 0) return prev;
-      const live = new Set(queue.map((q) => q.id));
-      let changed = false;
-      const next = new Set<string>();
-      prev.forEach((id) => {
-        if (live.has(id)) next.add(id);
-        else changed = true;
-      });
-      return changed ? next : prev;
-    });
-  }, [queue]);
-  const handleBulkRemoveWebtoons = useCallback(async () => {
-    const ids = [...selectedWebtoonIds];
-    if (ids.length === 0) return;
-    await Promise.all(ids.map((id) => handleRemove(id)));
-    setSelectedWebtoonIds(new Set());
-  }, [selectedWebtoonIds, handleRemove]);
-
-  // ─── 자막 편집기 ───
-  const [editingWebtoonId, setEditingWebtoonId] = useState<string | null>(null);
-  const editingWebtoon = useMemo(
-    () => queue.find((q) => q.id === editingWebtoonId) ?? null,
-    [queue, editingWebtoonId],
-  );
+  // ─── 웹툰 큐 (DB 폴링) — 생성 트리거 + 상단 배지(생성 중·실패) 용도 ───
+  const { items: queue, handleBatchGenerate } = useWebtoonState({ academyId });
 
   const queueCounts = useMemo(
     () => ({
@@ -421,6 +401,7 @@ export function WebtoonPageClient({ academyId }: WebtoonPageClientProps) {
           }
           void loadPassages();
           triggerRefresh();
+          setWebtoonRefreshSignal((n) => n + 1);
           return true;
         }
         return false;
@@ -471,6 +452,10 @@ export function WebtoonPageClient({ academyId }: WebtoonPageClientProps) {
                   customPrompt={customPrompt}
                   setCustomPrompt={setCustomPrompt}
                   onGenerateRow={handleGenerateRow}
+                  onAddPassage={() => {
+                    setWorkspaceOpen(false);
+                    setIntakeView("library");
+                  }}
                 />
               </div>
             }
@@ -545,8 +530,11 @@ export function WebtoonPageClient({ academyId }: WebtoonPageClientProps) {
           />
 
           {/* ─── 생성한 웹툰 ─── */}
-          <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
+          <section className="flex min-w-0 flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
+            <div
+              ref={webtoonHeaderRef}
+              className="sticky top-0 z-40 flex flex-wrap items-center justify-between gap-3 rounded-t-lg border-b border-slate-100 bg-white px-4 py-3"
+            >
               <div className="flex items-center gap-2.5">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
                   <ImageIcon className="size-5" aria-hidden="true" />
@@ -555,81 +543,26 @@ export function WebtoonPageClient({ academyId }: WebtoonPageClientProps) {
                   <h2 className="text-[14px] font-bold text-slate-900">
                     생성한 웹툰
                   </h2>
-                  <p className="text-[12px] font-medium text-slate-400">
-                    백그라운드에서 처리되며 완료되면 자동으로 표시됩니다.
-                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                {selectedWebtoonIds.size > 0 && (
-                  <button
-                    type="button"
-                    onClick={handleBulkRemoveWebtoons}
-                    className="inline-flex h-7 items-center gap-1.5 rounded-md border border-red-200 bg-red-50 px-2.5 text-[11.5px] font-semibold text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                    선택 {selectedWebtoonIds.size}개 삭제
-                  </button>
-                )}
-                {queueCounts.generating > 0 && (
-                  <Badge className="border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-50">
-                    <Loader2 className="mr-1 h-3 w-3 animate-spin" />
-                    생성 중 {queueCounts.generating}
-                  </Badge>
-                )}
-                {queueCounts.done > 0 && (
-                  <Badge className="border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-50">
-                    완료 {queueCounts.done}
-                  </Badge>
-                )}
                 {queueCounts.error > 0 && (
                   <Badge className="border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-50">
                     실패 {queueCounts.error}
                   </Badge>
                 )}
-                <Link
-                  href="/director/workbench/webtoon/library"
-                  className="text-[11.5px] font-semibold text-blue-600 transition-colors hover:text-blue-700"
-                >
-                  전체 보관함 →
-                </Link>
               </div>
             </div>
 
-            <div className="px-4 py-4">
-              {queueLoading ? (
-                <div className="flex flex-col items-center justify-center gap-2 py-12">
-                  <Loader2 className="h-5 w-5 animate-spin text-blue-500" />
-                  <p className="text-[12px] text-slate-400">목록 불러오는 중...</p>
-                </div>
-              ) : queue.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 opacity-70">
-                  <ImageIcon className="mb-2 h-8 w-8 text-slate-300" />
-                  <p className="text-[13px] text-slate-400">
-                    아직 생성된 웹툰이 없습니다
-                  </p>
-                  <p className="mt-1 text-[11px] text-slate-400">
-                    위에서 지문을 불러오고 화풍·언어를 설정한 뒤 웹툰 생성을
-                    눌러주세요
-                  </p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  {queue.map((item) => (
-                    <WebtoonQueueCard
-                      key={item.id}
-                      item={item}
-                      selected={selectedWebtoonIds.has(item.id)}
-                      onToggleSelected={() => toggleWebtoonSelected(item.id)}
-                      onRetry={handleRetry}
-                      onRemove={handleRemove}
-                      onEditText={setEditingWebtoonId}
-                      onToggleApprove={handleToggleApprove}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* 폴더창 + 필터 + 그리드 — 웹툰 관리(보관함)와 동일한 경험을 임베드 */}
+            <WebtoonLibraryClient
+              embedded
+              stickyTopOffset={webtoonHeaderHeight}
+              academyId={academyId}
+              collections={webtoonCollections}
+              collectionMembership={webtoonCollectionMembership}
+              refreshSignal={webtoonRefreshSignal}
+            />
           </section>
         </main>
       </div>
@@ -648,17 +581,6 @@ export function WebtoonPageClient({ academyId }: WebtoonPageClientProps) {
         />
       )}
 
-      {editingWebtoonId ? (
-        <WebtoonTextEditor
-          key={editingWebtoonId}
-          webtoonId={editingWebtoonId}
-          title={editingWebtoon?.passage.title}
-          onClose={() => setEditingWebtoonId(null)}
-          onExported={(editedImageUrl) =>
-            patchItem(editingWebtoonId, { editedImageUrl })
-          }
-        />
-      ) : null}
     </TooltipProvider>
   );
 }

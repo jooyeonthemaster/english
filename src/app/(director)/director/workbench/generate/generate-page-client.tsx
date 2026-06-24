@@ -338,6 +338,7 @@ export function GeneratePageClient({
 
   // 추출/입력 지문 "전체 보기" — 자료 추출 상세 모달(복원 근거 + 추출 이미지) 재사용.
   const [detailPassage, setDetailPassage] = useState<PassageItem | null>(null);
+  const [deletingDetailId, setDeletingDetailId] = useState<string | null>(null);
 
   // ── Saved questions from DB (persists across page visits) ──
   const [savedQuestions, setSavedQuestions] = useState<QuestionCardItem[]>([]);
@@ -1139,6 +1140,38 @@ export function GeneratePageClient({
       setPassageBulkAction(null);
     }
   }, [loadPassages, passageBulkAction, selectedIds, selectedPassage]);
+
+  // 상세 모달에서 단일 지문 삭제 — 확인 후 삭제하고 목록·모달을 정리한다.
+  const handleDeleteDetailPassage = useCallback(
+    async (passage: PassageItem) => {
+      if (deletingDetailId) return;
+      if (!window.confirm("이 지문을 삭제하시겠습니까?")) return;
+
+      setDeletingDetailId(passage.id);
+      try {
+        const result = await bulkDeleteWorkbenchPassages([passage.id]);
+        if (!result.success || result.deleted === 0) {
+          toast.error(result.error || "삭제에 실패했습니다.");
+          return;
+        }
+        toast.success("지문이 삭제되었습니다.");
+        setPassages((prev) => prev.filter((p) => p.id !== passage.id));
+        setSelectedIds((prev) => {
+          if (!prev.has(passage.id)) return prev;
+          const next = new Set(prev);
+          next.delete(passage.id);
+          return next;
+        });
+        setDetailPassage(null);
+        await loadPassages();
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
+      } finally {
+        setDeletingDetailId(null);
+      }
+    },
+    [deletingDetailId, loadPassages],
+  );
 
   // ── Apply deep-link pre-selection once passages are loaded ──
   // Runs once — filters the incoming ?passageIds= against the academy-scoped
@@ -2798,6 +2831,8 @@ export function GeneratePageClient({
           }}
           reviewBusy={reviewActionPassageIds.has(detailPassage.id)}
           onToggleExtractionReview={handleToggleExtractionReview}
+          deleteBusy={deletingDetailId === detailPassage.id}
+          onDelete={handleDeleteDetailPassage}
         />
       )}
 

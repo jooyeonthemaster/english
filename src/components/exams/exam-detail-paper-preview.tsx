@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 import { incrementExamPrintCount } from "@/actions/exams";
 import { PreviewPages } from "./exam-paper-builder-client-parts/preview-pages";
@@ -387,7 +388,14 @@ function formatExamDate(value: string | Date | null): string {
   return Number.isNaN(date.getTime()) ? "" : formatDateInput(date);
 }
 
-export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
+export function ExamDetailPaperPreview({
+  exam,
+  className,
+}: {
+  exam: ExamDetail;
+  /** 컨테이너 높이 제어 — 미지정 시 상세 페이지용 기본 높이를 사용한다. */
+  className?: string;
+}) {
   const [isPending, startTransition] = useTransition();
   const [activeItemId, setActiveItemId] = useState<string | null>(null);
   const [draggingItemId, setDraggingItemId] = useState<string | null>(null);
@@ -522,7 +530,12 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
   const schools = exam.school ? [{ id: exam.school.id, name: exam.school.name }] : [];
 
   return (
-    <section className="flex h-[calc(100dvh-282px)] min-h-[620px] flex-col overflow-hidden rounded-xl border border-slate-200 bg-slate-100/70 shadow-sm">
+    <section
+      className={cn(
+        "flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-slate-100/70 shadow-sm",
+        className ?? "h-[calc(100dvh-282px)] min-h-[620px]",
+      )}
+    >
       <PreviewToolbar
         template={template}
         paperSize={paperSize}
@@ -535,7 +548,6 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
         onDownloadDocxWithAnswers={handleDownloadDocxWithAnswers}
         onDownloadHwpx={handleDownloadHwpx}
         onDownloadHwpxWithAnswers={handleDownloadHwpxWithAnswers}
-        onSave={() => toast.info("이미 저장된 시험지입니다.")}
       />
 
       <div className="relative min-h-0 flex-1 overflow-hidden bg-slate-100/70">
@@ -579,6 +591,8 @@ export function ExamDetailPaperPreview({ exam }: { exam: ExamDetail }) {
             updateCover={() => undefined}
             activeItemId={activeItemId}
             setActiveItemId={setActiveItemId}
+            lineCaret={null}
+            setLineCaret={() => undefined}
             updateHeader={() => undefined}
             updateItem={() => undefined}
             updateGroupPassage={() => undefined}
@@ -707,6 +721,8 @@ export function ExamFirstPagePreview({
         updateCover={noop}
         activeItemId={null}
         setActiveItemId={noop}
+        lineCaret={null}
+        setLineCaret={noop}
         updateHeader={noop}
         updateItem={noop}
         updateGroupPassage={noop}

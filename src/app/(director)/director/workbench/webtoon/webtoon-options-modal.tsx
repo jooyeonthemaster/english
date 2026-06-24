@@ -70,8 +70,8 @@ export function WebtoonOptionsModal({
 
   return (
     <Dialog open={open} onOpenChange={(v) => !submitting && onOpenChange(v)}>
-      <DialogContent className="max-h-[88vh] gap-0 overflow-hidden p-0 sm:max-w-md">
-        <DialogHeader className="border-b border-slate-100 px-5 py-4">
+      <DialogContent className="flex max-h-[88vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-md">
+        <DialogHeader className="shrink-0 border-b border-slate-100 px-5 py-4">
           <DialogTitle className="flex items-center gap-2 text-[15px] font-bold text-slate-900">
             <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
               <Palette className="size-4" aria-hidden="true" />
@@ -84,7 +84,7 @@ export function WebtoonOptionsModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="max-h-[60vh] space-y-4 overflow-y-auto px-5 py-4">
+        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-5 py-4">
           {/* 지문 미리보기 */}
           {passagePreview ? (
             <p className="line-clamp-2 rounded-lg bg-slate-50 px-3 py-2 text-[12px] leading-relaxed text-slate-500">
@@ -177,7 +177,7 @@ export function WebtoonOptionsModal({
         </div>
 
         {/* ── 생성 푸터 ── */}
-        <div className="border-t border-slate-100 px-5 py-3.5">
+        <div className="shrink-0 border-t border-slate-100 px-5 py-3.5">
           <Button
             onClick={handleConfirm}
             disabled={submitting}

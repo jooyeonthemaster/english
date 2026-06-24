@@ -56,7 +56,7 @@ export async function packageHwpx(doc: HwpxDocument): Promise<Buffer> {
   );
 
   // 6) Section XML (단일 섹션 가정 — Phase 0)
-  const registry = new ShapeRegistry();
+  const registry = new ShapeRegistry(doc.defaultFontKr, doc.defaultFontLatin);
   const sectionXmls = doc.sections.map((sec) =>
     buildSectionXml(sec, registry),
   );

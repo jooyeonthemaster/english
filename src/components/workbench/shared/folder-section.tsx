@@ -134,6 +134,11 @@ interface FolderSectionProps {
    *  (e.g. passage-list combining folders + filters + grid into one box).
    *  `stickyFooter` is ignored in this mode — the caller handles it. */
   embedded?: boolean;
+  /** When true, the FolderSection header row (identity + folder controls +
+   *  view/collapse toggles) is not rendered — only the folder browser remains.
+   *  Use when the caller supplies its own page header above the folder area.
+   *  Forces the grid folder browser (the view toggle is hidden). */
+  hideHeader?: boolean;
 }
 
 interface ParentFolderButtonProps {
@@ -308,6 +313,7 @@ export function FolderSection({
   stickyFooter,
   treatRootAsFolder = false,
   embedded = false,
+  hideHeader = false,
 }: FolderSectionProps) {
   const [collapsed, setCollapsed] = useState(false);
   const useCards = useCardInsideFolder && activeFolder;
@@ -631,6 +637,7 @@ export function FolderSection({
 
   const inner = (
     <>
+      {!hideHeader && (
       <div className="flex flex-col gap-1.5 border-b border-slate-100 px-4 py-1.5">
           {/* Header row: page/folder identity (left) + page-specific filters/actions (right) */}
           <div className="flex items-center gap-3 min-w-0">
@@ -871,8 +878,9 @@ export function FolderSection({
 
           {contextBar}
         </div>
+      )}
 
-        {!collapsed && (!enableFolderControls || viewMode === "grid") ? (
+        {!collapsed && (!enableFolderControls || viewMode === "grid" || hideHeader) ? (
           <>
           <div
             style={
@@ -1035,7 +1043,7 @@ export function FolderSection({
           </>
         ) : null}
 
-        {!collapsed && enableFolderControls && viewMode === "list" ? (
+        {!collapsed && enableFolderControls && viewMode === "list" && !hideHeader ? (
           <div
             style={{ height: listHeight }}
             className="flex flex-col bg-slate-50/70 px-3 py-2"

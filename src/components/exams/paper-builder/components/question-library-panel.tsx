@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Database, FileText, Filter, Rows3, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { QuestionBankCard } from "@/components/workbench/question-bank-card";
@@ -39,6 +39,9 @@ interface QuestionLibraryPanelProps {
   setSort: (value: string) => void;
   statusCounts: { all: number; pending: number; approved: number };
   paperQuestionCounts: Map<string, number>;
+  // 시험지 미리보기에서 현재 클릭한 문항 id. 해당 카드를 진한 파랑 테두리로 강조하고,
+  // 목록에서 보이지 않으면 스크롤로 끌어온다.
+  activeQuestionId?: string | null;
   // 체크박스/카드 선택 즉시 시험지 미리보기에 추가한다.
   onToggleSelect: (questionId: string) => void;
   setSelectedQuestionIds: (next: Set<string>) => void;
@@ -83,6 +86,7 @@ export function QuestionLibraryPanel({
   setSort,
   statusCounts,
   paperQuestionCounts,
+  activeQuestionId,
   onToggleSelect,
   setSelectedQuestionIds,
   onShowDetail,
@@ -105,6 +109,34 @@ export function QuestionLibraryPanel({
 }: QuestionLibraryPanelProps) {
   const [gridColumns, setGridColumns] = useState<QuestionGridCols>(2);
   const [libraryView, setLibraryView] = useState<"questions" | "passages">("questions");
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // 시험지 미리보기에서 문항을 클릭하면 좌측 목록의 해당 카드로 스크롤한다(이미 보이는
+  // 경우엔 가만히 둔다). 지문별 보기에서 접혀 있는 그룹은 카드가 DOM에 없을 수 있어
+  // 스크롤 대상이 없으면 조용히 넘어간다.
+  useEffect(() => {
+    if (!activeQuestionId) return;
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const target = container.querySelector<HTMLElement>(
+      `[data-question-card-id="${CSS.escape(activeQuestionId)}"]`,
+    );
+    if (!target) return;
+    const containerRect = container.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const fullyVisible =
+      targetRect.top >= containerRect.top &&
+      targetRect.bottom <= containerRect.bottom;
+    if (fullyVisible) return;
+    container.scrollTo({
+      top:
+        container.scrollTop +
+        targetRect.top -
+        containerRect.top -
+        (containerRect.height - targetRect.height) / 2,
+      behavior: "smooth",
+    });
+  }, [activeQuestionId, libraryView, gridColumns]);
   const [expandedPassageIds, setExpandedPassageIds] = useState<Record<string, boolean>>({});
   const questionById = useMemo(
     () => new Map(filteredQuestions.map((question) => [question.id, question])),
@@ -426,7 +458,7 @@ export function QuestionLibraryPanel({
         </div>
       )}
 
-      <div id="exam-question-bank-scroll" className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-4">
+      <div ref={scrollContainerRef} id="exam-question-bank-scroll" className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-4">
         {filteredQuestions.length === 0 ? (
           anyFilterActive && statusCounts.all > 0 ? (
             // 실제로는 문항이 있는데 필터가 전부 가린 경우 — 왜 비었는지 명확히 설명.
@@ -511,6 +543,7 @@ export function QuestionLibraryPanel({
             dragRequiresSelection
             getDragQuestionIds={buildDragQuestionIds}
             selectionOrder={selectionOrder}
+            activeQuestionId={activeQuestionId}
             usageCounts={paperQuestionCounts}
             collapsible
             expandedPassageIds={expandedPassageIds}
@@ -550,6 +583,7 @@ export function QuestionLibraryPanel({
                   dragRequiresSelection
                   getDragQuestionIds={buildDragQuestionIds}
                   selectionIndex={selectionOrder.get(question.id)}
+                  active={activeQuestionId === question.id}
                   duplicateCount={usageCount > 1 ? usageCount : undefined}
                   selectedCardHighlight={false}
                   collapsible

@@ -44,6 +44,8 @@ export interface NavItem {
   children?: NavChild[];
   comingSoon?: boolean;
   feature?: string;
+  /** 베타 기능 — 사이드바에 BETA 배지를 노출한다. */
+  beta?: boolean;
 }
 
 export interface NavGroup {
@@ -161,11 +163,14 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       title: "운영",
       directorOnly: true,
       items: [
-        { label: "튜터 운영 홈", icon: Users, href: `${basePath}/tutor`, directorOnly: true },
+        { label: "크레딧 관리", icon: Coins, href: `${basePath}/credits`, directorOnly: true },
+        { label: "리워드", icon: Gift, href: `${basePath}/rewards`, directorOnly: true },
+        { label: "튜터 운영 홈", icon: Users, href: `${basePath}/tutor`, directorOnly: true, beta: true },
         {
           label: "모바일 학습",
           icon: Smartphone,
           href: `${basePath}/tutor/programs`,
+          beta: true,
           children: [
             { label: "프로그램 관리", href: `${basePath}/tutor/programs` },
             ...(showResults
@@ -173,13 +178,11 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
               : []),
           ],
         },
-        { label: "배포 관리", icon: Send, href: `${basePath}/tutor/distributions`, directorOnly: true },
+        { label: "배포 관리", icon: Send, href: `${basePath}/tutor/distributions`, directorOnly: true, beta: true },
         ...(showResults
-          ? [{ label: "학습 현황", icon: Activity, href: `${basePath}/tutor/monitor`, directorOnly: true }]
+          ? [{ label: "학습 현황", icon: Activity, href: `${basePath}/tutor/monitor`, directorOnly: true, beta: true }]
           : []),
-        { label: "크레딧 관리", icon: Coins, href: `${basePath}/credits`, directorOnly: true },
-        { label: "리워드", icon: Gift, href: `${basePath}/rewards`, directorOnly: true },
-        { label: "공지사항", icon: Megaphone, href: `${basePath}/notices` },
+        { label: "공지사항", icon: Megaphone, href: `${basePath}/notices`, beta: true },
       ],
     },
     {

@@ -195,7 +195,14 @@ function enrichQuestionForDisplay(question: any, rawSourcePassageContent?: strin
     normalizedQuestion?._typeId === "TOPIC_MAIN_IDEA" ||
     normalizedQuestion?._typeId === "TITLE" ||
     normalizedQuestion?._typeId === "CONTENT_MATCH" ||
-    normalizedQuestion?._typeId === "SUMMARY_COMPLETE_MC";
+    normalizedQuestion?._typeId === "SUMMARY_COMPLETE_MC" ||
+    // 서술형 영작·요약 유형 — 펼친 카드에서 원문 지문이 사라지지 않도록 원문을 함께 싣는다.
+    // (각 렌더러가 <SourcePassageBlock> 로 원문을 인라인 표시 — 다른 유형과 동일한 레이아웃)
+    normalizedQuestion?._typeId === "CONDITIONAL_WRITING" ||
+    normalizedQuestion?._typeId === "SENTENCE_TRANSFORM" ||
+    normalizedQuestion?._typeId === "SUMMARY_COMPLETE" ||
+    normalizedQuestion?._typeId === "SUMMARY_WRITING" ||
+    normalizedQuestion?._typeId === "WORD_ORDER";
 
   if (sourceBackedType && sourcePassageContent) {
     return {

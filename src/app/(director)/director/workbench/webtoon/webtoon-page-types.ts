@@ -33,15 +33,15 @@ export type WebtoonStyleId = (typeof WEBTOON_STYLES)[number]["id"];
 export const WEBTOON_LANGUAGES = [
   {
     id: "KO",
-    label: "한글 전용",
-    short: "한글",
+    label: "한국어 전용",
+    short: "한국어",
     description: "대사·나레이션 모두 한국어",
   },
   {
     id: "KO_EN",
-    label: "한글 + 영어 병기",
+    label: "한국어 + 영어 병기",
     short: "한+영",
-    description: "영어 말풍선 + 한글 번역 캡션",
+    description: "영어 말풍선 + 한국어 번역 캡션",
   },
   {
     id: "EN",
@@ -51,9 +51,9 @@ export const WEBTOON_LANGUAGES = [
   },
   {
     id: "EN_KO_GLOSS",
-    label: "대사 영어 + 해설 한글",
+    label: "대사 영어 + 해설 한국어",
     short: "영(대사)·한(설명)",
-    description: "대사는 영어, 장면 설명·나레이션은 한글",
+    description: "대사는 영어, 장면 설명·나레이션은 한국어",
   },
 ] as const;
 

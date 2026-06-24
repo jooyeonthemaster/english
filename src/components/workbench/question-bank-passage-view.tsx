@@ -51,6 +51,8 @@ interface PassageGroupedViewProps {
   getDragQuestionIds?: (draggedId: string) => string[];
   getDuplicateDragQuestionIds?: (draggedId: string) => string[];
   selectionOrder?: Map<string, number>;
+  // 시험지 미리보기에서 현재 클릭한 문항 id — 해당 카드를 진한 파랑 테두리로 강조한다.
+  activeQuestionId?: string | null;
   disabledIds?: Set<string>;
   duplicateSelectedIds?: Set<string>;
   usageCounts?: Map<string, number>;
@@ -119,6 +121,7 @@ export function PassageGroupedView({
   getDragQuestionIds,
   getDuplicateDragQuestionIds,
   selectionOrder,
+  activeQuestionId,
   disabledIds,
   duplicateSelectedIds,
   usageCounts,
@@ -490,6 +493,7 @@ export function PassageGroupedView({
                           getDragQuestionIds={getDragQuestionIds}
                           getDuplicateDragQuestionIds={getDuplicateDragQuestionIds}
                           selectionIndex={selectionOrder?.get(q.id)}
+                          active={activeQuestionId === q.id}
                           selectionDisabled={disabled}
                           collapsible={collapsible}
                           duplicateCount={usageCount > 1 ? usageCount : undefined}

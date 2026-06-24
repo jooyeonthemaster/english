@@ -38,6 +38,7 @@ import type {
   RenderItemPart,
   StructRowStyle,
 } from "./types";
+import { LINE_GAP_MAX_PX, isLineGapItem } from "./types";
 
 // 줄당 문자 폭 보정 계수. 미리보기/다운로드 글꼴을 맑은 고딕으로 통일하면서
 // 조정했다. 맑은 고딕의 라틴 글리프가 Pretendard보다 약간 넓어 한 줄에 들어가는
@@ -621,7 +622,10 @@ function estimateCustomBlockHeight(item: PaperItem, settings: PaginationSettings
     case "divider":
       return 18 + Math.max(1, item.dividerThickness);
     case "spacer":
-      return Math.max(8, Math.min(160, item.spacerHeight || 32));
+      // line-gap 빈 줄은 한 줄씩 일관되게 자라도록 더 큰 상한까지 그대로 반영한다.
+      return isLineGapItem(item)
+        ? Math.max(8, Math.min(LINE_GAP_MAX_PX, item.spacerHeight || 32))
+        : Math.max(8, Math.min(160, item.spacerHeight || 32));
     case "image":
       return Math.max(80, Math.min(260, (columnWidth * Math.max(20, Math.min(100, item.imageWidth || 70))) / 140));
     case "question":
@@ -675,7 +679,11 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     const last = col[col.length - 1];
     if (last && last.groupSourceId === group.id) return last;
 
-    const gap = col.length > 0 ? GROUP_GAP : 0;
+    // line-gap 빈 줄 묶음은 블록 사이 기본 여백(GROUP_GAP)을 더하지 않는다 — 렌더의
+    // -mt-4 상쇄와 1:1로 맞춰 엔터 한 번이 항상 한 줄 높이만 차지하게 한다.
+    const isLineGapGroup =
+      group.items.length === 1 && isLineGapItem(group.items[0]);
+    const gap = col.length > 0 && !isLineGapGroup ? GROUP_GAP : 0;
     const fragment: RenderFragment = {
       id: `${group.id}@p${pageIndex}c${columnIndex}n${col.length}`,
       passageTitle: group.passageTitle,
@@ -728,8 +736,11 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     const sameFragment = !!lastFrag && lastFrag.groupSourceId === block.group.id;
     let cost = block.height;
 
+    // line-gap 빈 줄 묶음은 GROUP_GAP 을 더하지 않는다(ensureFragment 와 동일 규칙).
+    const isLineGapGroup =
+      block.group.items.length === 1 && isLineGapItem(block.group.items[0]);
     if (!sameFragment) {
-      cost += col.length > 0 ? GROUP_GAP : 0;
+      cost += col.length > 0 && !isLineGapGroup ? GROUP_GAP : 0;
     }
 
     if (block.kind === "passage-line") {

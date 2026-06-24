@@ -44,6 +44,9 @@ interface PreviewPagesProps {
   updateCover: (patch: Partial<PaperCover>) => void;
   activeItemId: string | null;
   setActiveItemId: (id: string | null) => void;
+  // 워드프로세서식 빈 줄 캐럿 — 문제 사이 간격 클릭 위치(afterLocalId = 캐럿 위 항목, null=맨 앞).
+  lineCaret: { afterLocalId: string | null } | null;
+  setLineCaret: (caret: { afterLocalId: string | null } | null) => void;
   updateHeader: (patch: HeaderPatch) => void;
   updateItem: (localId: string, patch: Partial<PaperItem>) => void;
   updateGroupPassage: (
@@ -153,6 +156,8 @@ export function PreviewPages(props: PreviewPagesProps) {
               pageColumns={pageColumns}
               activeItemId={props.activeItemId}
               setActiveItemId={props.setActiveItemId}
+              lineCaret={props.lineCaret}
+              setLineCaret={props.setLineCaret}
               onHeaderChange={props.updateHeader}
               onUpdateItem={props.updateItem}
               onUpdateGroupPassage={props.updateGroupPassage}

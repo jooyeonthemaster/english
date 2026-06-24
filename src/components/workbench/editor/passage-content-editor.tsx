@@ -49,6 +49,10 @@ interface Props {
   onStats?: (stats: { chars: number; words: number }) => void;
   /** Allow forcing read-only (disables all edits + toolbar). */
   readOnly?: boolean;
+  /** Hide the formatting toolbar while keeping the editor editable. Inline
+   *  formatting never persists (plain text only), so contexts where it has no
+   *  effect (e.g. 웹툰 생성) can drop the toolbar to avoid confusion. */
+  hideToolbar?: boolean;
 }
 
 /** Plain text → simple <p><br></p> HTML. Double-newline = paragraph break. */
@@ -87,6 +91,7 @@ export function PassageContentEditor({
   placeholder,
   onStats,
   readOnly = false,
+  hideToolbar = false,
 }: Props) {
   // Capture the first-render plain text so TipTap initialises once. Subsequent
   // external updates to `content` flow through the useEffect below so the
@@ -158,7 +163,7 @@ export function PassageContentEditor({
   return (
     <div className="flex h-full min-h-0 w-full flex-col bg-white">
       {/* ─── Toolbar ─────────────────────────────────────────────── */}
-      {!readOnly ? <EditorToolbar editor={editor} /> : null}
+      {!readOnly && !hideToolbar ? <EditorToolbar editor={editor} /> : null}
 
       {/* ─── Editor surface ──────────────────────────────────────── */}
       <div className="min-h-0 flex-1 overflow-y-auto">

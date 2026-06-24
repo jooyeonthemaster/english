@@ -138,6 +138,10 @@ export function QuestionBankCard({
   duplicateCount,
   onDuplicateSelectConfirm,
   selectedCardHighlight = true,
+  // 시험지 미리보기에서 지금 '보고 있는'(클릭한) 문항이면 카드 테두리를 진한 파랑으로
+  // 강조하고, 보이지 않으면 스크롤로 끌어온다(스크롤 anchor는 data-question-card-id).
+  // selected(시험지에 포함됨)와는 별개의 시각 상태다.
+  active = false,
   // 접힘(콤팩트) 모드 — 시험지 빌더 등 목록을 콤팩트하게 볼 때. 기본은 펼침(전체) 유지.
   collapsible = false,
   // 접힌(콤팩트) 카드일 때만 적용할 min-height 클래스. 같은 줄의 접힌 카드들을
@@ -190,6 +194,8 @@ export function QuestionBankCard({
   onDuplicateSelectConfirm?: () => void;
   // 시험지 빌더처럼 체크박스/순서 뱃지만으로 선택 상태를 표시할 때 카드 배경 강조를 끈다.
   selectedCardHighlight?: boolean;
+  // 시험지 미리보기에서 현재 클릭한 문항이면 진한 파란 테두리로 강조한다.
+  active?: boolean;
   collapsible?: boolean;
   collapsedMinHeightClass?: string;
   embedded?: boolean;
@@ -465,13 +471,16 @@ export function QuestionBankCard({
     <Card
       ref={dragRef}
       data-drag-item-id={selectionDisabled ? undefined : q.id}
+      data-question-card-id={q.id}
       onMouseDown={preventCardDoubleClickTextSelection}
       onClick={handleCardClick}
       onDoubleClick={handleCardDoubleClick}
       className={`${onDetail || onEdit || (cardClickSelects && !selectionDisabled) ? "cursor-pointer" : ""} group relative flex h-full flex-col gap-0 py-0 ${isDragging ? "opacity-40 scale-95" : ""} ${
-        selected && selectedCardHighlight
-          ? "ring-2 ring-blue-400 bg-blue-50/30"
-          : "hover:shadow-md"
+        active
+          ? "ring-2 ring-blue-500 ring-offset-1 bg-blue-50/40 shadow-md"
+          : selected && selectedCardHighlight
+            ? "ring-2 ring-blue-400 bg-blue-50/30"
+            : "hover:shadow-md"
       } ${
         selectionDisabled
           ? "border-slate-200 bg-slate-100/80 text-slate-400 shadow-none hover:shadow-none"

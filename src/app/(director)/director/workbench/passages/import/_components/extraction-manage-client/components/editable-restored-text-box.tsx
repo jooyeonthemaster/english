@@ -3,6 +3,9 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Loader2, RefreshCw } from "lucide-react";
 
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { Input } from "@/components/ui/input";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 import {
   buildHighlightedSegments,
   type InlineRestorationChange,
@@ -28,6 +31,12 @@ interface EditableRestoredTextBoxProps {
   onRerestore?: () => void;
   isRerestoring?: boolean;
   rerestoreDisabled?: boolean;
+  /** 복원문 제목 입력칸 — onTitleChange 가 있을 때만 헤더 아래에 노출된다.
+   *  값은 로컬 편집용, onTitleCommit(blur/Enter) 에서 저장한다. */
+  title?: string;
+  titlePlaceholder?: string;
+  onTitleChange?: (value: string) => void;
+  onTitleCommit?: () => void;
 }
 
 export function EditableRestoredTextBox({
@@ -42,6 +51,10 @@ export function EditableRestoredTextBox({
   onRerestore,
   isRerestoring = false,
   rerestoreDisabled = false,
+  title,
+  titlePlaceholder,
+  onTitleChange,
+  onTitleCommit,
 }: EditableRestoredTextBoxProps) {
   const highlightRef = useRef<HTMLDivElement | null>(null);
 
@@ -62,9 +75,32 @@ export function EditableRestoredTextBox({
               <RefreshCw className="size-3" aria-hidden="true" />
             )}
             AI 복원 다시 실행
+            <CreditCostChip
+              amount={CREDIT_COSTS.PASSAGE_RESTORATION}
+              className="text-blue-700"
+              title={`AI 복원 다시 실행은 크레딧 ${CREDIT_COSTS.PASSAGE_RESTORATION}을 소모합니다`}
+            />
           </button>
         ) : null}
       </div>
+      {onTitleChange ? (
+        <div className="flex shrink-0 items-center gap-2 border-b border-slate-100 px-3 py-2">
+          <Input
+            value={title ?? ""}
+            onChange={(event) => onTitleChange(event.target.value)}
+            onBlur={onTitleCommit}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                event.currentTarget.blur();
+              }
+            }}
+            placeholder={titlePlaceholder || "제목"}
+            maxLength={200}
+            className="h-8 border-slate-200 text-[12.5px] font-semibold"
+          />
+        </div>
+      ) : null}
       <div className="relative min-h-0 flex-1">
         <div
           ref={highlightRef}
@@ -81,6 +117,12 @@ export function EditableRestoredTextBox({
             onSelectChange={onSelectChange}
           />
         </div>
+        {/* `leading-7!` (forced) is load-bearing: the global large-UI rule
+            `body.smoat-large-ui :where(...textarea...) { line-height: 1.35 }`
+            (globals.css) out-specifies a plain `leading-7` and would set this
+            textarea's line-height to ~19px while the highlight <div> stays at
+            28px. Mismatched line-heights drift the caret away from the visible
+            glyphs line by line. !important pins it back to match the div. */}
         <textarea
           aria-label="복원문 수정"
           value={value}
@@ -92,7 +134,7 @@ export function EditableRestoredTextBox({
             el.scrollLeft = event.currentTarget.scrollLeft;
           }}
           spellCheck={false}
-          className="absolute inset-0 h-full w-full resize-none overflow-y-auto rounded-b-lg border-0 bg-transparent px-4 py-3 text-[14px] leading-7 text-transparent caret-slate-950 outline-none selection:bg-sky-200/60 focus:ring-2 focus:ring-sky-200"
+          className="absolute inset-0 h-full w-full resize-none overflow-y-auto rounded-b-lg border-0 bg-transparent px-4 py-3 text-[14px] leading-7! text-transparent caret-slate-950 outline-none selection:bg-sky-200/60 focus:ring-2 focus:ring-sky-200"
         />
       </div>
     </div>

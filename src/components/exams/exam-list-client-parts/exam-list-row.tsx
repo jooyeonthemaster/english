@@ -3,8 +3,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { Calendar, Check, FileSearch, PencilLine, Trash2 } from "lucide-react";
-import { cn, formatDate } from "@/lib/utils";
+import { Check, FileSearch, PencilLine, Trash2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { STATUS_COLORS, STATUS_LABELS, TYPE_COLORS, TYPE_LABELS } from "./constants";
 import type { ExamItem } from "./types";
@@ -141,12 +141,6 @@ export function ExamListRow({
       {/* Class */}
       <span className="text-[11px] text-slate-500 w-16 truncate shrink-0">
         {exam.class?.name || "-"}
-      </span>
-
-      {/* Date */}
-      <span className="inline-flex items-center gap-1 text-[11px] text-slate-500 w-20 shrink-0">
-        <Calendar className="w-3 h-3 text-slate-400" />
-        {exam.examDate ? formatDate(exam.examDate) : "미정"}
       </span>
 
       {/* Questions */}

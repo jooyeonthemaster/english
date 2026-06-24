@@ -5,9 +5,9 @@ import {
   ArrowLeft,
   CheckCircle2,
   FileText,
-  GraduationCap,
   Loader2,
   Save,
+  Trash2,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -76,6 +76,9 @@ interface ExtractionDetailModalProps {
   ) => void;
   reviewBusy?: boolean;
   onToggleExtractionReview?: (passage: PassageItem) => void;
+  /** 지문 삭제 — 제공된 경우에만 헤더에 삭제 버튼을 노출한다. */
+  deleteBusy?: boolean;
+  onDelete?: (passage: PassageItem) => void;
 }
 
 /**
@@ -92,6 +95,8 @@ export function ExtractionDetailModal({
   onPassageSaved,
   reviewBusy = false,
   onToggleExtractionReview,
+  deleteBusy = false,
+  onDelete,
 }: ExtractionDetailModalProps) {
   const [draft, setDraft] = useState<M1PassageDraftWithJob | null>(null);
   const [loading, setLoading] = useState(true);
@@ -430,6 +435,21 @@ export function ExtractionDetailModal({
                     : "추출·입력된 지문"}
             </p>
           </div>
+          {onDelete && !reportEditorOpen ? (
+            <button
+              type="button"
+              onClick={() => onDelete(passage)}
+              disabled={deleteBusy}
+              className="ml-2 inline-flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 text-[12px] font-bold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {deleteBusy ? (
+                <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+              ) : (
+                <Trash2 className="size-3.5" aria-hidden="true" />
+              )}
+              삭제
+            </button>
+          ) : null}
           {reportEditorOpen ? (
             <button
               type="button"
@@ -439,21 +459,25 @@ export function ExtractionDetailModal({
               <ArrowLeft className="size-3.5" aria-hidden="true" />
               뒤로가기
             </button>
-          ) : (
-            <>
-              {/* 학습자료 열기 — 생성된 지문에만, 생성 버튼 왼쪽으로 밀어둔다. */}
-              {generatedReport ? (
-                <button
-                  type="button"
-                  onClick={openReportEditor}
-                  className="ml-2 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 text-[12px] font-bold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100"
-                >
-                  <GraduationCap className="size-3.5" aria-hidden="true" />
-                  학습자료 열기
-                </button>
-              ) : null}
-            </>
-          )}
+          ) : draft ? (
+            // 복원문 섹션에 있던 저장 버튼을 창 오른쪽 위로 옮김.
+            <button
+              type="button"
+              onClick={handleSaveEdits}
+              disabled={
+                saving || analysisRunning || editorContent.trim().length < 20
+              }
+              title="제목·복원문 수정 내용을 저장합니다 (학습자료 생성 없이)"
+              className="ml-2 inline-flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-bold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {saving ? (
+                <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+              ) : (
+                <Save className="size-3.5" aria-hidden="true" />
+              )}
+              저장
+            </button>
+          ) : null}
           {reviewDraft && onToggleExtractionReview ? (
             <button
               type="button"
@@ -517,11 +541,8 @@ export function ExtractionDetailModal({
               draft={draft}
               title={editorTitle}
               content={editorContent}
-              analysisRunning={analysisRunning}
-              saving={saving}
               onTitleChange={setEditorTitle}
               onContentChange={setEditorContent}
-              onSaveEdits={handleSaveEdits}
               hasActiveReportJob={!!activeReportJobId}
             />
           ) : (
@@ -541,26 +562,19 @@ function InlineStudyAnalysisWorkspace({
   draft,
   title,
   content,
-  analysisRunning,
   hasActiveReportJob,
-  saving,
   onTitleChange,
   onContentChange,
-  onSaveEdits,
 }: {
   draft: M1PassageDraftWithJob;
   title: string;
   content: string;
-  analysisRunning: boolean;
   hasActiveReportJob: boolean;
-  saving: boolean;
   onTitleChange: (value: string) => void;
   onContentChange: (value: string) => void;
-  onSaveEdits: () => void;
 }) {
   const [hoveredChangeId, setHoveredChangeId] = useState<string | null>(null);
   const [activeChangeId, setActiveChangeId] = useState<string | null>(null);
-  const hasContent = content.trim().length >= 20;
 
   // ─── 복원 근거 (원문/복원문 형광펜 + 변경 카드) ───
   // 자료 추출 페이지의 PassageCompare 와 동일하게 draft.changes 로부터 인라인
@@ -614,28 +628,12 @@ function InlineStudyAnalysisWorkspace({
           <div className="min-w-0">
             <span className="text-[13px] font-bold text-slate-900">복원문</span>
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            {hasActiveReportJob ? (
-              <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-bold text-blue-600">
-                <Loader2 className="size-3 animate-spin" aria-hidden="true" />
-                생성 중
-              </span>
-            ) : null}
-            <button
-              type="button"
-              onClick={onSaveEdits}
-              disabled={saving || analysisRunning || !hasContent}
-              title="제목·복원문 수정 내용을 저장합니다 (학습자료 생성 없이)"
-              className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-blue-200 bg-white px-2.5 text-[11.5px] font-bold text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {saving ? (
-                <Loader2 className="size-3 animate-spin" aria-hidden="true" />
-              ) : (
-                <Save className="size-3" aria-hidden="true" />
-              )}
-              저장
-            </button>
-          </div>
+          {hasActiveReportJob ? (
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-bold text-blue-600">
+              <Loader2 className="size-3 animate-spin" aria-hidden="true" />
+              생성 중
+            </span>
+          ) : null}
         </div>
         <div className="flex shrink-0 items-center gap-2 border-b border-slate-100 px-3 py-2">
           <Input

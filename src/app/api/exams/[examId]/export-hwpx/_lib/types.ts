@@ -183,6 +183,9 @@ export interface SectionSpec {
 export interface HwpxDocument {
   title: string;
   sections: SectionSpec[];
+  // 템플릿(세리프/산세리프)에 따른 본문 기본 글꼴. 미설정 시 ShapeRegistry 기본값 사용.
+  defaultFontKr?: string;
+  defaultFontLatin?: string;
 }
 
 // =============================================================================

@@ -19,12 +19,20 @@ export function PassageCompare({
   onRerestore,
   isRerestoring,
   rerestoreDisabled,
+  title,
+  titlePlaceholder,
+  onTitleChange,
+  onTitleCommit,
 }: {
   draft: M1PassageDraftWithJob;
   onTextChange: (value: string) => void;
   onRerestore?: () => void;
   isRerestoring?: boolean;
   rerestoreDisabled?: boolean;
+  title?: string;
+  titlePlaceholder?: string;
+  onTitleChange?: (value: string) => void;
+  onTitleCommit?: () => void;
 }) {
   const displayTeacherText = useMemo(
     () => formatExtractedTextForDisplay(draft.teacherText),
@@ -66,20 +74,14 @@ export function PassageCompare({
   }, [highlightableChanges, displayTeacherText]);
   const [hoveredChangeId, setHoveredChangeId] = useState<string | null>(null);
   const [activeChangeId, setActiveChangeId] = useState<string | null>(null);
-  // Show the side panel whenever we have something meaningful to surface,
-  // otherwise collapse back to the original two-pane layout.
-  const showPanel = inlineChanges.length > 0;
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4">
-      <div
-        className={
-          "grid min-h-0 flex-1 gap-4 [grid-auto-rows:minmax(0,1fr)] " +
-          (showPanel
-            ? "grid-cols-[minmax(0,1fr)_minmax(0,1fr)_340px]"
-            : "grid-cols-2")
-        }
-      >
+      {/* The 복원 근거 column is always rendered (even with zero inline
+          changes) so the layout never jumps when an "AI 복원 다시 실행" run
+          happens to return no sentence-level evidence. The panel shows its
+          own empty state in that case. */}
+      <div className="grid min-h-0 flex-1 gap-4 [grid-auto-rows:minmax(0,1fr)] grid-cols-[minmax(0,1fr)_minmax(0,1fr)_340px]">
         <OriginalProblemBox
           draft={draft}
           changes={highlightableChanges}
@@ -100,17 +102,20 @@ export function PassageCompare({
           onRerestore={onRerestore}
           isRerestoring={isRerestoring}
           rerestoreDisabled={rerestoreDisabled}
+          title={title}
+          titlePlaceholder={titlePlaceholder}
+          onTitleChange={onTitleChange}
+          onTitleCommit={onTitleCommit}
         />
-        {showPanel ? (
-          <RestorationChangesPanel
-            changes={inlineChanges}
-            orphanChangeIds={orphanChangeIds}
-            hoveredChangeId={hoveredChangeId}
-            activeChangeId={activeChangeId}
-            onHoverChange={setHoveredChangeId}
-            onSelectChange={setActiveChangeId}
-          />
-        ) : null}
+        <RestorationChangesPanel
+          changes={inlineChanges}
+          orphanChangeIds={orphanChangeIds}
+          hoveredChangeId={hoveredChangeId}
+          activeChangeId={activeChangeId}
+          onHoverChange={setHoveredChangeId}
+          onSelectChange={setActiveChangeId}
+          restorationStatus={draft.restorationStatus}
+        />
       </div>
     </div>
   );

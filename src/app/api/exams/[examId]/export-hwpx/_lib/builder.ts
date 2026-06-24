@@ -28,6 +28,8 @@ import {
   shouldRenderSourcePassageInsideQuestion,
 } from "@/components/exams/paper-builder/passage-policy";
 import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
+import { LINE_GAP_MARKER } from "@/components/exams/paper-builder/types";
+import { bodyFontForTemplate } from "@/app/api/exams/[examId]/export-docx/_lib/styles";
 import type {
   BuilderBlock,
   BuilderHeader,
@@ -238,6 +240,24 @@ function renderCustomBlock(
   }
 
   if (block.blockType === "spacer") {
+    // 워드프로세서식 빈 줄(line-gap): 미리보기에서 Enter 한 번 = 본문 한 줄이므로,
+    // 한글에서도 "본문 한 줄"과 똑같은 높이(빈 단락 한 줄)로 렌더한다. 빈 runs 는 기본
+    // 10pt 로 줄높이가 잡혀 본문(9pt)보다 커지므로, 본문 크기의 빈 run 을 넣어 줄높이를
+    // 본문 한 줄(size×lineSpacingPct)로 정확히 맞추고 추가 spaceAfter 는 두지 않는다.
+    if (block.blockText === LINE_GAP_MARKER) {
+      const bodySize = compact ? SIZE.bodyCompact : SIZE.body;
+      return [
+        {
+          kind: "p",
+          style: {
+            spaceBefore: 0,
+            spaceAfter: 0,
+            lineSpacingPct: compact ? 146 : 158,
+          },
+          runs: [txt("", { size: bodySize })],
+        },
+      ];
+    }
     return [
       {
         kind: "p",
@@ -584,6 +604,8 @@ export function buildBuilderHwpxDocument(
   opts: BuildHwpxOptions,
 ): HwpxDocument {
   const { title, settings, resolvedItems, includeAnswers } = opts;
+  // 템플릿(세리프/산세리프)별 본문 글꼴 — 미리보기·DOCX 와 동일 기준으로 통일.
+  const bodyFont = bodyFontForTemplate(settings?.template);
   const header: BuilderHeader = settings?.header ?? {};
   const layout: BuilderLayout = settings?.layout ?? {};
   const compact = layout.density === "compact";
@@ -709,7 +731,7 @@ export function buildBuilderHwpxDocument(
       headerApplyFirstOnly: false,
       blocks: bodyBlocks,
     };
-    return { title, sections: [section] };
+    return { title, sections: [section], defaultFontKr: bodyFont, defaultFontLatin: bodyFont };
   }
 
   const blocks: BlockNode[] = [];
@@ -1013,5 +1035,5 @@ export function buildBuilderHwpxDocument(
     blocks,
   };
 
-  return { title, sections: [section] };
+  return { title, sections: [section], defaultFontKr: bodyFont, defaultFontLatin: bodyFont };
 }

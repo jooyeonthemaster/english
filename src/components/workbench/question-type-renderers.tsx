@@ -445,6 +445,7 @@ export function ConditionalWritingRenderer({ q }: { q: ConditionalWritingQuestio
   return (
     <>
       <Direction text={q.direction} />
+      <SourcePassageBlock q={q as ConditionalWritingQuestion & { _sourcePassageContent?: unknown }} />
       <GivenSentenceBox sentence={q.referenceSentence} label="영작할 우리말" />
       <ConditionsBox conditions={q.conditions} />
       <AnswerRevealSection>
@@ -463,6 +464,7 @@ export function SentenceTransformRenderer({ q }: { q: SentenceTransformQuestion 
   return (
     <>
       <Direction text={q.direction} />
+      <SourcePassageBlock q={q as SentenceTransformQuestion & { _sourcePassageContent?: unknown }} />
       <GivenSentenceBox sentence={q.originalSentence} label="원래 문장" />
       <ConditionsBox conditions={q.conditions} label="전환 조건" blockId="conditions" />
       <AnswerRevealSection>
@@ -497,6 +499,7 @@ export function SummaryCompleteRenderer({ q }: { q: SummaryCompleteQuestion }) {
   return (
     <>
       <Direction text={q.direction} />
+      <SourcePassageBlock q={q as SummaryCompleteQuestion & { _sourcePassageContent?: unknown }} />
       <PassageBlock label="요약문">{renderBlanks(q.summaryWithBlanks)}</PassageBlock>
       <AnswerRevealSection>
         <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 space-y-1">
@@ -534,6 +537,7 @@ export function SummaryWritingRenderer({ q }: { q: SummaryWritingQuestion }) {
   return (
     <>
       <Direction text={q.direction} />
+      <SourcePassageBlock q={q as SummaryWritingQuestion & { _sourcePassageContent?: unknown }} />
       {/* [해석] — 회색(slate) 박스. orange/amber 금지. PassageBlock=slate-50 */}
       {koreanGloss && <PassageBlock label="해석">{koreanGloss}</PassageBlock>}
       {/* [요약문] — (A)(B) 파란 배지 + 파란 밑줄선. 마스킹 통과본만(정답어구 미포함) */}
@@ -583,6 +587,7 @@ export function WordOrderRenderer({ q }: { q: WordOrderQuestion }) {
   return (
     <>
       <Direction text={q.direction} />
+      <SourcePassageBlock q={q as WordOrderQuestion & { _sourcePassageContent?: unknown }} />
       {q.contextHint && (
         <div className="text-[12px] text-slate-500 italic">{q.contextHint}</div>
       )}

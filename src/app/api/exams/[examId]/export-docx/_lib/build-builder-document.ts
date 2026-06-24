@@ -20,7 +20,7 @@ import {
   WidthType,
 } from "docx";
 import { bdr, noBorders, NONE, thinBox } from "./borders";
-import { COLOR, FONT, KR_FONT } from "./styles";
+import { COLOR, FONT, KR_FONT, bodyFontForTemplate } from "./styles";
 import { parseFormattedText } from "./parse-formatted-text";
 import { buildAnswerKeyTable } from "./build-answer-key";
 import { safeParseJSON } from "./helpers";
@@ -39,6 +39,7 @@ import {
   shouldRenderSourcePassageInsideQuestion,
 } from "@/components/exams/paper-builder/passage-policy";
 import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
+import { LINE_GAP_MARKER } from "@/components/exams/paper-builder/types";
 import { normalizeQuestionText } from "@/components/exams/paper-builder/text-normalization";
 import { sentenceOrderSegmentsFromQuestionText } from "@/components/exams/paper-builder/question-body-layout";
 import {
@@ -53,6 +54,10 @@ import {
 import { isSummaryWriting } from "@/lib/summary-writing";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
+
+// 템플릿(세리프/산세리프)에 따라 본문 글꼴이 달라진다. buildBuilderExamDocument 시작 시
+// settings.template 로 1회 설정하고(동기 빌드라 레이스 없음) 모든 텍스트 런에서 사용한다.
+let bodyFont: string = KR_FONT;
 
 /*
  * 빌더 미리보기(A4PaperPage)와 1:1로 매칭되는 시험지 DOCX 빌더.
@@ -277,7 +282,7 @@ function buildPage1Header(
         children: [
           new TextRun({
             text: subtitle.toUpperCase(),
-            font: KR_FONT,
+            font: bodyFont,
             size: SIZE_SUBTITLE,
             bold: true,
             color: COLOR.gray,
@@ -293,7 +298,7 @@ function buildPage1Header(
       children: [
         new TextRun({
           text: title,
-          font: KR_FONT,
+          font: bodyFont,
           size: titleSize,
           bold: true,
           color: COLOR.black,
@@ -397,7 +402,7 @@ function buildPage1Header(
         children: [
           new TextRun({
             text: instructions,
-            font: KR_FONT,
+            font: bodyFont,
             size: SIZE_INSTRUCTIONS,
             color: COLOR.gray,
           }),
@@ -443,7 +448,7 @@ function buildInfoBlock(opts: {
                 children: [
                   new TextRun({
                     text: row.label,
-                    font: KR_FONT,
+                    font: bodyFont,
                     size: SIZE_INFO,
                     color: COLOR.darkGray,
                   }),
@@ -466,7 +471,7 @@ function buildInfoBlock(opts: {
                 children: [
                   new TextRun({
                     text: row.value || " ",
-                    font: KR_FONT,
+                    font: bodyFont,
                     size: SIZE_INFO,
                     bold: Boolean(row.value),
                     color: COLOR.black,
@@ -524,7 +529,7 @@ function buildPassage(opts: {
           children: [
             new TextRun({
               text: passageTitle.toUpperCase(),
-              font: KR_FONT,
+              font: bodyFont,
               size: SIZE_PASSAGE_TITLE,
               bold: true,
               color: COLOR.darkGray,
@@ -601,7 +606,7 @@ function buildGivenBox(text: string, bodySize: number, lh: number): DocChild[] {
       children: [
         new TextRun({
           text: "주어진 문장",
-          font: KR_FONT,
+          font: bodyFont,
           size: SIZE_META,
           bold: true,
           color: COLOR.gray,
@@ -612,7 +617,7 @@ function buildGivenBox(text: string, bodySize: number, lh: number): DocChild[] {
     new Paragraph({
       alignment: AlignmentType.JUSTIFIED,
       spacing: { after: 80, ...exactLineSpacing(bodySize, lh) },
-      children: parseFormattedText(text, { font: KR_FONT, size: bodySize, bold: true }),
+      children: parseFormattedText(text, { font: bodyFont, size: bodySize, bold: true }),
     }),
   ];
 }
@@ -713,7 +718,7 @@ function buildQuestionBlock(
   const headerRuns: TextRun[] = [
     new TextRun({
       text: `${orderNum}. `,
-      font: KR_FONT,
+      font: bodyFont,
       size: qNumSize,
       bold: true,
       color: COLOR.black,
@@ -724,7 +729,7 @@ function buildQuestionBlock(
     headerRuns.push(
       new TextRun({
         text: metaText,
-        font: KR_FONT,
+        font: bodyFont,
         size: SIZE_META,
         color: COLOR.gray,
       }),
@@ -735,7 +740,7 @@ function buildQuestionBlock(
   if (headerQuestionText) {
     headerRuns.push(
       ...parseFormattedText(headerQuestionText, {
-        font: KR_FONT,
+        font: bodyFont,
         size: bodySize,
         bold: true,
       }),
@@ -779,13 +784,13 @@ function buildQuestionBlock(
             children: [
               new TextRun({
                 text: "[해석] ",
-                font: KR_FONT,
+                font: bodyFont,
                 size: bodySize,
                 bold: true,
                 color: COLOR.gray,
               }),
               ...parseFormattedText(sw.gloss, {
-                font: KR_FONT,
+                font: bodyFont,
                 size: bodySize,
                 color: COLOR.gray,
               }),
@@ -802,7 +807,7 @@ function buildQuestionBlock(
             children: [
               new TextRun({
                 text: "[요약문] ",
-                font: KR_FONT,
+                font: bodyFont,
                 size: bodySize,
                 bold: true,
               }),
@@ -825,7 +830,7 @@ function buildQuestionBlock(
             children: [
               new TextRun({
                 text: "[보기] ",
-                font: KR_FONT,
+                font: bodyFont,
                 size: bodySize,
                 bold: true,
               }),
@@ -845,7 +850,7 @@ function buildQuestionBlock(
             children: [
               new TextRun({
                 text: "[앞글자] ",
-                font: KR_FONT,
+                font: bodyFont,
                 size: SIZE_META,
                 bold: true,
                 color: COLOR.gray,
@@ -890,7 +895,7 @@ function buildQuestionBlock(
             children: [
               new TextRun({
                 text: "\u2193",
-                font: KR_FONT,
+                font: bodyFont,
                 size: bodySize,
                 bold: true,
                 color: COLOR.gray,
@@ -909,7 +914,7 @@ function buildQuestionBlock(
                 ? [
                     new TextRun({
                       text: "[\uC694\uC57D\uBB38] ",
-                      font: KR_FONT,
+                      font: bodyFont,
                       size: bodySize,
                       bold: true,
                     }),
@@ -937,13 +942,13 @@ function buildQuestionBlock(
               children: [
                 new TextRun({
                   text: `${segment.label} `,
-                  font: KR_FONT,
+                  font: bodyFont,
                   size: bodySize,
                   bold: true,
                   color: COLOR.black,
                 }),
                 ...parseFormattedText(segment.text, {
-                  font: KR_FONT,
+                  font: bodyFont,
                   size: bodySize,
                   bold: true,
                   markerColor: COLOR.black,
@@ -957,7 +962,7 @@ function buildQuestionBlock(
               alignment: AlignmentType.JUSTIFIED,
               spacing: { before: 0, after: 60, ...exactLineSpacing(bodySize, lh) },
               children: parseFormattedText(segment.text, {
-                font: KR_FONT,
+                font: bodyFont,
                 size: bodySize,
                 bold: true,
                 markerColor: COLOR.black,
@@ -1023,9 +1028,9 @@ function buildQuestionBlock(
           keepNext: idx === bodyQuestionParagraphs.length - 1 && options.length > 0,
           children:
             trimmed.length === 0
-              ? [new TextRun({ text: " ", font: KR_FONT, size: bodySize })]
+              ? [new TextRun({ text: " ", font: bodyFont, size: bodySize })]
               : parseFormattedText(trimmed, {
-                  font: KR_FONT,
+                  font: bodyFont,
                   size: bodySize,
                   bold: true,
                   // 순서 유형의 (A)(B)(C)는 미리보기에서 검정, 그 외 본문 마커는 파랑(기본)
@@ -1068,14 +1073,14 @@ function buildQuestionBlock(
           children: [
             new TextRun({
               text: optionDisplayLabel(subType, idx, opt.label),
-              font: KR_FONT,
+              font: bodyFont,
               size: optionSize,
               bold: true,
               color: COLOR.darkGray,
             }),
             ...(hasDisplayText
               ? [
-                  new TextRun({ text: "  ", font: KR_FONT, size: optionSize }),
+                  new TextRun({ text: "  ", font: bodyFont, size: optionSize }),
                   ...parseFormattedText(displayText, {
                     font: useKR ? KR_FONT : FONT,
                     size: optionSize,
@@ -1108,12 +1113,12 @@ function buildQuestionBlock(
           children: [
             new TextRun({
               text: optionOrdinalLabel(optionIndex),
-              font: KR_FONT,
+              font: bodyFont,
               size: optionSize,
               bold: true,
               color: COLOR.darkGray,
             }),
-            new TextRun({ text: "  ", font: KR_FONT, size: optionSize }),
+            new TextRun({ text: "  ", font: bodyFont, size: optionSize }),
             ...(displayText
               ? parseFormattedText(displayText, {
                   font: useKR ? KR_FONT : FONT,
@@ -1123,7 +1128,7 @@ function buildQuestionBlock(
               : [
                   new TextRun({
                     text: "                                      ",
-                    font: KR_FONT,
+                    font: bodyFont,
                     size: optionSize,
                     underline: { type: UnderlineType.SINGLE },
                     color: COLOR.darkGray,
@@ -1212,7 +1217,7 @@ function buildAnswerBlock(opts: {
                   children: [
                     new TextRun({
                       text: `${answerLabel}  `,
-                      font: KR_FONT,
+                      font: bodyFont,
                       size: SIZE_ANSWER_LABEL,
                       bold: true,
                       color: COLOR.darkGray,
@@ -1247,7 +1252,7 @@ function buildAnswerBlock(opts: {
         children: [
           new TextRun({
             text: "해설",
-            font: KR_FONT,
+            font: bodyFont,
             size: SIZE_EXPLAIN_LABEL,
             bold: true,
             color: COLOR.darkGray,
@@ -1263,7 +1268,7 @@ function buildAnswerBlock(opts: {
           spacing: { after: 40, line: 290 },
           indent: { left: 200 },
           children: parseFormattedText(trimmed, {
-            font: KR_FONT,
+            font: bodyFont,
             size: SIZE_EXPLAIN_BODY,
             color: COLOR.darkGray,
           }),
@@ -1282,7 +1287,7 @@ function buildAnswerBlock(opts: {
         children: [
           new TextRun({
             text: "핵심 포인트",
-            font: KR_FONT,
+            font: bodyFont,
             size: SIZE_EXPLAIN_LABEL,
             bold: true,
             color: COLOR.darkGray,
@@ -1300,12 +1305,12 @@ function buildAnswerBlock(opts: {
           children: [
             new TextRun({
               text: "• ",
-              font: KR_FONT,
+              font: bodyFont,
               size: SIZE_EXPLAIN_BODY,
               color: COLOR.gray,
             }),
             ...parseFormattedText(trimmed, {
-              font: KR_FONT,
+              font: bodyFont,
               size: SIZE_EXPLAIN_BODY,
               color: COLOR.darkGray,
             }),
@@ -1331,7 +1336,7 @@ function buildAnswerBlock(opts: {
         children: [
           new TextRun({
             text: "오답 분석",
-            font: KR_FONT,
+            font: bodyFont,
             size: SIZE_EXPLAIN_LABEL,
             bold: true,
             color: COLOR.darkGray,
@@ -1347,13 +1352,13 @@ function buildAnswerBlock(opts: {
           children: [
             new TextRun({
               text: `${label} `,
-              font: KR_FONT,
+              font: bodyFont,
               size: SIZE_EXPLAIN_BODY,
               bold: true,
               color: COLOR.darkGray,
             }),
             ...parseFormattedText(exp.trim(), {
-              font: KR_FONT,
+              font: bodyFont,
               size: SIZE_EXPLAIN_BODY,
               color: COLOR.gray,
             }),
@@ -1439,7 +1444,7 @@ function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChild[] {
         children: [
           new TextRun({
             text: block.blockTitle || text || "새 섹션",
-            font: KR_FONT,
+            font: bodyFont,
             size: compact ? 24 : 26,
             bold: true,
             color: COLOR.black,
@@ -1457,7 +1462,7 @@ function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChild[] {
           alignment: align,
           spacing: { before: 40, after: 80 },
           children: parseFormattedText(paragraph || " ", {
-            font: KR_FONT,
+            font: bodyFont,
             size: blockBodySize(block, compact),
             color: COLOR.darkGray,
           }),
@@ -1485,6 +1490,19 @@ function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChild[] {
   }
 
   if (block.blockType === "spacer") {
+    // 워드프로세서식 빈 줄(line-gap): 미리보기에서 Enter 한 번 = 본문 한 줄이므로,
+    // 워드에서도 "본문 한 줄"과 똑같은 높이(빈 단락 한 줄)로 렌더한다. 추가 spaceAfter
+    // 없이 본문 글자 크기·행간(exactLineSpacing)만 줘서 정확히 한 줄을 차지하게 한다.
+    if (block.blockText === LINE_GAP_MARKER) {
+      const bodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
+      const lh = compact ? BODY_LINE_HEIGHT_COMPACT : BODY_LINE_HEIGHT;
+      return [
+        new Paragraph({
+          spacing: { before: 0, after: 0, ...exactLineSpacing(bodySize, lh) },
+          children: [new TextRun({ text: "", font: bodyFont, size: bodySize })],
+        }),
+      ];
+    }
     return [
       new Paragraph({
         spacing: { before: 0, after: Math.max(80, Math.min(900, (block.spacerHeight || 32) * 10)) },
@@ -1503,7 +1521,7 @@ function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChild[] {
           children: [
             new TextRun({
               text: block.imageAlt || "이미지",
-              font: KR_FONT,
+              font: bodyFont,
               size: SIZE_META,
               color: COLOR.gray,
               italics: true,
@@ -1534,7 +1552,7 @@ function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChild[] {
               children: [
                 new TextRun({
                   text: block.imageAlt,
-                  font: KR_FONT,
+                  font: bodyFont,
                   size: SIZE_META,
                   color: COLOR.gray,
                 }),
@@ -1605,6 +1623,7 @@ export function buildBuilderExamDocument(opts: {
   fullExamQuestions: ExamQuestionData[];
 }): Document {
   const { title, settings, resolvedItems, includeAnswers, fullExamQuestions } = opts;
+  bodyFont = bodyFontForTemplate(settings.template);
   const header = settings.header || {};
   const layout = settings.layout || {};
   const columns: 1 | 2 = layout.columns === 1 ? 1 : 2;
@@ -1687,7 +1706,7 @@ export function buildBuilderExamDocument(opts: {
         children: [
           new TextRun({
             text: title,
-            font: KR_FONT,
+            font: bodyFont,
             size: SIZE_CONTINUED,
             color: COLOR.gray,
           }),
@@ -1704,7 +1723,7 @@ export function buildBuilderExamDocument(opts: {
         children: [
           new TextRun({
             text: "- ",
-            font: KR_FONT,
+            font: bodyFont,
             size: SIZE_FOOTER,
             color: COLOR.gray,
           }),
@@ -1716,7 +1735,7 @@ export function buildBuilderExamDocument(opts: {
           }),
           new TextRun({
             text: " / ",
-            font: KR_FONT,
+            font: bodyFont,
             size: SIZE_FOOTER,
             color: COLOR.gray,
           }),
@@ -1728,7 +1747,7 @@ export function buildBuilderExamDocument(opts: {
           }),
           new TextRun({
             text: " -",
-            font: KR_FONT,
+            font: bodyFont,
             size: SIZE_FOOTER,
             color: COLOR.gray,
           }),
@@ -1742,7 +1761,7 @@ export function buildBuilderExamDocument(opts: {
     styles: {
       default: {
         document: {
-          run: { font: KR_FONT },
+          run: { font: bodyFont },
         },
       },
     },

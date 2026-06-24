@@ -51,14 +51,12 @@ export interface BorderFillSpec {
 // 기본값
 // =============================================================================
 
-// HWPX 다운로드 본문 글꼴. 한컴 한글에 기본 번들된 "맑은 고딕"을 쓴다(Mac/Win 공통).
-//
-// 참고: 미리보기는 macOS 브라우저에서 맑은 고딕을 못 찾아 Apple SD Gothic Neo 로
-// 폴백하므로, 영문 글자폭이 한글파일(맑은 고딕)보다 좁아 줄바꿈이 약간 다르다.
-// 이 "영문 줄넘김" 차이는 글꼴 메트릭 차이라 별도로 다룬다(양쪽이 같은 글꼴을 쓰게
-// 만들어야 함). 우선 여백(용지 방향) 문제부터 분리해 해결한다.
-export const DEFAULT_FONT_KR = "맑은 고딕";
-export const DEFAULT_FONT_LATIN = "맑은 고딕";
+// HWPX/DOCX/미리보기 본문 글꼴을 "Noto Sans KR"(무료·OFL)로 통일한다. 세 출력물이
+// 같은 글꼴을 쓰면 영문 글자폭이 같아져 줄바꿈·페이지넘김이 일치한다(맥 브라우저가
+// 맑은 고딕을 못 찾아 Apple SD Gothic Neo 로 폴백하던 불일치 해소). 한·영 글리프를
+// 모두 포함하므로 한·영 폰트를 동일하게 둔다.
+export const DEFAULT_FONT_KR = "Noto Sans KR";
+export const DEFAULT_FONT_LATIN = "Noto Sans KR";
 
 const NO_BORDER: BorderSpec = { type: "NONE", widthMm: 0.1, color: "#000000" };
 
@@ -72,11 +70,16 @@ export class ShapeRegistry {
   charShapes: CharShapeSpec[] = [];
   paraShapes: ParaShapeSpec[] = [];
   borderFills: BorderFillSpec[] = [];
+  defaultFontKr: string;
+  defaultFontLatin: string;
 
-  constructor() {
+  // 템플릿별 본문 글꼴(세리프=Noto Serif KR / 산세리프=Noto Sans KR)을 주입받는다.
+  constructor(defaultFontKr = DEFAULT_FONT_KR, defaultFontLatin = DEFAULT_FONT_LATIN) {
+    this.defaultFontKr = defaultFontKr;
+    this.defaultFontLatin = defaultFontLatin;
     // 한글/영문 기본 폰트 등록 (각 lang ID 0 번)
-    this.krFonts.push({ face: DEFAULT_FONT_KR, type: "TTF" });
-    this.latinFonts.push({ face: DEFAULT_FONT_LATIN, type: "TTF" });
+    this.krFonts.push({ face: defaultFontKr, type: "TTF" });
+    this.latinFonts.push({ face: defaultFontLatin, type: "TTF" });
 
     // BorderFill 0: 투명 (문단 외곽 기본)
     this.borderFills.push({
@@ -163,8 +166,8 @@ export class ShapeRegistry {
 
   charShapeFromStyle(style: RunStyle | undefined): number {
     const s: RunStyle = style ?? {};
-    const fontKr = s.fontKr ?? DEFAULT_FONT_KR;
-    const fontLatin = s.fontLatin ?? DEFAULT_FONT_LATIN;
+    const fontKr = s.fontKr ?? this.defaultFontKr;
+    const fontLatin = s.fontLatin ?? this.defaultFontLatin;
     const sizePt = s.size ?? 10;
     return this.registerCharShape({
       fontKrId: this.fontKrId(fontKr),

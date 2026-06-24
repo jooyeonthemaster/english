@@ -36,7 +36,7 @@ import type {
   QuestionCollection,
   SchoolOption,
 } from "./paper-builder/types";
-import { DEFAULT_PAPER_COVER } from "./paper-builder/types";
+import { DEFAULT_PAPER_COVER, LINE_GAP_MARKER } from "./paper-builder/types";
 import {
   DEFAULT_INSTRUCTIONS,
   PAPER_SIZE_SPECS,
@@ -573,6 +573,8 @@ function PageThumbnails({
                   pageColumns={pageColumns}
                   activeItemId={null}
                   setActiveItemId={() => undefined}
+                  lineCaret={null}
+                  setLineCaret={() => undefined}
                   onHeaderChange={() => undefined}
                   onUpdateItem={() => undefined}
                   onUpdateGroupPassage={() => undefined}
@@ -802,6 +804,8 @@ export function ExamPaperBuilderClient({
     distributeTotalPoints,
     insertBlock,
     insertImageBlock,
+    insertLineGap,
+    removeLineGap,
     duplicateItem,
     toggleLockItem,
     tryToggleKeepWithPrev,
@@ -822,6 +826,12 @@ export function ExamPaperBuilderClient({
     "before",
   );
   const [activePageIndex, setActivePageIndex] = useState(0);
+  // 워드프로세서식 빈 줄 — 미리보기에서 문제 사이 간격을 클릭하면 그 자리에 텍스트 캐럿이
+  // 놓인다. afterLocalId 는 캐럿 바로 위 항목의 localId(null = 맨 앞 간격). 이 상태에서
+  // Enter 로 빈 줄 추가, Backspace 로 제거, Esc 로 해제한다.
+  const [lineCaret, setLineCaret] = useState<{ afterLocalId: string | null } | null>(
+    null,
+  );
   const [panelWidths, setPanelWidths] = useState<PanelWidths>(
     readStoredPanelWidths,
   );
@@ -944,6 +954,89 @@ export function ExamPaperBuilderClient({
     }
     return ids;
   }, [paperItems]);
+
+  // 워드프로세서식 빈 줄(line-gap) 여백은 "미리보기에서만" 조절하는 요소다. 우측 편집
+  // 패널(블록 목록·선택 블록·블록 수)에는 일반 블록으로 노출하지 않도록 걸러낸다.
+  const panelPaperItems = useMemo(
+    () =>
+      paperItems.filter(
+        (item) =>
+          !(item.blockType === "spacer" && item.blockText === LINE_GAP_MARKER),
+      ),
+    [paperItems],
+  );
+
+  // 미리보기에서 클릭한 문항(블록)의 원본 문제 id — 좌측 문제목록 카드 강조/스크롤용.
+  const activeQuestionId =
+    activeItem && activeItem.blockType === "question"
+      ? activeItem.questionId
+      : null;
+
+  // 문항(블록)을 선택하면 빈 줄 캐럿은 해제한다(둘은 상호 배타).
+  useEffect(() => {
+    if (activeItemId) setLineCaret(null);
+  }, [activeItemId]);
+
+  // 빈 줄 캐럿이 놓인 동안 Enter=빈 줄 추가 / Backspace=제거 / Esc=해제.
+  // 본문 인라인 편집(EditableText·입력창) 중에는 가로채지 않는다.
+  useEffect(() => {
+    if (!lineCaret) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      const el = document.activeElement as HTMLElement | null;
+      if (
+        el &&
+        (el.isContentEditable ||
+          el.tagName === "INPUT" ||
+          el.tagName === "TEXTAREA")
+      )
+        return;
+      const linePx = density === "compact" ? 15 : 18;
+      if (event.key === "Enter") {
+        // 빈 줄을 한 줄 끼우고 캐럿도 그 줄로 함께 내려간다.
+        event.preventDefault();
+        const nextAnchor = insertLineGap(lineCaret.afterLocalId, linePx);
+        if (nextAnchor) setLineCaret({ afterLocalId: nextAnchor });
+      } else if (event.key === "Backspace" || event.key === "Delete") {
+        // 캐럿이 놓인 빈 줄을 지우고 캐럿이 한 줄 위로 올라간다(실제 문항은 못 지움).
+        event.preventDefault();
+        const { ok, nextAnchor } = removeLineGap(lineCaret.afterLocalId);
+        if (ok) setLineCaret({ afterLocalId: nextAnchor });
+      } else if (event.key === "Escape") {
+        setLineCaret(null);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [lineCaret, density, insertLineGap, removeLineGap]);
+
+  // 빈 줄이 칸/페이지를 넘어가면 캐럿이 다음 쪽으로 이동하므로, 화면 밖으로 나간 경우
+  // 미리보기를 캐럿(빈 줄 자리)이 보이도록 따라 스크롤한다(워드프로세서처럼 시야가 따라감).
+  useEffect(() => {
+    const anchor = lineCaret?.afterLocalId;
+    if (!anchor) return;
+    const raf = window.requestAnimationFrame(() => {
+      const scroller = previewScrollerRef.current;
+      const target = scroller?.querySelector<HTMLElement>(
+        `[data-line-gap-anchor="${CSS.escape(anchor)}"]`,
+      );
+      if (!scroller || !target) return;
+      const scrollerRect = scroller.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const fullyVisible =
+        targetRect.top >= scrollerRect.top + 8 &&
+        targetRect.bottom <= scrollerRect.bottom - 8;
+      if (fullyVisible) return;
+      scroller.scrollTo({
+        top:
+          scroller.scrollTop +
+          targetRect.top -
+          scrollerRect.top -
+          scrollerRect.height / 2,
+        behavior: "smooth",
+      });
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [lineCaret, previewScrollerRef]);
 
   const addQuestionIdsToPaper = useCallback((ids: Iterable<string>) => {
     const seen = new Set<string>();
@@ -1995,6 +2088,7 @@ export function ExamPaperBuilderClient({
             setSort={setSort}
             statusCounts={statusCounts}
             paperQuestionCounts={paperQuestionCounts}
+            activeQuestionId={activeQuestionId}
             selectedQuestionIds={selectedPaperQuestionIds}
             onToggleSelect={togglePaperQuestionSelection}
             setSelectedQuestionIds={applyPaperQuestionSelection}
@@ -2208,6 +2302,8 @@ export function ExamPaperBuilderClient({
                   updateCover={updateCover}
                   activeItemId={activeItemId}
                   setActiveItemId={setActiveItemId}
+                  lineCaret={lineCaret}
+                  setLineCaret={setLineCaret}
                   updateHeader={updateHeader}
                   updateItem={updateItem}
                   updateGroupPassage={updateGroupPassage}
@@ -2266,9 +2362,9 @@ export function ExamPaperBuilderClient({
         {!rightPanelCollapsed && (
           <BuilderPropertiesPanel
             activeItem={activeItem}
-            paperItems={paperItems}
+            paperItems={panelPaperItems}
             activeItemId={activeItemId}
-            paperItemsCount={paperItems.length}
+            paperItemsCount={panelPaperItems.length}
             totalPoints={totalPoints}
             autoPointTotal={autoPointTotal}
             activeTab={rightPanelTab}

@@ -8,7 +8,6 @@ import {
   Pencil,
   Save,
   Trash2,
-  Undo2,
   X,
 } from "lucide-react";
 
@@ -18,8 +17,6 @@ import type { M1PassageDraftWithJob } from "../types";
 import { getDraftSourceLabel } from "../utils/draft-source";
 import { getDraftDisplayTitle } from "../utils/title";
 import { PassageCompare } from "./passage-compare";
-import { RestorationBadge } from "./restoration-badge";
-import { RestorationMethodBadge } from "./restoration-method-badge";
 
 interface DraftDetailModalProps {
   draft: M1PassageDraftWithJob;
@@ -159,14 +156,6 @@ export function DraftDetailModal({
                       aria-hidden="true"
                     />
                   </button>
-                  <RestorationBadge status={draft.restorationStatus} />
-                  <RestorationMethodBadge draft={draft} />
-                  {isReviewed ? (
-                    <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200">
-                      <CheckCircle2 className="size-3" aria-hidden="true" />
-                      검수완료
-                    </span>
-                  ) : null}
                 </>
               )}
             </div>
@@ -202,31 +191,31 @@ export function DraftDetailModal({
               ) : (
                 <Save className="size-3.5" aria-hidden="true" />
               )}
-              수정 저장
+              저장
             </button>
             <button
               type="button"
               onClick={() => (isReviewed ? onUnpromote(draft) : onPromote(draft))}
               disabled={busy}
+              aria-pressed={isReviewed}
               className={
-                isReviewed
-                  ? "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50 px-3 text-[12px] font-bold text-emerald-700 hover:border-emerald-300 hover:bg-emerald-100 hover:text-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
-                  : "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md bg-emerald-600 px-3 text-[12px] font-bold text-white shadow-sm hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                "inline-flex h-9 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border bg-white px-3 text-[12px] font-bold transition-all outline-none focus-visible:ring-[3px] focus-visible:ring-emerald-500/40 disabled:cursor-not-allowed disabled:opacity-60 " +
+                (isReviewed
+                  ? "border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+                  : "border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
               }
               title={
                 isReviewed
-                  ? "이미 검수가 완료된 자료입니다. 클릭하면 검수를 취소합니다."
-                  : undefined
+                  ? "검수완료 — 누르면 검수를 취소합니다"
+                  : "검수필요 — 누르면 검수완료로 표시합니다"
               }
             >
               {isPromoting || isUnpromoting ? (
                 <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
-              ) : isReviewed ? (
-                <Undo2 className="size-3.5" aria-hidden="true" />
               ) : (
                 <CheckCircle2 className="size-3.5" aria-hidden="true" />
               )}
-              {isReviewed ? "검수취소" : "검수완료"}
+              {isReviewed ? "검수완료" : "미검수"}
             </button>
             <button
               type="button"
@@ -248,6 +237,10 @@ export function DraftDetailModal({
             onRerestore={() => onRerestore(draft)}
             isRerestoring={isRerestoring}
             rerestoreDisabled={busy}
+            title={titleInput}
+            titlePlaceholder={getDraftDisplayTitle(draft)}
+            onTitleChange={setTitleInput}
+            onTitleCommit={commitTitle}
           />
         </div>
       </div>

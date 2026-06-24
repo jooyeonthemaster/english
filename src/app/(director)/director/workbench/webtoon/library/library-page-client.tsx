@@ -4,20 +4,29 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
+  CheckCircle2,
   FolderX,
   Image as ImageIcon,
+  ListFilter,
   Loader2,
   Palette,
-  RefreshCw,
   Search,
   Trash2,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 import { useFolderManager } from "@/hooks/use-folder-manager";
 import { useSelection } from "@/components/workbench/hooks/use-selection";
 import { FolderSection } from "@/components/workbench/shared/folder-section";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
+import { ViewModeCycleButton } from "@/components/workbench/shared/view-mode-cycle-button";
+import { GridColsIcon } from "@/components/workbench/shared/grid-cols-icon";
 import { Pagination } from "@/components/workbench/shared/pagination";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import {
@@ -58,10 +67,10 @@ const GRID_CLASS: Record<GridCols, string> = {
   grid5: "grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5",
 };
 
-const GRID_OPTIONS: { value: GridCols; label: string }[] = [
-  { value: "grid3", label: "3" },
-  { value: "grid4", label: "4" },
-  { value: "grid5", label: "5" },
+const GRID_OPTIONS: { value: GridCols; cols: number }[] = [
+  { value: "grid3", cols: 3 },
+  { value: "grid4", cols: 4 },
+  { value: "grid5", cols: 5 },
 ];
 
 // ─── Server-action adapters for the shared folder manager ───
@@ -77,12 +86,25 @@ interface WebtoonLibraryClientProps {
   academyId: string;
   collections: CollectionItem[];
   collectionMembership: Record<string, Set<string>>;
+  /** When true, drops the full-height page chrome (height/scroll/page bg) and
+   *  hides the FolderSection header so this can live inside another section
+   *  (e.g. the 웹툰 생성 페이지의 '생성한 웹툰' 카드). */
+  embedded?: boolean;
+  /** Bumping this number triggers a silent refetch — used by the host page to
+   *  refresh the list after a new webtoon is queued. */
+  refreshSignal?: number;
+  /** Height (px) of the host section header that sits above this component, so
+   *  the embedded folder/toolbar can stick *below* it instead of at viewport 0. */
+  stickyTopOffset?: number;
 }
 
 export function WebtoonLibraryClient({
   academyId,
   collections: initialCollections,
   collectionMembership: initialMembership,
+  embedded = false,
+  refreshSignal,
+  stickyTopOffset = 0,
 }: WebtoonLibraryClientProps) {
   void academyId;
 
@@ -148,6 +170,17 @@ export function WebtoonLibraryClient({
     const tid = setInterval(() => void fetchAll(false), 5000);
     return () => clearInterval(tid);
   }, [items, fetchAll]);
+
+  // Host-triggered refresh (e.g. after a new webtoon is queued from the
+  // generate page). Skips the initial mount (handled by the fetch-on-mount).
+  const didMountRef = useRef(false);
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    void fetchAll(false);
+  }, [refreshSignal, fetchAll]);
 
   // ─── Folder manager (shared with 지문/문제/시험지 관리) ───
   const folder = useFolderManager({
@@ -343,14 +376,63 @@ export function WebtoonLibraryClient({
     }
   }, [selection, items]);
 
+  // 선택한 완료 웹툰을 일괄 검수완료 처리한다(이미 검수된 항목은 제외). 카드별
+  // handleToggleApprove 와 같은 PATCH 엔드포인트를 쓰되 한 번에 모아 호출한다.
+  const handleBulkApprove = useCallback(async () => {
+    const ids = Array.from(selection.selectedIds).filter((id) => {
+      const it = items.find((x) => x.id === id);
+      return it && it.status === "COMPLETED" && !it.approved;
+    });
+    if (ids.length === 0) {
+      toast.info("검수완료할 웹툰이 없습니다.");
+      return;
+    }
+    const idSet = new Set(ids);
+    // Optimistic — flip locally, revert the ones whose PATCH fails.
+    setItems((prev) =>
+      prev.map((it) => (idSet.has(it.id) ? { ...it, approved: true } : it)),
+    );
+    const results = await Promise.all(
+      ids.map((id) =>
+        fetch(`/api/webtoons/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ approved: true }),
+        })
+          .then((r) => r.json())
+          .then((d) => (d.ok ? id : null))
+          .catch(() => null),
+      ),
+    );
+    const ok = results.filter((x): x is string => x !== null);
+    if (ok.length > 0) {
+      selection.clearSelection();
+      toast.success(`${ok.length}개 검수완료`);
+    }
+    if (ok.length < ids.length) {
+      const failed = new Set(ids.filter((id) => !ok.includes(id)));
+      setItems((prev) =>
+        prev.map((it) => (failed.has(it.id) ? { ...it, approved: false } : it)),
+      );
+      toast.error(`${ids.length - ok.length}개는 검수완료하지 못했습니다.`);
+    }
+  }, [selection, items]);
+
   const totalCount = items.length;
   const [folderStickyRef, folderStickyHeight] = useMeasuredHeight();
 
   const hasSelection = selection.selectedIds.size > 0;
+  const hasActiveFilter = statusFilter !== "ALL" || styleFilter !== "ALL";
 
   return (
-    <div className="flex flex-col h-[calc(100vh-64px)]">
-      <div className="-mx-6 flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pb-4 sm:px-8">
+    <div className={embedded ? "flex flex-col" : "flex flex-col h-[calc(100vh-64px)]"}>
+      <div
+        className={
+          embedded
+            ? ""
+            : "-mx-6 flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pb-4 sm:px-8"
+        }
+      >
         {loading && items.length === 0 ? (
           <div className="mt-2 flex flex-col items-center justify-center gap-3 rounded-xl border bg-white py-24">
             <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
@@ -372,13 +454,25 @@ export function WebtoonLibraryClient({
             </div>
           </div>
         ) : (
-          <section className="mt-2 flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <section
+            className={
+              embedded
+                ? "flex flex-col"
+                : "mt-2 flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm"
+            }
+          >
             {/* ─── 파일창 (folder browser, sticky) ─── */}
             <div
               ref={folderStickyRef}
-              className="sticky top-0 z-30 shrink-0 overflow-hidden rounded-t-2xl bg-white"
+              style={embedded ? { top: stickyTopOffset } : undefined}
+              className={
+                embedded
+                  ? "sticky z-30 shrink-0 overflow-hidden bg-white"
+                  : "sticky top-0 z-30 shrink-0 overflow-hidden rounded-t-2xl bg-white"
+              }
             >
               <FolderSection
+                hideHeader={embedded}
                 embedded
                 childFolders={folder.childFolders}
                 activeFolder={folder.activeFolder}
@@ -415,38 +509,21 @@ export function WebtoonLibraryClient({
                   itemLabel: "웹툰",
                   itemUnit: "개",
                 }}
-                toolbar={
-                  <>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-8 gap-1.5 text-[12px]"
-                      onClick={() => fetchAll()}
-                      disabled={loading}
-                    >
-                      <RefreshCw
-                        className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`}
-                      />
-                      새로고침
-                    </Button>
-                    <Link
-                      href="/director/workbench/webtoon"
-                      className="flex h-8 items-center gap-1.5 rounded-lg bg-blue-600 px-3 text-[12px] font-semibold text-white transition-colors hover:bg-blue-700"
-                    >
-                      <Palette className="h-3.5 w-3.5" />새 웹툰 생성
-                    </Link>
-                  </>
-                }
               />
             </div>
 
             {/* ─── Toolbar: 선택 · 폴더 작업 · 필터 (sticky) ─── */}
             <div
-              style={{ top: folderStickyHeight > 0 ? folderStickyHeight - 1 : 0 }}
+              style={{
+                top:
+                  (embedded ? stickyTopOffset : 0) +
+                  (folderStickyHeight > 0 ? folderStickyHeight - 1 : 0),
+              }}
               className="sticky z-20 shrink-0 border-y border-slate-200 bg-slate-50 px-4 py-2 shadow-[0_6px_8px_-4px_rgba(15,23,42,0.08)]"
             >
               <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-                <div className="flex items-center gap-2">
+                {/* ─── 선택 액션: 체크박스 · 이동/복사 · 검수완료 · 삭제 ─── */}
+                <div className="flex items-center gap-1.5">
                   <SelectAllCheckbox
                     checked={selection.isAllSelected && hasSelection}
                     indeterminate={hasSelection && !selection.isAllSelected}
@@ -459,9 +536,10 @@ export function WebtoonLibraryClient({
                     title={`${selection.selectedIds.size}개 선택`}
                     ariaLabel={hasSelection ? "선택 해제" : "전체 선택"}
                   />
+                  {/* 이동/복사 · 삭제는 선택이 없으면 흐리게 + 클릭 차단 */}
                   <div
                     className={
-                      "flex items-center gap-3 " +
+                      "flex items-center gap-1.5 " +
                       (hasSelection ? "" : "pointer-events-none opacity-50")
                     }
                     aria-disabled={!hasSelection}
@@ -472,103 +550,199 @@ export function WebtoonLibraryClient({
                       selectedCount={selection.selectedIds.size}
                       onCopy={onAddToFolder}
                       onMove={onMoveToFolder}
+                      disabled={!hasSelection}
+                      compact
                     />
+                  </div>
+                  {/* 검수완료 — 자체 disabled 를 관리하므로 게이트 밖에 둔다 */}
+                  <button
+                    type="button"
+                    onClick={handleBulkApprove}
+                    disabled={!hasSelection}
+                    title="검수완료"
+                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-emerald-200 bg-white px-2.5 text-[11px] font-semibold text-emerald-600 shadow-sm transition-colors hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
+                    검수완료
+                  </button>
+                  <div
+                    className={
+                      "flex items-center gap-1.5 " +
+                      (hasSelection ? "" : "pointer-events-none opacity-50")
+                    }
+                    aria-disabled={!hasSelection}
+                  >
                     <button
                       type="button"
                       onClick={handleBulkDelete}
                       disabled={!hasSelection}
-                      className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                      title="삭제"
+                      aria-label="삭제"
+                      className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
-                      삭제
+                      <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
                     </button>
                     {folder.activeFolder ? (
                       <button
                         type="button"
                         onClick={onRemoveFromFolder}
                         title="폴더에서 삭제"
-                        className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-red-300 bg-red-50 px-2.5 text-[11px] font-semibold text-red-700 transition-colors hover:border-red-400 hover:bg-red-100 hover:text-red-800"
+                        aria-label="폴더에서 삭제"
+                        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-300 bg-red-50 text-red-700 transition-colors hover:border-red-400 hover:bg-red-100 hover:text-red-800"
                       >
-                        <FolderX className="h-3.5 w-3.5" />
-                        폴더에서 삭제
+                        <FolderX className="h-3.5 w-3.5" aria-hidden="true" />
                       </button>
                     ) : null}
                   </div>
                 </div>
 
-                <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
-                  {/* Search */}
-                  <div className="relative w-[200px]">
-                    <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
-                    <input
-                      placeholder="지문 제목으로 검색..."
-                      value={search}
-                      onChange={(e) => {
-                        setSearch(e.target.value);
-                        setPage(1);
-                      }}
-                      className="h-8 w-full rounded-lg border border-slate-200 bg-white pl-8 pr-3 text-[12px] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
-                    />
-                  </div>
-
-                  {/* Status filter */}
-                  <div className="flex gap-1 rounded-lg border border-slate-200 bg-white p-0.5">
-                    {STATUS_FILTERS.map((s) => (
-                      <button
-                        key={s.id}
-                        onClick={() => {
-                          setStatusFilter(s.id);
-                          setPage(1);
-                        }}
-                        className={`h-7 rounded-md px-2.5 text-[11px] font-semibold transition-all ${
-                          statusFilter === s.id
-                            ? "bg-blue-50 text-blue-700"
-                            : "text-slate-500 hover:text-slate-700"
-                        }`}
-                      >
-                        {s.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Style filter */}
-                  <select
-                    value={styleFilter}
-                    onChange={(e) => {
-                      setStyleFilter(e.target.value as WebtoonStyleId | "ALL");
-                      setPage(1);
-                    }}
-                    className={`h-8 cursor-pointer appearance-none rounded-lg border px-3 pr-7 text-[12px] font-semibold ${
-                      styleFilter !== "ALL"
-                        ? "border-blue-300 bg-blue-50 text-blue-700"
-                        : "border-slate-200 bg-white text-slate-500"
-                    }`}
+                {/* ─── 필터 묶음: 새 웹툰 생성 · 필터 · 검색 · 그리드 ─── */}
+                <div className="ml-auto flex shrink-0 items-center justify-end gap-1.5">
+                  <Link
+                    href="/director/workbench/webtoon"
+                    className="flex h-7 items-center gap-1.5 rounded-md bg-blue-600 px-2.5 text-[12px] font-semibold text-white transition-colors hover:bg-blue-700"
                   >
-                    <option value="ALL">화풍 전체</option>
-                    {WEBTOON_STYLES.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.label}
-                      </option>
-                    ))}
-                  </select>
+                    <Palette className="h-3.5 w-3.5" />새 웹툰 생성
+                  </Link>
 
-                  {/* Grid column toggle */}
-                  <div className="flex gap-0.5 rounded-lg border border-slate-200 bg-white p-0.5">
-                    {GRID_OPTIONS.map((g) => (
-                      <button
-                        key={g.value}
-                        onClick={() => setGridCols(g.value)}
-                        title={`${g.label}열 보기`}
-                        className={`h-7 w-7 rounded-md text-[11px] font-bold tabular-nums transition-all ${
-                          gridCols === g.value
-                            ? "bg-blue-50 text-blue-700"
-                            : "text-slate-400 hover:text-slate-600"
-                        }`}
-                      >
-                        {g.label}
-                      </button>
-                    ))}
-                  </div>
+                  {/* Filter popover (상태 + 화풍) */}
+                  <Popover>
+                    <PopoverTrigger
+                      title="필터"
+                      aria-label="필터"
+                      className={`relative flex size-7 shrink-0 items-center justify-center rounded-md border shadow-xs outline-none transition-colors focus-visible:ring-[3px] focus-visible:ring-blue-500/20 ${
+                        hasActiveFilter
+                          ? "border-blue-200 bg-blue-50 text-blue-700"
+                          : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                      }`}
+                    >
+                      <ListFilter className="size-3.5 shrink-0" aria-hidden="true" />
+                      {hasActiveFilter ? (
+                        <span
+                          aria-hidden="true"
+                          className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
+                        />
+                      ) : null}
+                    </PopoverTrigger>
+                    <PopoverContent align="end" className="w-56 p-3">
+                      <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-1.5">
+                          <span className="text-[11px] font-medium text-slate-600">
+                            상태
+                          </span>
+                          <div className="flex flex-wrap gap-1">
+                            {STATUS_FILTERS.map((s) => (
+                              <button
+                                key={s.id}
+                                type="button"
+                                onClick={() => {
+                                  setStatusFilter(s.id);
+                                  setPage(1);
+                                }}
+                                className={`h-7 rounded-md px-2.5 text-[11px] font-semibold transition-all ${
+                                  statusFilter === s.id
+                                    ? "bg-blue-50 text-blue-700"
+                                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+                                }`}
+                              >
+                                {s.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                          <span className="text-[11px] font-medium text-slate-600">
+                            화풍
+                          </span>
+                          <select
+                            value={styleFilter}
+                            onChange={(e) => {
+                              setStyleFilter(
+                                e.target.value as WebtoonStyleId | "ALL",
+                              );
+                              setPage(1);
+                            }}
+                            className={`h-8 w-full cursor-pointer appearance-none rounded-lg border px-3 pr-7 text-[12px] font-semibold ${
+                              styleFilter !== "ALL"
+                                ? "border-blue-300 bg-blue-50 text-blue-700"
+                                : "border-slate-200 bg-white text-slate-500"
+                            }`}
+                          >
+                            <option value="ALL">화풍 전체</option>
+                            {WEBTOON_STYLES.map((s) => (
+                              <option key={s.id} value={s.id}>
+                                {s.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+
+                  {/* Search popover */}
+                  <Popover>
+                    <PopoverTrigger
+                      title="검색"
+                      aria-label="검색"
+                      className="relative flex size-7 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 shadow-xs outline-none transition-colors hover:bg-slate-50 focus-visible:ring-[3px] focus-visible:ring-blue-500/20"
+                    >
+                      <Search className="size-3.5 shrink-0" aria-hidden="true" />
+                      {search ? (
+                        <span
+                          aria-hidden="true"
+                          className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
+                        />
+                      ) : null}
+                    </PopoverTrigger>
+                    <PopoverContent align="end" className="w-60 p-3">
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-[11px] font-medium text-slate-600">
+                          지문 검색
+                        </span>
+                        <div className="relative">
+                          <Search
+                            className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
+                            aria-hidden="true"
+                          />
+                          <input
+                            autoFocus
+                            placeholder="지문 제목으로 검색..."
+                            value={search}
+                            onChange={(e) => {
+                              setSearch(e.target.value);
+                              setPage(1);
+                            }}
+                            className="h-8 w-full rounded-md border border-slate-200 bg-white pl-7 pr-7 text-[12px] text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+                          />
+                          {search ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSearch("");
+                                setPage(1);
+                              }}
+                              aria-label="검색 지우기"
+                              className="absolute right-1.5 top-1/2 inline-flex size-4 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                            >
+                              <X className="size-3" />
+                            </button>
+                          ) : null}
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+
+                  {/* Grid column cycle */}
+                  <ViewModeCycleButton
+                    value={gridCols}
+                    onChange={setGridCols}
+                    options={GRID_OPTIONS.map((g) => ({
+                      value: g.value,
+                      label: `${g.cols}열 보기`,
+                      Icon: (props) => <GridColsIcon cols={g.cols} {...props} />,
+                    }))}
+                  />
                 </div>
               </div>
             </div>
@@ -637,11 +811,15 @@ export function WebtoonLibraryClient({
 
 // ─── Helpers ─────────────────────────────────────────────
 
+// Callback ref so the height is (re)measured whenever the node mounts — the
+// folder bar only renders after the client-side fetch, so an effect keyed on
+// mount would measure 0 and never re-run, leaving the sticky toolbar at top:0.
 function useMeasuredHeight() {
-  const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
-  useEffect(() => {
-    const el = ref.current;
+  const cleanupRef = useRef<(() => void) | null>(null);
+  const ref = useCallback((el: HTMLDivElement | null) => {
+    cleanupRef.current?.();
+    cleanupRef.current = null;
     if (!el) return;
     const update = () =>
       setHeight(Math.ceil(el.getBoundingClientRect().height));
@@ -649,7 +827,7 @@ function useMeasuredHeight() {
     const observer = new ResizeObserver(update);
     observer.observe(el);
     window.addEventListener("resize", update);
-    return () => {
+    cleanupRef.current = () => {
       observer.disconnect();
       window.removeEventListener("resize", update);
     };

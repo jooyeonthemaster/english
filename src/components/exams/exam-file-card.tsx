@@ -6,15 +6,13 @@ import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
   Check,
   Calendar,
-  Clock,
   Users,
   ClipboardList,
   FileSearch,
   Pencil,
   Printer,
-  Save,
 } from "lucide-react";
-import { cn, formatDate } from "@/lib/utils";
+import { cn, formatDate, formatDateTime } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { DragHandle, makeCardDragPreview } from "@/components/ui/drag-handle";
 import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
@@ -154,6 +152,12 @@ export function ExamFileCard({
               <ClipboardList className="w-3 h-3 text-slate-400" />
               {exam._count.questions}문항
             </span>
+            <span
+              title="마지막 수정일"
+              className="inline-flex shrink-0 items-center text-[11px] tabular-nums text-slate-400"
+            >
+              {formatDateTime(exam.updatedAt)}
+            </span>
             {showResults && (
               <span className="inline-flex items-center gap-1 text-[11px] text-slate-500">
                 <Users className="w-3 h-3 text-slate-400" />
@@ -186,58 +190,64 @@ export function ExamFileCard({
         </div>
       )}
 
-      {/* Activity counters as actions — 수정(편집 이동) / 인쇄(바로 인쇄) /
-          저장(횟수 표시 전용). 각 칩에 'N회'를 붙여 '횟수'임을 분명히 한다. */}
-      <div className="mt-3 grid grid-cols-3 gap-1.5">
-        {/* 수정: 누르면 편집 화면으로 이동 */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onEdit?.(exam.id);
-          }}
-          disabled={!onEdit}
-          title="시험지 수정 (지금까지 수정한 횟수)"
-          aria-label="시험지 수정"
-          className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-blue-100 bg-blue-50/60 px-2 text-[11px] font-semibold tabular-nums text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100/70 hover:text-blue-800 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-50 disabled:text-slate-400 disabled:opacity-70 disabled:hover:border-slate-200 disabled:hover:bg-slate-50 disabled:hover:text-slate-400"
-        >
-          <Pencil className="h-3 w-3 shrink-0" />
-          <span className="truncate">수정 {exam.editCount}회</span>
-        </button>
+      {/* Bottom: 수정(편집 이동) / 인쇄(바로 인쇄) / 저장(횟수 표시 전용) —
+          카드 하단 정렬, 무채색. 우측에 분석 정보(동형 한정)·상세 열기. */}
+      <div className="mt-auto flex items-center gap-1.5 pt-3">
+        <div className="grid min-w-0 flex-1 grid-cols-2 gap-1.5">
+          {/* 수정: 누르면 편집 화면으로 이동 */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onEdit?.(exam.id);
+            }}
+            disabled={!onEdit}
+            title="시험지 수정 (지금까지 수정한 횟수)"
+            aria-label="시험지 수정"
+            className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2 text-[11px] font-semibold tabular-nums text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-100 hover:text-slate-700 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 disabled:opacity-70 disabled:hover:border-slate-200 disabled:hover:bg-slate-50 disabled:hover:text-slate-400"
+          >
+            <Pencil className="h-3 w-3 shrink-0" />
+            <span className="truncate">수정 {exam.editCount}회</span>
+          </button>
 
-        {/* 인쇄: 미리보기를 새 탭으로 열어 바로 인쇄 대화상자를 띄운다 */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            window.open(
-              `/director/exams/${exam.id}?print=1`,
-              "_blank",
-              "noopener,noreferrer",
-            );
-          }}
-          title="바로 인쇄 (지금까지 인쇄한 횟수)"
-          aria-label="시험지 인쇄"
-          className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-blue-100 bg-blue-50/60 px-2 text-[11px] font-semibold tabular-nums text-blue-700 transition-colors hover:border-blue-300 hover:bg-blue-100/70 hover:text-blue-800"
-        >
-          <Printer className="h-3 w-3 shrink-0" />
-          <span className="truncate">인쇄 {exam.printCount}회</span>
-        </button>
+          {/* 인쇄: 페이지를 벗어나지 않고 숨김 iframe 으로 인쇄 대화상자를 띄운다.
+              ?print=1 라우트가 로드되면 스스로 window.print() 를 호출한다. */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const frameId = `exam-print-frame-${exam.id}`;
+              document.getElementById(frameId)?.remove();
+              const iframe = document.createElement("iframe");
+              iframe.id = frameId;
+              iframe.setAttribute("aria-hidden", "true");
+              iframe.style.position = "fixed";
+              iframe.style.right = "0";
+              iframe.style.bottom = "0";
+              iframe.style.width = "0";
+              iframe.style.height = "0";
+              iframe.style.border = "0";
+              iframe.style.visibility = "hidden";
+              iframe.src = `/director/exams/${exam.id}?print=1`;
+              iframe.onload = () => {
+                const cleanup = () => iframe.remove();
+                iframe.contentWindow?.addEventListener("afterprint", cleanup);
+                // 대화상자를 닫지 않는 등 afterprint 가 안 와도 결국 정리되도록.
+                window.setTimeout(cleanup, 120000);
+              };
+              document.body.appendChild(iframe);
+            }}
+            title="바로 인쇄 (지금까지 인쇄한 횟수)"
+            aria-label="시험지 인쇄"
+            className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2 text-[11px] font-semibold tabular-nums text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-100 hover:text-slate-700"
+          >
+            <Printer className="h-3 w-3 shrink-0" />
+            <span className="truncate">인쇄 {exam.printCount}회</span>
+          </button>
+        </div>
 
-        {/* 저장: 횟수 표시 전용 (버튼 동작 없음) */}
-        <span
-          title="저장한 횟수"
-          className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2 text-[11px] font-semibold tabular-nums text-slate-500"
-        >
-          <Save className="h-3 w-3 shrink-0 text-slate-400" />
-          <span className="truncate">저장 {exam.saveCount}회</span>
-        </span>
-      </div>
-
-      {/* Bottom row: 분석 정보(동형 생성 시험지 한정, 좌) · 마지막 수정일 (최우측) */}
-      <div className="flex items-center justify-between gap-2 mt-auto pt-3">
         {/* 동형 생성 시험지: 분석 정보 — 카드 클릭(상세 열기)과 구분되는 별도 액션 */}
         {onShowAnalysis && (
           <button
@@ -256,15 +266,8 @@ export function ExamFileCard({
           </button>
         )}
 
-        <span
-          title="마지막 수정일"
-          className="ml-auto inline-flex items-center gap-1 truncate text-[10px] text-slate-400"
-        >
-          <Clock className="w-3 h-3 shrink-0 text-slate-300" />
-          {formatDate(exam.updatedAt)}
-        </span>
         <CardDetailIconButton
-          className="size-7 rounded-md shadow-none"
+          className="size-7 shrink-0 rounded-md shadow-none"
           iconClassName="size-3.5"
           onClick={(e) => {
             e.stopPropagation();

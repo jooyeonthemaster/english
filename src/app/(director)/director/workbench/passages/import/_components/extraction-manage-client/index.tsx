@@ -63,7 +63,10 @@ import { JobCard } from "@/components/workbench/shared/job-card";
 import { MaterialJobCard } from "./components/material-job-card";
 import { DragSelect } from "@/components/ui/drag-select";
 import { JobReviewModal } from "./components/job-review-modal";
-import { JobReviewToggleButton } from "./components/job-review-toggle-button";
+import {
+  JobReviewToggleButton,
+  JobReviewDisabledButton,
+} from "./components/job-review-toggle-button";
 import {
   ManageFiltersBar,
   ManageFiltersPanel,
@@ -816,11 +819,6 @@ export function ExtractionManageClient({
   );
 
   // ─── Folder bulk bridges ───
-  const handleRemoveFromFolderClick = useCallback(async () => {
-    const ok = await folders.handleRemoveFromFolder(actionTargetIds);
-    if (ok) clearActionSelection();
-  }, [actionTargetIds, clearActionSelection, folders]);
-
   const handleAddToFolder = useCallback(
     async (collectionId: string) => {
       const ok = await folders.handleAddToFolder(collectionId, actionTargetIds);
@@ -912,75 +910,75 @@ export function ExtractionManageClient({
     triggerHintGlowWithin(draftZoneRef.current);
   }, []);
 
-  const selectionExtraActions = (
-    <>
-      <MoveOrCopyFolderPicker
-        collections={folders.collections}
-        activeFolder={folders.activeFolder}
-        selectedCount={actionTargetIds.size}
-        onCopy={handleAddToFolder}
-        onMove={handleMoveToFolder}
-        disabled={anyBulkRunning || noSelection}
-        compact={embedded}
-      />
+  // 자료 관리 툴바: 이동/복사·삭제는 아이콘 전용(이미지 디자인), AI 복원 다시는
+  // 가장 오른쪽으로 분리 배치한다. 각각 개별 슬롯으로 DraftSelectionToolbar 에
+  // 전달해 [체크박스] [이동/복사] [검수완료] [삭제] … [AI 복원 다시] 순서를 만든다.
+  const moveAction = (
+    <MoveOrCopyFolderPicker
+      collections={folders.collections}
+      activeFolder={folders.activeFolder}
+      selectedCount={actionTargetIds.size}
+      onCopy={handleAddToFolder}
+      onMove={handleMoveToFolder}
+      disabled={anyBulkRunning || noSelection}
+      compact
+    />
+  );
 
-      <button
-        type="button"
-        onClick={() => {
-          if (anyBulkRunning) return;
-          if (noSelection) {
-            hintSelectDrafts();
-            return;
-          }
-          void bulk.bulkRerestore(actionTargetIds, clearActionSelection);
-        }}
-        // 실행 중엔 진짜 비활, 미선택은 aria-disabled(눌리면 힌트 글로우).
-        disabled={anyBulkRunning}
-        aria-disabled={noSelection}
-        title={embedded ? "AI 복원 다시" : undefined}
-        aria-label={embedded ? "AI 복원 다시" : undefined}
-        className={
-          embedded
-            ? "flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
-            : "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-medium text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+  const deleteAction = (
+    <button
+      type="button"
+      onClick={() => {
+        if (anyBulkRunning) return;
+        if (noSelection) {
+          hintSelectDrafts();
+          return;
         }
-      >
-        {isRerestoring ? (
-          <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-        ) : (
-          <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
-        )}
-        {embedded ? null : "AI 복원 다시"}
-      </button>
+        void bulk.bulkDelete(actionTargetIds, clearActionSelection);
+      }}
+      disabled={anyBulkRunning}
+      aria-disabled={noSelection}
+      title="삭제"
+      aria-label="삭제"
+      className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+    >
+      {isDeleting ? (
+        <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+      ) : (
+        <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+      )}
+    </button>
+  );
 
-      <button
-        type="button"
-        onClick={() => {
-          if (anyBulkRunning) return;
-          if (noSelection) {
-            hintSelectDrafts();
-            return;
-          }
-          void bulk.bulkDelete(actionTargetIds, clearActionSelection);
-        }}
-        disabled={anyBulkRunning}
-        aria-disabled={noSelection}
-        title={embedded ? "삭제" : undefined}
-        aria-label={embedded ? "삭제" : undefined}
-        className={
-          embedded
-            ? "flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
-            : "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+  const rerestoreAction = (
+    <button
+      type="button"
+      onClick={() => {
+        if (anyBulkRunning) return;
+        if (noSelection) {
+          hintSelectDrafts();
+          return;
         }
-      >
-        {isDeleting ? (
-          <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-        ) : (
-          <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
-        )}
-        {embedded ? null : "삭제"}
-      </button>
-    </>
+        void bulk.bulkRerestore(actionTargetIds, clearActionSelection);
+      }}
+      // 실행 중엔 진짜 비활, 미선택은 aria-disabled(눌리면 힌트 글로우).
+      disabled={anyBulkRunning}
+      aria-disabled={noSelection}
+      title={embedded ? "AI 복원 다시" : undefined}
+      aria-label={embedded ? "AI 복원 다시" : undefined}
+      className={
+        embedded
+          ? "flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+          : "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-medium text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+      }
+    >
+      {isRerestoring ? (
+        <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+      ) : (
+        <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
+      )}
+      {embedded ? null : "AI 복원 다시"}
+    </button>
   );
 
   const materialDuplicateMode =
@@ -1298,10 +1296,10 @@ export function ExtractionManageClient({
                       isAllSelected={isAllSelected}
                       onSelectAll={selectAll}
                       onClearSelection={clearActionSelection}
-                      activeFolder={folders.activeFolder}
-                      onRemoveFromFolder={handleRemoveFromFolderClick}
-                      extraActions={selectionExtraActions}
+                      moveAction={moveAction}
                       primaryAction={promoteAction}
+                      deleteAction={deleteAction}
+                      trailingAction={rerestoreAction}
                     />
                     {!embedded ? (
                       <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
@@ -1401,7 +1399,15 @@ export function ExtractionManageClient({
                       }
                       renderTaskActions={(task) => {
                         const jobDrafts = draftsByJobId.get(task.id);
-                        if (!jobDrafts?.length) return null;
+                        if (!jobDrafts?.length) {
+                          // 취소·실패한 작업은 복원 자료가 없지만, 검수 토글이
+                          // 들어갈 자리를 비워두면 카드 레이아웃이 들쭉날쭉해진다.
+                          // 같은 크기의 비활성 "미검수" 버튼으로 자리를 채운다.
+                          return task.status === "cancelled" ||
+                            task.status === "failed" ? (
+                            <JobReviewDisabledButton status={task.status} />
+                          ) : null;
+                        }
                         return (
                           <JobReviewToggleButton
                             drafts={jobDrafts}
@@ -1482,6 +1488,13 @@ export function ExtractionManageClient({
                     statusBadgeMode={embedded ? "analysis" : "review"}
                     flatCards={embedded}
                     detailAction={draftDetailAction}
+                    // 자료 관리(standalone) 카드는 다른 검수 화면처럼 푸터에 검수완료
+                    // 버튼 + 상세보기 아이콘을 둔다. 임베드(학습지 생성)는 분석/가져오기
+                    // 흐름이라 검수 토글을 두지 않는다.
+                    onPromote={embedded ? undefined : actions.promoteDraft}
+                    onUnpromote={embedded ? undefined : actions.unpromoteDraft}
+                    onDeleteDraft={embedded ? undefined : actions.deleteDraft}
+                    deletingDraftId={actions.deletingDraftId}
                     groupIndexBySourceMaterialId={
                       display.groupIndexBySourceMaterialId
                     }
@@ -1509,10 +1522,10 @@ export function ExtractionManageClient({
                         isAllSelected={isAllSelected}
                         onSelectAll={selectAll}
                         onClearSelection={clearActionSelection}
-                        activeFolder={folders.activeFolder}
-                        onRemoveFromFolder={handleRemoveFromFolderClick}
-                        extraActions={selectionExtraActions}
+                        moveAction={moveAction}
                         primaryAction={promoteAction}
+                        deleteAction={deleteAction}
+                        trailingAction={rerestoreAction}
                       />
                     }
                   />

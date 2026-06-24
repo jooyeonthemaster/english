@@ -187,6 +187,14 @@ interface DraftGridProps {
   inProgressCount?: number;
   statusBadgeMode?: DraftCardStatusBadgeMode;
   detailAction?: DraftCardActionVariant;
+  /** 검수완료 토글. 둘 다 주어지면 각 자료 카드 푸터에 "검수완료/미검수" 버튼이
+   *  들어가고(상세보기는 아이콘으로 축소), 우상단 검수 도장은 생략된다. */
+  onPromote?: (draft: M1PassageDraftWithJob) => Promise<void>;
+  onUnpromote?: (draft: M1PassageDraftWithJob) => Promise<void>;
+  /** 카드별 삭제. 주어지면 각 자료 카드 제목 행에 빨강 휴지통 버튼이 노출된다. */
+  onDeleteDraft?: (draft: M1PassageDraftWithJob) => void;
+  /** 현재 삭제 진행 중인 draft id — 해당 카드의 휴지통을 스피너로 바꾼다. */
+  deletingDraftId?: string | null;
   /** 마키(영역 드래그) 시작 영역을 자료 콘텐츠 영역 전체로 넓히기 위한 boundary(부모에서
    *  내려줌). 그룹 보기에서는 그룹마다 DragSelect 가 렌더되지만 모두 같은 boundary·선택
    *  집합을 공유하므로 한 번의 드래그로 그룹을 가로질러 선택할 수 있다. */
@@ -238,6 +246,10 @@ export function DraftGrid({
   inProgressCount = 0,
   statusBadgeMode = "review",
   detailAction,
+  onPromote,
+  onUnpromote,
+  onDeleteDraft,
+  deletingDraftId,
   marqueeBoundaryRef,
 }: DraftGridProps) {
   // Stable keys + element list for the in-progress skeleton cards (same shape
@@ -485,6 +497,10 @@ export function DraftGrid({
                           onTitleChange={onRenameDraft}
                           statusBadgeMode={statusBadgeMode}
                           detailAction={detailAction}
+                          onPromote={onPromote}
+                          onUnpromote={onUnpromote}
+                          onDelete={onDeleteDraft}
+                          deleting={deletingDraftId === draft.id}
                           dragRequiresSelection
                         />
                       ))}
@@ -531,6 +547,10 @@ export function DraftGrid({
                     onTitleChange={onRenameDraft}
                     statusBadgeMode={statusBadgeMode}
                     detailAction={detailAction}
+                    onPromote={onPromote}
+                    onUnpromote={onUnpromote}
+                    onDelete={onDeleteDraft}
+                    deleting={deletingDraftId === draft.id}
                     dragRequiresSelection
                   />
                 ))}

@@ -131,6 +131,11 @@ interface PassageInputRowProps {
    */
   disableMarking?: boolean;
   /**
+   * 일반 텍스트 에디터(disableMarking)에서 서식 툴바를 숨긴다. 서식은 저장/생성에
+   * 반영되지 않으므로 웹툰 생성처럼 서식이 무의미한 경로에서 켠다(기본 false).
+   */
+  hideToolbar?: boolean;
+  /**
    * 변형 지문 생성 → 새 Passage 로 저장하고 새 행으로 추가한다(부모가 처리).
    * 주어지지 않으면 '변형 지문 생성' 버튼을 숨긴다.
    */
@@ -167,6 +172,7 @@ export function PassageInputRow({
   onToggleSelected,
   enableAiTransforms = false,
   disableMarking = false,
+  hideToolbar = false,
   onAddVariant,
 }: PassageInputRowProps) {
   const [restoring, setRestoring] = useState(false);
@@ -839,6 +845,7 @@ export function PassageInputRow({
                   content={row.content}
                   onChange={handleContentChange}
                   readOnly={busy}
+                  hideToolbar={hideToolbar}
                   placeholder="여기에 영어 지문을 붙여넣으세요..."
                 />
               ) : (

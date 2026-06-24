@@ -35,7 +35,9 @@ export function ExamPassageCard({
   return (
     <div
       data-exam-card
+      title="클릭하여 선택 · 더블클릭하여 상세 보기"
       onClick={() => onToggle(passage.id)}
+      onDoubleClick={() => onPreview(passage)}
       className={
         "group relative flex cursor-pointer flex-col gap-2 rounded-xl border bg-white p-3 text-left shadow-sm transition hover:shadow-md " +
         (selected

@@ -14,10 +14,18 @@ import {
   AlignCenter,
   AlignLeft,
   AlignRight,
+  ArrowLeft,
   Bold,
+  BookOpen,
   Check,
+  ChevronDown,
+  ChevronUp,
+  GripVertical,
+  Image as ImageIcon,
   Loader2,
+  Minus,
   Plus,
+  Printer,
   Redo2,
   RotateCcw,
   Save,
@@ -26,6 +34,11 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   PREVIEW_ZOOM_MAX,
   PREVIEW_ZOOM_MIN,
@@ -57,8 +70,14 @@ type Phase = "detecting" | "loading-image" | "ready" | "error";
 interface WebtoonTextEditorProps {
   webtoonId: string;
   title?: string;
+  /** 이 웹툰이 생성된 지문의 원문. 제공되면 헤더 제목을 눌러 팝오버로 볼 수 있다. */
+  passageContent?: string;
   onClose: () => void;
   onExported?: (editedImageUrl: string) => void;
+  /** 상세보기에서 진입한 경우, 편집창을 닫고 상세보기로 되돌아간다. */
+  onBack?: () => void;
+  /** 이 웹툰 자체를 삭제한다(되돌릴 수 없음). 제공되면 헤더에 삭제 버튼이 노출된다. */
+  onDelete?: () => void;
 }
 
 function nextFrame(): Promise<void> {
@@ -68,8 +87,11 @@ function nextFrame(): Promise<void> {
 export function WebtoonTextEditor({
   webtoonId,
   title,
+  passageContent,
   onClose,
   onExported,
+  onBack,
+  onDelete,
 }: WebtoonTextEditorProps) {
   const [phase, setPhase] = useState<Phase>("detecting");
   const [error, setError] = useState<string | null>(null);
@@ -475,53 +497,164 @@ export function WebtoonTextEditor({
     }
   }, [doc, boxes, webtoonId, onExported]);
 
+  const handlePrint = useCallback(async () => {
+    if (!doc) return;
+    // commit latest edits + real font metrics to the canvas before snapshotting
+    await nextFrame();
+    await nextFrame();
+    if (document.fonts?.ready) {
+      try {
+        await document.fonts.ready;
+      } catch {
+        /* ignore */
+      }
+    }
+    const dataUrl = exportApiRef.current?.exportDataUrl();
+    if (!dataUrl) {
+      setNotice("인쇄할 이미지를 준비하지 못했습니다");
+      return;
+    }
+    // 새 창(window.open) 대신 화면 밖 숨김 iframe으로 인쇄한다 — 팝업이 뜨지 않고
+    // 현재 탭에서 바로 인쇄 대화상자가 열린다. 인쇄가 끝나면 iframe을 제거한다.
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("aria-hidden", "true");
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    document.body.appendChild(iframe);
+
+    const cleanup = () => {
+      // 인쇄 대화상자가 닫힌 뒤 정리(여러 번 호출돼도 안전).
+      if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+    };
+
+    const idoc = iframe.contentWindow?.document;
+    if (!idoc) {
+      cleanup();
+      setNotice("인쇄를 준비하지 못했습니다");
+      return;
+    }
+    idoc.open();
+    idoc.write(
+      `<!doctype html><html><head><title>${title ? `${title} — 웹툰` : "웹툰"}</title>` +
+        // A4 세로(portrait)를 기본 용지로 지정하고, 이미지를 인쇄 가능 영역
+        // (A4 210×297mm − 10mm 여백 = 190×277mm)에 맞춰 축소해 한 페이지에 담는다.
+        `<style>` +
+        `@page{size:A4 portrait;margin:10mm}` +
+        `html,body{margin:0;padding:0}` +
+        `img{display:block;margin:0 auto;width:auto;height:auto;max-width:190mm;max-height:277mm}` +
+        `</style>` +
+        `</head><body><img src="${dataUrl}" /></body></html>`,
+    );
+    idoc.close();
+
+    const win = iframe.contentWindow;
+    const img = idoc.images[0];
+    const triggerPrint = () => {
+      try {
+        win?.focus();
+        win?.print();
+      } finally {
+        // 인쇄 대화상자를 닫은 뒤 정리. afterprint가 안 와도 대비해 타임아웃도 둔다.
+        win?.addEventListener("afterprint", cleanup);
+        window.setTimeout(cleanup, 60_000);
+      }
+    };
+    if (img && !img.complete) {
+      img.addEventListener("load", triggerPrint);
+      img.addEventListener("error", cleanup);
+    } else {
+      triggerPrint();
+    }
+  }, [doc, title]);
+
   const body = (
-    <div className="fixed inset-0 z-[60] flex flex-col bg-slate-900/95 backdrop-blur-sm">
-      {/* header */}
-      <div className="flex items-center justify-between gap-3 border-b border-slate-700 px-5 py-3 text-white">
-        <div className="min-w-0">
-          <div className="text-[13px] font-semibold truncate">
-            {title ? `웹툰 자막 편집 — ${title}` : "웹툰 자막 편집"}
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/40 p-2 backdrop-blur-sm sm:p-3"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl bg-[#F4F6F9] shadow-2xl">
+      {/* header row 1 — title bar (학습지 편집창과 동일 디자인 언어) */}
+      <div className="flex h-[52px] shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4">
+        {passageContent ? (
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                title="지문 원문 보기"
+                className="flex min-w-0 items-center gap-2 rounded-md py-1 pl-1 pr-2 text-left transition-colors hover:bg-slate-50"
+              >
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                  <ImageIcon className="size-4" />
+                </span>
+                <span className="shrink-0 text-[15px] font-bold text-slate-800">웹툰 편집</span>
+                {title ? (
+                  <span className="truncate text-[12px] text-slate-400">— {title}</span>
+                ) : null}
+                <ChevronDown className="size-4 shrink-0 text-slate-400" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="z-[70] w-[440px] max-w-[90vw] p-0">
+              <div className="flex items-center gap-1.5 border-b border-slate-100 px-3 py-2">
+                <BookOpen className="size-3.5 shrink-0 text-slate-400" />
+                <span className="truncate text-[12px] font-bold text-slate-700">
+                  {title ? `${title} — 지문 원문` : "지문 원문"}
+                </span>
+              </div>
+              <div className="max-h-[60vh] overflow-y-auto p-3">
+                <div className="rounded-lg border border-slate-200 bg-slate-50/60 px-3 py-2.5">
+                  <p className="whitespace-pre-wrap break-words text-[12.5px] leading-relaxed text-slate-700">
+                    {passageContent}
+                  </p>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        ) : (
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+              <ImageIcon className="size-4" />
+            </span>
+            <span className="truncate text-[15px] font-bold text-slate-800">웹툰 편집</span>
+            {title ? (
+              <span className="truncate text-[12px] text-slate-400">— {title}</span>
+            ) : null}
           </div>
-          <div className="text-[11px] text-slate-400">
-            {phase === "ready"
-              ? `편집 가능한 텍스트 ${editableBoxes.length}개 · 수정됨 ${editedCount}개 — 박스를 눌러 글자를 고치세요`
-              : "이미지 속 텍스트를 인식하는 중…"}
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="mr-1 flex items-center gap-0.5 rounded-lg bg-slate-800 p-0.5">
-            <ToolbarIconButton title="실행 취소 (Ctrl+Z)" onClick={undo} disabled={hist.u === 0 || phase !== "ready"}>
-              <Undo2 className="size-4" />
-            </ToolbarIconButton>
-            <ToolbarIconButton title="다시 실행 (Ctrl+Shift+Z)" onClick={redo} disabled={hist.r === 0 || phase !== "ready"}>
-              <Redo2 className="size-4" />
-            </ToolbarIconButton>
-            <ToolbarIconButton title="텍스트 박스 추가" onClick={addTextBox} disabled={phase !== "ready"}>
-              <Plus className="size-4" />
-            </ToolbarIconButton>
-          </div>
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={handleSave}
-            disabled={saving || phase !== "ready"}
-          >
-            {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
-            저장
-          </Button>
-          <Button
-            size="sm"
-            onClick={handleExport}
-            disabled={exporting || phase !== "ready" || editedCount === 0}
-          >
-            {exporting ? <Loader2 className="size-4 animate-spin" /> : <Check className="size-4" />}
-            적용 · 내보내기
-          </Button>
+        )}
+        <div className="flex shrink-0 items-center gap-2">
+          {onBack ? (
+            <button
+              type="button"
+              onClick={onBack}
+              title="이전 단계로 돌아가기"
+              className="flex h-8 items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+            >
+              <ArrowLeft className="size-3.5" />
+              돌아가기
+            </button>
+          ) : null}
+          {onDelete ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                if (window.confirm("이 웹툰을 삭제할까요? 되돌릴 수 없습니다.")) onDelete();
+              }}
+              className="h-8 text-xs text-red-500 hover:bg-red-50 hover:text-red-600"
+            >
+              <Trash2 className="mr-1 h-3.5 w-3.5" />
+              삭제
+            </Button>
+          ) : null}
           <button
             type="button"
             onClick={onClose}
-            className="ml-1 rounded-lg p-1.5 text-slate-300 hover:bg-slate-700 hover:text-white"
+            className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700"
             aria-label="닫기"
           >
             <X className="size-5" />
@@ -529,27 +662,129 @@ export function WebtoonTextEditor({
         </div>
       </div>
 
+      {/* header row 2 — toolbar (학습지 편집창 상단 바와 동일) */}
+      <div className="flex h-11 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="truncate text-[12px] font-bold text-slate-600">웹툰 편집</span>
+          {phase === "ready" ? (
+            <>
+              <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
+                편집 가능 {editableBoxes.length}개
+              </span>
+              {editedCount > 0 ? (
+                <span className="shrink-0 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                  수정됨 {editedCount}개
+                </span>
+              ) : null}
+            </>
+          ) : (
+            <span className="truncate text-[11px] text-slate-400">이미지 속 텍스트를 인식하는 중…</span>
+          )}
+        </div>
+
+        <div className="flex shrink-0 items-center justify-end gap-2">
+          {/* undo / redo */}
+          <button
+            type="button"
+            onClick={undo}
+            disabled={hist.u === 0 || phase !== "ready"}
+            title="실행 취소 (Ctrl+Z)"
+            aria-label="실행 취소"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Undo2 className="size-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={redo}
+            disabled={hist.r === 0 || phase !== "ready"}
+            title="다시 실행 (Ctrl+Shift+Z)"
+            aria-label="다시 실행"
+            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Redo2 className="size-3.5" />
+          </button>
+
+          <span className="mx-0.5 h-5 w-px bg-slate-200" aria-hidden="true" />
+
+          {/* 저장 */}
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={saving || phase !== "ready"}
+            className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {saving ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
+            저장
+          </button>
+          {/* 인쇄 */}
+          <button
+            type="button"
+            onClick={handlePrint}
+            disabled={phase !== "ready"}
+            className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Printer className="size-3.5" />
+            인쇄
+          </button>
+          {/* 배포하기 (primary) */}
+          <button
+            type="button"
+            onClick={handleExport}
+            disabled={exporting || phase !== "ready" || editedCount === 0}
+            className="flex h-8 min-w-[80px] items-center justify-center gap-1 rounded-md bg-slate-900 px-2.5 text-[11px] font-bold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
+          >
+            {exporting ? <Loader2 className="size-3.5 animate-spin" /> : <Check className="size-3.5" />}
+            배포하기
+          </button>
+        </div>
+      </div>
+
       {/* notice toast */}
       {notice ? (
-        <div className="absolute left-1/2 top-16 z-10 -translate-x-1/2 rounded-full bg-slate-800 px-4 py-1.5 text-[12px] text-white shadow-lg">
+        <div className="absolute left-1/2 top-28 z-10 -translate-x-1/2 rounded-full bg-slate-800 px-4 py-1.5 text-[12px] text-white shadow-lg">
           {notice}
         </div>
       ) : null}
 
       <div className="flex min-h-0 flex-1">
+        {/* left panel — recognized text list (학습지 편집창 좌측 패널 UI) */}
+        <aside className="flex h-full min-h-0 w-[300px] shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white">
+          <div className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-200 bg-white px-3.5">
+            <div className="min-w-0">
+              <p className="truncate text-[12px] font-black text-slate-800">인식된 텍스트</p>
+              <p className="truncate text-[10.5px] font-semibold text-slate-400">
+                {phase === "ready"
+                  ? `편집 가능 ${editableBoxes.length}개 · 수정됨 ${editedCount}개`
+                  : "텍스트 인식 중…"}
+              </p>
+            </div>
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto p-2.5">
+            <RegionList
+              boxes={editableBoxes}
+              hoverId={hoverId}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+              onHover={setHoverId}
+              onAddText={addTextBox}
+            />
+          </div>
+        </aside>
+
         {/* canvas area — relative parent so the zoom control stays fixed while the
             scroller pans the (possibly zoomed-in) canvas */}
         <div className="relative min-w-0 flex-1">
           <div ref={stageWrapRef} className="absolute inset-0 flex overflow-auto">
             {phase === "error" ? (
-              <div className="m-auto text-center text-slate-300">
+              <div className="m-auto text-center text-slate-500">
                 <p className="text-[14px]">{error}</p>
                 <Button size="sm" variant="secondary" className="mt-3" onClick={onClose}>
                   닫기
                 </Button>
               </div>
             ) : phase !== "ready" || !image || !doc ? (
-              <div className="m-auto flex flex-col items-center gap-3 text-slate-300">
+              <div className="m-auto flex flex-col items-center gap-3 text-slate-500">
                 <Loader2 className="size-8 animate-spin" />
                 <p className="text-[13px]">
                   {phase === "detecting" ? "텍스트 인식 중… (최초 1회, 약 10초)" : "이미지 불러오는 중…"}
@@ -589,37 +824,75 @@ export function WebtoonTextEditor({
           ) : null}
         </div>
 
-        {/* side panel */}
-        <aside className="w-[320px] shrink-0 overflow-y-auto border-l border-slate-700 bg-white">
-          {selected ? (
-            <BoxEditor
-              box={selected}
-              onChange={(patch) => updateBox(selected.id, patch)}
-              onFontChange={handleFontChange}
-              onDelete={() => removeOrEraseBox(selected)}
-              onRevert={() =>
-                updateBox(selected.id, {
-                  text: selected.sourceText,
-                  autoFit: true,
-                  edited: false,
-                  // return a dragged box to its detected home so nothing is repainted
-                  x: selected.srcX,
-                  y: selected.srcY,
-                  w: selected.srcW,
-                  h: selected.srcH,
-                })
-              }
-            />
-          ) : (
-            <RegionList
-              boxes={editableBoxes}
-              hoverId={hoverId}
-              onSelect={setSelectedId}
-              onHover={setHoverId}
-              onAddText={addTextBox}
-            />
-          )}
+        {/* right panel — speech-bubble editor (학습지 편집창 우측 패널 UI) */}
+        <aside className="flex h-full min-h-0 w-[320px] shrink-0 flex-col overflow-hidden border-l border-slate-200 bg-slate-50/80">
+          <div className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-slate-200 bg-white px-3.5">
+            <div className="min-w-0">
+              <p className="truncate text-[12px] font-black text-slate-800">말풍선 편집</p>
+              <p className="truncate text-[10.5px] font-semibold text-slate-400">
+                {selected
+                  ? `${selected.added ? "텍스트" : webtoonTextRoleLabel(selected.role)} 조정`
+                  : "박스를 선택하세요"}
+              </p>
+            </div>
+            {selected ? (
+              <div className="flex shrink-0 items-center gap-1">
+                {!selected.added ? (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateBox(selected.id, {
+                        text: selected.sourceText,
+                        autoFit: true,
+                        edited: false,
+                        x: selected.srcX,
+                        y: selected.srcY,
+                        w: selected.srcW,
+                        h: selected.srcH,
+                      })
+                    }
+                    disabled={!(selected.text !== selected.sourceText || selected.edited)}
+                    title="원본으로 되돌리기"
+                    className="flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] text-slate-500 hover:bg-slate-100 disabled:opacity-40"
+                  >
+                    <RotateCcw className="size-3.5" /> 원본
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => removeOrEraseBox(selected)}
+                  title={selected.added ? "박스 삭제" : "원본 글자 지우기"}
+                  className="flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] text-rose-500 hover:bg-rose-50"
+                >
+                  <Trash2 className="size-3.5" /> {selected.added ? "삭제" : "지우기"}
+                </button>
+              </div>
+            ) : null}
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto p-2.5">
+            {selected ? (
+              <HandleBlock
+                title={`${selected.added ? "텍스트" : webtoonTextRoleLabel(selected.role)} 편집`}
+                summary={selected.edited ? "수정됨" : undefined}
+              >
+                <BoxEditor
+                  box={selected}
+                  onChange={(patch) => updateBox(selected.id, patch)}
+                  onFontChange={handleFontChange}
+                />
+              </HandleBlock>
+            ) : (
+              <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
+                <p className="text-[12px] leading-relaxed text-slate-400">
+                  왼쪽 목록이나 이미지에서 텍스트 박스를 선택하면
+                  <br />
+                  여기서 글자·크기·색 등을 편집할 수 있어요.
+                </p>
+              </div>
+            )}
+          </div>
         </aside>
+      </div>
       </div>
     </div>
   );
@@ -628,48 +901,24 @@ export function WebtoonTextEditor({
   return createPortal(body, document.body);
 }
 
-function ToolbarIconButton({
-  children,
-  onClick,
-  disabled,
-  title,
-}: {
-  children: React.ReactNode;
-  onClick: () => void;
-  disabled?: boolean;
-  title: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      title={title}
-      aria-label={title}
-      className="flex size-7 items-center justify-center rounded-md text-slate-200 transition-colors hover:bg-slate-700 hover:text-white disabled:cursor-default disabled:text-slate-600 disabled:hover:bg-transparent"
-    >
-      {children}
-    </button>
-  );
-}
-
 function RegionList({
   boxes,
   hoverId,
+  selectedId,
   onSelect,
   onHover,
   onAddText,
 }: {
   boxes: WebtoonTextBox[];
   hoverId: string | null;
+  selectedId?: string | null;
   onSelect: (id: string) => void;
   onHover: (id: string | null) => void;
   onAddText: () => void;
 }) {
   return (
-    <div className="p-4">
-      <h3 className="text-[13px] font-semibold text-slate-800">인식된 텍스트</h3>
-      <p className="mt-1 text-[11px] leading-relaxed text-slate-500">
+    <div>
+      <p className="text-[11px] leading-relaxed text-slate-500">
         고치고 싶은 텍스트를 누르면 바로 편집할 수 있어요. 수정한 부분만 새로 그려지고 나머지는
         원본 그대로 유지됩니다.
       </p>
@@ -689,9 +938,11 @@ function RegionList({
               onMouseLeave={() => onHover(null)}
               onClick={() => onSelect(b.id)}
               className={`w-full rounded-lg border px-2.5 py-2 text-left transition ${
-                hoverId === b.id
-                  ? "border-blue-300 bg-blue-50/70"
-                  : "border-slate-200 bg-white hover:border-slate-300"
+                selectedId === b.id
+                  ? "border-blue-400 bg-blue-50 ring-1 ring-blue-300"
+                  : hoverId === b.id
+                    ? "border-blue-300 bg-blue-50/70"
+                    : "border-slate-200 bg-white hover:border-slate-300"
               }`}
             >
               <div className="flex items-center gap-1.5">
@@ -720,42 +971,154 @@ function hex6(value: string, fallback: string): string {
   return /^#[0-9a-fA-F]{6}$/.test(value) ? value : fallback;
 }
 
-function SliderRow({
+/** 손잡이 달린 블록 카드 — 학습지 편집창 PanelSection(블록 편집 카드)과 동일 디자인. */
+function HandleBlock({
+  title,
+  summary,
+  children,
+}: {
+  title: string;
+  summary?: string;
+  children: React.ReactNode;
+}) {
+  const [collapsed, setCollapsed] = useState(false);
+  return (
+    <section className="mb-2.5 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all last:mb-0">
+      <div className="flex items-center gap-1 border-b border-slate-100 bg-slate-50/70 px-2 py-1.5">
+        <span
+          className="flex h-6 w-6 shrink-0 cursor-grab items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700 active:cursor-grabbing"
+          aria-hidden="true"
+        >
+          <GripVertical className="h-3.5 w-3.5" />
+        </span>
+        <button
+          type="button"
+          onClick={() => setCollapsed((v) => !v)}
+          aria-expanded={!collapsed}
+          className="flex min-w-0 flex-1 flex-col items-start gap-0.5 rounded-md px-1 py-0.5 text-left transition-colors hover:bg-white"
+          title={`${title} ${collapsed ? "펼치기" : "접기"}`}
+        >
+          <h4 className="w-full truncate text-[10.5px] font-black uppercase tracking-wide text-slate-500">{title}</h4>
+          {summary ? (
+            <span className="w-full truncate text-[10px] font-medium text-slate-400">{summary}</span>
+          ) : null}
+        </button>
+        <button
+          type="button"
+          onClick={() => setCollapsed((v) => !v)}
+          className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700"
+          title={collapsed ? "펼치기" : "접기"}
+          aria-label={collapsed ? "펼치기" : "접기"}
+        >
+          {collapsed ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronUp className="h-3.5 w-3.5" />}
+        </button>
+      </div>
+      {!collapsed ? <div className="px-3 py-3">{children}</div> : null}
+    </section>
+  );
+}
+
+/** 섹션 헤더 — 학습지 편집창 PanelGroup 과 동일 패턴 (UI 통일감). */
+function PanelGroup({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="mt-3 border-t border-slate-100 pt-3 first:mt-0 first:border-t-0 first:pt-0">
+      <div className="mb-1.5 text-[10px] font-black uppercase tracking-wide text-slate-400">{label}</div>
+      {children}
+    </div>
+  );
+}
+
+/** 숫자 값 스테퍼 — 학습지 편집창의 [− 값 +] 컨트롤과 동일 (슬라이더 대신). */
+function StepperRow({
   label,
-  value,
-  min,
-  max,
-  step = 1,
   display,
-  disabled,
-  onChange,
+  headerRight,
+  onDec,
+  onInc,
+  decDisabled,
+  incDisabled,
 }: {
   label: string;
-  value: number;
-  min: number;
-  max: number;
-  step?: number;
-  display?: string;
-  disabled?: boolean;
-  onChange: (v: number) => void;
+  display: string;
+  headerRight?: React.ReactNode;
+  onDec: () => void;
+  onInc: () => void;
+  decDisabled?: boolean;
+  incDisabled?: boolean;
 }) {
   return (
-    <div className="mt-3">
-      <div className="flex items-center justify-between">
-        <span className="text-[11px] font-medium text-slate-500">{label}</span>
-        <span className="text-[11px] tabular-nums text-slate-500">{display ?? value}</span>
+    <div className="mb-2.5">
+      <div className="mb-1 flex items-center justify-between">
+        <span className="text-[12px] text-slate-600">{label}</span>
+        {headerRight ?? (
+          <span className="text-[11px] font-semibold tabular-nums text-slate-500">{display}</span>
+        )}
       </div>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        disabled={disabled}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-1 w-full accent-blue-600 disabled:opacity-40"
-      />
+      <div className="flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={onDec}
+          disabled={decDisabled}
+          className="inline-flex h-8 flex-1 items-center justify-center rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+        >
+          <Minus className="size-3.5" />
+        </button>
+        <span className="inline-flex h-8 min-w-[64px] items-center justify-center rounded-md border border-slate-200 px-2.5 text-[11px] font-semibold tabular-nums text-slate-600">
+          {display}
+        </span>
+        <button
+          type="button"
+          onClick={onInc}
+          disabled={incDisabled}
+          className="inline-flex h-8 flex-1 items-center justify-center rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+        >
+          <Plus className="size-3.5" />
+        </button>
+      </div>
     </div>
+  );
+}
+
+/** on/off 토글 행 — 학습지 편집창 ToggleRow 와 동일. */
+function ToggleRow({
+  label,
+  on,
+  onClick,
+  icon,
+}: {
+  label: string;
+  on: boolean;
+  onClick: () => void;
+  icon?: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      title={label}
+      onClick={onClick}
+      className={`inline-flex h-8 w-full items-center gap-1.5 rounded-md border px-2.5 text-[11.5px] font-semibold transition-colors ${
+        on
+          ? "border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100"
+          : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+      }`}
+    >
+      {icon}
+      <span className="min-w-0 flex-1 truncate text-left">{label}</span>
+      <span
+        className={`relative h-4 w-7 shrink-0 rounded-full transition-colors ${
+          on ? "bg-sky-500" : "bg-slate-300"
+        }`}
+        aria-hidden="true"
+      >
+        <span
+          className={`absolute left-0 top-0.5 h-3 w-3 rounded-full bg-white shadow-sm transition-transform ${
+            on ? "translate-x-3.5" : "translate-x-0.5"
+          }`}
+        />
+      </span>
+    </button>
   );
 }
 
@@ -772,12 +1135,12 @@ function ColorField({
 }) {
   return (
     <div>
-      <label className="block text-[11px] font-medium text-slate-500">{label}</label>
+      <label className="block text-[12px] text-slate-600">{label}</label>
       <input
         type="color"
         value={hex6(value, fallback)}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 h-8 w-full cursor-pointer rounded border border-slate-200"
+        className="mt-1 h-8 w-full cursor-pointer rounded-md border border-slate-200"
       />
     </div>
   );
@@ -787,162 +1150,137 @@ function BoxEditor({
   box,
   onChange,
   onFontChange,
-  onDelete,
-  onRevert,
 }: {
   box: WebtoonTextBox;
   onChange: (patch: Partial<WebtoonTextBox>) => void;
   onFontChange: (family: string) => void;
-  onDelete: () => void;
-  onRevert: () => void;
 }) {
   const aligns: { value: WebtoonTextAlign; icon: typeof AlignLeft }[] = [
     { value: "left", icon: AlignLeft },
     { value: "center", icon: AlignCenter },
     { value: "right", icon: AlignRight },
   ];
-  const dirty = box.text !== box.sourceText || box.edited;
   const isBold = (box.fontWeight ?? 400) >= 700;
   const strokeW = box.strokeWidth ?? 0;
+  // 글자 크기는 포인트(pt)로 표기·조절한다. 저장은 px(캔버스 단위) 그대로 유지.
+  // 1pt = 1/72in, 1px = 1/96in → pt = px × 72/96(=0.75), px = pt × 96/72.
+  const sizePt = Math.round(box.fontSizePx * (72 / 96));
+  const ptToPx = (pt: number) => Math.round(pt * (96 / 72));
+  const lhPct = Math.round((box.lineHeight ?? 1.3) * 100);
+  const ls = box.letterSpacing ?? 0;
   return (
-    <div className="p-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-[13px] font-semibold text-slate-800">
-          {box.added ? "텍스트" : webtoonTextRoleLabel(box.role)} 편집
-        </h3>
-        <div className="flex items-center gap-1">
-          {!box.added ? (
-            <button
-              type="button"
-              onClick={onRevert}
-              disabled={!dirty}
-              title="원본으로 되돌리기"
-              className="flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] text-slate-500 hover:bg-slate-100 disabled:opacity-40"
-            >
-              <RotateCcw className="size-3.5" /> 원본
-            </button>
-          ) : null}
-          <button
-            type="button"
-            onClick={onDelete}
-            title={box.added ? "박스 삭제" : "원본 글자 지우기"}
-            className="flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] text-rose-500 hover:bg-rose-50"
-          >
-            <Trash2 className="size-3.5" /> {box.added ? "삭제" : "지우기"}
-          </button>
+    <div>
+      <PanelGroup label="텍스트">
+        <textarea
+          value={box.text}
+          onChange={(e) => onChange({ text: e.target.value })}
+          rows={4}
+          className="w-full resize-y rounded-lg border border-slate-200 bg-slate-50/60 px-2.5 py-2 text-[13px] leading-relaxed text-slate-800 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+        />
+      </PanelGroup>
+
+      <PanelGroup label="서식">
+        <div className="mb-2.5">
+          <span className="mb-1 block text-[12px] text-slate-600">폰트</span>
+          <WebtoonFontPicker value={familyFromStack(box.fontFamily)} onChange={onFontChange} />
         </div>
-      </div>
 
-      <label className="mt-3 block text-[11px] font-medium text-slate-500">텍스트</label>
-      <textarea
-        value={box.text}
-        onChange={(e) => onChange({ text: e.target.value })}
-        rows={4}
-        className="mt-1 w-full resize-y rounded-lg border border-slate-200 bg-slate-50/60 px-2.5 py-2 text-[13px] leading-relaxed text-slate-800 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
-      />
+        {/* 굵게 — 학습지 ToggleRow */}
+        <div className="mb-2.5">
+          <ToggleRow
+            label="굵게"
+            on={isBold}
+            onClick={() => onChange({ fontWeight: isBold ? 400 : 700 })}
+            icon={<Bold className="size-3.5" />}
+          />
+        </div>
 
-      <label className="mt-3 block text-[11px] font-medium text-slate-500">폰트</label>
-      <div className="mt-1">
-        <WebtoonFontPicker value={familyFromStack(box.fontFamily)} onChange={onFontChange} />
-      </div>
-
-      {/* weight + alignment */}
-      <div className="mt-3 flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => onChange({ fontWeight: isBold ? 400 : 700 })}
-          title="굵게"
-          className={`flex size-9 items-center justify-center rounded-md border ${
-            isBold ? "border-blue-400 bg-blue-50 text-blue-700" : "border-slate-200 text-slate-500 hover:bg-slate-50"
-          }`}
-        >
-          <Bold className="size-4" />
-        </button>
-        <div className="flex flex-1 gap-1">
+        {/* 정렬 — 학습지 3분할 버튼 */}
+        <div className="mb-2.5 flex items-center gap-1.5">
           {aligns.map(({ value, icon: Icon }) => (
             <button
               key={value}
               type="button"
               onClick={() => onChange({ align: value })}
-              className={`flex-1 rounded-md border py-1.5 ${
+              className={`inline-flex h-8 flex-1 items-center justify-center rounded-md border ${
                 box.align === value
-                  ? "border-blue-400 bg-blue-50 text-blue-700"
+                  ? "border-blue-500 bg-blue-50 text-blue-600"
                   : "border-slate-200 text-slate-500 hover:bg-slate-50"
               }`}
             >
-              <Icon className="mx-auto size-4" />
+              <Icon className="size-3.5" />
             </button>
           ))}
         </div>
-      </div>
 
-      {/* font size with auto-fit */}
-      <div className="mt-3">
-        <div className="flex items-center justify-between">
-          <span className="text-[11px] font-medium text-slate-500">글자 크기</span>
-          <button
-            type="button"
-            onClick={() => onChange({ autoFit: !box.autoFit })}
-            className={`rounded-full px-2 py-0.5 text-[10px] font-semibold transition ${
-              box.autoFit ? "bg-blue-100 text-blue-700" : "bg-slate-100 text-slate-500"
-            }`}
-          >
-            자동맞춤 {box.autoFit ? "켜짐" : "꺼짐"}
-          </button>
-        </div>
-        <input
-          type="range"
-          min={10}
-          max={160}
-          value={box.fontSizePx}
-          onChange={(e) => onChange({ fontSizePx: Number(e.target.value), autoFit: false })}
-          className="mt-1 w-full accent-blue-600"
+        {/* 글자 크기 — 학습지 [− 값 +] 스테퍼 (자동맞춤 토글 칩 포함) */}
+        <StepperRow
+          label="글자 크기"
+          display={`${sizePt}pt`}
+          headerRight={
+            <button
+              type="button"
+              onClick={() => onChange({ autoFit: !box.autoFit })}
+              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold transition ${
+                box.autoFit ? "bg-blue-100 text-blue-700" : "bg-slate-100 text-slate-500"
+              }`}
+            >
+              자동맞춤 {box.autoFit ? "켜짐" : "꺼짐"}
+            </button>
+          }
+          decDisabled={sizePt <= 8}
+          incDisabled={sizePt >= 120}
+          onDec={() => onChange({ fontSizePx: ptToPx(Math.max(8, sizePt - 1)), autoFit: false })}
+          onInc={() => onChange({ fontSizePx: ptToPx(Math.min(120, sizePt + 1)), autoFit: false })}
         />
-      </div>
+      </PanelGroup>
 
-      <SliderRow
-        label="행간"
-        value={Math.round((box.lineHeight ?? 1.3) * 100)}
-        min={90}
-        max={250}
-        step={5}
-        display={`${Math.round((box.lineHeight ?? 1.3) * 100)}%`}
-        onChange={(v) => onChange({ lineHeight: v / 100 })}
-      />
-      <SliderRow
-        label="자간"
-        value={box.letterSpacing ?? 0}
-        min={-5}
-        max={20}
-        display={`${box.letterSpacing ?? 0}px`}
-        onChange={(v) => onChange({ letterSpacing: v })}
-      />
+      <PanelGroup label="간격">
+        <StepperRow
+          label="행간"
+          display={`${lhPct}%`}
+          decDisabled={lhPct <= 90}
+          incDisabled={lhPct >= 250}
+          onDec={() => onChange({ lineHeight: Math.max(90, lhPct - 5) / 100 })}
+          onInc={() => onChange({ lineHeight: Math.min(250, lhPct + 5) / 100 })}
+        />
+        <StepperRow
+          label="자간"
+          display={`${ls}px`}
+          decDisabled={ls <= -5}
+          incDisabled={ls >= 20}
+          onDec={() => onChange({ letterSpacing: Math.max(-5, ls - 1) })}
+          onInc={() => onChange({ letterSpacing: Math.min(20, ls + 1) })}
+        />
+      </PanelGroup>
 
-      {/* colors */}
-      <div className="mt-3 grid grid-cols-2 gap-3">
-        <ColorField label="글자색" value={box.color} fallback="#111111" onChange={(v) => onChange({ color: v })} />
-        <ColorField label="배경색" value={box.bgColor} fallback="#ffffff" onChange={(v) => onChange({ bgColor: v })} />
-      </div>
-
-      {/* outline (readability over busy art) */}
-      <SliderRow
-        label="외곽선 두께"
-        value={strokeW}
-        min={0}
-        max={20}
-        display={strokeW > 0 ? `${strokeW}px` : "없음"}
-        onChange={(v) => onChange({ strokeWidth: v })}
-      />
-      {strokeW > 0 ? (
-        <div className="mt-2">
-          <ColorField
-            label="외곽선 색"
-            value={box.strokeColor ?? "#ffffff"}
-            fallback="#ffffff"
-            onChange={(v) => onChange({ strokeColor: v })}
-          />
+      <PanelGroup label="색상">
+        <div className="grid grid-cols-2 gap-3">
+          <ColorField label="글자색" value={box.color} fallback="#111111" onChange={(v) => onChange({ color: v })} />
+          <ColorField label="배경색" value={box.bgColor} fallback="#ffffff" onChange={(v) => onChange({ bgColor: v })} />
         </div>
-      ) : null}
+      </PanelGroup>
+
+      <PanelGroup label="외곽선">
+        <StepperRow
+          label="외곽선 두께"
+          display={strokeW > 0 ? `${strokeW}px` : "없음"}
+          decDisabled={strokeW <= 0}
+          incDisabled={strokeW >= 20}
+          onDec={() => onChange({ strokeWidth: Math.max(0, strokeW - 1) })}
+          onInc={() => onChange({ strokeWidth: Math.min(20, strokeW + 1) })}
+        />
+        {strokeW > 0 ? (
+          <div className="mt-2">
+            <ColorField
+              label="외곽선 색"
+              value={box.strokeColor ?? "#ffffff"}
+              fallback="#ffffff"
+              onChange={(v) => onChange({ strokeColor: v })}
+            />
+          </div>
+        ) : null}
+      </PanelGroup>
 
       <p className="mt-4 rounded-lg bg-slate-50 px-2.5 py-2 text-[11px] leading-relaxed text-slate-500">
         팁: 박스를 드래그해 옮기고, 모서리·테두리 핸들로 크기를 조절하세요. 수정한 박스만 새로

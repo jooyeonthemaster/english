@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import {
-  CalendarClock,
   ChevronDown,
   ChevronUp,
   Database,
@@ -633,8 +632,7 @@ function TaskGridCard({
                     {task.errorBadge}
                   </span>
                 ) : null}
-                <span className="inline-flex items-center gap-1 rounded bg-slate-50 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
-                  <CalendarClock className="size-3.5" aria-hidden="true" />
+                <span className="inline-flex items-center rounded bg-slate-50 px-1.5 py-0.5 text-[10px] font-medium tabular-nums text-slate-500">
                   {formatTaskDate(task.createdAt)}
                 </span>
               </div>
@@ -646,7 +644,7 @@ function TaskGridCard({
               type="button"
               onClick={handleDelete}
               disabled={deleting}
-              className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg text-slate-300 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+              className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-red-300 text-red-500 transition-all hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
               aria-label="작업 삭제"
             >
               {deleting ? (
@@ -684,7 +682,7 @@ function TaskGridCard({
           {renderActions}
           {canOpen ? (
             <CardDetailIconButton
-              className="ml-auto size-7 rounded-md"
+              className="ml-auto h-7 w-7 rounded-md"
               iconClassName="size-3.5"
               onClick={(e) => {
                 e.stopPropagation();
@@ -896,8 +894,7 @@ function TaskListRow({
           ))}
         </div>
       ) : null}
-      <span className="hidden shrink-0 items-center gap-1 rounded bg-slate-50 px-1.5 py-0.5 text-[10px] font-medium text-slate-500 md:inline-flex">
-        <CalendarClock className="size-3.5" aria-hidden="true" />
+      <span className="hidden shrink-0 items-center rounded bg-slate-50 px-1.5 py-0.5 text-[10px] font-medium tabular-nums text-slate-500 md:inline-flex">
         {formatTaskDate(task.createdAt)}
       </span>
       {renderActions}

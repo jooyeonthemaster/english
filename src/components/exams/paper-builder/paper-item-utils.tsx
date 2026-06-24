@@ -216,6 +216,14 @@ function questionWithPaperItemPassage(item: PaperItem): BuilderQuestion {
   };
 }
 
+// 지문 박스 제목: item 의 passageTitle 이 비어 있으면 원본 문항의 지문 제목으로 폴백하고
+// 인라인 서식을 정규화한다(제목 빈칸 방지). origin/20260625jooyeon 에서 도입.
+export function resolvePaperItemPassageTitle(item: PaperItem): string {
+  return normalizeInlineText(
+    item.passageTitle || item.sourceQuestion.passage?.title || "",
+  );
+}
+
 export function shouldRenderSourcePassageForItem(item: PaperItem): boolean {
   if (item.blockType !== "question") return false;
   // 요약문 영작은 INLINE_SOURCE(SUMMARY_COMPLETE 와 동일) — 지문은 structuredSegments() 가 문제
@@ -334,6 +342,10 @@ export function reindexItems(items: PaperItem[]): PaperItem[] {
 
 export function buildGroups(items: PaperItem[]): PaperGroup[] {
   const groups: PaperGroup[] = [];
+  // 같은 지문 묶음(groupId)이 비문항 블록(워드프로세서식 빈 줄 등)으로 끊겨 여러 그룹으로
+  // 쪼개지더라도 지문 박스는 한 번만 그리도록, 이미 지문을 그린 groupId 를 기억한다.
+  // (안 그러면 지문이 중복 렌더되어 칸 높이가 부풀고 페이지 여백을 넘는다.)
+  const passageRenderedGroupIds = new Set<string>();
   for (const item of items) {
     if (item.blockType !== "question") {
       groups.push({
@@ -353,23 +365,41 @@ export function buildGroups(items: PaperItem[]): PaperGroup[] {
         item.passageContent || item.sourceQuestion.passage?.content || "",
       );
       if (shouldRenderSourcePassageForItem(item) && passageContent) {
-        last.includePassage = true;
-        last.passageTitle = item.passageTitle;
+        // 제목은 폴백·정규화(빈칸 방지)하되, 지문 박스 표시는 이 묶음이
+        // 아직 한 번도 안 그렸을 때만 켠다(중복 방지).
+        last.passageTitle = resolvePaperItemPassageTitle(item);
         last.passageContent = formatSourcePassageForQuestionItems(
           passageContent,
           last.items,
         );
+        if (!last.includePassage && !passageRenderedGroupIds.has(last.id)) {
+          last.includePassage = true;
+          passageRenderedGroupIds.add(last.id);
+        }
       }
     } else {
       const passageContent = normalizePassageText(
         item.passageContent || item.sourceQuestion.passage?.content || "",
       );
+      const groupId = item.groupId || item.localId;
+      const wantsPassage =
+        shouldRenderSourcePassageForItem(item) && Boolean(passageContent);
+      // 같은 지문 묶음이 "비문항 블록"(워드프로세서식 빈 줄 등)으로 쪼개진 경우에만 지문
+      // 중복 렌더를 막는다. 다른 문항(다른 지문)으로 갈라진 경우는 기존처럼 각자 지문을
+      // 그리도록 둬 일반 시험지 생성 동작을 바꾸지 않는다(회귀 방지).
+      const prevGroup = groups[groups.length - 1];
+      const prevIsNonQuestionBlock =
+        !!prevGroup && prevGroup.items[0]?.blockType !== "question";
+      const renderPassage =
+        wantsPassage &&
+        !(prevIsNonQuestionBlock && passageRenderedGroupIds.has(groupId));
+      if (wantsPassage) passageRenderedGroupIds.add(groupId);
       const groupItems = [item];
       groups.push({
-        id: item.groupId || item.localId,
+        id: groupId,
         items: groupItems,
-        includePassage: shouldRenderSourcePassageForItem(item) && Boolean(passageContent),
-        passageTitle: item.passageTitle,
+        includePassage: renderPassage,
+        passageTitle: resolvePaperItemPassageTitle(item),
         passageContent: formatSourcePassageForQuestionItems(passageContent, groupItems),
       });
     }

@@ -57,18 +57,42 @@ export function JobReviewToggleButton({
           : "검수필요 — 누르면 검수완료로 표시합니다"
       }
       className={
-        "inline-flex h-7 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border bg-white px-2 text-[11px] font-semibold transition-all outline-none focus-visible:ring-[3px] focus-visible:ring-emerald-500/40 disabled:cursor-not-allowed disabled:opacity-60 " +
+        "inline-flex h-7 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border bg-white px-2 text-[12px] font-semibold transition-all outline-none focus-visible:ring-[3px] focus-visible:ring-emerald-500/40 disabled:cursor-not-allowed disabled:opacity-60 " +
         (allCommitted
           ? "border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
           : "border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
       }
     >
       {busy ? (
-        <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />
+        <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
       ) : (
-        <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
+        <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
       )}
       {allCommitted ? "검수완료" : "미검수"}
+    </button>
+  );
+}
+
+/**
+ * 복원된 자료(draft)가 없는 작업(취소·실패)에서 검수완료 토글이 들어갈
+ * 자리를 비워두지 않도록 같은 크기로 표시하는 비활성 버튼. 검수할 대상이
+ * 없으므로 회색·disabled 상태로 작업 상태(취소/실패)만 라벨로 보여준다.
+ */
+export function JobReviewDisabledButton({
+  status,
+}: {
+  status: "cancelled" | "failed";
+}) {
+  const label = status === "cancelled" ? "취소됨" : "실패됨";
+  return (
+    <button
+      type="button"
+      disabled
+      aria-disabled="true"
+      title={`${label}된 작업이라 검수할 항목이 없습니다`}
+      className="inline-flex h-7 flex-1 cursor-not-allowed items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-slate-50 px-2 text-[12px] font-semibold text-slate-400 outline-none"
+    >
+      {label}
     </button>
   );
 }

@@ -34,7 +34,7 @@ export function renderFormatted(
       if (markerMatch) {
         parts.push(
           <span key={key++}>
-            <span className="font-bold text-slate-700">
+            <span className="font-bold">
               {isGrammarError ? grammarMarkerDisplayLabel(markerMatch[1]) : `(${markerMatch[1]})`}
             </span>{" "}
             <span className="underline decoration-2 decoration-blue-500 underline-offset-4 font-semibold text-slate-900">
@@ -65,7 +65,7 @@ export function renderFormatted(
     } else if (match[3]) {
       // (a)/(A) markers
       parts.push(
-        <span key={key++} className="font-bold text-slate-700">
+        <span key={key++} className="font-bold">
           {isGrammarError ? grammarMarkerDisplayLabel(match[3]) : `(${match[3]})`}
         </span>,
       );

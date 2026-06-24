@@ -1,5 +1,22 @@
 export type OptionItem = { label: string; text: string };
 
+// 워드프로세서식 빈 줄로 삽입된 여백(spacer) 블록을 표시하는 마커. blockText 에 넣어
+// 두면(spacer 는 blockText 를 렌더하지 않으므로 무해) 미리보기에서 점선 박스 없이 순수
+// 여백으로 그린다. 일반 '여백' 블록(툴바 삽입)과 구분하기 위함이며 저장/복원에 보존된다.
+export const LINE_GAP_MARKER = "__linegap__";
+
+// line-gap 여백은 한 줄씩 일관되게 자라야 하므로 일반 여백(8~160px)과 달리 훨씬 큰
+// 상한까지 한 블록 안에서 키운다. 상한을 둬 폭주만 막는다(정상 사용에선 도달 불가).
+export const LINE_GAP_MAX_PX = 2000;
+
+// 한 항목이 워드프로세서식 빈 줄(line-gap) 여백인지 — 렌더/페이지네이션/패널에서 공통 사용.
+export function isLineGapItem(item: {
+  blockType: PaperBlockType;
+  blockText: string;
+}): boolean {
+  return item.blockType === "spacer" && item.blockText === LINE_GAP_MARKER;
+}
+
 export type BuilderQuestion = {
   id: string;
   type: string;

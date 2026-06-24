@@ -7,6 +7,7 @@ import {
   ClipboardList,
   GraduationCap,
   Grid2x2,
+  Grid3x3,
   List,
   Loader2,
   Trash2,
@@ -74,10 +75,19 @@ const folderActions = {
   removeFromCollection: removeExamsFromCollection,
 };
 
+type ExamViewMode = "grid-3" | "grid-2" | "list";
+
 const EXAM_VIEW_OPTIONS = [
-  { value: "grid", label: "그리드 보기", Icon: Grid2x2 },
+  { value: "grid-3", label: "3열 보기", Icon: Grid3x3 },
+  { value: "grid-2", label: "2열 보기", Icon: Grid2x2 },
   { value: "list", label: "목록 보기", Icon: List },
-] satisfies ReadonlyArray<ViewModeCycleOption<"grid" | "list">>;
+] satisfies ReadonlyArray<ViewModeCycleOption<ExamViewMode>>;
+
+// 열 수 → Tailwind 그리드 클래스. 목록은 별도 렌더라 여기서 다루지 않는다.
+const EXAM_GRID_COL_CLASS: Record<"grid-3" | "grid-2", string> = {
+  "grid-3": "grid-cols-1 md:grid-cols-2 xl:grid-cols-3",
+  "grid-2": "grid-cols-1 sm:grid-cols-2",
+};
 
 // ---------------------------------------------------------------------------
 // Shared chrome helpers (mirrors question-bank-client)
@@ -154,10 +164,11 @@ export function ExamListClient({
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [classFilter, setClassFilter] = useState("ALL");
-  const [viewType, setViewType] = usePersistedState<"grid" | "list">(
+  const [viewType, setViewType] = usePersistedState<ExamViewMode>(
     "smoat:view-mode:exam-list",
-    "grid",
-    (v): v is "grid" | "list" => v === "grid" || v === "list",
+    "grid-3",
+    (v): v is ExamViewMode =>
+      v === "grid-3" || v === "grid-2" || v === "list",
   );
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [quickViewExamId, setQuickViewExamId] = useState<string | null>(null);
@@ -549,9 +560,9 @@ export function ExamListClient({
                     </p>
                   )}
                 </div>
-              ) : viewType === "grid" ? (
+              ) : viewType !== "list" ? (
                 <DragSelect
-                  className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"
+                  className={`grid ${EXAM_GRID_COL_CLASS[viewType]} gap-3`}
                   value={selection.selectedIds}
                   onChange={selection.setSelectedIds}
                 >

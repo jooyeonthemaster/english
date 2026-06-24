@@ -38,6 +38,9 @@ interface WebtoonInputStackProps {
       customPrompt: string;
     },
   ) => Promise<boolean>;
+
+  /** '지문 추가' → 빈 입력창 대신 내 지문함으로 이동해 지문을 골라 담는다. */
+  onAddPassage: () => void;
 }
 
 /** 본문 앞부분을 한 줄 미리보기로 자른다(모달 헤더용). */
@@ -63,6 +66,7 @@ export function WebtoonInputStack({
   customPrompt,
   setCustomPrompt,
   onGenerateRow,
+  onAddPassage,
 }: WebtoonInputStackProps) {
   // 현재 설정 모달이 열린 행 localId (없으면 null).
   const [settingsRowId, setSettingsRowId] = useState<string | null>(null);
@@ -75,8 +79,6 @@ export function WebtoonInputStack({
     setRows((prev) =>
       prev.map((r) => (r.localId === localId ? { ...r, ...patch } : r)),
     );
-
-  const addRow = () => setRows((prev) => [...prev, makeEmptyRow()]);
 
   const removeRow = (localId: string) =>
     setRows((prev) => {
@@ -133,6 +135,7 @@ export function WebtoonInputStack({
                   grow={false}
                   editorHeightPx={300}
                   disableMarking
+                  hideToolbar
                 />
                 {/* 푸터: 이 지문 전용 '다음으로 (웹툰 유형 선택)' */}
                 <div className="border-t border-slate-100 bg-slate-50/50 p-2">
@@ -150,18 +153,17 @@ export function WebtoonInputStack({
               </div>
             );
           })}
-        </div>
 
-        {/* 지문 추가 — 기출 지문은 상단 "기출 지문" 탭에서 내 지문함으로 담는다. */}
-        <div className="shrink-0 space-y-2 pt-2">
+          {/* 지문 추가 — 빈 입력창을 만들지 않고 내 지문함으로 이동해 지문을 골라
+              담는다. 카드와 같은 그리드 셀(=카드 가로폭)에 흐른다. */}
           <button
             type="button"
-            onClick={addRow}
+            onClick={onAddPassage}
             disabled={saving}
             className="flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-blue-300 bg-blue-50/40 py-2.5 text-[13px] font-bold text-blue-700 transition-colors hover:border-blue-400 hover:bg-blue-100/70 disabled:opacity-50"
           >
             <Plus className="h-4 w-4" />
-            빈 지문 추가
+            지문 추가
           </button>
         </div>
       </div>

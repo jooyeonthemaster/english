@@ -25,12 +25,13 @@ import {
   isStructuredAtomicSubtype,
 } from "@/components/exams/paper-builder/question-body-layout";
 import { renderQuestionBlock, type BuilderItemResolved } from "./question";
-import type {
-  PassageStyle,
-  RenderFragment,
-  RenderItemPart,
-  StructRow,
-  StructRowStyle,
+import {
+  LINE_GAP_MARKER,
+  type PassageStyle,
+  type RenderFragment,
+  type RenderItemPart,
+  type StructRow,
+  type StructRowStyle,
 } from "@/components/exams/paper-builder/types";
 
 const NO: BorderSpec = { type: "NONE", widthMm: 0.1, color: COLORS.black };
@@ -543,6 +544,24 @@ function renderCustomPart(
   }
 
   if (item.blockType === "spacer") {
+    // 워드프로세서식 빈 줄(line-gap): 미리보기에서 Enter 한 번 = 본문 한 줄이므로,
+    // 강제 단 배치(forced layout) 셀 안에서도 "본문 한 줄" 높이로 렌더한다(builder.ts
+    // buildCustomBlock 의 네이티브 흐름 처리와 동일 규칙). 본문 크기의 빈 run + 본문
+    // 행간(lineSpacingPct)만 주고 추가 spaceAfter 는 두지 않는다.
+    if (item.blockText === LINE_GAP_MARKER) {
+      const bodySize = compact ? SIZE.bodyCompact : SIZE.body;
+      return [
+        {
+          kind: "p",
+          style: {
+            spaceBefore: 0,
+            spaceAfter: 0,
+            lineSpacingPct: compact ? 146 : 158,
+          },
+          runs: [txt("", { size: bodySize })],
+        },
+      ];
+    }
     return [
       {
         kind: "p",

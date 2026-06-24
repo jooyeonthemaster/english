@@ -305,6 +305,13 @@ const STRUCTURED_RENDERER_SOURCE_PASSAGE_TYPES = new Set([
   "TITLE",
   "CONTENT_MATCH",
   "SUMMARY_COMPLETE_MC",
+  // 서술형 영작·요약 유형도 전용 렌더러가 원문 지문을 직접 싣는다(SourcePassageBlock).
+  // 원본 지문 블록을 중복 노출하지 않도록 여기에 포함한다.
+  "CONDITIONAL_WRITING",
+  "SENTENCE_TRANSFORM",
+  "SUMMARY_COMPLETE",
+  "SUMMARY_WRITING",
+  "WORD_ORDER",
 ]);
 
 // Format option: always use index-based number label, adapt text based on passage marking

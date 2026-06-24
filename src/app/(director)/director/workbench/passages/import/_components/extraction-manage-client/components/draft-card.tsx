@@ -9,7 +9,17 @@ import {
 } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { CheckCircle2, FileText, Pencil, Maximize2, type LucideIcon } from "lucide-react";
+import {
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  FileText,
+  Loader2,
+  Pencil,
+  Maximize2,
+  Trash2,
+  type LucideIcon,
+} from "lucide-react";
 
 import type { M1PassageDraftWithJob } from "../types";
 import {
@@ -29,6 +39,17 @@ import {
   shouldIgnoreCardSelectionClick,
   useDeferredCardSelectionClick,
 } from "@/components/workbench/shared/card-click";
+
+/** 카드 푸터 타임스탬프: "2026.06.20 19:32" (YYYY.MM.DD HH:mm, 24시간). */
+function formatCardTimestamp(value: string | Date): string {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return (
+    `${date.getFullYear()}.${pad(date.getMonth() + 1)}.${pad(date.getDate())} ` +
+    `${pad(date.getHours())}:${pad(date.getMinutes())}`
+  );
+}
 
 export type DraftCardStatusBadgeMode = "review" | "analysis";
 export type DraftCardActionVariant = {
@@ -79,6 +100,11 @@ interface DraftCardProps {
    *  자료 관리/검수 패널의 per-draft promote/unpromote 핸들러를 그대로 쓴다. */
   onPromote?: (draft: M1PassageDraftWithJob) => Promise<void>;
   onUnpromote?: (draft: M1PassageDraftWithJob) => Promise<void>;
+  /** 카드별 삭제. 주어지면 제목 행 우측에 빨강 휴지통 버튼이 노출된다.
+   *  (자료 관리 standalone 에서 actions.deleteDraft 를 그대로 연결한다) */
+  onDelete?: (draft: M1PassageDraftWithJob) => void;
+  /** 이 카드가 삭제 진행 중이면 휴지통 버튼을 스피너로 바꾸고 비활성화한다. */
+  deleting?: boolean;
 }
 
 export function DraftCard({
@@ -97,11 +123,15 @@ export function DraftCard({
   onOpenDetail,
   onPromote,
   onUnpromote,
+  onDelete,
+  deleting = false,
 }: DraftCardProps) {
   const hasReviewToggle = Boolean(onPromote && onUnpromote);
   const dragRef = useRef<HTMLDivElement>(null);
   const dragHandleRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  // 펼치기 토글: 기본은 접힘(미리보기 6줄), 누르면 본문 전문이 펼쳐진다.
+  const [expanded, setExpanded] = useState(false);
   const [titleEditState, setTitleEditState] = useState<{
     draftId: string;
     value: string;
@@ -225,15 +255,15 @@ export function DraftCard({
   // and 일괄 분석, which all read teacherText || restoredText || rawText.
   // (The list payload blanks restoredText but keeps teacherText, so the
   // teacherText branch is what carries the restored prose here.)
-  const preview = (
+  // 본문 전문(펼침 시): 단락 줄바꿈은 보존하고 카드 본문에 그대로 노출한다.
+  const fullText = (
     draft.teacherText?.trim() ||
     draft.restoredText?.trim() ||
     draft.rawText ||
     ""
-  )
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, 140);
+  ).trim();
+  // 미리보기(접힘 시): 공백을 한 줄로 합쳐 6줄 클램프로 보여준다.
+  const preview = fullText.replace(/\s+/g, " ").slice(0, 400);
 
   const isReviewed = draft.reviewStatus === "COMMITTED";
   const isAnalyzed = isDraftAnalysisComplete(draft);
@@ -305,7 +335,7 @@ export function DraftCard({
         }
       }}
       className={
-        "relative flex h-full min-h-[112px] min-w-0 flex-col gap-1.5 overflow-hidden rounded-lg border bg-white p-2.5 shadow-sm motion-safe:transition-colors motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+        "relative flex h-full min-h-[208px] min-w-0 flex-col gap-2.5 overflow-hidden rounded-lg border bg-white p-4 shadow-sm motion-safe:transition-colors motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
         (isDragging
           ? "cursor-grabbing opacity-50"
           : hideCheckbox
@@ -342,12 +372,14 @@ export function DraftCard({
           className="absolute inset-y-0 left-0 w-1 bg-blue-300/70"
         />
       ) : null}
-      {stampDone ? (
+      {/* 푸터에 검수완료 토글 버튼이 있으면 같은 상태를 두 번 표기하지 않도록
+          우상단 도장은 생략한다(버튼이 상태를 대신 표현). */}
+      {hasReviewToggle ? null : stampDone ? (
         <span
           role="img"
           aria-label={stampLabel}
           className={
-            "pointer-events-none absolute right-1.5 top-1.5 z-10 flex size-7 -rotate-12 select-none items-center justify-center whitespace-nowrap rounded-full border-2 bg-white/70 text-[7px] font-bold tracking-tighter shadow-sm backdrop-blur-[1px] " +
+            "pointer-events-none absolute right-2.5 top-2.5 z-10 flex size-7 -rotate-12 select-none items-center justify-center whitespace-nowrap rounded-full border-2 bg-white/70 text-[7px] font-bold tracking-tighter shadow-sm backdrop-blur-[1px] " +
             stampDoneClass
           }
         >
@@ -358,14 +390,19 @@ export function DraftCard({
           role="img"
           aria-label={stampLabel}
           className={
-            "pointer-events-none absolute right-1.5 top-1.5 z-10 flex size-7 -rotate-12 select-none items-center justify-center rounded-full border border-dashed text-[7.5px] font-bold tracking-tight " +
+            "pointer-events-none absolute right-2.5 top-2.5 z-10 flex size-7 -rotate-12 select-none items-center justify-center rounded-full border border-dashed text-[7.5px] font-bold tracking-tight " +
             stampNeededClass
           }
         >
           {stampLabel}
         </span>
       )}
-      <div className="flex items-start justify-between gap-2 pr-8">
+      <div
+        className={
+          "flex items-start justify-between gap-2 " +
+          (hasReviewToggle ? "" : "pr-8")
+        }
+      >
         <div className="flex min-w-0 flex-1 items-center gap-2">
           <DragHandle ref={dragHandleRef} className="shrink-0" />
           {hideCheckbox ? null : (
@@ -382,11 +419,31 @@ export function DraftCard({
                 checked={checked}
                 readOnly
                 tabIndex={-1}
-                className="size-3.5 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500"
                 aria-label="자료 선택"
               />
             </div>
           )}
+          {onDelete ? (
+            <button
+              type="button"
+              onMouseDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(draft);
+              }}
+              disabled={deleting}
+              title="이 자료를 삭제합니다"
+              aria-label="삭제"
+              className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {deleting ? (
+                <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+              ) : (
+                <Trash2 className="size-3.5" aria-hidden="true" />
+              )}
+            </button>
+          ) : null}
           {titleEditing && onTitleChange ? (
             <input
               autoFocus
@@ -407,7 +464,7 @@ export function DraftCard({
               }}
               placeholder={getDraftDisplayTitle(draft)}
               maxLength={200}
-              className="h-6 w-full min-w-0 flex-1 rounded-md border border-blue-300 bg-white px-1.5 text-[11.5px] font-bold text-slate-900 outline-none ring-2 ring-blue-100 placeholder:font-medium placeholder:text-slate-400"
+              className="h-7 w-full min-w-0 flex-1 rounded-md border border-blue-300 bg-white px-2 text-[13.5px] font-bold text-slate-900 outline-none ring-2 ring-blue-100 placeholder:font-medium placeholder:text-slate-400"
             />
           ) : onTitleChange ? (
             <button
@@ -420,61 +477,100 @@ export function DraftCard({
                   value: draft.title ?? "",
                 });
               }}
-              className="group flex min-w-0 flex-1 cursor-text items-center gap-1 rounded-md text-left"
+              className="group inline-flex h-7 min-w-0 flex-1 cursor-text items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 text-left transition-colors hover:bg-slate-100"
               title="제목 편집"
             >
-              <span className="truncate text-[11.5px] font-bold text-slate-900 group-hover:text-blue-700">
+              <FileText
+                className="size-3 shrink-0 text-blue-400"
+                aria-hidden="true"
+              />
+              <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-slate-700 group-hover:text-slate-900">
                 {getDraftDisplayTitle(draft)}
               </span>
               <Pencil
-                className="size-2.5 shrink-0 text-slate-300 transition-colors group-hover:text-blue-500"
+                className="size-3 shrink-0 text-slate-400 transition-colors group-hover:text-blue-500"
                 aria-hidden="true"
               />
             </button>
           ) : (
-            <span className="min-w-0 flex-1 truncate text-[11.5px] font-bold text-slate-900">
-              {getDraftDisplayTitle(draft)}
+            <span className="inline-flex h-7 min-w-0 flex-1 items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2">
+              <FileText
+                className="size-3 shrink-0 text-blue-400"
+                aria-hidden="true"
+              />
+              <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-slate-700">
+                {getDraftDisplayTitle(draft)}
+              </span>
             </span>
           )}
         </div>
+        {/* 펼치기/접기 — 헤더 오른쪽에 배치. */}
+        <button
+          type="button"
+          data-drag-select-ignore="true"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            setExpanded((prev) => !prev);
+          }}
+          aria-expanded={expanded}
+          aria-label={expanded ? "카드 접기" : "카드 펼치기"}
+          title={expanded ? "접기" : "펼치기"}
+          className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-500"
+        >
+          {expanded ? (
+            <ChevronUp className="size-4.5" aria-hidden="true" />
+          ) : (
+            <ChevronDown className="size-4.5" aria-hidden="true" />
+          )}
+        </button>
       </div>
 
       {primaryFile ? (
         <div
-          className="flex min-w-0 items-center gap-1 rounded bg-slate-100/80 px-1.5 py-0.5 ring-1 ring-slate-200/70"
+          className="flex min-w-0 items-center gap-1.5 rounded-md bg-slate-100/80 px-2 py-1 ring-1 ring-slate-200/70"
           title={getDraftSourceLabel(draft)}
         >
-          <FileText className="size-3 shrink-0 text-slate-500" aria-hidden="true" />
-          <span className="truncate text-[10.5px] font-semibold text-slate-700">
+          <FileText className="size-3.5 shrink-0 text-slate-500" aria-hidden="true" />
+          <span className="truncate text-[12px] font-semibold text-slate-700">
             {primaryFile}
           </span>
           {extraFileCount > 0 ? (
-            <span className="shrink-0 rounded bg-white px-1 py-0 text-[9px] font-bold text-slate-500 ring-1 ring-slate-200">
+            <span className="shrink-0 rounded bg-white px-1 py-0 text-[11px] font-bold text-slate-500 ring-1 ring-slate-200">
               +{extraFileCount}
             </span>
           ) : null}
           {pageLabel ? (
-            <span className="shrink-0 text-[9.5px] font-bold tabular-nums text-slate-400">
+            <span className="shrink-0 text-[11px] font-bold tabular-nums text-slate-400">
               · {pageLabel}
             </span>
           ) : null}
         </div>
       ) : null}
 
-      <div className="flex flex-wrap items-center gap-1">
+      <div className="flex flex-wrap items-center gap-1.5">
         <RestorationBadge status={draft.restorationStatus} />
         {loadedInWorkspace ? (
-          <span className="inline-flex shrink-0 items-center gap-0.5 rounded border border-blue-200 bg-blue-50 px-1 py-px text-[9.5px] font-bold leading-none text-blue-600">
-            <CheckCircle2 className="size-2.5" aria-hidden="true" />
+          <span className="inline-flex shrink-0 items-center gap-0.5 rounded border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[11px] font-bold leading-none text-blue-600">
+            <CheckCircle2 className="size-3" aria-hidden="true" />
             불러옴
           </span>
         ) : null}
       </div>
 
-      <p className="line-clamp-2 text-[11px] leading-snug text-slate-600">
-        {preview || "추출된 본문이 비어있습니다."}
+      <p
+        className={
+          "text-[13px] leading-relaxed text-slate-600 " +
+          (expanded ? "whitespace-pre-wrap" : "line-clamp-6")
+        }
+      >
+        {(expanded ? fullText : preview) || "추출된 본문이 비어있습니다."}
       </p>
-      <div className="mt-auto flex items-center gap-1.5 pt-1">
+      <div className="mt-auto shrink-0 space-y-2 border-t border-slate-100 pt-1.5">
+        <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
+          <span>{formatCardTimestamp(draft.createdAt)}</span>
+        </div>
+        <div className="flex items-center gap-2">
         {/* 검수완료 버튼이 있으면 가로를 채우고, 상세보기 주 액션은 정사각
             아이콘으로 줄인다. 없으면 기존대로 가져오기/상세보기가 가로를 채운다. */}
         {hasReviewToggle ? (
@@ -493,10 +589,10 @@ export function DraftCard({
           }
           className={
             hasReviewToggle
-              ? "size-7 shrink-0 rounded-md"
-              : "h-7 w-auto flex-1 rounded-md text-[11.5px]"
+              ? "size-8 shrink-0 rounded-md"
+              : "h-8 w-auto flex-1 rounded-md text-[12px]"
           }
-          iconClassName="size-3.5"
+          iconClassName="size-4"
           onClick={(e) => {
             e.stopPropagation();
             onClick();
@@ -507,14 +603,15 @@ export function DraftCard({
             icon={Maximize2}
             title="지문 전체 보기"
             aria-label="지문 전체 보기"
-            className="size-7 rounded-md"
-            iconClassName="size-3.5"
+            className="size-8 rounded-md"
+            iconClassName="size-4"
             onClick={(e) => {
               e.stopPropagation();
               onOpenDetail();
             }}
           />
         ) : null}
+        </div>
       </div>
     </div>
   );

@@ -84,6 +84,11 @@ export function NavItem({
             strokeWidth={active || childActive ? 2 : 1.7}
           />
           <span className="truncate flex-1 min-w-0 text-left">{item.label}</span>
+          {item.beta ? (
+            <span className="shrink-0 rounded border border-blue-200 bg-blue-50 px-1 py-px text-[8.5px] font-bold leading-none tracking-wide text-blue-500">
+              BETA
+            </span>
+          ) : null}
           <ChevronDown
             className={cn(
               "size-3.5 shrink-0 transition-transform duration-200",
@@ -201,6 +206,11 @@ export function NavItem({
       {!collapsed && (
         <>
           <span className="truncate flex-1 min-w-0">{item.label}</span>
+          {item.beta && (
+            <span className="shrink-0 rounded border border-blue-200 bg-blue-50 px-1 py-px text-[8.5px] font-bold leading-none tracking-wide text-blue-500">
+              BETA
+            </span>
+          )}
           {isComingSoon && (
             <span
               className={cn(
