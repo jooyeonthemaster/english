@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
     return [{ source: "/ir", destination: "/ir/index.html" }];
   },
 
+  // 서버 액션(회원 CSV 내보내기)에서 CP949 인코딩에 쓰는 iconv-lite는
+  // 동적 require가 있어 번들 대신 node_modules에서 직접 로드한다.
+  serverExternalPackages: ["iconv-lite"],
+
   experimental: {
     optimizePackageImports: [
       "lucide-react",
