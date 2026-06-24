@@ -54,6 +54,29 @@ const SURFACE_TO_CODE: Record<string, string> = {
 const MIN_COUNT = 3;
 const MAX_PAIRS_PER_CODE = 8;
 
+// 의미만 다른 토글·규범논쟁쌍은 정답으로 쓰면 복수정답 시비(둘 다 정문) → 모델에
+// '오류 변형 방향'으로 제시하면 안 되므로 최소대립쌍에서 제외한다. 정렬키(unordered)로
+// 양방향 차단. (question-quality.ts 수량 게이트 QUANTITY_*_PAIRS 와 동일 목록 유지.)
+const MEANING_TOGGLE_PAIR_KEYS = new Set<string>([
+  "a little|little", // 거의 없음 vs 조금 있음 (극성) — 라이브 리스크였던 little→a little
+  "a few|few",
+  "few|many",
+  "little|much",
+  "few|much",
+  "little|many",
+  "any|some",
+  "fewer|less", // 규범 vs 실사용 논쟁
+  "amount|number",
+  // 한정사 동의어/극성 토글(필살기 검증 2026-06-23 보강) — question-quality.ts QUANTITY_MEANING_TOGGLE_PAIRS 와 동기화
+  "all|some", "all|both", "each|every", "few|several", "less|little",
+  "many|numerous", "a few|some", "much|plenty of", "a lot of|lots of",
+  "a lot of|plenty of", "almost all of the|most of the", "either|neither",
+  "no|not any", "hardly any|very few",
+]);
+function meaningTogglePairKey(a: string, b: string): string {
+  return [a.trim().toLowerCase(), b.trim().toLowerCase()].sort().join("|");
+}
+
 // 깨끗한 영어 토큰/짧은 구만 채택 — OCR 노이즈(숫자·단일문자·기호) 배제.
 function isCleanSurface(value: string): boolean {
   const v = value.trim();
@@ -80,6 +103,8 @@ function main() {
       if (row.count < MIN_COUNT) continue;
       if (!isCleanSurface(row.correct) || !isCleanSurface(row.wrong)) continue;
       if (row.correct.toLowerCase() === row.wrong.toLowerCase()) continue;
+      // 의미토글·규범논쟁쌍 제외 — 정답으로 쓰면 복수정답 시비.
+      if (MEANING_TOGGLE_PAIR_KEYS.has(meaningTogglePairKey(row.correct, row.wrong))) continue;
       const bucket = byCode.get(code) ?? new Map();
       const key = `${row.correct.toLowerCase()}→${row.wrong.toLowerCase()}`;
       const prev = bucket.get(key);

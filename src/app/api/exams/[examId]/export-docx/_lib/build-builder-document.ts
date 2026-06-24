@@ -224,9 +224,8 @@ function normalizePrintableTitle(value: string | null | undefined): string {
 
 function printablePassageTitle(item: BuilderItemResolved): string {
   const savedTitle = normalizePrintableTitle(item.passageTitle);
-  if (!savedTitle) return "";
   const sourceTitle = normalizePrintableTitle(item.sourceQuestion.passage?.title);
-  return savedTitle === sourceTitle ? "" : savedTitle;
+  return savedTitle || sourceTitle;
 }
 
 function firstQuestionLineForHeader(questionText: string, subType: string | null | undefined): string {
@@ -567,6 +566,26 @@ function buildPassage(opts: {
   return [...innerChildren, new Paragraph({ spacing: { after: 120 } })];
 }
 
+function buildPassageTitleParagraph(
+  passageTitle: string,
+  showPassageTitle: boolean,
+): Paragraph | null {
+  if (!showPassageTitle || !passageTitle.trim()) return null;
+  return new Paragraph({
+    spacing: { before: 20, after: 30 },
+    children: [
+      new TextRun({
+        text: passageTitle.toUpperCase(),
+        font: KR_FONT,
+        size: SIZE_PASSAGE_TITLE,
+        bold: true,
+        color: COLOR.darkGray,
+        characterSpacing: 20,
+      }),
+    ],
+  });
+}
+
 // 주어진 문장 블록([주어진 문장]/[given]) 추출 — 문장삽입/순서 공용.
 function extractGivenBlock(text: string, subType: string): { given: string; rest: string } {
   if (subType !== "SENTENCE_INSERT" && subType !== "SENTENCE_ORDER") {
@@ -694,6 +713,8 @@ function buildQuestionBlock(
   const summaryComplete = isSummaryCompleteSubtype(subType);
   const summaryMc = isSummaryCompleteMc(subType);
   const summaryWriting = isSummaryWriting(subType);
+  const showPassageTitle = layout.showPassageTitle === true;
+  const passageTitle = printablePassageTitle(item);
   const passageContent = (item.passageContent ?? item.sourceQuestion.passage?.content ?? "").trim();
   const hasEmbeddedSourcePassage = questionHasEmbeddedPassage({
     ...item.sourceQuestion,
@@ -713,6 +734,11 @@ function buildQuestionBlock(
     : "";
   const headerQuestionText =
     summaryPartsForHeader?.stem || genericHeaderQuestionText;
+  const embeddedPassageTitle =
+    hasEmbeddedSourcePassage && !summaryWriting
+      ? buildPassageTitleParagraph(passageTitle, showPassageTitle)
+      : null;
+  if (embeddedPassageTitle) result.push(embeddedPassageTitle);
 
   // 번호 + 메타 + 본문 한 단락 (번호 굵게, 메타 작게, 본문은 새 줄에서 시작)
   const headerRuns: TextRun[] = [
@@ -766,10 +792,10 @@ function buildQuestionBlock(
       if (passageContent) {
         result.push(
           ...buildPassage({
-            passageTitle: "",
+            passageTitle,
             passageContent: inlinePassageContent || passageContent,
             passageStyle: "plain",
-            showPassageTitle: false,
+            showPassageTitle,
             compact,
             usesSentenceInsertMarkers: false,
           }),
@@ -878,10 +904,10 @@ function buildQuestionBlock(
       if (passageContent) {
         result.push(
           ...buildPassage({
-            passageTitle: "",
+            passageTitle,
             passageContent: inlinePassageContent || passageContent,
             passageStyle: "plain",
-            showPassageTitle: false,
+            showPassageTitle,
             compact,
             usesSentenceInsertMarkers: false,
           }),
@@ -986,10 +1012,10 @@ function buildQuestionBlock(
     ) {
       result.push(
         ...buildPassage({
-          passageTitle: "",
+          passageTitle,
           passageContent: inlinePassageContent,
           passageStyle: "plain",
-          showPassageTitle: false,
+          showPassageTitle,
           compact,
           usesSentenceInsertMarkers: false,
         }),
@@ -1047,10 +1073,10 @@ function buildQuestionBlock(
     ) {
       result.push(
         ...buildPassage({
-          passageTitle: "",
+          passageTitle,
           passageContent: inlinePassageContent,
           passageStyle: "plain",
-          showPassageTitle: false,
+          showPassageTitle,
           compact,
           usesSentenceInsertMarkers: subType === "SENTENCE_INSERT",
         }),

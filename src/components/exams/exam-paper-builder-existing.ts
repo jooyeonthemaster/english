@@ -142,13 +142,12 @@ function asObjectiveAnswerTexts(value: unknown, slots: number): string[] {
   return value.slice(0, slots).map((text) => String(text ?? ""));
 }
 
-function printablePassageTitle(
+function resolveSavedPassageTitle(
   savedTitle: string | undefined,
   sourceTitle: string | undefined,
 ): string {
   const saved = normalizeInlineText(savedTitle || "");
-  if (!saved) return "";
-  return saved === normalizeInlineText(sourceTitle || "") ? "" : saved;
+  return saved || normalizeInlineText(sourceTitle || "");
 }
 
 function examQuestionToBuilderQuestion(
@@ -240,7 +239,7 @@ function savedItemToPaperItem(
     points: saved.points || eq.points || sourceQuestion.points || 1,
     groupId: saved.groupId ?? `single:${localId}`,
     includePassage: defaultIncludePassage || saved.includePassage === true,
-    passageTitle: printablePassageTitle(
+    passageTitle: resolveSavedPassageTitle(
       saved.passageTitle,
       eq.question.passage?.title,
     ),

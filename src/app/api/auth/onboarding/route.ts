@@ -24,6 +24,8 @@ const onboardingSchema = z.object({
   estimatedStudents: z.string().optional().default(""),
   referralCode: z.string().optional(),
   agree: z.boolean().refine(Boolean, "agreement_required"),
+  // 선택 — 마케팅 정보 수신 동의(정보통신망법 제50조 opt-in 근거)
+  agreeMarketing: z.boolean().optional().default(false),
 });
 
 function slugify(name: string): string {
@@ -68,6 +70,7 @@ export async function POST(request: NextRequest) {
   const directorPhone = normalizePhone(parsed.data.directorPhone);
   const address = parsed.data.address.trim();
   const estimatedStudents = parsed.data.estimatedStudents?.trim() || null;
+  const agreeMarketing = parsed.data.agreeMarketing === true;
 
   if (payload.provider === "google") {
     const payloadEmail = payload.email?.trim().toLowerCase();
@@ -165,6 +168,9 @@ export async function POST(request: NextRequest) {
         kakaoId: payload.provider === "kakao" ? payload.kakaoId : null,
         authProvider: payload.provider,
         lastLoginAt: now,
+        // 마케팅 수신 동의 — 동의한 경우에만 동의 시각을 함께 기록(증빙)
+        marketingConsent: agreeMarketing,
+        marketingConsentAt: agreeMarketing ? now : null,
       },
     });
 

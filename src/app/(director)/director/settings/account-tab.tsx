@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { Lock, Eye, EyeOff, CheckCircle2, User, Building2, KeyRound, Loader2 } from "lucide-react";
+import { Lock, Eye, EyeOff, CheckCircle2, User, Building2, KeyRound, Loader2, BadgeCheck } from "lucide-react";
 import { toast } from "sonner";
+import { STAFF_PROFILE_UPDATED_EVENT } from "@/lib/staff-profile-events";
 
 const inputClass =
   "w-full h-11 px-4 rounded-xl text-[14px] text-foreground placeholder:text-muted-foreground bg-muted border border-border transition-all outline-none focus:bg-card focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10";
@@ -34,6 +35,7 @@ interface AccountData {
   email: string;
   phone: string;
   avatarUrl: string;
+  displayTitle: string;
   authProvider: string;
   academyName: string;
   academyPhone: string;
@@ -49,6 +51,7 @@ const EMPTY: AccountData = {
   email: "",
   phone: "",
   avatarUrl: "",
+  displayTitle: "원장",
   authProvider: "credentials",
   academyName: "",
   academyPhone: "",
@@ -129,7 +132,7 @@ export default function AccountTab() {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
-  async function patchAccount(payload: Record<string, unknown>): Promise<boolean> {
+  async function patchAccount(payload: Record<string, unknown>): Promise<Record<string, unknown> | null> {
     const res = await fetch("/api/director/account", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -138,24 +141,39 @@ export default function AccountTab() {
     const data = await res.json();
     if (!res.ok) {
       toast.error(data.error || "저장에 실패했습니다");
-      return false;
+      return null;
     }
-    return true;
+    return data as Record<string, unknown>;
   }
 
   async function handleSaveProfile(e: React.FormEvent) {
     e.preventDefault();
     setSavingProfile(true);
     try {
+      const nextName = form.name.trim();
+      const nextEmail = form.email.trim();
+      const nextDisplayTitle = form.displayTitle.trim();
       const payload: Record<string, unknown> = {
-        name: form.name,
+        name: nextName,
         phone: form.phone,
         avatarUrl: form.avatarUrl,
+        displayTitle: nextDisplayTitle,
       };
-      if (!isGoogle) payload.email = form.email;
-      if (!(await patchAccount(payload))) return;
+      if (!isGoogle) payload.email = nextEmail;
+      const saved = await patchAccount(payload);
+      if (!saved) return;
+      const nextTitle =
+        typeof saved.displayTitle === "string" && saved.displayTitle.trim()
+          ? saved.displayTitle
+          : nextDisplayTitle || "원장";
       // 세션(사이드바 이름/이메일) 즉시 갱신
-      await update({ name: form.name, email: form.email });
+      await update({ name: nextName, email: nextEmail, displayTitle: nextTitle });
+      setForm((prev) => ({ ...prev, name: nextName, email: nextEmail, displayTitle: nextTitle }));
+      window.dispatchEvent(
+        new CustomEvent(STAFF_PROFILE_UPDATED_EVENT, {
+          detail: { name: nextName, email: nextEmail, displayTitle: nextTitle },
+        }),
+      );
       toast.success("프로필이 저장되었습니다");
     } catch {
       toast.error("네트워크 오류가 발생했습니다");
@@ -168,8 +186,9 @@ export default function AccountTab() {
     e.preventDefault();
     setSavingAcademy(true);
     try {
+      const nextAcademyName = form.academyName.trim();
       const payload: Record<string, unknown> = {
-        academyName: form.academyName,
+        academyName: nextAcademyName,
         academyPhone: form.academyPhone,
         address: form.address,
         color: form.color,
@@ -178,7 +197,13 @@ export default function AccountTab() {
       };
       if (!(await patchAccount(payload))) return;
       // 세션(사이드바 학원명) 즉시 갱신
-      await update({ academyName: form.academyName });
+      await update({ academyName: nextAcademyName });
+      setForm((prev) => ({ ...prev, academyName: nextAcademyName }));
+      window.dispatchEvent(
+        new CustomEvent(STAFF_PROFILE_UPDATED_EVENT, {
+          detail: { academyName: nextAcademyName },
+        }),
+      );
       toast.success("학원 정보가 저장되었습니다");
     } catch {
       toast.error("네트워크 오류가 발생했습니다");
@@ -211,6 +236,20 @@ export default function AccountTab() {
                   placeholder="홍길동"
                   className={inputClass}
                 />
+              </div>
+              <div>
+                <FieldLabel>직함</FieldLabel>
+                <div className="relative">
+                  <BadgeCheck className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-blue-500" strokeWidth={1.8} />
+                  <input
+                    type="text"
+                    value={form.displayTitle}
+                    onChange={(e) => set("displayTitle", e.target.value)}
+                    placeholder="원장"
+                    maxLength={20}
+                    className={inputClass + " pl-9"}
+                  />
+                </div>
               </div>
               <div>
                 <FieldLabel>연락처</FieldLabel>

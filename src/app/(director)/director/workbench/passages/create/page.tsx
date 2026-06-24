@@ -12,7 +12,8 @@ import {
 } from "@/actions/workbench";
 import { PassageRegistrationClient } from "@/components/workbench/passage-registration-client";
 import type { PassageRegistrationProps } from "@/components/workbench/passage-registration-client";
-import { PassageListClient } from "@/components/workbench/passage-list-client";
+import { LearningGenerationProvider } from "./learning-generation-context";
+import { LearningListWithQueue } from "./learning-list-with-queue";
 
 const PASSAGE_MANAGER_BASE_PATH = "/director/workbench/passages/create";
 
@@ -136,47 +137,51 @@ export default async function PassageRegistrationPage({
     : null;
 
   return (
-    <div className="flex flex-col gap-6">
-      <PassageRegistrationClient
-        academyId={staff.academyId}
-        schools={schools}
-        recentPassages={recentData.passages}
-        initialCollections={
-          collections as PassageRegistrationProps["initialCollections"]
-        }
-        draftCollections={
-          draftCollections as PassageRegistrationProps["draftCollections"]
-        }
-        draftMembership={draftMembership}
-        initialDraftIds={initialDraftIds}
-        initialPassageIds={initialPassageIds}
-      />
-
-      {/* ─── 학습지 목록 — /director/workbench/passages 페이지를 그대로 이식한 별도 블록 ─── */}
-      <section className="flex flex-col gap-2">
-        <PassageListClient
+    // 상단 워크스페이스(생성 큐 엔진)와 하단 학습지 목록이 진행중 항목을 공유하도록
+    // 둘을 같은 컨텍스트로 감싼다 — 생성 시 하단 목록 상단에 로딩 큐가 뜬다.
+    <LearningGenerationProvider>
+      <div className="flex flex-col gap-6">
+        <PassageRegistrationClient
           academyId={staff.academyId}
-          passagesData={listData}
           schools={schools}
-          filters={effectiveListFilters}
-          collections={collections as any}
-          collectionMembership={Object.fromEntries(
-            Object.entries(listMembershipRaw).map(([k, v]) => [k, new Set(v)]),
-          )}
-          sourceMaterialBadge={
-            sourceMaterial && sourceMaterialLabel
-              ? { id: sourceMaterial.id, label: sourceMaterialLabel }
-              : null
+          recentPassages={recentData.passages}
+          initialCollections={
+            collections as PassageRegistrationProps["initialCollections"]
           }
-          collectionBadge={
-            activeCollection
-              ? { id: activeCollection.id, label: activeCollection.name }
-              : null
+          draftCollections={
+            draftCollections as PassageRegistrationProps["draftCollections"]
           }
-          basePath={PASSAGE_MANAGER_BASE_PATH}
-          embedded
+          draftMembership={draftMembership}
+          initialDraftIds={initialDraftIds}
+          initialPassageIds={initialPassageIds}
         />
-      </section>
-    </div>
+
+        {/* ─── 학습지 목록 — /director/workbench/passages 페이지를 그대로 이식한 별도 블록 ─── */}
+        <section className="flex flex-col gap-2">
+          <LearningListWithQueue
+            academyId={staff.academyId}
+            passagesData={listData}
+            schools={schools}
+            filters={effectiveListFilters}
+            collections={collections as any}
+            collectionMembership={Object.fromEntries(
+              Object.entries(listMembershipRaw).map(([k, v]) => [k, new Set(v)]),
+            )}
+            sourceMaterialBadge={
+              sourceMaterial && sourceMaterialLabel
+                ? { id: sourceMaterial.id, label: sourceMaterialLabel }
+                : null
+            }
+            collectionBadge={
+              activeCollection
+                ? { id: activeCollection.id, label: activeCollection.name }
+                : null
+            }
+            basePath={PASSAGE_MANAGER_BASE_PATH}
+            embedded
+          />
+        </section>
+      </div>
+    </LearningGenerationProvider>
   );
 }

@@ -26,6 +26,7 @@ import {
   shouldRenderSourcePassageInsideQuestion,
 } from "@/components/exams/paper-builder/passage-policy";
 import {
+  normalizeInlineText,
   normalizePassageText,
   normalizeQuestionText,
 } from "@/components/exams/paper-builder/text-normalization";
@@ -84,6 +85,12 @@ function shouldRenderSeparateSourcePassage(item: PaperItem): boolean {
   );
 }
 
+function resolvePaperItemPassageTitle(item: PaperItem): string {
+  return normalizeInlineText(
+    item.passageTitle || item.sourceQuestion.passage?.title || "",
+  );
+}
+
 function parseOptionsLoose(raw: unknown): OptionItem[] {
   if (Array.isArray(raw)) {
     return raw
@@ -120,7 +127,7 @@ function paginationSettingsFrom(
     density: layout.density === "compact" ? "compact" : "comfortable",
     // 정답 미포함 다운로드와 동일: 답란을 그대로 표시 (분할에 영향).
     showAnswerSpace: layout.showAnswerSpace !== false,
-    showPassageTitle: layout.showPassageTitle !== false,
+    showPassageTitle: layout.showPassageTitle === true,
     showQuestionMeta: layout.showQuestionMeta !== false,
     passageStyle: "plain",
     template: (template ?? "clean") as PaginationSettings["template"],
@@ -181,11 +188,12 @@ function reconstructPaperItems(opts: {
         source?.passage?.content ??
         "",
     );
-    const passageTitle =
-      block.passageTitle ??
-      resolved?.passageTitle ??
-      source?.passage?.title ??
-      "";
+    const passageTitle = normalizeInlineText(
+      block.passageTitle ||
+        resolved?.passageTitle ||
+        source?.passage?.title ||
+        "",
+    );
 
     return {
       localId,
@@ -327,7 +335,7 @@ function buildGroups(items: PaperItem[]): PaperGroup[] {
       last.items.push(item);
       if (shouldRenderSeparateSourcePassage(item) && item.passageContent) {
         last.includePassage = true;
-        last.passageTitle = item.passageTitle;
+        last.passageTitle = resolvePaperItemPassageTitle(item);
         last.passageContent = item.passageContent;
       }
     } else {
@@ -335,7 +343,7 @@ function buildGroups(items: PaperItem[]): PaperGroup[] {
         id: item.groupId || item.localId,
         items: [item],
         includePassage: shouldRenderSeparateSourcePassage(item),
-        passageTitle: item.passageTitle,
+        passageTitle: resolvePaperItemPassageTitle(item),
         passageContent: item.passageContent,
       });
     }

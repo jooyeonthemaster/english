@@ -27,7 +27,11 @@ import {
   structuredSegments,
 } from "./question-body-layout";
 import { questionHasEmbeddedPassage } from "./passage-policy";
-import { normalizePassageText, normalizeQuestionText } from "./text-normalization";
+import {
+  normalizeInlineText,
+  normalizePassageText,
+  normalizeQuestionText,
+} from "./text-normalization";
 import type {
   OptionItem,
   PaginationSettings,
@@ -225,6 +229,7 @@ export function questionMetaHeight(settings: PaginationSettings): number {
 // a4-paper-page.tsx 의 실제 렌더 박스 치수(px-2.5 py-2 border, space-y-2, ↓)를
 // 모델링한다. 살짝 보수적으로 잡아 칸 경계에서 잘리지 않도록 한다.
 const STRUCT_BOX_CHROME = 18; // 박스(지문/요약/given) 1개당 상하 테두리+패딩
+const STRUCT_PASSAGE_TITLE_HEIGHT = 15;
 const BOX_TEXT_INSET = 24; // px-2.5(20) + border(2) + 여유
 const STRUCTURE_GAP = 8; // space-y-2
 const HEADER_BODY_GAP = 8; // 헤더(지시문)과 본문 사이 간격
@@ -244,6 +249,18 @@ function boxLineHeight(settings: PaginationSettings): number {
 function structuredBoxChrome(style: Extract<StructRowStyle, "passage" | "summary" | "given">, settings: PaginationSettings): number {
   if (style !== "passage") return STRUCT_BOX_CHROME;
   return settings.passageStyle === "plain" ? 8 : STRUCT_BOX_CHROME;
+}
+
+function structuredPassageTitleHeight(
+  item: PaperItem,
+  settings: PaginationSettings,
+  style: Extract<StructRowStyle, "passage" | "summary" | "given">,
+): number {
+  if (style !== "passage" || !settings.showPassageTitle) return 0;
+  const title = normalizeInlineText(
+    item.passageTitle || item.sourceQuestion.passage?.title || "",
+  );
+  return title ? STRUCT_PASSAGE_TITLE_HEIGHT : 0;
 }
 
 function structuredBoxTextWidth(
@@ -288,7 +305,12 @@ export function estimateStructuredBodyHeight(
     const { summary: rawSummary } = splitSummaryCompleteMcQuestionText(item.questionText);
     const summary = summaryCompleteMcSummaryForItem(item, rawSummary);
     const blocks: number[] = [];
-    if (passage) blocks.push(structuredBoxTextHeight(passage, settings, "passage"));
+    if (passage) {
+      blocks.push(
+        structuredBoxTextHeight(passage, settings, "passage") +
+          structuredPassageTitleHeight(item, settings, "passage"),
+      );
+    }
     if (isSummaryCompleteMc(subType)) blocks.push(ARROW_BLOCK_HEIGHT);
     if (summary) blocks.push(structuredBoxTextHeight(summary, settings, "summary"));
     return (
@@ -311,7 +333,11 @@ export function estimateStructuredBodyHeight(
         estimateTextLines(bodyAfterStem, columnWidth, fontSize) * questionLineHeight(settings) +
         STRUCTURE_GAP;
     }
-    if (passage) height += structuredBoxTextHeight(passage, settings, "passage");
+    if (passage) {
+      height +=
+        structuredBoxTextHeight(passage, settings, "passage") +
+        structuredPassageTitleHeight(item, settings, "passage");
+    }
     return height;
   }
 
@@ -397,6 +423,11 @@ function buildStructLineBlocks(
     }
 
     lines.forEach((line, lineIndex) => {
+      const lineSegChrome =
+        segChrome +
+        (lineIndex === 0 && style === "passage"
+          ? structuredPassageTitleHeight(item, settings, "passage")
+          : 0);
       blocks.push({
         kind: "struct-line",
         group,
@@ -408,8 +439,8 @@ function buildStructLineBlocks(
         isSegStart: lineIndex === 0,
         isSegEnd: lineIndex === lines.length - 1,
         lineHeight,
-        segChrome,
-        height: lineHeight + (lineIndex === 0 ? segChrome : 0),
+        segChrome: lineSegChrome,
+        height: lineHeight + (lineIndex === 0 ? lineSegChrome : 0),
       });
     });
   });
@@ -488,6 +519,14 @@ function embeddedPassageBodyChrome(item: PaperItem, settings: PaginationSettings
       : 0;
 }
 
+function embeddedPassageTitleHeight(item: PaperItem, settings: PaginationSettings): number {
+  if (!hasEmbeddedPassageBody(item) || !settings.showPassageTitle) return 0;
+  const title = normalizeInlineText(
+    item.passageTitle || item.sourceQuestion.passage?.title || "",
+  );
+  return title ? STRUCT_PASSAGE_TITLE_HEIGHT : 0;
+}
+
 export function estimatePassageHeight(group: PaperGroup, settings: PaginationSettings): number {
   if (!group.includePassage || !group.passageContent) return 0;
   const lines = passageToLines(group.passageContent, settings);
@@ -518,6 +557,7 @@ export function estimateHeaderBlockHeight(item: PaperItem, settings: PaginationS
     height +=
       questionBodyToLines(bodyRendered, settings, item).length * questionLineHeight(settings);
     height += embeddedPassageBodyChrome(item, settings);
+    height += embeddedPassageTitleHeight(item, settings);
     const { givenText } = splitSentenceInsertGivenBlock(bodyRendered, subType);
     if (givenText) height += GIVEN_BOX_CHROME;
   }

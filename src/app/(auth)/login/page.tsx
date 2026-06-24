@@ -89,8 +89,8 @@ function StaffLoginForm() {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "jooyeon",
-      password: "jooyeon",
+      email: "",
+      password: "",
     },
   });
 

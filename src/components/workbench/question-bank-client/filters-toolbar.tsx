@@ -64,23 +64,22 @@ export function QuestionFiltersToolbar({
   }, [currentSubTypes.join(",")]);
 
   function toggleSub(value: string) {
-    setTypeSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(value)) next.delete(value);
-      else next.add(value);
-      return next;
-    });
+    const next = new Set(typeSelected);
+    if (next.has(value)) next.delete(value);
+    else next.add(value);
+    // 즉시 반영: 체크박스 즉답(optimistic) + 필터 커밋을 같은 토글에서 함께 한다.
+    setTypeSelected(next);
+    commitTypes([...next]);
   }
 
   function toggleGroup(group: (typeof TYPE_SUBTYPE_MAP)[number]) {
     const groupSubs = group.subtypes.map((s) => s.value);
     const allSelected = groupSubs.every((s) => typeSelected.has(s));
-    setTypeSelected((prev) => {
-      const next = new Set(prev);
-      if (allSelected) groupSubs.forEach((s) => next.delete(s));
-      else groupSubs.forEach((s) => next.add(s));
-      return next;
-    });
+    const next = new Set(typeSelected);
+    if (allSelected) groupSubs.forEach((s) => next.delete(s));
+    else groupSubs.forEach((s) => next.add(s));
+    setTypeSelected(next);
+    commitTypes([...next]);
   }
 
   function toggleCollapse(type: string) {
@@ -92,9 +91,9 @@ export function QuestionFiltersToolbar({
     });
   }
 
-  // Batch-apply the type selection (mirrors the old "적용" button) so each
-  // checkbox toggle doesn't trigger a navigation. Committed when the popover
-  // closes.
+  // Apply the type selection on each toggle so the filter takes effect
+  // immediately (no "적용" button / popover-close required), matching the
+  // 난이도·정렬·중요 controls below.
   function commitTypes(selectedSubs: string[]) {
     if (selectedSubs.length === 0) {
       updateFilters({ type: "ALL", subType: "ALL" });
@@ -113,13 +112,10 @@ export function QuestionFiltersToolbar({
     });
   }
 
+  // 유형 선택은 토글 즉시 commitTypes 로 반영되므로, 팝오버 열림/닫힘은
+  // 더 이상 커밋 경로가 아니다 — 단순히 열림 상태만 관리한다.
   function handleOpenChange(next: boolean) {
     setOpen(next);
-    if (!next) {
-      const sel = [...typeSelected].sort().join(",");
-      const cur = [...currentSubTypes].sort().join(",");
-      if (sel !== cur) commitTypes([...typeSelected]);
-    }
   }
 
   // 검수 상태(approved)는 별도 세그먼트 컨트롤이 소유하므로 팝오버의 활성
@@ -163,7 +159,10 @@ export function QuestionFiltersToolbar({
                 {typeSelected.size > 0 ? (
                   <button
                     type="button"
-                    onClick={() => setTypeSelected(new Set())}
+                    onClick={() => {
+                      setTypeSelected(new Set());
+                      commitTypes([]);
+                    }}
                     className="text-[10.5px] text-slate-400 transition-colors hover:text-red-500"
                   >
                     전체 해제

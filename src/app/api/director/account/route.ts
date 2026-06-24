@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getStaffSession } from "@/lib/auth";
+import {
+  getStaffDisplayTitle,
+  normalizeStaffDisplayTitle,
+  parseAcademySettings,
+  setStaffDisplayTitleInSettings,
+} from "@/lib/staff-display";
 
 const phoneRegex = /^(0\d{1,2}-?\d{3,4}-?\d{4})$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -13,6 +19,7 @@ const patchSchema = z.object({
   email: z.string().regex(emailRegex, "올바른 이메일 형식이 아닙니다.").optional(),
   phone: z.string().regex(phoneRegex, "올바른 전화번호 형식이 아닙니다.").or(z.literal("")).optional(),
   avatarUrl: z.string().url("올바른 URL이 아닙니다.").or(z.literal("")).optional(),
+  displayTitle: z.string().max(20, "직함은 20자 이하여야 합니다.").optional(),
   // 학원 정보 (Academy)
   academyName: z.string().min(1, "학원명을 입력해주세요.").max(100, "학원명은 100자 이하여야 합니다.").optional(),
   academyPhone: z.string().regex(phoneRegex, "올바른 전화번호 형식이 아닙니다.").or(z.literal("")).optional(),
@@ -22,21 +29,14 @@ const patchSchema = z.object({
   estimatedStudents: z.string().optional(),
 });
 
-function parseSettings(raw: string | null): Record<string, unknown> {
-  if (!raw) return {};
-  try {
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === "object" ? (parsed as Record<string, unknown>) : {};
-  } catch {
-    return {};
-  }
-}
-
 export async function GET() {
   try {
     const session = await getStaffSession();
     if (!session) {
       return NextResponse.json({ error: "인증이 필요합니다" }, { status: 401 });
+    }
+    if (session.role !== "DIRECTOR") {
+      return NextResponse.json({ error: "원장 권한이 필요합니다" }, { status: 403 });
     }
 
     const staff = await prisma.staff.findUnique({
@@ -45,6 +45,7 @@ export async function GET() {
         name: true,
         email: true,
         phone: true,
+        role: true,
         avatarUrl: true,
         authProvider: true,
         academy: {
@@ -65,13 +66,14 @@ export async function GET() {
       return NextResponse.json({ error: "계정을 찾을 수 없습니다" }, { status: 404 });
     }
 
-    const settings = parseSettings(staff.academy?.settings ?? null);
+    const settings = parseAcademySettings(staff.academy?.settings ?? null);
 
     return NextResponse.json({
       name: staff.name,
       email: staff.email,
       phone: staff.phone ?? "",
       avatarUrl: staff.avatarUrl ?? "",
+      displayTitle: getStaffDisplayTitle(settings, session.id, staff.role),
       authProvider: staff.authProvider ?? "credentials",
       academyName: staff.academy?.name ?? "",
       academyPhone: staff.academy?.phone ?? "",
@@ -79,7 +81,7 @@ export async function GET() {
       color: staff.academy?.color ?? "#3B82F6",
       logoUrl: staff.academy?.logoUrl ?? "",
       code: staff.academy?.code ?? "",
-      estimatedStudents: (settings.estimatedStudents as string) ?? "",
+      estimatedStudents: typeof settings.estimatedStudents === "string" ? settings.estimatedStudents : "",
     });
   } catch (error) {
     console.error("[DIRECTOR_ACCOUNT_GET] Error:", error);
@@ -93,6 +95,9 @@ export async function PATCH(req: NextRequest) {
     if (!session) {
       return NextResponse.json({ error: "인증이 필요합니다" }, { status: 401 });
     }
+    if (session.role !== "DIRECTOR") {
+      return NextResponse.json({ error: "원장 권한이 필요합니다" }, { status: 403 });
+    }
 
     const body = await req.json();
     const parsed = patchSchema.safeParse(body);
@@ -104,9 +109,16 @@ export async function PATCH(req: NextRequest) {
     }
     const data = parsed.data;
 
+    if (data.name !== undefined && data.name.trim().length === 0) {
+      return NextResponse.json({ error: "이름을 입력해주세요." }, { status: 400 });
+    }
+    if (data.academyName !== undefined && data.academyName.trim().length === 0) {
+      return NextResponse.json({ error: "학원명을 입력해주세요." }, { status: 400 });
+    }
+
     const staff = await prisma.staff.findUnique({
       where: { id: session.id },
-      select: { academyId: true, authProvider: true, email: true },
+      select: { academyId: true, authProvider: true, email: true, role: true },
     });
     if (!staff) {
       return NextResponse.json({ error: "계정을 찾을 수 없습니다" }, { status: 404 });
@@ -134,36 +146,60 @@ export async function PATCH(req: NextRequest) {
 
     // ── Staff 업데이트 ──
     const staffData: Record<string, unknown> = {};
-    if (data.name !== undefined) staffData.name = data.name;
+    if (data.name !== undefined) staffData.name = data.name.trim();
     if (nextEmail !== undefined) staffData.email = nextEmail;
     if (data.phone !== undefined) staffData.phone = data.phone || null;
     if (data.avatarUrl !== undefined) staffData.avatarUrl = data.avatarUrl || null;
-    if (Object.keys(staffData).length > 0) {
-      await prisma.staff.update({ where: { id: session.id }, data: staffData });
-    }
-
     // ── Academy 업데이트 ──
     const academyData: Record<string, unknown> = {};
-    if (data.academyName !== undefined) academyData.name = data.academyName;
+    if (data.academyName !== undefined) academyData.name = data.academyName.trim();
     if (data.academyPhone !== undefined) academyData.phone = data.academyPhone || null;
     if (data.address !== undefined) academyData.address = data.address || null;
     if (data.color !== undefined) academyData.color = data.color;
     if (data.logoUrl !== undefined) academyData.logoUrl = data.logoUrl || null;
 
-    if (data.estimatedStudents !== undefined) {
-      const current = await prisma.academy.findUnique({
-        where: { id: staff.academyId },
-        select: { settings: true },
+    let displayTitle: string | undefined;
+    if (data.displayTitle !== undefined) {
+      displayTitle = normalizeStaffDisplayTitle(data.displayTitle);
+    }
+
+    const shouldUpdateSettings = data.estimatedStudents !== undefined || data.displayTitle !== undefined;
+
+    if (Object.keys(staffData).length > 0 || Object.keys(academyData).length > 0 || shouldUpdateSettings) {
+      await prisma.$transaction(async (tx) => {
+        if (Object.keys(staffData).length > 0) {
+          await tx.staff.update({ where: { id: session.id }, data: staffData });
+        }
+
+        const nextAcademyData = { ...academyData };
+        if (shouldUpdateSettings) {
+          const current = await tx.academy.findUnique({
+            where: { id: staff.academyId },
+            select: { settings: true },
+          });
+          let merged = parseAcademySettings(current?.settings ?? null);
+          if (data.estimatedStudents !== undefined) {
+            merged = { ...merged, estimatedStudents: data.estimatedStudents };
+          }
+          if (data.displayTitle !== undefined) {
+            merged = setStaffDisplayTitleInSettings(merged, session.id, displayTitle ?? "");
+          }
+          nextAcademyData.settings = JSON.stringify(merged);
+        }
+
+        if (Object.keys(nextAcademyData).length > 0) {
+          await tx.academy.update({ where: { id: staff.academyId }, data: nextAcademyData });
+        }
       });
-      const merged = { ...parseSettings(current?.settings ?? null), estimatedStudents: data.estimatedStudents };
-      academyData.settings = JSON.stringify(merged);
     }
 
-    if (Object.keys(academyData).length > 0) {
-      await prisma.academy.update({ where: { id: staff.academyId }, data: academyData });
-    }
-
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      displayTitle:
+        displayTitle !== undefined
+          ? displayTitle || getStaffDisplayTitle({}, session.id, staff.role)
+          : undefined,
+    });
   } catch (error) {
     console.error("[DIRECTOR_ACCOUNT_PATCH] Error:", error);
     return NextResponse.json({ error: "서버 오류가 발생했습니다" }, { status: 500 });

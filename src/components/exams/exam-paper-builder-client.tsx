@@ -1730,6 +1730,11 @@ export function ExamPaperBuilderClient({
     setDirty(true);
   }
 
+  function togglePassageTitleVisibility() {
+    setShowPassageTitle((current) => !current);
+    markDirty();
+  }
+
   function updateHeader(patch: HeaderPatch) {
     if (patch.title !== undefined) setTitle(patch.title);
     if (patch.subtitle !== undefined) setSubtitle(patch.subtitle);
@@ -1844,9 +1849,20 @@ export function ExamPaperBuilderClient({
     return result.id;
   }
 
+  // 새 시험지(create)에서 처음 저장하면, 저장이 유발하는 현재 라우트 새로고침에
+  // 빌더가 리마운트될 때 메모리에만 있던 paperItems가 사라진다(create 페이지는
+  // initialExam이 없어 빈 상태로 다시 시작하고, 같은 저장이 IndexedDB 임시저장본도
+  // 지워 복구할 길이 없다). 편집 라우트는 DB에서 내용을 다시 불러오므로, 첫 저장
+  // 직후 편집 화면으로 옮겨 내용 손실을 막는다("다른 이름으로 저장"과 동일한 패턴).
+  function goToEditAfterFreshSave(examId: string) {
+    if (isEditingExistingExam) return;
+    router.replace(`/director/workbench/exams/${examId}/edit`);
+  }
+
   function handleSave() {
     startTransition(async () => {
-      await saveDraft();
+      const examId = await saveDraft();
+      if (examId) goToEditAfterFreshSave(examId);
     });
   }
 
@@ -1905,7 +1921,10 @@ export function ExamPaperBuilderClient({
     startTransition(async () => {
       const examId = dirty || !savedExamId ? await saveDraft() : savedExamId;
       if (!examId) return;
+      // 다운로드(attachment fetch)를 먼저 발사한 뒤 라우트를 이동해야 진행 중인
+      // 다운로드가 끊기지 않는다.
       triggerDocxDownload(examId, false);
+      goToEditAfterFreshSave(examId);
     });
   }
 
@@ -1914,6 +1933,7 @@ export function ExamPaperBuilderClient({
       const examId = dirty || !savedExamId ? await saveDraft() : savedExamId;
       if (!examId) return;
       triggerDocxDownload(examId, true);
+      goToEditAfterFreshSave(examId);
     });
   }
 
@@ -1933,6 +1953,7 @@ export function ExamPaperBuilderClient({
       const examId = dirty || !savedExamId ? await saveDraft() : savedExamId;
       if (!examId) return;
       triggerHwpxDownload(examId, false);
+      goToEditAfterFreshSave(examId);
     });
   }
 
@@ -1941,6 +1962,7 @@ export function ExamPaperBuilderClient({
       const examId = dirty || !savedExamId ? await saveDraft() : savedExamId;
       if (!examId) return;
       triggerHwpxDownload(examId, true);
+      goToEditAfterFreshSave(examId);
     });
   }
 
@@ -2367,6 +2389,7 @@ export function ExamPaperBuilderClient({
             paperItemsCount={panelPaperItems.length}
             totalPoints={totalPoints}
             autoPointTotal={autoPointTotal}
+            showPassageTitle={showPassageTitle}
             activeTab={rightPanelTab}
             onTabChange={setRightPanelTab}
             settingsPanel={templateSettingsPanel}
@@ -2375,6 +2398,7 @@ export function ExamPaperBuilderClient({
             onUploadImageBlock={insertImageBlock}
             onDuplicateItem={duplicateItem}
             onToggleLockItem={toggleLockItem}
+            onTogglePassageTitle={togglePassageTitleVisibility}
             onUpdateItem={updateItem}
             onToggleKeepWithPrev={tryToggleKeepWithPrev}
             onUngroupItem={ungroupItem}

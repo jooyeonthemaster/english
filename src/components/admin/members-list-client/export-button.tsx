@@ -2,19 +2,26 @@
 
 // ============================================================================
 // 회원 목록 → 엑셀(CSV) 내보내기 버튼.
-//   · "전체 회원": 허수/내부 계정을 뺀 전체 회원 (SMS발송대상 Y/N + 사유 컬럼 포함)
-//   · "SMS 발송대상": 전화번호가 있고 제외되지 않은 회원만 (대량발송 업로드용)
+//   · "전체 회원 엑셀" : 허수/내부 계정 뺀 전체 회원 (상세 15컬럼, Y/N + 사유 포함)
+//   · "정보성 발송 CSV": 전화번호 있는 활성 회원 전체(동의 무관). 크레딧 소멸 등 안내용
+//   · "광고성 발송 CSV": 마케팅 동의자만. 추가증정·이벤트 등 홍보용(법적 사전동의 필수)
+//   정보성/광고성 모두 뿌리오 업로드 양식(이름,휴대폰,[*1*]~[*4*])으로 바로 다운된다.
 // 서버 액션이 CSV 문자열(BOM 포함)을 돌려주면 브라우저에서 Blob 다운로드한다.
 // ============================================================================
 
 import { useState } from "react";
-import { Loader2, Users, Send } from "lucide-react";
+import { Loader2, Users, Send, Megaphone } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { exportMembers } from "@/actions/admin-members";
+import type { ExportMode } from "@/actions/admin-members/export-members";
 
-function triggerDownload(filename: string, csv: string) {
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+function triggerDownload(filename: string, contentBase64: string, mimeType: string) {
+  // 서버가 base64로 인코딩한 파일 바이트(발송용=CP949, 전체=UTF-8)를 그대로 복원.
+  const bin = atob(contentBase64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  const blob = new Blob([bytes], { type: mimeType });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -26,22 +33,28 @@ function triggerDownload(filename: string, csv: string) {
 }
 
 export function MembersExportButtons() {
-  const [pending, setPending] = useState<"all" | "targets" | null>(null);
+  const [pending, setPending] = useState<ExportMode | null>(null);
 
-  async function run(kind: "all" | "targets") {
+  async function run(mode: ExportMode) {
     if (pending) return;
-    setPending(kind);
+    setPending(mode);
     try {
-      const res = await exportMembers({ onlyTargets: kind === "targets" });
-      if (!res.csv || res.totalRows === 0) {
-        toast.message("내보낼 회원이 없습니다");
+      const res = await exportMembers({ mode });
+      if (!res.contentBase64 || res.totalRows === 0) {
+        toast.message(
+          mode === "ad"
+            ? "마케팅 동의한 광고 발송대상이 없습니다"
+            : "내보낼 회원이 없습니다",
+        );
         return;
       }
-      triggerDownload(res.filename, res.csv);
+      triggerDownload(res.filename, res.contentBase64, res.mimeType);
       toast.success(
-        kind === "targets"
-          ? `SMS 발송대상 ${res.smsTargetRows}명 내보내기 완료`
-          : `회원 ${res.totalRows}명 내보내기 완료 (발송대상 ${res.smsTargetRows}명)`,
+        mode === "info"
+          ? `정보성 발송대상 ${res.totalRows}명 내보내기 완료`
+          : mode === "ad"
+            ? `광고성 발송대상 ${res.totalRows}명 내보내기 완료`
+            : `회원 ${res.totalRows}명 내보내기 완료 (광고발송 가능 ${res.smsTargetRows}명)`,
       );
     } catch (err) {
       toast.error(
@@ -71,15 +84,31 @@ export function MembersExportButtons() {
       <Button
         size="sm"
         className="h-8 text-[12px] bg-blue-600 hover:bg-blue-700"
-        onClick={() => run("targets")}
+        onClick={() => run("info")}
         disabled={pending !== null}
+        title="크레딧 소멸 안내 등 정보성 — 마케팅 동의 없이도 발송 가능"
       >
-        {pending === "targets" ? (
+        {pending === "info" ? (
           <Loader2 className="size-3.5 mr-1.5 animate-spin" strokeWidth={2} aria-hidden />
         ) : (
           <Send className="size-3.5 mr-1.5" strokeWidth={2} aria-hidden />
         )}
-        SMS 발송대상 엑셀
+        정보성 발송 CSV
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        className="h-8 text-[12px] border-amber-300 text-amber-700 hover:bg-amber-50"
+        onClick={() => run("ad")}
+        disabled={pending !== null}
+        title="추가증정·이벤트 등 광고성 — 마케팅 수신동의자에게만 발송"
+      >
+        {pending === "ad" ? (
+          <Loader2 className="size-3.5 mr-1.5 animate-spin" strokeWidth={2} aria-hidden />
+        ) : (
+          <Megaphone className="size-3.5 mr-1.5" strokeWidth={2} aria-hidden />
+        )}
+        광고성 발송 CSV
       </Button>
     </div>
   );

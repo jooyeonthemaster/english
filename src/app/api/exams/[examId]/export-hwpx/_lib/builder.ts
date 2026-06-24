@@ -136,9 +136,8 @@ function normalizePrintableTitle(value: string | null | undefined): string {
 
 function printablePassageTitle(item: BuilderItemResolved): string {
   const savedTitle = normalizePrintableTitle(item.passageTitle);
-  if (!savedTitle) return "";
   const sourceTitle = normalizePrintableTitle(item.sourceQuestion.passage?.title);
-  return savedTitle === sourceTitle ? "" : savedTitle;
+  return savedTitle || sourceTitle;
 }
 
 function blockAlign(align: BuilderBlock["blockAlign"]) {

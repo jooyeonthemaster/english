@@ -21,12 +21,17 @@ import { NavItem } from "./admin-shell/nav-item";
 import { useReviewDrawer } from "./review-drawer-context";
 import { useSidebarFocus } from "./sidebar-focus-context";
 import { MarqueeBoundaryContext } from "./marquee-boundary-context";
+import {
+  STAFF_PROFILE_UPDATED_EVENT,
+  type StaffProfileUpdatedDetail,
+} from "@/lib/staff-profile-events";
 
 interface StaffSession {
   id: string;
   name: string;
   email: string;
   role: string;
+  displayTitle?: string;
   academyId: string;
   academyName: string;
 }
@@ -52,6 +57,7 @@ function clampSidebarWidth(width: number) {
 export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const [displayStaff, setDisplayStaff] = useState(staff);
   const [isPending, startTransition] = useTransition();
   const [navigatingTo, setNavigatingTo] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState(false);
@@ -71,6 +77,27 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   useEffect(() => {
     setNavigatingTo(null);
   }, [pathname]);
+
+  useEffect(() => {
+    setDisplayStaff(staff);
+  }, [staff]);
+
+  useEffect(() => {
+    const handleProfileUpdate = (event: Event) => {
+      const detail = (event as CustomEvent<StaffProfileUpdatedDetail>).detail;
+      if (!detail) return;
+      setDisplayStaff((current) => ({
+        ...current,
+        ...(detail.name !== undefined ? { name: detail.name } : {}),
+        ...(detail.email !== undefined ? { email: detail.email } : {}),
+        ...(detail.academyName !== undefined ? { academyName: detail.academyName } : {}),
+        ...(detail.displayTitle !== undefined ? { displayTitle: detail.displayTitle } : {}),
+      }));
+    };
+
+    window.addEventListener(STAFF_PROFILE_UPDATED_EVENT, handleProfileUpdate);
+    return () => window.removeEventListener(STAFF_PROFILE_UPDATED_EVENT, handleProfileUpdate);
+  }, []);
 
   useEffect(() => {
     const stored = localStorage.getItem(SIDEBAR_STORAGE_KEY);
@@ -206,7 +233,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     if (!open) setPeekOpen(sidebarHoverRef.current);
   }, []);
 
-  const isDirector = staff.role === "DIRECTOR";
+  const isDirector = displayStaff.role === "DIRECTOR";
   const navGroups = useMemo(() => getNavGroups(basePath), [basePath]);
 
   const filteredGroups: NavGroup[] = useMemo(
@@ -398,7 +425,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
 
             {/* Top user actions */}
             <SidebarTopActions
-              staff={staff}
+              staff={displayStaff}
               basePath={basePath}
               collapsed={displayCollapsed}
               pathname={pathname}

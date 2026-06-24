@@ -11,6 +11,7 @@ export interface StaffSession {
   academyId: string;
   academyName: string;
   academySlug: string;
+  displayTitle: string;
 }
 
 // Schedule types
