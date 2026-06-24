@@ -63,6 +63,7 @@ import {
   removeQuestionsFromCollection,
 } from "@/actions/workbench";
 import { createExam } from "@/actions/exams";
+import { QuestionSetSection } from "@/components/workbench/question-set-section";
 import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
 
 import {
@@ -433,6 +434,7 @@ export function EmbeddedQuestionBank({
     if (open) void loadQuestions();
   }, [open, loadQuestions]);
 
+
   // ─── Live queue strip (generating/error) sorted to the very front ───
   // Only "all" filter shows generating cards; "error" filter limits to errors.
   const queueStripItems = useMemo(() => {
@@ -498,6 +500,10 @@ export function EmbeddedQuestionBank({
     }, 1500);
     return () => window.clearTimeout(t);
   }, [queueCounts.done, open, loadQuestions]);
+
+  // ── 지문 세트 ── 일반 문항과 별개의 전용 섹션(QuestionSetSection)이 세트를 한 장의
+  // 카드로 묶어 보여준다. 여기선 빈-상태 판정용 세트 수만 추적한다.
+  const [setCount, setSetCount] = useState(0);
 
   // Debounced spinner so fast loads don't flash.
   useEffect(() => {
@@ -1489,6 +1495,20 @@ export function EmbeddedQuestionBank({
               {/* 진행 중인 생성 큐 — 항상 목록 맨 앞에 (뷰/폴더/필터와 무관). */}
               {queueStrip}
 
+              <div className="mb-3">
+                <QuestionSetSection
+                  refreshKey={`${open}:${queueCounts.done}`}
+                  onCountChange={setSetCount}
+                  gridClassName={`grid items-stretch gap-3 ${
+                    gridCols === 2
+                      ? "grid-cols-1 md:grid-cols-2"
+                      : gridCols === 3
+                        ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                        : "grid-cols-1"
+                  }`}
+                />
+              </div>
+
               {isGrouped ? (
                 <PassageGroupedView
                   passages={groupedPassages}
@@ -1515,7 +1535,9 @@ export function EmbeddedQuestionBank({
                     renderManagedQuestionCard(q, idx + 1)
                   }
                 />
-              ) : displayedQuestions.length === 0 && !loading ? (
+              ) : displayedQuestions.length === 0 &&
+                setCount === 0 &&
+                !loading ? (
                 <div className="py-12 text-center">
                   <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />
                   <p className="text-[13px] text-slate-400">

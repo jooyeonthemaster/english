@@ -43,6 +43,7 @@ import {
   QuestionCard,
   type QuestionCardItem,
 } from "@/components/workbench/question-card";
+import { QuestionSetSection } from "@/components/workbench/question-set-section";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import { DragSelect } from "@/components/ui/drag-select";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
@@ -660,8 +661,12 @@ export function BottomQueueSection({
     [cappedMergedSavedQuestions, sessionShownPersistedIds],
   );
 
-  // Passage-grouped saved cards for the 지문별 view, built from the deduped
-  // (session-overlap removed) list so each question is checkboxed once.
+  // ── 지문 세트 ── 일반 문항과 완전히 별개의 렌더 경로. 멤버는 inSet=true 라 일반
+  // 목록에는 안 뜨고, 전용 QuestionSetSection 이 세트를 한 장의 카드로 묶어 보여준다.
+  // 여기선 빈-상태 판정에 쓸 세트 수만 추적한다(섹션이 콜백으로 알려줌).
+  const [setCount, setSetCount] = useState(0);
+
+  // Passage-grouped saved cards for the 지문별 view.
   const savedCardsForDisplayGroups = useMemo(
     () =>
       groupByPassage(savedCardsForDisplay.map(withVisiblePlanTag), (q) => q),
@@ -1356,7 +1361,8 @@ export function BottomQueueSection({
               <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
             </div>
           ) : sessionFlatEntries.length === 0 &&
-            savedCardsForDisplay.length === 0 ? (
+            savedCardsForDisplay.length === 0 &&
+            setCount === 0 ? (
             <EmptyState
               message={
                 reviewStatusFilter === "ALL" && savedPlanFilter === "ALL"
@@ -1365,19 +1371,26 @@ export function BottomQueueSection({
               }
             />
           ) : (
-            <DragSelect
-              className={cardLayoutClassNames[cardLayoutMode]}
-              value={selectedQuestionIds}
-              onChange={setSelectedQuestionIds}
-              boundaryRef={marqueeBoundaryRef}
-            >
-              {sessionFlatEntries.map((entry) =>
-                entry.kind === "queue"
-                  ? renderQueueStatusCard(entry.item)
-                  : renderSessionQuestionCard(entry.card),
-              )}
-              {savedCardsForDisplay.map(renderSavedQuestionCard)}
-            </DragSelect>
+            <div className="space-y-3">
+              <QuestionSetSection
+                refreshKey={savedQuestions}
+                onCountChange={setSetCount}
+                gridClassName={cardLayoutClassNames[cardLayoutMode]}
+              />
+              <DragSelect
+                className={cardLayoutClassNames[cardLayoutMode]}
+                value={selectedQuestionIds}
+                onChange={setSelectedQuestionIds}
+                boundaryRef={marqueeBoundaryRef}
+              >
+                {sessionFlatEntries.map((entry) =>
+                  entry.kind === "queue"
+                    ? renderQueueStatusCard(entry.item)
+                    : renderSessionQuestionCard(entry.card),
+                )}
+                {savedCardsForDisplay.map(renderSavedQuestionCard)}
+              </DragSelect>
+            </div>
           )
         ) : (
           <div className="space-y-3">
@@ -1397,6 +1410,11 @@ export function BottomQueueSection({
                     .map((card) => card.persistedQuestionId as string),
               }),
             )}
+            <QuestionSetSection
+              refreshKey={savedQuestions}
+              onCountChange={setSetCount}
+              gridClassName={cardLayoutClassNames[cardLayoutMode]}
+            />
             {savedCardsForDisplayGroups.map((group) =>
               renderPassageGroup({
                 group,
@@ -1416,7 +1434,8 @@ export function BottomQueueSection({
             {!loadingSavedQuestions &&
               visibleQueueCards.length === 0 &&
               sessionGroups.length === 0 &&
-              savedCardsForDisplayGroups.length === 0 && (
+              savedCardsForDisplayGroups.length === 0 &&
+              setCount === 0 && (
                 <EmptyState
                   message={
                     reviewStatusFilter === "ALL" && savedPlanFilter === "ALL"

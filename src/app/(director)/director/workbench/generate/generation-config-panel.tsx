@@ -157,10 +157,22 @@ interface GenerationConfigPanelProps {
   editingRow?: boolean;
   /** 개별 설정 중인 지문 id — 장문 세트 모드일 때 이 지문으로 세트를 만든다. */
   activePassageId?: string | null;
-  /** 개별 설정 중인 지문의 장문 세트 구성(controlled) — 있으면 지문별 저장. */
-  setMembers?: { typeId: string; difficulty: "BASIC" | "INTERMEDIATE" | "KILLER" }[];
-  onSetMembersChange?: (
-    members: { typeId: string; difficulty: "BASIC" | "INTERMEDIATE" | "KILLER" }[],
+  /** 개별 설정 중인 지문의 세트 프리셋(controlled) — 있으면 지문별 저장. */
+  setPresetId?: string | null;
+  onSetPresetChange?: (presetId: string | null) => void;
+  /**
+   * 세트 멤버별 난이도·세부설정 오버라이드(controlled) — 프리셋 멤버 순서와 평행한
+   * 배열. 있으면 지문별 저장(SetBuilderPanel 로 그대로 전달).
+   */
+  setMemberOverrides?: Array<{
+    difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
+    typeSettings?: Record<string, unknown>;
+  }>;
+  onSetMemberOverridesChange?: (
+    next: Array<{
+      difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
+      typeSettings?: Record<string, unknown>;
+    }>,
   ) => void;
   generationPlan: QuestionGenerationPlan;
   setGenerationPlan: (v: QuestionGenerationPlan) => void;
@@ -243,8 +255,10 @@ export function GenerationConfigPanel({
   editingRow = false,
   hideGenerateButtons = false,
   activePassageId = null,
-  setMembers,
-  onSetMembersChange,
+  setPresetId,
+  onSetPresetChange,
+  setMemberOverrides,
+  onSetMemberOverridesChange,
   generationPlan,
   setGenerationPlan,
   typeCounts,
@@ -255,6 +269,7 @@ export function GenerationConfigPanel({
   totalQuestions,
   passageSentenceCount,
   difficulty,
+  setDifficulty,
   customPrompt,
   setCustomPrompt,
   savedPrompts,
@@ -2886,8 +2901,14 @@ export function GenerationConfigPanel({
                       : null
                 }
                 generationPlan={generationPlan}
-                members={editingRow ? (setMembers ?? []) : undefined}
-                onMembersChange={editingRow ? onSetMembersChange : undefined}
+                presetId={editingRow ? (setPresetId ?? null) : undefined}
+                onPresetChange={editingRow ? onSetPresetChange : undefined}
+                difficulty={editingRow ? difficulty : undefined}
+                onDifficultyChange={editingRow ? setDifficulty : undefined}
+                memberOverrides={editingRow ? (setMemberOverrides ?? []) : undefined}
+                onMemberOverridesChange={
+                  editingRow ? onSetMemberOverridesChange : undefined
+                }
                 embedded={editingRow}
               />
             </div>

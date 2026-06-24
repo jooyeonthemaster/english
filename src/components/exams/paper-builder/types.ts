@@ -15,6 +15,9 @@ export type BuilderQuestion = {
   approved: boolean;
   starred: boolean;
   createdAt: Date | string;
+  // 장문 세트(43~45처럼 지문 1회+N문항) membership. 솔로 문항은 null/undefined.
+  // 시험지에서 같은 setId 멤버를 한 그룹으로 묶어 공유 지문을 1회만 출력하는 데 쓴다.
+  setId?: string | null;
   passage: {
     id: string;
     title: string;

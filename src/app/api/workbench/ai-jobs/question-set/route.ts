@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { getStaffSession } from "@/lib/auth";
@@ -12,6 +13,7 @@ import { prisma } from "@/lib/prisma";
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
 import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 import { generateQuestionSet } from "@/lib/question-sets/generate-set";
+import { passageMeetsPreset, resolvePreset } from "@/lib/question-sets/presets";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 export const runtime = "nodejs";
@@ -22,29 +24,24 @@ const VOCAB_TYPES = new Set(["CONTEXT_MEANING", "SYNONYM", "ANTONYM"]);
 
 const requestSchema = z.object({
   passageId: z.string().min(1),
-  structuralMode: z
-    .enum(["NONE", "SENTENCE_ORDER", "SENTENCE_INSERT"])
-    .default("NONE"),
-  setLabel: z.string().optional(),
+  presetId: z.string().min(1),
+  difficulty: z.enum(["BASIC", "INTERMEDIATE", "KILLER"]).default("INTERMEDIATE"),
   generationPlan: z.unknown().optional(),
   customPrompt: z.string().optional(),
-  members: z
+  /** 멤버별 오버라이드(프리셋 멤버 순서와 평행) — 난이도·세부설정 커스터마이즈. */
+  memberOverrides: z
     .array(
       z.object({
-        typeId: z.string().min(1),
-        difficulty: z
-          .enum(["BASIC", "INTERMEDIATE", "KILLER"])
-          .default("INTERMEDIATE"),
-        typeSettings: z.unknown().optional(),
+        difficulty: z.enum(["BASIC", "INTERMEDIATE", "KILLER"]).optional(),
+        typeSettings: z.record(z.string(), z.unknown()).optional(),
       }),
     )
-    .min(1)
-    .max(8),
+    .optional(),
 });
 
 export async function POST(req: NextRequest) {
   if (!FEATURE_FLAGS.ENABLE_LONG_PASSAGE_SETS) {
-    return NextResponse.json({ error: "장문 세트 기능이 비활성화되어 있습니다." }, { status: 403 });
+    return NextResponse.json({ error: "지문 세트 기능이 비활성화되어 있습니다." }, { status: 403 });
   }
 
   const staff = await getStaffSession();
@@ -62,12 +59,23 @@ export async function POST(req: NextRequest) {
   const input = parsed.data;
   const generationPlan = normalizeQuestionGenerationPlan(input.generationPlan);
 
+  const preset = resolvePreset(input.presetId);
+  if (!preset) {
+    return NextResponse.json({ error: "알 수 없는 세트 프리셋입니다." }, { status: 400 });
+  }
+
   const passage = await prisma.passage.findFirst({
     where: { id: input.passageId, academyId: staff.academyId },
-    select: { id: true, title: true },
+    select: { id: true, title: true, content: true },
   });
   if (!passage) {
     return NextResponse.json({ error: "Passage not found" }, { status: 404 });
+  }
+
+  // 최소 분량 사전검증 — 차감 전에 빠르게 거른다(생성기도 한 번 더 검증).
+  const feasibility = passageMeetsPreset(passage.content, preset);
+  if (!feasibility.ok) {
+    return NextResponse.json({ error: feasibility.reason }, { status: 400 });
   }
 
   await cleanupStaleWorkbenchAiJobs({
@@ -76,7 +84,7 @@ export async function POST(req: NextRequest) {
     passageId: passage.id,
   });
 
-  const baseCreditCost = input.members.reduce(
+  const baseCreditCost = preset.members.reduce(
     (sum, m) =>
       sum +
       (VOCAB_TYPES.has(m.typeId)
@@ -96,19 +104,22 @@ export async function POST(req: NextRequest) {
       passageId: passage.id,
       mode: "SET",
       generationPlan,
-      requestedCount: input.members.length,
+      requestedCount: preset.members.length,
       startedAt: new Date(),
       config: {
         mode: "SET",
-        structuralMode: input.structuralMode,
-        members: input.members.map((m) => ({
+        presetId: preset.id,
+        structuralMode: preset.structuralMode,
+        difficulty: input.difficulty,
+        members: preset.members.map((m) => ({
           typeId: m.typeId,
-          difficulty: m.difficulty,
+          difficulty: m.difficulty ?? input.difficulty,
+          typeSettings: m.typeSettings ?? null,
         })),
-        setLabel: input.setLabel ?? null,
+        setLabel: preset.label,
         generationPlan,
         customPrompt: input.customPrompt ?? "",
-      },
+      } as Prisma.InputJsonValue,
     },
   });
 
@@ -122,8 +133,9 @@ export async function POST(req: NextRequest) {
       metadata: {
         passageId: passage.id,
         mode: "SET",
-        memberCount: input.members.length,
-        structuralMode: input.structuralMode,
+        presetId: preset.id,
+        memberCount: preset.members.length,
+        structuralMode: preset.structuralMode,
         generationPlan,
         creditCost,
       },
@@ -136,11 +148,11 @@ export async function POST(req: NextRequest) {
       staffId: staff.id,
       jobId: job.id,
       passageId: passage.id,
-      structuralMode: input.structuralMode,
-      setLabel: input.setLabel,
+      presetId: preset.id,
       generationPlan,
       customPrompt: input.customPrompt,
-      members: input.members,
+      difficulty: input.difficulty,
+      memberOverrides: input.memberOverrides,
     });
 
     await prisma.workbenchAiJob.update({
@@ -175,11 +187,11 @@ export async function POST(req: NextRequest) {
         job.academyId,
         "QUESTION_GEN_SINGLE",
         creditTxId,
-        "장문 세트 생성 실패",
+        "지문 세트 생성 실패",
         creditCost,
       ).catch(() => {});
     }
-    const message = err instanceof Error ? err.message : "장문 세트 생성에 실패했습니다.";
+    const message = err instanceof Error ? err.message : "지문 세트 생성에 실패했습니다.";
     await prisma.workbenchAiJob.update({
       where: { id: job.id },
       data: { status: "FAILED", errorMessage: message, completedAt: new Date() },

@@ -31,7 +31,7 @@ import {
   scheduleFastGeneration,
 } from "../fast-generation-scheduler";
 import { useTaskQueue } from "@/components/workbench/task-queue";
-import { deriveStructuralMode } from "@/lib/question-sets/composition-ui";
+import { resolvePreset } from "@/lib/question-sets/presets";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import {
   effectiveRowContent,
@@ -147,7 +147,8 @@ function computeRowGenStats(
       }
     }
   } else if (mode === "set") {
-    for (const m of row.override?.setMembers ?? []) {
+    const preset = resolvePreset(row.override?.setPresetId);
+    for (const m of preset?.members ?? []) {
       rowBase += VOCAB_GENERATION_TYPE_IDS.has(m.typeId)
         ? CREDIT_COSTS.QUESTION_GEN_VOCAB
         : CREDIT_COSTS.QUESTION_GEN_SINGLE;
@@ -472,14 +473,22 @@ export function useWorkspaceGeneration({
         localId?: string;
       };
       const fastUnits: FastUnit[] = [];
-      // 장문 세트 잡 — 유형지정과 같은 공용 '생성' 흐름에 합류한다.
+      // 지문 세트 — 한 잡으로 생성(멤버를 한 번에). 큐엔 세트 1개의 생성중 카드만 뜨고,
+      // 완료되면 멤버가 묶인 저장 카드로 합류한다(커스텀 라우트가 inSet=false+setId 로 저장).
       const setJobs: {
         passageId: string;
         title: string;
-        members: { typeId: string; difficulty: string }[];
-        structuralMode: string;
+        presetId: string;
+        difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
         generationPlan: QuestionGenerationPlan;
+        memberOverrides?: Array<{
+          difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
+          typeSettings?: Record<string, unknown>;
+        }>;
         localId?: string;
+        tempId: string;
+        passage: PassageItem;
+        config: QueueItem["config"];
       }[] = [];
       // 생성을 시도한 워크스페이스 행과, 그중 실패한 행 — 성공 행만 비운다.
       const attemptedLocalIds = new Set<string>();
@@ -573,28 +582,44 @@ export function useWorkspaceGeneration({
             }
           }
         } else if (effMode === "set" && item.kind === "workspace") {
-          // 장문 세트 — 구성한 멤버로 세트를 생성한다(공용 '생성' 흐름).
-          const members = item.row.override?.setMembers ?? [];
-          if (members.length > 0) {
+          // 지문 세트 — 한 잡(커스텀 라우트)으로 생성. 큐엔 세트 1개의 생성중 카드만 뜨고,
+          // 완료되면 멤버가 묶인 저장 카드로 합류한다.
+          const presetId = item.row.override?.setPresetId;
+          const preset = presetId ? resolvePreset(presetId) : null;
+          if (presetId && preset) {
             if (rowLocalId) attemptedLocalIds.add(rowLocalId);
+            const setDiff = item.row.override?.difficulty ?? "INTERMEDIATE";
+            const typeCounts: Record<string, number> = {};
+            for (const m of preset.members) {
+              typeCounts[m.typeId] = (typeCounts[m.typeId] ?? 0) + 1;
+            }
             setJobs.push({
               passageId: item.passageId,
               title: item.title,
-              members,
-              structuralMode: deriveStructuralMode(
-                members.map((m) => m.typeId),
-              ),
+              presetId,
+              difficulty: setDiff,
               generationPlan: effPlan,
+              memberOverrides: item.row.override?.setMemberOverrides,
               localId: rowLocalId,
+              tempId: `set:${item.passageId}:${presetId}:${runId}`,
+              passage: passageLike,
+              config: {
+                typeCounts,
+                questionTypeSettings: {},
+                difficulty: setDiff,
+                prompt,
+                mode: "manual",
+                generationPlan: effPlan,
+              },
             });
           }
         }
         // 그 외(유형 지정인데 유형 없음 · 멤버 없는 세트 행) → 생성 제외.
       }
 
-      // ── 3) optimistic 큐 등록 ──
+      // ── 3) optimistic 큐 등록 ── (세트는 잡 1개당 카드 1개)
       const batchCreatedAt = new Date().toISOString();
-      if (fastUnits.length > 0) {
+      if (fastUnits.length > 0 || setJobs.length > 0) {
         setSessionQueue((prev) => [
           ...fastUnits.map((unit) =>
             buildOptimisticItem({
@@ -603,6 +628,16 @@ export function useWorkspaceGeneration({
               analysisData: null,
               config: unit.config,
               progressKey: unit.progressKey,
+              createdAt: batchCreatedAt,
+            }),
+          ),
+          ...setJobs.map((job) =>
+            buildOptimisticItem({
+              jobId: job.tempId,
+              passage: job.passage,
+              analysisData: null,
+              config: job.config,
+              progressKey: "set",
               createdAt: batchCreatedAt,
             }),
           ),
@@ -625,6 +660,7 @@ export function useWorkspaceGeneration({
       void (async () => {
         let success = 0;
         let failed = 0;
+        let createdAnySet = false;
 
         if (fastUnits.length > 0) {
           const results = await Promise.allSettled(
@@ -693,8 +729,8 @@ export function useWorkspaceGeneration({
           failed += results.filter((r) => r.status === "rejected").length;
         }
 
-        // 장문 세트 — 전용 엔드포인트로 생성한다. 생성된 문항은 아래 생성/검수
-        // 결과에 그대로 합류한다(triggerRefresh 로 갱신).
+        // 지문 세트 — 커스텀 라우트로 한 번에 생성(멤버 inSet=false + setId 저장). 완료되면
+        // 생성중 카드(optimistic)를 치우고, 목록을 다시 읽어 묶인 저장 카드로 보여준다.
         for (const job of setJobs) {
           try {
             const res = await fetch("/api/workbench/ai-jobs/question-set", {
@@ -703,40 +739,48 @@ export function useWorkspaceGeneration({
               credentials: "include",
               body: JSON.stringify({
                 passageId: job.passageId,
-                structuralMode: job.structuralMode,
+                presetId: job.presetId,
+                difficulty: job.difficulty,
                 generationPlan: job.generationPlan,
                 customPrompt: prompt || undefined,
-                members: job.members.map((m) => ({
-                  typeId: m.typeId,
-                  difficulty: m.difficulty,
-                })),
+                memberOverrides: job.memberOverrides,
               }),
             });
             const data = await res.json().catch(() => ({}));
             if (!res.ok) {
-              throw new Error(data?.error || "장문 세트 생성에 실패했습니다.");
+              throw new Error(data?.error || "지문 세트 생성에 실패했습니다.");
             }
+            success += Array.isArray(data.questionIds) ? data.questionIds.length : 0;
+            createdAnySet = true;
             if (data.status === "DEGRADED") {
-              toast.warning(
-                `"${job.title}" 세트가 생성됐지만 검수가 필요합니다.`,
-              );
+              toast.warning(`"${job.title}" 세트가 생성됐지만 검수가 필요합니다.`);
             }
-            success += Array.isArray(data.questionIds)
-              ? data.questionIds.length
-              : job.members.length;
+            // 생성중 카드 제거 → 묶인 저장 카드가 대신 보인다.
+            setSessionQueue((prev) => prev.filter((q) => q.id !== job.tempId));
           } catch (err) {
             failed += 1;
-            toast.error(
-              err instanceof Error
-                ? `"${job.title}" ${err.message}`
-                : "장문 세트 생성에 실패했습니다.",
+            if (job.localId) failedLocalIds.add(job.localId);
+            const msg = err instanceof Error ? err.message : "세트 생성 실패";
+            // 구체적 이유(지문 분량 부족 등)를 토스트로 노출 — 카드 메시지는 일반적이라.
+            toast.error(`"${job.title}" ${msg}`);
+            setSessionQueue((prev) =>
+              prev.map((q) =>
+                q.id === job.tempId
+                  ? {
+                      ...q,
+                      status: "error" as const,
+                      progress: { set: "error" as const },
+                      error: msg,
+                    }
+                  : q,
+              ),
             );
           }
         }
 
         triggerRefresh();
-        // 장문 세트 문항은 optimistic 큐에 없으므로 결과 목록을 직접 다시 읽는다.
-        if (setJobs.length > 0) {
+        // 세트로 묶은 뒤 setId 가 반영된 목록을 다시 읽어 묶음 표시를 갱신한다.
+        if (createdAnySet) {
           void loadSavedQuestions?.();
         }
         if (success > 0) {

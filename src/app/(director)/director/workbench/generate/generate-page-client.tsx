@@ -2284,18 +2284,38 @@ export function GeneratePageClient({
     ? (p: "STANDARD" | "PREMIUM") =>
         writeActiveOverride((o) => ({ ...o, generationPlan: p }))
     : setGenerationPlan;
-  // 장문 세트 구성도 지문별로 저장한다(자동/유형지정과 동일 원리). 편집 중인
-  // 행의 override.setMembers 를 controlled 값으로 넘기고, 변경 시 그 행에 쓴다.
-  const panelSetMembers = editingRow
-    ? (activeRow.override?.setMembers ?? [])
+  // 세트 프리셋 선택도 지문별로 저장한다(자동/유형지정과 동일 원리). 편집 중인
+  // 행의 override.setPresetId/difficulty 를 controlled 값으로 넘기고, 변경 시 그 행에 쓴다.
+  const panelSetPresetId = editingRow
+    ? (activeRow.override?.setPresetId ?? null)
     : undefined;
-  const panelOnSetMembersChange = editingRow
+  const panelOnSetPresetChange = editingRow
+    ? (presetId: string | null) =>
+        writeActiveOverride((o) => ({
+          ...o,
+          mode: "set",
+          setPresetId: presetId ?? undefined,
+          // 프리셋이 바뀌면 멤버 인덱스가 달라지므로 멤버 오버라이드를 리셋한다.
+          setMemberOverrides:
+            presetId === o.setPresetId ? o.setMemberOverrides : undefined,
+        }))
+    : undefined;
+  // 세트 멤버별 난이도·세부설정도 지문별로 저장한다(프리셋 멤버 순서 평행 배열).
+  const panelSetMemberOverrides = editingRow
+    ? (activeRow.override?.setMemberOverrides ?? [])
+    : undefined;
+  const panelOnSetMemberOverridesChange = editingRow
     ? (
-        members: {
-          typeId: string;
-          difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
-        }[],
-      ) => writeActiveOverride((o) => ({ ...o, mode: "set", setMembers: members }))
+        next: Array<{
+          difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
+          typeSettings?: Record<string, unknown>;
+        }>,
+      ) =>
+        writeActiveOverride((o) => ({
+          ...o,
+          mode: "set",
+          setMemberOverrides: next,
+        }))
     : undefined;
 
   // ── Can generate? ──
@@ -2485,8 +2505,10 @@ export function GeneratePageClient({
           setGenMode={panelSetGenMode}
           editingRow={editingRow}
           activePassageId={activeRow?.passageId ?? null}
-          setMembers={panelSetMembers}
-          onSetMembersChange={panelOnSetMembersChange}
+          setPresetId={panelSetPresetId}
+          onSetPresetChange={panelOnSetPresetChange}
+          setMemberOverrides={panelSetMemberOverrides}
+          onSetMemberOverridesChange={panelOnSetMemberOverridesChange}
           generationPlan={panelGenerationPlan}
           setGenerationPlan={panelSetGenerationPlan}
           typeCounts={panelTypeCounts}

@@ -63,7 +63,7 @@ const TYPE_LABELS: Record<string, string> = {
   SHORT_ANSWER: "주관식",
 };
 
-const SUBTYPE_LABELS: Record<string, string> = {
+export const SUBTYPE_LABELS: Record<string, string> = {
   BLANK_INFERENCE: "빈칸 추론",
   GRAMMAR_ERROR: "어법 판단",
   GRAMMAR_CHOICE_COMBO: "네모 어법",
@@ -90,8 +90,10 @@ const SUBTYPE_LABELS: Record<string, string> = {
   ANTONYM: "반의어",
 };
 
-const DIFFICULTY_CONFIG: Record<string, { label: string; className: string }> =
-  {
+export const DIFFICULTY_CONFIG: Record<
+  string,
+  { label: string; className: string }
+> = {
     BASIC: {
       label: "기본",
       className: "bg-slate-50 text-slate-600 border-slate-200",
@@ -164,6 +166,10 @@ export interface QuestionCardItem {
   _count?: { examLinks: number };
   /** AI 생성 시 원본 구조화 데이터 (StructuredQuestionRenderer용) */
   structuredData?: unknown;
+  /** 지문 세트 멤버면 그 세트 id(묶음 표시용). 일반 문항은 null. */
+  setId?: string | null;
+  /** 지문 세트 라벨(예: "독해 핵심 2문항") — 묶음 헤더용. */
+  setLabel?: string | null;
 }
 
 // ─── Helpers ─────────────────────────────────────────────
@@ -184,7 +190,7 @@ function parseJSON<T>(str: unknown, fallback: T): T {
   }
 }
 
-function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
+export function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
   const labels = new Set<string>();
   const matches = correctAnswer?.match(
     /[\(\[]?\s*(?:[A-Ja-j]|\d{1,3}|[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF])\s*[\)\].:]?/g,
@@ -201,7 +207,7 @@ function parseCorrectAnswerLabels(correctAnswer: string): Set<string> {
   return labels;
 }
 
-function normalizeAnswerLabel(value: unknown): string {
+export function normalizeAnswerLabel(value: unknown): string {
   if (typeof value !== "string") return "";
   const text = value.trim();
   const circledIndex = getCircledNumbers(50).indexOf(text);
@@ -258,7 +264,7 @@ function readGenerationPlanFromStructuredData(
   return plan === "PREMIUM" || plan === "STANDARD" ? plan : null;
 }
 
-function detectPassageMarking(
+export function detectPassageMarking(
   passageContent?: string,
 ): "lowercase" | "uppercase" | "circled" | "none" {
   if (!passageContent) return "none";
@@ -308,7 +314,7 @@ const STRUCTURED_RENDERER_SOURCE_PASSAGE_TYPES = new Set([
 ]);
 
 // Format option: always use index-based number label, adapt text based on passage marking
-function formatOption(
+export function formatOption(
   label: string,
   text: string,
   index: number,

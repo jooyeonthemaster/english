@@ -126,6 +126,9 @@ export async function getExamPaperBuilderData(academyId: string) {
   const [questions, collections, classes, schools] = await Promise.all([
     prisma.question.findMany({
       where: { academyId },
+      // include 만 쓰므로 setId/inSet 등 스칼라 필드는 기본으로 모두 로드된다.
+      // (장문 세트 멤버를 시험지에서 "지문 1회+N문항" 묶음으로 렌더하려면
+      //  makePaperItem 이 question.setId 로 set 그룹을 부여한다 — paper-item-utils.tsx.)
       include: {
         passage: {
           select: {

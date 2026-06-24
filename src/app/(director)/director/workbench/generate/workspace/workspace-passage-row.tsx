@@ -37,6 +37,7 @@ import { toast } from "sonner";
 
 import { Textarea } from "@/components/ui/textarea";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { resolvePreset } from "@/lib/question-sets/presets";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import {
@@ -525,11 +526,11 @@ export function WorkspacePassageRow({
     rowMode === "set"
       ? {
           Icon: FileText,
-          label:
-            row.override?.setMembers && row.override.setMembers.length > 0
-              ? `장문 세트 ${row.override.setMembers.length}`
-              : "장문 세트",
-          title: "이 지문으로 장문 세트를 구성합니다 — 클릭해 편집",
+          label: (() => {
+            const preset = resolvePreset(row.override?.setPresetId);
+            return preset ? `지문 세트 · ${preset.label}` : "지문 세트";
+          })(),
+          title: "이 지문으로 지문 세트를 구성합니다 — 클릭해 편집",
           tone: "configured",
         }
       : rowMode === "manual"
