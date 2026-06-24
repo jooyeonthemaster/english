@@ -51,12 +51,11 @@ export interface BorderFillSpec {
 // 기본값
 // =============================================================================
 
-// HWPX/DOCX/미리보기 본문 글꼴을 "Noto Sans KR"(무료·OFL)로 통일한다. 세 출력물이
-// 같은 글꼴을 쓰면 영문 글자폭이 같아져 줄바꿈·페이지넘김이 일치한다(맥 브라우저가
-// 맑은 고딕을 못 찾아 Apple SD Gothic Neo 로 폴백하던 불일치 해소). 한·영 글리프를
-// 모두 포함하므로 한·영 폰트를 동일하게 둔다.
-export const DEFAULT_FONT_KR = "Noto Sans KR";
-export const DEFAULT_FONT_LATIN = "Noto Sans KR";
+// HWPX 다운로드 본문 글꼴. 한컴 한글에 기본 번들된 "맑은 고딕"을 쓴다(Mac/Win 공통).
+// NOTE: Noto Sans/Serif KR 통일은 미완 기능이라 보류 — 폰트값은 맑은 고딕으로 되돌리되
+// 템플릿별 폰트 주입(constructor) plumbing 은 남겨 추후 완성 시 재사용한다.
+export const DEFAULT_FONT_KR = "맑은 고딕";
+export const DEFAULT_FONT_LATIN = "맑은 고딕";
 
 const NO_BORDER: BorderSpec = { type: "NONE", widthMm: 0.1, color: "#000000" };
 
@@ -73,7 +72,7 @@ export class ShapeRegistry {
   defaultFontKr: string;
   defaultFontLatin: string;
 
-  // 템플릿별 본문 글꼴(세리프=Noto Serif KR / 산세리프=Noto Sans KR)을 주입받는다.
+  // 템플릿별 본문 글꼴을 주입받는 plumbing(미완 — 현재는 맑은 고딕으로 보류).
   constructor(defaultFontKr = DEFAULT_FONT_KR, defaultFontLatin = DEFAULT_FONT_LATIN) {
     this.defaultFontKr = defaultFontKr;
     this.defaultFontLatin = defaultFontLatin;
