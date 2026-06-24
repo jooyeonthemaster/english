@@ -47,6 +47,7 @@ import {
   type PassageInputRow,
 } from "./passage-registration/passage-input/types";
 import { FormSectionContainer } from "./passage-registration/sections/form-section-container";
+import { useLearningGenerationPublisher } from "@/app/(director)/director/workbench/passages/create/learning-generation-context";
 
 export type { PassageRegistrationProps } from "./passage-registration/types";
 
@@ -203,6 +204,23 @@ export function PassageRegistrationClient({
       ),
     [queue],
   );
+
+  // 하단 '학습지 목록'에 진행 중 로딩 큐를 띄우도록, 큐의 생성중 항목을 컨텍스트로
+  // 발행한다. 폴러는 이 워크스페이스 한 곳뿐이므로(이중 폴링 방지) 하단은 구독만 한다.
+  const publishGeneratingItems = useLearningGenerationPublisher();
+  const generatingItems = useMemo(
+    () => queue.filter((q) => q.status === "pending" || q.status === "analyzing"),
+    [queue],
+  );
+  const generatingSignature = useMemo(
+    () => generatingItems.map((q) => `${q.id}:${q.status}`).join("|"),
+    [generatingItems],
+  );
+  const generatingItemsRef = useRef(generatingItems);
+  generatingItemsRef.current = generatingItems;
+  useEffect(() => {
+    publishGeneratingItems(generatingItemsRef.current);
+  }, [generatingSignature, publishGeneratingItems]);
   // 방금 생성(분석) 완료된 지문 — 카드에 초록 글로우.
   const [freshLearningPassageIds, setFreshLearningPassageIds] = useState<
     Set<string>

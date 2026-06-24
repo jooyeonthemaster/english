@@ -155,6 +155,13 @@ interface PassageListProps {
    * the top while the list scrolls.
    */
   embedded?: boolean;
+  /**
+   * 목록 상단(list 모드)에 끼워 넣을 로딩 큐 노드. 학습지 생성 페이지에서 진행 중인
+   * 생성 작업을 이 목록 위에 로딩 카드로 보여줄 때 사용한다. 기본 미사용(무회귀).
+   */
+  loadingCards?: React.ReactNode;
+  /** loadingCards 에 표시 중인 진행 항목 수. 0 보다 크면 빈 목록이어도 섹션을 띄운다. */
+  loadingCount?: number;
 }
 
 // ─── Server action adapters ──────────────────────────────
@@ -235,6 +242,8 @@ export function PassageListClient({
   collectionBadge = null,
   basePath = "/director/workbench/passages",
   embedded = false,
+  loadingCards = null,
+  loadingCount = 0,
 }: PassageListProps) {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(filters.search || "");
@@ -753,7 +762,7 @@ export function PassageListClient({
             : "-mx-6 flex-1 overflow-y-auto bg-[#F4F6F9] px-6 pb-4 sm:px-8"
         }
       >
-        {passagesData.passages.length === 0 ? (
+        {passagesData.passages.length === 0 && loadingCount === 0 ? (
           <div className="mt-2 bg-white rounded-xl border text-center py-20">
             <Folder className="w-12 h-12 text-slate-200 mx-auto mb-3" />
             <p className="text-slate-500 font-medium">등록된 지문이 없습니다</p>
@@ -825,6 +834,8 @@ export function PassageListClient({
               ref={passageListBoundaryRef}
               className="min-w-0 px-4 pb-3 pt-3 sm:px-5"
             >
+            {/* 학습지 생성 진행 중 로딩 큐 (list 모드에서만, 생성 페이지가 주입) */}
+            {pageMode === "list" && loadingCards}
             {pageMode === "duplicates" ? (
               <div>
                 <div className="mb-3 flex items-center justify-between">
@@ -950,6 +961,8 @@ export function PassageListClient({
             ) : (
               <div>
                 {displayedPassages.length === 0 ? (
+                  // 진행 중 로딩 큐가 위에 떠 있으면(loadingCount>0) 빈 안내는 숨긴다.
+                  loadingCount > 0 ? null : (
                   <div className="py-12 text-center">
                     <FileText className="mx-auto mb-3 h-10 w-10 text-slate-200" />
                     <p className="text-[13px] text-slate-400">
@@ -964,6 +977,7 @@ export function PassageListClient({
                       </p>
                     )}
                   </div>
+                  )
                 ) : gridCols === "list" ? (
                   <DragSelect
                     className="space-y-1.5"
