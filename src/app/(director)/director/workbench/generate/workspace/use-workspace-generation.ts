@@ -31,7 +31,10 @@ import {
   scheduleFastGeneration,
 } from "../fast-generation-scheduler";
 import { useTaskQueue } from "@/components/workbench/task-queue";
-import { resolvePreset } from "@/lib/question-sets/presets";
+import {
+  QUESTION_SET_SAFETY_MAX_ATTEMPTS,
+  resolvePreset,
+} from "@/lib/question-sets/presets";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import {
   effectiveRowContent,
@@ -39,6 +42,7 @@ import {
   overrideHasTypeCounts,
   rowNeedsVariant,
   rowQuestionCount,
+  setPresetCountEntries,
   type WorkspaceRow,
 } from "./workspace-types";
 import type { WorkspaceRowsApi } from "./use-workspace-rows";
@@ -128,8 +132,7 @@ function computeRowGenStats(
   const mode = effectiveRowMode(row.override, ctx.genMode);
   const plan = row.override?.generationPlan ?? ctx.generationPlan;
   // 수동(유형 지정)은 유형마다 플랜이 다를 수 있어, 유형별 배수를 이미 적용한
-  // 비용을 따로 누적한다(rowFinal). set 은 행 단위 플랜 배수를 끝에 적용.
-  let rowBase = 0;
+  // 비용을 따로 누적한다(rowFinal). set 도 멤버별 플랜이 가능해 rowFinal 에 직접 더한다.
   let rowFinal = 0;
   if (mode === "manual") {
     if (overrideHasTypeCounts(row.override)) {
@@ -147,16 +150,33 @@ function computeRowGenStats(
       }
     }
   } else if (mode === "set") {
-    const preset = resolvePreset(row.override?.setPresetId);
-    for (const m of preset?.members ?? []) {
-      rowBase += VOCAB_GENERATION_TYPE_IDS.has(m.typeId)
-        ? CREDIT_COSTS.QUESTION_GEN_VOCAB
-        : CREDIT_COSTS.QUESTION_GEN_SINGLE;
+    for (const [presetId, count] of setPresetCountEntries(row.override)) {
+      const preset = resolvePreset(presetId);
+      if (!preset) continue;
+      const overrides =
+        row.override?.setMemberOverridesByPreset?.[presetId] ??
+        (presetId === row.override?.setPresetId
+          ? row.override?.setMemberOverrides
+          : undefined) ??
+        [];
+      for (let copy = 0; copy < count; copy += 1) {
+        for (let index = 0; index < preset.members.length; index += 1) {
+          const m = preset.members[index];
+          const unit = VOCAB_GENERATION_TYPE_IDS.has(m.typeId)
+            ? CREDIT_COSTS.QUESTION_GEN_VOCAB
+            : CREDIT_COSTS.QUESTION_GEN_SINGLE;
+          const memberPlan =
+            overrides[index]?.generationPlan ?? m.generationPlan ?? plan;
+          rowFinal +=
+            getQuestionGenerationCreditCost(unit, memberPlan) *
+            QUESTION_SET_SAFETY_MAX_ATTEMPTS;
+        }
+      }
     }
   }
   return {
     questions,
-    creditCost: rowFinal + getQuestionGenerationCreditCost(rowBase, plan),
+    creditCost: rowFinal,
   };
 }
 
@@ -482,10 +502,12 @@ export function useWorkspaceGeneration({
         passageId: string;
         title: string;
         presetId: string;
+        copyIndex: number;
         difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
         generationPlan: QuestionGenerationPlan;
         memberOverrides?: Array<{
           difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
+          generationPlan?: QuestionGenerationPlan;
           typeSettings?: Record<string, unknown>;
         }>;
         localId?: string;
@@ -587,34 +609,43 @@ export function useWorkspaceGeneration({
         } else if (effMode === "set" && item.kind === "workspace") {
           // 지문 세트 — 한 잡(커스텀 라우트)으로 생성. 큐엔 세트 1개의 생성중 카드만 뜨고,
           // 완료되면 멤버가 묶인 저장 카드로 합류한다.
-          const presetId = item.row.override?.setPresetId;
-          const preset = presetId ? resolvePreset(presetId) : null;
-          if (presetId && preset) {
+          const presetEntries = setPresetCountEntries(item.row.override);
+          for (const [presetId, count] of presetEntries) {
+            const preset = resolvePreset(presetId);
+            if (!preset) continue;
             if (rowLocalId) attemptedLocalIds.add(rowLocalId);
             const setDiff = item.row.override?.difficulty ?? "INTERMEDIATE";
             const typeCounts: Record<string, number> = {};
             for (const m of preset.members) {
               typeCounts[m.typeId] = (typeCounts[m.typeId] ?? 0) + 1;
             }
-            setJobs.push({
-              passageId: item.passageId,
-              title: item.title,
-              presetId,
-              difficulty: setDiff,
-              generationPlan: effPlan,
-              memberOverrides: item.row.override?.setMemberOverrides,
-              localId: rowLocalId,
-              tempId: `set:${item.passageId}:${presetId}:${runId}`,
-              passage: passageLike,
-              config: {
-                typeCounts,
-                questionTypeSettings: {},
+            const memberOverrides =
+              item.row.override?.setMemberOverridesByPreset?.[presetId] ??
+              (presetId === item.row.override?.setPresetId
+                ? item.row.override?.setMemberOverrides
+                : undefined);
+            for (let copyIndex = 0; copyIndex < count; copyIndex += 1) {
+              setJobs.push({
+                passageId: item.passageId,
+                title: item.title,
+                presetId,
+                copyIndex,
                 difficulty: setDiff,
-                prompt,
-                mode: "manual",
                 generationPlan: effPlan,
-              },
-            });
+                memberOverrides,
+                localId: rowLocalId,
+                tempId: `set:${item.passageId}:${presetId}:${runId}:${copyIndex}`,
+                passage: passageLike,
+                config: {
+                  typeCounts,
+                  questionTypeSettings: {},
+                  difficulty: setDiff,
+                  prompt,
+                  mode: "manual",
+                  generationPlan: effPlan,
+                },
+              });
+            }
           }
         }
         // 그 외(유형 지정인데 유형 없음 · 멤버 없는 세트 행) → 생성 제외.

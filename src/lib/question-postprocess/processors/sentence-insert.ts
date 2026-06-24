@@ -58,6 +58,15 @@ export function processSentenceInsert(
     givenSentence,
     ai.sourceSentenceToOmit as string | undefined,
   );
+  if (!omittedMatch) {
+    return {
+      success: false,
+      data: ai,
+      warnings,
+      error:
+        "SENTENCE_INSERT givenSentence must be source-backed; choose one original passage sentence to omit and provide sourceSentenceToOmit.",
+    };
+  }
   if (omittedMatch && omittedMatch.index === 0) {
     return {
       success: false,

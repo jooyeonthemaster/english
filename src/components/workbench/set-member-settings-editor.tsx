@@ -1,42 +1,60 @@
 "use client";
 
 // ============================================================================
-// 세트 멤버 1개의 설정 에디터 — 멤버별 난이도 + 유형별 세부설정
-// ============================================================================
-// 세트 프리셋의 각 멤버(문항)를 펼쳐 일반 문제 생성의 "유형별 세부 설정"과 동일한
-// 방식으로 난이도·세부값을 조정한다. 일반 생성 패널(generation-config-panel)의
-// renderNumberSetting / renderSegSetting 디자인을 그대로 모방한 자체 컴포넌트라
-// 디자인 토큰(slate 팔레트·text-[12px] 등)이 화면 전체와 일관된다.
-//
-// 여기서 만드는 값은 세트 POST 의 memberOverrides[i].typeSettings(유형별 세부)와
-// memberOverrides[i].difficulty(멤버 난이도)로 흘러간다 — 프리셋 멤버 순서와
-// 평행한 배열의 한 칸이다.
+// 세트 멤버 1개의 설정 에디터 — 일반 유형 상세 설정과 같은 조작 모델
 // ============================================================================
 
-import { Minus, Plus } from "lucide-react";
+import { Gem, Minus, Plus } from "lucide-react";
 
+import { PearlIcon } from "@/components/icons/pearl-icon";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import {
+  QUESTION_GENERATION_PLANS,
+  type QuestionGenerationPlan,
+} from "@/lib/question-generation-plans";
 import { QUESTION_TYPE_UI } from "@/lib/question-type-ui";
 import {
+  BLANK_INFERENCE_BLANK_COUNT_DEFAULT,
+  BLANK_INFERENCE_BLANK_COUNT_MAX,
+  BLANK_INFERENCE_BLANK_COUNT_MIN,
+  CONTENT_MATCH_ANSWER_COUNT_DEFAULT,
+  CONTENT_MATCH_ANSWER_COUNT_MIN,
   CONTENT_MATCH_OPTION_COUNT_DEFAULT,
   CONTENT_MATCH_OPTION_COUNT_MAX,
   CONTENT_MATCH_OPTION_COUNT_MIN,
   GENERIC_OPTION_COUNT_DEFAULT,
   GENERIC_OPTION_COUNT_MAX,
   GENERIC_OPTION_COUNT_MIN,
+  GRAMMAR_ANSWER_COUNT_DEFAULT,
+  GRAMMAR_ANSWER_COUNT_MIN,
+  GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT,
+  GRAMMAR_CORRECTION_ERROR_COUNT_MAX,
+  GRAMMAR_CORRECTION_ERROR_COUNT_MIN,
+  GRAMMAR_MARKER_COUNT_DEFAULT,
+  GRAMMAR_MARKER_COUNT_MAX,
+  GRAMMAR_MARKER_COUNT_MIN,
+  SENTENCE_INSERT_SLOT_COUNT_DEFAULT,
+  SENTENCE_INSERT_SLOT_COUNT_MAX,
+  SENTENCE_INSERT_SLOT_COUNT_MIN,
   SENTENCE_ORDER_PREFIX_VARIATION_COUNT_DEFAULT,
   SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MAX,
   SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MIN,
   SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT,
   SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX,
   SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN,
+  getQuestionLanguageToggleScope,
+  readOptionLanguageSetting,
+  readStemLanguageSetting,
+  supportsGenericOptionCount,
+  supportsGistAnswerPolarity,
   type ContentMatchPolarity,
 } from "@/lib/question-type-generation-settings";
 
 type Difficulty = "BASIC" | "INTERMEDIATE" | "KILLER";
 
-/** 세트 멤버 1개의 오버라이드 — 프리셋 멤버 순서와 평행한 배열의 한 칸. */
 export interface SetMemberOverride {
   difficulty?: Difficulty;
+  generationPlan?: QuestionGenerationPlan;
   typeSettings?: Record<string, unknown>;
 }
 
@@ -46,16 +64,8 @@ const DIFFICULTIES: { value: Difficulty; label: string; on: string }[] = [
   { value: "KILLER", label: "킬러", on: "bg-red-50 text-red-700" },
 ];
 
-// ─── 유형별 세부설정 분기 ────────────────────────────────────────────────────
-// 어떤 유형에 어떤 세부설정을 보일지 정의한다. 일반 생성 패널과 같은 스키마·기본값
-// (question-type-generation-settings)을 쓴다. 세트 프리셋에서 쓰는 유형만 다룬다.
-
-type DetailKind = "optionCount" | "blankCount" | "prefixVariationCount";
-
-interface NumberDetailSpec {
-  kind: DetailKind;
-  /** typeSettings 에 저장될 키. */
-  settingKey: string;
+interface NumberSettingSpec {
+  key: string;
   title: string;
   badges: string[];
   description: string;
@@ -64,90 +74,15 @@ interface NumberDetailSpec {
   defaultValue: number;
 }
 
-/** 이 유형이 보여줄 숫자 세부설정(있으면). 없으면 null. */
-function numberDetailForType(typeId: string): NumberDetailSpec | null {
-  if (
-    typeId === "MAIN_IDEA" ||
-    typeId === "TOPIC" ||
-    typeId === "TITLE" ||
-    typeId === "REFERENCE" ||
-    typeId === "SYNONYM" ||
-    typeId === "CONTEXT_MEANING"
-  ) {
-    return {
-      kind: "optionCount",
-      settingKey: "optionCount",
-      title: "보기 개수",
-      badges: [`${GENERIC_OPTION_COUNT_MIN} ~ ${GENERIC_OPTION_COUNT_MAX}`, "선택지"],
-      description: "학생에게 표시할 선택지 수입니다. 기본값은 5개입니다.",
-      min: GENERIC_OPTION_COUNT_MIN,
-      max: GENERIC_OPTION_COUNT_MAX,
-      defaultValue: GENERIC_OPTION_COUNT_DEFAULT,
-    };
-  }
-  if (typeId === "CONTENT_MATCH") {
-    return {
-      kind: "optionCount",
-      settingKey: "optionCount",
-      title: "보기 개수",
-      badges: [
-        `${CONTENT_MATCH_OPTION_COUNT_MIN} ~ ${CONTENT_MATCH_OPTION_COUNT_MAX}`,
-        "진술문",
-      ],
-      description: "학생에게 표시할 내용 일치 진술문 수입니다. 기본값은 5개입니다.",
-      min: CONTENT_MATCH_OPTION_COUNT_MIN,
-      max: CONTENT_MATCH_OPTION_COUNT_MAX,
-      defaultValue: CONTENT_MATCH_OPTION_COUNT_DEFAULT,
-    };
-  }
-  if (typeId === "SUMMARY_COMPLETE_MC") {
-    return {
-      kind: "blankCount",
-      settingKey: "blankCount",
-      title: "빈칸 개수",
-      badges: [
-        `${SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN} ~ ${SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX}`,
-        "(A)(B)",
-      ],
-      description: "요약문 빈칸 수입니다. 보기는 빈칸 값 조합으로 구성됩니다. 기본값은 2개입니다.",
-      min: SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN,
-      max: SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX,
-      defaultValue: SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT,
-    };
-  }
-  if (typeId === "SENTENCE_ORDER") {
-    return {
-      kind: "prefixVariationCount",
-      settingKey: "prefixVariationCount",
-      title: "앞문장 변형 수",
-      badges: [
-        `${SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MIN} ~ ${SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MAX}`,
-        "(A)(B)(C)",
-      ],
-      description:
-        "(A)(B)(C) 문단의 첫 문장을 같은 뜻으로 변형할 문단 수입니다. 0이면 변형하지 않습니다.",
-      min: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MIN,
-      max: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MAX,
-      defaultValue: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_DEFAULT,
-    };
-  }
-  return null;
-}
-
-/** 이 유형이 정답 극성(일치/불일치) 토글을 보여주는지. */
-function supportsMatchType(typeId: string): boolean {
-  return typeId === "CONTENT_MATCH";
-}
-
 function clampNumber(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, Math.round(value)));
 }
 
 function readNumberSetting(
   typeSettings: Record<string, unknown> | undefined,
-  spec: NumberDetailSpec,
+  spec: NumberSettingSpec,
 ): number {
-  const raw = Number(typeSettings?.[spec.settingKey]);
+  const raw = Number(typeSettings?.[spec.key]);
   if (!Number.isFinite(raw)) return spec.defaultValue;
   return clampNumber(raw, spec.min, spec.max);
 }
@@ -158,13 +93,32 @@ function readMatchType(
   return typeSettings?.matchType === "일치" ? "일치" : "불일치";
 }
 
-// ─── 멤버별 세부설정 존재 여부(배지·합산용) ──────────────────────────────────
-/** 이 유형에 보여줄 세부설정이 하나라도 있는지 — 펼침 버튼/안내에 쓴다. */
-export function memberTypeHasSettings(typeId: string): boolean {
-  return numberDetailForType(typeId) !== null || supportsMatchType(typeId);
+function readContentMatchAnswerCount(
+  typeSettings: Record<string, unknown> | undefined,
+  optionCount: number,
+): number {
+  const raw = Number(typeSettings?.answerCount ?? typeSettings?.correctAnswerCount);
+  const base = Number.isFinite(raw) ? raw : CONTENT_MATCH_ANSWER_COUNT_DEFAULT;
+  return clampNumber(base, CONTENT_MATCH_ANSWER_COUNT_MIN, optionCount);
 }
 
-// ─── 렌더 헬퍼 (일반 패널 디자인 모방) ───────────────────────────────────────
+function readGenericAnswerCount(
+  typeSettings: Record<string, unknown> | undefined,
+  optionCount: number,
+): number {
+  const raw = Number(typeSettings?.answerCount ?? typeSettings?.correctAnswerCount);
+  const base = Number.isFinite(raw) ? raw : 1;
+  return clampNumber(base, 1, Math.max(1, optionCount - 1));
+}
+
+function readGrammarAnswerCount(
+  typeSettings: Record<string, unknown> | undefined,
+  markerCount: number,
+): number {
+  const raw = Number(typeSettings?.answerCount ?? typeSettings?.correctAnswerCount);
+  const base = Number.isFinite(raw) ? raw : GRAMMAR_ANSWER_COUNT_DEFAULT;
+  return clampNumber(base, GRAMMAR_ANSWER_COUNT_MIN, markerCount);
+}
 
 function NumberSetting({
   title,
@@ -175,22 +129,15 @@ function NumberSetting({
   max,
   onChange,
   ariaBase,
-}: {
-  title: string;
-  badges: string[];
-  description: string;
+}: NumberSettingSpec & {
   value: number;
-  min: number;
-  max: number;
   onChange: (next: number) => void;
   ariaBase: string;
 }) {
   return (
     <div className="flex items-center justify-between gap-3">
       <div className="min-w-0">
-        <div className="flex items-center gap-1.5">
-          <span className="text-[12px] font-bold text-slate-800">{title}</span>
-        </div>
+        <span className="text-[12px] font-bold text-slate-800">{title}</span>
         <div className="mt-1 flex flex-wrap gap-1">
           {badges.map((badge) => (
             <span
@@ -201,7 +148,9 @@ function NumberSetting({
             </span>
           ))}
         </div>
-        <p className="mt-1.5 text-[10px] leading-snug text-slate-500">{description}</p>
+        <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+          {description}
+        </p>
       </div>
       <div className="flex shrink-0 items-center gap-0.5">
         <button
@@ -248,7 +197,9 @@ function SegSetting<T extends string>({
       <div className="min-w-0">
         <span className="text-[12px] font-bold text-slate-800">{title}</span>
         {description ? (
-          <p className="mt-1.5 text-[10px] leading-snug text-slate-500">{description}</p>
+          <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+            {description}
+          </p>
         ) : null}
       </div>
       <div className="flex shrink-0 rounded-md border border-slate-200 bg-slate-50 p-0.5">
@@ -271,22 +222,35 @@ function SegSetting<T extends string>({
   );
 }
 
-// ─── Component ───────────────────────────────────────────────────────────────
+export function memberTypeHasSettings(typeId: string): boolean {
+  return (
+    supportsGenericOptionCount(typeId) ||
+    [
+      "CONTENT_MATCH",
+      "SUMMARY_COMPLETE_MC",
+      "SENTENCE_ORDER",
+      "SENTENCE_INSERT",
+      "BLANK_INFERENCE",
+      "GRAMMAR_ERROR",
+      "GRAMMAR_CORRECTION",
+    ].includes(typeId)
+  );
+}
 
 export function SetMemberSettingsEditor({
   typeId,
   override,
   onChange,
+  inheritedGenerationPlan = "STANDARD",
+  inheritedDifficulty = "INTERMEDIATE",
 }: {
   typeId: string;
-  /** 이 멤버의 현재 오버라이드. 비어 있으면(undefined) 프리셋/기본값을 표시. */
   override: SetMemberOverride | undefined;
-  /** 변경 시 다음 오버라이드 전체를 돌려준다(상위가 평행 배열에 반영). */
   onChange: (next: SetMemberOverride) => void;
+  inheritedGenerationPlan?: QuestionGenerationPlan;
+  inheritedDifficulty?: Difficulty;
 }) {
   const typeSettings = override?.typeSettings;
-  const numberDetail = numberDetailForType(typeId);
-  const showMatchType = supportsMatchType(typeId);
 
   const patchTypeSettings = (patch: Record<string, unknown>) => {
     onChange({
@@ -295,92 +259,404 @@ export function SetMemberSettingsEditor({
     });
   };
 
-  const matchTypeOptions: { value: ContentMatchPolarity; label: string }[] = [
-    { value: "불일치", label: "불일치" },
-    { value: "일치", label: "일치" },
-  ];
+  const patchNumber = (spec: NumberSettingSpec, next: number) => {
+    patchTypeSettings({ [spec.key]: clampNumber(next, spec.min, spec.max) });
+  };
 
-  const memberDifficulty = override?.difficulty ?? null;
-
-  return (
-    <div className="space-y-3 rounded-lg border border-slate-100 bg-slate-50/50 p-3">
-      {/* 멤버 난이도 — 미설정이면 세트 공통 난이도를 따른다. */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="min-w-0">
-          <span className="text-[12px] font-bold text-slate-800">난이도</span>
-          <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
-            이 문항에만 적용할 난이도입니다. 미설정이면 세트 공통 난이도를 따릅니다.
-          </p>
+  const renderPlan = () => {
+    if (!FEATURE_FLAGS.SHOW_MODEL_SELECTOR) return null;
+    const selectedPlan = override?.generationPlan ?? inheritedGenerationPlan;
+    return (
+      <div className="border-b border-slate-100 pb-3">
+        <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          생성 플랜 · 이 문항만
         </div>
-        <div className="flex shrink-0 rounded-md border border-slate-200 bg-slate-50 p-0.5">
-          {DIFFICULTIES.map((d) => {
-            const active = memberDifficulty === d.value;
+        <div className="grid grid-cols-2 gap-2">
+          {(["STANDARD", "PREMIUM"] as const).map((planId) => {
+            const plan = QUESTION_GENERATION_PLANS[planId];
+            const active = selectedPlan === planId;
+            const Icon = planId === "PREMIUM" ? Gem : PearlIcon;
             return (
               <button
-                key={d.value}
+                key={planId}
                 type="button"
-                onClick={() =>
-                  onChange({
-                    ...override,
-                    // 같은 값을 다시 누르면 '미설정'(공통 난이도 따름)으로 되돌린다.
-                    difficulty: active ? undefined : d.value,
-                  })
-                }
-                className={`rounded px-2 py-1 text-[10px] font-bold transition-colors ${
+                onClick={() => onChange({ ...override, generationPlan: planId })}
+                className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 transition-colors ${
                   active
-                    ? d.on
-                    : "text-slate-400 hover:text-slate-600"
+                    ? "border-blue-300 bg-blue-50 text-blue-800"
+                    : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
                 }`}
               >
-                {d.label}
+                <Icon
+                  className={`h-3.5 w-3.5 shrink-0 ${
+                    active ? "text-blue-600" : "text-slate-400"
+                  }`}
+                />
+                <span className="truncate text-[12px] font-bold">
+                  {plan.shortLabel}
+                </span>
+                <span
+                  className={`ml-auto text-[10px] font-bold tabular-nums ${
+                    active ? "text-blue-600" : "text-slate-400"
+                  }`}
+                >
+                  {plan.creditMultiplier}x
+                </span>
               </button>
             );
           })}
         </div>
       </div>
+    );
+  };
 
-      {/* 정답 유형(내용 일치 전용) */}
-      {showMatchType ? (
-        <div className="border-t border-slate-100 pt-3">
+  const renderDifficulty = () => (
+    <div className="flex items-center justify-between gap-3">
+      <div className="min-w-0">
+        <span className="text-[12px] font-bold text-slate-800">난이도</span>
+        <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+          이 문항에만 적용할 난이도입니다. 미설정이면 프리셋/세트 기본값을 따릅니다.
+        </p>
+      </div>
+      <div className="flex shrink-0 rounded-md border border-slate-200 bg-slate-50 p-0.5">
+        {DIFFICULTIES.map((d) => {
+          const selectedDifficulty = override?.difficulty ?? inheritedDifficulty;
+          const active = selectedDifficulty === d.value;
+          return (
+            <button
+              key={d.value}
+              type="button"
+              onClick={() =>
+                onChange({
+                  ...override,
+                  difficulty: active ? undefined : d.value,
+                })
+              }
+              className={`rounded px-2 py-1 text-[10px] font-bold transition-colors ${
+                active ? d.on : "text-slate-400 hover:text-slate-600"
+              }`}
+            >
+              {d.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const renderNumericContent = () => {
+    if (typeId === "CONTENT_MATCH") {
+      const optionSpec: NumberSettingSpec = {
+        key: "optionCount",
+        title: "보기 개수",
+        badges: [
+          `${CONTENT_MATCH_OPTION_COUNT_MIN} ~ ${CONTENT_MATCH_OPTION_COUNT_MAX}`,
+          "진술문",
+        ],
+        description: "학생에게 표시할 내용 일치 진술문 수입니다. 기본값은 5개입니다.",
+        min: CONTENT_MATCH_OPTION_COUNT_MIN,
+        max: CONTENT_MATCH_OPTION_COUNT_MAX,
+        defaultValue: CONTENT_MATCH_OPTION_COUNT_DEFAULT,
+      };
+      const optionCount = readNumberSetting(typeSettings, optionSpec);
+      const answerCount = readContentMatchAnswerCount(typeSettings, optionCount);
+      const answerSpec: NumberSettingSpec = {
+        key: "answerCount",
+        title: "정답 개수",
+        badges: [
+          `1 ~ ${optionCount}`,
+          answerCount >= 2 ? "복수 정답" : "단일 정답",
+        ],
+        description:
+          "2개 이상이면 복수 정답 문항으로 생성하고 모든 정답 라벨을 함께 저장합니다.",
+        min: CONTENT_MATCH_ANSWER_COUNT_MIN,
+        max: optionCount,
+        defaultValue: CONTENT_MATCH_ANSWER_COUNT_DEFAULT,
+      };
+      return (
+        <div className="space-y-3">
           <SegSetting<ContentMatchPolarity>
             title="정답 유형"
             description="일치하는 것을 고를지, 일치하지 않는 것을 고를지 정합니다. 기본은 불일치입니다."
             value={readMatchType(typeSettings)}
-            options={matchTypeOptions}
+            options={[
+              { value: "불일치", label: "불일치" },
+              { value: "일치", label: "일치" },
+            ]}
             onChange={(next) => patchTypeSettings({ matchType: next })}
           />
+          <div className="border-t border-slate-100 pt-3">
+            <NumberSetting
+              {...optionSpec}
+              value={optionCount}
+              onChange={(next) => {
+                const clamped = clampNumber(next, optionSpec.min, optionSpec.max);
+                patchTypeSettings({
+                  optionCount: clamped,
+                  answerCount: Math.min(clamped, answerCount),
+                });
+              }}
+              ariaBase={`${typeId} option count`}
+            />
+          </div>
+          <div className="border-t border-slate-100 pt-3">
+            <NumberSetting
+              {...answerSpec}
+              value={answerCount}
+              onChange={(next) => patchNumber(answerSpec, next)}
+              ariaBase={`${typeId} answer count`}
+            />
+          </div>
         </div>
-      ) : null}
+      );
+    }
 
-      {/* 숫자 세부설정(보기 수·빈칸 수·앞문장 변형 수) */}
-      {numberDetail ? (
-        <div className="border-t border-slate-100 pt-3">
+    if (typeId === "GRAMMAR_ERROR") {
+      const markerSpec: NumberSettingSpec = {
+        key: "markerCount",
+        title: "밑줄 표현 개수",
+        badges: [`${GRAMMAR_MARKER_COUNT_MIN} ~ ${GRAMMAR_MARKER_COUNT_MAX}`, "표시 위치"],
+        description: "지문에서 검토할 밑줄 표현 수입니다. 정답 수는 아래에서 따로 지정합니다.",
+        min: GRAMMAR_MARKER_COUNT_MIN,
+        max: GRAMMAR_MARKER_COUNT_MAX,
+        defaultValue: GRAMMAR_MARKER_COUNT_DEFAULT,
+      };
+      const markerCount = readNumberSetting(typeSettings, markerSpec);
+      const answerCount = readGrammarAnswerCount(typeSettings, markerCount);
+      const answerSpec: NumberSettingSpec = {
+        key: "answerCount",
+        title: "정답 개수",
+        badges: [
+          `1 ~ ${markerCount}개`,
+          answerCount >= 2 ? "모두 고르기" : "단일 정답",
+        ],
+        description:
+          "2개 이상이면 발문에 개수를 쓰지 않고 어법상 틀린 것을 모두 고르라고 안내합니다.",
+        min: GRAMMAR_ANSWER_COUNT_MIN,
+        max: markerCount,
+        defaultValue: GRAMMAR_ANSWER_COUNT_DEFAULT,
+      };
+      return (
+        <div className="space-y-3">
           <NumberSetting
-            title={numberDetail.title}
-            badges={numberDetail.badges}
-            description={numberDetail.description}
-            value={readNumberSetting(typeSettings, numberDetail)}
-            min={numberDetail.min}
-            max={numberDetail.max}
-            onChange={(next) =>
+            {...markerSpec}
+            value={markerCount}
+            onChange={(next) => {
+              const clamped = clampNumber(next, markerSpec.min, markerSpec.max);
               patchTypeSettings({
-                [numberDetail.settingKey]: clampNumber(
-                  next,
-                  numberDetail.min,
-                  numberDetail.max,
-                ),
-              })
-            }
-            ariaBase={`${typeId} ${numberDetail.kind}`}
+                markerCount: clamped,
+                answerCount: Math.min(clamped, answerCount),
+              });
+            }}
+            ariaBase={`${typeId} marker count`}
+          />
+          <div className="border-t border-slate-100 pt-3">
+            <NumberSetting
+              {...answerSpec}
+              value={answerCount}
+              onChange={(next) => patchNumber(answerSpec, next)}
+              ariaBase={`${typeId} answer count`}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    const singleSpecs: Record<string, NumberSettingSpec> = {
+      SUMMARY_COMPLETE_MC: {
+        key: "blankCount",
+        title: "빈칸 개수",
+        badges: [
+          `${SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN} ~ ${SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX}`,
+          "(A)(B)",
+        ],
+        description:
+          "요약문 빈칸 수입니다. 보기는 빈칸 값 조합으로 구성됩니다. 기본값은 2개입니다.",
+        min: SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN,
+        max: SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX,
+        defaultValue: SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT,
+      },
+      SENTENCE_ORDER: {
+        key: "prefixVariationCount",
+        title: "앞문장 변형 수",
+        badges: [
+          `${SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MIN} ~ ${SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MAX}`,
+          "(A)(B)(C)",
+        ],
+        description:
+          "(A)(B)(C) 문단의 첫 문장을 같은 뜻으로 변형할 문단 수입니다. 0이면 변형하지 않습니다.",
+        min: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MIN,
+        max: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_MAX,
+        defaultValue: SENTENCE_ORDER_PREFIX_VARIATION_COUNT_DEFAULT,
+      },
+      SENTENCE_INSERT: {
+        key: "slotCount",
+        title: "삽입 위치 개수",
+        badges: [
+          `${SENTENCE_INSERT_SLOT_COUNT_MIN} ~ ${SENTENCE_INSERT_SLOT_COUNT_MAX}`,
+          "①~⑤",
+        ],
+        description:
+          "학생에게 표시할 삽입 후보 위치 수입니다. 기본값은 5개입니다.",
+        min: SENTENCE_INSERT_SLOT_COUNT_MIN,
+        max: SENTENCE_INSERT_SLOT_COUNT_MAX,
+        defaultValue: SENTENCE_INSERT_SLOT_COUNT_DEFAULT,
+      },
+      BLANK_INFERENCE: {
+        key: "blankCount",
+        title: "빈칸 개수",
+        badges: [
+          `${BLANK_INFERENCE_BLANK_COUNT_MIN} ~ ${BLANK_INFERENCE_BLANK_COUNT_MAX}`,
+          "단일 빈칸",
+        ],
+        description:
+          "기본값은 수능형 단일 빈칸입니다. 2개 이상이면 (A)(B)(C) 빈칸과 조합 보기로 생성합니다.",
+        min: BLANK_INFERENCE_BLANK_COUNT_MIN,
+        max: BLANK_INFERENCE_BLANK_COUNT_MAX,
+        defaultValue: BLANK_INFERENCE_BLANK_COUNT_DEFAULT,
+      },
+      GRAMMAR_CORRECTION: {
+        key: "errorCount",
+        title: "수정할 오류 개수",
+        badges: [
+          `${GRAMMAR_CORRECTION_ERROR_COUNT_MIN} ~ ${GRAMMAR_CORRECTION_ERROR_COUNT_MAX}`,
+          "서술형",
+        ],
+        description:
+          "학생이 직접 고쳐 쓸 오류 구간 수입니다. 기본값은 1개입니다.",
+        min: GRAMMAR_CORRECTION_ERROR_COUNT_MIN,
+        max: GRAMMAR_CORRECTION_ERROR_COUNT_MAX,
+        defaultValue: GRAMMAR_CORRECTION_ERROR_COUNT_DEFAULT,
+      },
+    };
+
+    const spec = singleSpecs[typeId];
+    if (spec) {
+      const value = readNumberSetting(typeSettings, spec);
+      return (
+        <NumberSetting
+          {...spec}
+          value={value}
+          onChange={(next) => patchNumber(spec, next)}
+          ariaBase={`${typeId} ${spec.key}`}
+        />
+      );
+    }
+
+    if (supportsGenericOptionCount(typeId)) {
+      const optionSpec: NumberSettingSpec = {
+        key: "optionCount",
+        title: "보기 개수",
+        badges: [`${GENERIC_OPTION_COUNT_MIN} ~ ${GENERIC_OPTION_COUNT_MAX}`, "선택지"],
+        description: "학생에게 표시할 보기 수입니다. 기본값은 5개입니다.",
+        min: GENERIC_OPTION_COUNT_MIN,
+        max: GENERIC_OPTION_COUNT_MAX,
+        defaultValue: GENERIC_OPTION_COUNT_DEFAULT,
+      };
+      const optionCount = readNumberSetting(typeSettings, optionSpec);
+      const answerCount = readGenericAnswerCount(typeSettings, optionCount);
+      const answerSpec: NumberSettingSpec = {
+        key: "answerCount",
+        title: "정답 개수",
+        badges: [
+          `1 ~ ${Math.max(1, optionCount - 1)}`,
+          answerCount >= 2 ? "모두 고르기" : "단일 정답",
+        ],
+        description:
+          "2개 이상이면 발문에 개수를 쓰지 않고 적절한 것을 모두 고르라고 안내합니다.",
+        min: 1,
+        max: Math.max(1, optionCount - 1),
+        defaultValue: 1,
+      };
+      const showGistPolarity = supportsGistAnswerPolarity(typeId);
+      const gistPolarity =
+        typeSettings?.answerPolarity === "NEGATIVE" ? "NEGATIVE" : "POSITIVE";
+      const gistPolarityKind =
+        typeId === "TITLE" ? "제목" : typeId === "MAIN_IDEA" ? "요지" : "주제";
+      return (
+        <div className="space-y-3">
+          {showGistPolarity ? (
+            <SegSetting<"POSITIVE" | "NEGATIVE">
+              title="정답 유형"
+              description={`${gistPolarityKind}로 '적절한 것'을 고를지, '적절하지 않은 것'을 고를지 정합니다.`}
+              value={gistPolarity}
+              options={[
+                { value: "POSITIVE", label: "적절한 것" },
+                { value: "NEGATIVE", label: "적절하지 않은 것" },
+              ]}
+              onChange={(next) => patchTypeSettings({ answerPolarity: next })}
+            />
+          ) : null}
+          <div className={showGistPolarity ? "border-t border-slate-100 pt-3" : undefined}>
+            <NumberSetting
+              {...optionSpec}
+              value={optionCount}
+              onChange={(next) => {
+                const clamped = clampNumber(next, optionSpec.min, optionSpec.max);
+                patchTypeSettings({
+                  optionCount: clamped,
+                  answerCount: Math.min(clamped - 1, answerCount),
+                });
+              }}
+              ariaBase={`${typeId} option count`}
+            />
+          </div>
+          <div className="border-t border-slate-100 pt-3">
+            <NumberSetting
+              {...answerSpec}
+              value={answerCount}
+              onChange={(next) => patchNumber(answerSpec, next)}
+              ariaBase={`${typeId} answer count`}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  const languageScope = getQuestionLanguageToggleScope(typeId);
+  const numericContent = renderNumericContent();
+  const typeLabel = QUESTION_TYPE_UI[typeId]?.label ?? typeId;
+
+  return (
+    <div className="space-y-3">
+      {renderPlan()}
+      {renderDifficulty()}
+      {numericContent ? (
+        <div className="border-t border-slate-100 pt-3">{numericContent}</div>
+      ) : null}
+      <div className="border-t border-slate-100 pt-3">
+        <SegSetting<"ko" | "en">
+          title="질문 언어"
+          description="학생에게 보이는 질문(지시문) 언어입니다."
+          value={readStemLanguageSetting(typeSettings, typeId)}
+          options={[
+            { value: "ko", label: "한국어" },
+            { value: "en", label: "영어" },
+          ]}
+          onChange={(next) => patchTypeSettings({ stemLanguage: next })}
+        />
+      </div>
+      {languageScope === "stem-option" ? (
+        <div className="border-t border-slate-100 pt-3">
+          <SegSetting<"ko" | "en">
+            title="보기 언어"
+            description="학생에게 보이는 보기(선택지) 언어입니다."
+            value={readOptionLanguageSetting(typeSettings, typeId)}
+            options={[
+              { value: "ko", label: "한국어" },
+              { value: "en", label: "영어" },
+            ]}
+            onChange={(next) => patchTypeSettings({ optionLanguage: next })}
           />
         </div>
       ) : null}
-
-      {/* 세부설정이 없는 유형 안내 — 난이도만 조정 가능. */}
-      {!showMatchType && !numberDetail ? (
+      {!numericContent ? (
         <p className="border-t border-slate-100 pt-3 text-[10px] leading-snug text-slate-400">
-          {QUESTION_TYPE_UI[typeId]?.label ?? typeId} 유형은 별도 세부 설정이 없습니다.
-          난이도만 조정할 수 있어요.
+          {typeLabel} 유형은 숫자 세부 설정이 없습니다. 생성 플랜, 난이도,
+          언어만 조정할 수 있어요.
         </p>
       ) : null}
     </div>

@@ -49,6 +49,7 @@ import {
   countWords,
   isRowDirty,
   overrideHasTypeCounts,
+  setPresetCountEntries,
   type RowHighlight,
   type RowRange,
   type WorkspaceRow,
@@ -527,8 +528,17 @@ export function WorkspacePassageRow({
       ? {
           Icon: FileText,
           label: (() => {
-            const preset = resolvePreset(row.override?.setPresetId);
-            return preset ? `지문 세트 · ${preset.label}` : "지문 세트";
+            const entries = setPresetCountEntries(row.override);
+            if (entries.length === 0) return "지문 세트";
+            const setCount = entries.reduce((sum, [, count]) => sum + count, 0);
+            if (entries.length === 1) {
+              const [presetId, count] = entries[0];
+              const preset = resolvePreset(presetId);
+              return preset
+                ? `지문 세트 · ${preset.label}${count > 1 ? ` × ${count}` : ""}`
+                : "지문 세트";
+            }
+            return `지문 세트 · ${entries.length}유형 ${setCount}세트`;
           })(),
           title: "이 지문으로 지문 세트를 구성합니다 — 클릭해 편집",
           tone: "configured",

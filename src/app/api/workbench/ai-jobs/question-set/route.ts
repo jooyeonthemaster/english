@@ -13,7 +13,11 @@ import { prisma } from "@/lib/prisma";
 import { ensureWorkbenchAiJobCharged } from "@/lib/workbench-ai-job-credit";
 import { cleanupStaleWorkbenchAiJobs } from "@/lib/workbench-ai-job-stale-cleanup";
 import { generateQuestionSet } from "@/lib/question-sets/generate-set";
-import { passageMeetsPreset, resolvePreset } from "@/lib/question-sets/presets";
+import {
+  QUESTION_SET_SAFETY_MAX_ATTEMPTS,
+  passageMeetsPreset,
+  resolvePreset,
+} from "@/lib/question-sets/presets";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 
 export const runtime = "nodejs";
@@ -33,6 +37,7 @@ const requestSchema = z.object({
     .array(
       z.object({
         difficulty: z.enum(["BASIC", "INTERMEDIATE", "KILLER"]).optional(),
+        generationPlan: z.enum(["STANDARD", "PREMIUM"]).optional(),
         typeSettings: z.record(z.string(), z.unknown()).optional(),
       }),
     )
@@ -84,15 +89,16 @@ export async function POST(req: NextRequest) {
     passageId: passage.id,
   });
 
-  const baseCreditCost = preset.members.reduce(
-    (sum, m) =>
-      sum +
-      (VOCAB_TYPES.has(m.typeId)
-        ? CREDIT_COSTS.QUESTION_GEN_VOCAB
-        : CREDIT_COSTS.QUESTION_GEN_SINGLE),
-    0,
-  );
-  const creditCost = getQuestionGenerationCreditCost(baseCreditCost, generationPlan);
+  const baseCreditCost = preset.members.reduce((sum, m, index) => {
+    const unit = VOCAB_TYPES.has(m.typeId)
+      ? CREDIT_COSTS.QUESTION_GEN_VOCAB
+      : CREDIT_COSTS.QUESTION_GEN_SINGLE;
+    const memberPlan = normalizeQuestionGenerationPlan(
+      input.memberOverrides?.[index]?.generationPlan ?? m.generationPlan ?? generationPlan,
+    );
+    return sum + getQuestionGenerationCreditCost(unit, memberPlan);
+  }, 0);
+  const creditCost = baseCreditCost * QUESTION_SET_SAFETY_MAX_ATTEMPTS;
 
   const job = await prisma.workbenchAiJob.create({
     data: {
@@ -111,11 +117,15 @@ export async function POST(req: NextRequest) {
         presetId: preset.id,
         structuralMode: preset.structuralMode,
         difficulty: input.difficulty,
-        members: preset.members.map((m) => ({
-          typeId: m.typeId,
-          difficulty: m.difficulty ?? input.difficulty,
-          typeSettings: m.typeSettings ?? null,
-        })),
+        members: preset.members.map((m, index) => {
+          const ov = input.memberOverrides?.[index];
+          return {
+            typeId: m.typeId,
+            difficulty: ov?.difficulty ?? m.difficulty ?? input.difficulty,
+            generationPlan: ov?.generationPlan ?? m.generationPlan ?? generationPlan,
+            typeSettings: ov?.typeSettings ?? m.typeSettings ?? null,
+          };
+        }),
         setLabel: preset.label,
         generationPlan,
         customPrompt: input.customPrompt ?? "",
@@ -137,6 +147,8 @@ export async function POST(req: NextRequest) {
         memberCount: preset.members.length,
         structuralMode: preset.structuralMode,
         generationPlan,
+        baseCreditCost,
+        maxSafetyAttempts: QUESTION_SET_SAFETY_MAX_ATTEMPTS,
         creditCost,
       },
       creditCost,
@@ -154,6 +166,22 @@ export async function POST(req: NextRequest) {
       difficulty: input.difficulty,
       memberOverrides: input.memberOverrides,
     });
+    const unusedAttemptCount = Math.max(
+      0,
+      QUESTION_SET_SAFETY_MAX_ATTEMPTS - result.attemptCount,
+    );
+    const unusedCreditCost = unusedAttemptCount * baseCreditCost;
+    let refundedUnusedCredits = 0;
+    if (unusedCreditCost > 0) {
+      refundedUnusedCredits = await refundCredits(
+        job.academyId,
+        "QUESTION_GEN_SINGLE",
+        credit.transactionId,
+        "지문 세트 안전 재시도 미사용분 환불",
+        unusedCreditCost,
+      ).catch(() => 0);
+    }
+    const creditsRemaining = credit.balanceAfter + refundedUnusedCredits;
 
     await prisma.workbenchAiJob.update({
       where: { id: job.id },
@@ -169,7 +197,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       jobId: job.id,
       ...result,
-      creditsRemaining: credit.balanceAfter,
+      creditsRemaining,
     });
   } catch (err) {
     if (err instanceof InsufficientCreditsError) {

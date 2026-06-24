@@ -251,6 +251,8 @@ const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "For KILLER, the correct order should require checking both local cohesion and the whole paragraph argument.",
   ],
   SENTENCE_INSERT: [
+    "givenSentence must be copied from or very lightly transformed from one original passage sentence; never invent a new bridge sentence or add outside background information.",
+    "Always provide sourceSentenceToOmit as the original verbatim passage sentence that was removed from the displayed passage.",
     "The given sentence must carry at least one explicit cohesive cue (demonstrative/pronoun anaphora, definite-article old information, a directional connective, or a temporal/causal link). A self-contained 'neutral' sentence that fits anywhere yields multiple answers and must be rejected.",
     "The correct gap is decided by asymmetry: at the answer it closes BOTH the link to the preceding sentence and the link to the following sentence, while every other gap breaks at least one link (and inserting there splits two originally adjacent sentences).",
     "Referent uniqueness: the cue's antecedent must exist only just before the correct gap; if a demonstrative/the-noun could resolve at two or more gaps the item has multiple answers.",
@@ -4837,6 +4839,11 @@ function validateSentenceInsertQuestion(
       }
     }
   } else if (given && passageWithMarkers) {
+    add(
+      "error",
+      "sentence-insert-missing-omitted-source",
+      "SENTENCE_INSERT must provide sourceSentenceToOmit/omittedSourceSentence copied from the original passage; newly invented bridge sentences are not allowed.",
+    );
     const leak = findSentenceInsertVisibleSourceLeak(given, passageWithMarkers);
     if (leak && leak.score >= 0.72) {
       add(

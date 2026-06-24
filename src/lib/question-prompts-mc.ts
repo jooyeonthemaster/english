@@ -293,6 +293,11 @@ direction 예시: "(A), (B), (C)의 각 네모 안에서 어법에 맞는 표현
 
   SENTENCE_INSERT: `문장 삽입 문제를 만드세요. (수능 38·39번 / 내신 킬러급 변별력 기준)
 
+SOURCE-BACKED REQUIREMENT:
+- givenSentence must come from one original passage sentence, copied verbatim or only very lightly transformed for grammar.
+- Always output sourceSentenceToOmit as the original verbatim passage sentence that was removed.
+- Never invent a new bridge sentence, outside historical context, outside examples, or extra background information.
+
 ## 이 유형의 본질 — "응집성 단절 복원(cohesive break restoration)"
 정답은 "주어진 문장이 잘 어울리는 자리"가 아니라 "나머지 4개 자리에서는 응집 고리가 끊기고, 오직 한 자리에서만 앞·뒤 양쪽 고리가 동시에 닫히는 자리"입니다. 즉 정답은 비대칭(asymmetry)으로 결정됩니다. 어느 위치에 넣어도 무난한 "중립 문장"은 절대 만들지 마세요 — 정답이 둘 이상이 되어 불량 문항이 됩니다.
 
