@@ -21,7 +21,13 @@ const EDITOR_STYLES = `
     outline: none;
     font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
     font-size: 14px; line-height: 1.9; color: #1e293b;
-    min-height: 100%; padding: 48px 20px 20px 20px;
+    min-height: 100%; padding: 16px 20px 20px 20px;
+  }
+  /* 우상단 Undo/Redo 버튼 영역만큼만 첫 줄을 비우는 float 더미 — 좌측은 여백 없이
+     본문이 바로 시작하고, 우측 상단 코너만 텍스트가 회피한다(과도한 상단 여백 제거).
+     편집 가능할 때(=버튼이 떠 있을 때)만 적용. */
+  .ProseMirror[contenteditable="true"]::before {
+    content: ""; float: right; width: 4.25rem; height: 2rem;
   }
   .ProseMirror p { margin: 0 0 0.75em 0; }
   .ProseMirror p.is-editor-empty:first-child::before {

@@ -872,13 +872,6 @@ export function PassageInputRow({
                 />
               )}
             </div>
-
-            {/* 글자수 — 입력창 우측하단 (문제생성 워크스페이스와 동일) */}
-            {charCount > 0 ? (
-              <div className="flex shrink-0 justify-end border-t border-slate-100 px-2.5 py-1 text-[10.5px] tabular-nums text-slate-400">
-                {charCount.toLocaleString()}자
-              </div>
-            ) : null}
           </div>
 
           {/* AI 변형 미리보기 패널 (한 번에 하나만) — 문제생성과 동일 UI */}
