@@ -702,13 +702,15 @@ export function PassageInputRow({
               }
             >
           {/* Title */}
-          {/* Content label (글자수는 입력창 우측하단으로 이동) */}
-          <div className="mb-1.5 flex items-center justify-between">
-            <label className="text-[11.5px] font-medium text-slate-500">
-              {inReview ? "복원된 지문 (수정·마킹 가능)" : "지문 내용"}{" "}
-              <span className="text-red-500">*</span>
-            </label>
-          </div>
+          {/* Content label — 일반(워크스페이스)에선 숨기고, 복원 모드 안내만 표시. */}
+          {inReview ? (
+            <div className="mb-1.5 flex items-center justify-between">
+              <label className="text-[11.5px] font-medium text-slate-500">
+                복원된 지문 (수정·마킹 가능){" "}
+                <span className="text-red-500">*</span>
+              </label>
+            </div>
+          ) : null}
 
           {/* ── AI 변형 도구 (학습지 워크스페이스 전용) ── 변형 지문 생성 ·
               (선택 시) AI 문장 변형. 앞 맥락 추가는 입력창 위 가로 바(아래). */}
@@ -829,14 +831,21 @@ export function PassageInputRow({
                 disableMarking(웹툰 등)이면 마킹 없는 일반 텍스트 에디터로 대체한다. */}
             <div
               className={
-                disableMarking || fill ? "flex min-h-0 flex-1 flex-col" : ""
+                disableMarking
+                  ? fill
+                    ? "flex min-h-0 flex-1 flex-col"
+                    : ""
+                  : "flex min-h-0 flex-col"
               }
               style={
                 disableMarking
                   ? { height: editorHeightPx ?? 300 }
-                  : fill
-                    ? { minHeight: editorHeightPx ?? 320 }
-                    : { minHeight: 160, maxHeight: editorHeightPx ?? 460 }
+                  : {
+                      // 본문이 아무리 길어도 카드가 첫 화면(뷰포트)을 넘기지 않도록 높이를 cap.
+                      // 자식 PassageAnnotationEditor(h-full · 본문 flex-1 overflow-y-auto · 힌트 footer shrink-0)가
+                      // 이 확정 높이를 받아 본문만 내부 스크롤 → 마킹 힌트 배너가 스크롤 없이 항상 보인다.
+                      height: `clamp(180px, calc(100vh - 580px), ${editorHeightPx ?? 420}px)`,
+                    }
               }
             >
               {disableMarking ? (
