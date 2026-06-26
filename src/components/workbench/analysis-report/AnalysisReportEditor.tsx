@@ -21,7 +21,6 @@ import {
 } from "react";
 
 import {
-  PreviewZoomControls,
   PREVIEW_ZOOM_MAX,
   PREVIEW_ZOOM_MIN,
   PREVIEW_ZOOM_STEP,
@@ -45,7 +44,6 @@ import { worksheetAnswersAreHidden } from "@/lib/passage-report/analysis-report/
 import { notifyCreditsChanged } from "@/lib/credits-client";
 
 import {
-  ReportPages,
   enumerateItems,
   type ItemDescriptor,
   type DropPlacement,
@@ -95,6 +93,7 @@ import { downscaleImage } from "./image-utils";
 import { usePanelWidths } from "./use-panel-widths";
 import { EditorTopBar } from "./editor-top-bar";
 import { PageThumbnailRail } from "./page-thumbnail-rail";
+import { EditorCanvas } from "./editor-canvas";
 import {
   addSavedReportSettings,
   COVER_DEFAULTS,
@@ -1366,47 +1365,23 @@ export function AnalysisReportEditor({
         />
 
         {/* 중앙 — A4 캔버스 (자연 크기, 드래그 autoscroll 용 id) */}
-        <section className="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-slate-100/70">
-          <div className="relative min-h-0 flex-1 overflow-hidden">
-            {pageList.length > 0 ? (
-              <PreviewZoomControls
-                zoom={zoom}
-                position={zoomControlsPos}
-                onZoomIn={zoomPreviewIn}
-                onZoomOut={zoomPreviewOut}
-                onReset={resetPreviewZoom}
-                onFit={fitPreviewToScreen}
-                onDragStart={handlePreviewZoomControlsDragStart}
-              />
-            ) : null}
-            <div
-              id="exam-paper-print-root"
-              ref={previewScrollerRef}
-              className="par-scroll h-full min-h-0 overflow-auto overscroll-contain px-5 py-5 [scrollbar-gutter:stable]"
-              onMouseDown={(e) => {
-                if (e.target === e.currentTarget) setActiveId(null);
-              }}
-            >
-              <div
-                className="mx-auto"
-                style={{
-                  width: REPORT_A4_WIDTH_PX * zoom,
-                  height: previewContentHeight * zoom,
-                }}
-              >
-                <div
-                  style={{
-                    width: REPORT_A4_WIDTH_PX,
-                    transform: `scale(${zoom})`,
-                    transformOrigin: "top left",
-                  }}
-                >
-                  <ReportPages report={report} edit={edit} onPagesChange={setPageList} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <EditorCanvas
+          pageList={pageList}
+          zoom={zoom}
+          zoomControlsPos={zoomControlsPos}
+          onZoomIn={zoomPreviewIn}
+          onZoomOut={zoomPreviewOut}
+          onReset={resetPreviewZoom}
+          onFit={fitPreviewToScreen}
+          onZoomControlsDragStart={handlePreviewZoomControlsDragStart}
+          scrollerRef={previewScrollerRef}
+          onDeselect={() => setActiveId(null)}
+          a4Width={REPORT_A4_WIDTH_PX}
+          contentHeight={previewContentHeight}
+          report={report}
+          edit={edit}
+          onPagesChange={setPageList}
+        />
 
         {/* 인라인 텍스트 편집용 떠다니는 서식 툴바 */}
         <FloatingFormatToolbar
