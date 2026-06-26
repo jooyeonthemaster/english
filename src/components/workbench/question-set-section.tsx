@@ -252,8 +252,10 @@ export function QuestionSetSection({
     />
   );
 
-  if (visible.length === 0) {
-    // 세트가 없어도 편집 다이얼로그는 떠 있을 수 있으므로 같이 렌더한다.
+  // 인라인 모드(부모 카드 그리드에 섞여 흐르는 경우)는 세트가 0개여도 아래 inline 분기에서
+  // normalItems(일반 문제 카드)를 렌더해야 하므로 여기서 early-return 하면 안 된다.
+  // (비인라인 독립 '지문 세트' 섹션만 세트가 없을 때 숨기되, 편집 다이얼로그는 같이 유지한다.)
+  if (visible.length === 0 && !inline) {
     return editDialog;
   }
 

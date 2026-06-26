@@ -1800,7 +1800,7 @@ export function PassageCardGrid({
                             })()}
                             {isLearningGenerating && (
                               <span
-                                className="learning-generating-text text-[10.5px] font-bold"
+                                className="learning-generating-text text-[10.5px] font-bold whitespace-nowrap"
                                 title="이 지문의 학습자료가 백그라운드에서 생성되고 있습니다"
                               >
                                 학습자료 생성중

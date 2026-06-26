@@ -1411,6 +1411,14 @@
 .learning-generating-text::after {
   content: "...";
   animation: smoat-loading-dots 1.6s steps(1, end) infinite;
+  /* 점(0~3개) 애니메이션이 inline 너비를 바꾸면, 부모 flex-wrap 경계에 걸친
+     "학습자료 생성중" 이 한 줄↔두 줄로 진동(레이아웃 jitter)한다. 점 영역을
+     3개 기준 고정폭으로 예약해 보이는 점 수와 무관하게 총 너비를 불변으로
+     고정 — 줄바꿈 토글(움찔거림)을 제거한다. */
+  display: inline-block;
+  width: 1.1em;
+  text-align: left;
+  vertical-align: bottom;
 }
 
 /* ============================================================================

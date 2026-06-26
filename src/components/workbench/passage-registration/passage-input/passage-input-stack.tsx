@@ -316,7 +316,10 @@ export function PassageInputStack({
         // 반응형 그리드 — 넓은 화면에서 카드가 2열로 동일 폭 타일된다(펼침/접힘
         // 무관). items-start 로 둬서 접힌(짧은) 카드가 옆의 펼친(긴) 카드 높이에
         // 맞춰 늘어나 '빈 카드'처럼 보이지 않게 한다.
-        className="grid min-h-0 flex-1 grid-cols-1 content-start items-start gap-2.5 overflow-y-auto pb-1 pr-0.5 xl:grid-cols-2"
+        // max-h: 상위 페이지에 뷰포트 높이 제약이 없어 flex-1 이 받쳐지지 않으므로,
+        // 카드 영역 자체를 뷰포트 기준으로 cap 한다 → 카드가 길어도 이 영역 안에서만
+        // 스크롤되고 아래 '학습지 구성/생성' 푸터는 항상 첫 화면에 남는다.
+        className="grid min-h-0 flex-1 grid-cols-1 content-start items-start gap-2.5 overflow-y-auto pb-1 pr-0.5 xl:grid-cols-2 max-h-[calc(100vh-400px)]"
       >
         {rows.map((row, i) => (
           <PassageInputRow
