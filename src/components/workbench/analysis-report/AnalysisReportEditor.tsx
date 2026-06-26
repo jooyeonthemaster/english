@@ -21,7 +21,6 @@ import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import {
   type MouseEvent as ReactMouseEvent,
-  type PointerEvent as ReactPointerEvent,
   type SetStateAction,
   useCallback,
   useDeferredValue,
@@ -104,25 +103,16 @@ import {
 } from "@/lib/passage-report/analysis-report/study-activities";
 import { reportHistoryReducer } from "./editor-history";
 import { downscaleImage } from "./image-utils";
+import { usePanelWidths } from "./use-panel-widths";
 import {
-  ACTIVITY_WIDTH_DEFAULT,
-  ACTIVITY_WIDTH_STORAGE_KEY,
   addSavedReportSettings,
-  clampActivityWidth,
-  clampPanelWidth,
-  clampRailWidth,
   COVER_DEFAULTS,
   deleteSavedReportSettings,
   DESIGN_TEMPLATE_LABELS,
   getDefaultReportSettings,
   hasAppliedDefaultFor,
   markAppliedDefaultFor,
-  PANEL_WIDTH_DEFAULT,
-  PANEL_WIDTH_STORAGE_KEY,
   persistAppliedReportSettings,
-  RAIL_WIDTH_DEFAULT,
-  RAIL_WIDTH_STORAGE_KEY,
-  readStoredWidth,
   SPACER_MIN_MM,
   type SavedReportSettings,
 } from "./editor-storage";
@@ -512,8 +502,6 @@ export function AnalysisReportEditor({
   const [propertiesPanelCollapsed, setPropertiesPanelCollapsed] = useState(false);
   // 학습 활동 팔레트는 창 가장 왼쪽(페이지 패널보다 왼쪽)에 붙는 독립 칼럼. 기본 펼침.
   const [activityPanelCollapsed, setActivityPanelCollapsed] = useState(false);
-  // 폭 드래그 중에는 너비 트랜지션을 꺼서(여닫힘 애니메이션과 충돌 방지) 즉각 반응하게 한다.
-  const [widthDragging, setWidthDragging] = useState(false);
   // '단어 시험지' 카드를 누른 적 있으면 우측 패널에 단어 시험지 설정 섹션이 떠 있는다(활동 설정과 동일).
   const [vocabTestFocused, setVocabTestFocused] = useState(false);
   // 카드를 누를 때마다 +1 — 설정 섹션이 접혀 있어도 다시 펼치고 그 위치로 스크롤하는 신호.
@@ -523,75 +511,7 @@ export function AnalysisReportEditor({
   useEffect(() => {
     if (activeId) setMaterialSettingsOpen(false);
   }, [activeId]);
-  const [railWidth, setRailWidth] = useState(() =>
-    readStoredWidth(RAIL_WIDTH_STORAGE_KEY, RAIL_WIDTH_DEFAULT, clampRailWidth),
-  );
-  const [panelWidth, setPanelWidth] = useState(() =>
-    readStoredWidth(PANEL_WIDTH_STORAGE_KEY, PANEL_WIDTH_DEFAULT, clampPanelWidth),
-  );
-  const [activityWidth, setActivityWidth] = useState(() =>
-    readStoredWidth(ACTIVITY_WIDTH_STORAGE_KEY, ACTIVITY_WIDTH_DEFAULT, clampActivityWidth),
-  );
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(RAIL_WIDTH_STORAGE_KEY, String(railWidth));
-    } catch {
-      // 편의 설정이라 실패해도 현재 세션 동작엔 영향 없음.
-    }
-  }, [railWidth]);
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(PANEL_WIDTH_STORAGE_KEY, String(panelWidth));
-    } catch {
-      // 편의 설정이라 실패해도 현재 세션 동작엔 영향 없음.
-    }
-  }, [panelWidth]);
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(ACTIVITY_WIDTH_STORAGE_KEY, String(activityWidth));
-    } catch {
-      // 편의 설정이라 실패해도 현재 세션 동작엔 영향 없음.
-    }
-  }, [activityWidth]);
-
-  // 좌/우 패널 폭 드래그 — 포인터 이벤트로 col-resize (exam paper builder 와 동일한 UX).
-  const startWidthDrag = useCallback(
-    (event: ReactPointerEvent<HTMLDivElement>, side: "rail" | "panel" | "activity") => {
-      if (event.pointerType === "mouse" && event.button !== 0) return;
-      event.preventDefault();
-      const startX = event.clientX;
-      const startRail = railWidth;
-      const startPanel = panelWidth;
-      const startActivity = activityWidth;
-      const prevCursor = document.body.style.cursor;
-      const prevSelect = document.body.style.userSelect;
-      document.body.style.cursor = "col-resize";
-      document.body.style.userSelect = "none";
-      setWidthDragging(true);
-
-      const move = (moveEvent: PointerEvent) => {
-        moveEvent.preventDefault();
-        const delta = moveEvent.clientX - startX;
-        // 학습 활동 패널은 창 왼쪽에 있어 핸들이 오른쪽 모서리 → 오른쪽 드래그가 폭 증가(+delta).
-        if (side === "rail") setRailWidth(clampRailWidth(startRail + delta));
-        else if (side === "activity") setActivityWidth(clampActivityWidth(startActivity + delta));
-        else setPanelWidth(clampPanelWidth(startPanel - delta));
-      };
-      const finish = () => {
-        window.removeEventListener("pointermove", move);
-        window.removeEventListener("pointerup", finish);
-        window.removeEventListener("pointercancel", finish);
-        document.body.style.cursor = prevCursor;
-        document.body.style.userSelect = prevSelect;
-        setWidthDragging(false);
-      };
-      window.addEventListener("pointermove", move, { passive: false });
-      window.addEventListener("pointerup", finish, { once: true });
-      window.addEventListener("pointercancel", finish, { once: true });
-    },
-    [railWidth, panelWidth, activityWidth],
-  );
+  const { railWidth, panelWidth, activityWidth, widthDragging, startWidthDrag } = usePanelWidths();
   const previewScrollerRef = useRef<HTMLDivElement>(null);
   // 좌측 페이지 썸네일 목록 스크롤러 — 본문 스크롤을 따라 활성 페이지를 보이게 한다.
   const pagesPanelScrollerRef = useRef<HTMLDivElement>(null);
