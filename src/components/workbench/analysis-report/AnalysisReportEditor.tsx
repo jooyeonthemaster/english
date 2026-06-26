@@ -4,21 +4,10 @@ import { createPortal } from "react-dom";
 import {
   ChevronLeft,
   ChevronRight,
-  FileQuestion,
-  FileText,
   ImagePlus,
-  Loader2,
   Plus,
-  Printer,
-  Redo2,
-  RotateCcw,
-  Save,
   Settings,
-  Trash2,
-  Undo2,
 } from "lucide-react";
-import { CreditCostChip } from "@/components/credits/credit-cost-chip";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
 import {
   type MouseEvent as ReactMouseEvent,
   type SetStateAction,
@@ -104,11 +93,12 @@ import {
 import { reportHistoryReducer } from "./editor-history";
 import { downscaleImage } from "./image-utils";
 import { usePanelWidths } from "./use-panel-widths";
+import { EditorTopBar } from "./editor-top-bar";
+import { PageThumbnailRail } from "./page-thumbnail-rail";
 import {
   addSavedReportSettings,
   COVER_DEFAULTS,
   deleteSavedReportSettings,
-  DESIGN_TEMPLATE_LABELS,
   getDefaultReportSettings,
   hasAppliedDefaultFor,
   markAppliedDefaultFor,
@@ -117,7 +107,6 @@ import {
   type SavedReportSettings,
 } from "./editor-storage";
 import { FloatingFormatToolbar } from "./floating-format-toolbar";
-import { PageMiniPreview } from "./page-mini-preview";
 import { PropertiesPanel } from "./properties-panel";
 import { SettingsTemplatePopover } from "./cover-logo-panels";
 
@@ -1212,141 +1201,25 @@ export function AnalysisReportEditor({
     <div className="are-shell flex h-full min-h-0 flex-col overflow-hidden bg-[#F4F6F9]">
       <style dangerouslySetInnerHTML={{ __html: ANALYSIS_REPORT_EDIT_CSS }} />
 
-      {/* 상단 바 */}
-      <div className="no-print flex h-11 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4">
-        <div className="flex min-w-0 items-center gap-2">
-          <FileText className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-          <span className="truncate text-[12px] font-bold text-slate-600">지문 학습자료 편집</span>
-          <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
-            {pageList.length || 1}페이지
-          </span>
-          <span className="hidden shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500 sm:inline-flex">
-            {DESIGN_TEMPLATE_LABELS[report.themeId]}
-          </span>
-        </div>
-
-        <div className="flex min-w-0 items-center justify-end gap-2">
-          {error ? <span className="max-w-[260px] truncate text-[11px] text-red-500">{error}</span> : null}
-          {dirty ? (
-            <span className="hidden rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 sm:inline-flex">
-              저장 필요
-            </span>
-          ) : null}
-          {toolbarWorksheetHasContent ? (
-            <button
-              type="button"
-              role="switch"
-              aria-checked={toolbarAnswerKeyIncluded}
-              data-answer-key-toolbar={toolbarAnswerKeyIncluded ? "include" : "exclude"}
-              onClick={() => onToggleWorksheetAnswers(toolbarWorksheetIndex)}
-              title="정답지·해설지 포함"
-              className={`inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border px-2.5 text-[11.5px] font-semibold transition-colors ${
-                toolbarAnswerKeyIncluded
-                  ? "border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100"
-                  : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-              }`}
-            >
-              <span className="hidden sm:inline">정답지·해설지 포함</span>
-              <span className="sm:hidden">정답·해설</span>
-              <span
-                className={`relative h-4 w-7 rounded-full transition-colors ${
-                  toolbarAnswerKeyIncluded ? "bg-sky-500" : "bg-slate-300"
-                }`}
-                aria-hidden="true"
-              >
-                <span
-                  className={`absolute left-0 top-0.5 h-3 w-3 rounded-full bg-white shadow-sm transition-transform ${
-                    toolbarAnswerKeyIncluded ? "translate-x-3.5" : "translate-x-0.5"
-                  }`}
-                />
-              </span>
-              <span className={`text-[10px] font-bold ${toolbarAnswerKeyIncluded ? "text-sky-700" : "text-slate-400"}`}>
-                {toolbarAnswerKeyIncluded ? "ON" : "OFF"}
-              </span>
-            </button>
-          ) : null}
-          {/* 단어 시험지 컨트롤은 우측 학습 활동 팔레트 하단 '어휘' 섹션으로 이동(툴바에서 제거) */}
-          <button
-            type="button"
-            onClick={undo}
-            disabled={!canUndo || saving}
-            title="되돌리기"
-            aria-label="되돌리기"
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <Undo2 className="h-3.5 w-3.5" />
-          </button>
-          <button
-            type="button"
-            onClick={redo}
-            disabled={!canRedo || saving}
-            title="앞으로 가기"
-            aria-label="앞으로 가기"
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <Redo2 className="h-3.5 w-3.5" />
-          </button>
-          <button
-            type="button"
-            onClick={revert}
-            disabled={!dirty || saving}
-            title="저장 전 상태로 되돌리기"
-            aria-label="저장 전 상태로 되돌리기"
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <RotateCcw className="h-3.5 w-3.5" />
-          </button>
-          <button
-            type="button"
-            onClick={save}
-            disabled={saving || !dirty}
-            className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md bg-slate-900 px-2 text-[11px] font-bold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
-          >
-            {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-            저장
-          </button>
-          {!toolbarWorksheetHasContent ? (
-            <button
-              type="button"
-              onClick={generateWorksheet}
-              disabled={worksheetBusy || saving}
-              title="실전 학습지(어법 선택·어휘 빈칸·배열 + 수능추론 5문항) 추가 생성"
-              className="flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-2.5 text-[11.5px] font-semibold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {worksheetBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileQuestion className="h-3.5 w-3.5" />}
-              <span className="hidden items-center gap-1.5 sm:inline-flex">
-                {worksheetBusy ? "실전 학습지 생성 중…" : "실전 학습지 생성"}
-                {!worksheetBusy && (
-                  <CreditCostChip
-                    amount={CREDIT_COSTS.PASSAGE_ANALYSIS}
-                    className="rounded bg-blue-100 px-1 py-px text-[10px] text-blue-700"
-                  />
-                )}
-              </span>
-              <span className="sm:hidden">실전 학습지</span>
-            </button>
-          ) : null}
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
-          >
-            <Printer className="h-3.5 w-3.5" />
-            인쇄
-          </button>
-          {onExit ? (
-            <button
-              type="button"
-              onClick={onExit}
-              title="이전 단계로 돌아가기"
-              aria-label="이전 단계로 돌아가기"
-              className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-800"
-            >
-              <ChevronLeft className="h-3.5 w-3.5" />
-            </button>
-          ) : null}
-        </div>
-      </div>
+      <EditorTopBar
+        pageCount={pageList.length}
+        themeId={report.themeId}
+        error={error}
+        dirty={dirty}
+        saving={saving}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        worksheetBusy={worksheetBusy}
+        worksheetHasContent={toolbarWorksheetHasContent}
+        answerKeyIncluded={toolbarAnswerKeyIncluded}
+        onToggleAnswers={() => onToggleWorksheetAnswers(toolbarWorksheetIndex)}
+        onUndo={undo}
+        onRedo={redo}
+        onRevert={revert}
+        onSave={save}
+        onGenerateWorksheet={generateWorksheet}
+        onExit={onExit}
+      />
 
       <div className="flex min-h-0 flex-1 overflow-hidden bg-white">
         {/* 좌측 끝 — 학습 활동 팔레트 (편집 패널과 같은 세로 탭 여닫힘 매커니즘 + 부드러운 폭 애니메이션) */}
@@ -1476,94 +1349,21 @@ export function AnalysisReportEditor({
         ) : null}
 
         {/* 좌측 — 페이지 인디케이터 */}
-        {pagesPanelCollapsed ? (
-          <button
-            type="button"
-            onClick={() => setPagesPanelCollapsed(false)}
-            title="페이지 목록 열기"
-            aria-label="페이지 목록 열기"
-            aria-expanded={false}
-            className="no-print hidden h-full min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 border-r border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-slate-50 hover:text-slate-600 lg:flex"
-          >
-            <ChevronRight className="h-3.5 w-3.5" />
-            <span style={{ writingMode: "vertical-rl" }}>페이지</span>
-          </button>
-        ) : (
-          <>
-          <aside style={{ width: railWidth }} className="no-print flex shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white">
-            <div className="flex h-11 shrink-0 items-center justify-between border-b border-slate-200 px-3">
-              <div>
-                <p className="text-[11px] font-black text-slate-700">페이지</p>
-                <p className="text-[10px] font-semibold text-slate-400">{pageList.length || 1}장</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setPagesPanelCollapsed(true)}
-                title="페이지 목록 닫기"
-                aria-label="페이지 목록 닫기"
-                className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
-              >
-                <ChevronLeft className="h-3.5 w-3.5" />
-              </button>
-            </div>
-            <div
-              ref={pagesPanelScrollerRef}
-              className="min-h-0 flex-1 space-y-2 overflow-y-auto p-2.5 [scrollbar-gutter:stable]"
-            >
-              {pageList.length === 0 ? (
-                <div className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-2 py-4 text-center text-[11px] font-semibold text-slate-400">
-                  페이지 계산 중
-                </div>
-              ) : (
-                pageList.map((ids, pi) => {
-                  const selected = activePageIndex === pi;
-                  return (
-                    <div key={pi} data-thumb-index={pi} className="group/page relative">
-                      <button
-                        type="button"
-                        onClick={() => scrollToPage(pi)}
-                        className={cn(
-                          "flex w-full flex-col items-center rounded-lg border bg-white p-1.5 text-left shadow-sm transition-colors",
-                          selected
-                            ? "border-blue-300 bg-blue-50/70 shadow-[0_0_0_2px_rgba(59,130,246,0.10)]"
-                            : "border-slate-200 hover:border-blue-200 hover:bg-slate-50",
-                        )}
-                        title={`${pi + 1}페이지로 이동`}
-                        aria-current={selected ? "page" : undefined}
-                      >
-                        <PageMiniPreview
-                          ids={ids}
-                          report={deferredReport}
-                          itemsById={thumbItemsById}
-                          isCover={thumbPageInfo.coverFlags[pi]}
-                          bodyNumber={thumbPageInfo.bodyNumbers[pi]}
-                          bodyTotal={thumbPageInfo.bodyTotal}
-                          selected={selected}
-                        />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => deletePage(ids)}
-                        title="이 페이지 삭제"
-                        aria-label="이 페이지 삭제"
-                        className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full border border-red-200 bg-white text-red-500 opacity-0 shadow-sm transition hover:bg-red-50 group-hover/page:opacity-100"
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </button>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          </aside>
-            <div
-              onPointerDown={(event) => startWidthDrag(event, "rail")}
-              title="페이지 목록 폭 조절"
-              aria-hidden
-              className="no-print hidden w-1.5 shrink-0 cursor-col-resize touch-none bg-slate-100 transition-colors hover:bg-blue-200 active:bg-blue-300 lg:block"
-            />
-          </>
-        )}
+        <PageThumbnailRail
+          collapsed={pagesPanelCollapsed}
+          onExpand={() => setPagesPanelCollapsed(false)}
+          onCollapse={() => setPagesPanelCollapsed(true)}
+          railWidth={railWidth}
+          pageList={pageList}
+          scrollerRef={pagesPanelScrollerRef}
+          activePageIndex={activePageIndex}
+          onSelectPage={scrollToPage}
+          report={deferredReport}
+          itemsById={thumbItemsById}
+          pageInfo={thumbPageInfo}
+          onDeletePage={deletePage}
+          onStartRailDrag={(event) => startWidthDrag(event, "rail")}
+        />
 
         {/* 중앙 — A4 캔버스 (자연 크기, 드래그 autoscroll 용 id) */}
         <section className="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-slate-100/70">
