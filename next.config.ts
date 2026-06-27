@@ -13,6 +13,13 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["iconv-lite"],
 
   experimental: {
+    // 시험지 빌더 저장 페이로드에는 학원 로고(최대 1.5MB)와 삽입 이미지가
+    // base64 data URL로 통째로 실린다. base64는 ~33% 커지므로 기본 1MB 한도를
+    // 쉽게 넘겨 "server-side exception"으로 저장이 깨졌다(로고 쓰는 학원만 발생).
+    // 한도를 올려 핫픽스. 근본 해결은 이미지를 스토리지에 올리고 URL만 저장하는 것.
+    serverActions: {
+      bodySizeLimit: "10mb",
+    },
     optimizePackageImports: [
       "lucide-react",
       "recharts",

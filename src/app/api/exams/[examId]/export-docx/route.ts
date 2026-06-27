@@ -39,10 +39,18 @@ function parseSettings(settings: string | null): BuilderSettings | null {
 function resolveBuilderItems(
   questions: ExamQuestionData[],
   items: BuilderItem[],
+  blocks?: BuilderSettings["blocks"],
 ) {
   const byQuestionId = new Map(
     questions.map((item) => [item.question.id, item]),
   );
+  // 문항 단위 서식(크기·굵게·기울임·정렬)은 settings.blocks 에만 저장되므로 병합한다.
+  const blockByLocalId = new Map<string, NonNullable<typeof blocks>[number]>();
+  const blockByQuestionId = new Map<string, NonNullable<typeof blocks>[number]>();
+  for (const b of blocks ?? []) {
+    if (b.localId) blockByLocalId.set(b.localId, b);
+    if (b.questionId) blockByQuestionId.set(b.questionId, b);
+  }
 
   return items
     .map((item, index) => {
@@ -54,12 +62,19 @@ function resolveBuilderItems(
         questionText: item.questionText || original.question.questionText,
         structuredData: (original.question as { structuredData?: unknown }).structuredData,
       });
+      const fmtBlock =
+        (item.localId ? blockByLocalId.get(item.localId) : undefined) ??
+        blockByQuestionId.get(item.questionId);
       return {
         ...item,
         questionText,
         includePassage: item.includePassage !== false || forceSourcePassage,
         orderNum: item.orderNum ?? index + 1,
         points: item.points ?? original.points,
+        blockFontPt: fmtBlock?.blockFontPt ?? null,
+        blockBold: fmtBlock?.blockBold ?? false,
+        blockItalic: fmtBlock?.blockItalic ?? false,
+        blockAlign: fmtBlock?.blockAlign ?? "left",
         sourceQuestion: original.question,
       };
     })
@@ -166,7 +181,7 @@ export async function GET(
     let doc;
     if (settings) {
       // 빌더 미리보기와 동일한 레이아웃의 DOCX (해설 포함 시 각 문항 아래에 정답·해설 추가)
-      const resolved = resolveBuilderItems(examQuestions, settings.items);
+      const resolved = resolveBuilderItems(examQuestions, settings.items, settings.blocks);
       const fullExamQuestions = applyBuilderSettings(examQuestions, settings);
       doc = buildBuilderExamDocument({
         title: exam.title,
@@ -183,10 +198,15 @@ export async function GET(
     const buffer = await Packer.toBuffer(doc);
 
     // 출력(DOCX 내보내기) 1회 → 인쇄 횟수 +1
-    await prisma.exam.update({
-      where: { id: examId },
-      data: { printCount: { increment: 1 } },
-    });
+    // 파일 버퍼 생성은 이미 끝났으므로 카운트 갱신 실패가 다운로드를 깨뜨리면 안 된다.
+    try {
+      await prisma.exam.update({
+        where: { id: examId },
+        data: { printCount: { increment: 1 } },
+      });
+    } catch (err) {
+      console.error("[export-docx] printCount 증가 실패(무시)", err);
+    }
 
     // 관리자 활동 타임라인용 — printCount는 행위자/시각이 없어 별도 기록
     const staff = await getStaffSession().catch(() => null);
