@@ -6,7 +6,7 @@
 // 호출부 인라인 함수호출이라 React reconciliation 동일. @ts-nocheck=원본 충실(인자 타입 생략).
 
 import { renderNumberSetting, renderSegSetting, renderToggleSetting } from "./setting-fields";
-import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN } from "@/lib/question-type-generation-settings";
+import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN, VOCAB_CHOICE_ANSWER_COUNT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN } from "@/lib/question-type-generation-settings";
 import { Minus, Plus } from "lucide-react";
 
 export function renderAntonymDetail({ antonymPairCount, setAntonymPairCount }) {
@@ -986,6 +986,85 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
               <span
                 className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
                   blankSettings.pointFocus ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+export function renderVocabChoiceDetail({ patchTypeSettings, questionTypeSettings, setVocabChoiceAnswerCount, setVocabChoiceMarkerCount, vocabChoiceAnswerCount, vocabChoiceAnswerMax, vocabChoiceMarkerCount }) {
+      const vocabSynonymVariants =
+        questionTypeSettings.VOCAB_CHOICE?.synonymVariants === true;
+      return (
+        <div className="space-y-3">
+          {renderNumberSetting({
+            title: "밑줄 어휘 개수",
+            badges: [
+              `${VOCAB_CHOICE_MARKER_COUNT_MIN} ~ ${VOCAB_CHOICE_MARKER_COUNT_MAX}`,
+              "표시 위치",
+            ],
+            description:
+              "지문에 밑줄 칠 어휘 수입니다. 정답(부적절한 어휘) 수는 아래에서 따로 지정합니다.",
+            value: vocabChoiceMarkerCount,
+            min: VOCAB_CHOICE_MARKER_COUNT_MIN,
+            max: VOCAB_CHOICE_MARKER_COUNT_MAX,
+            onChange: setVocabChoiceMarkerCount,
+            ariaBase: "vocab choice marker count",
+          })}
+          <div className="border-t border-slate-100 pt-3">
+            {renderNumberSetting({
+              title: "정답 개수",
+              badges: [
+                `1 ~ ${vocabChoiceAnswerMax}`,
+                vocabChoiceAnswerCount >= 2 ? "모두 고르기" : "단일 정답",
+              ],
+              description:
+                "기본값은 1개입니다. 2개 이상이면 발문에 개수를 쓰지 않고 부적절한 어휘를 모두 고르라고 안내합니다.",
+              value: vocabChoiceAnswerCount,
+              min: VOCAB_CHOICE_ANSWER_COUNT_MIN,
+              max: vocabChoiceAnswerMax,
+              onChange: setVocabChoiceAnswerCount,
+              ariaBase: "vocab choice answer count",
+            })}
+          </div>
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <span className="text-[12px] font-bold text-slate-800">
+                동의어 변형 (암기 무력화)
+              </span>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  지문 암기 방지
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  난이도 ↑
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                밑줄 친 어휘를 모두 동의어로 바꿔 표시합니다. 지문을 외워도 표면
+                매칭으로는 못 풀고 뜻으로 판단해야 합니다.
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={vocabSynonymVariants}
+              onClick={() =>
+                patchTypeSettings("VOCAB_CHOICE", {
+                  synonymVariants: !vocabSynonymVariants,
+                })
+              }
+              className={`relative h-6 w-11 rounded-full border transition-colors ${
+                vocabSynonymVariants
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  vocabSynonymVariants ? "translate-x-5" : "translate-x-0"
                 }`}
               />
             </button>
