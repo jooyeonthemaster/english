@@ -72,7 +72,6 @@ import {
   readVocabChoiceAnswerCountSetting,
   readVocabChoiceMarkerCountSetting,
   supportsGenericOptionCount,
-  supportsGistAnswerPolarity,
 } from "@/lib/question-type-generation-settings";
 import {
   GROUP_COLLAPSE_STORAGE_KEY,
@@ -82,7 +81,6 @@ import {
   VOCAB_GENERATION_TYPE_IDS,
 } from "./generation-config-panel-parts/constants";
 import { Collapsible } from "./generation-config-panel-parts/collapsible";
-import { renderNumberSetting } from "./generation-config-panel-parts/setting-fields";
 import * as TypeNumericDetail from "./generation-config-panel-parts/type-numeric-detail";
 import type { GenerationConfigPanelProps } from "./generation-config-panel-parts/types";
 
@@ -739,84 +737,7 @@ export function GenerationConfigPanel({
 
     if (typeId === "ANTONYM") return TypeNumericDetail.renderAntonymDetail({ antonymPairCount, setAntonymPairCount });
 
-    if (supportsGenericOptionCount(typeId)) {
-      const genericOptionCount = getGenericOptionCount(typeId);
-      const genericAnswerCount = getGenericAnswerCount(typeId);
-      const genericAnswerMax = Math.max(1, genericOptionCount - 1);
-      const showGistPolarity = supportsGistAnswerPolarity(typeId);
-      const gistPolarity =
-        (questionTypeSettings[typeId] as { answerPolarity?: string } | undefined)
-          ?.answerPolarity === "NEGATIVE"
-          ? "NEGATIVE"
-          : "POSITIVE";
-      const gistPolarityKind =
-        typeId === "TITLE" ? "제목" : typeId === "MAIN_IDEA" ? "요지" : "주제";
-      const gistPolarityOptions: { value: "POSITIVE" | "NEGATIVE"; label: string }[] = [
-        { value: "POSITIVE", label: "적절한 것" },
-        { value: "NEGATIVE", label: "적절하지 않은 것" },
-      ];
-      return (
-        <div className="space-y-3">
-          {showGistPolarity ? (
-            <div className="border-b border-slate-100 pb-3">
-              <div className="flex items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <span className="text-[12px] font-bold text-slate-800">정답 유형</span>
-                  <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
-                    {gistPolarityKind}로 &apos;적절한 것&apos;을 고를지, &apos;적절하지 않은 것&apos;을 고를지 정합니다.
-                  </p>
-                </div>
-                <div className="flex shrink-0 rounded-md border border-slate-200 bg-slate-50 p-0.5">
-                  {gistPolarityOptions.map((item) => (
-                    <button
-                      key={item.value}
-                      type="button"
-                      onClick={() => patchTypeSettings(typeId, { answerPolarity: item.value })}
-                      className={`rounded px-2 py-1 text-[10px] font-bold transition-colors ${
-                        gistPolarity === item.value
-                          ? "bg-white text-blue-700 shadow-sm"
-                          : "text-slate-400 hover:text-slate-600"
-                      }`}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ) : null}
-          {renderNumberSetting({
-            title: "보기 개수",
-            badges: [
-              `${GENERIC_OPTION_COUNT_MIN} ~ ${GENERIC_OPTION_COUNT_MAX}`,
-              "선택지",
-            ],
-            description: "학생에게 표시할 보기 수입니다. 기본값은 5개입니다.",
-            value: genericOptionCount,
-            min: GENERIC_OPTION_COUNT_MIN,
-            max: GENERIC_OPTION_COUNT_MAX,
-            onChange: (next) => setGenericOptionCount(typeId, next),
-            ariaBase: `${typeId} option count`,
-          })}
-          <div className="border-t border-slate-100 pt-3">
-            {renderNumberSetting({
-              title: "정답 개수",
-              badges: [
-                `1 ~ ${genericAnswerMax}`,
-                genericAnswerCount >= 2 ? "모두 고르기" : "단일 정답",
-              ],
-              description:
-                "기본값은 1개입니다. 2개 이상이면 발문에 개수를 쓰지 않고 적절한 것을 모두 고르라고 안내합니다.",
-              value: genericAnswerCount,
-              min: 1,
-              max: genericAnswerMax,
-              onChange: (next) => setGenericAnswerCount(typeId, next),
-              ariaBase: `${typeId} answer count`,
-            })}
-          </div>
-        </div>
-      );
-    }
+    if (supportsGenericOptionCount(typeId)) return TypeNumericDetail.renderGenericGistDetail({ getGenericAnswerCount, getGenericOptionCount, patchTypeSettings, questionTypeSettings, setGenericAnswerCount, setGenericOptionCount, typeId });
 
     return null;
   };
