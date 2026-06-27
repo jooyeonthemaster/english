@@ -9,11 +9,9 @@ import {
   Minus,
   Plus,
   Target,
-  Gem,
   Settings2,
   ChevronDown,
 } from "lucide-react";
-import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -27,10 +25,7 @@ import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { SetBuilderPanel } from "@/components/workbench/set-builder-panel";
-import {
-  QUESTION_GENERATION_PLANS,
-  getQuestionGenerationCreditCost,
-} from "@/lib/question-generation-plans";
+import { getQuestionGenerationCreditCost } from "@/lib/question-generation-plans";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 import {
@@ -67,13 +62,11 @@ import {
   ANTONYM_PAIR_COUNT_MIN,
   BLANK_INFERENCE_BLANK_COUNT_MAX,
   BLANK_INFERENCE_BLANK_COUNT_MIN,
-  getQuestionLanguageToggleScope,
   readAntonymPairCountSetting,
   readBlankInferenceBlankCountSetting,
   readGenericAnswerCountSetting,
   readGenericOptionCountSetting,
   readOptionLanguageSetting,
-  readQuestionTypeGenerationPlanSetting,
   readSentenceInsertSlotCountSetting,
   readStemLanguageSetting,
   readVocabChoiceAnswerCountSetting,
@@ -82,7 +75,6 @@ import {
   supportsGistAnswerPolarity,
 } from "@/lib/question-type-generation-settings";
 import {
-  DIFFICULTY_TONES,
   GROUP_COLLAPSE_STORAGE_KEY,
   GROUP_LABELS,
   GROUP_ORDER,
@@ -90,10 +82,7 @@ import {
   VOCAB_GENERATION_TYPE_IDS,
 } from "./generation-config-panel-parts/constants";
 import { Collapsible } from "./generation-config-panel-parts/collapsible";
-import {
-  renderNumberSetting,
-  renderLanguageSetting,
-} from "./generation-config-panel-parts/setting-fields";
+import { renderNumberSetting } from "./generation-config-panel-parts/setting-fields";
 import * as TypeNumericDetail from "./generation-config-panel-parts/type-numeric-detail";
 import type { GenerationConfigPanelProps } from "./generation-config-panel-parts/types";
 
@@ -836,133 +825,10 @@ export function GenerationConfigPanel({
   // 싶을 때 override 한다. 값은 questionTypeSettings[typeId].difficulty 에 쓰며,
   // 서버는 readQuestionTypeDifficultySetting(…, 전역 difficulty) 로 이를 우선 적용한다.
   // undefined = 전역 따름(오늘과 동일 동작). 순수 프런트엔드(백엔드 변경 0).
-  const renderPerTypeDifficulty = (typeId: string) => {
-    const raw = questionTypeSettings[typeId]?.difficulty as
-      | "BASIC"
-      | "INTERMEDIATE"
-      | "KILLER"
-      | undefined;
-    // 미설정이면 기본 난이도(전역 difficulty, 보통 중급)가 선택된 것으로 표시한다.
-    const effective = raw ?? difficulty;
-    return (
-      <div>
-        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-          난이도 · 이 유형만
-        </span>
-        <div className="mt-1.5 flex h-8 rounded-lg bg-slate-100 p-0.5">
-          {DIFFICULTY_TONES.map((d) => {
-            const isActive = effective === d.value;
-            return (
-              <button
-                key={d.value}
-                type="button"
-                onClick={() =>
-                  patchTypeSettings(typeId, { difficulty: d.value })
-                }
-                className={`flex flex-1 items-center justify-center gap-1 rounded-[6px] text-[12px] transition-all duration-150 ${
-                  isActive
-                    ? `font-bold shadow-sm ${d.on}`
-                    : "font-semibold text-slate-500 hover:text-slate-700"
-                }`}
-                aria-pressed={isActive}
-              >
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${d.dot}`}
-                  aria-hidden="true"
-                />
-                {d.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
+  const renderPerTypeDifficulty = (typeId) => TypeNumericDetail.renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSettings, questionTypeSettings });
 
   // Every type gets language toggles; numeric/special settings render above them.
-  const renderTypeDetailContent = (typeId: string) => {
-    const numericContent = renderTypeNumericDetailContent(typeId);
-    const languageScope = getQuestionLanguageToggleScope(typeId);
-    // 유형별 생성 플랜 개별지정(예: 어법만 PREMIUM). per-type generationPlan 을
-    // questionTypeSettings[typeId] 에 써넣으면 서버(fast route·워커)가
-    // readQuestionTypeGenerationPlanSetting 으로 전역값 대신 우선 적용한다.
-    const typePlan = readQuestionTypeGenerationPlanSetting(
-      questionTypeSettings[typeId],
-      generationPlan,
-    );
-    return (
-      <div className="space-y-3">
-        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
-          <div
-            className={
-              numericContent ? "border-b border-slate-100 pb-3" : undefined
-            }
-          >
-            <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-              생성 플랜 · 이 유형만
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              {(["STANDARD", "PREMIUM"] as const).map((planId) => {
-                const plan = QUESTION_GENERATION_PLANS[planId];
-                const active = typePlan === planId;
-                const Icon = planId === "PREMIUM" ? Gem : PearlIcon;
-                return (
-                  <button
-                    key={planId}
-                    type="button"
-                    onClick={() =>
-                      patchTypeSettings(typeId, { generationPlan: planId })
-                    }
-                    className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 transition-colors ${
-                      active
-                        ? "border-blue-300 bg-blue-50 text-blue-800"
-                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
-                    }`}
-                  >
-                    <Icon
-                      className={`h-3.5 w-3.5 shrink-0 ${active ? "text-blue-600" : "text-slate-400"}`}
-                    />
-                    <span className="truncate text-[12px] font-bold">
-                      {plan.shortLabel}
-                    </span>
-                    <span
-                      className={`ml-auto text-[10px] font-bold tabular-nums ${active ? "text-blue-600" : "text-slate-400"}`}
-                    >
-                      {plan.creditMultiplier}x
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        ) : null}
-        {numericContent}
-        <div
-          className={
-            numericContent ? "border-t border-slate-100 pt-3" : undefined
-          }
-        >
-          {renderLanguageSetting({
-            title: "질문 언어",
-            value: getTypeStemLanguage(typeId),
-            description: "학생에게 보이는 질문(지시문) 언어입니다.",
-            onChange: (value) => setTypeLanguage(typeId, "stemLanguage", value),
-          })}
-        </div>
-        {languageScope === "stem-option" ? (
-          <div className="border-t border-slate-100 pt-3">
-            {renderLanguageSetting({
-              title: "보기 언어",
-              value: getTypeOptionLanguage(typeId),
-              description: "학생에게 보이는 보기(선택지) 언어입니다.",
-              onChange: (value) =>
-                setTypeLanguage(typeId, "optionLanguage", value),
-            })}
-          </div>
-        ) : null}
-      </div>
-    );
-  };
+  const renderTypeDetailContent = (typeId) => TypeNumericDetail.renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOptionLanguage, getTypeStemLanguage, patchTypeSettings, questionTypeSettings, renderTypeNumericDetailContent, setTypeLanguage });
 
   return (
     <div className="flex flex-1 min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white">

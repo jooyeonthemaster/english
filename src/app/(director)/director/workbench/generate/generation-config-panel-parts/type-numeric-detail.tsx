@@ -5,9 +5,13 @@
 // verbatim 추출한 순수 함수들. 컴포넌트 상태/세터/파생값은 인자로 주입(효과는 main 잔류).
 // 호출부 인라인 함수호출이라 React reconciliation 동일. @ts-nocheck=원본 충실(인자 타입 생략).
 
-import { renderNumberSetting, renderSegSetting, renderToggleSetting } from "./setting-fields";
-import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SENTENCE_INSERT_SLOT_COUNT_MAX, SENTENCE_INSERT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN, VOCAB_CHOICE_ANSWER_COUNT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN } from "@/lib/question-type-generation-settings";
-import { Minus, Plus } from "lucide-react";
+import { DIFFICULTY_TONES } from "./constants";
+import { renderLanguageSetting, renderNumberSetting, renderSegSetting, renderToggleSetting } from "./setting-fields";
+import { PearlIcon } from "@/components/icons/pearl-icon";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
+import { QUESTION_GENERATION_PLANS } from "@/lib/question-generation-plans";
+import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SENTENCE_INSERT_SLOT_COUNT_MAX, SENTENCE_INSERT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN, VOCAB_CHOICE_ANSWER_COUNT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN, getQuestionLanguageToggleScope, readQuestionTypeGenerationPlanSetting } from "@/lib/question-type-generation-settings";
+import { Gem, Minus, Plus } from "lucide-react";
 
 export function renderAntonymDetail({ antonymPairCount, setAntonymPairCount }) {
       return renderNumberSetting({
@@ -1215,4 +1219,131 @@ export function renderSentenceOrderDetail({ patchTypeSettings, questionTypeSetti
         ariaBase: "sentence order prefix variation count",
       });
     }
+
+export function renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSettings, questionTypeSettings }) {
+    const raw = questionTypeSettings[typeId]?.difficulty as
+      | "BASIC"
+      | "INTERMEDIATE"
+      | "KILLER"
+      | undefined;
+    // 미설정이면 기본 난이도(전역 difficulty, 보통 중급)가 선택된 것으로 표시한다.
+    const effective = raw ?? difficulty;
+    return (
+      <div>
+        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          난이도 · 이 유형만
+        </span>
+        <div className="mt-1.5 flex h-8 rounded-lg bg-slate-100 p-0.5">
+          {DIFFICULTY_TONES.map((d) => {
+            const isActive = effective === d.value;
+            return (
+              <button
+                key={d.value}
+                type="button"
+                onClick={() =>
+                  patchTypeSettings(typeId, { difficulty: d.value })
+                }
+                className={`flex flex-1 items-center justify-center gap-1 rounded-[6px] text-[12px] transition-all duration-150 ${
+                  isActive
+                    ? `font-bold shadow-sm ${d.on}`
+                    : "font-semibold text-slate-500 hover:text-slate-700"
+                }`}
+                aria-pressed={isActive}
+              >
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${d.dot}`}
+                  aria-hidden="true"
+                />
+                {d.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+export function renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOptionLanguage, getTypeStemLanguage, patchTypeSettings, questionTypeSettings, renderTypeNumericDetailContent, setTypeLanguage }) {
+    const numericContent = renderTypeNumericDetailContent(typeId);
+    const languageScope = getQuestionLanguageToggleScope(typeId);
+    // 유형별 생성 플랜 개별지정(예: 어법만 PREMIUM). per-type generationPlan 을
+    // questionTypeSettings[typeId] 에 써넣으면 서버(fast route·워커)가
+    // readQuestionTypeGenerationPlanSetting 으로 전역값 대신 우선 적용한다.
+    const typePlan = readQuestionTypeGenerationPlanSetting(
+      questionTypeSettings[typeId],
+      generationPlan,
+    );
+    return (
+      <div className="space-y-3">
+        {FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
+          <div
+            className={
+              numericContent ? "border-b border-slate-100 pb-3" : undefined
+            }
+          >
+            <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              생성 플랜 · 이 유형만
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {(["STANDARD", "PREMIUM"] as const).map((planId) => {
+                const plan = QUESTION_GENERATION_PLANS[planId];
+                const active = typePlan === planId;
+                const Icon = planId === "PREMIUM" ? Gem : PearlIcon;
+                return (
+                  <button
+                    key={planId}
+                    type="button"
+                    onClick={() =>
+                      patchTypeSettings(typeId, { generationPlan: planId })
+                    }
+                    className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 transition-colors ${
+                      active
+                        ? "border-blue-300 bg-blue-50 text-blue-800"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                    }`}
+                  >
+                    <Icon
+                      className={`h-3.5 w-3.5 shrink-0 ${active ? "text-blue-600" : "text-slate-400"}`}
+                    />
+                    <span className="truncate text-[12px] font-bold">
+                      {plan.shortLabel}
+                    </span>
+                    <span
+                      className={`ml-auto text-[10px] font-bold tabular-nums ${active ? "text-blue-600" : "text-slate-400"}`}
+                    >
+                      {plan.creditMultiplier}x
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
+        {numericContent}
+        <div
+          className={
+            numericContent ? "border-t border-slate-100 pt-3" : undefined
+          }
+        >
+          {renderLanguageSetting({
+            title: "질문 언어",
+            value: getTypeStemLanguage(typeId),
+            description: "학생에게 보이는 질문(지시문) 언어입니다.",
+            onChange: (value) => setTypeLanguage(typeId, "stemLanguage", value),
+          })}
+        </div>
+        {languageScope === "stem-option" ? (
+          <div className="border-t border-slate-100 pt-3">
+            {renderLanguageSetting({
+              title: "보기 언어",
+              value: getTypeOptionLanguage(typeId),
+              description: "학생에게 보이는 보기(선택지) 언어입니다.",
+              onChange: (value) =>
+                setTypeLanguage(typeId, "optionLanguage", value),
+            })}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
 
