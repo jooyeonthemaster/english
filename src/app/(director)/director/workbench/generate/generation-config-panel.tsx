@@ -56,15 +56,6 @@ import {
   SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT,
   SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX,
   SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN,
-  SUMMARY_WRITING_BLANK_COUNT_DEFAULT,
-  SUMMARY_WRITING_BLANK_COUNT_MAX,
-  SUMMARY_WRITING_BLANK_COUNT_MIN,
-  SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT,
-  SUMMARY_WRITING_DISTRACTOR_COUNT_MAX,
-  SUMMARY_WRITING_DISTRACTOR_COUNT_MIN,
-  SUMMARY_WRITING_TARGET_WORDS_DEFAULT,
-  SUMMARY_WRITING_TARGET_WORDS_MAX,
-  SUMMARY_WRITING_TARGET_WORDS_MIN,
   VOCAB_CHOICE_ANSWER_COUNT_MIN,
   VOCAB_CHOICE_MARKER_COUNT_MAX,
   VOCAB_CHOICE_MARKER_COUNT_MIN,
@@ -102,8 +93,6 @@ import { Collapsible } from "./generation-config-panel-parts/collapsible";
 import {
   renderNumberSetting,
   renderLanguageSetting,
-  renderSegSetting,
-  renderToggleSetting,
 } from "./generation-config-panel-parts/setting-fields";
 import * as TypeNumericDetail from "./generation-config-panel-parts/type-numeric-detail";
 import type { GenerationConfigPanelProps } from "./generation-config-panel-parts/types";
