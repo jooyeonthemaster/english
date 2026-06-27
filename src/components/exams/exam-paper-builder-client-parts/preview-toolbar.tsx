@@ -11,11 +11,11 @@ import {
   Loader2,
   Printer,
   Redo2,
-  Save,
   Undo2,
 } from "lucide-react";
 import { TEMPLATE_META } from "../paper-builder/templates";
 import type { PaperSize, PaperTemplate } from "../paper-builder/types";
+import { SaveButton } from "@/components/ui/save-button";
 
 // ---------------------------------------------------------------------------
 // 용지 미리보기 상단 헤더 툴바
@@ -157,27 +157,23 @@ export function PreviewToolbar({
           </button>
         )}
         {onSave && (
-          <button
+          <SaveButton
             onClick={onSave}
+            saving={isPending}
             disabled={actionDisabled}
-            className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md bg-slate-900 px-2 text-[11px] font-bold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
-          >
-            {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-            저장
-          </button>
-        )}
-        {onSaveAs && (
-          <button
-            type="button"
-            onClick={onSaveAs}
-            disabled={actionDisabled}
-            title="다른 이름으로 저장"
-            aria-label="다른 이름으로 저장"
-            className="flex h-8 min-w-[78px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <Copy className="h-3.5 w-3.5" />
-            {compactLabels ? "복사" : "다른 이름"}
-          </button>
+            secondaryActions={
+              onSaveAs
+                ? [
+                    {
+                      label: "다른 이름으로 저장",
+                      icon: <Copy className="h-3.5 w-3.5" />,
+                      onClick: onSaveAs,
+                      disabled: actionDisabled,
+                    },
+                  ]
+                : undefined
+            }
+          />
         )}
         <button
           onClick={onPrint}

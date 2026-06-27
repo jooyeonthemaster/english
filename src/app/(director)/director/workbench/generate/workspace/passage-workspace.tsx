@@ -294,7 +294,7 @@ export function PassageWorkspace({
           aria-hidden="true"
         />
         <h3 className="shrink-0 text-[12.5px] font-bold text-slate-800">
-          지문 워크스페이스
+          문제 생성 워크스페이스
         </h3>
         {rows.length > 0 ? (
           <span className="flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded-full bg-blue-600 px-1 text-[10.5px] font-bold leading-none text-white tabular-nums">

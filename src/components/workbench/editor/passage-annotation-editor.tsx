@@ -9,6 +9,7 @@ import {
   BookOpen, PenTool, Braces, MessageSquare, Target,
   X, Trash2, MousePointerClick, Undo2, Redo2,
 } from "lucide-react";
+import { SaveButton } from "@/components/ui/save-button";
 import {
   VocabMark, GrammarMark, SyntaxMark, SentenceMark, ExamPointMark,
   generateAnnotationId, MARK_NAME_MAP,
@@ -622,7 +623,7 @@ export function PassageAnnotationEditor({
                     placeholder="메모 (Enter 저장 · Esc 취소)"
                     className="flex-1 min-w-0 h-7 px-2.5 text-[12px] rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-500/10"
                   />
-                  <button onClick={() => saveMemo(popup.id, memoInput)} className="h-7 px-2.5 rounded-md bg-blue-600 text-white text-[11px] font-medium hover:bg-blue-700 transition-colors shrink-0">저장</button>
+                  <SaveButton onClick={() => saveMemo(popup.id, memoInput)} className="h-7 min-w-0 shrink-0" />
                 </div>
               </div>
             )}
@@ -647,7 +648,7 @@ export function PassageAnnotationEditor({
                     placeholder="메모 수정 (Enter 저장)"
                     className="flex-1 min-w-0 h-7 px-2.5 text-[12px] rounded-md border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-500/10"
                   />
-                  <button onClick={() => saveMemo(popup.annotation.id, memoInput)} className="h-7 px-2.5 rounded-md bg-blue-600 text-white text-[11px] font-medium hover:bg-blue-700 transition-colors shrink-0">저장</button>
+                  <SaveButton onClick={() => saveMemo(popup.annotation.id, memoInput)} className="h-7 min-w-0 shrink-0" />
                 </div>
               </div>
             )}

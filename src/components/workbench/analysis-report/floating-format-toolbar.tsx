@@ -14,37 +14,6 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { BlockMeta } from "@/lib/passage-report/analysis-report/schema";
 
-// 선택 영역(없으면 필드 전체)에만 글자 크기(pt)를 입힌다. <font size=7> 로 감싼 뒤
-// span[data-fs][style=font-size:Npt] 로 변환. blur 시 Field 가 DOM 에서 런을 읽어 저장.
-function applyFontPtToSelection(field: HTMLElement, pt: number) {
-  const sel = window.getSelection();
-  if (!sel) return;
-  let range = sel.rangeCount ? sel.getRangeAt(0) : null;
-  const inField = !!range && field.contains(range.commonAncestorContainer);
-  if (!range || sel.isCollapsed || !inField) {
-    range = document.createRange();
-    range.selectNodeContents(field);
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }
-  document.execCommand("styleWithCSS", false, "false");
-  document.execCommand("fontSize", false, "7");
-  field.querySelectorAll('font[size="7"]').forEach((f) => {
-    const span = document.createElement("span");
-    span.setAttribute("data-fs", String(pt));
-    span.style.fontSize = `${pt}pt`;
-    while (f.firstChild) span.appendChild(f.firstChild);
-    // 중첩된 이전 크기 span 은 제거(바깥 크기가 우선).
-    span.querySelectorAll<HTMLElement>("[data-fs]").forEach((inner) => {
-      const parent = inner.parentNode;
-      if (!parent) return;
-      while (inner.firstChild) parent.insertBefore(inner.firstChild, inner);
-      parent.removeChild(inner);
-    });
-    f.replaceWith(span);
-  });
-}
-
 /** 편집 필드 안 현재 선택 영역의 [start,end) 를 평문(prompt) offset 으로 환산. <br> = \n = 1글자. */
 function selectionOffsetsInField(field: HTMLElement): { start: number; end: number } | null {
   const sel = window.getSelection();
@@ -109,7 +78,6 @@ export function FloatingFormatToolbar({
   const toolbarRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLElement | null>(null);
   const fieldRef = useRef<HTMLElement | null>(null);
-  const ptLabelRef = useRef<HTMLSpanElement>(null);
 
   // 편집 필드 포커스 → 해당 블록을 서식 대상으로 잡는다.
   useEffect(() => {
@@ -125,31 +93,6 @@ export function FloatingFormatToolbar({
     document.addEventListener("focusin", onFocusIn);
     return () => document.removeEventListener("focusin", onFocusIn);
   }, []);
-
-  // 현재 편집 중인 텍스트의 '실제' 글자 크기(pt) — 블록마다 기준 크기가 달라
-  // fontScale(배율)만으로는 pt 를 알 수 없으므로 렌더된 px 를 읽어 pt 로 환산한다.
-  const readFontPt = (): number | null => {
-    let field = fieldRef.current;
-    if (!field || !field.isConnected) {
-      field = anchorRef.current?.querySelector<HTMLElement>(".par-edit-field") ?? anchorRef.current ?? null;
-      fieldRef.current = field;
-    }
-    if (!field) return null;
-    // 선택이 이 필드 안에 있으면 '선택한 글자'의 크기를 우선 표시.
-    const sel = window.getSelection();
-    if (sel && sel.focusNode && field.contains(sel.focusNode)) {
-      const el =
-        sel.focusNode.nodeType === Node.ELEMENT_NODE
-          ? (sel.focusNode as HTMLElement)
-          : sel.focusNode.parentElement;
-      if (el) {
-        const spx = parseFloat(window.getComputedStyle(el).fontSize);
-        if (spx) return (spx * 72) / 96;
-      }
-    }
-    const px = parseFloat(window.getComputedStyle(field).fontSize);
-    return px ? (px * 72) / 96 : null; // px → pt
-  };
 
   // 리포트/툴바 바깥 클릭 또는 ESC 로 닫기.
   useEffect(() => {
@@ -218,12 +161,6 @@ export function FloatingFormatToolbar({
       } else if (bar) {
         bar.style.visibility = "hidden";
       }
-      // pt 라벨은 리렌더 없이 매 프레임 직접 갱신(서식 변경·줌에도 즉시 반영).
-      const ptEl = ptLabelRef.current;
-      if (ptEl) {
-        const pt = readFontPt();
-        ptEl.textContent = pt ? `${Math.round(pt)}pt` : "—";
-      }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -232,15 +169,15 @@ export function FloatingFormatToolbar({
 
   if (!blockId) return null;
   const meta = blockMeta?.[blockId] ?? {};
-  // 선택한 글자(없으면 현재 필드 전체)에만 pt 를 1pt 씩 조절. 블록 전체 배율이 아니라
-  // 범위 메타로 저장되도록, 선택 영역을 span 으로 감싼다(blur 시 Field 가 읽어 커밋).
-  const stepFontPt = (delta: number) => {
-    const field =
-      fieldRef.current && fieldRef.current.isConnected ? fieldRef.current : null;
-    if (!field) return;
-    const cur = readFontPt() ?? 12;
-    const targetPt = Math.min(60, Math.max(5, Math.round(cur) + delta));
-    applyFontPtToSelection(field, targetPt);
+  // 글자 크기 = 블록 전체 배율(fontScale). 우측 편집 패널 '서식'과 동일한 상태를 편집해
+  // 둘이 항상 일치한다(0.7~1.4, 1=10pt 기준). 한쪽을 바꾸면 다른 쪽도 즉시 갱신.
+  const fontScale = meta.fontScale ?? 1;
+  const stepFontScale = (delta: number) => {
+    const next =
+      delta < 0
+        ? Math.max(0.7, Math.round((fontScale - 0.1) * 10) / 10)
+        : Math.min(1.4, Math.round((fontScale + 0.1) * 10) / 10);
+    if (next !== fontScale) onBlockMeta(blockId, { fontScale: next });
   };
   const btnCls = (active: boolean) =>
     cn(
@@ -273,11 +210,11 @@ export function FloatingFormatToolbar({
       // 필드 포커스를 잃지 않도록(클릭 시 blur 방지) — 버튼 onClick 은 그대로 동작
       onMouseDown={(e) => e.preventDefault()}
     >
-      <button type="button" className={btnCls(false)} onClick={() => stepFontPt(-1)} title="글자 작게">
+      <button type="button" className={btnCls(false)} onClick={() => stepFontScale(-1)} title="글자 작게">
         <Minus className="h-3.5 w-3.5" />
       </button>
-      <span ref={ptLabelRef} className="w-10 text-center text-[11px] font-semibold tabular-nums text-slate-500">—</span>
-      <button type="button" className={btnCls(false)} onClick={() => stepFontPt(1)} title="글자 크게">
+      <span className="w-10 text-center text-[11px] font-semibold tabular-nums text-slate-500">{Math.round(fontScale * 10)}pt</span>
+      <button type="button" className={btnCls(false)} onClick={() => stepFontScale(1)} title="글자 크게">
         <Plus className="h-3.5 w-3.5" />
       </button>
       <span className="mx-0.5 h-5 w-px bg-slate-200" />

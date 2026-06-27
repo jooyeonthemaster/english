@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 
 import { getReportTheme, REPORT_LAYOUT } from "@/lib/passage-report/analysis-report/design-tokens";
 import type {
@@ -76,6 +77,8 @@ export interface ReportEdit {
   /** 표 열 너비(세로 구분선) 조절 — group(grammar/exam/vocab) → 열키→퍼센트 commit */
   onColWidths: (group: string, widths: Record<string, number>) => void;
   onDeletePage?: (ids: string[]) => void;
+  /** 페이지를 한 칸 위(-1)/아래(+1)로 이동 */
+  onMovePage?: (ids: string[], dir: -1 | 1) => void;
   drag: {
     startDrag: (e: ReactPointerEvent<HTMLButtonElement>, id: string) => void;
     draggingId: string | null;
@@ -295,24 +298,33 @@ export function ReportPages({
         return pages.map((pageIds, pi) => {
           const pageItems = pageIds.map((id) => itemsById.get(id)).filter(Boolean) as FlowItem[];
           if (pageItems.length === 0) return null;
+          let sheet: ReactNode;
           if (coverPageFlags[pi]) {
-            return (
-              <section className="par-sheet par-sheet-cover" key={`p-${pi}`} data-page-index={pi}>
-                <PageDeleteButton ids={pageIds} edit={edit} />
+            sheet = (
+              <section className="par-sheet par-sheet-cover" data-page-index={pi}>
                 <CoverShell it={pageItems[0]} edit={edit} meta={report.blockMeta?.[pageItems[0].id]} />
               </section>
             );
+          } else {
+            bodyNo += 1;
+            sheet = (
+              <section className="par-sheet" data-page-index={pi}>
+                <RunningHeader brand={report.brand} title={report.meta.titleKo} logoDataUrl={logoDataUrl} />
+                <div className="par-sheet-body">
+                  <RunsView items={pageItems} edit={edit} blockMeta={report.blockMeta} cols={colCtx} />
+                </div>
+                <RunningFooter brand={report.brand} docNo={report.docNo} page={bodyNo} total={bodyTotal} />
+              </section>
+            );
           }
-          bodyNo += 1;
+          // 편집 모드에서만 relative 래퍼로 감싸 페이지 컨트롤을 시트 '바깥'(위·오른쪽)에
+          // 둔다. 시트는 overflow:hidden 이라 자식으로 두면 바깥으로 못 나가기 때문.
+          if (!edit) return <Fragment key={`p-${pi}`}>{sheet}</Fragment>;
           return (
-            <section className="par-sheet" key={`p-${pi}`} data-page-index={pi}>
-              <PageDeleteButton ids={pageIds} edit={edit} />
-              <RunningHeader brand={report.brand} title={report.meta.titleKo} logoDataUrl={logoDataUrl} />
-              <div className="par-sheet-body">
-                <RunsView items={pageItems} edit={edit} blockMeta={report.blockMeta} cols={colCtx} />
-              </div>
-              <RunningFooter brand={report.brand} docNo={report.docNo} page={bodyNo} total={bodyTotal} />
-            </section>
+            <div className="par-sheet-wrap" key={`p-${pi}`}>
+              <PageControls ids={pageIds} pageIndex={pi} pageCount={pages.length} edit={edit} />
+              {sheet}
+            </div>
           );
         });
       })()}
@@ -320,21 +332,67 @@ export function ReportPages({
   );
 }
 
-function PageDeleteButton({ ids, edit }: { ids: string[]; edit?: ReportEdit }) {
-  if (!edit?.onDeletePage) return null;
+// 페이지 좌상단 컨트롤 — 위/아래 이동 + 삭제(캔바식). 자동 페이지네이션 구조라
+// '복제'는 깔끔히 매핑되지 않아 제외(이동·삭제만 제공).
+function PageControls({
+  ids,
+  pageIndex,
+  pageCount,
+  edit,
+}: {
+  ids: string[];
+  pageIndex: number;
+  pageCount: number;
+  edit?: ReportEdit;
+}) {
+  if (!edit?.onDeletePage && !edit?.onMovePage) return null;
   return (
-    <button
-      type="button"
-      className="par-page-delete par-edit-chrome"
-      title="이 페이지 삭제"
+    <div
+      className="par-page-controls par-edit-chrome"
       onMouseDown={(e) => e.stopPropagation()}
-      onClick={(e) => {
-        e.stopPropagation();
-        edit.onDeletePage?.(ids);
-      }}
     >
-      ×
-    </button>
+      {edit?.onMovePage ? (
+        <>
+          <button
+            type="button"
+            className="par-page-ctrl"
+            title="페이지 위로 이동"
+            disabled={pageIndex <= 0}
+            onClick={(e) => {
+              e.stopPropagation();
+              edit.onMovePage?.(ids, -1);
+            }}
+          >
+            <ChevronUp width={14} height={14} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            className="par-page-ctrl"
+            title="페이지 아래로 이동"
+            disabled={pageIndex >= pageCount - 1}
+            onClick={(e) => {
+              e.stopPropagation();
+              edit.onMovePage?.(ids, 1);
+            }}
+          >
+            <ChevronDown width={14} height={14} aria-hidden="true" />
+          </button>
+        </>
+      ) : null}
+      {edit?.onDeletePage ? (
+        <button
+          type="button"
+          className="par-page-ctrl par-page-ctrl-del"
+          title="이 페이지 삭제"
+          onClick={(e) => {
+            e.stopPropagation();
+            edit.onDeletePage?.(ids);
+          }}
+        >
+          <Trash2 width={13} height={13} aria-hidden="true" />
+        </button>
+      ) : null}
+    </div>
   );
 }
 

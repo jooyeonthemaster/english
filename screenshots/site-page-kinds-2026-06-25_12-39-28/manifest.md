@@ -1,0 +1,409 @@
+# Site Screenshot Manifest
+
+Generated: 2026-06-25T12:39:38.622Z
+Base URL: http://localhost:3000
+Pages captured: 146
+Page errors: 0
+Popup states captured: 245
+Popup trigger errors: 34
+
+## Pages
+
+- 1. `/` -> `/` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/001-home.png
+- 2. `/__not-found-screenshot` -> `/__not-found-screenshot` (public, 404) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/002-__not-found-screenshot.png
+- 3. `/admin` -> `/admin` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/003-admin.png
+- 4. `/admin/academies` -> `/admin/academies` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/004-admin-academies.png
+- 5. `/admin/academies/[academyId]` -> `/admin/academies/cmpry4p3p0009lb04evwhp4kc` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/005-admin-academies-academyId.png
+- 6. `/admin/academies/[academyId]/exams` -> `/admin/academies/cmpry4p3p0009lb04evwhp4kc/exams` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/006-admin-academies-academyId-exams.png
+- 7. `/admin/academies/[academyId]/passages` -> `/admin/academies/cmpry4p3p0009lb04evwhp4kc/passages` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/007-admin-academies-academyId-passages.png
+- 8. `/admin/academies/[academyId]/passages/[passageId]` -> `/admin/academies/cmpry4p3p0009lb04evwhp4kc/passages/cmpzne6kd0001ie0473pf76cq` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/008-admin-academies-academyId-passages-passageId.png
+- 9. `/admin/academies/[academyId]/questions` -> `/admin/academies/cmpry4p3p0009lb04evwhp4kc/questions` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/009-admin-academies-academyId-questions.png
+- 10. `/admin/activity` -> `/admin/activity` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/010-admin-activity.png
+- 11. `/admin/costs` -> `/admin/costs` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/011-admin-costs.png
+- 12. `/admin/credits` -> `/admin/credits` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/012-admin-credits.png
+- 13. `/admin/exam-print` -> `/admin/exam-print` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/013-admin-exam-print.png
+- 14. `/admin/login` -> `/admin/login` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/014-admin-login.png
+- 15. `/admin/members` -> `/admin/members` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/015-admin-members.png
+- 16. `/admin/members/[id]` -> `/admin/members/cmp3lj3860003jr04rn2orjxn` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/016-admin-members-id.png
+- 17. `/admin/plans` -> `/admin/plans` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/017-admin-plans.png
+- 18. `/admin/referrals` -> `/admin/referrals` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/018-admin-referrals.png
+- 19. `/admin/registrations` -> `/admin/registrations` (admin, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/019-admin-registrations.png
+- 20. `/assignments` -> `/assignments` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/020-assignments.png
+- 21. `/auth/complete` -> `/auth/complete` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/021-auth-complete.png
+- 22. `/auth/onboarding` -> `/auth/onboarding` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/022-auth-onboarding.png
+- 23. `/credits/products` -> `/credits/products` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/023-credits-products.png
+- 24. `/dev/annotation-editor` -> `/dev/annotation-editor` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/024-dev-annotation-editor.png
+- 25. `/dev/custom-layout-preview` -> `/dev/custom-layout-preview` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/025-dev-custom-layout-preview.png
+- 26. `/dev/passage-report` -> `/dev/passage-report` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/026-dev-passage-report.png
+- 27. `/director` -> `/director` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/027-director.png
+- 28. `/director/assignments` -> `/director/assignments` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/028-director-assignments.png
+- 29. `/director/assignments/[assignmentId]` -> `/director/assignments/missing-assignment` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/029-director-assignments-assignmentId.png
+- 30. `/director/attendance` -> `/director/attendance` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/030-director-attendance.png
+- 31. `/director/attendance/dashboard` -> `/director/attendance/dashboard` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/031-director-attendance-dashboard.png
+- 32. `/director/billing` -> `/director/billing` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/032-director-billing.png
+- 33. `/director/billing/[invoiceId]` -> `/director/billing/missing-invoice` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/033-director-billing-invoiceId.png
+- 34. `/director/calendar` -> `/director/calendar` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/034-director-calendar.png
+- 35. `/director/classes` -> `/director/classes` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/035-director-classes.png
+- 36. `/director/classes/[classId]` -> `/director/classes/missing-class` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/036-director-classes-classId.png
+- 37. `/director/consultations` -> `/director/consultations` (staff, 404) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/037-director-consultations.png
+- 38. `/director/credits` -> `/director/credits` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/038-director-credits.png
+- 39. `/director/dashboard-v2` -> `/director/dashboard-v2` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/039-director-dashboard-v2.png
+- 40. `/director/exams` -> `/director/exams` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/040-director-exams.png
+- 41. `/director/exams/[examId]` -> `/director/exams/cmq4y39ux0001l604sgu4v6dl` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/041-director-exams-examId.png
+- 42. `/director/exams/[examId]/grade` -> `/director/exams/cmq4y39ux0001l604sgu4v6dl/grade` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/042-director-exams-examId-grade.png
+- 43. `/director/exams/create` -> `/director/exams/create` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/043-director-exams-create.png
+- 44. `/director/finance` -> `/director/finance` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/044-director-finance.png
+- 45. `/director/learning` -> `/director/learning` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/045-director-learning.png
+- 46. `/director/learning-questions` -> `/director/learning-questions` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/046-director-learning-questions.png
+- 47. `/director/materials` -> `/director/materials` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/047-director-materials.png
+- 48. `/director/messages` -> `/director/messages` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/048-director-messages.png
+- 49. `/director/notices` -> `/director/notices` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/049-director-notices.png
+- 50. `/director/notices/[noticeId]` -> `/director/notices/missing-notice` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/050-director-notices-noticeId.png
+- 51. `/director/notifications` -> `/director/notifications` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/051-director-notifications.png
+- 52. `/director/profile` -> `/director/profile` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/052-director-profile.png
+- 53. `/director/questions` -> `/director/questions` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/053-director-questions.png
+- 54. `/director/questions/[questionId]` -> `/director/questions/cmqssqfva0007l504wa92pha2` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/054-director-questions-questionId.png
+- 55. `/director/questions/pending` -> `/director/questions/pending` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/055-director-questions-pending.png
+- 56. `/director/reports` -> `/director/reports` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/056-director-reports.png
+- 57. `/director/rewards` -> `/director/rewards` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/057-director-rewards.png
+- 58. `/director/salaries` -> `/director/salaries` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/058-director-salaries.png
+- 59. `/director/settings` -> `/director/settings` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/059-director-settings.png
+- 60. `/director/students` -> `/director/students` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/060-director-students.png
+- 61. `/director/students/[studentId]` -> `/director/students/cmq0aplu60003i904vzihef9c` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/061-director-students-studentId.png
+- 62. `/director/tutor` -> `/director/tutor` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/062-director-tutor.png
+- 63. `/director/tutor/distributions` -> `/director/tutor/distributions` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/063-director-tutor-distributions.png
+- 64. `/director/tutor/monitor` -> `/director/tutor/monitor` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/064-director-tutor-monitor.png
+- 65. `/director/tutor/programs` -> `/director/tutor/programs` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/065-director-tutor-programs.png
+- 66. `/director/tutor/programs/[programId]/builder` -> `/director/tutor/programs/cmpa4m5qh0003mmek7akc0me7/builder` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/066-director-tutor-programs-programId-builder.png
+- 67. `/director/tutor/programs/[programId]/emulator` -> `/director/tutor/programs/cmpa4m5qh0003mmek7akc0me7/emulator` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/067-director-tutor-programs-programId-emulator.png
+- 68. `/director/tutor/programs/[programId]/monitor` -> `/director/tutor/programs/cmpa4m5qh0003mmek7akc0me7/monitor` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/068-director-tutor-programs-programId-monitor.png
+- 69. `/director/tutor/programs/new` -> `/director/tutor/programs/new` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/069-director-tutor-programs-new.png
+- 70. `/director/workbench` -> `/director/workbench` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/070-director-workbench.png
+- 71. `/director/workbench/exams` -> `/director/workbench/exams` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/071-director-workbench-exams.png
+- 72. `/director/workbench/exams/[examId]` -> `/director/workbench/exams/cmq4y39ux0001l604sgu4v6dl` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/072-director-workbench-exams-examId.png
+- 73. `/director/workbench/exams/[examId]/edit` -> `/director/workbench/exams/cmq4y39ux0001l604sgu4v6dl/edit` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/073-director-workbench-exams-examId-edit.png
+- 74. `/director/workbench/exams/create` -> `/director/workbench/exams/create` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/074-director-workbench-exams-create.png
+- 75. `/director/workbench/exams/similar` -> `/director/workbench/exams/similar` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/075-director-workbench-exams-similar.png
+- 76. `/director/workbench/extraction` -> `/director/workbench/extraction` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/076-director-workbench-extraction.png
+- 77. `/director/workbench/extraction/jobs` -> `/director/workbench/extraction/jobs` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/077-director-workbench-extraction-jobs.png
+- 78. `/director/workbench/generate` -> `/director/workbench/generate` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/078-director-workbench-generate.png
+- 79. `/director/workbench/generate-learning` -> `/director/workbench/generate-learning` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/079-director-workbench-generate-learning.png
+- 80. `/director/workbench/passage-variant` -> `/director/workbench/passage-variant` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/080-director-workbench-passage-variant.png
+- 81. `/director/workbench/passages` -> `/director/workbench/passages` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/081-director-workbench-passages.png
+- 82. `/director/workbench/passages/[passageId]` -> `/director/workbench/passages/cmpzne6kd0001ie0473pf76cq` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/082-director-workbench-passages-passageId.png
+- 83. `/director/workbench/passages/[passageId]/reports` -> `/director/workbench/passages/cmpzne6kd0001ie0473pf76cq/reports` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/083-director-workbench-passages-passageId-reports.png
+- 84. `/director/workbench/passages/[passageId]/reports/[reportId]` -> `/director/workbench/passages/cmqo5mo0n0003jp04vprc0idu/reports/cmqs52314000xjw04gd326yjs` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/084-director-workbench-passages-passageId-reports-reportId.png
+- 85. `/director/workbench/passages/[passageId]/reports/new` -> `/director/workbench/passages/cmpzne6kd0001ie0473pf76cq/reports/new` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/085-director-workbench-passages-passageId-reports-new.png
+- 86. `/director/workbench/passages/create` -> `/director/workbench/passages/create` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/086-director-workbench-passages-create.png
+- 87. `/director/workbench/passages/import` -> `/director/workbench/passages/import` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/087-director-workbench-passages-import.png
+- 88. `/director/workbench/passages/import/jobs` -> `/director/workbench/passages/import/jobs` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/088-director-workbench-passages-import-jobs.png
+- 89. `/director/workbench/questions` -> `/director/workbench/questions` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/089-director-workbench-questions.png
+- 90. `/director/workbench/questions/custom` -> `/director/workbench/questions/custom` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/090-director-workbench-questions-custom.png
+- 91. `/director/workbench/questions/generate` -> `/director/workbench/questions/generate` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/091-director-workbench-questions-generate.png
+- 92. `/director/workbench/questions/similar` -> `/director/workbench/questions/similar` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/092-director-workbench-questions-similar.png
+- 93. `/director/workbench/report-preview` -> `/director/workbench/report-preview` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/093-director-workbench-report-preview.png
+- 94. `/director/workbench/similar-exams` -> `/director/workbench/similar-exams` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/094-director-workbench-similar-exams.png
+- 95. `/director/workbench/webtoon` -> `/director/workbench/webtoon` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/095-director-workbench-webtoon.png
+- 96. `/director/workbench/webtoon/library` -> `/director/workbench/webtoon/library` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/096-director-workbench-webtoon-library.png
+- 97. `/exams` -> `/exams` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/097-exams.png
+- 98. `/exams/[examId]/result` -> `/exams/cmq4y39ux0001l604sgu4v6dl/result` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/098-exams-examId-result.png
+- 99. `/exams/[examId]/take` -> `/exams/cmq4y39ux0001l604sgu4v6dl/take` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/099-exams-examId-take.png
+- 100. `/features/academy-erp` -> `/features/academy-erp` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/100-features-academy-erp.png
+- 101. `/features/ai-question-generation` -> `/features/ai-question-generation` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/101-features-ai-question-generation.png
+- 102. `/features/exam-builder` -> `/features/exam-builder` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/102-features-exam-builder.png
+- 103. `/features/passage-analysis` -> `/features/passage-analysis` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/103-features-passage-analysis.png
+- 104. `/login` -> `/login` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/104-login.png
+- 105. `/parent` -> `/parent` (parent, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/105-parent.png
+- 106. `/parent/billing` -> `/parent/billing` (parent, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/106-parent-billing.png
+- 107. `/parent/grades` -> `/parent/grades` (parent, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/107-parent-grades.png
+- 108. `/parent/login` -> `/parent/login` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/108-parent-login.png
+- 109. `/parent/messages` -> `/parent/messages` (parent, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/109-parent-messages.png
+- 110. `/parent/reports` -> `/parent/reports` (parent, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/110-parent-reports.png
+- 111. `/parent/reports/[reportId]` -> `/parent/reports/cmqs52314000xjw04gd326yjs` (parent, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/111-parent-reports-reportId.png
+- 112. `/privacy` -> `/privacy` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/112-privacy.png
+- 113. `/refund-policy` -> `/refund-policy` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/113-refund-policy.png
+- 114. `/register` -> `/register` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/114-register.png
+- 115. `/student` -> `/student` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/115-student.png
+- 116. `/student/attendance` -> `/student/attendance` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/116-student-attendance.png
+- 117. `/student/learn` -> `/student/learn` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/117-student-learn.png
+- 118. `/student/learn/[passageId]` -> `/student/learn/cmpzne6kd0001ie0473pf76cq` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/118-student-learn-passageId.png
+- 119. `/student/learn/[passageId]/session` -> `/student/learn/cmpzne6kd0001ie0473pf76cq/session` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/119-student-learn-passageId-session.png
+- 120. `/student/learn/[passageId]/stories` -> `/student/learn/cmpzne6kd0001ie0473pf76cq/stories` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/120-student-learn-passageId-stories.png
+- 121. `/student/learn/analytics` -> `/student/learn/analytics` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/121-student-learn-analytics.png
+- 122. `/student/learn/analytics/review` -> `/student/learn/analytics/review` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/122-student-learn-analytics-review.png
+- 123. `/student/learn/ranking` -> `/student/learn/ranking` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/123-student-learn-ranking.png
+- 124. `/student/login` -> `/student/login` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/124-student-login.png
+- 125. `/student/mypage` -> `/student/mypage` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/125-student-mypage.png
+- 126. `/student/mypage/progress` -> `/student/mypage/progress` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/126-student-mypage-progress.png
+- 127. `/student/mypage/settings` -> `/student/mypage/settings` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/127-student-mypage-settings.png
+- 128. `/student/notifications` -> `/student/notifications` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/128-student-notifications.png
+- 129. `/student/resources` -> `/student/resources` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/129-student-resources.png
+- 130. `/student/review` -> `/student/review` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/130-student-review.png
+- 131. `/student/wrong-answers` -> `/student/wrong-answers` (student, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/131-student-wrong-answers.png
+- 132. `/teacher` -> `/teacher` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/132-teacher.png
+- 133. `/teacher/attendance` -> `/teacher/attendance` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/133-teacher-attendance.png
+- 134. `/teacher/students` -> `/teacher/students` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/134-teacher-students.png
+- 135. `/teacher/students/[studentId]` -> `/teacher/students/cmq0aplu60003i904vzihef9c` (staff, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/135-teacher-students-studentId.png
+- 136. `/terms` -> `/terms` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/136-terms.png
+- 137. `/tutor/[academy]` -> `/tutor/수호영어학원-37b000` (public, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/137-tutor-academy.png
+- 138. `/tutor/[academy]/question-history` -> `/tutor/수호영어학원-37b000/question-history` (tutor, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/138-tutor-academy-question-history.png
+- 139. `/tutor/[academy]/report` -> `/tutor/수호영어학원-37b000/report` (tutor, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/139-tutor-academy-report.png
+- 140. `/tutor/[academy]/review` -> `/tutor/수호영어학원-37b000/review` (tutor, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/140-tutor-academy-review.png
+- 141. `/tutor/[academy]/study` -> `/tutor/수호영어학원-37b000/study` (tutor, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/141-tutor-academy-study.png
+- 142. `/tutor/[academy]/study/[programId]` -> `/tutor/수호영어학원-37b000/study/cmpa4m5qh0003mmek7akc0me7` (tutor, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/142-tutor-academy-study-programId.png
+- 143. `/tutor/[academy]/study/[programId]/units/[lessonId]` -> `/tutor/수호영어학원-37b000/study/cmpa4m5qh0003mmek7akc0me7/units/cmpa4m60f0005mmekfu5a81vf` (tutor, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/143-tutor-academy-study-programId-units-lessonId.png
+- 144. `/tutor/[academy]/study/[programId]/units/[lessonId]/activity/[activityId]` -> `/tutor/수호영어학원-37b000/study/cmpa4m5qh0003mmek7akc0me7/units/cmpa4m60f0005mmekfu5a81vf/activity/cmpa4m6k80008mmekb60swfx7` (tutor, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/144-tutor-academy-study-programId-units-lessonId-activity-activityId.png
+- 145. `/tutor/[academy]/study/[programId]/units/[lessonId]/ask` -> `/tutor/수호영어학원-37b000/study/cmpa4m5qh0003mmek7akc0me7/units/cmpa4m60f0005mmekfu5a81vf/ask` (tutor, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/145-tutor-academy-study-programId-units-lessonId-ask.png
+- 146. `/tutor/[academy]/weakness` -> `/tutor/수호영어학원-37b000/weakness` (tutor, 200) - screenshots/site-page-kinds-2026-06-25_12-39-28/pages/146-tutor-academy-weakness.png
+
+## Popup States
+
+- 1. `/admin` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/003-admin-popup-01-시시스템-관리자.png
+- 2. `/admin/academies` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/004-admin-academies-popup-01-시시스템-관리자.png
+- 3. `/admin/academies/[academyId]` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/005-admin-academies-academyId-popup-01-시시스템-관리자.png
+- 4. `/admin/academies/[academyId]` / 생성물(콘텐츠·추출·AI) - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/005-admin-academies-academyId-popup-02-생성물-콘텐츠-추출-AI.png
+- 5. `/admin/academies/[academyId]` / 자료 보기 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/005-admin-academies-academyId-popup-03-자료-보기.png
+- 6. `/admin/academies/[academyId]` / 자료 보기 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/005-admin-academies-academyId-popup-04-자료-보기.png
+- 7. `/admin/academies/[academyId]/exams` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/006-admin-academies-academyId-exams-popup-01-시시스템-관리자.png
+- 8. `/admin/academies/[academyId]/passages` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/007-admin-academies-academyId-passages-popup-01-시시스템-관리자.png
+- 9. `/admin/academies/[academyId]/questions` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/009-admin-academies-academyId-questions-popup-01-시시스템-관리자.png
+- 10. `/admin/activity` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/010-admin-activity-popup-01-시시스템-관리자.png
+- 11. `/admin/activity` / 최근 90일 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/010-admin-activity-popup-02-최근-90일.png
+- 12. `/admin/activity` / 일별 활동 추이 크게 보기 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/010-admin-activity-popup-03-일별-활동-추이-크게-보기.png
+- 13. `/admin/activity` / 카테고리 구성 추이 크게 보기 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/010-admin-activity-popup-04-카테고리-구성-추이-크게-보기.png
+- 14. `/admin/costs` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/011-admin-costs-popup-01-시시스템-관리자.png
+- 15. `/admin/credits` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/012-admin-credits-popup-01-시시스템-관리자.png
+- 16. `/admin/members` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/015-admin-members-popup-01-시시스템-관리자.png
+- 17. `/admin/members/[id]` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/016-admin-members-id-popup-01-시시스템-관리자.png
+- 18. `/admin/members/[id]` / 크레딧 조정 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/016-admin-members-id-popup-02-크레딧-조정.png
+- 19. `/admin/members/[id]` / 전체 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/016-admin-members-id-popup-03-전체.png
+- 20. `/admin/members/[id]` / 전체 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/016-admin-members-id-popup-04-전체.png
+- 21. `/admin/plans` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/017-admin-plans-popup-01-시시스템-관리자.png
+- 22. `/admin/referrals` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/018-admin-referrals-popup-01-시시스템-관리자.png
+- 23. `/admin/registrations` / 시시스템 관리자 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/019-admin-registrations-popup-01-시시스템-관리자.png
+- 24. `/director` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/027-director-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 25. `/director` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/027-director-popup-02-크레딧-잔액-99-997-473.png
+- 26. `/director` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/027-director-popup-03-알림.png
+- 27. `/director` / 폴더 검색 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/027-director-popup-04-폴더-검색.png
+- 28. `/director/assignments` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/028-director-assignments-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 29. `/director/assignments` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/028-director-assignments-popup-02-크레딧-잔액-99-997-473.png
+- 30. `/director/assignments` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/028-director-assignments-popup-03-알림.png
+- 31. `/director/assignments/[assignmentId]` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/029-director-assignments-assignmentId-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 32. `/director/assignments/[assignmentId]` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/029-director-assignments-assignmentId-popup-02-크레딧-잔액-99-997-473.png
+- 33. `/director/assignments/[assignmentId]` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/029-director-assignments-assignmentId-popup-03-알림.png
+- 34. `/director/attendance` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/030-director-attendance-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 35. `/director/attendance` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/030-director-attendance-popup-02-크레딧-잔액-99-997-473.png
+- 36. `/director/attendance` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/030-director-attendance-popup-03-알림.png
+- 37. `/director/attendance/dashboard` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/031-director-attendance-dashboard-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 38. `/director/attendance/dashboard` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/031-director-attendance-dashboard-popup-02-크레딧-잔액-99-997-473.png
+- 39. `/director/attendance/dashboard` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/031-director-attendance-dashboard-popup-03-알림.png
+- 40. `/director/billing` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/032-director-billing-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 41. `/director/billing` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/032-director-billing-popup-02-크레딧-잔액-99-997-473.png
+- 42. `/director/billing` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/032-director-billing-popup-03-알림.png
+- 43. `/director/billing/[invoiceId]` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/033-director-billing-invoiceId-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 44. `/director/billing/[invoiceId]` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/033-director-billing-invoiceId-popup-02-크레딧-잔액-99-997-473.png
+- 45. `/director/billing/[invoiceId]` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/033-director-billing-invoiceId-popup-03-알림.png
+- 46. `/director/calendar` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/034-director-calendar-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 47. `/director/calendar` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/034-director-calendar-popup-02-크레딧-잔액-99-997-473.png
+- 48. `/director/calendar` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/034-director-calendar-popup-03-알림.png
+- 49. `/director/classes` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/035-director-classes-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 50. `/director/classes` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/035-director-classes-popup-02-크레딧-잔액-99-997-473.png
+- 51. `/director/classes` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/035-director-classes-popup-03-알림.png
+- 52. `/director/classes` / 대량 등록 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/035-director-classes-popup-04-대량-등록.png
+- 53. `/director/classes/[classId]` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/036-director-classes-classId-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 54. `/director/classes/[classId]` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/036-director-classes-classId-popup-02-알림.png
+- 55. `/director/credits` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/038-director-credits-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 56. `/director/credits` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/038-director-credits-popup-02-크레딧-잔액-99-997-473.png
+- 57. `/director/dashboard-v2` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/039-director-dashboard-v2-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 58. `/director/dashboard-v2` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/039-director-dashboard-v2-popup-02-크레딧-잔액-99-997-473.png
+- 59. `/director/dashboard-v2` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/039-director-dashboard-v2-popup-03-알림.png
+- 60. `/director/exams` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/040-director-exams-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 61. `/director/exams` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/040-director-exams-popup-02-크레딧-잔액-99-997-473.png
+- 62. `/director/exams` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/040-director-exams-popup-03-알림.png
+- 63. `/director/exams` / 정렬 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/040-director-exams-popup-04-정렬.png
+- 64. `/director/exams/[examId]` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/041-director-exams-examId-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 65. `/director/exams/[examId]` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/041-director-exams-examId-popup-02-크레딧-잔액-99-997-473.png
+- 66. `/director/exams/[examId]` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/041-director-exams-examId-popup-03-알림.png
+- 67. `/director/exams/[examId]` / 시험지 다운로드 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/041-director-exams-examId-popup-04-시험지-다운로드.png
+- 68. `/director/exams/[examId]/grade` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/042-director-exams-examId-grade-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 69. `/director/exams/[examId]/grade` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/042-director-exams-examId-grade-popup-02-크레딧-잔액-99-997-473.png
+- 70. `/director/exams/[examId]/grade` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/042-director-exams-examId-grade-popup-03-알림.png
+- 71. `/director/exams/create` / 다른 학원 원장선생님 · 원장 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/043-director-exams-create-popup-01-다른-학원-원장선생님-원장.png
+- 72. `/director/exams/create` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/043-director-exams-create-popup-02-크레딧-잔액-99-997-473.png
+- 73. `/director/exams/create` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/043-director-exams-create-popup-03-알림.png
+- 74. `/director/exams/create` / 관리 바 접기 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/043-director-exams-create-popup-04-관리-바-접기.png
+- 75. `/director/finance` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/044-director-finance-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 76. `/director/finance` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/044-director-finance-popup-02-크레딧-잔액-99-997-473.png
+- 77. `/director/finance` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/044-director-finance-popup-03-알림.png
+- 78. `/director/learning` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/045-director-learning-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 79. `/director/learning` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/045-director-learning-popup-02-크레딧-잔액-99-997-473.png
+- 80. `/director/learning` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/045-director-learning-popup-03-알림.png
+- 81. `/director/learning-questions` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/046-director-learning-questions-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 82. `/director/learning-questions` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/046-director-learning-questions-popup-02-크레딧-잔액-99-997-473.png
+- 83. `/director/learning-questions` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/046-director-learning-questions-popup-03-알림.png
+- 84. `/director/materials` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/047-director-materials-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 85. `/director/materials` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/047-director-materials-popup-02-크레딧-잔액-99-997-473.png
+- 86. `/director/materials` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/047-director-materials-popup-03-알림.png
+- 87. `/director/messages` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/048-director-messages-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 88. `/director/messages` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/048-director-messages-popup-02-알림.png
+- 89. `/director/questions/[questionId]` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/054-director-questions-questionId-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 90. `/director/questions/[questionId]` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/054-director-questions-questionId-popup-02-크레딧-잔액-99-997-473.png
+- 91. `/director/questions/[questionId]` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/054-director-questions-questionId-popup-03-알림.png
+- 92. `/director/questions/pending` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/055-director-questions-pending-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 93. `/director/questions/pending` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/055-director-questions-pending-popup-02-크레딧-잔액-99-997-473.png
+- 94. `/director/questions/pending` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/055-director-questions-pending-popup-03-알림.png
+- 95. `/director/reports` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/056-director-reports-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 96. `/director/reports` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/056-director-reports-popup-02-크레딧-잔액-99-997-473.png
+- 97. `/director/reports` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/056-director-reports-popup-03-알림.png
+- 98. `/director/rewards` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/057-director-rewards-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 99. `/director/rewards` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/057-director-rewards-popup-02-크레딧-잔액-99-997-473.png
+- 100. `/director/rewards` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/057-director-rewards-popup-03-알림.png
+- 101. `/director/salaries` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/058-director-salaries-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 102. `/director/salaries` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/058-director-salaries-popup-02-크레딧-잔액-99-997-473.png
+- 103. `/director/salaries` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/058-director-salaries-popup-03-알림.png
+- 104. `/director/settings` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/059-director-settings-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 105. `/director/settings` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/059-director-settings-popup-02-크레딧-잔액-99-997-473.png
+- 106. `/director/settings` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/059-director-settings-popup-03-알림.png
+- 107. `/director/students` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/060-director-students-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 108. `/director/students` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/060-director-students-popup-02-크레딧-잔액-99-997-473.png
+- 109. `/director/students` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/060-director-students-popup-03-알림.png
+- 110. `/director/students` / 대량 등록 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/060-director-students-popup-04-대량-등록.png
+- 111. `/director/students/[studentId]` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/061-director-students-studentId-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 112. `/director/students/[studentId]` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/061-director-students-studentId-popup-02-크레딧-잔액-99-997-473.png
+- 113. `/director/students/[studentId]` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/061-director-students-studentId-popup-03-알림.png
+- 114. `/director/tutor` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/062-director-tutor-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 115. `/director/tutor` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/062-director-tutor-popup-02-크레딧-잔액-99-997-473.png
+- 116. `/director/tutor` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/062-director-tutor-popup-03-알림.png
+- 117. `/director/tutor` / 대량 등록 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/062-director-tutor-popup-04-대량-등록.png
+- 118. `/director/tutor/distributions` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/063-director-tutor-distributions-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 119. `/director/tutor/distributions` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/063-director-tutor-distributions-popup-02-크레딧-잔액-99-997-473.png
+- 120. `/director/tutor/distributions` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/063-director-tutor-distributions-popup-03-알림.png
+- 121. `/director/tutor/monitor` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/064-director-tutor-monitor-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 122. `/director/tutor/monitor` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/064-director-tutor-monitor-popup-02-크레딧-잔액-99-997-473.png
+- 123. `/director/tutor/monitor` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/064-director-tutor-monitor-popup-03-알림.png
+- 124. `/director/tutor/programs` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/065-director-tutor-programs-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 125. `/director/tutor/programs` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/065-director-tutor-programs-popup-02-크레딧-잔액-99-997-473.png
+- 126. `/director/tutor/programs` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/065-director-tutor-programs-popup-03-알림.png
+- 127. `/director/tutor/programs/[programId]/builder` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/066-director-tutor-programs-programId-builder-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 128. `/director/tutor/programs/[programId]/builder` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/066-director-tutor-programs-programId-builder-popup-02-크레딧-잔액-99-997-473.png
+- 129. `/director/tutor/programs/[programId]/builder` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/066-director-tutor-programs-programId-builder-popup-03-알림.png
+- 130. `/director/tutor/programs/[programId]/emulator` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/067-director-tutor-programs-programId-emulator-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 131. `/director/tutor/programs/[programId]/emulator` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/067-director-tutor-programs-programId-emulator-popup-02-크레딧-잔액-99-997-473.png
+- 132. `/director/tutor/programs/[programId]/emulator` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/067-director-tutor-programs-programId-emulator-popup-03-알림.png
+- 133. `/director/tutor/programs/[programId]/monitor` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/068-director-tutor-programs-programId-monitor-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 134. `/director/tutor/programs/[programId]/monitor` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/068-director-tutor-programs-programId-monitor-popup-02-크레딧-잔액-99-997-473.png
+- 135. `/director/tutor/programs/[programId]/monitor` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/068-director-tutor-programs-programId-monitor-popup-03-알림.png
+- 136. `/director/tutor/programs/new` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/069-director-tutor-programs-new-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 137. `/director/tutor/programs/new` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/069-director-tutor-programs-new-popup-02-크레딧-잔액-99-997-473.png
+- 138. `/director/tutor/programs/new` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/069-director-tutor-programs-new-popup-03-알림.png
+- 139. `/director/workbench` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/070-director-workbench-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 140. `/director/workbench` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/070-director-workbench-popup-02-크레딧-잔액-99-997-473.png
+- 141. `/director/workbench` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/070-director-workbench-popup-03-알림.png
+- 142. `/director/workbench/exams` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/071-director-workbench-exams-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 143. `/director/workbench/exams` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/071-director-workbench-exams-popup-02-크레딧-잔액-99-997-473.png
+- 144. `/director/workbench/exams` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/071-director-workbench-exams-popup-03-알림.png
+- 145. `/director/workbench/exams` / 정렬 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/071-director-workbench-exams-popup-04-정렬.png
+- 146. `/director/workbench/exams/[examId]` / 다른 학원 원장선생님 · 원장 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/072-director-workbench-exams-examId-popup-01-다른-학원-원장선생님-원장.png
+- 147. `/director/workbench/exams/[examId]` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/072-director-workbench-exams-examId-popup-02-크레딧-잔액-99-997-473.png
+- 148. `/director/workbench/exams/[examId]` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/072-director-workbench-exams-examId-popup-03-알림.png
+- 149. `/director/workbench/exams/[examId]` / 관리 바 접기 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/072-director-workbench-exams-examId-popup-04-관리-바-접기.png
+- 150. `/director/workbench/exams/[examId]/edit` / 다른 학원 원장선생님 · 원장 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/073-director-workbench-exams-examId-edit-popup-01-다른-학원-원장선생님-원장.png
+- 151. `/director/workbench/exams/[examId]/edit` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/073-director-workbench-exams-examId-edit-popup-02-크레딧-잔액-99-997-473.png
+- 152. `/director/workbench/exams/[examId]/edit` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/073-director-workbench-exams-examId-edit-popup-03-알림.png
+- 153. `/director/workbench/exams/[examId]/edit` / 관리 바 접기 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/073-director-workbench-exams-examId-edit-popup-04-관리-바-접기.png
+- 154. `/director/workbench/exams/create` / 다른 학원 원장선생님 · 원장 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/074-director-workbench-exams-create-popup-01-다른-학원-원장선생님-원장.png
+- 155. `/director/workbench/exams/create` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/074-director-workbench-exams-create-popup-02-크레딧-잔액-99-997-473.png
+- 156. `/director/workbench/exams/create` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/074-director-workbench-exams-create-popup-03-알림.png
+- 157. `/director/workbench/exams/create` / 관리 바 접기 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/074-director-workbench-exams-create-popup-04-관리-바-접기.png
+- 158. `/director/workbench/exams/similar` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/075-director-workbench-exams-similar-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 159. `/director/workbench/exams/similar` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/075-director-workbench-exams-similar-popup-02-크레딧-잔액-99-997-473.png
+- 160. `/director/workbench/exams/similar` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/075-director-workbench-exams-similar-popup-03-알림.png
+- 161. `/director/workbench/exams/similar` / 정렬 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/075-director-workbench-exams-similar-popup-04-정렬.png
+- 162. `/director/workbench/extraction` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/076-director-workbench-extraction-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 163. `/director/workbench/extraction` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/076-director-workbench-extraction-popup-02-크레딧-잔액-99-997-473.png
+- 164. `/director/workbench/extraction` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/076-director-workbench-extraction-popup-03-알림.png
+- 165. `/director/workbench/extraction/jobs` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/077-director-workbench-extraction-jobs-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 166. `/director/workbench/extraction/jobs` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/077-director-workbench-extraction-jobs-popup-02-크레딧-잔액-99-997-473.png
+- 167. `/director/workbench/extraction/jobs` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/077-director-workbench-extraction-jobs-popup-03-알림.png
+- 168. `/director/workbench/extraction/jobs` / 상세보기 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/077-director-workbench-extraction-jobs-popup-04-상세보기.png
+- 169. `/director/workbench/generate` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/078-director-workbench-generate-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 170. `/director/workbench/generate` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/078-director-workbench-generate-popup-02-크레딧-잔액-99-997-473.png
+- 171. `/director/workbench/generate` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/078-director-workbench-generate-popup-03-알림.png
+- 172. `/director/workbench/generate` / 접기 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/078-director-workbench-generate-popup-04-접기.png
+- 173. `/director/workbench/generate-learning` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/079-director-workbench-generate-learning-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 174. `/director/workbench/generate-learning` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/079-director-workbench-generate-learning-popup-02-크레딧-잔액-99-997-473.png
+- 175. `/director/workbench/generate-learning` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/079-director-workbench-generate-learning-popup-03-알림.png
+- 176. `/director/workbench/passage-variant` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/080-director-workbench-passage-variant-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 177. `/director/workbench/passage-variant` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/080-director-workbench-passage-variant-popup-02-크레딧-잔액-99-997-473.png
+- 178. `/director/workbench/passage-variant` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/080-director-workbench-passage-variant-popup-03-알림.png
+- 179. `/director/workbench/passages` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/081-director-workbench-passages-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 180. `/director/workbench/passages` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/081-director-workbench-passages-popup-02-크레딧-잔액-99-997-473.png
+- 181. `/director/workbench/passages` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/081-director-workbench-passages-popup-03-알림.png
+- 182. `/director/workbench/passages` / 정렬 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/081-director-workbench-passages-popup-04-정렬.png
+- 183. `/director/workbench/passages/[passageId]` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/082-director-workbench-passages-passageId-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 184. `/director/workbench/passages/[passageId]` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/082-director-workbench-passages-passageId-popup-02-크레딧-잔액-99-997-473.png
+- 185. `/director/workbench/passages/[passageId]` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/082-director-workbench-passages-passageId-popup-03-알림.png
+- 186. `/director/workbench/passages/[passageId]` / 시험에 추가 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/082-director-workbench-passages-passageId-popup-04-시험에-추가.png
+- 187. `/director/workbench/passages/[passageId]/reports` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/083-director-workbench-passages-passageId-reports-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 188. `/director/workbench/passages/[passageId]/reports` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/083-director-workbench-passages-passageId-reports-popup-02-크레딧-잔액-99-997-473.png
+- 189. `/director/workbench/passages/[passageId]/reports` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/083-director-workbench-passages-passageId-reports-popup-03-알림.png
+- 190. `/director/workbench/passages/[passageId]/reports/new` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/085-director-workbench-passages-passageId-reports-new-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 191. `/director/workbench/passages/[passageId]/reports/new` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/085-director-workbench-passages-passageId-reports-new-popup-02-크레딧-잔액-99-997-473.png
+- 192. `/director/workbench/passages/[passageId]/reports/new` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/085-director-workbench-passages-passageId-reports-new-popup-03-알림.png
+- 193. `/director/workbench/passages/create` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/086-director-workbench-passages-create-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 194. `/director/workbench/passages/create` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/086-director-workbench-passages-create-popup-02-크레딧-잔액-99-997-473.png
+- 195. `/director/workbench/passages/create` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/086-director-workbench-passages-create-popup-03-알림.png
+- 196. `/director/workbench/passages/create` / 정렬 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/086-director-workbench-passages-create-popup-04-정렬.png
+- 197. `/director/workbench/passages/import` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/087-director-workbench-passages-import-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 198. `/director/workbench/passages/import` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/087-director-workbench-passages-import-popup-02-크레딧-잔액-99-997-473.png
+- 199. `/director/workbench/passages/import` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/087-director-workbench-passages-import-popup-03-알림.png
+- 200. `/director/workbench/passages/import/jobs` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/088-director-workbench-passages-import-jobs-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 201. `/director/workbench/passages/import/jobs` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/088-director-workbench-passages-import-jobs-popup-02-크레딧-잔액-99-997-473.png
+- 202. `/director/workbench/passages/import/jobs` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/088-director-workbench-passages-import-jobs-popup-03-알림.png
+- 203. `/director/workbench/passages/import/jobs` / 상세보기 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/088-director-workbench-passages-import-jobs-popup-04-상세보기.png
+- 204. `/director/workbench/questions` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/089-director-workbench-questions-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 205. `/director/workbench/questions` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/089-director-workbench-questions-popup-02-크레딧-잔액-99-997-473.png
+- 206. `/director/workbench/questions` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/089-director-workbench-questions-popup-03-알림.png
+- 207. `/director/workbench/questions` / 정렬 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/089-director-workbench-questions-popup-04-정렬.png
+- 208. `/director/workbench/questions/custom` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/090-director-workbench-questions-custom-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 209. `/director/workbench/questions/custom` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/090-director-workbench-questions-custom-popup-02-크레딧-잔액-99-997-473.png
+- 210. `/director/workbench/questions/custom` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/090-director-workbench-questions-custom-popup-03-알림.png
+- 211. `/director/workbench/questions/generate` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/091-director-workbench-questions-generate-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 212. `/director/workbench/questions/generate` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/091-director-workbench-questions-generate-popup-02-크레딧-잔액-99-997-473.png
+- 213. `/director/workbench/questions/generate` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/091-director-workbench-questions-generate-popup-03-알림.png
+- 214. `/director/workbench/questions/generate` / 폴더 검색 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/091-director-workbench-questions-generate-popup-04-폴더-검색.png
+- 215. `/director/workbench/questions/similar` / 다른 학원 원장선생님 · 원장 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/092-director-workbench-questions-similar-popup-01-다른-학원-원장선생님-원장.png
+- 216. `/director/workbench/questions/similar` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/092-director-workbench-questions-similar-popup-02-크레딧-잔액-99-997-473.png
+- 217. `/director/workbench/questions/similar` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/092-director-workbench-questions-similar-popup-03-알림.png
+- 218. `/director/workbench/report-preview` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/093-director-workbench-report-preview-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 219. `/director/workbench/report-preview` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/093-director-workbench-report-preview-popup-02-크레딧-잔액-99-997-473.png
+- 220. `/director/workbench/report-preview` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/093-director-workbench-report-preview-popup-03-알림.png
+- 221. `/director/workbench/similar-exams` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/094-director-workbench-similar-exams-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 222. `/director/workbench/similar-exams` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/094-director-workbench-similar-exams-popup-02-크레딧-잔액-99-997-473.png
+- 223. `/director/workbench/similar-exams` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/094-director-workbench-similar-exams-popup-03-알림.png
+- 224. `/director/workbench/similar-exams` / 정렬 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/094-director-workbench-similar-exams-popup-04-정렬.png
+- 225. `/director/workbench/webtoon` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/095-director-workbench-webtoon-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 226. `/director/workbench/webtoon` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/095-director-workbench-webtoon-popup-02-크레딧-잔액-99-997-473.png
+- 227. `/director/workbench/webtoon` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/095-director-workbench-webtoon-popup-03-알림.png
+- 228. `/director/workbench/webtoon` / 정렬 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/095-director-workbench-webtoon-popup-04-정렬.png
+- 229. `/director/workbench/webtoon/library` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/096-director-workbench-webtoon-library-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 230. `/director/workbench/webtoon/library` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/096-director-workbench-webtoon-library-popup-02-크레딧-잔액-99-997-473.png
+- 231. `/director/workbench/webtoon/library` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/096-director-workbench-webtoon-library-popup-03-알림.png
+- 232. `/director/workbench/webtoon/library` / 정렬 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/096-director-workbench-webtoon-library-popup-04-정렬.png
+- 233. `/teacher` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/132-teacher-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 234. `/teacher` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/132-teacher-popup-02-크레딧-잔액-99-997-473.png
+- 235. `/teacher` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/132-teacher-popup-03-알림.png
+- 236. `/teacher/attendance` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/133-teacher-attendance-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 237. `/teacher/attendance` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/133-teacher-attendance-popup-02-크레딧-잔액-99-997-473.png
+- 238. `/teacher/attendance` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/133-teacher-attendance-popup-03-알림.png
+- 239. `/teacher/students` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/134-teacher-students-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 240. `/teacher/students` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/134-teacher-students-popup-02-크레딧-잔액-99-997-473.png
+- 241. `/teacher/students` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/134-teacher-students-popup-03-알림.png
+- 242. `/teacher/students` / 학교 전체 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/134-teacher-students-popup-04-학교-전체.png
+- 243. `/teacher/students/[studentId]` / 다학다른 학원 원장선생님원장다른영어학원 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/135-teacher-students-studentId-popup-01-다학다른-학원-원장선생님원장다른영어학원.png
+- 244. `/teacher/students/[studentId]` / 크레딧 잔액: 99,997,473 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/135-teacher-students-studentId-popup-02-크레딧-잔액-99-997-473.png
+- 245. `/teacher/students/[studentId]` / 알림 - screenshots/site-page-kinds-2026-06-25_12-39-28/popups/135-teacher-students-studentId-popup-03-알림.png
+
+## Page Errors
+
+- None.

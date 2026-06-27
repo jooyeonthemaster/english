@@ -10,9 +10,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
+import { DIFFICULTY_OPTIONS } from "./constants";
 
 interface Props {
   isModal: boolean;
@@ -20,6 +28,8 @@ interface Props {
   passageAnalysis: PassageAnalysisData | null;
   questionText: string;
   setQuestionText: (v: string) => void;
+  difficulty: string;
+  setDifficulty: (v: string) => void;
 }
 
 export function PassagePanel({
@@ -28,7 +38,10 @@ export function PassagePanel({
   passageAnalysis,
   questionText,
   setQuestionText,
+  difficulty,
+  setDifficulty,
 }: Props) {
+  const diffConfig = DIFFICULTY_OPTIONS.find((d) => d.value === difficulty);
   const [view, setView] = useState<"analysis" | "original">(
     passageAnalysis ? "analysis" : "original",
   );
@@ -126,8 +139,9 @@ export function PassagePanel({
 
   return (
     <div className="w-[38%] min-w-[440px] max-w-[680px] shrink-0 border-r border-slate-200 bg-[#F8FAFB] flex min-h-0 flex-col overflow-hidden">
-      {/* Passage title — 클릭하면 지문 분석/원문이 팝오버로 열림 */}
+      {/* Passage title — 클릭하면 지문 분석/원문이 팝오버로 열림 / 우측에 난이도 토글 */}
       <div className="px-3 py-2.5 border-b border-slate-200 bg-white shrink-0">
+        <div className="flex items-center gap-2">
         <Popover open={open} onOpenChange={setOpen}>
           {isModal ? (
             <PopoverTrigger asChild>
@@ -135,7 +149,7 @@ export function PassagePanel({
                 type="button"
                 title={title}
                 aria-expanded={open}
-                className="inline-flex w-full h-9 min-w-0 items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-2.5 transition-colors hover:bg-slate-100"
+                className="inline-flex flex-1 h-9 min-w-0 items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-2.5 transition-colors hover:bg-slate-100"
               >
                 <FileText className="h-4 w-4 shrink-0 text-blue-500" />
                 <span className="min-w-0 flex-1 truncate text-left text-[14.5px] font-semibold text-blue-700">
@@ -148,7 +162,7 @@ export function PassagePanel({
             </PopoverTrigger>
           ) : (
             <PopoverAnchor asChild>
-              <div className="inline-flex w-full h-9 min-w-0 items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-2.5 transition-colors hover:bg-slate-100">
+              <div className="inline-flex flex-1 h-9 min-w-0 items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-2.5 transition-colors hover:bg-slate-100">
                 <FileText className="h-4 w-4 shrink-0 text-blue-500" />
                 <Link
                   href={`/director/workbench/passages/${passage.id}`}
@@ -173,6 +187,18 @@ export function PassagePanel({
           )}
           {popoverBody}
         </Popover>
+        {/* 난이도 토글 — 지문 토글과 같은 줄·세로 길이(h-9) */}
+        <Select value={difficulty} onValueChange={setDifficulty}>
+          <SelectTrigger className={`h-9 w-[88px] shrink-0 text-[13px] font-semibold ${diffConfig?.color || ""}`}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {DIFFICULTY_OPTIONS.map((d) => (
+              <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        </div>
       </div>
 
       {/* Body: 문제 내용 — 패널 전체 사용 */}

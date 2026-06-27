@@ -4,8 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { toast } from "sonner";
-import { Calendar as CalendarIcon, Save, Loader2, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Calendar as CalendarIcon, Loader2, Users } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -20,6 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { SaveButton } from "@/components/ui/save-button";
 import {
   getClassAttendance,
   markAttendance,
@@ -343,18 +343,11 @@ export function ManualMode({ academyId, classes }: ManualModeProps) {
                   ) : null;
                 })}
               </div>
-              <Button
+              <SaveButton
                 onClick={handleSave}
-                disabled={saving || records.size === 0}
-                className="h-9 gap-2 bg-blue-500 hover:bg-blue-600"
-              >
-                {saving ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Save className="h-4 w-4" />
-                )}
-                저장
-              </Button>
+                saving={saving}
+                disabled={records.size === 0}
+              />
             </div>
           </>
         )}

@@ -66,6 +66,9 @@ export function WebtoonQueueCard({
 }: WebtoonQueueCardProps) {
   const [showPreview, setShowPreview] = useState(false);
   const [passageOpen, setPassageOpen] = useState(false);
+  // 상세 미리보기를 한 번이라도 열어봤는지 — 닫는 순간 카드를 배경 반짝임으로
+  // 강조해 "방금 본 카드"를 빠르게 찾게 한다.
+  const [hasViewedPreview, setHasViewedPreview] = useState(false);
 
   const isDone = item.status === "COMPLETED" && item.imageUrl;
   const isError = item.status === "FAILED";
@@ -75,8 +78,13 @@ export function WebtoonQueueCard({
   const openDetail = () => {
     if (!isDone) return;
     if (onOpenDetail) onOpenDetail(item.id);
-    else setShowPreview(true);
+    else {
+      setShowPreview(true);
+      setHasViewedPreview(true);
+    }
   };
+  // 미리보기를 열어봤고, 지금은 닫혀 있으며, 선택 상태도 아닐 때 한 번 반짝인다.
+  const recentlyViewed = hasViewedPreview && !showPreview && !selected;
 
   return (
     <>
@@ -85,7 +93,7 @@ export function WebtoonQueueCard({
           selected
             ? "bg-blue-50/30 ring-2 ring-blue-400"
             : "hover:shadow-md"
-        } ${!item.approved && isDone ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]" : ""}`}
+        } ${!item.approved && isDone ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]" : ""}${recentlyViewed ? " motion-safe:animate-[card-recently-viewed-flash_1.2s_ease-out]" : ""}`}
       >
         {/* 배경 오버레이 — 카드 여백 클릭=선택 토글, 더블클릭=상세보기 열기.
             내용층은 pointer-events-none 으로 두고 컨트롤만 다시 활성화한다. */}

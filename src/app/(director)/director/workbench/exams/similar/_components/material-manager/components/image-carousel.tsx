@@ -228,20 +228,18 @@ function ImageCarousel({
   return (
     <>
       {overlayEl ? createPortal(controlsNode, overlayEl) : null}
-      {/* No `overflow-hidden` on the figure — that was clipping the
-          zoomed wrapper's horizontal overflow and preventing the scroll
-          container above from generating a horizontal scrollbar. */}
-      <figure className="rounded-md border border-slate-200 bg-slate-50">
+      {/* The zoom width lives on the <figure> itself so its border/caption
+          grow with the enlarged image and stay wrapped around it — otherwise
+          the image spills past the figure's right border. The figure
+          overflows the scroll container above, which provides the horizontal
+          scrollbar. No `overflow-hidden` here — that would clip the overflow
+          and suppress the scrollbar. */}
+      <figure
+        className="rounded-md border border-slate-200 bg-slate-50"
+        style={{ width: `${zoom * 100}%` }}
+      >
         {active.signedUrl ? (
-          // The wrapper — not the <img> — carries the zoom width so the
-          // scroll container can detect horizontal overflow and offer a
-          // real left/right scroll. An <img> alone overflows `visible`
-          // without contributing to the parent's scrollable area, which is
-          // why horizontal drag-pan wasn't working previously.
-          <div
-            className="overflow-hidden rounded-t-[6px] bg-slate-100"
-            style={{ width: `${zoom * 100}%` }}
-          >
+          <div className="overflow-hidden rounded-t-[6px] bg-slate-100">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               key={active.pageIndex}

@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import {
-  getVisibleQuestionTags,
+  getDisplayQuestionTags,
   sanitizeAiModelDisclosureText,
 } from "@/lib/question-generation-plans";
 import type { AnalysisTone } from "@/lib/passage-analysis-options";
@@ -73,7 +73,7 @@ interface CompactOptionsRowProps {
 }
 
 export function CompactOptionsRow(props: CompactOptionsRowProps) {
-  const visibleTags = getVisibleQuestionTags(props.tags);
+  const visibleTags = getDisplayQuestionTags(props.tags);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">

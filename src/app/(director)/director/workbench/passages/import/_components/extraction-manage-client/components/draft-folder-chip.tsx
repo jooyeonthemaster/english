@@ -41,6 +41,7 @@ export function DraftFolderChip({
   void itemCountLabel;
   const [isDragOver, setIsDragOver] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [editName, setEditName] = useState(collection.name);
   const dropRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -125,6 +126,13 @@ export function DraftFolderChip({
       ref={dropRef}
       onClick={onClick}
       onDoubleClick={startEditing}
+      onContextMenu={(e) => {
+        // 우클릭 = 폴더 메뉴(이름 변경/삭제). 좌클릭(진입)과 분리돼 있어
+        // 폴더로 들어가려다 실수로 삭제하는 일을 막는다.
+        e.preventDefault();
+        e.stopPropagation();
+        setMenuOpen(true);
+      }}
       className={
         "group relative flex w-[64px] cursor-pointer flex-col items-center justify-center rounded-lg border px-1 py-1 shadow-sm motion-safe:transition-all motion-safe:duration-200 " +
         (isDragOver
@@ -148,13 +156,14 @@ export function DraftFolderChip({
           {formatFolderDate(collection.createdAt)}
         </span>
       ) : null}
-      <DropdownMenu>
+      <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
           <button
             type="button"
             onClick={(e) => e.stopPropagation()}
             className="absolute right-0.5 top-0.5 inline-flex size-4 cursor-pointer items-center justify-center rounded bg-white/90 text-slate-400 opacity-0 shadow-sm ring-1 ring-slate-200 transition-opacity hover:text-slate-700 group-hover:opacity-100"
-            aria-label="폴더 메뉴"
+            aria-label="폴더 메뉴 (우클릭으로도 열 수 있어요)"
+            title="우클릭으로도 열 수 있어요"
           >
             <MoreHorizontal className="size-2.5" aria-hidden="true" />
           </button>

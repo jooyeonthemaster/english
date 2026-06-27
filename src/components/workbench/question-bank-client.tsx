@@ -511,6 +511,10 @@ export function QuestionBankClient({
   const detailLoadTokenRef = useRef(0);
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailQuestionId, setDetailQuestionId] = useState<string | null>(null);
+  // 방금 상세를 열어본 문제 id — 모달을 닫아도 유지해, 닫는 순간 카드를 한 번 반짝인다.
+  const [lastViewedQuestionId, setLastViewedQuestionId] = useState<
+    string | null
+  >(null);
   const [detailQuestion, setDetailQuestion] = useState<Awaited<
     ReturnType<typeof getWorkbenchQuestion>
   > | null>(null);
@@ -522,6 +526,7 @@ export function QuestionBankClient({
     detailLoadTokenRef.current = token;
     setDetailOpen(true);
     setDetailQuestionId(id);
+    setLastViewedQuestionId(id);
     setDetailQuestion(null);
     setDetailLoadError(null);
     setDetailLoading(true);
@@ -1153,7 +1158,7 @@ export function QuestionBankClient({
                 onDragToRoot={handleDragToRoot}
                 breadcrumbPath={folders.breadcrumbPath}
                 onNavigateToRoot={handleNavigateToRoot}
-                useCardInsideFolder={true}
+                useCardInsideFolder={false}
                 rootLabel="전체 문제"
                 enableFolderControls
                 allFolders={folders.collections}
@@ -1204,6 +1209,8 @@ export function QuestionBankClient({
                   onToggleStar={handleToggleStar}
                   onDetail={openDetail}
                   onEdit={editor.openEditor}
+                  lastViewedQuestionId={lastViewedQuestionId}
+                  openDetailQuestionId={detailQuestionId}
                   cardClickSelects
                   showDetailButton
                   dragRequiresSelection
@@ -1219,6 +1226,10 @@ export function QuestionBankClient({
                             q={q}
                             num={idx + 1}
                             selected={selectedIds.has(q.id)}
+                            recentlyViewed={
+                              lastViewedQuestionId === q.id &&
+                              detailQuestionId !== q.id
+                            }
                             onToggle={() => toggleSelect(q.id)}
                             onApprove={() => handleApprove(q.id)}
                             onDetail={() => openDetail(q.id)}
@@ -1267,6 +1278,10 @@ export function QuestionBankClient({
                           q={q}
                           num={startIdx + idx + 1}
                           selected={selectedIds.has(q.id)}
+                          recentlyViewed={
+                            lastViewedQuestionId === q.id &&
+                            detailQuestionId !== q.id
+                          }
                           onToggle={() => toggleSelect(q.id)}
                           onApprove={() => handleApprove(q.id)}
                           onDetail={() => openDetail(q.id)}
@@ -1285,6 +1300,10 @@ export function QuestionBankClient({
                         q={q}
                         num={startIdx + idx + 1}
                         selected={selectedIds.has(q.id)}
+                        recentlyViewed={
+                          lastViewedQuestionId === q.id &&
+                          detailQuestionId !== q.id
+                        }
                         onToggle={() => toggleSelect(q.id)}
                         onDelete={() => handleDelete(q.id)}
                         onApprove={() => handleApprove(q.id)}

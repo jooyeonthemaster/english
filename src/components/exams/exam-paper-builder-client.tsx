@@ -79,6 +79,7 @@ import { ExamCoverPage } from "./paper-builder/components/exam-cover-page";
 import { PrintStyles } from "./paper-builder/components/print-styles";
 import { BuilderPropertiesPanel } from "./paper-builder/components/builder-properties-panel";
 import { QuestionDetailModal } from "./paper-builder/components/question-detail-modal";
+import { BlockFormatToolbar } from "./paper-builder/components/block-format-toolbar";
 import { QuestionLibraryPanel } from "./paper-builder/components/question-library-panel";
 import { TemplateSettingsPanel } from "./paper-builder/components/template-settings-panel";
 import { PreviewPages } from "./exam-paper-builder-client-parts/preview-pages";
@@ -100,6 +101,8 @@ import {
 } from "@/actions/workbench";
 import { incrementExamPrintCount } from "@/actions/exams";
 import { Button } from "@/components/ui/button";
+import { SaveButton } from "@/components/ui/save-button";
+import { useBeforeUnloadWarning } from "@/components/shared/use-unsaved-close-guard";
 import {
   Dialog,
   DialogContent,
@@ -663,6 +666,8 @@ export function ExamPaperBuilderClient({
   const [draftStorageReady, setDraftStorageReady] =
     useState(isEditingExistingExam);
   const [dirty, setDirty] = useState(false);
+  // 전체 페이지형 편집기 — 미저장 변경 시 브라우저 이탈(탭 닫기/새로고침) 경고.
+  useBeforeUnloadWarning(dirty);
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("ALL");
   const [selectedSubTypes, setSelectedSubTypes] = useState<string[]>([]);
@@ -832,6 +837,9 @@ export function ExamPaperBuilderClient({
   const [lineCaret, setLineCaret] = useState<{ afterLocalId: string | null } | null>(
     null,
   );
+  // 블록(이미지·텍스트 등)을 삽입한 직후, 그 블록이 다음 칸·다음 쪽으로 들어갔더라도
+  // 미리보기가 자동으로 그 위치까지 스크롤해 사용자에게 보여주기 위한 대상 localId.
+  const [pendingScrollItemId, setPendingScrollItemId] = useState<string | null>(null);
   const [panelWidths, setPanelWidths] = useState<PanelWidths>(
     readStoredPanelWidths,
   );
@@ -1009,6 +1017,64 @@ export function ExamPaperBuilderClient({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [lineCaret, density, insertLineGap, removeLineGap]);
 
+  // 전역 단축키: 선택 블록 Delete/Backspace=삭제, Cmd/Ctrl+Z=되돌리기,
+  // Cmd/Ctrl+Shift+Z(또는 Ctrl+Y)=다시 실행.
+  // 본문 인라인 편집(EditableText)·입력창·선택상자에 포커스가 있을 땐 가로채지 않는다
+  // (텍스트 편집과 브라우저 기본 실행취소를 보존).
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const el = document.activeElement as HTMLElement | null;
+      const editing =
+        !!el &&
+        (el.isContentEditable ||
+          el.tagName === "INPUT" ||
+          el.tagName === "TEXTAREA" ||
+          el.tagName === "SELECT");
+      if (editing) return;
+
+      const mod = event.metaKey || event.ctrlKey;
+      if (mod && (event.key === "z" || event.key === "Z")) {
+        event.preventDefault();
+        if (event.shiftKey) {
+          if (canRedo) redo();
+        } else if (canUndo) {
+          undo();
+        }
+        return;
+      }
+      if (mod && (event.key === "y" || event.key === "Y")) {
+        event.preventDefault();
+        if (canRedo) redo();
+        return;
+      }
+
+      // 빈 줄 캐럿이 활성일 땐 위 핸들러가 Delete/Backspace 를 처리하므로 제외.
+      // 잠긴 블록은 삭제하지 않는다(미리보기 휴지통 버튼과 동일 규칙).
+      if (
+        !lineCaret &&
+        activeItemId &&
+        !activeItem?.locked &&
+        (event.key === "Delete" || event.key === "Backspace")
+      ) {
+        event.preventDefault();
+        removeItem(activeItemId);
+        setActiveItemId(null);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [
+    activeItemId,
+    activeItem?.locked,
+    lineCaret,
+    removeItem,
+    setActiveItemId,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  ]);
+
   // 빈 줄이 칸/페이지를 넘어가면 캐럿이 다음 쪽으로 이동하므로, 화면 밖으로 나간 경우
   // 미리보기를 캐럿(빈 줄 자리)이 보이도록 따라 스크롤한다(워드프로세서처럼 시야가 따라감).
   useEffect(() => {
@@ -1037,6 +1103,34 @@ export function ExamPaperBuilderClient({
     });
     return () => window.cancelAnimationFrame(raf);
   }, [lineCaret, previewScrollerRef]);
+
+  // 블록 삽입 직후: 새 블록(특히 다음 쪽으로 넘어간 이미지)이 화면 밖이면 그 위치까지
+  // 부드럽게 스크롤해 사용자에게 보여준다. paperItems 변경(삽입→재배치) 후 DOM 이 갱신된
+  // 뒤 RAF 로 스크롤한다(타이밍 안전). 이미 보이면 그대로 둔다.
+  useEffect(() => {
+    if (!pendingScrollItemId) return;
+    const raf = window.requestAnimationFrame(() => {
+      const scroller = previewScrollerRef.current;
+      const target = scroller?.querySelector<HTMLElement>(
+        `[data-paper-item-id="${CSS.escape(pendingScrollItemId)}"]`,
+      );
+      if (!scroller || !target) return; // 아직 렌더 전 — paperItems 갱신 시 재시도.
+      const scrollerRect = scroller.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const fullyVisible =
+        targetRect.top >= scrollerRect.top + 8 &&
+        targetRect.bottom <= scrollerRect.bottom - 8;
+      if (!fullyVisible) {
+        scroller.scrollTo({
+          top:
+            scroller.scrollTop + targetRect.top - scrollerRect.top - 72,
+          behavior: "smooth",
+        });
+      }
+      setPendingScrollItemId(null);
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [pendingScrollItemId, paperItems, previewScrollerRef]);
 
   const addQuestionIdsToPaper = useCallback((ids: Iterable<string>) => {
     const seen = new Set<string>();
@@ -1982,6 +2076,14 @@ export function ExamPaperBuilderClient({
     setActivePageIndex(pageIndex);
   }
 
+  // 블록 삽입 후 그 블록을 스크롤 대상으로 등록 → 다음 쪽으로 넘어가도 자동으로 보여준다.
+  function handleInsertBlock(blockType: Parameters<typeof insertBlock>[0]) {
+    setPendingScrollItemId(insertBlock(blockType));
+  }
+  function handleUploadImageBlock(dataUrl: string, imageAlt: string) {
+    setPendingScrollItemId(insertImageBlock(dataUrl, imageAlt));
+  }
+
   function handleSelectPaperItem(localId: string) {
     setActiveItemId(localId);
     window.requestAnimationFrame(() => {
@@ -2351,6 +2453,8 @@ export function ExamPaperBuilderClient({
               </div>
             </div>
           </div>
+          {/* 텍스트/섹션 블록 인라인 편집 시 떠오르는 서식 툴바(글자크기·굵게·기울임·정렬). */}
+          <BlockFormatToolbar items={paperItems} onUpdateItem={updateItem} />
         </section>
 
         {rightPanelCollapsed ? (
@@ -2394,8 +2498,8 @@ export function ExamPaperBuilderClient({
             onTabChange={setRightPanelTab}
             settingsPanel={templateSettingsPanel}
             onSelectItem={handleSelectPaperItem}
-            onInsertBlock={insertBlock}
-            onUploadImageBlock={insertImageBlock}
+            onInsertBlock={handleInsertBlock}
+            onUploadImageBlock={handleUploadImageBlock}
             onDuplicateItem={duplicateItem}
             onToggleLockItem={toggleLockItem}
             onTogglePassageTitle={togglePassageTitleVisibility}
@@ -2443,9 +2547,12 @@ export function ExamPaperBuilderClient({
               >
                 취소
               </Button>
-              <Button type="submit" disabled={isPending || !saveAsTitle.trim()}>
-                {isPending ? "저장 중..." : "새 시험지로 저장"}
-              </Button>
+              <SaveButton
+                type="submit"
+                saving={isPending}
+                disabled={isPending || !saveAsTitle.trim()}
+                title="새 시험지로 저장"
+              />
             </DialogFooter>
           </form>
         </DialogContent>

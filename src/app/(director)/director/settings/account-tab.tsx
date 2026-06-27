@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { Lock, Eye, EyeOff, CheckCircle2, User, Building2, KeyRound, Loader2, BadgeCheck } from "lucide-react";
 import { toast } from "sonner";
 import { STAFF_PROFILE_UPDATED_EVENT } from "@/lib/staff-profile-events";
+import { SaveButton } from "@/components/ui/save-button";
 
 const inputClass =
   "w-full h-11 px-4 rounded-xl text-[14px] text-foreground placeholder:text-muted-foreground bg-muted border border-border transition-all outline-none focus:bg-card focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10";
@@ -84,19 +85,6 @@ function SectionCard({
       </div>
       <div className="px-6 py-5">{children}</div>
     </div>
-  );
-}
-
-function SaveButton({ saving, label = "변경사항 저장" }: { saving: boolean; label?: string }) {
-  return (
-    <button
-      type="submit"
-      disabled={saving}
-      className="h-8 px-4 rounded-lg text-[12px] font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors inline-flex items-center gap-1.5"
-    >
-      {saving && <Loader2 className="size-3.5 animate-spin" />}
-      {saving ? "저장 중..." : label}
-    </button>
   );
 }
 
@@ -224,7 +212,7 @@ export default function AccountTab() {
     <div className="space-y-6">
       {/* 프로필 */}
       <form onSubmit={handleSaveProfile}>
-        <SectionCard title="프로필" icon={User} action={<SaveButton saving={savingProfile} />}>
+        <SectionCard title="프로필" icon={User} action={<SaveButton type="submit" saving={savingProfile} title="변경사항 저장" />}>
           <div className="space-y-4 max-w-2xl">
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
@@ -295,7 +283,7 @@ export default function AccountTab() {
 
       {/* 학원 정보 */}
       <form onSubmit={handleSaveAcademy}>
-        <SectionCard title="학원 정보" icon={Building2} action={<SaveButton saving={savingAcademy} />}>
+        <SectionCard title="학원 정보" icon={Building2} action={<SaveButton type="submit" saving={savingAcademy} title="변경사항 저장" />}>
           <div className="space-y-4 max-w-2xl">
             <div>
               <FieldLabel>학원명</FieldLabel>

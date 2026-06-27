@@ -11,6 +11,7 @@ import {
 } from "./_lib/build-builder-document";
 import { shouldForceSourcePassage } from "@/components/exams/paper-builder/passage-policy";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { toEmbeddableImageDataUrl } from "@/lib/server-image";
 import type { ExamQuestionData } from "./_lib/types";
 
 // ---------------------------------------------------------------------------
@@ -180,6 +181,22 @@ export async function GET(
 
     let doc;
     if (settings) {
+      // Word 가 임베드 못 하는 이미지 포맷(webp 등)을 PNG 로 변환해 다운로드에도 그림이 보이게 한다
+      // (미리보기는 브라우저가 webp 를 그대로 렌더하므로 차이가 났던 부분).
+      if (Array.isArray(settings.blocks)) {
+        await Promise.all(
+          settings.blocks.map(async (b) => {
+            if (b.blockType === "image" && b.imageDataUrl) {
+              b.imageDataUrl = await toEmbeddableImageDataUrl(b.imageDataUrl);
+            }
+          }),
+        );
+      }
+      if (settings.header?.academyLogoDataUrl) {
+        settings.header.academyLogoDataUrl = await toEmbeddableImageDataUrl(
+          settings.header.academyLogoDataUrl,
+        );
+      }
       // 빌더 미리보기와 동일한 레이아웃의 DOCX (해설 포함 시 각 문항 아래에 정답·해설 추가)
       const resolved = resolveBuilderItems(examQuestions, settings.items, settings.blocks);
       const fullExamQuestions = applyBuilderSettings(examQuestions, settings);

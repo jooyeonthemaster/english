@@ -600,7 +600,17 @@ export function JobPreviewDrawer({
                   className="size-4 cursor-pointer rounded border-slate-300 accent-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed"
                 />
               </label>
-              <div className="ml-auto flex shrink-0 items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2">
+                <MoveOrCopyFolderPicker
+                  collections={folders.collections}
+                  activeFolder={folders.activeFolder}
+                  selectedCount={visibleCheckedIds.size}
+                  onCopy={handleAdd}
+                  onMove={handleMove}
+                  disabled={anyBulkRunning || !hasSelection}
+                  compact
+                />
+
                 <button
                   type="button"
                   onClick={handlePromote}
@@ -618,16 +628,6 @@ export function JobPreviewDrawer({
                     <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                   )}
                 </button>
-
-                <MoveOrCopyFolderPicker
-                  collections={folders.collections}
-                  activeFolder={folders.activeFolder}
-                  selectedCount={visibleCheckedIds.size}
-                  onCopy={handleAdd}
-                  onMove={handleMove}
-                  disabled={anyBulkRunning || !hasSelection}
-                  compact
-                />
 
                 <button
                   type="button"
@@ -690,6 +690,11 @@ export function JobPreviewDrawer({
                       onToggleCheck={() => toggleCheck(draft.id)}
                       bulkDragIds={bulkDragIds}
                       onTitleChange={actions.updateDraftTitle}
+                      onPromote={actions.promoteDraft}
+                      onUnpromote={actions.unpromoteDraft}
+                      onDelete={actions.deleteDraft}
+                      footerDelete
+                      deleting={actions.deletingDraftId === draft.id}
                     />
                   ))}
                 </DragSelect>

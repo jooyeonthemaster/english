@@ -65,6 +65,10 @@ const requestSchema = z.object({
   // 같은 배치에서 병렬 생성되는 N개 중 몇 번째인지 — 다양성(타깃/정답 위치 분산)용.
   variantIndex: z.number().int().min(0).max(99).optional(),
   variantCount: z.number().int().min(1).max(99).optional(),
+  // 낙관적 temp 의 id(클라이언트 nonce). config 에 그대로 저장했다 DB 폴링이 되읽어,
+  // 큐 병합 때 temp↔DB 행을 설정 시그니처가 아닌 이 값으로 1:1 매칭한다. 같은 지문+유형을
+  // 연속/동시 생성해도 카드(지문·빈칸연습)가 섞이지 않게 하는 핵심 식별자.
+  clientTempId: z.string().min(1).max(200).optional(),
 });
 
 function getOperationType({
@@ -296,6 +300,7 @@ export async function POST(req: NextRequest) {
         customPrompt: config.customPrompt ?? "",
         generationPlan: effectiveGenerationPlan,
         fastPath: true,
+        clientTempId: config.clientTempId ?? null,
       },
     },
   });

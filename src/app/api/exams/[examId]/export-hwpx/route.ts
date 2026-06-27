@@ -7,6 +7,7 @@ import { packageHwpx } from "./_lib/package";
 import { MIMETYPE } from "./_lib/static-files";
 import { shouldForceSourcePassage } from "@/components/exams/paper-builder/passage-policy";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { toEmbeddableImageDataUrl } from "@/lib/server-image";
 import type {
   BuilderItem,
   BuilderSettings,
@@ -185,6 +186,17 @@ export async function GET(
 
     const settings = parseSettings(exam.settings);
     const examQuestions = exam.questions as unknown as ExamQuestionData[];
+
+    // 한컴이 임베드 못 하는 이미지 포맷(webp 등)을 PNG 로 변환 — hp:pic 임베드에 png/jpg/gif/bmp 만.
+    if (Array.isArray(settings?.blocks)) {
+      await Promise.all(
+        settings.blocks.map(async (b) => {
+          if (b.blockType === "image" && b.imageDataUrl) {
+            b.imageDataUrl = await toEmbeddableImageDataUrl(b.imageDataUrl);
+          }
+        }),
+      );
+    }
 
     const resolvedItems = settings
       ? resolveBuilderItems(examQuestions, settings.items, settings.blocks)

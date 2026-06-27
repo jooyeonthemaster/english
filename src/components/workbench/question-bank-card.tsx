@@ -142,6 +142,8 @@ export function QuestionBankCard({
   // 강조하고, 보이지 않으면 스크롤로 끌어온다(스크롤 anchor는 data-question-card-id).
   // selected(시험지에 포함됨)와는 별개의 시각 상태다.
   active = false,
+  // 방금 상세를 열어봤다가 닫은 카드 — 한 번 배경이 반짝여 "여기 봤었지"를 알려준다.
+  recentlyViewed = false,
   // 접힘(콤팩트) 모드 — 시험지 빌더 등 목록을 콤팩트하게 볼 때. 기본은 펼침(전체) 유지.
   collapsible = false,
   // 접힌(콤팩트) 카드일 때만 적용할 min-height 클래스. 같은 줄의 접힌 카드들을
@@ -196,6 +198,7 @@ export function QuestionBankCard({
   selectedCardHighlight?: boolean;
   // 시험지 미리보기에서 현재 클릭한 문항이면 진한 파란 테두리로 강조한다.
   active?: boolean;
+  recentlyViewed?: boolean;
   collapsible?: boolean;
   collapsedMinHeightClass?: string;
   embedded?: boolean;
@@ -294,6 +297,16 @@ export function QuestionBankCard({
         {generationPlan === "PREMIUM" ? "프리미엄" : "일반"}
       </Badge>
     ) : null;
+  // 난이도 배지 — 일반/프리미엄(planBadge)과 동일한 pill 디자인.
+  // 기본=파랑, 중급=노랑(amber), 킬러=빨강. plan 배지 왼쪽에 배치한다.
+  const difficultyBadge = diffConfig ? (
+    <Badge
+      variant="outline"
+      className={`shrink-0 text-[10px] font-bold ${diffConfig.className}`}
+    >
+      {diffConfig.label}
+    </Badge>
+  ) : null;
 
   // Parse questionText into structured sections
   const sections = useMemo(
@@ -489,7 +502,7 @@ export function QuestionBankCard({
         !selectionDisabled && !q.approved
           ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]"
           : ""
-      }${collapsed && collapsedMinHeightClass ? ` ${collapsedMinHeightClass}` : ""}`}
+      }${recentlyViewed && !active ? " motion-safe:animate-[card-recently-viewed-flash_1.2s_ease-out]" : ""}${collapsed && collapsedMinHeightClass ? ` ${collapsedMinHeightClass}` : ""}`}
     >
       <CardContent
         ref={contentRef}
@@ -592,6 +605,7 @@ export function QuestionBankCard({
             )}
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
+            {difficultyBadge}
             {planBadge}
             {typeof duplicateCount === "number" && duplicateCount > 1 && (
               <span

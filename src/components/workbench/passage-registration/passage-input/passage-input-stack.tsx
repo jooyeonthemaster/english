@@ -21,8 +21,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { ExamPassagePickerModal } from "@/components/workbench/exam-passage-library/exam-passage-picker-modal";
-import type { ExamPassagePick } from "@/lib/exam-passages/types";
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
@@ -38,7 +36,6 @@ import {
 import { PassageInputRow } from "./passage-input-row";
 import {
   makeEmptyRow,
-  mergeExamPicksIntoRows,
   MIN_CONTENT_CHARS,
   type PassageInputRow as RowData,
 } from "./types";
@@ -95,21 +92,6 @@ export function PassageInputStack({
 
   const addRow = () =>
     setRows((prev) => [...prev, makeEmptyRow()]);
-
-  // 수능·모평 기출 지문 불러오기 → 입력 스택 행으로 병합(중복·빈행 정리).
-  const handleLoadExamPicks = (picks: ExamPassagePick[]) => {
-    const res = mergeExamPicksIntoRows(rows, picks);
-    setRows(res.rows);
-    if (res.added > 0) {
-      toast.success(
-        res.skipped > 0
-          ? `기출 지문 ${res.added}개를 불러왔어요. (이미 있는 ${res.skipped}개 제외)`
-          : `기출 지문 ${res.added}개를 불러왔어요.`,
-      );
-    } else if (res.skipped > 0) {
-      toast.info("선택한 기출 지문은 이미 불러와 있어요.");
-    }
-  };
 
   // 문제생성 워크스페이스처럼 행은 0개까지 비울 수 있다 — 마지막 카드를 지우면
   // 빈 워크스페이스('지문 추가' 버튼만)로 돌아간다.
@@ -238,11 +220,13 @@ export function PassageInputStack({
   };
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="flex h-full min-h-0 min-w-0 flex-col bg-slate-50/60">
       {/* 워크스페이스 헤더 — 전체 펼치기 · 제목/개수 · 모두 접기 · 비우기
-          (문제생성 지문 워크스페이스 헤더와 동일 구성). */}
-      {!isEmpty ? (
-        <div className="mb-2.5 flex h-11 shrink-0 items-center gap-2 rounded-lg border border-slate-200 bg-white pl-3 pr-1.5 shadow-sm">
+          (문제생성 지문 워크스페이스 헤더와 동일 구성: 박스 없이 하단 보더만).
+          비어 있어도 제목 바는 항상 노출하고, 행에 의존하는 컨트롤(체크박스·개수·
+          액션)만 숨긴다. */}
+      <div className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-100 bg-white pl-3 pr-1.5">
+        {!isEmpty ? (
           <button
             type="button"
             role="checkbox"
@@ -259,67 +243,71 @@ export function PassageInputStack({
           >
             <Check className="h-3 w-3" aria-hidden="true" />
           </button>
-          <FilePen
-            className="h-3.5 w-3.5 shrink-0 text-slate-400"
-            aria-hidden="true"
-          />
-          <h3 className="shrink-0 text-[12.5px] font-bold text-slate-800">
-            지문 워크스페이스
-          </h3>
+        ) : null}
+        <FilePen
+          className="h-3.5 w-3.5 shrink-0 text-slate-400"
+          aria-hidden="true"
+        />
+        <h3 className="shrink-0 text-[12.5px] font-bold text-slate-800">
+          학습지 워크스페이스
+        </h3>
+        {!isEmpty ? (
           <span className="flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded-full bg-blue-600 px-1 text-[10.5px] font-bold leading-none text-white tabular-nums">
             {rows.length}
           </span>
-          <span className="min-w-0 flex-1" aria-hidden="true" />
-          <span
-            className="mx-0.5 h-4 w-px shrink-0 bg-slate-200"
-            aria-hidden="true"
-          />
-          <button
-            type="button"
-            onClick={() =>
-              toast.info(
-                "지문을 펼쳐 마킹·AI 변형하고, 아래 '생성하기'로 학습지를 만드세요.",
-              )
-            }
-            title="기능 안내"
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-blue-600"
-          >
-            <HelpCircle className="h-4 w-4" aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setAllCollapsed(true)}
-            title="모두 접기"
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
-          >
-            <ChevronsDownUp className="h-4 w-4" aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            onClick={clearWorkspace}
-            disabled={saving}
-            title={
-              selectedCount > 0
-                ? `선택한 지문 ${selectedCount}개 빼기 (지문은 삭제되지 않음)`
-                : "워크스페이스 비우기 (지문은 삭제되지 않음)"
-            }
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
-          >
-            <Trash2 className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </div>
-      ) : null}
+        ) : null}
+        <span className="min-w-0 flex-1" aria-hidden="true" />
+        {!isEmpty ? (
+          <>
+            <span
+              className="mx-0.5 h-4 w-px shrink-0 bg-slate-200"
+              aria-hidden="true"
+            />
+            <button
+              type="button"
+              onClick={() =>
+                toast.info(
+                  "지문을 펼쳐 마킹·AI 변형하고, 아래 '생성하기'로 학습지를 만드세요.",
+                )
+              }
+              title="기능 안내"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-blue-600"
+            >
+              <HelpCircle className="h-4 w-4" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setAllCollapsed(true)}
+              title="모두 접기"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+            >
+              <ChevronsDownUp className="h-4 w-4" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={clearWorkspace}
+              disabled={saving}
+              title={
+                selectedCount > 0
+                  ? `선택한 지문 ${selectedCount}개 빼기 (지문은 삭제되지 않음)`
+                  : "워크스페이스 비우기 (지문은 삭제되지 않음)"
+              }
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
+            >
+              <Trash2 className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </>
+        ) : null}
+      </div>
 
       {/* Rows (scrollable). With a single row, it stretches to fill the height. */}
       <div
         ref={rowsZoneRef}
         // 반응형 그리드 — 넓은 화면에서 카드가 2열로 동일 폭 타일된다(펼침/접힘
         // 무관). items-start 로 둬서 접힌(짧은) 카드가 옆의 펼친(긴) 카드 높이에
-        // 맞춰 늘어나 '빈 카드'처럼 보이지 않게 한다.
-        // max-h: 상위 페이지에 뷰포트 높이 제약이 없어 flex-1 이 받쳐지지 않으므로,
-        // 카드 영역 자체를 뷰포트 기준으로 cap 한다 → 카드가 길어도 이 영역 안에서만
-        // 스크롤되고 아래 '학습지 구성/생성' 푸터는 항상 첫 화면에 남는다.
-        className="grid min-h-0 flex-1 grid-cols-1 content-start items-start gap-2.5 overflow-y-auto pb-1 pr-0.5 xl:grid-cols-2 max-h-[calc(100vh-400px)]"
+        // 맞춰 늘어나 '빈 카드'처럼 보이지 않게 한다. 패널(IntakeSurface 오버레이)이
+        // 고정 높이를 주므로 flex-1 로 영역을 채우고 그 안에서만 스크롤된다.
+        className="grid min-h-0 flex-1 grid-cols-1 content-start items-start gap-2.5 overflow-y-auto p-3 xl:grid-cols-2"
       >
         {rows.map((row, i) => (
           <PassageInputRow
@@ -341,14 +329,6 @@ export function PassageInputStack({
           />
         ))}
 
-        {/* 수능·모평 기출 지문 불러오기 — 추가 버튼과 같은 그리드 타일(2열이면 반쪽). */}
-        <ExamPassagePickerModal
-          onPick={handleLoadExamPicks}
-          busy={saving}
-          triggerLabel="수능·모평 기출에서 불러오기"
-          pickLabel="선택한 지문 불러오기"
-          triggerClassName="flex h-11 w-full shrink-0 items-center justify-center gap-1.5 self-start rounded-xl border border-blue-200 bg-blue-50/70 text-[13px] font-bold text-blue-700 hover:bg-blue-100/70"
-        />
         {/* 지문 추가 — 지문 카드와 같은 가로 폭(2열이면 반쪽), 높이는 고정
             (self-start 로 옆 카드 높이에 맞춰 늘어나지 않게). 클릭하면 내
             지문함으로 돌아가 지문을 골라 담는다(문제생성 워크스페이스와 동일). */}
@@ -356,17 +336,27 @@ export function PassageInputStack({
           type="button"
           onClick={onAddPassage ?? addRow}
           disabled={saving}
-          className="flex h-11 w-full shrink-0 items-center justify-center gap-1.5 self-start rounded-xl border-2 border-dashed border-blue-300 bg-blue-50/60 text-[13px] font-bold text-blue-700 transition-colors hover:border-blue-400 hover:bg-blue-100/70 disabled:opacity-50"
+          className="flex h-11 w-full shrink-0 items-center justify-center gap-1.5 self-start rounded-lg border border-dashed border-slate-300 bg-white text-[12.5px] font-semibold text-slate-500 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Plus className="h-4 w-4" />
           빈 지문 추가
         </button>
+
+        {/* 빈 워크스페이스 안내 — 추가 버튼 아래 빈 공간 가운데에 회색 문구
+            (문제생성 워크스페이스와 동일). */}
+        {isEmpty ? (
+          <div className="col-span-full flex min-h-[320px] items-center justify-center">
+            <p className="text-[13px] font-medium text-slate-400">
+              지문을 먼저 추가해주세요
+            </p>
+          </div>
+        ) : null}
       </div>
 
       {!isEmpty && (
-        <>
+        <div className="shrink-0 px-3 pb-3">
       {/* ── 학습지 구성 선택 — 무엇이 만들어지는지 실물로 보고 고른다 ── */}
-      <div className="mt-2.5 shrink-0">
+      <div className="shrink-0">
         <div className="mb-1.5 flex items-center justify-between">
           <span className="text-[11px] font-black uppercase tracking-wide text-slate-500">
             학습지 구성
@@ -492,7 +482,7 @@ export function PassageInputStack({
           </span>
         </Button>
       </div>
-        </>
+        </div>
       )}
 
       {/* 실제 학습지 미리보기 — 기본/실전 비교는 실제 생성 데이터 그대로 */}

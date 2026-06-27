@@ -14,10 +14,10 @@ import {
   Maximize2,
   Minimize2,
   RotateCcw,
-  Save,
   Search,
   Shuffle,
 } from "lucide-react";
+import { SaveButton } from "@/components/ui/save-button";
 
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
@@ -625,23 +625,13 @@ export function PassageVariantClient({ passages }: PassageVariantClientProps) {
                         />
                       </button>
                       <span className="min-w-0 flex-1" aria-hidden="true" />
-                      <button
-                        type="button"
+                      <SaveButton
                         onClick={handleSave}
+                        saving={saving}
                         disabled={busy || saving}
                         title="이 변형본을 지문 목록에 저장합니다 (문제 생성에 바로 사용 가능)"
-                        className="flex h-8 shrink-0 items-center gap-1.5 rounded-md bg-violet-600 px-4 text-[11.5px] font-bold text-white shadow-sm transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        {saving ? (
-                          <Loader2
-                            className="h-3.5 w-3.5 animate-spin"
-                            aria-hidden="true"
-                          />
-                        ) : (
-                          <Save className="h-3.5 w-3.5" aria-hidden="true" />
-                        )}
-                        {saving ? "저장 중" : "라이브러리에 저장"}
-                      </button>
+                        className="shrink-0"
+                      />
                     </div>
 
                     {/* 저장 완료 후 후속 링크 */}

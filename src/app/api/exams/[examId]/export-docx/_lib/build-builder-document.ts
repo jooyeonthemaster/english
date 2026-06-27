@@ -53,6 +53,7 @@ import {
 } from "@/lib/summary-complete-mc";
 import { isSummaryWriting } from "@/lib/summary-writing";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
+import { DEFAULT_IMAGE_ASPECT, imageDimsFromDataUrl } from "@/lib/image-dims";
 import type { DocChild, ExamQuestionData, ParsedOption } from "./types";
 
 // 템플릿(세리프/산세리프)에 따라 본문 글꼴이 달라진다. buildBuilderExamDocument 시작 시
@@ -195,6 +196,9 @@ export interface BuilderBlock extends Omit<Partial<BuilderItem>, "blockType"> {
   blockText?: string;
   blockAlign?: "left" | "center" | "right";
   blockFontSize?: "sm" | "md" | "lg";
+  blockBold?: boolean;
+  blockItalic?: boolean;
+  blockFontPt?: number | null;
   blockAccentColor?: string;
   dividerStyle?: "solid" | "dashed" | "dotted";
   dividerThickness?: number;
@@ -215,6 +219,11 @@ export interface BuilderSettings {
 }
 
 interface BuilderItemResolved extends BuilderItem {
+  // 문항 단위 서식(블록 서식 툴바) — 미리보기와 동일하게 다운로드에도 반영.
+  blockFontPt?: number | null;
+  blockBold?: boolean;
+  blockItalic?: boolean;
+  blockAlign?: "left" | "center" | "right";
   sourceQuestion: ExamQuestionData["question"];
 }
 
@@ -247,7 +256,9 @@ function dataUrlToImage(dataUrl: string | null | undefined):
   const buf = Buffer.from(match[2], "base64");
   const type: "png" | "jpg" | "gif" | "bmp" =
     mime === "png" ? "png" : mime === "gif" ? "gif" : mime === "bmp" ? "bmp" : "jpg";
-  return { buffer: buf, type, width: 64, height: 64 };
+  // 실제 자연 크기를 헤더에서 읽어 종횡비를 정확히 한다(미상이면 정사각 폴백).
+  const dims = imageDimsFromDataUrl(dataUrl);
+  return { buffer: buf, type, width: dims?.width ?? 64, height: dims?.height ?? 64 };
 }
 
 function emptyParagraph(): Paragraph {
@@ -636,7 +647,8 @@ function buildGivenBox(text: string, bodySize: number, lh: number): DocChild[] {
     new Paragraph({
       alignment: AlignmentType.JUSTIFIED,
       spacing: { after: 80, ...exactLineSpacing(bodySize, lh) },
-      children: parseFormattedText(text, { font: bodyFont, size: bodySize, bold: true }),
+      // 본문(주어진 문장 내용)은 일반체 — 라벨("주어진 문장")만 굵게(미리보기와 동일).
+      children: parseFormattedText(text, { font: bodyFont, size: bodySize, bold: false }),
     }),
   ];
 }
@@ -706,9 +718,18 @@ function buildQuestionBlock(
   );
   const options = shouldRenderOptionListForSubtype(subType) ? parsedOptions : [];
 
-  const qNumSize = compact ? SIZE_QNUM_COMPACT : SIZE_QNUM;
-  const bodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
-  const optionSize = compact ? SIZE_OPTION_COMPACT : SIZE_OPTION;
+  // 문항 단위 글자 크기(pt)·굵게·기울임 — 미리보기 컨테이너 글꼴 상속과 동일하게,
+  // 본문/번호/선지 크기를 같은 비율로 확대·축소한다(DOCX size 는 half-point = pt*2).
+  const baseBodyHalf = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
+  const fontScale =
+    typeof item.blockFontPt === "number" && item.blockFontPt > 0
+      ? (item.blockFontPt * 2) / baseBodyHalf
+      : 1;
+  const qNumSize = Math.round((compact ? SIZE_QNUM_COMPACT : SIZE_QNUM) * fontScale);
+  const bodySize = Math.round(baseBodyHalf * fontScale);
+  const optionSize = Math.round((compact ? SIZE_OPTION_COMPACT : SIZE_OPTION) * fontScale);
+  const qBold = item.blockBold ?? false;
+  const qItalic = item.blockItalic ?? false;
   const lh = compact ? BODY_LINE_HEIGHT_COMPACT : BODY_LINE_HEIGHT;
   const summaryComplete = isSummaryCompleteSubtype(subType);
   const summaryMc = isSummaryCompleteMc(subType);
@@ -769,6 +790,7 @@ function buildQuestionBlock(
         font: bodyFont,
         size: bodySize,
         bold: true,
+        italics: qItalic,
       }),
     );
   }
@@ -1040,6 +1062,15 @@ function buildQuestionBlock(
       }
       return true;
     });
+    // 발문(헤더)과 본문 사이의 빈 줄(원문 "발문\n\n본문" 의 \n\n)은 미리보기에선 본문 위에
+    // 표시되지 않는다. DOCX 도 선두 빈 줄을 제거해 발문 바로 아래에서 본문이 시작하게 한다
+    // (이 처리 없으면 1번 외 모든 문항에서 발문 아래 빈 줄 한 칸이 더 생겨 미리보기와 어긋남).
+    while (
+      bodyQuestionParagraphs.length > 0 &&
+      bodyQuestionParagraphs[0].trim().length === 0
+    ) {
+      bodyQuestionParagraphs.shift();
+    }
 
     bodyQuestionParagraphs.forEach((text, idx) => {
       const trimmed = text.trim();
@@ -1048,7 +1079,15 @@ function buildQuestionBlock(
           alignment: AlignmentType.JUSTIFIED,
           spacing: {
             before: 0,
-            after: idx === bodyQuestionParagraphs.length - 1 ? 100 : 30,
+            // 본문 마지막 단락: 선지가 뒤따르면 본문↔선지 간격(100), 선지가 없으면(밑줄/어휘
+            // 등 인라인 마커 유형) 이 본문이 문항의 마지막 요소이므로 선지 trailing(60)과
+            // 같게 둬 문항 간 간격을 일관되게 한다.
+            after:
+              idx === bodyQuestionParagraphs.length - 1
+                ? options.length > 0
+                  ? 100
+                  : 60
+                : 30,
             ...exactLineSpacing(bodySize, lh),
           },
           keepNext: idx === bodyQuestionParagraphs.length - 1 && options.length > 0,
@@ -1058,7 +1097,11 @@ function buildQuestionBlock(
               : parseFormattedText(trimmed, {
                   font: bodyFont,
                   size: bodySize,
-                  bold: true,
+                  // 문항 본문(지문)은 일반체 — 발문(헤더)만 굵게(미리보기와 동일).
+                  // 일부 유형(빈칸·어휘·무관문장 등)이 굵게 나오던 불일치 해소.
+                  // 단, 문항 단위 '굵게' 서식이 켜지면 본문도 함께 굵게(미리보기와 동일).
+                  bold: qBold,
+                  italics: qItalic,
                   // 순서 유형의 (A)(B)(C)는 미리보기에서 검정, 그 외 본문 마커는 파랑(기본)
                   ...(subType === "SENTENCE_ORDER" ? { markerColor: COLOR.black } : {}),
                 }),
@@ -1110,6 +1153,8 @@ function buildQuestionBlock(
                   ...parseFormattedText(displayText, {
                     font: useKR ? KR_FONT : FONT,
                     size: optionSize,
+                    bold: qBold,
+                    italics: qItalic,
                     markerColor: COLOR.black, // 선지의 (A) 마커는 미리보기에서 검정
                   }),
                 ]
@@ -1149,6 +1194,8 @@ function buildQuestionBlock(
               ? parseFormattedText(displayText, {
                   font: useKR ? KR_FONT : FONT,
                   size: optionSize,
+                  bold: qBold,
+                  italics: qItalic,
                   markerColor: COLOR.black,
                 })
               : [
@@ -1166,7 +1213,14 @@ function buildQuestionBlock(
     }
   }
 
-  if (options.length > 0) {
+  // 선지 뒤 빈 줄: 답란/해설이 뒤따를 때만 구분용으로 둔다. 문항 사이 간격은 다음 문항
+  // 헤더의 before spacing 으로 일관 처리하므로, 여기서 무조건 빈 줄을 넣으면 "선지 있는
+  // 문항"만 한 줄 더 벌어져 문항 간 간격이 들쭉날쭉해진다(미리보기는 항상 동일 간격).
+  const hasTrailingAnswerContent =
+    includeAnswers ||
+    (showAnswerSpace &&
+      (((item.objectiveAnswerSlots ?? 0) > 0) || ((item.answerSpaceLines ?? 0) > 0)));
+  if (options.length > 0 && hasTrailingAnswerContent) {
     result.push(new Paragraph({ spacing: { after: 60 } }));
   }
 
@@ -1439,6 +1493,10 @@ function docAlignment(align: BuilderBlock["blockAlign"]): (typeof AlignmentType)
 }
 
 function blockBodySize(block: BuilderBlock, compact: boolean) {
+  // 숫자 pt 가 지정되면 half-point(pt*2) 로 직접 환산해 미리보기와 동일 크기로 출력한다.
+  if (typeof block.blockFontPt === "number" && Number.isFinite(block.blockFontPt)) {
+    return Math.round(block.blockFontPt * 2);
+  }
   if (block.blockFontSize === "lg") return compact ? 24 : 26;
   if (block.blockFontSize === "sm") return compact ? 16 : 18;
   return compact ? SIZE_BODY_COMPACT : SIZE_BODY;
@@ -1471,8 +1529,14 @@ function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChild[] {
           new TextRun({
             text: block.blockTitle || text || "새 섹션",
             font: bodyFont,
-            size: compact ? 24 : 26,
-            bold: true,
+            size:
+              typeof block.blockFontPt === "number" && Number.isFinite(block.blockFontPt)
+                ? Math.round(block.blockFontPt * 2)
+                : compact
+                  ? 24
+                  : 26,
+            bold: block.blockBold ?? true,
+            italics: block.blockItalic ?? false,
             color: COLOR.black,
           }),
         ],
@@ -1491,6 +1555,8 @@ function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChild[] {
             font: bodyFont,
             size: blockBodySize(block, compact),
             color: COLOR.darkGray,
+            bold: block.blockBold ?? false,
+            italics: block.blockItalic ?? false,
           }),
         }),
     );
@@ -1558,14 +1624,30 @@ function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChild[] {
     }
 
     const width = Math.max(120, Math.min(520, 520 * ((block.imageWidth || 70) / 100)));
+    // 실제 종횡비(자연 height/width)로 높이를 잡아 미리보기와 같은 비율로 출력한다.
+    const aspect = image.width > 0 ? image.height / image.width : DEFAULT_IMAGE_ASPECT;
+    // 아주 긴 이미지는 한 페이지(내용 높이 ~1000px@A4)를 넘지 않도록 높이를 제한해
+    // 종횡비를 유지한 채 폭까지 함께 줄인다(워드 페이지/여백을 넘지 않게).
+    const MAX_IMG_HEIGHT_PX = 1000;
+    let imgW = width;
+    let imgH = Math.round(width * aspect);
+    if (imgH > MAX_IMG_HEIGHT_PX) {
+      imgH = MAX_IMG_HEIGHT_PX;
+      imgW = Math.round(MAX_IMG_HEIGHT_PX / aspect);
+    }
+    const height = imgH;
     return [
       new Paragraph({
         alignment: align,
         spacing: { before: 80, after: block.imageAlt ? 40 : 120 },
+        // 이미지는 한 덩어리로 유지 — 페이지 하단에 안 들어가면 통째로 다음 쪽으로
+        // (Word 가 인라인 이미지를 쪼개지 않으므로 자동으로 다음 쪽 상단에 배치된다).
+        keepLines: true,
+        keepNext: Boolean(block.imageAlt),
         children: [
           new ImageRun({
             data: image.buffer,
-            transformation: { width, height: width * 0.68 },
+            transformation: { width: imgW, height },
             type: image.type,
           }),
         ],
@@ -1575,6 +1657,7 @@ function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChild[] {
             new Paragraph({
               alignment: align,
               spacing: { after: 100 },
+              keepLines: true,
               children: [
                 new TextRun({
                   text: block.imageAlt,
@@ -1602,7 +1685,21 @@ function appendQuestionGroups(
   const passageStyle = "plain";
   const showPassageTitle = layout.showPassageTitle === true;
   const groups = groupItems(items);
+
+  // 워드(DOCX) 전용: 문항과 문항 사이에 항상 빈 줄 1개를 넣어 간격을 일관되게 한다
+  // (미리보기·HWPX 는 그대로 — 사용자 요청 "워드만"). 본문 한 줄 높이의 빈 단락.
+  const sepBodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
+  const sepLh = compact ? BODY_LINE_HEIGHT_COMPACT : BODY_LINE_HEIGHT;
+  const questionSeparator = () =>
+    new Paragraph({
+      spacing: { before: 0, after: 0, ...exactLineSpacing(sepBodySize, sepLh) },
+      children: [new TextRun({ text: " ", font: bodyFont, size: sepBodySize })],
+    });
+  let renderedAnyQuestion = false;
+
   for (const group of groups) {
+    // 이전 문항(그룹)과의 사이에 빈 줄 1개.
+    if (renderedAnyQuestion) target.push(questionSeparator());
     const first = group.items[0];
     const rawPassageContent = (first.passageContent ?? first.sourceQuestion.passage?.content ?? "").trim();
     const passageContent = formatSourcePassageForQuestionItems(
@@ -1631,9 +1728,12 @@ function appendQuestionGroups(
       });
       target.push(...passageBlocks);
     }
-    for (const item of group.items) {
+    group.items.forEach((item, idx) => {
+      // 같은 지문을 공유하는 그룹 내 문항들 사이에도 빈 줄 1개.
+      if (idx > 0) target.push(questionSeparator());
       target.push(...buildQuestionBlock(item, layout, includeAnswers));
-    }
+      renderedAnyQuestion = true;
+    });
   }
 }
 

@@ -125,6 +125,7 @@ export async function createFastQuestionGenerationJob({
   generationPlan,
   variantIndex,
   variantCount,
+  clientTempId,
 }: {
   passageId: string;
   mode: "MANUAL";
@@ -137,6 +138,8 @@ export async function createFastQuestionGenerationJob({
   /** 같은 유형 N개 병렬 생성 중 몇 번째인지 — 서버 다양성(타깃/정답 위치 분산)용 */
   variantIndex?: number;
   variantCount?: number;
+  /** 낙관적 temp 의 id — 서버 config 에 저장됐다 DB 폴링 때 되읽어 temp↔DB 1:1 매칭. */
+  clientTempId?: string;
 }) {
   const res = await fetch("/api/workbench/ai-jobs/question-generation/fast", {
     method: "POST",
@@ -153,6 +156,7 @@ export async function createFastQuestionGenerationJob({
       generationPlan,
       variantIndex,
       variantCount,
+      clientTempId,
     }),
   });
   const data = await res.json().catch(() => ({}));
@@ -357,6 +361,7 @@ export function useGenerationHandlers({
                 generationPlan,
                 variantIndex: unit.variantIndex,
                 variantCount: unit.variantCount,
+                clientTempId: unit.tempId,
               });
               const doneItem = {
                 ...buildOptimisticItem({
@@ -778,6 +783,7 @@ export function useGenerationHandlers({
           difficulty: config.difficulty,
           customPrompt: config.prompt?.trim() || undefined,
           generationPlan: plan,
+          clientTempId: item.id,
         });
         const doneItem: QueueItem = {
           ...buildOptimisticItem({

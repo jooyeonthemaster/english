@@ -136,6 +136,16 @@ interface ExtractionManageClientProps {
    *  Merged with server jobMeta to render IMMEDIATE "추출 중" skeleton cards in
    *  the grid (session covers the gap before the server poll sees the job). */
   sessionPending?: PendingExtraction[];
+  /** When false, drop the full-page bleed wrapper (-m-6 + bg) so this surface
+   *  can be embedded inline below another section (e.g. the 자료 추출 upload
+   *  panel) whose parent already supplies the page background and padding.
+   *  Unlike `embedded`, this keeps ALL standalone behavior (job list row,
+   *  job cards, review modal) — it only swaps the outermost wrapper. */
+  pageBleed?: boolean;
+  /** When false, hide the horizontal "자료 목록"(작업/권) 카드 행. Used by the
+   *  자료 추출 embed, where the same jobs are already tracked by the global
+   *  작업 목록 드로어 — so an inline copy of the row is redundant. */
+  showJobListRow?: boolean;
 }
 
 const MATERIAL_GRID_OPTIONS = [
@@ -230,6 +240,8 @@ export function ExtractionManageClient({
   draftDetailActionMode = "detail",
   refreshToken = 0,
   sessionPending = [],
+  pageBleed = true,
+  showJobListRow = true,
 }: ExtractionManageClientProps) {
   const draftDetailAction =
     draftDetailActionMode === "import"
@@ -1066,7 +1078,10 @@ export function ExtractionManageClient({
   // scrolls only the materials list below them.
   const shouldPinManageHeaders = !embedded;
   const hasStickyJobList =
-    !embedded && shouldPinManageHeaders && display.availableJobs.length > 0;
+    !embedded &&
+    showJobListRow &&
+    shouldPinManageHeaders &&
+    display.availableJobs.length > 0;
   const [jobListStickyRef, jobListStickyHeight] =
     useMeasuredHeight(hasStickyJobList);
   const [folderStickyRef, folderStickyHeight] = useMeasuredHeight(
@@ -1089,7 +1104,9 @@ export function ExtractionManageClient({
       className={
         embedded
           ? "flex h-full min-h-0 min-w-0 flex-col overflow-hidden"
-          : "-m-6 flex min-h-[calc(100%+3rem)] min-w-0 flex-col bg-[#F4F6F9]"
+          : pageBleed
+            ? "-m-6 flex min-h-[calc(100%+3rem)] min-w-0 flex-col bg-[#F4F6F9]"
+            : "flex min-w-0 flex-col"
       }
     >
       <div
@@ -1112,7 +1129,7 @@ export function ExtractionManageClient({
             "flex min-w-0 flex-col" + (embedded ? " min-h-0 flex-1" : "")
           }
         >
-          {!embedded && display.availableJobs.length > 0 ? (
+          {!embedded && showJobListRow && display.availableJobs.length > 0 ? (
             <div
               ref={jobListStickyRef}
               className={

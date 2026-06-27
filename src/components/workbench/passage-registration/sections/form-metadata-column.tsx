@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import {
-  getVisibleQuestionTags,
+  getDisplayQuestionTags,
   sanitizeAiModelDisclosureText,
 } from "@/lib/question-generation-plans";
 import { PUBLISHERS } from "../constants";
@@ -63,7 +63,7 @@ export function FormMetadataColumn({
   addTag,
   removeTag,
 }: FormMetadataColumnProps) {
-  const visibleTags = getVisibleQuestionTags(tags);
+  const visibleTags = getDisplayQuestionTags(tags);
 
   return (
     <div className="bg-slate-50/70 rounded-xl border border-slate-200 p-5 flex flex-col min-h-0 overflow-y-auto">

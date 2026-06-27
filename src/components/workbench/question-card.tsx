@@ -96,15 +96,15 @@ export const DIFFICULTY_CONFIG: Record<
 > = {
     BASIC: {
       label: "기본",
-      className: "bg-slate-50 text-slate-600 border-slate-200",
+      className: "border-blue-200 bg-blue-50 text-blue-700",
     },
     INTERMEDIATE: {
       label: "중급",
-      className: "bg-slate-50 text-slate-600 border-slate-200",
+      className: "border-amber-200 bg-amber-50 text-amber-700",
     },
     KILLER: {
       label: "킬러",
-      className: "bg-slate-50 text-slate-600 border-slate-200",
+      className: "border-red-200 bg-red-50 text-red-700",
     },
   };
 
@@ -469,6 +469,8 @@ interface QuestionCardProps {
   q: QuestionCardItem;
   num: number;
   selected?: boolean;
+  /** 방금 상세를 열어봤다가 닫은 카드 — 한 번 배경이 반짝인다. */
+  recentlyViewed?: boolean;
   onToggle?: () => void;
   onDelete?: () => void;
   onApprove?: () => void;
@@ -504,6 +506,7 @@ export function QuestionCard({
   q,
   num,
   selected = false,
+  recentlyViewed = false,
   onToggle,
   onDelete,
   onApprove,
@@ -583,6 +586,16 @@ export function QuestionCard({
       </Badge>
     ) : null;
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
+  // 난이도 배지 — 일반/프리미엄(planBadge)과 동일한 pill 디자인.
+  // 기본=파랑, 중급=노랑(amber), 킬러=빨강으로 색상 구분. plan 배지 왼쪽에 배치한다.
+  const difficultyBadge = diffConfig ? (
+    <Badge
+      variant="outline"
+      className={`shrink-0 text-[10px] font-bold ${diffConfig.className}`}
+    >
+      {diffConfig.label}
+    </Badge>
+  ) : null;
   const keyPoints = parseJSON<string[]>(q.explanation?.keyPoints || null, []);
 
   // 구조화 데이터가 있으면 해당 유형의 전용 렌더러 사용 (compact 아닐 때)
@@ -693,6 +706,8 @@ export function QuestionCard({
       className={`group relative gap-0 py-0 transition-all ${openOnCardClick ? "cursor-pointer" : ""} ${
         selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"
       } ${!q.approved ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]" : ""}${
+        recentlyViewed && !selected ? " motion-safe:animate-[card-recently-viewed-flash_1.2s_ease-out]" : ""
+      }${
         compactFixed ? " h-full" : ""
       }`}
     >
@@ -724,8 +739,13 @@ export function QuestionCard({
                    발문을 다시 렌더하므로(중복/겹침 방지) 헤더 발문은 접힌 상태에서만
                    보여준다. 단, 생성 플랜 태그는 접힘/펼침 모두 항상 노출한다. */
                 <>
-                  {planBadge ? (
-                    <div className={!compactExpanded ? "mb-1.5" : ""}>
+                  {difficultyBadge || planBadge ? (
+                    <div
+                      className={`flex items-center gap-1 ${
+                        !compactExpanded ? "mb-1.5" : ""
+                      }`}
+                    >
+                      {difficultyBadge}
                       {planBadge}
                     </div>
                   ) : null}
@@ -752,14 +772,7 @@ export function QuestionCard({
                         {SUBTYPE_LABELS[q.subType] || q.subType}
                       </Badge>
                     )}
-                    {diffConfig && (
-                      <Badge
-                        variant="outline"
-                        className={`text-[10px] ${diffConfig.className}`}
-                      >
-                        {diffConfig.label}
-                      </Badge>
-                    )}
+                    {difficultyBadge}
                     {planBadge}
                     {q.aiGenerated && (
                       <Layers className="w-3 h-3 text-blue-400" />

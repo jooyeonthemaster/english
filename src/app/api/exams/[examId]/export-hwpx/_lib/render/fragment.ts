@@ -26,7 +26,11 @@ import {
 } from "@/components/exams/paper-builder/question-body-layout";
 import { questionHasEmbeddedPassage } from "@/components/exams/paper-builder/passage-policy";
 import { normalizeInlineText } from "@/components/exams/paper-builder/text-normalization";
-import { renderQuestionBlock, type BuilderItemResolved } from "./question";
+import {
+  applyQuestionBlockFormat,
+  renderQuestionBlock,
+  type BuilderItemResolved,
+} from "./question";
 import {
   LINE_GAP_MARKER,
   type PassageStyle,
@@ -353,7 +357,7 @@ export function renderQuestionPart(
       contentWidthHpu: opts.columnWidthHpu,
     });
     blocks.push({ kind: "p", style: { spaceAfter: 80 }, runs: [] });
-    return blocks;
+    return applyQuestionBlockFormat(blocks, item, compact);
   }
 
   // 미리보기(a4-paper-page)와 동일: 지시문(stem=첫 단락)은 번호 옆에 항상 통째로,
@@ -550,7 +554,7 @@ export function renderQuestionPart(
 
   // 문항 사이 간격
   result.push({ kind: "p", style: { spaceAfter: 80 }, runs: [] });
-  return result;
+  return applyQuestionBlockFormat(result, item, compact);
 }
 
 function renderCustomPart(
@@ -580,8 +584,14 @@ function renderCustomPart(
         },
         runs: [
           txt(item.blockTitle || item.blockText || "새 섹션", {
-            size: compact ? 12 : 13,
-            bold: true,
+            size:
+              typeof item.blockFontPt === "number" && Number.isFinite(item.blockFontPt)
+                ? item.blockFontPt
+                : compact
+                  ? 12
+                  : 13,
+            bold: item.blockBold ?? true,
+            italic: item.blockItalic ?? false,
             color,
           }),
         ],
@@ -591,24 +601,33 @@ function renderCustomPart(
 
   if (item.blockType === "text") {
     const size =
-      item.blockFontSize === "lg"
-        ? compact
-          ? 12
-          : 13
-        : item.blockFontSize === "sm"
+      typeof item.blockFontPt === "number" && Number.isFinite(item.blockFontPt)
+        ? item.blockFontPt
+        : item.blockFontSize === "lg"
           ? compact
-            ? 8
-            : 9
-          : compact
-            ? SIZE.bodyCompact
-            : SIZE.body;
+            ? 12
+            : 13
+          : item.blockFontSize === "sm"
+            ? compact
+              ? 8
+              : 9
+            : compact
+              ? SIZE.bodyCompact
+              : SIZE.body;
     return (item.blockText || " ")
       .replace(/\r/g, "")
       .split("\n")
       .map<BlockNode>((line) => ({
         kind: "p",
         style: { align, spaceBefore: 40, spaceAfter: 80, lineSpacingPct: 155 },
-        runs: [txt(line || " ", { size, color: COLORS.darkGray })],
+        runs: [
+          txt(line || " ", {
+            size,
+            bold: item.blockBold ?? false,
+            italic: item.blockItalic ?? false,
+            color: COLORS.darkGray,
+          }),
+        ],
       }));
   }
 

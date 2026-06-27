@@ -21,11 +21,11 @@ interface FolderActions {
   addToCollection: (
     collectionId: string,
     itemIds: string[],
-  ) => Promise<{ success: boolean }>;
+  ) => Promise<{ success: boolean; addedIds?: string[] }>;
   removeFromCollection: (
     collectionId: string,
     itemIds: string[],
-  ) => Promise<{ success: boolean }>;
+  ) => Promise<{ success: boolean; removedIds?: string[] }>;
 }
 
 interface UseFolderManagerOptions {
@@ -213,18 +213,26 @@ export function useFolderManager({
 
       const result = await actions.addToCollection(collectionId, idsToAdd);
       if (result.success) {
+        // Trust the server's report of what was ACTUALLY inserted so the
+        // folder count never drifts from the DB (the client's idsToAdd guess
+        // can be stale if another tab already added some of them).
+        const addedIds = result.addedIds ?? idsToAdd;
+        if (addedIds.length === 0) {
+          toast.info("이미 이 폴더에 들어있는 자료입니다.");
+          return false;
+        }
         const nextMembership = { ...membership };
         const existing = nextMembership[collectionId]
           ? new Set(nextMembership[collectionId])
           : new Set<string>();
-        idsToAdd.forEach((id) => existing.add(id));
+        addedIds.forEach((id) => existing.add(id));
         nextMembership[collectionId] = existing;
         applyMembershipSnapshot(nextMembership);
 
         const undoAddToFolder = async () => {
           const undoResult = await actions.removeFromCollection(
             collectionId,
-            idsToAdd,
+            addedIds,
           );
           if (!undoResult.success) {
             toast.error("폴더 추가를 실행 취소하지 못했습니다.");
@@ -232,14 +240,14 @@ export function useFolderManager({
           }
           const revertedMembership = cloneMembership(nextMembership);
           const reverted = new Set(revertedMembership[collectionId] ?? []);
-          idsToAdd.forEach((id) => reverted.delete(id));
+          addedIds.forEach((id) => reverted.delete(id));
           revertedMembership[collectionId] = reverted;
           applyMembershipSnapshot(revertedMembership);
           toast.success("폴더 추가를 실행 취소했습니다.");
         };
 
         toast.success(
-          `${idsToAdd.length}개 ${itemLabel}이(가) 폴더에 추가되었습니다.`,
+          `${addedIds.length}개 ${itemLabel}이(가) 폴더에 추가되었습니다.`,
           {
             duration: UNDO_TOAST_DURATION,
             action: {
@@ -261,9 +269,12 @@ export function useFolderManager({
       const folderId = activeFolder;
       const ids = [...selectedIds];
       const existingIds = membership[folderId] ?? new Set<string>();
-      const idsToRemove = ids.filter((id) => existingIds.has(id));
       const result = await actions.removeFromCollection(folderId, ids);
       if (result.success) {
+        // Reconcile against what the server actually removed so the folder
+        // count matches the DB (items not in this folder are never counted).
+        const idsToRemove =
+          result.removedIds ?? ids.filter((id) => existingIds.has(id));
         const nextMembership = cloneMembership(membership);
         const existing = new Set(nextMembership[folderId] ?? []);
         idsToRemove.forEach((id) => existing.delete(id));
@@ -289,7 +300,7 @@ export function useFolderManager({
         };
 
         toast.success(
-          `${ids.length}개 ${itemLabel}이(가) 폴더에서 제거되었습니다.`,
+          `${idsToRemove.length}개 ${itemLabel}이(가) 폴더에서 제거되었습니다.`,
           idsToRemove.length > 0
             ? {
                 duration: UNDO_TOAST_DURATION,
@@ -341,45 +352,66 @@ export function useFolderManager({
 
       try {
         const previousMembership = cloneMembership(membership);
-        const nextMembership: Record<string, Set<string>> = {};
-        for (const [colId, ids] of Object.entries(membership)) {
-          const nextIds = new Set(ids);
-          if (!copy && colId !== folderId) {
-            idsToMove.forEach((id) => nextIds.delete(id));
-          }
-          nextMembership[colId] = nextIds;
-        }
-        const targetNext = nextMembership[folderId]
-          ? new Set(nextMembership[folderId])
-          : new Set<string>();
-        (copy ? idsToAdd : idsToMove).forEach((id) => targetNext.add(id));
-        nextMembership[folderId] = targetNext;
 
+        // Remove from every other folder (move only), capturing what the
+        // server ACTUALLY removed per folder so the snapshot matches the DB.
+        const removedByCol: Record<string, string[]> = {};
         if (!copy) {
-          // Remove from all current folders first
-          const removePromises: Promise<unknown>[] = [];
+          const removeOps: { colId: string; toRemove: string[] }[] = [];
           for (const [colId, ids] of Object.entries(membership)) {
             if (colId !== folderId) {
               const toRemove = idsToMove.filter((id) => ids.has(id));
-              if (toRemove.length > 0) {
-                removePromises.push(
-                  actions.removeFromCollection(colId, toRemove),
-                );
-              }
+              if (toRemove.length > 0) removeOps.push({ colId, toRemove });
             }
           }
-          await Promise.all(removePromises);
+          const removeResults = await Promise.all(
+            removeOps.map((op) =>
+              actions.removeFromCollection(op.colId, op.toRemove),
+            ),
+          );
+          removeOps.forEach((op, i) => {
+            const r = removeResults[i];
+            removedByCol[op.colId] = r?.success
+              ? (r.removedIds ?? op.toRemove)
+              : [];
+          });
         }
 
+        // Add to the target folder, using the server's real insert list.
+        let addedIds: string[] = [];
         if (idsToAdd.length > 0) {
-          await actions.addToCollection(folderId, idsToAdd);
+          const addResult = await actions.addToCollection(folderId, idsToAdd);
+          addedIds = addResult.success ? (addResult.addedIds ?? idsToAdd) : [];
         }
 
+        // Build the next snapshot from the actual server deltas so every
+        // folder badge (and the optimistic grid mask) matches the DB exactly.
+        const nextMembership = cloneMembership(membership);
+        for (const [colId, removed] of Object.entries(removedByCol)) {
+          const set = new Set(nextMembership[colId] ?? []);
+          removed.forEach((id) => set.delete(id));
+          nextMembership[colId] = set;
+        }
+        const targetNext = new Set(nextMembership[folderId] ?? []);
+        addedIds.forEach((id) => targetNext.add(id));
+        nextMembership[folderId] = targetNext;
         applyMembershipSnapshot(nextMembership);
 
         const folderName =
           collections.find((c) => c.id === folderId)?.name || "폴더";
-        const toastCount = copy ? idsToAdd.length : idsToMove.length;
+        // Count distinct items whose membership actually changed (added to the
+        // target and/or removed from a source) so the toast matches reality.
+        const changedIds = new Set<string>(addedIds);
+        if (!copy) {
+          for (const removed of Object.values(removedByCol)) {
+            removed.forEach((id) => changedIds.add(id));
+          }
+        }
+        const toastCount = changedIds.size;
+        if (toastCount === 0) {
+          toast.info("이미 이 폴더에 들어있는 자료입니다.");
+          return false;
+        }
         const countLabel =
           toastCount > 1
             ? `${toastCount}개 ${itemLabel}이(가)`

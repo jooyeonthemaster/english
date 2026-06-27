@@ -16,6 +16,10 @@ export interface ActionResult {
   success: boolean;
   error?: string;
   id?: string;
+  /** Items actually inserted by an add-to-collection action (after dedup). */
+  addedIds?: string[];
+  /** Items actually removed by a remove-from-collection action. */
+  removedIds?: string[];
 }
 
 export interface ExamCreateData {

@@ -1,8 +1,9 @@
 import { X } from "lucide-react";
-import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
-import { optionDisplayTextForSubtype } from "../option-display";
-import { parseOptions } from "../paper-item-utils";
-import { normalizeQuestionText } from "../text-normalization";
+import {
+  QuestionCard,
+  ReviewStatusStamp,
+  type QuestionCardItem,
+} from "@/components/workbench/question-card";
 import type { BuilderQuestion } from "../types";
 
 interface QuestionDetailModalProps {
@@ -11,62 +12,59 @@ interface QuestionDetailModalProps {
 }
 
 export function QuestionDetailModal({ question, onClose }: QuestionDetailModalProps) {
-  const options = parseOptions(question.options);
-  const displayQuestionText = normalizeQuestionText(question.questionText);
-  const displayOptions =
-    question.subType === "SENTENCE_INSERT"
-      ? options.map((option, index) => ({
-          ...option,
-          text: optionDisplayTextForSubtype(question.subType, index, option.text),
-        }))
-      : options;
+  // BuilderQuestion 은 QuestionCardItem 의 필요한 필드를 모두 포함한다(createdAt 만 Date|string).
+  const cardQuestion = question as unknown as QuestionCardItem;
 
   return (
     <div
-      className="no-print fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-3 backdrop-blur-[2px]"
+      className="no-print fixed inset-0 z-50 flex items-stretch justify-center"
       onClick={onClose}
     >
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
       <div
-        className="flex h-[96vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+        className="relative z-10 mx-4 my-4 flex w-full max-w-[1200px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-5 py-2">
-          <div>
-            <p className="text-[14px] font-bold text-slate-900">문제 상세</p>
-            <p className="text-[11px] text-slate-400">
-              {sanitizeAiModelDisclosureText(question.passage?.title) || "독립 문제"}
-            </p>
+        {/* Header */}
+        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-200 px-6 py-3">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <h2 className="text-[15px] font-bold text-slate-800">문제 상세</h2>
           </div>
-          <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-slate-100">
-            <X className="h-4 w-4 text-slate-400" />
+          <button
+            onClick={onClose}
+            className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+            aria-label="닫기"
+          >
+            <X className="h-4 w-4" />
           </button>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
-          {question.passage && (
-            <div className="mb-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-              <p className="mb-2 text-[12px] font-bold text-slate-700">
-                {sanitizeAiModelDisclosureText(question.passage.title)}
-              </p>
-              <p className="whitespace-pre-line text-[12px] leading-relaxed text-slate-600">{question.passage.content}</p>
-            </div>
-          )}
-          <p className="whitespace-pre-line text-[14px] font-semibold leading-relaxed text-slate-800">{displayQuestionText}</p>
-          {displayOptions.length > 0 && (
-            <div className="mt-4 space-y-2">
-              {displayOptions.map((option) => (
-                <div key={option.label} className="flex gap-2 rounded-lg bg-slate-50 px-3 py-2 text-[13px] text-slate-700">
-                  <span className="font-bold text-slate-400">{option.label}</span>
-                  <span>{option.text}</span>
+        {/* Content: 2 columns */}
+        <div className="grid flex-1 grid-cols-2 overflow-hidden">
+          {/* Left: Passage */}
+          <div className="overflow-y-auto border-r border-slate-200">
+            {question.passage ? (
+              <div className="px-6 py-5">
+                <div className="whitespace-pre-wrap font-mono text-sm leading-[2] text-slate-800">
+                  {question.passage.content}
                 </div>
-              ))}
+              </div>
+            ) : (
+              <div className="flex h-full items-center justify-center text-sm text-slate-400">
+                지문 없음
+              </div>
+            )}
+          </div>
+          {/* Right: Question */}
+          <div className="relative overflow-hidden">
+            <div className="h-full overflow-y-auto px-6 py-5">
+              <QuestionCard q={cardQuestion} num={1} readonly hideReviewStatusStamp />
             </div>
-          )}
-          {question.explanation && (
-            <div className="mt-4 rounded-xl border border-amber-100 bg-amber-50/60 px-4 py-3">
-              <p className="text-[12px] font-bold text-amber-800">해설</p>
-              <p className="mt-1 whitespace-pre-line text-[12px] leading-relaxed text-amber-900">{question.explanation.content}</p>
-            </div>
-          )}
+            {/* 검수 도장 — 우측 문제 박스 우측 상단에 고정 + 확대. */}
+            <ReviewStatusStamp
+              approved={question.approved}
+              className="absolute right-9 top-9 z-10 origin-top-right scale-125"
+            />
+          </div>
         </div>
       </div>
     </div>

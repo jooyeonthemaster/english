@@ -710,6 +710,7 @@ export function useWorkspaceGeneration({
                     difficulty: unit.difficulty,
                     customPrompt: prompt || undefined,
                     generationPlan: unit.generationPlan,
+                    clientTempId: unit.tempId,
                   });
                   const doneItem = {
                     ...buildOptimisticItem({

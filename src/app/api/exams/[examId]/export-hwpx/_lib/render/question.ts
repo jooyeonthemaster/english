@@ -3,8 +3,8 @@
  * DOCX 의 buildQuestionBlock 과 동일한 시각 구조를 HWPX 로 재현.
  */
 
-import type { BlockNode, BorderSpec, RunNode } from "../types";
-import { txt } from "../types";
+import type { BlockNode, BorderSpec, HAlign, RunNode } from "../types";
+import { restyleBlockTree, txt } from "../types";
 import { COLORS, SIZE, SUBTYPE_LABELS } from "../tokens";
 import { parseFormattedToRuns } from "../format";
 import { renderOptions, type ParsedOption } from "./options";
@@ -90,6 +90,11 @@ export interface BuilderItemResolved {
   objectiveAnswerTexts?: string[];
   sectionTitle?: string;
   teacherNote?: string;
+  // 문항 단위 서식(블록 서식 툴바) — 미리보기와 동일하게 다운로드에도 반영한다.
+  blockFontPt?: number | null;
+  blockBold?: boolean;
+  blockItalic?: boolean;
+  blockAlign?: "left" | "center" | "right";
   sourceQuestion: ExamQuestionData["question"];
 }
 
@@ -664,4 +669,30 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
 
   void GIVEN_BORDER;
   return result;
+}
+
+// 문항 블록 단위 서식(글자 크기 pt·굵게·기울임·정렬)을 렌더 결과에 후처리로 입힌다.
+// 미리보기는 문항 컨테이너에 fontSize/bold/italic/align 을 줘 발문·본문·선지가 상속하므로,
+// 다운로드도 동일하게 문항의 모든 텍스트 런을 비례 조정한다. 기본값(미설정)이면 무변경.
+export function applyQuestionBlockFormat(
+  blocks: BlockNode[],
+  fmt: {
+    blockFontPt?: number | null;
+    blockBold?: boolean;
+    blockItalic?: boolean;
+    blockAlign?: string | null;
+  },
+  compact: boolean,
+): BlockNode[] {
+  const baseBody = compact ? SIZE.bodyCompact : SIZE.body;
+  const pt = fmt.blockFontPt;
+  const scale = typeof pt === "number" && pt > 0 ? pt / baseBody : 1;
+  const align: HAlign | undefined =
+    fmt.blockAlign === "center" ? "CENTER" : fmt.blockAlign === "right" ? "RIGHT" : undefined;
+  return restyleBlockTree(blocks, {
+    scale,
+    bold: !!fmt.blockBold,
+    italic: !!fmt.blockItalic,
+    align,
+  });
 }

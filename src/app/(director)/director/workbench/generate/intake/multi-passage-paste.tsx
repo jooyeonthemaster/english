@@ -89,7 +89,7 @@ export function MultiPassagePaste({
     {
       v: "verbatim" as const,
       label: "그대로 추출",
-      badge: "추가 비용 없음",
+      badge: "지문당 무료",
     },
     {
       v: "restored" as const,

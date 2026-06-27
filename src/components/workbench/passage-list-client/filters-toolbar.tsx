@@ -259,15 +259,15 @@ export function PassageFiltersToolbar({
       {/* 검색 */}
       <Popover>
         <PopoverTrigger
-          title="지문 검색"
-          className="relative flex h-7 shrink-0 items-center gap-1 rounded-md border border-input bg-transparent px-2.5 text-[11.5px] shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          title="검색"
+          aria-label="검색"
+          className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent text-[11.5px] shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
         >
-          <Search className="size-3 shrink-0" />
-          <span>검색</span>
+          <Search className="size-3.5 shrink-0" />
           {searchValue ? (
             <span
               aria-hidden="true"
-              className="ml-0.5 inline-block size-1.5 rounded-full bg-blue-500"
+              className="absolute -right-0.5 -top-0.5 inline-block size-1.5 rounded-full bg-blue-500"
             />
           ) : null}
         </PopoverTrigger>

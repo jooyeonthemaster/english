@@ -622,6 +622,9 @@ function TaskGridCard({
                 </h4>
               )}
               <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+                <span className="text-[10px] font-medium tabular-nums text-slate-500">
+                  {formatTaskDate(task.createdAt)}
+                </span>
                 <span
                   className={`text-[10px] font-medium ${gridIconClass(task.status)}`}
                 >
@@ -632,9 +635,6 @@ function TaskGridCard({
                     {task.errorBadge}
                   </span>
                 ) : null}
-                <span className="inline-flex items-center rounded bg-slate-50 px-1.5 py-0.5 text-[10px] font-medium tabular-nums text-slate-500">
-                  {formatTaskDate(task.createdAt)}
-                </span>
               </div>
             </div>
           </div>

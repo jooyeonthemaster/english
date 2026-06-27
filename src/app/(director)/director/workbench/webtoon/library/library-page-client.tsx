@@ -495,7 +495,7 @@ export function WebtoonLibraryClient({
                   selection.clearSelection();
                   setPage(1);
                 }}
-                useCardInsideFolder
+                useCardInsideFolder={false}
                 rootLabel="전체 웹툰"
                 enableFolderControls
                 allFolders={folder.collections}

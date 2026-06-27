@@ -37,6 +37,11 @@ export const AnswerRevealContext = createContext<AnswerRevealMode>("default");
  *  정답이 이미 다른 방식으로 드러나는 표면에서 중복 줄을 숨길 때 사용. */
 export const HideAnswerLineContext = createContext(false);
 
+/** 발문(Direction) 오른쪽 끝에 곁들일 문제 유형명(예: "글의 순서"). null 이면 표시
+ *  안 함. 문제카드와 동일한 디자인을 다른 표면(예: 문제 수정 좌측 패널)에 줄 때
+ *  StructuredQuestionRenderer 가 값을 내려준다. */
+export const QuestionTypeLabelContext = createContext<string | null>(null);
+
 // ============================================================================
 // Shared UI primitives for question renderers
 // ============================================================================
@@ -136,12 +141,20 @@ export function AnswerRevealSection({ children }: { children: React.ReactNode })
   );
 }
 
-/** Direction (발문) — bold, dark, clearly separated. __text__ 밑줄 패턴도 처리. */
+/** Direction (발문) — bold, dark, clearly separated. __text__ 밑줄 패턴도 처리.
+ *  QuestionTypeLabelContext 가 주어지면 발문 마지막 줄 오른쪽 끝에 유형명(회색)을
+ *  곁들인다(문제카드와 동일 디자인). */
 export function Direction({ text }: { text: string }) {
+  const typeLabel = useContext(QuestionTypeLabelContext);
   return (
     <SelectableBlock blockId="direction" label="발문" field="direction" excerpt={blockExcerpt(text)}>
       <div className="text-[13px] font-bold text-slate-900 leading-relaxed whitespace-pre-line">
         {renderPassageFormatted(text)}
+        {typeLabel && (
+          <span className="float-right ml-2 pl-1 whitespace-nowrap text-[11px] font-medium leading-[21px] text-slate-400">
+            {typeLabel}
+          </span>
+        )}
       </div>
     </SelectableBlock>
   );

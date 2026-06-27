@@ -2,9 +2,10 @@
 "use client";
 
 import React from "react";
-import { Gem, Loader2, Save } from "lucide-react";
+import { Gem, Loader2 } from "lucide-react";
 import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Button } from "@/components/ui/button";
+import { SaveButton } from "@/components/ui/save-button";
 import { StructuredQuestionRenderer } from "../question-renderers";
 import { QUESTION_TYPE_GROUPS as EXAM_TYPE_GROUPS } from "@/lib/question-type-ui";
 import {
@@ -89,10 +90,7 @@ export function ResultsStep({
             <span className="text-sm font-semibold text-slate-900">
               {generatedQuestions.length}개 문제 생성됨
             </span>
-            <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 h-8 text-xs" onClick={onSave}>
-              <Save className="w-3.5 h-3.5 mr-1" />
-              문제 은행에 저장
-            </Button>
+            <SaveButton onClick={onSave} title="문제 은행에 저장" />
           </div>
 
           {/* Grouped by type */}
@@ -122,10 +120,7 @@ export function ResultsStep({
             <Button variant="outline" onClick={onReconfigure} className="flex-1">
               다시 설정
             </Button>
-            <Button className="flex-1 bg-emerald-600 hover:bg-emerald-700" onClick={onSave}>
-              <Save className="w-4 h-4 mr-1.5" />
-              문제 은행에 저장
-            </Button>
+            <SaveButton onClick={onSave} title="문제 은행에 저장" className="flex-1" />
           </div>
         </div>
       )}

@@ -89,8 +89,12 @@ function jobToQueueItem(
         ? "error"
         : "pending";
 
+  const clientTempId =
+    typeof config.clientTempId === "string" ? config.clientTempId : undefined;
+
   return {
     id: job.id,
+    clientTempId,
     passageId,
     passageTitle: job.passage?.title || job.title,
     passageContent: job.passage?.content ?? "",
@@ -166,6 +170,25 @@ function sameGenerationRequest(a: QueueItem, b: QueueItem): boolean {
   );
 }
 
+/**
+ * 낙관적 temp(아직 jobId 를 모르는 in-flight 카드)와 DB 폴링이 가져온 잡 행이
+ * "같은 작업"인지 판정한다.
+ *
+ * temp.id 는 곧 그 작업의 클라이언트 nonce(tempId)이고, fast 경로 잡은 그 값을
+ * config.clientTempId 로 왕복 저장해 두므로 — nonce 가 있으면 그걸로 정확히 1:1
+ * 매칭한다. 같은 지문+유형+설정을 연속/동시에 여러 번 생성해도 작업이 서로
+ * 구분돼, 카드(지문·빈칸연습)가 섞이던 문제를 없앤다.
+ *
+ * nonce 가 없는 잡(레거시 행, 또는 slow/세트 등 다른 경로)만 기존 설정 시그니처로
+ * 폴백한다 — 이들은 같은 설정 동시 다발 생성 동선이 드물어 회귀 위험이 낮다.
+ */
+function dbItemMatchesTemp(temp: QueueItem, dbItem: QueueItem): boolean {
+  if (dbItem.clientTempId) {
+    return dbItem.clientTempId === temp.id;
+  }
+  return sameGenerationRequest(temp, dbItem);
+}
+
 export function useGenerationSessionQueue(): [
   QueueItem[],
   Dispatch<SetStateAction<QueueItem[]>>,
@@ -229,7 +252,7 @@ export function useGenerationSessionQueue(): [
                   ? Date.parse(item.createdAt)
                   : 0;
                 const failedMatch = failedJobItems.find((failed) => {
-                  if (!sameGenerationRequest(item, failed)) return false;
+                  if (!dbItemMatchesTemp(item, failed)) return false;
                   // temp 가 만들어지기 전에 이미 관측된 실패 잡은 과거 실패.
                   const firstSeen = failedFirstSeenRef.current.get(failed.id);
                   return firstSeen == null || firstSeen >= itemTime;
@@ -278,7 +301,7 @@ export function useGenerationSessionQueue(): [
     for (const item of localQueue) {
       if (
         isFastTempItem(item) &&
-        completedDbItems.some((dbItem) => sameGenerationRequest(item, dbItem))
+        completedDbItems.some((dbItem) => dbItemMatchesTemp(item, dbItem))
       ) {
         continue;
       }
@@ -287,7 +310,7 @@ export function useGenerationSessionQueue(): [
     for (const item of dbQueue) {
       if (
         item.status === "generating" &&
-        activeFastTemps.some((temp) => sameGenerationRequest(temp, item))
+        activeFastTemps.some((temp) => dbItemMatchesTemp(temp, item))
       ) {
         continue;
       }

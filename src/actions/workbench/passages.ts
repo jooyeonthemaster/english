@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { requireAuth, getAcademyId } from "./_helpers";
 import { buildDuplicateIndex } from "@/lib/duplicate-detection";
 import { DIRECT_INPUT_PASSAGE_SOURCE } from "@/lib/passage-source";
+import { PRIME_REPORT_MARKER } from "./passage-constants";
 import type {
   WorkbenchPassageFilters,
   ActionResult,
@@ -26,10 +27,6 @@ const DIRECT_INPUT_MATERIAL_HASH = "__SMOAT_DIRECT_INPUT_TEXT__";
 /** `ExtractionJob.sourceType` marker for the text bucket (vs "PDF" | "IMAGES"). */
 const DIRECT_INPUT_SOURCE_TYPE = "TEXT";
 
-/** `PassageReport.generationPlan` marker for the A4 분석 보고서(학습지).
- *  Mirrors PRIME_MARKER in the prime report API route. A passage "has a
- *  generated 학습지" iff it owns a non-deleted report with this plan. */
-const PRIME_REPORT_MARKER = "PRIME";
 
 // ---------------------------------------------------------------------------
 // Passage CRUD (Workbench)

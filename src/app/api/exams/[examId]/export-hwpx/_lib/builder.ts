@@ -18,6 +18,7 @@ import { COLORS, SIZE } from "./tokens";
 import { renderPageHeader } from "./render/page-header";
 import { renderPassage } from "./render/passage";
 import {
+  applyQuestionBlockFormat,
   renderQuestionBlock,
   type BuilderItemResolved,
 } from "./render/question";
@@ -29,6 +30,7 @@ import {
 } from "@/components/exams/paper-builder/passage-policy";
 import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
 import { LINE_GAP_MARKER } from "@/components/exams/paper-builder/types";
+import { DEFAULT_IMAGE_ASPECT, imageAspectFromDataUrl } from "@/lib/image-dims";
 import { bodyFontForTemplate } from "@/app/api/exams/[examId]/export-docx/_lib/styles";
 import type {
   BuilderBlock,
@@ -157,15 +159,40 @@ function applyBreak(blocks: BlockNode[], type: BreakType | undefined) {
 }
 
 function blockTextSize(block: BuilderBlock, compact: boolean) {
+  // 숫자 pt 가 지정되면 그 값을 그대로(pt) 사용 — 미리보기와 동일 크기로 출력.
+  if (typeof block.blockFontPt === "number" && Number.isFinite(block.blockFontPt)) {
+    return block.blockFontPt;
+  }
   if (block.blockFontSize === "lg") return compact ? 12 : 13;
   if (block.blockFontSize === "sm") return compact ? 8 : 9;
   return compact ? SIZE.bodyCompact : SIZE.body;
+}
+
+// data URL(base64) → 버퍼+포맷. hp:pic 임베드용. webp 등은 라우트에서 png 로 미리 변환되므로
+// 여기엔 png/jpg/gif/bmp 만 들어온다(그 외는 null → 대체 텍스트).
+function decodeImageDataUrl(
+  dataUrl: string | null | undefined,
+): { buffer: Buffer; mime: "png" | "jpg" | "gif" | "bmp" } | null {
+  if (!dataUrl) return null;
+  const m = dataUrl.match(/^data:image\/(png|jpe?g|gif|bmp);base64,(.+)$/i);
+  if (!m) return null;
+  const f = m[1].toLowerCase();
+  const mime = f === "png" ? "png" : f === "gif" ? "gif" : f === "bmp" ? "bmp" : "jpg";
+  try {
+    return { buffer: Buffer.from(m[2], "base64"), mime };
+  } catch {
+    return null;
+  }
 }
 
 function renderCustomBlock(
   block: BuilderBlock,
   compact: boolean,
   contentWidthHpu: number,
+  // 이미지 박스 크기 기준: 미리보기와 같은 물리적 크기로 그리려면 (2단 시험지라도
+  // 한컴 폴백은 전체폭 1단이므로) "단 폭"을 기준으로 imageWidth% 를 적용한다.
+  imageColWidthHpu?: number,
+  imageMaxHeightHpu?: number,
 ): BlockNode[] {
   const align = blockAlign(block.blockAlign);
   const color = block.blockAccentColor || "#2563EB";
@@ -184,8 +211,14 @@ function renderCustomBlock(
         },
         runs: [
           txt(block.blockTitle || text || "새 섹션", {
-            size: compact ? 12 : 13,
-            bold: true,
+            size:
+              typeof block.blockFontPt === "number" && Number.isFinite(block.blockFontPt)
+                ? block.blockFontPt
+                : compact
+                  ? 12
+                  : 13,
+            bold: block.blockBold ?? true,
+            italic: block.blockItalic ?? false,
             color,
           }),
         ],
@@ -197,7 +230,14 @@ function renderCustomBlock(
     return (text || " ").replace(/\r/g, "").split("\n").map((line) => ({
       kind: "p" as const,
       style: { align, spaceBefore: 40, spaceAfter: 80, lineSpacingPct: 155 },
-      runs: [txt(line || " ", { size: blockTextSize(block, compact), color: COLORS.darkGray })],
+      runs: [
+        txt(line || " ", {
+          size: blockTextSize(block, compact),
+          bold: block.blockBold ?? false,
+          italic: block.blockItalic ?? false,
+          color: COLORS.darkGray,
+        }),
+      ],
     }));
   }
 
@@ -270,18 +310,57 @@ function renderCustomBlock(
   }
 
   if (block.blockType === "image") {
-    return [
+    // 실제 그림을 인라인 이미지(hp:pic, treatAsChar)로 임베드한다. 폭은 단 폭 기준
+    // imageWidth%, 종횡비 유지, 한 페이지(칸) 높이로 캡. 미리보기와 동일 크기.
+    const refColW = imageColWidthHpu ?? contentWidthHpu;
+    const pct = Math.max(20, Math.min(100, block.imageWidth || 70));
+    let dispW = Math.max(mm(20), Math.round((refColW * pct) / 100));
+    const aspect = imageAspectFromDataUrl(block.imageDataUrl) ?? DEFAULT_IMAGE_ASPECT;
+    let dispH = Math.round(dispW * aspect);
+    if (imageMaxHeightHpu && dispH > imageMaxHeightHpu) {
+      dispH = imageMaxHeightHpu;
+      dispW = Math.round(dispH / aspect);
+    }
+    dispH = Math.max(mm(10), dispH);
+    const decoded = decodeImageDataUrl(block.imageDataUrl);
+    if (!decoded) {
+      // 디코드 실패(미지원 포맷 등) → 대체 텍스트.
+      return [
+        {
+          kind: "p",
+          style: { align, spaceBefore: 80, spaceAfter: 80 },
+          runs: [
+            txt(`[이미지: ${block.imageAlt || "삽입 이미지"}]`, {
+              size: SIZE.meta,
+              color: COLORS.gray,
+            }),
+          ],
+        },
+      ];
+    }
+    const out: BlockNode[] = [
       {
         kind: "p",
-        style: { align, spaceBefore: 80, spaceAfter: 80 },
+        style: { align, spaceBefore: 80, spaceAfter: block.imageAlt ? 40 : 80 },
         runs: [
-          txt(`[이미지: ${block.imageAlt || "삽입 이미지"}]`, {
-            size: SIZE.meta,
-            color: COLORS.gray,
-          }),
+          {
+            kind: "image",
+            data: decoded.buffer,
+            mime: decoded.mime,
+            widthHpu: dispW,
+            heightHpu: dispH,
+          },
         ],
       },
     ];
+    if (block.imageAlt) {
+      out.push({
+        kind: "p",
+        style: { align, spaceAfter: 80 },
+        runs: [txt(block.imageAlt, { size: SIZE.meta, color: COLORS.gray })],
+      });
+    }
+    return out;
   }
 
   return [];
@@ -351,12 +430,16 @@ function appendQuestionGroups(opts: {
       opts.target.push(...passageBlocks);
     }
     group.items.forEach((item, idx) => {
-      const questionBlocks = renderQuestionBlock({
+      const questionBlocks = applyQuestionBlockFormat(
+        renderQuestionBlock({
+          item,
+          layout: opts.layout,
+          includeAnswers: opts.includeAnswers,
+          contentWidthHpu: opts.contentWidthHpu,
+        }),
         item,
-        layout: opts.layout,
-        includeAnswers: opts.includeAnswers,
-        contentWidthHpu: opts.contentWidthHpu,
-      });
+        opts.compact,
+      );
       if (item.localId) {
         applyBreak(questionBlocks, opts.breakPlan.get(questionBreakKey(item.localId)));
       }
@@ -369,6 +452,90 @@ function appendQuestionGroups(opts: {
       opts.target.push(...questionBlocks);
     });
   }
+}
+
+// 문항과 커스텀 블록(텍스트·섹션·구분선·여백·이미지)을 settings.blocks 순서대로 흘려보낸다.
+// 문항은 연속분을 모아 appendQuestionGroups 로(지문 묶음 유지), 커스텀 블록은 사이에 끼운다.
+// contentWidthHpu = 본문/문항 폭(단 폭 또는 전체폭), imageColWidthHpu = 이미지 박스 폭 기준.
+// 네이티브 2단(colCount=2) 경로에서도 이 함수를 써 이미지·섹션이 칸 안에 함께 흐르게 한다.
+function appendBlocksInOrder(opts: {
+  target: BlockNode[];
+  blocks: BuilderBlock[] | undefined;
+  resolvedItems: BuilderItemResolved[];
+  layout: BuilderLayout;
+  includeAnswers: boolean;
+  compact: boolean;
+  passageStyle: "boxed" | "underlined" | "plain";
+  showPassageTitle: boolean;
+  contentWidthHpu: number;
+  imageColWidthHpu: number;
+  imageMaxHeightHpu: number;
+  breakPlan: BreakPlan;
+}) {
+  const appendQ = (items: BuilderItemResolved[]) => {
+    if (items.length === 0) return;
+    appendQuestionGroups({
+      target: opts.target,
+      items,
+      layout: opts.layout,
+      includeAnswers: opts.includeAnswers,
+      compact: opts.compact,
+      passageStyle: opts.passageStyle,
+      showPassageTitle: opts.showPassageTitle,
+      contentWidthHpu: opts.contentWidthHpu,
+      breakPlan: opts.breakPlan,
+    });
+  };
+
+  if (!opts.blocks?.length) {
+    appendQ(opts.resolvedItems);
+    return;
+  }
+
+  const byLocalId = new Map(
+    opts.resolvedItems
+      .filter((item) => item.localId)
+      .map((item) => [item.localId as string, item]),
+  );
+  const used = new Set<BuilderItemResolved>();
+  const takeQuestion = (block: BuilderBlock) => {
+    const byId = block.localId ? byLocalId.get(block.localId) : undefined;
+    if (byId && !used.has(byId)) {
+      used.add(byId);
+      return byId;
+    }
+    const fallback = opts.resolvedItems.find(
+      (item) => !used.has(item) && item.questionId === block.questionId,
+    );
+    if (fallback) used.add(fallback);
+    return fallback;
+  };
+
+  let pending: BuilderItemResolved[] = [];
+  const flush = () => {
+    appendQ(pending);
+    pending = [];
+  };
+  for (const block of opts.blocks) {
+    if (block.blockType === "question") {
+      const q = takeQuestion(block);
+      if (q) pending.push(q);
+      continue;
+    }
+    flush();
+    const customBlocks = renderCustomBlock(
+      block,
+      opts.compact,
+      opts.contentWidthHpu,
+      opts.imageColWidthHpu,
+      opts.imageMaxHeightHpu,
+    );
+    if (block.localId) {
+      applyBreak(customBlocks, opts.breakPlan.get(questionBreakKey(block.localId)));
+    }
+    opts.target.push(...customBlocks);
+  }
+  flush();
 }
 
 // 한 단(column)의 fragment 들을 BlockNode[] 로.
@@ -532,12 +699,16 @@ function renderGroupsToUnits(opts: {
       });
     }
     group.items.forEach((item) => {
-      const questionBlocks = renderQuestionBlock({
+      const questionBlocks = applyQuestionBlockFormat(
+        renderQuestionBlock({
+          item,
+          layout: opts.layout,
+          includeAnswers: opts.includeAnswers,
+          contentWidthHpu: opts.columnWidthHpu,
+        }),
         item,
-        layout: opts.layout,
-        includeAnswers: opts.includeAnswers,
-        contentWidthHpu: opts.columnWidthHpu,
-      });
+        opts.compact,
+      );
       units.push({
         placeKey: item.localId ? questionBreakKey(item.localId) : null,
         blocks: questionBlocks,
@@ -657,15 +828,12 @@ export function buildBuilderHwpxDocument(
   // 꽉 채우게 한다 → 옛 그리디 표 방식의 "칸 하단 여백/왼쪽→오른쪽 조기 넘어감"
   // 문제 제거. 전체폭 헤더(제목/학생정보)는 떠 있는 표로 머리말 밴드에 얹는다.
   //   (한컴 실제 시험지 인코딩 역공학으로 확인: header control + colCount=2.)
-  //   비활성화하려면 env HWPX_NATIVE_2COL=0. (1단/커스텀블록/정답포함은 기존 경로.)
+  //   비활성화하려면 env HWPX_NATIVE_2COL=0. (1단/정답포함은 기존 경로.)
+  // 커스텀 블록(이미지·텍스트·섹션 등)이 있어도 2단 칸 안에 함께 흘려보낸다(A안).
   // =========================================================================
-  const nativeHasCustom = (settings?.blocks ?? []).some(
-    (b) => b.blockType && b.blockType !== "question",
-  );
   if (
     process.env.HWPX_NATIVE_2COL !== "0" &&
     columns === 2 &&
-    !nativeHasCustom &&
     !includeAnswers
   ) {
     const rawHeader: BlockNode[] = renderPageHeader({
@@ -687,15 +855,19 @@ export function buildBuilderHwpxDocument(
     // 한컴이 그 문단을 전체폭으로 그려(머리말 컨트롤 영향) 첫 지문이 칸을 벗어난다.
     // → 빈 문단을 맨 앞에 둬 컨트롤만 품게 하고 실제 본문은 둘째 블록부터 흐르게 한다.
     const bodyBlocks: BlockNode[] = [{ kind: "p", style: { spaceAfter: 0 }, runs: [] }];
-    appendQuestionGroups({
+    appendBlocksInOrder({
       target: bodyBlocks,
-      items: resolvedItems,
+      blocks: settings?.blocks,
+      resolvedItems,
       layout,
       includeAnswers,
       compact,
       passageStyle,
       showPassageTitle,
       contentWidthHpu: nativeColW,
+      // 이미지는 단 폭(nativeColW) 기준으로 그려 칸 안에 들어가게 한다(2단 칸).
+      imageColWidthHpu: nativeColW,
+      imageMaxHeightHpu: pageHeight - 2 * marginTB - mm(10),
       breakPlan: new Map(), // 강제 분할 없음 — 한컴이 자동 흐름으로 채운다.
     });
     if (!includeAnswers && opts.fullExamQuestions.length > 0) {
@@ -948,69 +1120,24 @@ export function buildBuilderHwpxDocument(
       });
     }
   } else {
-    // 폴백: 전체폭 단일 흐름 (1단 / 정답포함 / 커스텀 블록 / pagination 실패).
+    // 폴백: 전체폭 단일 흐름 (1단 / 정답포함 / pagination 실패).
     // colPr 다단은 한컴에서 작동하지 않으므로 쓰지 않는다.
     const flatWidth = contentWidth;
-    if (settings?.blocks?.length) {
-      const byLocalId = new Map(
-        resolvedItems
-          .filter((item) => item.localId)
-          .map((item) => [item.localId as string, item]),
-      );
-      const used = new Set<BuilderItemResolved>();
-      const takeQuestion = (block: BuilderBlock) => {
-        const byId = block.localId ? byLocalId.get(block.localId) : undefined;
-        if (byId && !used.has(byId)) {
-          used.add(byId);
-          return byId;
-        }
-        const fallback = resolvedItems.find(
-          (item) => !used.has(item) && item.questionId === block.questionId,
-        );
-        if (fallback) used.add(fallback);
-        return fallback;
-      };
-      let pendingQuestions: BuilderItemResolved[] = [];
-      const flush = () => {
-        if (pendingQuestions.length === 0) return;
-        appendQuestionGroups({
-          target: blocks,
-          items: pendingQuestions,
-          layout,
-          includeAnswers,
-          compact,
-          passageStyle,
-          showPassageTitle,
-          contentWidthHpu: flatWidth,
-          breakPlan,
-        });
-        pendingQuestions = [];
-      };
-
-      for (const block of settings.blocks) {
-        if (block.blockType === "question") {
-          const questionItem = takeQuestion(block);
-          if (questionItem) pendingQuestions.push(questionItem);
-          continue;
-        }
-        flush();
-        const customBlocks = renderCustomBlock(block, compact, flatWidth);
-        blocks.push(...customBlocks);
-      }
-      flush();
-    } else {
-      appendQuestionGroups({
-        target: blocks,
-        items: resolvedItems,
-        layout,
-        includeAnswers,
-        compact,
-        passageStyle,
-        showPassageTitle,
-        contentWidthHpu: flatWidth,
-        breakPlan,
-      });
-    }
+    appendBlocksInOrder({
+      target: blocks,
+      blocks: settings?.blocks,
+      resolvedItems,
+      layout,
+      includeAnswers,
+      compact,
+      passageStyle,
+      showPassageTitle,
+      contentWidthHpu: flatWidth,
+      // 1단 흐름이라도 이미지는 미리보기의 단 폭(2단이면 columnWidth) 기준 크기로 그린다.
+      imageColWidthHpu: columns === 2 ? columnWidth : flatWidth,
+      imageMaxHeightHpu: pageHeight - 2 * marginTB - mm(10),
+      breakPlan,
+    });
     if (!includeAnswers && opts.fullExamQuestions.length > 0) {
       blocks.push(...renderAnswerKey(opts.fullExamQuestions, flatWidth));
     }

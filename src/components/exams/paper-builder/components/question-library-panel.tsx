@@ -319,7 +319,7 @@ export function QuestionLibraryPanel({
         <FolderSection
           embedded
           treatRootAsFolder
-          useCardInsideFolder
+          useCardInsideFolder={false}
           resizableGrid
           storageKey="exam-question-folders"
           dragItemType="question"

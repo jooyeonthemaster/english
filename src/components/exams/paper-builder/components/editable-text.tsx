@@ -54,6 +54,7 @@ export function EditableText({
   value,
   onCommit,
   className,
+  style,
   children,
   placeholder = "",
   readOnly = false,
@@ -61,6 +62,7 @@ export function EditableText({
   value: string;
   onCommit: (value: string) => void;
   className?: string;
+  style?: React.CSSProperties;
   children?: React.ReactNode;
   placeholder?: string;
   readOnly?: boolean;
@@ -69,7 +71,11 @@ export function EditableText({
   const isEmpty = !value.trim();
 
   if (readOnly) {
-    return <span className={className}>{isEmpty ? placeholder : children ?? value}</span>;
+    return (
+      <span className={className} style={style}>
+        {isEmpty ? placeholder : children ?? value}
+      </span>
+    );
   }
 
   return (
@@ -77,6 +83,7 @@ export function EditableText({
       contentEditable
       suppressContentEditableWarning
       spellCheck={false}
+      style={style}
       onFocus={() => setEditing(true)}
       onBlur={(event) => {
         const next = normalizeEditableText(serializeEditableDom(event.currentTarget));
@@ -84,7 +91,8 @@ export function EditableText({
         if (next !== value) onCommit(next);
       }}
       className={cn(
-        "editable-paper-field rounded-[3px] outline-none transition-colors hover:bg-blue-50/70 focus:bg-blue-50 focus:ring-2 focus:ring-blue-300/60",
+        // cursor-text + caret-color 로 클릭 시 I-빔 커서와 깜빡이는 캐럿이 또렷이 보이게 한다.
+        "editable-paper-field cursor-text caret-blue-600 rounded-[3px] outline-none transition-colors hover:bg-blue-50/70 focus:bg-blue-50 focus:ring-2 focus:ring-blue-300/60",
         isEmpty && "text-slate-300",
         className,
       )}

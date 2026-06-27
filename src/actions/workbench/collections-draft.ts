@@ -149,7 +149,21 @@ export async function addDraftsToCollection(
     );
     if (allowedDraftIds.length === 0) {
       revalidatePath(MANAGE_PATH);
-      return { success: true as const };
+      return { success: true as const, addedIds: [] as string[] };
+    }
+
+    // Exclude items already in the folder so the returned addedIds reflect the
+    // real DB delta (allowed ∩ requested − already-present). The client uses
+    // this to keep its folder counts accurate.
+    const existing = await prisma.m1PassageDraftCollectionItem.findMany({
+      where: { collectionId, draftId: { in: allowedDraftIds } },
+      select: { draftId: true },
+    });
+    const existingSet = new Set(existing.map((e) => e.draftId));
+    const addedIds = allowedDraftIds.filter((id) => !existingSet.has(id));
+    if (addedIds.length === 0) {
+      revalidatePath(MANAGE_PATH);
+      return { success: true as const, addedIds: [] as string[] };
     }
 
     const maxItem = await prisma.m1PassageDraftCollectionItem.findFirst({
@@ -160,7 +174,7 @@ export async function addDraftsToCollection(
     const startOrder = (maxItem?.orderNum ?? -1) + 1;
 
     await prisma.m1PassageDraftCollectionItem.createMany({
-      data: allowedDraftIds.map((draftId, idx) => ({
+      data: addedIds.map((draftId, idx) => ({
         collectionId,
         draftId,
         orderNum: startOrder + idx,
@@ -169,7 +183,7 @@ export async function addDraftsToCollection(
     });
 
     revalidatePath(MANAGE_PATH);
-    return { success: true as const };
+    return { success: true as const, addedIds };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "폴더에 추가 실패";
@@ -219,8 +233,9 @@ export async function removeDraftsFromCollection(
     });
     if (existingItems.length === 0) {
       revalidatePath(MANAGE_PATH);
-      return { success: true as const };
+      return { success: true as const, removedIds: [] as string[] };
     }
+    const removedIds = existingItems.map((item) => item.draftId);
 
     await prisma.$transaction([
       prisma.extractionAuditLog.createMany({
@@ -245,12 +260,12 @@ export async function removeDraftsFromCollection(
       prisma.m1PassageDraftCollectionItem.deleteMany({
         where: {
           collectionId,
-          draftId: { in: existingItems.map((item) => item.draftId) },
+          draftId: { in: removedIds },
         },
       }),
     ]);
     revalidatePath(MANAGE_PATH);
-    return { success: true as const };
+    return { success: true as const, removedIds };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "폴더에서 제거 실패";

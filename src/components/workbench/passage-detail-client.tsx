@@ -8,6 +8,7 @@ import {
 import { toast } from "sonner";
 import { deleteWorkbenchPassage, updatePassageAnalysis } from "@/actions/workbench";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
+import { useBeforeUnloadWarning } from "@/components/shared/use-unsaved-close-guard";
 import { DEFAULT_ANALYSIS_TONE } from "@/lib/passage-analysis-options";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
 import {
@@ -32,6 +33,8 @@ export function PassageDetailClient({ passage, academyId, autoAnalyze, initialPr
   const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  // 전체 페이지형 — 미저장 변경 시 브라우저 이탈(탭 닫기/새로고침) 경고.
+  useBeforeUnloadWarning(hasUnsavedChanges);
   const [lastPromptConfig, setLastPromptConfig] =
     useState<AnalysisPromptConfig>({
       customPrompt: initialPrompt || "",
