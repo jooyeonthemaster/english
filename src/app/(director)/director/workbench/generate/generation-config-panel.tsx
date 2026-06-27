@@ -3,16 +3,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
-  Cpu,
   FileText,
   GripVertical,
   Minus,
   Plus,
-  Target,
   Settings2,
   ChevronDown,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverAnchor,
@@ -21,11 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { EXAM_TYPE_GROUPS } from "./generate-page-types";
 import { PromptSection } from "./prompt-section";
-import { CREDIT_COSTS } from "@/lib/credit-costs";
-import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
-import { SetBuilderPanel } from "@/components/workbench/set-builder-panel";
-import { getQuestionGenerationCreditCost } from "@/lib/question-generation-plans";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 import {
@@ -78,7 +71,6 @@ import {
   GROUP_LABELS,
   GROUP_ORDER,
   TYPE_ORDER_STORAGE_KEY,
-  VOCAB_GENERATION_TYPE_IDS,
 } from "./generation-config-panel-parts/constants";
 import { Collapsible } from "./generation-config-panel-parts/collapsible";
 import * as TypeNumericDetail from "./generation-config-panel-parts/type-numeric-detail";
@@ -1148,182 +1140,16 @@ export function GenerationConfigPanel({
           </div>
         )}
 
-        {genMode === "set" && (
-          <>
-            {!editingRow && workspaceActive ? (
-              <p className="mx-4 mt-3 rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-slate-500">
-                장문 세트는 ‘내 지문’에서 체크한 지문 1개로 동작합니다 —
-                워크스페이스에 불러온 지문({workspaceRowCount}개)은 여기에
-                사용되지 않아요.
-              </p>
-            ) : null}
-            <div data-generate-tour="set-builder-panel">
-              <SetBuilderPanel
-                passageId={
-                  editingRow
-                    ? activePassageId
-                    : selectedIds && selectedIds.size > 0
-                      ? Array.from(selectedIds)[0]
-                      : null
-                }
-                generationPlan={generationPlan}
-                presetId={editingRow ? (setPresetId ?? null) : undefined}
-                onPresetChange={editingRow ? onSetPresetChange : undefined}
-                presetCounts={editingRow ? (setPresetCounts ?? {}) : undefined}
-                onPresetCountsChange={
-                  editingRow ? onSetPresetCountsChange : undefined
-                }
-                difficulty={editingRow ? difficulty : undefined}
-                onDifficultyChange={editingRow ? setDifficulty : undefined}
-                memberOverrides={editingRow ? (setMemberOverrides ?? []) : undefined}
-                onMemberOverridesChange={
-                  editingRow ? onSetMemberOverridesChange : undefined
-                }
-                memberOverridesByPreset={
-                  editingRow ? (setMemberOverridesByPreset ?? {}) : undefined
-                }
-                onMemberOverridesByPresetChange={
-                  editingRow ? onSetMemberOverridesByPresetChange : undefined
-                }
-                embedded={editingRow}
-              />
-            </div>
-          </>
-        )}
+        {genMode === "set" && TypeNumericDetail.renderSetBuilderSection({ activePassageId, difficulty, editingRow, generationPlan, onSetMemberOverridesByPresetChange, onSetMemberOverridesChange, onSetPresetChange, onSetPresetCountsChange, selectedIds, setDifficulty, setMemberOverrides, setMemberOverridesByPreset, setPresetCounts, setPresetId, workspaceActive, workspaceRowCount })}
       </div>
 
       {/* Generate Button — 워크스페이스 모드.
           지문별 설정(editingRow)에서는 장문 세트도 이 공용 버튼으로 생성한다.
           hideGenerateButtons(=지문별 모달) 일 때는 모달 푸터가 CTA 를 제공하므로 숨긴다. */}
-      {!hideGenerateButtons && (genMode !== "set" || editingRow) && workspaceActive && (
-        <div className="px-4 py-3 border-t border-slate-100 bg-white shrink-0">
-          {workspaceVariantCount > 0 ? (
-            <p className="mb-2 rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-slate-500">
-              수정·범위 지정된 {workspaceVariantCount}개 지문은 생성 시 ‘변형본’
-              지문으로 저장된 뒤 출제됩니다. 원본 지문은 그대로 보존돼요.
-            </p>
-          ) : null}
-          {workspaceSelectedOnlyCount > 0 ? (
-            <p className="mb-2 rounded-md bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium leading-relaxed text-slate-500">
-              워크스페이스 지문과 ‘내 지문’에서 체크한{" "}
-              {workspaceSelectedOnlyCount}개 지문을 함께 생성합니다. 이미
-              워크스페이스에 있는 지문은 중복 생성하지 않아요.
-            </p>
-          ) : null}
-          <Button
-            data-generate-tour="generate-button"
-            className={`h-12 w-full min-w-0 rounded-xl px-3 text-[14px] font-bold whitespace-normal transition-all duration-200 ${
-              workspaceTotalQuestions > 0 && !workspaceGenerating
-                ? "bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200/50 hover:shadow-lg hover:shadow-blue-200/60"
-                : "bg-slate-200 text-slate-400 cursor-not-allowed"
-            }`}
-            onClick={() => {
-              dispatchGenerateTourMilestone("question-generation-started");
-              onWorkspaceGenerate?.();
-            }}
-            disabled={workspaceTotalQuestions === 0 || workspaceGenerating}
-          >
-            {workspaceGenerating ? (
-              <span className="flex min-w-0 flex-1 items-center justify-center gap-2">
-                <Cpu className="w-4.5 h-4.5 animate-pulse" />
-                <span className="min-w-0 truncate">생성 중…</span>
-              </span>
-            ) : workspaceTotalQuestions > 0 ? (
-              <span className="flex min-w-0 flex-1 items-center justify-center gap-2 overflow-hidden">
-                <Cpu className="w-4.5 h-4.5" />
-                <span className="min-w-0 truncate">
-                  {`${workspaceTotalQuestions}문제 생성`}
-                </span>
-              </span>
-            ) : (
-              <span className="flex min-w-0 flex-1 items-center justify-center gap-2">
-                <Target className="w-4.5 h-4.5" />
-                <span className="min-w-0 truncate">유형을 선택하세요</span>
-              </span>
-            )}
-            {workspaceTotalQuestions > 0 &&
-              workspaceCreditCost > 0 &&
-              !workspaceGenerating && (
-                <CreditCostChip
-                  amount={workspaceCreditCost}
-                  className="ml-1 shrink-0 gap-1 rounded-lg bg-white/20 px-2 py-1 text-[11px] text-white"
-                />
-              )}
-          </Button>
-        </div>
-      )}
+      {!hideGenerateButtons && (genMode !== "set" || editingRow) && workspaceActive && TypeNumericDetail.renderWorkspaceGenerateButton({ onWorkspaceGenerate, workspaceCreditCost, workspaceGenerating, workspaceSelectedOnlyCount, workspaceTotalQuestions, workspaceVariantCount })}
 
       {/* Generate Button — 기존 라이브러리 선택 모드 */}
-      {!hideGenerateButtons && genMode !== "set" && !workspaceActive && (
-        <div className="px-4 py-3 border-t border-slate-100 bg-white shrink-0">
-          {(() => {
-            // 크레딧 비용 계산 — 유형 지정(MANUAL) 전용.
-            const baseCreditCost =
-              selectedIds.size *
-              Object.entries(typeCounts).reduce((sum, [typeId, value]) => {
-                if (value <= 0) return sum;
-                const unitCost = VOCAB_GENERATION_TYPE_IDS.has(typeId)
-                  ? CREDIT_COSTS.QUESTION_GEN_VOCAB
-                  : CREDIT_COSTS.QUESTION_GEN_SINGLE;
-                return sum + unitCost * value;
-              }, 0);
-            const creditCost = getQuestionGenerationCreditCost(
-              baseCreditCost,
-              generationPlan,
-            );
-            return (
-              <>
-                <Button
-                  data-generate-tour="generate-button"
-                  className={`h-12 w-full min-w-0 rounded-xl px-3 text-[14px] font-bold whitespace-normal transition-all duration-200 ${
-                    canGenerate
-                      ? "bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200/50 hover:shadow-lg hover:shadow-blue-200/60"
-                      : "bg-slate-200 text-slate-400 cursor-not-allowed"
-                  }`}
-                  onClick={() => {
-                    dispatchGenerateTourMilestone(
-                      "question-generation-started",
-                    );
-                    handleBatchGenerate();
-                  }}
-                  disabled={!canGenerate}
-                >
-                  {selectedIds.size === 0 ? (
-                    <span className="flex min-w-0 flex-1 items-center justify-center gap-2">
-                      <FileText className="w-4.5 h-4.5" />
-                      <span className="min-w-0 truncate">
-                        지문을 선택하세요
-                      </span>
-                    </span>
-                  ) : totalQuestions > 0 ? (
-                    <span className="flex min-w-0 flex-1 items-center justify-center gap-2 overflow-hidden">
-                      <Cpu className="w-4.5 h-4.5" />
-                      <span className="min-w-0 truncate">
-                        {selectedIds.size === 1
-                          ? `${totalQuestions}문제 생성`
-                          : `${selectedIds.size}개 지문 × ${totalQuestions}문제 생성`}
-                      </span>
-                    </span>
-                  ) : (
-                    <span className="flex min-w-0 flex-1 items-center justify-center gap-2">
-                      <Target className="w-4.5 h-4.5" />
-                      <span className="min-w-0 truncate">
-                        유형을 선택하세요
-                      </span>
-                    </span>
-                  )}
-                  {canGenerate && creditCost > 0 && (
-                    <CreditCostChip
-                      amount={creditCost}
-                      className="ml-1 shrink-0 gap-1 rounded-lg bg-white/20 px-2 py-1 text-[11px] text-white"
-                    />
-                  )}
-                </Button>
-              </>
-            );
-          })()}
-        </div>
-      )}
+      {!hideGenerateButtons && genMode !== "set" && !workspaceActive && TypeNumericDetail.renderLibraryGenerateButton({ canGenerate, generationPlan, handleBatchGenerate, selectedIds, totalQuestions, typeCounts })}
     </div>
   );
 }
