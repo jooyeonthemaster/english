@@ -1185,3 +1185,34 @@ export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSett
       );
     }
 
+export function renderSentenceOrderDetail({ patchTypeSettings, questionTypeSettings }) {
+      const sentenceOrderPrefixVariationCount = Math.min(
+        3,
+        Math.max(
+          0,
+          Math.round(
+            Number(
+              questionTypeSettings.SENTENCE_ORDER?.prefixVariationCount,
+            ) || 0,
+          ),
+        ),
+      );
+      return renderNumberSetting({
+        title: "앞문장 변형 문단 수",
+        badges: [
+          "0 ~ 3",
+          sentenceOrderPrefixVariationCount > 0 ? "암기 무력화" : "끄기",
+        ],
+        description:
+          "(A)(B)(C) 중 앞 문장을 같은 의미로 변형할 문단 수입니다. 0이면 변형하지 않습니다. 주어진 글과 정답 순서는 그대로 유지됩니다.",
+        value: sentenceOrderPrefixVariationCount,
+        min: 0,
+        max: 3,
+        onChange: (next) =>
+          patchTypeSettings("SENTENCE_ORDER", {
+            prefixVariationCount: Math.min(3, Math.max(0, Math.round(next))),
+          }),
+        ariaBase: "sentence order prefix variation count",
+      });
+    }
+
