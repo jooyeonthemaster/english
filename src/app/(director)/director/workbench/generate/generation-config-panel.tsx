@@ -739,22 +739,7 @@ export function GenerationConfigPanel({
 
     if (typeId === "IRRELEVANT") return TypeNumericDetail.renderIrrelevantDetail({ irrelevantSlotCount, setIrrelevantSlotCount });
 
-    if (typeId === "SUMMARY_COMPLETE") {
-      return renderNumberSetting({
-        title: "Blank count",
-        badges: [
-          `${SUMMARY_COMPLETE_BLANK_COUNT_MIN} ~ ${SUMMARY_COMPLETE_BLANK_COUNT_MAX}`,
-          "Short answer",
-        ],
-        description:
-          "Number of blanks students must fill in the short-answer summary.",
-        value: summaryCompleteBlankCount,
-        min: SUMMARY_COMPLETE_BLANK_COUNT_MIN,
-        max: SUMMARY_COMPLETE_BLANK_COUNT_MAX,
-        onChange: setSummaryCompleteBlankCount,
-        ariaBase: "summary complete blank count",
-      });
-    }
+    if (typeId === "SUMMARY_COMPLETE") return TypeNumericDetail.renderSummaryCompleteDetail({ setSummaryCompleteBlankCount, summaryCompleteBlankCount });
 
     if (typeId === "SUMMARY_WRITING") {
       const sw = (questionTypeSettings.SUMMARY_WRITING || {}) as Record<
