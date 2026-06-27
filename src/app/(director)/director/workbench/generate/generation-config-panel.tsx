@@ -30,7 +30,6 @@ import { SetBuilderPanel } from "@/components/workbench/set-builder-panel";
 import {
   QUESTION_GENERATION_PLANS,
   getQuestionGenerationCreditCost,
-  type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
@@ -91,184 +90,16 @@ import {
   supportsGenericOptionCount,
   supportsGistAnswerPolarity,
 } from "@/lib/question-type-generation-settings";
-
-const VOCAB_GENERATION_TYPE_IDS = new Set([
-  "CONTEXT_MEANING",
-  "SYNONYM",
-  "ANTONYM",
-]);
-const TYPE_ORDER_STORAGE_KEY =
-  "smoat.workbench.questions.generate.typeOrder.v1";
-// 카테고리 그룹 접힘 상태(UI 취향) — 유형 목록을 3개 카테고리 카드로 묶고
-// 각 카드를 접을 수 있게 한다. 투어 중에는 강제로 모두 펼친다.
-const GROUP_COLLAPSE_STORAGE_KEY =
-  "smoat.workbench.questions.generate.groupCollapsed.v1";
-// 렌더 순서(고정): 수능 → 내신 → 어휘. 정렬(typeOrder)은 그룹 내부에만 적용된다.
-const GROUP_ORDER = ["수능", "내신", "어휘"] as const;
-const GROUP_LABELS: Record<string, string> = {
-  수능: "수능·모의고사 객관식",
-  내신: "내신 서술형",
-  어휘: "어휘",
-};
-
-// Difficulty — 세그먼트 컨트롤. 단계 식별은 컬러 닷 + 난이도별 면색(SOT).
-// 색은 src/lib/difficulty.ts 와 동일(기본=파랑·중급=노랑·킬러=빨강) — 전 화면 일관.
-const DIFFICULTY_TONES = [
-  { value: "BASIC", label: "기본", on: "bg-blue-50 text-blue-700", dot: "bg-blue-500" },
-  { value: "INTERMEDIATE", label: "중급", on: "bg-amber-50 text-amber-700", dot: "bg-amber-500" },
-  { value: "KILLER", label: "킬러", on: "bg-red-50 text-red-700", dot: "bg-red-500" },
-] as const;
-
-// 부드럽게 펼쳐지는 컨테이너 — 순수 CSS grid-rows 0fr↔1fr 트릭(높이 측정·프레이머
-// 불필요, 임의 내용 높이 애니메이션). 유형 세부옵션·카테고리 그룹 양쪽에 쓴다.
-// 내용은 항상 마운트해 펼침/접힘이 모두 애니메이션되게 한다(접힘 시 inert 로 비활성).
-function Collapsible({
-  open,
-  children,
-}: {
-  open: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <div
-      className="grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
-      style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
-    >
-      <div className="min-h-0 overflow-hidden" inert={!open}>
-        <div
-          className={`transition-[opacity,transform] duration-300 motion-reduce:transition-none ${
-            open ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1"
-          }`}
-        >
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── Props ───────────────────────────────────────────
-
-interface GenerationConfigPanelProps {
-  // Mode
-  genMode: "manual" | "set";
-  setGenMode: (v: "manual" | "set") => void;
-  /** 워크스페이스의 특정 지문만 개별 설정 중인지 — 장문 세트 빌더 바인딩에 쓴다. */
-  editingRow?: boolean;
-  /** 개별 설정 중인 지문 id — 장문 세트 모드일 때 이 지문으로 세트를 만든다. */
-  activePassageId?: string | null;
-  /** 개별 설정 중인 지문의 세트 프리셋(controlled) — 있으면 지문별 저장. */
-  setPresetId?: string | null;
-  onSetPresetChange?: (presetId: string | null) => void;
-  /** 개별 설정 중인 지문의 세트 프리셋별 생성 개수. */
-  setPresetCounts?: Record<string, number>;
-  onSetPresetCountsChange?: (next: Record<string, number>) => void;
-  /**
-   * 세트 멤버별 난이도·세부설정 오버라이드(controlled) — 프리셋 멤버 순서와 평행한
-   * 배열. 있으면 지문별 저장(SetBuilderPanel 로 그대로 전달).
-   */
-  setMemberOverrides?: Array<{
-    difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
-    generationPlan?: QuestionGenerationPlan;
-    typeSettings?: Record<string, unknown>;
-  }>;
-  onSetMemberOverridesChange?: (
-    next: Array<{
-      difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
-      generationPlan?: QuestionGenerationPlan;
-      typeSettings?: Record<string, unknown>;
-    }>,
-  ) => void;
-  setMemberOverridesByPreset?: Record<
-    string,
-    Array<{
-      difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
-      generationPlan?: QuestionGenerationPlan;
-      typeSettings?: Record<string, unknown>;
-    }>
-  >;
-  onSetMemberOverridesByPresetChange?: (
-    next: Record<
-      string,
-      Array<{
-        difficulty?: "BASIC" | "INTERMEDIATE" | "KILLER";
-        generationPlan?: QuestionGenerationPlan;
-        typeSettings?: Record<string, unknown>;
-      }>
-    >,
-  ) => void;
-  generationPlan: QuestionGenerationPlan;
-  setGenerationPlan: (v: QuestionGenerationPlan) => void;
-
-  // Manual config
-  typeCounts: Record<string, number>;
-  setTypeCount: (id: string, count: number) => void;
-  setTypeCounts: (v: Record<string, number>) => void;
-  questionTypeSettings: QuestionTypeGenerationSettings;
-  setQuestionTypeSettings: (
-    v:
-      | QuestionTypeGenerationSettings
-      | ((
-          prev: QuestionTypeGenerationSettings,
-        ) => QuestionTypeGenerationSettings),
-  ) => void;
-  totalQuestions: number;
-  /**
-   * 활성 지문의 문장 수 — 문장삽입(SENTENCE_INSERT)처럼 일정 문장 수를 요구하는
-   * 유형을 짧은 지문에서 비활성화(게이팅)하는 데 쓴다. 미전달(undefined) 시
-   * 게이팅하지 않음(다른 호출자 무영향).
-   */
-  passageSentenceCount?: number;
-
-  // Difficulty
-  difficulty: "BASIC" | "INTERMEDIATE" | "KILLER";
-  setDifficulty: (v: "BASIC" | "INTERMEDIATE" | "KILLER") => void;
-
-  // Prompt
-  customPrompt: string;
-  setCustomPrompt: (v: string) => void;
-  savedPrompts: { id: string; name: string; content: string }[];
-  showSavedPrompts: boolean;
-  setShowSavedPrompts: (v: boolean) => void;
-  showSaveInput: boolean;
-  setShowSaveInput: (v: boolean) => void;
-  savePromptName: string;
-  setSavePromptName: (v: string) => void;
-  savingPrompt: boolean;
-  setSavingPrompt: (v: boolean) => void;
-  editingPromptId: string | null;
-  setEditingPromptId: (v: string | null) => void;
-  editingName: string;
-  setEditingName: (v: string) => void;
-  loadSavedPrompts: () => void;
-
-  // Generate
-  canGenerate: boolean;
-  selectedIds: Set<string>;
-  handleBatchGenerate: () => void;
-
-  // 지문 워크스페이스 모드 — 행이 1개라도 불러와지면 생성 버튼은 워크스페이스
-  // 기준으로 동작한다 (라이브러리 직접 선택 생성 대신).
-  workspaceActive?: boolean;
-  /** 워크스페이스에 없는, 내 지문에서 체크만 된 생성 대상 수. */
-  workspaceSelectedOnlyCount?: number;
-  workspaceRowCount?: number;
-  workspaceTotalQuestions?: number;
-  workspaceCreditCost?: number;
-  workspaceVariantCount?: number;
-  workspaceGenerating?: boolean;
-  onWorkspaceGenerate?: () => void;
-  /**
-   * 패널 하단의 생성 버튼들을 숨긴다 — 지문별 '문제 생성' 모달처럼 생성 CTA 를
-   * 패널 바깥(모달 푸터)에서 제공할 때 쓴다. 미지정 시 기존처럼 버튼을 렌더한다.
-   */
-  hideGenerateButtons?: boolean;
-  /**
-   * 제품 투어가 진행 중인지 — true 면 카테고리 그룹을 강제로 모두 펼쳐 투어가
-   * 가리키는 유형 행(type-add-button 등)이 항상 보이게 한다.
-   */
-  tourActive?: boolean;
-}
+import {
+  DIFFICULTY_TONES,
+  GROUP_COLLAPSE_STORAGE_KEY,
+  GROUP_LABELS,
+  GROUP_ORDER,
+  TYPE_ORDER_STORAGE_KEY,
+  VOCAB_GENERATION_TYPE_IDS,
+} from "./generation-config-panel-parts/constants";
+import { Collapsible } from "./generation-config-panel-parts/collapsible";
+import type { GenerationConfigPanelProps } from "./generation-config-panel-parts/types";
 
 // ─── Component ───────────────────────────────────────
 
