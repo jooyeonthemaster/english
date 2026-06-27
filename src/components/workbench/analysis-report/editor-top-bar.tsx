@@ -2,7 +2,6 @@ import {
   ChevronLeft,
   FileQuestion,
   FileText,
-  Languages,
   Loader2,
   Printer,
   Redo2,
@@ -29,9 +28,6 @@ type Props = {
   worksheetHasContent: boolean;
   answerKeyIncluded: boolean;
   onToggleAnswers: () => void;
-  clozeTranslationsAvailable: boolean;
-  clozeTranslationsIncluded: boolean;
-  onToggleClozeTranslations: () => void;
   onUndo: () => void;
   onRedo: () => void;
   onRevert: () => void;
@@ -52,9 +48,6 @@ export function EditorTopBar({
   worksheetHasContent,
   answerKeyIncluded,
   onToggleAnswers,
-  clozeTranslationsAvailable,
-  clozeTranslationsIncluded,
-  onToggleClozeTranslations,
   onUndo,
   onRedo,
   onRevert,
@@ -112,40 +105,6 @@ export function EditorTopBar({
             </span>
             <span className={`text-[10px] font-bold ${answerKeyIncluded ? "text-sky-700" : "text-slate-400"}`}>
               {answerKeyIncluded ? "ON" : "OFF"}
-            </span>
-          </button>
-        ) : null}
-        {/* 단어 시험지 컨트롤은 우측 학습 활동 팔레트 하단 '어휘' 섹션으로 이동(툴바에서 제거) */}
-        {clozeTranslationsAvailable ? (
-          <button
-            type="button"
-            role="switch"
-            aria-checked={clozeTranslationsIncluded}
-            onClick={onToggleClozeTranslations}
-            title="핵심어구 한국어 해석 표시"
-            className={`inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border px-2.5 text-[11.5px] font-semibold transition-colors ${
-              clozeTranslationsIncluded
-                ? "border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100"
-                : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-            }`}
-          >
-            <Languages className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">한국어 해석</span>
-            <span className="sm:hidden">해석</span>
-            <span
-              className={`relative h-4 w-7 rounded-full transition-colors ${
-                clozeTranslationsIncluded ? "bg-sky-500" : "bg-slate-300"
-              }`}
-              aria-hidden="true"
-            >
-              <span
-                className={`absolute left-0 top-0.5 h-3 w-3 rounded-full bg-white shadow-sm transition-transform ${
-                  clozeTranslationsIncluded ? "translate-x-3.5" : "translate-x-0.5"
-                }`}
-              />
-            </span>
-            <span className={`text-[10px] font-bold ${clozeTranslationsIncluded ? "text-sky-700" : "text-slate-400"}`}>
-              {clozeTranslationsIncluded ? "ON" : "OFF"}
             </span>
           </button>
         ) : null}

@@ -1173,11 +1173,6 @@ export function AnalysisReportEditor({
       !!toolbarWorksheetSection.drills);
   const toolbarAnswerKeyIncluded =
     toolbarWorksheetSection?.kind === "learning-worksheet" ? !worksheetAnswersAreHidden(toolbarWorksheetSection) : false;
-  const toolbarClozeTranslationsAvailable =
-    toolbarWorksheetSection?.kind === "learning-worksheet" && !!toolbarWorksheetSection.cloze?.items?.length;
-  const toolbarClozeTranslationsIncluded =
-    toolbarWorksheetSection?.kind === "learning-worksheet" ? !worksheetClozeTranslationsAreHidden(toolbarWorksheetSection) : true;
-
   // 첫 단어장 섹션 대상
   const toolbarVocabularyIndex = useMemo(
     () => report.sections.findIndex((section) => section.kind === "vocabulary"),
@@ -1227,9 +1222,6 @@ export function AnalysisReportEditor({
         worksheetHasContent={toolbarWorksheetHasContent}
         answerKeyIncluded={toolbarAnswerKeyIncluded}
         onToggleAnswers={() => onToggleWorksheetAnswers(toolbarWorksheetIndex)}
-        clozeTranslationsAvailable={toolbarClozeTranslationsAvailable}
-        clozeTranslationsIncluded={toolbarClozeTranslationsIncluded}
-        onToggleClozeTranslations={() => onToggleWorksheetClozeTranslations(toolbarWorksheetIndex)}
         onUndo={undo}
         onRedo={redo}
         onRevert={revert}
