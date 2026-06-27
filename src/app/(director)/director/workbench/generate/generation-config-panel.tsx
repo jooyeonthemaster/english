@@ -737,22 +737,7 @@ export function GenerationConfigPanel({
   const renderTypeNumericDetailContent = (typeId: string) => {
     if (typeId === "CONTENT_MATCH") return TypeNumericDetail.renderContentMatchDetail({ contentMatchAnswerCount, contentMatchAnswerMax, contentMatchOptionCount, contentMatchSettings, setContentMatchAnswerCount, setContentMatchOptionCount, setQuestionTypeSettings });
 
-    if (typeId === "IRRELEVANT") {
-      return renderNumberSetting({
-        title: "Option count",
-        badges: [
-          `${IRRELEVANT_SLOT_COUNT_MIN} ~ ${IRRELEVANT_SLOT_COUNT_MAX}`,
-          "Sentence slots",
-        ],
-        description:
-          "Number of numbered sentence choices, including one inserted irrelevant sentence.",
-        value: irrelevantSlotCount,
-        min: IRRELEVANT_SLOT_COUNT_MIN,
-        max: IRRELEVANT_SLOT_COUNT_MAX,
-        onChange: setIrrelevantSlotCount,
-        ariaBase: "irrelevant option count",
-      });
-    }
+    if (typeId === "IRRELEVANT") return TypeNumericDetail.renderIrrelevantDetail({ irrelevantSlotCount, setIrrelevantSlotCount });
 
     if (typeId === "SUMMARY_COMPLETE") {
       return renderNumberSetting({

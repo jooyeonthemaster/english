@@ -6,7 +6,7 @@
 // 호출부 인라인 함수호출이라 React reconciliation 동일. @ts-nocheck=원본 충실(인자 타입 생략).
 
 import { renderNumberSetting } from "./setting-fields";
-import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN } from "@/lib/question-type-generation-settings";
+import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN } from "@/lib/question-type-generation-settings";
 
 export function renderAntonymDetail({ antonymPairCount, setAntonymPairCount }) {
       return renderNumberSetting({
@@ -100,5 +100,22 @@ export function renderContentMatchDetail({ contentMatchAnswerCount, contentMatch
           </div>
         </div>
       );
+    }
+
+export function renderIrrelevantDetail({ irrelevantSlotCount, setIrrelevantSlotCount }) {
+      return renderNumberSetting({
+        title: "Option count",
+        badges: [
+          `${IRRELEVANT_SLOT_COUNT_MIN} ~ ${IRRELEVANT_SLOT_COUNT_MAX}`,
+          "Sentence slots",
+        ],
+        description:
+          "Number of numbered sentence choices, including one inserted irrelevant sentence.",
+        value: irrelevantSlotCount,
+        min: IRRELEVANT_SLOT_COUNT_MIN,
+        max: IRRELEVANT_SLOT_COUNT_MAX,
+        onChange: setIrrelevantSlotCount,
+        ariaBase: "irrelevant option count",
+      });
     }
 
