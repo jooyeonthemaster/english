@@ -749,64 +749,7 @@ export function GenerationConfigPanel({
 
     if (typeId === "GRAMMAR_CORRECTION") return TypeNumericDetail.renderGrammarCorrectionDetail({ grammarCorrectionErrorCount, grammarCorrectionSettings, patchTypeSettings, setGrammarCorrectionErrorCount });
 
-    if (typeId === "SUMMARY_COMPLETE_MC") {
-      return (
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[12px] font-bold text-slate-800">
-                요약 빈칸 개수
-              </span>
-            </div>
-            <div className="mt-1 flex flex-wrap gap-1">
-              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
-                2 ~ 4개
-              </span>
-              <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
-                객관식 조합
-              </span>
-            </div>
-            <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
-              기본값은 2개입니다. 3개 이상이면 각 선지에 모든 빈칸 값을 맞춰
-              생성합니다.
-            </p>
-          </div>
-          <div className="flex items-center gap-0.5 shrink-0">
-            <button
-              type="button"
-              onClick={() =>
-                setSummaryCompleteMcBlankCount(summaryCompleteMcBlankCount - 1)
-              }
-              disabled={
-                summaryCompleteMcBlankCount <=
-                SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN
-              }
-              className="w-7 h-7 rounded-md flex items-center justify-center text-blue-400 hover:text-blue-600 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
-              aria-label="요약 빈칸 개수 줄이기"
-            >
-              <Minus className="w-3 h-3" />
-            </button>
-            <span className="w-6 text-center text-[12px] font-bold tabular-nums text-blue-700">
-              {summaryCompleteMcBlankCount}
-            </span>
-            <button
-              type="button"
-              onClick={() =>
-                setSummaryCompleteMcBlankCount(summaryCompleteMcBlankCount + 1)
-              }
-              disabled={
-                summaryCompleteMcBlankCount >=
-                SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX
-              }
-              className="w-7 h-7 rounded-md flex items-center justify-center text-blue-500 hover:text-blue-700 hover:bg-blue-100 disabled:text-slate-200 disabled:hover:bg-transparent transition-colors"
-              aria-label="요약 빈칸 개수 늘리기"
-            >
-              <Plus className="w-3 h-3" />
-            </button>
-          </div>
-        </div>
-      );
-    }
+    if (typeId === "SUMMARY_COMPLETE_MC") return TypeNumericDetail.renderSummaryCompleteMcDetail({ setSummaryCompleteMcBlankCount, summaryCompleteMcBlankCount });
 
     if (typeId === "BLANK_INFERENCE") {
       const isMultiBlank = blankInferenceBlankCount >= 2;
