@@ -336,10 +336,21 @@ export function WebtoonPageClient({
 
   // ─── 카드 '상세 보기' → 지문 상세 모달 ───
   const [detailPassage, setDetailPassage] = useState<PassageItem | null>(null);
+  // 방금 상세를 열어본 지문 id — 모달을 닫아도 유지해, 닫는 순간 카드를 한 번 반짝인다.
+  const [lastViewedPassageId, setLastViewedPassageId] = useState<string | null>(
+    null,
+  );
+  const handleViewPassageContent = useCallback((passage: PassageItem) => {
+    setDetailPassage(passage);
+    setLastViewedPassageId(passage.id);
+  }, []);
   const openDetailById = useCallback(
     (passageId: string) => {
       const p = passages.find((x) => x.id === passageId);
-      if (p) setDetailPassage(p);
+      if (p) {
+        setDetailPassage(p);
+        setLastViewedPassageId(p.id);
+      }
     },
     [passages],
   );
@@ -440,7 +451,7 @@ export function WebtoonPageClient({
               />
             }
             rightPane={
-              <div className="flex min-h-0 flex-1 flex-col p-3">
+              <div className="flex min-h-0 flex-1 flex-col">
                 <WebtoonInputStack
                   rows={rows}
                   setRows={setRows}
@@ -524,7 +535,9 @@ export function WebtoonPageClient({
                 workspacePassageIds={workspacePassageIds}
                 workspaceActive={workspaceActive}
                 handleOpenAnalysisModal={openDetailById}
-                onViewPassageContent={setDetailPassage}
+                onViewPassageContent={handleViewPassageContent}
+                lastViewedPassageId={lastViewedPassageId}
+                openPassageDetailId={detailPassage?.id ?? null}
               />
             }
           />

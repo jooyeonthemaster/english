@@ -1,9 +1,10 @@
 import { GROUP_GAP, ITEM_GAP } from "./constants";
 import { formatInlineMarkersForSubtype, formatSentenceInsertPassageMarkers, shouldRenderOptionListForSubtype, splitSentenceInsertGivenBlock } from "./option-display";
 import { isFlowStructuredSubtype, questionStemAndBody } from "./question-body-layout";
-import { isLineGapItem, LINE_GAP_MAX_PX, type PaginationSettings, type PaperGroup, type PaperItem, type PaperPage, type RenderFragment, type RenderItemPart } from "./types";
+import { isLineGapItem, LINE_GAP_MAX_PX, BLOCK_PX_PER_PT, type PaginationSettings, type PaperGroup, type PaperItem, type PaperPage, type RenderFragment, type RenderItemPart } from "./types";
+import { DEFAULT_IMAGE_ASPECT, imageAspectFromDataUrl } from "@/lib/image-dims";
 import type { FlowBlock, PaginationResult } from "./pagination-types";
-import { GIVEN_BOX_CHROME, ITEM_RENDER_OVERHEAD, MIN_PASSAGE_START_LINES, MIN_QUESTION_START_LINES, OPTION_BLOCK_TOP_GAP, OPTION_ROW_GAP, buildStructLineBlocks, embeddedPassageBodyChrome, estimateAnswerBlockHeight, estimateObjectiveAnswerBlockHeight, estimateOptionBlockHeight, estimateTeacherNoteHeight, estimateTextLines, pageMetrics, passageChromeHeight, passageContinuationReserveHeight, passageLineHeight, passageToLines, questionBodyToLines, questionLineHeight, questionMetaHeight, questionToLines } from "./pagination-metrics";
+import { GIVEN_BOX_CHROME, ITEM_RENDER_OVERHEAD, MIN_PASSAGE_START_LINES, MIN_QUESTION_START_LINES, OPTION_BLOCK_TOP_GAP, OPTION_ROW_GAP, buildStructLineBlocks, embeddedPassageBodyChrome, estimateAnswerBlockHeight, estimateObjectiveAnswerBlockHeight, estimateOptionBlockHeight, estimateTeacherNoteHeight, estimateTextLines, pageMetrics, passageChromeHeight, passageContinuationReserveHeight, passageLineHeight, passageToLines, questionBodyToLines, questionLineHeight, questionMetaHeight, questionToLines, resolveItemFontPx } from "./pagination-metrics";
 
 export type {
   PaginationResult,
@@ -36,14 +37,22 @@ function itemForBlock(block: FlowBlock): PaperItem | undefined {
 function estimateCustomBlockHeight(item: PaperItem, settings: PaginationSettings): number {
   const compact = settings.density === "compact";
   const { columnWidth } = pageMetrics(settings, 0);
+  // 숫자 pt 가 지정되면 미리보기 px 로 환산해 줄 폭·줄높이에 반영(미지정 시 기존 sm/md/lg).
+  const ptPx =
+    typeof item.blockFontPt === "number" && Number.isFinite(item.blockFontPt)
+      ? item.blockFontPt * BLOCK_PX_PER_PT
+      : null;
   const bodyFontSize =
-    item.blockFontSize === "lg" ? 14 : item.blockFontSize === "sm" ? 10 : 11.5;
+    ptPx ?? (item.blockFontSize === "lg" ? 14 : item.blockFontSize === "sm" ? 10 : 11.5);
 
   switch (item.blockType) {
-    case "section":
-      return 38 + estimateTextLines(item.blockTitle || item.blockText || " ", columnWidth, 15) * 12;
+    case "section": {
+      const sectionFontSize = ptPx ?? 15;
+      const sectionLineH = ptPx ? ptPx * 1.4 : 12;
+      return 38 + estimateTextLines(item.blockTitle || item.blockText || " ", columnWidth, sectionFontSize) * sectionLineH;
+    }
     case "text":
-      return 20 + estimateTextLines(item.blockText || " ", columnWidth, bodyFontSize) * (compact ? 14 : 16);
+      return 20 + estimateTextLines(item.blockText || " ", columnWidth, bodyFontSize) * (ptPx ? ptPx * 1.4 : compact ? 14 : 16);
     case "divider":
       return 18 + Math.max(1, item.dividerThickness);
     case "spacer":
@@ -51,8 +60,19 @@ function estimateCustomBlockHeight(item: PaperItem, settings: PaginationSettings
       return isLineGapItem(item)
         ? Math.max(8, Math.min(LINE_GAP_MAX_PX, item.spacerHeight || 32))
         : Math.max(8, Math.min(160, item.spacerHeight || 32));
-    case "image":
-      return Math.max(80, Math.min(260, (columnWidth * Math.max(20, Math.min(100, item.imageWidth || 70))) / 140));
+    case "image": {
+      // 실제 렌더 높이 = 표시 폭(칸폭×imageWidth%) × 종횡비(자연 height/width).
+      // 종횡비를 data URL 헤더에서 직접 읽어 추정 높이를 실제와 맞춘다 → 남은 공간에
+      // 안 들어가면 배치 루프가 다음 칸/페이지로 통째로 넘긴다(미리보기와 일치).
+      // 한 페이지(칸)보다 큰 아주 긴 이미지는 페이지 내용 높이로 제한(렌더에서 축소)되므로
+      // 추정도 같은 상한을 적용해, 어디에도 안 들어가 넘치는 일이 없게 한다.
+      const widthPct = Math.max(20, Math.min(100, item.imageWidth || 70));
+      const dispW = (columnWidth * widthPct) / 100;
+      const aspect = imageAspectFromDataUrl(item.imageDataUrl) ?? DEFAULT_IMAGE_ASPECT;
+      const captionH = item.imageAlt ? 14 : 0;
+      const cap = pageMetrics(settings, 1).capacity;
+      return Math.min(cap, Math.max(40, dispW * aspect + captionH + 8));
+    }
     case "question":
     default:
       return 0;
@@ -318,10 +338,11 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
     for (const item of group.items) {
       const subType = item.sourceQuestion.subType;
       const { stem, body } = questionStemAndBody(item);
-      const lineH = questionLineHeight(settings);
+      const fontPx = resolveItemFontPx(item, settings);
+      const lineH = questionLineHeight(settings, fontPx);
 
       const stemRendered = formatInlineMarkersForSubtype(stem, subType);
-      const stemLineCount = Math.max(1, questionToLines(stemRendered, settings).length);
+      const stemLineCount = Math.max(1, questionToLines(stemRendered, settings, fontPx).length);
 
       const structured = isFlowStructuredSubtype(subType);
       const bodyRendered = structured ? "" : formatInlineMarkersForSubtype(body, subType);
@@ -371,7 +392,15 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
             option,
             index,
             height:
-              estimateOptionBlockHeight(option, settings, item.sourceQuestion.subType, index) +
+              estimateOptionBlockHeight(
+                option,
+                settings,
+                item.sourceQuestion.subType,
+                index,
+                // 선택지 기본 글꼴(10/11)은 본문(10.5/11.5)과 달라, pt 가 실제 지정된
+                // 경우에만 스케일을 넘긴다(미지정 시 기존 분할 그대로 — 회귀 0).
+                item.blockFontPt != null ? fontPx : undefined,
+              ) +
               (index === 0 ? OPTION_BLOCK_TOP_GAP : OPTION_ROW_GAP),
           });
         });

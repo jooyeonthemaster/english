@@ -54,10 +54,7 @@ import {
   type RowRange,
   type WorkspaceRow,
 } from "./workspace-types";
-import {
-  difficultyLabel,
-  overrideTypeSummary,
-} from "./type-override-popover";
+import { overrideTypeSummary } from "./type-override-popover";
 import {
   ParaphrasePreviewPanel,
   PrependPreviewPanel,
@@ -70,6 +67,7 @@ import {
 import { RowHistoryPopover } from "./row-history-popover";
 import type { QueueItem } from "../generate-page-types";
 import type { QuestionCardItem } from "@/components/workbench/question-card";
+import { DIFFICULTY_CONFIG } from "@/components/workbench/question-card";
 import {
   defaultVariantTitle,
   variantModeLabel,
@@ -1234,8 +1232,27 @@ export function WorkspacePassageRow({
           ) : null}
           {/* 상태 배지 — 생성 플랜 / 난이도 / 유형 을 제목 옆(왼쪽)에 모은다.
               (단어 수는 입력창 우하단 푸터로 이동) */}
-          {/* 생성 플랜 뱃지 — 개별 지정이 있으면 그 플랜을(또렷하게), 없으면
-              전체 공통 플랜을 기본 뱃지(흐리게)로 보여준다. 프리미엄은 보라색. */}
+          {/* 난이도 뱃지 — 문제카드와 동일한 디자인(색상 pill)·순서(난이도 먼저).
+              기본=파랑, 중급=노랑(amber), 킬러=빨강. 항상 노출한다. */}
+          {(() => {
+            const custom = !!row.override?.difficulty;
+            const diff =
+              DIFFICULTY_CONFIG[row.override?.difficulty ?? globalDifficulty];
+            if (!diff) return null;
+            return (
+              <span
+                title={
+                  custom
+                    ? "이 지문에 지정된 난이도"
+                    : "전체 공통 난이도 (기본값) — 지문별 설정에서 따로 지정 가능"
+                }
+                className={`flex h-7 shrink-0 items-center rounded-md border px-1.5 text-[10px] font-bold ${diff.className}`}
+              >
+                {diff.label}
+              </span>
+            );
+          })()}
+          {/* 생성 플랜 뱃지 — 문제카드와 동일한 디자인(일반=회색+아이콘, 프리미엄=보라). */}
           {(() => {
             const custom = !!row.override?.generationPlan;
             const isPremium =
@@ -1250,44 +1267,14 @@ export function WorkspacePassageRow({
                     : "전체 공통 생성 플랜 (기본값) — 지문별 설정에서 따로 지정 가능"
                 }
                 className={
-                  "flex h-7 shrink-0 items-center gap-1 rounded-md border px-1.5 text-[10.5px] font-semibold " +
+                  "flex h-7 shrink-0 items-center gap-1 rounded-md border px-1.5 text-[10px] font-bold " +
                   (isPremium
-                    ? custom
-                      ? "border-blue-300 bg-blue-100 text-blue-700"
-                      : "border-blue-200 bg-blue-50 text-blue-600"
-                    : custom
-                      ? "border-slate-200 bg-slate-50 text-slate-600"
-                      : "border-slate-200 bg-white text-slate-400")
+                    ? "border-violet-200 bg-violet-50 text-violet-700"
+                    : "border-slate-200 bg-slate-50 text-slate-500")
                 }
               >
                 <PlanIcon className="h-3 w-3 shrink-0" aria-hidden="true" />
                 {isPremium ? "프리미엄" : "일반"}
-              </span>
-            );
-          })()}
-          {/* 난이도 뱃지 — 개별 지정이 있으면 그 난이도를(또렷하게), 없으면
-              전체 공통 난이도를 기본 뱃지(흐리게)로 항상 보여준다. */}
-          {(() => {
-            const custom = !!row.override?.difficulty;
-            const label = difficultyLabel(
-              row.override?.difficulty ?? globalDifficulty,
-            );
-            if (!label) return null;
-            return (
-              <span
-                title={
-                  custom
-                    ? "이 지문에 지정된 난이도"
-                    : "전체 공통 난이도 (기본값) — 지문별 설정에서 따로 지정 가능"
-                }
-                className={
-                  "flex h-7 shrink-0 items-center rounded-md border px-1.5 text-[10.5px] font-semibold " +
-                  (custom
-                    ? "border-slate-200 bg-slate-50 text-slate-600"
-                    : "border-slate-200 bg-white text-slate-400")
-                }
-              >
-                {label}
               </span>
             );
           })()}

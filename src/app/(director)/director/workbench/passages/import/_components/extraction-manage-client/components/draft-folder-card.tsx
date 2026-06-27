@@ -10,6 +10,13 @@ import {
   Trash2,
 } from "lucide-react";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { FOLDER_COLORS } from "@/components/workbench/shared/constants";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 
@@ -41,27 +48,15 @@ export function DraftFolderCard({
 }: DraftFolderCardProps) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(collection.name);
+  // Radix DropdownMenu(=포털 렌더)로 메뉴를 띄운다. 직접 absolute div를 쓰면
+  // 부모의 overflow-hidden/overflow-auto 컨테이너에 잘려서 "이름 변경/삭제"가
+  // 짤린다. FolderCard·FolderChip·FolderListRow와 동일한 포털 방식으로 통일.
   const [showMenu, setShowMenu] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
   const color =
     collection.color ||
     FOLDER_COLORS[collection.name.charCodeAt(0) % FOLDER_COLORS.length];
-
-  useEffect(() => {
-    if (!showMenu) return;
-    function handleClick(e: MouseEvent) {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(e.target as Node)
-      ) {
-        setShowMenu(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [showMenu]);
 
   useEffect(() => {
     const el = dropRef.current;
@@ -89,6 +84,12 @@ export function DraftFolderCard({
     <div
       ref={dropRef}
       onClick={editing ? undefined : onClick}
+      onContextMenu={(e) => {
+        // 우클릭 = 폴더 메뉴(이름 변경/삭제). 좌클릭(진입)과 분리돼 실수 삭제 방지.
+        e.preventDefault();
+        e.stopPropagation();
+        setShowMenu(true);
+      }}
       className={
         "group flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 shadow-sm motion-safe:transition-all motion-safe:duration-200 " +
         (isDragOver
@@ -150,46 +151,42 @@ export function DraftFolderCard({
         </p>
       </div>
 
-      <div
-        ref={menuRef}
-        className="relative"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          type="button"
-          onClick={() => setShowMenu(!showMenu)}
-          className="flex size-8 cursor-pointer items-center justify-center rounded-lg opacity-0 transition-all hover:bg-slate-100 group-hover:opacity-100"
-          aria-label="폴더 메뉴"
-        >
-          <MoreHorizontal className="size-4 text-slate-400" />
-        </button>
-        {showMenu ? (
-          <div className="absolute right-0 top-9 z-20 w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
-            <button
-              type="button"
-              onClick={() => {
-                setEditing(true);
-                setShowMenu(false);
-              }}
-              className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50"
-            >
-              <Pencil className="size-3.5" />
-              이름 변경
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                onDelete(collection.id);
-                setShowMenu(false);
-              }}
-              className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50"
-            >
-              <Trash2 className="size-3.5" />
-              삭제
-            </button>
-          </div>
-        ) : null}
-      </div>
+      {/* Context menu — 포털 렌더라 부모 overflow에 잘리지 않고 항상 위에 뜬다 */}
+      <DropdownMenu open={showMenu} onOpenChange={setShowMenu}>
+        <DropdownMenuTrigger asChild>
+          <button
+            type="button"
+            onClick={(e) => e.stopPropagation()}
+            className="flex size-8 cursor-pointer items-center justify-center rounded-lg opacity-0 transition-all hover:bg-slate-100 group-hover:opacity-100"
+            aria-label="폴더 메뉴 (우클릭으로도 열 수 있어요)"
+            title="우클릭으로도 열 수 있어요"
+          >
+            <MoreHorizontal className="size-4 text-slate-400" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              setEditing(true);
+            }}
+          >
+            <Pencil className="mr-2 size-3.5" />
+            이름 변경
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(collection.id);
+            }}
+            className="text-red-600"
+          >
+            <Trash2 className="mr-2 size-3.5" />
+            삭제
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

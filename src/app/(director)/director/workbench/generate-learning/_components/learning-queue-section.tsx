@@ -12,6 +12,7 @@ import {
   ChevronUp,
   X,
 } from "lucide-react";
+import { SaveButton } from "@/components/ui/save-button";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 import { LEARNING_SUBTYPE_LABELS } from "@/lib/learning-constants";
@@ -387,7 +388,7 @@ function SaveModal({
               className="w-full h-9 px-3 text-[13px] rounded-xl border border-slate-200 bg-slate-50 outline-none focus:border-blue-400"
             />
           </div>
-          <button
+          <SaveButton
             onClick={() =>
               onSave(item, {
                 publisher,
@@ -396,11 +397,11 @@ function SaveModal({
                 unit: unit || undefined,
               })
             }
+            saving={saving}
             disabled={!publisher.trim() || saving}
-            className="w-full h-11 rounded-xl text-[14px] font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors"
-          >
-            {saving ? "저장 중..." : `${item.questions.length}개 문제 저장`}
-          </button>
+            title={`${item.questions.length}개 문제 저장`}
+            className="w-full"
+          />
         </div>
       </div>
     </div>

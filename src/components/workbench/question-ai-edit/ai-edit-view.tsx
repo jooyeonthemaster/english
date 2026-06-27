@@ -18,7 +18,10 @@ import {
   ArrowRight,
   Bot,
   Check,
+  ChevronDown,
   CornerDownLeft,
+  FileText,
+  Gem,
   Loader2,
   MousePointerClick,
   Plus,
@@ -31,8 +34,19 @@ import {
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { SaveButton } from "@/components/ui/save-button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { PearlIcon } from "@/components/icons/pearl-icon";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
+import { DIFFICULTY_CONFIG } from "@/components/workbench/question-card";
+import { getQuestionGenerationPlanFromTags } from "@/lib/question-generation-plans";
+import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import {
   BlockChangeContext,
   BlockSelectionContext,
@@ -43,7 +57,6 @@ import {
 } from "@/components/workbench/question-renderer-blocks";
 import { EditViewToggle } from "@/components/workbench/question-edit-client/edit-view-toggle";
 import { getTypeEditConfig } from "@/lib/question-ai-edit/type-edit-config";
-import { QUESTION_TYPE_META } from "@/lib/question-schemas";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { triggerHintGlow } from "@/lib/hint-glow";
 import { circleGrammarLabelMentions } from "@/components/exams/paper-builder/option-display";
@@ -109,6 +122,121 @@ interface Props {
   onSavedAsNew?: (newQuestionId: string) => void;
 }
 
+/** "기존 문제" 위에 띄울 카드 헤더 — 지문명 칩 + 난이도 배지 + 생성 플랜 배지.
+ *  (문제카드 헤더와 동일 디자인) */
+function ExistingQuestionHeader({
+  difficulty,
+  passageTitle,
+  passageContent,
+  before,
+}: {
+  difficulty?: string;
+  passageTitle?: string | null;
+  passageContent?: string;
+  before?: Record<string, unknown>;
+}) {
+  const diffConfig = difficulty ? DIFFICULTY_CONFIG[difficulty] : null;
+
+  // 생성 플랜(일반/프리미엄) — 태그 우선, 없으면 구조화 데이터(_generationPlan) 폴백.
+  const tags = Array.isArray(before?.tags)
+    ? (before!.tags as string[])
+    : typeof before?.tags === "string"
+      ? (() => {
+          try {
+            const v = JSON.parse(before!.tags as string);
+            return Array.isArray(v) ? (v as string[]) : [];
+          } catch {
+            return [];
+          }
+        })()
+      : [];
+  const structured =
+    before?.structuredData && typeof before.structuredData === "object"
+      ? (before.structuredData as { _generationPlan?: unknown })
+      : null;
+  const structuredPlan =
+    structured?._generationPlan === "PREMIUM" ||
+    structured?._generationPlan === "STANDARD"
+      ? (structured._generationPlan as "PREMIUM" | "STANDARD")
+      : null;
+  const generationPlan =
+    getQuestionGenerationPlanFromTags(tags) ?? structuredPlan;
+  const isPremium = generationPlan === "PREMIUM";
+  const showPlan =
+    generationPlan && (isPremium || FEATURE_FLAGS.SHOW_MODEL_SELECTOR);
+
+  if (!passageTitle && !diffConfig && !showPlan) return null;
+
+  return (
+    <div className="mb-3 flex items-center gap-1.5">
+      {passageTitle && (
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              title={passageContent ? "지문 보기" : passageTitle}
+              disabled={!passageContent}
+              className="inline-flex h-7 min-w-0 flex-1 items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 text-[11px] font-medium text-slate-600 transition-colors hover:bg-slate-100 disabled:cursor-default disabled:hover:bg-slate-50"
+            >
+              <FileText className="h-3 w-3 shrink-0 text-blue-400" aria-hidden="true" />
+              <span className="min-w-0 flex-1 truncate text-left text-[13px] font-semibold">
+                {passageTitle}
+              </span>
+              {passageContent && (
+                <ChevronDown className="h-3 w-3 shrink-0 text-slate-400" aria-hidden="true" />
+              )}
+            </button>
+          </PopoverTrigger>
+          {passageContent && (
+            <PopoverContent
+              align="start"
+              collisionPadding={12}
+              className="max-h-[60vh] w-[min(34rem,85vw)] overflow-y-auto p-0"
+            >
+              <div className="flex items-center gap-1.5 border-b border-slate-100 bg-slate-50/80 px-3 py-2">
+                <FileText className="h-3.5 w-3.5 shrink-0 text-blue-400" aria-hidden="true" />
+                <span className="min-w-0 flex-1 truncate text-[12px] font-bold text-slate-700">
+                  {passageTitle}
+                </span>
+              </div>
+              <p className="whitespace-pre-wrap px-3 py-2.5 font-mono text-[12px] leading-[1.8] text-slate-700">
+                {passageContent}
+              </p>
+            </PopoverContent>
+          )}
+        </Popover>
+      )}
+      <div className="ml-auto flex items-center gap-1.5 shrink-0">
+        {diffConfig && (
+          <Badge
+            variant="outline"
+            className={`shrink-0 text-[10px] font-bold ${diffConfig.className}`}
+          >
+            {diffConfig.label}
+          </Badge>
+        )}
+        {showPlan && (
+          <Badge
+            variant="outline"
+            className={`shrink-0 gap-1 text-[10px] font-bold ${
+              isPremium
+                ? "border-violet-200 bg-violet-50 text-violet-700"
+                : "border-slate-200 bg-slate-50 text-slate-500"
+            }`}
+          >
+            {isPremium ? (
+              <Gem className="h-3 w-3" />
+            ) : (
+              <PearlIcon className="h-3 w-3" />
+            )}
+            {isPremium ? "프리미엄" : "일반"}
+          </Badge>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function AiEditView({
   questionId,
   aiGenerated,
@@ -159,7 +287,6 @@ export function AiEditView({
   });
 
   const subType = context?.subType;
-  const typeLabel = (subType && QUESTION_TYPE_META[subType]?.label) || subType || "";
   const config = useMemo(() => (subType ? getTypeEditConfig(subType) : null), [subType]);
 
   // 활성 컨트롤 directive(비기본값만).
@@ -239,6 +366,26 @@ export function AiEditView({
   const changedBlockCount = Object.keys(changeMap.byId).length;
   const [expandAllChanges, setExpandAllChanges] = useState(false);
 
+  // 우측(AI 수정본)의 "변경된 블럭" 안내 배너. 좌측(기존 문제)에는 보이지 않는
+  // 복제본을 같은 자리에 깔아 좌우 시작 높이를 맞춘다(줄바꿈까지 동일하게 반영).
+  const changedBlocksBanner =
+    changedBlockCount > 0 ? (
+      <div className="flex items-center justify-between gap-2 rounded-lg bg-blue-50/70 px-2.5 py-1.5">
+        <span className="flex items-center gap-1.5 text-[11.5px] font-medium text-blue-700">
+          <MousePointerClick className="h-3.5 w-3.5" />
+          색칠된 {changedBlockCount}개 블럭이 변경됐어요. 좌측 색 막대 블럭의
+          배지를 눌러 바뀐 내용을 확인하세요.
+        </span>
+        <button
+          type="button"
+          onClick={() => setExpandAllChanges((v) => !v)}
+          className="shrink-0 rounded-md border border-blue-300 bg-white px-2 py-0.5 text-[11px] font-semibold text-blue-700 transition-colors hover:bg-blue-50"
+        >
+          {expandAllChanges ? "모두 접기" : "모두 펼치기"}
+        </button>
+      </div>
+    ) : null;
+
   function addQuick(instruction: string, label: string) {
     setQuickChips((prev) => (prev.some((c) => c.label === label) ? prev : [...prev, { label, instruction }]));
     textareaRef.current?.focus();
@@ -289,56 +436,31 @@ export function AiEditView({
           )}
           <span className="text-[17px] font-bold tracking-tight text-slate-900">문제 수정</span>
           <EditViewToggle active="ai" onAi={() => {}} onManual={onSwitchToManual} />
-          {typeLabel && (
-            <span className="inline-flex shrink-0 items-center rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-[12px] font-semibold text-blue-700">
-              {typeLabel}
-            </span>
-          )}
-          {aiGenerated && (
-            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-sky-200 bg-sky-50 px-2.5 py-1 text-[12.5px] font-bold text-sky-700">
-              <svg
-                viewBox="0 0 24 24"
-                className="h-3.5 w-3.5"
-                aria-hidden="true"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="9" />
-                <path d="M8 8.5A5 5 0 0 1 11.5 5.7" />
-              </svg>
-              일반 생성
-            </span>
-          )}
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={() => void saveAsNew()}
-            disabled={!activeVersion || applying || savingAsNew || sending || activeVersionSaved}
-            size="sm"
-            className="h-7 gap-1 border-slate-300 px-3 text-[11px] font-semibold text-slate-700"
-          >
-            {savingAsNew ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : activeVersionSaved ? (
-              <Check className="h-3.5 w-3.5 text-emerald-600" />
-            ) : (
-              <SaveAsNewIcon />
-            )}
-            {activeVersionSaved ? "저장됨" : "새 문제로 저장"}
-          </Button>
-          <Button
+          <SaveButton
             onClick={apply}
+            saving={applying}
             disabled={!activeVersion || applying || savingAsNew || sending}
-            size="sm"
-            className="h-7 gap-1 bg-blue-600 px-3 text-[11px] font-semibold shadow-sm hover:bg-blue-700"
-          >
-            {applying ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-            저장
-          </Button>
+            className="h-7"
+            secondaryActions={[
+              {
+                label: activeVersionSaved ? "저장됨" : "새 문제로 저장",
+                icon: activeVersionSaved ? (
+                  <Check className="h-3.5 w-3.5 text-emerald-600" />
+                ) : (
+                  <SaveAsNewIcon />
+                ),
+                onClick: () => void saveAsNew(),
+                disabled:
+                  !activeVersion ||
+                  applying ||
+                  savingAsNew ||
+                  sending ||
+                  activeVersionSaved,
+              },
+            ]}
+          />
           <div className="h-5 w-px bg-slate-200" />
           <button
             type="button"
@@ -379,10 +501,24 @@ export function AiEditView({
               <div className="min-h-0 flex-1 overflow-y-auto bg-slate-50/30 px-5 py-4">
                 {context?.before && (
                   <BlockSelectionContext.Provider value={blockApi}>
+                    {/* 우측 "변경 블럭" 배너와 동일한 높이를 보이지 않게 확보해
+                        좌우 문제 시작 위치를 맞춘다. */}
+                    {changedBlocksBanner && (
+                      <div aria-hidden="true" className="invisible mb-3">
+                        {changedBlocksBanner}
+                      </div>
+                    )}
+                    <ExistingQuestionHeader
+                      difficulty={context.difficulty}
+                      passageTitle={context.passageTitle}
+                      passageContent={context.passageContent}
+                      before={context.before}
+                    />
                     <StructuredQuestionRenderer
                       question={context.before}
                       index={0}
                       hideHeader
+                      showTypeLabel
                       sourcePassageContent={context.passageContent}
                       answerRevealMode="show-all"
                       hideAnswerLine
@@ -483,23 +619,18 @@ export function AiEditView({
                     ) : (
                       <>
                         {/* 블럭별 변경 안내 — 미리보기 위(좌측 색 막대 블럭을 보라는 안내) */}
-                        {changedBlockCount > 0 && (
-                          <div className="flex items-center justify-between gap-2 rounded-lg bg-blue-50/70 px-2.5 py-1.5">
-                            <span className="flex items-center gap-1.5 text-[11.5px] font-medium text-blue-700">
-                              <MousePointerClick className="h-3.5 w-3.5" />
-                              색칠된 {changedBlockCount}개 블럭이 변경됐어요. 좌측 색 막대 블럭의 배지를 눌러 바뀐 내용을 확인하세요.
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => setExpandAllChanges((v) => !v)}
-                              className="shrink-0 rounded-md border border-blue-300 bg-white px-2 py-0.5 text-[11px] font-semibold text-blue-700 transition-colors hover:bg-blue-50"
-                            >
-                              {expandAllChanges ? "모두 접기" : "모두 펼치기"}
-                            </button>
-                          </div>
-                        )}
+                        {changedBlocksBanner}
                         {/* 문제를 먼저 — 좌측 '기존 문제'와 같은 높이에서 시작해 섹션이 위에서부터 정렬.
                             BlockChangeContext 로 변경 블럭에 색 막대·배지를 마크한다. */}
+                        <ExistingQuestionHeader
+                          difficulty={
+                            (activeVersion.after?.difficulty as string) ??
+                            context?.difficulty
+                          }
+                          passageTitle={context?.passageTitle}
+                          passageContent={context?.passageContent}
+                          before={activeVersion.after}
+                        />
                         <BlockChangeContext.Provider
                           value={{ byId: changeMap.byId, expandAll: expandAllChanges }}
                         >
@@ -507,6 +638,7 @@ export function AiEditView({
                             question={activeVersion.after}
                             index={0}
                             hideHeader
+                            showTypeLabel
                             sourcePassageContent={context?.passageContent}
                             answerRevealMode="show-all"
                             hideAnswerLine

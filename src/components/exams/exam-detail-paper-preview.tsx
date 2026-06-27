@@ -80,6 +80,9 @@ type SavedBuilderBlock = Omit<SavedBuilderItem, "blockType"> & {
   blockText?: string;
   blockAlign?: PaperItem["blockAlign"];
   blockFontSize?: PaperItem["blockFontSize"];
+  blockBold?: boolean;
+  blockItalic?: boolean;
+  blockFontPt?: number | null;
   blockAccentColor?: string;
   dividerStyle?: PaperItem["dividerStyle"];
   dividerThickness?: number;
@@ -210,6 +213,13 @@ function examQuestionToBuilderQuestion(eq: ExamQuestion, saved?: SavedBuilderIte
 }
 
 function savedItemToPaperItem(saved: SavedBuilderItem, eq: ExamQuestion, index: number): PaperItem {
+  // settings.blocks 의 문항 블록이 그대로 넘어오므로 블록 서식 필드를 함께 읽는다.
+  const questionFmt = saved as {
+    blockFontPt?: number | null;
+    blockBold?: boolean;
+    blockItalic?: boolean;
+    blockAlign?: string;
+  };
   const sourceQuestion = examQuestionToBuilderQuestion(eq, saved);
   const localId = saved.localId || `${sourceQuestion.id}-saved-${index}`;
   const passageContent = normalizePassageText(saved.passageContent ?? sourceQuestion.passage?.content ?? "");
@@ -259,8 +269,19 @@ function savedItemToPaperItem(saved: SavedBuilderItem, eq: ExamQuestion, index: 
     locked: false,
     blockTitle: "",
     blockText: "",
-    blockAlign: "left",
+    // 문항 단위 서식(블록 서식 툴바)은 settings.blocks 의 문항 블록에 저장된다.
+    // 재오픈·상세 미리보기에서도 동일하게 반영되도록 saved 에서 읽는다.
+    blockAlign:
+      questionFmt.blockAlign === "center" || questionFmt.blockAlign === "right"
+        ? questionFmt.blockAlign
+        : "left",
     blockFontSize: "md",
+    blockBold: typeof questionFmt.blockBold === "boolean" ? questionFmt.blockBold : false,
+    blockItalic: typeof questionFmt.blockItalic === "boolean" ? questionFmt.blockItalic : false,
+    blockFontPt:
+      typeof questionFmt.blockFontPt === "number" && Number.isFinite(questionFmt.blockFontPt)
+        ? Math.min(60, Math.max(5, Math.round(questionFmt.blockFontPt)))
+        : null,
     blockAccentColor: "#2563EB",
     dividerStyle: "solid",
     dividerThickness: 1,
@@ -314,6 +335,14 @@ function savedBlockToPaperItem(saved: SavedBuilderBlock, index: number): PaperIt
       saved.blockFontSize === "sm" || saved.blockFontSize === "lg"
         ? saved.blockFontSize
         : base.blockFontSize,
+    blockBold:
+      typeof saved.blockBold === "boolean" ? saved.blockBold : base.blockBold,
+    blockItalic:
+      typeof saved.blockItalic === "boolean" ? saved.blockItalic : base.blockItalic,
+    blockFontPt:
+      typeof saved.blockFontPt === "number" && Number.isFinite(saved.blockFontPt)
+        ? Math.min(60, Math.max(5, Math.round(saved.blockFontPt)))
+        : null,
     blockAccentColor: saved.blockAccentColor || base.blockAccentColor,
     dividerStyle:
       saved.dividerStyle === "dashed" || saved.dividerStyle === "dotted"

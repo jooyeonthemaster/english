@@ -12,7 +12,7 @@ export function TaskDomainTabs({
   onChange: (next: TaskScope) => void;
 }) {
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div className="flex flex-nowrap gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <FilterChip active={scope === "all"} onClick={() => onChange("all")}>
         전체
       </FilterChip>

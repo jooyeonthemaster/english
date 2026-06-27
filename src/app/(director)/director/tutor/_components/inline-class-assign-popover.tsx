@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { SaveButton } from "@/components/ui/save-button";
 import { updateStudentClassAssignments } from "@/actions/students";
 import { createClass } from "@/actions/classes";
 import type { HubClass } from "./types";
@@ -235,15 +236,7 @@ export function InlineClassAssignPopover({
           >
             취소
           </Button>
-          <Button
-            size="sm"
-            className={cn("h-8 rounded-lg bg-blue-600 text-xs font-bold text-white hover:bg-blue-700")}
-            onClick={save}
-            disabled={isPending}
-          >
-            {isPending && <Loader2 className="size-3.5 animate-spin" />}
-            저장
-          </Button>
+          <SaveButton onClick={save} saving={isPending} />
         </div>
       </PopoverContent>
     </Popover>

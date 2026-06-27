@@ -25,6 +25,7 @@ export default async function BulkExtractionImportPage() {
 
   return (
     <BulkExtractClient
+      academyId={staff.academyId}
       initialCreditBalance={credit.balance}
       initialCollections={collections}
       initialCollectionMembership={collectionMembership}

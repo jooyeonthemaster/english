@@ -474,7 +474,8 @@ export function usePaperItems(
     return true;
   }
 
-  function insertBlock(blockType: InsertablePaperBlockType) {
+  // 삽입한 새 블록의 localId 를 반환한다(호출부에서 미리보기를 그 블록으로 스크롤하는 데 사용).
+  function insertBlock(blockType: InsertablePaperBlockType): string {
     const nextBlock = makeCustomPaperBlock(blockType, paperItems.length + 1);
     commitItems((current) => {
       const activeIndex = activeItemId
@@ -484,9 +485,10 @@ export function usePaperItems(
       next.splice(activeIndex >= 0 ? activeIndex + 1 : current.length, 0, nextBlock);
       return next;
     }, () => nextBlock.localId);
+    return nextBlock.localId;
   }
 
-  function insertImageBlock(dataUrl: string, imageAlt = "삽입 이미지") {
+  function insertImageBlock(dataUrl: string, imageAlt = "삽입 이미지"): string {
     const nextBlock = {
       ...makeCustomPaperBlock("image", paperItems.length + 1),
       imageDataUrl: dataUrl,
@@ -500,6 +502,7 @@ export function usePaperItems(
       next.splice(activeIndex >= 0 ? activeIndex + 1 : current.length, 0, nextBlock);
       return next;
     }, () => nextBlock.localId);
+    return nextBlock.localId;
   }
 
   // 워드프로세서식 빈 줄 — afterLocalId(캐럿 위 항목, null=맨 앞) 바로 뒤에 한 줄(lineHeight)

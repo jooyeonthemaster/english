@@ -54,6 +54,9 @@ export interface BuilderBlock extends Omit<Partial<BuilderItem>, "blockType"> {
   blockText?: string;
   blockAlign?: "left" | "center" | "right";
   blockFontSize?: "sm" | "md" | "lg";
+  blockBold?: boolean;
+  blockItalic?: boolean;
+  blockFontPt?: number | null;
   blockAccentColor?: string;
   dividerStyle?: "solid" | "dashed" | "dotted";
   dividerThickness?: number;
@@ -74,6 +77,11 @@ export interface BuilderSettings {
 }
 
 export interface BuilderItemResolved extends BuilderItem {
+  // 문항 단위 서식(블록 서식 툴바) — 미리보기와 동일하게 다운로드에도 반영.
+  blockFontPt?: number | null;
+  blockBold?: boolean;
+  blockItalic?: boolean;
+  blockAlign?: "left" | "center" | "right";
   sourceQuestion: ExamQuestionData["question"];
 }
 

@@ -10,8 +10,8 @@ import {
   Pencil,
   X,
   Check,
-  Loader2,
 } from "lucide-react";
+import { SaveButton } from "@/components/ui/save-button";
 import {
   createCustomPrompt,
   updateCustomPrompt,
@@ -118,7 +118,7 @@ export function PromptSection({
               if (e.key === "Escape") setShowSaveInput(false);
             }}
           />
-          <button
+          <SaveButton
             onClick={() => {
               if (!savePromptName.trim()) return;
               setSavingPrompt(true);
@@ -133,15 +133,9 @@ export function PromptSection({
                 loadSavedPrompts();
               });
             }}
+            saving={savingPrompt}
             disabled={!savePromptName.trim() || savingPrompt}
-            className="h-8 px-3 text-[11px] font-semibold bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50 transition-colors"
-          >
-            {savingPrompt ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              "저장"
-            )}
-          </button>
+          />
           <button
             onClick={() => setShowSaveInput(false)}
             className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-600 rounded-lg hover:bg-white transition-colors"

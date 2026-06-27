@@ -5,12 +5,13 @@ import { isFlowStructuredSubtype, isInlineSourcePassageSubtype, isStructuredAtom
 import { questionHasEmbeddedPassage } from "./passage-policy";
 import { normalizeInlineText, normalizePassageText, normalizeQuestionText } from "./text-normalization";
 import type { OptionItem, PaginationSettings, PaperGroup, PaperItem, StructRowStyle } from "./types";
+import { BLOCK_PX_PER_PT } from "./types";
 import type { FlowBlock } from "./pagination-types";
-// 줄당 문자 폭 보정 계수. 미리보기/다운로드 글꼴을 맑은 고딕으로 통일하면서
-// 조정했다. 맑은 고딕의 라틴 글리프가 Pretendard보다 약간 넓어 한 줄에 들어가는
-// 글자수가 살짝 줄어들므로, 줄바꿈 과소예측을 막기 위해 계수를 소폭 낮춘다.
-// (양쪽이 같은 글꼴을 쓰므로 정확한 페이지 분할 일치는 요구되지 않음.)
-export const LINE_WIDTH_FUDGE = 0.99;
+// 줄당 문자 폭 보정 계수. 본문 글꼴을 맑은 고딕으로 통일한 뒤, 미리보기 추정 줄 수가
+// 실제 브라우저 맑은 고딕 렌더보다 1줄씩 많게 나와(문항 높이 과대추정 → 1단이 일찍 차서
+// 다음 칸으로 일찍 넘어감) 칸이 덜 채워졌다. 실측상 1.05 에서 추정 줄 수 == 브라우저
+// 줄 수(맑은 고딕)로 일치한다(HWPX 빌더의 값과 동일). 0.99→1.05 로 올려 칸을 끝까지 채운다.
+export const LINE_WIDTH_FUDGE = 1.05;
 
 // 고아(orphan) 방지 최소 줄 수. 칸 경계에서 새 문항/지문이 시작할 때 최소 이만큼은
 // 함께 둔다. 너무 크면(원래 8/4) 칸 하단 빈 공간이 이 값보다 작을 때 다음 문항이
@@ -42,6 +43,27 @@ export function isSetMemberItem(item: PaperItem): boolean {
   return item.blockType === "question" && Boolean(item.sourceQuestion.setId);
 }
 
+// 본문 글꼴 크기(미리보기 px). 페이지네이션은 모든 길이를 "미리보기 px" 단위로 계산하므로
+// 밀도 기본값도 px(comfortable 11.5 / compact 10.5)로 둔다.
+function densityFontPx(settings: PaginationSettings): number {
+  return settings.density === "compact" ? 10.5 : 11.5;
+}
+function densityLineMult(settings: PaginationSettings): number {
+  return settings.density === "compact" ? 1.46 : 1.58;
+}
+// 문항/블록별 글꼴 크기(미리보기 px)를 해석한다. blockFontPt(pt)가 지정되면 px 로 환산하고,
+// 없으면 밀도 기본 px 를 쓴다. a4-paper-page 의 화면 렌더(컨테이너 fontSize)와 1:1 로 맞춰
+// 미리보기·페이지분할·HWPX(같은 paginateGroups 재사용)가 같은 줄 수/높이를 갖게 한다.
+export function resolveItemFontPx(
+  item: { blockFontPt: number | null } | null | undefined,
+  settings: PaginationSettings,
+): number {
+  const pt = item?.blockFontPt;
+  return typeof pt === "number" && Number.isFinite(pt)
+    ? pt * BLOCK_PX_PER_PT
+    : densityFontPx(settings);
+}
+
 export function isWideGlyph(char: string): boolean {
   const code = char.charCodeAt(0);
   return (
@@ -66,6 +88,22 @@ export function maxUnitsPerLine(columnWidth: number, fontSize: number): number {
   return Math.max(10, (columnWidth / fontSize) * LINE_WIDTH_FUDGE);
 }
 
+// 줄바꿈 폭은 "화면/출력에 보이는 글자" 기준이어야 한다. 보기 마커 원문(__(a) word__)은
+// 화면에선 "① word"(밑줄)로 짧게 렌더되므로, 원문 그대로 폭을 세면 실제보다 넓게 잡혀
+// 줄 수가 부풀려진다 → 문항 높이 과대추정 → 칸이 일찍 차서 다음 문항/분할이 위로 밀린다
+// (1단이 일찍 끝나 보이는 원인). 단어 단위로 표시형으로 환산해 폭만 보정한다(빈칸 _____ 은
+// 그대로). 마커는 단어 경계를 바꾸지 않으므로 줄 구성/단어 수에는 영향 없다.
+function displayWordForWidth(word: string): string {
+  if (/^_+$/.test(word)) return word;
+  return word.replace(/^__\(([a-jA-J])\)\s*/, "①").replace(/__/g, "");
+}
+
+function wordWidthUnits(word: string): number {
+  let units = 0;
+  for (const ch of displayWordForWidth(word)) units += glyphUnits(ch);
+  return units;
+}
+
 export function wrapParagraph(paragraph: string, maxUnits: number): string[] {
   const lines: string[] = [];
   let currentLine = "";
@@ -76,7 +114,7 @@ export function wrapParagraph(paragraph: string, maxUnits: number): string[] {
     let nextSpace = paragraph.indexOf(" ", i);
     if (nextSpace === -1) nextSpace = paragraph.length;
     const word = paragraph.slice(i, nextSpace);
-    const wordUnits = Array.from(word).reduce((sum, ch) => sum + glyphUnits(ch), 0);
+    const wordUnits = wordWidthUnits(word);
     const spaceFollows = nextSpace < paragraph.length;
     const spaceUnits = spaceFollows ? glyphUnits(" ") : 0;
 
@@ -189,10 +227,12 @@ export function passageContinuationReserveHeight(settings: PaginationSettings): 
   return settings.density === "compact" ? 9 : 10;
 }
 
-export function questionLineHeight(settings: PaginationSettings): number {
-  const compact = settings.density === "compact";
-  const fontSize = compact ? 10.5 : 11.5;
-  return fontSize * (compact ? 1.46 : 1.58);
+export function questionLineHeight(
+  settings: PaginationSettings,
+  fontPx?: number,
+): number {
+  const fontSize = fontPx ?? densityFontPx(settings);
+  return fontSize * densityLineMult(settings);
 }
 
 export function questionMetaHeight(settings: PaginationSettings): number {
@@ -214,11 +254,10 @@ export const GIVEN_BOX_CHROME = 32; // SENTENCE_INSERT 주어진 문장 박스: 
 // 여러 문항이 한 칸에 쌓일 때 누적 오차로 칸 경계를 넘지 않도록 보정한다.
 export const ITEM_RENDER_OVERHEAD = 12;
 
-export function boxLineHeight(settings: PaginationSettings): number {
-  const compact = settings.density === "compact";
-  const fontSize = compact ? 10.5 : 11.5;
+export function boxLineHeight(settings: PaginationSettings, fontPx?: number): number {
+  const fontSize = fontPx ?? densityFontPx(settings);
   // 박스 본문 줄높이를 평문(questionLineHeight)과 통일 — a4 StructuredBody leading 과 1:1.
-  return fontSize * (compact ? 1.46 : 1.58);
+  return fontSize * densityLineMult(settings);
 }
 
 export function structuredBoxChrome(style: Extract<StructRowStyle, "passage" | "summary" | "given">, settings: PaginationSettings): number {
@@ -253,12 +292,12 @@ export function structuredBoxTextHeight(
   text: string,
   settings: PaginationSettings,
   style: Extract<StructRowStyle, "passage" | "summary" | "given">,
+  fontPx?: number,
 ): number {
   if (!text.trim()) return 0;
-  const compact = settings.density === "compact";
-  const fontSize = compact ? 10.5 : 11.5;
+  const fontSize = fontPx ?? densityFontPx(settings);
   const lines = estimateTextLines(text, structuredBoxTextWidth(style, settings), fontSize);
-  return structuredBoxChrome(style, settings) + lines * boxLineHeight(settings);
+  return structuredBoxChrome(style, settings) + lines * boxLineHeight(settings, fontPx);
 }
 
 export function questionBodyAfterStem(item: PaperItem): string {
@@ -274,6 +313,7 @@ export function estimateStructuredBodyHeight(
   settings: PaginationSettings,
 ): number {
   const subType = item.sourceQuestion.subType;
+  const fontPx = resolveItemFontPx(item, settings);
 
   if (isSummaryCompleteSubtype(subType)) {
     const passage = summaryCompleteMcPassageForItem(item);
@@ -282,12 +322,12 @@ export function estimateStructuredBodyHeight(
     const blocks: number[] = [];
     if (passage) {
       blocks.push(
-        structuredBoxTextHeight(passage, settings, "passage") +
+        structuredBoxTextHeight(passage, settings, "passage", fontPx) +
           structuredPassageTitleHeight(item, settings, "passage"),
       );
     }
     if (isSummaryCompleteMc(subType)) blocks.push(ARROW_BLOCK_HEIGHT);
-    if (summary) blocks.push(structuredBoxTextHeight(summary, settings, "summary"));
+    if (summary) blocks.push(structuredBoxTextHeight(summary, settings, "summary", fontPx));
     return (
       HEADER_BODY_GAP +
       blocks.reduce((sum, h) => sum + h, 0) +
@@ -307,14 +347,13 @@ export function estimateStructuredBodyHeight(
     let height = HEADER_BODY_GAP;
     if (bodyAfterStem) {
       const { columnWidth } = pageMetrics(settings, 0);
-      const fontSize = settings.density === "compact" ? 10.5 : 11.5;
       height +=
-        estimateTextLines(bodyAfterStem, columnWidth, fontSize) * questionLineHeight(settings) +
+        estimateTextLines(bodyAfterStem, columnWidth, fontPx) * questionLineHeight(settings, fontPx) +
         STRUCTURE_GAP;
     }
     if (passage) {
       height +=
-        structuredBoxTextHeight(passage, settings, "passage") +
+        structuredBoxTextHeight(passage, settings, "passage", fontPx) +
         structuredPassageTitleHeight(item, settings, "passage");
     }
     return height;
@@ -323,9 +362,8 @@ export function estimateStructuredBodyHeight(
   // SENTENCE_ORDER: [given] 박스 + (A)(B)(C) 단락(비박스) + 기타.
   const bodyText = questionBodyAfterStem(item);
   const { columnWidth } = pageMetrics(settings, 0);
-  const fontSize = settings.density === "compact" ? 10.5 : 11.5;
   let height =
-    HEADER_BODY_GAP + estimateTextLines(bodyText, columnWidth, fontSize) * questionLineHeight(settings);
+    HEADER_BODY_GAP + estimateTextLines(bodyText, columnWidth, fontPx) * questionLineHeight(settings, fontPx);
   if (/\[(?:주어진\s*문장|given)\]/i.test(bodyText)) {
     height += GIVEN_BOX_CHROME;
   }
@@ -337,15 +375,19 @@ export function boxTextToLines(
   text: string,
   settings: PaginationSettings,
   style: Extract<StructRowStyle, "passage" | "summary" | "given">,
+  fontPx?: number,
 ): string[] {
-  const compact = settings.density === "compact";
-  const fontSize = compact ? 10.5 : 11.5;
+  const fontSize = fontPx ?? densityFontPx(settings);
   const lines = textToLines(text, structuredBoxTextWidth(style, settings), fontSize);
   return lines.length > 0 ? lines : [""];
 }
 
-export function columnTextToLines(text: string, settings: PaginationSettings): string[] {
-  const lines = questionToLines(text, settings);
+export function columnTextToLines(
+  text: string,
+  settings: PaginationSettings,
+  fontPx?: number,
+): string[] {
+  const lines = questionToLines(text, settings, fontPx);
   return lines.length > 0 ? lines : [""];
 }
 
@@ -354,8 +396,9 @@ export function buildStructLineBlocks(
   group: PaperGroup,
   settings: PaginationSettings,
 ): FlowBlock[] {
-  const boxLineH = boxLineHeight(settings);
-  const textLineH = questionLineHeight(settings);
+  const fontPx = resolveItemFontPx(item, settings);
+  const boxLineH = boxLineHeight(settings, fontPx);
+  const textLineH = questionLineHeight(settings, fontPx);
   const blocks: FlowBlock[] = [];
 
   // 장문 세트 멤버: 공유 지문은 그룹 첫머리에서 1회만 출력하므로(buildGroups·a4 fragment),
@@ -393,17 +436,17 @@ export function buildStructLineBlocks(
 
     if (seg.kind === "box") {
       style = seg.boxStyle;
-      lines = boxTextToLines(seg.text, settings, style);
+      lines = boxTextToLines(seg.text, settings, style, fontPx);
       lineHeight = boxLineH;
       segChrome = STRUCTURE_GAP + structuredBoxChrome(style, settings);
     } else if (seg.kind === "para") {
-      lines = columnTextToLines(seg.text, settings);
+      lines = columnTextToLines(seg.text, settings, fontPx);
       style = "para";
       lineHeight = textLineH;
       segChrome = STRUCTURE_GAP;
       paraLabel = seg.label;
     } else {
-      lines = columnTextToLines(seg.text, settings);
+      lines = columnTextToLines(seg.text, settings, fontPx);
       style = "text";
       lineHeight = textLineH;
       segChrome = STRUCTURE_GAP;
@@ -459,11 +502,14 @@ export function passageToLines(content: string, settings: PaginationSettings): s
   return textToLines(normalizePassageText(content), passageContentWidth(settings), fontSize);
 }
 
-export function questionToLines(content: string, settings: PaginationSettings): string[] {
+export function questionToLines(
+  content: string,
+  settings: PaginationSettings,
+  fontPx?: number,
+): string[] {
   if (!content) return [];
-  const compact = settings.density === "compact";
   const { columnWidth } = pageMetrics(settings, 0);
-  const fontSize = compact ? 10.5 : 11.5;
+  const fontSize = fontPx ?? densityFontPx(settings);
   return textToLines(normalizeQuestionText(content), columnWidth, fontSize);
 }
 
@@ -486,9 +532,8 @@ export function questionBodyToLines(
   item: PaperItem,
 ): string[] {
   if (!content) return [];
-  const compact = settings.density === "compact";
   const { columnWidth } = pageMetrics(settings, 0);
-  const fontSize = compact ? 10.5 : 11.5;
+  const fontSize = resolveItemFontPx(item, settings);
   const width =
     settings.passageStyle === "boxed" && hasEmbeddedPassageBody(item)
       ? Math.max(80, columnWidth - BOXED_PASSAGE_HORIZONTAL_INSET)
@@ -525,16 +570,18 @@ export function estimatePassageHeight(group: PaperGroup, settings: PaginationSet
 // stem 의 줄 수만큼 높이를 잡는다(본문/구조화 박스는 별도 계산).
 export function estimateStemHeight(item: PaperItem, settings: PaginationSettings): number {
   const { stem } = questionStemAndBody(item);
+  const fontPx = resolveItemFontPx(item, settings);
   const stemRendered = formatInlineMarkersForSubtype(stem, item.sourceQuestion.subType);
-  const stemLines = questionToLines(stemRendered, settings);
+  const stemLines = questionToLines(stemRendered, settings, fontPx);
   return (
     questionMetaHeight(settings) +
-    Math.max(1, stemLines.length) * questionLineHeight(settings)
+    Math.max(1, stemLines.length) * questionLineHeight(settings, fontPx)
   );
 }
 
 export function estimateHeaderBlockHeight(item: PaperItem, settings: PaginationSettings): number {
   const subType = item.sourceQuestion.subType;
+  const fontPx = resolveItemFontPx(item, settings);
   let height = estimateStemHeight(item, settings) + ITEM_RENDER_OVERHEAD;
   if (isFlowStructuredSubtype(subType)) {
     height += estimateStructuredBodyHeight(item, settings);
@@ -542,7 +589,7 @@ export function estimateHeaderBlockHeight(item: PaperItem, settings: PaginationS
     const { body } = questionStemAndBody(item);
     const bodyRendered = formatInlineMarkersForSubtype(body, subType);
     height +=
-      questionBodyToLines(bodyRendered, settings, item).length * questionLineHeight(settings);
+      questionBodyToLines(bodyRendered, settings, item).length * questionLineHeight(settings, fontPx);
     height += embeddedPassageBodyChrome(item, settings);
     height += embeddedPassageTitleHeight(item, settings);
     const { givenText } = splitSentenceInsertGivenBlock(bodyRendered, subType);
@@ -556,12 +603,16 @@ export function estimateOptionBlockHeight(
   settings: PaginationSettings,
   subType?: string | null,
   optionIndex = 0,
+  fontPx?: number,
 ): number {
   const compact = settings.density === "compact";
   const { columnWidth } = pageMetrics(settings, 0);
   const displayText = optionDisplayTextForSubtype(subType, optionIndex, option.text);
-  const optionLines = estimateTextLines(displayText, Math.max(80, columnWidth - 22), compact ? 10 : 11);
-  return Math.max(16, optionLines * (compact ? 14.5 : 16));
+  // 선택지는 화면에서 문항 컨테이너 글꼴을 상속한다. 문항 pt 가 지정되면 선택지 줄 폭·
+  // 줄높이도 같은 크기로 스케일해 미리보기와 분할이 어긋나지 않게 한다(미지정 시 기존 10/11).
+  const optionFontPx = fontPx ?? (compact ? 10 : 11);
+  const optionLines = estimateTextLines(displayText, Math.max(80, columnWidth - 22), optionFontPx);
+  return Math.max(16, optionLines * optionFontPx * 1.45);
 }
 
 export function estimateAnswerBlockHeight(item: PaperItem): number {

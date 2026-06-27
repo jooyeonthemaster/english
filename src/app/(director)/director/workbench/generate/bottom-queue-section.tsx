@@ -80,6 +80,9 @@ interface BottomQueueSectionProps {
   savedQuestions: QuestionCardItem[];
   loadingSavedQuestions: boolean;
   setDetailQuestion: (q: QuestionCardItem | null) => void;
+  /** 지금 상세가 열려 있는 문제 id(부모 관리). 상세를 닫는 순간 그 카드를 한 번
+   *  배경 반짝임으로 강조하기 위해, 내부 lastViewed 와 함께 사용한다. */
+  openDetailQuestionId?: string | null;
   /** Per-card 검수완료/해제 핸들러. 선택 — 미지정 시(기본 생성 페이지) 카드 단건 검수
    *  액션을 숨기고 일괄 검수만 노출한다. 커스텀/동형 패널이 전달한다. */
   onApproveQuestion?: (questionId: string) => void;
@@ -286,6 +289,7 @@ export function BottomQueueSection({
   savedQuestions,
   loadingSavedQuestions,
   setDetailQuestion,
+  openDetailQuestionId,
   onApproveQuestion,
   onUnapproveQuestion,
   onBatchApproveQuestions,
@@ -331,6 +335,17 @@ export function BottomQueueSection({
       return next;
     });
   }, []);
+  // 방금 상세를 열어본 문제 id — 모달을 닫아도 유지해, 닫는 순간 카드를 한 번 반짝인다.
+  const [lastViewedQuestionId, setLastViewedQuestionId] = useState<
+    string | null
+  >(null);
+  const openQuestionDetail = useCallback(
+    (q: QuestionCardItem) => {
+      setLastViewedQuestionId(q.id);
+      setDetailQuestion(q);
+    },
+    [setDetailQuestion],
+  );
   const {
     cancelPendingCardSelectionClick,
     scheduleCardSelectionClick,
@@ -1025,7 +1040,7 @@ export function BottomQueueSection({
           cancelPendingCardSelectionClick();
           clearCardTextSelection();
           if (shouldIgnoreCardDoubleClick(e)) return;
-          setDetailQuestion(cardQuestion);
+          openQuestionDetail(cardQuestion);
         }}
         onMouseDown={preventCardDoubleClickTextSelection}
         className="h-full cursor-pointer"
@@ -1038,9 +1053,12 @@ export function BottomQueueSection({
           showReviewActions
           showHeaderActions
           selected={isSelected}
+          recentlyViewed={
+            lastViewedQuestionId === q.id && openDetailQuestionId !== q.id
+          }
           dragItemId={q.id}
           onToggle={cardToggle}
-          onDetail={() => setDetailQuestion(cardQuestion)}
+          onDetail={() => openQuestionDetail(cardQuestion)}
           showDetailButton
           showDetailIconButton
           detailExtra={renderCardDetailExtra?.(cardQuestion)}

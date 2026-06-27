@@ -451,6 +451,7 @@ export function SimilarQuestionJobsPanel({
           savedQuestions={savedQuestions}
           loadingSavedQuestions={loadingSaved}
           setDetailQuestion={setDetailQuestion}
+          openDetailQuestionId={detailQuestion?.id ?? null}
           onBatchApproveQuestions={handleBatchApproveQuestions}
           onBatchDeleteQuestions={handleBatchDeleteQuestions}
           deletedQuestionIds={deletedQuestionIds}

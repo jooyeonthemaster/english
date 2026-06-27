@@ -32,6 +32,7 @@ const NO: BorderSpec = {
 export function renderAnswerKey(
   questions: ExamQuestionData[],
   contentWidthHpu: number,
+  opts?: { pageBreak?: boolean },
 ): BlockNode[] {
   if (!questions.length) return [];
 
@@ -39,9 +40,11 @@ export function renderAnswerKey(
   const result: BlockNode[] = [];
   const cellW = Math.floor(contentWidthHpu / cols);
 
-  // 상단 굵은 구분선
+  // 상단 굵은 구분선. pageBreak 가 켜지면 이 첫 블록에서 새 페이지로 넘어간다(정답표는
+  // 항상 새 페이지에서 시작). 2단 섹션 흐름에선 새 페이지 왼쪽 칸부터 채워진다.
   result.push({
     kind: "tbl",
+    pageBreak: opts?.pageBreak ?? false,
     colWidthsHpu: [contentWidthHpu],
     borders: { left: NO, right: NO, top: BOLD, bottom: NO },
     rows: [

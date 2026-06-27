@@ -2,9 +2,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { X, Save, Loader2, FileText, RotateCcw } from "lucide-react";
+import { X, FileText, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SaveButton } from "@/components/ui/save-button";
 import { StructuredQuestionRenderer } from "@/components/workbench/question-renderers";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
 
@@ -128,15 +129,12 @@ export function QuestionReviewModal({
                 다시 생성
               </Button>
             )}
-            <Button
-              size="sm"
-              className="h-8 text-xs bg-teal-600 hover:bg-teal-700"
+            <SaveButton
               onClick={handleSave}
-              disabled={saving || questions.length === 0}
-            >
-              {saving ? <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" /> : <Save className="w-3.5 h-3.5 mr-1" />}
-              문제관리에 저장 ({questions.length}개)
-            </Button>
+              saving={saving}
+              disabled={questions.length === 0}
+              title={`문제관리에 저장 (${questions.length}개)`}
+            />
             <button
               onClick={onClose}
               className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100 transition-colors"

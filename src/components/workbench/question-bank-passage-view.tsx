@@ -53,6 +53,10 @@ interface PassageGroupedViewProps {
   selectionOrder?: Map<string, number>;
   // 시험지 미리보기에서 현재 클릭한 문항 id — 해당 카드를 진한 파랑 테두리로 강조한다.
   activeQuestionId?: string | null;
+  // 방금 상세를 열어본 문항 id(모달 닫혀도 유지) + 지금 열려 있는 상세 id.
+  // 두 값으로 "상세를 닫는 순간 그 카드만 한 번 배경 반짝임"을 만든다.
+  lastViewedQuestionId?: string | null;
+  openDetailQuestionId?: string | null;
   disabledIds?: Set<string>;
   duplicateSelectedIds?: Set<string>;
   usageCounts?: Map<string, number>;
@@ -122,6 +126,8 @@ export function PassageGroupedView({
   getDuplicateDragQuestionIds,
   selectionOrder,
   activeQuestionId,
+  lastViewedQuestionId,
+  openDetailQuestionId,
   disabledIds,
   duplicateSelectedIds,
   usageCounts,
@@ -494,6 +500,11 @@ export function PassageGroupedView({
                           getDuplicateDragQuestionIds={getDuplicateDragQuestionIds}
                           selectionIndex={selectionOrder?.get(q.id)}
                           active={activeQuestionId === q.id}
+                          recentlyViewed={
+                            lastViewedQuestionId != null &&
+                            lastViewedQuestionId === q.id &&
+                            openDetailQuestionId !== q.id
+                          }
                           selectionDisabled={disabled}
                           collapsible={collapsible}
                           duplicateCount={usageCount > 1 ? usageCount : undefined}

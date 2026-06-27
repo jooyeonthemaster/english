@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import {
   ChevronLeft,
   ChevronRight,
-  Settings,
+  GripVertical,
 } from "lucide-react";
 import {
   type MouseEvent as ReactMouseEvent,
@@ -46,6 +46,8 @@ import { notifyCreditsChanged } from "@/lib/credits-client";
 
 import {
   enumerateItems,
+  isActivityAnswerId,
+  orderIdOf,
   type ItemDescriptor,
   type DropPlacement,
   type ReportEdit,
@@ -110,8 +112,23 @@ import { SettingsTemplatePopover } from "./cover-logo-panels";
 
 const REPORT_A4_WIDTH_PX = Math.round((210 * 96) / 25.4);
 const REPORT_A4_HEIGHT_PX = Math.round((297 * 96) / 25.4);
-const REPORT_PAGE_GAP_PX = Math.round((9 * 96) / 25.4);
+// 편집 모드는 페이지 컨트롤(이동/삭제)이 페이지 사이에 들어가므로 간격을 넓게.
+// report-edit-styles 의 `.par-sheet-wrap { margin-bottom }` / `.par-root-edit { padding-top }`
+// 값과 반드시 일치해야 스크롤 높이가 어긋나지 않는다.
+const REPORT_EDIT_PAGE_GAP_PX = Math.round((18 * 96) / 25.4);
+const REPORT_EDIT_TOP_INSET_PX = Math.round((18 * 96) / 25.4);
 const LOGO_FILE_MAX_BYTES = 1.5 * 1024 * 1024;
+
+export type ReportEditorToolbarState = {
+  dirty: boolean;
+  saving: boolean;
+  save: () => void;
+  // 실전 학습지(워크북+수능추론) 옵트인 생성 — 저장 버튼 옆(모달 헤더)에서 렌더.
+  // 이미 콘텐츠가 있으면(hasWorksheet) 생성 버튼은 숨긴다.
+  worksheetBusy: boolean;
+  worksheetHasContent: boolean;
+  generateWorksheet: () => void;
+};
 
 interface Props {
   passageId: string;
@@ -119,6 +136,8 @@ interface Props {
   onDraftChange?: (report: AnalysisReport, state: { dirty: boolean }) => void;
   onSaved?: (report: AnalysisReport) => void;
   onExit?: () => void;
+  /** 저장 버튼을 바깥(모달 헤더)에서 렌더할 수 있게 저장 상태/함수를 끌어올린다. */
+  onToolbarStateChange?: (state: ReportEditorToolbarState | null) => void;
 }
 
 export function AnalysisReportEditor({
@@ -127,6 +146,7 @@ export function AnalysisReportEditor({
   onDraftChange,
   onSaved,
   onExit,
+  onToolbarStateChange,
 }: Props) {
   const [history, dispatchReport] = useReducer(reportHistoryReducer, {
     present: initialReport,
@@ -493,12 +513,13 @@ export function AnalysisReportEditor({
   const [vocabTestFocused, setVocabTestFocused] = useState(false);
   // 카드를 누를 때마다 +1 — 설정 섹션이 접혀 있어도 다시 펼치고 그 위치로 스크롤하는 신호.
   const [vocabTestActivateNonce, setVocabTestActivateNonce] = useState(0);
-  const [materialSettingsOpen, setMaterialSettingsOpen] = useState(false);
+  // 편집창에 처음 들어오면 '설정' 패널이 열려 있고, 블록을 선택하면 '편집' 패널로 전환된다.
+  const [materialSettingsOpen, setMaterialSettingsOpen] = useState(true);
   // 블록을 선택하면 학습자료 설정에서 편집 패널로 자동 전환(그 블록 도구를 바로 보여주기 위해)
   useEffect(() => {
     if (activeId) setMaterialSettingsOpen(false);
   }, [activeId]);
-  const { railWidth, panelWidth, activityWidth, widthDragging, startWidthDrag } = usePanelWidths();
+  const { railWidth, panelWidth, activityWidth, widthDragging, startWidthDrag, consumeWidthDragClick } = usePanelWidths();
   const previewScrollerRef = useRef<HTMLDivElement>(null);
   // 좌측 페이지 썸네일 목록 스크롤러 — 본문 스크롤을 따라 활성 페이지를 보이게 한다.
   const pagesPanelScrollerRef = useRef<HTMLDivElement>(null);
@@ -507,7 +528,9 @@ export function AnalysisReportEditor({
   const [zoomControlsPos, setZoomControlsPos] = useState({ top: 12, right: 12 });
   const zoom = manualZoom ?? fitZoom;
   const previewPageCount = Math.max(pageList.length, 1);
-  const previewContentHeight = previewPageCount * (REPORT_A4_HEIGHT_PX + REPORT_PAGE_GAP_PX);
+  const previewContentHeight =
+    previewPageCount * (REPORT_A4_HEIGHT_PX + REPORT_EDIT_PAGE_GAP_PX) +
+    REPORT_EDIT_TOP_INSET_PX;
 
   useEffect(() => {
     const scroller = previewScrollerRef.current;
@@ -759,6 +782,72 @@ export function AnalysisReportEditor({
     if (!window.confirm(`이 페이지의 블록 ${logicalIds.length}개를 삭제할까요?`)) return;
     setReport((r) => hideOrDeleteIds(r, logicalIds));
   }, [setReport]);
+
+  // 페이지를 통째로 한 칸 위/아래로 이동 — 인접 페이지의 블록 묶음과 통째로 자리바꿈한다.
+  // 자동 페이지네이션(높이 기준)이라 한 블록(특히 회차·문항이 여럿인 학습 활동)이
+  // 두 페이지에 걸쳐 렌더되는 경우가 흔하다. 그런 블록은 "첫 조각이 놓인 페이지"의
+  // 소유로 보고 한 덩어리로 옮겨야, 페이지 안 블록이 쪼개지지 않고 전체가 함께 이동한다.
+  const movePage = useCallback(
+    (pageIds: string[], dir: -1 | 1) => {
+      if (!pageIds.length) return;
+      const pi = pageList.findIndex(
+        (p) => p.length > 0 && p[0] === pageIds[0],
+      );
+      if (pi < 0) return;
+      const ti = pi + dir;
+      if (ti < 0 || ti >= pageList.length) return;
+      setReport((r) => {
+        // 페이지 조각(part-key) → blockOrder 정렬 단위(orderId) 매핑.
+        const orderOf = new Map<string, string>();
+        for (const it of reportFlowItems(r)) {
+          if (isActivityAnswerId(it.id)) continue;
+          orderOf.set(it.id, orderIdOf(it));
+        }
+        const toOrder = (id: string) =>
+          orderOf.get(id) ?? (id.startsWith("c-") ? id.split("::", 1)[0] : id);
+
+        const ids = applyBlockOrder(
+          enumerateItems(r).map((b) => b.id),
+          r.blockOrder,
+        );
+        const pos = new Map(ids.map((id, i) => [id, i] as const));
+
+        // 각 orderId 의 "소유 페이지" = 그 블록의 첫 조각이 놓인 페이지(앞 페이지 우선).
+        const ownerPage = new Map<string, number>();
+        pageList.forEach((parts, pageIdx) => {
+          for (const part of parts) {
+            const oid = toOrder(part);
+            if (!pos.has(oid) || ownerPage.has(oid)) continue;
+            ownerPage.set(oid, pageIdx);
+          }
+        });
+
+        const curOwned = ids.filter((id) => ownerPage.get(id) === pi);
+        const adjOwned = ids.filter((id) => ownerPage.get(id) === ti);
+        // 옮길 블록이 없는 페이지(예: 다른 블록의 연속 조각만 있는 페이지)는 무시.
+        if (!curOwned.length || !adjOwned.length) return r;
+
+        // 앞쪽(먼저 오는) 묶음 lower, 뒤쪽(나중 오는) 묶음 upper 를 통째로 자리바꿈.
+        const lower = dir < 0 ? adjOwned : curOwned;
+        const upper = dir < 0 ? curOwned : adjOwned;
+        const start = pos.get(lower[0])!;
+        const end = pos.get(upper[upper.length - 1])!;
+        // 두 묶음이 [start, end] 구간을 빈틈없이 채울 때만 안전하게 swap (방어).
+        if (end - start + 1 !== lower.length + upper.length) return r;
+
+        return {
+          ...r,
+          blockOrder: [
+            ...ids.slice(0, start),
+            ...upper,
+            ...lower,
+            ...ids.slice(end + 1),
+          ],
+        };
+      });
+    },
+    [pageList, setReport],
+  );
   const onToggleCol = useCallback((si: number, key: string) => {
     setReport((r) => toggleTableCol(r, si, key));
   }, [setReport]);
@@ -1014,9 +1103,11 @@ export function AnalysisReportEditor({
       onResize,
       onColWidths,
       onDeletePage: deletePage,
+      onDelete: deleteActive,
+      onMovePage: movePage,
       drag: { startDrag, draggingId, dragOverId, placement },
     }),
-    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, insertTextAfter, onActivity, ced, onResize, onColWidths, deletePage, startDrag, draggingId, dragOverId, placement],
+    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, insertTextAfter, onActivity, ced, onResize, onColWidths, deletePage, deleteActive, movePage, startDrag, draggingId, dragOverId, placement],
   );
 
   const descriptors = useMemo(() => enumerateItems(report), [report]);
@@ -1128,14 +1219,72 @@ export function AnalysisReportEditor({
   }, [dirty, save, passageId, report, onSaved]);
 
   const undo = useCallback(() => {
+    // 실행취소로 되돌아갈 상태(past 의 마지막)와 현재 상태를 비교해, 다시 보이게 되는
+    // 블록(삭제 취소로 복구된 블록)을 찾아 선택 상태로 둔다.
+    // 삭제는 블록을 완전히 제거하기도 하고 blockMeta.hidden=true 로 숨기기도 하므로,
+    // "보이는 블록 id" 집합(숨김 제외)을 비교해야 두 경우 모두 복구 블록을 찾을 수 있다.
+    const restored = history.past[history.past.length - 1];
+    let restoredId: string | null = null;
+    if (restored) {
+      const visibleId = (it: FlowItem, r: AnalysisReport) =>
+        isActivityAnswerId(it.id) ||
+        r.blockMeta?.[orderIdOf(it)]?.hidden ||
+        r.blockMeta?.[it.id]?.hidden
+          ? null
+          : orderIdOf(it);
+      const before = new Set(
+        reportFlowItems(history.present)
+          .map((it) => visibleId(it, history.present))
+          .filter((id): id is string => !!id),
+      );
+      for (const it of reportFlowItems(restored)) {
+        const id = visibleId(it, restored);
+        if (id && !before.has(id)) {
+          restoredId = id;
+          break;
+        }
+      }
+    }
     dispatchReport({ type: "undo" });
-    setActiveId(null);
-  }, []);
+    setActiveId(restoredId);
+    if (restoredId) scrollToBlockRef.current(restoredId);
+  }, [history]);
 
   const redo = useCallback(() => {
     dispatchReport({ type: "redo" });
     setActiveId(null);
   }, []);
+
+  // Cmd/Ctrl+Z 실행취소, Cmd/Ctrl+Shift+Z·Cmd/Ctrl+Y 다시실행.
+  // 인라인 텍스트 편집(contentEditable)·입력창·선택상자에 포커스가 있을 땐 가로채지 않아
+  // 브라우저 기본 텍스트 실행취소를 보존한다(엑셀·시험지 빌더와 동일한 규칙).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = document.activeElement as HTMLElement | null;
+      const editing =
+        !!el &&
+        (el.isContentEditable ||
+          el.tagName === "INPUT" ||
+          el.tagName === "TEXTAREA" ||
+          el.tagName === "SELECT");
+      if (editing) return;
+      const mod = e.metaKey || e.ctrlKey;
+      if (!mod) return;
+      if (e.key === "z" || e.key === "Z") {
+        e.preventDefault();
+        if (e.shiftKey) {
+          if (canRedo) redo();
+        } else if (canUndo) {
+          undo();
+        }
+      } else if (e.key === "y" || e.key === "Y") {
+        e.preventDefault();
+        if (canRedo) redo();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [undo, redo, canUndo, canRedo]);
 
   const fontScale = activeMeta.fontScale ?? 1;
   const setMetaPatch = (patch: Partial<BlockMeta>) => logicalActiveId && onBlockMeta(logicalActiveId, patch);
@@ -1173,6 +1322,33 @@ export function AnalysisReportEditor({
       !!toolbarWorksheetSection.drills);
   const toolbarAnswerKeyIncluded =
     toolbarWorksheetSection?.kind === "learning-worksheet" ? !worksheetAnswersAreHidden(toolbarWorksheetSection) : false;
+
+  // 저장·실전 학습지 생성 버튼을 모달 헤더에서 렌더하도록 상태/함수를 끌어올린다.
+  // save/generateWorksheet 는 편집마다 정체성이 바뀌므로 ref 로 안정화 — 의미 있는 상태
+  // (dirty/saving/busy/hasContent)가 바뀔 때만 부모에 보고해 키 입력마다 모달이 리렌더되는 것을 막는다.
+  const saveRef = useRef(save);
+  const genRef = useRef(generateWorksheet);
+  useEffect(() => {
+    saveRef.current = save;
+    genRef.current = generateWorksheet;
+  }, [save, generateWorksheet]);
+  const stableSave = useCallback(() => saveRef.current(), []);
+  const stableGenerateWorksheet = useCallback(() => genRef.current(), []);
+  useEffect(() => {
+    onToolbarStateChange?.({
+      dirty,
+      saving,
+      save: stableSave,
+      worksheetBusy,
+      worksheetHasContent: toolbarWorksheetHasContent,
+      generateWorksheet: stableGenerateWorksheet,
+    });
+  }, [dirty, saving, stableSave, worksheetBusy, toolbarWorksheetHasContent, stableGenerateWorksheet, onToolbarStateChange]);
+  useEffect(
+    () => () => onToolbarStateChange?.(null),
+    [onToolbarStateChange],
+  );
+
   // 첫 단어장 섹션 대상
   const toolbarVocabularyIndex = useMemo(
     () => report.sections.findIndex((section) => section.kind === "vocabulary"),
@@ -1210,27 +1386,29 @@ export function AnalysisReportEditor({
     <div className="are-shell flex h-full min-h-0 flex-col overflow-hidden bg-[#F4F6F9]">
       <style dangerouslySetInnerHTML={{ __html: ANALYSIS_REPORT_EDIT_CSS }} />
 
-      <EditorTopBar
-        pageCount={pageList.length}
-        themeId={report.themeId}
-        error={error}
-        dirty={dirty}
-        saving={saving}
-        canUndo={canUndo}
-        canRedo={canRedo}
-        worksheetBusy={worksheetBusy}
-        worksheetHasContent={toolbarWorksheetHasContent}
-        answerKeyIncluded={toolbarAnswerKeyIncluded}
-        onToggleAnswers={() => onToggleWorksheetAnswers(toolbarWorksheetIndex)}
-        onUndo={undo}
-        onRedo={redo}
-        onRevert={revert}
-        onSave={save}
-        onGenerateWorksheet={generateWorksheet}
-        onExit={onExit}
-      />
-
       <div className="flex min-h-0 flex-1 overflow-hidden bg-white">
+        {/* 좌측 컬럼 — 상단바 + 작업 영역(팔레트·페이지·캔버스). 상단바가 미리보기(캔버스) 우측 끝에서
+            끝나도록, 우측 편집 패널은 이 컬럼 바깥의 전체 높이 형제로 둔다(패널이 위까지 채워짐). */}
+        <div className="flex min-w-0 min-h-0 flex-1 flex-col overflow-hidden">
+          <EditorTopBar
+            pageCount={pageList.length}
+            themeId={report.themeId}
+            error={error}
+            dirty={dirty}
+            saving={saving}
+            canUndo={canUndo}
+            canRedo={canRedo}
+            worksheetBusy={worksheetBusy}
+            worksheetHasContent={toolbarWorksheetHasContent}
+            showGenerateWorksheet={!onToolbarStateChange}
+            answerKeyIncluded={toolbarAnswerKeyIncluded}
+            onToggleAnswers={() => onToggleWorksheetAnswers(toolbarWorksheetIndex)}
+            onUndo={undo}
+            onRedo={redo}
+            onRevert={revert}
+            onGenerateWorksheet={generateWorksheet}
+          />
+          <div className="flex min-h-0 flex-1 overflow-hidden">
         {/* 좌측 끝 — 학습 활동 팔레트 (편집 패널과 같은 세로 탭 여닫힘 매커니즘 + 부드러운 폭 애니메이션) */}
         <ActivityPaletteRail
           collapsed={activityPanelCollapsed}
@@ -1238,6 +1416,7 @@ export function AnalysisReportEditor({
           activityWidth={activityWidth}
           widthDragging={widthDragging}
           onStartActivityDrag={(event) => startWidthDrag(event, "activity")}
+          onConsumeDragClick={consumeWidthDragClick}
           webtoonPickerOpen={webtoonPickerOpen}
           passageId={passageId}
           onOpenWebtoonPicker={() => setWebtoonPickerOpen(true)}
@@ -1382,25 +1561,27 @@ export function AnalysisReportEditor({
               document.body,
             )
           : null}
+          </div>
+        </div>
 
-        {/* 우측 — 속성(편집) 패널 (세로 탭 여닫힘 + 부드러운 폭 애니메이션) */}
-        {/* 편집 패널 폭 조절 핸들 — 펼쳤을 때만(핸들이 왼쪽 모서리) */}
-        {!propertiesPanelCollapsed ? (
-          <div
-            onPointerDown={(event) => startWidthDrag(event, "panel")}
-            title="편집 패널 폭 조절"
-            aria-hidden
-            className="no-print hidden w-1.5 shrink-0 cursor-col-resize touch-none bg-slate-100 transition-colors hover:bg-blue-200 active:bg-blue-300 lg:block"
-          />
-        ) : null}
-        {/* 편집 패널 세로 탭 — 항상 보임. 누르면 여닫힘. */}
+        {/* 우측 — 속성(편집) 패널. 세로 탭 = 여닫기 + 폭조절 겸용 핸들(시험지 생성 UI와 동일).
+            펼친 상태: 드래그로 폭 조절, 클릭으로 닫기. 접힌 상태: 클릭으로 열기. */}
         <button
           type="button"
-          onClick={() => setPropertiesPanelCollapsed((v) => !v)}
-          title={propertiesPanelCollapsed ? "편집 패널 열기" : "편집 패널 닫기"}
+          onPointerDown={
+            propertiesPanelCollapsed ? undefined : (event) => startWidthDrag(event, "panel")
+          }
+          onClick={() => {
+            if (!propertiesPanelCollapsed && consumeWidthDragClick()) return;
+            setPropertiesPanelCollapsed((v) => !v);
+          }}
+          title={propertiesPanelCollapsed ? "편집 패널 열기" : "드래그하여 폭 조절 · 클릭하여 닫기"}
           aria-label={propertiesPanelCollapsed ? "편집 패널 열기" : "편집 패널 닫기"}
           aria-expanded={!propertiesPanelCollapsed}
-          className="no-print hidden h-full min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1 border-l border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 lg:flex"
+          className={cn(
+            "group/rhandle no-print hidden h-full min-h-0 w-5 shrink-0 touch-none select-none flex-col items-center justify-center gap-1 border-l border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 lg:flex",
+            !propertiesPanelCollapsed && "cursor-col-resize",
+          )}
         >
           {propertiesPanelCollapsed ? (
             <ChevronLeft className="h-3.5 w-3.5" />
@@ -1408,6 +1589,9 @@ export function AnalysisReportEditor({
             <ChevronRight className="h-3.5 w-3.5" />
           )}
           <span style={{ writingMode: "vertical-rl" }}>편집 패널</span>
+          {!propertiesPanelCollapsed ? (
+            <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/rhandle:opacity-70" />
+          ) : null}
         </button>
         {/* 애니메이션 컨테이너 — 폭을 0↔패널폭으로 부드럽게 전환 */}
         <div
@@ -1419,16 +1603,49 @@ export function AnalysisReportEditor({
           }}
         >
             <aside style={{ width: panelWidth }} className="flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-l border-slate-200 bg-slate-50/80">
-              <div className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-slate-200 bg-white px-3.5">
-                <div className="min-w-0">
-                  <p className="truncate text-[12px] font-black text-slate-800">
-                    {materialSettingsOpen ? "학습자료 설정" : "편집 패널"}
-                  </p>
-                  <p className="truncate text-[10.5px] font-semibold text-slate-400">
+              <div className="shrink-0 border-b border-slate-200 bg-white px-3 py-2">
+                {/* 편집 ↔ 설정 세그먼트 토글 (시험지 생성 패널과 동일 패턴) */}
+                <div
+                  role="tablist"
+                  aria-label="학습지 편집 패널"
+                  className="relative grid grid-cols-2 overflow-hidden rounded-md border border-blue-200 bg-white p-1"
+                >
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "pointer-events-none absolute bottom-1 left-1 top-1 w-[calc(50%-0.25rem)] rounded bg-blue-600 shadow-sm shadow-blue-600/20 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                      materialSettingsOpen && "translate-x-full",
+                    )}
+                  />
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={!materialSettingsOpen}
+                    onClick={() => setMaterialSettingsOpen(false)}
+                    className={cn(
+                      "relative z-10 h-8 rounded px-2 text-[12px] font-black transition-colors duration-200",
+                      !materialSettingsOpen ? "text-white" : "text-blue-700 hover:text-blue-900",
+                    )}
+                  >
+                    편집
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={materialSettingsOpen}
+                    onClick={() => setMaterialSettingsOpen(true)}
+                    className={cn(
+                      "relative z-10 h-8 rounded px-2 text-[12px] font-black transition-colors duration-200",
+                      materialSettingsOpen ? "text-white" : "text-blue-700 hover:text-blue-900",
+                    )}
+                  >
+                    설정
+                  </button>
+                </div>
+                <div className="mt-1.5 flex items-center justify-between gap-2">
+                  <p className="min-w-0 truncate text-[11px] font-semibold text-slate-400">
                     {materialSettingsOpen ? "표지·로고·디자인·템플릿" : active ? "선택 블록 조정" : "문서 설정"}
                   </p>
-                </div>
-                <div className="flex shrink-0 items-center gap-1.5">
                   {materialSettingsOpen ? (
                     <SettingsTemplatePopover
                       onSave={onSaveReportSettings}
@@ -1437,23 +1654,18 @@ export function AnalysisReportEditor({
                       onReset={onResetReportSettings}
                     />
                   ) : null}
-                  <button
-                    type="button"
-                    onClick={() => setMaterialSettingsOpen((v) => !v)}
-                    title={materialSettingsOpen ? "편집 패널로 돌아가기" : "학습자료 설정"}
-                    aria-label={materialSettingsOpen ? "편집 패널로 돌아가기" : "학습자료 설정"}
-                    className={cn(
-                      "flex h-7 w-7 shrink-0 items-center justify-center rounded-md border transition-colors",
-                      materialSettingsOpen
-                        ? "border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100"
-                        : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-800",
-                    )}
-                  >
-                    <Settings className="h-4 w-4" />
-                  </button>
                 </div>
               </div>
               <div className="min-h-0 flex-1 overflow-y-auto p-2.5 [scrollbar-gutter:stable]">
+                {/* 설정 ↔ 편집 전환 시 부드러운 슬라이드·페이드. key 로 콘텐츠를 갈아끼워 진입 애니메이션을 재생.
+                    탭 위치(편집=좌, 설정=우)에 맞춰 들어오는 방향을 준다. */}
+                <div
+                  key={materialSettingsOpen ? "settings" : "edit"}
+                  className={cn(
+                    "animate-in fade-in-0 duration-300 ease-out",
+                    materialSettingsOpen ? "slide-in-from-right-2" : "slide-in-from-left-2",
+                  )}
+                >
                 <PropertiesPanel
                   report={report}
                   active={active}
@@ -1513,6 +1725,7 @@ export function AnalysisReportEditor({
                     }
                   }}
                 />
+                </div>
               </div>
             </aside>
         </div>

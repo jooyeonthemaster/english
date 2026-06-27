@@ -121,6 +121,16 @@ export async function addExamsToCollection(
     await assertExamCollectionBelongsToAcademy(collectionId, staff.academyId);
     await assertExamsBelongToAcademy(examIds, staff.academyId);
 
+    const existing = await prisma.examCollectionItem.findMany({
+      where: { collectionId, examId: { in: examIds } },
+      select: { examId: true },
+    });
+    const existingSet = new Set(existing.map((e) => e.examId));
+    const addedIds = [...new Set(examIds)].filter((id) => !existingSet.has(id));
+    if (addedIds.length === 0) {
+      return { success: true, addedIds: [] };
+    }
+
     const maxItem = await prisma.examCollectionItem.findFirst({
       where: { collectionId },
       orderBy: { orderNum: "desc" },
@@ -129,7 +139,7 @@ export async function addExamsToCollection(
     const startOrder = (maxItem?.orderNum ?? -1) + 1;
 
     await prisma.examCollectionItem.createMany({
-      data: examIds.map((examId, idx) => ({
+      data: addedIds.map((examId, idx) => ({
         collectionId,
         examId,
         orderNum: startOrder + idx,
@@ -138,7 +148,7 @@ export async function addExamsToCollection(
     });
 
     revalidatePath("/director/exams");
-    return { success: true };
+    return { success: true, addedIds };
   } catch (error) {
     const message = error instanceof Error ? error.message : "폴더 추가 실패";
     return { success: false, error: message };
@@ -157,11 +167,20 @@ export async function removeExamsFromCollection(
     // has already been proven to belong to this academy. Rows referencing
     // foreign examIds simply won't match and will no-op.
 
-    await prisma.examCollectionItem.deleteMany({
+    const existing = await prisma.examCollectionItem.findMany({
       where: { collectionId, examId: { in: examIds } },
+      select: { examId: true },
+    });
+    const removedIds = existing.map((e) => e.examId);
+    if (removedIds.length === 0) {
+      return { success: true, removedIds: [] };
+    }
+
+    await prisma.examCollectionItem.deleteMany({
+      where: { collectionId, examId: { in: removedIds } },
     });
     revalidatePath("/director/exams");
-    return { success: true };
+    return { success: true, removedIds };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "폴더에서 제거 실패";

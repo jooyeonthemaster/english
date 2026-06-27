@@ -113,11 +113,13 @@ export default async function PassageRegistrationPage({
       page: 1,
       analyzedOnly: true,
     }),
-    getPassageCollections(staff.academyId),
+    getPassageCollections(staff.academyId, { onlyWithReport: true }),
     getM1DraftCollections(staff.academyId),
     getAcademyM1DraftCollectionMembership(staff.academyId),
     getWorkbenchPassages(staff.academyId, effectiveListFilters),
-    getAcademyPassageCollectionMembership(staff.academyId),
+    getAcademyPassageCollectionMembership(staff.academyId, {
+      onlyWithReport: true,
+    }),
   ]);
 
   const sourceMaterialLabel = sourceMaterial

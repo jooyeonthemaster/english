@@ -8,7 +8,7 @@ import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { formatDate } from "@/lib/utils";
 import {
   getQuestionGenerationPlanFromTags,
-  getVisibleQuestionTags,
+  getDisplayQuestionTags,
   QUESTION_GENERATION_PLAN_TAGS,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
@@ -49,7 +49,7 @@ function PassageQuestionCard({ q, num }: { q: PassageDetailProps["passage"]["que
   const generationPlan =
     getQuestionGenerationPlanFromTags(rawTags) ??
     readGenerationPlanFromStructuredData(q.structuredData);
-  const tags = getVisibleQuestionTags(rawTags);
+  const tags = getDisplayQuestionTags(rawTags);
   // 어법 판단(GRAMMAR_ERROR)만 라벨/마커를 원형숫자(①)로 표시(시험지 렌더 동일). 타 유형 무영향.
   const isGrammarError = q.subType === "GRAMMAR_ERROR";
   const rawKeyPoints = safeParseJSON<string[]>(q.explanation?.keyPoints, []);

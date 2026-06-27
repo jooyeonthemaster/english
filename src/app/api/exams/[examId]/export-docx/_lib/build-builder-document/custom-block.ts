@@ -1,5 +1,6 @@
 import { BorderStyle, ImageRun, Paragraph, TextRun } from "docx";
 import { LINE_GAP_MARKER } from "@/components/exams/paper-builder/types";
+import { DEFAULT_IMAGE_ASPECT } from "@/lib/image-dims";
 import { NONE, bdr } from "../borders";
 import { parseFormattedText } from "../parse-formatted-text";
 import { COLOR } from "../styles";
@@ -31,8 +32,14 @@ export function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChil
           new TextRun({
             text: block.blockTitle || text || "새 섹션",
             font: bodyFont,
-            size: compact ? 24 : 26,
-            bold: true,
+            size:
+              typeof block.blockFontPt === "number" && Number.isFinite(block.blockFontPt)
+                ? Math.round(block.blockFontPt * 2)
+                : compact
+                  ? 24
+                  : 26,
+            bold: block.blockBold ?? true,
+            italics: block.blockItalic ?? false,
             color: COLOR.black,
           }),
         ],
@@ -51,6 +58,8 @@ export function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChil
             font: bodyFont,
             size: blockBodySize(block, compact),
             color: COLOR.darkGray,
+            bold: block.blockBold ?? false,
+            italics: block.blockItalic ?? false,
           }),
         }),
     );
@@ -118,14 +127,30 @@ export function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChil
     }
 
     const width = Math.max(120, Math.min(520, 520 * ((block.imageWidth || 70) / 100)));
+    // 실제 종횡비(자연 height/width)로 높이를 잡아 미리보기와 같은 비율로 출력한다.
+    const aspect = image.width > 0 ? image.height / image.width : DEFAULT_IMAGE_ASPECT;
+    // 아주 긴 이미지는 한 페이지(내용 높이 ~1000px@A4)를 넘지 않도록 높이를 제한해
+    // 종횡비를 유지한 채 폭까지 함께 줄인다(워드 페이지/여백을 넘지 않게).
+    const MAX_IMG_HEIGHT_PX = 1000;
+    let imgW = width;
+    let imgH = Math.round(width * aspect);
+    if (imgH > MAX_IMG_HEIGHT_PX) {
+      imgH = MAX_IMG_HEIGHT_PX;
+      imgW = Math.round(MAX_IMG_HEIGHT_PX / aspect);
+    }
+    const height = imgH;
     return [
       new Paragraph({
         alignment: align,
         spacing: { before: 80, after: block.imageAlt ? 40 : 120 },
+        // 이미지는 한 덩어리로 유지 — 페이지 하단에 안 들어가면 통째로 다음 쪽으로
+        // (Word 가 인라인 이미지를 쪼개지 않으므로 자동으로 다음 쪽 상단에 배치된다).
+        keepLines: true,
+        keepNext: Boolean(block.imageAlt),
         children: [
           new ImageRun({
             data: image.buffer,
-            transformation: { width, height: width * 0.68 },
+            transformation: { width: imgW, height },
             type: image.type,
           }),
         ],
@@ -135,6 +160,7 @@ export function buildCustomBlock(block: BuilderBlock, compact: boolean): DocChil
             new Paragraph({
               alignment: align,
               spacing: { after: 100 },
+              keepLines: true,
               children: [
                 new TextRun({
                   text: block.imageAlt,

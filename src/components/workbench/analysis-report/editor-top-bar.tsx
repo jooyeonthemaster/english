@@ -1,12 +1,9 @@
 import {
-  ChevronLeft,
   FileQuestion,
   FileText,
   Loader2,
-  Printer,
   Redo2,
   RotateCcw,
-  Save,
   Undo2,
 } from "lucide-react";
 
@@ -26,14 +23,14 @@ type Props = {
   canRedo: boolean;
   worksheetBusy: boolean;
   worksheetHasContent: boolean;
+  /** 모달 헤더가 '실전 학습지 생성' 버튼을 대신 렌더하지 않는 컨텍스트에서만 툴바에 인라인으로 보인다. */
+  showGenerateWorksheet: boolean;
   answerKeyIncluded: boolean;
   onToggleAnswers: () => void;
   onUndo: () => void;
   onRedo: () => void;
   onRevert: () => void;
-  onSave: () => void;
   onGenerateWorksheet: () => void;
-  onExit?: () => void;
 };
 
 export function EditorTopBar({
@@ -46,14 +43,13 @@ export function EditorTopBar({
   canRedo,
   worksheetBusy,
   worksheetHasContent,
+  showGenerateWorksheet,
   answerKeyIncluded,
   onToggleAnswers,
   onUndo,
   onRedo,
   onRevert,
-  onSave,
   onGenerateWorksheet,
-  onExit,
 }: Props) {
   return (
     <div className="no-print flex h-11 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4">
@@ -103,9 +99,6 @@ export function EditorTopBar({
                 }`}
               />
             </span>
-            <span className={`text-[10px] font-bold ${answerKeyIncluded ? "text-sky-700" : "text-slate-400"}`}>
-              {answerKeyIncluded ? "ON" : "OFF"}
-            </span>
           </button>
         ) : null}
         <button
@@ -138,22 +131,15 @@ export function EditorTopBar({
         >
           <RotateCcw className="h-3.5 w-3.5" />
         </button>
-        <button
-          type="button"
-          onClick={onSave}
-          disabled={saving || !dirty}
-          className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md bg-slate-900 px-2 text-[11px] font-bold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
-        >
-          {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
-          저장
-        </button>
-        {!worksheetHasContent ? (
+        {/* '실전 학습지 생성' — 모달 헤더(저장 버튼 옆)에서 렌더하는 컨텍스트에서는 숨기고,
+            툴바 상태를 끌어올리지 않는 컨텍스트에서만 여기 인라인으로 보인다. */}
+        {showGenerateWorksheet && !worksheetHasContent ? (
           <button
             type="button"
             onClick={onGenerateWorksheet}
             disabled={worksheetBusy || saving}
             title="실전 학습지(어법 선택·어휘 빈칸·배열 + 수능추론 5문항) 추가 생성"
-            className="flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-2.5 text-[11.5px] font-semibold text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-white px-2.5 text-[11.5px] font-semibold text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {worksheetBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <FileQuestion className="h-3.5 w-3.5" />}
             <span className="hidden items-center gap-1.5 sm:inline-flex">
@@ -166,25 +152,6 @@ export function EditorTopBar({
               )}
             </span>
             <span className="sm:hidden">실전 학습지</span>
-          </button>
-        ) : null}
-        <button
-          type="button"
-          onClick={() => window.print()}
-          className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
-        >
-          <Printer className="h-3.5 w-3.5" />
-          인쇄
-        </button>
-        {onExit ? (
-          <button
-            type="button"
-            onClick={onExit}
-            title="이전 단계로 돌아가기"
-            aria-label="이전 단계로 돌아가기"
-            className="flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-800"
-          >
-            <ChevronLeft className="h-3.5 w-3.5" />
           </button>
         ) : null}
       </div>

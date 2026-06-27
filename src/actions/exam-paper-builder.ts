@@ -51,6 +51,9 @@ export interface ExamPaperBuilderBlockInput {
   blockText?: string;
   blockAlign?: "left" | "center" | "right";
   blockFontSize?: "sm" | "md" | "lg";
+  blockBold?: boolean;
+  blockItalic?: boolean;
+  blockFontPt?: number | null;
   blockAccentColor?: string;
   dividerStyle?: "solid" | "dashed" | "dotted";
   dividerThickness?: number;
@@ -277,6 +280,12 @@ export async function saveExamPaperDraft(
             block.blockFontSize === "sm" || block.blockFontSize === "lg"
               ? block.blockFontSize
               : "md",
+          blockBold: Boolean(block.blockBold),
+          blockItalic: Boolean(block.blockItalic),
+          blockFontPt:
+            typeof block.blockFontPt === "number" && Number.isFinite(block.blockFontPt)
+              ? Math.min(60, Math.max(5, Math.round(block.blockFontPt)))
+              : null,
           blockAccentColor:
             typeof block.blockAccentColor === "string" && block.blockAccentColor
               ? block.blockAccentColor

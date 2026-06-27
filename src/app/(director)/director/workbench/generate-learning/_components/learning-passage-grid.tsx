@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PassageInlineTitle } from "@/components/workbench/passage-inline-title";
 import type { PassageItem } from "./generate-learning-client";
 
 // ---------------------------------------------------------------------------
@@ -43,6 +44,8 @@ interface Props {
   setSelectedCollectionId: (v: string) => void;
   selectedIds: Set<string>;
   toggleCheckbox: (id: string) => void;
+  /** 카드 제목 인라인 수정(연필) 직후 부모 목록 동기화. */
+  onPassageRenamed?: (passageId: string, title: string) => void;
   selectAll: () => void;
   deselectAll: () => void;
   canGenerate: boolean;
@@ -73,6 +76,7 @@ export function LearningPassageGrid({
   setSelectedCollectionId,
   selectedIds,
   toggleCheckbox,
+  onPassageRenamed,
   selectAll,
   deselectAll,
   canGenerate,
@@ -283,11 +287,19 @@ export function LearningPassageGrid({
             {passages.map((p) => {
               const checked = selectedIds.has(p.id);
               return (
-                <button
+                <div
                   key={p.id}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => toggleCheckbox(p.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      toggleCheckbox(p.id);
+                    }
+                  }}
                   className={cn(
-                    "group rounded-xl border bg-white p-3.5 text-left transition-all",
+                    "group cursor-pointer rounded-xl border bg-white p-3.5 text-left transition-all outline-none focus-visible:ring-2 focus-visible:ring-blue-400",
                     checked
                       ? "border-blue-400 ring-2 ring-blue-300/30"
                       : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm",
@@ -302,9 +314,11 @@ export function LearningPassageGrid({
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-[13px] font-semibold text-slate-800 truncate">
-                        {p.title}
-                      </p>
+                      <PassageInlineTitle
+                        passageId={p.id}
+                        title={p.title}
+                        onRenamed={onPassageRenamed}
+                      />
                       <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-2 leading-relaxed">
                         {p.content.slice(0, 120)}...
                       </p>
@@ -327,7 +341,7 @@ export function LearningPassageGrid({
                       </div>
                     </div>
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>

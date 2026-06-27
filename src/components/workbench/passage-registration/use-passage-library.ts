@@ -126,9 +126,14 @@ export function usePassageLibrary({
       return true;
     });
 
+    // 카드에 보이는 날짜는 "등록일(createdAt)" 이므로 최신순/오래된순도
+    // createdAt 기준으로 정렬한다. (서버 도착 순서는 updatedAt desc 라, 그대로
+    // 두면 수정된 지문이 옛 등록일을 단 채 위로 올라와 순서가 어긋나 보인다.)
+    const createdTime = (p: PassageItem) =>
+      p.createdAt ? new Date(p.createdAt).getTime() : 0;
     switch (passageSortOrder) {
       case "oldest":
-        result.reverse();
+        result.sort((a, b) => createdTime(a) - createdTime(b));
         break;
       case "name_asc":
         result.sort((a, b) => a.title.localeCompare(b.title, "ko"));
@@ -138,6 +143,7 @@ export function usePassageLibrary({
         break;
       case "newest":
       default:
+        result.sort((a, b) => createdTime(b) - createdTime(a));
         // 방금 추출된 지문은 "추출한 순서" 그대로 맨 앞에 고정한다.
         if (recentExtractionPassageIds.length > 0) {
           const pinRank = new Map(

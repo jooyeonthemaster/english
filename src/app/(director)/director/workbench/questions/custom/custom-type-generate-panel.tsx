@@ -737,6 +737,7 @@ export function CustomTypeGeneratePanel({
           savedQuestions={savedQuestions}
           loadingSavedQuestions={loadingSavedQuestions}
           setDetailQuestion={setDetailQuestion}
+          openDetailQuestionId={detailQuestion?.id ?? null}
           onBatchApproveQuestions={handleBatchApproveQuestions}
           onBatchDeleteQuestions={handleBatchDeleteQuestions}
           deletedQuestionIds={deletedQuestionIds}

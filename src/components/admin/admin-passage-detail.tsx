@@ -12,7 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { cn, formatDate } from "@/lib/utils";
 import {
-  getVisibleQuestionTags,
+  getDisplayQuestionTags,
   sanitizeAiModelDisclosureText,
 } from "@/lib/question-generation-plans";
 import type { PassageAnalysisData } from "@/types/passage-analysis";
@@ -47,7 +47,7 @@ export function AdminPassageDetail({ passage, academyId }: Props) {
     }
   }, [passage.analysis]);
 
-  const tags = getVisibleQuestionTags(parseJSON<string[]>(passage.tags, []));
+  const tags = getDisplayQuestionTags(parseJSON<string[]>(passage.tags, []));
 
   return (
     <div className="space-y-4">

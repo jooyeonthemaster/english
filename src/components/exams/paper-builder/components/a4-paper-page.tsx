@@ -1,8 +1,8 @@
 import * as React from "react";
-import { GripVertical } from "lucide-react";
+import { GripVertical, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-import { PAPER_SIZE_SPECS, SUBTYPE_LABELS } from "../constants";
+import { PAPER_SIZE_SPECS, PREVIEW_PAGE_WIDTH, SUBTYPE_LABELS } from "../constants";
 import {
   formatInlineMarkersForSubtype,
   formatSentenceInsertPassageMarkers,
@@ -26,7 +26,12 @@ import {
 } from "../question-body-layout";
 import { questionHasEmbeddedPassage } from "../passage-policy";
 import { TEMPLATE_VISUALS } from "../templates";
-import { LINE_GAP_MARKER, LINE_GAP_MAX_PX, isLineGapItem } from "../types";
+import {
+  BLOCK_PX_PER_PT,
+  LINE_GAP_MARKER,
+  LINE_GAP_MAX_PX,
+  isLineGapItem,
+} from "../types";
 import type {
   Density,
   DropPlacement,
@@ -68,6 +73,24 @@ function blockAlignClass(item: PaperItem) {
   if (item.blockAlign === "center") return "text-center";
   if (item.blockAlign === "right") return "text-right";
   return "text-left";
+}
+
+// 문항 발문/본문 단락의 정렬. 기본(left)은 기존처럼 양끝맞춤(text-justify)을 유지하고,
+// 가운데/오른쪽을 고르면 그 정렬로 바꾼다(블록 서식 툴바의 정렬과 연동).
+function questionAlignClass(item: PaperItem) {
+  if (item.blockAlign === "center") return "text-center";
+  if (item.blockAlign === "right") return "text-right";
+  return "text-justify";
+}
+
+// 숫자 pt 글자 크기가 지정된 블록만 인라인 px 스타일을 준다(미지정이면 null → 기존
+// sm/md/lg 클래스/상속 유지로 기존 시험지 화면이 그대로). pt → 미리보기 px 로 환산.
+function blockFontStyle(item: PaperItem, lineHeight: number): React.CSSProperties | undefined {
+  if (item.blockFontPt == null) return undefined;
+  return {
+    fontSize: `${(item.blockFontPt * BLOCK_PX_PER_PT).toFixed(2)}px`,
+    lineHeight,
+  };
 }
 
 // \uC904 \uB2E8\uC704\uB85C \uD758\uB7EC\uC628 \uAD6C\uC870\uD654 \uBCF8\uBB38(structRows)\uC744 \uBC15\uC2A4/\uB2E8\uB77D\uC73C\uB85C \uC7AC\uAD6C\uC131\uD55C\uB2E4.
@@ -244,10 +267,12 @@ function CustomPaperBlock({
   item,
   readOnly,
   onUpdateItem,
+  maxImageHeightPx,
 }: {
   item: PaperItem;
   readOnly: boolean;
   onUpdateItem: (localId: string, patch: Partial<PaperItem>) => void;
+  maxImageHeightPx?: number;
 }) {
   const disabled = readOnly || item.locked;
   const accent = item.blockAccentColor || "#2563EB";
@@ -268,7 +293,13 @@ function CustomPaperBlock({
               sectionTitle: next,
             })
           }
-          className={cn("block font-black text-slate-900", blockAlignClass(item))}
+          className={cn(
+            "block text-slate-900",
+            item.blockBold ? "font-black" : "font-normal",
+            item.blockItalic && "italic",
+            blockAlignClass(item),
+          )}
+          style={blockFontStyle(item, 1.4)}
           readOnly={disabled}
         >
           {item.blockTitle || item.blockText || "새 섹션"}
@@ -289,9 +320,12 @@ function CustomPaperBlock({
         }
         className={cn(
           "block whitespace-pre-line text-slate-700",
-          blockTextSizeClass(item),
+          item.blockFontPt == null && blockTextSizeClass(item),
+          item.blockBold && "font-bold",
+          item.blockItalic && "italic",
           blockAlignClass(item),
         )}
+        style={blockFontStyle(item, 1.6)}
         placeholder="안내 문구를 입력하세요."
         readOnly={disabled}
       >
@@ -336,35 +370,91 @@ function CustomPaperBlock({
 
   if (item.blockType === "image") {
     return (
-      <figure className={cn("space-y-1.5", blockAlignClass(item))}>
-        {item.imageDataUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={item.imageDataUrl}
-            alt={item.imageAlt || ""}
-            className={cn(
-              "inline-block max-w-full rounded border border-slate-200 object-contain",
-              item.blockAlign === "left" && "mr-auto",
-              item.blockAlign === "center" && "mx-auto",
-              item.blockAlign === "right" && "ml-auto",
-            )}
-            style={{ width: `${Math.max(20, Math.min(100, item.imageWidth || 70))}%` }}
-          />
-        ) : (
-          <div className="flex h-28 items-center justify-center rounded border border-dashed border-slate-300 bg-slate-50 text-[10px] font-bold text-slate-400">
-            이미지 없음
-          </div>
-        )}
-        {item.imageAlt && (
-          <figcaption className="text-[9px] font-medium text-slate-400">
-            {item.imageAlt}
-          </figcaption>
-        )}
-      </figure>
+      <ImageBlock
+        item={item}
+        disabled={disabled}
+        onUpdateItem={onUpdateItem}
+        maxHeightPx={maxImageHeightPx}
+      />
     );
   }
 
   return null;
+}
+
+function ImageBlock({
+  item,
+  disabled,
+  onUpdateItem,
+  maxHeightPx,
+}: {
+  item: PaperItem;
+  disabled: boolean;
+  onUpdateItem: (localId: string, patch: Partial<PaperItem>) => void;
+  maxHeightPx?: number;
+}) {
+  const figureRef = React.useRef<HTMLElement>(null);
+  const widthPct = Math.max(20, Math.min(100, item.imageWidth || 70));
+
+  const handleResizeStart = (event: React.PointerEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const figure = figureRef.current;
+    if (!figure) return;
+    const figureWidth = figure.clientWidth;
+    if (figureWidth <= 0) return;
+    const startX = event.clientX;
+    const startPct = widthPct;
+
+    const handleMove = (moveEvent: PointerEvent) => {
+      const deltaPct = ((moveEvent.clientX - startX) / figureWidth) * 100;
+      const next = Math.max(20, Math.min(100, Math.round(startPct + deltaPct)));
+      onUpdateItem(item.localId, { imageWidth: next });
+    };
+    const handleUp = () => {
+      window.removeEventListener("pointermove", handleMove);
+      window.removeEventListener("pointerup", handleUp);
+    };
+    window.addEventListener("pointermove", handleMove);
+    window.addEventListener("pointerup", handleUp);
+  };
+
+  return (
+    <figure ref={figureRef} className={cn(blockAlignClass(item))}>
+      {item.imageDataUrl ? (
+        <span
+          className="relative inline-block align-top"
+          style={{ width: `${widthPct}%`, maxWidth: "100%" }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={item.imageDataUrl}
+            alt={item.imageAlt || ""}
+            className="block w-full rounded border border-slate-200 object-contain"
+            // 아주 긴 이미지는 페이지 내용 높이로 제한해 여백/페이지를 넘지 않게 한다
+            // (object-contain 이라 종횡비 유지하며 축소; 폭을 줄여 들어오면 자동으로 원래대로).
+            style={maxHeightPx ? { maxHeight: `${maxHeightPx}px` } : undefined}
+          />
+          {!disabled && (
+            <button
+              type="button"
+              title="이미지 폭 조절 (드래그)"
+              aria-label="이미지 폭 조절"
+              onPointerDown={handleResizeStart}
+              onClick={(event) => event.stopPropagation()}
+              className="no-print absolute right-0 top-1/2 z-10 flex h-8 w-3 -translate-y-1/2 translate-x-1/2 cursor-ew-resize touch-none items-center justify-center rounded-full border border-slate-300 bg-white/95 opacity-0 shadow-sm transition-opacity hover:border-blue-300 group-hover/paper-item:opacity-100 group-focus-within/paper-item:opacity-100"
+            >
+              <span className="h-4 w-0.5 rounded-full bg-slate-400" />
+            </button>
+          )}
+        </span>
+      ) : (
+        <div className="flex h-28 items-center justify-center rounded border border-dashed border-slate-300 bg-slate-50 text-[10px] font-bold text-slate-400">
+          이미지 없음
+        </div>
+      )}
+    </figure>
+  );
 }
 
 export interface A4PaperPageProps {
@@ -465,6 +555,14 @@ export function A4PaperPage({
   const compact = density === "compact";
   const visual = TEMPLATE_VISUALS[template];
   const paperSpec = PAPER_SIZE_SPECS[paperSize];
+  // 한 페이지(칸) 내용 영역 높이(미리보기 모델 px) — 이보다 큰 이미지는 이 높이로 축소해
+  // 페이지/여백을 넘지 않게 한다(pagination.pageMetrics 의 후속쪽 capacity 와 동일 산식).
+  const _pageWidthModel = Math.round(PREVIEW_PAGE_WIDTH * paperSpec.widthRatio);
+  const _pageHeightModel = _pageWidthModel * paperSpec.heightRatio;
+  const maxImageHeightPx = Math.max(
+    120,
+    _pageHeightModel - (compact ? 48 : 56) - 24 - 24 - 20,
+  );
   void overflowItemIds;
 
   // 지문 박스 테두리: passageStyle 설정을 실제 border-width 로 배선(기본 plain=선 없음).
@@ -488,14 +586,17 @@ export function A4PaperPage({
   return (
     <div
       className={cn(
-        "exam-a4-page relative w-full overflow-hidden shadow-xl ring-1",
+        "exam-a4-page relative w-full shadow-xl ring-1",
+        // 편집 화면에서는 블록 제어 툴바(왼쪽 여백)가 페이지 밖 캔버스로 넘어가도 잘리지
+        // 않도록 overflow 를 허용한다. 읽기전용/인쇄/썸네일은 깔끔하게 클립(overflow-hidden).
+        readOnly ? "overflow-hidden" : "overflow-visible",
         visual.pageClass,
       )}
       style={{
         aspectRatio: `${paperSpec.widthMm} / ${paperSpec.heightMm}`,
         // 시험지 미리보기 글꼴을 다운로드(DOCX/HWPX)와 "Noto Sans KR" 로 통일한다.
         // 미리보기(브라우저)·Word·한글이 같은 글꼴을 쓰면 줄바꿈·페이지넘김이 일치한다.
-        fontFamily: '"Noto Sans KR Exam", "Noto Sans KR", sans-serif',
+        fontFamily: '"Malgun Gothic Exam", "Malgun Gothic", "맑은 고딕", sans-serif',
       }}
       data-paper-size={paperSize}
     >
@@ -627,24 +728,32 @@ export function A4PaperPage({
                               visual.questionClass,
                             )}
                           >
-                            {isSplit ? (
-                              <span className="block">
-                                {renderFormattedInline(renderedText)}
-                              </span>
-                            ) : (
-                              <EditableText
-                                value={fragment.passageContent}
-                                onCommit={(next) =>
-                                  onUpdateGroupPassage(fragment.groupSourceId, {
-                                    passageContent: next,
-                                  })
-                                }
-                                className="block"
-                                readOnly={readOnly}
-                              >
-                                {renderFormattedInline(renderedText)}
-                              </EditableText>
-                            )}
+                            <EditableText
+                              value={fragment.passageContent}
+                              onCommit={(next) =>
+                                onUpdateGroupPassage(fragment.groupSourceId, {
+                                  passageContent: next,
+                                })
+                              }
+                              className="block"
+                              readOnly={readOnly}
+                              // 지문이 칸/쪽 경계에서 쪼개진 경우(isSplit): 평소엔 이 칸 조각만
+                              // 서식 그대로 보이다가, 클릭하면 지문 전체로 펼쳐 통째로 편집한다.
+                              editingChildren={
+                                isSplit
+                                  ? renderFormattedInline(
+                                      formatSentenceInsertPassageMarkers(
+                                        fragment.passageContent,
+                                        fragment.usesSentenceInsertMarkers
+                                          ? "SENTENCE_INSERT"
+                                          : null,
+                                      ),
+                                    )
+                                  : undefined
+                              }
+                            >
+                              {renderFormattedInline(renderedText)}
+                            </EditableText>
                           </p>
                           {isSplit && !isPassageEnd && (
                             <p
@@ -765,11 +874,24 @@ export function A4PaperPage({
                               item.keepWithPrev || usesStructuredBody
                                 ? "avoid"
                                 : undefined,
+                            // 문항 블록의 숫자 pt 크기 — 발문·본문·선택지가 상속한다(미지정 시
+                            // 페이지 공통 크기 유지). 페이지네이션(resolveItemFontPx)과 1:1.
+                            ...(!isCustomBlock && item.blockFontPt != null
+                              ? {
+                                  fontSize: `${(item.blockFontPt * BLOCK_PX_PER_PT).toFixed(2)}px`,
+                                  lineHeight: compact ? 1.46 : 1.58,
+                                }
+                              : {}),
                           }}
                           className={cn(
                             "group/paper-item relative rounded-md transition-colors",
                             (item.keepWithPrev || usesStructuredBody) &&
                               "break-inside-avoid",
+                            // 문항 블록 서식(굵게/기울임/정렬) — 발문·본문·선택지에 전파.
+                            !isCustomBlock && item.blockBold && "font-bold",
+                            !isCustomBlock && item.blockItalic && "italic",
+                            !isCustomBlock && item.blockAlign === "center" && "text-center",
+                            !isCustomBlock && item.blockAlign === "right" && "text-right",
                             item.locked && "cursor-default",
                             visual.itemClass,
                             !readOnly &&
@@ -812,24 +934,41 @@ export function A4PaperPage({
                             />
                           )}
                           {part.isStart && !readOnly && !item.locked && isCustomBlock && !isLineGapSpacer && (
-                            <button
-                              type="button"
-                              title="블록 드래그"
-                              aria-label="블록 드래그"
-                              onPointerDown={(event) => startDrag(event, item.localId)}
+                            <div
                               className={cn(
-                                "no-print pointer-events-none absolute -right-2 -top-3 z-20 flex h-7 w-7 touch-none cursor-grab items-center justify-center rounded-lg border border-slate-200 bg-white/95 text-slate-400 opacity-0 shadow-lg backdrop-blur transition-opacity hover:bg-slate-50 hover:text-slate-700 active:cursor-grabbing group-hover/paper-item:pointer-events-auto group-hover/paper-item:opacity-100 group-focus-within/paper-item:pointer-events-auto group-focus-within/paper-item:opacity-100",
+                                // 블록 왼쪽 여백에 세로(위→아래)로 띄워 블록 내용을 가리지 않게 한다.
+                                "no-print pointer-events-none absolute left-0 top-0 -translate-x-full -ml-0.5 z-20 flex flex-col items-center gap-2 rounded-lg border border-slate-200 bg-white/95 p-1 opacity-0 shadow-lg backdrop-blur transition-opacity group-hover/paper-item:pointer-events-auto group-hover/paper-item:opacity-100 group-focus-within/paper-item:pointer-events-auto group-focus-within/paper-item:opacity-100",
                                 activeItemId === item.localId && "pointer-events-auto opacity-100",
                               )}
                             >
-                              <GripVertical className="h-3.5 w-3.5" />
-                            </button>
+                              <button
+                                type="button"
+                                title="블록 드래그"
+                                aria-label="블록 드래그"
+                                onPointerDown={(event) => startDrag(event, item.localId)}
+                                className="flex h-5 w-5 touch-none cursor-grab items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700 active:cursor-grabbing"
+                              >
+                                <GripVertical className="h-3.5 w-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  onRemoveItem(item.localId);
+                                }}
+                                className="flex h-5 w-5 items-center justify-center rounded-md text-rose-500 hover:bg-rose-50"
+                                title="블록 삭제"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </button>
+                            </div>
                           )}
                           {isCustomBlock && part.showCustomBlock && (
                             <CustomPaperBlock
                               item={item}
                               readOnly={readOnly}
                               onUpdateItem={onUpdateItem}
+                              maxImageHeightPx={maxImageHeightPx}
                             />
                           )}
                           {isCustomBlock && part.showCustomBlock && item.locked && (
@@ -843,7 +982,8 @@ export function A4PaperPage({
                           {part.showHeader && (
                             <p
                               className={cn(
-                                "mb-1 whitespace-pre-line text-justify font-semibold",
+                                "mb-1 whitespace-pre-line font-semibold",
+                                questionAlignClass(item),
                                 visual.questionClass,
                               )}
                             >
@@ -946,7 +1086,8 @@ export function A4PaperPage({
                                 <>
                                   <p
                                     className={cn(
-                                      "mt-1 whitespace-pre-line text-justify",
+                                      "mt-1 whitespace-pre-line",
+                                      questionAlignClass(item),
                                       visual.questionClass,
                                     )}
                                   >
@@ -982,7 +1123,26 @@ export function A4PaperPage({
                                     visual.questionClass,
                                   )}
                                 >
-                                  <span className="block">
+                                  {/* 칸/쪽 경계에서 쪼개진 본문 조각. 평소엔 이 칸 조각만 서식
+                                      그대로 보이다가, 클릭하면 본문 전체로 펼쳐 통째로 인라인
+                                      편집한다(조각만 고치면 나머지가 날아가므로). blur 시 저장→재분할. */}
+                                  <EditableText
+                                    value={questionBody}
+                                    onCommit={(next) =>
+                                      onUpdateItem(item.localId, {
+                                        questionText: recombineQuestionText(
+                                          questionStem,
+                                          next,
+                                        ),
+                                      })
+                                    }
+                                    readOnly={readOnly || item.locked}
+                                    className="block"
+                                    editingChildren={renderQuestionTextInline(
+                                      formatInlineMarkersForSubtype(questionBody, subType),
+                                      subType,
+                                    )}
+                                  >
                                     {renderQuestionTextInline(
                                       formatInlineMarkersForSubtype(
                                         joinRenderedLinesForDisplay(
@@ -992,7 +1152,7 @@ export function A4PaperPage({
                                       ),
                                       subType,
                                     )}
-                                  </span>
+                                  </EditableText>
                                 </p>
                               </>
                             );

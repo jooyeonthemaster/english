@@ -391,8 +391,46 @@ function runChildXml(
       const ctrlId = state.nextCtrlId++;
       return `<hp:ctrl><hp:autoNum num="0" id="${ctrlId}" type="TOTAL_PAGE" format="DIGIT"/></hp:ctrl>`;
     }
-    case "image":
-      return `<hp:t></hp:t>`;
+    case "image": {
+      const ext =
+        run.mime === "png"
+          ? "png"
+          : run.mime === "gif"
+            ? "gif"
+            : run.mime === "bmp"
+              ? "bmp"
+              : "jpg";
+      const binId = registry.registerImage(run.data, ext);
+      const w = Math.max(1, Math.round(run.widthHpu));
+      const h = Math.max(1, Math.round(run.heightHpu));
+      const instId = state.nextCtrlId++;
+      const cx = Math.round(w / 2);
+      const cy = Math.round(h / 2);
+      // 인라인 그림(treatAsChar=1) — 본문/단 흐름에 글자처럼 끼어 흐른다.
+      // ShapeComponent(orgSz/curSz/renderingInfo) 를 갖춰야 렌더러가 표시 크기를 잡는다.
+      return [
+        `<hp:pic reverse="0" isClipped="0" dropcapstyle="None" href="" groupLevel="0" instid="${instId}" id="${instId}" zOrder="0" numberingType="PICTURE" textWrap="TOP_AND_BOTTOM" textFlow="BOTH_SIDES" lock="0">`,
+        `<hp:sz width="${w}" widthRelTo="ABSOLUTE" height="${h}" heightRelTo="ABSOLUTE" protect="0"/>`,
+        `<hp:pos treatAsChar="1" affectLSpacing="0" flowWithText="1" allowOverlap="0" holdAnchorAndSO="0" vertRelTo="PARA" horzRelTo="COLUMN" vertAlign="TOP" horzAlign="CENTER" vertOffset="0" horzOffset="0"/>`,
+        `<hp:outMargin left="0" right="0" top="0" bottom="0"/>`,
+        `<hp:offset x="0" y="0"/>`,
+        `<hp:orgSz width="${w}" height="${h}"/>`,
+        `<hp:curSz width="${w}" height="${h}"/>`,
+        `<hp:flip horizontal="0" vertical="0"/>`,
+        `<hp:rotationInfo angle="0" centerX="${cx}" centerY="${cy}" rotateimage="1"/>`,
+        `<hp:renderingInfo>`,
+        `<hc:transMatrix e1="1" e2="0" e3="0" e4="0" e5="1" e6="0"/>`,
+        `<hc:scaMatrix e1="1" e2="0" e3="0" e4="0" e5="1" e6="0"/>`,
+        `<hc:rotMatrix e1="1" e2="0" e3="0" e4="0" e5="1" e6="0"/>`,
+        `</hp:renderingInfo>`,
+        `<hc:img binaryItemIDRef="${binId}" bright="0" contrast="0" effect="REAL_PIC" alpha="0"/>`,
+        `<hp:imgRect><hc:pt0 x="0" y="0"/><hc:pt1 x="${w}" y="0"/><hc:pt2 x="${w}" y="${h}"/><hc:pt3 x="0" y="${h}"/></hp:imgRect>`,
+        `<hp:imgClip left="0" right="${w}" top="0" bottom="${h}"/>`,
+        `<hp:inMargin left="0" right="0" top="0" bottom="0"/>`,
+        `<hp:imgDim dimwidth="${w}" dimheight="${h}"/>`,
+        `</hp:pic>`,
+      ].join("");
+    }
     default:
       return `<hp:t></hp:t>`;
   }

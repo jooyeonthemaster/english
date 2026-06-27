@@ -4,15 +4,14 @@ import Link from "next/link";
 import {
   ArrowLeft,
   FileText,
-  Loader2,
   Trash2,
-  Save,
   Layers,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SaveButton } from "@/components/ui/save-button";
 import {
-  getVisibleQuestionTags,
+  getDisplayQuestionTags,
   sanitizeAiModelDisclosureText,
 } from "@/lib/question-generation-plans";
 import type { PassageDetailProps } from "../types";
@@ -36,7 +35,7 @@ export function PassageDetailHeader({
   onSave,
   onDelete,
 }: PassageDetailHeaderProps) {
-  const visibleTags = getVisibleQuestionTags(tags);
+  const visibleTags = getDisplayQuestionTags(tags);
 
   return (
     <div className="flex items-center justify-between">
@@ -86,20 +85,7 @@ export function PassageDetailHeader({
       </div>
       <div className="flex items-center gap-2">
         {hasUnsavedChanges && (
-          <Button
-            variant="outline"
-            size="sm"
-            className="text-blue-600 border-blue-200 hover:bg-blue-50"
-            onClick={onSave}
-            disabled={saving}
-          >
-            {saving ? (
-              <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-            ) : (
-              <Save className="w-4 h-4 mr-1" />
-            )}
-            분석 저장
-          </Button>
+          <SaveButton onClick={onSave} saving={saving} title="분석 저장" />
         )}
         <Button
           variant="outline"

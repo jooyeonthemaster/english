@@ -4,6 +4,7 @@
 import React from "react";
 import { renderFormatted } from "./render-formatted";
 import { grammarMarkerDisplayLabel } from "@/components/exams/paper-builder/option-display";
+import { SUBTYPE_LABELS } from "../question-type-filter";
 
 // 카드를 접었을 때 보여줄 미리보기:
 //  · 의문문(발문) — 펼침과 동일하게 전체 노출
@@ -26,6 +27,8 @@ export function CollapsedPreview({
 }) {
   // 어법 판단(GRAMMAR_ERROR)만 라벨/마커를 원형숫자(①)로 표시(시험지 렌더 동일). 타 유형 무영향.
   const isGrammarError = subType === "GRAMMAR_ERROR";
+  // 발문 오른쪽에 작은 회색 글씨로 표시할 문제 유형명(예: "빈칸 추론", "조건부 영작").
+  const typeLabel = subType ? SUBTYPE_LABELS[subType] : null;
   const badgeLabel = (label: unknown) =>
     optionBadgeLabel(isGrammarError ? grammarMarkerDisplayLabel(label) : label);
   const correctLabels = parseCorrectAnswerLabels(correctAnswer);
@@ -41,10 +44,19 @@ export function CollapsedPreview({
 
   return (
     <div className="space-y-2">
-      {/* 의문문(발문) — 접힘 상태에서도 전체 노출. */}
+      {/* 의문문(발문) — 접힘 상태에서도 전체 노출. 유형명은 발문 우측 상단에
+          고정(flex)한다. 예전 float-right는 줄 높이가 어긋나면 아래 지문 영역을
+          침범해서 flex로 교체. */}
       {direction && (
-        <div className="text-[13px] font-bold text-slate-900 leading-relaxed whitespace-pre-line">
-          {renderFormatted(direction, subType)}
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1 text-[13px] font-bold text-slate-900 leading-relaxed whitespace-pre-line">
+            {renderFormatted(direction, subType)}
+          </div>
+          {typeLabel && (
+            <span className="shrink-0 whitespace-nowrap text-[11px] font-medium leading-relaxed text-slate-400">
+              {typeLabel}
+            </span>
+          )}
         </div>
       )}
 

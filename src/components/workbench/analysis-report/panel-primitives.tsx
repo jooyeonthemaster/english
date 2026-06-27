@@ -21,7 +21,11 @@ export function SegRow({
   onChange: (v: string | number) => void;
 }) {
   return (
-    <div className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0,1fr))` }}>
+    <div
+      className="grid gap-1.5"
+      // 넓으면 한 줄에 모두, 좁아지면 각 단추가 최소 60px 를 유지하며 다음 줄로 줄바꿈된다(반응형).
+      style={{ gridTemplateColumns: `repeat(auto-fit, minmax(60px, 1fr))` }}
+    >
       {options.map((o) => (
         <button
           key={String(o.value)}

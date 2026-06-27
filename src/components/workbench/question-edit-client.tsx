@@ -11,6 +11,14 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TYPE_OPTIONS } from "./question-edit-client/constants";
 import { toast } from "sonner";
 import {
   updateWorkbenchQuestion,
@@ -324,12 +332,6 @@ export function QuestionEditClient({
         onBack={onBack}
         approved={approved}
         aiGenerated={question.aiGenerated}
-        type={type}
-        setType={setType}
-        subType={subType}
-        setSubType={setSubType}
-        difficulty={difficulty}
-        setDifficulty={setDifficulty}
         onDelete={handleDelete}
         onApprove={handleApprove}
         onUnapprove={handleUnapprove}
@@ -349,11 +351,26 @@ export function QuestionEditClient({
             passageAnalysis={passageAnalysis}
             questionText={questionText}
             setQuestionText={setQuestionText}
+            difficulty={difficulty}
+            setDifficulty={setDifficulty}
           />
         )}
 
         {/* ── CENTER: Question Editor ── */}
         <div className="flex-1 min-w-[340px] overflow-hidden flex min-h-0 flex-col bg-white">
+          {/* 문제 유형 토글 — 좌측 지문 토글과 같은 줄·좌우 여백(px-3 py-2.5 border-b) */}
+          <div className="px-3 py-2.5 border-b border-slate-200 bg-white shrink-0">
+            <Select value={type} onValueChange={setType}>
+              <SelectTrigger className="h-9 w-full text-[13px] font-medium">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {TYPE_OPTIONS.map((t) => (
+                  <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           {/* Editor area — fills remaining space */}
           <div className="flex-1 min-h-0 overflow-y-auto px-6 py-5 bg-white">
             <div className="min-h-full flex flex-col gap-6">

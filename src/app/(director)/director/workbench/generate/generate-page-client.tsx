@@ -338,6 +338,15 @@ export function GeneratePageClient({
 
   // 추출/입력 지문 "전체 보기" — 자료 추출 상세 모달(복원 근거 + 추출 이미지) 재사용.
   const [detailPassage, setDetailPassage] = useState<PassageItem | null>(null);
+  // 방금 상세를 열어본 지문 id — 모달을 닫아도 유지해, 닫는 순간 해당 카드를
+  // 한 번 배경 반짝임으로 강조한다(어디까지 봤는지 빠르게 찾게).
+  const [lastViewedPassageId, setLastViewedPassageId] = useState<string | null>(
+    null,
+  );
+  const handleViewPassageContent = useCallback((passage: PassageItem) => {
+    setDetailPassage(passage);
+    setLastViewedPassageId(passage.id);
+  }, []);
   const [deletingDetailId, setDeletingDetailId] = useState<string | null>(null);
 
   // ── Saved questions from DB (persists across page visits) ──
@@ -471,11 +480,15 @@ export function GeneratePageClient({
       return true;
     });
 
-    // `passages` arrives newest-first (updatedAt desc), so "newest" keeps the
-    // source order and "oldest" reverses it. Name sorts use the Korean locale.
+    // 카드에 보이는 날짜는 "등록일(createdAt)" 이므로 최신순/오래된순도
+    // createdAt 기준으로 정렬해 보이는 순서와 일치시킨다. (`passages` 자체는
+    // 서버에서 updatedAt desc 로 도착하지만, 그 순서에 의존하면 수정된 지문이
+    // 옛 등록일을 단 채 위로 올라와 뒤죽박죽으로 보인다.) Name sorts use ko locale.
+    const createdTime = (p: PassageItem) =>
+      p.createdAt ? new Date(p.createdAt).getTime() : 0;
     switch (passageSortOrder) {
       case "oldest":
-        result.reverse();
+        result.sort((a, b) => createdTime(a) - createdTime(b));
         break;
       case "name_asc":
         result.sort((a, b) => a.title.localeCompare(b.title, "ko"));
@@ -485,6 +498,7 @@ export function GeneratePageClient({
         break;
       case "newest":
       default:
+        result.sort((a, b) => createdTime(b) - createdTime(a));
         // 방금 추출된 지문은 "추출한 순서" 그대로 맨 앞에 고정한다. 일괄
         // promote 가 지문별 createdAt/updatedAt 을 뒤섞을 수 있고, 재추출
         // dedup 은 기존(오래된) 행을 재사용하므로 시간 정렬만으로는 새
@@ -2554,7 +2568,14 @@ export function GeneratePageClient({
               workspacePassageIds={workspacePassageIds}
               workspaceActive={workspaceActive}
               handleOpenAnalysisModal={handleOpenAnalysisModal}
-              onViewPassageContent={setDetailPassage}
+              onViewPassageContent={handleViewPassageContent}
+              onPassageRenamed={(passageId, title) =>
+                setPassages((prev) =>
+                  prev.map((p) => (p.id === passageId ? { ...p, title } : p)),
+                )
+              }
+              lastViewedPassageId={lastViewedPassageId}
+              openPassageDetailId={detailPassage?.id ?? null}
               onToggleExtractionReview={handleToggleExtractionReview}
               reviewActionPassageIds={reviewActionPassageIds}
             />

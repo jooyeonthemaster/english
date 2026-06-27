@@ -48,6 +48,7 @@ import {
   bulkDeleteWorkbenchPassages,
   setPassageReviewed,
   bulkSetPassageReviewed,
+  getWorkbenchPassages,
 } from "@/actions/workbench";
 
 // Shared modules
@@ -84,6 +85,13 @@ interface PassageItem {
     updatedAt: Date;
     analysisData?: string | null;
   } | null;
+  // 카드에 표시되는 "학습지 생성/수정 시각"용 최신 PRIME 보고서(서버가 take:1).
+  reports?: {
+    createdAt: Date | string;
+    updatedAt: Date | string;
+    lastEditedAt?: Date | string | null;
+  }[];
+  reviewedAt?: Date | string | null;
   _count: { questions: number; notes: number };
 }
 
@@ -310,6 +318,19 @@ export function PassageListClient({
   // to wait (and so the duplicates view, which has its own client-side cache,
   // doesn't keep showing already-deleted items).
   const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
+  // 카드별 단건 삭제 진행 중 id (휴지통 버튼 스피너용).
+  const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
+
+  // ─── 폴더 진입 시 그 폴더의 학습지 전체를 서버에서 직접 조회 ───
+  // 목록은 hasReport + 20개 페이지네이션이라, 폴더를 클라이언트에서만 필터링하면
+  // 다른 페이지에 있는 폴더 멤버가 안 보여 "N개인데 폴더가 빔"이 된다. 폴더가
+  // 활성화되면 collectionId로 스코프해 페이지 제한 없이 받아 그리드 소스로 쓴다.
+  // (embedded = 학습지 생성 페이지 하단 블록은 기존 클라이언트 필터 유지)
+  const [folderView, setFolderView] = useState<{
+    collectionId: string;
+    loading: boolean;
+    passages: PassageItem[];
+  } | null>(null);
 
   const loadDuplicates = useCallback(async () => {
     setDupLoading(true);
@@ -375,9 +396,50 @@ export function PassageListClient({
     initialCollections,
     initialMembership,
     actions: folderActions,
-    itemLabel: "지문",
+    itemLabel: "학습지",
   });
   const { filterByActiveFolder } = folder;
+  const folderActiveId = folder.activeFolder;
+
+  // Fetch the active folder's full 학습지 set (server-scoped, unpaginated) so
+  // the grid shows every member regardless of which list page they'd fall on.
+  useEffect(() => {
+    if (embedded || !folderActiveId) {
+      setFolderView(null);
+      return;
+    }
+    let cancelled = false;
+    setFolderView({
+      collectionId: folderActiveId,
+      loading: true,
+      passages: [],
+    });
+    getWorkbenchPassages(academyId, {
+      collectionId: folderActiveId,
+      hasReport: true,
+      page: 1,
+      limit: 1000,
+    })
+      .then((res) => {
+        if (cancelled) return;
+        setFolderView({
+          collectionId: folderActiveId,
+          loading: false,
+          passages: res.passages,
+        });
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setFolderView({
+          collectionId: folderActiveId,
+          loading: false,
+          passages: [],
+        });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [folderActiveId, embedded, academyId]);
 
   // Non-first members of each duplicate group, used when 중복 숨기기 is on.
   const duplicateMembersToHide = useMemo<Set<string>>(() => {
@@ -398,22 +460,40 @@ export function PassageListClient({
   // sort. When 중복 숨기기 is on we also drop non-first members of each
   // duplicate group so the user sees one representative per group.
   const displayedPassages = useMemo(() => {
-    const base = filterByActiveFolder(passagesData.passages).filter(
+    // Inside a folder (standalone page) use the server-fetched folder set so
+    // members on other list pages still appear; filterByActiveFolder still runs
+    // as an optimistic membership mask (instant drag-in/out without refetch).
+    const sourceList =
+      !embedded && folderActiveId
+        ? folderView?.collectionId === folderActiveId
+          ? folderView.passages
+          : []
+        : passagesData.passages;
+    const base = filterByActiveFolder(sourceList).filter(
       (p) =>
         !removedIds.has(p.id) &&
         !(hideDuplicates && duplicateMembersToHide.has(p.id)),
     );
+    // 카드에 찍히는 "학습지 생성/수정 시각"과 동일한 기준으로 정렬한다.
+    // (passage-file-card 의 cardTimestamp 규칙: 최신 PRIME 보고서의
+    //  lastEditedAt > updatedAt > createdAt, 없으면 지문 생성 시각)
+    // 정렬 키와 표시 날짜가 어긋나면 최신순/오래된순이 뒤죽박죽으로 보인다.
+    const effectiveTime = (p: PassageItem): number => {
+      const report = p.reports?.[0];
+      const raw =
+        report?.lastEditedAt ??
+        report?.updatedAt ??
+        report?.createdAt ??
+        p.createdAt;
+      return new Date(raw).getTime();
+    };
     const sorted = [...base];
     sorted.sort((a, b) => {
       switch (sortOrder) {
         case "newest":
-          return (
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
+          return effectiveTime(b) - effectiveTime(a);
         case "oldest":
-          return (
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          );
+          return effectiveTime(a) - effectiveTime(b);
         case "name_asc":
           return (a.title || "").localeCompare(b.title || "", "ko");
         case "name_desc":
@@ -426,6 +506,9 @@ export function PassageListClient({
   }, [
     filterByActiveFolder,
     passagesData.passages,
+    embedded,
+    folderActiveId,
+    folderView,
     removedIds,
     hideDuplicates,
     duplicateMembersToHide,
@@ -570,9 +653,9 @@ export function PassageListClient({
         return;
       }
       if (result.deleted === result.requested) {
-        toast.success(`${result.deleted}편의 지문을 삭제했습니다.`);
+        toast.success(`${result.deleted}편의 학습지를 삭제했습니다.`);
       } else if (result.deleted === 0) {
-        toast.error("삭제된 지문이 없습니다.");
+        toast.error("삭제된 학습지가 없습니다.");
       } else {
         toast.warning(
           `${result.deleted}편 삭제됨, ${result.requested - result.deleted}편 누락`,
@@ -594,6 +677,35 @@ export function PassageListClient({
       setBulkDeleting(false);
     }
   }, [selection, bulkDeleting, router]);
+
+  // 카드 우상단 휴지통 — 단건 삭제(확인 후). 일괄 삭제와 동일한 서버 액션을
+  // [id] 하나로 호출하고, 낙관적으로 카드를 즉시 감춘다.
+  const handleDeleteOne = useCallback(
+    async (id: string) => {
+      if (deletingIds.has(id)) return;
+      if (!window.confirm("이 학습지를 삭제할까요? 되돌릴 수 없습니다.")) return;
+      setDeletingIds((prev) => new Set(prev).add(id));
+      try {
+        const result = await bulkDeleteWorkbenchPassages([id]);
+        if (!result.success || result.deleted === 0) {
+          toast.error(result.error || "삭제에 실패했습니다.");
+          return;
+        }
+        toast.success("학습지를 삭제했습니다.");
+        setRemovedIds((prev) => new Set(prev).add(id));
+        router.refresh();
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
+      } finally {
+        setDeletingIds((prev) => {
+          const next = new Set(prev);
+          next.delete(id);
+          return next;
+        });
+      }
+    },
+    [deletingIds, router],
+  );
 
   // 선택한 학습지 일괄 검수완료 — 미검수가 하나라도 있으면 검수완료로, 모두
   // 검수완료 상태면 검수취소로 토글한다. 낙관적 상태(reviewOverrides)도 갱신.
@@ -765,15 +877,15 @@ export function PassageListClient({
         {passagesData.passages.length === 0 && loadingCount === 0 ? (
           <div className="mt-2 bg-white rounded-xl border text-center py-20">
             <Folder className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-            <p className="text-slate-500 font-medium">등록된 지문이 없습니다</p>
+            <p className="text-slate-500 font-medium">등록된 학습지가 없습니다</p>
             <p className="text-sm text-slate-400 mt-1">
-              지문을 등록하여 AI 문제 생성을 시작하세요
+              학습지를 등록하여 AI 문제 생성을 시작하세요
             </p>
             <div className="flex items-center justify-center gap-2 mt-4">
               <Link href="/director/workbench/passages/create">
                 <Button className="bg-blue-600 hover:bg-blue-700" size="sm">
                   <Plus className="w-3.5 h-3.5 mr-1.5" />
-                  지문 등록
+                  학습지 등록
                 </Button>
               </Link>
             </div>
@@ -790,7 +902,7 @@ export function PassageListClient({
                 activeFolder={folder.activeFolder}
                 dragItemType="passage"
                 dragItemIdKey="passageId"
-                itemCountLabel="지문"
+                itemCountLabel="학습지"
                 showNewFolder={folder.showNewFolder}
                 newFolderName={folder.newFolderName}
                 onNewFolderNameChange={folder.setNewFolderName}
@@ -806,7 +918,10 @@ export function PassageListClient({
                   folder.setActiveFolder(null);
                   selection.clearSelection();
                 }}
-                useCardInsideFolder={true}
+                // 폴더 안에서도 루트와 동일한 작은 칩(FolderChip)으로 통일 —
+                // 큰 카드(useCardInsideFolder)는 루트 칩과 크기·글자 크기가 달라
+                // 이질감이 있었다.
+                useCardInsideFolder={false}
                 rootLabel="전체 학습지"
                 enableFolderControls
                 allFolders={folder.collections}
@@ -817,7 +932,7 @@ export function PassageListClient({
                   parentLabel: "학습지 관리",
                   title: "전체 학습지",
                   totalCount,
-                  itemLabel: "지문",
+                  itemLabel: "학습지",
                   itemUnit: "편",
                 }}
               />
@@ -844,7 +959,7 @@ export function PassageListClient({
                     중복 그룹 모아보기
                     {visibleDupSummary ? (
                       <span className="ml-1.5 text-[11px] font-normal text-slate-400">
-                        그룹 {visibleDupSummary.groupCount}개 · 중복 지문{" "}
+                        그룹 {visibleDupSummary.groupCount}개 · 중복 학습지{" "}
                         {visibleDupSummary.totalDuplicateCount}편
                       </span>
                     ) : null}
@@ -884,7 +999,7 @@ export function PassageListClient({
                       중복 자료가 없습니다
                     </p>
                     <p className="mt-1 text-sm text-slate-400">
-                      총 {visibleDupSummary?.totalScanned ?? 0}편의 지문을
+                      총 {visibleDupSummary?.totalScanned ?? 0}편의 학습지를
                       검사했습니다.
                     </p>
                   </div>
@@ -948,6 +1063,8 @@ export function PassageListClient({
                                   onToggleSelect={selection.toggleSelect}
                                   onViewDetail={setModalPassageId}
                                   dupCount={group.items.length - 1}
+                                  onDelete={handleDeleteOne}
+                                  deleteBusy={deletingIds.has(p.id)}
                                 />
                               );
                             })}
@@ -962,17 +1079,26 @@ export function PassageListClient({
               <div>
                 {displayedPassages.length === 0 ? (
                   // 진행 중 로딩 큐가 위에 떠 있으면(loadingCount>0) 빈 안내는 숨긴다.
-                  loadingCount > 0 ? null : (
+                  loadingCount > 0 ? null : !embedded &&
+                    folderActiveId &&
+                    (folderView?.collectionId !== folderActiveId ||
+                      folderView?.loading) ? (
+                    // 폴더 내용 서버 조회 중 — "비어 있음"을 잘못 깜빡이지 않도록 로딩 표시.
+                    <div className="flex items-center justify-center gap-2 py-12 text-slate-400">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span className="text-[13px]">폴더 내용을 불러오는 중...</span>
+                    </div>
+                  ) : (
                   <div className="py-12 text-center">
                     <FileText className="mx-auto mb-3 h-10 w-10 text-slate-200" />
                     <p className="text-[13px] text-slate-400">
                       {folder.activeFolder
-                        ? "이 폴더에 지문이 없습니다."
-                        : "등록된 지문이 없습니다."}
+                        ? "이 폴더에 학습지가 없습니다."
+                        : "등록된 학습지가 없습니다."}
                     </p>
                     {folder.activeFolder && (
                       <p className="mt-1 text-[12px] text-slate-400">
-                        지문을 드래그하거나 선택 후 &quot;폴더에 추가&quot;를
+                        학습지를 드래그하거나 선택 후 &quot;폴더에 추가&quot;를
                         사용하세요.
                       </p>
                     )}
@@ -1018,6 +1144,8 @@ export function PassageListClient({
                         onToggleReview={handleToggleReview}
                         reviewBusy={reviewBusyIds.has(p.id)}
                         dupCount={dupCountById.get(p.id) ?? 0}
+                        onDelete={handleDeleteOne}
+                        deleteBusy={deletingIds.has(p.id)}
                       />
                     ))}
                   </DragSelect>
@@ -1048,10 +1176,10 @@ export function PassageListClient({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              선택한 지문 {selection.selectedIds.size}편을 삭제하시겠습니까?
+              선택한 학습지 {selection.selectedIds.size}편을 삭제하시겠습니까?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 지문에 연결된 분석/문제 데이터도
+              이 작업은 되돌릴 수 없습니다. 학습지에 연결된 분석/문제 데이터도
               함께 삭제될 수 있습니다.
             </AlertDialogDescription>
           </AlertDialogHeader>

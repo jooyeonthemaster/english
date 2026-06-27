@@ -40,10 +40,12 @@ export function hrule(
   color: string = COLOR.separator,
   size = 4,
   spaceBefore = 80,
-  spaceAfter = 80
+  spaceAfter = 80,
+  pageBreakBefore = false
 ): Paragraph {
   return new Paragraph({
     spacing: { before: spaceBefore, after: spaceAfter },
+    pageBreakBefore,
     border: {
       bottom: bdr(BorderStyle.SINGLE, size, color),
       top: NONE,

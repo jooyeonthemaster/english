@@ -43,15 +43,15 @@ export const DIFFICULTY_CONFIG: Record<
 > = {
     BASIC: {
       label: "기본",
-      className: "bg-slate-50 text-slate-600 border-slate-200",
+      className: "border-blue-200 bg-blue-50 text-blue-700",
     },
     INTERMEDIATE: {
       label: "중급",
-      className: "bg-slate-50 text-slate-600 border-slate-200",
+      className: "border-amber-200 bg-amber-50 text-amber-700",
     },
     KILLER: {
       label: "킬러",
-      className: "bg-slate-50 text-slate-600 border-slate-200",
+      className: "border-red-200 bg-red-50 text-red-700",
     },
   };
 

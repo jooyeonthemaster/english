@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { SaveButton } from "@/components/ui/save-button";
 
 interface ReportCommentDialogProps {
   open: boolean;
@@ -45,16 +46,7 @@ export function ReportCommentDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             취소
           </Button>
-          <Button
-            onClick={onSave}
-            disabled={isPending}
-            className="gradient-primary text-white"
-          >
-            {isPending ? (
-              <Loader2 className="size-4 animate-spin mr-1.5" />
-            ) : null}
-            저장
-          </Button>
+          <SaveButton onClick={onSave} saving={isPending} />
         </DialogFooter>
       </DialogContent>
     </Dialog>

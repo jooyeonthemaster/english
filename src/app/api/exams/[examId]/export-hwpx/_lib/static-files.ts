@@ -74,11 +74,17 @@ export interface ContentHpfOptions {
   title: string;
   createdIso?: string; // ISO 8601 timestamp
   sectionCount?: number; // 섹션(구역) 수. 기본 1.
+  // 임베드 이미지(BinData) 매니페스트 항목 — id 는 hp:pic 의 binaryItemIDRef 와 일치.
+  images?: Array<{ id: string; href: string; mime: string }>;
 }
 
 export function contentHpfXml(opts: ContentHpfOptions): string {
   const { title, createdIso } = opts;
   const sectionCount = Math.max(1, opts.sectionCount ?? 1);
+  const imageItems = (opts.images ?? []).map(
+    (im) =>
+      `<opf:item id="${im.id}" href="${im.href}" media-type="${im.mime}" isEmbeded="1"/>`,
+  );
   const iso = createdIso ?? new Date().toISOString().slice(0, 19) + "Z";
   const sectionItems: string[] = [];
   const sectionRefs: string[] = [];
@@ -107,6 +113,7 @@ export function contentHpfXml(opts: ContentHpfOptions): string {
     `<opf:item id="header" href="Contents/header.xml" media-type="application/xml"/>`,
     ...sectionItems,
     `<opf:item id="settings" href="settings.xml" media-type="application/xml"/>`,
+    ...imageItems,
     `</opf:manifest>`,
     `<opf:spine>`,
     `<opf:itemref idref="header"/>`,

@@ -3,6 +3,7 @@ import { splitSentenceInsertGivenBlock } from "@/components/exams/paper-builder/
 import type { ParsedOption } from "../types";
 import type { BuilderBlock, BuilderItemResolved } from "./model";
 import { SIZE_BODY, SIZE_BODY_COMPACT } from "./sizes";
+import { imageDimsFromDataUrl } from "@/lib/image-dims";
 
 
 
@@ -29,13 +30,19 @@ export function dataUrlToImage(dataUrl: string | null | undefined):
   | { buffer: Buffer; type: "png" | "jpg" | "gif" | "bmp"; width: number; height: number }
   | null {
   if (!dataUrl) return null;
-  const match = dataUrl.match(/^data:image\/(png|jpe?g|gif|bmp);base64,(.+)$/i);
+  // 헤더만 정규식으로 보고 base64 본문은 콤마로 잘라낸다(거대 문자열을 (.+)$ 로 캡처하면
+  // 정규식 엔진 스택 오버플로 발생).
+  const comma = dataUrl.indexOf(",");
+  if (comma === -1) return null;
+  const match = dataUrl.slice(0, comma).match(/^data:image\/(png|jpe?g|gif|bmp);base64$/i);
   if (!match) return null;
   const mime = match[1].toLowerCase();
-  const buf = Buffer.from(match[2], "base64");
+  const buf = Buffer.from(dataUrl.slice(comma + 1), "base64");
   const type: "png" | "jpg" | "gif" | "bmp" =
     mime === "png" ? "png" : mime === "gif" ? "gif" : mime === "bmp" ? "bmp" : "jpg";
-  return { buffer: buf, type, width: 64, height: 64 };
+  // 실제 자연 크기를 헤더에서 읽어 종횡비를 정확히 한다(미상이면 정사각 폴백).
+  const dims = imageDimsFromDataUrl(dataUrl);
+  return { buffer: buf, type, width: dims?.width ?? 64, height: dims?.height ?? 64 };
 }
 
 export function emptyParagraph(): Paragraph {
@@ -83,6 +90,10 @@ export function docAlignment(align: BuilderBlock["blockAlign"]): (typeof Alignme
 }
 
 export function blockBodySize(block: BuilderBlock, compact: boolean) {
+  // 숫자 pt 가 지정되면 half-point(pt*2) 로 직접 환산해 미리보기와 동일 크기로 출력한다.
+  if (typeof block.blockFontPt === "number" && Number.isFinite(block.blockFontPt)) {
+    return Math.round(block.blockFontPt * 2);
+  }
   if (block.blockFontSize === "lg") return compact ? 24 : 26;
   if (block.blockFontSize === "sm") return compact ? 16 : 18;
   return compact ? SIZE_BODY_COMPACT : SIZE_BODY;

@@ -49,9 +49,18 @@ export function buildQuestionBlock(
   );
   const options = shouldRenderOptionListForSubtype(subType) ? parsedOptions : [];
 
-  const qNumSize = compact ? SIZE_QNUM_COMPACT : SIZE_QNUM;
-  const bodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
-  const optionSize = compact ? SIZE_OPTION_COMPACT : SIZE_OPTION;
+  // 문항 단위 글자 크기(pt)·굵게·기울임 — 미리보기 컨테이너 글꼴 상속과 동일하게,
+  // 본문/번호/선지 크기를 같은 비율로 확대·축소한다(DOCX size 는 half-point = pt*2).
+  const baseBodyHalf = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
+  const fontScale =
+    typeof item.blockFontPt === "number" && item.blockFontPt > 0
+      ? (item.blockFontPt * 2) / baseBodyHalf
+      : 1;
+  const qNumSize = Math.round((compact ? SIZE_QNUM_COMPACT : SIZE_QNUM) * fontScale);
+  const bodySize = Math.round(baseBodyHalf * fontScale);
+  const optionSize = Math.round((compact ? SIZE_OPTION_COMPACT : SIZE_OPTION) * fontScale);
+  const qBold = item.blockBold ?? false;
+  const qItalic = item.blockItalic ?? false;
   const lh = compact ? BODY_LINE_HEIGHT_COMPACT : BODY_LINE_HEIGHT;
   const summaryComplete = isSummaryCompleteSubtype(subType);
   const summaryMc = isSummaryCompleteMc(subType);
@@ -112,6 +121,7 @@ export function buildQuestionBlock(
         font: bodyFont,
         size: bodySize,
         bold: true,
+        italics: qItalic,
       }),
     );
   }
@@ -383,6 +393,15 @@ export function buildQuestionBlock(
       }
       return true;
     });
+    // 발문(헤더)과 본문 사이의 빈 줄(원문 "발문\n\n본문" 의 \n\n)은 미리보기에선 본문 위에
+    // 표시되지 않는다. DOCX 도 선두 빈 줄을 제거해 발문 바로 아래에서 본문이 시작하게 한다
+    // (이 처리 없으면 1번 외 모든 문항에서 발문 아래 빈 줄 한 칸이 더 생겨 미리보기와 어긋남).
+    while (
+      bodyQuestionParagraphs.length > 0 &&
+      bodyQuestionParagraphs[0].trim().length === 0
+    ) {
+      bodyQuestionParagraphs.shift();
+    }
 
     bodyQuestionParagraphs.forEach((text, idx) => {
       const trimmed = text.trim();
@@ -391,7 +410,15 @@ export function buildQuestionBlock(
           alignment: AlignmentType.JUSTIFIED,
           spacing: {
             before: 0,
-            after: idx === bodyQuestionParagraphs.length - 1 ? 100 : 30,
+            // 본문 마지막 단락: 선지가 뒤따르면 본문↔선지 간격(100), 선지가 없으면(밑줄/어휘
+            // 등 인라인 마커 유형) 이 본문이 문항의 마지막 요소이므로 선지 trailing(60)과
+            // 같게 둬 문항 간 간격을 일관되게 한다.
+            after:
+              idx === bodyQuestionParagraphs.length - 1
+                ? options.length > 0
+                  ? 100
+                  : 60
+                : 30,
             ...exactLineSpacing(bodySize, lh),
           },
           keepNext: idx === bodyQuestionParagraphs.length - 1 && options.length > 0,
@@ -401,7 +428,11 @@ export function buildQuestionBlock(
               : parseFormattedText(trimmed, {
                   font: bodyFont,
                   size: bodySize,
-                  bold: true,
+                  // 문항 본문(지문)은 일반체 — 발문(헤더)만 굵게(미리보기와 동일).
+                  // 일부 유형(빈칸·어휘·무관문장 등)이 굵게 나오던 불일치 해소.
+                  // 단, 문항 단위 '굵게' 서식이 켜지면 본문도 함께 굵게(미리보기와 동일).
+                  bold: qBold,
+                  italics: qItalic,
                   // 순서 유형의 (A)(B)(C)는 미리보기에서 검정, 그 외 본문 마커는 파랑(기본)
                   ...(subType === "SENTENCE_ORDER" ? { markerColor: COLOR.black } : {}),
                 }),
@@ -453,6 +484,8 @@ export function buildQuestionBlock(
                   ...parseFormattedText(displayText, {
                     font: useKR ? KR_FONT : FONT,
                     size: optionSize,
+                    bold: qBold,
+                    italics: qItalic,
                     markerColor: COLOR.black, // 선지의 (A) 마커는 미리보기에서 검정
                   }),
                 ]
@@ -492,6 +525,8 @@ export function buildQuestionBlock(
               ? parseFormattedText(displayText, {
                   font: useKR ? KR_FONT : FONT,
                   size: optionSize,
+                  bold: qBold,
+                  italics: qItalic,
                   markerColor: COLOR.black,
                 })
               : [
@@ -509,7 +544,14 @@ export function buildQuestionBlock(
     }
   }
 
-  if (options.length > 0) {
+  // 선지 뒤 빈 줄: 답란/해설이 뒤따를 때만 구분용으로 둔다. 문항 사이 간격은 다음 문항
+  // 헤더의 before spacing 으로 일관 처리하므로, 여기서 무조건 빈 줄을 넣으면 "선지 있는
+  // 문항"만 한 줄 더 벌어져 문항 간 간격이 들쭉날쭉해진다(미리보기는 항상 동일 간격).
+  const hasTrailingAnswerContent =
+    includeAnswers ||
+    (showAnswerSpace &&
+      (((item.objectiveAnswerSlots ?? 0) > 0) || ((item.answerSpaceLines ?? 0) > 0)));
+  if (options.length > 0 && hasTrailingAnswerContent) {
     result.push(new Paragraph({ spacing: { after: 60 } }));
   }
 

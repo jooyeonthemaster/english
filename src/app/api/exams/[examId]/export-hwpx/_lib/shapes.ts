@@ -63,12 +63,20 @@ const NO_BORDER: BorderSpec = { type: "NONE", widthMm: 0.1, color: "#000000" };
 // 레지스트리
 // =============================================================================
 
+export interface EmbeddedImageSpec {
+  id: string; // binaryItemIDRef (= content.hpf manifest item id), 예: "image1"
+  buffer: Buffer;
+  ext: "png" | "jpg" | "gif" | "bmp";
+  mime: string;
+}
+
 export class ShapeRegistry {
   krFonts: FontFaceSpec[] = [];
   latinFonts: FontFaceSpec[] = [];
   charShapes: CharShapeSpec[] = [];
   paraShapes: ParaShapeSpec[] = [];
   borderFills: BorderFillSpec[] = [];
+  images: EmbeddedImageSpec[] = [];
   defaultFontKr: string;
   defaultFontLatin: string;
 
@@ -220,6 +228,31 @@ export class ShapeRegistry {
     }
     this.borderFills.push(spec);
     return this.borderFills.length - 1;
+  }
+
+  // ---------------------------------------------------------------------------
+  // 임베드 이미지 — BinData/imageN.{ext} 로 저장하고 content.hpf 매니페스트에 등록한다.
+  // 반환값(id)이 hp:pic 의 binaryItemIDRef 이자 매니페스트 item id 다. 동일 바이너리는
+  // 재사용(dedupe).
+  // ---------------------------------------------------------------------------
+  registerImage(buffer: Buffer, ext: "png" | "jpg" | "gif" | "bmp"): string {
+    const key = `${ext}:${buffer.length}:${buffer.subarray(0, 64).toString("base64")}`;
+    const existing = this.images.find(
+      (im) =>
+        `${im.ext}:${im.buffer.length}:${im.buffer.subarray(0, 64).toString("base64")}` === key,
+    );
+    if (existing) return existing.id;
+    const id = `image${this.images.length + 1}`;
+    const mime =
+      ext === "png"
+        ? "image/png"
+        : ext === "gif"
+          ? "image/gif"
+          : ext === "bmp"
+            ? "image/bmp"
+            : "image/jpeg";
+    this.images.push({ id, buffer, ext, mime });
+    return id;
   }
 
   borderFillFromCell(border: CellBorders | undefined): number {

@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   Pencil,
   Loader2,
+  Trash2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getSemesterLabel } from "@/lib/utils";
@@ -84,6 +85,8 @@ export function PassageFileCard({
   onToggleReview,
   reviewBusy,
   dupCount,
+  onDelete,
+  deleteBusy,
 }: {
   passage: PassageItem;
   selected: boolean;
@@ -91,6 +94,10 @@ export function PassageFileCard({
   onViewDetail: (id: string) => void;
   /** "수정하기" — 상세 모달(편집 모드)을 연다. 미지정 시 onViewDetail 로 폴백. */
   onEdit?: (id: string) => void;
+  /** 카드 우상단 휴지통 — 단건 삭제. 미지정 시 버튼을 숨긴다. */
+  onDelete?: (id: string) => void;
+  /** 삭제 진행 중(낙관적) — 휴지통에 스피너. */
+  deleteBusy?: boolean;
   /** 검수완료 여부. 미지정 시 passage.reviewedAt 으로 추론. */
   reviewed?: boolean;
   /** "검수완료/검수취소" 토글. 미지정 시 버튼을 숨긴다. */
@@ -102,7 +109,6 @@ export function PassageFileCard({
   dupCount?: number;
 }) {
   const data = parseAnalysis(passage.analysis);
-  const isAnalyzed = !!passage.analysis;
   const isDirectInput = isDirectInputPassage(passage.source);
   const mainIdea = data?.structure?.mainIdea;
   const isReviewed = reviewed ?? !!passage.reviewedAt;
@@ -222,11 +228,11 @@ export function PassageFileCard({
 
         {/* ─── 우측: 카드 본문 ─── */}
         <div className="flex min-w-0 flex-1 flex-col px-3.5 py-2.5">
-          <div className="flex items-start gap-2.5 min-w-0">
-            <DragHandle ref={dragHandleRef} className="mt-0.5 shrink-0" />
+          <div className="flex items-center gap-2.5 min-w-0">
+            <DragHandle ref={dragHandleRef} className="shrink-0" />
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleSelect(passage.id, e.shiftKey); }}
-              className={`w-[18px] h-[18px] rounded flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+              className={`w-[18px] h-[18px] rounded flex items-center justify-center shrink-0 transition-all ${
                 selected ? "bg-blue-600 text-white border border-blue-600" : "bg-white border border-slate-300 text-transparent hover:border-blue-400 hover:text-blue-400"
               }`}
             >
@@ -269,7 +275,7 @@ export function PassageFileCard({
                     }}
                     title="학습지 제목 수정"
                     aria-label="학습지 제목 수정"
-                    className="inline-flex size-5 shrink-0 items-center justify-center rounded text-slate-400 opacity-0 transition-all hover:bg-slate-100 hover:text-slate-700 group-hover:opacity-100"
+                    className="inline-flex size-5 shrink-0 items-center justify-center rounded text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
                   >
                     {savingTitle ? (
                       <Loader2 className="size-3 animate-spin" />
@@ -279,14 +285,28 @@ export function PassageFileCard({
                   </button>
                 </div>
               )}
-              {isDirectInput ? (
-                <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                  <span className="inline-flex items-center text-[10px] font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">
-                    직접 입력
-                  </span>
-                </div>
-              ) : null}
             </div>
+            {/* 우측 끝: 단건 삭제(휴지통) — 손잡이·체크박스·제목·연필과 같은 줄. */}
+            {onDelete ? (
+              <button
+                type="button"
+                aria-label="삭제"
+                title="삭제"
+                disabled={deleteBusy}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onDelete(passage.id);
+                }}
+                className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {deleteBusy ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Trash2 className="h-3.5 w-3.5" />
+                )}
+              </button>
+            ) : null}
           </div>
 
           {(passage.school || passage.grade || passage.unit || passage.publisher) && (
@@ -299,17 +319,26 @@ export function PassageFileCard({
             </div>
           )}
 
-          {isAnalyzed && mainIdea && (
-            <p className="text-[11px] text-slate-500 leading-relaxed mt-2 line-clamp-2">{mainIdea}</p>
+          {/* 본문 미리보기 — 상세 내용을 더 길게 노출해 카드 가운데 여백을 줄인다.
+              분석 요지(mainIdea)보다 실제 지문 본문이 길어 빈 공간을 잘 채운다. */}
+          {(passage.content?.trim() || mainIdea) && (
+            <p className="text-[11px] text-slate-500 leading-relaxed mt-2 line-clamp-5">
+              {passage.content?.trim() || mainIdea}
+            </p>
           )}
 
           {/* ─── 하단: 생성/수정 시각(연월일시분) + 액션 버튼 행 ─── */}
           <div className="mt-auto pt-3">
-            {(cardTimestamp || (dupCount && dupCount > 0)) ? (
+            {(cardTimestamp || isDirectInput || (dupCount && dupCount > 0)) ? (
               <div className="mb-1.5 flex items-center gap-1.5">
                 {cardTimestamp ? (
                   <span className="text-[10px] tabular-nums text-slate-400">
                     {cardTimestamp}
+                  </span>
+                ) : null}
+                {isDirectInput ? (
+                  <span className="inline-flex items-center rounded border border-blue-200 bg-blue-50 px-1 py-0 text-[9px] font-semibold text-blue-600">
+                    직접 입력
                   </span>
                 ) : null}
                 {dupCount && dupCount > 0 ? (

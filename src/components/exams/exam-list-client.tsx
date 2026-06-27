@@ -518,7 +518,7 @@ export function ExamListClient({
                   folder.setActiveFolder(null);
                   selection.clearSelection();
                 }}
-                useCardInsideFolder={true}
+                useCardInsideFolder={false}
                 rootLabel="전체 시험"
                 enableFolderControls
                 allFolders={folder.collections}
@@ -576,6 +576,7 @@ export function ExamListClient({
                       onEdit={(id) =>
                         router.push(`/director/workbench/exams/${id}/edit`)
                       }
+                      onDelete={setDeleteId}
                       onShowAnalysis={
                         analysisByExamId.has(exam.id) ? handleShowAnalysis : undefined
                       }

@@ -43,6 +43,8 @@ export interface QuestionCardProps {
   q: QuestionCardItem;
   num: number;
   selected?: boolean;
+  /** 방금 상세를 열어봤다가 닫은 카드 — 한 번 배경이 반짝인다. */
+  recentlyViewed?: boolean;
   onToggle?: () => void;
   onDelete?: () => void;
   onApprove?: () => void;

@@ -1,13 +1,19 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { ListFilter, RotateCcw, Search, X } from "lucide-react";
+import { ListFilter, Search, X } from "lucide-react";
 
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export type TaskStatusFilter =
   | "ALL"
@@ -65,40 +71,6 @@ interface ManageFiltersBarTasksProps {
   compact?: boolean;
 }
 
-function Pill({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={
-        "inline-flex h-7 cursor-pointer items-center rounded-full px-2.5 text-[11.5px] font-semibold outline-none transition-colors focus-visible:ring-2 focus-visible:ring-blue-500/40 " +
-        (active
-          ? "bg-blue-600 text-white shadow-sm"
-          : "bg-slate-50 text-slate-600 ring-1 ring-inset ring-slate-200 hover:bg-slate-100 hover:text-slate-900")
-      }
-    >
-      {children}
-    </button>
-  );
-}
-
-function SectionLabel({ children }: { children: ReactNode }) {
-  return (
-    <p className="text-[10.5px] font-bold uppercase tracking-wide text-slate-400">
-      {children}
-    </p>
-  );
-}
-
 export function ManageFiltersBarTasks({
   searchValue,
   onSearchChange,
@@ -123,12 +95,6 @@ export function ManageFiltersBarTasks({
     (sortOrder !== "newest" ? 1 : 0) +
     (showAnalysis && analysisFilter !== "all" ? 1 : 0);
   const hasActiveFilter = activeCount > 0;
-
-  const resetAll = () => {
-    onStatusFilterChange("ALL");
-    onSortOrderChange("newest");
-    onAnalysisFilterChange?.("all");
-  };
 
   return (
     <div
@@ -160,71 +126,76 @@ export function ManageFiltersBarTasks({
               </span>
             ) : null}
           </PopoverTrigger>
-          <PopoverContent align="end" className="w-[272px] overflow-hidden p-0">
-            <div className="flex items-center justify-between border-b border-slate-100 px-3 py-2">
-              <span className="inline-flex items-center gap-1.5 text-[12px] font-bold text-slate-800">
-                <ListFilter className="size-3.5 text-slate-500" aria-hidden="true" />
-                필터 · 정렬
-              </span>
-              {hasActiveFilter ? (
-                <button
-                  type="button"
-                  onClick={resetAll}
-                  className="inline-flex cursor-pointer items-center gap-1 rounded-md px-1.5 py-1 text-[11px] font-semibold text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
+          <PopoverContent align="end" className="w-64 p-3">
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-medium text-slate-600">
+                  상태
+                </label>
+                <Select
+                  value={statusFilter}
+                  onValueChange={(v) =>
+                    onStatusFilterChange(v as TaskStatusFilter)
+                  }
                 >
-                  <RotateCcw className="size-3" aria-hidden="true" />
-                  초기화
-                </button>
-              ) : null}
-            </div>
-
-            <div className="space-y-3 p-3">
-              <section>
-                <SectionLabel>상태</SectionLabel>
-                <div className="mt-1.5 flex flex-wrap gap-1.5">
-                  {STATUS_OPTIONS.map((opt) => (
-                    <Pill
-                      key={opt.value}
-                      active={statusFilter === opt.value}
-                      onClick={() => onStatusFilterChange(opt.value)}
-                    >
-                      {opt.label}
-                    </Pill>
-                  ))}
-                </div>
-              </section>
+                  <SelectTrigger className="h-8 w-full px-2.5 text-[12px]">
+                    <SelectValue placeholder="상태" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {STATUS_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
               {showAnalysis ? (
-                <section>
-                  <SectionLabel>분석</SectionLabel>
-                  <div className="mt-1.5 flex flex-wrap gap-1.5">
-                    {ANALYSIS_OPTIONS.map((opt) => (
-                      <Pill
-                        key={opt.value}
-                        active={analysisFilter === opt.value}
-                        onClick={() => onAnalysisFilterChange?.(opt.value)}
-                      >
-                        {opt.label}
-                      </Pill>
-                    ))}
-                  </div>
-                </section>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[11px] font-medium text-slate-600">
+                    분석
+                  </label>
+                  <Select
+                    value={analysisFilter}
+                    onValueChange={(v) =>
+                      onAnalysisFilterChange?.(v as TaskAnalysisFilter)
+                    }
+                  >
+                    <SelectTrigger className="h-8 w-full px-2.5 text-[12px]">
+                      <SelectValue placeholder="분석" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ANALYSIS_OPTIONS.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               ) : null}
 
-              <section>
-                <SectionLabel>정렬</SectionLabel>
-                <div className="mt-1.5 flex flex-wrap gap-1.5">
-                  {SORT_OPTIONS.map((opt) => (
-                    <Pill
-                      key={opt.value}
-                      active={sortOrder === opt.value}
-                      onClick={() => onSortOrderChange(opt.value)}
-                    >
-                      {opt.label}
-                    </Pill>
-                  ))}
-                </div>
-              </section>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-medium text-slate-600">
+                  정렬
+                </label>
+                <Select
+                  value={sortOrder}
+                  onValueChange={(v) => onSortOrderChange(v as TaskSortOrder)}
+                >
+                  <SelectTrigger className="h-8 w-full px-2.5 text-[12px]">
+                    <SelectValue placeholder="정렬" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SORT_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </PopoverContent>
         </Popover>

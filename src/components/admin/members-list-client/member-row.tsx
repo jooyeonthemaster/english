@@ -3,10 +3,11 @@
 import { useCallback, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronRight, AlertTriangle, StickyNote, Loader2 } from "lucide-react";
+import { ChevronRight, AlertTriangle, StickyNote } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { SaveButton } from "@/components/ui/save-button";
 import { ProviderBadge } from "@/components/admin/provider-badge";
 import type { MemberListItem } from "@/actions/admin-members";
 import { updateMemberMemo } from "@/actions/admin-members";
@@ -231,17 +232,11 @@ function MemoCell({
         />
         {error && <p className="mt-0.5 text-[10.5px] text-rose-600">{error}</p>}
         <div className="mt-1 flex items-center gap-1.5">
-          <button
-            type="button"
+          <SaveButton
             onClick={save}
-            disabled={isPending}
-            className="inline-flex h-6 items-center gap-1 rounded bg-blue-600 px-2 text-[11px] font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-60"
-          >
-            {isPending && (
-              <Loader2 className="size-3 animate-spin" strokeWidth={2} aria-hidden />
-            )}
-            저장
-          </button>
+            saving={isPending}
+            className="h-6 min-w-0 rounded px-2"
+          />
           <button
             type="button"
             onClick={cancel}

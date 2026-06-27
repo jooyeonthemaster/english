@@ -13,7 +13,6 @@ import {
   Percent,
   Plus,
   RefreshCw,
-  Save,
   ShieldCheck,
   Trash2,
   Users,
@@ -45,6 +44,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { SaveButton } from "@/components/ui/save-button";
 
 type AdminPlan = {
   id: string;
@@ -769,25 +769,11 @@ export function AdminPlansClient({ initialPlans }: AdminPlansClientProps) {
                       <RefreshCw className="size-3.5" />
                       되돌리기
                     </Button>
-                    <Button
-                      type="button"
-                      size="sm"
+                    <SaveButton
                       onClick={() => submitPlan(plan)}
+                      saving={savingPlanId === plan.id}
                       disabled={!expanded || saving || deleting}
-                      className="bg-blue-600 hover:bg-blue-700"
-                    >
-                      {savingPlanId === plan.id ? (
-                        <span className="flex items-center gap-1.5">
-                          <span className="size-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                          저장 중
-                        </span>
-                      ) : (
-                        <>
-                          <Save className="size-3.5" />
-                          저장
-                        </>
-                      )}
-                    </Button>
+                    />
                   </div>
                 </div>
               </CardHeader>

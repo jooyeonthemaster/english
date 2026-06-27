@@ -28,12 +28,13 @@ import {
   Printer,
   Redo2,
   RotateCcw,
-  Save,
   Trash2,
   Undo2,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SaveButton } from "@/components/ui/save-button";
+import { useUnsavedCloseGuard } from "@/components/shared/use-unsaved-close-guard";
 import {
   Popover,
   PopoverContent,
@@ -121,6 +122,16 @@ export function WebtoonTextEditor({
   useEffect(() => {
     boxesRef.current = boxes;
   });
+  // 미저장 변경 추적 — 최초 로드/저장 시점의 boxes 스냅샷과 현재를 비교.
+  const savedBoxesSnapshotRef = useRef<string | null>(null);
+  const dirty = useMemo(
+    () =>
+      savedBoxesSnapshotRef.current != null &&
+      JSON.stringify(boxes) !== savedBoxesSnapshotRef.current,
+    [boxes],
+  );
+  // 닫기 가드 — 표준 경고 다이얼로그(다른 편집 화면과 동일 디자인).
+  const closeGuard = useUnsavedCloseGuard({ isDirty: dirty, onClose });
   const historyRef = useRef<{ past: WebtoonTextBox[][]; future: WebtoonTextBox[][]; lastAt: number }>(
     { past: [], future: [], lastAt: 0 },
   );
@@ -152,7 +163,9 @@ export function WebtoonTextEditor({
         if (cancelled) return;
         const td = json.textDoc as WebtoonTextDoc;
         setDoc(td);
-        setBoxes(td.boxes.map((b) => ({ ...b })));
+        const loadedBoxes = td.boxes.map((b) => ({ ...b }));
+        setBoxes(loadedBoxes);
+        savedBoxesSnapshotRef.current = JSON.stringify(loadedBoxes);
         setPhase("loading-image");
 
         // 2) load the original image as a blob (untainted canvas → exportable)
@@ -401,7 +414,7 @@ export function WebtoonTextEditor({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onClose();
+        closeGuard.requestClose();
         return;
       }
       const mod = e.ctrlKey || e.metaKey;
@@ -417,7 +430,7 @@ export function WebtoonTextEditor({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, undo, redo]);
+  }, [closeGuard.requestClose, undo, redo]);
 
   const selected = useMemo(
     () => boxes.find((b) => b.id === selectedId) ?? null,
@@ -442,6 +455,7 @@ export function WebtoonTextEditor({
     setNotice(null);
     try {
       const ok = await persistDoc();
+      if (ok) savedBoxesSnapshotRef.current = JSON.stringify(boxesRef.current);
       setNotice(ok ? "편집 내용을 저장했습니다" : "저장에 실패했습니다");
     } finally {
       setSaving(false);
@@ -575,7 +589,7 @@ export function WebtoonTextEditor({
     <div
       className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/40 p-2 backdrop-blur-sm sm:p-3"
       onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) closeGuard.requestClose();
       }}
     >
       <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl bg-[#F4F6F9] shadow-2xl">
@@ -653,7 +667,7 @@ export function WebtoonTextEditor({
           ) : null}
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => closeGuard.requestClose()}
             className="flex h-7 w-7 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700"
             aria-label="닫기"
           >
@@ -708,15 +722,11 @@ export function WebtoonTextEditor({
           <span className="mx-0.5 h-5 w-px bg-slate-200" aria-hidden="true" />
 
           {/* 저장 */}
-          <button
-            type="button"
+          <SaveButton
             onClick={handleSave}
+            saving={saving}
             disabled={saving || phase !== "ready"}
-            className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {saving ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
-            저장
-          </button>
+          />
           {/* 인쇄 */}
           <button
             type="button"
@@ -894,6 +904,7 @@ export function WebtoonTextEditor({
         </aside>
       </div>
       </div>
+      {closeGuard.dialog}
     </div>
   );
 

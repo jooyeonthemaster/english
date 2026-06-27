@@ -129,6 +129,9 @@ function paperBlockDefaults(): Pick<
   | "blockText"
   | "blockAlign"
   | "blockFontSize"
+  | "blockBold"
+  | "blockItalic"
+  | "blockFontPt"
   | "blockAccentColor"
   | "dividerStyle"
   | "dividerThickness"
@@ -143,6 +146,9 @@ function paperBlockDefaults(): Pick<
     blockText: "",
     blockAlign: "left",
     blockFontSize: "md",
+    blockBold: false,
+    blockItalic: false,
+    blockFontPt: null,
     blockAccentColor: "#2563EB",
     dividerStyle: "solid",
     dividerThickness: 1,
@@ -343,8 +349,10 @@ export function makeCustomPaperBlock(
     blockTitle: blockType === "section" ? "새 섹션" : "",
     blockText: defaultTextByType[blockType],
     blockFontSize: blockType === "section" ? "lg" : "md",
+    // 섹션 제목은 기존처럼 기본 굵게(font-black). 텍스트는 일반체.
+    blockBold: blockType === "section",
     spacerHeight: blockType === "spacer" ? 40 : defaults.spacerHeight,
-    imageWidth: blockType === "image" ? 78 : defaults.imageWidth,
+    imageWidth: blockType === "image" ? 100 : defaults.imageWidth,
   };
 }
 

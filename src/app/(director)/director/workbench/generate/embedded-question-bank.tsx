@@ -291,7 +291,7 @@ function QueueStripCard({
 
 // 방금 생성 완료된 문제의 파란 글로우 — passage-card-grid 의 fresh 글로우와 동일.
 const FRESH_QUESTION_GLOW_CLASS =
-  "rounded-xl !ring-2 !ring-blue-400/60 !shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_30px_10px_rgba(37,99,235,0.32)] motion-safe:animate-pulse [&_[data-slot=card]]:!border-blue-400 [&_[data-slot=card]]:!bg-blue-50/25";
+  "rounded-xl !ring-2 !ring-blue-400/60 !shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_30px_10px_rgba(37,99,235,0.32)] motion-safe:animate-pulse [&_[data-slot=card]]:!border-blue-400";
 
 interface EmbeddedQuestionBankProps {
   academyId: string;
@@ -692,6 +692,11 @@ export function EmbeddedQuestionBank({
   const detailLoadTokenRef = useRef(0);
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailQuestionId, setDetailQuestionId] = useState<string | null>(null);
+  // 방금 상세를 열어본 문제 id — 모달을 닫아도 유지해, 닫는 순간 해당 카드를
+  // 한 번 배경 반짝임으로 "여기 봤었지"라고 알려준다.
+  const [lastViewedQuestionId, setLastViewedQuestionId] = useState<
+    string | null
+  >(null);
   const [detailQuestion, setDetailQuestion] = useState<any | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailLoadError, setDetailLoadError] = useState<string | null>(null);
@@ -701,6 +706,7 @@ export function EmbeddedQuestionBank({
     detailLoadTokenRef.current = token;
     setDetailOpen(true);
     setDetailQuestionId(id);
+    setLastViewedQuestionId(id);
     setDetailQuestion(null);
     setDetailLoadError(null);
     setDetailLoading(true);
@@ -1386,6 +1392,9 @@ export function EmbeddedQuestionBank({
         q={q}
         num={displayNum}
         selected={selectedIds.has(q.id)}
+        recentlyViewed={
+          lastViewedQuestionId === q.id && detailQuestionId !== q.id
+        }
         onToggle={() => toggleSelect(q.id)}
         onApprove={() => handleApprove(q.id)}
         onUnapprove={() => handleUnapprove(q.id)}
@@ -1452,7 +1461,7 @@ export function EmbeddedQuestionBank({
                 onDragToRoot={handleDragToRoot}
                 breadcrumbPath={folders.breadcrumbPath}
                 onNavigateToRoot={handleNavigateToRoot}
-                useCardInsideFolder={true}
+                useCardInsideFolder={false}
                 rootLabel="전체 문제"
                 enableFolderControls
                 allFolders={folders.collections}
