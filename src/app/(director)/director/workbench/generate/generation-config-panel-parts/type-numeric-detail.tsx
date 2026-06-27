@@ -6,7 +6,7 @@
 // 호출부 인라인 함수호출이라 React reconciliation 동일. @ts-nocheck=원본 충실(인자 타입 생략).
 
 import { renderNumberSetting, renderSegSetting, renderToggleSetting } from "./setting-fields";
-import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN } from "@/lib/question-type-generation-settings";
+import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN } from "@/lib/question-type-generation-settings";
 import { Minus, Plus } from "lucide-react";
 
 export function renderAntonymDetail({ antonymPairCount, setAntonymPairCount }) {
@@ -789,6 +789,205 @@ export function renderSummaryCompleteMcDetail({ setSummaryCompleteMcBlankCount, 
               aria-label="요약 빈칸 개수 늘리기"
             >
               <Plus className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSettings, setBlankInferenceBlankCount, updateBlankSetting }) {
+      const isMultiBlank = blankInferenceBlankCount >= 2;
+      return (
+        <div className="space-y-3">
+          {renderNumberSetting({
+            title: "빈칸 개수",
+            badges: [
+              `${BLANK_INFERENCE_BLANK_COUNT_MIN} ~ ${BLANK_INFERENCE_BLANK_COUNT_MAX}`,
+              isMultiBlank ? "(A)(B) 조합 보기" : "단일 빈칸",
+            ],
+            description:
+              "기본값 1개는 수능형 단일 빈칸입니다. 2개 이상이면 (A)(B)(C) 빈칸과 조합 보기로 생성합니다.",
+            value: blankInferenceBlankCount,
+            min: BLANK_INFERENCE_BLANK_COUNT_MIN,
+            max: BLANK_INFERENCE_BLANK_COUNT_MAX,
+            onChange: setBlankInferenceBlankCount,
+            ariaBase: "blank inference blank count",
+          })}
+          <div className="border-t border-slate-100 pt-3">
+            {renderSegSetting({
+              title: "빈칸 단위",
+              description:
+                "빈칸으로 잡는 표현의 크기입니다. 자동은 모델이 지문 논리에 맞춰 고르고, 단어·구·절은 그 크기로 빈칸과 선지를 강제합니다.",
+              value:
+                (blankSettings.blankGranularity as string | undefined) || "auto",
+              options: [
+                { value: "auto", label: "자동" },
+                { value: "word", label: "단어" },
+                { value: "phrase", label: "구" },
+                { value: "clause", label: "절" },
+              ],
+              onChange: (next) =>
+                updateBlankSetting({
+                  blankGranularity: next as
+                    | "auto"
+                    | "word"
+                    | "phrase"
+                    | "clause",
+                }),
+            })}
+          </div>
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[12px] font-bold text-slate-800">
+                  빈칸 변형
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  정답 패러프레이즈
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  난이도별 어휘
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  오답 균질화
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                정답 선지를 원문 그대로 내지 않고, 지문 의미를 보존한
+                패러프레이즈로 생성합니다.
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!!blankSettings.paraphraseAnswer}
+              onClick={() => {
+                const next = !blankSettings.paraphraseAnswer;
+                updateBlankSetting({
+                  paraphraseAnswer: next,
+                  ...(next ? { doubleNegative: false } : {}),
+                });
+              }}
+              className={`relative h-6 w-11 rounded-full border transition-colors ${
+                blankSettings.paraphraseAnswer
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  blankSettings.paraphraseAnswer
+                    ? "translate-x-5"
+                    : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span
+                  className={`text-[12px] font-bold ${isMultiBlank ? "text-slate-400" : "text-slate-800"}`}
+                >
+                  부정-부정 빈칸
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  정답 변형
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  부정어 함정
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  킬러형
+                </span>
+              </div>
+              {isMultiBlank ? (
+                <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                  빈칸 1개일 때만 사용할 수 있습니다.
+                </p>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!isMultiBlank && !!blankSettings.doubleNegative}
+              disabled={isMultiBlank}
+              onClick={() => {
+                const next = !blankSettings.doubleNegative;
+                updateBlankSetting({
+                  doubleNegative: next,
+                  ...(next ? { paraphraseAnswer: false } : {}),
+                });
+              }}
+              className={`relative h-6 w-11 rounded-full border transition-colors ${
+                isMultiBlank
+                  ? "cursor-not-allowed border-slate-200 bg-slate-100"
+                  : blankSettings.doubleNegative
+                    ? "border-blue-300 bg-blue-500"
+                    : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  !isMultiBlank && blankSettings.doubleNegative
+                    ? "translate-x-5"
+                    : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[12px] font-bold text-slate-800">
+                  출제 포인트 집중
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  {blankSettings.pointFocus ? "핵심 논리 집중" : "폭넓게 출제"}
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  인과·개념명명·재진술·대조
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                켜면 정답을 기출 최빈출 추론 논리(인과·기제, 추상 개념 명명,
+                재진술·환언, 대조 전환)에 집중합니다. 끄면 다양한 논리로 폭넓게
+                출제합니다.
+              </p>
+              {blankSettings.pointFocus ? (
+                <p className="mt-1 text-[10px] leading-snug text-slate-500">
+                  집중 모드는 출제 논리를 좁히므로, 같은 지문에서 많은 문항을
+                  생성하면 중복 가능성이 높아집니다.
+                </p>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!!blankSettings.pointFocus}
+              onClick={() =>
+                updateBlankSetting({
+                  pointFocus: !blankSettings.pointFocus,
+                })
+              }
+              className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors ${
+                blankSettings.pointFocus
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  blankSettings.pointFocus ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
             </button>
           </div>
         </div>
