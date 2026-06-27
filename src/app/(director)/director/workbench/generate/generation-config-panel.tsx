@@ -105,6 +105,7 @@ import {
   renderSegSetting,
   renderToggleSetting,
 } from "./generation-config-panel-parts/setting-fields";
+import * as TypeNumericDetail from "./generation-config-panel-parts/type-numeric-detail";
 import type { GenerationConfigPanelProps } from "./generation-config-panel-parts/types";
 
 // ─── Component ───────────────────────────────────────
@@ -1924,22 +1925,7 @@ export function GenerationConfigPanel({
       });
     }
 
-    if (typeId === "ANTONYM") {
-      return renderNumberSetting({
-        title: "단어 쌍 개수",
-        badges: [
-          `${ANTONYM_PAIR_COUNT_MIN} ~ ${ANTONYM_PAIR_COUNT_MAX}`,
-          "(A)~ 쌍",
-        ],
-        description:
-          "지문 단어와 짝 단어 쌍의 수입니다. 정답(잘못 짝지어진 쌍)은 항상 1개입니다.",
-        value: antonymPairCount,
-        min: ANTONYM_PAIR_COUNT_MIN,
-        max: ANTONYM_PAIR_COUNT_MAX,
-        onChange: setAntonymPairCount,
-        ariaBase: "antonym pair count",
-      });
-    }
+    if (typeId === "ANTONYM") return TypeNumericDetail.renderAntonymDetail({ antonymPairCount, setAntonymPairCount });
 
     if (supportsGenericOptionCount(typeId)) {
       const genericOptionCount = getGenericOptionCount(typeId);
