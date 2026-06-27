@@ -412,3 +412,63 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
       );
     }
 
+export function renderGrammarChoiceComboDetail({ grammarChoiceComboSettings, patchTypeSettings }) {
+      return (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[12px] font-bold text-slate-800">
+                  출제 포인트 집중
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  {grammarChoiceComboSettings.pointFocus
+                    ? "핵심 6개 집중"
+                    : "폭넓게 출제"}
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  관계사·수일치·분사·to/-ing
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                켜면 세 네모의 정답(올바른 표현) 어법 포인트를 기출 최빈출
+                포인트(관계사·수일치·to부정사/동명사·분사·대명사·형용사/부사)에
+                집중합니다. 끄면 다양한 포인트로 폭넓게 돌려가며 출제합니다.
+              </p>
+              {grammarChoiceComboSettings.pointFocus ? (
+                <p className="mt-1 text-[10px] leading-snug text-slate-500">
+                  집중 모드는 출제 포인트를 좁히므로, 같은 지문에서 많은
+                  문항을 생성하면 중복 가능성이 높아집니다.
+                </p>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!!grammarChoiceComboSettings.pointFocus}
+              onClick={() =>
+                patchTypeSettings("GRAMMAR_CHOICE_COMBO", {
+                  pointFocus: !grammarChoiceComboSettings.pointFocus,
+                })
+              }
+              className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors ${
+                grammarChoiceComboSettings.pointFocus
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  grammarChoiceComboSettings.pointFocus
+                    ? "translate-x-5"
+                    : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+      );
+    }
+
