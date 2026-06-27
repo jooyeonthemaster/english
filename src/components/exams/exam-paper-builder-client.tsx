@@ -1713,6 +1713,9 @@ export function ExamPaperBuilderClient({
             onDownloadDocxWithAnswers={handleDownloadDocxWithAnswers}
             onDownloadHwpx={handleDownloadHwpx}
             onDownloadHwpxWithAnswers={handleDownloadHwpxWithAnswers}
+            onResetPaper={() =>
+              replacePaperItems([], null, { markAsDirty: true })
+            }
             onSave={handleSave}
             onSaveAs={savedExamId ? openSaveAsDialog : undefined}
           />

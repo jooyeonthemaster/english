@@ -458,7 +458,7 @@ export function QuestionLibraryPanel({
         </div>
       )}
 
-      <div ref={scrollContainerRef} id="exam-question-bank-scroll" className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-4">
+      <div ref={scrollContainerRef} id="exam-question-bank-scroll" className="qbank-compact-font min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 py-4">
         {filteredQuestions.length === 0 ? (
           anyFilterActive && statusCounts.all > 0 ? (
             // 실제로는 문항이 있는데 필터가 전부 가린 경우 — 왜 비었는지 명확히 설명.

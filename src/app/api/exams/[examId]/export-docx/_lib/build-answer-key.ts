@@ -18,10 +18,14 @@ import type { DocChild, ExamQuestionData } from "./types";
 // Answer Key Table (for student prints)
 // ---------------------------------------------------------------------------
 
-export function buildAnswerKeyTable(questions: ExamQuestionData[]): DocChild[] {
+export function buildAnswerKeyTable(
+  questions: ExamQuestionData[],
+  opts?: { pageBreakBefore?: boolean },
+): DocChild[] {
   const result: DocChild[] = [];
 
-  result.push(hrule(COLOR.darkGray, 12, 300, 200));
+  // 정답표는 항상 새 페이지에서 시작(pageBreakBefore) — 첫 구분선 단락에 적용.
+  result.push(hrule(COLOR.darkGray, 12, 300, 200, opts?.pageBreakBefore ?? false));
 
   result.push(
     new Paragraph({

@@ -78,7 +78,8 @@ export function buildExamDocument(
   }
 
   if (!includeAnswers) {
-    allChildren.push(...buildAnswerKeyTable(questions));
+    // 정답표는 항상 새 페이지에서 시작.
+    allChildren.push(...buildAnswerKeyTable(questions, { pageBreakBefore: true }));
   }
 
   const compact = options?.density === "compact";

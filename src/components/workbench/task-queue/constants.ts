@@ -21,10 +21,10 @@ export const DOMAIN_UNITS: Record<TaskDomain, string> = {
 };
 
 export const DOMAIN_ORDER: TaskDomain[] = [
-  "extraction",
-  "passage-analysis",
   "question-generation",
   "exam-generation",
+  "passage-analysis",
+  "extraction",
   "webtoon",
 ];
 

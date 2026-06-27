@@ -100,12 +100,16 @@ function decodeImageDataUrl(
   dataUrl: string | null | undefined,
 ): { buffer: Buffer; mime: "png" | "jpg" | "gif" | "bmp" } | null {
   if (!dataUrl) return null;
-  const m = dataUrl.match(/^data:image\/(png|jpe?g|gif|bmp);base64,(.+)$/i);
+  // 헤더만 정규식으로 보고 base64 본문은 콤마로 잘라낸다(거대 문자열을 (.+)$ 로 캡처하면
+  // 정규식 엔진 스택 오버플로 발생).
+  const comma = dataUrl.indexOf(",");
+  if (comma === -1) return null;
+  const m = dataUrl.slice(0, comma).match(/^data:image\/(png|jpe?g|gif|bmp);base64$/i);
   if (!m) return null;
   const f = m[1].toLowerCase();
   const mime = f === "png" ? "png" : f === "gif" ? "gif" : f === "bmp" ? "bmp" : "jpg";
   try {
-    return { buffer: Buffer.from(m[2], "base64"), mime };
+    return { buffer: Buffer.from(dataUrl.slice(comma + 1), "base64"), mime };
   } catch {
     return null;
   }

@@ -100,6 +100,17 @@ export const ANALYSIS_REPORT_EDIT_CSS = `
 .par-root-edit .par-egrip2:active { cursor: grabbing; }
 .par-root-edit .par-eline:hover > .par-egrip2,
 .par-root-edit .par-eline.is-active > .par-egrip2 { opacity: 1; }
+
+/* 블록 삭제 버튼 — 블록 오른쪽 위 모서리, hover/active 시 표시 */
+.par-root-edit .par-eblock-del {
+  position: absolute; right: -6.5mm; top: 0;
+  width: 5mm; height: 5mm; display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid #fecaca; background: #fff; border-radius: 3px; color: #dc2626;
+  cursor: pointer; line-height: 1; opacity: 0; transition: opacity .12s, background-color .12s; z-index: 7;
+}
+.par-root-edit .par-eline:hover > .par-eblock-del,
+.par-root-edit .par-eline.is-active > .par-eblock-del { opacity: 1; }
+.par-root-edit .par-eblock-del:hover { background: #fee2e2; border-color: #fca5a5; }
 /* 편집 모드: 각 페이지를 relative 래퍼로 감싸 컨트롤을 시트 바깥에 띄운다.
    (시트는 overflow:hidden 이라 컨트롤을 자식으로 두면 바깥으로 못 나간다) */
 /* 첫 페이지 컨트롤이 스크롤 최상단에서 잘리지 않도록 상단 여백 확보
@@ -176,7 +187,7 @@ body.par-resizing { cursor: ns-resize !important; user-select: none !important; 
 
 /* 인쇄 시 편집 chrome 전부 숨김 → 깨끗한 A4 */
 @media print {
-  .par-edit-chrome, .par-egrip2, .par-edit-hcell, .par-eresize, .par-page-controls, .par-cov-logo-resize { display: none !important; }
+  .par-edit-chrome, .par-egrip2, .par-eblock-del, .par-edit-hcell, .par-eresize, .par-page-controls, .par-cov-logo-resize { display: none !important; }
   .par-root-edit .par-edit-field { background: none !important; box-shadow: none !important; }
   .par-root-edit .par-eline, .par-root-edit .par-eline:hover, .par-root-edit .par-eline.is-active { outline: none !important; box-shadow: none !important; }
   .par-root-edit .par-edit-empty::before { content: "" !important; }

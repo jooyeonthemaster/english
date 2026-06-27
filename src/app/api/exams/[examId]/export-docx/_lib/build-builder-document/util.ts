@@ -30,10 +30,14 @@ export function dataUrlToImage(dataUrl: string | null | undefined):
   | { buffer: Buffer; type: "png" | "jpg" | "gif" | "bmp"; width: number; height: number }
   | null {
   if (!dataUrl) return null;
-  const match = dataUrl.match(/^data:image\/(png|jpe?g|gif|bmp);base64,(.+)$/i);
+  // 헤더만 정규식으로 보고 base64 본문은 콤마로 잘라낸다(거대 문자열을 (.+)$ 로 캡처하면
+  // 정규식 엔진 스택 오버플로 발생).
+  const comma = dataUrl.indexOf(",");
+  if (comma === -1) return null;
+  const match = dataUrl.slice(0, comma).match(/^data:image\/(png|jpe?g|gif|bmp);base64$/i);
   if (!match) return null;
   const mime = match[1].toLowerCase();
-  const buf = Buffer.from(match[2], "base64");
+  const buf = Buffer.from(dataUrl.slice(comma + 1), "base64");
   const type: "png" | "jpg" | "gif" | "bmp" =
     mime === "png" ? "png" : mime === "gif" ? "gif" : mime === "bmp" ? "bmp" : "jpg";
   // 실제 자연 크기를 헤더에서 읽어 종횡비를 정확히 한다(미상이면 정사각 폴백).

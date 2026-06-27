@@ -394,62 +394,67 @@ export function PropertiesPanel({
 
           {activeCustom?.kind !== "spacer" ? (
           <PanelGroup label="서식">
-            {/* 글자 크기·굵게·이탤릭·정렬 — 한 줄 (- 10pt + B I 좌 중 우) */}
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => onMetaPatch({ fontScale: Math.max(0.7, Math.round((fontScale - 0.1) * 10) / 10) })}
-                title="글자 작게"
-                className="inline-flex h-8 w-8 shrink-0 justify-center items-center rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50"
-              >
-                <Minus className="w-3.5 h-3.5" />
-              </button>
-              <span className="w-10 shrink-0 text-center text-[11px] font-semibold tabular-nums text-slate-500">{Math.round(fontScale * 10)}pt</span>
-              <button
-                type="button"
-                onClick={() => onMetaPatch({ fontScale: Math.min(1.4, Math.round((fontScale + 0.1) * 10) / 10) })}
-                title="글자 크게"
-                className="inline-flex h-8 w-8 shrink-0 justify-center items-center rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50"
-              >
-                <Plus className="w-3.5 h-3.5" />
-              </button>
-              <span className="mx-0.5 h-5 w-px bg-slate-200" />
-              <button
-                type="button"
-                onClick={() => onMetaPatch({ bold: !activeMeta.bold })}
-                title="굵게"
-                className={`inline-flex h-8 w-8 shrink-0 justify-center items-center rounded-md border ${
-                  activeMeta.bold ? "border-blue-500 bg-blue-50 text-blue-600" : "border-slate-200 text-slate-500 hover:bg-slate-50"
-                }`}
-              >
-                <Bold className="w-3.5 h-3.5" />
-              </button>
-              <button
-                type="button"
-                onClick={() => onMetaPatch({ italic: !activeMeta.italic })}
-                title="이탤릭"
-                className={`inline-flex h-8 w-8 shrink-0 justify-center items-center rounded-md border ${
-                  activeMeta.italic ? "border-blue-500 bg-blue-50 text-blue-600" : "border-slate-200 text-slate-500 hover:bg-slate-50"
-                }`}
-              >
-                <Italic className="w-3.5 h-3.5" />
-              </button>
-              <span className="mx-0.5 h-5 w-px bg-slate-200" />
-              {(["left", "center", "right"] as const).map((a) => {
-                const Icon = a === "left" ? AlignLeft : a === "center" ? AlignCenter : AlignRight;
-                return (
-                  <button
-                    key={a}
-                    type="button"
-                    onClick={() => onMetaPatch({ align: a })}
-                    className={`flex-1 inline-flex justify-center items-center h-8 rounded-md border ${
-                      align === a ? "border-blue-500 bg-blue-50 text-blue-600" : "border-slate-200 text-slate-500 hover:bg-slate-50"
-                    }`}
-                  >
-                    <Icon className="w-3.5 h-3.5" />
-                  </button>
-                );
-              })}
+            {/* 글자 크기·굵게·이탤릭·정렬 — 넓으면 한 줄, 좁아지면 정렬 묶음이 다음 줄로 내려간다. */}
+            <div className="flex flex-wrap items-center gap-1">
+              {/* 글자 크기 스텝퍼 */}
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => onMetaPatch({ fontScale: Math.max(0.7, Math.round((fontScale - 0.1) * 10) / 10) })}
+                  title="글자 작게"
+                  className="inline-flex h-8 w-8 shrink-0 justify-center items-center rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50"
+                >
+                  <Minus className="w-3.5 h-3.5" />
+                </button>
+                <span className="w-10 shrink-0 text-center text-[11px] font-semibold tabular-nums text-slate-500">{Math.round(fontScale * 10)}pt</span>
+                <button
+                  type="button"
+                  onClick={() => onMetaPatch({ fontScale: Math.min(1.4, Math.round((fontScale + 0.1) * 10) / 10) })}
+                  title="글자 크게"
+                  className="inline-flex h-8 w-8 shrink-0 justify-center items-center rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                </button>
+              </div>
+              {/* 굵게·이탤릭·정렬 — 묶음 단위로 줄바꿈, 좁아지면 한 줄 전체를 차지한다. */}
+              <div className="flex flex-1 items-center gap-1 min-w-[150px]">
+                <button
+                  type="button"
+                  onClick={() => onMetaPatch({ bold: !activeMeta.bold })}
+                  title="굵게"
+                  className={`inline-flex h-8 w-8 shrink-0 justify-center items-center rounded-md border ${
+                    activeMeta.bold ? "border-blue-500 bg-blue-50 text-blue-600" : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                  }`}
+                >
+                  <Bold className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onMetaPatch({ italic: !activeMeta.italic })}
+                  title="이탤릭"
+                  className={`inline-flex h-8 w-8 shrink-0 justify-center items-center rounded-md border ${
+                    activeMeta.italic ? "border-blue-500 bg-blue-50 text-blue-600" : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                  }`}
+                >
+                  <Italic className="w-3.5 h-3.5" />
+                </button>
+                <span className="mx-0.5 h-5 w-px shrink-0 bg-slate-200" />
+                {(["left", "center", "right"] as const).map((a) => {
+                  const Icon = a === "left" ? AlignLeft : a === "center" ? AlignCenter : AlignRight;
+                  return (
+                    <button
+                      key={a}
+                      type="button"
+                      onClick={() => onMetaPatch({ align: a })}
+                      className={`flex-1 inline-flex justify-center items-center h-8 rounded-md border ${
+                        align === a ? "border-blue-500 bg-blue-50 text-blue-600" : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                      }`}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </PanelGroup>
           ) : null}
@@ -525,8 +530,8 @@ export function PropertiesPanel({
             ) : null}
           </PanelGroup>
 
-          <PanelGroup label="순서 / 표시">
-            <div className="grid grid-cols-2 gap-1.5 mb-2">
+          <PanelGroup label="순서">
+            <div className="grid grid-cols-2 gap-1.5">
               <button
                 type="button"
                 onClick={() => onMove(-1)}
@@ -544,14 +549,6 @@ export function PropertiesPanel({
                 ↓ 아래로
               </button>
             </div>
-            {!isTitleMeta ? (
-              <ToggleRow
-                label={activeMeta.hidden ? "숨김 (인쇄 제외)" : "표시 중"}
-                on={!!activeMeta.hidden}
-                onClick={() => onMetaPatch({ hidden: !activeMeta.hidden })}
-                icon={activeMeta.hidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-              />
-            ) : null}
           </PanelGroup>
 
           {isSectionItem && active.isSectionStart ? (

@@ -32,6 +32,8 @@ export interface ReportEdit {
   /** 표 열 너비(세로 구분선) 조절 — group(grammar/exam/vocab) → 열키→퍼센트 commit */
   onColWidths: (group: string, widths: Record<string, number>) => void;
   onDeletePage?: (ids: string[]) => void;
+  /** 블록 단위 삭제 — 블록 오른쪽 위 삭제 버튼. */
+  onDelete?: (id: string) => void;
   /** 페이지를 한 칸 위(-1)/아래(+1)로 이동 */
   onMovePage?: (ids: string[], dir: -1 | 1) => void;
   drag: {

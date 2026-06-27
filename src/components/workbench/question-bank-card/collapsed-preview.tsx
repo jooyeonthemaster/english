@@ -44,13 +44,16 @@ export function CollapsedPreview({
 
   return (
     <div className="space-y-2">
-      {/* 의문문(발문) — 접힘 상태에서도 전체 노출. 유형명은 마지막 줄 오른쪽 끝에
-          오도록 float 처리(여러 줄이면 마지막 줄 우측 모서리). */}
+      {/* 의문문(발문) — 접힘 상태에서도 전체 노출. 유형명은 발문 우측 상단에
+          고정(flex)한다. 예전 float-right는 줄 높이가 어긋나면 아래 지문 영역을
+          침범해서 flex로 교체. */}
       {direction && (
-        <div className="text-[13px] font-bold text-slate-900 leading-relaxed whitespace-pre-line">
-          {renderFormatted(direction, subType)}
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1 text-[13px] font-bold text-slate-900 leading-relaxed whitespace-pre-line">
+            {renderFormatted(direction, subType)}
+          </div>
           {typeLabel && (
-            <span className="float-right ml-2 pl-1 whitespace-nowrap text-[11px] font-medium leading-[21px] text-slate-400">
+            <span className="shrink-0 whitespace-nowrap text-[11px] font-medium leading-relaxed text-slate-400">
               {typeLabel}
             </span>
           )}

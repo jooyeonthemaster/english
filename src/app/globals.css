@@ -1782,3 +1782,16 @@ body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :
 body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :where(.text-2xl) {
   font-size: 1.5rem !important;
 }
+
+/* ---------------------------------------------------------------------------
+   시험지 생성(빌더) 왼쪽 "문제 관리" 패널 한정 — 문제카드 안의 글자 크기만 한 단계
+   줄여 작은 화면에서도 카드 내용이 한눈에 들어오게 한다. 패딩·아이콘은 그대로 두고
+   폰트 크기만 ~2px 축소(공유 QuestionBankCard는 다른 페이지에 영향 없음).
+   .qbank-compact-font 스코프는 question-library-panel(빌더 전용)에서만 붙는다.
+   --------------------------------------------------------------------------- */
+.qbank-compact-font :where(.text-\[15px\]) { font-size: 13px !important; }
+.qbank-compact-font :where(.text-\[13px\]) { font-size: 11px !important; }
+.qbank-compact-font :where(.text-\[12px\]) { font-size: 10px !important; }
+.qbank-compact-font :where(.text-\[11px\]) { font-size: 9px !important; }
+.qbank-compact-font :where(.text-\[10px\]) { font-size: 8px !important; }
+.qbank-compact-font :where(.text-\[9px\]) { font-size: 7px !important; }

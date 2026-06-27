@@ -153,9 +153,11 @@ export function buildBuilderExamDocument(opts: {
     appendQuestionGroups(section2Children, resolvedItems, layout, includeAnswers, compact);
   }
 
-  // 정답표 (정답포함 모드가 아닐 때만 추가)
+  // 정답표 (정답포함 모드가 아닐 때만 추가) — 항상 새 페이지에서 시작.
   if (!includeAnswers && fullExamQuestions.length > 0) {
-    section2Children.push(...buildAnswerKeyTable(fullExamQuestions));
+    section2Children.push(
+      ...buildAnswerKeyTable(fullExamQuestions, { pageBreakBefore: true }),
+    );
   }
 
   // ---- 헤더/푸터 정의 ----

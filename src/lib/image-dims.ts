@@ -27,12 +27,19 @@ export interface ImageDims {
 
 export function imageDimsFromDataUrl(dataUrl: string | null | undefined): ImageDims | null {
   if (!dataUrl) return null;
-  const m = dataUrl.match(/^data:image\/(png|jpe?g|gif|bmp|webp);base64,(.+)$/i);
-  if (!m) return null;
-  const fmt = m[1].toLowerCase();
+  // 거대 base64 를 정규식 (.+)$ 로 캡처하면 정규식 엔진이 스택 오버플로를 낸다
+  // (RangeError: Maximum call stack size exceeded). 헤더만 정규식으로 보고, base64 본문은
+  // 첫 콤마 기준으로 잘라낸다.
+  const comma = dataUrl.indexOf(",");
+  if (comma === -1) return null;
+  const headerMatch = dataUrl
+    .slice(0, comma)
+    .match(/^data:image\/(png|jpe?g|gif|bmp|webp);base64$/i);
+  if (!headerMatch) return null;
+  const fmt = headerMatch[1].toLowerCase();
   let bytes: Uint8Array;
   try {
-    bytes = bytesFromBase64Prefix(m[2]);
+    bytes = bytesFromBase64Prefix(dataUrl.slice(comma + 1));
   } catch {
     return null;
   }

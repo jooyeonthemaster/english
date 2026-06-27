@@ -728,24 +728,32 @@ export function A4PaperPage({
                               visual.questionClass,
                             )}
                           >
-                            {isSplit ? (
-                              <span className="block">
-                                {renderFormattedInline(renderedText)}
-                              </span>
-                            ) : (
-                              <EditableText
-                                value={fragment.passageContent}
-                                onCommit={(next) =>
-                                  onUpdateGroupPassage(fragment.groupSourceId, {
-                                    passageContent: next,
-                                  })
-                                }
-                                className="block"
-                                readOnly={readOnly}
-                              >
-                                {renderFormattedInline(renderedText)}
-                              </EditableText>
-                            )}
+                            <EditableText
+                              value={fragment.passageContent}
+                              onCommit={(next) =>
+                                onUpdateGroupPassage(fragment.groupSourceId, {
+                                  passageContent: next,
+                                })
+                              }
+                              className="block"
+                              readOnly={readOnly}
+                              // 지문이 칸/쪽 경계에서 쪼개진 경우(isSplit): 평소엔 이 칸 조각만
+                              // 서식 그대로 보이다가, 클릭하면 지문 전체로 펼쳐 통째로 편집한다.
+                              editingChildren={
+                                isSplit
+                                  ? renderFormattedInline(
+                                      formatSentenceInsertPassageMarkers(
+                                        fragment.passageContent,
+                                        fragment.usesSentenceInsertMarkers
+                                          ? "SENTENCE_INSERT"
+                                          : null,
+                                      ),
+                                    )
+                                  : undefined
+                              }
+                            >
+                              {renderFormattedInline(renderedText)}
+                            </EditableText>
                           </p>
                           {isSplit && !isPassageEnd && (
                             <p
@@ -1115,7 +1123,26 @@ export function A4PaperPage({
                                     visual.questionClass,
                                   )}
                                 >
-                                  <span className="block">
+                                  {/* 칸/쪽 경계에서 쪼개진 본문 조각. 평소엔 이 칸 조각만 서식
+                                      그대로 보이다가, 클릭하면 본문 전체로 펼쳐 통째로 인라인
+                                      편집한다(조각만 고치면 나머지가 날아가므로). blur 시 저장→재분할. */}
+                                  <EditableText
+                                    value={questionBody}
+                                    onCommit={(next) =>
+                                      onUpdateItem(item.localId, {
+                                        questionText: recombineQuestionText(
+                                          questionStem,
+                                          next,
+                                        ),
+                                      })
+                                    }
+                                    readOnly={readOnly || item.locked}
+                                    className="block"
+                                    editingChildren={renderQuestionTextInline(
+                                      formatInlineMarkersForSubtype(questionBody, subType),
+                                      subType,
+                                    )}
+                                  >
                                     {renderQuestionTextInline(
                                       formatInlineMarkersForSubtype(
                                         joinRenderedLinesForDisplay(
@@ -1125,7 +1152,7 @@ export function A4PaperPage({
                                       ),
                                       subType,
                                     )}
-                                  </span>
+                                  </EditableText>
                                 </p>
                               </>
                             );

@@ -7,14 +7,18 @@ export async function toEmbeddableImageDataUrl(
   dataUrl: string | null | undefined,
 ): Promise<string | null> {
   if (!dataUrl) return null;
-  const m = dataUrl.match(/^data:image\/([a-z0-9.+-]+);base64,(.+)$/i);
+  // 헤더만 정규식으로 보고 base64 본문은 콤마로 잘라낸다(거대 문자열을 (.+)$ 로 캡처하면
+  // 정규식 엔진 스택 오버플로 발생).
+  const comma = dataUrl.indexOf(",");
+  if (comma === -1) return dataUrl;
+  const m = dataUrl.slice(0, comma).match(/^data:image\/([a-z0-9.+-]+);base64$/i);
   if (!m) return dataUrl;
   const fmt = m[1].toLowerCase();
   if (fmt === "png" || fmt === "jpeg" || fmt === "jpg" || fmt === "gif" || fmt === "bmp") {
     return dataUrl;
   }
   try {
-    const buf = Buffer.from(m[2], "base64");
+    const buf = Buffer.from(dataUrl.slice(comma + 1), "base64");
     const png = await sharp(buf).png().toBuffer();
     return `data:image/png;base64,${png.toString("base64")}`;
   } catch {

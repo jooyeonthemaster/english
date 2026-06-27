@@ -80,6 +80,25 @@ export function Grip({ edit, id }: { edit: ReportEdit; id: string }) {
   );
 }
 
+// 블록 오른쪽 위 삭제 버튼 — hover/선택 시 표시. 클릭으로 이 블록을 삭제한다.
+export function BlockDelete({ edit, id }: { edit: ReportEdit; id: string }) {
+  if (!edit.onDelete) return null;
+  return (
+    <button
+      type="button"
+      className="par-eblock-del par-edit-chrome"
+      title="이 블록 삭제"
+      onMouseDown={(e) => e.stopPropagation()}
+      onClick={(e) => {
+        e.stopPropagation();
+        edit.onDelete?.(id);
+      }}
+    >
+      <Trash2 width={12} height={12} aria-hidden="true" />
+    </button>
+  );
+}
+
 export function ResizeHandle({ edit, id, el }: { edit: ReportEdit; id: string; el: () => HTMLElement | null }) {
   const start = (e: ReactPointerEvent<HTMLButtonElement>) => {
     if (e.button !== 0) return;
@@ -168,6 +187,7 @@ export function LiShell({ it, edit, meta, listStyle, measure }: { it: FlowItem; 
   return (
     <li ref={ref} data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`${listStyle ? "" : "par-edit-row"} ${(cp.className as string) ?? ""}`}>
       {edit && !measure && it.showGrip !== false ? <Grip edit={edit} id={editId} /> : null}
+      {edit && !measure && it.showGrip !== false ? <BlockDelete edit={edit} id={editId} /> : null}
       <BlockFontProvider
         blockId={editId}
         runs={meta?.fontRuns}
@@ -207,6 +227,7 @@ export function BlockShell({ it, edit, meta, measure }: { it: FlowItem; edit?: R
   return (
     <div ref={ref} data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`par-block par-wrap-${it.wrap} ${(cp.className as string) ?? ""}`}>
       {edit && !measure && it.showGrip !== false ? <Grip edit={edit} id={editId} /> : null}
+      {edit && !measure && it.showGrip !== false ? <BlockDelete edit={edit} id={editId} /> : null}
       <BlockFontProvider
         blockId={editId}
         runs={meta?.fontRuns}
@@ -246,6 +267,7 @@ export function MapItemShell({ it, edit, meta, measure }: { it: FlowItem; edit?:
   return (
     <div data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`par-mapitem ${(cp.className as string) ?? ""}`}>
       {edit && !measure && it.showGrip !== false ? <Grip edit={edit} id={editId} /> : null}
+      {edit && !measure && it.showGrip !== false ? <BlockDelete edit={edit} id={editId} /> : null}
       <BlockFontProvider
         blockId={editId}
         runs={meta?.fontRuns}

@@ -43,6 +43,8 @@ import { notifyCreditsChanged } from "@/lib/credits-client";
 
 import {
   enumerateItems,
+  isActivityAnswerId,
+  orderIdOf,
   type ItemDescriptor,
   type DropPlacement,
   type ReportEdit,
@@ -778,42 +780,65 @@ export function AnalysisReportEditor({
     setReport((r) => hideOrDeleteIds(r, logicalIds));
   }, [setReport]);
 
-  // 페이지를 통째로 한 칸 위/아래로 이동 — 인접 페이지 블록 묶음과 자리바꿈한다.
+  // 페이지를 통째로 한 칸 위/아래로 이동 — 인접 페이지의 블록 묶음과 통째로 자리바꿈한다.
+  // 자동 페이지네이션(높이 기준)이라 한 블록(특히 회차·문항이 여럿인 학습 활동)이
+  // 두 페이지에 걸쳐 렌더되는 경우가 흔하다. 그런 블록은 "첫 조각이 놓인 페이지"의
+  // 소유로 보고 한 덩어리로 옮겨야, 페이지 안 블록이 쪼개지지 않고 전체가 함께 이동한다.
   const movePage = useCallback(
     (pageIds: string[], dir: -1 | 1) => {
       if (!pageIds.length) return;
-      const toLogical = (id: string) =>
-        id.startsWith("c-") ? id.split("::", 1)[0] : id;
-      const curLogical = Array.from(new Set(pageIds.map(toLogical)));
       const pi = pageList.findIndex(
-        (p) => p.length > 0 && toLogical(p[0]) === curLogical[0],
+        (p) => p.length > 0 && p[0] === pageIds[0],
       );
       if (pi < 0) return;
       const ti = pi + dir;
       if (ti < 0 || ti >= pageList.length) return;
-      const adjLogical = Array.from(new Set(pageList[ti].map(toLogical)));
-      if (!adjLogical.length) return;
       setReport((r) => {
+        // 페이지 조각(part-key) → blockOrder 정렬 단위(orderId) 매핑.
+        const orderOf = new Map<string, string>();
+        for (const it of reportFlowItems(r)) {
+          if (isActivityAnswerId(it.id)) continue;
+          orderOf.set(it.id, orderIdOf(it));
+        }
+        const toOrder = (id: string) =>
+          orderOf.get(id) ?? (id.startsWith("c-") ? id.split("::", 1)[0] : id);
+
         const ids = applyBlockOrder(
           enumerateItems(r).map((b) => b.id),
           r.blockOrder,
         );
-        const idSet = new Set(ids);
-        // 파생 페이지(학습 활동 정답 등)는 blockOrder 로 이동할 수 없으므로 무시.
-        if (!curLogical.every((id) => idSet.has(id))) return r;
-        const curSet = new Set(curLogical);
-        const without = ids.filter((id) => !curSet.has(id));
-        const anchorId =
-          dir < 0 ? adjLogical[0] : adjLogical[adjLogical.length - 1];
-        const at = without.indexOf(anchorId);
-        if (at < 0) return r;
-        const insertAt = dir < 0 ? at : at + 1;
+        const pos = new Map(ids.map((id, i) => [id, i] as const));
+
+        // 각 orderId 의 "소유 페이지" = 그 블록의 첫 조각이 놓인 페이지(앞 페이지 우선).
+        const ownerPage = new Map<string, number>();
+        pageList.forEach((parts, pageIdx) => {
+          for (const part of parts) {
+            const oid = toOrder(part);
+            if (!pos.has(oid) || ownerPage.has(oid)) continue;
+            ownerPage.set(oid, pageIdx);
+          }
+        });
+
+        const curOwned = ids.filter((id) => ownerPage.get(id) === pi);
+        const adjOwned = ids.filter((id) => ownerPage.get(id) === ti);
+        // 옮길 블록이 없는 페이지(예: 다른 블록의 연속 조각만 있는 페이지)는 무시.
+        if (!curOwned.length || !adjOwned.length) return r;
+
+        // 앞쪽(먼저 오는) 묶음 lower, 뒤쪽(나중 오는) 묶음 upper 를 통째로 자리바꿈.
+        const lower = dir < 0 ? adjOwned : curOwned;
+        const upper = dir < 0 ? curOwned : adjOwned;
+        const start = pos.get(lower[0])!;
+        const end = pos.get(upper[upper.length - 1])!;
+        // 두 묶음이 [start, end] 구간을 빈틈없이 채울 때만 안전하게 swap (방어).
+        if (end - start + 1 !== lower.length + upper.length) return r;
+
         return {
           ...r,
           blockOrder: [
-            ...without.slice(0, insertAt),
-            ...curLogical,
-            ...without.slice(insertAt),
+            ...ids.slice(0, start),
+            ...upper,
+            ...lower,
+            ...ids.slice(end + 1),
           ],
         };
       });
@@ -1063,10 +1088,11 @@ export function AnalysisReportEditor({
       onResize,
       onColWidths,
       onDeletePage: deletePage,
+      onDelete: deleteActive,
       onMovePage: movePage,
       drag: { startDrag, draggingId, dragOverId, placement },
     }),
-    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, insertTextAfter, onActivity, ced, onResize, onColWidths, deletePage, movePage, startDrag, draggingId, dragOverId, placement],
+    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, insertTextAfter, onActivity, ced, onResize, onColWidths, deletePage, deleteActive, movePage, startDrag, draggingId, dragOverId, placement],
   );
 
   const descriptors = useMemo(() => enumerateItems(report), [report]);
@@ -1178,14 +1204,72 @@ export function AnalysisReportEditor({
   }, [dirty, save, passageId, report, onSaved]);
 
   const undo = useCallback(() => {
+    // 실행취소로 되돌아갈 상태(past 의 마지막)와 현재 상태를 비교해, 다시 보이게 되는
+    // 블록(삭제 취소로 복구된 블록)을 찾아 선택 상태로 둔다.
+    // 삭제는 블록을 완전히 제거하기도 하고 blockMeta.hidden=true 로 숨기기도 하므로,
+    // "보이는 블록 id" 집합(숨김 제외)을 비교해야 두 경우 모두 복구 블록을 찾을 수 있다.
+    const restored = history.past[history.past.length - 1];
+    let restoredId: string | null = null;
+    if (restored) {
+      const visibleId = (it: FlowItem, r: AnalysisReport) =>
+        isActivityAnswerId(it.id) ||
+        r.blockMeta?.[orderIdOf(it)]?.hidden ||
+        r.blockMeta?.[it.id]?.hidden
+          ? null
+          : orderIdOf(it);
+      const before = new Set(
+        reportFlowItems(history.present)
+          .map((it) => visibleId(it, history.present))
+          .filter((id): id is string => !!id),
+      );
+      for (const it of reportFlowItems(restored)) {
+        const id = visibleId(it, restored);
+        if (id && !before.has(id)) {
+          restoredId = id;
+          break;
+        }
+      }
+    }
     dispatchReport({ type: "undo" });
-    setActiveId(null);
-  }, []);
+    setActiveId(restoredId);
+    if (restoredId) scrollToBlockRef.current(restoredId);
+  }, [history]);
 
   const redo = useCallback(() => {
     dispatchReport({ type: "redo" });
     setActiveId(null);
   }, []);
+
+  // Cmd/Ctrl+Z 실행취소, Cmd/Ctrl+Shift+Z·Cmd/Ctrl+Y 다시실행.
+  // 인라인 텍스트 편집(contentEditable)·입력창·선택상자에 포커스가 있을 땐 가로채지 않아
+  // 브라우저 기본 텍스트 실행취소를 보존한다(엑셀·시험지 빌더와 동일한 규칙).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = document.activeElement as HTMLElement | null;
+      const editing =
+        !!el &&
+        (el.isContentEditable ||
+          el.tagName === "INPUT" ||
+          el.tagName === "TEXTAREA" ||
+          el.tagName === "SELECT");
+      if (editing) return;
+      const mod = e.metaKey || e.ctrlKey;
+      if (!mod) return;
+      if (e.key === "z" || e.key === "Z") {
+        e.preventDefault();
+        if (e.shiftKey) {
+          if (canRedo) redo();
+        } else if (canUndo) {
+          undo();
+        }
+      } else if (e.key === "y" || e.key === "Y") {
+        e.preventDefault();
+        if (canRedo) redo();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [undo, redo, canUndo, canRedo]);
 
   const fontScale = activeMeta.fontScale ?? 1;
   const setMetaPatch = (patch: Partial<BlockMeta>) => logicalActiveId && onBlockMeta(logicalActiveId, patch);
