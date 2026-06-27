@@ -26,7 +26,7 @@ export async function getSystemStats() {
     prisma.academy.count({ where: { status: "ACTIVE" } }),
     prisma.student.count(),
     prisma.staff.count(),
-    prisma.question.count(),
+    prisma.question.count({ where: { deletedAt: null } }),
     prisma.passage.count(),
     prisma.exam.count(),
     prisma.academyRegistration.count({ where: { status: "PENDING" } }),

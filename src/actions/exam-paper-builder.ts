@@ -125,7 +125,8 @@ export async function getExamPaperBuilderData(academyId: string) {
 
   const [questions, collections, classes, schools] = await Promise.all([
     prisma.question.findMany({
-      where: { academyId },
+      // 휴지통(soft delete) 가드 — 삭제된 문제는 시험지 빌더 "문제 추가" 피커에 노출 금지.
+      where: { academyId, deletedAt: null },
       // include 만 쓰므로 setId/inSet 등 스칼라 필드는 기본으로 모두 로드된다.
       // (장문 세트 멤버를 시험지에서 "지문 1회+N문항" 묶음으로 렌더하려면
       //  makePaperItem 이 question.setId 로 set 그룹을 부여한다 — paper-item-utils.tsx.)
@@ -299,7 +300,8 @@ export async function saveExamPaperDraft(
 
     const questionIds = [...new Set(normalizedItems.map((item) => item.questionId))];
     const ownedQuestions = await prisma.question.findMany({
-      where: { academyId: staff.academyId, id: { in: questionIds } },
+      // 휴지통 가드 — 삭제(휴지통)된 문제는 시험지에 새로 담아 저장할 수 없다.
+      where: { academyId: staff.academyId, id: { in: questionIds }, deletedAt: null },
       select: { id: true },
     });
     if (ownedQuestions.length !== questionIds.length) {
@@ -440,6 +442,12 @@ export async function saveExamPaperDraft(
             select: { id: true },
           });
 
+      // 휴지통 한계(의도된 동작): 빌더는 getExam 으로 살아있는 문제만 불러오므로
+      // examQuestionLinks 에는 휴지통(삭제) 문제가 없다. 여기서 기존 링크를 전부 지우고
+      // 다시 만들면, 이 시험지에 들어있던 "삭제된 문제"의 링크도 사라진다.
+      // → 그 문제를 나중에 복원해도 이 시험지에는 자동 재배치되지 않는다(문제은행/폴더로는 복원됨).
+      //   링크를 보존하려면 examQuestion @@unique([examId, orderNum]) 충돌을 피하는 재번호가
+      //   필요하므로, 드문 엣지(삭제 문제를 품은 시험지를 편집 저장)에 대해선 이 동작을 수용한다.
       await tx.examQuestion.deleteMany({ where: { examId: saved.id } });
       await tx.examQuestion.createMany({
         data: examQuestionLinks.map((item) => ({

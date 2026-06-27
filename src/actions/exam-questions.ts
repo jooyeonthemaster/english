@@ -32,7 +32,7 @@ export async function addQuestionsToExam(
     if (!exam) return { success: false, error: "시험을 찾을 수 없습니다." };
 
     const questions = await prisma.question.findMany({
-      where: { id: { in: questionIds }, academyId: staff.academyId },
+      where: { id: { in: questionIds }, academyId: staff.academyId, deletedAt: null },
       select: { id: true },
     });
     if (questions.length !== new Set(questionIds).size) {
@@ -132,6 +132,7 @@ export async function getQuestionBank(
   await requireStaffAuth();
 
   const where: Record<string, unknown> = { academyId };
+  where.deletedAt = null;
 
   if (filters?.type && filters.type !== "ALL") where.type = filters.type;
   if (filters?.difficulty && filters.difficulty !== "ALL")

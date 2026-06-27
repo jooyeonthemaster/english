@@ -90,7 +90,7 @@ export async function getPassageQuestionIds(
     select: {
       id: true,
       title: true,
-      questions: { select: { id: true } },
+      questions: { where: { deletedAt: null }, select: { id: true } },
     },
   });
   if (!passage) return null;
@@ -118,7 +118,8 @@ export async function getDraftExamsForPicker(academyId: string) {
       title: true,
       type: true,
       examDate: true,
-      _count: { select: { questions: true } },
+      // 휴지통 가드 — 삭제된 문제는 "기존 시험에 추가" 피커의 문항 수에서 제외.
+      _count: { select: { questions: { where: { question: { deletedAt: null } } } } },
     },
     orderBy: { createdAt: "desc" },
     take: 50,

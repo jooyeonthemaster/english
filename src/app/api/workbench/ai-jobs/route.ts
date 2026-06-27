@@ -129,6 +129,7 @@ export async function GET(req: NextRequest) {
     ...(includePassageQuestions
       ? {
           questions: {
+            where: { deletedAt: null },
             include: { explanation: true, _count: { select: { examLinks: true } } },
             orderBy: { createdAt: "desc" as const },
             take: 50,
@@ -165,7 +166,7 @@ export async function GET(req: NextRequest) {
   let liveIds: Set<string> = new Set();
   if (referencedIds.size > 0) {
     const rows = await prisma.question.findMany({
-      where: { id: { in: [...referencedIds] }, academyId: staff.academyId },
+      where: { id: { in: [...referencedIds] }, academyId: staff.academyId, deletedAt: null },
       select: { id: true },
     });
     liveIds = new Set(rows.map((r) => r.id));

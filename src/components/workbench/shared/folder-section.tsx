@@ -100,6 +100,10 @@ interface FolderSectionProps {
     /** Optional faded prefix rendered before the title (e.g., feature name).
      *  Shown as `parentLabel · title` with a middle-dot separator. */
     parentLabel?: string;
+    /** Optional element rendered at the very start of the header row, before
+     *  the icon (e.g. a "← 돌아가기" back link). Pages that don't pass it are
+     *  unaffected. */
+    backLink?: ReactNode;
   };
   rootLabel?: string;
   /** Opt-in: enables 자료관리-style folder controls (folder search input,
@@ -641,6 +645,9 @@ export function FolderSection({
       <div className="flex flex-col gap-1.5 border-b border-slate-100 px-4 py-1.5">
           {/* Header row: page/folder identity (left) + page-specific filters/actions (right) */}
           <div className="flex items-center gap-3 min-w-0">
+            {pageHeader?.backLink ? (
+              <div className="shrink-0">{pageHeader.backLink}</div>
+            ) : null}
             {pageHeader ? (
               <>
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">

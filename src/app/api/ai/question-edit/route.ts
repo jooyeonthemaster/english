@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
     const { questionId, instruction, baseline: baselineOverride, targets } = parsed.data;
 
     const question = await prisma.question.findFirst({
-      where: { id: questionId, academyId: staff.academyId },
+      where: { id: questionId, academyId: staff.academyId, deletedAt: null },
       include: {
         passage: {
           select: {

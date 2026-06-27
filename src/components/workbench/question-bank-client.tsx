@@ -3,6 +3,7 @@
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { GenerateQuestionsDialog } from "./generate-questions-dialog";
 import {
   Database,
@@ -1104,6 +1105,16 @@ export function QuestionBankClient({
       <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
         {filtersToolbar}
         {gridToggle}
+        {/* 휴지통 — 삭제한 문제는 여기로 모인다(라벨 노출로 발견성↑). */}
+        <Link
+          href="/director/workbench/questions/trash"
+          title="삭제한 문제 보관함"
+          aria-label="휴지통"
+          className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+          휴지통
+        </Link>
       </div>
     </div>
   );

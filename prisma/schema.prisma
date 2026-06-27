@@ -922,6 +922,12 @@ model Question {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // ── 휴지통(soft delete) — 삭제는 즉시 물리삭제가 아니라 deletedAt 타임스탬프로
+  // 표시되고, 모든 정상 읽기 경로는 deletedAt:null 로 거른다. 복원은 deletedAt 를
+  // null 로 되돌리고, "영구 삭제"만 실제 cascade 물리삭제다. (자동 purge 없음) ──
+  deletedAt   DateTime?
+  deletedById String? // 삭제를 수행한 staff.id (감사/표시용, FK 미설정)
+
   // Relations
   academy         Academy                  @relation(fields: [academyId], references: [id])
   passage         Passage?                 @relation(fields: [passageId], references: [id])
@@ -943,6 +949,8 @@ model Question {
   @@index([setId])
   @@index([similarQuestionGenJobId])
   @@index([customTypeId])
+  @@index([academyId, deletedAt, createdAt])
+  @@index([deletedAt])
   @@map("questions")
 }
 

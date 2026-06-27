@@ -85,7 +85,10 @@ import {
   type VocabTestMode,
   type VocabularyTier,
 } from "@/lib/passage-report/analysis-report/schema";
-import { worksheetAnswersAreHidden } from "@/lib/passage-report/analysis-report/worksheet-surface";
+import {
+  worksheetAnswersAreHidden,
+  worksheetClozeTranslationsAreHidden,
+} from "@/lib/passage-report/analysis-report/worksheet-surface";
 import { notifyCreditsChanged } from "@/lib/credits-client";
 
 import {
@@ -2019,6 +2022,18 @@ export function AnalysisReportEditor({
     }
   }, [report, blockAbovePrefix, scrollToSelector, scrollUpThenApply, setReport]);
 
+  const onToggleWorksheetClozeTranslations = useCallback((si: number) => {
+    setReport((r) => {
+      const s2 = r.sections[si];
+      if (!s2 || s2.kind !== "learning-worksheet") return r;
+      return setSection(r, si, {
+        ...s2,
+        hiddenClozeTranslations: !worksheetClozeTranslationsAreHidden(s2),
+      });
+    });
+    scrollToBlock(`s${si}-ws-cloze`);
+  }, [scrollToBlock, setReport]);
+
   // Delete 키로 선택 블록 삭제. 텍스트 편집 중이라도 필드가 '비어 있으면' 블록을
   // 지운다(방금 삽입한 빈 텍스트/여백 블록을 클릭 후 바로 삭제할 수 있도록).
   // 내용이 있는 필드를 편집 중일 때만 글자 삭제로 두고 블록은 보존한다.
@@ -2357,6 +2372,10 @@ export function AnalysisReportEditor({
       !!toolbarWorksheetSection.drills);
   const toolbarAnswerKeyIncluded =
     toolbarWorksheetSection?.kind === "learning-worksheet" ? !worksheetAnswersAreHidden(toolbarWorksheetSection) : false;
+  const toolbarClozeTranslationsAvailable =
+    toolbarWorksheetSection?.kind === "learning-worksheet" && !!toolbarWorksheetSection.cloze?.items?.length;
+  const toolbarClozeTranslationsIncluded =
+    toolbarWorksheetSection?.kind === "learning-worksheet" ? !worksheetClozeTranslationsAreHidden(toolbarWorksheetSection) : true;
 
   // 첫 단어장 섹션 대상
   const toolbarVocabularyIndex = useMemo(
@@ -2449,6 +2468,39 @@ export function AnalysisReportEditor({
             </button>
           ) : null}
           {/* 단어 시험지 컨트롤은 우측 학습 활동 팔레트 하단 '어휘' 섹션으로 이동(툴바에서 제거) */}
+          {toolbarClozeTranslationsAvailable ? (
+            <button
+              type="button"
+              role="switch"
+              aria-checked={toolbarClozeTranslationsIncluded}
+              onClick={() => onToggleWorksheetClozeTranslations(toolbarWorksheetIndex)}
+              title="핵심어구 한국어 해석 표시"
+              className={`inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border px-2.5 text-[11.5px] font-semibold transition-colors ${
+                toolbarClozeTranslationsIncluded
+                  ? "border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100"
+                  : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+              }`}
+            >
+              <Languages className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">한국어 해석</span>
+              <span className="sm:hidden">해석</span>
+              <span
+                className={`relative h-4 w-7 rounded-full transition-colors ${
+                  toolbarClozeTranslationsIncluded ? "bg-sky-500" : "bg-slate-300"
+                }`}
+                aria-hidden="true"
+              >
+                <span
+                  className={`absolute left-0 top-0.5 h-3 w-3 rounded-full bg-white shadow-sm transition-transform ${
+                    toolbarClozeTranslationsIncluded ? "translate-x-3.5" : "translate-x-0.5"
+                  }`}
+                />
+              </span>
+              <span className={`text-[10px] font-bold ${toolbarClozeTranslationsIncluded ? "text-sky-700" : "text-slate-400"}`}>
+                {toolbarClozeTranslationsIncluded ? "ON" : "OFF"}
+              </span>
+            </button>
+          ) : null}
           <button
             type="button"
             onClick={undo}
@@ -2955,6 +3007,7 @@ export function AnalysisReportEditor({
                   onDeleteItem={deleteActive}
                   onToggleCol={onToggleCol}
                   onToggleWorksheetAnswers={onToggleWorksheetAnswers}
+                  onToggleWorksheetClozeTranslations={onToggleWorksheetClozeTranslations}
                   onVocabTestMode={onVocabTestMode}
                   onVocabTestLayout={onVocabTestLayout}
                   onVocabTestOnly={onVocabTestOnly}
@@ -3826,6 +3879,7 @@ function PropertiesPanel({
   onDeleteItem,
   onToggleCol,
   onToggleWorksheetAnswers,
+  onToggleWorksheetClozeTranslations,
   onVocabTestMode,
   onVocabTestLayout,
   onVocabTestOnly,
@@ -3871,6 +3925,7 @@ function PropertiesPanel({
   onDeleteItem: (id: string) => void;
   onToggleCol: (sectionIndex: number, key: string) => void;
   onToggleWorksheetAnswers: (sectionIndex: number) => void;
+  onToggleWorksheetClozeTranslations: (sectionIndex: number) => void;
   onVocabTestMode: (sectionIndex: number, mode: VocabTestMode) => void;
   onVocabTestLayout: (sectionIndex: number, layout: VocabTestLayout) => void;
   onVocabTestOnly: (sectionIndex: number, enabled: boolean, mode?: Exclude<VocabTestMode, "study">) => void;
@@ -4239,6 +4294,14 @@ function PropertiesPanel({
                 on={worksheetAnswersAreHidden(activeWorksheet)}
                 onClick={() => onToggleWorksheetAnswers(active.sectionIndex)}
               />
+              {activeWorksheet.cloze?.items?.length ? (
+                <ToggleRow
+                  label="핵심어구 한국어 해석 표시"
+                  on={!worksheetClozeTranslationsAreHidden(activeWorksheet)}
+                  onClick={() => onToggleWorksheetClozeTranslations(active.sectionIndex)}
+                  icon={<Languages className="h-3.5 w-3.5" />}
+                />
+              ) : null}
               <p className="mt-2 text-[10.5px] text-slate-400 leading-relaxed">
                 학생 배포용으로 쓸 때는 정답과 오답 분석을 숨기고, 해설지로 쓸 때는 다시 켜면 돼요.
               </p>

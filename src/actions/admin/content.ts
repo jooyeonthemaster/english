@@ -15,7 +15,10 @@ export async function getAcademyPassages(academyId: string) {
     include: {
       school: { select: { id: true, name: true } },
       analysis: { select: { id: true } },
-      _count: { select: { questions: true, notes: true } },
+      // 휴지통 가드 — 삭제된 문제는 지문의 문항 수에서 제외.
+      _count: {
+        select: { questions: { where: { deletedAt: null } }, notes: true },
+      },
     },
   });
 
@@ -65,6 +68,7 @@ export async function getAcademyPassageDetail(
         },
       },
       questions: {
+        where: { deletedAt: null },
         orderBy: { createdAt: "desc" },
         include: {
           explanation: true,
@@ -132,7 +136,7 @@ export async function getAcademyQuestions(academyId: string) {
   await requireAdminAuth();
 
   const questions = await prisma.question.findMany({
-    where: { academyId },
+    where: { academyId, deletedAt: null },
     orderBy: { createdAt: "desc" },
     include: {
       passage: {
@@ -190,7 +194,13 @@ export async function getAcademyExams(academyId: string) {
     include: {
       class: { select: { id: true, name: true } },
       school: { select: { id: true, name: true } },
-      _count: { select: { questions: true, submissions: true } },
+      // 휴지통 가드 — 삭제된 문제는 시험지 문항 수에서 제외.
+      _count: {
+        select: {
+          questions: { where: { question: { deletedAt: null } } },
+          submissions: true,
+        },
+      },
     },
   });
 

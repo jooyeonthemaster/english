@@ -481,6 +481,9 @@ interface QuestionCardProps {
   compact?: boolean;
   showReviewActions?: boolean;
   hideReviewStatusStamp?: boolean;
+  /** 미검수(빨간) 테두리 글로우 억제 — 휴지통처럼 검수 상태가 무의미하고
+   *  파괴적(영구삭제) 빨강과 혼동되면 안 되는 컨텍스트 전용. */
+  suppressUnapprovedBorder?: boolean;
   /** Show the 수정(pencil) + 더보기(...) action pair in the header, left of 펼치기.
    *  Works even in readonly contexts (e.g. 문제 생성 결과 카드). */
   showHeaderActions?: boolean;
@@ -514,6 +517,7 @@ export function QuestionCard({
   compact = false,
   showReviewActions = false,
   hideReviewStatusStamp = false,
+  suppressUnapprovedBorder = false,
   showHeaderActions = false,
   openOnCardClick = false,
   showDetailButton = false,
@@ -692,7 +696,7 @@ export function QuestionCard({
       onDoubleClick={handleCardDoubleClick}
       className={`group relative gap-0 py-0 transition-all ${openOnCardClick ? "cursor-pointer" : ""} ${
         selected ? "ring-2 ring-blue-400 bg-blue-50/30" : "hover:shadow-md"
-      } ${!q.approved ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]" : ""}${
+      } ${!suppressUnapprovedBorder && !q.approved ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]" : ""}${
         compactFixed ? " h-full" : ""
       }`}
     >

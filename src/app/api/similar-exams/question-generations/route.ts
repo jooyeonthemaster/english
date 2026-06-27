@@ -31,6 +31,7 @@ export async function GET(req: NextRequest) {
   const rows = await prisma.question.findMany({
     where: {
       academyId: staff.academyId,
+      deletedAt: null,
       // 장문 세트 멤버는 단독 카드로 노출하지 않음(공유 결과 패널과 동일 규칙).
       inSet: false,
       structuredData: { path: ["_similarQuestionGen"], equals: true },

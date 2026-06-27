@@ -91,8 +91,14 @@ function enrichGeneratedQuestionPlanMetadata(q: SaveQuestionData) {
 function buildWorkbenchQuestionWhere(
   academyId: string,
   filters?: WorkbenchQuestionFilters,
+  scope: "active" | "trash" = "active",
 ): Prisma.QuestionWhereInput {
   const where: Prisma.QuestionWhereInput = { academyId };
+
+  // 휴지통(soft delete) 단일 게이트 — 모든 워크벤치 문제 조회는 이 헬퍼를 거친다.
+  // "active"=살아있는 문제만(deletedAt:null), "trash"=휴지통에 있는 것만.
+  // 이 한 줄을 빼먹으면 삭제된 문제가 문제은행/지문별 뷰/빌더 피커에 새어나간다.
+  where.deletedAt = scope === "trash" ? { not: null } : null;
 
   // 장문 세트 members render only as a set (their passage is stored as anchors, not
   // baked into questionText), so they must NOT appear as standalone bank cards.
@@ -127,6 +133,7 @@ function buildWorkbenchQuestionWhere(
 function revalidateQuestionBankPaths() {
   revalidatePath("/director/questions");
   revalidatePath("/director/workbench/questions");
+  revalidatePath("/director/workbench/questions/trash");
   revalidatePath("/director/workbench");
 }
 
@@ -160,9 +167,60 @@ function stringifyOptionsForUpdate(
   return JSON.stringify(normalizeOptionsForSubtype(subType, options));
 }
 
-// Returns the ids actually deleted (academy-owned + existing) — callers tombstone
-// exactly these, never the full request, so a partial delete can't hide surviving rows.
+// Soft delete: 휴지통으로 보낸다(deletedAt 표시). 시험지·해설·콜렉션·오답로그 등 자식
+// 링크는 일부러 보존해 복원이 가능하게 한다 — 실제 cascade 물리삭제는 영구삭제
+// (purgeQuestionsForAcademy)만 한다. 반환 = 실제로 휴지통行된 id(소유+살아있던 것)만 —
+// 호출자는 정확히 이것만 tombstone 하므로 부분 삭제가 살아남은 행을 숨기지 못한다.
 async function deleteQuestionsForAcademy(
+  questionIds: string[],
+  academyId: string,
+  deletedById: string | null,
+): Promise<string[]> {
+  const uniqueIds = [...new Set(questionIds.filter(Boolean))];
+  if (uniqueIds.length === 0) return [];
+
+  const ownedQuestions = await prisma.question.findMany({
+    where: { id: { in: uniqueIds }, academyId, deletedAt: null },
+    select: { id: true },
+  });
+  const ownedIds = ownedQuestions.map((question) => question.id);
+  if (ownedIds.length === 0) return [];
+
+  await prisma.question.updateMany({
+    where: { id: { in: ownedIds }, academyId, deletedAt: null },
+    data: { deletedAt: new Date(), deletedById },
+  });
+
+  return ownedIds;
+}
+
+// 휴지통에서 복원: deletedAt 를 비워 다시 살아있는 상태로 되돌린다. 자식 링크가
+// 보존돼 있었으므로 시험지·폴더 소속도 그대로 복구된다. 반환 = 실제 복원된 id.
+async function restoreQuestionsForAcademy(
+  questionIds: string[],
+  academyId: string,
+): Promise<string[]> {
+  const uniqueIds = [...new Set(questionIds.filter(Boolean))];
+  if (uniqueIds.length === 0) return [];
+
+  const owned = await prisma.question.findMany({
+    where: { id: { in: uniqueIds }, academyId, deletedAt: { not: null } },
+    select: { id: true },
+  });
+  const ownedIds = owned.map((question) => question.id);
+  if (ownedIds.length === 0) return [];
+
+  await prisma.question.updateMany({
+    where: { id: { in: ownedIds }, academyId },
+    data: { deletedAt: null, deletedById: null },
+  });
+
+  return ownedIds;
+}
+
+// 영구 삭제(되돌릴 수 없음): 휴지통에 있는(deletedAt != null) 문제만 물리삭제 + cascade.
+// 가드 — 휴지통을 거치지 않은 살아있는 문제는 절대 물리삭제하지 않는다(deletedAt 조건).
+async function purgeQuestionsForAcademy(
   questionIds: string[],
   academyId: string,
 ): Promise<string[]> {
@@ -170,22 +228,28 @@ async function deleteQuestionsForAcademy(
   if (uniqueIds.length === 0) return [];
 
   const ownedQuestions = await prisma.question.findMany({
-    where: { id: { in: uniqueIds }, academyId },
+    where: { id: { in: uniqueIds }, academyId, deletedAt: { not: null } },
     select: { id: true },
   });
   const ownedIds = ownedQuestions.map((question) => question.id);
   if (ownedIds.length === 0) return [];
 
-  const questionIdWhere = { questionId: { in: ownedIds } };
+  // 동시성 가드 — ownedIds 선택과 삭제 사이에 다른 스태프가 같은 문제를 복원(restore)하면,
+  // 자식 deleteMany 가 이미 "살아난" 문제의 시험지·해설·폴더 링크까지 지울 수 있다.
+  // 그래서 자식 삭제도 question 관계가 여전히 휴지통(deletedAt != null)인 행만 대상으로 한다.
+  const purgeChildWhere = {
+    questionId: { in: ownedIds },
+    question: { deletedAt: { not: null } },
+  };
 
   await prisma.$transaction([
-    prisma.examQuestion.deleteMany({ where: questionIdWhere }),
-    prisma.wrongAnswerLog.deleteMany({ where: questionIdWhere }),
-    prisma.aIConversation.deleteMany({ where: questionIdWhere }),
-    prisma.questionCollectionItem.deleteMany({ where: questionIdWhere }),
-    prisma.questionExplanation.deleteMany({ where: questionIdWhere }),
+    prisma.examQuestion.deleteMany({ where: purgeChildWhere }),
+    prisma.wrongAnswerLog.deleteMany({ where: purgeChildWhere }),
+    prisma.aIConversation.deleteMany({ where: purgeChildWhere }),
+    prisma.questionCollectionItem.deleteMany({ where: purgeChildWhere }),
+    prisma.questionExplanation.deleteMany({ where: purgeChildWhere }),
     prisma.question.deleteMany({
-      where: { id: { in: ownedIds }, academyId },
+      where: { id: { in: ownedIds }, academyId, deletedAt: { not: null } },
     }),
   ]);
 
@@ -325,7 +389,9 @@ export async function getWorkbenchQuestionsGroupedByPassage(
         updatedAt: true,
         school: { select: { id: true, name: true } },
         analysis: { select: { id: true, updatedAt: true } },
-        _count: { select: { questions: true } },
+        // 휴지통 가드 — "(전체 N)" 배지가 아래 카드 목록(questionWhere)과 같은 집합을 세도록
+        // deletedAt:null + inSet:false 로 맞춘다(삭제문제·세트멤버 제외).
+        _count: { select: { questions: { where: { deletedAt: null, inSet: false } } } },
         questions: {
           where: questionWhere,
           include: {
@@ -383,8 +449,8 @@ export async function getWorkbenchQuestionsGroupedByPassage(
 export async function getWorkbenchQuestion(questionId: string) {
   await requireAuth();
 
-  const question = await prisma.question.findUnique({
-    where: { id: questionId },
+  const question = await prisma.question.findFirst({
+    where: { id: questionId, deletedAt: null },
     include: {
       passage: {
         select: {
@@ -532,8 +598,8 @@ export async function updateWorkbenchQuestion(
     // 직접 수정 반영을 위해 항상 현재 스냅샷을 읽는다. AI 생성 문제의 카드는
     // structuredData(JSON 컬럼)로 렌더되므로, flat 컬럼만 갱신하면 검수 화면에
     // 편집이 보이지 않는다(직접수정 미반영 버그). 여기서 스냅샷을 함께 맞춘다.
-    const currentQuestion = await prisma.question.findUnique({
-      where: { id: questionId },
+    const currentQuestion = await prisma.question.findFirst({
+      where: { id: questionId, deletedAt: null },
       select: { tags: true, structuredData: true },
     });
     const incomingTags =
@@ -695,7 +761,7 @@ export async function deleteWorkbenchQuestion(
   try {
     const staff = await requireAuth();
 
-    const deletedIds = await deleteQuestionsForAcademy([questionId], staff.academyId);
+    const deletedIds = await deleteQuestionsForAcademy([questionId], staff.academyId, staff.id);
     if (deletedIds.length === 0) {
       return { success: false, error: "문제를 찾을 수 없습니다." };
     }
@@ -727,7 +793,7 @@ export async function bulkDeleteWorkbenchQuestions(
     if (questionIds.length === 0) {
       return { success: true, requested: 0, deleted: 0, deletedIds: [] };
     }
-    const deletedIds = await deleteQuestionsForAcademy(questionIds, staff.academyId);
+    const deletedIds = await deleteQuestionsForAcademy(questionIds, staff.academyId, staff.id);
     revalidateQuestionBankPaths();
     return {
       success: true,
@@ -747,6 +813,107 @@ export async function bulkDeleteWorkbenchQuestions(
       deletedIds: [],
       error: message,
     };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 휴지통(Trash) — 삭제된 문제 조회 / 복원 / 영구삭제
+//   휴지통은 학원 단위(academyId)다 — 그 학원의 원장·강사 등 스태프 전원이 자기
+//   학원이 삭제한 모든 문제를 본다(누가 삭제했는지와 무관). 자동 purge 는 없다.
+// ---------------------------------------------------------------------------
+
+export async function getTrashWorkbenchQuestions(
+  academyId: string,
+  filters?: WorkbenchQuestionFilters,
+) {
+  const staff = await requireAuth();
+  const page = filters?.page || 1;
+  const limit = filters?.limit || 20;
+  if (staff.academyId !== academyId) {
+    return { questions: [], total: 0, page, limit, totalPages: 0 };
+  }
+
+  const where = buildWorkbenchQuestionWhere(academyId, filters, "trash");
+
+  // 마지막 페이지의 항목을 복원/영구삭제하면 빈 페이지에 고립될 수 있으므로,
+  // total 을 먼저 구해 요청 page 를 유효 범위로 클램프한다.
+  const total = await prisma.question.count({ where });
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+  const safePage = Math.min(Math.max(1, page), totalPages);
+  const skip = (safePage - 1) * limit;
+
+  // 휴지통은 "최근 삭제순"이 기본 — deletedAt 기준 정렬.
+  let orderBy: Prisma.QuestionOrderByWithRelationInput = { deletedAt: "desc" };
+  if (filters?.sort === "oldest") orderBy = { deletedAt: "asc" as const };
+
+  const questions = await prisma.question.findMany({
+    where,
+    include: {
+      passage: {
+        select: {
+          id: true, title: true, content: true,
+          grade: true, semester: true, publisher: true,
+          school: { select: { id: true, name: true } },
+        },
+      },
+      explanation: true,
+      examLinks: {
+        select: { exam: { select: { id: true, title: true } } },
+      },
+      _count: { select: { examLinks: true } },
+    },
+    orderBy,
+    skip,
+    take: limit,
+  });
+
+  return { questions, total, page: safePage, limit, totalPages };
+}
+
+// 휴지통 배지/탭에 표시할 삭제된 문제 개수.
+export async function getTrashQuestionCount(academyId: string): Promise<number> {
+  const staff = await requireAuth();
+  if (staff.academyId !== academyId) return 0;
+  return prisma.question.count({
+    where: buildWorkbenchQuestionWhere(academyId, undefined, "trash"),
+  });
+}
+
+// 복원 — 휴지통의 문제를 다시 살아있는 상태로 되돌린다(시험지·폴더 소속도 함께 복구).
+export async function restoreWorkbenchQuestions(
+  questionIds: string[],
+): Promise<{ success: boolean; restored: number; restoredIds: string[]; error?: string }> {
+  try {
+    const staff = await requireAuth();
+    if (questionIds.length === 0) {
+      return { success: true, restored: 0, restoredIds: [] };
+    }
+    const restoredIds = await restoreQuestionsForAcademy(questionIds, staff.academyId);
+    revalidateQuestionBankPaths();
+    return { success: true, restored: restoredIds.length, restoredIds };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "문제 복원 중 오류가 발생했습니다.";
+    return { success: false, restored: 0, restoredIds: [], error: message };
+  }
+}
+
+// 영구 삭제 — 되돌릴 수 없음. 휴지통(deletedAt != null)에 있는 문제만 물리삭제 + cascade.
+export async function purgeWorkbenchQuestions(
+  questionIds: string[],
+): Promise<{ success: boolean; purged: number; purgedIds: string[]; error?: string }> {
+  try {
+    const staff = await requireAuth();
+    if (questionIds.length === 0) {
+      return { success: true, purged: 0, purgedIds: [] };
+    }
+    const purgedIds = await purgeQuestionsForAcademy(questionIds, staff.academyId);
+    revalidateQuestionBankPaths();
+    return { success: true, purged: purgedIds.length, purgedIds };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "문제 영구 삭제 중 오류가 발생했습니다.";
+    return { success: false, purged: 0, purgedIds: [], error: message };
   }
 }
 
@@ -822,7 +989,7 @@ export async function bulkApproveWorkbenchQuestions(
     }
 
     const ownedQuestions = await prisma.question.findMany({
-      where: { id: { in: uniqueIds }, academyId: staff.academyId },
+      where: { id: { in: uniqueIds }, academyId: staff.academyId, deletedAt: null },
       select: { id: true },
     });
     const ownedIds = ownedQuestions.map((question) => question.id);
@@ -870,8 +1037,8 @@ export async function toggleQuestionStar(
   try {
     await requireAuth();
 
-    const question = await prisma.question.findUnique({
-      where: { id: questionId },
+    const question = await prisma.question.findFirst({
+      where: { id: questionId, deletedAt: null },
       select: { starred: true },
     });
 

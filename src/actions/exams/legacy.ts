@@ -93,7 +93,7 @@ export async function deleteQuestion(
     // Scope the question to this academy — otherwise any id leaks let
     // anyone delete any other tenant's question row.
     const question = await prisma.question.findFirst({
-      where: { id: questionId, academyId: staff.academyId },
+      where: { id: questionId, academyId: staff.academyId, deletedAt: null },
       select: { id: true },
     });
     if (!question) {

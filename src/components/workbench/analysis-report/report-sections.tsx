@@ -20,8 +20,10 @@ import {
   getConsolidatedWordOrders,
   isSummaryPairWorksheetType,
   normalizeStudentFacingMarkup,
+  toStudentWorksheetWordBank,
   toStudentVocabularyClozePassage,
   worksheetAnswersAreHidden,
+  worksheetClozeTranslationsAreHidden,
   type WorksheetWordOrder,
 } from "@/lib/passage-report/analysis-report/worksheet-surface";
 import {
@@ -3447,6 +3449,7 @@ export function sectionFlowItems(
       const consolidatedWordOrders = getConsolidatedWordOrders(s);
       const showDrillWordOrders = !workbookSet && !!s.drills?.wordOrders?.length;
       const showAnswerKey = !worksheetAnswersAreHidden(s);
+      const showClozeTranslations = !worksheetClozeTranslationsAreHidden(s);
       push(
         "note",
         "ws-title",
@@ -3485,7 +3488,7 @@ export function sectionFlowItems(
                       }
                     />
                   </div>
-                  {item.translation ? (
+                  {showClozeTranslations && item.translation ? (
                     <Field
                       as="div"
                       className="par-ws-cloze-ko"
@@ -3502,7 +3505,7 @@ export function sectionFlowItems(
                 </div>
               ))}
             </div>
-            <WordBank words={s.cloze.wordBank} />
+            <WordBank words={toStudentWorksheetWordBank(s.cloze.wordBank, s.cloze.items)} />
           </div>,
         );
       }
@@ -3530,7 +3533,7 @@ export function sectionFlowItems(
                 </div>
               ))}
             </div>
-            <WordBank words={s.practice.wordBank} />
+            <WordBank words={toStudentWorksheetWordBank(s.practice.wordBank, s.practice.items)} />
           </div>,
         );
       }

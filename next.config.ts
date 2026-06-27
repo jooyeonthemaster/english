@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["iconv-lite"],
 
   experimental: {
+    // 시험지 빌더 저장은 문항·지문 본문을 통째로 서버 액션 본문에 실어 보낸다.
+    // 문항이 많은 시험지는 기본 1MB 한도를 넘겨 HTTP 413("Body exceeded 1 MB
+    // limit", digest …@E394)로 저장/다운로드가 통째로 실패한다 → 한도 상향.
+    serverActions: {
+      bodySizeLimit: "10mb",
+    },
     optimizePackageImports: [
       "lucide-react",
       "recharts",

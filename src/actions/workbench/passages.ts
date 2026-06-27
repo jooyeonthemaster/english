@@ -206,6 +206,7 @@ export async function getWorkbenchPassage(passageId: string) {
       notes: { orderBy: { order: "asc" } },
       analysis: true,
       questions: {
+        where: { deletedAt: null },
         include: { explanation: true },
         orderBy: { createdAt: "desc" },
       },

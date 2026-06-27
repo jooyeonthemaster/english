@@ -12,7 +12,15 @@ export async function getQuestionCollections(academyId: string) {
   await requireAuth();
   return prisma.questionCollection.findMany({
     where: { academyId },
-    include: { _count: { select: { items: true, children: true } } },
+    // 휴지통 가드 — 폴더 "N개" 배지는 삭제(휴지통)된 문제를 빼고 센다(링크는 보존되지만 미표시).
+    include: {
+      _count: {
+        select: {
+          items: { where: { question: { deletedAt: null } } },
+          children: true,
+        },
+      },
+    },
     orderBy: { name: "asc" },
   });
 }
@@ -29,7 +37,8 @@ export async function getAcademyQuestionCollectionMembership(
   const session = await requireAuth();
   if (session.academyId !== academyId) return {};
   const items = await prisma.questionCollectionItem.findMany({
-    where: { collection: { academyId } },
+    // 휴지통 가드 — 삭제된 문제는 멤버십(폴더 카운트 파생)에서 제외(page.tsx 인라인 쿼리와 일치).
+    where: { collection: { academyId }, question: { deletedAt: null } },
     select: { collectionId: true, questionId: true },
   });
   const membership: Record<string, string[]> = {};

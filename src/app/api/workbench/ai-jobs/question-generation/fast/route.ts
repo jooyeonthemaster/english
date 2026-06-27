@@ -373,6 +373,7 @@ export async function POST(req: NextRequest) {
           academyId: staff.academyId,
           passageId: passage.id,
           subType: { in: planSubTypes },
+          deletedAt: null,
         },
         orderBy: { createdAt: "desc" },
         take: 40,

@@ -18,7 +18,7 @@ export async function getQuestionBank(
   const staff = await requireStaffAuth();
   if (staff.academyId !== academyId) return [];
 
-  const where: Record<string, unknown> = { academyId };
+  const where: Record<string, unknown> = { academyId, deletedAt: null };
 
   if (filters?.type && filters.type !== "ALL") where.type = filters.type;
   if (filters?.difficulty && filters.difficulty !== "ALL")

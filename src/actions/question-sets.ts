@@ -74,6 +74,8 @@ export async function getQuestionSet(
     where: { id: setId, academyId: staff.academyId },
     include: {
       items: {
+        // 휴지통 가드 — 삭제(휴지통)된 세트 멤버는 세트 렌더에서 제외.
+        where: { question: { deletedAt: null } },
         orderBy: { orderInSet: "asc" },
         include: {
           question: {
@@ -153,6 +155,8 @@ export async function listQuestionSets(opts: {
     take: opts.limit ?? 50,
     include: {
       items: {
+        // 휴지통 가드 — 삭제(휴지통)된 세트 멤버는 세트 렌더에서 제외.
+        where: { question: { deletedAt: null } },
         orderBy: { orderInSet: "asc" },
         include: {
           question: {
@@ -187,7 +191,7 @@ export async function groupQuestionsIntoSet(opts: {
 
   // 내 학원·이 지문 소속 문항만 (보안 + 정합)
   const owned = await prisma.question.findMany({
-    where: { id: { in: opts.questionIds }, academyId: staff.academyId, passageId: opts.passageId },
+    where: { id: { in: opts.questionIds }, academyId: staff.academyId, passageId: opts.passageId, deletedAt: null },
     select: { id: true },
   });
   const ownedIds = new Set(owned.map((q) => q.id));
@@ -247,7 +251,7 @@ export async function splitQuestionSetMember(
   if (!staff) return { success: false, error: "Authentication required" };
 
   const original = await prisma.question.findFirst({
-    where: { id: questionId, academyId: staff.academyId, setId: { not: null } },
+    where: { id: questionId, academyId: staff.academyId, setId: { not: null }, deletedAt: null },
     include: { explanation: true },
   });
   if (!original) return { success: false, error: "세트 멤버를 찾을 수 없습니다." };

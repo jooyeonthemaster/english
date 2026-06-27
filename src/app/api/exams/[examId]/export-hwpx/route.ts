@@ -141,6 +141,8 @@ export async function GET(
       where: { id: examId },
       include: {
         questions: {
+          // 휴지통(soft delete) 가드 — 삭제된 문제는 HWPX 출력물에 절대 포함 금지.
+          where: { question: { deletedAt: null } },
           include: {
             question: {
               include: {

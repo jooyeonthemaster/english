@@ -13,10 +13,14 @@ import surface from "@/lib/passage-report/analysis-report/worksheet-surface";
 
 const {
   worksheetAnswersAreHidden,
+  worksheetClozeTranslationsAreHidden,
   normalizeStudentFacingMarkup,
   studentFacingMarkupIssues,
   toStudentVocabularyClozePassage,
+  toStudentWorksheetWordBank,
   vocabularyClozeSurfaceIssues,
+  wordBankFollowsAnswerOrder,
+  worksheetWordBankSurfaceIssues,
   consolidateWordOrders,
   wordOrderItemIssues,
 } = surface;
@@ -43,9 +47,28 @@ check("vocab cloze prints blank 1", studentVocab.includes("(1) __________"));
 check("vocab cloze prints blank 2", studentVocab.includes("(2) __________"));
 check("vocab surface audit passes sanitized output", vocabularyClozeSurfaceIssues(leakyVocab, vocabBlanks).length === 0);
 
-check("answers hidden by default", worksheetAnswersAreHidden({}) === true);
+const phraseClozeItems = [
+  { no: 1, answers: ["unconventional and unrealistic methods"] },
+  { no: 2, answers: ["get in the way of"] },
+  { no: 3, answers: ["revealing stylistic technique"] },
+  { no: 4, answers: ["difficult to visualize"] },
+  { no: 5, answers: ["diminished emphasis on dialogue"] },
+];
+const orderedWordBank = phraseClozeItems.map((item) => item.answers[0]);
+const studentWordBank = toStudentWorksheetWordBank(orderedWordBank, phraseClozeItems);
+check("key phrase word bank is present", Array.isArray(studentWordBank) && studentWordBank.length === orderedWordBank.length);
+check("key phrase word bank keeps the same entries", studentWordBank.slice().sort().join("|") === orderedWordBank.slice().sort().join("|"));
+check("key phrase word bank is not answer order", studentWordBank.join("|") !== orderedWordBank.join("|"));
+check("key phrase word bank no longer follows answer order", !wordBankFollowsAnswerOrder(studentWordBank, orderedWordBank));
+check("key phrase word bank shuffle is deterministic", toStudentWorksheetWordBank(orderedWordBank, phraseClozeItems).join("|") === studentWordBank.join("|"));
+check("word bank surface audit passes after student shuffle", worksheetWordBankSurfaceIssues("key phrase cloze", orderedWordBank, phraseClozeItems).length === 0);
+
+check("answers shown by default", worksheetAnswersAreHidden({}) === false);
 check("answers hidden when true", worksheetAnswersAreHidden({ hiddenAnswers: true }) === true);
 check("answers shown only when false", worksheetAnswersAreHidden({ hiddenAnswers: false }) === false);
+check("cloze translations shown by default", worksheetClozeTranslationsAreHidden({}) === false);
+check("cloze translations hidden when true", worksheetClozeTranslationsAreHidden({ hiddenClozeTranslations: true }) === true);
+check("cloze translations shown only when false", worksheetClozeTranslationsAreHidden({ hiddenClozeTranslations: false }) === false);
 
 const htmlPrompt =
   "밑줄 친 <span style='text-decoration:underline;'>turn data tombs into &quot;golden nuggets&quot; of knowledge</span>의 의미는?";
@@ -143,5 +166,5 @@ const summary = runHarness();
 
 test("analysis-report worksheet surface keeps student sheet clean", () => {
   assert.equal(summary.failed, 0, `worksheet surface failures: ${JSON.stringify(summary.failures)}`);
-  assert.ok(summary.passed >= 18, `expected at least 18 checks, got ${summary.passed}`);
+  assert.ok(summary.passed >= 27, `expected at least 27 checks, got ${summary.passed}`);
 });

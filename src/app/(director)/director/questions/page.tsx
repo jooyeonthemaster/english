@@ -71,7 +71,11 @@ export default async function QuestionsPage({ searchParams }: PageProps) {
     getWorkbenchQuestionStatusCounts(staff.academyId, filters),
     getQuestionCollections(staff.academyId),
     prisma.questionCollectionItem.findMany({
-      where: { collection: { academyId: staff.academyId } },
+      // 휴지통 가드 — 삭제(휴지통)된 문제는 폴더 멤버십/카운트에서 제외(링크는 보존되지만 표시 X).
+      where: {
+        collection: { academyId: staff.academyId },
+        question: { deletedAt: null },
+      },
       select: { collectionId: true, questionId: true },
     }),
   ]);

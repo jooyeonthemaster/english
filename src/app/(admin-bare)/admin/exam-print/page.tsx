@@ -73,7 +73,7 @@ export default async function ExamPrintPage({
 
   const rows = questionIds.length
     ? await prisma.question.findMany({
-        where: { id: { in: questionIds } },
+        where: { id: { in: questionIds }, deletedAt: null },
         select: {
           id: true,
           questionNumber: true,

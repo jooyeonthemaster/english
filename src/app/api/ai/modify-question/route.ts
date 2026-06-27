@@ -43,8 +43,8 @@ export async function POST(request: NextRequest) {
     };
 
     // Fetch passage context
-    const question = await prisma.question.findUnique({
-      where: { id: questionId },
+    const question = await prisma.question.findFirst({
+      where: { id: questionId, deletedAt: null },
       include: {
         passage: {
           select: { content: true, title: true, grade: true,

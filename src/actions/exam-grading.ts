@@ -122,6 +122,7 @@ export async function getExamAnalytics(examId: string) {
     where: { id: examId },
     include: {
       questions: {
+        where: { question: { deletedAt: null } },
         include: { question: true },
         orderBy: { orderNum: "asc" },
       },

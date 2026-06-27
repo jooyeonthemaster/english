@@ -60,6 +60,10 @@ export {
   unapproveWorkbenchQuestion,
   bulkApproveWorkbenchQuestions,
   toggleQuestionStar,
+  getTrashWorkbenchQuestions,
+  getTrashQuestionCount,
+  restoreWorkbenchQuestions,
+  purgeWorkbenchQuestions,
 } from "./workbench/questions";
 
 export {

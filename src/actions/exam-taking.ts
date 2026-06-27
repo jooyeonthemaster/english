@@ -46,7 +46,8 @@ export async function getAvailableExams(studentId: string) {
     },
     include: {
       class: { select: { id: true, name: true } },
-      _count: { select: { questions: true } },
+      // 휴지통 가드 — 학생에게 보이는 문항 수도 삭제된 문제를 빼고 센다.
+      _count: { select: { questions: { where: { question: { deletedAt: null } } } } },
       submissions: {
         where: { studentId },
         select: {
@@ -85,6 +86,8 @@ export async function startExam(
       where: { id: examId },
       include: {
         questions: {
+          // 휴지통(soft delete) 가드 — 삭제된 문제는 학생 시험화면에 절대 노출 금지.
+          where: { question: { deletedAt: null } },
           include: {
             question: {
               select: {
@@ -232,6 +235,8 @@ export async function submitExam(
         exam: {
           include: {
             questions: {
+              // 휴지통 가드 — 자동채점은 삭제된 문제를 점수/배점에서 제외(startExam 과 동일 집합).
+              where: { question: { deletedAt: null } },
               include: {
                 question: true,
               },
@@ -322,6 +327,8 @@ export async function getExamResult(submissionId: string) {
       exam: {
         include: {
           questions: {
+            // 휴지통 가드 — 학생 결과/리뷰 화면에 삭제된 문제(정답·해설 포함)가 노출되면 안 된다.
+            where: { question: { deletedAt: null } },
             include: {
               question: {
                 include: { explanation: true },
