@@ -6,7 +6,7 @@
 // 호출부 인라인 함수호출이라 React reconciliation 동일. @ts-nocheck=원본 충실(인자 타입 생략).
 
 import { renderNumberSetting, renderSegSetting, renderToggleSetting } from "./setting-fields";
-import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN, VOCAB_CHOICE_ANSWER_COUNT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN } from "@/lib/question-type-generation-settings";
+import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SENTENCE_INSERT_SLOT_COUNT_MAX, SENTENCE_INSERT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN, VOCAB_CHOICE_ANSWER_COUNT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN } from "@/lib/question-type-generation-settings";
 import { Minus, Plus } from "lucide-react";
 
 export function renderAntonymDetail({ antonymPairCount, setAntonymPairCount }) {
@@ -1065,6 +1065,118 @@ export function renderVocabChoiceDetail({ patchTypeSettings, questionTypeSetting
               <span
                 className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
                   vocabSynonymVariants ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSettings, sentenceInsertSlotCount, setSentenceInsertSlotCount }) {
+      const sentenceInsertParaphrasePrefix =
+        questionTypeSettings.SENTENCE_INSERT?.paraphrasePrefix === true;
+      const sentenceInsertPointFocus =
+        questionTypeSettings.SENTENCE_INSERT?.pointFocus === true;
+      return (
+        <div className="space-y-3">
+          {renderNumberSetting({
+            title: "삽입 위치 개수",
+            badges: [
+              `${SENTENCE_INSERT_SLOT_COUNT_MIN} ~ ${SENTENCE_INSERT_SLOT_COUNT_MAX}`,
+              "①~ 마커",
+            ],
+            description:
+              "지문에 표시할 삽입 위치(①~) 수입니다. 정답은 항상 1곳이며, 위치 수만큼 지문 문장이 필요해 짧은 지문은 생성에 실패할 수 있습니다.",
+            value: sentenceInsertSlotCount,
+            min: SENTENCE_INSERT_SLOT_COUNT_MIN,
+            max: SENTENCE_INSERT_SLOT_COUNT_MAX,
+            onChange: setSentenceInsertSlotCount,
+            ariaBase: "sentence insert slot count",
+          })}
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <span className="text-[12px] font-bold text-slate-800">
+                주어진 문장 앞부분 변형
+              </span>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  지문 암기 방지
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  난이도 ↑
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                주어진(삽입) 문장의 앞부분을 같은 의미로 바꿔, 표면 표현을 외워
+                푸는 것을 막습니다. 정답 위치는 그대로입니다.
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={sentenceInsertParaphrasePrefix}
+              onClick={() =>
+                patchTypeSettings("SENTENCE_INSERT", {
+                  paraphrasePrefix: !sentenceInsertParaphrasePrefix,
+                })
+              }
+              className={`relative h-6 w-11 rounded-full border transition-colors ${
+                sentenceInsertParaphrasePrefix
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  sentenceInsertParaphrasePrefix ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+            <div className="min-w-0">
+              <span className="text-[12px] font-bold text-slate-800">
+                출제 포인트 집중
+              </span>
+              <div className="mt-1 flex flex-wrap gap-1">
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  {sentenceInsertPointFocus ? "핵심 장치 집중" : "폭넓게 출제"}
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-medium text-slate-600">
+                  참조 해소·대조 전환
+                </span>
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                켜면 정답 자리를 기출 최빈출 응집장치(지시어·정관사로 앞 문장을
+                가리키는 참조 해소, 내용을 뒤집는 대조 전환)로 고정하도록 집중합니다.
+                끄면 다양한 응집장치로 폭넓게 출제합니다.
+              </p>
+              {sentenceInsertPointFocus ? (
+                <p className="mt-1 text-[10px] leading-snug text-slate-500">
+                  집중 모드는 출제 장치를 좁히므로, 같은 지문에서 많은 문항을
+                  생성하면 중복 가능성이 높아집니다.
+                </p>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={sentenceInsertPointFocus}
+              onClick={() =>
+                patchTypeSettings("SENTENCE_INSERT", {
+                  pointFocus: !sentenceInsertPointFocus,
+                })
+              }
+              className={`relative h-6 w-11 shrink-0 rounded-full border transition-colors ${
+                sentenceInsertPointFocus
+                  ? "border-blue-300 bg-blue-500"
+                  : "border-slate-200 bg-slate-200"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-transform ${
+                  sentenceInsertPointFocus ? "translate-x-5" : "translate-x-0"
                 }`}
               />
             </button>
