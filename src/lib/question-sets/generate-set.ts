@@ -821,6 +821,7 @@ async function persistQuestionSet(opts: {
           layoutFingerprint: built.layout.fingerprintHash,
           itemCount: built.members.length,
           setLabel: built.preset.label,
+          basePassageId: passageId,
           status: built.status,
         },
       });

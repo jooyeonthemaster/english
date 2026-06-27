@@ -46,11 +46,18 @@ const nextConfig: NextConfig = {
   //    the extraction-pipeline scope above is treated as a blocker there.
   //    (See also: README / BULK-PASSAGE-EXTRACTION.md.)
 
-  // `pdfjs-dist` (used by the bulk passage extractor on the client) has an
-  // optional `canvas` node dependency that we never use in the browser.
-  // Tell webpack to treat it as unresolved so the build doesn't look for
-  // the native module. `dev --webpack` is set in package.json so we stay
-  // on the webpack path.
+  // `pdfjs-dist` (used by the bulk passage extractor on the client) optionally
+  // references the `canvas` native module, which we never use in the browser.
+  // We stub it out so neither bundler tries to resolve the native dep — keep
+  // dev (Turbopack) and build (webpack) in parity:
+  //   - dev runs `next dev --turbopack` → turbopack.resolveAlias below
+  //   - `next build --webpack`          → the webpack alias below
+  // Turbopack can't alias to `false`, so it points at an empty stub (empty.ts).
+  turbopack: {
+    resolveAlias: {
+      canvas: { browser: "./empty.ts" },
+    },
+  },
   webpack: (config) => {
     config.resolve = config.resolve ?? {};
     config.resolve.alias = {

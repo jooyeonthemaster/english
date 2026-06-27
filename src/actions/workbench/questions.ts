@@ -461,10 +461,52 @@ export async function getWorkbenchQuestion(questionId: string) {
         },
       },
       explanation: true,
+      setItem: {
+        include: {
+          set: {
+            include: {
+              basePassage: {
+                select: {
+                  id: true,
+                  title: true,
+                  content: true,
+                  analysis: { select: { id: true, analysisData: true, updatedAt: true } },
+                },
+              },
+              items: {
+                orderBy: { orderInSet: "asc" },
+                include: {
+                  question: {
+                    select: {
+                      passage: {
+                        select: {
+                          id: true,
+                          title: true,
+                          content: true,
+                          analysis: { select: { id: true, analysisData: true, updatedAt: true } },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 
-  return question;
+  if (!question) return question;
+
+  const { setItem, ...rest } = question;
+  const sharedPassage =
+    question.passage ??
+    setItem?.set.basePassage ??
+    setItem?.set.items.find((item) => item.question.passage)?.question.passage ??
+    null;
+
+  return { ...rest, passage: sharedPassage };
 }
 
 export async function getWorkbenchQuestionIds(

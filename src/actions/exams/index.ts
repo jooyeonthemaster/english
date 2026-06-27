@@ -50,8 +50,6 @@ export {
   removeExamsFromCollection,
 } from "./collections";
 
-export { createQuestion, deleteQuestion } from "./legacy";
-
 export type {
   ActionResult,
   ExamCreateData,

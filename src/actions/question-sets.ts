@@ -10,6 +10,7 @@ import type { Anchor, LayoutDescriptor } from "@/lib/question-sets/types";
 
 type SetWithItems = Prisma.QuestionSetGetPayload<{
   include: {
+    basePassage: { select: { id: true; title: true } };
     items: {
       include: {
         question: {
@@ -86,6 +87,7 @@ export async function getQuestionSet(
           },
         },
       },
+      basePassage: { select: { id: true, title: true } },
     },
   });
   if (!set) return null;
@@ -93,6 +95,11 @@ export async function getQuestionSet(
 }
 
 function mapSet(set: SetWithItems): QuestionSetForRender {
+  const sharedPassage =
+    set.basePassage ??
+    set.items.find((item) => item.question.passage)?.question.passage ??
+    null;
+
   return {
     id: set.id,
     status: set.status,
@@ -101,8 +108,8 @@ function mapSet(set: SetWithItems): QuestionSetForRender {
     canonicalPassage: set.canonicalPassage,
     layout: parseJson<LayoutDescriptor>(set.displayedPassageLayout),
     createdAt: set.createdAt,
-    passageTitle: set.items[0]?.question.passage?.title ?? null,
-    passageId: set.items[0]?.question.passage?.id ?? null,
+    passageTitle: sharedPassage?.title ?? null,
+    passageId: sharedPassage?.id ?? null,
     members: set.items.map((item) => {
       const q = item.question;
       return {
@@ -148,7 +155,12 @@ export async function listQuestionSets(opts: {
       academyId: staff.academyId,
       ...(opts.jobId ? { jobId: opts.jobId } : {}),
       ...(opts.passageId
-        ? { items: { some: { question: { passageId: opts.passageId } } } }
+        ? {
+            OR: [
+              { basePassageId: opts.passageId },
+              { items: { some: { question: { passageId: opts.passageId } } } },
+            ],
+          }
         : {}),
     },
     orderBy: { createdAt: "desc" },
@@ -167,6 +179,7 @@ export async function listQuestionSets(opts: {
           },
         },
       },
+      basePassage: { select: { id: true, title: true } },
     },
   });
   return sets.map(mapSet);
@@ -216,6 +229,7 @@ export async function groupQuestionsIntoSet(opts: {
           layoutFingerprint: "",
           itemCount: orderedIds.length,
           setLabel: preset.label,
+          basePassageId: opts.passageId,
           status: "OK",
         },
       });
@@ -251,15 +265,44 @@ export async function splitQuestionSetMember(
   if (!staff) return { success: false, error: "Authentication required" };
 
   const original = await prisma.question.findFirst({
+    // 휴지통 가드(deletedAt:null) 유지 + jay의 setItem/basePassage include 확장 동시 채택
     where: { id: questionId, academyId: staff.academyId, setId: { not: null }, deletedAt: null },
-    include: { explanation: true },
+    include: {
+      explanation: true,
+      setItem: {
+        include: {
+          set: {
+            include: {
+              basePassage: { select: { id: true } },
+              items: {
+                orderBy: { orderInSet: "asc" },
+                include: { question: { select: { passageId: true } } },
+              },
+            },
+          },
+        },
+      },
+    },
   });
   if (!original) return { success: false, error: "세트 멤버를 찾을 수 없습니다." };
+
+  const sharedPassageId =
+    original.passageId ??
+    original.setItem?.set.basePassage?.id ??
+    original.setItem?.set.items.find((item) => item.question.passageId)?.question.passageId ??
+    null;
+
+  if (!original.passageId && sharedPassageId) {
+    await prisma.question.update({
+      where: { id: original.id },
+      data: { passageId: sharedPassageId },
+    });
+  }
 
   const copy = await prisma.question.create({
     data: {
       academyId: original.academyId,
-      passageId: original.passageId,
+      passageId: sharedPassageId,
       type: original.type,
       subType: original.subType,
       questionText: original.questionText,
