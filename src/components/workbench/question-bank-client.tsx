@@ -3,6 +3,7 @@
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { GenerateQuestionsDialog } from "./generate-questions-dialog";
 import {
   Database,
@@ -511,6 +512,10 @@ export function QuestionBankClient({
   const detailLoadTokenRef = useRef(0);
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailQuestionId, setDetailQuestionId] = useState<string | null>(null);
+  // 방금 상세를 열어본 문제 id — 모달을 닫아도 유지해, 닫는 순간 카드를 한 번 반짝인다.
+  const [lastViewedQuestionId, setLastViewedQuestionId] = useState<
+    string | null
+  >(null);
   const [detailQuestion, setDetailQuestion] = useState<Awaited<
     ReturnType<typeof getWorkbenchQuestion>
   > | null>(null);
@@ -522,6 +527,7 @@ export function QuestionBankClient({
     detailLoadTokenRef.current = token;
     setDetailOpen(true);
     setDetailQuestionId(id);
+    setLastViewedQuestionId(id);
     setDetailQuestion(null);
     setDetailLoadError(null);
     setDetailLoading(true);
@@ -1104,6 +1110,16 @@ export function QuestionBankClient({
       <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
         {filtersToolbar}
         {gridToggle}
+        {/* 휴지통 — 삭제한 문제는 여기로 모인다(라벨 노출로 발견성↑). */}
+        <Link
+          href="/director/workbench/questions/trash"
+          title="삭제한 문제 보관함"
+          aria-label="휴지통"
+          className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+          휴지통
+        </Link>
       </div>
     </div>
   );
@@ -1153,7 +1169,7 @@ export function QuestionBankClient({
                 onDragToRoot={handleDragToRoot}
                 breadcrumbPath={folders.breadcrumbPath}
                 onNavigateToRoot={handleNavigateToRoot}
-                useCardInsideFolder={true}
+                useCardInsideFolder={false}
                 rootLabel="전체 문제"
                 enableFolderControls
                 allFolders={folders.collections}
@@ -1204,6 +1220,8 @@ export function QuestionBankClient({
                   onToggleStar={handleToggleStar}
                   onDetail={openDetail}
                   onEdit={editor.openEditor}
+                  lastViewedQuestionId={lastViewedQuestionId}
+                  openDetailQuestionId={detailQuestionId}
                   cardClickSelects
                   showDetailButton
                   dragRequiresSelection
@@ -1219,6 +1237,10 @@ export function QuestionBankClient({
                             q={q}
                             num={idx + 1}
                             selected={selectedIds.has(q.id)}
+                            recentlyViewed={
+                              lastViewedQuestionId === q.id &&
+                              detailQuestionId !== q.id
+                            }
                             onToggle={() => toggleSelect(q.id)}
                             onApprove={() => handleApprove(q.id)}
                             onDetail={() => openDetail(q.id)}
@@ -1267,6 +1289,10 @@ export function QuestionBankClient({
                           q={q}
                           num={startIdx + idx + 1}
                           selected={selectedIds.has(q.id)}
+                          recentlyViewed={
+                            lastViewedQuestionId === q.id &&
+                            detailQuestionId !== q.id
+                          }
                           onToggle={() => toggleSelect(q.id)}
                           onApprove={() => handleApprove(q.id)}
                           onDetail={() => openDetail(q.id)}
@@ -1285,6 +1311,10 @@ export function QuestionBankClient({
                         q={q}
                         num={startIdx + idx + 1}
                         selected={selectedIds.has(q.id)}
+                        recentlyViewed={
+                          lastViewedQuestionId === q.id &&
+                          detailQuestionId !== q.id
+                        }
                         onToggle={() => toggleSelect(q.id)}
                         onDelete={() => handleDelete(q.id)}
                         onApprove={() => handleApprove(q.id)}

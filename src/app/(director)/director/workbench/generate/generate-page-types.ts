@@ -79,6 +79,13 @@ export type QueueStatus = "generating" | "done" | "reviewed" | "error";
 
 export interface QueueItem {
   id: string;
+  /**
+   * 이 잡을 만든 낙관적 temp 의 id(클라이언트 nonce). fast 경로에서만 채워지며,
+   * 서버 job.config 에 왕복 저장됐다 DB 폴링 시 되읽힌다. 큐 병합 때 temp↔DB 행을
+   * 설정 시그니처가 아니라 이 값으로 1:1 매칭해, 같은 지문+유형을 연속/동시 생성해도
+   * 카드(지문·빈칸연습)가 서로 섞이지 않게 한다.
+   */
+  clientTempId?: string;
   passageId: string;
   passageTitle: string;
   passageContent: string;

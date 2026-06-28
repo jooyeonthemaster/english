@@ -87,6 +87,18 @@ export async function addWebtoonsToCollection(
 ) {
   await requireAuth();
   try {
+    const existing = await prisma.webtoonCollectionItem.findMany({
+      where: { collectionId, webtoonId: { in: webtoonIds } },
+      select: { webtoonId: true },
+    });
+    const existingSet = new Set(existing.map((e) => e.webtoonId));
+    const addedIds = [...new Set(webtoonIds)].filter(
+      (id) => !existingSet.has(id),
+    );
+    if (addedIds.length === 0) {
+      return { success: true as const, addedIds: [] as string[] };
+    }
+
     const maxItem = await prisma.webtoonCollectionItem.findFirst({
       where: { collectionId },
       orderBy: { orderNum: "desc" },
@@ -95,7 +107,7 @@ export async function addWebtoonsToCollection(
     const startOrder = (maxItem?.orderNum ?? -1) + 1;
 
     await prisma.webtoonCollectionItem.createMany({
-      data: webtoonIds.map((webtoonId, idx) => ({
+      data: addedIds.map((webtoonId, idx) => ({
         collectionId,
         webtoonId,
         orderNum: startOrder + idx,
@@ -104,7 +116,7 @@ export async function addWebtoonsToCollection(
     });
 
     revalidatePath(WEBTOON_LIBRARY_PATH);
-    return { success: true as const };
+    return { success: true as const, addedIds };
   } catch (error) {
     const message = error instanceof Error ? error.message : "폴더에 추가 실패";
     return { success: false as const, error: message };
@@ -117,14 +129,23 @@ export async function removeWebtoonsFromCollection(
 ) {
   await requireAuth();
   try {
+    const existing = await prisma.webtoonCollectionItem.findMany({
+      where: { collectionId, webtoonId: { in: webtoonIds } },
+      select: { webtoonId: true },
+    });
+    const removedIds = existing.map((e) => e.webtoonId);
+    if (removedIds.length === 0) {
+      return { success: true as const, removedIds: [] as string[] };
+    }
+
     await prisma.webtoonCollectionItem.deleteMany({
       where: {
         collectionId,
-        webtoonId: { in: webtoonIds },
+        webtoonId: { in: removedIds },
       },
     });
     revalidatePath(WEBTOON_LIBRARY_PATH);
-    return { success: true as const };
+    return { success: true as const, removedIds };
   } catch (error) {
     const message = error instanceof Error ? error.message : "폴더에서 제거 실패";
     return { success: false as const, error: message };

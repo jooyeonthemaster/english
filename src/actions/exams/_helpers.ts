@@ -25,7 +25,8 @@ export async function assertQuestionsBelongToAcademy(
 ): Promise<void> {
   if (questionIds.length === 0) return;
   const valid = await prisma.question.findMany({
-    where: { id: { in: questionIds }, academyId },
+    // 휴지통 가드 — 삭제(휴지통)된 문제는 시험지에 attach 할 수 없다.
+    where: { id: { in: questionIds }, academyId, deletedAt: null },
     select: { id: true },
   });
   if (valid.length !== new Set(questionIds).size) {

@@ -14,7 +14,6 @@ import {
   RefreshCw,
   Radio,
   RotateCcw,
-  Save,
   ShieldCheck,
   Undo2,
   X,
@@ -25,6 +24,7 @@ import {
   type CreditProductUpdateData,
 } from "@/actions/admin/credit-products";
 import { cn } from "@/lib/utils";
+import { SaveButton } from "@/components/ui/save-button";
 
 type AdminTopUp = {
   id: string;
@@ -633,19 +633,7 @@ export function CreditTopUpsAdminClient({
                     </p>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => saveProduct(product)}
-                    disabled={saving}
-                    className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-3 text-[12px] font-semibold text-white transition hover:bg-blue-700 disabled:cursor-wait disabled:opacity-60"
-                  >
-                    {saving ? (
-                      <span className="size-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                    ) : (
-                      <Save className="size-3.5" strokeWidth={2} />
-                    )}
-                    저장
-                  </button>
+                  <SaveButton onClick={() => saveProduct(product)} saving={saving} />
                 </div>
 
                 <div className="mt-4 grid gap-3 md:grid-cols-2">

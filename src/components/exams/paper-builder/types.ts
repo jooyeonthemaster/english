@@ -111,6 +111,37 @@ export type PaperBlockAlign = "left" | "center" | "right";
 export type PaperBlockFontSize = "sm" | "md" | "lg";
 export type PaperBlockDividerStyle = "solid" | "dashed" | "dotted";
 
+// 블록(텍스트/섹션) 글자 크기: 미리보기는 px, 내보내기(HWPX/DOCX)는 pt 를 쓴다. HWPX 본문
+// 9pt ↔ 미리보기 11.5px 비율로 환산해, 한 pt 값이 화면·내보내기에서 같은 크기로 보이게 한다.
+export const BLOCK_PX_PER_PT = 11.5 / 9;
+export const MIN_BLOCK_FONT_PT = 5;
+export const MAX_BLOCK_FONT_PT = 60;
+
+// blockFontPt 가 비어 있는(기존 시험지) 블록의 기본 pt — sm/md/lg·블록 종류에서 도출한다.
+// 미리보기 px(sm 10·md 11.5·lg 14)을 pt 로 환산한 값이라, blockFontPt 미설정 시 화면과
+// 툴바 표시 pt 가 정확히 일치한다(섹션은 제목이므로 약간 크게 13pt).
+export function defaultBlockFontPt(item: {
+  blockType: PaperBlockType;
+  blockFontSize: PaperBlockFontSize;
+}): number {
+  if (item.blockType === "section") return 13;
+  if (item.blockFontSize === "lg") return 11;
+  if (item.blockFontSize === "sm") return 8;
+  return 9;
+}
+
+export function effectiveBlockFontPt(item: {
+  blockType: PaperBlockType;
+  blockFontSize: PaperBlockFontSize;
+  blockFontPt: number | null;
+}): number {
+  return item.blockFontPt ?? defaultBlockFontPt(item);
+}
+
+export function clampBlockFontPt(pt: number): number {
+  return Math.min(MAX_BLOCK_FONT_PT, Math.max(MIN_BLOCK_FONT_PT, Math.round(pt)));
+}
+
 export type PaperItem = {
   localId: string;
   questionId: string;
@@ -137,6 +168,11 @@ export type PaperItem = {
   blockText: string;
   blockAlign: PaperBlockAlign;
   blockFontSize: PaperBlockFontSize;
+  // 굵게/기울임/숫자 pt 글자 크기(블록 단위 서식). blockFontPt 가 null 이면 blockFontSize
+  // 프리셋(sm/md/lg)으로 폴백한다 — 기존 시험지는 이 값들이 없어도 동작이 그대로 유지된다.
+  blockBold: boolean;
+  blockItalic: boolean;
+  blockFontPt: number | null;
   blockAccentColor: string;
   dividerStyle: PaperBlockDividerStyle;
   dividerThickness: number;

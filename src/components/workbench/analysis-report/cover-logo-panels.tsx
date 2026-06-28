@@ -33,6 +33,7 @@ import {
   type SavedReportSettings,
 } from "./editor-storage";
 import { ToggleRow } from "./panel-primitives";
+import { SaveButton } from "@/components/ui/save-button";
 
 /**
  * 설정 템플릿 팝오버 — 학습자료 설정 헤더(닫기 X 버튼 왼쪽)의 저장 아이콘 버튼.
@@ -172,13 +173,7 @@ export function SettingsTemplatePopover({
               placeholder="템플릿 이름 (예: 기본형, A반용)"
               className="h-8 min-w-0 flex-1 rounded-md border border-slate-200 px-2 text-[11.5px] text-slate-700 placeholder:text-slate-300 focus:border-slate-400 focus:outline-none"
             />
-            <button
-              type="button"
-              onClick={handleSave}
-              className="inline-flex h-8 shrink-0 items-center justify-center gap-1 rounded-md border border-slate-200 px-2.5 text-[11.5px] font-semibold text-slate-600 hover:bg-slate-50"
-            >
-              <Save className="h-3.5 w-3.5" /> 저장
-            </button>
+            <SaveButton onClick={handleSave} title="템플릿 저장" className="shrink-0" />
           </div>
 
           {/* 저장된 템플릿 목록 — 이름을 클릭하면 바로 적용 / 손잡이로 순서 변경 / 삭제 */}

@@ -71,6 +71,8 @@ export function QuestionSetSection({
   // 추가하므로 세트 표시에서 멤버를 빼지 않는다.
   const [splittingIds, setSplittingIds] = useState<Set<string>>(() => new Set());
   const [detailSetId, setDetailSetId] = useState<string | null>(null);
+  // 방금 상세를 열어본 세트 id — 모달을 닫아도 유지해, 닫는 순간 카드를 한 번 반짝인다.
+  const [lastViewedSetId, setLastViewedSetId] = useState<string | null>(null);
   // 편집 중인 세트 — 편집 모달의 멤버 토글(1번/2번)을 그릴 컨텍스트. null 이면 일반 단일 편집.
   const [editingSet, setEditingSet] = useState<QuestionSetForRender | null>(null);
 
@@ -296,7 +298,13 @@ export function QuestionSetSection({
           const first = set.members[0];
           if (first) handleEditMember(set, first.questionId);
         }}
-        onOpenDetail={() => setDetailSetId(set.id)}
+        recentlyViewed={
+          lastViewedSetId === set.id && detailSetId !== set.id
+        }
+        onOpenDetail={() => {
+          setDetailSetId(set.id);
+          setLastViewedSetId(set.id);
+        }}
         onApprove={() => handleApproveSet(set.id)}
         onDelete={() => handleDeleteSet(set.id)}
       />

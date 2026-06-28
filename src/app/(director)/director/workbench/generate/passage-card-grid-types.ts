@@ -131,6 +131,12 @@ export interface PassageCardGridProps {
   // opens a plain full-content viewer instead of the analysis/report modal.
   // Omit it (e.g. tutor program builder) to keep the legacy single-modal behavior.
   onViewPassageContent?: (passage: PassageItem) => void;
+  // 카드 제목 인라인 수정(연필) 직후 부모가 목록 상태를 동기화할 수 있게.
+  onPassageRenamed?: (passageId: string, title: string) => void;
+  // 방금 상세를 열어본 지문 id(모달 닫혀도 유지) + 지금 열려 있는 상세 id.
+  // 두 값으로 "상세를 닫는 순간 그 카드만 한 번 반짝임"을 만든다.
+  lastViewedPassageId?: string | null;
+  openPassageDetailId?: string | null;
   // 카드 우측 상단 검수 토글 점. 누르면 검수상태(빨강↔초록)가 실제로 바뀐다.
   onToggleExtractionReview?: (passage: PassageItem) => void;
   // 검수 토글 처리 중인 지문 id (점에 로딩 표시).

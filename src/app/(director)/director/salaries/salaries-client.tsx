@@ -16,6 +16,7 @@ import { formatCurrency, cn } from "@/lib/utils";
 import { STAFF_ROLES } from "@/lib/constants";
 import { updateSalary, markSalaryPaid, bulkMarkSalariesPaid } from "@/actions/finance";
 import { Button } from "@/components/ui/button";
+import { SaveButton } from "@/components/ui/save-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -447,13 +448,7 @@ export function SalariesClient({ salaryData, currentMonth }: Props) {
             <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
               취소
             </Button>
-            <Button
-              onClick={handleSaveSalary}
-              disabled={isPending}
-              className="bg-[#3B82F6] hover:bg-[#2563EB]"
-            >
-              {isPending ? "저장 중..." : "저장"}
-            </Button>
+            <SaveButton onClick={handleSaveSalary} saving={isPending} />
           </DialogFooter>
         </DialogContent>
       </Dialog>

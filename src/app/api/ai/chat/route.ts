@@ -45,8 +45,8 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Fetch question with explanation and passage
-    const question = await prisma.question.findUnique({
-      where: { id: questionId },
+    const question = await prisma.question.findFirst({
+      where: { id: questionId, deletedAt: null },
       include: {
         explanation: true,
         passage: true,

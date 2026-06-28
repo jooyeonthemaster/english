@@ -2,9 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { StickyNote, Loader2, Check, AlertCircle } from "lucide-react";
+import { StickyNote, Check, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { SaveButton } from "@/components/ui/save-button";
 import { SectionCard } from "@/components/admin/member-detail/atoms";
 import { updateMemberMemo } from "@/actions/admin-members";
 
@@ -94,25 +95,12 @@ export function MemoSection({
         <span className="text-[11px] text-gray-400 tabular-nums">
           {value.length.toLocaleString("ko-KR")} / {MAX_MEMO_LENGTH.toLocaleString("ko-KR")}
         </span>
-        <Button
-          size="sm"
+        <SaveButton
           onClick={handleSave}
-          disabled={!isDirty || isPending}
-          className="h-8 text-[12px] bg-blue-600 hover:bg-blue-700 min-w-[72px]"
-        >
-          {isPending ? (
-            <>
-              <Loader2
-                className="size-3.5 mr-1.5 animate-spin"
-                strokeWidth={2}
-                aria-hidden
-              />
-              저장 중
-            </>
-          ) : (
-            "저장"
-          )}
-        </Button>
+          saving={isPending}
+          disabled={!isDirty}
+          className="min-w-[72px]"
+        />
       </div>
     </SectionCard>
   );

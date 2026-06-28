@@ -514,6 +514,7 @@ export const learningWorksheetSectionSchema = z
     inferenceSet: worksheetInferenceSetSchema.optional(),
     questions: z.array(worksheetQuestionSchema).max(8).default([]),
     hiddenAnswers: z.boolean().default(false),
+    hiddenClozeTranslations: z.boolean().optional(),
   })
   .passthrough();
 

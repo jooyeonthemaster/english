@@ -1,9 +1,10 @@
 "use client";
 
-import { Gem, Save } from "lucide-react";
+import { Gem } from "lucide-react";
 import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { SaveButton } from "@/components/ui/save-button";
 import { StructuredQuestionRenderer } from "../../question-renderers";
 import {
   QUESTION_GENERATION_PLANS,
@@ -46,14 +47,7 @@ export function GeneratedResults({
         <span className="text-sm font-semibold text-slate-900">
           생성된 문제 ({generatedQuestions.length}개)
         </span>
-        <Button
-          size="sm"
-          className="bg-emerald-600 hover:bg-emerald-700 h-8 text-xs"
-          onClick={onSaveQuestions}
-        >
-          <Save className="w-3.5 h-3.5 mr-1" />
-          문제 은행에 저장
-        </Button>
+        <SaveButton onClick={onSaveQuestions} title="문제 은행에 저장" />
       </div>
 
       {/* Group by _typeLabel */}

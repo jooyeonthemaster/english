@@ -10,7 +10,7 @@ import { buildPage1Header } from "./header";
 import type { BuilderBlock, BuilderItemResolved, BuilderLayout, BuilderSettings } from "./model";
 import { buildPassage } from "./passage";
 import { buildQuestionBlock } from "./question";
-import { DOCX_PAPER_SIZES, SIZE_CONTINUED, SIZE_FOOTER, bodyFont, mmToDxa, setBodyFont } from "./sizes";
+import { BODY_LINE_HEIGHT, BODY_LINE_HEIGHT_COMPACT, DOCX_PAPER_SIZES, SIZE_BODY, SIZE_BODY_COMPACT, SIZE_CONTINUED, SIZE_FOOTER, bodyFont, exactLineSpacing, mmToDxa, setBodyFont } from "./sizes";
 import { emptyParagraph, groupItems, printablePassageTitle } from "./util";
 
 
@@ -25,7 +25,21 @@ function appendQuestionGroups(
   const passageStyle = "plain";
   const showPassageTitle = layout.showPassageTitle === true;
   const groups = groupItems(items);
+
+  // 워드(DOCX) 전용: 문항과 문항 사이에 항상 빈 줄 1개를 넣어 간격을 일관되게 한다
+  // (미리보기·HWPX 는 그대로 — 사용자 요청 "워드만"). 본문 한 줄 높이의 빈 단락.
+  const sepBodySize = compact ? SIZE_BODY_COMPACT : SIZE_BODY;
+  const sepLh = compact ? BODY_LINE_HEIGHT_COMPACT : BODY_LINE_HEIGHT;
+  const questionSeparator = () =>
+    new Paragraph({
+      spacing: { before: 0, after: 0, ...exactLineSpacing(sepBodySize, sepLh) },
+      children: [new TextRun({ text: " ", font: bodyFont, size: sepBodySize })],
+    });
+  let renderedAnyQuestion = false;
+
   for (const group of groups) {
+    // 이전 문항(그룹)과의 사이에 빈 줄 1개.
+    if (renderedAnyQuestion) target.push(questionSeparator());
     const first = group.items[0];
     const rawPassageContent = (first.passageContent ?? first.sourceQuestion.passage?.content ?? "").trim();
     const passageContent = formatSourcePassageForQuestionItems(
@@ -54,9 +68,12 @@ function appendQuestionGroups(
       });
       target.push(...passageBlocks);
     }
-    for (const item of group.items) {
+    group.items.forEach((item, idx) => {
+      // 같은 지문을 공유하는 그룹 내 문항들 사이에도 빈 줄 1개.
+      if (idx > 0) target.push(questionSeparator());
       target.push(...buildQuestionBlock(item, layout, includeAnswers));
-    }
+      renderedAnyQuestion = true;
+    });
   }
 }
 
@@ -136,9 +153,11 @@ export function buildBuilderExamDocument(opts: {
     appendQuestionGroups(section2Children, resolvedItems, layout, includeAnswers, compact);
   }
 
-  // 정답표 (정답포함 모드가 아닐 때만 추가)
+  // 정답표 (정답포함 모드가 아닐 때만 추가) — 항상 새 페이지에서 시작.
   if (!includeAnswers && fullExamQuestions.length > 0) {
-    section2Children.push(...buildAnswerKeyTable(fullExamQuestions));
+    section2Children.push(
+      ...buildAnswerKeyTable(fullExamQuestions, { pageBreakBefore: true }),
+    );
   }
 
   // ---- 헤더/푸터 정의 ----

@@ -66,7 +66,7 @@ export async function getQuestionForAiEdit(questionId: string): Promise<
   try {
     const staff = await requireAuth();
     const question = await prisma.question.findFirst({
-      where: { id: questionId, academyId: staff.academyId },
+      where: { id: questionId, academyId: staff.academyId, deletedAt: null },
       include: {
         passage: {
           select: {
@@ -202,7 +202,7 @@ export async function saveAiEditedAsNew(
   try {
     const staff = await requireAuth();
     const source = await prisma.question.findFirst({
-      where: { id: sourceQuestionId, academyId: staff.academyId },
+      where: { id: sourceQuestionId, academyId: staff.academyId, deletedAt: null },
       select: {
         type: true,
         subType: true,
@@ -292,7 +292,7 @@ export async function applyAiEditToQuestion(
   try {
     const staff = await requireAuth();
     const existing = await prisma.question.findFirst({
-      where: { id: questionId, academyId: staff.academyId },
+      where: { id: questionId, academyId: staff.academyId, deletedAt: null },
       select: { tags: true, structuredData: true },
     });
     if (!existing) return { success: false, error: "문제를 찾을 수 없습니다." };

@@ -50,7 +50,7 @@ export interface LineBreakRunNode {
 export interface ImageRunNode {
   kind: "image";
   data: Buffer;
-  mime: "png" | "jpg" | "gif";
+  mime: "png" | "jpg" | "gif" | "bmp";
   widthHpu: number;
   heightHpu: number;
 }
@@ -212,4 +212,42 @@ export function para(
 
 export function emptyPara(spaceAfter?: number): ParagraphNode {
   return { kind: "p", runs: [], style: { spaceAfter } };
+}
+
+// 문항/블록 단위 서식(글자 크기 배율·굵게·기울임·정렬)을 이미 생성된 BlockNode 트리에
+// 후처리로 입힌다. 문항 렌더러(renderQuestionBlock/renderQuestionPart)의 결과 전체를
+// 한 번에 조정해, 발문·본문·선지·박스의 모든 텍스트 런 크기를 미리보기(컨테이너 글꼴
+// 상속)와 동일하게 비례 확대/축소한다. scale=1 이고 bold/italic/align 이 없으면 무변경.
+export function restyleBlockTree(
+  blocks: BlockNode[],
+  opts: { scale?: number; bold?: boolean; italic?: boolean; align?: HAlign },
+): BlockNode[] {
+  const scale = opts.scale ?? 1;
+  const { bold, italic, align } = opts;
+  if (scale === 1 && !bold && !italic && !align) return blocks;
+  const fixRun = (run: RunNode) => {
+    if (run.kind !== "text" && run.kind !== "pageNum" && run.kind !== "totalPages") {
+      return;
+    }
+    const st = (run.style ??= {});
+    if (scale !== 1 && typeof st.size === "number") {
+      st.size = Math.round(st.size * scale * 10) / 10;
+    }
+    if (bold) st.bold = true;
+    if (italic) st.italic = true;
+  };
+  const walk = (bs: BlockNode[]) => {
+    for (const b of bs) {
+      if (b.kind === "p") {
+        b.runs.forEach(fixRun);
+        if (align) b.style = { ...(b.style ?? {}), align };
+      } else if (b.kind === "tbl") {
+        for (const row of b.rows) {
+          for (const cell of row.cells) walk(cell.blocks);
+        }
+      }
+    }
+  };
+  walk(blocks);
+  return blocks;
 }

@@ -46,14 +46,13 @@ export function useTaskList({
   }, [scope]);
 
   useEffect(() => {
-    if (scope === "all") {
-      setTasks([]);
-      setLoading(false);
-      return;
-    }
-
+    // "all" aggregates every domain's adapter; a specific scope narrows to its
+    // own adapter(s). Each adapter still tags tasks with its `domain`, so the
+    // combined list stays distinguishable in the row UI.
     const adapters =
-      ALL_ADAPTERS.filter((a) => a.domain === scope);
+      scope === "all"
+        ? ALL_ADAPTERS
+        : ALL_ADAPTERS.filter((a) => a.domain === scope);
 
     return startAdaptivePoll({
       activeMs: POLL_INTERVAL_MS,

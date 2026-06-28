@@ -1,5 +1,5 @@
 import type { AnalysisSection } from "@/lib/passage-report/analysis-report/schema";
-import { getConsolidatedWordOrders, toStudentVocabularyClozePassage, worksheetAnswersAreHidden } from "@/lib/passage-report/analysis-report/worksheet-surface";
+import { getConsolidatedWordOrders, toStudentVocabularyClozePassage, toStudentWorksheetWordBank, worksheetAnswersAreHidden, worksheetClozeTranslationsAreHidden } from "@/lib/passage-report/analysis-report/worksheet-surface";
 import { Field, renderGrammarChoiceText } from "./editable-field";
 import type { LearningWorksheetSection, SectionFlowCtx } from "./types";
 import { WordBank, WorksheetLogicMapBlock, WorksheetMiniTitle, WorksheetQuestionCard, worksheetAnswerKeySubsections } from "./worksheet";
@@ -12,6 +12,7 @@ const s = section;
       const consolidatedWordOrders = getConsolidatedWordOrders(s);
       const showDrillWordOrders = !workbookSet && !!s.drills?.wordOrders?.length;
       const showAnswerKey = !worksheetAnswersAreHidden(s);
+      const showClozeTranslations = !worksheetClozeTranslationsAreHidden(s);
       push(
         "note",
         "ws-title",
@@ -50,7 +51,7 @@ const s = section;
                       }
                     />
                   </div>
-                  {item.translation ? (
+                  {showClozeTranslations && item.translation ? (
                     <Field
                       as="div"
                       className="par-ws-cloze-ko"
@@ -67,7 +68,7 @@ const s = section;
                 </div>
               ))}
             </div>
-            <WordBank words={s.cloze.wordBank} />
+            <WordBank words={toStudentWorksheetWordBank(s.cloze.wordBank, s.cloze.items)} />
           </div>,
         );
       }
@@ -95,7 +96,7 @@ const s = section;
                 </div>
               ))}
             </div>
-            <WordBank words={s.practice.wordBank} />
+            <WordBank words={toStudentWorksheetWordBank(s.practice.wordBank, s.practice.items)} />
           </div>,
         );
       }

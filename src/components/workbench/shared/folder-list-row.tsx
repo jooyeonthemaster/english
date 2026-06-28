@@ -52,6 +52,7 @@ export function FolderListRow({
 }: FolderListRowProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [editName, setEditName] = useState(collection.name);
   const dropRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -109,6 +110,12 @@ export function FolderListRow({
       ref={dropRef}
       onClick={isEditing ? undefined : onClick}
       onDoubleClick={startEditing}
+      onContextMenu={(e) => {
+        // 우클릭 = 폴더 메뉴(이름 변경/삭제). 좌클릭(진입)과 분리돼 실수 삭제 방지.
+        e.preventDefault();
+        e.stopPropagation();
+        setMenuOpen(true);
+      }}
       className={
         "group flex h-7 cursor-pointer items-center gap-2 rounded-md border px-2 motion-safe:transition-colors " +
         (isDragOver
@@ -159,13 +166,14 @@ export function FolderListRow({
       >
         {collection._count.items}개
       </span>
-      <DropdownMenu>
+      <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
           <button
             type="button"
             onClick={(e) => e.stopPropagation()}
             className="inline-flex size-5 shrink-0 cursor-pointer items-center justify-center rounded text-slate-300 opacity-0 transition-all hover:bg-slate-100 hover:text-slate-600 group-hover:opacity-100"
-            aria-label="폴더 메뉴"
+            aria-label="폴더 메뉴 (우클릭으로도 열 수 있어요)"
+            title="우클릭으로도 열 수 있어요"
           >
             <MoreHorizontal className="size-3.5" aria-hidden="true" />
           </button>

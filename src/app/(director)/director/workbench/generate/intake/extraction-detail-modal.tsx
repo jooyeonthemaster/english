@@ -3,24 +3,26 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
+  Check,
   CheckCircle2,
   FileText,
   Loader2,
-  Save,
+  Pencil,
   Trash2,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
 
-import { updateWorkbenchPassage } from "@/actions/workbench";
+import { renamePassage, updateWorkbenchPassage } from "@/actions/workbench";
+import { useUnsavedCloseGuard } from "@/components/shared/use-unsaved-close-guard";
 import { notifyCreditsChanged } from "@/lib/credits-client";
 import { AnalysisReportEditor } from "@/components/workbench/analysis-report/AnalysisReportEditor";
 import { Input } from "@/components/ui/input";
+import { SaveButton } from "@/components/ui/save-button";
 import { Textarea } from "@/components/ui/textarea";
 import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import type { PassageItem } from "../generate-page-types";
 import { OriginalProblemBox } from "../../passages/import/_components/extraction-manage-client/components/original-problem-box";
-import { RestorationBadge } from "../../passages/import/_components/extraction-manage-client/components/restoration-badge";
 import { RestorationChangesPanel } from "../../passages/import/_components/extraction-manage-client/components/restoration-changes-panel";
 import type { M1PassageDraftWithJob } from "../../passages/import/_components/extraction-manage-client/types";
 import { formatExtractedTextForDisplay } from "../../passages/import/_components/extraction-manage-client/utils/display-text";
@@ -108,6 +110,10 @@ export function ExtractionDetailModal({
   const [editorContent, setEditorContent] = useState(passage.content || "");
   const [analysisRunning, setAnalysisRunning] = useState(false);
   const [saving, setSaving] = useState(false);
+  // 헤더 제목 인라인 편집(제목 오른쪽 연필) — 제목만 즉시 저장(renamePassage).
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState(passage.title || "지문");
+  const [savingTitle, setSavingTitle] = useState(false);
   const [activeReportJobId, setActiveReportJobId] = useState<string | null>(
     null,
   );
@@ -118,6 +124,8 @@ export function ExtractionDetailModal({
     null,
   );
   const [reportEditorOpen, setReportEditorOpen] = useState(false);
+  // 학습자료(리포트) 편집기의 미저장 상태 — 닫기 경고 가드에 사용.
+  const [reportDirty, setReportDirty] = useState(false);
 
   const sourceLabel =
     draft?.job?.displayName?.trim() ||
@@ -146,6 +154,7 @@ export function ExtractionDetailModal({
   const handleReportDraftChange = useCallback(
     (report: AnalysisReport, state?: { dirty?: boolean }) => {
       setGeneratedReport(report);
+      setReportDirty(Boolean(state?.dirty));
       if (state?.dirty) {
         writeTemporaryReportDraft(passage.id, report);
       }
@@ -156,17 +165,21 @@ export function ExtractionDetailModal({
   const handleReportSaved = useCallback(
     (saved: AnalysisReport) => {
       setGeneratedReport(saved);
+      setReportDirty(false);
       clearTemporaryReportDraft(passage.id);
       void onPassageAnalyzed?.(passage.id);
     },
     [onPassageAnalyzed, passage.id],
   );
 
+  // 닫기 가드 — 표준 경고 다이얼로그(다른 편집 화면과 동일 디자인).
+  const closeGuard = useUnsavedCloseGuard({ isDirty: reportDirty, onClose });
+
   // ESC to close + body scroll lock.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (reportEditorOpen) return;
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") closeGuard.requestClose();
     };
     document.addEventListener("keydown", onKey);
     const previous = document.body.style.overflow;
@@ -175,7 +188,7 @@ export function ExtractionDetailModal({
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = previous;
     };
-  }, [reportEditorOpen, onClose]);
+  }, [reportEditorOpen, closeGuard.requestClose]);
 
   useEffect(() => {
     let cancelled = false;
@@ -395,11 +408,42 @@ export function ExtractionDetailModal({
     }
   }
 
+  /** 헤더 연필 — 제목만 즉시 저장한다(복원문 내용은 건드리지 않음). */
+  async function handleSaveTitle() {
+    const next = titleDraft.trim();
+    const current = editorTitle.trim() || passage.title || "지문";
+    if (!next || next === current) {
+      setEditingTitle(false);
+      setTitleDraft(current);
+      return;
+    }
+    setSavingTitle(true);
+    setEditorTitle(next); // 낙관적 반영
+    setEditingTitle(false);
+    try {
+      const res = await renamePassage(passage.id, next);
+      if (!res.success) {
+        setEditorTitle(current);
+        toast.error(res.error || "제목 수정에 실패했습니다.");
+        return;
+      }
+      onPassageSaved?.(passage.id, { title: next, content: editorContent });
+      toast.success("제목을 변경했습니다.");
+    } catch (err) {
+      setEditorTitle(current);
+      toast.error(
+        err instanceof Error ? err.message : "제목 수정에 실패했습니다.",
+      );
+    } finally {
+      setSavingTitle(false);
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-stretch justify-center">
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
-        onClick={onClose}
+        onClick={() => closeGuard.requestClose()}
         aria-hidden="true"
       />
 
@@ -414,42 +458,85 @@ export function ExtractionDetailModal({
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-              <h2 className="truncate text-base font-bold text-slate-900">
-                {reportEditorOpen
-                  ? generatedReport?.meta.titleKo ||
-                    editorTitle ||
-                    "지문 학습자료"
-                  : editorTitle.trim() || passage.title || "지문"}
-              </h2>
-              {draft ? (
-                <RestorationBadge status={draft.restorationStatus} />
+              {!reportEditorOpen && editingTitle ? (
+                <div className="flex min-w-0 items-center gap-1.5">
+                  <input
+                    autoFocus
+                    value={titleDraft}
+                    onChange={(e) => setTitleDraft(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        void handleSaveTitle();
+                      } else if (e.key === "Escape") {
+                        e.preventDefault();
+                        setEditingTitle(false);
+                        setTitleDraft(editorTitle.trim() || passage.title || "지문");
+                      }
+                    }}
+                    onBlur={() => void handleSaveTitle()}
+                    disabled={savingTitle}
+                    placeholder="지문 제목"
+                    className="min-w-0 flex-1 rounded-md border border-blue-300 bg-white px-2 py-1 text-base font-bold text-slate-900 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/15 disabled:opacity-60"
+                  />
+                  <button
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => void handleSaveTitle()}
+                    disabled={savingTitle}
+                    title="제목 저장"
+                    aria-label="제목 저장"
+                    className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-blue-600 transition-colors hover:bg-blue-50 disabled:opacity-60"
+                  >
+                    {savingTitle ? (
+                      <Loader2 className="size-4 animate-spin" />
+                    ) : (
+                      <Check className="size-4" />
+                    )}
+                  </button>
+                </div>
+              ) : (
+                <div className="flex min-w-0 items-center gap-1">
+                  <h2 className="truncate text-base font-bold text-slate-900">
+                    {reportEditorOpen
+                      ? generatedReport?.meta.titleKo ||
+                        editorTitle ||
+                        "지문 학습자료"
+                      : editorTitle.trim() || passage.title || "지문"}
+                  </h2>
+                  {!reportEditorOpen ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTitleDraft(editorTitle.trim() || passage.title || "지문");
+                        setEditingTitle(true);
+                      }}
+                      title="지문 제목 수정"
+                      aria-label="지문 제목 수정"
+                      className="inline-flex size-6 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                    >
+                      <Pencil className="size-3.5" />
+                    </button>
+                  ) : null}
+                </div>
+              )}
+              {/* 제목 옆 출처 표기 — 복원 상태 뱃지 자리에 출처를 노출한다. */}
+              {!reportEditorOpen && !editingTitle ? (
+                <span className="min-w-0 truncate text-xs text-slate-500">
+                  {isExamPassage
+                    ? "출처 기출 지문"
+                    : draft?.job?.originalFileName
+                      ? `출처 ${draft.job.originalFileName}`
+                      : "추출·입력된 지문"}
+                </span>
               ) : null}
             </div>
-            <p className="mt-0.5 truncate text-xs text-slate-500">
-              {reportEditorOpen
-                ? "팝업 안에서 학습자료 편집 중 · 뒤로가면 복원문 편집 단계로 돌아갑니다"
-                : isExamPassage
-                  ? "출처 기출 지문"
-                  : draft?.job?.originalFileName
-                    ? `출처 ${draft.job.originalFileName}`
-                    : "추출·입력된 지문"}
-            </p>
+            {reportEditorOpen ? (
+              <p className="mt-0.5 truncate text-xs text-slate-500">
+                팝업 안에서 학습자료 편집 중 · 뒤로가면 복원문 편집 단계로 돌아갑니다
+              </p>
+            ) : null}
           </div>
-          {onDelete && !reportEditorOpen ? (
-            <button
-              type="button"
-              onClick={() => onDelete(passage)}
-              disabled={deleteBusy}
-              className="ml-2 inline-flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 text-[12px] font-bold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {deleteBusy ? (
-                <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
-              ) : (
-                <Trash2 className="size-3.5" aria-hidden="true" />
-              )}
-              삭제
-            </button>
-          ) : null}
           {reportEditorOpen ? (
             <button
               type="button"
@@ -460,23 +547,14 @@ export function ExtractionDetailModal({
               뒤로가기
             </button>
           ) : draft ? (
-            // 복원문 섹션에 있던 저장 버튼을 창 오른쪽 위로 옮김.
-            <button
-              type="button"
+            // 복원문 섹션에 있던 저장 버튼을 창 오른쪽 위로 옮김. 전역 표준 SaveButton 사용.
+            <SaveButton
               onClick={handleSaveEdits}
-              disabled={
-                saving || analysisRunning || editorContent.trim().length < 20
-              }
+              saving={saving}
+              disabled={analysisRunning || editorContent.trim().length < 20}
               title="제목·복원문 수정 내용을 저장합니다 (학습자료 생성 없이)"
-              className="ml-2 inline-flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-bold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {saving ? (
-                <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
-              ) : (
-                <Save className="size-3.5" aria-hidden="true" />
-              )}
-              저장
-            </button>
+              className="ml-2 shrink-0"
+            />
           ) : null}
           {reviewDraft && onToggleExtractionReview ? (
             <button
@@ -491,7 +569,7 @@ export function ExtractionDetailModal({
                   : "검수필요 — 누르면 검수완료로 표시합니다"
               }
               className={
-                "ml-1 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border bg-white px-3 text-[12px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-70 " +
+                "ml-1 flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border bg-white px-3 text-[12px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-70 " +
                 (isReviewCommitted
                   ? "border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
                   : "border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
@@ -505,9 +583,24 @@ export function ExtractionDetailModal({
               {isReviewCommitted ? "검수완료" : "미검수"}
             </button>
           ) : null}
+          {onDelete && !reportEditorOpen ? (
+            <button
+              type="button"
+              onClick={() => onDelete(passage)}
+              disabled={deleteBusy}
+              className="ml-1 inline-flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 text-[12px] font-bold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {deleteBusy ? (
+                <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+              ) : (
+                <Trash2 className="size-3.5" aria-hidden="true" />
+              )}
+              삭제
+            </button>
+          ) : null}
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => closeGuard.requestClose()}
             className="ml-1 flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
             aria-label="닫기"
           >
@@ -554,6 +647,7 @@ export function ExtractionDetailModal({
           )}
         </div>
       </div>
+      {closeGuard.dialog}
     </div>
   );
 }

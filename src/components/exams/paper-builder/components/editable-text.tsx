@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export function normalizeEditableText(text: string): string {
@@ -54,29 +54,56 @@ export function EditableText({
   value,
   onCommit,
   className,
+  style,
   children,
+  editingChildren,
   placeholder = "",
   readOnly = false,
 }: {
   value: string;
   onCommit: (value: string) => void;
   className?: string;
+  style?: React.CSSProperties;
   children?: React.ReactNode;
+  // 칸/쪽 경계에서 쪼개진 본문 전용: 평소엔 이 칸에 배치된 조각(children)만 서식 그대로
+  // 보이다가, 클릭(편집 시작)하면 본문 "전체"(editingChildren)로 펼쳐 통째로 편집한다.
+  // (조각만 편집하면 직렬화 시 나머지 본문이 날아가므로.) 미지정이면 기존 동작 그대로.
+  editingChildren?: React.ReactNode;
   placeholder?: string;
   readOnly?: boolean;
 }) {
   const [editing, setEditing] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
   const isEmpty = !value.trim();
 
+  // editingChildren 으로 펼친 직후 캐럿을 끝에 둔다(내용이 조각→전체로 바뀌어 캐럿이
+  // 유효하지 않을 수 있으므로). 일반(펼침 없음) 편집은 브라우저 기본 캐럿을 그대로 둔다.
+  useEffect(() => {
+    if (!editing || editingChildren === undefined || !ref.current) return;
+    const el = ref.current;
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel?.removeAllRanges();
+    sel?.addRange(range);
+  }, [editing, editingChildren]);
+
   if (readOnly) {
-    return <span className={className}>{isEmpty ? placeholder : children ?? value}</span>;
+    return (
+      <span className={className} style={style}>
+        {isEmpty ? placeholder : children ?? value}
+      </span>
+    );
   }
 
   return (
     <span
+      ref={ref}
       contentEditable
       suppressContentEditableWarning
       spellCheck={false}
+      style={style}
       onFocus={() => setEditing(true)}
       onBlur={(event) => {
         const next = normalizeEditableText(serializeEditableDom(event.currentTarget));
@@ -84,14 +111,21 @@ export function EditableText({
         if (next !== value) onCommit(next);
       }}
       className={cn(
-        "editable-paper-field rounded-[3px] outline-none transition-colors hover:bg-blue-50/70 focus:bg-blue-50 focus:ring-2 focus:ring-blue-300/60",
+        // cursor-text + caret-color 로 클릭 시 I-빔 커서와 깜빡이는 캐럿이 또렷이 보이게 한다.
+        "editable-paper-field cursor-text caret-blue-600 rounded-[3px] outline-none transition-colors hover:bg-blue-50/70 focus:bg-blue-50 focus:ring-2 focus:ring-blue-300/60",
         isEmpty && "text-slate-300",
         className,
       )}
     >
-      {/* Keep the formatted view at all times — swapping to the raw string on
-          focus is what made the box re-wrap/jump when clicked. */}
-      {isEmpty ? (editing ? null : placeholder) : children ?? value}
+      {/* 평소엔 서식 렌더를 그대로 유지(클릭 시 재배치/점프 방지). 쪼개진 본문만 편집 중
+          editingChildren(전체)로 펼친다. */}
+      {isEmpty
+        ? editing
+          ? null
+          : placeholder
+        : editing && editingChildren !== undefined
+          ? editingChildren
+          : children ?? value}
     </span>
   );
 }

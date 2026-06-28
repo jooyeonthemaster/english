@@ -29,6 +29,10 @@ export function JobReviewToggleButton({
 
   const pending = drafts.filter((d) => d.reviewStatus !== "COMMITTED");
   const allCommitted = pending.length === 0;
+  // 일부 자료만 검수완료된 상태(= 검수 진행 중). 버튼은 아직 '미검수'로 두되
+  // 라벨 옆에 (검수중)을 덧붙여 부분 진행 상태를 드러낸다. 단일 자료(drawer
+  // per-draft)는 0개 아니면 전부라 항상 false → 표시되지 않는다.
+  const inReview = !allCommitted && pending.length < drafts.length;
 
   const handleClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -54,7 +58,9 @@ export function JobReviewToggleButton({
       title={
         allCommitted
           ? "검수완료 — 누르면 검수를 취소합니다"
-          : "검수필요 — 누르면 검수완료로 표시합니다"
+          : inReview
+            ? "검수 진행 중 — 누르면 나머지도 검수완료로 표시합니다"
+            : "검수필요 — 누르면 검수완료로 표시합니다"
       }
       className={
         "inline-flex h-7 flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border bg-white px-2 text-[12px] font-semibold transition-all outline-none focus-visible:ring-[3px] focus-visible:ring-emerald-500/40 disabled:cursor-not-allowed disabled:opacity-60 " +
@@ -68,7 +74,14 @@ export function JobReviewToggleButton({
       ) : (
         <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
       )}
-      {allCommitted ? "검수완료" : "미검수"}
+      <span className="inline-flex items-baseline gap-1">
+        <span>{allCommitted ? "검수완료" : "미검수"}</span>
+        {inReview ? (
+          <span className="text-[11px] font-medium text-slate-400">
+            (검수중)
+          </span>
+        ) : null}
+      </span>
     </button>
   );
 }

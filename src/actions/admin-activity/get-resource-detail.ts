@@ -68,7 +68,7 @@ async function fetchPassageQuestions(
   passageId: string,
 ): Promise<QuestionBrief[]> {
   const rows = await prisma.question.findMany({
-    where: { passageId },
+    where: { passageId, deletedAt: null },
     orderBy: [{ questionNumber: "asc" }, { createdAt: "asc" }],
     take: 100,
     select: {
@@ -366,7 +366,8 @@ export async function getActivityResourceDetail(
         select: {
           id: true, title: true, type: true, status: true,
           printCount: true, createdAt: true,
-          _count: { select: { questions: true } },
+          // 휴지통 가드 — 삭제된 문제는 문항 수에서 제외.
+          _count: { select: { questions: { where: { question: { deletedAt: null } } } } },
         },
       });
       if (!e) return { kind: "not_found" };

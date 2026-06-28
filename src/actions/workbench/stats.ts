@@ -22,9 +22,9 @@ export async function getWorkbenchStats(academyId: string) {
     pendingPassages,
   ] = await Promise.all([
     prisma.passage.count({ where: { academyId } }),
-    prisma.question.count({ where: { academyId } }),
-    prisma.question.count({ where: { academyId, aiGenerated: true } }),
-    prisma.question.count({ where: { academyId, approved: true } }),
+    prisma.question.count({ where: { academyId, deletedAt: null } }),
+    prisma.question.count({ where: { academyId, aiGenerated: true, deletedAt: null } }),
+    prisma.question.count({ where: { academyId, approved: true, deletedAt: null } }),
     // Passages without analysis
     prisma.passage.count({
       where: { academyId, analysis: null },
@@ -43,11 +43,11 @@ export async function getWorkbenchStats(academyId: string) {
         grade: true,
         createdAt: true,
         analysis: { select: { id: true } },
-        _count: { select: { questions: true } },
+        _count: { select: { questions: { where: { deletedAt: null } } } },
       },
     }),
     prisma.question.findMany({
-      where: { academyId },
+      where: { academyId, deletedAt: null },
       orderBy: { createdAt: "desc" },
       take: 5,
       select: {

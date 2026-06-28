@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import {
   X,
   FileText,
-  Save,
   CheckCircle2,
   Loader2,
   Trash2,
@@ -13,10 +12,15 @@ import {
   Undo2,
   Pencil,
   Check,
+  Printer,
+  FileQuestion,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { SaveButton } from "@/components/ui/save-button";
+import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { toast } from "sonner";
 import { notifyCreditsChanged } from "@/lib/credits-client";
 import {
@@ -35,10 +39,12 @@ import {
 } from "@/lib/passage-analysis-options";
 import { InteractivePassageView } from "./interactive-passage-view";
 import { PrimeAnalysisView } from "./prime-analysis-view";
+import type { ReportEditorToolbarState } from "./analysis-report/AnalysisReportEditor";
+import { useUnsavedCloseGuard } from "@/components/shared/use-unsaved-close-guard";
 import { AnalysisLoadingOverlay } from "./analysis-loading-overlay";
 import { GenerationPlanSelector } from "@/components/workbench/generation-plan-selector";
 import {
-  getVisibleQuestionTags,
+  getDisplayQuestionTags,
   sanitizeAiModelDisclosureText,
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
@@ -147,6 +153,9 @@ export function PassageAnalysisModal({
   const [analyzing, setAnalyzing] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
+  // PRIME 편집기(레이아웃)에서 끌어올린 저장 상태 — 헤더에 저장 버튼을 렌더한다.
+  const [editorToolbar, setEditorToolbar] =
+    useState<ReportEditorToolbarState | null>(null);
   // ── 제목 인라인 편집 (헤더 연필 버튼) ──
   const [title, setTitle] = useState(passage.title);
   const [editingTitle, setEditingTitle] = useState(false);
@@ -192,6 +201,11 @@ export function PassageAnalysisModal({
     }
   };
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  // 닫기 가드 — PRIME 학습지 편집기의 실제 미저장 상태(editorToolbar.dirty)로 경고.
+  const closeGuard = useUnsavedCloseGuard({
+    isDirty: Boolean(editorToolbar?.dirty) || hasUnsavedChanges,
+    onClose,
+  });
   const [lastPromptConfig, setLastPromptConfig] =
     useState<AnalysisPromptConfig>(
       initialPromptConfig || {
@@ -209,7 +223,7 @@ export function PassageAnalysisModal({
     lastPromptConfig.analysisTone || DEFAULT_ANALYSIS_TONE,
   );
 
-  const tags: string[] = getVisibleQuestionTags(
+  const tags: string[] = getDisplayQuestionTags(
     passage.tags ? safeParseJSON(passage.tags, []) : [],
   );
   const reviewDraft = passage.extractionReviewDraft ?? null;
@@ -235,18 +249,11 @@ export function PassageAnalysisModal({
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        if (hasUnsavedChanges) {
-          if (confirm("저장하지 않은 변경사항이 있습니다. 닫으시겠습니까?"))
-            onClose();
-        } else {
-          onClose();
-        }
-      }
+      if (e.key === "Escape") closeGuard.requestClose();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [open, hasUnsavedChanges, onClose]);
+  }, [open, closeGuard.requestClose]);
 
   // Lock body scroll when open
   useEffect(() => {
@@ -365,14 +372,7 @@ export function PassageAnalysisModal({
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
-        onClick={() => {
-          if (hasUnsavedChanges) {
-            if (confirm("저장하지 않은 변경사항이 있습니다. 닫으시겠습니까?"))
-              onClose();
-          } else {
-            onClose();
-          }
-        }}
+        onClick={() => closeGuard.requestClose()}
       />
 
       {/* Modal container — 화면 크기에 따라 반응형으로 대부분의 영역을 채운다(상한 없음) */}
@@ -507,25 +507,59 @@ export function PassageAnalysisModal({
                 </Button>
               ) : null}
               {hasUnsavedChanges && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-blue-600 border-blue-200 hover:bg-blue-50 h-8 text-xs"
-                  onClick={handleSave}
-                  disabled={saving}
-                >
-                  {saving ? (
-                    <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
-                  ) : (
-                    <Save className="w-3.5 h-3.5 mr-1" />
-                  )}
-                  저장
-                </Button>
+                <SaveButton onClick={handleSave} saving={saving} />
               )}
+              {/* PRIME 편집기 저장·인쇄 — 편집기 툴바에서 이 헤더로 끌어올림. */}
+              {editorToolbar ? (
+                <>
+                  {/* 실전 학습지 생성 — 저장 버튼 왼쪽. 가느다란 구분선으로 '생성' 과 '저장' 을 기능적으로 분리. */}
+                  {!editorToolbar.worksheetHasContent ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={editorToolbar.generateWorksheet}
+                        disabled={editorToolbar.worksheetBusy || editorToolbar.saving}
+                        title="실전 학습지(어법 선택·어휘 빈칸·배열 + 수능추론 5문항) 추가 생성"
+                        className="flex h-8 shrink-0 items-center justify-center gap-1.5 rounded-md border border-blue-200 bg-white px-2.5 text-[11.5px] font-semibold text-blue-700 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {editorToolbar.worksheetBusy ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <FileQuestion className="h-3.5 w-3.5" />
+                        )}
+                        <span className="hidden items-center gap-1.5 sm:inline-flex">
+                          {editorToolbar.worksheetBusy ? "실전 학습지 생성 중…" : "실전 학습지 생성"}
+                          {!editorToolbar.worksheetBusy && (
+                            <CreditCostChip
+                              amount={CREDIT_COSTS.PASSAGE_ANALYSIS}
+                              className="rounded bg-blue-100 px-1 py-px text-[10px] text-blue-700"
+                            />
+                          )}
+                        </span>
+                        <span className="sm:hidden">실전 학습지</span>
+                      </button>
+                      <span aria-hidden="true" className="mx-0.5 h-5 w-px shrink-0 self-center bg-slate-200" />
+                    </>
+                  ) : null}
+                  <SaveButton
+                    onClick={editorToolbar.save}
+                    saving={editorToolbar.saving}
+                    disabled={!editorToolbar.dirty}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+                  >
+                    <Printer className="h-3.5 w-3.5" />
+                    인쇄
+                  </button>
+                </>
+              ) : null}
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="text-red-500 hover:text-red-600 hover:bg-red-50 h-8 text-xs"
+                className="h-8 border-red-200 bg-white text-xs font-semibold text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700"
                 onClick={handleDelete}
                 disabled={deleting}
               >
@@ -533,18 +567,7 @@ export function PassageAnalysisModal({
                 삭제
               </Button>
               <button
-                onClick={() => {
-                  if (hasUnsavedChanges) {
-                    if (
-                      confirm(
-                        "저장하지 않은 변경사항이 있습니다. 닫으시겠습니까?",
-                      )
-                    )
-                      onClose();
-                  } else {
-                    onClose();
-                  }
-                }}
+                onClick={() => closeGuard.requestClose()}
                 className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100 transition-colors"
               >
                 <X className="w-4 h-4 text-slate-500" />
@@ -558,10 +581,12 @@ export function PassageAnalysisModal({
               passageId={passage.id}
               legacyAnalysisData={analysisData}
               passageContent={passage.content}
+              onToolbarStateChange={setEditorToolbar}
             />
           </div>
         </div>
       </TooltipProvider>
+      {closeGuard.dialog}
     </div>
   );
 }

@@ -6,21 +6,69 @@ import { BlockFontProvider, type FlowItem } from "../report-sections";
 import { MIN_RESIZE_MM, PAGE_BODY_MM, PX_PER_MM } from "./constants";
 import type { ReportEdit } from "./types";
 import { blockStyleOf, chromeProps, editIdOf } from "./items";
-export function PageDeleteButton({ ids, edit }: { ids: string[]; edit?: ReportEdit }) {
-  if (!edit?.onDeletePage) return null;
+import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
+
+// 페이지 좌상단 컨트롤 — 위/아래 이동 + 삭제(캔바식). 자동 페이지네이션 구조라
+// '복제'는 깔끔히 매핑되지 않아 제외(이동·삭제만 제공).
+export function PageControls({
+  ids,
+  pageIndex,
+  pageCount,
+  edit,
+}: {
+  ids: string[];
+  pageIndex: number;
+  pageCount: number;
+  edit?: ReportEdit;
+}) {
+  if (!edit?.onDeletePage && !edit?.onMovePage) return null;
   return (
-    <button
-      type="button"
-      className="par-page-delete par-edit-chrome"
-      title="이 페이지 삭제"
+    <div
+      className="par-page-controls par-edit-chrome"
       onMouseDown={(e) => e.stopPropagation()}
-      onClick={(e) => {
-        e.stopPropagation();
-        edit.onDeletePage?.(ids);
-      }}
     >
-      ×
-    </button>
+      {edit?.onMovePage ? (
+        <>
+          <button
+            type="button"
+            className="par-page-ctrl"
+            title="페이지 위로 이동"
+            disabled={pageIndex <= 0}
+            onClick={(e) => {
+              e.stopPropagation();
+              edit.onMovePage?.(ids, -1);
+            }}
+          >
+            <ChevronUp width={14} height={14} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            className="par-page-ctrl"
+            title="페이지 아래로 이동"
+            disabled={pageIndex >= pageCount - 1}
+            onClick={(e) => {
+              e.stopPropagation();
+              edit.onMovePage?.(ids, 1);
+            }}
+          >
+            <ChevronDown width={14} height={14} aria-hidden="true" />
+          </button>
+        </>
+      ) : null}
+      {edit?.onDeletePage ? (
+        <button
+          type="button"
+          className="par-page-ctrl par-page-ctrl-del"
+          title="이 페이지 삭제"
+          onClick={(e) => {
+            e.stopPropagation();
+            edit.onDeletePage?.(ids);
+          }}
+        >
+          <Trash2 width={13} height={13} aria-hidden="true" />
+        </button>
+      ) : null}
+    </div>
   );
 }
 
@@ -28,6 +76,25 @@ export function Grip({ edit, id }: { edit: ReportEdit; id: string }) {
   return (
     <button type="button" className="par-egrip2 par-edit-chrome" title="드래그로 이동" onPointerDown={(e) => edit.drag.startDrag(e, id)}>
       ⠿
+    </button>
+  );
+}
+
+// 블록 오른쪽 위 삭제 버튼 — hover/선택 시 표시. 클릭으로 이 블록을 삭제한다.
+export function BlockDelete({ edit, id }: { edit: ReportEdit; id: string }) {
+  if (!edit.onDelete) return null;
+  return (
+    <button
+      type="button"
+      className="par-eblock-del par-edit-chrome"
+      title="이 블록 삭제"
+      onMouseDown={(e) => e.stopPropagation()}
+      onClick={(e) => {
+        e.stopPropagation();
+        edit.onDelete?.(id);
+      }}
+    >
+      <Trash2 width={12} height={12} aria-hidden="true" />
     </button>
   );
 }
@@ -120,6 +187,7 @@ export function LiShell({ it, edit, meta, listStyle, measure }: { it: FlowItem; 
   return (
     <li ref={ref} data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`${listStyle ? "" : "par-edit-row"} ${(cp.className as string) ?? ""}`}>
       {edit && !measure && it.showGrip !== false ? <Grip edit={edit} id={editId} /> : null}
+      {edit && !measure && it.showGrip !== false ? <BlockDelete edit={edit} id={editId} /> : null}
       <BlockFontProvider
         blockId={editId}
         runs={meta?.fontRuns}
@@ -159,6 +227,7 @@ export function BlockShell({ it, edit, meta, measure }: { it: FlowItem; edit?: R
   return (
     <div ref={ref} data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`par-block par-wrap-${it.wrap} ${(cp.className as string) ?? ""}`}>
       {edit && !measure && it.showGrip !== false ? <Grip edit={edit} id={editId} /> : null}
+      {edit && !measure && it.showGrip !== false ? <BlockDelete edit={edit} id={editId} /> : null}
       <BlockFontProvider
         blockId={editId}
         runs={meta?.fontRuns}
@@ -198,6 +267,7 @@ export function MapItemShell({ it, edit, meta, measure }: { it: FlowItem; edit?:
   return (
     <div data-mid={it.id} style={blockStyleOf(meta)} {...cp} className={`par-mapitem ${(cp.className as string) ?? ""}`}>
       {edit && !measure && it.showGrip !== false ? <Grip edit={edit} id={editId} /> : null}
+      {edit && !measure && it.showGrip !== false ? <BlockDelete edit={edit} id={editId} /> : null}
       <BlockFontProvider
         blockId={editId}
         runs={meta?.fontRuns}

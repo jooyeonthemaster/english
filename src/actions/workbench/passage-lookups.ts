@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireAuth, getAcademyId } from "./_helpers";
+import { HAS_PRIME_REPORT_WHERE } from "./passage-constants";
 
 // ---------------------------------------------------------------------------
 // SourceMaterial lookup — lightweight read used to render filter badges when
@@ -53,7 +54,8 @@ export async function getPassageCollectionSummary(collectionId: string) {
 // layer and we get a single guarded entry point for future scoping tweaks.
 // ---------------------------------------------------------------------------
 export async function getAcademyPassageCollectionMembership(
-  academyId: string
+  academyId: string,
+  opts?: { onlyWithReport?: boolean },
 ): Promise<Record<string, string[]>> {
   const session = await requireAuth();
   if (session.academyId !== academyId) {
@@ -61,7 +63,12 @@ export async function getAcademyPassageCollectionMembership(
     return {};
   }
   const items = await prisma.passageCollectionItem.findMany({
-    where: { collection: { academyId } },
+    where: {
+      collection: { academyId },
+      // Mirror the count scoping: 학습지 관리는 보고서 있는 학습지만 멤버로
+      // 친다(배지·그리드·드래그 카운트가 같은 모집단을 보도록).
+      ...(opts?.onlyWithReport ? { passage: HAS_PRIME_REPORT_WHERE } : {}),
+    },
     select: { collectionId: true, passageId: true },
   });
   const membership: Record<string, string[]> = {};
@@ -90,7 +97,7 @@ export async function getPassageQuestionIds(
     select: {
       id: true,
       title: true,
-      questions: { select: { id: true } },
+      questions: { where: { deletedAt: null }, select: { id: true } },
     },
   });
   if (!passage) return null;
@@ -118,7 +125,8 @@ export async function getDraftExamsForPicker(academyId: string) {
       title: true,
       type: true,
       examDate: true,
-      _count: { select: { questions: true } },
+      // 휴지통 가드 — 삭제된 문제는 "기존 시험에 추가" 피커의 문항 수에서 제외.
+      _count: { select: { questions: { where: { question: { deletedAt: null } } } } },
     },
     orderBy: { createdAt: "desc" },
     take: 50,

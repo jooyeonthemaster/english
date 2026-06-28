@@ -4,7 +4,10 @@ import { Loader2, PencilLine, Printer, RefreshCw, Sparkle } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 import { AnalysisReportDocument } from "@/components/workbench/analysis-report/AnalysisReportDocument";
-import { AnalysisReportEditor } from "@/components/workbench/analysis-report/AnalysisReportEditor";
+import {
+  AnalysisReportEditor,
+  type ReportEditorToolbarState,
+} from "@/components/workbench/analysis-report/AnalysisReportEditor";
 import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
@@ -19,6 +22,8 @@ interface Props {
   /** 기존 5-layer 분석 (PRIME 없을 때 옛 인터랙티브 뷰로 폴백 — 기존 유저 호환) */
   legacyAnalysisData?: PassageAnalysisData | null;
   passageContent?: string;
+  /** 편집기 저장 상태를 모달 헤더로 끌어올리기 위한 콜백. */
+  onToolbarStateChange?: (state: ReportEditorToolbarState | null) => void;
 }
 
 /**
@@ -26,7 +31,7 @@ interface Props {
  * - 기존 보고서 있으면 바로 렌더
  * - 없으면 생성 버튼 (5크레딧) → 생성 → 렌더
  */
-export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, passageContent }: Props) {
+export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, passageContent, onToolbarStateChange }: Props) {
   const [report, setReport] = useState<AnalysisReport | null>(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
@@ -146,6 +151,7 @@ export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, 
           onGenerated?.();
         }}
         onExit={() => setMode("view")}
+        onToolbarStateChange={onToolbarStateChange}
       />
     );
   }

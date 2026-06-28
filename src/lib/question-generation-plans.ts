@@ -178,6 +178,25 @@ export function getVisibleQuestionTags(
     .filter((tag) => tag.length > 0 && !isQuestionGenerationPlanTag(tag));
 }
 
+// `prefix:value` 형태(예: kice:2027_06_…)의 내부 식별 키 태그. ASCII 식별자 +
+// 콜론으로 시작하는 것만 매칭해 한글 라벨("단원:1과" 등) 오탐을 피한다.
+const MACHINE_KEY_TAG = /^[A-Za-z0-9_.-]+:/;
+
+export function isMachineKeyTag(tag: string): boolean {
+  return MACHINE_KEY_TAG.test(tag);
+}
+
+/**
+ * 화면 표시용 태그 — `getVisibleQuestionTags` 에서 기계용 식별 키(`kice:` 등)까지
+ * 추가로 제거한다. 데이터/저장에는 영향이 없도록 '표시' 경로에서만 쓸 것
+ * (편집 초기값 등 저장으로 왕복하는 곳에는 `getVisibleQuestionTags` 를 그대로 사용).
+ */
+export function getDisplayQuestionTags(
+  tags: readonly string[] | null | undefined,
+): string[] {
+  return getVisibleQuestionTags(tags).filter((tag) => !isMachineKeyTag(tag));
+}
+
 export function sanitizeAiModelDisclosureText(value: string | null | undefined): string {
   if (!value) return "";
   return AI_MODEL_DISCLOSURE_REPLACEMENTS.reduce(

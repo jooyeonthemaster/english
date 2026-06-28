@@ -223,8 +223,14 @@ function reconstructPaperItems(opts: {
       locked: false,
       blockTitle: "",
       blockText: "",
-      blockAlign: "left",
+      blockAlign: (block.blockAlign as PaperItem["blockAlign"]) ?? "left",
       blockFontSize: "md",
+      blockBold: block.blockBold ?? false,
+      blockItalic: block.blockItalic ?? false,
+      blockFontPt:
+        typeof block.blockFontPt === "number" && Number.isFinite(block.blockFontPt)
+          ? block.blockFontPt
+          : null,
       blockAccentColor: "#2563EB",
       dividerStyle: "solid",
       dividerThickness: 1,
@@ -263,6 +269,12 @@ function reconstructPaperItems(opts: {
       blockText: block.blockText ?? "",
       blockAlign: (block.blockAlign as PaperItem["blockAlign"]) ?? "left",
       blockFontSize: (block.blockFontSize as PaperItem["blockFontSize"]) ?? "md",
+      blockBold: block.blockBold ?? (block.blockType === "section"),
+      blockItalic: block.blockItalic ?? false,
+      blockFontPt:
+        typeof block.blockFontPt === "number" && Number.isFinite(block.blockFontPt)
+          ? block.blockFontPt
+          : null,
       blockAccentColor: block.blockAccentColor ?? "#2563EB",
       dividerStyle:
         (block.dividerStyle as PaperItem["dividerStyle"]) ?? "solid",

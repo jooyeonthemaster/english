@@ -45,23 +45,39 @@ export async function packageHwpx(doc: HwpxDocument): Promise<Buffer> {
   // 5) settings.xml
   zip.file("settings.xml", settingsXml(), { compression: "DEFLATE" });
 
-  // 6) Contents/content.hpf
+  // 6) Section XML — 먼저 빌드해 shape/이미지 등록을 끝낸다(content.hpf·header 가 이를 참조).
+  const registry = new ShapeRegistry(doc.defaultFontKr, doc.defaultFontLatin);
+  const sectionXmls = doc.sections.map((sec) =>
+    buildSectionXml(sec, registry),
+  );
+
+  // 7) Contents/content.hpf — 섹션 빌드 후(임베드 이미지 매니페스트 포함) 작성.
   zip.file(
     "Contents/content.hpf",
-    contentHpfXml({ title: doc.title, sectionCount: doc.sections.length }),
+    contentHpfXml({
+      title: doc.title,
+      sectionCount: doc.sections.length,
+      images: registry.images.map((im) => ({
+        id: im.id,
+        href: `BinData/${im.id}.${im.ext}`,
+        mime: im.mime,
+      })),
+    }),
     {
       compression: "DEFLATE",
       createFolders: false,
     },
   );
 
-  // 6) Section XML (단일 섹션 가정 — Phase 0)
-  const registry = new ShapeRegistry(doc.defaultFontKr, doc.defaultFontLatin);
-  const sectionXmls = doc.sections.map((sec) =>
-    buildSectionXml(sec, registry),
-  );
+  // 8) BinData/*.{ext} — 임베드 이미지 바이너리.
+  for (const im of registry.images) {
+    zip.file(`BinData/${im.id}.${im.ext}`, im.buffer, {
+      compression: "DEFLATE",
+      createFolders: false,
+    });
+  }
 
-  // 7) header.xml — 모든 섹션 빌드 후 (shape 등록 끝난 후) 작성
+  // 9) header.xml — 모든 섹션 빌드 후 (shape 등록 끝난 후) 작성
   const headerXml = buildHeaderXml(registry, doc.sections.length);
   zip.file("Contents/header.xml", headerXml, {
     compression: "DEFLATE",

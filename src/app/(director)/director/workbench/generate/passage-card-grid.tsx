@@ -35,6 +35,7 @@ import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { Badge } from "@/components/ui/badge";
 import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import { isDirectInputPassage } from "@/lib/passage-source";
+import { PassageInlineTitle } from "@/components/workbench/passage-inline-title";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import {
@@ -129,6 +130,9 @@ export function PassageCardGrid({
   workspaceActive = false,
   handleOpenAnalysisModal,
   onViewPassageContent,
+  onPassageRenamed,
+  lastViewedPassageId,
+  openPassageDetailId,
   onToggleExtractionReview,
   reviewActionPassageIds,
 }: PassageCardGridProps) {
@@ -1202,6 +1206,15 @@ export function PassageCardGrid({
                   !isLearningGenerating &&
                   !isLearningGlow &&
                   glowingPassageIds.has(p.id);
+                // 상세를 열어봤다가 닫은 카드 — 생성/추출 글로우가 없을 때만,
+                // 그리고 지금 열려 있는 카드가 아닐 때만 배경을 한 번 반짝인다.
+                const isRecentlyViewed =
+                  !isGlowing &&
+                  !isLearningGlow &&
+                  !isLearningGenerating &&
+                  lastViewedPassageId != null &&
+                  lastViewedPassageId === p.id &&
+                  openPassageDetailId !== p.id;
                 const reviewDraft = p.extractionReviewDraft ?? null;
                 const hasReviewDraft = reviewDraft != null;
                 const isReviewCommitted =
@@ -1232,7 +1245,7 @@ export function PassageCardGrid({
                     onClick={(e) => handlePassageCardClick(p.id, e)}
                     onDoubleClick={(e) => handlePassageCardDoubleClick(p.id, e)}
                     onKeyDown={(e) => handleCardKeyDown(p.id, e)}
-                    className={`group relative flex flex-col overflow-hidden rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
+                    className={`group relative flex h-[300px] flex-col overflow-hidden rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
                       isChecked
                         ? "border-blue-400 ring-2 ring-blue-300/30"
                         : hasReviewDraft && !isReviewCommitted
@@ -1246,15 +1259,19 @@ export function PassageCardGrid({
                         : ""
                     } ${
                       isGlowing
-                        ? "!border-blue-400 !bg-blue-50/25 !ring-2 !ring-blue-400/60 !shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_36px_12px_rgba(37,99,235,0.36)] hover:!shadow-[0_0_0_1px_rgba(37,99,235,0.55),0_0_42px_14px_rgba(37,99,235,0.46)] motion-safe:animate-pulse"
+                        ? "!border-blue-400 !ring-2 !ring-blue-400/60 !shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_36px_12px_rgba(37,99,235,0.36)] hover:!shadow-[0_0_0_1px_rgba(37,99,235,0.55),0_0_42px_14px_rgba(37,99,235,0.46)] motion-safe:animate-pulse"
                         : ""
                     } ${
                       isLearningGlow
-                        ? "!border-blue-400 !bg-blue-50/25 !ring-2 !ring-blue-400/60 !shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_36px_12px_rgba(37,99,235,0.36)] hover:!shadow-[0_0_0_1px_rgba(37,99,235,0.55),0_0_42px_14px_rgba(37,99,235,0.46)] motion-safe:animate-pulse"
+                        ? "!border-blue-400 !ring-2 !ring-blue-400/60 !shadow-[0_0_0_1px_rgba(37,99,235,0.45),0_0_36px_12px_rgba(37,99,235,0.36)] hover:!shadow-[0_0_0_1px_rgba(37,99,235,0.55),0_0_42px_14px_rgba(37,99,235,0.46)] motion-safe:animate-pulse"
                         : ""
                     } ${
                       isLearningGenerating
                         ? "learning-generating-glow !border-blue-200 !shadow-[0_0_24px_4px_rgba(37,99,235,0.18)]"
+                        : ""
+                    } ${
+                      isRecentlyViewed
+                        ? "motion-safe:animate-[card-recently-viewed-flash_1.2s_ease-out]"
                         : ""
                     } outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white`}
                   >
@@ -1307,9 +1324,11 @@ export function PassageCardGrid({
                           <Check className="w-3 h-3" />
                         </button>
                         <div className="min-w-0 flex-1">
-                          <h4 className="text-[13px] font-semibold text-slate-800 truncate">
-                            {p.title}
-                          </h4>
+                          <PassageInlineTitle
+                            passageId={p.id}
+                            title={p.title}
+                            onRenamed={onPassageRenamed}
+                          />
                           <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                             {(() => {
                               const created = formatMinuteTimestamp(
@@ -1345,10 +1364,13 @@ export function PassageCardGrid({
                       </div>
                     </div>
 
-                    {/* Content preview */}
-                    <p className="text-[11px] text-slate-500 leading-relaxed mt-2.5 line-clamp-3">
-                      {p.content.slice(0, 200)}...
-                    </p>
+                    {/* Content preview — 남는 세로 공간을 채워, 학습자료 요약 유무와
+                        상관없이 카드 높이가 일관되게 보이도록 flex-1 로 늘린다. */}
+                    <div className="mt-2.5 min-h-0 flex-1 overflow-hidden">
+                      <p className="text-[11px] text-slate-500 leading-relaxed">
+                        {p.content}
+                      </p>
+                    </div>
 
                     {/* Main idea + Meta */}
                     <div className="mt-3 space-y-2">
@@ -1386,8 +1408,6 @@ export function PassageCardGrid({
                         </div>
                       )}
                     </div>
-
-                    <div className="flex-1" />
 
                     {/* 생성된 문제 · 학습자료 토글 — 카드 가로 전체 폭으로 한 줄 위 */}
                     <div className="w-full">

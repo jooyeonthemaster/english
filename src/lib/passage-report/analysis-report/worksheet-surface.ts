@@ -4,11 +4,16 @@ type WorkbookSet = NonNullable<LearningWorksheetSection["workbookSet"]>;
 type VocabularyBlank = WorkbookSet["vocabularyCloze"]["blanks"][number];
 export type WorksheetWordOrder = WorkbookSet["wordOrders"][number];
 type DrillWordOrder = NonNullable<NonNullable<LearningWorksheetSection["drills"]>["wordOrders"]>[number];
+type WorksheetWordBankItem = { answers: readonly string[] };
 
 const LETTER_RE = /[A-Za-z]/;
 
 export function worksheetAnswersAreHidden(section: LearningWorksheetSection): boolean {
   return section.hiddenAnswers === true;
+}
+
+export function worksheetClozeTranslationsAreHidden(section: LearningWorksheetSection): boolean {
+  return section.hiddenClozeTranslations === true;
 }
 
 export function vocabularyBlankToken(no: number): string {
@@ -145,6 +150,49 @@ export function vocabularyClozeSurfaceIssues(passage: string, blanks: Vocabulary
   return issues;
 }
 
+export function toStudentWorksheetWordBank(
+  words: readonly string[] | undefined,
+  items: readonly WorksheetWordBankItem[] | undefined,
+): string[] | undefined {
+  const cleaned = cleanWordBankWords(words);
+  if (cleaned.length === 0) return undefined;
+
+  const answerOrder = wordBankAnswerOrder(items);
+  if (!wordBankFollowsAnswerOrder(cleaned, answerOrder)) return cleaned;
+
+  return stableScrambleWordBank(cleaned, answerOrder);
+}
+
+export function worksheetWordBankSurfaceIssues(
+  label: string,
+  words: readonly string[] | undefined,
+  items: readonly WorksheetWordBankItem[] | undefined,
+): string[] {
+  const studentWords = toStudentWorksheetWordBank(words, items) ?? [];
+  const answerOrder = wordBankAnswerOrder(items);
+  if (!wordBankFollowsAnswerOrder(studentWords, answerOrder)) return [];
+  return [`${label}: word bank still follows answer order`];
+}
+
+export function wordBankFollowsAnswerOrder(words: readonly string[], answerOrder: readonly string[]): boolean {
+  const answers = answerOrder.map(normalizeWordBankEntry).filter(Boolean);
+  const bankEntries = words.map(normalizeWordBankEntry).filter(Boolean);
+  if (answers.length < 2 || bankEntries.length < 2) return false;
+
+  const usedAnswerIndexes = new Set<number>();
+  const matchedPositions: number[] = [];
+
+  for (const entry of bankEntries) {
+    const position = answers.findIndex((answer, index) => !usedAnswerIndexes.has(index) && answer === entry);
+    if (position < 0) continue;
+    usedAnswerIndexes.add(position);
+    matchedPositions.push(position);
+  }
+
+  if (matchedPositions.length < 2) return false;
+  return matchedPositions.every((position, index) => index === 0 || position > matchedPositions[index - 1]);
+}
+
 export function getConsolidatedWordOrders(section: LearningWorksheetSection): WorksheetWordOrder[] {
   return consolidateWordOrders(section.workbookSet?.wordOrders ?? [], section.drills?.wordOrders ?? []);
 }
@@ -271,6 +319,53 @@ function tokenCounts(tokens: string[]): Map<string, number> {
   const counts = new Map<string, number>();
   for (const token of tokens) counts.set(token, (counts.get(token) ?? 0) + 1);
   return counts;
+}
+
+function cleanWordBankWords(words: readonly string[] | undefined): string[] {
+  return (words ?? []).map((word) => word.trim()).filter(Boolean);
+}
+
+function wordBankAnswerOrder(items: readonly WorksheetWordBankItem[] | undefined): string[] {
+  return (items ?? []).flatMap((item) => item.answers).map((answer) => answer.trim()).filter(Boolean);
+}
+
+function stableScrambleWordBank(words: readonly string[], answerOrder: readonly string[]): string[] {
+  if (words.length <= 1) return [...words];
+  const seedText = answerOrder.map(normalizeWordBankEntry).filter(Boolean).join("|") || words.join("|");
+  const seed = stableHash(seedText);
+  let output = [...words].sort((a, b) => {
+    const aNorm = normalizeWordBankEntry(a);
+    const bNorm = normalizeWordBankEntry(b);
+    const aHash = stableHash(`${seed}|${aNorm}|${a}`);
+    const bHash = stableHash(`${seed}|${bNorm}|${b}`);
+    return aHash - bHash || aNorm.localeCompare(bNorm) || a.localeCompare(b);
+  });
+
+  if (wordBankFollowsAnswerOrder(output, answerOrder)) {
+    const offset = (seed % (output.length - 1)) + 1;
+    output = [...output.slice(offset), ...output.slice(0, offset)];
+  }
+  if (wordBankFollowsAnswerOrder(output, answerOrder)) {
+    output = [...output].reverse();
+  }
+  if (wordBankFollowsAnswerOrder(output, answerOrder)) {
+    output = [output[output.length - 1], ...output.slice(1, -1), output[0]];
+  }
+
+  return output;
+}
+
+function normalizeWordBankEntry(value: string): string {
+  return normalizeSentence(value);
+}
+
+function stableHash(value: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < value.length; i += 1) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
 }
 
 function stripInlineHtml(value: string): string {

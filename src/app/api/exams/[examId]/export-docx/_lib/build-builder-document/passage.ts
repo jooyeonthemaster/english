@@ -148,7 +148,8 @@ export function buildGivenBox(text: string, bodySize: number, lh: number): DocCh
     new Paragraph({
       alignment: AlignmentType.JUSTIFIED,
       spacing: { after: 80, ...exactLineSpacing(bodySize, lh) },
-      children: parseFormattedText(text, { font: bodyFont, size: bodySize, bold: true }),
+      // 본문(주어진 문장 내용)은 일반체 — 라벨("주어진 문장")만 굵게(미리보기와 동일).
+      children: parseFormattedText(text, { font: bodyFont, size: bodySize, bold: false }),
     }),
   ];
 }

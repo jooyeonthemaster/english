@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
   Plus, X, ArrowUp, ArrowDown, Search, GripVertical,
 } from "lucide-react";
+import { SaveButton } from "@/components/ui/save-button";
 import { toast } from "sonner";
 import {
   createSeason, updateSeason,
@@ -219,9 +220,12 @@ export function SeasonFormModal({ mode, season, onClose, onSaved }: {
 
         <div className="flex justify-end gap-2 p-4 border-t">
           <button onClick={onClose} className="h-8 px-4 text-xs text-slate-500 hover:text-slate-700 font-medium">취소</button>
-          <button onClick={handleSubmit} disabled={submitting || !name || !startDate || !endDate || (mode === "create" && selectedIds.size === 0)} className="h-8 px-4 bg-blue-600 text-white rounded-lg text-xs font-medium disabled:opacity-40 hover:bg-blue-700">
-            {submitting ? "저장 중..." : mode === "create" ? "시즌 생성" : "저장"}
-          </button>
+          <SaveButton
+            onClick={handleSubmit}
+            saving={submitting}
+            disabled={!name || !startDate || !endDate || (mode === "create" && selectedIds.size === 0)}
+            title={mode === "create" ? "새 내신 시즌 생성" : "내신 시즌 수정"}
+          />
         </div>
       </div>
     </div>

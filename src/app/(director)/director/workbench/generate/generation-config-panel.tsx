@@ -957,7 +957,7 @@ export function GenerationConfigPanel({
                                       setDraggingTypeId(null);
                                       setDragOverTypeId(null);
                                     }}
-                                    className={`relative flex flex-col overflow-hidden rounded-lg border transition-colors ${
+                                    className={`relative flex items-center gap-1 overflow-hidden rounded-lg border px-1 py-1 transition-colors ${
                                       dragOver
                                         ? "border-blue-300 bg-blue-100 ring-1 ring-inset ring-blue-300"
                                         : active
@@ -967,31 +967,30 @@ export function GenerationConfigPanel({
                                             : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80"
                                     } ${dragging ? "opacity-50" : ""} ${expanded ? "rounded-b-none" : ""}`}
                                   >
-                                    {/* 타일 헤더 — 손잡이 + 유형명 + 펼치기 토글 */}
-                                    <div className="flex items-center gap-0.5 pl-1 pr-1.5 pt-1.5">
-                                      <button
-                                        type="button"
-                                        draggable
-                                        onDragStart={(event) => {
-                                          setDraggingTypeId(item.id);
-                                          event.dataTransfer.effectAllowed =
-                                            "move";
-                                          event.dataTransfer.setData(
-                                            "text/plain",
-                                            item.id,
-                                          );
-                                        }}
-                                        onDragEnd={() => {
-                                          setDraggingTypeId(null);
-                                          setDragOverTypeId(null);
-                                        }}
-                                        className="flex h-6 w-4 shrink-0 cursor-grab items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 active:cursor-grabbing"
-                                        title={`${item.label} 순서 드래그`}
-                                        aria-label={`${item.label} 순서 드래그`}
-                                      >
-                                        <GripVertical className="h-3.5 w-3.5" />
-                                      </button>
-                                      <PopoverTrigger asChild>
+                                    {/* 한 줄 타일 — 손잡이 + 유형명 + 스테퍼 + 펼치기 토글 */}
+                                    <button
+                                      type="button"
+                                      draggable
+                                      onDragStart={(event) => {
+                                        setDraggingTypeId(item.id);
+                                        event.dataTransfer.effectAllowed =
+                                          "move";
+                                        event.dataTransfer.setData(
+                                          "text/plain",
+                                          item.id,
+                                        );
+                                      }}
+                                      onDragEnd={() => {
+                                        setDraggingTypeId(null);
+                                        setDragOverTypeId(null);
+                                      }}
+                                      className="flex h-7 w-3.5 shrink-0 cursor-grab items-center justify-center rounded text-slate-300 transition-colors hover:text-slate-500 active:cursor-grabbing"
+                                      title={`${item.label} 순서 드래그`}
+                                      aria-label={`${item.label} 순서 드래그`}
+                                    >
+                                      <GripVertical className="h-3.5 w-3.5" />
+                                    </button>
+                                    <PopoverTrigger asChild>
                                       <button
                                         type="button"
                                         data-generate-tour={
@@ -1018,66 +1017,71 @@ export function GenerationConfigPanel({
                                             aria-hidden="true"
                                           />
                                         ) : null}
+                                        {itemDisabled ? (
+                                          <span
+                                            className="shrink-0 whitespace-nowrap rounded bg-slate-100 px-1 text-[9px] font-semibold text-slate-400"
+                                            title={`이 지문은 문장이 적어 문장삽입에 적합하지 않아요 (최소 ${sentenceInsertRequiredSentences}문장 필요).`}
+                                          >
+                                            문장 부족
+                                          </span>
+                                        ) : null}
+                                      </button>
+                                    </PopoverTrigger>
+                                    {/* 문항 수 스테퍼 */}
+                                    <div className="flex shrink-0 items-center overflow-hidden rounded-lg border border-slate-200 bg-white">
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          applyTypeCount(
+                                            item.id,
+                                            Math.max(0, count - 1),
+                                          )
+                                        }
+                                        disabled={count <= 0}
+                                        className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
+                                        aria-label={`${item.label} 개수 줄이기`}
+                                      >
+                                        <Minus className="h-3.5 w-3.5" />
+                                      </button>
+                                      <span
+                                        className={`flex h-7 w-7 items-center justify-center border-x border-slate-200 text-[12.5px] font-bold tabular-nums ${
+                                          count > 0
+                                            ? "bg-blue-50/50 text-blue-700"
+                                            : "bg-slate-50/60 text-slate-300"
+                                        }`}
+                                      >
+                                        {count}
+                                      </span>
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          applyTypeCount(item.id, count + 1);
+                                          // 문항 수를 늘리면 세부 설정(난이도 등)을 바로
+                                          // 만질 수 있도록 토글을 자동으로 펼친다.
+                                          setExpandedTypeId(item.id);
+                                        }}
+                                        disabled={itemDisabled}
+                                        data-generate-tour="type-add-button"
+                                        className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
+                                        aria-label={`${item.label} 개수 늘리기`}
+                                      >
+                                        <Plus className="h-3.5 w-3.5" />
+                                      </button>
+                                    </div>
+                                    {/* 펼치기 토글 */}
+                                    <PopoverTrigger asChild>
+                                      <button
+                                        type="button"
+                                        className="flex h-7 w-6 shrink-0 items-center justify-center rounded text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-500"
+                                        title={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
+                                        aria-label={`${item.label} 세부 옵션 ${expanded ? "접기" : "펼치기"}`}
+                                      >
                                         <ChevronDown
-                                          className={`ml-auto size-4 shrink-0 text-blue-300 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
+                                          className={`size-4 shrink-0 transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}
                                           aria-hidden="true"
                                         />
                                       </button>
-                                      </PopoverTrigger>
-                                    </div>
-
-                                    {itemDisabled ? (
-                                      <span
-                                        className="ml-1.5 mt-1 inline-flex w-fit shrink-0 whitespace-nowrap rounded bg-slate-100 px-1 text-[9px] font-semibold text-slate-400"
-                                        title={`이 지문은 문장이 적어 문장삽입에 적합하지 않아요 (최소 ${sentenceInsertRequiredSentences}문장 필요).`}
-                                      >
-                                        문장 부족
-                                      </span>
-                                    ) : null}
-
-                                    {/* 문항 수 스테퍼 */}
-                                    <div className="mt-1 flex items-center justify-between gap-1 px-1.5 pb-1.5">
-                                      <span className="whitespace-nowrap pl-0.5 text-[10px] font-semibold text-slate-400">
-                                        문항 수
-                                      </span>
-                                      <div className="flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white">
-                                        <button
-                                          type="button"
-                                          onClick={() =>
-                                            applyTypeCount(
-                                              item.id,
-                                              Math.max(0, count - 1),
-                                            )
-                                          }
-                                          disabled={count <= 0}
-                                          className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
-                                          aria-label={`${item.label} 개수 줄이기`}
-                                        >
-                                          <Minus className="h-3.5 w-3.5" />
-                                        </button>
-                                        <span
-                                          className={`flex h-7 w-7 items-center justify-center border-x border-slate-200 text-[12.5px] font-bold tabular-nums ${
-                                            count > 0
-                                              ? "bg-blue-50/50 text-blue-700"
-                                              : "bg-slate-50/60 text-slate-300"
-                                          }`}
-                                        >
-                                          {count}
-                                        </span>
-                                        <button
-                                          type="button"
-                                          onClick={() =>
-                                            applyTypeCount(item.id, count + 1)
-                                          }
-                                          disabled={itemDisabled}
-                                          data-generate-tour="type-add-button"
-                                          className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
-                                          aria-label={`${item.label} 개수 늘리기`}
-                                        >
-                                          <Plus className="h-3.5 w-3.5" />
-                                        </button>
-                                      </div>
-                                    </div>
+                                    </PopoverTrigger>
                                   </div>
                                     </PopoverAnchor>
                                     <PopoverContent

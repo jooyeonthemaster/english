@@ -276,7 +276,8 @@ export function buildLearningWorksheetPrompt(input: BuildAnalysisReportPromptInp
     ]
   },
   "questions": [],
-  "hiddenAnswers": false
+  "hiddenAnswers": false,
+  "hiddenClozeTranslations": false
 }
 
 # 세부 품질 기준
@@ -285,6 +286,7 @@ export function buildLearningWorksheetPrompt(input: BuildAnalysisReportPromptInp
 - drills: PDF 워크북처럼 어법 선택 2~4개와 주요문장 단어배열 영작 1~2개를 가능하면 생성하세요. 지문에 억지로 만들기 어려우면 줄여도 됩니다. 단순 철자, 대소문자, 의미 차이가 거의 없는 선택지는 금지합니다.
 - workbookSet: 반드시 생성하세요. 첨부 워크북처럼 ① 주제/요지 ② 어법 선택 ③ 어휘 빈칸 완성 ④ 주요문장 단어배열 영작을 한 세트로 구성합니다.
   - Student-facing fields must never print answers or explanations directly after the question. Keep all answers only in answer/explanation fields.
+  - cloze.wordBank and practice.wordBank must be shuffled for students. Their visible order must NOT match the answer/item order.
   - vocabularyCloze.passage must contain numbered blanks such as "(1) __________"; never output "[answer]①" or a filled answer next to the number.
   - Put word-order writing only in workbookSet.wordOrders. Do not duplicate the same word-order item in drills.wordOrders.
   - topicGist.topicTitle은 영어 제목형으로, 지문 중심 대비/반박/인과를 담습니다. gist는 한국어 한 문장으로 "글쓴이의 최종 주장"이 드러나야 하며, 소재 소개로 끝내면 안 됩니다.

@@ -1,3 +1,4 @@
+import { Bold, Italic } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PaperBlockFontSize, PaperItem } from "../../types";
 import { AlignmentControls, NumberStepper, PrecisionPresetButtons } from "./panel-controls";
@@ -18,7 +19,10 @@ export function CustomBlockInspector({
   disabled: boolean;
   onUpdate: (patch: Partial<PaperItem>) => void;
 }) {
-  const setFontSize = (blockFontSize: PaperBlockFontSize) => onUpdate({ blockFontSize });
+  // 프리셋(SM/MD/LG)을 고르면 숫자 pt 오버라이드는 해제해 프리셋이 그대로 보이게 한다
+  // (미리보기 위 떠다니는 툴바의 ±pt 와 한 값으로 일관 동작).
+  const setFontSize = (blockFontSize: PaperBlockFontSize) =>
+    onUpdate({ blockFontSize, blockFontPt: null });
 
   return (
     <div className="space-y-3">
@@ -63,16 +67,6 @@ export function CustomBlockInspector({
 
       {item.blockType === "image" && (
         <div className="space-y-3">
-          <div>
-            <p className="mb-2 text-[11px] font-bold text-slate-500">캡션</p>
-            <input
-              type="text"
-              disabled={disabled}
-              value={item.imageAlt}
-              onChange={(event) => onUpdate({ imageAlt: event.target.value })}
-              className="h-8 w-full rounded-md border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-700 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 disabled:text-slate-400"
-            />
-          </div>
           <div className="space-y-2 rounded-lg border border-slate-200 bg-slate-50/60 p-2">
             <NumberStepper
               label="정밀 폭(%)"
@@ -171,6 +165,38 @@ export function CustomBlockInspector({
             disabled={disabled}
             onChange={(blockAlign) => onUpdate({ blockAlign })}
           />
+        </div>
+      )}
+
+      {(item.blockType === "text" || item.blockType === "section") && (
+        <div>
+          <p className="mb-2 text-[11px] font-bold text-slate-500">서식</p>
+          <div className="grid grid-cols-2 gap-1 rounded-lg border border-slate-200 bg-slate-50 p-1">
+            <button
+              type="button"
+              disabled={disabled}
+              title="굵게"
+              onClick={() => onUpdate({ blockBold: !item.blockBold })}
+              className={cn(
+                "flex h-7 items-center justify-center rounded-md transition-colors disabled:opacity-40",
+                item.blockBold ? "bg-white text-blue-700 shadow-sm" : "text-slate-500 hover:bg-white",
+              )}
+            >
+              <Bold className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              disabled={disabled}
+              title="기울임"
+              onClick={() => onUpdate({ blockItalic: !item.blockItalic })}
+              className={cn(
+                "flex h-7 items-center justify-center rounded-md transition-colors disabled:opacity-40",
+                item.blockItalic ? "bg-white text-blue-700 shadow-sm" : "text-slate-500 hover:bg-white",
+              )}
+            >
+              <Italic className="h-3.5 w-3.5" />
+            </button>
+          </div>
         </div>
       )}
 

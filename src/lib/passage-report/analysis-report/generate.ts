@@ -22,8 +22,10 @@ import {
   normalizeStudentFacingMarkup,
   scrambleWordOrderChunks,
   studentFacingMarkupIssues,
+  toStudentWorksheetWordBank,
   toStudentVocabularyClozePassage,
   vocabularyClozeSurfaceIssues,
+  worksheetWordBankSurfaceIssues,
   wordOrderItemIssues,
 } from "./worksheet-surface";
 
@@ -594,6 +596,8 @@ const CHOICE_LABELS = ["①", "②", "③", "④", "⑤"] as const;
 const INFERENCE_ANSWER_LABEL_PATTERN = ["②", "④", "①", "⑤", "③"] as const;
 
 function normalizeWorkbookTestSurface(section: LearningWorksheetSection): void {
+  normalizeWorksheetWordBanks(section);
+
   const workbook = section.workbookSet;
   if (!workbook) return;
 
@@ -638,6 +642,17 @@ function normalizeWorkbookTestSurface(section: LearningWorksheetSection): void {
   });
   if (section.drills?.wordOrders?.length) {
     section.drills.wordOrders = [];
+  }
+}
+
+function normalizeWorksheetWordBanks(section: LearningWorksheetSection): void {
+  if (section.cloze?.wordBank) {
+    const wordBank = toStudentWorksheetWordBank(section.cloze.wordBank, section.cloze.items);
+    if (wordBank) section.cloze.wordBank = wordBank;
+  }
+  if (section.practice?.wordBank) {
+    const wordBank = toStudentWorksheetWordBank(section.practice.wordBank, section.practice.items);
+    if (wordBank) section.practice.wordBank = wordBank;
   }
 }
 
@@ -695,6 +710,9 @@ function validateLearningWorksheetQuality(section: LearningWorksheetSection): st
 
 function validateWorkbookQuality(section: LearningWorksheetSection): string[] {
   const issues: string[] = [];
+  issues.push(...worksheetWordBankSurfaceIssues("key phrase cloze", section.cloze?.wordBank, section.cloze?.items));
+  issues.push(...worksheetWordBankSurfaceIssues("practice cloze", section.practice?.wordBank, section.practice?.items));
+
   const workbook = section.workbookSet;
   if (!workbook) {
     issues.push("workbookSet이 없습니다.");

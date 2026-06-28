@@ -11,6 +11,7 @@ import {
   FileSearch,
   Pencil,
   Printer,
+  Trash2,
 } from "lucide-react";
 import { cn, formatDate, formatDateTime } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
@@ -55,6 +56,7 @@ export function ExamFileCard({
   onToggleSelect,
   onClick,
   onEdit,
+  onDelete,
   onShowAnalysis,
 }: {
   exam: ExamItem;
@@ -62,6 +64,8 @@ export function ExamFileCard({
   onToggleSelect: (id: string, shift: boolean) => void;
   onClick: (id: string) => void;
   onEdit?: (id: string) => void;
+  /** 카드 우상단 휴지통 — 단건 삭제(확인 모달). 미지정 시 버튼을 숨긴다. */
+  onDelete?: (id: string) => void;
   /** 동형 생성 시험지에만 전달 — 누르면 분석 정보 모달을 연다. */
   onShowAnalysis?: (id: string) => void;
 }) {
@@ -130,11 +134,11 @@ export function ExamFileCard({
       <div className="flex min-w-0 flex-1 flex-col p-4">
       {/* Top row: handle + checkbox + title */}
       <div className="flex items-start gap-2.5 min-w-0">
-        <DragHandle ref={dragHandleRef} className="mt-0.5 shrink-0" />
+        <DragHandle ref={dragHandleRef} className="mt-1 shrink-0" />
         <button
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); onToggleSelect(exam.id, e.shiftKey); }}
           className={cn(
-            "w-[18px] h-[18px] rounded flex items-center justify-center shrink-0 mt-0.5 transition-all",
+            "w-[18px] h-[18px] rounded flex items-center justify-center shrink-0 mt-1 transition-all",
             selected
               ? "bg-blue-600 text-white border border-blue-600"
               : "bg-white border border-slate-300 text-transparent hover:border-blue-400 hover:text-blue-400",
@@ -143,9 +147,27 @@ export function ExamFileCard({
           <Check className="w-3 h-3" />
         </button>
         <div className="min-w-0 flex-1">
-          <h4 className="text-[13px] font-semibold text-slate-800 truncate group-hover:text-blue-600 transition-colors">
-            {exam.title}
-          </h4>
+          <div className="flex items-center gap-2 min-w-0">
+            <h4 className="min-w-0 flex-1 text-[13px] font-semibold text-slate-800 truncate group-hover:text-blue-600 transition-colors">
+              {exam.title}
+            </h4>
+            {/* 제목 줄 우측 끝: 단건 삭제(휴지통) — 제목과 세로 가운데정렬. */}
+            {onDelete ? (
+              <button
+                type="button"
+                aria-label="삭제"
+                title="삭제"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onDelete(exam.id);
+                }}
+                className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            ) : null}
+          </div>
           {/* Info row */}
           <div className="flex items-center gap-3 mt-1 flex-wrap">
             <span className="inline-flex items-center gap-1 text-[11px] text-slate-500">
@@ -205,7 +227,7 @@ export function ExamFileCard({
             disabled={!onEdit}
             title="시험지 수정 (지금까지 수정한 횟수)"
             aria-label="시험지 수정"
-            className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2 text-[11px] font-semibold tabular-nums text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-100 hover:text-slate-700 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 disabled:opacity-70 disabled:hover:border-slate-200 disabled:hover:bg-slate-50 disabled:hover:text-slate-400"
+            className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold tabular-nums text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 disabled:cursor-not-allowed disabled:bg-white disabled:text-slate-400 disabled:opacity-70 disabled:hover:border-slate-200 disabled:hover:bg-white disabled:hover:text-slate-400"
           >
             <Pencil className="h-3 w-3 shrink-0" />
             <span className="truncate">수정 {exam.editCount}회</span>
@@ -241,7 +263,7 @@ export function ExamFileCard({
             }}
             title="바로 인쇄 (지금까지 인쇄한 횟수)"
             aria-label="시험지 인쇄"
-            className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2 text-[11px] font-semibold tabular-nums text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-100 hover:text-slate-700"
+            className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold tabular-nums text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
           >
             <Printer className="h-3 w-3 shrink-0" />
             <span className="truncate">인쇄 {exam.printCount}회</span>

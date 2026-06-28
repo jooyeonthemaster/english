@@ -50,10 +50,19 @@ export function PaperItemActions({
   return (
     <div
       className={cn(
-        "no-print pointer-events-none absolute -right-2 -top-3 z-20 flex items-center gap-1 rounded-lg border border-slate-200 bg-white/95 p-1 opacity-0 shadow-lg backdrop-blur transition-opacity group-hover/paper-item:pointer-events-auto group-hover/paper-item:opacity-100 group-focus-within/paper-item:pointer-events-auto group-focus-within/paper-item:opacity-100",
+        // 블록 왼쪽 여백에 세로(위→아래)로 띄워 블록 내용을 가리지 않게 한다.
+        "no-print pointer-events-none absolute left-0 top-0 -translate-x-full -ml-0.5 z-20 flex flex-col items-center gap-2 rounded-lg border border-slate-200 bg-white/95 p-1 opacity-0 shadow-lg backdrop-blur transition-opacity group-hover/paper-item:pointer-events-auto group-hover/paper-item:opacity-100 group-focus-within/paper-item:pointer-events-auto group-focus-within/paper-item:opacity-100",
         isActive && "pointer-events-auto opacity-100",
       )}
     >
+      <button
+        type="button"
+        onPointerDown={(event) => onStartDrag(event, item.localId)}
+        className="flex h-5 w-5 touch-none cursor-grab items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700 active:cursor-grabbing"
+        title="문항 드래그"
+      >
+        <GripVertical className="h-3.5 w-3.5" />
+      </button>
       <button
         onClick={(event) => {
           event.stopPropagation();
@@ -62,7 +71,7 @@ export function PaperItemActions({
         }}
         disabled={passageForced}
         className={cn(
-          "flex h-6 w-6 items-center justify-center rounded-md hover:bg-slate-50",
+          "flex h-5 w-5 items-center justify-center rounded-md hover:bg-slate-50",
           passageActive
             ? "text-blue-600"
             : "text-slate-400 hover:text-slate-700",
@@ -78,7 +87,7 @@ export function PaperItemActions({
           onToggleKeepWithPrev(item.localId);
         }}
         className={cn(
-          "flex h-6 w-6 items-center justify-center rounded-md hover:bg-blue-50",
+          "flex h-5 w-5 items-center justify-center rounded-md hover:bg-blue-50",
           item.keepWithPrev
             ? "text-blue-600"
             : "text-slate-400 hover:text-slate-700",
@@ -99,7 +108,7 @@ export function PaperItemActions({
           onUpdateItem(item.localId, { breakBefore: next });
         }}
         className={cn(
-          "flex h-6 w-6 items-center justify-center rounded-md hover:bg-emerald-50",
+          "flex h-5 w-5 items-center justify-center rounded-md hover:bg-emerald-50",
           item.breakBefore === "column"
             ? "text-emerald-600"
             : "text-slate-400 hover:text-slate-700",
@@ -120,7 +129,7 @@ export function PaperItemActions({
           onUpdateItem(item.localId, { breakBefore: next });
         }}
         className={cn(
-          "flex h-6 w-6 items-center justify-center rounded-md hover:bg-blue-50",
+          "flex h-5 w-5 items-center justify-center rounded-md hover:bg-blue-50",
           item.breakBefore === "page"
             ? "text-blue-700"
             : "text-slate-400 hover:text-slate-700",
@@ -138,7 +147,7 @@ export function PaperItemActions({
           event.stopPropagation();
           onUngroupItem(item.localId);
         }}
-        className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700"
+        className="flex h-5 w-5 items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700"
         title="현재 문항 묶음 해제"
       >
         <Ungroup className="h-3 w-3" />
@@ -148,7 +157,7 @@ export function PaperItemActions({
           event.stopPropagation();
           onRegroupByPassage();
         }}
-        className="flex h-6 w-6 items-center justify-center rounded-md text-blue-500 hover:bg-blue-50"
+        className="flex h-5 w-5 items-center justify-center rounded-md text-blue-500 hover:bg-blue-50"
         title="지문별 다시 묶기"
       >
         <Group className="h-3 w-3" />
@@ -158,18 +167,10 @@ export function PaperItemActions({
           event.stopPropagation();
           onRemoveItem(item.localId);
         }}
-        className="flex h-6 w-6 items-center justify-center rounded-md text-rose-500 hover:bg-rose-50"
+        className="flex h-5 w-5 items-center justify-center rounded-md text-rose-500 hover:bg-rose-50"
         title="문항 삭제"
       >
         <Trash2 className="h-3 w-3" />
-      </button>
-      <button
-        type="button"
-        onPointerDown={(event) => onStartDrag(event, item.localId)}
-        className="flex h-6 w-6 touch-none cursor-grab items-center justify-center rounded-md text-slate-400 hover:bg-slate-50 hover:text-slate-700 active:cursor-grabbing"
-        title="문항 드래그"
-      >
-        <GripVertical className="h-3.5 w-3.5" />
       </button>
     </div>
   );

@@ -121,11 +121,11 @@ export async function getAcademyDetail(academyId: string) {
         unit: true,
         publisher: true,
         createdAt: true,
-        _count: { select: { questions: true } },
+        _count: { select: { questions: { where: { deletedAt: null } } } },
       },
     }),
     prisma.question.findMany({
-      where: { academyId },
+      where: { academyId, deletedAt: null },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -149,7 +149,7 @@ export async function getAcademyDetail(academyId: string) {
         type: true,
         status: true,
         createdAt: true,
-        _count: { select: { questions: true } },
+        _count: { select: { questions: { where: { question: { deletedAt: null } } } } },
       },
     }),
   ]);

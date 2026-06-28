@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
   }
 
   const rows = await prisma.question.findMany({
-    where: { id: { in: questionIds } },
+    where: { id: { in: questionIds }, deletedAt: null },
     include: {
       passage: { select: { title: true, content: true } },
       explanation: {

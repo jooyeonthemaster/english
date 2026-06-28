@@ -45,7 +45,13 @@ export async function getExams(academyId: string, filters?: ExamFilters) {
     include: {
       class: { select: { id: true, name: true } },
       school: { select: { id: true, name: true } },
-      _count: { select: { questions: true, submissions: true } },
+      // 휴지통 가드 — 목록 카드의 "N문항" 배지는 삭제된 문제를 빼고 센다(상세/출력과 일치).
+      _count: {
+        select: {
+          questions: { where: { question: { deletedAt: null } } },
+          submissions: true,
+        },
+      },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -64,6 +70,8 @@ export async function getExam(examId: string) {
       class: { select: { id: true, name: true } },
       school: { select: { id: true, name: true } },
       questions: {
+        // 휴지통(soft delete) 가드 — 삭제된 문제는 시험지 상세/미리보기/편집에서 제외.
+        where: { question: { deletedAt: null } },
         include: {
           question: {
             include: {
@@ -114,6 +122,8 @@ export async function getExamPreviewData(examId: string) {
       class: { select: { id: true, name: true } },
       school: { select: { id: true, name: true } },
       questions: {
+        // 휴지통(soft delete) 가드 — 삭제된 문제는 시험지 상세/미리보기/편집에서 제외.
+        where: { question: { deletedAt: null } },
         include: {
           question: {
             include: {
@@ -359,7 +369,11 @@ export async function publishExam(examId: string): Promise<ActionResult> {
 
     const exam = await prisma.exam.findFirst({
       where: { id: examId, academyId: staff.academyId },
-      include: { _count: { select: { questions: true } } },
+      // 휴지통 가드 — 문제가 전부 삭제(휴지통)된 시험지는 링크가 남아도 "빈 시험지"이므로
+      // 배포 불가여야 한다. 살아있는 문제만 센다.
+      include: {
+        _count: { select: { questions: { where: { question: { deletedAt: null } } } } },
+      },
     });
 
     if (!exam) return { success: false, error: "시험을 찾을 수 없습니다." };

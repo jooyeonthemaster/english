@@ -1,14 +1,14 @@
 import type { BlockNode } from "./types";
 import { renderPassage } from "./render/passage";
-import { type BuilderItemResolved, renderQuestionBlock } from "./render/question";
+import { type BuilderItemResolved, applyQuestionBlockFormat, renderQuestionBlock } from "./render/question";
 import { shouldForceSourcePassage, shouldRenderSourcePassageInsideQuestion } from "@/components/exams/paper-builder/passage-policy";
 import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
 import type { PaperPage, RenderFragment } from "@/components/exams/paper-builder/types";
-import type { BuilderLayout } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
+import type { BuilderBlock, BuilderLayout } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
 import { type BreakPlan, passageBreakKey, questionBreakKey } from "./break-plan";
 import { type FragmentRenderOptions, renderPassageFragment, renderQuestionPart } from "./render/fragment";
 import type { ColumnUnit } from "./builder-types";
-import { applyBreak, printablePassageTitle } from "./builder-blocks";
+import { applyBreak, printablePassageTitle, renderCustomBlock } from "./builder-blocks";
 export function groupItems(
   items: BuilderItemResolved[],
 ): Array<{ groupKey: string; items: BuilderItemResolved[] }> {
@@ -89,12 +89,16 @@ export function appendQuestionGroups(opts: {
       opts.target.push(...passageBlocks);
     }
     group.items.forEach((item, idx) => {
-      const questionBlocks = renderQuestionBlock({
+      const questionBlocks = applyQuestionBlockFormat(
+        renderQuestionBlock({
+          item,
+          layout: opts.layout,
+          includeAnswers: opts.includeAnswers,
+          contentWidthHpu: opts.contentWidthHpu,
+        }),
         item,
-        layout: opts.layout,
-        includeAnswers: opts.includeAnswers,
-        contentWidthHpu: opts.contentWidthHpu,
-      });
+        opts.compact,
+      );
       if (item.localId) {
         applyBreak(questionBlocks, opts.breakPlan.get(questionBreakKey(item.localId)));
       }
@@ -107,6 +111,90 @@ export function appendQuestionGroups(opts: {
       opts.target.push(...questionBlocks);
     });
   }
+}
+
+// 문항과 커스텀 블록(텍스트·섹션·구분선·여백·이미지)을 settings.blocks 순서대로 흘려보낸다.
+// 문항은 연속분을 모아 appendQuestionGroups 로(지문 묶음 유지), 커스텀 블록은 사이에 끼운다.
+// contentWidthHpu = 본문/문항 폭(단 폭 또는 전체폭), imageColWidthHpu = 이미지 박스 폭 기준.
+// 네이티브 2단(colCount=2) 경로에서도 이 함수를 써 이미지·섹션이 칸 안에 함께 흐르게 한다.
+export function appendBlocksInOrder(opts: {
+  target: BlockNode[];
+  blocks: BuilderBlock[] | undefined;
+  resolvedItems: BuilderItemResolved[];
+  layout: BuilderLayout;
+  includeAnswers: boolean;
+  compact: boolean;
+  passageStyle: "boxed" | "underlined" | "plain";
+  showPassageTitle: boolean;
+  contentWidthHpu: number;
+  imageColWidthHpu: number;
+  imageMaxHeightHpu: number;
+  breakPlan: BreakPlan;
+}) {
+  const appendQ = (items: BuilderItemResolved[]) => {
+    if (items.length === 0) return;
+    appendQuestionGroups({
+      target: opts.target,
+      items,
+      layout: opts.layout,
+      includeAnswers: opts.includeAnswers,
+      compact: opts.compact,
+      passageStyle: opts.passageStyle,
+      showPassageTitle: opts.showPassageTitle,
+      contentWidthHpu: opts.contentWidthHpu,
+      breakPlan: opts.breakPlan,
+    });
+  };
+
+  if (!opts.blocks?.length) {
+    appendQ(opts.resolvedItems);
+    return;
+  }
+
+  const byLocalId = new Map(
+    opts.resolvedItems
+      .filter((item) => item.localId)
+      .map((item) => [item.localId as string, item]),
+  );
+  const used = new Set<BuilderItemResolved>();
+  const takeQuestion = (block: BuilderBlock) => {
+    const byId = block.localId ? byLocalId.get(block.localId) : undefined;
+    if (byId && !used.has(byId)) {
+      used.add(byId);
+      return byId;
+    }
+    const fallback = opts.resolvedItems.find(
+      (item) => !used.has(item) && item.questionId === block.questionId,
+    );
+    if (fallback) used.add(fallback);
+    return fallback;
+  };
+
+  let pending: BuilderItemResolved[] = [];
+  const flush = () => {
+    appendQ(pending);
+    pending = [];
+  };
+  for (const block of opts.blocks) {
+    if (block.blockType === "question") {
+      const q = takeQuestion(block);
+      if (q) pending.push(q);
+      continue;
+    }
+    flush();
+    const customBlocks = renderCustomBlock(
+      block,
+      opts.compact,
+      opts.contentWidthHpu,
+      opts.imageColWidthHpu,
+      opts.imageMaxHeightHpu,
+    );
+    if (block.localId) {
+      applyBreak(customBlocks, opts.breakPlan.get(questionBreakKey(block.localId)));
+    }
+    opts.target.push(...customBlocks);
+  }
+  flush();
 }
 
 // 한 단(column)의 fragment 들을 BlockNode[] 로.
@@ -266,12 +354,16 @@ export function renderGroupsToUnits(opts: {
       });
     }
     group.items.forEach((item) => {
-      const questionBlocks = renderQuestionBlock({
+      const questionBlocks = applyQuestionBlockFormat(
+        renderQuestionBlock({
+          item,
+          layout: opts.layout,
+          includeAnswers: opts.includeAnswers,
+          contentWidthHpu: opts.columnWidthHpu,
+        }),
         item,
-        layout: opts.layout,
-        includeAnswers: opts.includeAnswers,
-        contentWidthHpu: opts.columnWidthHpu,
-      });
+        opts.compact,
+      );
       units.push({
         placeKey: item.localId ? questionBreakKey(item.localId) : null,
         blocks: questionBlocks,

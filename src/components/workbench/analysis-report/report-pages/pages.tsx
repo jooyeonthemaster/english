@@ -1,13 +1,13 @@
 "use client";
 
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import { ANALYSIS_REPORT_CSS } from "../report-styles";
 import { type FlowItem, reportFlowItems, tableHeadRow } from "../report-sections";
 import { PX_PER_MM, REPORT_A4_WIDTH_PX } from "./constants";
 import type { ColCtx, ReportEdit } from "./types";
 import { buildReportRootStyle, cssEsc, packFlow, samePages, visibleFlowItems } from "./items";
-import { CoverShell, PageDeleteButton } from "./shells";
+import { CoverShell, PageControls } from "./shells";
 import { RunningFooter, RunningHeader, RunsView } from "./runs";
 // ─── 메인 ─────────────────────────────────────────────────────────────────────
 export function ReportPages({
@@ -105,24 +105,33 @@ export function ReportPages({
         return pages.map((pageIds, pi) => {
           const pageItems = pageIds.map((id) => itemsById.get(id)).filter(Boolean) as FlowItem[];
           if (pageItems.length === 0) return null;
+          let sheet: ReactNode;
           if (coverPageFlags[pi]) {
-            return (
-              <section className="par-sheet par-sheet-cover" key={`p-${pi}`} data-page-index={pi}>
-                <PageDeleteButton ids={pageIds} edit={edit} />
+            sheet = (
+              <section className="par-sheet par-sheet-cover" data-page-index={pi}>
                 <CoverShell it={pageItems[0]} edit={edit} meta={report.blockMeta?.[pageItems[0].id]} />
               </section>
             );
+          } else {
+            bodyNo += 1;
+            sheet = (
+              <section className="par-sheet" data-page-index={pi}>
+                <RunningHeader brand={report.brand} title={report.meta.titleKo} logoDataUrl={logoDataUrl} />
+                <div className="par-sheet-body">
+                  <RunsView items={pageItems} edit={edit} blockMeta={report.blockMeta} cols={colCtx} />
+                </div>
+                <RunningFooter brand={report.brand} docNo={report.docNo} page={bodyNo} total={bodyTotal} />
+              </section>
+            );
           }
-          bodyNo += 1;
+          // 편집 모드에서만 relative 래퍼로 감싸 페이지 컨트롤을 시트 '바깥'(위·오른쪽)에
+          // 둔다. 시트는 overflow:hidden 이라 자식으로 두면 바깥으로 못 나가기 때문.
+          if (!edit) return <Fragment key={`p-${pi}`}>{sheet}</Fragment>;
           return (
-            <section className="par-sheet" key={`p-${pi}`} data-page-index={pi}>
-              <PageDeleteButton ids={pageIds} edit={edit} />
-              <RunningHeader brand={report.brand} title={report.meta.titleKo} logoDataUrl={logoDataUrl} />
-              <div className="par-sheet-body">
-                <RunsView items={pageItems} edit={edit} blockMeta={report.blockMeta} cols={colCtx} />
-              </div>
-              <RunningFooter brand={report.brand} docNo={report.docNo} page={bodyNo} total={bodyTotal} />
-            </section>
+            <div className="par-sheet-wrap" key={`p-${pi}`}>
+              <PageControls ids={pageIds} pageIndex={pi} pageCount={pages.length} edit={edit} />
+              {sheet}
+            </div>
           );
         });
       })()}

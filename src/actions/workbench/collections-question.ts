@@ -12,7 +12,15 @@ export async function getQuestionCollections(academyId: string) {
   await requireAuth();
   return prisma.questionCollection.findMany({
     where: { academyId },
-    include: { _count: { select: { items: true, children: true } } },
+    // 휴지통 가드 — 폴더 "N개" 배지는 삭제(휴지통)된 문제를 빼고 센다(링크는 보존되지만 미표시).
+    include: {
+      _count: {
+        select: {
+          items: { where: { question: { deletedAt: null } } },
+          children: true,
+        },
+      },
+    },
     orderBy: { name: "asc" },
   });
 }
@@ -29,7 +37,8 @@ export async function getAcademyQuestionCollectionMembership(
   const session = await requireAuth();
   if (session.academyId !== academyId) return {};
   const items = await prisma.questionCollectionItem.findMany({
-    where: { collection: { academyId } },
+    // 휴지통 가드 — 삭제된 문제는 멤버십(폴더 카운트 파생)에서 제외(page.tsx 인라인 쿼리와 일치).
+    where: { collection: { academyId }, question: { deletedAt: null } },
     select: { collectionId: true, questionId: true },
   });
   const membership: Record<string, string[]> = {};
@@ -106,6 +115,22 @@ export async function addQuestionsToCollection(
 ) {
   await requireAuth();
   try {
+    // Compute the items that will ACTUALLY be inserted (not already present)
+    // so the caller can reconcile its optimistic UI counts with the DB. Using
+    // skipDuplicates alone hides this — createMany never reports which rows it
+    // skipped — so the client would over-count.
+    const existing = await prisma.questionCollectionItem.findMany({
+      where: { collectionId, questionId: { in: questionIds } },
+      select: { questionId: true },
+    });
+    const existingSet = new Set(existing.map((e) => e.questionId));
+    const addedIds = [...new Set(questionIds)].filter(
+      (id) => !existingSet.has(id),
+    );
+    if (addedIds.length === 0) {
+      return { success: true as const, addedIds: [] as string[] };
+    }
+
     const maxItem = await prisma.questionCollectionItem.findFirst({
       where: { collectionId },
       orderBy: { orderNum: "desc" },
@@ -114,7 +139,7 @@ export async function addQuestionsToCollection(
     const startOrder = (maxItem?.orderNum ?? -1) + 1;
 
     await prisma.questionCollectionItem.createMany({
-      data: questionIds.map((questionId, idx) => ({
+      data: addedIds.map((questionId, idx) => ({
         collectionId,
         questionId,
         orderNum: startOrder + idx,
@@ -123,7 +148,7 @@ export async function addQuestionsToCollection(
     });
 
     revalidatePath("/director/questions");
-    return { success: true as const };
+    return { success: true as const, addedIds };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "컬렉션 추가 실패";
@@ -137,14 +162,26 @@ export async function removeQuestionsFromCollection(
 ) {
   await requireAuth();
   try {
+    // Resolve which of the requested items are actually in the collection so
+    // the caller can reconcile counts against the DB (the rest were never
+    // members and must not be counted as removals).
+    const existing = await prisma.questionCollectionItem.findMany({
+      where: { collectionId, questionId: { in: questionIds } },
+      select: { questionId: true },
+    });
+    const removedIds = existing.map((e) => e.questionId);
+    if (removedIds.length === 0) {
+      return { success: true as const, removedIds: [] as string[] };
+    }
+
     await prisma.questionCollectionItem.deleteMany({
       where: {
         collectionId,
-        questionId: { in: questionIds },
+        questionId: { in: removedIds },
       },
     });
     revalidatePath("/director/questions");
-    return { success: true as const };
+    return { success: true as const, removedIds };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "컬렉션 제거 실패";

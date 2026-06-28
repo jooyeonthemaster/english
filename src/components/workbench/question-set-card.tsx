@@ -200,6 +200,7 @@ export function QuestionSetCard({
   onApprove,
   onDelete,
   compact = false,
+  recentlyViewed = false,
 }: {
   set: QuestionSetForRender;
   /** 멤버 분리 핸들러 — 누르면 해당 문항을 세트에서 빼낸다. 미지정 시 분리 버튼 숨김. */
@@ -214,6 +215,8 @@ export function QuestionSetCard({
   onDelete?: () => void | Promise<void>;
   /** 목록 카드용 — 접힘 토글 노출 + 기본 접힘. 모달에선 펼침 고정. */
   compact?: boolean;
+  /** 방금 상세를 열어봤다가 닫은 세트 카드 — 한 번 배경이 반짝인다. */
+  recentlyViewed?: boolean;
 }) {
   const [splittingId, setSplittingId] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState(compact);
@@ -250,6 +253,8 @@ export function QuestionSetCard({
   return (
     <Card
       className={`group relative flex h-full flex-col gap-0 py-0 transition-all hover:shadow-md ${
+        recentlyViewed ? "motion-safe:animate-[card-recently-viewed-flash_1.2s_ease-out] " : ""
+      }${
         !allApproved
           ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]"
           : ""

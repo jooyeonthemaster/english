@@ -36,8 +36,8 @@ export async function POST(request: NextRequest) {
       throw err;
     }
 
-    const question = await prisma.question.findUnique({
-      where: { id: questionId },
+    const question = await prisma.question.findFirst({
+      where: { id: questionId, deletedAt: null },
       include: {
         passage: { select: { content: true, title: true } },
       },

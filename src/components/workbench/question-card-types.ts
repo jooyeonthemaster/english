@@ -43,6 +43,8 @@ export interface QuestionCardProps {
   q: QuestionCardItem;
   num: number;
   selected?: boolean;
+  /** 방금 상세를 열어봤다가 닫은 카드 — 한 번 배경이 반짝인다. */
+  recentlyViewed?: boolean;
   onToggle?: () => void;
   onDelete?: () => void;
   onApprove?: () => void;
@@ -55,6 +57,9 @@ export interface QuestionCardProps {
   compact?: boolean;
   showReviewActions?: boolean;
   hideReviewStatusStamp?: boolean;
+  /** 미검수(빨간) 테두리 글로우 억제 — 휴지통처럼 검수 상태가 무의미하고
+   *  파괴적(영구삭제) 빨강과 혼동되면 안 되는 컨텍스트 전용. */
+  suppressUnapprovedBorder?: boolean;
   /** Show the 수정(pencil) + 더보기(...) action pair in the header, left of 펼치기.
    *  Works even in readonly contexts (e.g. 문제 생성 결과 카드). */
   showHeaderActions?: boolean;

@@ -1685,9 +1685,8 @@ export const InlineCropBoard = forwardRef<
                 </>
               ) : (
                 <>
-                  지문 합치기를 하시려면{" "}
                   <b className="font-bold text-slate-700">2개 이상의 지문</b>을
-                  고르세요
+                  선택하여 합치기
                 </>
               )}
             </span>

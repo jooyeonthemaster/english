@@ -67,8 +67,10 @@ export default async function PassagesPage({ searchParams }: PageProps) {
   const [passagesData, schools, collections, membershipRaw] = await Promise.all([
     getWorkbenchPassages(staff.academyId, effectiveFilters),
     getAcademySchools(staff.academyId),
-    getPassageCollections(staff.academyId),
-    getAcademyPassageCollectionMembership(staff.academyId),
+    getPassageCollections(staff.academyId, { onlyWithReport: true }),
+    getAcademyPassageCollectionMembership(staff.academyId, {
+      onlyWithReport: true,
+    }),
   ]);
 
   // Derive a human-readable badge label for the pinned source material

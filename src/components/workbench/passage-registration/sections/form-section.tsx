@@ -310,7 +310,7 @@ export function FormSection(props: FormSectionProps) {
                   props.workspaceOpen
                     ? (props.rightPane ??
                       (props.rows && props.setRows && props.onAnalyze ? (
-                        <div className="flex min-h-0 flex-1 flex-col p-3">
+                        <div className="flex min-h-0 flex-1 flex-col">
                           <PassageInputStack
                             rows={props.rows}
                             setRows={props.setRows}

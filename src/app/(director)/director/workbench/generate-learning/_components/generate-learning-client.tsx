@@ -552,6 +552,11 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
           setSelectedCollectionId={setSelectedCollectionId}
           selectedIds={selectedIds}
           toggleCheckbox={toggleCheckbox}
+          onPassageRenamed={(passageId, title) =>
+            setPassages((prev) =>
+              prev.map((p) => (p.id === passageId ? { ...p, title } : p)),
+            )
+          }
           selectAll={selectAll}
           deselectAll={deselectAll}
           canGenerate={canGenerate}

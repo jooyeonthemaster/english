@@ -103,6 +103,9 @@ interface DraftCardProps {
   /** 카드별 삭제. 주어지면 제목 행 우측에 빨강 휴지통 버튼이 노출된다.
    *  (자료 관리 standalone 에서 actions.deleteDraft 를 그대로 연결한다) */
   onDelete?: (draft: M1PassageDraftWithJob) => void;
+  /** 삭제 버튼을 제목 행 대신 푸터(검수 토글 오른쪽)에 정사각 아이콘으로 배치한다.
+   *  추출 페이지 슬라이더 드로어처럼 토글·상세보기와 한 줄로 묶고 싶을 때 사용. */
+  footerDelete?: boolean;
   /** 이 카드가 삭제 진행 중이면 휴지통 버튼을 스피너로 바꾸고 비활성화한다. */
   deleting?: boolean;
 }
@@ -124,6 +127,7 @@ export function DraftCard({
   onPromote,
   onUnpromote,
   onDelete,
+  footerDelete = false,
   deleting = false,
 }: DraftCardProps) {
   const hasReviewToggle = Boolean(onPromote && onUnpromote);
@@ -424,7 +428,7 @@ export function DraftCard({
               />
             </div>
           )}
-          {onDelete ? (
+          {onDelete && !footerDelete ? (
             <button
               type="button"
               onMouseDown={(e) => e.stopPropagation()}
@@ -548,15 +552,14 @@ export function DraftCard({
         </div>
       ) : null}
 
-      <div className="flex flex-wrap items-center gap-1.5">
-        <RestorationBadge status={draft.restorationStatus} />
-        {loadedInWorkspace ? (
+      {loadedInWorkspace ? (
+        <div className="flex flex-wrap items-center gap-1.5">
           <span className="inline-flex shrink-0 items-center gap-0.5 rounded border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[11px] font-bold leading-none text-blue-600">
             <CheckCircle2 className="size-3" aria-hidden="true" />
             불러옴
           </span>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
 
       <p
         className={
@@ -567,8 +570,9 @@ export function DraftCard({
         {(expanded ? fullText : preview) || "추출된 본문이 비어있습니다."}
       </p>
       <div className="mt-auto shrink-0 space-y-2 border-t border-slate-100 pt-1.5">
-        <div className="flex min-w-0 flex-wrap items-center gap-3 text-[10px] text-slate-400">
+        <div className="flex min-w-0 flex-wrap items-center gap-2 text-[10px] text-slate-400">
           <span>{formatCardTimestamp(draft.createdAt)}</span>
+          <RestorationBadge status={draft.restorationStatus} />
         </div>
         <div className="flex items-center gap-2">
         {/* 검수완료 버튼이 있으면 가로를 채우고, 상세보기 주 액션은 정사각
@@ -579,6 +583,26 @@ export function DraftCard({
             onPromote={onPromote!}
             onUnpromote={onUnpromote!}
           />
+        ) : null}
+        {onDelete && footerDelete ? (
+          <button
+            type="button"
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(draft);
+            }}
+            disabled={deleting}
+            title="이 자료를 삭제합니다"
+            aria-label="삭제"
+            className="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {deleting ? (
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+            ) : (
+              <Trash2 className="size-4" aria-hidden="true" />
+            )}
+          </button>
         ) : null}
         <CardDetailIconButton
           icon={detailAction?.icon ?? Maximize2}

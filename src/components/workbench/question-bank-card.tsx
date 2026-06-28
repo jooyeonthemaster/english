@@ -14,6 +14,8 @@ import {
   ClipboardList,
   Star,
   CheckCircle2,
+  RotateCcw,
+  Loader2,
 } from "lucide-react";
 import { PearlIcon } from "@/components/icons/pearl-icon";
 import { Card, CardContent } from "@/components/ui/card";
@@ -142,6 +144,8 @@ export function QuestionBankCard({
   // 강조하고, 보이지 않으면 스크롤로 끌어온다(스크롤 anchor는 data-question-card-id).
   // selected(시험지에 포함됨)와는 별개의 시각 상태다.
   active = false,
+  // 방금 상세를 열어봤다가 닫은 카드 — 한 번 배경이 반짝여 "여기 봤었지"를 알려준다.
+  recentlyViewed = false,
   // 접힘(콤팩트) 모드 — 시험지 빌더 등 목록을 콤팩트하게 볼 때. 기본은 펼침(전체) 유지.
   collapsible = false,
   // 접힌(콤팩트) 카드일 때만 적용할 min-height 클래스. 같은 줄의 접힌 카드들을
@@ -153,6 +157,17 @@ export function QuestionBankCard({
   // 손잡이/체크박스/별/삭제/접기 토글과 하단 footer(사용 이력·검수 버튼)를 모두 숨기고
   // 항상 펼친 상태로 시작한다. (지문 제목 토글·발문·지문·선지·해설 보기는 유지)
   embedded = false,
+  // 휴지통(soft-delete) 모드 — 검수/수정 풋터 대신 "복원/영구삭제" 풋터를 띄운다.
+  // 미검수 빨간 테두리·상단 삭제버튼은 끄고(파괴적 빨강과 혼동 방지), onDelete 는
+  // "영구삭제"(purge) 확인을 트리거하는 핸들러로 재사용한다. 드래그는 호출부에서 끈다.
+  trashMode = false,
+  // 휴지통 복원 핸들러(emerald 버튼). actionBusy 동안 스피너로 잠근다.
+  onRestore,
+  // 복원/영구삭제 진행 중 — 두 버튼을 비활성화하고 스피너를 노출한다.
+  actionBusy = false,
+  // 삭제 시점 라벨(예: "오늘 삭제", "3일 전 삭제") — 호출부에서 계산해 넘긴다.
+  // 검수 도장(ReviewStatusStamp) 자리에 대신 노출한다.
+  deletedLabel,
 }: {
   q: QuestionBankItem;
   num: number;
@@ -196,9 +211,14 @@ export function QuestionBankCard({
   selectedCardHighlight?: boolean;
   // 시험지 미리보기에서 현재 클릭한 문항이면 진한 파란 테두리로 강조한다.
   active?: boolean;
+  recentlyViewed?: boolean;
   collapsible?: boolean;
   collapsedMinHeightClass?: string;
   embedded?: boolean;
+  trashMode?: boolean;
+  onRestore?: () => void;
+  actionBusy?: boolean;
+  deletedLabel?: string | null;
 }) {
   const [isDragging, setIsDragging] = useState(false);
   // 카드 접힘/펼침 — 기본은 접힘(의문문 + 지문 2줄 + 정답만 보이는 미리보기).
@@ -294,6 +314,16 @@ export function QuestionBankCard({
         {generationPlan === "PREMIUM" ? "프리미엄" : "일반"}
       </Badge>
     ) : null;
+  // 난이도 배지 — 일반/프리미엄(planBadge)과 동일한 pill 디자인.
+  // 기본=파랑, 중급=노랑(amber), 킬러=빨강. plan 배지 왼쪽에 배치한다.
+  const difficultyBadge = diffConfig ? (
+    <Badge
+      variant="outline"
+      className={`shrink-0 text-[10px] font-bold ${diffConfig.className}`}
+    >
+      {diffConfig.label}
+    </Badge>
+  ) : null;
 
   // Parse questionText into structured sections
   const sections = useMemo(
@@ -425,6 +455,10 @@ export function QuestionBankCard({
   // Review action footer (검수완료/검수취소 + 수정하기 + stamp) — only in managed contexts
   const showReviewActions =
     showManagementActions && Boolean(q.id) && Boolean(onApprove || onUnapprove);
+  // 휴지통 풋터(복원/영구삭제) — 검수 풋터와 상호배타. 상세 아이콘은 둘 다 풋터에 둔다.
+  const showTrashActions = trashMode && Boolean(q.id) && !embedded;
+  // 상세 아이콘이 풋터에 들어가는 컨텍스트면 '사용 이력' 밴드의 상세버튼은 숨겨 중복을 막는다.
+  const detailInFooter = showReviewActions || showTrashActions;
 
   const handleEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -486,10 +520,10 @@ export function QuestionBankCard({
           ? "border-slate-200 bg-slate-100/80 text-slate-400 shadow-none hover:shadow-none"
           : ""
       } ${
-        !selectionDisabled && !q.approved
+        !selectionDisabled && !q.approved && !trashMode
           ? "border-red-200/80 shadow-[0_0_0_1px_rgba(252,165,165,0.35),0_0_18px_rgba(248,113,113,0.12)]"
           : ""
-      }${collapsed && collapsedMinHeightClass ? ` ${collapsedMinHeightClass}` : ""}`}
+      }${recentlyViewed && !active ? " motion-safe:animate-[card-recently-viewed-flash_1.2s_ease-out]" : ""}${collapsed && collapsedMinHeightClass ? ` ${collapsedMinHeightClass}` : ""}`}
     >
       <CardContent
         ref={contentRef}
@@ -553,8 +587,9 @@ export function QuestionBankCard({
                   />
                 </span>
               ))}
-            {/* 삭제 — 즐겨찾기(별표) 바로 오른쪽. 윗줄 일괄 삭제 버튼과 동일 사이즈(h-7 w-7). */}
-            {showManagementActions && onDelete && !embedded && (
+            {/* 삭제 — 즐겨찾기(별표) 바로 오른쪽. 윗줄 일괄 삭제 버튼과 동일 사이즈(h-7 w-7).
+                휴지통 모드에서는 풋터의 '영구삭제'가 그 역할을 하므로 상단 삭제는 숨긴다. */}
+            {showManagementActions && onDelete && !embedded && !trashMode && (
               <button
                 type="button"
                 aria-label="삭제"
@@ -592,6 +627,7 @@ export function QuestionBankCard({
             )}
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
+            {difficultyBadge}
             {planBadge}
             {typeof duplicateCount === "number" && duplicateCount > 1 && (
               <span
@@ -890,7 +926,7 @@ export function QuestionBankCard({
                     </div>
                   </PopoverContent>
                 </Popover>
-                {!showReviewActions && detailButton}
+                {!detailInFooter && detailButton}
               </div>
             );
           }
@@ -900,7 +936,7 @@ export function QuestionBankCard({
               <div className="flex min-w-0 flex-1 items-center gap-1.5 rounded-md px-1 py-1">
                 {inner}
               </div>
-              {!showReviewActions && detailButton}
+              {!detailInFooter && detailButton}
             </div>
           );
         })()}
@@ -908,7 +944,8 @@ export function QuestionBankCard({
         {/* Footer: review actions (검수완료/취소 + 수정) — '사용 이력' 밴드 아래로 이동.
             compactUsageLabel(시험지 빌더)에서는 날짜+스탬프 줄을 생략하고
             스탬프를 위 '사용 이력' 밴드 우측으로 옮긴다. */}
-        {(embedded ? showReviewActions : !compactUsageLabel || showReviewActions) && (
+        {(showTrashActions ||
+          (embedded ? showReviewActions : !compactUsageLabel || showReviewActions)) && (
           <div className="space-y-2 pt-1.5 border-t border-slate-100 shrink-0">
             {/* 임베드(상세 팝업)는 날짜/도장 줄을 숨기고 검수·수정 버튼만 노출한다. */}
             {!embedded && (
@@ -919,9 +956,69 @@ export function QuestionBankCard({
                     <span>시험 {q._count.examLinks}회 사용</span>
                   )}
                 </div>
-                {!showReviewActions && (
+                {showTrashActions ? (
+                  deletedLabel ? (
+                    <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-500">
+                      <Trash2 className="h-3 w-3 text-slate-400" />
+                      {deletedLabel}
+                    </span>
+                  ) : null
+                ) : !showReviewActions ? (
                   <ReviewStatusStamp approved={q.approved} className="shrink-0" />
-                )}
+                ) : null}
+              </div>
+            )}
+            {/* 휴지통 풋터 — 검수완료/수정하기 자리에 '복원 / 영구삭제'를 같은 레이아웃으로 둔다.
+                상세보기 아이콘은 검수 풋터와 동일하게 오른쪽 끝에 유지한다. */}
+            {showTrashActions && (
+              <div className="flex items-end gap-1.5">
+                {/* 복원 — emerald(검수완료 톤). 클릭하면 살아있는 상태로 되돌린다. */}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  disabled={actionBusy}
+                  title="복원 — 문제를 다시 살립니다"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onRestore?.();
+                  }}
+                  className="h-7 flex-1 justify-center gap-1.5 border border-emerald-500 bg-white px-2 text-[11px] font-semibold text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {actionBusy ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <RotateCcw className="w-3 h-3" />
+                  )}
+                  복원
+                </Button>
+                {/* 영구삭제 — red destructive. onDelete 가 확인 다이얼로그를 연다. */}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  disabled={actionBusy}
+                  title="영구 삭제 — 되돌릴 수 없습니다"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete?.();
+                  }}
+                  className="h-7 flex-1 justify-center gap-1.5 border border-red-200 bg-red-50 px-2 text-[11px] font-semibold text-red-600 hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <Trash2 className="w-3 h-3" />
+                  영구 삭제
+                </Button>
+                {showDetailButton && (onDetail || onEdit) ? (
+                  <CardDetailIconButton
+                    className="size-7 shrink-0 rounded-md"
+                    iconClassName="size-3.5"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onDetail) onDetail();
+                      else onEdit?.();
+                    }}
+                  />
+                ) : null}
               </div>
             )}
             {showReviewActions && (

@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["iconv-lite"],
 
   experimental: {
+    // 시험지 빌더 저장은 문항·지문 본문 + 학원 로고(최대 1.5MB)·삽입 이미지(base64,
+    // ~33% 팽창)를 통째로 서버 액션 본문에 실어 보낸다. 기본 1MB 한도를 넘기면 HTTP 413
+    // ("Body exceeded 1 MB limit", digest …@E394) 또는 "server-side exception"으로
+    // 저장/다운로드가 통째로 실패한다 → 한도 상향. 근본 해결은 이미지를 스토리지에 올리고
+    // URL만 저장하는 것.
+    serverActions: {
+      bodySizeLimit: "10mb",
+    },
     optimizePackageImports: [
       "lucide-react",
       "recharts",
