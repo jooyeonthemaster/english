@@ -6,7 +6,6 @@ import {
   useMemo,
   useRef,
   useState,
-  type ReactNode,
 } from "react";
 import {
   draggable,
@@ -24,7 +23,6 @@ import {
   ChevronDown,
   ChevronUp,
   CornerUpLeft,
-  ListFilter,
   Trash2,
   Folder,
   FolderOpen,
@@ -36,29 +34,21 @@ import {
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { Badge } from "@/components/ui/badge";
 import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { isDirectInputPassage } from "@/lib/passage-source";
 import { PassageInlineTitle } from "@/components/workbench/passage-inline-title";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import {
-  type PassageItem,
   type PassageCollectionItem,
-  type FilterOptions,
-  type PassageAnalysisStatusFilter,
-  type PassageSortOrder,
   countWords,
 } from "./generate-page-types";
 import { DragSelect } from "@/components/ui/drag-select";
 import { triggerHintGlow } from "@/lib/hint-glow";
 import { DragHandle } from "@/components/ui/drag-handle";
-import type { QuestionCardItem } from "@/components/workbench/question-card";
 import { PassageQuestionsSummary } from "./passage-questions-summary";
 import { PassageReportsSummary } from "./passage-reports-summary";
+import { PassageFilterPopover } from "./passage-filter-popover";
+import { PassageSortSearchPopover } from "./passage-sort-search-popover";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import {
   clearCardTextSelection,
@@ -67,179 +57,20 @@ import {
   shouldIgnoreCardSelectionClick,
   useDeferredCardSelectionClick,
 } from "@/components/workbench/shared/card-click";
-
-type ParsedAnalysisSummary = {
-  vocabulary?: unknown[];
-  grammarPoints?: unknown[];
-  syntaxAnalysis?: unknown[];
-  structure?: {
-    topicSentenceIndex?: number | null;
-    mainIdea?: string | null;
-  };
-  examDesign?: {
-    paraphrasableSegments?: unknown[];
-    structureTransformPoints?: unknown[];
-  };
-};
-
-const FOLDER_WINDOW_HEIGHT_STORAGE_KEY =
-  "smoat:generate:passage-folder-window-height";
-const FOLDER_WINDOW_MIN_HEIGHT = 48;
-const FOLDER_WINDOW_DEFAULT_HEIGHT = 136;
-const FOLDER_WINDOW_MAX_HEIGHT = 220;
-const ANALYSIS_GLOW_ACK_STORAGE_KEY = "smoat:generate:analysis-glow-ack.v1";
-const RECENT_ANALYSIS_GLOW_WINDOW_MS = 30 * 60 * 1000;
-
-function analysisGlowKey(passage: PassageItem): string | null {
-  const analysis = passage.analysis as
-    | { id?: string | null; updatedAt?: string | Date | null }
-    | null
-    | undefined;
-  if (!analysis) return null;
-  const updated =
-    analysis.updatedAt instanceof Date
-      ? analysis.updatedAt.toISOString()
-      : analysis.updatedAt
-        ? String(analysis.updatedAt)
-        : "";
-  return `${passage.id}:${analysis.id ?? "analysis"}:${updated}`;
-}
-
-/** 연월일시분 — 카드 타임스탬프용. 잘못된 값이면 null. */
-function formatMinuteTimestamp(value?: string | Date | null): string | null {
-  if (!value) return null;
-  const d = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(d.getTime())) return null;
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(
-    d.getHours(),
-  )}:${pad(d.getMinutes())}`;
-}
-
-function analysisUpdatedAtMs(passage: PassageItem): number | null {
-  const updatedAt = (passage.analysis as { updatedAt?: string | Date } | null)
-    ?.updatedAt;
-  if (!updatedAt) return null;
-  const ms =
-    updatedAt instanceof Date ? updatedAt.getTime() : Date.parse(updatedAt);
-  return Number.isNaN(ms) ? null : ms;
-}
-
-// ─── Props ───────────────────────────────────────────
-
-interface PassageCardGridProps {
-  // Data
-  passages: PassageItem[];
-  filteredPassages: PassageItem[];
-  filterOptions: FilterOptions;
-  collections: PassageCollectionItem[];
-  loadingPassages: boolean;
-
-  // Search/filter state
-  passageSearch: string;
-  setPassageSearch: (v: string) => void;
-  filterSchool: string;
-  setFilterSchool: (v: string) => void;
-  filterGrade: string;
-  setFilterGrade: (v: string) => void;
-  filterSemester: string;
-  setFilterSemester: (v: string) => void;
-  analysisStatusFilter: PassageAnalysisStatusFilter;
-  setAnalysisStatusFilter: (v: PassageAnalysisStatusFilter) => void;
-  // Sort controls live in the folder header. Optional — consumers that don't
-  // pass them (e.g. tutor program builder) simply hide the sort control.
-  passageSortOrder?: PassageSortOrder;
-  setPassageSortOrder?: (v: PassageSortOrder) => void;
-  passageStatusCounts: { all: number; analyzed: number; unanalyzed: number };
-  activeFilterCount: number;
-
-  // Collection
-  selectedCollectionId: string;
-  setSelectedCollectionId: (v: string) => void;
-
-  // Selection
-  selectedIds: Set<string>;
-  setSelectedIds: (next: Set<string>) => void;
-  toggleCheckbox: (id: string, e?: React.MouseEvent) => void;
-  selectAll: () => void;
-  deselectAll: () => void;
-  onCopySelectedToCollection?: (collectionId: string) => Promise<void> | void;
-  onMoveSelectedToCollection?: (collectionId: string) => Promise<void> | void;
-  onMovePassagesToCollection?: (
-    passageIds: string[],
-    collectionId: string,
-  ) => Promise<void> | void;
-  onCreateCollection?: (
-    name: string,
-    parentId?: string | null,
-  ) => Promise<string | null | undefined> | string | null | undefined;
-  onRemoveSelectedFromCollection?: () => Promise<void> | void;
-  onDeleteSelectedPassages?: () => Promise<void> | void;
-  passageBulkAction?: "move" | "remove" | "delete" | null;
-
-  // Generation
-  // NOTE: PassageCardGrid 는 문제 생성 외 페이지(튜터 프로그램 빌더 등)에서도
-  // 재사용된다. 그쪽은 여전히 "auto" 를 넘기고 이 prop 은 본문에서 쓰이지 않으므로,
-  // 문제 생성의 genMode 좁히기와 무관하게 넓은 유니온을 유지한다.
-  genMode: "auto" | "manual" | "set";
-  totalQuestions: number;
-  handleBatchGenerate: () => void;
-  selectionActionText?: string;
-  selectionActionDisabled?: boolean;
-
-  // 지문별 "이미 생성된" 문제 수(실시간). 생략 시 서버 _count 만 사용한다.
-  questionCountByPassage?: Map<string, number>;
-
-  // 지문별 생성된 문제 목록. 지문 카드 하단의 "생성된 문제" 요약 토글에 쓴다.
-  questionsByPassage?: Map<string, QuestionCardItem[]>;
-  // 전달되면 "생성된 문제" 목록의 문제 행 클릭 시 페이지 이동 대신
-  // 인페이지 문제 상세 팝업을 연다.
-  onOpenQuestionDetail?: (q: QuestionCardItem) => void;
-
-  // 학습지 생성(다른 화면)에서 학습자료가 백그라운드로 생성 중인 지문 id.
-  // 카드 테두리에 초록 글로우가 빙글 도는 모션을 띄운다.
-  learningGeneratingPassageIds?: Set<string>;
-  // 방금 학습자료 생성(분석)이 완료된 지문 id — 초록 글로우(클릭 시 해제).
-  // 추출 완료(freshAnalysisPassageIds)의 파란 글로우와 색으로 구분된다.
-  learningCompletedPassageIds?: Set<string>;
-
-  // 추출 중인 지문 로딩 카드(이미지·PDF 추출). 카드 그리드 상단에 렌더한다.
-  loadingCards?: ReactNode;
-  // 방금 추출/분석이 끝난 지문 id. 완료 시각이 늦게 동기화되는 경우에도 글로우를 켠다.
-  freshAnalysisPassageIds?: Set<string>;
-  onFreshAnalysisAcknowledged?: (passageId: string) => void;
-  reviewBulkActionRunning?: boolean;
-  onBulkCompleteExtractionReview?: (passages: PassageItem[]) => void;
-
-  // 선택한 지문 일괄 학습자료 생성. 버튼에 총 크레딧 소모량을 표시한다.
-  onBulkGenerateLearning?: (passages: PassageItem[]) => void;
-  learningBulkActionRunning?: boolean;
-  learningCreditCostPerPassage?: number;
-
-  // 선택한 지문을 워크스페이스로 보낸다 (학습자료 생성 버튼 오른쪽).
-  onEditSelected?: () => void;
-  // 워크스페이스에 올라간 지문 id. 카드 왼쪽 표시선과 배지로 구분한다.
-  workspacePassageIds?: Set<string>;
-  // 워크스페이스에 작업 중인 지문이 있는지 — 있으면 '추가' 어휘로 바꾼다.
-  workspaceActive?: boolean;
-
-  // Actions
-  handleOpenAnalysisModal: (passageId: string) => void | Promise<void>;
-  // Optional. When provided, clicking "상세 보기" on a 미분석 (un-analyzed) passage
-  // opens a plain full-content viewer instead of the analysis/report modal.
-  // Omit it (e.g. tutor program builder) to keep the legacy single-modal behavior.
-  onViewPassageContent?: (passage: PassageItem) => void;
-  // 카드 제목 인라인 수정(연필) 직후 부모가 목록 상태를 동기화할 수 있게.
-  onPassageRenamed?: (passageId: string, title: string) => void;
-  // 방금 상세를 열어본 지문 id(모달 닫혀도 유지) + 지금 열려 있는 상세 id.
-  // 두 값으로 "상세를 닫는 순간 그 카드만 한 번 반짝임"을 만든다.
-  lastViewedPassageId?: string | null;
-  openPassageDetailId?: string | null;
-  // 카드 우측 상단 검수 토글 점. 누르면 검수상태(빨강↔초록)가 실제로 바뀐다.
-  onToggleExtractionReview?: (passage: PassageItem) => void;
-  // 검수 토글 처리 중인 지문 id (점에 로딩 표시).
-  reviewActionPassageIds?: Set<string>;
-}
+import {
+  ANALYSIS_GLOW_ACK_STORAGE_KEY,
+  RECENT_ANALYSIS_GLOW_WINDOW_MS,
+} from "./passage-card-grid-constants";
+import {
+  analysisGlowKey,
+  analysisUpdatedAtMs,
+  formatMinuteTimestamp,
+} from "./passage-card-grid-helpers";
+import type {
+  ParsedAnalysisSummary,
+  PassageCardGridProps,
+} from "./passage-card-grid-types";
+import { useFolderWindowHeight } from "./use-folder-window-height";
 
 // ─── Component ───────────────────────────────────────
 
@@ -306,7 +137,13 @@ export function PassageCardGrid({
   reviewActionPassageIds,
 }: PassageCardGridProps) {
   const [showSearch, setShowSearch] = useState(() => passageSearch.length > 0);
-  const [folderWindowCollapsed, setFolderWindowCollapsed] = useState(false);
+  const {
+    folderWindowHeight,
+    folderWindowCollapsed,
+    setFolderWindowCollapsed,
+    beginFolderWindowResize,
+    resetFolderWindowHeight,
+  } = useFolderWindowHeight();
   const [draggingPassageIds, setDraggingPassageIds] = useState<string[]>([]);
   const [dropTargetCollectionId, setDropTargetCollectionId] = useState<
     string | null
@@ -343,21 +180,6 @@ export function PassageCardGrid({
     });
   const folderDropRefs = useRef<Map<string, HTMLElement>>(new Map());
   const newFolderInputRef = useRef<HTMLInputElement>(null);
-  const [folderWindowHeight, setFolderWindowHeight] = useState<number>(() => {
-    if (typeof window === "undefined") return FOLDER_WINDOW_DEFAULT_HEIGHT;
-    try {
-      const raw = window.localStorage.getItem(FOLDER_WINDOW_HEIGHT_STORAGE_KEY);
-      if (!raw) return FOLDER_WINDOW_DEFAULT_HEIGHT;
-      const n = parseInt(raw, 10);
-      if (Number.isNaN(n)) return FOLDER_WINDOW_DEFAULT_HEIGHT;
-      return Math.min(
-        FOLDER_WINDOW_MAX_HEIGHT,
-        Math.max(FOLDER_WINDOW_MIN_HEIGHT, n),
-      );
-    } catch {
-      return FOLDER_WINDOW_DEFAULT_HEIGHT;
-    }
-  });
   const selectAllCheckboxRef = useRef<HTMLInputElement>(null);
   // '다음으로(워크스페이스)'가 비활(선택 0개)일 때 눌리면 이 안의 지문 카드들을
   // 글로우해 "지문을 먼저 고르세요"를 유도한다.
@@ -515,55 +337,6 @@ export function PassageCardGrid({
       setCreatingFolder(false);
     }
   }, [creatingFolder, newFolderName, onCreateCollection, selectedCollectionId]);
-
-  const beginFolderWindowResize = (event: React.PointerEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const startY = event.clientY;
-    const startHeight = folderWindowHeight;
-    let latest = startHeight;
-
-    document.body.style.cursor = "row-resize";
-    document.body.style.userSelect = "none";
-
-    const onMove = (ev: PointerEvent) => {
-      latest = Math.min(
-        FOLDER_WINDOW_MAX_HEIGHT,
-        Math.max(FOLDER_WINDOW_MIN_HEIGHT, startHeight + (ev.clientY - startY)),
-      );
-      setFolderWindowHeight(latest);
-    };
-
-    const onUp = () => {
-      document.body.style.cursor = "";
-      document.body.style.userSelect = "";
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerup", onUp);
-      try {
-        window.localStorage.setItem(
-          FOLDER_WINDOW_HEIGHT_STORAGE_KEY,
-          String(latest),
-        );
-      } catch {
-        /* ignore */
-      }
-    };
-
-    window.addEventListener("pointermove", onMove);
-    window.addEventListener("pointerup", onUp);
-  };
-
-  const resetFolderWindowHeight = () => {
-    setFolderWindowHeight(FOLDER_WINDOW_DEFAULT_HEIGHT);
-    try {
-      window.localStorage.setItem(
-        FOLDER_WINDOW_HEIGHT_STORAGE_KEY,
-        String(FOLDER_WINDOW_DEFAULT_HEIGHT),
-      );
-    } catch {
-      /* ignore */
-    }
-  };
 
   useEffect(() => {
     if (!selectAllCheckboxRef.current) return;
@@ -1002,117 +775,12 @@ export function PassageCardGrid({
           {/* 정렬 필터 + 검색 (팝오버) */}
           {setPassageSortOrder ? (
             <div className="ml-auto flex shrink-0 items-center gap-1.5">
-              {setPassageSortOrder ? (
-                <>
-                  <Popover>
-                    <PopoverTrigger
-                      title="정렬"
-                      aria-label="정렬"
-                      className="relative flex size-7 shrink-0 items-center justify-center rounded-md border border-input bg-transparent text-slate-700 shadow-xs transition-[color,box-shadow] outline-none hover:bg-slate-50 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[state=open]:border-blue-200 data-[state=open]:bg-blue-50 data-[state=open]:text-blue-700"
-                    >
-                      <ListFilter
-                        className="size-3.5 shrink-0"
-                        aria-hidden="true"
-                      />
-                      {passageSortOrder !== "newest" ? (
-                        <span
-                          aria-hidden="true"
-                          className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
-                        />
-                      ) : null}
-                    </PopoverTrigger>
-                    <PopoverContent align="end" className="w-44 p-1.5">
-                      <div className="flex flex-col gap-0.5">
-                        <span className="px-2 py-1 text-[11px] font-medium text-slate-400">
-                          정렬
-                        </span>
-                        {(
-                          [
-                            { value: "newest", label: "최신순" },
-                            { value: "oldest", label: "오래된순" },
-                            { value: "name_asc", label: "이름 오름차순" },
-                            { value: "name_desc", label: "이름 내림차순" },
-                          ] as { value: PassageSortOrder; label: string }[]
-                        ).map((opt) => (
-                          <button
-                            key={opt.value}
-                            type="button"
-                            onClick={() => setPassageSortOrder?.(opt.value)}
-                            className={
-                              "flex items-center justify-between rounded-md px-2 py-1.5 text-left text-[12px] transition-colors " +
-                              (passageSortOrder === opt.value
-                                ? "bg-blue-50 font-medium text-blue-700"
-                                : "text-slate-600 hover:bg-slate-50")
-                            }
-                          >
-                            {opt.label}
-                            {passageSortOrder === opt.value ? (
-                              <Check
-                                className="size-3.5 shrink-0"
-                                aria-hidden="true"
-                              />
-                            ) : null}
-                          </button>
-                        ))}
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-
-                  <Popover>
-                    <PopoverTrigger
-                      title="검색"
-                      aria-label="검색"
-                      className={
-                        "relative flex size-7 shrink-0 items-center justify-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[state=open]:border-blue-200 data-[state=open]:bg-blue-50 data-[state=open]:text-blue-700 " +
-                        (passageSearch
-                          ? "border-blue-200 bg-blue-50 text-blue-700"
-                          : "border-input bg-transparent text-slate-700 hover:bg-slate-50")
-                      }
-                    >
-                      <Search
-                        className="size-3.5 shrink-0"
-                        aria-hidden="true"
-                      />
-                      {passageSearch ? (
-                        <span
-                          aria-hidden="true"
-                          className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
-                        />
-                      ) : null}
-                    </PopoverTrigger>
-                    <PopoverContent align="end" className="w-60 p-3">
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-[11px] font-medium text-slate-600">
-                          지문 검색
-                        </label>
-                        <div className="relative">
-                          <Search
-                            className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-slate-400"
-                            aria-hidden="true"
-                          />
-                          <input
-                            autoFocus
-                            placeholder="지문 제목 또는 내용 검색..."
-                            value={passageSearch}
-                            onChange={(e) => setPassageSearch(e.target.value)}
-                            className="h-8 w-full rounded-md border border-slate-200 bg-white pl-7 pr-7 text-[12px] text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
-                          />
-                          {passageSearch ? (
-                            <button
-                              type="button"
-                              onClick={() => setPassageSearch("")}
-                              className="absolute right-1.5 top-1/2 inline-flex size-4 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
-                              aria-label="검색 지우기"
-                            >
-                              <X className="size-3" />
-                            </button>
-                          ) : null}
-                        </div>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                </>
-              ) : null}
+              <PassageSortSearchPopover
+                passageSortOrder={passageSortOrder}
+                setPassageSortOrder={setPassageSortOrder}
+                passageSearch={passageSearch}
+                setPassageSearch={setPassageSearch}
+              />
             </div>
           ) : null}
 
@@ -1424,159 +1092,19 @@ export function PassageCardGrid({
             ) : null}
           </div>
           <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
-            <Popover>
-              <PopoverTrigger
-                title={
-                  activeFilterCount > 0
-                    ? `필터 ${activeFilterCount}개 적용`
-                    : "필터"
-                }
-                aria-label="필터"
-                className={`relative flex size-7 shrink-0 items-center justify-center rounded-md border shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[state=open]:border-blue-200 data-[state=open]:bg-blue-50 data-[state=open]:text-blue-700 ${
-                  activeFilterCount > 0
-                    ? "border-blue-200 bg-blue-50 text-blue-700"
-                    : "border-input bg-transparent text-slate-700 hover:bg-slate-50"
-                }`}
-              >
-                <ListFilter className="size-3.5 shrink-0" aria-hidden="true" />
-                {activeFilterCount > 0 ? (
-                  <span
-                    aria-hidden="true"
-                    className="absolute right-1 top-1 inline-block size-1.5 rounded-full bg-blue-500"
-                  />
-                ) : null}
-              </PopoverTrigger>
-              <PopoverContent align="end" className="w-60 p-3">
-                <div className="flex flex-col gap-3">
-                  {filterOptions.schools.length > 0 && (
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[11px] font-medium text-slate-600">
-                        학교
-                      </label>
-                      <select
-                        value={filterSchool}
-                        onChange={(e) => setFilterSchool(e.target.value)}
-                        className={`h-8 px-2.5 pr-6 rounded-md text-[12px] font-medium border appearance-none cursor-pointer transition-all ${
-                          filterSchool
-                            ? "bg-blue-50 text-blue-700 border-blue-300"
-                            : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
-                        }`}
-                      >
-                        <option value="">학교 전체</option>
-                        {filterOptions.schools.map((s) => (
-                          <option key={s.id} value={s.id}>
-                            {s.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-                  {filterOptions.grades.length > 0 && (
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[11px] font-medium text-slate-600">
-                        학년
-                      </label>
-                      <select
-                        value={filterGrade}
-                        onChange={(e) => setFilterGrade(e.target.value)}
-                        className={`h-8 px-2.5 pr-6 rounded-md text-[12px] font-medium border appearance-none cursor-pointer transition-all ${
-                          filterGrade
-                            ? "bg-blue-50 text-blue-700 border-blue-300"
-                            : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
-                        }`}
-                      >
-                        <option value="">학년 전체</option>
-                        {filterOptions.grades.map((g) => (
-                          <option key={g} value={g}>
-                            {g}학년
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-medium text-slate-600">
-                      학기
-                    </label>
-                    <div className="flex gap-1 rounded-lg border border-slate-200 p-0.5 bg-slate-50">
-                      {[
-                        { value: "", label: "전체" },
-                        { value: "FIRST", label: "1학기" },
-                        { value: "SECOND", label: "2학기" },
-                      ].map((s) => (
-                        <button
-                          key={s.value}
-                          type="button"
-                          onClick={() => setFilterSemester(s.value)}
-                          className={`h-6 flex-1 rounded-md text-[11px] font-medium transition-all ${
-                            filterSemester === s.value
-                              ? "bg-white text-blue-700 shadow-sm"
-                              : "text-slate-400 hover:text-slate-600"
-                          }`}
-                        >
-                          {s.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-medium text-slate-600">
-                      분석 상태
-                    </label>
-                    <div className="flex gap-1 rounded-lg border border-slate-200 p-0.5 bg-slate-50">
-                      {[
-                        {
-                          value: "all" as const,
-                          label: "전체",
-                          count: passageStatusCounts.all,
-                        },
-                        {
-                          value: "analyzed" as const,
-                          label: "분석 완료",
-                          count: passageStatusCounts.analyzed,
-                        },
-                        {
-                          value: "unanalyzed" as const,
-                          label: "미분석",
-                          count: passageStatusCounts.unanalyzed,
-                        },
-                      ].map((s) => (
-                        <button
-                          key={s.value}
-                          type="button"
-                          onClick={() => setAnalysisStatusFilter(s.value)}
-                          className={`h-6 flex-1 rounded-md text-[11px] font-medium transition-all ${
-                            analysisStatusFilter === s.value
-                              ? "bg-white text-blue-700 shadow-sm"
-                              : "text-slate-400 hover:text-slate-600"
-                          }`}
-                        >
-                          {s.label}{" "}
-                          <span className="text-[10px] opacity-70">
-                            {s.count}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  {activeFilterCount > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setFilterSchool("");
-                        setFilterGrade("");
-                        setFilterSemester("");
-                        setAnalysisStatusFilter("all");
-                      }}
-                      className="flex items-center justify-center gap-1 text-[11px] font-medium text-blue-600 hover:text-blue-700"
-                    >
-                      <X className="w-3 h-3" />
-                      초기화
-                    </button>
-                  )}
-                </div>
-              </PopoverContent>
-            </Popover>
+            <PassageFilterPopover
+              activeFilterCount={activeFilterCount}
+              filterOptions={filterOptions}
+              filterSchool={filterSchool}
+              setFilterSchool={setFilterSchool}
+              filterGrade={filterGrade}
+              setFilterGrade={setFilterGrade}
+              filterSemester={filterSemester}
+              setFilterSemester={setFilterSemester}
+              analysisStatusFilter={analysisStatusFilter}
+              setAnalysisStatusFilter={setAnalysisStatusFilter}
+              passageStatusCounts={passageStatusCounts}
+            />
             <button
               type="button"
               onClick={() => setShowSearch((open) => !open)}

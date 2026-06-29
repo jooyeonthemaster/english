@@ -1,0 +1,28 @@
+// generation-config-panel.tsx 에서 분리한 모듈 레벨 상수 (verbatim 이동).
+
+export const VOCAB_GENERATION_TYPE_IDS = new Set([
+  "CONTEXT_MEANING",
+  "SYNONYM",
+  "ANTONYM",
+]);
+export const TYPE_ORDER_STORAGE_KEY =
+  "smoat.workbench.questions.generate.typeOrder.v1";
+// 카테고리 그룹 접힘 상태(UI 취향) — 유형 목록을 3개 카테고리 카드로 묶고
+// 각 카드를 접을 수 있게 한다. 투어 중에는 강제로 모두 펼친다.
+export const GROUP_COLLAPSE_STORAGE_KEY =
+  "smoat.workbench.questions.generate.groupCollapsed.v1";
+// 렌더 순서(고정): 수능 → 내신 → 어휘. 정렬(typeOrder)은 그룹 내부에만 적용된다.
+export const GROUP_ORDER = ["수능", "내신", "어휘"] as const;
+export const GROUP_LABELS: Record<string, string> = {
+  수능: "수능·모의고사 객관식",
+  내신: "내신 서술형",
+  어휘: "어휘",
+};
+
+// Difficulty — 세그먼트 컨트롤. 단계 식별은 컬러 닷 + 난이도별 면색(SOT).
+// 색은 src/lib/difficulty.ts 와 동일(기본=파랑·중급=노랑·킬러=빨강) — 전 화면 일관.
+export const DIFFICULTY_TONES = [
+  { value: "BASIC", label: "기본", on: "bg-blue-50 text-blue-700", dot: "bg-blue-500" },
+  { value: "INTERMEDIATE", label: "중급", on: "bg-amber-50 text-amber-700", dot: "bg-amber-500" },
+  { value: "KILLER", label: "킬러", on: "bg-red-50 text-red-700", dot: "bg-red-500" },
+] as const;

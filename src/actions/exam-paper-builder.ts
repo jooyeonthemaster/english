@@ -167,7 +167,7 @@ export async function getExamPaperBuilderData(academyId: string) {
         _count: { select: { examLinks: true } },
       },
       orderBy: [{ starred: "desc" }, { createdAt: "desc" }],
-      take: 400,
+      take: 1000,
     }),
     prisma.questionCollection.findMany({
       where: { academyId },
