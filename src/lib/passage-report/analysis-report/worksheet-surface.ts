@@ -134,6 +134,139 @@ export function toStudentVocabularyClozePassage(passage: string, blanks: Vocabul
   return output;
 }
 
+// ─── 원문 생략 방지 (실전 학습지 어휘빈칸·어법선택 본문) ──────────────────────
+// 문제: workbookSet.vocabularyCloze.passage / grammarSelection.passage 는 AI 자유생성(z.string)
+// 본문이라, 모델이 원문 문장을 통째로 빠뜨리거나(원문 생략) 바꿔 쓰는 일이 있다. 권위 있는 원문
+// 문장 배열과 대조해 빠진 원문 문장만 제자리에 '원문 그대로' 복원한다.
+//  - 누락이 0이면 입력 문자열을 그대로 반환(무회귀 — 정상 본문은 절대 건드리지 않는다).
+//  - AI 문장은 절대 버리거나 재배열하지 않는다(빈칸/선택지 보존). 빠진 원문만 '추가'한다.
+
+// 원문 문장이 '존재'로 인정되려면 내용 토큰의 절반 이상이 본문에 있어야 한다(빈칸/선택지로 빠진 단어 감안).
+const CLOZE_COVERAGE_THRESHOLD = 0.5;
+
+/** 문장 경계로 분할(위치 추정 전용 — 누락 검출은 전역 토큰으로 한다).
+ *  종결부호(.!?) 뒤 공백에서 끊는다. 다음 글자 종류를 제한하지 않아 숫자/소문자로 시작하는 문장도 안전하게 끊긴다.
+ *  (약어로 과분할돼도 AI 문장은 절대 버리지 않으므로 무해) */
+function splitIntoSentences(text: string): string[] {
+  return text
+    .replace(/\s+/g, " ")
+    .trim()
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+/** 매칭용 내용 토큰 — 빈칸 (N)____, 선택지 [..], 남은 밑줄을 제거하고 소문자 단어(3+글자)만 추출. */
+function clozeContentTokens(text: string): string[] {
+  const stripped = text
+    .replace(/\(\s*\d+\s*\)\s*[_＿]+/g, " ")
+    .replace(/\[[^\]]*\]/g, " ")
+    .replace(/[_＿]{2,}/g, " ");
+  return tokenize(stripped).filter((w) => w.length >= 3);
+}
+
+/** 토큰 다중집합(토큰→개수). */
+function toBag(tokens: readonly string[]): Map<string, number> {
+  const bag = new Map<string, number>();
+  for (const t of tokens) bag.set(t, (bag.get(t) ?? 0) + 1);
+  return bag;
+}
+
+/**
+ * AI 본문 '전체' 토큰 집합(비소비)에서 각 원문 문장의 토큰이 충분히 존재하는지로 누락을 판정한다.
+ * 문장 분할/1:1 매칭에 의존하지 않으므로 (1) AI가 두 원문을 한 문장으로 합치거나 (2) 문장이 숫자/소문자로
+ * 시작하거나 (3) 근접 중복/보일러플레이트 문장이 있어도, '본문에 실제로 존재하는 문장을 누락으로 오판하지
+ * 않는다'. → 복원은 항상 가산만(present 문장을 절대 중복 복제하지 않음 = AI 출력보다 나빠질 수 없음).
+ * 대가: 다른 문장과 핵심어를 대부분 공유하는 '근접 중복' 문장이 진짜 빠진 경우는 놓칠 수 있다(부패 없음, AI
+ * 출력 그대로 = 무회귀). 실제 지문(서로 다른 내용어)은 모두 정확히 검출된다. 반환: 누락된 원문 인덱스 Set.
+ */
+function uncoveredOriginalSet(clozePassage: string, origs: readonly string[]): Set<number> {
+  const present = new Set(clozeContentTokens(clozePassage)); // 비소비: 본문에 존재하는 토큰 집합
+  const missing = new Set<number>();
+  origs.forEach((orig, i) => {
+    const ot = clozeContentTokens(orig);
+    if (ot.length === 0) return; // 토큰 없는 초단문은 커버로 간주
+    let hit = 0;
+    for (const t of ot) if (present.has(t)) hit += 1;
+    if (hit / ot.length < CLOZE_COVERAGE_THRESHOLD) missing.add(i);
+  });
+  return missing;
+}
+
+/** 원문 문장이 가장 잘 들어있는 AI 문장 인덱스(복원 위치 추정용, many-to-one 허용 — used set 없음). 없으면 -1. */
+function bestAiSentence(ot: readonly string[], aiTokens: readonly string[][]): number {
+  if (ot.length === 0) return -1;
+  let best = -1;
+  let bestScore = 0.3; // 위치 추정이므로 느슨하게
+  aiTokens.forEach((at, i) => {
+    const bag = toBag(at);
+    let hit = 0;
+    for (const t of ot) {
+      const c = bag.get(t) ?? 0;
+      if (c > 0) {
+        hit += 1;
+        bag.set(t, c - 1);
+      }
+    }
+    const score = hit / ot.length;
+    if (score > bestScore) {
+      bestScore = score;
+      best = i;
+    }
+  });
+  return best;
+}
+
+/**
+ * AI cloze 본문에서 '실제로 누락된' 원문 문장만 제자리에 복원한다(원문 생략 방지).
+ * - 누락이 없으면 입력을 그대로 반환(무회귀).
+ * - 검출은 전역 토큰 소비라 merge/숫자시작/근접중복에 강건 → 거짓양성으로 인한 중복 주입이 없다.
+ * - 위치는 '직전에 커버된 원문이 들어있는 AI 문장' 뒤(시작부 누락은 맨 앞). AI 문장은 절대 버리지 않는다.
+ */
+export function restoreClozePassageOriginal(clozePassage: string, originalSentences: readonly string[]): string {
+  const origs = originalSentences.map((s) => s.trim()).filter(Boolean);
+  if (origs.length === 0 || !clozePassage.trim()) return clozePassage;
+  const missing = uncoveredOriginalSet(clozePassage, origs);
+  if (missing.size === 0) return clozePassage; // 누락 0 → 무회귀
+
+  const aiSents = splitIntoSentences(clozePassage);
+  const aiTokens = aiSents.map(clozeContentTokens);
+  const insertAfter = new Map<number, string[]>();
+  const beforeFirst: string[] = [];
+  let lastAi = -1;
+  origs.forEach((orig, i) => {
+    if (!missing.has(i)) {
+      const ai = bestAiSentence(clozeContentTokens(orig), aiTokens);
+      if (ai > lastAi) lastAi = ai;
+      return;
+    }
+    if (lastAi < 0) beforeFirst.push(orig);
+    else {
+      const arr = insertAfter.get(lastAi) ?? [];
+      arr.push(orig);
+      insertAfter.set(lastAi, arr);
+    }
+  });
+
+  const parts: string[] = [...beforeFirst];
+  aiSents.forEach((sentence, ai) => {
+    parts.push(sentence);
+    const extra = insertAfter.get(ai);
+    if (extra) parts.push(...extra);
+  });
+  return parts.join(" ");
+}
+
+/** 원문 문장 중 cloze 본문에서 누락된 것(1-based 번호) 목록. 없으면 빈 배열. */
+export function clozePassageCoverageIssues(label: string, clozePassage: string, originalSentences: readonly string[]): string[] {
+  const origs = originalSentences.map((s) => s.trim()).filter(Boolean);
+  if (origs.length === 0) return [];
+  const missing = uncoveredOriginalSet(clozePassage, origs);
+  if (missing.size === 0) return [];
+  const nos = [...missing].map((i) => i + 1).sort((a, b) => a - b);
+  return [`${label}: 원문 문장 ${nos.join(", ")}번이 누락되었습니다(원문 생략).`];
+}
+
 export function vocabularyClozeSurfaceIssues(passage: string, blanks: VocabularyBlank[]): string[] {
   const studentPassage = toStudentVocabularyClozePassage(passage, blanks);
   const issues: string[] = [];

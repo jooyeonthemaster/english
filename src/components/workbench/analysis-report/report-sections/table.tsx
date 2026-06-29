@@ -1,5 +1,6 @@
 import { type ReactNode, type PointerEvent as ReactPointerEvent, useRef } from "react";
 import { type AnalysisSection, NUMBERED_SECTION_LABELS, SECTION_LABELS_EN } from "@/lib/passage-report/analysis-report/schema";
+import { Field } from "./editable-field";
 import type { TableColResize, WrapKind } from "./types";
 
 /** 표 종류별 열 키(순서) */
@@ -37,12 +38,42 @@ export function Arrow() {
   );
 }
 
-export function SectionHead({ no, kind, labelKo, labelEn }: { no: number; kind: AnalysisSection["kind"]; labelKo?: string; labelEn?: string }) {
+/**
+ * 섹션 헤더(par-sec-head). 번호(par-sec-no)는 자동 생성이라 고정. 한글 제목(ko)·영문 라벨(en)은
+ * editable + onCommit 이 주어지면 인라인 편집 필드로 렌더(편집 핸들러 없으면 정적 텍스트 — 무회귀).
+ */
+export function SectionHead({
+  no,
+  kind,
+  labelKo,
+  labelEn,
+  editable,
+  onCommitKo,
+  onCommitEn,
+}: {
+  no: number;
+  kind: AnalysisSection["kind"];
+  labelKo?: string;
+  labelEn?: string;
+  editable?: boolean;
+  onCommitKo?: (v: string) => void;
+  onCommitEn?: (v: string) => void;
+}) {
+  const ko = labelKo ?? NUMBERED_SECTION_LABELS[kind];
+  const en = labelEn ?? SECTION_LABELS_EN[kind];
   return (
     <div className="par-sec-head">
       <span className="par-sec-no">{String(no).padStart(2, "0")}</span>
-      <span className="par-sec-ko">{labelKo ?? NUMBERED_SECTION_LABELS[kind]}</span>
-      <span className="par-sec-en">{labelEn ?? SECTION_LABELS_EN[kind]}</span>
+      {editable && onCommitKo ? (
+        <Field as="span" className="par-sec-ko par-no-fontrun" editable value={ko} onCommit={onCommitKo} placeholder="섹션 제목" />
+      ) : (
+        <span className="par-sec-ko">{ko}</span>
+      )}
+      {editable && onCommitEn ? (
+        <Field as="span" className="par-sec-en par-no-fontrun" editable value={en} onCommit={onCommitEn} placeholder="English" />
+      ) : (
+        <span className="par-sec-en">{en}</span>
+      )}
     </div>
   );
 }

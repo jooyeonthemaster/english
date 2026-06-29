@@ -2,7 +2,7 @@ import type { AnalysisSection } from "@/lib/passage-report/analysis-report/schem
 import { getConsolidatedWordOrders, toStudentVocabularyClozePassage, toStudentWorksheetWordBank, worksheetAnswersAreHidden, worksheetClozeTranslationsAreHidden } from "@/lib/passage-report/analysis-report/worksheet-surface";
 import { Field, renderGrammarChoiceText } from "./editable-field";
 import type { LearningWorksheetSection, SectionFlowCtx } from "./types";
-import { WordBank, WorksheetLogicMapBlock, WorksheetMiniTitle, WorksheetQuestionCard, worksheetAnswerKeySubsections } from "./worksheet";
+import { EditableSectionLabel, miniHeadProps, WordBank, WorksheetLogicMapBlock, WorksheetMiniTitle, WorksheetQuestionCard, worksheetAnswerKeySubsections } from "./worksheet";
 
 export function worksheetSectionFlow(section: Extract<AnalysisSection, { kind: "learning-worksheet" }>, ctx: SectionFlowCtx): void {
   const { editable, commit, push, options } = ctx;
@@ -33,7 +33,11 @@ const s = section;
           "note",
           "ws-cloze",
           <div className="par-ws-block">
-            <WorksheetMiniTitle title={s.cloze.title} kicker="Key Phrase Cloze" />
+            <WorksheetMiniTitle
+              {...miniHeadProps(s, patch, editable, "ws-cloze", s.cloze.title, "Key Phrase Cloze", (v) =>
+                s.cloze ? patch({ cloze: { ...s.cloze, title: v } }) : undefined,
+              )}
+            />
             <div className="par-ws-cloze-list">
               {s.cloze.items.map((item, i) => (
                 <div className="par-ws-cloze" key={item.no}>
@@ -77,7 +81,11 @@ const s = section;
           "note",
           "ws-practice",
           <div className="par-ws-block">
-            <WorksheetMiniTitle title={s.practice.title} kicker="No Translation" />
+            <WorksheetMiniTitle
+              {...miniHeadProps(s, patch, editable, "ws-practice", s.practice.title, "No Translation", (v) =>
+                s.practice ? patch({ practice: { ...s.practice, title: v } }) : undefined,
+              )}
+            />
             <div className="par-ws-practice-list">
               {s.practice.items.map((item, i) => (
                 <div className="par-ws-practice" key={item.no}>
@@ -105,10 +113,10 @@ const s = section;
           "note",
           "ws-drills",
           <div className="par-ws-block">
-            <WorksheetMiniTitle title="어법 선택 · 단어배열 영작" kicker="Workbook Drills" />
+            <WorksheetMiniTitle {...miniHeadProps(s, patch, editable, "ws-drills", "어법 선택 · 단어배열 영작", "Workbook Drills")} />
             {s.drills?.grammarChoices?.length ? (
               <div className="par-ws-drill-set">
-                <div className="par-ws-drill-label">어법 선택</div>
+                <EditableSectionLabel section={s} onPatch={patch} editable={editable} slot="ws-drill-grammar-label" defaultText="어법 선택" className="par-ws-drill-label" />
                 {s.drills.grammarChoices.map((item, i) => (
                   <div className="par-ws-grammar-choice" key={item.no}>
                     <div className="par-ws-drill-line">
@@ -138,7 +146,7 @@ const s = section;
             ) : null}
             {showDrillWordOrders ? (
               <div className="par-ws-drill-set">
-                <div className="par-ws-drill-label">주요문장 단어배열 영작</div>
+                <EditableSectionLabel section={s} onPatch={patch} editable={editable} slot="ws-drill-order-label" defaultText="주요문장 단어배열 영작" className="par-ws-drill-label" />
                 {(s.drills?.wordOrders ?? []).map((item, i) => (
                   <div className="par-ws-wordorder" key={item.no}>
                     <div className="par-ws-wordorder-ko">
@@ -174,9 +182,19 @@ const s = section;
           "note",
           "ws-workbook-topic",
           <div className="par-ws-block">
-            <WorksheetMiniTitle title={workbookSet.title} kicker="EBS Workbook" />
+            <WorksheetMiniTitle
+              {...miniHeadProps(s, patch, editable, "ws-workbook-topic", workbookSet.title, "EBS Workbook", (v) =>
+                patch({ workbookSet: { ...workbookSet, title: v } }),
+              )}
+            />
             <div className="par-ws-topic-card">
-              <span className="par-ws-topic-label">{workbookSet.topicGist.title}</span>
+              <Field
+                as="span"
+                className="par-ws-topic-label par-no-fontrun"
+                editable={editable}
+                value={workbookSet.topicGist.title}
+                onCommit={(v) => patch({ workbookSet: { ...workbookSet, topicGist: { ...workbookSet.topicGist, title: v } } })}
+              />
               <Field
                 as="div"
                 className="par-ws-topic-title"
@@ -206,7 +224,11 @@ const s = section;
           "note",
           "ws-workbook-grammar",
           <div className="par-ws-block">
-            <WorksheetMiniTitle title={workbookSet.grammarSelection.title} kicker="Grammar Choice" />
+            <WorksheetMiniTitle
+              {...miniHeadProps(s, patch, editable, "ws-workbook-grammar", workbookSet.grammarSelection.title, "Grammar Choice", (v) =>
+                patch({ workbookSet: { ...workbookSet, grammarSelection: { ...workbookSet.grammarSelection, title: v } } }),
+              )}
+            />
             {editable ? (
               <Field
                 as="div"
@@ -231,7 +253,11 @@ const s = section;
           "note",
           "ws-workbook-vocab",
           <div className="par-ws-block">
-            <WorksheetMiniTitle title={workbookSet.vocabularyCloze.title} kicker="Vocabulary Cloze" />
+            <WorksheetMiniTitle
+              {...miniHeadProps(s, patch, editable, "ws-workbook-vocab", workbookSet.vocabularyCloze.title, "Vocabulary Cloze", (v) =>
+                patch({ workbookSet: { ...workbookSet, vocabularyCloze: { ...workbookSet.vocabularyCloze, title: v } } }),
+              )}
+            />
             <Field
               as="div"
               className="par-ws-workbook-passage"
@@ -252,7 +278,7 @@ const s = section;
           "note",
           "ws-workbook-order",
           <div className="par-ws-block">
-            <WorksheetMiniTitle title="주요문장 단어배열 영작" kicker="Word Order" />
+            <WorksheetMiniTitle {...miniHeadProps(s, patch, editable, "ws-workbook-order", "주요문장 단어배열 영작", "Word Order")} />
             <div className="par-ws-drill-set">
               {consolidatedWordOrders.map((item, i) => (
                 <div className="par-ws-wordorder" key={item.no}>
@@ -289,7 +315,11 @@ const s = section;
           "note",
           "ws-inference-title",
           <div className="par-ws-block">
-            <WorksheetMiniTitle title={inferenceSet.title} kicker="Suneung Inference" />
+            <WorksheetMiniTitle
+              {...miniHeadProps(s, patch, editable, "ws-inference-title", inferenceSet.title, "Suneung Inference", (v) =>
+                patch({ inferenceSet: { ...inferenceSet, title: v } }),
+              )}
+            />
           </div>,
         );
         inferenceSet.questions.forEach((q, qi) => {
@@ -332,7 +362,7 @@ const s = section;
       });
       if (showAnswerKey) {
         let firstAnswer = true;
-        for (const sub of worksheetAnswerKeySubsections(s, consolidatedWordOrders)) {
+        for (const sub of worksheetAnswerKeySubsections(s, consolidatedWordOrders, editable, patch)) {
           // 정답·해설은 맨 뒤 '별도 페이지'에서 시작 (학생 시험지와 분리)
           push("note", `ws-answer-${sub.key}`, sub.node, firstAnswer ? { breakBefore: true } : undefined);
           firstAnswer = false;

@@ -18,8 +18,10 @@ import {
   type ReportThemeId,
 } from "./schema";
 import {
+  clozePassageCoverageIssues,
   consolidateWordOrders,
   normalizeStudentFacingMarkup,
+  restoreClozePassageOriginal,
   scrambleWordOrderChunks,
   studentFacingMarkupIssues,
   toStudentWorksheetWordBank,
@@ -215,7 +217,8 @@ export async function generateLearningWorksheet(
     inferenceSet: inference.inferenceSet,
     questions: core.section.questions ?? [],
   };
-  normalizeWorkbookTestSurface(combined);
+  const originalSentences = passageSentencesOf(report);
+  normalizeWorkbookTestSurface(combined, originalSentences);
   normalizeInferenceQuestions(combined);
   normalizeInferenceAnswerPositions(combined);
 
@@ -229,7 +232,7 @@ export async function generateLearningWorksheet(
     };
   }
 
-  const qualityIssues = validateLearningWorksheetQuality(validation.data);
+  const qualityIssues = validateLearningWorksheetQuality(validation.data, originalSentences);
   if (qualityIssues.length > 0) {
     return {
       ok: false,
@@ -333,12 +336,13 @@ export async function generateLearningWorksheetResilient(
     inferenceSet: inferenceSet ?? undefined,
     questions: workbookSection?.questions ?? [],
   } as LearningWorksheetSection;
-  normalizeWorkbookTestSurface(combined);
+  const originalSentences = passageSentencesOf(report);
+  normalizeWorkbookTestSurface(combined, originalSentences);
   if (inferenceSet) {
     normalizeInferenceQuestions(combined);
     normalizeInferenceAnswerPositions(combined);
   }
-  const qualityIssues = validateLearningWorksheetQuality(combined);
+  const qualityIssues = validateLearningWorksheetQuality(combined, originalSentences);
   if (qualityIssues.length > 0) {
     console.warn(`[RESILIENT_WORKSHEET] 품질 경고(완성 우선, 비차단): ${qualityIssues.slice(0, 6).join(" | ")}`);
   }
@@ -413,8 +417,9 @@ async function generateLearningWorksheetCore(
       continue;
     }
 
-    normalizeWorkbookTestSurface(validation.data);
-    const qualityIssues = validateWorkbookQuality(validation.data);
+    const originalSentences = passageSentencesOf(report);
+    normalizeWorkbookTestSurface(validation.data, originalSentences);
+    const qualityIssues = validateWorkbookQuality(validation.data, originalSentences);
     if (qualityIssues.length > 0) {
       lastFailure = `품질 검증 실패: ${qualityIssues.slice(0, 10).join(" | ")}`;
       lastParsed = validation.data;
@@ -595,13 +600,26 @@ function normalizeInferenceQuestions(section: LearningWorksheetSection): void {
 const CHOICE_LABELS = ["①", "②", "③", "④", "⑤"] as const;
 const INFERENCE_ANSWER_LABEL_PATTERN = ["②", "④", "①", "⑤", "③"] as const;
 
-function normalizeWorkbookTestSurface(section: LearningWorksheetSection): void {
+/** 보고서 passage 섹션의 원문 영어 문장 배열(권위) — 원문 생략 복원의 기준. */
+function passageSentencesOf(report: AnalysisReport): string[] {
+  const p = report.sections.find((s) => s.kind === "passage");
+  return p && p.kind === "passage" ? p.sentences.map((s) => s.en).filter((e) => e.trim().length > 0) : [];
+}
+
+function normalizeWorkbookTestSurface(section: LearningWorksheetSection, originalSentences: readonly string[] = []): void {
   normalizeWorksheetWordBanks(section);
 
   const workbook = section.workbookSet;
   if (!workbook) return;
 
   section.hiddenAnswers = false;
+
+  // 원문 생략 방지 — AI 본문에서 빠진 원문 문장을 먼저 복원한 뒤, 선택지 셔플/빈칸 치환을 적용한다.
+  // (누락이 없으면 입력 그대로 → 무회귀)
+  if (originalSentences.length > 0) {
+    workbook.grammarSelection.passage = restoreClozePassageOriginal(workbook.grammarSelection.passage, originalSentences);
+    workbook.vocabularyCloze.passage = restoreClozePassageOriginal(workbook.vocabularyCloze.passage, originalSentences);
+  }
 
   let grammarPassage = workbook.grammarSelection.passage;
   workbook.grammarSelection.choices.forEach((choice, index) => {
@@ -704,11 +722,11 @@ function replaceBracketOptions(passage: string, previousOptions: string[], nextO
   return passage.replace(pattern, nextText);
 }
 
-function validateLearningWorksheetQuality(section: LearningWorksheetSection): string[] {
-  return [...validateWorkbookQuality(section), ...validateInferenceQuality(section)];
+function validateLearningWorksheetQuality(section: LearningWorksheetSection, originalSentences: readonly string[] = []): string[] {
+  return [...validateWorkbookQuality(section, originalSentences), ...validateInferenceQuality(section)];
 }
 
-function validateWorkbookQuality(section: LearningWorksheetSection): string[] {
+function validateWorkbookQuality(section: LearningWorksheetSection, originalSentences: readonly string[] = []): string[] {
   const issues: string[] = [];
   issues.push(...worksheetWordBankSurfaceIssues("key phrase cloze", section.cloze?.wordBank, section.cloze?.items));
   issues.push(...worksheetWordBankSurfaceIssues("practice cloze", section.practice?.wordBank, section.practice?.items));
@@ -742,6 +760,11 @@ function validateWorkbookQuality(section: LearningWorksheetSection): string[] {
       issues.push("어휘 빈칸은 최소 8개 이상이어야 합니다.");
     }
     issues.push(...vocabularyClozeSurfaceIssues(workbook.vocabularyCloze.passage, workbook.vocabularyCloze.blanks));
+    // 원문 생략 가드 — 어휘빈칸/어법선택 본문이 원문 문장을 빠뜨리면 실패(정규화 복원 후 잔여 누락 검출).
+    if (originalSentences.length > 0) {
+      issues.push(...clozePassageCoverageIssues("어휘 빈칸 본문", workbook.vocabularyCloze.passage, originalSentences));
+      issues.push(...clozePassageCoverageIssues("어법 선택 본문", workbook.grammarSelection.passage, originalSentences));
+    }
     for (const blank of workbook.vocabularyCloze.blanks) {
       if (!blank.meaning?.trim()) {
         issues.push(`어휘 빈칸 ${blank.no}번 뜻이 없습니다.`);

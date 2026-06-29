@@ -345,6 +345,9 @@ export function AnalysisReportEditor({
         else if (action.type === "param") next = appliedActivityParams(r, b, action.patch);
         else if (action.type === "sentences") next = appliedActivitySentences(r, b, action.sentenceNos);
         else if (action.type === "answers") next = { ...b, answersHidden: action.hidden };
+        else if (action.type === "title") next = { ...b, title: action.value };
+        // 빈 영문 라벨은 undefined 로 — 표시 시 payload.instructions 기본값으로 되돌아간다.
+        else if (action.type === "kicker") next = { ...b, kicker: action.value.trim() ? action.value : undefined };
         else if (action.type === "blankItem") {
           // 블록 전체 연속 재번호(nested 는 회차별 리셋) — 인라인=정답지 번호 일치 보장.
           const renum = applyManualBlankToBlock(
@@ -411,6 +414,14 @@ export function AnalysisReportEditor({
 
   const onColWidths = useCallback((group: string, widths: Record<string, number>) => {
     setReport((r) => setTableColWidths(r, group, widths));
+  }, [setReport]);
+
+  // 섹션 헤더(par-sec-head) ko/en 라벨 인라인 편집 — 보고서 레벨 오버라이드 맵(슬롯키 → {ko,en}).
+  const onSectionHeading = useCallback((key: string, patch: { ko?: string; en?: string }) => {
+    setReport((r) => ({
+      ...r,
+      sectionHeadings: { ...(r.sectionHeadings ?? {}), [key]: { ...(r.sectionHeadings?.[key] ?? {}), ...patch } },
+    }));
   }, [setReport]);
 
   const setCustom = useCallback((id: string, patch: Partial<CustomBlock>) => {
@@ -1102,12 +1113,13 @@ export function AnalysisReportEditor({
       ced,
       onResize,
       onColWidths,
+      onSectionHeading,
       onDeletePage: deletePage,
       onDelete: deleteActive,
       onMovePage: movePage,
       drag: { startDrag, draggingId, dragOverId, placement },
     }),
-    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, insertTextAfter, onActivity, ced, onResize, onColWidths, deletePage, deleteActive, movePage, startDrag, draggingId, dragOverId, placement],
+    [med, sectionEdit, activeId, onReorder, onBlockMeta, setCustom, insertTextAfter, onActivity, ced, onResize, onColWidths, onSectionHeading, deletePage, deleteActive, movePage, startDrag, draggingId, dragOverId, placement],
   );
 
   const descriptors = useMemo(() => enumerateItems(report), [report]);
