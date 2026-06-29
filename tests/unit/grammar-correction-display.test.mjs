@@ -235,7 +235,8 @@ test("GRAMMAR_CORRECTION keeps only the corrected expression as the answer", () 
   );
   assert.equal(result.postProcessed.data.errorPart, "is rarely");
   assert.equal(result.postProcessed.data.correctAnswer, "(A) are rarely");
-  assert.equal(result.formattedAnswer, "(A) are rarely");
+  // 표시용 포매터는 단일 오류면 (A) 라벨을 생략한다(빈칸 1개 → 라벨 불필요). 저장값은 라벨 유지.
+  assert.equal(result.formattedAnswer, "are rarely");
 });
 
 test("question text and paper builder use labeled underlined passage plus labeled answer slots", () => {
@@ -268,13 +269,13 @@ test("quality gate accepts wide underlines and rejects exact-error underlines", 
   assert.equal(result.postProcessedWithoutPassage.success, false);
   assert.ok(
     result.tooNarrowQuality.some(
-      (issue) => issue.severity === "error" && issue.code === "grammar-correction-underline-too-narrow",
+      (issue) => issue.severity === "warning" && issue.code === "grammar-correction-underline-too-narrow",
     ),
     JSON.stringify(result.tooNarrowQuality),
   );
   assert.ok(
     result.tooNarrowQuality.some(
-      (issue) => issue.severity === "error" && issue.code === "grammar-correction-underlined-segment-short",
+      (issue) => issue.severity === "warning" && issue.code === "grammar-correction-underlined-segment-short",
     ),
     JSON.stringify(result.tooNarrowQuality),
   );

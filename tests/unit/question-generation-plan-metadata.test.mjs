@@ -165,12 +165,20 @@ test("premium generation plan is wired through generation and review surfaces", 
       ],
     ],
     [
+      // 패널은 유형별 난이도/생성플랜 UI를 추출 파트(type-numeric-detail)로 위임한다.
       "src/app/(director)/director/workbench/generate/generation-config-panel.tsx",
       [
-        "getTypeDifficulty(typeId)",
-        "getTypeGenerationPlan(typeId)",
-        "setTypeGenerationPlan(typeId, next)",
-        "GenerationPlanSelector",
+        "TypeNumericDetail.renderPerTypeDifficultyImpl(",
+        "TypeNumericDetail.renderTypeDetailContentImpl(",
+      ],
+    ],
+    [
+      // 추출 파트가 유형별 난이도 읽기/쓰기 + 유형별 생성플랜 읽기를 실제로 구현한다.
+      "src/app/(director)/director/workbench/generate/generation-config-panel-parts/type-numeric-detail.tsx",
+      [
+        "questionTypeSettings[typeId]?.difficulty",
+        "patchTypeSettings(typeId, { difficulty:",
+        "readQuestionTypeGenerationPlanSetting(",
       ],
     ],
     [
