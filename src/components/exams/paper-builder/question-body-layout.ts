@@ -50,6 +50,9 @@ const STRUCTURED_ATOMIC_SUBTYPES = new Set([
   // 요약문 영작: [해석]/[요약문]/[보기]/[앞글자] 박스와 영작 답란이 칸 경계에서
   // 쪼개지지 않도록 SUMMARY_COMPLETE 와 동일하게 원자 배치한다.
   "SUMMARY_WRITING",
+  // 주제문 영작: [주제 힌트]/[주제문]/[보기]/[배열 단어] 박스와 영작 답란이 칸 경계에서
+  // 쪼개지지 않도록 SUMMARY_WRITING 과 동일하게 원자 배치한다.
+  "TOPIC_SENTENCE_WRITING",
   "SENTENCE_ORDER",
 ]);
 
@@ -80,6 +83,96 @@ function splitFirstParagraph(text: string): { stem: string; body: string } {
   return { stem, body };
 }
 
+// ---------------------------------------------------------------------------
+// 주제문 영작(TOPIC_SENTENCE_WRITING) 마커 분해 — SUMMARY_WRITING 미러.
+//
+// 직렬 포맷(학생 안전, topicSentenceWritingStudentParts 산출):
+//   <발문>
+//   [주제 힌트] <한국어>            ← hintEnabled && koreanGloss 일 때만
+//   (scrambled) [배열 단어] w1 / w2 / ...
+//   (cloze)     [주제문] <(A) _____ 마스킹본>   +  [보기] chip1 / chip2 ...
+// 정답계열은 어느 마커에도 직렬화되지 않으므로 정답 제거 로직이 불필요하다.
+// 마커는 "블록/라인 시작"에 앵커해 발문 안의 인라인 리터럴([보기] 등) 오인을 막는다.
+// ---------------------------------------------------------------------------
+export function isTopicSentenceWritingSubtype(subType: string | null | undefined) {
+  return subType === "TOPIC_SENTENCE_WRITING";
+}
+
+const TSW_HINT_MARKER_RE = /(^|\n)\s*\[(?:주제\s*힌트|topic\s*hint)\]/i; // [주제 힌트]
+const TSW_TOPIC_MARKER_RE = /(^|\n)\s*\[(?:주제문|topic\s*sentence)\]/i; // [주제문]
+const TSW_WORDBANK_MARKER_RE = /(^|\n)\s*\[(?:보기|word\s*bank)\]/i; // [보기]
+const TSW_SCRAMBLED_MARKER_RE = /(^|\n)\s*\[(?:배열\s*단어|word\s*order)\]/i; // [배열 단어]
+const ANY_TSW_MARKER_RE =
+  /^\s*\[(?:주제\s*힌트|topic\s*hint|주제문|topic\s*sentence|보기|word\s*bank|배열\s*단어|word\s*order)\]/i;
+
+type TopicSentenceWritingSections = {
+  stem: string;
+  hint: string; // [주제 힌트]
+  topic: string; // [주제문] (cloze, 마스킹본)
+  wordBank: string; // [보기] (cloze)
+  scrambled: string; // [배열 단어] (scrambled)
+};
+
+function cleanupTopicSection(text: string) {
+  return (text || "").replace(/\s+/g, " ").trim();
+}
+
+function splitTopicSentenceWritingQuestionText(text: string): TopicSentenceWritingSections {
+  const normalized = normalizeQuestionText(text || "");
+  const empty: TopicSentenceWritingSections = {
+    stem: "",
+    hint: "",
+    topic: "",
+    wordBank: "",
+    scrambled: "",
+  };
+  if (!normalized) return empty;
+
+  type MarkerSpec = { key: keyof TopicSentenceWritingSections; re: RegExp };
+  const markerSpecs: MarkerSpec[] = [
+    { key: "hint", re: TSW_HINT_MARKER_RE },
+    { key: "topic", re: TSW_TOPIC_MARKER_RE },
+    { key: "wordBank", re: TSW_WORDBANK_MARKER_RE },
+    { key: "scrambled", re: TSW_SCRAMBLED_MARKER_RE },
+  ];
+
+  // 1차 방어: 발문(첫 \n\n 블록)을 stem 으로 떼어내고 남은 본문에서만 마커를 찾는다.
+  const blocks = normalized.split(/\n{2,}/);
+  const firstBlock = (blocks[0] || "").trim();
+  const firstIsMarker = Boolean(firstBlock) && ANY_TSW_MARKER_RE.test(firstBlock);
+  const firstParagraphStem = firstIsMarker ? "" : cleanupTopicSection(firstBlock);
+  const body = firstIsMarker ? normalized : blocks.slice(1).join("\n\n");
+
+  // 2차 방어: 본문에서 마커를 "블록/라인 시작"에 앵커해 탐색(인라인 리터럴 무시).
+  const hits = markerSpecs
+    .map((spec) => {
+      const match = body.match(spec.re);
+      return match && match.index !== undefined
+        ? { key: spec.key, start: match.index, end: match.index + match[0].length }
+        : null;
+    })
+    .filter(
+      (hit): hit is { key: keyof TopicSentenceWritingSections; start: number; end: number } =>
+        hit !== null,
+    )
+    .sort((a, b) => a.start - b.start);
+
+  if (hits.length === 0) {
+    return { ...empty, stem: firstParagraphStem || cleanupTopicSection(firstBlock) };
+  }
+
+  const result: TopicSentenceWritingSections = { ...empty };
+  const stemTail = cleanupTopicSection(body.slice(0, hits[0].start));
+  result.stem = [firstParagraphStem, stemTail].filter(Boolean).join(" ").trim();
+
+  hits.forEach((hit, index) => {
+    const nextStart = hits[index + 1]?.start ?? body.length;
+    result[hit.key] = cleanupTopicSection(body.slice(hit.end, nextStart));
+  });
+
+  return result;
+}
+
 export function questionStemAndBody(item: PaperItem): { stem: string; body: string } {
   const subType = item.sourceQuestion.subType;
 
@@ -92,6 +185,13 @@ export function questionStemAndBody(item: PaperItem): { stem: string; body: stri
   // structuredSegments() 가 박스로 그린다.
   if (isSummaryWritingSubtype(subType)) {
     const { stem } = splitSummaryWritingQuestionText(item.questionText);
+    return { stem, body: "" };
+  }
+
+  // 주제문 영작: 지시문(stem)만 헤더에 두고, [주제 힌트]/[주제문]/[보기]/[배열 단어] 본문은
+  // structuredSegments() 가 박스로 그린다(SUMMARY_WRITING 미러).
+  if (isTopicSentenceWritingSubtype(subType)) {
+    const { stem } = splitTopicSentenceWritingQuestionText(item.questionText);
     return { stem, body: "" };
   }
 
@@ -271,6 +371,23 @@ export function structuredSegments(item: PaperItem): StructSegment[] {
     if (sw.wordBank) segs.push({ kind: "box", boxStyle: "given", text: `[보기] ${sw.wordBank}` });
     if (sw.firstLetter)
       segs.push({ kind: "box", boxStyle: "given", text: `[앞글자] ${sw.firstLetter}` });
+    return segs;
+  }
+
+  // 주제문 영작: [지문](테두리 박스) → [주제 힌트](회색) →
+  //   cloze:    [주제문]((A)(B) 빈칸선, 본문색) + [보기](회색 칩)
+  //   scrambled:[배열 단어](회색 칩)
+  // SUMMARY_WRITING 미러. 정답계열은 questionText 에 직렬화되지 않으므로 마스킹 불필요.
+  if (isTopicSentenceWritingSubtype(subType)) {
+    const passage = summaryCompleteMcPassageForItem(item);
+    const tsw = splitTopicSentenceWritingQuestionText(item.questionText);
+    const segs: StructSegment[] = [];
+    if (passage) segs.push({ kind: "box", boxStyle: "passage", text: passage });
+    if (tsw.hint) segs.push({ kind: "box", boxStyle: "given", text: `[주제 힌트] ${tsw.hint}` });
+    if (tsw.topic) segs.push({ kind: "box", boxStyle: "summary", text: `[주제문] ${tsw.topic}` });
+    if (tsw.wordBank) segs.push({ kind: "box", boxStyle: "given", text: `[보기] ${tsw.wordBank}` });
+    if (tsw.scrambled)
+      segs.push({ kind: "box", boxStyle: "given", text: `[배열 단어] ${tsw.scrambled}` });
     return segs;
   }
 

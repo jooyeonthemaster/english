@@ -16,6 +16,7 @@ import { readSentenceOrderPrefixVariationCountSetting } from "./sentence-order";
 import { BLANK_INFERENCE_BLANK_COUNT_DEFAULT, CONTENT_MATCH_ANSWER_COUNT_DEFAULT, CONTENT_MATCH_OPTION_COUNT_DEFAULT, MULTI_BLANK_LABELS, SENTENCE_INSERT_SLOT_COUNT_DEFAULT, SENTENCE_ORDER_PREFIX_VARIATION_COUNT_DEFAULT, combinePromptSections, getQuestionTypeSettingsForType, isRecord, readBooleanSetting, readGistAnswerPolaritySetting, readQuestionTypeDifficultySetting, readQuestionTypeGenerationPlanSetting } from "./shared";
 import { SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT, SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, readSummaryCompleteBlankCountSetting, readSummaryCompleteMcBlankCountSetting } from "./summary";
 import { buildSummaryWritingDirection, resolveSummaryWritingSettings, summaryWritingBlankLabels } from "./summary-writing";
+import { TOPIC_SENTENCE_WRITING_BLANK_COUNT_DEFAULT, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_DEFAULT, buildTopicSentenceWritingDirection, resolveTopicSentenceWritingSettings, topicSentenceWritingBlankLabels } from "./topic-sentence-writing";
 import { type QuestionTypeGenerationSettings, type ResolvedQuestionTypeGenerationSettings } from "./types";
 import { VOCAB_CHOICE_ANSWER_COUNT_DEFAULT, VOCAB_CHOICE_LABELS, VOCAB_CHOICE_MARKER_COUNT_DEFAULT, readVocabChoiceAnswerCountSetting, readVocabChoiceMarkerCountSetting, readVocabChoiceSynonymVariantsSetting } from "./vocab";
 
@@ -62,6 +63,36 @@ export function resolveQuestionTypeGenerationSettings(
       summaryWritingDistractorCount: sw.boxDistractors,
       summaryWritingTargetWords: sw.targetWordsPerBlank,
       summaryWritingDirection,
+    };
+  }
+
+  if (typeId === "TOPIC_SENTENCE_WRITING") {
+    const tsw = resolveTopicSentenceWritingSettings(rawSettings, fallbackDifficulty);
+    const topicSentenceWritingDirection = buildTopicSentenceWritingDirection(tsw);
+    return {
+      effectiveTypeSettings: effectiveSettingsWithLanguage(typeId, rawSettings, {
+        difficulty: tsw.difficulty,
+        mode: tsw.mode,
+        topicForm: tsw.topicForm,
+        hintEnabled: tsw.hintEnabled,
+        hintLooseness: tsw.hintLooseness,
+        chunking: tsw.chunking,
+        distractors: tsw.distractors,
+        fidelity: tsw.fidelity,
+        scrambleOrder: tsw.scrambleOrder,
+        blankCount: tsw.blankCount,
+        blankAssignment: tsw.blankAssignment,
+        clueMode: tsw.clueMode,
+        sourceMode: tsw.sourceMode,
+        sourceSentenceParaphrase: tsw.sourceSentenceParaphrase,
+        scoringGranularity: tsw.scoringGranularity,
+        directionAutoText: topicSentenceWritingDirection,
+      }),
+      ...languageSettings,
+      topicSentenceWritingMode: tsw.mode,
+      topicSentenceWritingBlankCount: tsw.blankCount,
+      topicSentenceWritingDistractorCount: tsw.distractors,
+      topicSentenceWritingDirection,
     };
   }
 
@@ -368,6 +399,17 @@ export function getQuestionTypeGenerationTokenFloor(
   }
 
   if (
+    typeId === "TOPIC_SENTENCE_WRITING" &&
+    ((resolved.topicSentenceWritingBlankCount ?? TOPIC_SENTENCE_WRITING_BLANK_COUNT_DEFAULT) >
+      TOPIC_SENTENCE_WRITING_BLANK_COUNT_DEFAULT ||
+      (resolved.topicSentenceWritingDistractorCount ??
+        TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_DEFAULT) >
+        TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_DEFAULT)
+  ) {
+    return 8_192;
+  }
+
+  if (
     typeId === "IRRELEVANT" &&
     (resolved.irrelevantSlotCount ?? IRRELEVANT_SLOT_COUNT_DEFAULT) >
       IRRELEVANT_SLOT_COUNT_DEFAULT
@@ -486,6 +528,14 @@ export function getDefaultQuestionTypeGenerationSettings(): QuestionTypeGenerati
       sourceSentenceParaphrase: false,
       scoringGranularity: "keyword",
       ...defaultLanguageSettingsForType("SUMMARY_WRITING"),
+    },
+    TOPIC_SENTENCE_WRITING: {
+      // ⚠️ 의도적으로 세부옵션을 비워 둔다(언어 설정만). 세부값을 여기 박으면 그 값이
+      // 난이도 프리셋을 가려(shadow) 기본/중급/킬러 차이가 점수만 달라지는 SUMMARY_WRITING
+      // 문제를 답습한다. 비워 두면 resolveTopicSentenceWritingSettings 가 선택 난이도의
+      // 프리셋(배열↔빈칸·미끼·어형·빈칸수 등)을 그대로 적용해 "차이가 확실"해진다.
+      // 강사가 상세 패널에서 만진 옵션만 명시 키로 저장되어 프리셋을 덮어쓴다.
+      ...defaultLanguageSettingsForType("TOPIC_SENTENCE_WRITING"),
     },
     SUMMARY_COMPLETE_MC: {
       blankCount: SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT,
@@ -932,6 +982,96 @@ export function buildQuestionTypeSettingsPrompt(
       `- Echo these as structured metadata fields exactly: wordBankPolicy = "${sw.wordBankUsage}", wordBankFidelity = "${sw.wordBankFidelity}"${
         sw.blankCount >= 2 ? `, blankAssignment = "${sw.blankAssignment}"` : ""
       }, clueMode = "${sw.clueMode}", targetWordsMode = "${sw.targetWordsMode}", summarySourceMode = "${sw.summarySourceMode}". These record the constraints for grading and must match the instructions above.`,
+    );
+
+    return combinePromptSections(languagePrompt, lines.join("\n"));
+  }
+
+  if (typeId === "TOPIC_SENTENCE_WRITING") {
+    const tsw = resolveTopicSentenceWritingSettings(rawSettings, fallbackDifficulty);
+    const direction = buildTopicSentenceWritingDirection(tsw);
+    const topicNoun = tsw.topicForm === "nounPhrase" ? "academic noun phrase (≤12 words, no main verb)" : "topic sentence (12–14 words)";
+    const lines: string[] = [
+      "## Type detail setting: TOPIC_SENTENCE_WRITING / 주제문 영작 (topic-statement writing)",
+      "- First analyze the passage logically and determine the single main TOPIC of the whole passage.",
+      `- topicForm = ${tsw.topicForm}: express the topic as ${topicNoun}. Set the topicForm field accordingly.`,
+      tsw.sourceMode === "inference"
+        ? "- sourceMode = inference: the topic must be a higher-level claim inferred from the passage, not a sentence copied or lightly reworded from it."
+        : tsw.sourceMode === "paraphrase"
+          ? "- sourceMode = paraphrase: the topic must paraphrase the passage's core; never let it be recoverable by copying a passage span verbatim."
+          : "- sourceMode = explicit: the topic may restate the passage's stated main point in clean academic English.",
+      "- This is a short-answer English WRITING item. options must be null/empty; do NOT create multiple-choice options.",
+      `- direction must be EXACTLY: "${direction}". Do not paraphrase, translate, or change the score bracket.`,
+      "- modelAnswer must be the full correct topic statement in English, and correctAnswer must equal modelAnswer.",
+      `- Set mode = "${tsw.mode}".`,
+    ];
+
+    if (tsw.mode === "scrambled") {
+      lines.push(
+        "- Produce scrambledWords: the tokens of modelAnswer, broken into pieces and SHUFFLED. The shuffled order must NOT match modelAnswer's order (an in-order list leaks the answer).",
+        tsw.chunking === "chunk"
+          ? "- chunking = chunk: pieces may be short multi-word chunks, but never give one whole chunk that solves it by arrangement alone."
+          : "- chunking = word: pieces are single words (function words separate).",
+        "- Leave summaryWithBlanks empty and blanks empty for scrambled mode.",
+      );
+      if (tsw.distractors > 0) {
+        lines.push(
+          `- Include exactly ${tsw.distractors} distractor token(s) in scrambledWords that are NOT used in the answer, and list them in wordBankDistractors. Each distractor must be a synonym, confusable, or inflected form of an answer token (never an unrelated word).`,
+        );
+      } else {
+        lines.push("- No distractors: scrambledWords must contain exactly the answer tokens (wordBankDistractors empty).");
+      }
+      if (tsw.fidelity !== "verbatim") {
+        lines.push("- fidelity = inflected: give base forms; students change tense/number/agreement to fit. Never give an incorrect form to be corrected.");
+      }
+    } else {
+      const labels = topicSentenceWritingBlankLabels(tsw.blankCount).join(", ");
+      lines.push(
+        `- summaryWithBlanks must be the topic ${tsw.topicForm === "nounPhrase" ? "noun phrase" : "sentence"} containing each marker ${labels} exactly once, and must NOT contain the answer phrases.`,
+        `- blanks must contain exactly ${tsw.blankCount} entr${tsw.blankCount >= 2 ? "ies" : "y"} with labels ${labels}, in order. Each blanks[].answer is the secret model writing for that blank.`,
+        "- Leave scrambledWords empty for cloze mode.",
+        "- Provide wordBank: the [보기] chips students may use, lowercase and SHUFFLED. The shuffled order must NOT match the modelAnswer word order.",
+        "- If the answer needs the same word twice, include that string twice in wordBank (×2 rule).",
+      );
+      if (tsw.distractors > 0) {
+        lines.push(
+          `- Include exactly ${tsw.distractors} distractor word(s) in wordBank that are NOT used in any answer, and list them in wordBankDistractors. Each distractor must be a synonym, confusable, or inflected form of an answer word.`,
+        );
+      } else {
+        lines.push("- No distractors: wordBank must equal exactly the answer tokens (wordBankDistractors empty).");
+      }
+      if (tsw.fidelity !== "verbatim") {
+        lines.push("- fidelity = inflected: students may change tense/number/agreement of a given base form. Never give an incorrect form to be corrected.");
+      }
+      if (tsw.blankCount >= 2) {
+        lines.push(
+          tsw.blankAssignment === "shared"
+            ? "- blankAssignment = shared: ensure the word distribution yields a SINGLE unambiguous correct assignment per blank."
+            : "- blankAssignment = separate: each blank draws from its own portion of the word bank.",
+        );
+      }
+      if (tsw.clueMode === "firstLetter") {
+        lines.push("- clueMode = firstLetter: for each blank, provide firstLetterHint = lowercase first letter of each answer word, space-separated, 1:1 to the answer tokens. One letter per word only.");
+      } else if (tsw.clueMode === "wordCount") {
+        lines.push("- clueMode = wordCount: tell the number of words only (use targetWordCount); never reveal letters.");
+      }
+    }
+
+    if (tsw.hintEnabled) {
+      lines.push(
+        `- Provide koreanGloss for the [주제 힌트] box as ONE natural Korean sentence (looseness = ${tsw.hintLooseness}) conveying the topic's meaning. NEVER list the answer words 1:1 as a direct translation, and never reveal the English answer order.`,
+      );
+    } else {
+      lines.push("- Do NOT provide koreanGloss (no Korean hint is given).");
+    }
+
+    if (tsw.sourceSentenceParaphrase) {
+      lines.push("- Reword the non-answer surface wording so students cannot surface-match memorized passage text.");
+    }
+
+    lines.push(
+      `- scoringGranularity = ${tsw.scoringGranularity}: provide scoringCriteria (Korean rubric, teacher-only) and acceptableVariants (equivalent answers — word-order/synonym variants) for partial credit. These are SECRET — never put them in student-facing text.`,
+      `- Echo these as structured metadata fields exactly: mode = "${tsw.mode}", topicForm = "${tsw.topicForm}", wordBankFidelity = "${tsw.fidelity}", sourceMode = "${tsw.sourceMode}"${tsw.mode === "cloze" && tsw.blankCount >= 2 ? `, blankAssignment = "${tsw.blankAssignment}"` : ""}${tsw.mode === "cloze" ? `, clueMode = "${tsw.clueMode}"` : ""}.`,
     );
 
     return combinePromptSections(languagePrompt, lines.join("\n"));

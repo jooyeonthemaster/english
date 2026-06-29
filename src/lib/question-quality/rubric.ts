@@ -137,6 +137,16 @@ export const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "Keep punctuation attached to a neighboring word/chunk and never create punctuation-only pieces.",
     "For KILLER, the order should require grammar plus meaning; the scrambledWords order must not already equal the model answer.",
   ],
+  TOPIC_SENTENCE_WRITING: [
+    "First analyze the passage logic, then express its central topic as either a complete topic sentence (12-14 words) or an academic noun phrase (≤12 words) according to topicForm; do not just copy one passage sentence.",
+    "Fill exactly one mode: for scrambled, populate scrambledWords (and leave blanks/summaryWithBlanks empty); for cloze, populate summaryWithBlanks plus blanks (and leave scrambledWords empty).",
+    "modelAnswer must be the complete English topic sentence/phrase and stay synchronized with correctAnswer.",
+    "scrambled: split the answer into chips and shuffle them so scrambledWords never already equal the model answer; keep punctuation attached to a chip and never create punctuation-only chips; the non-distractor chips must reconstruct exactly the modelAnswer tokens.",
+    "cloze: summaryWithBlanks must contain each (A)/(B) placeholder exactly once and must NOT contain any blank answer phrase; every blank needs a non-empty English answer.",
+    "Never leak the answer: koreanGloss, scrambledWords, wordBank, and summaryWithBlanks must not contain the modelAnswer or any blank answer verbatim, and the Korean hint must not be a 1:1 translation of the answer wording.",
+    "Distractors (wordBankDistractors) must be synonyms or inflected forms of answer tokens, not unrelated words that are trivially excluded.",
+    "For KILLER, prefer cloze with inference-level topic, inflected word bank, two distractors, and no Korean hint; for BASIC, prefer chunk-level scrambled noun-phrase with a literal hint and no distractors.",
+  ],
   GRAMMAR_CORRECTION: [
     "Underline a sentence-level or clause-level segment from the source passage; the exact wrong word/form must be hidden inside that wider underline.",
     "Do not underline only the wrong expression itself. The underlined segment must be meaningfully wider than errorPart.",

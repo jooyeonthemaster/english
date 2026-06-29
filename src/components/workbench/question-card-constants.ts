@@ -30,7 +30,9 @@ export const SUBTYPE_LABELS: Record<string, string> = {
   SENTENCE_TRANSFORM: "문장 전환",
   FILL_BLANK_KEY: "핵심 표현 빈칸",
   SUMMARY_COMPLETE: "요약문 완성",
+  SUMMARY_WRITING: "요약문 영작",
   WORD_ORDER: "배열 영작",
+  TOPIC_SENTENCE_WRITING: "주제문 영작",
   GRAMMAR_CORRECTION: "문법 오류 수정",
   CONTEXT_MEANING: "문맥 속 의미",
   SYNONYM: "동의어",
@@ -98,4 +100,5 @@ export const STRUCTURED_RENDERER_SOURCE_PASSAGE_TYPES = new Set([
   "SUMMARY_COMPLETE",
   "SUMMARY_WRITING",
   "WORD_ORDER",
+  "TOPIC_SENTENCE_WRITING",
 ]);

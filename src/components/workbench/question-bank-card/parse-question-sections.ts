@@ -29,6 +29,10 @@ export function parseQuestionSections(
     "[conditions]": { type: "conditions", label: "조건" },
     "[요약문]": { type: "summary", label: "요약문" },
     "[summary]": { type: "summary", label: "요약문" },
+    // 주제문 영작(TOPIC_SENTENCE_WRITING) 학생 안전 블록.
+    "[주제문]": { type: "summary", label: "주제문" },
+    "[주제 힌트]": { type: "context", label: "주제 힌트" },
+    "[보기]": { type: "scrambled", label: "보기" },
     "[빈칸 정답]": { type: "blanks", label: "빈칸 정답" },
     "[blank answers]": { type: "blanks", label: "빈칸 정답" },
     "[배열 단어]": { type: "scrambled", label: "배열 단어" },

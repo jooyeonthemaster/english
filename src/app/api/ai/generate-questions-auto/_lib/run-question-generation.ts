@@ -2,9 +2,10 @@ import { z } from "zod";
 import { AI_QUESTION_SCHEMAS, getAiResponseSchema } from "@/lib/question-ai-schemas-mc";
 import { GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS } from "@/lib/concurrency-config";
 import { postProcessQuestion } from "@/lib/question-postprocess";
+import { reshuffleTopicSentenceWritingChips } from "@/lib/topic-sentence-writing";
 import { normalizePassageWhitespace } from "@/lib/question-postprocess/text-utils";
 import { QUESTION_SCHEMAS, STRUCTURED_TYPE_PROMPTS } from "@/lib/question-schemas";
-import { buildQuestionTypeSettingsPrompt, getQuestionTypeGenerationTokenFloor, readQuestionTypeDifficultySetting, readQuestionTypeGenerationPlanSetting, readSummaryWritingBlankCountSetting, resolveQuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import { buildQuestionTypeSettingsPrompt, getQuestionTypeGenerationTokenFloor, readQuestionTypeDifficultySetting, readQuestionTypeGenerationPlanSetting, readSummaryWritingBlankCountSetting, readTopicSentenceWritingBlankCountSetting, resolveQuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 import { buildQuestionTargetCandidateBlock, getTypeQualityRubric, type QuestionQualityIssue, validateQuestionQuality } from "@/lib/question-quality";
 import { buildDiversityPromptBlock, shuffleQuestionOptionsForDiversity } from "@/lib/question-diversity";
 import { DIFF_DESCRIPTION, TYPE_LABELS } from "./constants";
@@ -198,6 +199,11 @@ export async function runQuestionGeneration(
         subType === "SUMMARY_WRITING"
           ? readSummaryWritingBlankCountSetting(rawTypeSettings)
           : undefined;
+      // TOPIC_SENTENCE_WRITING(주제문 영작) cloze 모드도 blankCount(1~2) 동적 스키마를 미러.
+      const topicSentenceWritingBlankCount =
+        subType === "TOPIC_SENTENCE_WRITING"
+          ? readTopicSentenceWritingBlankCountSetting(rawTypeSettings)
+          : undefined;
       const responseSchema = hasAiSchema
         ? getAiResponseSchema(subType, {
             irrelevantSlotCount,
@@ -207,6 +213,7 @@ export async function runQuestionGeneration(
             summaryCompleteMcBlankCount,
             summaryCompleteBlankCount,
             summaryWritingBlankCount,
+            topicSentenceWritingBlankCount,
             contentMatchOptionCount,
             contentMatchAnswerCount,
             vocabChoiceMarkerCount,
@@ -359,6 +366,14 @@ export async function runQuestionGeneration(
               [arr[0], arr[arr.length - 1]] = [arr[arr.length - 1], arr[0]];
             }
             mapped.scrambledWords = arr;
+          }
+
+          // 주제문 영작: 보기/배열단어가 정답 어순 그대로면 누수(왼→오 읽기로 풀림). 모델
+          // 셔플에만 의존하지 않고 결정론적으로 정답 어순에서 떼어 놓는다(게이트 검증 전 수행).
+          if (subType === "TOPIC_SENTENCE_WRITING") {
+            const reshuffled = reshuffleTopicSentenceWritingChips(mapped);
+            mapped.scrambledWords = reshuffled.scrambledWords;
+            mapped.wordBank = reshuffled.wordBank;
           }
 
           // 다양성 모드: 보기 배열형 유형의 보기 내용을 셔플해 정답 위치 편중을
