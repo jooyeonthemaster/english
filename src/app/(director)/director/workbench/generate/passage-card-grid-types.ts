@@ -70,6 +70,16 @@ export interface PassageCardGridProps {
   onMovePassagesToCollection?: (
     passageIds: string[],
     collectionId: string,
+    /** Source folders to KEEP the items in (skip removal) when moving. */
+    keepFolderIds?: string[],
+  ) => Promise<void> | void;
+  /** Copy (add to target, keep in current folders) by explicit ids. When
+   *  provided, dropping a card onto a folder opens a 복사/이동 chooser at the
+   *  drop point instead of silently moving. Omit to keep the legacy
+   *  drag = immediate move behaviour. */
+  onCopyPassagesToCollection?: (
+    passageIds: string[],
+    collectionId: string,
   ) => Promise<void> | void;
   onCreateCollection?: (
     name: string,

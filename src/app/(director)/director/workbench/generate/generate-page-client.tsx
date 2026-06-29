@@ -869,7 +869,11 @@ export function GeneratePageClient({
   );
 
   const handleMovePassagesToCollection = useCallback(
-    async (passageIds: string[], collectionId: string) => {
+    async (
+      passageIds: string[],
+      collectionId: string,
+      keepFolderIds: string[] = [],
+    ) => {
       const ids = Array.from(new Set(passageIds)).filter(
         (id) => !isDraftPseudoId(id),
       );
@@ -877,6 +881,7 @@ export function GeneratePageClient({
       setPassageBulkAction("move");
       try {
         const idSet = new Set(ids);
+        const keepSet = new Set(keepFolderIds);
         const selectedPassages = passages.filter((passage) =>
           idSet.has(passage.id),
         );
@@ -888,8 +893,9 @@ export function GeneratePageClient({
             previousMembership.set(item.collectionId, list);
           }
         }
+        // Keep the item in folders the user ticked — only remove from the rest.
         const sourceCollectionIds = [...previousMembership.keys()].filter(
-          (id) => id !== collectionId,
+          (id) => id !== collectionId && !keepSet.has(id),
         );
         const targetExistingIds = new Set(
           previousMembership.get(collectionId) ?? [],
@@ -1033,6 +1039,114 @@ export function GeneratePageClient({
       await handleMovePassagesToCollection([...selectedIds], collectionId);
     },
     [handleMovePassagesToCollection, selectedIds],
+  );
+
+  // Copy (add to target, keep in current folders) by explicit ids — powers the
+  // 복사 option of the drag chooser. Mirrors the move handler's optimistic
+  // updates but only adds (never removes from sources).
+  const handleCopyPassagesToCollection = useCallback(
+    async (passageIds: string[], collectionId: string) => {
+      const ids = Array.from(new Set(passageIds)).filter(
+        (id) => !isDraftPseudoId(id),
+      );
+      if (ids.length === 0 || passageBulkAction) return;
+      setPassageBulkAction("move");
+      try {
+        const idSet = new Set(ids);
+        const targetPassages = passages.filter((passage) =>
+          idSet.has(passage.id),
+        );
+        const idsToAdd = ids.filter(
+          (id) =>
+            !targetPassages
+              .find((passage) => passage.id === id)
+              ?.collectionItems?.some(
+                (item) => item.collectionId === collectionId,
+              ),
+        );
+        if (idsToAdd.length === 0) {
+          toast.info("이미 이 폴더에 들어있는 지문입니다.");
+          return;
+        }
+        const addResult = await addPassagesToCollection(collectionId, idsToAdd);
+        if (!addResult.success) {
+          toast.error(addResult.error || "폴더에 복사하지 못했습니다.");
+          return;
+        }
+        const folderName =
+          collections.find((collection) => collection.id === collectionId)
+            ?.name || "폴더";
+        const countLabel =
+          idsToAdd.length > 1 ? `${idsToAdd.length}개 지문이` : "지문이";
+        const undoFolderCopy = async () => {
+          setPassageBulkAction("move");
+          try {
+            const undo = await removePassagesFromCollection(
+              collectionId,
+              idsToAdd,
+            );
+            if (!undo.success) {
+              toast.error(undo.error || "폴더 복사를 실행 취소하지 못했습니다.");
+              return;
+            }
+            await loadPassages();
+            toast.success("폴더 복사를 실행 취소했습니다.");
+          } catch (err) {
+            toast.error(
+              err instanceof Error
+                ? err.message
+                : "폴더 복사를 실행 취소하지 못했습니다.",
+            );
+          } finally {
+            setPassageBulkAction(null);
+          }
+        };
+        toast.success(`${countLabel} "${folderName}"에 복사되었습니다`, {
+          duration: UNDO_TOAST_DURATION,
+          action: { label: "실행 취소", onClick: () => void undoFolderCopy() },
+        });
+        setPassages((prev) =>
+          prev.map((passage) => {
+            if (!idSet.has(passage.id)) return passage;
+            const collectionItems = passage.collectionItems ?? [];
+            if (
+              collectionItems.some((item) => item.collectionId === collectionId)
+            ) {
+              return passage;
+            }
+            return {
+              ...passage,
+              collectionItems: [...collectionItems, { collectionId }],
+            };
+          }),
+        );
+        setCollections((prev) =>
+          prev.map((collection) =>
+            collection.id === collectionId
+              ? {
+                  ...collection,
+                  _count: {
+                    ...collection._count,
+                    items: collection._count.items + idsToAdd.length,
+                  },
+                }
+              : collection,
+          ),
+        );
+        setSelectedIds((prev) => {
+          if (!ids.some((id) => prev.has(id))) return prev;
+          return new Set([...prev].filter((id) => !idSet.has(id)));
+        });
+        void loadPassages();
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "폴더에 복사하지 못했습니다.",
+        );
+      } finally {
+        setPassageBulkAction(null);
+      }
+    },
+    [collections, loadPassages, passageBulkAction, passages],
   );
 
   const handleRemoveSelectedPassagesFromCollection = useCallback(async () => {
@@ -2541,6 +2655,7 @@ export function GeneratePageClient({
                 handleMoveSelectedPassagesToCollection
               }
               onMovePassagesToCollection={handleMovePassagesToCollection}
+              onCopyPassagesToCollection={handleCopyPassagesToCollection}
               onCreateCollection={handleCreatePassageCollection}
               onRemoveSelectedFromCollection={
                 handleRemoveSelectedPassagesFromCollection

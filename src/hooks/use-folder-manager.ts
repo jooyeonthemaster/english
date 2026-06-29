@@ -326,6 +326,8 @@ export function useFolderManager({
       folderId: string,
       copy: boolean,
       selectedIds: Set<string>,
+      /** Move only: source folders to KEEP the item in (skip removal). */
+      keepFolderIds: string[] = [],
     ) => {
       // If dragged item is part of selection, move ALL selected items
       const draggedIds = Array.isArray(itemId) ? itemId : [itemId];
@@ -335,6 +337,7 @@ export function useFolderManager({
         : Array.from(new Set(draggedIds));
       if (idsToMove.length === 0) return false;
 
+      const keepSet = new Set(keepFolderIds);
       const targetExisting = membership[folderId] ?? new Set<string>();
       const idsToAdd = idsToMove.filter((id) => !targetExisting.has(id));
       const hasFolderChanges =
@@ -342,7 +345,9 @@ export function useFolderManager({
         (!copy &&
           Object.entries(membership).some(
             ([colId, ids]) =>
-              colId !== folderId && idsToMove.some((id) => ids.has(id)),
+              colId !== folderId &&
+              !keepSet.has(colId) &&
+              idsToMove.some((id) => ids.has(id)),
           ));
 
       if (!hasFolderChanges) {
@@ -359,7 +364,7 @@ export function useFolderManager({
         if (!copy) {
           const removeOps: { colId: string; toRemove: string[] }[] = [];
           for (const [colId, ids] of Object.entries(membership)) {
-            if (colId !== folderId) {
+            if (colId !== folderId && !keepSet.has(colId)) {
               const toRemove = idsToMove.filter((id) => ids.has(id));
               if (toRemove.length > 0) removeOps.push({ colId, toRemove });
             }

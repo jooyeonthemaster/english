@@ -26,6 +26,10 @@ import { FolderChip } from "./folder-chip";
 import { FolderCard } from "./folder-card";
 import { FolderListRow } from "./folder-list-row";
 import {
+  DragDropModePopover,
+  type DropChoiceTarget,
+} from "./drag-drop-mode-popover";
+import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
 } from "./view-mode-cycle-button";
@@ -64,8 +68,17 @@ interface FolderSectionProps {
   onNavigateToFolder: (id: string) => void;
   onRenameFolder: (id: string, name: string) => void;
   onDeleteFolder: (id: string) => void;
-  onDragToFolder: (itemId: string, folderId: string, copy: boolean) => void;
+  onDragToFolder: (
+    itemId: string,
+    folderId: string,
+    copy: boolean,
+    keepFolderIds?: string[],
+  ) => void;
   onDragToRoot?: (itemId: string, copy: boolean) => void;
+  /** Returns the folders the given item (and, if it's part of the current
+   *  selection, the whole selection) currently belongs to — used to offer
+   *  "keep in this folder" toggles when moving. */
+  getItemFolders?: (itemId: string) => { id: string; name: string }[];
   breadcrumbPath?: CollectionItem[];
   onNavigateToRoot?: () => void;
   /** If true, use full FolderCard inside folders, FolderChip at root */
@@ -302,6 +315,7 @@ export function FolderSection({
   onDeleteFolder,
   onDragToFolder,
   onDragToRoot,
+  getItemFolders,
   breadcrumbPath = [],
   onNavigateToRoot,
   useCardInsideFolder = false,
@@ -332,6 +346,22 @@ export function FolderSection({
   const handleDropToParent = (itemId: string, copy: boolean) => {
     if (parentFolderId) onDragToFolder(itemId, parentFolderId, copy);
     else onDragToRoot?.(itemId, copy);
+  };
+
+  // Dropping a card onto a real folder opens an explicit 복사/이동 chooser at
+  // the drop point (replaces the old invisible Shift=copy). Root/상위 drops keep
+  // their immediate behaviour (move out / move up — copy there is meaningless).
+  const [pendingDrop, setPendingDrop] = useState<DropChoiceTarget | null>(null);
+  const requestDropChoice = (
+    itemId: string,
+    folderId: string,
+    folderName: string,
+    anchor: { x: number; y: number },
+  ) => {
+    const currentFolders = (getItemFolders?.(itemId) ?? []).filter(
+      (f) => f.id !== folderId,
+    );
+    setPendingDrop({ itemId, folderId, folderName, anchor, currentFolders });
   };
 
   // ─── Enhanced controls state (only used when enableFolderControls=true) ───
@@ -938,7 +968,7 @@ export function FolderSection({
                       onClick={() => onNavigateToFolder(c.id)}
                       onRename={onRenameFolder}
                       onDelete={onDeleteFolder}
-                      onFileDrop={onDragToFolder}
+                      onFileDrop={requestDropChoice}
                     />
                   ))
                 : visibleChildFolders.map((c) => (
@@ -951,7 +981,7 @@ export function FolderSection({
                       onClick={() => onNavigateToFolder(c.id)}
                       onRename={onRenameFolder}
                       onDelete={onDeleteFolder}
-                      onFileDrop={onDragToFolder}
+                      onFileDrop={requestDropChoice}
                     />
                   ))}
               {showNewFolder ? (
@@ -1143,7 +1173,7 @@ export function FolderSection({
                           onClick={() => onNavigateToFolder(c.id)}
                           onRename={onRenameFolder}
                           onDelete={onDeleteFolder}
-                          onFileDrop={onDragToFolder}
+                          onFileDrop={requestDropChoice}
                           selected={column.selectedId === c.id}
                           showChevron={(childCountByParent.get(c.id) ?? 0) > 0}
                           dateWidth={subColumnWidths.date}
@@ -1275,6 +1305,27 @@ export function FolderSection({
             {selectionBar}
           </div>
         ) : null}
+        <DragDropModePopover
+          key={
+            pendingDrop
+              ? `${pendingDrop.folderId}:${pendingDrop.anchor.x}:${pendingDrop.anchor.y}`
+              : "none"
+          }
+          pending={pendingDrop}
+          itemLabel={itemCountLabel}
+          onChoose={({ copy, keepFolderIds }) => {
+            if (pendingDrop) {
+              onDragToFolder(
+                pendingDrop.itemId,
+                pendingDrop.folderId,
+                copy,
+                keepFolderIds,
+              );
+            }
+            setPendingDrop(null);
+          }}
+          onCancel={() => setPendingDrop(null)}
+        />
     </>
   );
 
