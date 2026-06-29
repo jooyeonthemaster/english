@@ -316,11 +316,7 @@ export function MoveOrCopyFolderPicker({
 
       {/* Footer hint */}
       <div className="px-3 py-1.5 text-[10px] text-slate-400 bg-slate-50 border-t border-slate-100">
-        팁: 폴더 카드로 직접 드래그하면 이동,{" "}
-        <kbd className="px-1 py-0.5 bg-white border border-slate-200 rounded text-[9px]">
-          Shift
-        </kbd>{" "}
-        + 드래그는 복사입니다.
+        팁: 폴더로 직접 드래그하면 이동·복사를 그 자리에서 고를 수 있어요.
       </div>
     </div>
   ) : null;

@@ -65,12 +65,16 @@ function computeFieldOrd(el: HTMLElement): number {
   if (!block) return 0;
   const logicalId = block.getAttribute("data-paper-item-id");
   const root = block.closest<HTMLElement>(".par-root");
-  const fields =
+  const all =
     logicalId && root
       ? Array.from(root.querySelectorAll<HTMLElement>("[data-paper-item-id]"))
           .filter((candidate) => candidate.getAttribute("data-paper-item-id") === logicalId)
           .flatMap((candidate) => Array.from(candidate.querySelectorAll<HTMLElement>(".par-field")))
       : Array.from(block.querySelectorAll<HTMLElement>(".par-field"));
+  // 섹션 미니 타이틀(par-ws-minihead)·크롬 라벨(par-no-fontrun: 섹션헤더·드릴라벨·표헤더 등) 편집 필드는
+  // 폰트 런 ord 공간에서 제외한다 — 편집 모드에서 이들이 .par-field 로 추가돼도 본문 필드의 ord 가 밀리지
+  // 않게(저장된 글자크기 런 오귀속/회귀 방지).
+  const fields = all.filter((f) => !f.closest(".par-ws-minihead") && !f.classList.contains("par-no-fontrun"));
   const i = fields.indexOf(el);
   return i < 0 ? 0 : i;
 }
@@ -107,14 +111,18 @@ export function Field({
   // 커스텀 render 가 있는 보기 필드는 ReactNode 로 그리므로 런(HTML) 비적용.
   // 그 외(편집 필드 + 단순 텍스트 보기 필드)는 우리가 innerHTML 을 관리해 런을 입힌다.
   const managedHtml = editable || !render;
+  // 섹션 미니 타이틀·크롬 라벨(par-no-fontrun) 편집 필드는 폰트 런(글자 크기 구간)에 참여하지 않는다 —
+  // ord 공간에서 제외되고 본문 필드 ord 와 충돌하지 않게(글자크기 오귀속 방지). 타이틀/라벨은 단일 크기로 충분.
+  const cls = className ?? "";
+  const noFontRun = cls.includes("par-ws-minihead") || cls.includes("par-no-fontrun");
 
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el || !managedHtml || focusedRef.current) return;
-    const ord = computeFieldOrd(el);
+    const ord = noFontRun ? -1 : computeFieldOrd(el);
     ordRef.current = ord;
-    el.innerHTML = editableTextHtml(value, runsByOrd?.get(ord));
-  }, [value, runsByOrd, managedHtml]);
+    el.innerHTML = editableTextHtml(value, noFontRun ? undefined : runsByOrd?.get(ord));
+  }, [value, runsByOrd, managedHtml, noFontRun]);
 
   if (!editable) {
     if (render) return <Tag className={cn(className, "par-field")}>{render(value)}</Tag>;
@@ -145,7 +153,7 @@ export function Field({
         const { text, runs } = readEditableContent(e.currentTarget);
         const next = normalizeEditableText(text);
         if (next !== value) onCommit(next);
-        if (ctx) {
+        if (ctx && !noFontRun) {
           const ord = ordRef.current >= 0 ? ordRef.current : computeFieldOrd(e.currentTarget);
           const clamped = runs
             .filter((r) => r.s < next.length)

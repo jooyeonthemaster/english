@@ -3,13 +3,122 @@ import { type WorksheetWordOrder, formatSummaryPairText, isSummaryPairWorksheetT
 import type { LearningWorksheetSection, WorksheetQuestionPatch, WorksheetQuestionView } from "./types";
 import { Field, renderStudentFacingText } from "./editable-field";
 
-export function WorksheetMiniTitle({ title, kicker }: { title: string; kicker?: string }) {
+/**
+ * 섹션 미니 타이틀(par-ws-minihead) — 한글 제목(k) + 영문 라벨(e).
+ * editable + onTitleCommit/onKickerCommit 가 주어지면 인라인 편집 필드로 렌더한다.
+ * (편집 핸들러가 없는 호출부는 기존처럼 정적 텍스트로 표시 — 무회귀)
+ */
+export function WorksheetMiniTitle({
+  title,
+  kicker,
+  editable,
+  onTitleCommit,
+  onKickerCommit,
+}: {
+  title: string;
+  kicker?: string;
+  editable?: boolean;
+  onTitleCommit?: (v: string) => void;
+  onKickerCommit?: (v: string) => void;
+}) {
+  const editTitle = editable && !!onTitleCommit;
+  const editKicker = editable && !!onKickerCommit;
   return (
     <div className="par-ws-minihead">
-      <span className="par-ws-minihead-k">{title}</span>
-      {kicker ? <span className="par-ws-minihead-e">{kicker}</span> : null}
+      {editTitle ? (
+        <Field as="span" className="par-ws-minihead-k" editable value={title} onCommit={onTitleCommit!} placeholder="섹션 제목" />
+      ) : (
+        <span className="par-ws-minihead-k">{title}</span>
+      )}
+      {editKicker ? (
+        <Field as="span" className="par-ws-minihead-e" editable value={kicker ?? ""} onCommit={onKickerCommit!} placeholder="영문 라벨" />
+      ) : kicker ? (
+        <span className="par-ws-minihead-e">{kicker}</span>
+      ) : null}
     </div>
   );
+}
+
+/**
+ * 미니 타이틀 슬롯 오버라이드 → WorksheetMiniTitle props.
+ * - 영문 라벨(e)은 항상 titleOverrides[slot].e 로 편집(하드코딩 키커도 편집 가능).
+ * - 한글 제목(k)은 스키마 필드가 있으면(onTitleCommitField) 그 필드로 직접 커밋(정답지와 일관),
+ *   없으면(하드코딩 제목) titleOverrides[slot].k 로 편집.
+ */
+export function miniHeadProps(
+  section: LearningWorksheetSection,
+  onPatch: (p: Partial<LearningWorksheetSection>) => void,
+  editable: boolean,
+  slot: string,
+  defaultTitle: string,
+  defaultKicker?: string,
+  onTitleCommitField?: (v: string) => void,
+): {
+  title: string;
+  kicker?: string;
+  editable: boolean;
+  onTitleCommit: (v: string) => void;
+  onKickerCommit: (v: string) => void;
+} {
+  const ov = section.titleOverrides?.[slot];
+  const setOv = (key: "k" | "e", v: string) =>
+    onPatch({
+      titleOverrides: {
+        ...(section.titleOverrides ?? {}),
+        [slot]: { ...(section.titleOverrides?.[slot] ?? {}), [key]: v },
+      },
+    });
+  return {
+    title: onTitleCommitField ? defaultTitle : ov?.k ?? defaultTitle,
+    kicker: ov?.e ?? defaultKicker,
+    editable,
+    onTitleCommit: onTitleCommitField ?? ((v: string) => setOv("k", v)),
+    onKickerCommit: (v: string) => setOv("e", v),
+  };
+}
+
+/**
+ * titleOverrides[slot].k 로 백업되는 단일 라벨(영문 키커 없는 par-ws-drill-label·표 헤더 등).
+ * editable 면 인라인 Field, 아니면 정적 엘리먼트(무회귀). as 로 div/th/span 선택.
+ */
+export function EditableSectionLabel({
+  section,
+  onPatch,
+  editable,
+  slot,
+  defaultText,
+  as = "div",
+  className,
+}: {
+  section: LearningWorksheetSection;
+  onPatch: (p: Partial<LearningWorksheetSection>) => void;
+  editable: boolean;
+  slot: string;
+  defaultText: string;
+  as?: "div" | "th" | "span";
+  className?: string;
+}) {
+  const value = section.titleOverrides?.[slot]?.k ?? defaultText;
+  if (editable) {
+    return (
+      <Field
+        as={as}
+        className={["par-no-fontrun", className].filter(Boolean).join(" ")}
+        editable
+        value={value}
+        onCommit={(v) =>
+          onPatch({
+            titleOverrides: {
+              ...(section.titleOverrides ?? {}),
+              [slot]: { ...(section.titleOverrides?.[slot] ?? {}), k: v },
+            },
+          })
+        }
+      />
+    );
+  }
+  const Tag = as;
+  return <Tag className={className}>{value}</Tag>;
 }
 
 export function WordBank({ words }: { words?: string[] }) {
@@ -173,6 +282,8 @@ function WorksheetQuestionAnswer({ q }: { q: WorksheetQuestionView }) {
 export function worksheetAnswerKeySubsections(
   section: LearningWorksheetSection,
   wordOrders: WorksheetWordOrder[],
+  editable?: boolean,
+  onPatch?: (p: Partial<LearningWorksheetSection>) => void,
 ): { key: string; node: ReactNode }[] {
   const workbook = section.workbookSet;
   const clozeItems = section.cloze?.items ?? [];
@@ -189,7 +300,13 @@ export function worksheetAnswerKeySubsections(
       key,
       node: (
         <div className="par-ws-block par-ws-answer-key">
-          {withTitle ? <WorksheetMiniTitle title="정답 및 해설" kicker="Answer Key" /> : null}
+          {withTitle ? (
+            onPatch ? (
+              <WorksheetMiniTitle {...miniHeadProps(section, onPatch, !!editable, "ws-answer-key", "정답 및 해설", "Answer Key")} />
+            ) : (
+              <WorksheetMiniTitle title="정답 및 해설" kicker="Answer Key" />
+            )
+          ) : null}
           {inner}
         </div>
       ),
@@ -339,13 +456,13 @@ export function WorksheetLogicMapBlock({
   if (!section.logicRows.length) return null;
   return (
     <div className="par-ws-block par-ws-logic-promoted">
-      <WorksheetMiniTitle title="지문 논리 구조 분석" kicker="Logic Map" />
+      <WorksheetMiniTitle {...miniHeadProps(section, onPatch, editable, "ws-logic", "지문 논리 구조 분석", "Logic Map")} />
       <table className="par-ws-logic">
         <thead>
           <tr>
-            <th>문장</th>
-            <th>기능</th>
-            <th>핵심 내용</th>
+            <EditableSectionLabel section={section} onPatch={onPatch} editable={editable} slot="ws-logic-col-sentence" defaultText="문장" as="th" />
+            <EditableSectionLabel section={section} onPatch={onPatch} editable={editable} slot="ws-logic-col-function" defaultText="기능" as="th" />
+            <EditableSectionLabel section={section} onPatch={onPatch} editable={editable} slot="ws-logic-col-keypoint" defaultText="핵심 내용" as="th" />
           </tr>
         </thead>
         <tbody>

@@ -37,6 +37,7 @@ import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import { isDirectInputPassage } from "@/lib/passage-source";
 import { PassageInlineTitle } from "@/components/workbench/passage-inline-title";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
+import { DragDropModePopover } from "@/components/workbench/shared/drag-drop-mode-popover";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import {
   type PassageCollectionItem,
@@ -104,6 +105,7 @@ export function PassageCardGrid({
   onCopySelectedToCollection,
   onMoveSelectedToCollection,
   onMovePassagesToCollection,
+  onCopyPassagesToCollection,
   onCreateCollection,
   onRemoveSelectedFromCollection,
   onDeleteSelectedPassages,
@@ -148,6 +150,15 @@ export function PassageCardGrid({
   const [dropTargetCollectionId, setDropTargetCollectionId] = useState<
     string | null
   >(null);
+  // When a card is dropped on a folder and copy is available, defer the
+  // move/copy decision to a chooser popover anchored at the drop point.
+  const [pendingFolderDrop, setPendingFolderDrop] = useState<{
+    ids: string[];
+    collectionId: string;
+    folderName: string;
+    anchor: { x: number; y: number };
+    currentFolders: { id: string; name: string }[];
+  } | null>(null);
   const [showNewFolderInput, setShowNewFolderInput] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
   const [creatingFolder, setCreatingFolder] = useState(false);
@@ -604,7 +615,7 @@ export function PassageCardGrid({
             setDropTargetCollectionId((current) =>
               current === collectionId ? null : current,
             ),
-          onDrop: ({ source }) => {
+          onDrop: ({ source, location }) => {
             setDropTargetCollectionId(null);
             setDraggingPassageIds([]);
 
@@ -618,6 +629,42 @@ export function PassageCardGrid({
             const ids = Array.from(new Set(sourceIds));
             if (ids.length === 0) return;
 
+            // With copy available, ask the user 복사 vs 이동 right at the drop
+            // point (drag used to silently move, removing from other folders —
+            // confusing when reusing the same passage across students). Without
+            // it, keep the legacy immediate-move behaviour.
+            if (onCopyPassagesToCollection) {
+              const input = location?.current?.input;
+              const folderName =
+                collections.find((c) => c.id === collectionId)?.name ?? "폴더";
+              // Folders the dragged items currently belong to (union), minus the
+              // target — so the move chooser can offer "keep here" per folder.
+              const idSet = new Set(ids);
+              const currentFolderIds = new Set<string>();
+              for (const passage of passages) {
+                if (!idSet.has(passage.id)) continue;
+                for (const item of passage.collectionItems ?? []) {
+                  if (item.collectionId !== collectionId) {
+                    currentFolderIds.add(item.collectionId);
+                  }
+                }
+              }
+              const currentFolders = collections
+                .filter((c) => currentFolderIds.has(c.id))
+                .map((c) => ({ id: c.id, name: c.name }));
+              setPendingFolderDrop({
+                ids,
+                collectionId,
+                folderName,
+                anchor: {
+                  x: input?.clientX ?? window.innerWidth / 2,
+                  y: input?.clientY ?? window.innerHeight / 2,
+                },
+                currentFolders,
+              });
+              return;
+            }
+
             void onMovePassagesToCollection(ids, collectionId);
           },
         }),
@@ -625,7 +672,14 @@ export function PassageCardGrid({
     }
 
     return () => cleanupFns.forEach((cleanup) => cleanup());
-  }, [childCollections, onMovePassagesToCollection, passageBulkAction]);
+  }, [
+    childCollections,
+    collections,
+    passages,
+    onMovePassagesToCollection,
+    onCopyPassagesToCollection,
+    passageBulkAction,
+  ]);
 
   const renderFolderChip = (
     key: string,
@@ -1551,6 +1605,41 @@ export function PassageCardGrid({
           </button>
         </div>
       ) : null}
+      <DragDropModePopover
+        key={
+          pendingFolderDrop
+            ? `${pendingFolderDrop.collectionId}:${pendingFolderDrop.anchor.x}:${pendingFolderDrop.anchor.y}`
+            : "none"
+        }
+        pending={
+          pendingFolderDrop
+            ? {
+                itemId: pendingFolderDrop.ids[0],
+                folderId: pendingFolderDrop.collectionId,
+                folderName: pendingFolderDrop.folderName,
+                anchor: pendingFolderDrop.anchor,
+                currentFolders: pendingFolderDrop.currentFolders,
+              }
+            : null
+        }
+        itemLabel="지문"
+        onChoose={({ copy, keepFolderIds }) => {
+          if (pendingFolderDrop) {
+            const { ids, collectionId } = pendingFolderDrop;
+            if (copy) {
+              void onCopyPassagesToCollection?.(ids, collectionId);
+            } else {
+              void onMovePassagesToCollection?.(
+                ids,
+                collectionId,
+                keepFolderIds,
+              );
+            }
+          }
+          setPendingFolderDrop(null);
+        }}
+        onCancel={() => setPendingFolderDrop(null)}
+      />
     </div>
   );
 }

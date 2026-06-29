@@ -662,16 +662,36 @@ export function QuestionBankClient({
 
   // ─── Folder drag handler (wraps hook's handler with selectedIds) ───
   const handleDragToFolder = useCallback(
-    async (itemId: string, folderId: string, copy: boolean) => {
+    async (
+      itemId: string,
+      folderId: string,
+      copy: boolean,
+      keepFolderIds: string[] = [],
+    ) => {
       const success = await folders.handleDragToFolder(
         itemId,
         folderId,
         copy,
         selectedIds,
+        keepFolderIds,
       );
       if (success) clearSelection();
     },
     [folders, selectedIds, clearSelection],
+  );
+
+  // Folders the dragged question (or whole selection) currently belongs to —
+  // powers the "keep in this folder" toggles when moving.
+  const getItemFolders = useCallback(
+    (itemId: string) => {
+      const ids = selectedIds.has(itemId) ? selectedIds : new Set([itemId]);
+      return folders.collections
+        .filter((c) =>
+          [...ids].some((id) => folders.membership[c.id]?.has(id)),
+        )
+        .map((c) => ({ id: c.id, name: c.name }));
+    },
+    [folders.collections, folders.membership, selectedIds],
   );
 
   const handleDragToRoot = useCallback(
@@ -1166,6 +1186,7 @@ export function QuestionBankClient({
                 onDeleteFolder={folders.handleDeleteFolder}
                 onDragToFolder={handleDragToFolder}
                 onDragToRoot={handleDragToRoot}
+                getItemFolders={getItemFolders}
                 breadcrumbPath={folders.breadcrumbPath}
                 onNavigateToRoot={handleNavigateToRoot}
                 useCardInsideFolder={false}

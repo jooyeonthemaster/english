@@ -634,14 +634,41 @@ export function PassageListClient({
   }, [folder, selection]);
 
   const onDragToFolder = useCallback(
-    (itemId: string, folderId: string, copy: boolean) => {
+    (
+      itemId: string,
+      folderId: string,
+      copy: boolean,
+      keepFolderIds: string[] = [],
+    ) => {
       folder
-        .handleDragToFolder(itemId, folderId, copy, selection.selectedIds)
+        .handleDragToFolder(
+          itemId,
+          folderId,
+          copy,
+          selection.selectedIds,
+          keepFolderIds,
+        )
         .then((success) => {
           if (success) selection.clearSelection();
         });
     },
     [folder, selection],
+  );
+
+  // Folders the dragged item (or whole selection, if the item is selected)
+  // currently belongs to — powers the "keep in this folder" toggles when moving.
+  const getItemFolders = useCallback(
+    (itemId: string) => {
+      const ids = selection.selectedIds.has(itemId)
+        ? selection.selectedIds
+        : new Set([itemId]);
+      return folder.collections
+        .filter((c) =>
+          [...ids].some((id) => folder.membership[c.id]?.has(id)),
+        )
+        .map((c) => ({ id: c.id, name: c.name }));
+    },
+    [folder.collections, folder.membership, selection.selectedIds],
   );
 
   const onDragToRoot = useCallback(
@@ -1004,6 +1031,7 @@ export function PassageListClient({
                 onDeleteFolder={folder.handleDeleteFolder}
                 onDragToFolder={onDragToFolder}
                 onDragToRoot={onDragToRoot}
+                getItemFolders={getItemFolders}
                 breadcrumbPath={folder.breadcrumbPath}
                 onNavigateToRoot={() => {
                   folder.setActiveFolder(null);

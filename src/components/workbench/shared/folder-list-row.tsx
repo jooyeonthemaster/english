@@ -30,7 +30,12 @@ interface FolderListRowProps {
   onClick: () => void;
   onRename: (id: string, name: string) => void;
   onDelete: (id: string) => void;
-  onFileDrop: (itemId: string, folderId: string, copy: boolean) => void;
+  onFileDrop: (
+    itemId: string,
+    folderId: string,
+    folderName: string,
+    anchor: { x: number; y: number },
+  ) => void;
   selected?: boolean;
   showChevron?: boolean;
   dateWidth?: number;
@@ -68,14 +73,20 @@ export function FolderListRow({
       canDrop: ({ source }) => source.data.type === dragItemType,
       onDragEnter: () => setIsDragOver(true),
       onDragLeave: () => setIsDragOver(false),
-      onDrop: ({ source }) => {
+      onDrop: ({ source, location }) => {
         setIsDragOver(false);
         const itemId = source.data[dragItemIdKey] as string;
-        const isCopy = (window.event as DragEvent | null)?.shiftKey ?? false;
-        onFileDrop(itemId, collection.id, isCopy);
+        const input = location?.current?.input;
+        const anchor = {
+          x: input?.clientX ?? window.innerWidth / 2,
+          y: input?.clientY ?? window.innerHeight / 2,
+        };
+        // Defer the move/copy decision to the chooser popover owned by
+        // FolderSection — every plain drop asks (tablet-friendly, explicit).
+        onFileDrop(itemId, collection.id, collection.name, anchor);
       },
     });
-  }, [collection.id, onFileDrop, dragItemType, dragItemIdKey]);
+  }, [collection.id, collection.name, onFileDrop, dragItemType, dragItemIdKey]);
 
   useEffect(() => {
     if (isEditing && inputRef.current) {

@@ -31,6 +31,8 @@ export interface ReportEdit {
   onResize: (id: string, heightMm: number) => void;
   /** 표 열 너비(세로 구분선) 조절 — group(grammar/exam/vocab) → 열키→퍼센트 commit */
   onColWidths: (group: string, widths: Record<string, number>) => void;
+  /** 섹션 헤더(par-sec-head) 한글/영문 라벨 인라인 편집 — 슬롯키 → { ko?, en? } commit */
+  onSectionHeading: (key: string, patch: { ko?: string; en?: string }) => void;
   onDeletePage?: (ids: string[]) => void;
   /** 블록 단위 삭제 — 블록 오른쪽 위 삭제 버튼. */
   onDelete?: (id: string) => void;

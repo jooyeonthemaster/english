@@ -319,16 +319,19 @@ export function usePassageLibrary({
     [loadPassages],
   );
 
-  const handleCopySelectedPassagesToCollection = useCallback(
-    async (collectionId: string) => {
-      const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
+  const handleCopyPassagesToCollection = useCallback(
+    async (passageIds: string[], collectionId: string) => {
+      const ids = Array.from(new Set(passageIds)).filter(
+        (id) => !isDraftPseudoId(id),
+      );
       if (ids.length === 0 || passageBulkAction) return;
       setPassageBulkAction("move");
       try {
-        const selectedPassages = passages.filter((p) => selectedIds.has(p.id));
+        const idSet = new Set(ids);
+        const targetPassages = passages.filter((p) => idSet.has(p.id));
         const idsToAdd = ids.filter(
           (id) =>
-            !selectedPassages
+            !targetPassages
               .find((p) => p.id === id)
               ?.collectionItems?.some((ci) => ci.collectionId === collectionId),
         );
@@ -372,7 +375,12 @@ export function usePassageLibrary({
           duration: UNDO_TOAST_DURATION,
           action: { label: "실행 취소", onClick: () => void undoFolderCopy() },
         });
-        setSelectedIds(new Set());
+        // Clear only the copied ids from the selection (a bare drag of an
+        // unselected card must not wipe an unrelated selection).
+        setSelectedIds((prev) => {
+          if (!ids.some((id) => prev.has(id))) return prev;
+          return new Set([...prev].filter((id) => !idSet.has(id)));
+        });
         await loadPassages();
       } catch (err) {
         toast.error(
@@ -382,11 +390,22 @@ export function usePassageLibrary({
         setPassageBulkAction(null);
       }
     },
-    [collections, loadPassages, passageBulkAction, passages, selectedIds],
+    [collections, loadPassages, passageBulkAction, passages],
+  );
+
+  const handleCopySelectedPassagesToCollection = useCallback(
+    async (collectionId: string) => {
+      await handleCopyPassagesToCollection([...selectedIds], collectionId);
+    },
+    [handleCopyPassagesToCollection, selectedIds],
   );
 
   const handleMovePassagesToCollection = useCallback(
-    async (passageIds: string[], collectionId: string) => {
+    async (
+      passageIds: string[],
+      collectionId: string,
+      keepFolderIds: string[] = [],
+    ) => {
       const ids = Array.from(new Set(passageIds)).filter(
         (id) => !isDraftPseudoId(id),
       );
@@ -394,6 +413,7 @@ export function usePassageLibrary({
       setPassageBulkAction("move");
       try {
         const idSet = new Set(ids);
+        const keepSet = new Set(keepFolderIds);
         const selectedPassages = passages.filter((p) => idSet.has(p.id));
         const previousMembership = new Map<string, string[]>();
         for (const p of selectedPassages) {
@@ -403,8 +423,9 @@ export function usePassageLibrary({
             previousMembership.set(ci.collectionId, list);
           }
         }
+        // Keep the item in folders the user ticked — only remove from the rest.
         const sourceCollectionIds = [...previousMembership.keys()].filter(
-          (id) => id !== collectionId,
+          (id) => id !== collectionId && !keepSet.has(id),
         );
         const targetExistingIds = new Set(
           previousMembership.get(collectionId) ?? [],
@@ -653,6 +674,7 @@ export function usePassageLibrary({
     loadPassages,
     handleCreatePassageCollection,
     handleCopySelectedPassagesToCollection,
+    handleCopyPassagesToCollection,
     handleMovePassagesToCollection,
     handleMoveSelectedPassagesToCollection,
     handleRemoveSelectedPassagesFromCollection,

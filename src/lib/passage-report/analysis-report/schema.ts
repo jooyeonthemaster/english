@@ -515,6 +515,11 @@ export const learningWorksheetSectionSchema = z
     questions: z.array(worksheetQuestionSchema).max(8).default([]),
     hiddenAnswers: z.boolean().default(false),
     hiddenClozeTranslations: z.boolean().optional(),
+    /** 섹션 미니 타이틀(par-ws-minihead) 인라인 편집 오버라이드 — slot id → { k: 한글 제목, e: 영문 라벨 }.
+     *  하드코딩 라벨/영문 키커도 편집 가능하게, 스키마에 필드를 N개 추가하지 않고 한 맵으로 모은다. */
+    titleOverrides: z
+      .record(z.string(), z.object({ k: z.string().optional(), e: z.string().optional() }))
+      .optional(),
   })
   .passthrough();
 
@@ -751,7 +756,8 @@ export const customBlockSchema = z.discriminatedUnion("kind", [
       kind: z.literal("activity"),
       id: z.string().min(1),
       activityKind: activityKindSchema,
-      title: z.string().default(""),                  // 빈 문자열이면 기본 라벨
+      title: z.string().default(""),                  // 빈 문자열이면 기본 라벨(미니헤드 k)
+      kicker: z.string().optional(),                  // 미니헤드 영문 라벨(e) 오버라이드 — 비면 payload.instructions
       sentenceNos: z.array(z.number().int().min(1).max(40)).optional(), // 비면 전체
       params: activityParamsSchema.default({}),
       seed: z.number().int().min(0).default(1),       // ★ re-roll 카운터
@@ -851,6 +857,12 @@ export const analysisReportSchema = z
      * 열 키 → 퍼센트(보이는 열들의 합이 ~100). 없으면 기본 비율로 렌더. 세로 구분선 드래그로 저장.
      */
     tableColWidths: z.record(z.string(), z.record(z.string(), z.number())).optional(),
+    /**
+     * (편집기) 섹션 헤더(par-sec-head) 인라인 편집 오버라이드 — 헤더 슬롯키(kind+suffix, 예:
+     * "passage", "passage-anno", "learning-worksheet-logic", "summary", "vocabulary") → { ko, en }.
+     * 같은 섹션이 여러 헤더로 나와도 슬롯키로 구분. 번호(par-sec-no)는 자동 생성이라 편집 대상 아님.
+     */
+    sectionHeadings: z.record(z.string(), z.object({ ko: z.string().optional(), en: z.string().optional() })).optional(),
     /** Vocabulary worksheet only mode. Keeps source data but renders only the word-test sheet. */
     vocabTestOnly: z.boolean().optional(),
     /** (편집기) 표지 다음에 '영어 원문만' 단독 페이지를 추가할지. 기본 off. */

@@ -159,6 +159,7 @@ export function WebtoonPageClient({
     loadPassages,
     handleCreatePassageCollection,
     handleCopySelectedPassagesToCollection,
+    handleCopyPassagesToCollection,
     handleMovePassagesToCollection,
     handleMoveSelectedPassagesToCollection,
     handleRemoveSelectedPassagesFromCollection,
@@ -520,6 +521,7 @@ export function WebtoonPageClient({
                   handleMoveSelectedPassagesToCollection
                 }
                 onMovePassagesToCollection={handleMovePassagesToCollection}
+                onCopyPassagesToCollection={handleCopyPassagesToCollection}
                 onCreateCollection={handleCreatePassageCollection}
                 onRemoveSelectedFromCollection={
                   handleRemoveSelectedPassagesFromCollection

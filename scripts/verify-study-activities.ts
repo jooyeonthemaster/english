@@ -7,7 +7,7 @@
  *  - produce-KO (해석 쓰기): 한글 정답이 prompt 안에 보이면 실패.
  * 그 외: 매칭 유일해(우측 distinct·교란순열), 빈칸 전(全)등장 처리, 비어있지 않음 등.
  */
-import { makeActivityBlock, applyManualBlankToItem, applyManualBlankToBlock, insertIntoWordBank } from "@/lib/passage-report/analysis-report/study-activities";
+import { makeActivityBlock, applyManualBlankToItem, applyManualBlankToBlock, insertIntoWordBank, isFunctionWord } from "@/lib/passage-report/analysis-report/study-activities";
 import type { AnalysisReport, ActivityKind } from "@/lib/passage-report/analysis-report/schema";
 
 const report = {
@@ -185,6 +185,56 @@ for (const kind of CLOZE_KINDS) {
     block.payload.items.forEach((_, i) => {
       log(JSON.stringify(ans[i]) === JSON.stringify(inl[i]), `[번호일치 ${kind} s${seed} item${i}] 인라인 ${JSON.stringify(inl[i])} ≠ 정답지 ${JSON.stringify(ans[i])}`);
     });
+  }
+}
+
+// ─── 내용어(content) 빈칸 필터 — 전치사·접속사·관사·대명사·조동사 누출 0 (사용자 요구) ───
+// keyword/full/nested cloze 는 모두 clozeCandidateIdx 를 통해 빈칸을 고른다. 기본 target="content"
+// 에서 answerKey(빈칸 정답)에 기능어가 단 하나라도 끼면 실패. (빈칸 개수보다 필터 우선)
+{
+  // 기능어가 잔뜩 섞인 합성 지문 — 필터가 없으면 the/for/with/and/but/that/which/their… 가 빈칸이 된다.
+  const fnReport = {
+    schemaVersion: 1, brand: "X", themeId: "black-white",
+    meta: { titleKo: "t", titleEn: "t", category: "c", theme: "th", difficulty: 3, solveTime: "3", examTypes: "x" },
+    sections: [
+      {
+        kind: "passage",
+        sentences: [
+          { n: 1, en: "Within liberal culture, the value of fairness for individuals outweighs the preservation of family integrity.", ko: "자유주의 문화 안에서는 개인의 공정성 가치가 가족 통합의 보존보다 중요하다." },
+          { n: 2, en: "In contrast, Confucian cultures believe that the family assumes a fundamental role and that living within a family institution is essential.", ko: "대조적으로, 유교 문화는 가족이 근본적 역할을 맡으며 가족 제도 안에서 사는 것이 필수적이라고 믿는다." },
+          { n: 3, en: "Therefore, some societies may choose to impose restrictions because they prefer collective welfare over individual rights.", ko: "따라서 어떤 사회는 집단 복지를 개인의 권리보다 선호하기 때문에 제약을 부과하기로 선택할 수 있다." },
+        ],
+        keywords: ["culture", "family", "rights"],
+      },
+    ],
+  } as unknown as AnalysisReport;
+  const CONTENT_CLOZE: ActivityKind[] = ["keyword-cloze", "full-cloze", "nested-cloze"];
+  for (const kind of CONTENT_CLOZE) {
+    for (let seed = 1; seed <= 6; seed++) {
+      // 높은 밀도로 강제 — 후보가 넓어도 기능어가 새지 않아야 한다.
+      const block = makeActivityBlock(fnReport, { activityKind: kind, params: { density: 90 } as never, seed });
+      for (const it of block.payload.items) {
+        for (const key of it.answerKey ?? []) {
+          log(!isFunctionWord(key), `[내용어필터 ${kind} s${seed}] 기능어가 빈칸으로 누출됨: "${key}"`);
+        }
+      }
+    }
+  }
+  // 명시적 기능어 표본 — 사용자가 지목한 전치사/접속사 + 관사/대명사/조동사 + 저빈도 전치사/접속사(despite/throughout/via/lest/albeit)
+  for (const w of [
+    "for", "with", "from", "into", "and", "but", "because", "although", "while", "the", "their", "which",
+    "that", "are", "have", "this", "these", "your", "they", "not", "very", "more",
+    "despite", "throughout", "via", "per", "amid", "alongside", "underneath", "regarding", "concerning",
+    "lest", "albeit", "whereby", "wherein",
+  ]) {
+    log(isFunctionWord(w), `[내용어필터] 기능어로 분류돼야 하는데 누락됨: "${w}"`);
+  }
+  // 내용어 표본 — 절대 기능어로 오분류되면 안 됨(빈칸 후보가 사라지는 회귀 방지). need/dare/done 등 동음어 포함.
+  for (const w of [
+    "value", "culture", "family", "fairness", "integrity", "fundamental", "restrictions", "welfare",
+    "individuals", "preservation", "institution", "collective", "need", "dare", "done", "doing", "having",
+  ]) {
+    log(!isFunctionWord(w), `[내용어필터] 내용어가 기능어로 오분류됨(빈칸 후보 손실): "${w}"`);
   }
 }
 

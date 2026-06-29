@@ -21,6 +21,8 @@ export type ActivityAction =
   | { type: "answers"; hidden: boolean }
   | { type: "answerKeyPage"; on: boolean }
   | { type: "blankItem"; index: number; start: number; end: number } // 선택 구간 → 빈칸
+  | { type: "title"; value: string } // 미니헤드 한글 제목(k) 편집
+  | { type: "kicker"; value: string } // 미니헤드 영문 라벨(e) 편집
   | { type: "remove" };
 
 /**
@@ -167,12 +169,42 @@ function ActivityControls({
   );
 }
 
-function ActivityHeader({ block }: { block: ActivityBlock }) {
+function ActivityHeader({
+  block,
+  onActivity,
+  renderText,
+}: {
+  block: ActivityBlock;
+  onActivity?: (id: string, action: ActivityAction) => void;
+  renderText?: ActivityTextRenderer;
+}) {
   const head = block.title.trim() || activityBlockLabel(block);
+  const kicker = (block.kicker ?? block.payload.instructions) ?? "";
+  const editable = !!renderText && !!onActivity;
   return (
     <div className="par-ws-minihead">
-      <span className="par-ws-minihead-k">{head}</span>
-      {block.payload.instructions ? <span className="par-ws-minihead-e">{block.payload.instructions}</span> : null}
+      {editable ? (
+        renderText!({
+          as: "span",
+          className: "par-ws-minihead-k",
+          value: head,
+          placeholder: "활동 제목",
+          onCommit: (v) => onActivity!(block.id, { type: "title", value: v }),
+        })
+      ) : (
+        <span className="par-ws-minihead-k">{head}</span>
+      )}
+      {editable ? (
+        renderText!({
+          as: "span",
+          className: "par-ws-minihead-e",
+          value: kicker,
+          placeholder: "영문 라벨",
+          onCommit: (v) => onActivity!(block.id, { type: "kicker", value: v }),
+        })
+      ) : kicker ? (
+        <span className="par-ws-minihead-e">{kicker}</span>
+      ) : null}
     </div>
   );
 }
@@ -344,7 +376,7 @@ function ActivityContent({
       {showHeader ? (
         <>
           <ActivityControls block={block} onActivity={onActivity} />
-          <ActivityHeader block={block} />
+          <ActivityHeader block={block} onActivity={onActivity} renderText={renderText} />
         </>
       ) : null}
 

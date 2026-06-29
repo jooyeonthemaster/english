@@ -102,8 +102,20 @@ function activityAnswerItems(report: AnalysisReport): FlowItem[] {
 
 export function reportFlowItems(
   report: AnalysisReport,
-  edit?: { med?: MetaEdit; sectionEdit?: (i: number) => SectionEdit; setCustom?: CustomEdit; insertTextAfter?: (anchorId: string) => void; ced?: CoverEdit; onActivity?: (id: string, action: ActivityAction) => void },
+  edit?: { med?: MetaEdit; sectionEdit?: (i: number) => SectionEdit; setCustom?: CustomEdit; insertTextAfter?: (anchorId: string) => void; ced?: CoverEdit; onActivity?: (id: string, action: ActivityAction) => void; onSectionHeading?: (key: string, patch: { ko?: string; en?: string }) => void },
 ): FlowItem[] {
+  // 섹션 헤더(par-sec-head) ko/en 인라인 편집 — 슬롯키(kind+suffix)로 오버라이드 저장. (번호는 자동·고정)
+  const headOverride = (key: string, fallbackKo?: string, fallbackEn?: string) => {
+    const ov = report.sectionHeadings?.[key];
+    const editableHead = !!edit?.onSectionHeading;
+    return {
+      labelKo: ov?.ko ?? fallbackKo,
+      labelEn: ov?.en ?? fallbackEn,
+      editable: editableHead,
+      onCommitKo: editableHead ? (v: string) => edit!.onSectionHeading!(key, { ko: v }) : undefined,
+      onCommitEn: editableHead ? (v: string) => edit!.onSectionHeading!(key, { en: v }) : undefined,
+    };
+  };
   const vocabTestOnly = !!report.vocabTestOnly;
   const items: FlowItem[] = vocabTestOnly
     ? []
@@ -145,7 +157,7 @@ export function reportFlowItems(
         kind,
         no,
         wrap: "secheader",
-        node: <SectionHead no={no} kind={kind} labelKo={labelKo} labelEn={labelEn} />,
+        node: <SectionHead no={no} kind={kind} {...headOverride(`${kind}${idSuffix}`, labelKo, labelEn)} />,
         breakBefore,
         keepWithPrev,
       });
@@ -239,7 +251,7 @@ export function reportFlowItems(
         kind: section.kind,
         no,
         wrap: "secheader",
-        node: <SectionHead no={no} kind={section.kind} />,
+        node: <SectionHead no={no} kind={section.kind} {...headOverride(section.kind)} />,
       });
     }
     const sed = edit?.sectionEdit ? edit.sectionEdit(si) : undefined;
