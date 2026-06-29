@@ -3,7 +3,7 @@ import { getHelpPosts } from "@/actions/help-center";
 import { HelpBoardClient } from "@/components/help-center/help-board-client";
 
 export const metadata: Metadata = {
-  title: "고객 지원",
+  title: "문의 게시판",
 };
 
 export const dynamic = "force-dynamic";

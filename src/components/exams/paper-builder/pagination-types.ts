@@ -29,7 +29,8 @@ export type FlowBlock =
   | { kind: "option"; group: PaperGroup; item: PaperItem; option: OptionItem; index: number; height: number }
   | { kind: "objective-answer"; group: PaperGroup; item: PaperItem; height: number }
   | { kind: "answer"; group: PaperGroup; item: PaperItem; height: number }
-  | { kind: "note"; group: PaperGroup; item: PaperItem; height: number };
+  | { kind: "note"; group: PaperGroup; item: PaperItem; height: number }
+  | { kind: "explanation"; group: PaperGroup; item: PaperItem; height: number };
 
 export type PaginationResult = {
   pages: PaperPage[];

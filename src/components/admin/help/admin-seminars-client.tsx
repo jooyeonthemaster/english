@@ -10,7 +10,7 @@ import { SEMINAR_STATUSES, SEMINAR_CHANNELS, statusOf, labelOf } from "@/lib/hel
 import { StatusBadge } from "@/components/help-center/status-badge";
 import { formatDateTime } from "@/lib/utils";
 import { toast } from "sonner";
-import { Search, Phone, Mail, CalendarClock, Save } from "lucide-react";
+import { Search, Phone, Mail, CalendarClock, Save, Video } from "lucide-react";
 
 export function AdminSeminarsClient({
   initialRequests,
@@ -28,12 +28,14 @@ export function AdminSeminarsClient({
   // 편집 상태(선택된 신청 기준)
   const [memo, setMemo] = useState("");
   const [scheduledAt, setScheduledAt] = useState("");
+  const [meetingUrl, setMeetingUrl] = useState("");
   const [editStatus, setEditStatus] = useState("");
 
   function select(r: AdminSeminarRequestView) {
     setSelectedId(r.id);
     setMemo(r.adminMemo ?? "");
     setScheduledAt(r.scheduledAt ? r.scheduledAt.slice(0, 16) : "");
+    setMeetingUrl(r.meetingUrl ?? "");
     setEditStatus(r.status);
   }
 
@@ -55,6 +57,7 @@ export function AdminSeminarsClient({
           status: editStatus || selected.status,
           adminMemo: memo,
           scheduledAt: scheduledAt || null,
+          meetingUrl: meetingUrl || null,
         });
         toast.success("저장되었습니다.");
         const data = await adminGetSeminarRequests({
@@ -211,6 +214,23 @@ export function AdminSeminarsClient({
                   onChange={(e) => setScheduledAt(e.target.value)}
                   className="w-full h-9 rounded-xl border border-gray-200 px-3 text-[13px] outline-none focus:border-blue-500"
                 />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-gray-500 inline-flex items-center gap-1">
+                  <Video className="size-3.5 text-gray-400" />
+                  줌(Zoom) 링크
+                </label>
+                <input
+                  type="url"
+                  value={meetingUrl}
+                  onChange={(e) => setMeetingUrl(e.target.value)}
+                  placeholder="https://zoom.us/j/..."
+                  className="w-full h-9 rounded-xl border border-gray-200 px-3 text-[13px] outline-none focus:border-blue-500"
+                />
+                <p className="text-[11px] text-gray-400">
+                  입력하면 신청자가 1:1 세미나 신청에서 바로 접속할 수 있습니다.
+                </p>
               </div>
 
               <div className="space-y-1.5">

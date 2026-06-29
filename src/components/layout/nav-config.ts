@@ -194,14 +194,14 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
       directorOnly: true,
       items: [
         {
-          label: "헬프센터",
+          label: "고객 센터",
           icon: LifeBuoy,
           href: `${basePath}/help/seminar`,
           directorOnly: true,
           children: [
             { label: "1:1 세미나 신청", href: `${basePath}/help/seminar` },
             { label: "피드백 게시판", href: `${basePath}/help/feedback` },
-            { label: "고객 지원", href: `${basePath}/help/support` },
+            { label: "문의 게시판", href: `${basePath}/help/support` },
           ],
         },
       ],

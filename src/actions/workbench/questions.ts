@@ -18,6 +18,7 @@ import type {
   ActionResult,
   SaveQuestionData,
 } from "./_types";
+import { buildWorkbenchQuestionWhere } from "./_question-where";
 
 function toPrismaJson(value: unknown): Prisma.InputJsonValue | undefined {
   if (value === undefined || value === null) return undefined;
@@ -86,50 +87,6 @@ function enrichGeneratedQuestionPlanMetadata(q: SaveQuestionData) {
       : q.structuredData;
 
   return { tags, structuredData };
-}
-
-function buildWorkbenchQuestionWhere(
-  academyId: string,
-  filters?: WorkbenchQuestionFilters,
-  scope: "active" | "trash" = "active",
-): Prisma.QuestionWhereInput {
-  const where: Prisma.QuestionWhereInput = { academyId };
-
-  // 휴지통(soft delete) 단일 게이트 — 모든 워크벤치 문제 조회는 이 헬퍼를 거친다.
-  // "active"=살아있는 문제만(deletedAt:null), "trash"=휴지통에 있는 것만.
-  // 이 한 줄을 빼먹으면 삭제된 문제가 문제은행/지문별 뷰/빌더 피커에 새어나간다.
-  where.deletedAt = scope === "trash" ? { not: null } : null;
-
-  // 세트 멤버도 활성 문제은행에선 "일반 문항 카드"로 노출한다(표시 통일). 멤버는
-  // 자체 passage·structuredData·options·해설을 모두 보유하므로 일반 카드로 충실히
-  // 렌더된다(세트로 묶어 한 장으로 보여주던 것 → 문항당 1카드). 휴지통 목록은
-  // 기존 동작을 유지해 세트 멤버를 제외한다(복원 동선 단순화).
-  if (scope === "trash") where.inSet = false;
-
-  if (filters?.type) {
-    // Support comma-separated multi-type: "MULTIPLE_CHOICE,SHORT_ANSWER"
-    const types = filters.type.split(",").filter(Boolean);
-    where.type = types.length > 1 ? { in: types } : types[0];
-  }
-  if (filters?.subType) {
-    // Support comma-separated multi-subtype: "BLANK_INFERENCE,GRAMMAR_ERROR"
-    const subs = filters.subType.split(",").filter(Boolean);
-    where.subType = subs.length > 1 ? { in: subs } : subs[0];
-  }
-  if (filters?.difficulty) where.difficulty = filters.difficulty;
-  if (filters?.passageId) where.passageId = filters.passageId;
-  if (filters?.collectionId) {
-    where.collectionItems = { some: { collectionId: filters.collectionId } };
-  }
-  if (filters?.tags) where.tags = { contains: filters.tags };
-  if (filters?.aiGenerated !== undefined) where.aiGenerated = filters.aiGenerated;
-  if (filters?.approved !== undefined) where.approved = filters.approved;
-  if (filters?.starred !== undefined) where.starred = filters.starred;
-  if (filters?.search) {
-    where.questionText = { contains: filters.search, mode: "insensitive" };
-  }
-
-  return where;
 }
 
 function revalidateQuestionBankPaths() {

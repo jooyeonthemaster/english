@@ -4367,6 +4367,7 @@ model SeminarRequest {
   status           String    @default("RECEIVED") // RECEIVED→CONTACTED→SCHEDULED→DONE / CANCELED
   adminMemo        String?   @db.Text
   scheduledAt      DateTime?
+  meetingUrl       String? // 운영자가 입력하는 줌(Zoom) 등 화상 접속 링크 — 신청자에게 노출
   handledByAdminId String?
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt

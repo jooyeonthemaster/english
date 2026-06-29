@@ -110,6 +110,7 @@ interface PreviewToolbarProps {
   onRedo?: () => void;
   onPrint: () => void;
   onDownloadPdf: () => void;
+  onDownloadPdfWithAnswers: () => void;
   onDownloadDocx: () => void;
   onDownloadDocxWithAnswers: () => void;
   onDownloadHwpx: () => void;
@@ -133,6 +134,7 @@ export function PreviewToolbar({
   onRedo,
   onPrint,
   onDownloadPdf,
+  onDownloadPdfWithAnswers,
   onDownloadDocx,
   onDownloadDocxWithAnswers,
   onDownloadHwpx,
@@ -287,6 +289,14 @@ export function PreviewToolbar({
                 <span className="ml-auto rounded-sm bg-rose-50 px-1 py-px text-[9px] font-bold leading-none text-rose-600">
                   미리보기 그대로
                 </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => runDownload(onDownloadPdfWithAnswers)}
+                className="flex h-9 w-full items-center gap-2 px-3 text-left text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+              >
+                <FormatFileIcon label="PDF" color={FORMAT_COLORS.pdf} stacked />
+                PDF 해설
               </button>
               <div className="my-1 h-px bg-slate-100" />
               <button

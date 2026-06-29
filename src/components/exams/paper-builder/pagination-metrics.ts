@@ -6,6 +6,7 @@ import { questionHasEmbeddedPassage } from "./passage-policy";
 import { normalizeInlineText, normalizePassageText, normalizeQuestionText } from "./text-normalization";
 import type { OptionItem, PaginationSettings, PaperGroup, PaperItem, StructRowStyle } from "./types";
 import { BLOCK_PX_PER_PT } from "./types";
+import { buildExplanationRows } from "./explanation-content";
 import type { FlowBlock } from "./pagination-types";
 // 줄당 문자 폭 보정 계수. 본문 글꼴을 맑은 고딕으로 통일한 뒤, 미리보기 추정 줄 수가
 // 실제 브라우저 맑은 고딕 렌더보다 1줄씩 많게 나와(문항 높이 과대추정 → 1단이 일찍 차서
@@ -336,13 +337,9 @@ export function estimateStructuredBodyHeight(
   }
 
   if (isInlineSourcePassageSubtype(subType)) {
-    // 세트 멤버는 공유 지문을 그룹에서 1회만 그리므로(인라인 지문 박스 제거),
-    // 본문 높이 추정에서도 지문 박스 높이를 빼 buildStructLineBlocks 와 일치시킨다.
-    const passage = isSetMemberItem(item)
-      ? ""
-      : normalizePassageText(
-          item.passageContent || item.sourceQuestion.passage?.content || "",
-        );
+    const passage = normalizePassageText(
+      item.passageContent || item.sourceQuestion.passage?.content || "",
+    );
     const bodyAfterStem = questionBodyAfterStem(item);
     let height = HEADER_BODY_GAP;
     if (bodyAfterStem) {
@@ -401,13 +398,10 @@ export function buildStructLineBlocks(
   const textLineH = questionLineHeight(settings, fontPx);
   const blocks: FlowBlock[] = [];
 
-  // 장문 세트 멤버: 공유 지문은 그룹 첫머리에서 1회만 출력하므로(buildGroups·a4 fragment),
-  // 멤버 본문의 인라인 "지문(passage) 박스" 세그먼트는 제거해 중복 출력을 막는다.
-  // (요약/주어진문장 박스·순서 단락 등 멤버 고유 본문은 그대로 둔다.)
-  const isSetMember = isSetMemberItem(item);
-  const segments = structuredSegments(item).filter(
-    (seg) => !(isSetMember && seg.kind === "box" && seg.boxStyle === "passage"),
-  );
+  // 장문 세트 멤버도 자기완결(self-contained)로 렌더한다 — 각 멤버의 마킹 지문은
+  // makePaperItem 의 materializeSetMember 가 본문/passageContent 에 복원해 주입하므로,
+  // 여기서는 일반 문항과 동일하게 모든 구조 세그먼트를 그대로 흘려보낸다.
+  const segments = structuredSegments(item);
 
   segments.forEach((seg, segIndex) => {
     if (seg.kind === "arrow") {
@@ -640,4 +634,31 @@ export function estimateObjectiveAnswerBlockHeight(item: PaperItem, settings: Pa
 
 export function estimateTeacherNoteHeight(item: PaperItem, settings: PaginationSettings): number {
   return settings.template === "worksheet" && item.teacherNote ? 24 : 0;
+}
+
+// 인라인 정답·해설 블록(해설 포함 PDF) 높이 추정 — exam-explanation-block.tsx 의 실제
+// 렌더(글꼴/패딩/들여쓰기)를 모델링한다. 약간 보수적으로 잡아 칸 경계에서 잘리지 않게 한다.
+export function estimateExplanationBlockHeight(item: PaperItem, settings: PaginationSettings): number {
+  const rows = buildExplanationRows(item);
+  const compact = settings.density === "compact";
+  const { columnWidth } = pageMetrics(settings, 0);
+  const fontSize = compact ? 9.5 : 10;
+  const lineH = fontSize * 1.5;
+
+  let height = 10; // 문제와 구분되는 상단 여백
+  for (const row of rows) {
+    if (row.type === "answer") {
+      // 정답 배지(테두리 박스): 한 줄 + 박스 패딩/테두리
+      height += lineH + 14;
+    } else if (row.type === "label") {
+      height += lineH + 6;
+    } else if (row.type === "text") {
+      height += estimateTextLines(row.text, columnWidth - 8, fontSize) * lineH + 2;
+    } else if (row.type === "bullet") {
+      height += estimateTextLines(`• ${row.text}`, columnWidth - 16, fontSize) * lineH + 2;
+    } else {
+      height += estimateTextLines(`${row.label} ${row.text}`, columnWidth - 16, fontSize) * lineH + 2;
+    }
+  }
+  return Math.ceil(height);
 }

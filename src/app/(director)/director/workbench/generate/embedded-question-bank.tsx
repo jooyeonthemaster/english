@@ -353,6 +353,8 @@ export function EmbeddedQuestionBank({
       removeFromCollection: removeQuestionsFromCollection,
     },
     itemLabel: "문제",
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    cumulativeCounts: true,
   });
 
   // Hydrate collections + membership once.
@@ -1245,6 +1247,17 @@ export function EmbeddedQuestionBank({
   // 카드들을 글로우시켜 "문항을 먼저 고르세요"를 유도한다.
   const cardZoneRef = useRef<HTMLDivElement>(null);
 
+  // 페이지 이동(필터.page 변경) 시 카드 목록 맨 위로 부드럽게 스크롤한다.
+  // 최초 마운트에서는 스크롤하지 않는다(불필요한 점프 방지).
+  const pageScrollSkipRef = useRef(true);
+  useEffect(() => {
+    if (pageScrollSkipRef.current) {
+      pageScrollSkipRef.current = false;
+      return;
+    }
+    cardZoneRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [filters.page]);
+
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
       <div className="flex flex-1 items-center gap-2 min-w-0">
@@ -1486,6 +1499,8 @@ export function EmbeddedQuestionBank({
             <div
               ref={cardZoneRef}
               className="relative min-w-0 px-4 pb-3 pt-3 sm:px-5"
+              // 페이지 이동 스크롤 시 스티키 폴더/툴바 아래에 카드 첫 줄이 오도록 여백 확보.
+              style={{ scrollMarginTop: folderStickyHeight + 56 }}
             >
               {showNavLoading ? (
                 <div className="absolute inset-0 z-10 flex items-start justify-center bg-white/55 pt-12 backdrop-blur-[1px]">

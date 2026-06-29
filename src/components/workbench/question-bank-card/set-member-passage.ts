@@ -32,7 +32,21 @@ export function setMemberDisplayPassage(q: MaybeSetMember): string | null {
   if (!spans || spans.length === 0) return base;
 
   try {
-    return reconstructPassageView(base, spans).text || base;
+    const primary = reconstructPassageView(base, spans);
+    if (primary.missing.length === 0) return primary.text || base;
+    // 못 찾은 anchor: surroundingText 가 세트 병합 레이아웃(삽입마커 ①②③④⑤·문장 제거) 기준이라
+    // 단독 멤버의 clean 지문과 어긋날 수 있다. surroundingText 를 버리고 spanText 단독·완화
+    // 전략으로 재시도해(예: 지칭의 'This' 가 지문에 1회뿐이면 정확히 찾힘) 밑줄/빈칸을 살린다.
+    const relaxed = primary.missing
+      .filter((a) => a.kind === "UNDERLINE" || a.kind === "MARKER" || a.kind === "BLANK")
+      .map((a) => ({
+        ...a,
+        surroundingText: undefined,
+        occurrenceIndex: undefined,
+        findStrategy: (a.kind === "BLANK" ? "expression" : "word") as "expression" | "word",
+      }));
+    if (relaxed.length === 0) return primary.text || base;
+    return reconstructPassageView(primary.text, relaxed).text || primary.text || base;
   } catch {
     return base;
   }
@@ -47,6 +61,10 @@ const PASSAGE_FIELD_BY_TYPE: Record<string, string> = {
   CONTEXT_MEANING: "passageWithUnderline",
   IMPLIED_MEANING: "passageWithUnderline",
   REFERENCE: "passageWithUnderline",
+  // 문법 오류 수정(서술형): 지문에 (A)(B)(C) 마커가 찍힌 passageWithUnderline 이
+  // 있어야 구조형 렌더가 켜지고(grammarCorrectionErrorSentenceForQuestionText 가
+  // 이 필드로 전체 지문을 라벨링), 없으면 지문 없이 폴백된다.
+  GRAMMAR_CORRECTION: "passageWithUnderline",
   GRAMMAR_ERROR: "passageWithMarkers",
   GRAMMAR_CHOICE_COMBO: "passageWithMarkers",
   VOCAB_CHOICE: "passageWithMarkers",

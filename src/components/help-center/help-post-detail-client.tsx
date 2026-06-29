@@ -302,24 +302,26 @@ export function HelpPostDetailClient({ board, postId }: { board: HelpBoard; post
           </div>
         )}
 
-        {/* Follow-up reply (author) */}
-        {post.isMine && (
-          <div className="mt-4 space-y-2">
-            <Separator />
-            <Textarea
-              value={reply}
-              onChange={(e) => setReply(e.target.value)}
-              placeholder="추가로 남길 내용이 있다면 작성하세요"
-              rows={3}
-              className="resize-y mt-4"
-            />
-            <div className="flex justify-end">
-              <Button size="sm" onClick={handleReply} disabled={isPending || !reply.trim()}>
-                댓글 등록
-              </Button>
-            </div>
+        {/* Follow-up reply (anyone) */}
+        <div className="mt-4 space-y-2">
+          <Separator />
+          <Textarea
+            value={reply}
+            onChange={(e) => setReply(e.target.value)}
+            placeholder={
+              post.isMine
+                ? "추가로 남길 내용이 있다면 작성하세요"
+                : "댓글을 남겨 보세요"
+            }
+            rows={3}
+            className="resize-y mt-4"
+          />
+          <div className="flex justify-end">
+            <Button size="sm" onClick={handleReply} disabled={isPending || !reply.trim()}>
+              댓글 등록
+            </Button>
           </div>
-        )}
+        </div>
         </div>
       </div>
 

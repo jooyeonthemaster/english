@@ -392,6 +392,8 @@ export function PassageListClient({
     initialMembership,
     actions: folderActions,
     itemLabel: "학습지",
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    cumulativeCounts: true,
   });
   const { filterByActiveFolder } = folder;
   const folderActiveId = folder.activeFolder;
@@ -1148,7 +1150,7 @@ export function PassageListClient({
                             className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3"
                             value={selection.selectedIds}
                             onChange={selection.setSelectedIds}
-                            itemScopeRef={passageListBoundaryRef}
+                            boundaryRef={passageListBoundaryRef}
                           >
                             {group.items.map((p) => {
                               const adapted = {
@@ -1228,7 +1230,7 @@ export function PassageListClient({
                     className="space-y-1.5"
                     value={selection.selectedIds}
                     onChange={selection.setSelectedIds}
-                    itemScopeRef={passageListBoundaryRef}
+                    boundaryRef={passageListBoundaryRef}
                   >
                     {displayedPassages.map((p) => (
                       <PassageFileRow
@@ -1249,7 +1251,7 @@ export function PassageListClient({
                     }
                     value={selection.selectedIds}
                     onChange={selection.setSelectedIds}
-                    itemScopeRef={passageListBoundaryRef}
+                    boundaryRef={passageListBoundaryRef}
                   >
                     {displayedPassages.map((p) => (
                       <PassageFileCard

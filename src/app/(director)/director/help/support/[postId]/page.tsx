@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { HelpPostDetailClient } from "@/components/help-center/help-post-detail-client";
 
 export const metadata: Metadata = {
-  title: "고객 지원",
+  title: "문의 게시판",
 };
 
 export default async function SupportDetailPage({

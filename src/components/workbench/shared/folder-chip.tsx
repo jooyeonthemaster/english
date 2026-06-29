@@ -5,6 +5,7 @@ import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element
 import {
   Folder,
   FolderOpen,
+  Layers,
   MoreHorizontal,
   Pencil,
   Trash2,
@@ -16,22 +17,29 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { CollectionItem } from "./types";
+import type { CollectionItem, DragItemType } from "./types";
 import { formatFolderDate } from "./folder-date";
+import { resolveFolderCount } from "./folder-count";
+import {
+  folderDropCanDrop,
+  folderDropItemId,
+  isCopyDragModifier,
+} from "./folder-drag";
 
 interface FolderChipProps {
   collection: CollectionItem;
-  dragItemType: "question" | "passage" | "exam";
+  dragItemType: DragItemType;
   dragItemIdKey: string;
   itemCountLabel: string;
   onClick: () => void;
   onRename: (id: string, name: string) => void;
   onDelete: (id: string) => void;
   onFileDrop: (
-    itemId: string,
+    itemId: string | string[],
     folderId: string,
     folderName: string,
     anchor: { x: number; y: number },
+    copyShortcut: boolean,
   ) => void;
 }
 
@@ -57,20 +65,26 @@ export function FolderChip({
     if (!el) return;
     return dropTargetForElements({
       element: el,
-      canDrop: ({ source }) => source.data.type === dragItemType,
+      canDrop: ({ source }) => folderDropCanDrop(dragItemType, source.data.type),
       onDragEnter: () => setIsDragOver(true),
       onDragLeave: () => setIsDragOver(false),
       onDrop: ({ source, location }) => {
         setIsDragOver(false);
-        const itemId = source.data[dragItemIdKey] as string;
+        const itemId = folderDropItemId(source.data, dragItemIdKey);
         const input = location?.current?.input;
         const anchor = {
           x: input?.clientX ?? window.innerWidth / 2,
           y: input?.clientY ?? window.innerHeight / 2,
         };
-        // Defer the move/copy decision to the chooser popover owned by
-        // FolderSection — every plain drop asks (tablet-friendly, explicit).
-        onFileDrop(itemId, collection.id, collection.name, anchor);
+        // 평소엔 복사/이동 팝오버로 묻고(태블릿 친화·명시적), Alt/Ctrl을 누른
+        // 채 드롭하면 팝오버 없이 바로 복사한다(OS 복사-드래그 관례).
+        onFileDrop(
+          itemId,
+          collection.id,
+          collection.name,
+          anchor,
+          isCopyDragModifier(input),
+        );
       },
     });
   }, [collection.id, collection.name, onFileDrop, dragItemType, dragItemIdKey]);
@@ -128,6 +142,7 @@ export function FolderChip({
   }
 
   const dateLabel = formatFolderDate(collection.createdAt);
+  const count = resolveFolderCount(collection);
 
   return (
     <div
@@ -141,7 +156,7 @@ export function FolderChip({
         e.stopPropagation();
         setMenuOpen(true);
       }}
-      className={`group relative flex w-[64px] cursor-pointer flex-col items-center justify-center rounded-lg border px-1 py-1 shadow-sm motion-safe:transition-all motion-safe:duration-200 ${
+      className={`group relative flex h-[80px] w-[64px] cursor-pointer flex-col items-center justify-center rounded-lg border px-1 py-1 shadow-sm motion-safe:transition-all motion-safe:duration-200 ${
         isDragOver
           ? "scale-105 border-blue-400 bg-white shadow-md ring-2 ring-blue-200/60"
           : "border-slate-200 bg-white hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
@@ -155,9 +170,27 @@ export function FolderChip({
       <span className="max-w-[56px] truncate text-center text-[9.5px] font-bold leading-tight text-slate-800">
         {collection.name}
       </span>
-      <span className="text-[8.5px] tabular-nums text-slate-400">
-        {collection._count.items}개
+      <span
+        title={count.tooltip}
+        className={`flex items-center gap-0.5 text-[8.5px] tabular-nums ${
+          count.includesSubfolders ? "text-blue-500" : "text-slate-400"
+        }`}
+      >
+        {count.includesSubfolders ? (
+          <Layers className="size-2" aria-hidden="true" />
+        ) : null}
+        {count.display}개
       </span>
+      {count.note ? (
+        <span
+          title={count.tooltip}
+          className={`text-[7px] font-semibold leading-none ${
+            count.noteTone === "duplicate" ? "text-amber-500" : "text-blue-400"
+          }`}
+        >
+          {count.note}
+        </span>
+      ) : null}
       {dateLabel ? (
         <span className="text-[8px] tabular-nums text-slate-300">
           {dateLabel}

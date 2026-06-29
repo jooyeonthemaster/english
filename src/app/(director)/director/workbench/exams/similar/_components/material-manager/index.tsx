@@ -220,6 +220,8 @@ export function ExtractionManageClient({
       removeFromCollection: removeDraftsFromCollection,
     },
     itemLabel: "자료",
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    cumulativeCounts: true,
   });
 
   // ─── Per-job review popup state ───

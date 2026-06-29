@@ -46,7 +46,7 @@ import { useSelection } from "@/hooks/use-selection";
 import { useQueueDrawer } from "../queue-drawer-context";
 
 import { DraftDetailModal } from "./components/draft-detail-modal";
-import { DraftFolderSection } from "./components/draft-folder-section";
+import { FolderSection } from "@/components/workbench/shared/folder-section";
 import { DraftGrid, type GridCols } from "./components/draft-grid";
 import { DraftSelectionToolbar } from "./components/draft-selection-toolbar";
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
@@ -266,6 +266,8 @@ export function ExtractionManageClient({
       removeFromCollection: removeDraftsFromCollection,
     },
     itemLabel: "자료",
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    cumulativeCounts: true,
   });
 
   // ─── Per-job review popup state ───
@@ -1223,9 +1225,16 @@ export function ExtractionManageClient({
                     : "bg-white")
                 }
               >
-                <DraftFolderSection
+                <FolderSection
                   embedded
-                  gridOnly={embedded}
+                  dragItemType="draft"
+                  // 임베드(학습지 생성 좌측)는 그리드 전용, standalone(자료추출)은
+                  // 정렬·검색·리스트(밀러) 풀 컨트롤. 둘 다 높이 조절 가능.
+                  enableFolderControls={!embedded}
+                  resizableGrid={embedded}
+                  treatRootAsFolder
+                  rootLabel="전체 자료"
+                  storageKey="extraction-drafts"
                   childFolders={folders.childFolders}
                   allFolders={folders.collections}
                   activeFolder={folders.activeFolder}
@@ -1259,13 +1268,18 @@ export function ExtractionManageClient({
                         : draftsInActiveFolder.length,
                     itemLabel: "자료",
                   }}
-                  resultScope={data.resultScope}
-                  onBackToAllResults={showAllResults}
                   toolbar={
-                    // 임베드(학습지 생성)는 잡 카드 대신 개별 자료(DraftGrid)를 보여주므로
-                    // 잡 단위 검색/필터 툴바를 두지 않는다 — 자료 검색은 DraftGrid 의
-                    // filtersToolbar 가 담당한다. (standalone 은 원래 이 슬롯이 undefined.)
-                    undefined
+                    // "전체 결과로" 되돌리기 — 단일 잡으로 드릴인했을 때만. (예전
+                    // DraftFolderSection의 resultScope/onBackToAllResults를 toolbar로 이전)
+                    data.resultScope === "job" ? (
+                      <button
+                        type="button"
+                        onClick={showAllResults}
+                        className="shrink-0 cursor-pointer rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700"
+                      >
+                        전체 결과로
+                      </button>
+                    ) : undefined
                   }
                 />
               </div>

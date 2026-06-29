@@ -192,7 +192,10 @@ export function DraftCard({
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         const { checked: c, bulkDragIds: ids } = dragStateRef.current;
         const count = c && ids && ids.length > 1 ? ids.length : 1;
-        if (count <= 1) return;
+        // 손잡이에 draggable을 걸어 둔 탓에 기본 미리보기는 손잡이 아이콘만
+        // 나온다 → 항상 카드 본문 클론을 미리보기로 쓴다. 여러 장일 때만 뒤에
+        // 겹친 카드 + 개수 배지를 추가한다.
+        const isMulti = count > 1;
         setCustomNativeDragPreview({
           nativeSetDragImage,
           getOffset: ({ container }) => {
@@ -207,17 +210,19 @@ export function DraftCard({
             wrapper.style.position = "relative";
             wrapper.style.width = `${rect.width}px`;
             wrapper.style.height = `${rect.height}px`;
-            const backCount = Math.min(2, count - 1);
-            for (let i = backCount; i >= 1; i--) {
-              const back = document.createElement("div");
-              back.style.position = "absolute";
-              back.style.inset = "0";
-              back.style.transform = `translate(${i * 6}px, ${i * 6}px)`;
-              back.style.borderRadius = "12px";
-              back.style.background = "white";
-              back.style.border = "1px solid rgb(226, 232, 240)";
-              back.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
-              wrapper.appendChild(back);
+            if (isMulti) {
+              const backCount = Math.min(2, count - 1);
+              for (let i = backCount; i >= 1; i--) {
+                const back = document.createElement("div");
+                back.style.position = "absolute";
+                back.style.inset = "0";
+                back.style.transform = `translate(${i * 6}px, ${i * 6}px)`;
+                back.style.borderRadius = "12px";
+                back.style.background = "white";
+                back.style.border = "1px solid rgb(226, 232, 240)";
+                back.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
+                wrapper.appendChild(back);
+              }
             }
             const clone = source.cloneNode(true) as HTMLElement;
             clone.style.position = "relative";
@@ -226,25 +231,27 @@ export function DraftCard({
             clone.style.opacity = "1";
             clone.style.transform = "none";
             wrapper.appendChild(clone);
-            const badge = document.createElement("div");
-            badge.textContent = String(count);
-            badge.style.position = "absolute";
-            badge.style.top = "-10px";
-            badge.style.right = "-10px";
-            badge.style.minWidth = "28px";
-            badge.style.height = "28px";
-            badge.style.padding = "0 8px";
-            badge.style.borderRadius = "14px";
-            badge.style.background = "#2563eb";
-            badge.style.color = "white";
-            badge.style.fontSize = "13px";
-            badge.style.fontWeight = "700";
-            badge.style.display = "flex";
-            badge.style.alignItems = "center";
-            badge.style.justifyContent = "center";
-            badge.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
-            badge.style.fontVariantNumeric = "tabular-nums";
-            wrapper.appendChild(badge);
+            if (isMulti) {
+              const badge = document.createElement("div");
+              badge.textContent = String(count);
+              badge.style.position = "absolute";
+              badge.style.top = "-10px";
+              badge.style.right = "-10px";
+              badge.style.minWidth = "28px";
+              badge.style.height = "28px";
+              badge.style.padding = "0 8px";
+              badge.style.borderRadius = "14px";
+              badge.style.background = "#2563eb";
+              badge.style.color = "white";
+              badge.style.fontSize = "13px";
+              badge.style.fontWeight = "700";
+              badge.style.display = "flex";
+              badge.style.alignItems = "center";
+              badge.style.justifyContent = "center";
+              badge.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
+              badge.style.fontVariantNumeric = "tabular-nums";
+              wrapper.appendChild(badge);
+            }
             container.appendChild(wrapper);
           },
         });

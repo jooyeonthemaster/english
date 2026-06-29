@@ -46,6 +46,7 @@ import type {
   StructRowStyle,
 } from "../types";
 import { EditableText } from "./editable-text";
+import { ExamExplanationBlock } from "./exam-explanation-block";
 import {
   ContinuedHeader,
   PageHeader,
@@ -1324,6 +1325,9 @@ export function A4PaperPage({
                                 교사용 메모: {item.teacherNote}
                               </p>
                             )}
+                          {part.showExplanation && (
+                            <ExamExplanationBlock item={item} compact={compact} />
+                          )}
                             </>
                           )}
                           {/* 워드프로세서식 빈 줄 — 항목 아래 경계의 얇은 클릭 영역.

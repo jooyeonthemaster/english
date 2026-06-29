@@ -353,17 +353,26 @@ export function QuestionBankCard({
   // 복원한다. 세트 멤버가 아니면 null → 기존 동작 유지.
   const setMemberPassage = useMemo(() => setMemberDisplayPassage(q), [q]);
 
-  // 접힘 미리보기용 지문 — 파싱된 지문/요약/단락 섹션을 우선 쓰고,
-  // 없으면 본문 첫 섹션, 그래도 없으면 (세트 멤버는 복원된) 참조 지문 본문을 쓴다.
+  // 접힘 미리보기용 지문 — 파싱된 지문/요약/단락 섹션을 최우선으로 쓰고, 없으면
+  // 실제 지문(세트 멤버 복원본 > 참조 지문)을 쓴다. 문법 오류 수정처럼 지문이
+  // questionText 에 없는 유형은 "(A) ___" 같은 답 슬롯이 첫 본문 섹션으로 잡히는데,
+  // 그걸 지문 대신 띄우지 않도록 실제 지문을 슬롯보다 우선한다.
   const collapsedPassage = useMemo(() => {
-    const candidate =
-      bodySections.find(
-        (s) =>
-          s.type === "passage" ||
-          s.type === "summary" ||
-          s.type === "paragraphs",
-      ) ?? bodySections.find((s) => typeof s.content === "string" && s.content);
-    return candidate?.content || setMemberPassage || q.passage?.content || "";
+    // 세트 멤버는 지문이 questionText 에 없고(공유 지문 + anchor) "(A) ___" 같은
+    // 답 슬롯만 들어있으므로, 복원된 실제 지문을 최우선으로 미리보기에 쓴다.
+    if (setMemberPassage) return setMemberPassage;
+    const passageSection = bodySections.find(
+      (s) =>
+        s.type === "passage" ||
+        s.type === "summary" ||
+        s.type === "paragraphs",
+    );
+    if (passageSection?.content) return passageSection.content;
+    if (q.passage?.content) return q.passage.content;
+    const firstContent = bodySections.find(
+      (s) => typeof s.content === "string" && s.content,
+    );
+    return firstContent?.content || "";
   }, [bodySections, setMemberPassage, q.passage]);
 
   // Make card draggable — 단, 네이티브 드래그는 "손잡이(DragHandle)"에만 등록한다.
@@ -382,11 +391,13 @@ export function QuestionBankCard({
           getDuplicateDragQuestionIdsRef.current?.(q.id) ?? [],
         type: "question",
       }),
-      // 다중 선택 드래그: 선택한 카드들이 한 장으로 겹쳐진 듯한 미리보기 + 개수 배지.
-      // (1개일 땐 기본 드래그 미리보기를 그대로 사용)
+      // 드래그 미리보기: 손잡이를 끌어도 "선택한 카드 모양 그대로"가 커서를
+      // 따라오게 한다(손잡이에 draggable을 걸어 둔 탓에 기본 미리보기는 손잡이
+      // 아이콘만 나옴 → 항상 카드 본문 클론으로 대체). 여러 장일 땐 뒤에 겹친
+      // 카드 + 개수 배지를 추가해 "한 덩어리" 느낌을 준다.
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         const count = getDragQuestionIdsRef.current?.(q.id)?.length ?? 1;
-        if (count <= 1) return;
+        const isMulti = count > 1;
         setCustomNativeDragPreview({
           nativeSetDragImage,
           getOffset: ({ container }) => {
@@ -401,18 +412,20 @@ export function QuestionBankCard({
             wrapper.style.position = "relative";
             wrapper.style.width = `${rect.width}px`;
             wrapper.style.height = `${rect.height}px`;
-            // 뒤로 살짝 어긋나게 겹친 카드 2장 — "여러 장이 한 덩어리" 느낌.
-            const backCount = Math.min(2, count - 1);
-            for (let i = backCount; i >= 1; i--) {
-              const back = document.createElement("div");
-              back.style.position = "absolute";
-              back.style.inset = "0";
-              back.style.transform = `translate(${i * 6}px, ${i * 6}px)`;
-              back.style.borderRadius = "12px";
-              back.style.background = "white";
-              back.style.border = "1px solid rgb(226, 232, 240)";
-              back.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
-              wrapper.appendChild(back);
+            // 뒤로 살짝 어긋나게 겹친 카드 — "여러 장이 한 덩어리" 느낌(다중 선택만).
+            if (isMulti) {
+              const backCount = Math.min(2, count - 1);
+              for (let i = backCount; i >= 1; i--) {
+                const back = document.createElement("div");
+                back.style.position = "absolute";
+                back.style.inset = "0";
+                back.style.transform = `translate(${i * 6}px, ${i * 6}px)`;
+                back.style.borderRadius = "12px";
+                back.style.background = "white";
+                back.style.border = "1px solid rgb(226, 232, 240)";
+                back.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
+                wrapper.appendChild(back);
+              }
             }
             const clone = source.cloneNode(true) as HTMLElement;
             clone.style.position = "relative";
@@ -421,25 +434,27 @@ export function QuestionBankCard({
             clone.style.opacity = "1";
             clone.style.transform = "none";
             wrapper.appendChild(clone);
-            const badge = document.createElement("div");
-            badge.textContent = String(count);
-            badge.style.position = "absolute";
-            badge.style.top = "-10px";
-            badge.style.right = "-10px";
-            badge.style.minWidth = "28px";
-            badge.style.height = "28px";
-            badge.style.padding = "0 8px";
-            badge.style.borderRadius = "14px";
-            badge.style.background = "#2563eb";
-            badge.style.color = "white";
-            badge.style.fontSize = "13px";
-            badge.style.fontWeight = "700";
-            badge.style.display = "flex";
-            badge.style.alignItems = "center";
-            badge.style.justifyContent = "center";
-            badge.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
-            badge.style.fontVariantNumeric = "tabular-nums";
-            wrapper.appendChild(badge);
+            if (isMulti) {
+              const badge = document.createElement("div");
+              badge.textContent = String(count);
+              badge.style.position = "absolute";
+              badge.style.top = "-10px";
+              badge.style.right = "-10px";
+              badge.style.minWidth = "28px";
+              badge.style.height = "28px";
+              badge.style.padding = "0 8px";
+              badge.style.borderRadius = "14px";
+              badge.style.background = "#2563eb";
+              badge.style.color = "white";
+              badge.style.fontSize = "13px";
+              badge.style.fontWeight = "700";
+              badge.style.display = "flex";
+              badge.style.alignItems = "center";
+              badge.style.justifyContent = "center";
+              badge.style.boxShadow = "0 4px 12px rgba(37,99,235,0.35)";
+              badge.style.fontVariantNumeric = "tabular-nums";
+              wrapper.appendChild(badge);
+            }
             container.appendChild(wrapper);
           },
         });

@@ -26,13 +26,77 @@ import { toast } from "sonner";
 import { Lock, Paperclip, X } from "lucide-react";
 
 const MAX_ATTACHMENTS = 3;
-const MAX_ATTACHMENT_BYTES = 1.5 * 1024 * 1024; // 1.5MB
+// 원본 허용 한도(이 이하는 모두 받아서 자동 리사이즈). 4K 스크린샷(보통 5~15MB) 무난.
+const MAX_SOURCE_BYTES = 25 * 1024 * 1024; // 25MB
+// 리사이즈 후 긴 변 최대 픽셀(4K 캡처도 텍스트 가독성 충분). webp 재인코딩으로 용량↓.
+const MAX_DIMENSION = 2560;
+const COMPRESS_QUALITY = 0.9;
 
 interface Attachment {
   name: string;
   url: string; // data URL
   size?: number;
   type?: string;
+}
+
+/**
+ * 큰 이미지를 canvas로 긴 변 MAX_DIMENSION 이하로 축소하고 webp로 재인코딩한다.
+ * 서버 액션 본문(10MB)·DB Json 부담을 줄이면서 4K 캡처도 받아들이기 위함.
+ * 축소가 불필요하거나 webp 인코딩이 안 되면 원본 data URL을 그대로 반환한다.
+ */
+async function compressImage(file: File): Promise<Attachment> {
+  const originalUrl: string = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+
+  const fallback: Attachment = {
+    name: file.name,
+    url: originalUrl,
+    size: file.size,
+    type: file.type,
+  };
+
+  // GIF는 애니메이션이 깨지므로 압축하지 않고 원본 유지.
+  if (file.type === "image/gif") return fallback;
+
+  try {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const el = new window.Image();
+      el.onload = () => resolve(el);
+      el.onerror = () => reject(new Error("decode failed"));
+      el.src = originalUrl;
+    });
+
+    const longest = Math.max(img.width, img.height);
+    const scale = longest > MAX_DIMENSION ? MAX_DIMENSION / longest : 1;
+    const w = Math.round(img.width * scale);
+    const h = Math.round(img.height * scale);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return fallback;
+    ctx.drawImage(img, 0, 0, w, h);
+
+    const compressed = canvas.toDataURL("image/webp", COMPRESS_QUALITY);
+    // webp 미지원 브라우저는 image/png로 폴백되어 오히려 커질 수 있다 → 더 작을 때만 채택.
+    if (!compressed.startsWith("data:image/webp") || compressed.length >= originalUrl.length) {
+      return fallback;
+    }
+    const baseName = file.name.replace(/\.[^./\\]+$/, "");
+    return {
+      name: `${baseName}.webp`,
+      url: compressed,
+      size: Math.round((compressed.length - "data:image/webp;base64,".length) * 0.75),
+      type: "image/webp",
+    };
+  } catch {
+    return fallback;
+  }
 }
 
 interface ExistingPost {
@@ -57,7 +121,7 @@ export function HelpPostFormDialog({
 }: HelpPostFormDialogProps) {
   const isEdit = !!post;
   const categories = boardCategories(board);
-  const showAttachments = board === "SUPPORT";
+  const showAttachments = true; // 피드백·문의 게시판 모두 이미지 첨부 허용
 
   const [isPending, startTransition] = useTransition();
   const [category, setCategory] = useState(post?.category || categories[0].value);
@@ -73,18 +137,13 @@ export function HelpPostFormDialog({
     const remaining = MAX_ATTACHMENTS - attachments.length;
     const list = Array.from(files).slice(0, remaining);
     for (const file of list) {
-      if (file.size > MAX_ATTACHMENT_BYTES) {
-        toast.error(`${file.name}: 1.5MB 이하만 첨부할 수 있습니다.`);
+      if (file.size > MAX_SOURCE_BYTES) {
+        toast.error(`${file.name}: 25MB 이하만 첨부할 수 있습니다.`);
         continue;
       }
-      const reader = new FileReader();
-      reader.onload = () => {
-        setAttachments((prev) => [
-          ...prev,
-          { name: file.name, url: String(reader.result), size: file.size, type: file.type },
-        ]);
-      };
-      reader.readAsDataURL(file);
+      compressImage(file)
+        .then((att) => setAttachments((prev) => [...prev, att]))
+        .catch(() => toast.error(`${file.name}: 첨부 처리 중 오류가 발생했습니다.`));
     }
   }
 
@@ -172,7 +231,7 @@ export function HelpPostFormDialog({
                   : "문의 내용을 구체적으로 적어 주세요"
               }
               rows={8}
-              className="resize-y"
+              className="h-48 resize-none overflow-y-auto [field-sizing:fixed]"
             />
           </div>
 
@@ -183,7 +242,7 @@ export function HelpPostFormDialog({
                 <Paperclip className="size-3.5" />
                 첨부파일
                 <span className="text-xs font-normal text-muted-foreground">
-                  (이미지 최대 {MAX_ATTACHMENTS}개 · 1.5MB 이하)
+                  (이미지 최대 {MAX_ATTACHMENTS}개 · 업로드 시 자동 최적화)
                 </span>
               </Label>
               <div className="flex flex-wrap gap-2">

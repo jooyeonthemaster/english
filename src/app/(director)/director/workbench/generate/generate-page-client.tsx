@@ -21,6 +21,7 @@ import {
   bulkDeleteWorkbenchPassages,
   bulkDeleteWorkbenchQuestions,
   createPassageCollection,
+  updatePassageCollection,
   deleteWorkbenchQuestion,
   removePassagesFromCollection,
   unapproveWorkbenchQuestion,
@@ -788,6 +789,51 @@ export function GeneratePageClient({
     [loadPassages],
   );
 
+  const handleRenamePassageCollection = useCallback(
+    async (collectionId: string, name: string) => {
+      const trimmed = name.trim();
+      if (!trimmed) return;
+      // 낙관적 갱신 후 서버 반영(실패 시 토스트). 폴더 카운트/멤버십엔 영향 없음.
+      setCollections((prev) =>
+        prev
+          .map((c) => (c.id === collectionId ? { ...c, name: trimmed } : c))
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name, "ko")),
+      );
+      const result = await updatePassageCollection(collectionId, {
+        name: trimmed,
+      });
+      if (!result?.success) {
+        toast.error(result?.error || "폴더 이름 변경 실패");
+        void loadPassages();
+      }
+    },
+    [loadPassages],
+  );
+
+  // 상위(↑) 버튼이 "전체 지문"(루트)일 때 카드를 떨어뜨리면 현재 폴더에서 빼낸다.
+  const handleRemovePassagesFromFolder = useCallback(
+    async (passageIds: string[], collectionId: string) => {
+      const ids = Array.from(new Set(passageIds)).filter(
+        (id) => !isDraftPseudoId(id),
+      );
+      if (ids.length === 0 || !collectionId || passageBulkAction) return;
+      setPassageBulkAction("move");
+      try {
+        const result = await removePassagesFromCollection(collectionId, ids);
+        if (!result.success) {
+          toast.error(result.error || "폴더에서 빼기 실패");
+          return;
+        }
+        toast.success(`${ids.length}개 지문을 폴더에서 뺐습니다.`);
+        void loadPassages();
+      } finally {
+        setPassageBulkAction(null);
+      }
+    },
+    [passageBulkAction, loadPassages],
+  );
+
   const handleCopySelectedPassagesToCollection = useCallback(
     async (collectionId: string) => {
       const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
@@ -848,13 +894,20 @@ export function GeneratePageClient({
           }
         };
 
-        toast.success(`${countLabel} "${folderName}"에 복사되었습니다`, {
-          duration: UNDO_TOAST_DURATION,
-          action: {
-            label: "실행 취소",
-            onClick: () => void undoFolderCopy(),
+        // 선택한 것 중 이미 이 폴더에 있어 새로 담지 않은(중복 제외) 개수.
+        const skippedCopy = ids.length - idsToAdd.length;
+        const skippedCopySuffix =
+          skippedCopy > 0 ? ` · 이미 들어있던 ${skippedCopy}개 제외` : "";
+        toast.success(
+          `${countLabel} "${folderName}"에 복사되었습니다${skippedCopySuffix}`,
+          {
+            duration: UNDO_TOAST_DURATION,
+            action: {
+              label: "실행 취소",
+              onClick: () => void undoFolderCopy(),
+            },
           },
-        });
+        );
         setSelectedIds(new Set());
         await loadPassages();
       } catch (err) {
@@ -976,13 +1029,20 @@ export function GeneratePageClient({
           }
         };
 
-        toast.success(`${countLabel} "${folderName}"(으)로 이동되었습니다`, {
-          duration: UNDO_TOAST_DURATION,
-          action: {
-            label: "실행 취소",
-            onClick: () => void undoFolderMove(),
+        // 끌어온 것 중 이미 이 폴더에 있어 새로 담지 않은(중복 제외) 개수.
+        const skippedMove = ids.length - idsToAdd.length;
+        const skippedMoveSuffix =
+          skippedMove > 0 ? ` · 이미 들어있던 ${skippedMove}개 제외` : "";
+        toast.success(
+          `${countLabel} "${folderName}"(으)로 이동되었습니다${skippedMoveSuffix}`,
+          {
+            duration: UNDO_TOAST_DURATION,
+            action: {
+              label: "실행 취소",
+              onClick: () => void undoFolderMove(),
+            },
           },
-        });
+        );
         setPassages((prev) =>
           prev.map((passage) => {
             if (!idSet.has(passage.id)) return passage;
@@ -1101,10 +1161,17 @@ export function GeneratePageClient({
             setPassageBulkAction(null);
           }
         };
-        toast.success(`${countLabel} "${folderName}"에 복사되었습니다`, {
-          duration: UNDO_TOAST_DURATION,
-          action: { label: "실행 취소", onClick: () => void undoFolderCopy() },
-        });
+        // 끌어온 것 중 이미 이 폴더에 있어 새로 담지 않은(중복 제외) 개수.
+        const skippedCopy = ids.length - idsToAdd.length;
+        const skippedCopySuffix =
+          skippedCopy > 0 ? ` · 이미 들어있던 ${skippedCopy}개 제외` : "";
+        toast.success(
+          `${countLabel} "${folderName}"에 복사되었습니다${skippedCopySuffix}`,
+          {
+            duration: UNDO_TOAST_DURATION,
+            action: { label: "실행 취소", onClick: () => void undoFolderCopy() },
+          },
+        );
         setPassages((prev) =>
           prev.map((passage) => {
             if (!idSet.has(passage.id)) return passage;
@@ -2657,6 +2724,8 @@ export function GeneratePageClient({
               onMovePassagesToCollection={handleMovePassagesToCollection}
               onCopyPassagesToCollection={handleCopyPassagesToCollection}
               onCreateCollection={handleCreatePassageCollection}
+              onRenameCollection={handleRenamePassageCollection}
+              onRemovePassagesFromFolder={handleRemovePassagesFromFolder}
               onRemoveSelectedFromCollection={
                 handleRemoveSelectedPassagesFromCollection
               }

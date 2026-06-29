@@ -22,7 +22,7 @@ import {
 import { StatusBadge } from "@/components/help-center/status-badge";
 import { formatDateTime } from "@/lib/utils";
 import { toast } from "sonner";
-import { ArrowLeft, Lock, Pin, Trash2, ShieldCheck, ThumbsUp } from "lucide-react";
+import { ArrowLeft, Lock, Pin, Trash2, ShieldCheck, ThumbsUp, X } from "lucide-react";
 
 export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; postId: string }) {
   const router = useRouter();
@@ -34,6 +34,7 @@ export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; pos
   const [loading, setLoading] = useState(true);
   const [reply, setReply] = useState("");
   const [replyStatus, setReplyStatus] = useState<string>("");
+  const [lightbox, setLightbox] = useState<{ url: string; name: string } | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const load = useCallback(() => {
@@ -184,9 +185,14 @@ export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; pos
         {post.attachments.length > 0 && (
           <div className="flex flex-wrap gap-3 pt-1">
             {post.attachments.map((a, i) => (
-              <a key={i} href={a.url} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-lg border">
+              <button
+                key={i}
+                type="button"
+                onClick={() => setLightbox({ url: a.url, name: a.name })}
+                className="block cursor-zoom-in overflow-hidden rounded-lg border transition hover:opacity-90"
+              >
                 <Image src={a.url} alt={a.name} width={160} height={160} unoptimized className="h-28 w-28 object-cover" />
-              </a>
+              </button>
             ))}
           </div>
         )}
@@ -279,6 +285,34 @@ export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; pos
           </div>
         </div>
       </div>
+
+      {/* 이미지 라이트박스 — 별도 탭이 아닌 팝업으로 크게 보기 */}
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-6"
+          onClick={() => setLightbox(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            type="button"
+            onClick={() => setLightbox(null)}
+            aria-label="닫기"
+            className="absolute right-5 top-5 flex size-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+          >
+            <X className="size-5" />
+          </button>
+          <Image
+            src={lightbox.url}
+            alt={lightbox.name}
+            width={2000}
+            height={2000}
+            unoptimized
+            onClick={(e) => e.stopPropagation()}
+            className="max-h-[88vh] w-auto max-w-[92vw] cursor-default rounded-lg object-contain shadow-2xl"
+          />
+        </div>
+      )}
     </div>
   );
 }

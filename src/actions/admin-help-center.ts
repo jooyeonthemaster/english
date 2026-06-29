@@ -171,7 +171,7 @@ export async function adminReplyHelpPost(
 
   // 작성 학원 원장에게 알림
   if (post.academyId) {
-    const boardLabel = post.board === "FEEDBACK" ? "피드백" : "고객지원";
+    const boardLabel = post.board === "FEEDBACK" ? "피드백" : "문의 게시판";
     await notifyAcademyDirector(post.academyId, {
       category: "SYSTEM",
       type: "HELP_REPLY",
@@ -256,6 +256,7 @@ export interface AdminSeminarRequestView {
   status: string;
   adminMemo: string | null;
   scheduledAt: string | null;
+  meetingUrl: string | null;
   createdAt: string;
 }
 
@@ -295,13 +296,19 @@ export async function adminGetSeminarRequests(params?: {
     status: r.status,
     adminMemo: r.adminMemo,
     scheduledAt: r.scheduledAt?.toISOString() ?? null,
+    meetingUrl: r.meetingUrl,
     createdAt: r.createdAt.toISOString(),
   }));
 }
 
 export async function adminUpdateSeminarRequest(
   requestId: string,
-  input: { status?: string; adminMemo?: string; scheduledAt?: string | null },
+  input: {
+    status?: string;
+    adminMemo?: string;
+    scheduledAt?: string | null;
+    meetingUrl?: string | null;
+  },
 ) {
   const admin = await requireAdminAuth();
 
@@ -310,6 +317,9 @@ export async function adminUpdateSeminarRequest(
   if (input.adminMemo !== undefined) data.adminMemo = input.adminMemo || null;
   if (input.scheduledAt !== undefined) {
     data.scheduledAt = input.scheduledAt ? new Date(input.scheduledAt) : null;
+  }
+  if (input.meetingUrl !== undefined) {
+    data.meetingUrl = input.meetingUrl?.trim() || null;
   }
 
   const req = await prisma.seminarRequest.update({

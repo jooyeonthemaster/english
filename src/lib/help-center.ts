@@ -46,7 +46,7 @@ export const FEEDBACK_STATUSES: readonly StatusOption[] = [
   { value: "REVIEWING", label: "검토중", className: BLUE },
   { value: "PLANNED", label: "반영예정", className: VIOLET },
   { value: "DONE", label: "반영완료", className: EMERALD },
-  { value: "WONT_DO", label: "미반영", className: ROSE },
+  { value: "WONT_DO", label: "반려", className: ROSE },
 ] as const;
 
 export const SUPPORT_STATUSES: readonly StatusOption[] = [
@@ -121,7 +121,7 @@ export const HELP_BOARD_META: Record<
     adminPath: "/admin/feedback",
   },
   SUPPORT: {
-    title: "고객 지원",
+    title: "문의 게시판",
     subtitle: "결제·이용 중 불편한 점이나 문제를 문의하세요",
     path: "/director/help/support",
     adminPath: "/admin/support",

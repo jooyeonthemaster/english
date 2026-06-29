@@ -19,22 +19,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import type { CollectionItem } from "./types";
+import type { CollectionItem, DragItemType } from "./types";
 import { FOLDER_COLORS } from "./constants";
 import { formatFolderDate } from "./folder-date";
+import { resolveFolderCount } from "./folder-count";
+import {
+  folderDropCanDrop,
+  folderDropItemId,
+  isCopyDragModifier,
+} from "./folder-drag";
 
 interface FolderListRowProps {
   collection: CollectionItem;
-  dragItemType: "question" | "passage" | "exam";
+  dragItemType: DragItemType;
   dragItemIdKey: string;
   onClick: () => void;
   onRename: (id: string, name: string) => void;
   onDelete: (id: string) => void;
   onFileDrop: (
-    itemId: string,
+    itemId: string | string[],
     folderId: string,
     folderName: string,
     anchor: { x: number; y: number },
+    copyShortcut: boolean,
   ) => void;
   selected?: boolean;
   showChevron?: boolean;
@@ -70,20 +77,26 @@ export function FolderListRow({
     if (!el) return;
     return dropTargetForElements({
       element: el,
-      canDrop: ({ source }) => source.data.type === dragItemType,
+      canDrop: ({ source }) => folderDropCanDrop(dragItemType, source.data.type),
       onDragEnter: () => setIsDragOver(true),
       onDragLeave: () => setIsDragOver(false),
       onDrop: ({ source, location }) => {
         setIsDragOver(false);
-        const itemId = source.data[dragItemIdKey] as string;
+        const itemId = folderDropItemId(source.data, dragItemIdKey);
         const input = location?.current?.input;
         const anchor = {
           x: input?.clientX ?? window.innerWidth / 2,
           y: input?.clientY ?? window.innerHeight / 2,
         };
-        // Defer the move/copy decision to the chooser popover owned by
-        // FolderSection — every plain drop asks (tablet-friendly, explicit).
-        onFileDrop(itemId, collection.id, collection.name, anchor);
+        // 평소엔 복사/이동 팝오버로 묻고, Alt/Ctrl을 누른 채 드롭하면 팝오버
+        // 없이 바로 복사한다(OS 복사-드래그 관례).
+        onFileDrop(
+          itemId,
+          collection.id,
+          collection.name,
+          anchor,
+          isCopyDragModifier(input),
+        );
       },
     });
   }, [collection.id, collection.name, onFileDrop, dragItemType, dragItemIdKey]);
@@ -171,12 +184,31 @@ export function FolderListRow({
       >
         {dateLabel || "—"}
       </span>
-      <span
-        style={{ width: countWidth }}
-        className="shrink-0 truncate text-left text-[11px] tabular-nums text-slate-400"
-      >
-        {collection._count.items}개
-      </span>
+      {(() => {
+        const count = resolveFolderCount(collection);
+        return (
+          <span
+            style={{ width: countWidth }}
+            title={count.tooltip}
+            className={`shrink-0 truncate text-left text-[11px] tabular-nums ${
+              count.includesSubfolders ? "text-blue-500" : "text-slate-400"
+            }`}
+          >
+            {count.display}개
+            {count.note ? (
+              <span
+                className={`ml-1 text-[10px] font-semibold ${
+                  count.noteTone === "duplicate"
+                    ? "text-amber-600"
+                    : "text-blue-400"
+                }`}
+              >
+                {count.note}
+              </span>
+            ) : null}
+          </span>
+        );
+      })()}
       <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
           <button

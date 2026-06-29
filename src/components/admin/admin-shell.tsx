@@ -62,7 +62,7 @@ const NAV_ITEMS = [
   // 헬프센터 — 고객(원장)이 작성한 신청·문의를 운영자가 관리.
   { label: "세미나 신청", icon: Presentation, href: "/admin/seminars" },
   { label: "피드백", icon: MessageSquare, href: "/admin/feedback" },
-  { label: "고객 지원", icon: LifeBuoy, href: "/admin/support" },
+  { label: "문의 게시판", icon: LifeBuoy, href: "/admin/support" },
 ];
 
 const SIDEBAR_STORAGE_KEY = "yshin-admin-sidebar-collapsed";

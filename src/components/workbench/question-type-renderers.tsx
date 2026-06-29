@@ -647,6 +647,9 @@ export function GrammarCorrectionRenderer({ q }: { q: GrammarCorrectionQuestion 
           ))}
         </div>
       )}
+      {/* 모범 답안(수정 결과)은 '해설 보기'를 누르지 않아도 바로 보이도록 토글 밖에
+          둔다 — 접힘 미리보기와 동일한 파란 '답' 배지. 상세 수정 비교·해설은 토글 안 유지. */}
+      <ModelAnswer answer={formattedAnswer} />
       <AnswerRevealSection>
         <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 space-y-2">
           <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block">수정</span>
@@ -664,7 +667,6 @@ export function GrammarCorrectionRenderer({ q }: { q: GrammarCorrectionQuestion 
             <p className="text-[13px] text-emerald-800 leading-relaxed font-medium">{q.correctedSentence}</p>
           )}
         </div>
-        <AnswerLine answer={formattedAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} />
       </AnswerRevealSection>
     </>

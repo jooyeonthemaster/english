@@ -434,6 +434,18 @@ export function renderMarkedSentencePassage(text: string): React.ReactNode {
   return parts.length > 0 ? <>{parts}</> : text;
 }
 
+// 배지(파란 원)에 찍을 라벨 표시용 — 원형숫자(①②③)는 평문 숫자로 풀어(원 안 원문자
+// 방지) 접힘 미리보기(CollapsedPreview)와 동일하게 보이게 한다. 괄호/구두점은 떼되
+// 영문 라벨(A/B)은 대소문자를 유지한다.
+function optionBadgeDisplay(value: unknown): string {
+  if (typeof value !== "string") return "";
+  const text = value.trim();
+  const circledIndex = getCircledNumbers(50).indexOf(text);
+  if (circledIndex >= 0) return String(circledIndex + 1);
+  const m = text.match(/^[([]?\s*([A-Ja-j]|10|[1-9])\s*[)\].:]?\s*$/);
+  return m ? m[1] : text;
+}
+
 /** MC Option list */
 export function OptionList({
   options,
@@ -470,7 +482,7 @@ export function OptionList({
                     : "bg-slate-100 text-slate-400"
                 }`}
               >
-                {opt.label}
+                {optionBadgeDisplay(opt.label)}
               </span>
               <span>{opt.text}</span>
             </div>

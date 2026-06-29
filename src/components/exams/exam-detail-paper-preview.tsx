@@ -18,6 +18,7 @@ import {
 import { PrintStyles } from "./paper-builder/components/print-styles";
 import { usePrintPortal } from "./paper-builder/hooks/use-print-portal";
 import { paginateGroups } from "./paper-builder/pagination";
+import { buildAnswerKeyLayout, EMPTY_ANSWER_KEY_LAYOUT } from "./paper-builder/answer-key-layout";
 import {
   buildGroups,
   formatDateInput,
@@ -456,6 +457,8 @@ export function ExamDetailPaperPreview({
 
   usePrintPortal(paperSize);
 
+  // 해설 포함 PDF 인쇄 중에만 true — 각 문항 뒤 인라인 정답·해설을 포함하고 정답표는 뺀다.
+  const [explanationPrint, setExplanationPrint] = useState(false);
   const paperItems = useMemo(() => buildPaperItems(exam, settings), [exam, settings]);
   const paperGroups = useMemo(() => buildGroups(paperItems), [paperItems]);
   const paginationSettings = useMemo<PaginationSettings>(
@@ -468,16 +471,27 @@ export function ExamDetailPaperPreview({
       showPassageTitle,
       showQuestionMeta,
       template,
+      includeAnswers: explanationPrint,
     }),
-    [paperSize, columns, density, passageStyle, showAnswerSpace, showPassageTitle, showQuestionMeta, template],
+    [paperSize, columns, density, passageStyle, showAnswerSpace, showPassageTitle, showQuestionMeta, template, explanationPrint],
   );
   const paginationResult = useMemo(
     () => paginateGroups(paperGroups, paginationSettings),
     [paperGroups, paginationSettings],
   );
   const paperPages = paginationResult.pages;
+  // 시험지 맨 뒤 정답표 페이지(들) — PDF 인쇄에 정답지가 포함되도록 미리보기에 렌더.
+  // (해설 포함 PDF 는 인라인 해설을 쓰므로 정답표를 빼서 DOCX 해설과 동일하게 맞춘다.)
+  const answerKey = useMemo(
+    () =>
+      explanationPrint
+        ? EMPTY_ANSWER_KEY_LAYOUT
+        : buildAnswerKeyLayout(paperItems, { paperSize, density }),
+    [paperItems, paperSize, density, explanationPrint],
+  );
   // 표지가 켜져 있으면 본문 앞에 한 장 더 렌더되므로 zoom-spacer 높이에 반영한다.
-  const renderedPageCount = paperPages.length + (cover.enabled ? 1 : 0);
+  const renderedPageCount =
+    paperPages.length + (cover.enabled ? 1 : 0) + answerKey.pages.length;
   const previewContentHeight =
     renderedPageCount > 0
       ? renderedPageCount * baseWidth * PAPER_SIZE_SPECS[paperSize].heightRatio +
@@ -493,6 +507,31 @@ export function ExamDetailPaperPreview({
     void incrementExamPrintCount(exam.id);
     window.setTimeout(() => window.print(), 50);
   }
+
+  // 해설 포함 PDF: 인라인 정답·해설을 켜고 재레이아웃이 반영된 뒤 인쇄한다.
+  function handlePrintWithAnswers() {
+    if (paperItems.length === 0) {
+      toast.error("인쇄할 문제가 없습니다.");
+      return;
+    }
+    void incrementExamPrintCount(exam.id);
+    setExplanationPrint(true);
+  }
+
+  useEffect(() => {
+    if (!explanationPrint) return;
+    let timer = 0;
+    const raf = window.requestAnimationFrame(() => {
+      timer = window.setTimeout(() => window.print(), 120);
+    });
+    const handleAfterPrint = () => setExplanationPrint(false);
+    window.addEventListener("afterprint", handleAfterPrint, { once: true });
+    return () => {
+      window.cancelAnimationFrame(raf);
+      window.clearTimeout(timer);
+      window.removeEventListener("afterprint", handleAfterPrint);
+    };
+  }, [explanationPrint]);
 
   // ?print=1 로 열렸을 때(시험지 카드의 '인쇄' 버튼 → 새 탭) 미리보기가
   // 준비되면 자동으로 브라우저 인쇄 대화상자를 띄운다.
@@ -572,6 +611,7 @@ export function ExamDetailPaperPreview({
         paperItemsCount={paperItems.length}
         onPrint={handlePrint}
         onDownloadPdf={handlePrint}
+        onDownloadPdfWithAnswers={handlePrintWithAnswers}
         onDownloadDocx={handleDownloadDocx}
         onDownloadDocxWithAnswers={handleDownloadDocxWithAnswers}
         onDownloadHwpx={handleDownloadHwpx}
@@ -606,6 +646,8 @@ export function ExamDetailPaperPreview({
               (baseWidth || PREVIEW_PAGE_WIDTH) *
               PAPER_SIZE_SPECS[paperSize].heightRatio
             }
+            answerKey={answerKey}
+            forceMountAll={explanationPrint}
             title={exam.title}
             paperSize={paperSize}
             subtitle={settings?.header?.subtitle || ""}
@@ -737,6 +779,7 @@ export function ExamFirstPagePreview({
         previewZoom={zoom}
         previewContentHeight={baseWidth * heightRatio}
         singlePageHeight={baseWidth * heightRatio}
+        answerKey={EMPTY_ANSWER_KEY_LAYOUT}
         title={exam.title}
         paperSize={paperSize}
         subtitle={settings?.header?.subtitle || ""}

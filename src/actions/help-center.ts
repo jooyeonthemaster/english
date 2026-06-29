@@ -360,6 +360,7 @@ export interface SeminarRequestView {
   message: string | null;
   status: string;
   scheduledAt: string | null;
+  meetingUrl: string | null;
   createdAt: string;
 }
 
@@ -380,6 +381,7 @@ export async function getMySeminarRequests(): Promise<SeminarRequestView[]> {
     message: r.message,
     status: r.status,
     scheduledAt: r.scheduledAt?.toISOString() ?? null,
+    meetingUrl: r.meetingUrl,
     createdAt: r.createdAt.toISOString(),
   }));
 }

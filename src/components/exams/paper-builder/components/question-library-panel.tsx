@@ -6,6 +6,7 @@ import { QuestionBankCard } from "@/components/workbench/question-bank-card";
 import { DragSelect } from "@/components/ui/drag-select";
 import { PassageGroupedView } from "@/components/workbench/question-bank-passage-view";
 import { FolderSection } from "@/components/workbench/shared/folder-section";
+import { Pagination } from "@/components/workbench/shared/pagination";
 import { QuestionFiltersToolbar } from "@/components/workbench/question-bank-client/filters-toolbar";
 import {
   GridToggle,
@@ -24,7 +25,15 @@ const LIBRARY_VIEW_OPTIONS = [
 ] satisfies ReadonlyArray<ViewModeCycleOption<"questions" | "passages">>;
 
 interface QuestionLibraryPanelProps {
+  // 서버 페이지네이션: filteredQuestions 는 "현재 페이지(100개)"의 결과다.
   filteredQuestions: BuilderQuestion[];
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  listLoading: boolean;
+  // 전체 선택(페이지 경계 무관) — 필터 매칭 전체를 시험지에 담는/빼는 비동기 토글.
+  selectAllPending: boolean;
+  onToggleSelectAllFiltered: () => void;
   selectedQuestionIds: Set<string>;
   search: string;
   setSearch: (value: string) => void;
@@ -61,8 +70,12 @@ interface QuestionLibraryPanelProps {
   onNavigateToRoot: () => void;
   onRenameFolder: (id: string, name: string) => void;
   onDeleteFolder: (id: string) => void;
-  onDragToFolder: (itemId: string, folderId: string, copy: boolean) => void;
-  onDragToRoot: (itemId: string, copy: boolean) => void;
+  onDragToFolder: (
+    itemId: string | string[],
+    folderId: string,
+    copy: boolean,
+  ) => void;
+  onDragToRoot: (itemId: string | string[], copy: boolean) => void;
   /**
    * 마키(영역 드래그) 시작 영역을 이 패널 바깥(시험지 미리보기창 포함, 빌더 전체)까지
    * 넓히기 위한 boundary. 빌더 루트에서 내려준다.
@@ -72,6 +85,12 @@ interface QuestionLibraryPanelProps {
 
 export function QuestionLibraryPanel({
   filteredQuestions,
+  page,
+  totalPages,
+  onPageChange,
+  listLoading,
+  selectAllPending,
+  onToggleSelectAllFiltered,
   selectedQuestionIds,
   search,
   setSearch,
@@ -294,6 +313,9 @@ export function QuestionLibraryPanel({
   ]);
 
   // 전체 선택 — 현재 필터된 문제 전체의 선택 상태.
+  // 체크박스 시각 상태는 "현재 페이지" 기준(페이지의 모든 카드가 선택됐는지)으로 둔다.
+  // 단 클릭 동작은 페이지 경계를 넘어 "필터 매칭 전체"를 시험지에 담는/빼는 전역 토글
+  // (onToggleSelectAllFiltered)을 호출한다 — 서버에서 전체 ID 를 받아 처리한다.
   const selectableFilteredQuestions = filteredQuestions;
   const allFilteredSelected =
     selectableFilteredQuestions.length > 0 &&
@@ -301,23 +323,7 @@ export function QuestionLibraryPanel({
   const someFilteredSelected = selectableFilteredQuestions.some((q) =>
     selectedQuestionIds.has(q.id),
   );
-  const toggleSelectAllFiltered = () => {
-    if (allFilteredSelected) {
-      const filteredIdSet = new Set(selectableFilteredQuestions.map((q) => q.id));
-      applySelectedQuestionIds(
-        new Set(
-          Array.from(selectedQuestionIds).filter((id) => !filteredIdSet.has(id)),
-        ),
-      );
-    } else {
-      applySelectedQuestionIds(
-        new Set([
-          ...Array.from(selectedQuestionIds),
-          ...selectableFilteredQuestions.map((q) => q.id),
-        ]),
-      );
-    }
-  };
+  const toggleSelectAllFiltered = onToggleSelectAllFiltered;
 
   // ─── 지금 화면을 좁히고 있는 필터를 사람이 읽을 수 있게 요약한다 ───
   // statusCounts.all 은 검수상태 세그먼트를 제외한 모든 필터(폴더·유형·난이도·중요·
@@ -415,9 +421,9 @@ export function QuestionLibraryPanel({
               if (el) el.indeterminate = someFilteredSelected && !allFilteredSelected;
             }}
             onChange={toggleSelectAllFiltered}
-            disabled={selectableFilteredQuestions.length === 0}
-            title="현재 목록 문제 전체 추가"
-            aria-label="현재 목록 문제 전체 추가"
+            disabled={statusCounts.all === 0 || selectAllPending}
+            title={`필터 매칭 전체(${statusCounts.all}개) 시험지에 담기`}
+            aria-label={`필터 매칭 전체(${statusCounts.all}개) 시험지에 담기`}
             className="mr-auto size-4 shrink-0 cursor-pointer rounded border-slate-300 text-blue-600 accent-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
           />
 
@@ -677,6 +683,23 @@ export function QuestionLibraryPanel({
                 </div>
               );
             })}
+          </div>
+        )}
+        {/* 페이지네이션 — 스크롤 목록의 "맨 끝"에 둬서 끝까지 내려야 보이게 한다(문제관리
+            페이지와 동일). 고정 푸터가 아니라 콘텐츠와 함께 스크롤된다. 문제별 보기 전용
+            (지문별은 그룹 접힘이라 별도). listLoading 중에도 버튼은 노출해 연타 허용. */}
+        {libraryView === "questions" && totalPages > 1 && (
+          <div
+            className={cn(
+              "px-2 pb-2 transition-opacity",
+              listLoading && "pointer-events-none opacity-60",
+            )}
+          >
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onGoToPage={onPageChange}
+            />
           </div>
         )}
       </div>

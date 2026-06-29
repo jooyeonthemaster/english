@@ -22,13 +22,19 @@ import {
 } from "@/lib/help-center";
 import { formatDateTime } from "@/lib/utils";
 import { toast } from "sonner";
-import { Presentation, Phone, MessageCircle, CalendarClock, X, Plus } from "lucide-react";
+import { Presentation, Phone, MessageCircle, CalendarClock, X, Plus, Video } from "lucide-react";
 
 interface Prefill {
   applicantName: string;
   phone: string;
   email: string;
   academyName: string;
+}
+
+/** 프로토콜이 없는 링크(예: "www.smoat.co.kr")는 상대경로로 해석되므로 https://를 보정한다. */
+function toExternalUrl(url: string) {
+  const trimmed = url.trim();
+  return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
 }
 
 function Chip({
@@ -112,6 +118,7 @@ export function SeminarClient({
             message: message || null,
             status: "RECEIVED",
             scheduledAt: null,
+            meetingUrl: null,
             createdAt: new Date().toISOString(),
           },
           ...prev,
@@ -286,6 +293,17 @@ export function SeminarClient({
                     </div>
                   )}
                   {r.topic && <div className="text-xs text-slate-500">주제: {r.topic}</div>}
+                  {r.meetingUrl && (
+                    <a
+                      href={toExternalUrl(r.meetingUrl)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 mt-1 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-blue-700"
+                    >
+                      <Video className="size-3.5" />
+                      줌(Zoom) 화상 접속
+                    </a>
+                  )}
                 </div>
                 {r.status !== "DONE" && r.status !== "CANCELED" && !r.id.startsWith("temp-") && (
                   <Button

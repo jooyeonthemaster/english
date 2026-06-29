@@ -91,6 +91,11 @@ export function formatGrammarCorrectionCorrectAnswer(
 ): string {
   const segments = readGrammarCorrectionSegmentsForDisplay(question);
   if (segments.length > 0) {
+    // 오류가 하나면 빈칸이 하나뿐이라 라벨(A)이 불필요 — 고친 표현만 보인다("what").
+    // 여러 개면 어느 빈칸의 답인지 구분되도록 라벨을 유지한다("(A) x, (B) y").
+    if (segments.length === 1) {
+      return normalizeDisplayString(segments[0].correctedPart);
+    }
     return segments
       .map((segment) => `${segment.label} ${segment.correctedPart}`)
       .join(", ");

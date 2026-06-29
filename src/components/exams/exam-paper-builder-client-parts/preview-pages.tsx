@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { A4PaperPage } from "../paper-builder/components/a4-paper-page";
 import { ExamCoverPage } from "../paper-builder/components/exam-cover-page";
+import { ExamAnswerKeyPage } from "../paper-builder/components/exam-answer-key-page";
+import type { AnswerKeyLayout } from "../paper-builder/answer-key-layout";
 import type {
   ClassOption,
   Density,
@@ -79,6 +81,10 @@ interface PreviewPagesProps {
   readOnly?: boolean;
   // 한 페이지의 (zoom 적용 전) 픽셀 높이 — 가상화 프레임의 placeholder 높이로 쓴다.
   singlePageHeight: number;
+  // 시험지 맨 뒤 정답표 페이지(들). pages 가 비어 있으면 렌더하지 않는다.
+  answerKey: AnswerKeyLayout;
+  // 해설 포함 PDF 인쇄 직전 모든 페이지를 강제 마운트(미스크롤 페이지 빈 인쇄 방지).
+  forceMountAll?: boolean;
 }
 
 // ─── 페이지 지연 마운트 (미리보기 가상화) ───
@@ -91,15 +97,23 @@ function LazyPaperPage({
   pageIndex,
   height,
   eager,
+  forceMount,
   children,
 }: {
   pageIndex: number;
   height: number;
   eager: boolean;
+  // 인쇄(특히 해설 포함 PDF) 직전에 모든 페이지를 즉시 마운트해, 아직 스크롤하지 않은
+  // 페이지가 빈 채로 인쇄되지 않게 한다.
+  forceMount: boolean;
   children: () => ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(eager);
+
+  useEffect(() => {
+    if (forceMount) setMounted(true);
+  }, [forceMount]);
 
   useEffect(() => {
     if (mounted) return;
@@ -190,6 +204,7 @@ export function PreviewPages(props: PreviewPagesProps) {
             pageIndex={pageIndex}
             height={props.singlePageHeight}
             eager={pageIndex < 2}
+            forceMount={props.forceMountAll ?? false}
           >
             {() => (
             <A4PaperPage
@@ -237,6 +252,25 @@ export function PreviewPages(props: PreviewPagesProps) {
             />
             )}
           </LazyPaperPage>
+        ))}
+        {props.answerKey.pages.map((entries, answerPageIndex) => (
+          <div
+            key={`answer-${answerPageIndex}`}
+            className="exam-preview-page-frame w-full"
+            data-exam-answer-key-frame="true"
+          >
+            <ExamAnswerKeyPage
+              paperSize={props.paperSize}
+              template={props.template}
+              density={props.density}
+              title={props.title}
+              entries={entries}
+              rowsPerPage={props.answerKey.rowsPerPage}
+              mode={props.answerKey.mode}
+              pageOrdinal={answerPageIndex + 1}
+              pageTotal={props.answerKey.pages.length}
+            />
+          </div>
         ))}
       </div>
     </div>

@@ -85,6 +85,14 @@ export interface PassageCardGridProps {
     name: string,
     parentId?: string | null,
   ) => Promise<string | null | undefined> | string | null | undefined;
+  onRenameCollection?: (
+    collectionId: string,
+    name: string,
+  ) => Promise<void> | void;
+  onRemovePassagesFromFolder?: (
+    passageIds: string[],
+    collectionId: string,
+  ) => Promise<void> | void;
   onRemoveSelectedFromCollection?: () => Promise<void> | void;
   onDeleteSelectedPassages?: () => Promise<void> | void;
   passageBulkAction?: "move" | "remove" | "delete" | null;

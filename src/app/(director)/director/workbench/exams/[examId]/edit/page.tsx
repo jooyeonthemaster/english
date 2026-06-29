@@ -24,6 +24,9 @@ export default async function WorkbenchExamEditPage({ params }: PageProps) {
     <ExamPaperBuilderClient
       academyId={staff.academyId}
       questions={data.questions as never}
+      total={data.total}
+      totalPages={data.totalPages}
+      statusCounts={data.statusCounts}
       collections={data.collections as never}
       classes={data.classes}
       schools={data.schools}

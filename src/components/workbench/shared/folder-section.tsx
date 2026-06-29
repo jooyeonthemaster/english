@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePersistedState } from "@/hooks/use-persisted-state";
-import type { CollectionItem } from "./types";
+import type { CollectionItem, DragItemType } from "./types";
 import { FolderChip } from "./folder-chip";
 import { FolderCard } from "./folder-card";
 import { FolderListRow } from "./folder-list-row";
@@ -29,6 +29,11 @@ import {
   DragDropModePopover,
   type DropChoiceTarget,
 } from "./drag-drop-mode-popover";
+import {
+  folderDropCanDrop,
+  folderDropItemId,
+  isCopyDragModifier,
+} from "./folder-drag";
 import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
@@ -57,7 +62,7 @@ const FOLDER_VIEW_OPTIONS = [
 interface FolderSectionProps {
   childFolders: CollectionItem[];
   activeFolder: string | null;
-  dragItemType: "question" | "passage" | "exam";
+  dragItemType: DragItemType;
   dragItemIdKey: string;
   itemCountLabel: string;
   showNewFolder: boolean;
@@ -69,12 +74,12 @@ interface FolderSectionProps {
   onRenameFolder: (id: string, name: string) => void;
   onDeleteFolder: (id: string) => void;
   onDragToFolder: (
-    itemId: string,
+    itemId: string | string[],
     folderId: string,
     copy: boolean,
     keepFolderIds?: string[],
   ) => void;
-  onDragToRoot?: (itemId: string, copy: boolean) => void;
+  onDragToRoot?: (itemId: string | string[], copy: boolean) => void;
   /** Returns the folders the given item (and, if it's part of the current
    *  selection, the whole selection) currently belongs to — used to offer
    *  "keep in this folder" toggles when moving. */
@@ -159,10 +164,14 @@ interface FolderSectionProps {
 }
 
 interface ParentFolderButtonProps {
-  dragItemType: "question" | "passage" | "exam";
+  dragItemType: DragItemType;
   dragItemIdKey: string;
   onClick: () => void;
-  onFileDrop: (itemId: string, copy: boolean) => void;
+  onFileDrop: (
+    itemId: string | string[],
+    anchor: { x: number; y: number },
+    copyShortcut: boolean,
+  ) => void;
 }
 
 interface RootFolderChipProps {
@@ -170,10 +179,10 @@ interface RootFolderChipProps {
   count: number;
   unit: string;
   selected: boolean;
-  dragItemType: "question" | "passage" | "exam";
+  dragItemType: DragItemType;
   dragItemIdKey: string;
   onClick: () => void;
-  onFileDrop?: (itemId: string, copy: boolean) => void;
+  onFileDrop?: (itemId: string | string[], copy: boolean) => void;
 }
 
 function RootFolderChip({
@@ -194,12 +203,12 @@ function RootFolderChip({
     if (!el || !onFileDrop) return;
     return dropTargetForElements({
       element: el,
-      canDrop: ({ source }) => source.data.type === dragItemType,
+      canDrop: ({ source }) => folderDropCanDrop(dragItemType, source.data.type),
       onDragEnter: () => setIsDragOver(true),
       onDragLeave: () => setIsDragOver(false),
       onDrop: ({ source }) => {
         setIsDragOver(false);
-        const itemId = source.data[dragItemIdKey] as string;
+        const itemId = folderDropItemId(source.data, dragItemIdKey);
         const isCopy = (window.event as DragEvent | null)?.shiftKey ?? false;
         onFileDrop(itemId, isCopy);
       },
@@ -207,7 +216,7 @@ function RootFolderChip({
   }, [dragItemIdKey, dragItemType, onFileDrop]);
 
   const base =
-    "group relative flex w-[64px] cursor-pointer flex-col items-center justify-center rounded-lg border px-1 py-1 shadow-sm motion-safe:transition-all motion-safe:duration-200";
+    "group relative flex h-[80px] w-[64px] cursor-pointer flex-col items-center justify-center rounded-lg border px-1 py-1 shadow-sm motion-safe:transition-all motion-safe:duration-200";
   const chrome = selected
     ? "border-blue-400 bg-blue-50 ring-2 ring-blue-200/60 shadow-md"
     : isDragOver
@@ -269,14 +278,18 @@ function ParentFolderButton({
     if (!el) return;
     return dropTargetForElements({
       element: el,
-      canDrop: ({ source }) => source.data.type === dragItemType,
+      canDrop: ({ source }) => folderDropCanDrop(dragItemType, source.data.type),
       onDragEnter: () => setIsDragOver(true),
       onDragLeave: () => setIsDragOver(false),
-      onDrop: ({ source }) => {
+      onDrop: ({ source, location }) => {
         setIsDragOver(false);
-        const itemId = source.data[dragItemIdKey] as string;
-        const isCopy = (window.event as DragEvent | null)?.shiftKey ?? false;
-        onFileDrop(itemId, isCopy);
+        const itemId = folderDropItemId(source.data, dragItemIdKey);
+        const input = location?.current?.input;
+        const anchor = {
+          x: input?.clientX ?? window.innerWidth / 2,
+          y: input?.clientY ?? window.innerHeight / 2,
+        };
+        onFileDrop(itemId, anchor, isCopyDragModifier(input));
       },
     });
   }, [dragItemIdKey, dragItemType, onFileDrop]);
@@ -339,29 +352,68 @@ export function FolderSection({
     ? breadcrumbPath[breadcrumbPath.length - 1]
     : null;
   const parentFolderId = currentFolder?.parentId ?? null;
+  // 상위가 실제 폴더인지(=2단계 이상 깊이) 판별. 브레드크럼 끝에서 두 번째가 부모.
+  const parentFolder =
+    breadcrumbPath.length >= 2
+      ? breadcrumbPath[breadcrumbPath.length - 2]
+      : null;
   const navigateToParent = () => {
     if (parentFolderId) onNavigateToFolder(parentFolderId);
     else onNavigateToRoot?.();
   };
-  const handleDropToParent = (itemId: string, copy: boolean) => {
-    if (parentFolderId) onDragToFolder(itemId, parentFolderId, copy);
-    else onDragToRoot?.(itemId, copy);
-  };
 
   // Dropping a card onto a real folder opens an explicit 복사/이동 chooser at
-  // the drop point (replaces the old invisible Shift=copy). Root/상위 drops keep
-  // their immediate behaviour (move out / move up — copy there is meaningless).
+  // the drop point (replaces the old invisible Shift=copy). 상위(↑) drops route
+  // here too when the parent is a real folder; only the root chip / 상위-to-root
+  // stay immediate (move out — copy into "all items" is meaningless).
   const [pendingDrop, setPendingDrop] = useState<DropChoiceTarget | null>(null);
   const requestDropChoice = (
-    itemId: string,
+    itemId: string | string[],
     folderId: string,
     folderName: string,
     anchor: { x: number; y: number },
+    copyShortcut = false,
   ) => {
-    const currentFolders = (getItemFolders?.(itemId) ?? []).filter(
-      (f) => f.id !== folderId,
-    );
-    setPendingDrop({ itemId, folderId, folderName, anchor, currentFolders });
+    // Alt/Ctrl + 드롭 = 팝오버 없이 바로 복사(다른 폴더 사본은 유지).
+    if (copyShortcut) {
+      onDragToFolder(itemId, folderId, true, []);
+      return;
+    }
+    // getItemFolders는 단일 id 기준 — 다중(draft-bulk) 드롭에선 생략한다.
+    const currentFolders = (
+      typeof itemId === "string" ? (getItemFolders?.(itemId) ?? []) : []
+    ).filter((f) => f.id !== folderId);
+    // 이동은 지금 보고 있는 폴더에서만 빼낸다 — 그 폴더 이름을 팝오버에 넘겨
+    // "「실험폴더」에서만 빼고 옮김"을 정확히 안내한다(루트면 undefined).
+    setPendingDrop({
+      itemId,
+      folderId,
+      folderName,
+      anchor,
+      currentFolders,
+      sourceFolderName: currentFolder?.name,
+    });
+  };
+
+  // 상위(↑) 버튼 드롭: 상위가 실제 폴더면 일반 폴더와 똑같이 복사/이동 팝오버를
+  // 띄운다(이동=현재 폴더에서 빼서 위로, 복사=현재 폴더에 둔 채 위로도 추가).
+  // 상위가 루트(전체 보기)면 담을 "통"이 없으므로 현재 폴더에서 빼내기만 한다.
+  const handleDropToParent = (
+    itemId: string | string[],
+    anchor: { x: number; y: number },
+    copyShortcut = false,
+  ) => {
+    if (parentFolder) {
+      requestDropChoice(
+        itemId,
+        parentFolder.id,
+        parentFolder.name,
+        anchor,
+        copyShortcut,
+      );
+    } else {
+      onDragToRoot?.(itemId, false);
+    }
   };
 
   // ─── Enhanced controls state (only used when enableFolderControls=true) ───
