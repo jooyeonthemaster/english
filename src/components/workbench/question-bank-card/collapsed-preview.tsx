@@ -6,6 +6,18 @@ import { renderFormatted } from "./render-formatted";
 import { grammarMarkerDisplayLabel } from "@/components/exams/paper-builder/option-display";
 import { SUBTYPE_LABELS } from "../question-type-filter";
 
+// 서술형(영작·요약 등) — 보기(options)가 없고 답이 모범 답안 문장이라, 객관식
+// 글자 배지로 파싱하면 안 된다. 이 유형은 카드에 모범 답안 텍스트를 그대로 보인다.
+const ESSAY_SUBTYPES = new Set([
+  "CONDITIONAL_WRITING",
+  "SENTENCE_TRANSFORM",
+  "FILL_BLANK_KEY",
+  "SUMMARY_COMPLETE",
+  "SUMMARY_WRITING",
+  "WORD_ORDER",
+  "GRAMMAR_CORRECTION",
+]);
+
 // 카드를 접었을 때 보여줄 미리보기:
 //  · 의문문(발문) — 펼침과 동일하게 전체 노출
 //  · 지문 — 2줄만 남기고 '…'으로 말줄임
@@ -17,6 +29,7 @@ export function CollapsedPreview({
   correctAnswer,
   displayCorrectAnswer = correctAnswer,
   subType,
+  isSetMember = false,
 }: {
   direction: string;
   passage: string;
@@ -24,9 +37,13 @@ export function CollapsedPreview({
   correctAnswer: string;
   displayCorrectAnswer?: string;
   subType?: string | null;
+  /** 장문 세트(QuestionSet) 소속 문항 — 유형 라벨 앞에 "장문" 표식을 붙여 구분한다. */
+  isSetMember?: boolean;
 }) {
   // 어법 판단(GRAMMAR_ERROR)만 라벨/마커를 원형숫자(①)로 표시(시험지 렌더 동일). 타 유형 무영향.
   const isGrammarError = subType === "GRAMMAR_ERROR";
+  // 서술형이면 객관식 정답 배지를 만들지 않고 모범 답안 텍스트를 보인다.
+  const isEssay = !!subType && ESSAY_SUBTYPES.has(subType);
   // 발문 오른쪽에 작은 회색 글씨로 표시할 문제 유형명(예: "빈칸 추론", "조건부 영작").
   const typeLabel = subType ? SUBTYPE_LABELS[subType] : null;
   const badgeLabel = (label: unknown) =>
@@ -38,7 +55,7 @@ export function CollapsedPreview({
   // 보기 텍스트가 없는 마커 유형(어법·어휘·삽입·무관) — 정답을 회색 박스 대신
   // 파란 원형 배지(숫자)로 표시해 일반 선지 배지와 디자인을 통일한다.
   const answerBadgeLabels =
-    correctOptions.length === 0
+    correctOptions.length === 0 && !isEssay
       ? Array.from(parseCorrectAnswerLabels(displayCorrectAnswer || correctAnswer))
       : [];
 
@@ -52,9 +69,13 @@ export function CollapsedPreview({
           <div className="min-w-0 flex-1 text-[13px] font-bold text-slate-900 leading-relaxed whitespace-pre-line">
             {renderFormatted(direction, subType)}
           </div>
-          {typeLabel && (
+          {(typeLabel || isSetMember) && (
             <span className="shrink-0 whitespace-nowrap text-[11px] font-medium leading-relaxed text-slate-400">
-              {typeLabel}
+              {isSetMember && typeLabel
+                ? `장문 · ${typeLabel}`
+                : isSetMember
+                  ? "장문"
+                  : typeLabel}
             </span>
           )}
         </div>
@@ -96,10 +117,19 @@ export function CollapsedPreview({
           ))}
         </div>
       ) : displayCorrectAnswer ? (
-        <div className="text-[12px] bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded border border-slate-200">
-          <span className="font-medium">정답:</span>{" "}
-          {renderFormatted(displayCorrectAnswer, subType)}
-        </div>
+        isEssay ? (
+          <div className="flex items-start gap-2 pl-1 text-[13px] font-semibold text-blue-700">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
+              답
+            </span>
+            <span>{renderFormatted(displayCorrectAnswer, subType)}</span>
+          </div>
+        ) : (
+          <div className="text-[12px] bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded border border-slate-200">
+            <span className="font-medium">정답:</span>{" "}
+            {renderFormatted(displayCorrectAnswer, subType)}
+          </div>
+        )
       ) : null}
     </div>
   );

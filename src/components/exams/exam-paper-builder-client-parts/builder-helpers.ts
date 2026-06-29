@@ -24,6 +24,7 @@ export function formatBuilderDraftUpdatedAt(value: string): string {
   if (Number.isNaN(date.getTime())) return "저장 시각 알 수 없음";
 
   return new Intl.DateTimeFormat("ko-KR", {
+    timeZone: "Asia/Seoul", // 배포 서버(UTC) SSR에서도 한국시간으로 고정 표시
     month: "short",
     day: "numeric",
     hour: "2-digit",

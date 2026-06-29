@@ -13,7 +13,6 @@ import { toast } from "sonner";
 import {
   ChevronDown,
   FileText,
-  GripVertical,
   Layers,
   Loader2,
   Minus,
@@ -231,24 +230,24 @@ export function SetBuilderPanel({
       ? onMemberOverridesByPresetChange!(next)
       : setInternalMemberOverridesByPreset(next);
 
-  /** 멤버 i 의 오버라이드만 갈아끼운다(평행 배열의 한 칸). */
-  const setMemberOverrideAt = (index: number, next: SetMemberOverride) => {
-    const presetKey = effectiveFocusedPresetId;
-    const source =
-      presetKey && selectedMemberOverridesByPreset[presetKey]
-        ? selectedMemberOverridesByPreset[presetKey]
-        : presetKey === selectedPreset
-          ? selectedMemberOverrides
-          : [];
+  /** 특정 프리셋의 멤버 i 오버라이드만 갈아끼운다(평행 배열의 한 칸). */
+  const setMemberOverrideForPreset = (
+    presetKey: string,
+    index: number,
+    next: SetMemberOverride,
+  ) => {
+    const source = selectedMemberOverridesByPreset[presetKey]
+      ? selectedMemberOverridesByPreset[presetKey]
+      : presetKey === selectedPreset
+        ? selectedMemberOverrides
+        : [];
     const draft = [...source];
     while (draft.length <= index) draft.push({});
     draft[index] = next;
-    if (presetKey) {
-      setMemberOverridesByPresetValue({
-        ...selectedMemberOverridesByPreset,
-        [presetKey]: draft,
-      });
-    }
+    setMemberOverridesByPresetValue({
+      ...selectedMemberOverridesByPreset,
+      [presetKey]: draft,
+    });
     if (presetKey === selectedPreset || !membersByPresetControlled) {
       setMemberOverridesValue(draft);
     }
@@ -256,6 +255,8 @@ export function SetBuilderPanel({
 
   // 펼친 멤버(상세 편집 중) — 한 번에 하나씩 펼친다. UI 취향이라 내부 state.
   const [expandedMember, setExpandedMember] = useState<number | null>(null);
+  // 문항별 설정 팝오버가 열린 프리셋 id(일반 유형지정의 expandedTypeId 미러).
+  const [expandedPresetId, setExpandedPresetId] = useState<string | null>(null);
 
   const [customPrompt, setCustomPrompt] = useState("");
   const [generating, setGenerating] = useState(false);
@@ -270,6 +271,11 @@ export function SetBuilderPanel({
   useEffect(() => {
     setExpandedMember(null);
   }, [selectedPreset]);
+
+  // 다른 프리셋 팝오버를 열면(또는 닫으면) 이전 프리셋의 펼친 멤버를 초기화한다.
+  useEffect(() => {
+    setExpandedMember(null);
+  }, [expandedPresetId]);
 
   const presets = SET_PRESETS.filter((p) => p.tier === 1);
   const focusedPreset = effectiveFocusedPresetId
@@ -389,83 +395,201 @@ export function SetBuilderPanel({
             {presets.map((p) => {
               const count = Math.max(0, Math.floor(Number(selectedPresetCounts[p.id]) || 0));
               const active = count > 0;
-              const focused = effectiveFocusedPresetId === p.id;
+              const presetOpen = expandedPresetId === p.id;
+              const preset = resolvePreset(p.id);
+              const overrides =
+                selectedMemberOverridesByPreset[p.id] ??
+                (p.id === selectedPreset ? selectedMemberOverrides : []);
               return (
-                <div
+                <Popover
                   key={p.id}
-                  className={`relative flex flex-col overflow-hidden rounded-lg border transition-colors ${
-                    focused
-                      ? "border-blue-400 bg-blue-50/80 ring-1 ring-inset ring-blue-200"
-                      : active
-                        ? "border-blue-300 bg-blue-50/70"
-                      : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80"
-                  }`}
+                  open={presetOpen}
+                  onOpenChange={(o) => setExpandedPresetId(o ? p.id : null)}
                 >
-                  <div className="flex items-center gap-0.5 pl-1 pr-1.5 pt-1.5">
-                    <span className="flex h-6 w-4 shrink-0 items-center justify-center rounded text-slate-300">
-                      <FileText className="h-3.5 w-3.5" />
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (!active) applyPresetCount(p.id, 1);
-                        else setFocusedPresetId(p.id);
-                      }}
-                      className="flex min-w-0 flex-1 items-center gap-1 text-left"
-                      title={`${p.label} 선택`}
+                  <PopoverAnchor asChild>
+                    <div
+                      className={`relative flex flex-col overflow-hidden rounded-lg border transition-colors ${
+                        presetOpen
+                          ? "rounded-b-none border-blue-400 bg-blue-50/80 ring-1 ring-inset ring-blue-200"
+                          : active
+                            ? "border-blue-300 bg-blue-50/70"
+                            : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80"
+                      }`}
                     >
-                      <span
-                        className={`min-w-0 truncate text-[12px] ${
-                          active
-                            ? "font-bold text-slate-800"
-                            : "font-semibold text-slate-600"
-                        }`}
-                      >
-                        {p.label}
-                      </span>
-                    </button>
-                  </div>
-                  <div className="mt-1 min-h-[26px] px-1.5 text-[10px] font-medium leading-snug text-slate-500">
-                    <span className="line-clamp-2">{memberLabels(p.id)}</span>
-                  </div>
-                  <div className="mt-1 flex items-center justify-between gap-1 px-1.5 pb-1.5">
-                    <span className="whitespace-nowrap pl-0.5 text-[10px] font-semibold text-slate-400">
-                      세트 수
-                    </span>
-                    <div className="flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          applyPresetCount(p.id, Math.max(0, count - 1));
-                        }}
-                        disabled={!active}
-                        className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
-                        aria-label={`${p.label} 선택 해제`}
-                      >
-                        <Minus className="h-3.5 w-3.5" />
-                      </button>
-                      <span
-                        className={`flex h-7 w-7 items-center justify-center border-x border-slate-200 text-[12.5px] font-bold tabular-nums ${
-                          active
-                            ? "bg-blue-50/50 text-blue-700"
-                            : "bg-slate-50/60 text-slate-300"
-                        }`}
-                      >
-                        {count}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          applyPresetCount(p.id, count + 1);
-                        }}
-                        className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
-                        aria-label={`${p.label} 선택`}
-                      >
-                        <Plus className="h-3.5 w-3.5" />
-                      </button>
+                      <div className="flex items-center gap-0.5 pl-1 pr-1.5 pt-1.5">
+                        <span className="flex h-6 w-4 shrink-0 items-center justify-center rounded text-slate-300">
+                          <FileText className="h-3.5 w-3.5" />
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!active) applyPresetCount(p.id, 1);
+                            setFocusedPresetId(p.id);
+                            setExpandedPresetId(p.id);
+                          }}
+                          className="flex min-w-0 flex-1 items-center gap-1 text-left"
+                          title={`${p.label} — 문항별 설정 열기`}
+                        >
+                          <span
+                            className={`min-w-0 truncate text-[12px] ${
+                              active
+                                ? "font-bold text-slate-800"
+                                : "font-semibold text-slate-600"
+                            }`}
+                          >
+                            {p.label}
+                          </span>
+                        </button>
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-500"
+                            aria-label={`${p.label} 문항별 설정 ${presetOpen ? "접기" : "펼치기"}`}
+                          >
+                            <ChevronDown
+                              className={`size-4 transition-transform duration-300 ${
+                                presetOpen ? "rotate-180" : ""
+                              }`}
+                              aria-hidden="true"
+                            />
+                          </button>
+                        </PopoverTrigger>
+                      </div>
+                      <div className="mt-1 min-h-[26px] px-1.5 text-[10px] font-medium leading-snug text-slate-500">
+                        <span className="line-clamp-2">{memberLabels(p.id)}</span>
+                      </div>
+                      <div className="mt-1 flex items-center justify-between gap-1 px-1.5 pb-1.5">
+                        <span className="whitespace-nowrap pl-0.5 text-[10px] font-semibold text-slate-400">
+                          세트 수
+                        </span>
+                        <div className="flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const nc = Math.max(0, count - 1);
+                              applyPresetCount(p.id, nc);
+                              if (nc <= 0)
+                                setExpandedPresetId((cur) =>
+                                  cur === p.id ? null : cur,
+                                );
+                            }}
+                            disabled={!active}
+                            className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
+                            aria-label={`${p.label} 세트 수 줄이기`}
+                          >
+                            <Minus className="h-3.5 w-3.5" />
+                          </button>
+                          <span
+                            className={`flex h-7 w-7 items-center justify-center border-x border-slate-200 text-[12.5px] font-bold tabular-nums ${
+                              active
+                                ? "bg-blue-50/50 text-blue-700"
+                                : "bg-slate-50/60 text-slate-300"
+                            }`}
+                          >
+                            {count}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              applyPresetCount(p.id, count + 1);
+                              setExpandedPresetId(p.id);
+                            }}
+                            className="flex h-7 w-7 items-center justify-center text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-200 disabled:hover:bg-transparent"
+                            aria-label={`${p.label} 세트 수 늘리기 · 문항별 설정 열기`}
+                          >
+                            <Plus className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  </PopoverAnchor>
+                  {preset ? (
+                    <PopoverContent
+                      align="start"
+                      sideOffset={0}
+                      collisionPadding={12}
+                      className="max-h-[60vh] w-[var(--radix-popover-trigger-width)] overflow-y-auto rounded-t-none border border-t-0 border-blue-400 p-0 shadow-lg"
+                    >
+                      <div className="flex h-9 items-center gap-2 border-b border-slate-200 bg-white px-3">
+                        <Settings2 className="h-3.5 w-3.5 shrink-0 text-emerald-500" />
+                        <span className="min-w-0 flex-1 truncate text-[12px] font-bold text-slate-800">
+                          문항별 설정
+                        </span>
+                        <span className="shrink-0 rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-slate-500">
+                          {preset.members.length}문항
+                        </span>
+                      </div>
+                      <div className="space-y-1.5 bg-slate-100 p-2">
+                        {preset.members.map((member, index) => {
+                          const typeLabel =
+                            QUESTION_TYPE_UI[member.typeId]?.label ?? member.typeId;
+                          const memberOverride = overrides[index];
+                          const memberOpen = expandedMember === index;
+                          const memberDiff = memberOverride?.difficulty;
+                          const inheritedDiff = member.difficulty ?? selectedDiff;
+                          const effDiff = memberDiff ?? inheritedDiff;
+                          const adjusted = memberOverrideHasContent(memberOverride);
+                          return (
+                            <div
+                              key={`${member.typeId}-${index}`}
+                              className="overflow-hidden rounded-lg border border-slate-200 bg-white"
+                            >
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setExpandedMember(memberOpen ? null : index)
+                                }
+                                className="flex w-full items-center gap-1 px-2.5 py-2 text-left"
+                                title={`${typeLabel} 세부 옵션 ${memberOpen ? "접기" : "펼치기"}`}
+                              >
+                                <span className="min-w-0 truncate text-[12px] font-bold text-slate-700">
+                                  {typeLabel}
+                                </span>
+                                {adjusted ? (
+                                  <span
+                                    className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                                      memberDiff ? DIFFICULTY_DOT[effDiff] : "bg-blue-500"
+                                    }`}
+                                    title="이 문항만 개별 설정"
+                                  />
+                                ) : null}
+                                <span className="ml-auto shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-500">
+                                  {DIFFICULTY_LABELS[effDiff]}
+                                </span>
+                                <ChevronDown
+                                  className={`size-4 shrink-0 text-blue-300 transition-transform duration-300 ${
+                                    memberOpen ? "rotate-180" : ""
+                                  }`}
+                                  aria-hidden="true"
+                                />
+                              </button>
+                              {memberOpen ? (
+                                <div className="border-t border-slate-200 bg-slate-100 px-2.5 pb-2.5 pt-2">
+                                  <div className="rounded-lg border border-slate-200 bg-white px-3 py-2.5">
+                                    <SetMemberSettingsEditor
+                                      typeId={member.typeId}
+                                      override={memberOverride}
+                                      inheritedGenerationPlan={
+                                        member.generationPlan ??
+                                        (generationPlan === "PREMIUM"
+                                          ? "PREMIUM"
+                                          : "STANDARD")
+                                      }
+                                      inheritedDifficulty={inheritedDiff}
+                                      onChange={(next) =>
+                                        setMemberOverrideForPreset(p.id, index, next)
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                              ) : null}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </PopoverContent>
+                  ) : null}
+                </Popover>
               );
             })}
           </div>
@@ -478,141 +602,6 @@ export function SetBuilderPanel({
           : "한 지문에 여러 문항을 묶는 세트 프리셋을 고르세요. 지문 분량이 부족하면 생성 시 안내됩니다."}
       </p>
 
-      {/* 멤버별 설정 — 프리셋 선택 후, 각 문항을 펼쳐 난이도·세부설정을 일반
-          문제 생성과 동일하게 조정한다. 조정값은 memberOverrides 로 전송된다. */}
-      {effectiveFocusedPresetId
-        ? (() => {
-            const preset = resolvePreset(effectiveFocusedPresetId);
-            if (!preset) return null;
-            const focusedOverrides =
-              selectedMemberOverridesByPreset[preset.id] ??
-              (preset.id === selectedPreset ? selectedMemberOverrides : []);
-            return (
-              <div className="shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-                <div className="flex h-10 w-full items-center gap-2 border-b border-slate-200 bg-slate-50/80 px-3 text-left">
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-400" aria-hidden="true" />
-                  <span className="text-[12px] font-bold text-slate-700">문항별 설정</span>
-                  <span className="ml-1 rounded-full bg-white px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-slate-600 ring-1 ring-inset ring-slate-200">
-                    {preset.members.length}문항
-                  </span>
-                  <Settings2 className="ml-auto h-3.5 w-3.5 shrink-0 text-slate-400" />
-                </div>
-                <div className="grid grid-cols-2 gap-2 p-2">
-                  {preset.members.map((member, index) => {
-                    const typeLabel =
-                      QUESTION_TYPE_UI[member.typeId]?.label ?? member.typeId;
-                    const memberOverride = focusedOverrides[index];
-                    const open = expandedMember === index;
-                    const memberDiff = memberOverride?.difficulty;
-                    const inheritedDiff = member.difficulty ?? selectedDiff;
-                    const effDiff = memberDiff ?? inheritedDiff;
-                    const adjusted = memberOverrideHasContent(memberOverride);
-                    return (
-                      <Popover
-                        key={`${member.typeId}-${index}`}
-                        open={open}
-                        onOpenChange={(nextOpen) =>
-                          setExpandedMember(nextOpen ? index : null)
-                        }
-                      >
-                        <PopoverAnchor asChild>
-                          <div
-                            className={`relative flex flex-col overflow-hidden rounded-lg border transition-colors ${
-                              open
-                                ? "rounded-b-none border-blue-300 bg-blue-50/40"
-                                : adjusted
-                                  ? "border-blue-300 bg-blue-50/70"
-                                  : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/80"
-                            }`}
-                          >
-                            <div className="flex items-center gap-0.5 pl-1 pr-1.5 pt-1.5">
-                              <span className="flex h-6 w-4 shrink-0 items-center justify-center rounded text-slate-300">
-                                <GripVertical className="h-3.5 w-3.5" />
-                              </span>
-                              <PopoverTrigger asChild>
-                                <button
-                                  type="button"
-                                  className="flex min-w-0 flex-1 items-center gap-1 text-left"
-                                  title={`${typeLabel} 세부 옵션 ${open ? "접기" : "펼치기"}`}
-                                >
-                                  <span className="min-w-0 truncate text-[12px] font-bold text-slate-700">
-                                    {typeLabel}
-                                  </span>
-                                  {adjusted ? (
-                                    <span
-                                      className={`h-1.5 w-1.5 shrink-0 rounded-full ${
-                                        memberDiff ? DIFFICULTY_DOT[effDiff] : "bg-blue-500"
-                                      }`}
-                                      title="이 문항만 개별 설정"
-                                    />
-                                  ) : null}
-                                  <ChevronDown
-                                    className={`ml-auto size-4 shrink-0 text-blue-300 transition-transform duration-300 ${
-                                      open ? "rotate-180" : ""
-                                    }`}
-                                    aria-hidden="true"
-                                  />
-                                </button>
-                              </PopoverTrigger>
-                            </div>
-                            <div className="mt-1 flex items-center justify-between gap-1 px-1.5 pb-1.5">
-                              <span className="whitespace-nowrap pl-0.5 text-[10px] font-semibold text-slate-400">
-                                문항 수
-                              </span>
-                              <div className="flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white">
-                                <span className="flex h-7 w-7 items-center justify-center text-slate-200">
-                                  <Minus className="h-3.5 w-3.5" />
-                                </span>
-                                <span className="flex h-7 w-7 items-center justify-center border-x border-slate-200 bg-blue-50/50 text-[12.5px] font-bold tabular-nums text-blue-700">
-                                  1
-                                </span>
-                                <span className="flex h-7 w-7 items-center justify-center text-slate-200">
-                                  <Plus className="h-3.5 w-3.5" />
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </PopoverAnchor>
-                        <PopoverContent
-                          align="start"
-                          sideOffset={0}
-                          collisionPadding={12}
-                          className="max-h-[60vh] w-[var(--radix-popover-trigger-width)] overflow-y-auto rounded-t-none border border-t-0 border-blue-300 p-0 shadow-lg"
-                        >
-                          <div className="flex h-9 items-center gap-2 border-b border-slate-200 bg-white px-3">
-                            <Settings2 className="h-3.5 w-3.5 shrink-0 text-blue-500" />
-                            <span className="min-w-0 flex-1 truncate text-[12px] font-bold text-slate-800">
-                              {typeLabel} 세부 설정
-                            </span>
-                            <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-500">
-                              {DIFFICULTY_LABELS[effDiff]}
-                            </span>
-                          </div>
-                          <div className="bg-slate-100 px-3 pb-3 pt-2.5">
-                            <div className="rounded-lg border border-slate-200 bg-white px-3 py-2.5">
-                            <SetMemberSettingsEditor
-                              typeId={member.typeId}
-                              override={memberOverride}
-                              inheritedGenerationPlan={
-                                member.generationPlan ??
-                                (generationPlan === "PREMIUM" ? "PREMIUM" : "STANDARD")
-                              }
-                              inheritedDifficulty={inheritedDiff}
-                              onChange={(next) =>
-                                setMemberOverrideAt(index, next)
-                              }
-                            />
-                          </div>
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })()
-        : null}
 
       {/* 공통 지시문 — embedded(지문별)에서는 공용 '생성' 흐름이 담당하므로 숨김 */}
       {!embedded && (

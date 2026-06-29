@@ -547,13 +547,12 @@ export function ModelAnswer({ answer, label }: { answer: string; label?: string 
       field="modelAnswer"
       excerpt={blockExcerpt(answer)}
     >
-      <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3">
-        <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">
-          {label || "모범 답안"}
+      {/* 객관식 정답 배지와 동일한 디자인 — 파란 원 안에 '답' + 오른쪽 파란 글씨 답안. */}
+      <div className="flex items-start gap-2 text-[13px] font-semibold text-blue-700">
+        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
+          답
         </span>
-        <p className="text-[13px] font-semibold text-emerald-800 leading-relaxed">
-          {answer}
-        </p>
+        <span className="leading-relaxed">{answer}</span>
       </div>
     </SelectableBlock>
   );

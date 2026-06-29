@@ -20,6 +20,9 @@ import type { ExamQuestionData } from "./_lib/types";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+// 대량 시험지(수백~1000+ 문항) DOCX 생성은 문항 로드 + 이미지 임베드 변환으로
+// 기본 서버리스 타임아웃을 넘길 수 있어 상한을 명시한다(플랫폼이 자체 한도로 클램프).
+export const maxDuration = 300;
 
 function parseSettings(settings: string | null): BuilderSettings | null {
   if (!settings) return null;

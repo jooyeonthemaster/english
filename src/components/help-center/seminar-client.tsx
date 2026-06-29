@@ -22,7 +22,7 @@ import {
 } from "@/lib/help-center";
 import { formatDateTime } from "@/lib/utils";
 import { toast } from "sonner";
-import { Presentation, Phone, MessageCircle, CalendarClock, X } from "lucide-react";
+import { Presentation, Phone, MessageCircle, CalendarClock, X, Plus } from "lucide-react";
 
 interface Prefill {
   applicantName: string;
@@ -158,7 +158,7 @@ export function SeminarClient({
         </div>
         {!showForm && (
           <Button onClick={() => setShowForm(true)}>
-            <Presentation className="size-4" />
+            <Plus className="size-4" />
             새 신청
           </Button>
         )}

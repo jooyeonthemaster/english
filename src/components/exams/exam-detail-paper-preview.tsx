@@ -602,6 +602,10 @@ export function ExamDetailPaperPreview({
             previewBaseWidth={baseWidth || PREVIEW_PAGE_WIDTH}
             previewZoom={zoom}
             previewContentHeight={previewContentHeight}
+            singlePageHeight={
+              (baseWidth || PREVIEW_PAGE_WIDTH) *
+              PAPER_SIZE_SPECS[paperSize].heightRatio
+            }
             title={exam.title}
             paperSize={paperSize}
             subtitle={settings?.header?.subtitle || ""}
@@ -732,6 +736,7 @@ export function ExamFirstPagePreview({
         previewBaseWidth={baseWidth}
         previewZoom={zoom}
         previewContentHeight={baseWidth * heightRatio}
+        singlePageHeight={baseWidth * heightRatio}
         title={exam.title}
         paperSize={paperSize}
         subtitle={settings?.header?.subtitle || ""}

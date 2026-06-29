@@ -399,26 +399,6 @@ export function QuestionBankClient({
   );
   const { selectedIds, setSelectedIds, toggleSelect, clearSelection } =
     useSelection(getDisplayedIds);
-  const isCurrentPageSelected =
-    displayedQuestionIds.length > 0 &&
-    displayedQuestionIds.every((id) => selectedIds.has(id));
-
-  const handleSelectCurrentPage = useCallback(() => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      const shouldClearPage =
-        displayedQuestionIds.length > 0 &&
-        displayedQuestionIds.every((id) => next.has(id));
-
-      for (const id of displayedQuestionIds) {
-        if (shouldClearPage) next.delete(id);
-        else next.add(id);
-      }
-
-      return next;
-    });
-  }, [displayedQuestionIds, setSelectedIds]);
-
   // Exam dialog
   const [createExamOpen, setCreateExamOpen] = useState(false);
   const [examTitle, setExamTitle] = useState("");
@@ -494,6 +474,20 @@ export function QuestionBankClient({
     selectingAllPages,
     setSelectedIds,
   ]);
+
+  // 헤더 체크박스 = "전체 페이지 선택". 현재 페이지만이 아니라 현재 폴더/필터의 전체
+  // 문항(getWorkbenchQuestionIds)을 선택한다 → 하위 폴더 안에서도 전체 선택→이동 가능.
+  // 이미 전체가 선택돼 있으면 해제한다.
+  const allFilteredSelected =
+    totalCount > 0 && selectedIds.size >= totalCount;
+  const someSelected = selectedIds.size > 0 && !allFilteredSelected;
+  const handleToggleSelectAll = useCallback(() => {
+    if (allFilteredSelected) {
+      clearSelection();
+      return;
+    }
+    void handleSelectAllPages();
+  }, [allFilteredSelected, clearSelection, handleSelectAllPages]);
 
   const editor = useQuestionEditor((id) => {
     selectedIds.delete(id);
@@ -1042,14 +1036,19 @@ export function QuestionBankClient({
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
       <div className="flex flex-1 items-center gap-2 min-w-0">
         <SelectAllCheckbox
-          checked={isCurrentPageSelected && selectedIds.size > 0}
-          indeterminate={selectedIds.size > 0 && !isCurrentPageSelected}
-          disabled={displayedQuestions.length === 0}
-          onChange={handleSelectCurrentPage}
-          title={`${selectedIds.size}문항 선택`}
-          ariaLabel={
-            isCurrentPageSelected ? "현재 페이지 해제" : "현재 페이지 선택"
+          checked={allFilteredSelected}
+          indeterminate={someSelected}
+          disabled={
+            (totalCount === 0 && displayedQuestions.length === 0) ||
+            selectingAllPages
           }
+          onChange={handleToggleSelectAll}
+          title={
+            allFilteredSelected
+              ? `전체 ${selectedIds.size}문항 선택됨 — 클릭 시 해제`
+              : `전체 ${totalCount}문항 선택`
+          }
+          ariaLabel={allFilteredSelected ? "전체 해제" : "전체 페이지 선택"}
         />
         <div
           className={
@@ -1072,6 +1071,18 @@ export function QuestionBankClient({
             </button>
           ) : null}
         </div>
+        {/* 휴지통 — 삭제 버튼 바로 오른쪽에 두어 "삭제 → 휴지통" 흐름을 잇는다.
+            삭제(빨강)와 달리 무채색(슬레이트)으로 두어 단순 이동 링크임을 구분.
+            텍스트 펄이라 h-9로 살짝 키웠다. 선택과 무관하게 항상 활성. */}
+        <Link
+          href="/director/workbench/questions/trash"
+          title="삭제한 문제 보관함"
+          aria-label="휴지통"
+          className="flex h-9 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-slate-50 px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-100 hover:text-slate-700"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+          휴지통
+        </Link>
         {/* 시험지 만들기 — 흐림 처리되는 액션 클러스터 밖에 둬 비활성 시
             또렷한 회색으로 보이게 한다. */}
         <button
@@ -1108,16 +1119,6 @@ export function QuestionBankClient({
       <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
         {filtersToolbar}
         {gridToggle}
-        {/* 휴지통 — 삭제한 문제는 여기로 모인다(라벨 노출로 발견성↑). */}
-        <Link
-          href="/director/workbench/questions/trash"
-          title="삭제한 문제 보관함"
-          aria-label="휴지통"
-          className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
-        >
-          <Trash2 className="h-3.5 w-3.5" />
-          휴지통
-        </Link>
       </div>
     </div>
   );

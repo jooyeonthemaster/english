@@ -32,16 +32,14 @@ const DIRECT_INPUT_SOURCE_TYPE = "TEXT";
 // Passage CRUD (Workbench)
 // ---------------------------------------------------------------------------
 
-export async function getWorkbenchPassages(
+// Shared `where` builder for the workbench passage list. Extracted so the
+// paginated list (getWorkbenchPassages) and the "전체 페이지 선택" id fetch
+// (getWorkbenchPassageIds) always scope to the SAME population — otherwise
+// 전체 선택이 목록에 없던 지문을 잡거나 일부를 빠뜨릴 수 있다.
+function buildWorkbenchPassageWhere(
   academyId: string,
-  filters?: WorkbenchPassageFilters
-) {
-  await requireAuth();
-
-  const page = filters?.page || 1;
-  const limit = filters?.limit || 20;
-  const skip = (page - 1) * limit;
-
+  filters?: WorkbenchPassageFilters,
+): Record<string, unknown> {
   const where: Record<string, unknown> = { academyId };
 
   if (filters?.schoolId) where.schoolId = filters.schoolId;
@@ -82,6 +80,56 @@ export async function getWorkbenchPassages(
       where.analysis = { isNot: null };
     }
   }
+  return where;
+}
+
+/**
+ * Return EVERY passage id matching `filters` (no pagination), academy-scoped.
+ * Mirror of getWorkbenchQuestionIds — powers "전체 페이지 선택" so a bulk
+ * 폴더 이동/추가가 현재 20개 페이지로 조용히 잘리지 않는다.
+ */
+export async function getWorkbenchPassageIds(
+  academyId: string,
+  filters?: WorkbenchPassageFilters,
+): Promise<{ success: boolean; ids: string[]; count: number; error?: string }> {
+  try {
+    const staff = await requireAuth();
+    if (staff.academyId !== academyId) {
+      return {
+        success: false,
+        ids: [],
+        count: 0,
+        error: "학원 정보가 일치하지 않습니다.",
+      };
+    }
+    const where = buildWorkbenchPassageWhere(staff.academyId, filters);
+    const passages = await prisma.passage.findMany({
+      where,
+      select: { id: true },
+      orderBy: { createdAt: "desc" },
+    });
+    const ids = passages.map((p) => p.id);
+    return { success: true, ids, count: ids.length };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "지문 목록을 불러오는 중 오류가 발생했습니다.";
+    return { success: false, ids: [], count: 0, error: message };
+  }
+}
+
+export async function getWorkbenchPassages(
+  academyId: string,
+  filters?: WorkbenchPassageFilters
+) {
+  await requireAuth();
+
+  const page = filters?.page || 1;
+  const limit = filters?.limit || 20;
+  const skip = (page - 1) * limit;
+
+  const where = buildWorkbenchPassageWhere(academyId, filters);
 
   const [passages, total] = await Promise.all([
     prisma.passage.findMany({

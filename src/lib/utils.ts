@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { format, formatDistanceToNow, differenceInDays, startOfDay } from "date-fns";
+import { formatDistanceToNow, differenceInDays, startOfDay } from "date-fns";
 import { ko } from "date-fns/locale";
 
 export function cn(...inputs: ClassValue[]) {
@@ -8,28 +8,70 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // Date formatting
+//
+// 모든 타임스탬프는 "한국시간(Asia/Seoul) 고정"으로 표시한다. date-fns의 `format`은
+// 런타임(서버/브라우저)의 로컬 타임존을 따르므로, UTC로 도는 배포 서버(Vercel 등)의
+// SSR 단계에서 9시간 어긋난 시각이 HTML에 박혀버린다("use client" 카드는 하이드레이션
+// 후에도 그 값을 유지). 그래서 런타임 TZ에 의존하지 않도록 Intl로 명시적으로 KST 부품을
+// 뽑아 조립한다 — 서버/클라이언트 어디서 렌더되든 결과가 동일하다.
+const APP_TIME_ZONE = "Asia/Seoul";
+
+function kstParts(date: Date | string) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: APP_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23", // 자정을 "24"가 아닌 "00"으로 (h23 = 00–23)
+  }).formatToParts(new Date(date));
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((p) => p.type === type)?.value ?? "";
+  return {
+    year: get("year"),
+    month: get("month"),
+    day: get("day"),
+    hour: get("hour"),
+    minute: get("minute"),
+  };
+}
+
 export function formatDate(date: Date | string) {
-  return format(new Date(date), "yyyy.MM.dd");
+  const p = kstParts(date);
+  return `${p.year}.${p.month}.${p.day}`;
 }
 
 export function formatDateTime(date: Date | string) {
-  return format(new Date(date), "yyyy.MM.dd HH:mm");
+  const p = kstParts(date);
+  return `${p.year}.${p.month}.${p.day} ${p.hour}:${p.minute}`;
 }
 
 export function formatTime(date: Date | string) {
-  return format(new Date(date), "HH:mm");
+  const p = kstParts(date);
+  return `${p.hour}:${p.minute}`;
 }
 
+// 상대시간("3시간 전")은 두 절대시각의 '차이'라 타임존과 무관하므로 그대로 둔다.
 export function formatRelativeTime(date: Date | string) {
   return formatDistanceToNow(new Date(date), { addSuffix: true, locale: ko });
 }
 
 export function formatMonth(date: Date | string) {
-  return format(new Date(date), "yyyy년 M월");
+  const p = kstParts(date);
+  return `${p.year}년 ${Number(p.month)}월`;
 }
 
 export function formatKoreanDate(date: Date | string) {
-  return format(new Date(date), "M월 d일 (EEE)", { locale: ko });
+  const parts = new Intl.DateTimeFormat("ko-KR", {
+    timeZone: APP_TIME_ZONE,
+    month: "numeric",
+    day: "numeric",
+    weekday: "short",
+  }).formatToParts(new Date(date));
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((p) => p.type === type)?.value ?? "";
+  return `${get("month")}월 ${get("day")}일 (${get("weekday")})`;
 }
 
 // Number formatting

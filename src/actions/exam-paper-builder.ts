@@ -115,6 +115,44 @@ function normalizeObjectiveAnswerTexts(input: unknown, slots: number): string[] 
   return input.slice(0, slots).map((text) => String(text ?? ""));
 }
 
+// 빌더 카드/미리보기가 필요로 하는 문항 include 형태 — 목록 로드와 id 배치 로드가
+// 동일한 모양을 반환하도록 한 곳에서 공유한다(BuilderQuestion 형태와 일치).
+const BUILDER_QUESTION_INCLUDE = {
+  passage: {
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      grade: true,
+      semester: true,
+      publisher: true,
+      school: { select: { id: true, name: true } },
+    },
+  },
+  explanation: {
+    select: {
+      id: true,
+      content: true,
+      keyPoints: true,
+      wrongOptionExplanations: true,
+    },
+  },
+  collectionItems: {
+    select: { collectionId: true },
+  },
+  examLinks: {
+    select: {
+      exam: { select: { id: true, title: true, createdAt: true } },
+    },
+  },
+  _count: { select: { examLinks: true } },
+} as const;
+
+// 빌더 목록에 한 번에 로드하는 카드 상한. 가상화(좌측 목록/미리보기) 덕에 렌더는
+// 무거워지지 않지만, 이 값은 "한 번의 서버 페이로드 크기"를 결정하므로 무한정 올리지
+// 않는다. 이 상한을 넘는 선택은 getExamPaperBuilderQuestionsByIds 로 배치 로드한다.
+const BUILDER_QUESTION_LOAD_CAP = 2000;
+
 export async function getExamPaperBuilderData(academyId: string) {
   const staff = await requireStaffAuth();
   if (staff.academyId !== academyId) {
@@ -133,41 +171,9 @@ export async function getExamPaperBuilderData(academyId: string) {
       // include 만 쓰므로 setId/inSet 등 스칼라 필드는 기본으로 모두 로드된다.
       // (장문 세트 멤버를 시험지에서 "지문 1회+N문항" 묶음으로 렌더하려면
       //  makePaperItem 이 question.setId 로 set 그룹을 부여한다 — paper-item-utils.tsx.)
-      include: {
-        passage: {
-          select: {
-            id: true,
-            title: true,
-            content: true,
-            grade: true,
-            semester: true,
-            publisher: true,
-            school: { select: { id: true, name: true } },
-          },
-        },
-        explanation: {
-          select: {
-            id: true,
-            content: true,
-            keyPoints: true,
-            wrongOptionExplanations: true,
-          },
-        },
-        collectionItems: {
-          select: { collectionId: true },
-        },
-        // Which exam papers already include this question — surfaced on the
-        // library card as a "사용 이력" band so teachers can see at a glance
-        // whether a question has been used before (and in which papers).
-        examLinks: {
-          select: {
-            exam: { select: { id: true, title: true, createdAt: true } },
-          },
-        },
-        _count: { select: { examLinks: true } },
-      },
+      include: BUILDER_QUESTION_INCLUDE,
       orderBy: [{ starred: "desc" }, { createdAt: "desc" }],
-      take: 1000,
+      take: BUILDER_QUESTION_LOAD_CAP,
     }),
     prisma.questionCollection.findMany({
       where: { academyId },
@@ -186,7 +192,26 @@ export async function getExamPaperBuilderData(academyId: string) {
     }),
   ]);
 
-  return { questions, collections, classes, schools };
+  return { questions, collections, classes, schools, loadCap: BUILDER_QUESTION_LOAD_CAP };
+}
+
+// 초기 로드 상한(BUILDER_QUESTION_LOAD_CAP)을 넘어 선택됐거나, 생성 결과에서 시드된
+// id 중 목록에 아직 없는 문항을 미리보기에 올릴 때 그 문항 데이터만 배치 로드한다.
+// 반환 형태는 getExamPaperBuilderData 의 questions 원소와 동일(BuilderQuestion).
+export async function getExamPaperBuilderQuestionsByIds(
+  academyId: string,
+  ids: string[],
+) {
+  const staff = await requireStaffAuth();
+  if (staff.academyId !== academyId) return [];
+  const unique = Array.from(new Set(ids.filter(Boolean)));
+  if (unique.length === 0) return [];
+  return prisma.question.findMany({
+    // 휴지통 가드 + 테넌트 가드 — 남의 학원/삭제된 문항은 절대 반환하지 않는다.
+    where: { id: { in: unique }, academyId, deletedAt: null },
+    include: BUILDER_QUESTION_INCLUDE,
+    orderBy: [{ starred: "desc" }, { createdAt: "desc" }],
+  });
 }
 
 export async function saveExamPaperDraft(

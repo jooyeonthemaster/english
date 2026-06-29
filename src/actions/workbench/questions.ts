@@ -100,9 +100,11 @@ function buildWorkbenchQuestionWhere(
   // 이 한 줄을 빼먹으면 삭제된 문제가 문제은행/지문별 뷰/빌더 피커에 새어나간다.
   where.deletedAt = scope === "trash" ? { not: null } : null;
 
-  // 장문 세트 members render only as a set (their passage is stored as anchors, not
-  // baked into questionText), so they must NOT appear as standalone bank cards.
-  where.inSet = false;
+  // 세트 멤버도 활성 문제은행에선 "일반 문항 카드"로 노출한다(표시 통일). 멤버는
+  // 자체 passage·structuredData·options·해설을 모두 보유하므로 일반 카드로 충실히
+  // 렌더된다(세트로 묶어 한 장으로 보여주던 것 → 문항당 1카드). 휴지통 목록은
+  // 기존 동작을 유지해 세트 멤버를 제외한다(복원 동선 단순화).
+  if (scope === "trash") where.inSet = false;
 
   if (filters?.type) {
     // Support comma-separated multi-type: "MULTIPLE_CHOICE,SHORT_ANSWER"
@@ -390,8 +392,8 @@ export async function getWorkbenchQuestionsGroupedByPassage(
         school: { select: { id: true, name: true } },
         analysis: { select: { id: true, updatedAt: true } },
         // 휴지통 가드 — "(전체 N)" 배지가 아래 카드 목록(questionWhere)과 같은 집합을 세도록
-        // deletedAt:null + inSet:false 로 맞춘다(삭제문제·세트멤버 제외).
-        _count: { select: { questions: { where: { deletedAt: null, inSet: false } } } },
+        // deletedAt:null 로 맞춘다(세트 멤버도 이제 일반 카드로 노출되므로 함께 센다).
+        _count: { select: { questions: { where: { deletedAt: null } } } },
         questions: {
           where: questionWhere,
           include: {
@@ -512,7 +514,7 @@ export async function getWorkbenchQuestion(questionId: string) {
 export async function getWorkbenchQuestionIds(
   academyId: string,
   filters?: WorkbenchQuestionFilters,
-  options?: { passageOnly?: boolean },
+  options?: { passageOnly?: boolean; scope?: "active" | "trash" },
 ): Promise<{ success: boolean; ids: string[]; count: number; error?: string }> {
   try {
     const staff = await requireAuth();
@@ -525,7 +527,12 @@ export async function getWorkbenchQuestionIds(
       };
     }
 
-    const where = buildWorkbenchQuestionWhere(staff.academyId, filters);
+    // scope="trash"면 휴지통(deletedAt!=null) 전체 id — 휴지통 전체선택(전 페이지)용.
+    const where = buildWorkbenchQuestionWhere(
+      staff.academyId,
+      filters,
+      options?.scope ?? "active",
+    );
     if (options?.passageOnly && !filters?.passageId) {
       where.passageId = { not: null };
     }

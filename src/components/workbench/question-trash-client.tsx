@@ -8,13 +8,13 @@ import {
   RotateCcw,
   Loader2,
   ArrowLeft,
-  Check,
 } from "lucide-react";
 import { toast } from "sonner";
 
 import {
   restoreWorkbenchQuestions,
   purgeWorkbenchQuestions,
+  getWorkbenchQuestionIds,
   createQuestionCollection,
   updateQuestionCollection,
   deleteQuestionCollection,
@@ -58,6 +58,7 @@ type TrashQuestionItem = Omit<QuestionBankItem, "createdAt"> & {
 };
 
 interface QuestionTrashProps {
+  academyId: string;
   questionsData: {
     questions: TrashQuestionItem[];
     total: number;
@@ -99,11 +100,46 @@ function deletedAgoLabel(deletedAt?: Date | string | null): string | null {
   return `${formatDate(then)} 삭제`;
 }
 
+// 전체 선택 체크박스 — 일부만 선택되면 indeterminate(중간) 상태로 표시한다.
+function SelectAllCheckbox({
+  checked,
+  indeterminate,
+  disabled,
+  onChange,
+  title,
+  ariaLabel,
+}: {
+  checked: boolean;
+  indeterminate: boolean;
+  disabled: boolean;
+  onChange: () => void;
+  title: string;
+  ariaLabel: string;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (ref.current) ref.current.indeterminate = indeterminate;
+  }, [indeterminate]);
+  return (
+    <input
+      ref={ref}
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      disabled={disabled}
+      title={title}
+      aria-label={ariaLabel}
+      className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Main Component
 // ---------------------------------------------------------------------------
 
 export function QuestionTrashClient({
+  academyId,
   questionsData,
   filters,
   collections: initialCollections,
@@ -452,16 +488,74 @@ export function QuestionTrashClient({
   // ─── Selection toolbar (bulk restore + bulk purge) ───
   const hasSelection = selectedIds.size > 0;
 
+  // 전체(전 페이지) 선택 — 휴지통도 20개 페이지네이션이라 현재 페이지만 선택되면
+  // 복원/영구삭제가 한 페이지에만 적용된다. 현재 필터/폴더의 휴지통 전체 id를 가져와
+  // 선택한다(trash 스코프). 선택 직후엔 목록 재조회가 없어 선택이 유지되고, 곧장
+  // 복원/영구삭제하면 전 페이지 항목에 적용된다.
+  const [selectingAllPages, setSelectingAllPages] = useState(false);
+  const allPagesSelected =
+    total > 0 && selectedIds.size >= total;
+
+  const handleSelectAllPages = useCallback(async () => {
+    if (selectingAllPages) return;
+    setSelectingAllPages(true);
+    try {
+      const result = await getWorkbenchQuestionIds(
+        academyId,
+        {
+          ...filters,
+          page: undefined,
+          limit: undefined,
+          collectionId: filters.collectionId,
+        } as never,
+        { scope: "trash" },
+      );
+      if (!result.success) {
+        toast.error(result.error || "전체 선택에 실패했습니다.");
+        return;
+      }
+      const ids = result.ids.filter((id) => !removedIds.has(id));
+      if (ids.length === 0) {
+        toast.error("선택할 문제가 없습니다.");
+        return;
+      }
+      setSelectedIds(new Set(ids));
+      toast.success(`${ids.length}문항을 전체 페이지에서 선택했습니다.`);
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "전체 선택에 실패했습니다.",
+      );
+    } finally {
+      setSelectingAllPages(false);
+    }
+  }, [academyId, filters, removedIds, selectingAllPages, setSelectedIds]);
+
   const isAllSelected =
     displayedIds.length > 0 && displayedIds.every((id) => selectedIds.has(id));
 
-  const toggleSelectAll = useCallback(() => {
+  // 헤더 "전체 선택" 토글: 이미 전체(전 페이지) 선택 → 해제 / 여러 페이지면 전 페이지
+  // 선택 / 한 페이지뿐이면 현재 페이지 토글.
+  const handleToggleSelectAll = useCallback(() => {
+    if (allPagesSelected) {
+      setSelectedIds(new Set());
+      return;
+    }
+    if (total > displayedIds.length) {
+      void handleSelectAllPages();
+      return;
+    }
     setSelectedIds((prev) => {
       const allSelected =
         displayedIds.length > 0 && displayedIds.every((id) => prev.has(id));
       return allSelected ? new Set() : new Set(displayedIds);
     });
-  }, [displayedIds, setSelectedIds]);
+  }, [
+    allPagesSelected,
+    total,
+    displayedIds,
+    handleSelectAllPages,
+    setSelectedIds,
+  ]);
 
   // 필터(유형/난이도/정렬/검색) 토글 + 3열 토글 — 문제 관리와 동일한 컴포넌트.
   const filtersToolbar = (
@@ -479,25 +573,25 @@ export function QuestionTrashClient({
 
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2.5 gap-y-1.5">
-      {/* 선택 개수 + 전체 선택 */}
-      <button
-        type="button"
-        onClick={toggleSelectAll}
-        disabled={displayedIds.length === 0}
-        className={
-          "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border px-2.5 text-[11px] font-semibold shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
-          (isAllSelected && hasSelection
-            ? "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
-            : "border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700")
+      {/* 전체 선택 — 단순 체크박스 하나로 토글. 일부 선택 시 중간 상태. */}
+      <SelectAllCheckbox
+        checked={allPagesSelected || (isAllSelected && hasSelection)}
+        indeterminate={
+          hasSelection && !allPagesSelected && !(isAllSelected && hasSelection)
         }
-      >
-        <Check className="h-3.5 w-3.5" />
-        {isAllSelected && hasSelection ? "선택 해제" : "전체 선택"}
-      </button>
-
-      <span className="text-[12px] font-medium text-slate-500">
-        {selectedIds.size}문항 선택
-      </span>
+        disabled={displayedIds.length === 0 || selectingAllPages}
+        onChange={handleToggleSelectAll}
+        title={
+          total > displayedIds.length
+            ? `전체 ${total}문항 선택 (모든 페이지)`
+            : "전체 선택"
+        }
+        ariaLabel={
+          allPagesSelected || (isAllSelected && hasSelection)
+            ? "전체 해제"
+            : "전체 선택"
+        }
+      />
 
       <span className="h-4 w-px bg-slate-200" />
 

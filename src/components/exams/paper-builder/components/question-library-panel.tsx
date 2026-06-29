@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { Database, FileText, Filter, Rows3, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { QuestionBankCard } from "@/components/workbench/question-bank-card";
@@ -196,7 +197,16 @@ export function QuestionLibraryPanel({
     [onToggleSelect],
   );
 
-  const buildDragQuestionIds = useCallback((draggedId: string) => [draggedId], []);
+  // 끄는 카드가 선택(체크)에 포함되면 선택 전체를 드래그 대상으로 삼는다(다중 폴더 이동).
+  // 포함되지 않으면 그 카드만. — 가상화로 화면 밖 카드가 DOM 에 없어도 선택은 id 집합이라
+  // 전체가 함께 이동한다.
+  const buildDragQuestionIds = useCallback(
+    (draggedId: string) =>
+      selectedQuestionIds.has(draggedId)
+        ? Array.from(selectedQuestionIds)
+        : [draggedId],
+    [selectedQuestionIds],
+  );
 
   // 체크한 순서를 카드에 1,2,3… 번호로 보여 주기 위한 맵(드롭 순서 = 이 순서).
   const selectionOrder = useMemo(() => {
@@ -241,6 +251,47 @@ export function QuestionLibraryPanel({
 
   // 3열은 카드를 한 단계 작게(md), 2열/목록은 기본(lg)로 — questions 페이지 동일.
   const viewSize: "lg" | "md" = gridColumns === 3 ? "md" : "lg";
+
+  // ─── 목록 가상화 ───
+  // 수백~1000+ 문항을 한 번에 마운트하면 좌측 패널이 무거워지므로, 문제별 보기는
+  // row 단위로 가상화해 보이는 카드만 DOM에 올린다. 페이지네이션/무한스크롤이 아니라
+  // "보이는 것만 렌더"이므로 전체 선택·드래그 데이터(id 기반)는 영향받지 않는다.
+  // (지문별 보기는 그룹 접힘 구조라 1차 범위에서 제외 — PassageGroupedView 그대로.)
+  const columnsCount = gridColumns === 3 ? 3 : gridColumns === 2 ? 2 : 1;
+  const rowCount = Math.ceil(filteredQuestions.length / columnsCount);
+  const rowVirtualizer = useVirtualizer({
+    count: rowCount,
+    getScrollElement: () => scrollContainerRef.current,
+    // 접힌 콤팩트 카드의 대략 높이(+행 간격). 실제 높이는 measureElement 로 보정된다.
+    estimateSize: () => 240,
+    overscan: 6,
+  });
+
+  // 미리보기에서 클릭한 문항이 가상화로 아직 마운트되지 않았으면, 먼저 해당 row 로
+  // 가상 스크롤해 카드를 DOM 에 올린다. 카드가 올라오면 위의 활성카드 스크롤 effect 가
+  // 중앙으로 맞춘다. (지문별 보기는 가상화 대상이 아니라 그대로 둔다.)
+  useEffect(() => {
+    if (!activeQuestionId || libraryView !== "questions") return;
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const alreadyRendered = container.querySelector(
+      `[data-question-card-id="${CSS.escape(activeQuestionId)}"]`,
+    );
+    if (alreadyRendered) return;
+    const flatIndex = filteredQuestions.findIndex(
+      (q) => q.id === activeQuestionId,
+    );
+    if (flatIndex < 0) return;
+    rowVirtualizer.scrollToIndex(Math.floor(flatIndex / columnsCount), {
+      align: "center",
+    });
+  }, [
+    activeQuestionId,
+    libraryView,
+    filteredQuestions,
+    columnsCount,
+    rowVirtualizer,
+  ]);
 
   // 전체 선택 — 현재 필터된 문제 전체의 선택 상태.
   const selectableFilteredQuestions = filteredQuestions;
@@ -550,44 +601,80 @@ export function QuestionLibraryPanel({
             setExpandedPassageIds={setExpandedPassageIds}
           />
         ) : (
-          // 마키 시작은 패널 전체(상위 DragSelect)에서 처리하므로 여기선 그리드만 둔다.
+          // 마키 시작은 패널 전체(상위 DragSelect)에서 처리하므로 여기선 가상 행만 둔다.
+          // row 가상화: 보이는 행의 카드만 마운트하고, 전체 높이는 spacer 로 확보한다.
           <div
-            className={cn(
-              "grid gap-3",
-              gridColumns === 2
-                ? "grid-cols-2"
-                : gridColumns === 3
-                  ? "grid-cols-3"
-                  : "grid-cols-1",
-            )}
+            style={{
+              height: rowVirtualizer.getTotalSize(),
+              position: "relative",
+              width: "100%",
+            }}
           >
-            {filteredQuestions.map((question, index) => {
-              const usageCount = paperQuestionCounts.get(question.id) || 0;
-              const selected = selectedQuestionIds.has(question.id);
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const start = virtualRow.index * columnsCount;
+              const rowQuestions = filteredQuestions.slice(
+                start,
+                start + columnsCount,
+              );
               return (
-                <QuestionBankCard
-                  key={question.id}
-                  q={question}
-                  num={index + 1}
-                  selected={selected}
-                  onToggle={() => {
-                    onToggleSelect(question.id);
+                <div
+                  key={virtualRow.key}
+                  data-index={virtualRow.index}
+                  ref={rowVirtualizer.measureElement}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    transform: `translateY(${virtualRow.start}px)`,
                   }}
-                  onDetail={() => onShowDetail(question)}
-                  viewSize={viewSize}
-                  showManagementActions={false}
-                  enableDrag
-                  compactUsageLabel
-                  cardClickSelects
-                  showDetailButton
-                  dragRequiresSelection
-                  getDragQuestionIds={buildDragQuestionIds}
-                  selectionIndex={selectionOrder.get(question.id)}
-                  active={activeQuestionId === question.id}
-                  duplicateCount={usageCount > 1 ? usageCount : undefined}
-                  selectedCardHighlight={false}
-                  collapsible
-                />
+                >
+                  {/* 행 사이 간격은 측정 높이에 포함되도록 pb-3 로 준다(세로 gap 대체). */}
+                  <div
+                    className={cn(
+                      "grid gap-3 pb-3",
+                      gridColumns === 2
+                        ? "grid-cols-2"
+                        : gridColumns === 3
+                          ? "grid-cols-3"
+                          : "grid-cols-1",
+                    )}
+                  >
+                    {rowQuestions.map((question, columnIndex) => {
+                      const index = start + columnIndex;
+                      const usageCount =
+                        paperQuestionCounts.get(question.id) || 0;
+                      const selected = selectedQuestionIds.has(question.id);
+                      return (
+                        <QuestionBankCard
+                          key={question.id}
+                          q={question}
+                          num={index + 1}
+                          selected={selected}
+                          onToggle={() => {
+                            onToggleSelect(question.id);
+                          }}
+                          onDetail={() => onShowDetail(question)}
+                          viewSize={viewSize}
+                          showManagementActions={false}
+                          enableDrag
+                          compactUsageLabel
+                          cardClickSelects
+                          showDetailButton
+                          dragRequiresSelection
+                          getDragQuestionIds={buildDragQuestionIds}
+                          selectionIndex={selectionOrder.get(question.id)}
+                          active={activeQuestionId === question.id}
+                          duplicateCount={
+                            usageCount > 1 ? usageCount : undefined
+                          }
+                          selectedCardHighlight={false}
+                          collapsible
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
           </div>

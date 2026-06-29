@@ -65,6 +65,7 @@ function formatTime(value: string | null | undefined) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
   return new Intl.DateTimeFormat("ko-KR", {
+    timeZone: "Asia/Seoul", // 배포 서버(UTC) SSR에서도 한국시간으로 고정 표시
     month: "2-digit",
     day: "2-digit",
     hour: "2-digit",

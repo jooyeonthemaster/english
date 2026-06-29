@@ -44,6 +44,10 @@ import { CollapsedPreview } from "./question-bank-card/collapsed-preview";
 import { ExplanationSection } from "./question-bank-card/explanation-section";
 import { parseQuestionSections } from "./question-bank-card/parse-question-sections";
 import { renderFormatted } from "./question-bank-card/render-formatted";
+import {
+  setMemberDisplayPassage,
+  enrichSetMemberStructured,
+} from "./question-bank-card/set-member-passage";
 import { RenderedSections } from "./question-bank-card/rendered-sections";
 import type { QuestionBankItem } from "./question-bank-card/types";
 import {
@@ -264,12 +268,10 @@ export function QuestionBankCard({
     optionBadgeLabel(isGrammarError ? grammarMarkerDisplayLabel(label) : label);
   const correctAnswerLabels = parseCorrectAnswerLabels(q.correctAnswer);
   const diffConfig = DIFFICULTY_CONFIG[q.difficulty];
-  const structuredQuestion =
-    q.structuredData &&
-    typeof q.structuredData === "object" &&
-    "_typeId" in q.structuredData
-      ? (q.structuredData as Record<string, unknown>)
-      : null;
+  // 장문 세트 멤버는 지문이 anchor(spans)로만 저장돼 passageWith* 필드가 없으므로,
+  // 복원 지문을 유형별 필드로 주입해 본문(발문 아래)에 지문+밑줄/마커가 그려지게 한다.
+  // 비-세트 문항은 원본 structuredData 를 그대로 사용(동작 동일).
+  const structuredQuestion = enrichSetMemberStructured(q);
   const displayQuestionText = repairGrammarCorrectionQuestionText({
     subType: q.subType,
     questionText: q.questionText,
@@ -346,8 +348,13 @@ export function QuestionBankCard({
     [sections],
   );
 
+  // 장문 세트 멤버: 지문이 questionText 에 baked 되지 않고 anchor(spans)로만
+  // 저장되므로, 멤버 자신의 spans 를 공유 지문에 적용해 밑줄(__단어__) 마크업을
+  // 복원한다. 세트 멤버가 아니면 null → 기존 동작 유지.
+  const setMemberPassage = useMemo(() => setMemberDisplayPassage(q), [q]);
+
   // 접힘 미리보기용 지문 — 파싱된 지문/요약/단락 섹션을 우선 쓰고,
-  // 없으면 본문 첫 섹션, 그래도 없으면 참조 지문(q.passage) 본문을 쓴다.
+  // 없으면 본문 첫 섹션, 그래도 없으면 (세트 멤버는 복원된) 참조 지문 본문을 쓴다.
   const collapsedPassage = useMemo(() => {
     const candidate =
       bodySections.find(
@@ -356,8 +363,8 @@ export function QuestionBankCard({
           s.type === "summary" ||
           s.type === "paragraphs",
       ) ?? bodySections.find((s) => typeof s.content === "string" && s.content);
-    return candidate?.content || q.passage?.content || "";
-  }, [bodySections, q.passage]);
+    return candidate?.content || setMemberPassage || q.passage?.content || "";
+  }, [bodySections, setMemberPassage, q.passage]);
 
   // Make card draggable — 단, 네이티브 드래그는 "손잡이(DragHandle)"에만 등록한다.
   // 카드 본문은 draggable 이 아니므로 본문 위에서는 영역 선택(마키)이 동작하고,
@@ -687,6 +694,7 @@ export function QuestionBankCard({
               correctAnswer={q.correctAnswer}
               displayCorrectAnswer={displayCorrectAnswer}
               subType={q.subType}
+              isSetMember={!!q.inSet || !!q.setId}
             />
           ) : (
             <>

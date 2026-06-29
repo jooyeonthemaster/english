@@ -357,18 +357,22 @@ export function QuestionSetSection({
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 px-0.5">
-        <Layers className="h-3.5 w-3.5 text-blue-500" />
-        <span className="text-[12px] font-bold text-slate-600">지문 세트</span>
-        <span className="text-[11px] font-medium text-slate-400">
-          카드 하나가 세트 전체 — 분리하면 그 문항의 복제본이 단독 문항으로 추가됩니다.
-        </span>
-      </div>
+      {showSets ? (
+        <>
+          <div className="flex items-center gap-2 px-0.5">
+            <Layers className="h-3.5 w-3.5 text-blue-500" />
+            <span className="text-[12px] font-bold text-slate-600">지문 세트</span>
+            <span className="text-[11px] font-medium text-slate-400">
+              카드 하나가 세트 전체 — 분리하면 그 문항의 복제본이 단독 문항으로 추가됩니다.
+            </span>
+          </div>
 
-      <div className={gridClassName ?? "space-y-3"}>
-        {splittingMembers.map(renderSplittingCard)}
-        {visible.map(renderSetCard)}
-      </div>
+          <div className={gridClassName ?? "space-y-3"}>
+            {splittingMembers.map(renderSplittingCard)}
+            {visible.map(renderSetCard)}
+          </div>
+        </>
+      ) : null}
 
       {setDialogs}
     </div>

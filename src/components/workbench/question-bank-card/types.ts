@@ -50,4 +50,7 @@ export interface QuestionBankItem {
   _count: { examLinks: number };
   examLinks?: { exam: { id: string; title: string; createdAt?: Date | string } }[];
   structuredData?: unknown;
+  /** 장문 세트(QuestionSet) 소속 여부 — 일반 카드로 노출되더라도 "장문" 표식으로 구분한다. */
+  inSet?: boolean;
+  setId?: string | null;
 }

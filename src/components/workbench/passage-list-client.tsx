@@ -40,6 +40,7 @@ import {
   setPassageReviewed,
   bulkSetPassageReviewed,
   getWorkbenchPassages,
+  getWorkbenchPassageIds,
 } from "@/actions/workbench";
 
 // Shared modules
@@ -303,6 +304,10 @@ export function PassageListClient({
   const [pageMode, setPageMode] = useState<"list" | "duplicates">("list");
   const [bulkDeleting, setBulkDeleting] = useState(false);
   const [bulkReviewing, setBulkReviewing] = useState(false);
+  // "전체 페이지 선택" 진행 중 플래그 — 루트 목록은 20개 페이지네이션이라
+  // selectAll()은 현재 페이지만 잡는다. 페이지 밖 지문까지 한 번에 선택하려면
+  // 서버에서 현재 필터의 전체 id를 받아 selection 에 채운다.
+  const [selectingAllPages, setSelectingAllPages] = useState(false);
   // Optimistic local removal — router.refresh() updates server-side props
   // eventually, but we hide deleted rows immediately so the user doesn't have
   // to wait (and so the duplicates view, which has its own client-side cache,
@@ -514,8 +519,82 @@ export function PassageListClient({
 
   const selection = useSelection(passageIds);
 
+  // 루트 목록(폴더 밖)에서 현재 필터에 해당하는 모든 페이지의 지문을 한 번에
+  // 선택한다. 폴더 안에서는 folderView가 이미 전체 멤버(≤1000)를 로드하므로
+  // 기존 selection.selectAll()로 충분해 이 동선이 필요 없다.
+  const handleSelectAllPages = useCallback(async () => {
+    if (selectingAllPages) return;
+    setSelectingAllPages(true);
+    try {
+      const result = await getWorkbenchPassageIds(academyId, {
+        ...filters,
+        page: undefined,
+        limit: undefined,
+        // 루트 목록 모집단과 동일하게: 생성 완료된 학습지(PRIME 보고서)만.
+        hasReport: true,
+      });
+      if (!result.success) {
+        toast.error(result.error || "전체 선택에 실패했습니다.");
+        return;
+      }
+      const ids = result.ids.filter(
+        (id) =>
+          !removedIds.has(id) &&
+          !(hideDuplicates && duplicateMembersToHide.has(id)),
+      );
+      if (ids.length === 0) {
+        toast.error("선택할 학습지가 없습니다.");
+        return;
+      }
+      selection.setSelectedIds(new Set(ids));
+      toast.success(`${ids.length}편을 전체 페이지에서 선택했습니다.`);
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "전체 선택에 실패했습니다.",
+      );
+    } finally {
+      setSelectingAllPages(false);
+    }
+  }, [
+    academyId,
+    filters,
+    removedIds,
+    hideDuplicates,
+    duplicateMembersToHide,
+    selectingAllPages,
+    selection,
+  ]);
+
   // Stats
   const totalCount = passagesData.total;
+
+  // 헤더 체크박스 = "전체 선택"(현재 페이지가 아니라 현재 스코프 전체).
+  // - 폴더 안: 멤버 전체가 이미 페이지 제한 없이 로드돼 있으므로 selectAll(=표시분 전체).
+  // - 루트(전체): 페이지네이션이라 다음 페이지까지 포함해 getWorkbenchPassageIds 로 전부 선택.
+  // 이미 전체가 선택돼 있으면 해제. → 하위 폴더/루트 어디서든 전체 선택→폴더 이동 일관 동작.
+  const isAllSelectedAcrossScope =
+    selection.selectedIds.size > 0 &&
+    (folder.activeFolder
+      ? selection.isAllSelected
+      : totalCount > 0 && selection.selectedIds.size >= totalCount);
+  const handleToggleSelectAll = useCallback(() => {
+    if (isAllSelectedAcrossScope) {
+      selection.clearSelection();
+      return;
+    }
+    if (!folder.activeFolder && totalCount > displayedPassages.length) {
+      void handleSelectAllPages();
+    } else {
+      selection.selectAll();
+    }
+  }, [
+    isAllSelectedAcrossScope,
+    folder.activeFolder,
+    totalCount,
+    displayedPassages.length,
+    handleSelectAllPages,
+    selection,
+  ]);
 
   // ─── Folder action wrappers (pass selectedIds from selection hook) ───
   const onAddToFolder = useCallback(
@@ -808,23 +887,37 @@ export function PassageListClient({
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
         <div className="flex items-center gap-2">
           <SelectAllCheckbox
-            checked={
-              selection.isAllSelected && selection.selectedIds.size > 0
-            }
+            checked={isAllSelectedAcrossScope}
             indeterminate={
-              selection.selectedIds.size > 0 && !selection.isAllSelected
+              selection.selectedIds.size > 0 && !isAllSelectedAcrossScope
             }
-            disabled={displayedPassages.length === 0}
-            onChange={() =>
-              selection.selectedIds.size > 0
-                ? selection.clearSelection()
-                : selection.selectAll()
+            disabled={displayedPassages.length === 0 || selectingAllPages}
+            onChange={handleToggleSelectAll}
+            title={
+              isAllSelectedAcrossScope
+                ? `전체 ${selection.selectedIds.size}편 선택됨 — 클릭 시 해제`
+                : `전체 ${totalCount}편 선택`
             }
-            title={`${selection.selectedIds.size}개 선택`}
             ariaLabel={
-              selection.selectedIds.size > 0 ? "선택 해제" : "전체 선택"
+              isAllSelectedAcrossScope ? "전체 해제" : "전체 페이지 선택"
             }
           />
+          {!embedded &&
+          !folder.activeFolder &&
+          pageMode === "list" &&
+          passagesData.total > displayedPassages.length ? (
+            <button
+              type="button"
+              onClick={() => void handleSelectAllPages()}
+              disabled={selectingAllPages}
+              className="whitespace-nowrap text-xs font-medium text-blue-600 underline-offset-2 hover:underline disabled:opacity-50"
+              title="현재 필터의 모든 페이지에 있는 학습지를 선택"
+            >
+              {selectingAllPages
+                ? "선택 중…"
+                : `전체 ${passagesData.total}편 선택`}
+            </button>
+          ) : null}
           <div
             className={
               "flex items-center gap-3 " +

@@ -246,8 +246,12 @@ export function useFolderManager({
           toast.success("폴더 추가를 실행 취소했습니다.");
         };
 
+        // 끌어온/선택한 것 중 이미 폴더에 있어 추가하지 않은(중복 제외) 개수.
+        const skippedCount = ids.length - addedIds.length;
+        const skippedSuffix =
+          skippedCount > 0 ? ` (이미 들어있던 ${skippedCount}개 제외)` : "";
         toast.success(
-          `${addedIds.length}개 ${itemLabel}이(가) 폴더에 추가되었습니다.`,
+          `${addedIds.length}개 ${itemLabel}이(가) 폴더에 추가되었습니다.${skippedSuffix}`,
           {
             duration: UNDO_TOAST_DURATION,
             action: {
@@ -416,6 +420,11 @@ export function useFolderManager({
           toastCount > 1
             ? `${toastCount}개 ${itemLabel}이(가)`
             : `${itemLabel}이(가)`;
+        // 끌어온 것 중 이미 대상 폴더에 들어있어 새로 추가하지 않은(중복 제외) 개수.
+        // 예: 421개를 끌었는데 41개가 이미 폴더에 있었다면 "이미 들어있던 41개 제외".
+        const skippedCount = idsToMove.length - idsToAdd.length;
+        const skippedSuffix =
+          skippedCount > 0 ? ` · 이미 들어있던 ${skippedCount}개 제외` : "";
 
         const undoFolderMove = async () => {
           try {
@@ -452,8 +461,8 @@ export function useFolderManager({
 
         toast.success(
           copy
-            ? `${countLabel} "${folderName}"에 복사되었습니다`
-            : `${countLabel} "${folderName}"(으)로 이동되었습니다`,
+            ? `${countLabel} "${folderName}"에 복사되었습니다${skippedSuffix}`
+            : `${countLabel} "${folderName}"(으)로 이동되었습니다${skippedSuffix}`,
           {
             duration: UNDO_TOAST_DURATION,
             action: {

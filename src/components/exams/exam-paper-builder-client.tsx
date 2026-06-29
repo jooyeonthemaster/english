@@ -32,6 +32,7 @@ import { useFolderManager } from "@/hooks/use-folder-manager";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import { addQuestionsToCollection, createQuestionCollection, deleteQuestionCollection, removeQuestionsFromCollection, updateQuestionCollection } from "@/actions/workbench";
 import { incrementExamPrintCount } from "@/actions/exams";
+import { getExamPaperBuilderQuestionsByIds } from "@/actions/exam-paper-builder";
 import { Button } from "@/components/ui/button";
 import { SaveButton } from "@/components/ui/save-button";
 import { useBeforeUnloadWarning } from "@/components/shared/use-unsaved-close-guard";
@@ -296,10 +297,19 @@ export function ExamPaperBuilderClient({
     return () => setSidebarCollapseRequested(false);
   }, [setSidebarCollapseRequested]);
 
-  const questionById = useMemo(
-    () => new Map(questions.map((question) => [question.id, question])),
-    [questions],
-  );
+  // 초기 로드 상한(서버 BUILDER_QUESTION_LOAD_CAP)을 넘어 선택됐거나, 생성 결과에서
+  // 시드된 id 중 목록에 없는 문항을 배치 로드해 보관한다. questionById 에 병합돼,
+  // 미리보기 추가 시 "로드 안 된 문항"도 정상적으로 올라간다.
+  const [fetchedQuestions, setFetchedQuestions] = useState<
+    Map<string, BuilderQuestion>
+  >(() => new Map());
+
+  const questionById = useMemo(() => {
+    const map = new Map<string, BuilderQuestion>();
+    for (const [id, q] of fetchedQuestions) map.set(id, q);
+    for (const question of questions) map.set(question.id, question);
+    return map;
+  }, [questions, fetchedQuestions]);
 
   // ─── 파일(폴더) 관리 — questions 페이지와 동일한 중첩 폴더 구조를 컴팩트하게 ───
   // 초기 컬렉션을 폴더 매니저가 기대하는 CollectionItem 형태로 변환한다.
@@ -342,21 +352,6 @@ export function ExamPaperBuilderClient({
     itemLabel: "문제",
   });
 
-  // 드래그한 문제를 폴더에 담기/이동(빈 selection이라 단일 문제만 대상).
-  const handleDragQuestionToFolder = useCallback(
-    (itemId: string, folderId: string, copy: boolean) => {
-      void folders.handleDragToFolder(itemId, folderId, copy, new Set<string>());
-    },
-    [folders],
-  );
-  // "전체 문제"로 드래그하면 현재 폴더에서 제거한다(복사 드롭은 무시).
-  const handleDragQuestionToRoot = useCallback(
-    (itemId: string, copy: boolean) => {
-      if (copy || !folders.activeFolder) return;
-      void folders.handleRemoveFromFolder(new Set<string>([itemId]));
-    },
-    [folders],
-  );
 
   const paperQuestionCounts = useMemo(
     () => {
@@ -390,6 +385,34 @@ export function ExamPaperBuilderClient({
     }
     return ids;
   }, [paperItems]);
+
+  // 드래그한 문제를 폴더에 담기/이동. 체크된(=시험지에 올라간) 문항 전체가 선택으로
+  // 간주되어, 끄는 카드가 그 선택에 포함되면 selectedPaperQuestionIds 전체가 함께
+  // 이동한다(useFolderManager.handleDragToFolder 가 selection 포함 여부로 판단).
+  // 폴더 이동은 시험지 멤버십과 무관하므로 선택(=시험지 구성)은 그대로 둔다.
+  const handleDragQuestionToFolder = useCallback(
+    (itemId: string, folderId: string, copy: boolean) => {
+      void folders.handleDragToFolder(
+        itemId,
+        folderId,
+        copy,
+        selectedPaperQuestionIds,
+      );
+    },
+    [folders, selectedPaperQuestionIds],
+  );
+  // "전체 문제"로 드래그하면 현재 폴더에서 제거한다(복사 드롭은 무시). 끄는 카드가
+  // 선택에 포함되면 선택 전체를, 아니면 그 카드만 폴더에서 뺀다.
+  const handleDragQuestionToRoot = useCallback(
+    (itemId: string, copy: boolean) => {
+      if (copy || !folders.activeFolder) return;
+      const ids = selectedPaperQuestionIds.has(itemId)
+        ? selectedPaperQuestionIds
+        : new Set<string>([itemId]);
+      void folders.handleRemoveFromFolder(ids);
+    },
+    [folders, selectedPaperQuestionIds],
+  );
 
   // 워드프로세서식 빈 줄(line-gap) 여백은 "미리보기에서만" 조절하는 요소다. 우측 편집
   // 패널(블록 목록·선택 블록·블록 수)에는 일반 블록으로 노출하지 않도록 걸러낸다.
@@ -503,79 +526,55 @@ export function ExamPaperBuilderClient({
     canRedo,
   ]);
 
-  // 빈 줄이 칸/페이지를 넘어가면 캐럿이 다음 쪽으로 이동하므로, 화면 밖으로 나간 경우
-  // 미리보기를 캐럿(빈 줄 자리)이 보이도록 따라 스크롤한다(워드프로세서처럼 시야가 따라감).
-  useEffect(() => {
-    const anchor = lineCaret?.afterLocalId;
-    if (!anchor) return;
-    const raf = window.requestAnimationFrame(() => {
-      const scroller = previewScrollerRef.current;
-      const target = scroller?.querySelector<HTMLElement>(
-        `[data-line-gap-anchor="${CSS.escape(anchor)}"]`,
-      );
-      if (!scroller || !target) return;
-      const scrollerRect = scroller.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
-      const fullyVisible =
-        targetRect.top >= scrollerRect.top + 8 &&
-        targetRect.bottom <= scrollerRect.bottom - 8;
-      if (fullyVisible) return;
-      scroller.scrollTo({
-        top:
-          scroller.scrollTop +
-          targetRect.top -
-          scrollerRect.top -
-          scrollerRect.height / 2,
-        behavior: "smooth",
-      });
-    });
-    return () => window.cancelAnimationFrame(raf);
-  }, [lineCaret, previewScrollerRef]);
+  const addQuestionIdsToPaper = useCallback(
+    async (ids: Iterable<string>) => {
+      const seen = new Set<string>();
+      const orderedIds: string[] = [];
+      const missingIds: string[] = [];
 
-  // 블록 삽입 직후: 새 블록(특히 다음 쪽으로 넘어간 이미지)이 화면 밖이면 그 위치까지
-  // 부드럽게 스크롤해 사용자에게 보여준다. paperItems 변경(삽입→재배치) 후 DOM 이 갱신된
-  // 뒤 RAF 로 스크롤한다(타이밍 안전). 이미 보이면 그대로 둔다.
-  useEffect(() => {
-    if (!pendingScrollItemId) return;
-    const raf = window.requestAnimationFrame(() => {
-      const scroller = previewScrollerRef.current;
-      const target = scroller?.querySelector<HTMLElement>(
-        `[data-paper-item-id="${CSS.escape(pendingScrollItemId)}"]`,
-      );
-      if (!scroller || !target) return; // 아직 렌더 전 — paperItems 갱신 시 재시도.
-      const scrollerRect = scroller.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
-      const fullyVisible =
-        targetRect.top >= scrollerRect.top + 8 &&
-        targetRect.bottom <= scrollerRect.bottom - 8;
-      if (!fullyVisible) {
-        scroller.scrollTo({
-          top:
-            scroller.scrollTop + targetRect.top - scrollerRect.top - 72,
-          behavior: "smooth",
-        });
+      for (const id of ids) {
+        if (!id || seen.has(id) || paperQuestionCounts.has(id)) continue;
+        seen.add(id);
+        orderedIds.push(id);
+        if (!questionById.has(id)) missingIds.push(id);
       }
-      setPendingScrollItemId(null);
-    });
-    return () => window.cancelAnimationFrame(raf);
-  }, [pendingScrollItemId, paperItems, previewScrollerRef]);
+      if (orderedIds.length === 0) return;
 
-  const addQuestionIdsToPaper = useCallback((ids: Iterable<string>) => {
-    const seen = new Set<string>();
-    const selectedQuestions: BuilderQuestion[] = [];
+      // 로드 상한을 넘었거나 시드된 id 중 목록에 없는 문항은 배치 로드해 병합한다.
+      // questionById 는 다음 렌더에 갱신되므로, 이번 호출에선 합쳐진 맵을 직접 만들어 쓴다.
+      let resolved = questionById;
+      if (missingIds.length > 0) {
+        try {
+          const fetched = (await getExamPaperBuilderQuestionsByIds(
+            academyId,
+            missingIds,
+          )) as unknown as BuilderQuestion[];
+          if (fetched.length > 0) {
+            setFetchedQuestions((prev) => {
+              const next = new Map(prev);
+              for (const q of fetched) next.set(q.id, q);
+              return next;
+            });
+            const merged = new Map(questionById);
+            for (const q of fetched) merged.set(q.id, q);
+            resolved = merged;
+          }
+        } catch {
+          toast.error("일부 문항을 불러오지 못했습니다.");
+        }
+      }
 
-    for (const id of ids) {
-      if (seen.has(id) || paperQuestionCounts.has(id)) continue;
-      const question = questionById.get(id);
-      if (!question) continue;
-      seen.add(id);
-      selectedQuestions.push(question);
-    }
-
-    if (selectedQuestions.length > 0) {
-      addQuestionsAtDropTarget(selectedQuestions, null, "after");
-    }
-  }, [addQuestionsAtDropTarget, paperQuestionCounts, questionById]);
+      const selectedQuestions: BuilderQuestion[] = [];
+      for (const id of orderedIds) {
+        const question = resolved.get(id);
+        if (question) selectedQuestions.push(question);
+      }
+      if (selectedQuestions.length > 0) {
+        addQuestionsAtDropTarget(selectedQuestions, null, "after");
+      }
+    },
+    [academyId, addQuestionsAtDropTarget, paperQuestionCounts, questionById],
+  );
 
   const removeQuestionIdFromPaper = useCallback((id: string) => {
     const targets = paperItems.filter(
@@ -596,7 +595,7 @@ export function ExamPaperBuilderClient({
       window.sessionStorage.removeItem(EXAM_SEED_QUESTION_IDS_KEY);
       const ids = JSON.parse(raw);
       if (Array.isArray(ids) && ids.length > 0) {
-        addQuestionIdsToPaper(
+        void addQuestionIdsToPaper(
           ids.filter((value): value is string => typeof value === "string"),
         );
       }
@@ -610,7 +609,7 @@ export function ExamPaperBuilderClient({
       removeQuestionIdFromPaper(id);
       return;
     }
-    addQuestionIdsToPaper([id]);
+    void addQuestionIdsToPaper([id]);
   }, [addQuestionIdsToPaper, removeQuestionIdFromPaper, selectedPaperQuestionIds]);
 
   const applyPaperQuestionSelection = useCallback((nextSelectedIds: Set<string>) => {
@@ -622,7 +621,7 @@ export function ExamPaperBuilderClient({
     );
 
     for (const id of toRemove) removeQuestionIdFromPaper(id);
-    addQuestionIdsToPaper(toAdd);
+    void addQuestionIdsToPaper(toAdd);
   }, [addQuestionIdsToPaper, removeQuestionIdFromPaper, selectedPaperQuestionIds]);
 
   const builderDraftState = useMemo<ExamPaperBuilderDraftState>(
@@ -970,6 +969,98 @@ export function ExamPaperBuilderClient({
       ? renderedPageCount * singlePageHeight +
         (renderedPageCount - 1) * PREVIEW_PAGE_GAP
       : 0;
+
+  // ─── 미리보기 가상화 보조 ───
+  // 페이지를 지연 마운트(preview-pages.tsx)하면 화면 밖 페이지의 카드/캐럿은 DOM 에
+  // 없어 querySelector 로 못 찾는다. 그 경우를 위해 항목 localId → 페이지 인덱스 맵을
+  // 만들어, 대상이 아직 마운트되지 않았을 때 페이지 높이로 스크롤 위치를 정확히 추정한다
+  // (모든 페이지 높이가 singlePageHeight 로 균일하므로 추정이 정확하다).
+  const itemPageIndex = useMemo(() => {
+    const map = new Map<string, number>();
+    paperPages.forEach((columns, pageIndex) => {
+      for (const column of columns) {
+        for (const fragment of column) {
+          for (const part of fragment.parts) {
+            const localId = part.source?.localId;
+            if (localId && !map.has(localId)) map.set(localId, pageIndex);
+          }
+        }
+      }
+    });
+    return map;
+  }, [paperPages]);
+
+  const scrollPreviewToItem = useCallback(
+    (localId: string, topMargin: number) => {
+      const scroller = previewScrollerRef.current;
+      if (!scroller) return;
+      // 1) 이미 마운트돼 DOM 에 있으면 그 요소 기준으로 정확히 스크롤.
+      const target = scroller.querySelector<HTMLElement>(
+        `[data-paper-item-id="${CSS.escape(localId)}"], [data-line-gap-anchor="${CSS.escape(localId)}"]`,
+      );
+      if (target) {
+        const scrollerRect = scroller.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+        const fullyVisible =
+          targetRect.top >= scrollerRect.top + 8 &&
+          targetRect.bottom <= scrollerRect.bottom - 8;
+        if (!fullyVisible) {
+          scroller.scrollTo({
+            top:
+              scroller.scrollTop +
+              targetRect.top -
+              scrollerRect.top -
+              topMargin,
+            behavior: "smooth",
+          });
+        }
+        return;
+      }
+      // 2) 아직 지연 마운트 전이면 페이지 인덱스로 위치를 추정해 스크롤(→ 마운트 유발).
+      const pageIndex = itemPageIndex.get(localId);
+      if (pageIndex == null) return;
+      const coverOffset = cover.enabled ? singlePageHeight + PREVIEW_PAGE_GAP : 0;
+      const estimatedTop =
+        (coverOffset + pageIndex * (singlePageHeight + PREVIEW_PAGE_GAP)) *
+        previewZoom;
+      scroller.scrollTo({
+        top: Math.max(0, estimatedTop - topMargin),
+        behavior: "smooth",
+      });
+    },
+    [
+      cover.enabled,
+      itemPageIndex,
+      previewScrollerRef,
+      previewZoom,
+      singlePageHeight,
+    ],
+  );
+
+  // 빈 줄이 칸/페이지를 넘어가면 캐럿이 다음 쪽으로 이동하므로, 화면 밖으로 나간 경우
+  // 미리보기를 캐럿(빈 줄 자리)이 보이도록 따라 스크롤한다(워드프로세서처럼 시야가 따라감).
+  useEffect(() => {
+    const anchor = lineCaret?.afterLocalId;
+    if (!anchor) return;
+    const raf = window.requestAnimationFrame(() => {
+      scrollPreviewToItem(anchor, previewScrollerRef.current
+        ? previewScrollerRef.current.getBoundingClientRect().height / 2
+        : 0);
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [lineCaret, previewScrollerRef, scrollPreviewToItem]);
+
+  // 블록 삽입 직후: 새 블록(특히 다음 쪽으로 넘어간 이미지)이 화면 밖이면 그 위치까지
+  // 부드럽게 스크롤해 사용자에게 보여준다. paperItems 변경(삽입→재배치) 후 DOM 이 갱신된
+  // 뒤 RAF 로 스크롤한다(타이밍 안전). 이미 보이면 그대로 둔다.
+  useEffect(() => {
+    if (!pendingScrollItemId) return;
+    const raf = window.requestAnimationFrame(() => {
+      scrollPreviewToItem(pendingScrollItemId, 72);
+      setPendingScrollItemId(null);
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [pendingScrollItemId, paperItems, previewScrollerRef, scrollPreviewToItem]);
   // 토글 핸들은 접힘 여부와 무관하게 항상 표시한다.
   const leftColumnWidth = leftPanelCollapsed ? 0 : panelWidths.left;
   const rightColumnWidth = rightPanelCollapsed ? 0 : panelWidths.right;
@@ -1840,6 +1931,7 @@ export function ExamPaperBuilderClient({
                   previewBaseWidth={previewBaseWidth}
                   previewZoom={previewZoom}
                   previewContentHeight={previewContentHeight}
+                  singlePageHeight={singlePageHeight}
                   title={title}
                   paperSize={paperSize}
                   subtitle={subtitle}

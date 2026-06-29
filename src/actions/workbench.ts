@@ -16,6 +16,7 @@ export type {
 
 export {
   getWorkbenchPassages,
+  getWorkbenchPassageIds,
   findWorkbenchPassageDuplicates,
   getWorkbenchPassage,
   createWorkbenchPassage,

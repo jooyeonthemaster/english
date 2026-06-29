@@ -629,23 +629,6 @@ export function EmbeddedQuestionBank({
   );
   const { selectedIds, setSelectedIds, toggleSelect, clearSelection } =
     useSelection(getDisplayedIds);
-  const isCurrentPageSelected =
-    displayedQuestionIds.length > 0 &&
-    displayedQuestionIds.every((id) => selectedIds.has(id));
-
-  const handleSelectCurrentPage = useCallback(() => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      const shouldClearPage =
-        displayedQuestionIds.length > 0 &&
-        displayedQuestionIds.every((id) => next.has(id));
-      for (const id of displayedQuestionIds) {
-        if (shouldClearPage) next.delete(id);
-        else next.add(id);
-      }
-      return next;
-    });
-  }, [displayedQuestionIds, setSelectedIds]);
 
   // ─── Grid view mode (separate storage key from question-management) ───
   const [gridCols, setGridCols] = usePersistedState<2 | 3 | "list">(
@@ -1024,6 +1007,20 @@ export function EmbeddedQuestionBank({
     setSelectedIds,
   ]);
 
+  // 헤더 체크박스 = "전체 페이지 선택". 현재 페이지(20개)만이 아니라 현재 필터의
+  // 전체 문항(getWorkbenchQuestionIds)을 선택한다 → 선택→드래그로 전체를 폴더 이동
+  // 가능. 이미 전체가 선택돼 있으면 해제한다.
+  const allFilteredSelected =
+    totalCount > 0 && selectedIds.size >= totalCount;
+  const someSelected = selectedIds.size > 0 && !allFilteredSelected;
+  const handleToggleSelectAll = useCallback(() => {
+    if (allFilteredSelected) {
+      clearSelection();
+      return;
+    }
+    void handleSelectAllPages();
+  }, [allFilteredSelected, clearSelection, handleSelectAllPages]);
+
   // ─── Toolbar pieces ───
   const VIEW_MODE_OPTIONS = [
     { value: "ALL", label: "문제별", Icon: Rows3 },
@@ -1252,14 +1249,16 @@ export function EmbeddedQuestionBank({
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
       <div className="flex flex-1 items-center gap-2 min-w-0">
         <SelectAllCheckbox
-          checked={isCurrentPageSelected && selectedIds.size > 0}
-          indeterminate={selectedIds.size > 0 && !isCurrentPageSelected}
-          disabled={displayedQuestions.length === 0}
-          onChange={handleSelectCurrentPage}
-          title={`${selectedIds.size}문항 선택`}
-          ariaLabel={
-            isCurrentPageSelected ? "현재 페이지 해제" : "현재 페이지 선택"
+          checked={allFilteredSelected}
+          indeterminate={someSelected}
+          disabled={(totalCount === 0 && displayedQuestions.length === 0) || selectingAllPages}
+          onChange={handleToggleSelectAll}
+          title={
+            allFilteredSelected
+              ? `전체 ${selectedIds.size}문항 선택됨 — 클릭 시 해제`
+              : `전체 ${totalCount}문항 선택`
           }
+          ariaLabel={allFilteredSelected ? "전체 해제" : "전체 페이지 선택"}
         />
         <div
           className={
@@ -1504,6 +1503,7 @@ export function EmbeddedQuestionBank({
                 <>
                   <div className="mb-3">
                     <QuestionSetSection
+                      showSets={false}
                       refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}`}
                       onCountChange={setSetCount}
                       onMemberSplit={handleSplitCreated}
@@ -1575,7 +1575,7 @@ export function EmbeddedQuestionBank({
                       (종류 불문 통합 정렬). 세트는 최신이라 1페이지에서만 끼운다. */}
                   <QuestionSetSection
                     inline
-                    showSets={currentPage === 1}
+                    showSets={false}
                     refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}`}
                     onCountChange={setSetCount}
                     onMemberSplit={handleSplitCreated}

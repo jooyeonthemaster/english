@@ -448,12 +448,12 @@ export function ConditionalWritingRenderer({ q }: { q: ConditionalWritingQuestio
       <SourcePassageBlock q={q as ConditionalWritingQuestion & { _sourcePassageContent?: unknown }} />
       <GivenSentenceBox sentence={q.referenceSentence} label="영작할 우리말" />
       <ConditionsBox conditions={q.conditions} />
+      {/* 모범 답안은 '해설 보기'를 누르지 않아도 바로 보이도록 토글 밖에 둔다. */}
+      <ModelAnswer answer={q.modelAnswer} />
       <AnswerRevealSection>
-        <ModelAnswer answer={q.modelAnswer} />
         {q.scoringCriteria && q.scoringCriteria.length > 0 && (
           <ConditionsBox conditions={q.scoringCriteria} label="채점 기준" />
         )}
-        <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} />
       </AnswerRevealSection>
     </>
@@ -467,12 +467,12 @@ export function SentenceTransformRenderer({ q }: { q: SentenceTransformQuestion 
       <SourcePassageBlock q={q as SentenceTransformQuestion & { _sourcePassageContent?: unknown }} />
       <GivenSentenceBox sentence={q.originalSentence} label="원래 문장" />
       <ConditionsBox conditions={q.conditions} label="전환 조건" blockId="conditions" />
+      {/* 모범 답안은 '해설 보기'를 누르지 않아도 바로 보이도록 토글 밖에 둔다. */}
+      <ModelAnswer answer={q.modelAnswer} />
       <AnswerRevealSection>
-        <ModelAnswer answer={q.modelAnswer} />
         {q.scoringCriteria && q.scoringCriteria.length > 0 && (
           <ConditionsBox conditions={q.scoringCriteria} label="채점 기준" />
         )}
-        <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} />
       </AnswerRevealSection>
     </>
@@ -679,14 +679,7 @@ export function ContextMeaningRenderer({ q }: { q: ContextMeaningQuestion }) {
   return (
     <>
       <Direction text={q.direction} />
-      {q.underlinedWord && (
-        <SelectableBlock blockId="underlinedWord" label="밑줄 단어" field="underlinedWord" excerpt={blockExcerpt(q.underlinedWord)}>
-          <div className="rounded-lg bg-violet-50 border border-violet-200 px-3 py-2">
-            <span className="text-[10px] font-bold text-violet-600 uppercase tracking-wider">밑줄 단어</span>
-            <p className="text-[15px] font-bold text-violet-900 mt-0.5">{q.underlinedWord}</p>
-          </div>
-        </SelectableBlock>
-      )}
+      {/* 밑줄 단어는 아래 지문에 이미 밑줄로 표시되므로 별도 '밑줄 단어' 블록은 생략(중복 제거). */}
       <PassageBlock>{renderUnderlinedText(q.passageWithUnderline)}</PassageBlock>
       <OptionList options={q.options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>
