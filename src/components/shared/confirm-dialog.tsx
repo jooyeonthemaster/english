@@ -1,15 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { useEffect } from "react";
+
+import { confirmNative } from "@/lib/browser-confirm";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -17,72 +10,36 @@ interface ConfirmDialogProps {
   title: string;
   description: string;
   onConfirm: () => void;
+  /** @deprecated 브라우저 네이티브 경고창에서는 버튼 라벨을 바꿀 수 없다(확인/취소 고정). */
   confirmText?: string;
+  /** @deprecated 브라우저 네이티브 경고창에서는 버튼 라벨을 바꿀 수 없다(확인/취소 고정). */
   cancelText?: string;
+  /** @deprecated 네이티브 경고창은 variant 스타일을 입힐 수 없다. */
   variant?: "default" | "destructive";
 }
 
+/**
+ * 확인 다이얼로그 — 브라우저 네이티브 경고창(window.confirm)으로 동작한다.
+ *
+ * 기존 커스텀 모달 API(open/onOpenChange/onConfirm)를 그대로 유지하므로 호출부 변경이 없다.
+ * `open` 이 true 로 바뀌면 즉시 window.confirm 을 띄우고, 확인 시 onConfirm 을 호출한 뒤
+ * 어느 경우든 onOpenChange(false) 로 상태를 닫는다. 렌더링되는 DOM 은 없다.
+ */
 export function ConfirmDialog({
   open,
   onOpenChange,
   title,
   description,
   onConfirm,
-  confirmText = "확인",
-  cancelText = "취소",
-  variant = "default",
 }: ConfirmDialogProps) {
-  function handleConfirm() {
-    onConfirm();
+  useEffect(() => {
+    if (!open) return;
+    const ok = confirmNative(title, description);
+    if (ok) onConfirm();
     onOpenChange(false);
-  }
+    // open 전환 시에만 실행 — title/description 은 그 시점 값을 사용한다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        showCloseButton={false}
-        className={cn(
-          "max-w-[320px] gap-0 overflow-hidden rounded-2xl border-0 p-0",
-          "bg-white/90 backdrop-blur-xl shadow-float",
-          "data-[state=open]:animate-scale-in"
-        )}
-      >
-        <DialogHeader className="px-6 pt-7 pb-3">
-          <DialogTitle className="text-[17px] font-bold tracking-tight text-[#1A1F16]">
-            {title}
-          </DialogTitle>
-          <DialogDescription className="mt-1 text-[14px] leading-relaxed text-[#6B7265]">
-            {description}
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="flex-row gap-2.5 px-6 pt-3 pb-6">
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            className={cn(
-              "flex-1 h-12 rounded-xl border-[#E5E7E0] text-[14px] font-semibold text-[#4A5043]",
-              "hover:bg-[#FAFBF8] hover:text-[#1A1F16] hover:border-[#C8CCC2]",
-              "transition-all duration-150"
-            )}
-          >
-            {cancelText}
-          </Button>
-          <Button
-            variant={variant === "destructive" ? "destructive" : "default"}
-            onClick={handleConfirm}
-            className={cn(
-              "flex-1 h-12 rounded-xl text-[14px] font-semibold",
-              "transition-all duration-150",
-              variant === "default" &&
-                "gradient-primary text-white shadow-glow-green hover:opacity-90",
-              variant === "destructive" &&
-                "bg-gradient-to-r from-[#EF4444] to-[#DC2626] text-white hover:opacity-90"
-            )}
-          >
-            {confirmText}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+  return null;
 }

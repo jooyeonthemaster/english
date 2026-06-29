@@ -15,6 +15,9 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   ChevronDown,
+  Presentation,
+  MessageSquare,
+  LifeBuoy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BrandIcon } from "@/components/brand/brand-mark";
@@ -56,6 +59,10 @@ const NAV_ITEMS = [
   { label: "크레딧", icon: Coins, href: "/admin/credits" },
   { label: "원가 분석", icon: ChartNoAxesCombined, href: "/admin/costs" },
   { label: "요금제", icon: CreditCard, href: "/admin/plans" },
+  // 헬프센터 — 고객(원장)이 작성한 신청·문의를 운영자가 관리.
+  { label: "세미나 신청", icon: Presentation, href: "/admin/seminars" },
+  { label: "피드백", icon: MessageSquare, href: "/admin/feedback" },
+  { label: "고객 지원", icon: LifeBuoy, href: "/admin/support" },
 ];
 
 const SIDEBAR_STORAGE_KEY = "yshin-admin-sidebar-collapsed";

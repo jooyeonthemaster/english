@@ -19,6 +19,7 @@ import {
   Smartphone,
   Send,
   Activity,
+  LifeBuoy,
   type LucideIcon,
 } from "lucide-react";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
@@ -184,6 +185,25 @@ export function getNavGroups(basePath: "/director" | "/teacher"): NavGroup[] {
           ? [{ label: "학습 현황", icon: Activity, href: `${basePath}/tutor/monitor`, directorOnly: true, beta: true }]
           : []),
         { label: "공지사항", icon: Megaphone, href: `${basePath}/notices`, beta: true },
+      ],
+    },
+    {
+      // 1:1 세미나 신청 · 피드백 게시판 · 고객 지원을 겸하는 헬프센터.
+      // 빈 title → 섹션 헤더 없이 접이식 상위 항목 하나만 노출된다.
+      title: "",
+      directorOnly: true,
+      items: [
+        {
+          label: "헬프센터",
+          icon: LifeBuoy,
+          href: `${basePath}/help/seminar`,
+          directorOnly: true,
+          children: [
+            { label: "1:1 세미나 신청", href: `${basePath}/help/seminar` },
+            { label: "피드백 게시판", href: `${basePath}/help/feedback` },
+            { label: "고객 지원", href: `${basePath}/help/support` },
+          ],
+        },
       ],
     },
     {

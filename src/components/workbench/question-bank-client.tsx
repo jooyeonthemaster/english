@@ -36,16 +36,7 @@ import {
   updateQuestionCollection,
 } from "@/actions/workbench";
 import { createExam } from "@/actions/exams";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { confirmNative } from "@/lib/browser-confirm";
 
 // Shared modules
 import type { CollectionItem } from "./shared/types";
@@ -434,7 +425,6 @@ export function QuestionBankClient({
   const [creatingExam, setCreatingExam] = useState(false);
 
   // Bulk delete
-  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
 
   // Bulk approve (검수완료)
@@ -765,7 +755,6 @@ export function QuestionBankClient({
         return next;
       });
       clearSelection();
-      setBulkDeleteOpen(false);
       router.refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
@@ -924,7 +913,16 @@ export function QuestionBankClient({
 
       <button
         type="button"
-        onClick={() => setBulkDeleteOpen(true)}
+        onClick={() => {
+          if (
+            !confirmNative(
+              `선택한 문제 ${selectedIds.size}문항을 삭제하시겠습니까?`,
+              "이 작업은 되돌릴 수 없습니다. 문제에 연결된 해설/시험 연결도 함께 삭제됩니다.",
+            )
+          )
+            return;
+          void handleBulkDelete();
+        }}
         disabled={selectedIds.size === 0 || bulkDeleting}
         title="삭제"
         aria-label="삭제"
@@ -1414,37 +1412,6 @@ export function QuestionBankClient({
         onBack={editorCameFromDetail ? backToDetail : undefined}
       />
 
-      <AlertDialog
-        open={bulkDeleteOpen}
-        onOpenChange={(open) => {
-          if (!bulkDeleting) setBulkDeleteOpen(open);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              선택한 문제 {selectedIds.size}문항을 삭제하시겠습니까?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 문제에 연결된 해설/시험 연결도 함께
-              삭제됩니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={bulkDeleting}>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(e) => {
-                e.preventDefault();
-                void handleBulkDelete();
-              }}
-              disabled={bulkDeleting}
-              className="bg-red-500 hover:bg-red-600"
-            >
-              {bulkDeleting ? "삭제 중..." : "삭제"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }

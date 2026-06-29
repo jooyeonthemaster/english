@@ -15,17 +15,7 @@ import {
 import { TEMPLATE_META } from "../paper-builder/templates";
 import type { PaperSize, PaperTemplate } from "../paper-builder/types";
 import { SaveButton } from "@/components/ui/save-button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { confirmNative } from "@/lib/browser-confirm";
 
 // 다운로드 메뉴용 파일 포맷 아이콘 — 파일 모양 안에 포맷 텍스트(PDF/DOCX/HWPX)를 키컬러
 // 밴드로 박는다. 해설 포함 버전은 파일 두 개가 겹친 모양(stacked).
@@ -341,37 +331,26 @@ export function PreviewToolbar({
           )}
         </div>
         {onResetPaper ? (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <button
-                type="button"
-                disabled={isPending || paperItemsCount === 0}
-                title="시험지 전체 비우기 (처음부터 다시)"
-                aria-label="시험지 전체 비우기"
-                className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-red-300 text-red-500 transition-all hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
-              >
-                <Trash2 className="size-3.5" aria-hidden="true" />
-              </button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>정말로 삭제하시겠습니까?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  이 시험지의 모든 문항·블록이 삭제되고 처음부터 다시 시작합니다.
-                  이 작업은 되돌릴 수 없습니다.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>취소</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={onResetPaper}
-                  className="bg-rose-600 hover:bg-rose-700 focus-visible:ring-rose-400"
-                >
-                  전체 삭제
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <button
+            type="button"
+            disabled={isPending || paperItemsCount === 0}
+            onClick={() => {
+              if (
+                !confirmNative(
+                  "정말로 삭제하시겠습니까?",
+                  "이 시험지의 모든 문항·블록이 삭제되고 처음부터 다시 시작합니다. 이 작업은 되돌릴 수 없습니다.",
+                )
+              ) {
+                return;
+              }
+              onResetPaper();
+            }}
+            title="시험지 전체 비우기 (처음부터 다시)"
+            aria-label="시험지 전체 비우기"
+            className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-red-300 text-red-500 transition-all hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+          >
+            <Trash2 className="size-3.5" aria-hidden="true" />
+          </button>
         ) : null}
       </div>
     </div>

@@ -67,9 +67,12 @@ export default async function PassagesPage({ searchParams }: PageProps) {
   const [passagesData, schools, collections, membershipRaw] = await Promise.all([
     getWorkbenchPassages(staff.academyId, effectiveFilters),
     getAcademySchools(staff.academyId),
-    getPassageCollections(staff.academyId, { onlyWithReport: true }),
+    // 폴더 배지·멤버십은 "담긴 지문 전체"를 센다(보고서 유무 무관). 폴더는
+    // 정리용 그릇이라, 담은 30개가 배지에도 그대로 30으로 보여야 한다. (루트
+    // 목록 자체는 effectiveFilters.hasReport=true 라 학습지만 노출되는 건 유지)
+    getPassageCollections(staff.academyId, { onlyWithReport: false }),
     getAcademyPassageCollectionMembership(staff.academyId, {
-      onlyWithReport: true,
+      onlyWithReport: false,
     }),
   ]);
 

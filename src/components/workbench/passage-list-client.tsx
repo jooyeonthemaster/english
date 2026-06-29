@@ -24,16 +24,7 @@ import type {
 } from "./passage-list-client/filters-toolbar";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { confirmNative } from "@/lib/browser-confirm";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 import { PassageFileRow } from "@/components/workbench/passage-file-row";
 import { PassageFileCard } from "@/components/workbench/passage-file-card";
@@ -310,7 +301,6 @@ export function PassageListClient({
   const [dupLoading, setDupLoading] = useState(false);
   const [dupError, setDupError] = useState<string | null>(null);
   const [pageMode, setPageMode] = useState<"list" | "duplicates">("list");
-  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
   const [bulkReviewing, setBulkReviewing] = useState(false);
   // Optimistic local removal — router.refresh() updates server-side props
@@ -416,7 +406,9 @@ export function PassageListClient({
     });
     getWorkbenchPassages(academyId, {
       collectionId: folderActiveId,
-      hasReport: true,
+      // 폴더 안에서는 "담긴 멤버 전체"를 보여준다. 학습지(PRIME 보고서)가 아직
+      // 없는 지문(업로드 직후 분석 대기 등)도 폴더에 담겼으면 그대로 노출해
+      // "30개 넣었는데 27개만 보임"을 막는다. (루트 목록은 hasReport 유지)
       page: 1,
       limit: 1000,
     })
@@ -669,7 +661,6 @@ export function PassageListClient({
         return next;
       });
       selection.clearSelection();
-      setBulkDeleteOpen(false);
       router.refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
@@ -777,7 +768,14 @@ export function PassageListClient({
   const bulkDeleteAction = (
     <button
       type="button"
-      onClick={() => setBulkDeleteOpen(true)}
+      onClick={() => {
+        if (selection.selectedIds.size === 0 || bulkDeleting) return;
+        const ok = confirmNative(
+          `선택한 학습지 ${selection.selectedIds.size}편을 삭제하시겠습니까?`,
+          "이 작업은 되돌릴 수 없습니다. 학습지에 연결된 분석/문제 데이터도 함께 삭제될 수 있습니다.",
+        );
+        if (ok) void handleBulkDelete();
+      }}
       disabled={selection.selectedIds.size === 0 || bulkDeleting}
       title="삭제"
       aria-label="삭제"
@@ -1165,39 +1163,6 @@ export function PassageListClient({
           />
         )}
       </div>
-
-      {/* ─── Bulk Delete Confirmation ─── */}
-      <AlertDialog
-        open={bulkDeleteOpen}
-        onOpenChange={(open) => {
-          if (!bulkDeleting) setBulkDeleteOpen(open);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              선택한 학습지 {selection.selectedIds.size}편을 삭제하시겠습니까?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 학습지에 연결된 분석/문제 데이터도
-              함께 삭제될 수 있습니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={bulkDeleting}>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(e) => {
-                e.preventDefault();
-                void handleBulkDelete();
-              }}
-              disabled={bulkDeleting}
-              className="bg-red-500 hover:bg-red-600"
-            >
-              {bulkDeleting ? "삭제 중..." : "삭제"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
       {/* ─── Analysis Modal ─── */}
       {modalPassage && (

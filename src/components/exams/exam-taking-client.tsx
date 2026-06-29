@@ -8,16 +8,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { confirmNative } from "@/lib/browser-confirm";
 import {
   ChevronLeft,
   ChevronRight,
@@ -191,7 +182,6 @@ export function ExamTakingClient({ examData }: Props) {
     examData.savedAnswers || {}
   );
   const [flagged, setFlagged] = useState<Set<string>>(new Set());
-  const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const autoSubmittedRef = useRef(false);
 
   const remaining = useTimer(examData.duration, examData.startedAt);
@@ -240,6 +230,22 @@ export function ExamTakingClient({ examData }: Props) {
       }
     });
   }, [examData.submissionId, router, startTransition]);
+
+  const handleSubmitClick = useCallback(() => {
+    const statusLine =
+      unansweredCount > 0
+        ? `아직 답하지 않은 문제가 ${unansweredCount}개 있습니다.`
+        : "모든 문제에 답변을 완료했습니다.";
+    if (
+      !confirmNative(
+        "시험을 제출하시겠습니까?",
+        `${statusLine}\n제출 후에는 수정할 수 없습니다.`,
+      )
+    ) {
+      return;
+    }
+    handleSubmit();
+  }, [handleSubmit, unansweredCount]);
 
   // Auto-submit on timeout
   useEffect(() => {
@@ -309,7 +315,8 @@ export function ExamTakingClient({ examData }: Props) {
 
         <Button
           size="sm"
-          onClick={() => setShowSubmitDialog(true)}
+          onClick={handleSubmitClick}
+          disabled={isPending}
           className="bg-[#3182F6] hover:bg-[#1B64DA] text-xs px-3"
         >
           <Send className="size-3.5 mr-1" />
@@ -501,36 +508,6 @@ export function ExamTakingClient({ examData }: Props) {
           <ChevronRight className="size-4 ml-1" />
         </Button>
       </footer>
-
-      {/* Submit Confirmation Dialog */}
-      <AlertDialog open={showSubmitDialog} onOpenChange={setShowSubmitDialog}>
-        <AlertDialogContent className="max-w-sm">
-          <AlertDialogHeader>
-            <AlertDialogTitle>시험을 제출하시겠습니까?</AlertDialogTitle>
-            <AlertDialogDescription>
-              {unansweredCount > 0 ? (
-                <span className="text-amber-600 font-medium">
-                  아직 답하지 않은 문제가 {unansweredCount}개 있습니다.
-                </span>
-              ) : (
-                "모든 문제에 답변을 완료했습니다."
-              )}
-              <br />
-              제출 후에는 수정할 수 없습니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>돌아가기</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleSubmit}
-              className="bg-[#3182F6] hover:bg-[#1B64DA]"
-              disabled={isPending}
-            >
-              {isPending ? "제출 중..." : "제출하기"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }

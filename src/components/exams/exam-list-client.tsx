@@ -23,16 +23,7 @@ import {
   removeExamsFromCollection,
   updateExamCollection,
 } from "@/actions/exams";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { confirmNative } from "@/lib/browser-confirm";
 
 // Shared folder modules
 import type { CollectionItem } from "@/components/workbench/shared/types";
@@ -170,10 +161,8 @@ export function ExamListClient({
     (v): v is ExamViewMode =>
       v === "grid-3" || v === "grid-2" || v === "list",
   );
-  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [quickViewExamId, setQuickViewExamId] = useState<string | null>(null);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
-  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
   // 동형 생성 시험지의 분석 정보(설정의 patternProfile 기반).
   const [analysisExam, setAnalysisExam] = useState(null);
@@ -281,9 +270,16 @@ export function ExamListClient({
   }, []);
 
   // ─── Delete handler ───
-  async function handleDelete() {
-    if (!deleteId) return;
-    const targetId = deleteId;
+  async function handleDelete(targetId: string) {
+    if (!targetId) return;
+    if (
+      !confirmNative(
+        "시험을 삭제하시겠습니까?",
+        "이 작업은 되돌릴 수 없습니다. 시험과 관련된 모든 데이터가 삭제됩니다.",
+      )
+    ) {
+      return;
+    }
     const result = await deleteExam(targetId);
     if (result.success) {
       toast.success("시험이 삭제되었습니다.");
@@ -296,13 +292,20 @@ export function ExamListClient({
     } else {
       toast.error(result.error || "삭제에 실패했습니다.");
     }
-    setDeleteId(null);
   }
 
   // ─── Bulk delete handler ───
   const handleBulkDelete = useCallback(async () => {
     const ids = Array.from(selection.selectedIds);
     if (ids.length === 0 || bulkDeleting) return;
+    if (
+      !confirmNative(
+        `선택한 시험 ${ids.length}부를 삭제하시겠습니까?`,
+        "이 작업은 되돌릴 수 없습니다. 초안 상태의 시험만 삭제되며, 배포된 시험은 자동으로 건너뜁니다.",
+      )
+    ) {
+      return;
+    }
     setBulkDeleting(true);
     try {
       const result = await bulkDeleteExams(ids);
@@ -347,7 +350,6 @@ export function ExamListClient({
         });
       }
       selection.clearSelection();
-      setBulkDeleteOpen(false);
       router.refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
@@ -404,7 +406,7 @@ export function ExamListClient({
       {/* Bulk delete */}
       <button
         type="button"
-        onClick={() => setBulkDeleteOpen(true)}
+        onClick={() => void handleBulkDelete()}
         disabled={selection.selectedIds.size === 0 || bulkDeleting}
         className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
       >
@@ -576,7 +578,7 @@ export function ExamListClient({
                       onEdit={(id) =>
                         router.push(`/director/workbench/exams/${id}/edit`)
                       }
-                      onDelete={setDeleteId}
+                      onDelete={handleDelete}
                       onShowAnalysis={
                         analysisByExamId.has(exam.id) ? handleShowAnalysis : undefined
                       }
@@ -600,7 +602,7 @@ export function ExamListClient({
                       onEdit={(id) =>
                         router.push(`/director/workbench/exams/${id}/edit`)
                       }
-                      onDelete={setDeleteId}
+                      onDelete={handleDelete}
                       onShowAnalysis={
                         analysisByExamId.has(exam.id) ? handleShowAnalysis : undefined
                       }
@@ -612,64 +614,6 @@ export function ExamListClient({
           </section>
         )}
       </div>
-
-      {/* Delete Dialog */}
-      <AlertDialog
-        open={!!deleteId}
-        onOpenChange={(open) => !open && setDeleteId(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>시험을 삭제하시겠습니까?</AlertDialogTitle>
-            <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 시험과 관련된 모든 데이터가
-              삭제됩니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              className="bg-red-500 hover:bg-red-600"
-            >
-              삭제
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* Bulk Delete Dialog */}
-      <AlertDialog
-        open={bulkDeleteOpen}
-        onOpenChange={(open) => {
-          if (!bulkDeleting) setBulkDeleteOpen(open);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              선택한 시험 {selection.selectedIds.size}부를 삭제하시겠습니까?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 초안 상태의 시험만 삭제되며,
-              배포된 시험은 자동으로 건너뜁니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={bulkDeleting}>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(e) => {
-                e.preventDefault();
-                void handleBulkDelete();
-              }}
-              disabled={bulkDeleting}
-              className="bg-red-500 hover:bg-red-600"
-            >
-              {bulkDeleting ? "삭제 중..." : "삭제"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
       <ExamQuickViewDialog
         examId={quickViewExamId}

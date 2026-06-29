@@ -170,3 +170,37 @@ export type QuestionExplanationInput = z.infer<typeof questionExplanationSchema>
 export type TeacherPromptInput = z.infer<typeof teacherPromptSchema>;
 export type StudentInput = z.infer<typeof studentSchema>;
 export type AiChatMessageInput = z.infer<typeof aiChatMessageSchema>;
+
+// ============================================================================
+// Help Center — 피드백/고객지원 게시판 + 1:1 세미나 신청
+// ============================================================================
+
+export const helpPostSchema = z.object({
+  board: z.enum(["FEEDBACK", "SUPPORT"]),
+  category: z.string().min(1, "분류를 선택하세요"),
+  title: z.string().min(1, "제목을 입력하세요").max(200),
+  content: z.string().min(1, "내용을 입력하세요"),
+  isPrivate: z.boolean().default(false),
+  // 비밀글일 때만 사용.
+  password: z.string().max(100).optional(),
+});
+
+export const helpReplySchema = z.object({
+  postId: z.string().min(1),
+  content: z.string().min(1, "답변 내용을 입력하세요"),
+});
+
+export const seminarRequestSchema = z.object({
+  applicantName: z.string().min(1, "이름을 입력하세요").max(50),
+  phone: z.string().min(1, "연락처를 입력하세요").max(30),
+  email: z.string().email("올바른 이메일을 입력하세요").optional().or(z.literal("")),
+  academyName: z.string().max(100).optional(),
+  preferredChannel: z.enum(["PHONE", "KAKAO", "EITHER"]).default("PHONE"),
+  preferredTimes: z.string().max(300).optional(),
+  topic: z.string().max(300).optional(),
+  message: z.string().max(2000).optional(),
+});
+
+export type HelpPostInput = z.infer<typeof helpPostSchema>;
+export type HelpReplyInput = z.infer<typeof helpReplySchema>;
+export type SeminarRequestInput = z.infer<typeof seminarRequestSchema>;

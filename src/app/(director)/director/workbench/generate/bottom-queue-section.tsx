@@ -29,16 +29,7 @@ import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
 } from "@/components/workbench/shared/view-mode-cycle-button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { confirmNative } from "@/lib/browser-confirm";
 import {
   QuestionCard,
   type QuestionCardItem,
@@ -293,7 +284,7 @@ export function BottomQueueSection({
   onApproveQuestion,
   onUnapproveQuestion,
   onBatchApproveQuestions,
-  // Single-delete now routes through requestDelete -> in-app AlertDialog ->
+  // Single-delete now routes through requestDelete -> 네이티브 확인창 ->
   // onBatchDeleteQuestions (with tombstone tracking). onDeleteQuestion is kept
   // in the prop contract for the parent's wiring but superseded by that flow.
   onDeleteQuestion,
@@ -354,12 +345,6 @@ export function BottomQueueSection({
   const [expandedPassageIds, setExpandedPassageIds] = useState<
     Record<string, boolean>
   >({});
-  // Pending delete awaiting in-app confirmation (replaces native window.confirm).
-  const [confirmDelete, setConfirmDelete] = useState<{
-    ids: string[];
-    source: "bulk" | "single";
-  } | null>(null);
-
   // Live (non-tombstoned) saved questions — the source of truth for every
   // saved-question derivation below, so deletes take effect immediately and
   // survive the periodic session-queue refetch.
@@ -786,28 +771,31 @@ export function BottomQueueSection({
     }
   }, [onBatchApproveQuestions, selectedApprovableIds]);
 
-  // Open the in-app confirm dialog instead of a native window.confirm.
+  // 네이티브 확인창으로 삭제 확인 후 곧바로 실행한다.
   const requestDelete = useCallback(
-    (ids: string[], source: "bulk" | "single") => {
+    async (ids: string[], source: "bulk" | "single") => {
       if (!onBatchDeleteQuestions || ids.length === 0 || batchDeleting) return;
-      setConfirmDelete({ ids, source });
+      const title =
+        source === "single"
+          ? "이 문제를 삭제하시겠습니까?"
+          : `선택한 문제 ${ids.length}개를 삭제하시겠습니까?`;
+      if (
+        !confirmNative(
+          title,
+          "이 작업은 되돌릴 수 없습니다. 문제에 연결된 해설·시험 연결도 함께 삭제됩니다.",
+        )
+      )
+        return;
+      const ran = await onBatchDeleteQuestions(ids);
+      if (ran !== false && source === "bulk") setSelectedQuestionIds(new Set());
     },
     [batchDeleting, onBatchDeleteQuestions],
   );
 
   const handleBatchDelete = useCallback(() => {
     if (selectedQuestionIds.size === 0) return;
-    requestDelete(Array.from(selectedQuestionIds), "bulk");
+    void requestDelete(Array.from(selectedQuestionIds), "bulk");
   }, [requestDelete, selectedQuestionIds]);
-
-  // Runs after the user confirms in the dialog.
-  const confirmDeleteNow = useCallback(async () => {
-    if (!confirmDelete || !onBatchDeleteQuestions) return;
-    const { ids, source } = confirmDelete;
-    const ran = await onBatchDeleteQuestions(ids);
-    if (ran !== false && source === "bulk") setSelectedQuestionIds(new Set());
-    setConfirmDelete(null);
-  }, [confirmDelete, onBatchDeleteQuestions]);
 
   function renderQueueStatusCard(item: QueueItem) {
     const planConfig = getQuestionGenerationPlanConfig(
@@ -1018,7 +1006,7 @@ export function BottomQueueSection({
           onDelete={
             !persistedId
               ? undefined
-              : () => requestDelete([persistedId as string], "single")
+              : () => void requestDelete([persistedId as string], "single")
           }
         />
       </div>
@@ -1073,7 +1061,7 @@ export function BottomQueueSection({
               : () => onUnapproveQuestion(cardQuestion.id)
           }
           onEdit={() => onEditQuestion(cardQuestion.id)}
-          onDelete={() => requestDelete([cardQuestion.id], "single")}
+          onDelete={() => void requestDelete([cardQuestion.id], "single")}
         />
       </div>
     );
@@ -1466,39 +1454,6 @@ export function BottomQueueSection({
         )}
       </div>
 
-      <AlertDialog
-        open={!!confirmDelete}
-        onOpenChange={(open) => {
-          if (!open && !batchDeleting) setConfirmDelete(null);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {confirmDelete?.source === "single"
-                ? "이 문제를 삭제하시겠습니까?"
-                : `선택한 문제 ${confirmDelete?.ids.length ?? 0}개를 삭제하시겠습니까?`}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 문제에 연결된 해설·시험 연결도 함께
-              삭제됩니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={batchDeleting}>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(e) => {
-                e.preventDefault();
-                void confirmDeleteNow();
-              }}
-              disabled={batchDeleting}
-              className="bg-red-600 hover:bg-red-700 focus-visible:ring-red-400"
-            >
-              {batchDeleting ? "삭제 중..." : "삭제"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }
