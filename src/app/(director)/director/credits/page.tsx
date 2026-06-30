@@ -9,7 +9,7 @@ import { CreditBetaNoticeDialog } from "./_components/beta-notice-dialog";
 import { FILTER_OPTIONS, OPERATION_COLORS, OPERATION_ICONS, OverviewCard, TYPE_LABELS } from "./_components/credit-overview";
 import type { DanalLegacyPaymentParams, DanalLegacyPaymentResponse } from "./_components/payment-sdk";
 import { SubscriptionBillingPanel } from "./_components/subscription-billing-panel";
-import { TopUpHistory, TopUpPanel } from "./_components/top-up-panel";
+import { BankDepositGuide, TopUpHistory, TopUpPanel } from "./_components/top-up-panel";
 import { useCreditsController } from "./_components/use-credits-controller";
 
 declare global {
@@ -28,9 +28,12 @@ declare global {
 
 export default function CreditsPage() {
   const {
+    bankDepositGuide,
     cancelSubscriptionBilling,
+    clearBankDepositGuide,
     closeBetaNotice,
     costEntries,
+    depositorName,
     easyPayProvider,
     filterType,
     hideBetaNoticeForDay,
@@ -41,6 +44,7 @@ export default function CreditsPage() {
     payingCredits,
     paymentMessage,
     refreshAllCreditData,
+    setDepositorName,
     setEasyPayProvider,
     setFilterType,
     setPage,
@@ -144,10 +148,19 @@ export default function CreditsPage() {
         onPayMethodChange={setPayMethod}
         easyPayProvider={easyPayProvider}
         onEasyPayProviderChange={setEasyPayProvider}
+        depositorName={depositorName}
+        onDepositorNameChange={setDepositorName}
         payingCredits={payingCredits}
         onStartTopUp={startTopUp}
         disabled={!FEATURE_FLAGS.SHOW_CREDIT_TOP_UP}
       />
+
+      {bankDepositGuide && (
+        <BankDepositGuide
+          guide={bankDepositGuide}
+          onClose={clearBankDepositGuide}
+        />
+      )}
 
       {paymentMessage && (
         <div

@@ -3,8 +3,9 @@
 import { OPERATION_LABELS } from "@/lib/credit-costs";
 import type { OperationType } from "@/lib/credit-costs";
 import { cn } from "@/lib/utils";
-import { CreditCard, Landmark, ReceiptText, Smartphone, WalletCards } from "lucide-react";
+import { Banknote, Check, Copy, CreditCard, Landmark, ReceiptText, Smartphone, WalletCards } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { ComingSoonOverlay } from "./shared";
 
 export interface CreditTopUp {
@@ -52,7 +53,21 @@ export type TopUpPayMethod =
   | "EASY_PAY"
   | "TRANSFER"
   | "VIRTUAL_ACCOUNT"
-  | "MOBILE";
+  | "MOBILE"
+  | "BANK_TRANSFER";
+
+export interface BankDepositGuideData {
+  topUpId: string;
+  amount: number;
+  creditAmount: number;
+  depositorName: string;
+  account: {
+    bankName: string;
+    accountNumber: string;
+    accountHolder: string;
+  };
+  windowMinutes: number;
+}
 
 export type EasyPayProvider = "KAKAOPAY" | "NAVERPAY" | "TOSSPAY" | "PAYCO";
 
@@ -70,13 +85,27 @@ const PAY_METHOD_OPTIONS: Array<{
 
 const VISIBLE_TOP_UP_PAY_METHODS = getVisibleTopUpPayMethods();
 
-export const VISIBLE_PAY_METHOD_OPTIONS = PAY_METHOD_OPTIONS.filter((option) =>
-  VISIBLE_TOP_UP_PAY_METHODS.includes(option.value),
-);
+export const BANK_DEPOSIT_ENABLED =
+  process.env.NEXT_PUBLIC_BANK_DEPOSIT_ENABLED === "true";
 
-const TOP_UP_GRANT_TEXT = VISIBLE_TOP_UP_PAY_METHODS.includes("VIRTUAL_ACCOUNT")
-  ? "결제 승인 또는 가상계좌 입금 확인 후 잔고에 즉시 지급됩니다."
-  : "신용카드 결제 승인 확인 후 잔고에 즉시 지급됩니다.";
+const BANK_DEPOSIT_OPTION = {
+  value: "BANK_TRANSFER" as const,
+  label: "무통장입금",
+  icon: Banknote,
+};
+
+export const VISIBLE_PAY_METHOD_OPTIONS = [
+  ...PAY_METHOD_OPTIONS.filter((option) =>
+    VISIBLE_TOP_UP_PAY_METHODS.includes(option.value),
+  ),
+  ...(BANK_DEPOSIT_ENABLED ? [BANK_DEPOSIT_OPTION] : []),
+];
+
+const TOP_UP_GRANT_TEXT = BANK_DEPOSIT_ENABLED
+  ? "결제 승인 또는 무통장입금 확인 후 잔고에 즉시 지급됩니다."
+  : VISIBLE_TOP_UP_PAY_METHODS.includes("VIRTUAL_ACCOUNT")
+    ? "결제 승인 또는 가상계좌 입금 확인 후 잔고에 즉시 지급됩니다."
+    : "신용카드 결제 승인 확인 후 잔고에 즉시 지급됩니다.";
 
 const EASY_PAY_PROVIDER_OPTIONS: Array<{
   value: EasyPayProvider;
@@ -127,6 +156,8 @@ export function TopUpPanel({
   onPayMethodChange,
   easyPayProvider,
   onEasyPayProviderChange,
+  depositorName,
+  onDepositorNameChange,
   payingCredits,
   onStartTopUp,
   disabled = false,
@@ -137,6 +168,8 @@ export function TopUpPanel({
   onPayMethodChange: (method: TopUpPayMethod) => void;
   easyPayProvider: EasyPayProvider;
   onEasyPayProviderChange: (provider: EasyPayProvider) => void;
+  depositorName: string;
+  onDepositorNameChange: (name: string) => void;
   payingCredits: number | null;
   onStartTopUp: (product: CreditTopUpProduct) => void;
   disabled?: boolean;
@@ -216,6 +249,23 @@ export function TopUpPanel({
                   </button>
                 );
               })}
+            </div>
+          )}
+          {payMethod === "BANK_TRANSFER" && (
+            <div className="flex flex-col items-start gap-1">
+              <input
+                type="text"
+                value={depositorName}
+                onChange={(e) => onDepositorNameChange(e.target.value)}
+                disabled={disabled}
+                maxLength={40}
+                placeholder="입금자명 (예: 홍길동)"
+                className="h-8 w-44 rounded-lg border border-gray-200 px-2.5 text-[12px] font-medium text-gray-700 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-500/20"
+              />
+              <p className="text-[11px] text-gray-400">
+                실제 입금하실 분의 성함을 입력하세요. 입력한 성함·금액으로 자동
+                확인됩니다.
+              </p>
             </div>
           )}
         </div>
@@ -348,6 +398,101 @@ export function TopUpPanel({
           ))}
         </div>
       </div>
+      </div>
+    </div>
+  );
+}
+
+function CopyField({ label, value }: { label: string; value: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="flex items-center justify-between rounded-lg bg-white px-3 py-2.5">
+      <div className="min-w-0">
+        <p className="text-[11px] font-medium text-gray-400">{label}</p>
+        <p className="truncate text-[14px] font-bold tabular-nums text-gray-900">
+          {value}
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={() => {
+          void navigator.clipboard?.writeText(value).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+          });
+        }}
+        className="ml-2 inline-flex h-7 shrink-0 items-center gap-1 rounded-md border border-gray-200 px-2 text-[11px] font-semibold text-gray-500 transition hover:border-blue-300 hover:text-blue-600"
+      >
+        {copied ? (
+          <Check className="size-3" strokeWidth={2.4} />
+        ) : (
+          <Copy className="size-3" strokeWidth={2} />
+        )}
+        {copied ? "복사됨" : "복사"}
+      </button>
+    </div>
+  );
+}
+
+export function BankDepositGuide({
+  guide,
+  onClose,
+}: {
+  guide: BankDepositGuideData;
+  onClose: () => void;
+}) {
+  return (
+    <div className="rounded-2xl border border-sky-200 bg-sky-50/70 p-5 shadow-sm">
+      <div className="mb-3 flex items-start justify-between">
+        <div>
+          <h3 className="flex items-center gap-1.5 text-[14px] font-bold text-sky-900">
+            <Banknote className="size-4" strokeWidth={2} />
+            무통장입금 안내
+          </h3>
+          <p className="mt-0.5 text-[12px] text-sky-700">
+            아래 계좌로 <b>정확한 금액</b>을 입금하시면 확인 즉시 자동으로
+            크레딧이 지급됩니다.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-[12px] font-medium text-sky-600 hover:text-sky-800"
+        >
+          닫기
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <CopyField
+          label="입금 계좌"
+          value={`${guide.account.bankName} ${guide.account.accountNumber}`}
+        />
+        <CopyField label="예금주" value={guide.account.accountHolder} />
+        <CopyField
+          label="입금 금액"
+          value={`${guide.amount.toLocaleString("ko-KR")}원`}
+        />
+        <CopyField label="입금자명" value={guide.depositorName} />
+      </div>
+
+      <div className="mt-3 space-y-1 text-[12px] text-sky-800">
+        <p>
+          · 충전 크레딧:{" "}
+          <b>{guide.creditAmount.toLocaleString("ko-KR")}C</b>
+        </p>
+        <p>
+          · 입력하신 <b>입금자명</b>과 <b>금액</b>이 정확히 일치해야 자동
+          확인됩니다.
+        </p>
+        <p>
+          · 자동 확인은 보통 1~2분 내에 처리되며, 처리되면 아래 충전 요청
+          내역이 “충전 완료”로 바뀝니다.
+        </p>
+        <p className="text-sky-600">
+          · 약 {guide.windowMinutes}분 내에 입금해주세요. 시간이 지나거나
+          금액이 다르면 자동 확인이 지연되어 관리자 확인이 필요할 수 있습니다.
+        </p>
       </div>
     </div>
   );

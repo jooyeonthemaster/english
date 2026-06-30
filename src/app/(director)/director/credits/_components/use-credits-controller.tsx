@@ -8,7 +8,7 @@ import { isDanalLegacyPaymentRequest, requestDanalLegacyPayment } from "./paymen
 import { clearCreditPaymentReturnParams } from "./return-params";
 import type { SubscriptionBillingOverview } from "./subscription-billing-panel";
 import { VISIBLE_PAY_METHOD_OPTIONS } from "./top-up-panel";
-import type { CreditTopUp, CreditTopUpProduct, EasyPayProvider, TopUpPayMethod } from "./top-up-panel";
+import type { BankDepositGuideData, CreditTopUp, CreditTopUpProduct, EasyPayProvider, TopUpPayMethod } from "./top-up-panel";
 
 export function useCreditsController() {
   const [summary, setSummary] = useState<CreditSummary | null>(null);
@@ -31,6 +31,9 @@ export function useCreditsController() {
   );
   const [easyPayProvider, setEasyPayProvider] =
     useState<EasyPayProvider>("KAKAOPAY");
+  const [depositorName, setDepositorName] = useState("");
+  const [bankDepositGuide, setBankDepositGuide] =
+    useState<BankDepositGuideData | null>(null);
   const [payingCredits, setPayingCredits] = useState<number | null>(null);
   const [paymentMessage, setPaymentMessage] = useState<{
     type: "success" | "error" | "info";
@@ -168,8 +171,66 @@ export function useCreditsController() {
     [refreshAllCreditData],
   );
 
+  const startBankDeposit = useCallback(
+    async (product: CreditTopUpProduct) => {
+      const trimmedName = depositorName.trim();
+      if (!trimmedName) {
+        setPaymentMessage({
+          type: "error",
+          text: "입금자명을 입력해주세요. 실제 입금하실 분의 성함이 필요합니다.",
+        });
+        return;
+      }
+      setPayingCredits(product.creditAmount);
+      setPaymentMessage(null);
+      setBankDepositGuide(null);
+      try {
+        const res = await fetch("/api/credits/top-ups/bank-deposit/prepare", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            credits: product.creditAmount,
+            depositorName: trimmedName,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error ?? "입금 안내 생성에 실패했습니다.");
+        }
+        setBankDepositGuide({
+          topUpId: data.topUpId,
+          amount: data.amount,
+          creditAmount: data.creditAmount,
+          depositorName: data.depositorName,
+          account: data.account,
+          windowMinutes: data.windowMinutes,
+        });
+        setPaymentMessage({
+          type: "info",
+          text: "입금 안내를 생성했습니다. 안내된 계좌로 입금하시면 자동으로 확인됩니다.",
+        });
+        await fetchTopUps();
+      } catch (err) {
+        setPaymentMessage({
+          type: "error",
+          text:
+            err instanceof Error
+              ? err.message
+              : "입금 안내 생성 중 오류가 발생했습니다.",
+        });
+      } finally {
+        setPayingCredits(null);
+      }
+    },
+    [depositorName, fetchTopUps],
+  );
+
   const startTopUp = useCallback(
     async (product: CreditTopUpProduct) => {
+      if (payMethod === "BANK_TRANSFER") {
+        await startBankDeposit(product);
+        return;
+      }
       setPayingCredits(product.creditAmount);
       setPaymentMessage(null);
       try {
@@ -223,7 +284,7 @@ export function useCreditsController() {
         setPayingCredits(null);
       }
     },
-    [completePayment, easyPayProvider, fetchTopUps, payMethod],
+    [completePayment, easyPayProvider, fetchTopUps, payMethod, startBankDeposit],
   );
 
   const registerSubscriptionBilling = useCallback(
@@ -446,9 +507,12 @@ export function useCreditsController() {
     : 0;
 
   return {
+    bankDepositGuide,
     cancelSubscriptionBilling,
+    clearBankDepositGuide: () => setBankDepositGuide(null),
     closeBetaNotice,
     costEntries,
+    depositorName,
     easyPayProvider,
     filterType,
     hideBetaNoticeForDay,
@@ -459,6 +523,7 @@ export function useCreditsController() {
     payingCredits,
     paymentMessage,
     refreshAllCreditData,
+    setDepositorName,
     setEasyPayProvider,
     setFilterType,
     setPage,
