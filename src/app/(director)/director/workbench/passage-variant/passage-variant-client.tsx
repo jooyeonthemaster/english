@@ -325,7 +325,7 @@ export function PassageVariantClient({ passages }: PassageVariantClientProps) {
 
         <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-[340px_minmax(0,1fr)]">
           {/* ───────────────── 원본 지문 선택기 ───────────────── */}
-          <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm lg:max-h-[calc(100vh-160px)]">
+          <section className="flex h-[70vh] min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm lg:h-auto lg:max-h-[calc(100vh-160px)]">
             <div className="flex items-center gap-2 border-b border-slate-100 px-3 py-2.5">
               <FileText
                 className="h-4 w-4 shrink-0 text-violet-500"

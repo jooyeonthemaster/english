@@ -175,7 +175,8 @@ export function WebtoonPickerModal({
               onClick={() => void load()}
               disabled={loading}
               title="새로고침"
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50"
+              aria-label="새로고침"
+              className="flex size-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
             </button>

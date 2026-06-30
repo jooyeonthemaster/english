@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -51,7 +52,28 @@ export function HelpBoardClient({ board, initialPosts }: HelpBoardClientProps) {
   const [sort, setSort] = useState<"recent" | "popular">("recent");
   const [view, setView] = useState<"list" | "grid">("list");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [composeDefaults, setComposeDefaults] = useState<
+    { category?: string; title?: string; content?: string } | undefined
+  >(undefined);
   const [isPending, startTransition] = useTransition();
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // 외부(예: 무통장입금 안내의 "문의하기")에서 ?compose=1 로 진입하면
+  // 전달된 분류/제목/내용을 채운 새 글 작성 다이얼로그를 자동으로 연다.
+  useEffect(() => {
+    if (searchParams.get("compose") !== "1") return;
+    setComposeDefaults({
+      category: searchParams.get("category") || undefined,
+      title: searchParams.get("title") || undefined,
+      content: searchParams.get("content") || undefined,
+    });
+    setDialogOpen(true);
+    router.replace(pathname); // 새로고침/재진입 시 다시 열리지 않도록 쿼리 제거
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const filtersActive = category !== "ALL" || status !== "ALL";
 
@@ -356,9 +378,13 @@ export function HelpBoardClient({ board, initialPosts }: HelpBoardClientProps) {
       <HelpPostFormDialog
         board={board}
         open={dialogOpen}
+        defaults={composeDefaults}
         onOpenChange={(open) => {
           setDialogOpen(open);
-          if (!open) reload();
+          if (!open) {
+            setComposeDefaults(undefined);
+            reload();
+          }
         }}
       />
     </div>

@@ -6,7 +6,9 @@ import { MembersListClient } from "@/components/admin/members-list-client";
 export const dynamic = "force-dynamic";
 
 async function MembersContent() {
-  const members = await getMembers({ limit: 500 });
+  // limit 미지정 = 전체 로드. 회원 검색/정렬이 클라이언트 메모리에서 전 범위를
+  // 대상으로 이뤄지도록(이전 500명 캡 제거).
+  const members = await getMembers();
   return <MembersListClient members={members} />;
 }
 

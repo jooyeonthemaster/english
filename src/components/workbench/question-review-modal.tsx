@@ -122,17 +122,19 @@ export function QuestionReviewModal({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 text-xs text-slate-600"
+                title="다시 생성"
+                aria-label="다시 생성"
+                className="size-8 justify-center p-0 text-slate-600"
                 onClick={onRegenerate}
               >
-                <RotateCcw className="w-3.5 h-3.5 mr-1" />
-                다시 생성
+                <RotateCcw className="w-3.5 h-3.5" />
               </Button>
             )}
             <SaveButton
               onClick={handleSave}
               saving={saving}
               disabled={questions.length === 0}
+              iconOnly
               title={`문제관리에 저장 (${questions.length}개)`}
             />
             <button

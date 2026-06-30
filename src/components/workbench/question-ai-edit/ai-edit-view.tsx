@@ -19,6 +19,7 @@ import {
   Bot,
   Check,
   ChevronDown,
+  ChevronUp,
   CornerDownLeft,
   FileText,
   Gem,
@@ -27,6 +28,7 @@ import {
   Plus,
   RotateCcw,
   Save,
+  SlidersHorizontal,
   TriangleAlert,
   X,
   Zap,
@@ -682,10 +684,11 @@ export function AiEditView({
 
       {/* ── Footer: 좌=입력 / 우=유형 맞춤 · 하단 전체폭 액션 ── */}
       <div className="shrink-0 space-y-3 border-t border-slate-200 bg-white px-4 py-3">
-        {/* 2분할 — 좌측 입력 / 우측 유형 맞춤 설정 */}
-        <div className="flex max-h-[44vh] min-h-[180px] items-stretch gap-3">
+        {/* 2분할 — 좌측 입력 / 우측 유형 맞춤 설정.
+            모바일(< lg)에서는 입력창과 유형 맞춤 설정을 위아래로 쌓는다. */}
+        <div className="flex flex-col gap-3 lg:max-h-[44vh] lg:min-h-[180px] lg:flex-row lg:items-stretch">
           {/* LEFT — 입력(칩·버전·프롬프트) */}
-          <div className={`flex min-h-0 min-w-0 flex-col gap-2 ${config ? "w-1/2" : "flex-1"}`}>
+          <div className={`flex min-h-0 min-w-0 flex-col gap-2 ${config ? "lg:w-1/2" : "flex-1"}`}>
 
         {/* 지난 지시(버전) 칩은 우측 'AI 수정본' 헤더(제목 오른쪽)로 이동. */}
 
@@ -783,14 +786,56 @@ export function AiEditView({
 
           {/* RIGHT — 유형 맞춤 설정 (블럭 카드 + 토글) */}
           {config && (
-            <div className="w-1/2 min-w-0">
-              <TypeEditPanel
-                config={config}
-                controlValues={controlValues}
-                onControlChange={(id, v) => setControlValues((prev) => ({ ...prev, [id]: v }))}
-                disabled={loading || !!loadError}
-              />
-            </div>
+            <>
+              {/* 데스크톱(≥ lg) — 인라인 패널 */}
+              <div className="hidden w-full min-w-0 lg:block lg:w-1/2">
+                <TypeEditPanel
+                  config={config}
+                  controlValues={controlValues}
+                  onControlChange={(id, v) =>
+                    setControlValues((prev) => ({ ...prev, [id]: v }))
+                  }
+                  disabled={loading || !!loadError}
+                />
+              </div>
+
+              {/* 모바일(< lg) — 토글 버튼. 기본 닫힘, 열면 위쪽으로 팝오버. */}
+              <div className="lg:hidden">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      type="button"
+                      disabled={loading || !!loadError}
+                      className="flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5 text-[12.5px] font-bold text-slate-700 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <SlidersHorizontal className="h-3.5 w-3.5 shrink-0 text-blue-600" />
+                      유형 맞춤 설정
+                      {controlDirectives.length > 0 && (
+                        <span className="rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700">
+                          {controlDirectives.length}
+                        </span>
+                      )}
+                      <ChevronUp className="ml-auto h-4 w-4 shrink-0 text-slate-400" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    side="top"
+                    align="start"
+                    sideOffset={8}
+                    className="max-h-[60vh] w-[calc(100vw-2rem)] overflow-y-auto p-0"
+                  >
+                    <TypeEditPanel
+                      config={config}
+                      controlValues={controlValues}
+                      onControlChange={(id, v) =>
+                        setControlValues((prev) => ({ ...prev, [id]: v }))
+                      }
+                      disabled={loading || !!loadError}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </>
           )}
         </div>
 

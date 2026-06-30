@@ -102,47 +102,71 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Idempotency key: relay-provided id, else a stable hash of the content.
-  const externalId =
+  // Idempotency. With an explicit relay id we always dedup on it. Without one we
+  // dedup on a content hash, but ONLY within a short window: a network retry of
+  // the same SMS (within seconds) is ignored, while a genuinely new deposit with
+  // identical text some time later (e.g. buying the same product again after the
+  // first one completed) is still processed. Double-crediting is independently
+  // prevented at the order level in grantBankDepositTopUp().
+  const hasExplicitId = Boolean(parsed.data.externalId?.trim());
+  const baseExternalId =
     parsed.data.externalId?.trim() ||
     createHash("sha256")
       .update(`${rawText}|${amount}|${depositorName ?? ""}|${occurredAt?.toISOString() ?? ""}`)
       .digest("hex");
+  const RETRY_DEDUP_MS = 60_000;
 
-  // Record the inbound alert first (idempotent). If it already exists, return
-  // its prior outcome without re-crediting.
-  let notification;
+  const notificationData = {
+    source,
+    rawText: rawText || JSON.stringify(parsed.data),
+    amount,
+    depositorName,
+    bankName,
+    status: "UNMATCHED",
+    occurredAt,
+  };
+
+  let externalId = baseExternalId;
+  let notification: Awaited<
+    ReturnType<typeof prisma.bankDepositNotification.create>
+  > | null = null;
   try {
     notification = await prisma.bankDepositNotification.create({
-      data: {
-        externalId,
-        source,
-        rawText: rawText || JSON.stringify(parsed.data),
-        amount,
-        depositorName,
-        bankName,
-        status: "UNMATCHED",
-        occurredAt,
-      },
+      data: { externalId, ...notificationData },
     });
   } catch (err) {
-    if (
-      typeof err === "object" &&
-      err !== null &&
-      "code" in err &&
-      (err as { code?: string }).code === "P2002"
-    ) {
-      const existing = await prisma.bankDepositNotification.findUnique({
-        where: { externalId },
-        select: { status: true, matchedTopUpId: true },
-      });
+    if (!isUniqueViolation(err)) {
+      console.error("[bank-notify] record failed", err);
+      return NextResponse.json({ error: "record failed" }, { status: 500 });
+    }
+    const existing = await prisma.bankDepositNotification.findUnique({
+      where: { externalId: baseExternalId },
+      select: { status: true, matchedTopUpId: true, receivedAt: true },
+    });
+    const isRecentDuplicate =
+      existing != null &&
+      (hasExplicitId ||
+        Date.now() - existing.receivedAt.getTime() < RETRY_DEDUP_MS);
+    if (isRecentDuplicate) {
       return NextResponse.json({
         duplicate: true,
-        status: existing?.status ?? "UNKNOWN",
-        topUpId: existing?.matchedTopUpId ?? null,
+        status: existing.status,
+        topUpId: existing.matchedTopUpId ?? null,
       });
     }
-    console.error("[bank-notify] record failed", err);
+    // Genuinely new deposit that happens to have identical content → record it
+    // under a unique key so it is processed as a separate deposit.
+    externalId = `${baseExternalId}-${Date.now()}`;
+    try {
+      notification = await prisma.bankDepositNotification.create({
+        data: { externalId, ...notificationData },
+      });
+    } catch (retryErr) {
+      console.error("[bank-notify] record failed (retry)", retryErr);
+      return NextResponse.json({ error: "record failed" }, { status: 500 });
+    }
+  }
+  if (!notification) {
     return NextResponse.json({ error: "record failed" }, { status: 500 });
   }
 
@@ -226,4 +250,13 @@ export async function POST(request: NextRequest) {
       .catch(() => {});
     return NextResponse.json({ error: "processing failed" }, { status: 500 });
   }
+}
+
+function isUniqueViolation(err: unknown): boolean {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    "code" in err &&
+    (err as { code?: string }).code === "P2002"
+  );
 }

@@ -30,6 +30,7 @@ export function CollapsedPreview({
   displayCorrectAnswer = correctAnswer,
   subType,
   isSetMember = false,
+  compact = false,
 }: {
   direction: string;
   passage: string;
@@ -39,6 +40,8 @@ export function CollapsedPreview({
   subType?: string | null;
   /** 장문 세트(QuestionSet) 소속 문항 — 유형 라벨 앞에 "장문" 표식을 붙여 구분한다. */
   isSetMember?: boolean;
+  /** 시험지 빌더 좌측 라이브러리 전용 — 글자·여백·배지를 한 단계 줄인다. */
+  compact?: boolean;
 }) {
   // 어법 판단(GRAMMAR_ERROR)만 라벨/마커를 원형숫자(①)로 표시(시험지 렌더 동일). 타 유형 무영향.
   const isGrammarError = subType === "GRAMMAR_ERROR";
@@ -59,14 +62,21 @@ export function CollapsedPreview({
       ? Array.from(parseCorrectAnswerLabels(displayCorrectAnswer || correctAnswer))
       : [];
 
+  // 콤팩트(시험지 빌더 좌측)일 때 글자·여백·배지 한 단계 축소.
+  const directionTextCls = compact ? "text-[12px]" : "text-[13px]";
+  const passageTextCls = compact ? "text-[11px] leading-[1.6]" : "text-[12px] leading-[1.8]";
+  const passageBoxCls = compact ? "p-2" : "p-3";
+  const optionTextCls = compact ? "text-[12px]" : "text-[13px]";
+  const badgeSizeCls = compact ? "w-4 h-4 text-[9px]" : "w-5 h-5 text-[10px]";
+
   return (
-    <div className="space-y-2">
+    <div className={compact ? "space-y-1.5" : "space-y-2"}>
       {/* 의문문(발문) — 접힘 상태에서도 전체 노출. 유형명은 발문 우측 상단에
           고정(flex)한다. 예전 float-right는 줄 높이가 어긋나면 아래 지문 영역을
           침범해서 flex로 교체. */}
       {direction && (
         <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0 flex-1 text-[13px] font-bold text-slate-900 leading-relaxed whitespace-pre-line">
+          <div className={`min-w-0 flex-1 ${directionTextCls} font-bold text-slate-900 leading-relaxed whitespace-pre-line`}>
             {renderFormatted(direction, subType)}
           </div>
           {(typeLabel || isSetMember) && (
@@ -83,8 +93,8 @@ export function CollapsedPreview({
 
       {/* 지문 — 2줄만 남기고 말줄임 */}
       {passage && (
-        <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
-          <div className="font-mono text-[12px] leading-[1.8] text-slate-700 whitespace-pre-wrap line-clamp-2">
+        <div className={`rounded-lg bg-slate-50 border border-slate-200 ${passageBoxCls}`}>
+          <div className={`font-mono ${passageTextCls} text-slate-700 whitespace-pre-wrap line-clamp-2`}>
             {renderFormatted(passage, subType)}
           </div>
         </div>
@@ -92,13 +102,13 @@ export function CollapsedPreview({
 
       {/* 선지 — 정답만, 파란 원형 라벨 + 파란 굵은 글씨. */}
       {correctOptions.length > 0 ? (
-        <div className="space-y-1.5 pl-1">
+        <div className={`${compact ? "space-y-1" : "space-y-1.5"} pl-1`}>
           {correctOptions.map((opt) => (
             <div
               key={opt.label}
-              className="text-[13px] flex items-start gap-2 text-blue-700 font-semibold"
+              className={`${optionTextCls} flex items-start gap-2 text-blue-700 font-semibold`}
             >
-              <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-blue-600 text-white">
+              <span className={`shrink-0 ${badgeSizeCls} rounded-full flex items-center justify-center font-bold bg-blue-600 text-white`}>
                 {badgeLabel(opt.label)}
               </span>
               <span>{renderFormatted(opt.text, subType)}</span>
@@ -110,7 +120,7 @@ export function CollapsedPreview({
           {answerBadgeLabels.map((label) => (
             <span
               key={label}
-              className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-blue-600 text-white"
+              className={`shrink-0 ${badgeSizeCls} rounded-full flex items-center justify-center font-bold bg-blue-600 text-white`}
             >
               {badgeLabel(label)}
             </span>
@@ -118,14 +128,14 @@ export function CollapsedPreview({
         </div>
       ) : displayCorrectAnswer ? (
         isEssay ? (
-          <div className="flex items-start gap-2 pl-1 text-[13px] font-semibold text-blue-700">
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
+          <div className={`flex items-start gap-2 pl-1 ${optionTextCls} font-semibold text-blue-700`}>
+            <span className={`flex shrink-0 items-center justify-center rounded-full bg-blue-600 font-bold text-white ${badgeSizeCls}`}>
               답
             </span>
             <span>{renderFormatted(displayCorrectAnswer, subType)}</span>
           </div>
         ) : (
-          <div className="text-[12px] bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded border border-slate-200">
+          <div className={`${compact ? "text-[11px]" : "text-[12px]"} bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded border border-slate-200`}>
             <span className="font-medium">정답:</span>{" "}
             {renderFormatted(displayCorrectAnswer, subType)}
           </div>

@@ -18,6 +18,8 @@ import { getPlanPricingPreview } from "@/lib/subscription-plan-pricing";
 export const dynamic = "force-dynamic";
 
 const SUBSCRIPTION_BILLING_ENABLED = FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING;
+const BANK_DEPOSIT_ENABLED =
+  process.env.NEXT_PUBLIC_BANK_DEPOSIT_ENABLED === "true";
 
 export const metadata: Metadata = {
   title: SUBSCRIPTION_BILLING_ENABLED
@@ -47,6 +49,11 @@ const POLICY_SECTIONS = [
       ...(!CREDIT_TOP_UP_CARD_ONLY
         ? [
             "가상계좌 결제는 계좌 발급 시점이 아니라 실제 입금 완료 및 결제 상태 확인 후 크레딧이 지급됩니다.",
+          ]
+        : []),
+      ...(BANK_DEPOSIT_ENABLED
+        ? [
+            "무통장입금(계좌이체)은 회원이 회사가 지정한 계좌로 입금하고, 회사가 입금자명과 입금 금액을 대조하여 입금이 확인된 후 크레딧이 지급됩니다. 입금 전에는 크레딧이 지급되지 않습니다.",
           ]
         : []),
       "크레딧은 사용자가 AI 기능 실행을 요청하여 결과 생성, 분석, 추출, 수정 등의 디지털 서비스 제공이 시작될 때 기능별 단가에 따라 차감됩니다.",
@@ -94,6 +101,11 @@ const POLICY_SECTIONS = [
             "가상계좌는 입금 전까지 발급 계좌 말소 또는 결제 취소가 가능하며, 입금 후에는 일반 환불 기준을 따릅니다.",
           ]
         : []),
+      ...(BANK_DEPOSIT_ENABLED
+        ? [
+            "무통장입금(계좌이체)으로 생성한 충전 주문은 입금 전(미입금) 상태에서는 크레딧이 지급되지 않으며, 안내된 입금 시간이 지나면 자동으로 만료·취소될 수 있습니다. 입금 후에는 일반 환불 기준을 따릅니다.",
+          ]
+        : []),
     ],
   },
   {
@@ -121,6 +133,11 @@ const POLICY_SECTIONS = [
       CREDIT_TOP_UP_CARD_ONLY
         ? "환불 가능 건은 확인 완료 후 원 결제수단 취소를 원칙으로 처리하며, 계좌 환불이 필요한 예외적인 경우에만 예금주, 은행, 계좌번호 등 환불에 필요한 최소 정보를 요청할 수 있습니다."
         : "환불 가능 건은 확인 완료 후 원 결제수단 취소를 원칙으로 처리하며, 가상계좌·계좌이체 등 환불계좌가 필요한 경우 예금주, 은행, 계좌번호 등 환불에 필요한 최소 정보를 요청할 수 있습니다.",
+      ...(BANK_DEPOSIT_ENABLED
+        ? [
+            "무통장입금(계좌이체)으로 결제한 건은 원 결제수단 취소가 적용되지 않으므로 환불 시 회원 명의의 환불 계좌로 처리하며, 예금주, 은행, 계좌번호 등 환불에 필요한 최소 정보를 요청할 수 있습니다.",
+          ]
+        : []),
     ],
   },
   {

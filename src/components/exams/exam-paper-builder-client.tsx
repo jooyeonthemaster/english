@@ -289,6 +289,8 @@ export function ExamPaperBuilderClient({
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(
     readStoredLeftPanelCollapsed,
   );
+  // 모바일(<lg) 전용 2단계 흐름: 1) 문제 선택 ↔ 2) 미리보기·저장. 데스크톱은 영향 없음.
+  const [mobileStep, setMobileStep] = useState<"select" | "preview">("select");
   const [thumbnailsWidth, setThumbnailsWidth] = useState(
     readStoredThumbnailsWidth,
   );
@@ -1887,6 +1889,67 @@ export function ExamPaperBuilderClient({
             : "translate-x-0 translate-y-0 opacity-100",
         )}
       />
+      {/* 모바일 전용 단계 전환 바 — 1) 문제 선택 ↔ 2) 미리보기·저장 */}
+      <div className="no-print flex shrink-0 items-center gap-1.5 border-b border-slate-200 bg-white px-2 py-1.5 lg:hidden">
+        <button
+          type="button"
+          onClick={() => setMobileStep("select")}
+          aria-pressed={mobileStep === "select"}
+          className={cn(
+            "flex h-9 flex-1 items-center justify-center gap-1.5 rounded-md text-[13px] font-bold transition-colors",
+            mobileStep === "select"
+              ? "bg-blue-600 text-white shadow-sm"
+              : "bg-slate-100 text-slate-500 active:bg-slate-200",
+          )}
+        >
+          <span
+            className={cn(
+              "flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-black",
+              mobileStep === "select"
+                ? "bg-white/25 text-white"
+                : "bg-white text-slate-400",
+            )}
+          >
+            1
+          </span>
+          문제 선택
+          {questionItemsCount > 0 && (
+            <span
+              className={cn(
+                "ml-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums",
+                mobileStep === "select"
+                  ? "bg-white/20 text-white"
+                  : "bg-blue-50 text-blue-600",
+              )}
+            >
+              {questionItemsCount}
+            </span>
+          )}
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileStep("preview")}
+          aria-pressed={mobileStep === "preview"}
+          className={cn(
+            "flex h-9 flex-1 items-center justify-center gap-1.5 rounded-md text-[13px] font-bold transition-colors",
+            mobileStep === "preview"
+              ? "bg-blue-600 text-white shadow-sm"
+              : "bg-slate-100 text-slate-500 active:bg-slate-200",
+          )}
+        >
+          <span
+            className={cn(
+              "flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-black",
+              mobileStep === "preview"
+                ? "bg-white/25 text-white"
+                : "bg-white text-slate-400",
+            )}
+          >
+            2
+          </span>
+          미리보기 · 저장
+        </button>
+      </div>
       <div
         ref={builderGridRef}
         className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden bg-white lg:[grid-template-columns:var(--exam-builder-grid-columns)]"
@@ -1900,6 +1963,12 @@ export function ExamPaperBuilderClient({
           // 접혀도 그리드 1번 컬럼 자리를 채워 나머지 컬럼이 밀리지 않게 한다.
           <div aria-hidden className="min-w-0 overflow-hidden" />
         ) : (
+          <div
+            className={cn(
+              "overflow-hidden lg:contents",
+              mobileStep === "select" ? "grid h-full" : "hidden",
+            )}
+          >
           <QuestionLibraryPanel
             filteredQuestions={pageQuestions}
             page={page}
@@ -1943,6 +2012,7 @@ export function ExamPaperBuilderClient({
             onDragToFolder={handleDragQuestionToFolder}
             onDragToRoot={handleDragQuestionToRoot}
           />
+          </div>
         )}
 
         {leftPanelCollapsed ? (
@@ -1975,7 +2045,8 @@ export function ExamPaperBuilderClient({
 
         <section
           className={cn(
-            "flex min-w-0 flex-col overflow-hidden",
+            "min-w-0 flex-col overflow-hidden lg:flex lg:h-auto",
+            mobileStep === "preview" ? "flex h-full" : "hidden",
             isEditingExistingExam ? "bg-slate-200/80" : "bg-slate-100/70",
           )}
         >

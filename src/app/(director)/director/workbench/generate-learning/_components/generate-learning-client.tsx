@@ -484,9 +484,9 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
   }, []);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-64px)]">
+    <div className="flex flex-col min-h-[100dvh] overflow-x-hidden lg:h-[calc(100vh-64px)] lg:min-h-0 lg:overflow-hidden">
       {/* ═══ HEADER ═══ */}
-      <div className="flex items-center gap-4 px-8 py-4 bg-white border-b shrink-0">
+      <div className="flex items-center gap-4 px-4 py-4 bg-white border-b shrink-0 lg:px-8">
         <Link
           href="/director/workbench"
           className="flex items-center justify-center w-9 h-9 rounded-xl hover:bg-slate-100 transition-colors"
@@ -529,8 +529,9 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
       </div>
 
       {/* ═══ MAIN: 지문 그리드 + 설정 사이드바 ═══ */}
-      <div className="grid grid-cols-[1fr_420px] bg-white h-[420px] shrink-0">
+      <div className="grid grid-cols-1 bg-white shrink-0 lg:grid-cols-[1fr_420px] lg:h-[420px]">
         {/* LEFT: Passage Grid */}
+        <div className="grid h-[60vh] overflow-hidden lg:contents">
         <LearningPassageGrid
           passages={filteredPassages}
           totalPassages={passages.length}
@@ -562,8 +563,10 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
           canGenerate={canGenerate}
           handleBatchGenerate={handleBatchGenerate}
         />
+        </div>
 
         {/* RIGHT: Config Panel */}
+        <div className="grid overflow-hidden lg:contents">
         <LearningConfigPanel
           genMode={genMode}
           setGenMode={setGenMode}
@@ -579,6 +582,7 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
           selectedIds={selectedIds}
           handleBatchGenerate={handleBatchGenerate}
         />
+        </div>
       </div>
 
       {/* ═══ DIVIDER ═══ */}

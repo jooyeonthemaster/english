@@ -12,16 +12,25 @@ import {
   ChartNoAxesCombined,
   Radar,
   LogOut,
+  Menu,
   PanelLeftClose,
   PanelLeftOpen,
   ChevronDown,
   Presentation,
   MessageSquare,
   LifeBuoy,
+  Banknote,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BrandIcon } from "@/components/brand/brand-mark";
 import { BusinessInfoBlock } from "@/components/legal/business-info-block";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -57,6 +66,7 @@ const NAV_ITEMS = [
   { label: "추천·미션", icon: Gift, href: "/admin/referrals" },
   { label: "활동 모니터링", icon: Radar, href: "/admin/activity" },
   { label: "크레딧", icon: Coins, href: "/admin/credits" },
+  { label: "무통장입금", icon: Banknote, href: "/admin/credits/bank-deposits" },
   { label: "원가 분석", icon: ChartNoAxesCombined, href: "/admin/costs" },
   { label: "요금제", icon: CreditCard, href: "/admin/plans" },
   // 헬프센터 — 고객(원장)이 작성한 신청·문의를 운영자가 관리.
@@ -73,6 +83,7 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
   const [isPending, startTransition] = useTransition();
   const [navigatingTo, setNavigatingTo] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setNavigatingTo(null);
@@ -95,7 +106,16 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
   function isActive(href: string) {
     const effectivePath = navigatingTo || pathname;
     if (href === "/admin") return effectivePath === "/admin";
-    return effectivePath.startsWith(href);
+    if (!effectivePath.startsWith(href)) return false;
+    // A more specific sibling (e.g. /admin/credits/bank-deposits) takes priority
+    // over its parent (/admin/credits) so only one nav item highlights.
+    const moreSpecificMatch = NAV_ITEMS.some(
+      (item) =>
+        item.href !== href &&
+        item.href.startsWith(href) &&
+        effectivePath.startsWith(item.href),
+    );
+    return !moreSpecificMatch;
   }
 
   function handleNavClick(href: string, e: React.MouseEvent) {
@@ -107,15 +127,23 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
     });
   }
 
+  function handleMobileNavClick(href: string, e: React.MouseEvent) {
+    setMobileNavOpen(false);
+    handleNavClick(href, e);
+  }
+
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
     router.push("/admin/login");
   }
 
+  const activeNavLabel =
+    NAV_ITEMS.find((item) => isActive(item.href))?.label ?? "관리자 콘솔";
+
   if (!mounted) {
     return (
       <div className="flex h-screen bg-[#F4F6F9]">
-        <div className="w-[220px] shrink-0" />
+        <div className="hidden w-[220px] shrink-0 md:block" />
         <div className="flex-1" />
       </div>
     );
@@ -128,7 +156,7 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
         {/* Sidebar */}
         <aside
           className={cn(
-            "sticky top-0 h-screen self-start flex shrink-0 flex-col transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]",
+            "sticky top-0 hidden h-screen self-start shrink-0 flex-col transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] md:flex",
             collapsed ? "w-[72px]" : "w-[220px]",
           )}
           style={{
@@ -244,7 +272,7 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
         >
           {/* Top header */}
           <header
-            className="sticky top-0 z-20 flex items-center justify-between h-[56px] px-6"
+            className="sticky top-0 z-20 flex items-center justify-between h-[56px] px-3 md:px-6"
             style={{
               background: "rgba(244,246,249,0.75)",
               backdropFilter: "blur(20px) saturate(180%)",
@@ -253,8 +281,87 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
             }}
           >
             <div className="flex items-center gap-3">
+              <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+                <SheetTrigger asChild>
+                  <button
+                    type="button"
+                    className="flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm active:scale-[0.98] md:hidden"
+                    aria-label="관리자 메뉴 열기"
+                  >
+                    <Menu className="size-5" strokeWidth={2} />
+                  </button>
+                </SheetTrigger>
+                <SheetContent
+                  side="left"
+                  className="w-[min(92vw,340px)] gap-0 border-r border-slate-800 bg-slate-950 p-0 text-white"
+                >
+                  <SheetHeader className="border-b border-white/10 px-4 py-4 text-left">
+                    <SheetTitle className="flex items-center gap-2.5 text-white">
+                      <BrandIcon className="size-8 shrink-0 bg-blue-600 shadow-none" markClassName="size-[20px]" />
+                      <span className="min-w-0">
+                        <span className="block truncate text-[17px] font-bold tracking-tight">
+                          SMOAT
+                          <span className="ml-1.5 text-[10px] font-medium uppercase tracking-widest text-slate-400">
+                            admin
+                          </span>
+                        </span>
+                        <span className="block truncate text-[11px] font-semibold text-slate-500">
+                          {admin.name}
+                        </span>
+                      </span>
+                    </SheetTitle>
+                  </SheetHeader>
+
+                  <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-3" aria-label="관리자 모바일 메뉴">
+                    <ul className="space-y-1">
+                      {NAV_ITEMS.map((item) => {
+                        const active = isActive(item.href);
+                        const Icon = item.icon;
+                        return (
+                          <li key={item.href}>
+                            <Link
+                              href={item.href}
+                              onClick={(e) => handleMobileNavClick(item.href, e)}
+                              className={cn(
+                                "flex min-h-11 items-center gap-3 rounded-xl px-3 text-[13px] font-bold transition-colors",
+                                active
+                                  ? "bg-white/10 text-white"
+                                  : "text-slate-400 hover:bg-white/[0.06] hover:text-white",
+                              )}
+                            >
+                              <Icon
+                                className={cn(
+                                  "size-5 shrink-0",
+                                  active ? "text-blue-400" : "text-slate-500",
+                                )}
+                                strokeWidth={active ? 2 : 1.8}
+                              />
+                              <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </nav>
+
+                  <div className="border-t border-white/10 p-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMobileNavOpen(false);
+                        void handleLogout();
+                      }}
+                      className="flex min-h-10 w-full items-center gap-2 rounded-xl px-3 text-[13px] font-bold text-red-300 hover:bg-red-500/10"
+                    >
+                      <LogOut className="size-4" />
+                      로그아웃
+                    </button>
+                  </div>
+                </SheetContent>
+              </Sheet>
               <h2 className="text-[13px] font-semibold text-gray-600">
-                최고 관리자 콘솔
+                <span className="md:hidden">{activeNavLabel}</span>
+                <span className="hidden md:inline">최고 관리자 콘솔</span>
               </h2>
               <span className="inline-flex items-center h-[20px] px-2 text-[10px] font-semibold rounded-md text-blue-600 bg-blue-500/[0.08]">
                 {admin.role === "SUPER_ADMIN" ? "최고 관리자" : "지원"}
@@ -268,10 +375,10 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
                     <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-slate-900 text-white text-[11px] font-bold">
                       {admin.name.charAt(0).toUpperCase()}
                     </div>
-                    <span className="text-[13px] font-medium text-gray-600">
+                    <span className="hidden text-[13px] font-medium text-gray-600 sm:inline">
                       {admin.name}
                     </span>
-                    <ChevronDown className="size-3 text-gray-300" />
+                    <ChevronDown className="hidden size-3 text-gray-300 sm:block" />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 rounded-xl p-1.5">
@@ -298,7 +405,7 @@ export function SuperAdminShell({ children, admin }: AdminShellProps) {
           </header>
 
           {/* Page content */}
-          <main className="flex-1 p-6 relative">
+          <main className="flex-1 p-4 md:p-6 relative">
             {isPending && (
               <div className="fixed inset-0 z-10 bg-[#F4F6F9]/60 flex items-start justify-center pt-32 pointer-events-none">
                 <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border">

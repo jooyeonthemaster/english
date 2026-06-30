@@ -131,6 +131,27 @@ export function QuestionLibraryPanel({
   const [libraryView, setLibraryView] = useState<"questions" | "passages">("questions");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // 패널이 좁아지면 카드가 세로로 짓눌려(한 글자씩 줄바꿈) 읽기 어려워지므로,
+  // 일정 너비 이하에서는 사용자가 2/3열을 골라도 무조건 1열로 강제한다.
+  const FORCE_SINGLE_COLUMN_WIDTH = 500;
+  const [panelWidth, setPanelWidth] = useState<number | null>(null);
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setPanelWidth(entry.contentRect.width);
+      }
+    });
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+  const forceSingleColumn =
+    panelWidth !== null && panelWidth < FORCE_SINGLE_COLUMN_WIDTH;
+  const effectiveGridColumns: QuestionGridCols = forceSingleColumn
+    ? "list"
+    : gridColumns;
+
   // 시험지 미리보기에서 문항을 클릭하면 좌측 목록의 해당 카드로 스크롤한다(이미 보이는
   // 경우엔 가만히 둔다). 지문별 보기에서 접혀 있는 그룹은 카드가 DOM에 없을 수 있어
   // 스크롤 대상이 없으면 조용히 넘어간다.
@@ -156,7 +177,7 @@ export function QuestionLibraryPanel({
         (containerRect.height - targetRect.height) / 2,
       behavior: "smooth",
     });
-  }, [activeQuestionId, libraryView, gridColumns]);
+  }, [activeQuestionId, libraryView, effectiveGridColumns]);
   const [expandedPassageIds, setExpandedPassageIds] = useState<Record<string, boolean>>({});
   const questionById = useMemo(
     () => new Map(filteredQuestions.map((question) => [question.id, question])),
@@ -269,20 +290,21 @@ export function QuestionLibraryPanel({
   );
 
   // 3열은 카드를 한 단계 작게(md), 2열/목록은 기본(lg)로 — questions 페이지 동일.
-  const viewSize: "lg" | "md" = gridColumns === 3 ? "md" : "lg";
+  const viewSize: "lg" | "md" = effectiveGridColumns === 3 ? "md" : "lg";
 
   // ─── 목록 가상화 ───
   // 수백~1000+ 문항을 한 번에 마운트하면 좌측 패널이 무거워지므로, 문제별 보기는
   // row 단위로 가상화해 보이는 카드만 DOM에 올린다. 페이지네이션/무한스크롤이 아니라
   // "보이는 것만 렌더"이므로 전체 선택·드래그 데이터(id 기반)는 영향받지 않는다.
   // (지문별 보기는 그룹 접힘 구조라 1차 범위에서 제외 — PassageGroupedView 그대로.)
-  const columnsCount = gridColumns === 3 ? 3 : gridColumns === 2 ? 2 : 1;
+  const columnsCount =
+    effectiveGridColumns === 3 ? 3 : effectiveGridColumns === 2 ? 2 : 1;
   const rowCount = Math.ceil(filteredQuestions.length / columnsCount);
   const rowVirtualizer = useVirtualizer({
     count: rowCount,
     getScrollElement: () => scrollContainerRef.current,
     // 접힌 콤팩트 카드의 대략 높이(+행 간격). 실제 높이는 measureElement 로 보정된다.
-    estimateSize: () => 240,
+    estimateSize: () => 200,
     overscan: 6,
   });
 
@@ -573,7 +595,7 @@ export function QuestionLibraryPanel({
         ) : libraryView === "passages" ? (
           <PassageGroupedView
             passages={groupedPassages}
-            gridCols={gridColumns}
+            gridCols={effectiveGridColumns}
             viewSize={viewSize}
             selectedIds={selectedQuestionIds}
             setSelectedIds={applySelectedQuestionIds}
@@ -603,6 +625,7 @@ export function QuestionLibraryPanel({
             activeQuestionId={activeQuestionId}
             usageCounts={paperQuestionCounts}
             collapsible
+            compact
             expandedPassageIds={expandedPassageIds}
             setExpandedPassageIds={setExpandedPassageIds}
           />
@@ -635,13 +658,13 @@ export function QuestionLibraryPanel({
                     transform: `translateY(${virtualRow.start}px)`,
                   }}
                 >
-                  {/* 행 사이 간격은 측정 높이에 포함되도록 pb-3 로 준다(세로 gap 대체). */}
+                  {/* 행 사이 간격은 측정 높이에 포함되도록 pb 로 준다(세로 gap 대체). */}
                   <div
                     className={cn(
-                      "grid gap-3 pb-3",
-                      gridColumns === 2
+                      "grid gap-2.5 pb-2.5",
+                      effectiveGridColumns === 2
                         ? "grid-cols-2"
-                        : gridColumns === 3
+                        : effectiveGridColumns === 3
                           ? "grid-cols-3"
                           : "grid-cols-1",
                     )}
@@ -676,6 +699,7 @@ export function QuestionLibraryPanel({
                           }
                           selectedCardHighlight={false}
                           collapsible
+                          compact
                         />
                       );
                     })}

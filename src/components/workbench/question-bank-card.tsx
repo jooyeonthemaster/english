@@ -152,6 +152,9 @@ export function QuestionBankCard({
   recentlyViewed = false,
   // 접힘(콤팩트) 모드 — 시험지 빌더 등 목록을 콤팩트하게 볼 때. 기본은 펼침(전체) 유지.
   collapsible = false,
+  // 시험지 빌더 좌측 라이브러리 전용 — 카드 전체 크기를 한 단계 줄인다(여백·간격·글자).
+  // 문제생성/문제관리/휴지통 등 다른 화면은 기본(false)이라 영향 없음.
+  compact = false,
   // 접힌(콤팩트) 카드일 때만 적용할 min-height 클래스. 같은 줄의 접힌 카드들을
   // 동일 높이로 맞춰 footer(검수완료/수정하기)를 정렬한다. 펼치면 해제되어 카드가
   // 콘텐츠대로 자라므로 self-start 래퍼의 "옆 카드 안 늘어남" 동작과 공존한다.
@@ -217,6 +220,7 @@ export function QuestionBankCard({
   active?: boolean;
   recentlyViewed?: boolean;
   collapsible?: boolean;
+  compact?: boolean;
   collapsedMinHeightClass?: string;
   embedded?: boolean;
   trashMode?: boolean;
@@ -549,10 +553,10 @@ export function QuestionBankCard({
     >
       <CardContent
         ref={contentRef}
-        className="p-3 flex flex-1 flex-col gap-1.5"
+        className={`flex flex-1 flex-col ${compact ? "p-2 gap-1" : "p-3 gap-1.5"}`}
       >
         {/* Header row — 손잡이~펼치기까지 한 줄에 세로 가운데 정렬 */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className={`flex items-center shrink-0 ${compact ? "gap-1" : "gap-1.5"}`}>
           {enableDrag && !selectionDisabled && !embedded && (
             <DragHandle ref={dragHandleRef} className="shrink-0" />
           )}
@@ -710,6 +714,7 @@ export function QuestionBankCard({
               displayCorrectAnswer={displayCorrectAnswer}
               subType={q.subType}
               isSetMember={!!q.inSet || !!q.setId}
+              compact={compact}
             />
           ) : (
             <>

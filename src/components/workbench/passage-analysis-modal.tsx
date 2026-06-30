@@ -487,8 +487,10 @@ export function PassageAnalysisModal({
                   type="button"
                   variant="outline"
                   size="sm"
+                  title={isReviewCommitted ? "검수취소" : "미검수"}
+                  aria-label={isReviewCommitted ? "검수취소" : "미검수"}
                   className={
-                    "h-8 text-xs font-bold " +
+                    "size-8 p-0 text-xs font-bold " +
                     (isReviewCommitted
                       ? "border-emerald-500 bg-white text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
                       : "border-red-200/80 bg-white text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
@@ -497,17 +499,16 @@ export function PassageAnalysisModal({
                   disabled={reviewBusy}
                 >
                   {reviewBusy ? (
-                    <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
                   ) : isReviewCommitted ? (
-                    <Undo2 className="w-3.5 h-3.5 mr-1" />
+                    <Undo2 className="w-3.5 h-3.5" />
                   ) : (
-                    <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                    <CheckCircle2 className="w-3.5 h-3.5" />
                   )}
-                  {isReviewCommitted ? "검수취소" : "미검수"}
                 </Button>
               ) : null}
               {hasUnsavedChanges && (
-                <SaveButton onClick={handleSave} saving={saving} />
+                <SaveButton onClick={handleSave} saving={saving} iconOnly />
               )}
               {/* PRIME 편집기 저장·인쇄 — 편집기 툴바에서 이 헤더로 끌어올림. */}
               {editorToolbar ? (
@@ -545,26 +546,29 @@ export function PassageAnalysisModal({
                     onClick={editorToolbar.save}
                     saving={editorToolbar.saving}
                     disabled={!editorToolbar.dirty}
+                    iconOnly
                   />
                   <button
                     type="button"
                     onClick={() => window.print()}
-                    className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+                    title="인쇄"
+                    aria-label="인쇄"
+                    className="inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50"
                   >
                     <Printer className="h-3.5 w-3.5" />
-                    인쇄
                   </button>
                 </>
               ) : null}
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 border-red-200 bg-white text-xs font-semibold text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700"
+                title="삭제"
+                aria-label="삭제"
+                className="size-8 p-0 border-red-200 bg-white text-xs font-semibold text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700"
                 onClick={handleDelete}
                 disabled={deleting}
               >
-                <Trash2 className="w-3.5 h-3.5 mr-1" />
-                삭제
+                <Trash2 className="w-3.5 h-3.5" />
               </Button>
               <button
                 onClick={() => closeGuard.requestClose()}

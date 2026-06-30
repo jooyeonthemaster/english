@@ -43,17 +43,17 @@ export function Pagination({ page, totalPages, onGoToPage }: PaginationProps) {
   const pageNumbers = getPageNumbers(page, totalPages);
 
   return (
-    <div className="flex items-center justify-center gap-1 pt-6">
+    <div className="flex max-w-full items-center justify-start gap-0.5 overflow-x-auto px-1 pt-6 md:justify-center md:gap-1 md:overflow-visible md:px-0">
       {/* First page */}
       <Button
         variant="outline"
         size="sm"
         disabled={page <= 1}
         onClick={() => onGoToPage(1)}
-        className="h-8 w-8 p-0"
+        className="h-7 w-7 shrink-0 p-0 md:h-8 md:w-8"
         aria-label="첫 페이지"
       >
-        <ChevronsLeft className="w-4 h-4" />
+        <ChevronsLeft className="h-3.5 w-3.5 md:h-4 md:w-4" />
       </Button>
 
       {/* Previous */}
@@ -62,16 +62,16 @@ export function Pagination({ page, totalPages, onGoToPage }: PaginationProps) {
         size="sm"
         disabled={page <= 1}
         onClick={() => onGoToPage(page - 1)}
-        className="h-8 w-8 p-0"
+        className="h-7 w-7 shrink-0 p-0 md:h-8 md:w-8"
         aria-label="이전 페이지"
       >
-        <ChevronLeft className="w-4 h-4" />
+        <ChevronLeft className="h-3.5 w-3.5 md:h-4 md:w-4" />
       </Button>
 
       {/* Page numbers */}
       {pageNumbers.map((p, idx) =>
         p === -1 ? (
-          <span key={`ellipsis-${idx}`} className="w-8 h-8 flex items-center justify-center text-[12px] text-slate-400">
+          <span key={`ellipsis-${idx}`} className="flex h-7 w-6 shrink-0 items-center justify-center text-[12px] text-slate-400 md:h-8 md:w-8">
             ...
           </span>
         ) : (
@@ -80,7 +80,7 @@ export function Pagination({ page, totalPages, onGoToPage }: PaginationProps) {
             variant={p === page ? "default" : "outline"}
             size="sm"
             onClick={() => onGoToPage(p)}
-            className={`h-8 w-8 p-0 text-[12px] ${
+            className={`h-7 w-7 shrink-0 p-0 text-[12px] md:h-8 md:w-8 ${
               p === page
                 ? "bg-slate-800 text-white hover:bg-slate-700"
                 : "text-slate-600 hover:bg-slate-50"
@@ -99,10 +99,10 @@ export function Pagination({ page, totalPages, onGoToPage }: PaginationProps) {
         size="sm"
         disabled={page >= totalPages}
         onClick={() => onGoToPage(page + 1)}
-        className="h-8 w-8 p-0"
+        className="h-7 w-7 shrink-0 p-0 md:h-8 md:w-8"
         aria-label="다음 페이지"
       >
-        <ChevronRight className="w-4 h-4" />
+        <ChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4" />
       </Button>
 
       {/* Last page */}
@@ -111,10 +111,10 @@ export function Pagination({ page, totalPages, onGoToPage }: PaginationProps) {
         size="sm"
         disabled={page >= totalPages}
         onClick={() => onGoToPage(totalPages)}
-        className="h-8 w-8 p-0"
+        className="h-7 w-7 shrink-0 p-0 md:h-8 md:w-8"
         aria-label="마지막 페이지"
       >
-        <ChevronsRight className="w-4 h-4" />
+        <ChevronsRight className="h-3.5 w-3.5 md:h-4 md:w-4" />
       </Button>
     </div>
   );

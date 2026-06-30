@@ -265,8 +265,9 @@ export function QuestionBankClient({
     isPending: isNavPending,
   } = useUrlFilters(QUESTION_BANK_PATH);
 
-  function handleSearch() {
-    urlSearch(searchValue);
+  function handleSearch(value?: string) {
+    // X 버튼은 빈 값을 명시적으로 넘긴다(상태 갱신은 비동기라 stale 방지).
+    urlSearch(value !== undefined ? value : searchValue);
   }
 
   // Folder manager
@@ -1067,7 +1068,7 @@ export function QuestionBankClient({
 
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-      <div className="flex flex-1 items-center gap-2 min-w-0">
+      <div className="flex w-full min-w-0 flex-wrap items-center gap-2 md:w-auto md:flex-1 md:flex-nowrap">
         <SelectAllCheckbox
           checked={allFilteredSelected}
           indeterminate={someSelected}
@@ -1085,7 +1086,7 @@ export function QuestionBankClient({
         />
         <div
           className={
-            "flex shrink-0 items-center gap-3 " +
+            "flex min-w-0 flex-wrap items-center gap-1.5 md:shrink-0 md:flex-nowrap md:gap-3 " +
             (selectedIds.size > 0 ? "" : "pointer-events-none opacity-50")
           }
           aria-disabled={selectedIds.size === 0}
@@ -1139,17 +1140,18 @@ export function QuestionBankClient({
             setCreateExamOpen(true);
           }}
           className={
-            "flex h-12 grow items-center justify-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[14px] font-bold text-white shadow-sm transition-colors " +
+            "flex h-10 min-w-[9rem] flex-[1_1_9rem] items-center justify-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[13px] font-bold text-white shadow-sm transition-colors md:h-12 md:min-w-0 md:basis-auto md:grow md:text-[14px] " +
             (selectedIds.size === 0 || creatingExam
               ? "cursor-not-allowed border-blue-200 bg-blue-300 shadow-none"
               : "cursor-pointer border-blue-600 bg-blue-600 hover:border-blue-700 hover:bg-blue-700")
           }
         >
-          <ClipboardList className="size-5" />
-          다음으로 (시험지 생성)
+          <ClipboardList className="size-4 md:size-5" />
+          <span className="md:hidden">시험지 생성</span>
+          <span className="hidden md:inline">다음으로 (시험지 생성)</span>
         </button>
       </div>
-      <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+      <div className="ml-auto flex w-full shrink-0 flex-wrap items-center justify-end gap-2 md:w-auto">
         {filtersToolbar}
         {gridToggle}
       </div>

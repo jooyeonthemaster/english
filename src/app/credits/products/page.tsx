@@ -24,6 +24,8 @@ import { productSchema } from "@/lib/seo/structured-data";
 export const dynamic = "force-dynamic";
 
 const SUBSCRIPTION_BILLING_ENABLED = FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING;
+const BANK_DEPOSIT_ENABLED =
+  process.env.NEXT_PUBLIC_BANK_DEPOSIT_ENABLED === "true";
 
 export const metadata: Metadata = {
   title: SUBSCRIPTION_BILLING_ENABLED
@@ -92,6 +94,14 @@ export default async function CreditProductsPage() {
               ? `SMOAT 구독 요금제는 30일 단위 디지털 서비스 이용권과 월 배정 크레딧을 제공합니다. 신용카드 정기결제를 등록하면 포트원 빌링키로 30일마다 자동 결제됩니다. 추가 크레딧 상품은 문제 생성, 자동 출제, 학습지 생성, OCR, 해설 생성 등 내부 AI 기능을 더 이용하기 위한 디지털 이용권이며, ${CREDIT_TOP_UP_COMPLETION_TEXT} 서비스 잔고에 즉시 지급됩니다.`
               : `SMOAT 크레딧 상품은 문제 생성, 자동 출제, 학습지 생성, OCR, 해설 생성 등 내부 AI 기능을 더 이용하기 위한 디지털 이용권입니다. ${CREDIT_TOP_UP_COMPLETION_TEXT} 서비스 잔고에 즉시 지급되며, 실물 배송이 없는 온라인 상품입니다.`}
           </p>
+          {BANK_DEPOSIT_ENABLED && (
+            <p className="mt-3 max-w-3xl text-[14px] leading-7 text-slate-500">
+              신용카드 결제 외에 <b>무통장입금(계좌이체)</b>으로도 충전할 수
+              있습니다. 무통장입금은 포트원·PG사를 거치지 않고 회사가 지정한
+              계좌로 입금하시면, 입금자명과 입금 금액이 확인되는 즉시 크레딧이
+              자동으로 지급됩니다. 입금 전에는 크레딧이 지급되지 않습니다.
+            </p>
+          )}
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {SUBSCRIPTION_BILLING_ENABLED ? (
               <ProductNotice

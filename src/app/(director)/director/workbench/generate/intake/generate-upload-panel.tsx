@@ -658,10 +658,10 @@ export function GenerateUploadPanel({
 
   const outputModeToggle = (
     <div
-      className="flex min-w-0 items-center gap-3"
+      className="w-full min-w-0 sm:flex sm:items-center sm:gap-3"
       data-generate-tour="output-mode"
     >
-      <div className="flex shrink-0 items-center gap-1">
+      <div className="grid w-full min-w-0 grid-cols-1 gap-1 sm:flex sm:w-auto sm:shrink-0 sm:items-center">
         {outputModeOptions.map((opt) => {
           const active = outputMode === opt.v;
           return (
@@ -673,7 +673,7 @@ export function GenerateUploadPanel({
               aria-pressed={active}
               data-generate-tour={`output-mode-${opt.v}`}
               className={
-                "inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
+                "inline-flex min-h-8 w-full min-w-0 cursor-pointer flex-wrap items-center justify-center gap-1.5 rounded-md border px-2.5 py-1 text-center text-[12.5px] font-semibold leading-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 sm:h-7 sm:w-auto sm:flex-nowrap sm:px-3 sm:py-0 " +
                 (active
                   ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
                   : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")
@@ -787,13 +787,13 @@ export function GenerateUploadPanel({
     <section className="flex h-full min-h-0 flex-col overflow-hidden">
       {/* 출력 방식 — 위 '파일업로드' 탭에서 말풍선처럼 뻗어나온 하위 선택임을
           드러낸다(파일업로드 > 그대로 추출/AI 복원의 계층감). */}
-      <div className="flex items-center gap-3 border-b border-slate-100 px-3 pb-2 pt-2">
-        <div className="relative w-fit rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 shadow-sm">
+      <div className="flex flex-col items-stretch gap-2 border-b border-slate-100 px-3 pb-2 pt-2 sm:flex-row sm:items-center sm:gap-3">
+        <div className="relative w-full rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 shadow-sm sm:w-fit">
           {/* 말풍선 박스는 직접입력과 같은 위치(ml-0)에 고정하고, 꼬리만 '파일업로드'
               탭 중앙 아래를 가리키게 한다(모드별로 화살표 위치만 다름). */}
           <span
             aria-hidden="true"
-            className="absolute -top-[6px] left-[156px] z-10 h-3 w-3 -translate-x-1/2 rotate-45 rounded-[2px] border-l border-t border-blue-200 bg-blue-50"
+            className="absolute -top-[6px] left-[156px] z-10 hidden h-3 w-3 -translate-x-1/2 rotate-45 rounded-[2px] border-l border-t border-blue-200 bg-blue-50 sm:block"
           />
           <div className="min-w-0">{outputModeToggle}</div>
         </div>

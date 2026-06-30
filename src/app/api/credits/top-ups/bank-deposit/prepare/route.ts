@@ -6,6 +6,7 @@ import { getActiveCreditTopUpProductByCredits } from "@/lib/credit-top-up-produc
 import {
   BANK_TRANSFER_PAY_METHOD,
   getBankDepositConfig,
+  normalizeDepositorName,
 } from "@/lib/bank-deposit";
 
 const prepareSchema = z.object({
@@ -48,6 +49,43 @@ export async function POST(request: NextRequest) {
     }
 
     const depositorName = parsed.data.depositorName;
+
+    // 동일 학원 + 동일 입금자명 + 동일 금액의 입금 대기 주문이 시간창 내에 이미
+    // 있으면 중복 생성을 막는다(같은 입금 1건이 어느 주문인지 구분 불가해지는 것 방지).
+    const windowStart = new Date(
+      Date.now() - config.matchWindowMinutes * 60_000,
+    );
+    const pendingSameAmount = await prisma.creditTopUp.findMany({
+      where: {
+        academyId: staff.academyId,
+        paymentMethod: BANK_TRANSFER_PAY_METHOD,
+        status: "WAITING_FOR_DEPOSIT",
+        price: product.price,
+        createdAt: { gte: windowStart },
+      },
+      select: { customData: true },
+    });
+    const wantedName = normalizeDepositorName(depositorName);
+    const hasDuplicate = pendingSameAmount.some((order) => {
+      const cd = order.customData;
+      const stored =
+        cd && typeof cd === "object" && !Array.isArray(cd)
+          ? (cd as Record<string, unknown>).depositorName
+          : null;
+      return (
+        typeof stored === "string" &&
+        normalizeDepositorName(stored) === wantedName
+      );
+    });
+    if (hasDuplicate) {
+      return NextResponse.json(
+        {
+          error:
+            "이미 동일한 입금 대기 주문이 있습니다. 기존 주문에 입금하거나 완료 후 다시 시도해주세요.",
+        },
+        { status: 409 },
+      );
+    }
 
     const topUp = await prisma.creditTopUp.create({
       data: {

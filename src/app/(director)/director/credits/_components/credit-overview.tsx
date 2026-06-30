@@ -78,11 +78,13 @@ export function OverviewCard({
   value,
   icon: Icon,
   accent,
+  comingSoon = false,
 }: {
   label: string;
   value: number;
   icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
   accent: "emerald" | "blue" | "indigo" | "gray" | "red";
+  comingSoon?: boolean;
 }) {
   const accentMap = {
     emerald: { bg: "bg-emerald-50", text: "text-emerald-500", value: "text-emerald-700" },
@@ -92,6 +94,35 @@ export function OverviewCard({
     red: { bg: "bg-red-50", text: "text-red-500", value: "text-red-700" },
   };
   const colors = accentMap[accent];
+
+  if (comingSoon) {
+    return (
+      <div
+        className="relative bg-white rounded-2xl border border-gray-200/60 shadow-sm p-4 overflow-hidden select-none"
+        aria-disabled
+      >
+        <div className="pointer-events-none opacity-40 grayscale">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[12px] font-medium text-gray-400">{label}</span>
+            <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-gray-100">
+              <Icon className="size-3.5 text-gray-400" strokeWidth={1.8} />
+            </div>
+          </div>
+          <div className="flex items-baseline gap-1">
+            <span className="text-[22px] font-bold tabular-nums tracking-tight text-gray-400">
+              {value.toLocaleString()}
+            </span>
+            <span className="text-[11px] text-gray-400 font-medium">크레딧</span>
+          </div>
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center bg-white/30 backdrop-blur-[1px]">
+          <span className="inline-flex items-center rounded-full border border-gray-200 bg-white/90 px-2.5 py-1 text-[11px] font-semibold text-gray-500 shadow-sm">
+            준비중
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200/60 shadow-sm p-4">

@@ -714,7 +714,7 @@ export function PassageListClient({
       schools={schools}
       searchValue={searchValue}
       onSearchChange={setSearchValue}
-      onSearchSubmit={() => handleSearch(searchValue)}
+      onSearchSubmit={(value) => handleSearch(value ?? searchValue)}
       updateFilter={updateFilter}
       sortOrder={sortOrder}
       onSortOrderChange={setSortOrder}

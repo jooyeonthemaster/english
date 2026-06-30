@@ -2984,19 +2984,21 @@ export function GeneratePageClient({
                   <button
                     type="button"
                     onClick={() => handleUnapproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                    title="검수취소"
+                    aria-label="검수취소"
+                    className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <XCircle className="h-3.5 w-3.5" />
-                    검수취소
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={() => handleApproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                    title="검수완료"
+                    aria-label="검수완료"
+                    className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <CheckCircle2 className="h-3.5 w-3.5" />
-                    검수완료
                   </button>
                 )}
                 {/* 수정하기 — 검수완료 버튼 오른쪽. 상세를 닫고 편집기를 연다. */}
@@ -3007,10 +3009,11 @@ export function GeneratePageClient({
                     setDetailQuestion(null);
                     editor.openEditor(id);
                   }}
-                  className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                  title="수정하기"
+                  aria-label="수정하기"
+                  className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                 >
                   <SquarePen className="h-3.5 w-3.5" />
-                  수정하기
                 </button>
                 <button
                   onClick={() => setDetailQuestion(null)}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import {
   Dialog,
   DialogContent,
@@ -106,11 +106,19 @@ interface ExistingPost {
   content: string;
 }
 
+/** 새 글 작성 시 미리 채워둘 값(예: 결제건 문의 진입 시 주문번호 자동 기입). */
+interface ComposeDefaults {
+  category?: string;
+  title?: string;
+  content?: string;
+}
+
 interface HelpPostFormDialogProps {
   board: HelpBoard;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   post?: ExistingPost | null;
+  defaults?: ComposeDefaults;
 }
 
 export function HelpPostFormDialog({
@@ -118,19 +126,35 @@ export function HelpPostFormDialog({
   open,
   onOpenChange,
   post,
+  defaults,
 }: HelpPostFormDialogProps) {
   const isEdit = !!post;
   const categories = boardCategories(board);
   const showAttachments = true; // 피드백·문의 게시판 모두 이미지 첨부 허용
 
   const [isPending, startTransition] = useTransition();
-  const [category, setCategory] = useState(post?.category || categories[0].value);
-  const [title, setTitle] = useState(post?.title || "");
-  const [content, setContent] = useState(post?.content || "");
+  const [category, setCategory] = useState(
+    post?.category || defaults?.category || categories[0].value,
+  );
+  const [title, setTitle] = useState(post?.title || defaults?.title || "");
+  const [content, setContent] = useState(post?.content || defaults?.content || "");
   // 고객지원은 비공개 기본, 피드백은 공개 기본.
   const [isPrivate, setIsPrivate] = useState(board === "SUPPORT");
   const [password, setPassword] = useState("");
   const [attachments, setAttachments] = useState<Attachment[]>([]);
+
+  // 새 글 작성 모드에서 다이얼로그가 열릴 때마다 폼을 초기화한다.
+  // defaults 가 있으면 그 값으로 채우고(결제건 문의 등), 없으면 빈 폼으로 되돌린다.
+  useEffect(() => {
+    if (!open || isEdit) return;
+    setCategory(defaults?.category || categories[0].value);
+    setTitle(defaults?.title || "");
+    setContent(defaults?.content || "");
+    setIsPrivate(board === "SUPPORT");
+    setPassword("");
+    setAttachments([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   function handleFiles(files: FileList | null) {
     if (!files) return;

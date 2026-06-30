@@ -489,7 +489,7 @@ export function SimilarQuestionGeneratorClient({
 
         <div
           ref={gridRef}
-          className="grid h-[min(760px,calc(100dvh-220px))] min-h-[520px] grid-cols-1 overflow-hidden lg:[grid-template-columns:var(--sq-grid-columns)]"
+          className="grid grid-cols-1 gap-3 p-3 lg:h-[min(760px,calc(100dvh-220px))] lg:min-h-[520px] lg:gap-0 lg:overflow-hidden lg:p-0 lg:[grid-template-columns:var(--sq-grid-columns)]"
           style={{ "--sq-grid-columns": gridColumns } as CSSProperties}
         >
           {/* ─── 좌: 대상 지문 선택 (내 지문 + 직접 입력 + 이미지/PDF 추출) ─── */}
@@ -498,7 +498,7 @@ export function SimilarQuestionGeneratorClient({
           ) : (
             <div
               ref={leftColRef}
-              className="flex min-h-0 min-w-0 flex-col overflow-hidden border-r border-slate-200"
+              className="flex h-[70vh] min-h-0 min-w-0 flex-col overflow-hidden rounded-md border border-slate-200 lg:h-auto lg:rounded-none lg:border-0 lg:border-r"
             >
               <IntakeSurface
                 intakeView={intakeView}
@@ -586,7 +586,7 @@ export function SimilarQuestionGeneratorClient({
           )}
 
           {/* ─── 중앙: 원본 문항(참조) 미리보기 + 실행 ─── */}
-          <section className="flex min-w-0 flex-col overflow-hidden bg-slate-100/70">
+          <section className="flex h-[70vh] min-w-0 flex-col overflow-hidden rounded-md border border-slate-200 bg-slate-100/70 lg:h-auto lg:rounded-none lg:border-0">
             <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-slate-200 bg-white px-4 py-2">
               <span className="text-[12px] font-bold text-slate-700">
                 {staged

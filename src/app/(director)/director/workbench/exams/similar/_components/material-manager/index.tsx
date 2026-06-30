@@ -871,7 +871,9 @@ export function ExtractionManageClient({
       compact={embedded}
       searchValue={display.searchValue}
       onSearchChange={display.setSearchValue}
-      onSearchSubmit={() => display.setAppliedSearch(display.searchValue)}
+      onSearchSubmit={(value) =>
+        display.setAppliedSearch(value ?? display.searchValue)
+      }
       showFilters={showMaterialFilters}
       onToggleFilters={() => setShowMaterialFilters((v) => !v)}
       hasActiveFilter={materialHasActiveFilter}

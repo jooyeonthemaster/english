@@ -266,10 +266,11 @@ export function CustomTypeLab({
             <button
               type="button"
               onClick={() => setHistoryOpen((v) => !v)}
-              className="inline-flex h-8 items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 transition-colors hover:border-blue-200 hover:text-blue-700"
+              title="이력"
+              aria-label="이력"
+              className="inline-flex size-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-colors hover:border-blue-200 hover:text-blue-700"
             >
               <History className="size-3.5" />
-              이력
             </button>
             {historyOpen ? (
               <>

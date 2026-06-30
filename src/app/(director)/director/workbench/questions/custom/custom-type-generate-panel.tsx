@@ -773,19 +773,21 @@ export function CustomTypeGeneratePanel({
                   <button
                     type="button"
                     onClick={() => handleUnapproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-red-50 px-2.5 text-[11px] font-semibold text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700"
+                    title="검수취소"
+                    aria-label="검수취소"
+                    className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700"
                   >
                     <XCircle className="h-3.5 w-3.5" />
-                    검수취소
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={() => handleApproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-green-200 bg-green-50/60 px-2.5 text-[11px] font-semibold text-green-700 transition-colors hover:border-green-300 hover:bg-green-50 hover:text-green-800"
+                    title="검수완료"
+                    aria-label="검수완료"
+                    className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-green-200 bg-green-50/60 text-green-700 transition-colors hover:border-green-300 hover:bg-green-50 hover:text-green-800"
                   >
                     <CheckCircle2 className="h-3.5 w-3.5" />
-                    검수완료
                   </button>
                 )}
                 <button

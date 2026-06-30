@@ -541,16 +541,18 @@ export function ExtractionDetailModal({
             <button
               type="button"
               onClick={closeReportEditor}
-              className="ml-2 flex h-9 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-[12px] font-bold text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+              title="뒤로가기"
+              aria-label="뒤로가기"
+              className="ml-2 inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
             >
               <ArrowLeft className="size-3.5" aria-hidden="true" />
-              뒤로가기
             </button>
           ) : draft ? (
             // 복원문 섹션에 있던 저장 버튼을 창 오른쪽 위로 옮김. 전역 표준 SaveButton 사용.
             <SaveButton
               onClick={handleSaveEdits}
               saving={saving}
+              iconOnly
               disabled={analysisRunning || editorContent.trim().length < 20}
               title="제목·복원문 수정 내용을 저장합니다 (학습자료 생성 없이)"
               className="ml-2 shrink-0"
@@ -569,7 +571,7 @@ export function ExtractionDetailModal({
                   : "검수필요 — 누르면 검수완료로 표시합니다"
               }
               className={
-                "ml-1 flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border bg-white px-3 text-[12px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-70 " +
+                "ml-1 inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md border bg-white transition-colors disabled:cursor-not-allowed disabled:opacity-70 " +
                 (isReviewCommitted
                   ? "border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
                   : "border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
@@ -580,7 +582,6 @@ export function ExtractionDetailModal({
               ) : (
                 <CheckCircle2 className="size-3.5" aria-hidden="true" />
               )}
-              {isReviewCommitted ? "검수완료" : "미검수"}
             </button>
           ) : null}
           {onDelete && !reportEditorOpen ? (
@@ -588,14 +589,15 @@ export function ExtractionDetailModal({
               type="button"
               onClick={() => onDelete(passage)}
               disabled={deleteBusy}
-              className="ml-1 inline-flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 text-[12px] font-bold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+              title="삭제"
+              aria-label="삭제"
+              className="ml-1 inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {deleteBusy ? (
                 <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
               ) : (
                 <Trash2 className="size-3.5" aria-hidden="true" />
               )}
-              삭제
             </button>
           ) : null}
           <button

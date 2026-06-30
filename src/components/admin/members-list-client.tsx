@@ -213,7 +213,7 @@ export function MembersListClient({ members }: MembersListClientProps) {
 
       {/* Table */}
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-        <div className="flex items-center justify-between gap-3 px-5 py-3 border-b border-gray-50">
+        <div className="flex flex-col items-start gap-3 border-b border-gray-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <span className="text-[12px] text-gray-500">
             <span className="font-semibold text-gray-800 tabular-nums">
               {sorted.length}
