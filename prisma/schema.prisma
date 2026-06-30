@@ -2420,6 +2420,7 @@ model CreditTopUp {
   academy           Academy               @relation(fields: [academyId], references: [id])
   creditTransaction CreditTransaction?    @relation(fields: [creditTransactionId], references: [id])
   webhookEvents     PortOneWebhookEvent[]
+  bankDeposits      BankDepositNotification[]
 
   @@index([academyId])
   @@index([academyId, status, createdAt])
@@ -2457,6 +2458,32 @@ model PortOneWebhookEvent {
   @@index([subscriptionPaymentId])
   @@index([status, receivedAt])
   @@map("portone_webhook_events")
+}
+
+/// BankDepositNotification — inbound bank deposit alerts (무통장입금 자동확인)
+/// Relayed from a bank SMS/push forwarder. Idempotent on externalId.
+/// status: "MATCHED" | "UNMATCHED" | "AMBIGUOUS" | "IGNORED" | "FAILED"
+model BankDepositNotification {
+  id             String    @id @default(cuid())
+  externalId     String    @unique // dedup key from relay (SMS hash / provider id)
+  source         String    @default("sms") // relay channel
+  rawText        String    @db.Text
+  amount         Int // 입금 금액 (원)
+  depositorName  String? // 입금자명 (정규화 전 원본)
+  bankName       String?
+  status         String    @default("UNMATCHED")
+  matchedTopUpId String? // CreditTopUp matched & credited
+  note           String?   @db.Text
+  occurredAt     DateTime? // 은행이 알려준 입금 시각
+  receivedAt     DateTime  @default(now())
+  processedAt    DateTime?
+
+  matchedTopUp CreditTopUp? @relation(fields: [matchedTopUpId], references: [id], onDelete: SetNull)
+
+  @@index([status, receivedAt])
+  @@index([amount])
+  @@index([matchedTopUpId])
+  @@map("bank_deposit_notifications")
 }
 
 // ============================================================================
