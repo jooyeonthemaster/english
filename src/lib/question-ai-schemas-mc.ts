@@ -576,6 +576,8 @@ import {
   summaryWritingSchema,
   buildSummaryWritingSchema,
   wordOrderSchema,
+  topicSentenceWritingSchema,
+  buildTopicSentenceWritingSchema,
   grammarCorrectionSchema,
 } from "./question-schemas-essay";
 
@@ -586,6 +588,7 @@ const AI_ESSAY_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   SUMMARY_COMPLETE: summaryCompleteSchema,
   SUMMARY_WRITING: summaryWritingSchema,
   WORD_ORDER: wordOrderSchema,
+  TOPIC_SENTENCE_WRITING: topicSentenceWritingSchema,
   GRAMMAR_CORRECTION: grammarCorrectionSchema,
 };
 
@@ -658,6 +661,7 @@ export function getAiResponseSchema(
     summaryCompleteMcBlankCount?: number;
     summaryCompleteBlankCount?: number;
     summaryWritingBlankCount?: number;
+    topicSentenceWritingBlankCount?: number;
     contentMatchOptionCount?: number;
     contentMatchAnswerCount?: number;
     vocabChoiceMarkerCount?: number;
@@ -712,6 +716,13 @@ export function getAiResponseSchema(
     options.summaryWritingBlankCount !== 1
   ) {
     schema = buildSummaryWritingSchema(options.summaryWritingBlankCount);
+  }
+  if (
+    typeId === "TOPIC_SENTENCE_WRITING" &&
+    options?.topicSentenceWritingBlankCount &&
+    options.topicSentenceWritingBlankCount !== 1
+  ) {
+    schema = buildTopicSentenceWritingSchema(options.topicSentenceWritingBlankCount);
   }
   if (
     typeId === "CONTENT_MATCH" &&

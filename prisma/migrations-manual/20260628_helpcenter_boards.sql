@@ -69,3 +69,7 @@ CREATE TABLE IF NOT EXISTS "seminar_requests" (
   "updatedAt" TIMESTAMP(3) NOT NULL
 );
 CREATE INDEX IF NOT EXISTS "seminar_requests_status_createdAt_idx" ON "seminar_requests" ("status", "createdAt");
+
+-- 운영자 입력 화상회의 링크. schema.prisma SeminarRequest.meetingUrl 와 동기화(파일이 뒤처져 보강).
+-- prod 에는 이미 surgical ALTER 로 존재 → IF NOT EXISTS 로 멱등(no-op). 신규 부트스트랩 정합성용.
+ALTER TABLE "seminar_requests" ADD COLUMN IF NOT EXISTS "meetingUrl" TEXT;

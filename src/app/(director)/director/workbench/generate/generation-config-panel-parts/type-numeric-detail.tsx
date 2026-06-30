@@ -15,7 +15,7 @@ import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
 import { QUESTION_GENERATION_PLANS, getQuestionGenerationCreditCost } from "@/lib/question-generation-plans";
-import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GENERIC_OPTION_COUNT_MAX, GENERIC_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SENTENCE_INSERT_SLOT_COUNT_MAX, SENTENCE_INSERT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN, VOCAB_CHOICE_ANSWER_COUNT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN, getQuestionLanguageToggleScope, readQuestionTypeGenerationPlanSetting, supportsGistAnswerPolarity } from "@/lib/question-type-generation-settings";
+import { ANTONYM_PAIR_COUNT_MAX, ANTONYM_PAIR_COUNT_MIN, BLANK_INFERENCE_BLANK_COUNT_MAX, BLANK_INFERENCE_BLANK_COUNT_MIN, CONTENT_MATCH_ANSWER_COUNT_MIN, CONTENT_MATCH_OPTION_COUNT_MAX, CONTENT_MATCH_OPTION_COUNT_MIN, GENERIC_OPTION_COUNT_MAX, GENERIC_OPTION_COUNT_MIN, GRAMMAR_ANSWER_COUNT_MIN, GRAMMAR_CORRECTION_ERROR_COUNT_MAX, GRAMMAR_CORRECTION_ERROR_COUNT_MIN, GRAMMAR_MARKER_COUNT_MAX, GRAMMAR_MARKER_COUNT_MIN, IRRELEVANT_SLOT_COUNT_MAX, IRRELEVANT_SLOT_COUNT_MIN, SENTENCE_INSERT_SLOT_COUNT_MAX, SENTENCE_INSERT_SLOT_COUNT_MIN, SUMMARY_COMPLETE_BLANK_COUNT_MAX, SUMMARY_COMPLETE_BLANK_COUNT_MIN, SUMMARY_COMPLETE_MC_BLANK_COUNT_MAX, SUMMARY_COMPLETE_MC_BLANK_COUNT_MIN, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_MAX, SUMMARY_WRITING_BLANK_COUNT_MIN, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_MAX, SUMMARY_WRITING_DISTRACTOR_COUNT_MIN, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_MAX, SUMMARY_WRITING_TARGET_WORDS_MIN, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MAX, TOPIC_SENTENCE_WRITING_BLANK_COUNT_MIN, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MAX, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MIN, VOCAB_CHOICE_ANSWER_COUNT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN, getQuestionLanguageToggleScope, readQuestionTypeGenerationPlanSetting, resolveTopicSentenceWritingSettings, supportsGistAnswerPolarity } from "@/lib/question-type-generation-settings";
 import { Cpu, FileText, Gem, Minus, Plus, Target } from "lucide-react";
 
 export function renderAntonymDetail({ antonymPairCount, setAntonymPairCount }) {
@@ -416,6 +416,193 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
               ],
               onChange: (next: string) =>
                 patchTypeSettings("SUMMARY_WRITING", { blankAssignment: next }),
+            })}
+          </div>
+        </div>
+      );
+    }
+
+export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTypeSettings, difficulty }) {
+      // 미설정 옵션은 "선택한 난이도의 프리셋"으로 표시한다(SUMMARY_WRITING이 고정 중급
+      // 폴백을 쓰는 것과 다른 핵심 요구사항). resolve가 강사 설정값 우선 + 미설정은
+      // 난이도 프리셋 + 호환성 매트릭스(F)까지 적용하므로, 화면에 보이는 값 = 실제 생성될 값.
+      // → 기본/중급/킬러를 바꾸면 패널 값이 눈에 띄게 달라진다.
+      const raw = (questionTypeSettings.TOPIC_SENTENCE_WRITING || {}) as Record<
+        string,
+        unknown
+      >;
+      // 이 유형의 실제 난이도(미설정이면 전역/기본 난이도). resolve의 fallbackDifficulty로 넘긴다.
+      const effDiff =
+        (raw.difficulty as "BASIC" | "INTERMEDIATE" | "KILLER" | undefined) ??
+        difficulty ??
+        "INTERMEDIATE";
+      const r = resolveTopicSentenceWritingSettings(raw, effDiff);
+
+      // 호환성 매트릭스(바이블 §2·§3) — 회색/비활성 처리.
+      const isCloze = r.mode === "cloze";
+      // 빈칸 개수는 cloze 전용. scrambled이면 비활성.
+      const blankCountDisabled = !isCloze;
+      // cloze + 명사구는 빈칸 1개 강제(다중 빈칸은 문장형만) — resolve가 이미 1로 강등하지만 UI도 잠근다.
+      const blankCountLockedByNounPhrase = isCloze && r.topicForm === "nounPhrase";
+
+      return (
+        <div className="space-y-3">
+          {/* 출제 방식 — 두 축의 첫 번째. 최상단. */}
+          {renderSegSetting({
+            title: "출제 방식",
+            description:
+              "배열은 주어진 단어를 올바른 순서로 배열, 빈칸완성은 주제문 빈칸을 [보기]로 채웁니다.",
+            value: r.mode,
+            options: [
+              { value: "scrambled", label: "배열" },
+              { value: "cloze", label: "빈칸완성" },
+            ],
+            onChange: (next: string) =>
+              patchTypeSettings("TOPIC_SENTENCE_WRITING", { mode: next }),
+          })}
+
+          {/* 주제 형태 — 두 축의 두 번째. */}
+          <div className="border-t border-slate-100 pt-3">
+            {renderSegSetting({
+              title: "주제 형태",
+              description:
+                "주제문은 완전한 문장(12~14단어), 명사구는 동사 없는 학술 명사구(12단어 이내)로 출제합니다.",
+              value: r.topicForm,
+              options: [
+                { value: "sentence", label: "주제문" },
+                { value: "nounPhrase", label: "명사구" },
+              ],
+              onChange: (next: string) =>
+                patchTypeSettings("TOPIC_SENTENCE_WRITING", { topicForm: next }),
+            })}
+          </div>
+
+          {/* 주제 힌트 제공 */}
+          <div className="border-t border-slate-100 pt-3">
+            {renderToggleSetting({
+              title: "주제 힌트 제공",
+              description:
+                "주제의 한국어 단서([주제 힌트] 박스)를 제공합니다. 끄면 해석 없이 풀어야 해 난도가 올라갑니다.",
+              checked: r.hintEnabled,
+              onChange: () =>
+                patchTypeSettings("TOPIC_SENTENCE_WRITING", {
+                  hintEnabled: !r.hintEnabled,
+                }),
+            })}
+          </div>
+
+          {/* 제시어 입도 */}
+          <div className="border-t border-slate-100 pt-3">
+            {renderSegSetting({
+              title: "제시어 입도",
+              description:
+                "구 단위는 여러 단어를 한 칩으로(쉬움), 단어 단위는 단어 하나씩 칩으로(어려움) 제시합니다.",
+              value: r.chunking === "word" ? "word" : "chunk",
+              options: [
+                { value: "chunk", label: "구 단위" },
+                { value: "word", label: "단어 단위" },
+              ],
+              onChange: (next: string) =>
+                patchTypeSettings("TOPIC_SENTENCE_WRITING", { chunking: next }),
+            })}
+          </div>
+
+          {/* 미끼 단어 수 — 제시어/보기는 항상 있으므로 항상 활성. */}
+          <div className="border-t border-slate-100 pt-3">
+            {renderNumberSetting({
+              title: "미끼 단어 수",
+              badges: [
+                `${TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MIN} ~ ${TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MAX}`,
+                r.distractors > 0 ? "함정" : "미끼 없음",
+              ],
+              description:
+                "정답에 쓰이지 않는 미끼 제시어 수입니다. 미끼는 정답 단어의 동의어·활용형으로 만들어 '다 끼우기'를 막습니다.",
+              value: r.distractors,
+              min: TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MIN,
+              max: TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MAX,
+              onChange: (next: number) =>
+                patchTypeSettings("TOPIC_SENTENCE_WRITING", {
+                  distractors: Math.min(
+                    TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MAX,
+                    Math.max(
+                      TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_MIN,
+                      Math.round(next),
+                    ),
+                  ),
+                }),
+              ariaBase: "topic sentence writing distractor count",
+            })}
+          </div>
+
+          {/* 제시어 어형 */}
+          <div className="border-t border-slate-100 pt-3">
+            {renderSegSetting({
+              title: "제시어 어형",
+              description:
+                "그대로는 주어진 형태를 그대로, 어형 변형은 시제·수 등을 바꿔 써야 정답이 됩니다.",
+              value: r.fidelity === "inflected" ? "inflected" : "verbatim",
+              options: [
+                { value: "verbatim", label: "그대로" },
+                { value: "inflected", label: "어형 변형" },
+              ],
+              onChange: (next: string) =>
+                patchTypeSettings("TOPIC_SENTENCE_WRITING", { fidelity: next }),
+            })}
+          </div>
+
+          {/* 빈칸 개수 — cloze 전용. scrambled이면 비활성. */}
+          <div className="border-t border-slate-100 pt-3">
+            {renderNumberSetting({
+              title: "빈칸 개수",
+              badges: [
+                `${TOPIC_SENTENCE_WRITING_BLANK_COUNT_MIN} ~ ${TOPIC_SENTENCE_WRITING_BLANK_COUNT_MAX}`,
+                blankCountDisabled
+                  ? "빈칸완성 전용"
+                  : r.blankCount >= 2
+                    ? "(A)(B) 다중 빈칸"
+                    : "단일 빈칸",
+              ],
+              description: blankCountDisabled
+                ? "출제 방식을 '빈칸완성'으로 설정해야 빈칸 개수를 정할 수 있습니다."
+                : blankCountLockedByNounPhrase
+                  ? "주제 형태가 '명사구'이면 빈칸은 1개로 고정됩니다. 다중 빈칸은 '주제문'에서만 가능합니다."
+                  : "주제문에서 학생이 영작할 빈칸 수입니다. 한 빈칸에 여러 단어가 들어갑니다.",
+              value: blankCountDisabled ? 1 : r.blankCount,
+              min: TOPIC_SENTENCE_WRITING_BLANK_COUNT_MIN,
+              max:
+                blankCountDisabled || blankCountLockedByNounPhrase
+                  ? TOPIC_SENTENCE_WRITING_BLANK_COUNT_MIN
+                  : TOPIC_SENTENCE_WRITING_BLANK_COUNT_MAX,
+              onChange: (next: number) => {
+                if (blankCountDisabled) return;
+                patchTypeSettings("TOPIC_SENTENCE_WRITING", {
+                  blankCount: Math.min(
+                    TOPIC_SENTENCE_WRITING_BLANK_COUNT_MAX,
+                    Math.max(
+                      TOPIC_SENTENCE_WRITING_BLANK_COUNT_MIN,
+                      Math.round(next),
+                    ),
+                  ),
+                });
+              },
+              ariaBase: "topic sentence writing blank count",
+            })}
+          </div>
+
+          {/* 주제 출처 */}
+          <div className="border-t border-slate-100 pt-3">
+            {renderSegSetting({
+              title: "주제 출처",
+              description:
+                "명시는 지문에 그대로 드러난 주제, 환언은 같은 뜻을 바꿔 쓴 주제, 추론은 상위 명제로 끌어올린 주제로 출제합니다.",
+              value: r.sourceMode,
+              options: [
+                { value: "explicit", label: "명시" },
+                { value: "paraphrase", label: "환언" },
+                { value: "inference", label: "추론" },
+              ],
+              onChange: (next: string) =>
+                patchTypeSettings("TOPIC_SENTENCE_WRITING", { sourceMode: next }),
             })}
           </div>
         </div>

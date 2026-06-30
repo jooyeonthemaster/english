@@ -23,6 +23,7 @@ import {
   type SummaryCompleteQuestion,
   type SummaryWritingQuestion,
   type WordOrderQuestion,
+  type TopicSentenceWritingQuestion,
   type GrammarCorrectionQuestion,
   type ContextMeaningQuestion,
   type SynonymQuestion,
@@ -607,6 +608,87 @@ export function WordOrderRenderer({ q }: { q: WordOrderQuestion }) {
       </SelectableBlock>
       <AnswerRevealSection>
         <ModelAnswer answer={q.modelAnswer} />
+        <AnswerLine answer={q.correctAnswer} />
+        <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} />
+      </AnswerRevealSection>
+    </>
+  );
+}
+
+export function TopicSentenceWritingRenderer({ q }: { q: TopicSentenceWritingQuestion }) {
+  // 주제문 영작 = SUMMARY_WRITING(요약문 영작, cloze) + WORD_ORDER(배열 영작, scrambled) 하이브리드.
+  // mode 로 분기하되 두 레퍼런스 렌더러의 학생노출 마크업을 그대로 미러한다.
+  // 👁학생노출: koreanGloss(주제 힌트) / scrambledWords(셔플 칩) / 마스킹된 summaryWithBlanks / wordBank.
+  // 🔒비밀: modelAnswer / blanks[].answer / acceptableVariants / scoringCriteria → AnswerRevealSection 안에서만.
+  const koreanGloss = typeof q.koreanGloss === "string" ? q.koreanGloss.trim() : "";
+  const isCloze = q.mode === "cloze";
+
+  // scrambled: 셔플된 제시어 칩(정답 어순 노출 금지 — WORD_ORDER 와 동일하게 scrambledWords 칩만).
+  const scrambledWords = Array.isArray(q.scrambledWords)
+    ? q.scrambledWords.map((w) => (typeof w === "string" ? w.trim() : "")).filter(Boolean)
+    : [];
+  // cloze: 마스킹 통과한 주제문 + 보기 칩. (' / ' join→split 왕복 금지 — chunk 칩의 슬래시 보존)
+  const maskedTopic = isCloze ? summaryWritingMaskedSummary(q) : "";
+  const wordBank = Array.isArray(q.wordBank)
+    ? q.wordBank.map((w) => (typeof w === "string" ? w.trim() : "")).filter(Boolean)
+    : [];
+  const blanks = Array.isArray(q.blanks) ? q.blanks : [];
+
+  return (
+    <>
+      <Direction text={q.direction} />
+      <SourcePassageBlock q={q as TopicSentenceWritingQuestion & { _sourcePassageContent?: unknown }} />
+      {/* [주제 힌트] — 회색(slate) 박스. PassageBlock=slate-50 */}
+      {koreanGloss && <PassageBlock label="주제 힌트">{koreanGloss}</PassageBlock>}
+      {isCloze ? (
+        <>
+          {/* [주제문] — (A)(B) 파란 배지 + 파란 밑줄선. 마스킹 통과본만(정답어구 미포함) */}
+          <PassageBlock label="주제문">{renderSummaryBlankMarkers(maskedTopic)}</PassageBlock>
+          {/* [보기] — SUMMARY_WRITING 칩 스타일. 미끼도 동일 스타일(시각 구분 없음). 비밀 미끼목록 미노출 */}
+          {wordBank.length > 0 && (
+            <div className="flex flex-wrap gap-2 p-3 rounded-lg bg-slate-50 border border-slate-200">
+              {wordBank.map((word, i) => (
+                <span key={i} className="inline-block px-2.5 py-1 rounded-md bg-white border border-slate-300 text-[12px] font-medium text-slate-700 shadow-sm">
+                  {word}
+                </span>
+              ))}
+            </div>
+          )}
+        </>
+      ) : (
+        // [배열 단어] — WORD_ORDER 칩 스타일. 셔플된 scrambledWords 만 노출(정답 어순 비밀).
+        <div className="flex flex-wrap gap-2 p-3 rounded-lg bg-slate-50 border border-slate-200">
+          {scrambledWords.map((word, i) => (
+            <span key={i} className="inline-block px-2.5 py-1 rounded-md bg-white border border-slate-300 text-[12px] font-medium text-slate-700 shadow-sm">
+              {word}
+            </span>
+          ))}
+        </div>
+      )}
+      <AnswerRevealSection>
+        <ModelAnswer answer={q.modelAnswer} />
+        {isCloze && blanks.length > 0 && (
+          <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 space-y-1">
+            <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">빈칸 정답</span>
+            {blanks.map((b, i) => (
+              <div key={i} className="text-[12px] text-emerald-800 flex items-start gap-2">
+                <span className="font-bold shrink-0">{b.label}</span>
+                <span>
+                  {b.answer}
+                  {Array.isArray(b.acceptableVariants) && b.acceptableVariants.length > 0 && (
+                    <span className="text-emerald-600"> / {b.acceptableVariants.join(" / ")}</span>
+                  )}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+        {Array.isArray(q.acceptableVariants) && q.acceptableVariants.length > 0 && (
+          <ConditionsBox conditions={q.acceptableVariants} label="동치 정답" />
+        )}
+        {Array.isArray(q.scoringCriteria) && q.scoringCriteria.length > 0 && (
+          <ConditionsBox conditions={q.scoringCriteria} label="채점 기준" />
+        )}
         <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} />
       </AnswerRevealSection>

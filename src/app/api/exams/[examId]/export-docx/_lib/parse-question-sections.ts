@@ -61,6 +61,11 @@ export function parseQuestionSections(
     "[conditions]": { type: "conditions", label: "조건" },
     "[요약문]": { type: "summary", label: "요약문" },
     "[summary]": { type: "summary", label: "요약문" },
+    // 주제문 영작(TOPIC_SENTENCE_WRITING) 학생 안전 블록 — 정답계열 미포함.
+    //   [주제문] → summary(요약문 박스 재사용, 라벨만 주제문), [주제 힌트] → context(회색 해석),
+    //   [보기]/[배열 단어] 는 위 scrambled 매핑 재사용.
+    "[주제문]": { type: "summary", label: "주제문" },
+    "[주제 힌트]": { type: "context", label: "주제 힌트" },
     "[빈칸 정답]": { type: "blanks", label: "빈칸 정답" },
     "[blank answers]": { type: "blanks", label: "빈칸 정답" },
     // 요약문 영작(SUMMARY_WRITING) 학생 안전 블록 — 정답계열은 직렬화에 미포함.

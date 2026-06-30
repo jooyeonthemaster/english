@@ -167,17 +167,21 @@ function StructuredBody({
         if (group.style === "passage" || group.style === "summary" || group.style === "given") {
           const isSourcePassage = group.style === "passage";
           const isSummaryWriting = subType === "SUMMARY_WRITING";
-          // 요약문 영작의 보조 박스(해석/보기/앞글자)는 회색 슬레이트 톤.
-          // [요약문] 박스는 본문 가독성을 위해 본문 색을 유지한다.
-          const isSwSecondaryBox = isSummaryWriting && group.style === "given";
+          const isTopicSentenceWriting = subType === "TOPIC_SENTENCE_WRITING";
+          // 영작형(요약문 영작·주제문 영작): 보조 박스 회색 톤 + 라벨 굵게 분리를 공유한다.
+          const isWritingType = isSummaryWriting || isTopicSentenceWriting;
+          // 영작형 보조 박스(해석/보기/앞글자 · 주제 힌트/보기/배열 단어)는 회색 슬레이트 톤.
+          // [요약문]/[주제문] 박스는 본문 가독성을 위해 본문 색을 유지한다.
+          const isSwSecondaryBox = isWritingType && group.style === "given";
           // 수능 표준: 지문·요약·주어진문장 박스 본문은 일반체(라벨·마커만 강조).
           // 출처 지문 박스와 동일 weight 로 통일 — 임베드/출처 유형 간 볼드 불일치 해소.
           const boxTone = "font-normal";
-          // 요약문 영작은 [해석]/[보기]/[앞글자] 라벨이 본문 앞에 포함돼 있으므로
-          // SUMMARY_COMPLETE 처럼 별도 [요약문] 헤더를 덧붙이지 않고, 라벨만 굵게 분리한다.
+          // 영작형은 [해석]/[보기]/[앞글자]·[주제 힌트]/[배열 단어] 라벨이 본문 앞에 포함돼
+          // 있으므로 SUMMARY_COMPLETE 처럼 별도 헤더를 덧붙이지 않고, 라벨만 굵게 분리한다.
+          // (주제문 영작의 [주제 힌트]/[배열 단어] 는 길이가 8자를 넘으므로 라벨 폭을 넓힌다.)
           const swLabelMatch =
-            isSummaryWriting && !resumed
-              ? text.match(/^(\[[^\]\n]{1,8}\])\s*([\s\S]*)$/)
+            isWritingType && !resumed
+              ? text.match(/^(\[[^\]\n]{1,12}\])\s*([\s\S]*)$/)
               : null;
           const swLabel = swLabelMatch ? swLabelMatch[1] : "";
           const swBody = swLabelMatch ? swLabelMatch[2] : text;
@@ -218,7 +222,7 @@ function StructuredBody({
                   </EditableText>
                 </span>
               )}
-              {group.style === "given" && !isSummaryWriting && !resumed && (
+              {group.style === "given" && !isWritingType && !resumed && (
                 <span className="mb-0.5 block text-[9px] font-bold uppercase tracking-wider text-slate-500">
                   주어진 문장
                 </span>
@@ -229,7 +233,7 @@ function StructuredBody({
               {swLabel && (
                 <span className="font-bold text-slate-700">{`${swLabel} `}</span>
               )}
-              {renderFormattedInline(isSummaryWriting ? swBody : text, subType, {
+              {renderFormattedInline(isWritingType ? swBody : text, subType, {
                 alphabetMarkerClassName: "font-semibold text-slate-950",
               })}
               {continues && (

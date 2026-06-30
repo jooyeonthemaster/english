@@ -16,6 +16,7 @@ import {
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
 import { isSummaryWriting, summaryWritingStudentParts } from "@/lib/summary-writing";
+import { isTopicSentenceWriting, topicSentenceWritingStudentParts } from "@/lib/topic-sentence-writing";
 
 function toPrismaJson(value: unknown): Prisma.InputJsonValue | undefined {
   if (value === undefined || value === null) return undefined;
@@ -69,6 +70,13 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
   // SW-LEAK-1: SUMMARY_WRITING 은 학생 안전 블록만 직렬화([빈칸 정답]·modelAnswer 미포함)
   if (isSummaryWriting(typeId)) {
     for (const part of summaryWritingStudentParts(q)) push(part);
+    if (q.questionText && !q.direction) push(q.questionText);
+    return parts.filter(Boolean).join("\n\n");
+  }
+  // SW-LEAK-1: TOPIC_SENTENCE_WRITING 도 학생 안전 블록만 직렬화(정답·modelAnswer 미포함).
+  // 일반 경로(아래 [빈칸 정답])는 blanks[].answer 를 노출하므로 반드시 여기서 분기한다.
+  if (isTopicSentenceWriting(typeId)) {
+    for (const part of topicSentenceWritingStudentParts(q)) push(part);
     if (q.questionText && !q.direction) push(q.questionText);
     return parts.filter(Boolean).join("\n\n");
   }

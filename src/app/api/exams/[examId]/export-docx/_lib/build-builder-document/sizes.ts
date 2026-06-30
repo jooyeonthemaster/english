@@ -42,6 +42,7 @@ export const SUBTYPE_LABELS_DOCX: Record<string, string> = {
   SUMMARY_COMPLETE: "요약문 완성",
   SUMMARY_WRITING: "요약문 영작",
   WORD_ORDER: "배열 영작",
+  TOPIC_SENTENCE_WRITING: "주제문 영작",
   GRAMMAR_CORRECTION: "문법 오류 수정",
   CONTEXT_MEANING: "문맥 속 의미",
   SYNONYM: "동의어",

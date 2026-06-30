@@ -1469,6 +1469,143 @@ export const FANOUT_TYPE_CONTROLS: Record<string, EditControl[]> = {
       "defaultValue": "off"
     }
   ],
+  "TOPIC_SENTENCE_WRITING": [
+    {
+      "id": "distractorStrength",
+      "kind": "segmented",
+      "label": "미끼 제시어",
+      "hint": "쓰지 않는 제시어(미끼)를 추가/강화해 '다 끼우기'를 차단합니다. 모드(배열/빈칸완성)와 제시어 개수는 유지됩니다.",
+      "badges": [
+        "난이도 ↑",
+        "암기 방지"
+      ],
+      "options": [
+        {
+          "value": "keep",
+          "label": "유지",
+          "directive": null
+        },
+        {
+          "value": "subtle",
+          "label": "동의어·활용형 미끼",
+          "directive": "미끼(쓰지 않는 제시어)를 정답의 동의어나 어형 변형(시제·수)으로 더 그럴듯하게 만들어 줘. 무관한 미끼는 즉시 배제되므로 정답과 같은 의미장·문법 자리에서 헷갈리는 후보로. scrambled 모드면 scrambledWords 에, cloze 모드면 wordBank 에 섞되 반드시 셔플하고, wordBankDistractors(교사면 전용)에 미끼 목록을 기록해. 정답 어구·어순은 학생면에 노출하지 마. 모드와 제시어 개수는 유지해."
+        },
+        {
+          "value": "inflected",
+          "label": "어형변형 강제",
+          "directive": "fidelity 를 inflected 로 바꿔 제시어를 그대로 쓰면 안 되고 시제·수·품사 등 어형을 바꿔야 완성되도록 다시 구성해 줘(받아쓰기 방지). 발문의 '변형 없이 한 번씩 사용' 문구는 제거하고, 모범답안(modelAnswer)·정답 어형이 제시어와 다르게. 정답계열은 학생면에 노출하지 마. 모드와 제시어 개수는 유지해."
+        }
+      ],
+      "defaultValue": "keep"
+    },
+    {
+      "id": "sourceMode",
+      "kind": "segmented",
+      "label": "주제 출처",
+      "hint": "주제를 지문에서 어떻게 끌어내는지(명시문장/환언/상위명제 추론)를 조정합니다. 모드·구조는 유지됩니다.",
+      "badges": [
+        "난이도 조정"
+      ],
+      "options": [
+        {
+          "value": "keep",
+          "label": "유지",
+          "directive": null
+        },
+        {
+          "value": "paraphrase",
+          "label": "환언",
+          "directive": "sourceMode 를 paraphrase 로 바꿔, 지문에 명시된 문장을 그대로 쓰지 않고 같은 의미를 다른 표현으로 환언한 주제문/명사구로 다시 구성해 줘. 모범답안(modelAnswer)·제시어·빈칸을 그에 정합하게 맞추되 정답계열은 학생면에 노출하지 마. 모드와 구조 개수는 유지해."
+        },
+        {
+          "value": "inference",
+          "label": "상위명제 추론",
+          "directive": "sourceMode 를 inference 로 바꿔, 지문에 직접 적혀 있지 않은 글 전체의 상위 명제를 추론해 주제문/명사구로 만들어 줘(킬러 난이도). 모범답안·제시어·빈칸을 그 추론 주제에 맞춰 정합하게 재구성하되 정답계열은 학생면에 노출 금지. 모드와 구조 개수는 유지해."
+        }
+      ],
+      "defaultValue": "keep"
+    },
+    {
+      "id": "topicForm",
+      "kind": "segmented",
+      "label": "주제 형태",
+      "hint": "추출한 주제를 완전한 주제문(12~14단어)으로 할지 학술 명사구(≤12단어)로 할지 조정합니다.",
+      "options": [
+        {
+          "value": "keep",
+          "label": "유지",
+          "directive": null
+        },
+        {
+          "value": "sentence",
+          "label": "주제문(문장)",
+          "directive": "topicForm 을 sentence 로 바꿔 주제를 동사를 갖춘 완전한 주제문(약 12~14단어)으로 다시 작성해 줘. 모범답안(modelAnswer)과 제시어·빈칸을 그에 맞춰 정합하게 재구성하되 정답계열은 학생면에 노출하지 마. 모드와 구조 개수는 유지해."
+        },
+        {
+          "value": "nounPhrase",
+          "label": "명사구",
+          "directive": "topicForm 을 nounPhrase 로 바꿔 주제를 관사로 시작하는 학술 명사구(동사 없음, ≤12단어)로 다시 작성해 줘. 모범답안과 제시어·빈칸을 그에 맞춰 정합하게 재구성하되 정답계열은 학생면에 노출하지 마. 모드와 구조 개수는 유지해."
+        }
+      ],
+      "defaultValue": "keep"
+    },
+    {
+      "id": "clueModeConfig",
+      "kind": "segmented",
+      "label": "빈칸 단서(빈칸완성)",
+      "hint": "빈칸완성(cloze) 모드에서 빈칸을 푸는 단서 제공 수준. 빈칸 개수는 유지됩니다.",
+      "badges": [
+        "난이도 조정"
+      ],
+      "options": [
+        {
+          "value": "keep",
+          "label": "유지",
+          "directive": null
+        },
+        {
+          "value": "none",
+          "label": "단서 없음",
+          "directive": "cloze 모드에서 clueMode 를 'none' 으로 설정해 빈칸 단서를 제공하지 않게 해 줘. 학생이 보기와 해석만 보고 풀어야 하므로 난이도가 올라간다. 정답(blanks.answer)은 학생면에 노출하지 말고 빈칸 개수는 유지해."
+        },
+        {
+          "value": "firstLetter",
+          "label": "첫글자 단서",
+          "directive": "cloze 모드에서 clueMode 를 'firstLetter' 로 설정해 각 빈칸 정답의 단어별 첫 글자만 표시하도록 각 blank.firstLetterHint 를 정답(answer) 토큰에서 채워 줘(첫글자 단서는 정답에서 자동 생성). 난이도를 약간 낮추고 빈칸 개수는 유지해. 정답 전체는 노출 금지."
+        },
+        {
+          "value": "wordCount",
+          "label": "단어수 표시",
+          "directive": "cloze 모드에서 clueMode 를 'wordCount' 로 설정해 각 빈칸에 목표 단어수를 표시하도록 각 blank.targetWordCount 를 예상 단어 수로 채워 줘. 난이도를 낮추고 빈칸 개수는 유지해. 정답은 노출 금지."
+        }
+      ],
+      "defaultValue": "keep"
+    },
+    {
+      "id": "koreanGlossConfig",
+      "kind": "segmented",
+      "label": "[주제 힌트] 제공",
+      "hint": "한국어 주제 단서([주제 힌트], koreanGloss) 제공 여부. 정답 어구를 1:1 직역해 나열하면 안 됩니다.",
+      "options": [
+        {
+          "value": "keep",
+          "label": "유지",
+          "directive": null
+        },
+        {
+          "value": "off",
+          "label": "끄기",
+          "directive": "koreanGloss 를 비워 [주제 힌트] 박스를 학생에게 보이지 않게 해 줘. 해석 없이 풀어야 하므로 난이도가 올라간다. 교사면 검수용으로는 koreanGloss 를 유지해도 되지만 학생면 직렬화에는 넣지 마. 모드·구조 개수는 유지해."
+        },
+        {
+          "value": "on",
+          "label": "제공",
+          "directive": "koreanGloss 에 글의 주제를 가리키는 자연스러운 한국어 단서를 채워 줘. 단, 정답 어구(modelAnswer/제시어)를 1:1 로 직역해 나열하면 영작이 받아쓰기로 전락하므로 전체 의미만 전달하도록 작성해. 난이도를 낮추고 모드·구조 개수는 유지해."
+        }
+      ],
+      "defaultValue": "keep"
+    }
+  ],
   "GRAMMAR_CORRECTION": [
     {
       "id": "grammarPointCategory",

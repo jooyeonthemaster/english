@@ -711,6 +711,10 @@ export function GenerationConfigPanel({
 
     if (typeId === "SUMMARY_WRITING") return TypeNumericDetail.renderSummaryWritingDetail({ patchTypeSettings, questionTypeSettings });
 
+    // 주제문 영작 — SUMMARY_WRITING과 달리 "선택한 난이도의 프리셋"을 패널에 반영하기 위해
+    // 이 유형의 실제 난이도(미설정이면 전역 difficulty)를 함께 넘긴다.
+    if (typeId === "TOPIC_SENTENCE_WRITING") return TypeNumericDetail.renderTopicSentenceWritingDetail({ patchTypeSettings, questionTypeSettings, difficulty: (questionTypeSettings.TOPIC_SENTENCE_WRITING?.difficulty as "BASIC" | "INTERMEDIATE" | "KILLER" | undefined) ?? difficulty });
+
     if (typeId === "GRAMMAR_CHOICE_COMBO") return TypeNumericDetail.renderGrammarChoiceComboDetail({ grammarChoiceComboSettings, patchTypeSettings });
 
     if (typeId === "GRAMMAR_ERROR") return TypeNumericDetail.renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax, grammarErrorSettings, grammarMarkerCount, patchTypeSettings, setGrammarAnswerCount, setGrammarMarkerCount });

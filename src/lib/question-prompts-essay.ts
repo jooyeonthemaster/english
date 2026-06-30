@@ -129,6 +129,59 @@ ESSAY_PROMPTS.SUMMARY_WRITING = `요약문 영작 서술형 문제를 만드세�
 - "다음 글의 요약문 빈칸 (A)에 들어갈 말을 [보기]의 단어를 변형 없이 한 번씩 모두 사용하여 영작하시오. [2점]"
 - "다음 글의 [해석]을 참고하여 요약문 빈칸 (A), (B)에 들어갈 말을 [보기]에서 필요한 단어만 골라 (필요시 어형을 바꿔) 영작하시오. (쓰지 않는 단어가 포함됨) [3점]"`;
 
+// 주제문 영작(TOPIC_SENTENCE_WRITING) — 상세 프롬프트. 글을 논리적으로 분석해 "글의 주제"를
+// 주제문(12~14단어) 또는 학술 명사구(≤12단어)로 만들고, ① 제시어 배열(scrambled) 또는
+// ② 주제문 빈칸 완성(cloze)으로 출제하는 내신 킬러 서술형. (요약문 영작/배열 영작의 하이브리드)
+// 잠금 스키마(topicSentenceWritingSchema) 필드와 1:1 매칭.
+// ⚠️ 누수 절대금지: 정답(modelAnswer/blanks[].answer)을 scrambledWords/wordBank/summaryWithBlanks/
+//   koreanGloss 어디에도 그대로/정답어순으로 노출하지 마세요.
+ESSAY_PROMPTS.TOPIC_SENTENCE_WRITING = `주제문 영작 서술형 문제를 만드세요.
+
+## 유형 개요
+- 먼저 지문을 논리적으로 분석해 글 전체의 **단 하나의 주제**를 정합니다.
+- 그 주제를 topicForm 에 따라 **주제문(완전한 문장, 12~14단어)** 또는 **학술 명사구(동사 없는 명사구, 12단어 이내)** 로 작성합니다(modelAnswer).
+- 출제 방식(mode)은 두 가지입니다:
+  - **scrambled(배열)**: 주제문/명사구를 토큰/구로 쪼개 무작위로 섞어(scrambledWords) 학생이 올바른 순서로 배열하게 합니다.
+  - **cloze(빈칸 완성)**: 주제문/명사구의 핵심 어구를 빈칸 (A){,(B)}로 비우고(summaryWithBlanks), [보기](wordBank)·제시어로 학생이 직접 영작하게 합니다.
+- 객관식이 아닙니다 — options 를 만들지 마세요(null/빈 배열).
+
+## 출력 필드 (스키마와 1:1)
+- mode: "scrambled" 또는 "cloze" (주어진 설정값 그대로).
+- topicForm: "sentence" 또는 "nounPhrase" (주어진 설정값 그대로).
+- modelAnswer: 완성된 주제문/명사구 전체(영어). correctAnswer 와 동기화(동일).
+- (scrambled 모드) scrambledWords: modelAnswer 의 토큰/구를 **반드시 셔플**(정답 어순 금지). 예: 정답 "A B C D E" → ["D","B","E","A","C"].
+- (cloze 모드) summaryWithBlanks: (A){,(B)} placeholder 를 각 1회 포함하는 주제문/명사구. **정답 어구 절대 미포함**(placeholder 만).
+- (cloze 모드) blanks: 각 빈칸 {label:"(A)"..., answer(🔒비밀 모범영작), acceptableVariants(🔒동치답), requiredLemmas(🔒핵심표제어), firstLetterHint(단서 모드일 때만), targetWordCount, connectorFrameAfter}.
+- (cloze 모드) wordBank: [보기] 제시어 칩(셔플, 미끼 포함). 같은 단어 2회 필요 시 같은 문자열 2개(×2 규약).
+- wordBankDistractors: 🔒비밀. scrambledWords/wordBank 중 정답에 안 쓰이는 미끼 목록(검수/교사면 전용).
+  ⚠️ 미끼는 무관한 단어가 아니라 정답 단어의 동의어/혼동어/활용형이어야 합니다.
+- koreanGloss: hintEnabled 일 때만. [주제 힌트] 박스 한국어 — 주제의 의미를 자연스러운 한 문장으로. ⚠️ 정답 어구를 1:1 직역 나열하거나 정답 어순을 베끼지 마세요(영작→받아쓰기 누수).
+- mode/topicForm/wordBankFidelity/clueMode/sourceMode/sourceSentenceParaphrase/blankAssignment: 주어진 설정값을 메타로 채웁니다.
+- explanation/keyPoints/tags/difficulty: 공통 필드. explanation 에는 주제를 어떻게 도출했는지(논리 분석) 포함.
+
+## 발문(direction)
+- 발문은 옵션 조합으로 결정론 합성된 문구를 **그대로** 따릅니다(buildTopicSentenceWritingDirection — AI가 새로 짓지 마세요).
+- 배점: BASIC [2점] / INTERMEDIATE [3점] / KILLER [4점].
+
+## 난이도별 출제 지침
+### BASIC (2점) — "구 배열"
+- mode=scrambled, topicForm=nounPhrase. 다단어 구 단위(chunk) 제시어, 미끼 0, [주제 힌트] 직역 제공. 어순 조립만 하면 됨.
+### INTERMEDIATE (3점) — "단어 배열 + 미끼"
+- mode=scrambled, topicForm=sentence. 단어 단위(word) 제시어, 미끼 1(동의어/활용형), [주제 힌트] 자연 의역. 단어 선택+어순 판단.
+### KILLER (4점) — "빈칸완성 + 어형변형 + 미끼 + 추론"
+- mode=cloze, topicForm=sentence. 상위 명제 추론 주제, [보기] 어형변형(inflected), 미끼 2, 빈칸 2, [주제 힌트] 미제공, 부분점수 루브릭.
+
+## 누수 가드 (반드시 준수)
+- 정답(modelAnswer / blanks[].answer)은 scrambledWords·wordBank·summaryWithBlanks·koreanGloss·firstLetterHint 어디에도 그대로 노출 금지.
+- scrambledWords·wordBank 나열 순서 = 정답 어순 금지(반드시 강하게 셔플). 왼쪽→오른쪽으로 읽었을 때 정답 단어가 정답 순서대로 나오면 안 됩니다(정답의 연속 부분수열이 되지 않게 섞으세요). 미끼를 정답 단어들 사이사이에 끼워 넣으세요.
+- 미끼는 정답의 동의어/활용형(무관 미끼 금지). firstLetterHint 는 각 토큰 첫 글자 1개만(소문자), answer 토큰과 1:1.
+- 어법수정형 금지: 일부러 틀린 형태를 제시어로 주고 고치게 하지 마세요(inflected=정상 어형변화만).
+
+## direction 예시
+- "다음 글의 주제가 되도록 [주제 힌트]를 참고하여 주어진 단어를 모두 한 번씩 사용하여 올바른 순서로 배열하시오. [2점]"
+- "다음 글의 주제문이 되도록 주어진 단어를 올바른 순서로 배열하시오. (쓰지 않는 단어가 포함됨) [3점]"
+- "다음 글의 주제문 빈칸 (A), (B)에 들어갈 말을 [보기]에서 필요한 단어만 골라 (필요시 어형을 바꿔) 영작하시오. (쓰지 않는 단어가 포함됨) [4점]"`;
+
 ESSAY_PROMPTS.GRAMMAR_CORRECTION = `어법 고치기 서술형 문제를 만드세요.
 
 ## 출제 방식

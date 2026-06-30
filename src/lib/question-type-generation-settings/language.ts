@@ -31,6 +31,8 @@ const DEFAULT_QUESTION_LANGUAGE_SETTINGS: Record<
   // 요약문 영작 — 서술형(options=null). 발문은 한국어, 보기·요약문은 영어 고정.
   // getQuestionLanguageToggleScope 가 'stem' 을 반환하므로 optionLanguage 는 노출 안 됨.
   SUMMARY_WRITING: { stemLanguage: "ko", optionLanguage: "en" },
+  // 주제문 영작 — 서술형(options=null). 발문 한국어, 제시어/주제문 영어 고정. toggle scope='stem'.
+  TOPIC_SENTENCE_WRITING: { stemLanguage: "ko", optionLanguage: "en" },
   CONDITIONAL_WRITING: { stemLanguage: "ko", optionLanguage: "ko" },
   SENTENCE_TRANSFORM: { stemLanguage: "ko", optionLanguage: "ko" },
   FILL_BLANK_KEY: { stemLanguage: "ko", optionLanguage: "ko" },

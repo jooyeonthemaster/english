@@ -147,6 +147,7 @@ export const TYPE_TO_SPANKIND: Record<string, SpanKind | null> = {
   CONDITIONAL_WRITING: null,
   SENTENCE_TRANSFORM: null,
   WORD_ORDER: null,
+  TOPIC_SENTENCE_WRITING: null,
 };
 
 /** Types that DEFINE a set's displayed base passage (one per set). */

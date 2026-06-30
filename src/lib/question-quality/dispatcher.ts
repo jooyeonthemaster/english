@@ -20,6 +20,7 @@ import { validateSentenceInsertQuestion } from "./validators/sentence-insert";
 import { validateSentenceOrderQuestion } from "./validators/sentence-order";
 import { validateSummaryCompleteMcQuestion } from "./validators/summary/mc";
 import { validateSummaryWritingQuestion } from "./validators/summary/writing";
+import { validateTopicSentenceWritingQuestion } from "./validators/topic-sentence/writing";
 import { validateGistNegativePolarity, validateTopicMainIdeaQuestion } from "./validators/topic";
 import { validateVocabChoiceQuestion } from "./validators/vocab";
 
@@ -54,6 +55,8 @@ export interface ValidateQuestionQualityInput {
   blankInferenceParaphraseAnswer?: boolean;
   /** Requested BLANK_INFERENCE blank unit. "word" intentionally allows single-word blanks. */
   blankInferenceGranularity?: "auto" | "word" | "phrase" | "clause";
+  /** Requested TOPIC_SENTENCE_WRITING (cloze mode) blank count (1~2). Omitted = infer from data. */
+  topicSentenceWritingBlankCount?: number;
   /** Requested option count for free-text option types (TOPIC/TITLE/...). */
   genericOptionCount?: number;
   /** Requested correct-answer count for free-text option types. Omitted = 1. */
@@ -314,6 +317,10 @@ export function validateTypeSpecific(
 
   if (typeId === "SUMMARY_WRITING") {
     validateSummaryWritingQuestion(question, add);
+  }
+
+  if (typeId === "TOPIC_SENTENCE_WRITING") {
+    validateTopicSentenceWritingQuestion(question, add);
   }
 
   if (typeId === "IRRELEVANT") {

@@ -190,10 +190,10 @@ function runHarness() {
 
 const result = runHarness();
 
-test("GRAMMAR_ERROR rejects when a KILLER answer is only a thin local agreement flip", () => {
+test("GRAMMAR_ERROR warns (ship-first) when a KILLER answer is only a thin local agreement flip", () => {
   assert.ok(
     result.thinGrammarErrorQuality.some(
-      (issue) => issue.severity === "error" && issue.code === "grammar-killer-thin-answer",
+      (issue) => issue.severity === "warning" && issue.code === "grammar-killer-thin-answer",
     ),
     JSON.stringify(result.thinGrammarErrorQuality),
   );
@@ -214,7 +214,7 @@ test("GRAMMAR_ERROR does not warn for structurally loaded KILLER agreement", () 
 test("GRAMMAR_CORRECTION applies the same KILLER depth check to hidden errors", () => {
   assert.ok(
     result.thinGrammarCorrectionQuality.some(
-      (issue) => issue.severity === "error" && issue.code === "grammar-correction-killer-thin-segment",
+      (issue) => issue.severity === "warning" && issue.code === "grammar-correction-killer-thin-segment",
     ),
     JSON.stringify(result.thinGrammarCorrectionQuality),
   );

@@ -58,6 +58,12 @@ import {
   summaryWritingMaskedSummary,
   summaryWritingWordBankText,
 } from "@/lib/summary-writing";
+import {
+  isTopicSentenceClozeMode,
+  isTopicSentenceWriting,
+  topicSentenceWritingMaskedTopic,
+  topicSentenceWritingWordBankText,
+} from "@/lib/topic-sentence-writing";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
 
@@ -231,6 +237,70 @@ function resolveSummaryWritingBlocks(
   return extractSummaryWritingBlocksFromText(questionText);
 }
 
+// ---------------------------------------------------------------------------
+// TOPIC_SENTENCE_WRITING (주제문 영작) 학생노출 블록 추출.
+//   SUMMARY_WRITING 과 동일한 SW-LEAK-1: 정답계열(modelAnswer / blanks[].answer /
+//   acceptableVariants / requiredLemmas / wordBankDistractors / scoringCriteria)은 절대
+//   만지지 않는다. mode 분기: cloze=[주제문](마스킹)+[보기], scrambled=[배열 단어].
+//   1차: structuredData(👁필드)의 topic-sentence-writing.ts 학생안전 헬퍼로 직접 생성.
+//   2차(폴백): 이미 학생안전하게 직렬화된 questionText 의 마커 블록만 파싱.
+// ---------------------------------------------------------------------------
+
+interface TopicSentenceWritingStudentBlocks {
+  gloss: string; // [주제 힌트] koreanGloss
+  topic: string; // [주제문] 마스킹된 주제문 (cloze)
+  wordBank: string; // [보기] (cloze)
+  scrambled: string; // [배열 단어] (scrambled)
+}
+
+function extractTopicSentenceWritingBlocksFromText(
+  text: string,
+): TopicSentenceWritingStudentBlocks {
+  const blocks = (text || "").split(/\n{2,}/).map((b) => b.trim()).filter(Boolean);
+  const pick = (marker: string) => {
+    const block = blocks.find((b) => b.startsWith(marker));
+    return block ? block.slice(marker.length).replace(/^\s*/, "").trim() : "";
+  };
+  return {
+    gloss: pick("[주제 힌트]"),
+    topic: pick("[주제문]"),
+    wordBank: pick("[보기]"),
+    scrambled: pick("[배열 단어]"),
+  };
+}
+
+function resolveTopicSentenceWritingBlocks(
+  sourceQuestion: ExamQuestionData["question"],
+  questionText: string,
+): TopicSentenceWritingStudentBlocks {
+  const structured = asPlainRecord(sourceQuestion.structuredData);
+  const hasStructured =
+    typeof structured.mode === "string" ||
+    (Array.isArray(structured.scrambledWords) && structured.scrambledWords.length > 0) ||
+    (typeof structured.summaryWithBlanks === "string" &&
+      structured.summaryWithBlanks.trim().length > 0);
+
+  if (hasStructured) {
+    const gloss = typeof structured.koreanGloss === "string" ? structured.koreanGloss.trim() : "";
+    if (isTopicSentenceClozeMode(structured)) {
+      return {
+        gloss,
+        topic: topicSentenceWritingMaskedTopic(structured),
+        wordBank: topicSentenceWritingWordBankText(structured),
+        scrambled: "",
+      };
+    }
+    const scrambled = Array.isArray(structured.scrambledWords)
+      ? structured.scrambledWords
+          .map((w) => (typeof w === "string" ? w.trim() : ""))
+          .filter(Boolean)
+          .join(" / ")
+      : "";
+    return { gloss, topic: "", wordBank: "", scrambled };
+  }
+  return extractTopicSentenceWritingBlocksFromText(questionText);
+}
+
 export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   const { item, layout, includeAnswers, contentWidthHpu } = opts;
   const compact = layout.density === "compact";
@@ -261,6 +331,135 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   const bodySize = compact ? SIZE.bodyCompact : SIZE.body;
   const showPassageTitle = layout.showPassageTitle === true;
   const passageTitle = printablePassageTitle(item);
+
+  // ── TOPIC_SENTENCE_WRITING (주제문 영작) 전용 렌더 ──
+  //   SUMMARY_WRITING 파이프를 미러하되 라벨/마커만 주제문용으로 바꾸고, mode 로 분기한다.
+  //   순서: 헤더(번호+배점+stem) → [지문] → [주제 힌트](회색 context) →
+  //     cloze: [주제문]((A)(B) 빈칸선, renderSummary 재사용) + [보기](칩) /
+  //     scrambled: [배열 단어](칩, WORD_ORDER 류) → 영작 답란 → (교사면) 정답·해설.
+  //   isSummaryWriting 보다 먼저 검사한다(독립 분기, 무회귀). 정답계열은 영작 답란/칩/마스킹
+  //   어디에도 들어가지 않는다(SW-LEAK-1). 학생노출은 셔플된 scrambledWords/마스킹 주제문뿐.
+  if (isTopicSentenceWriting(subType)) {
+    const tsSections = parseQuestionSections(displayQuestionText, subType);
+    const tsDirection = tsSections.find((s) => s.type === "direction");
+    const tsStem = (tsDirection?.content ?? "").trim();
+    const blocks = resolveTopicSentenceWritingBlocks(item.sourceQuestion, displayQuestionText);
+
+    // 1. 헤더 (번호 + [배점 · 유형] + 발문)
+    const headerRuns: RunNode[] = [
+      txt(`${orderNum}. `, { size: qNumSize, bold: true, color: COLORS.black }),
+    ];
+    if (showMeta) {
+      headerRuns.push(
+        txt("  ", { size: qNumSize }),
+        txt(subTypeLabel ? `[${points}점 · ${subTypeLabel}]` : `[${points}점]`, {
+          size: SIZE.meta,
+          color: COLORS.gray,
+        }),
+      );
+    }
+    if (tsStem) {
+      headerRuns.push(
+        txt(" ", { size: bodySize }),
+        ...parseFormattedToRuns(tsStem, {
+          size: compact ? SIZE.bodyCompact : SIZE.body,
+          bold: true,
+        }),
+      );
+    }
+    result.push({
+      kind: "p",
+      style: { spaceBefore: 80, spaceAfter: 100, lineSpacingPct: 158 },
+      runs: headerRuns,
+    });
+
+    // 2. [지문] — SUMMARY_WRITING 과 동일하게 무조건 함께 렌더. 주제문/제시어 위에.
+    const tsPassage = (item.passageContent ?? item.sourceQuestion.passage?.content ?? "").trim();
+    if (tsPassage) {
+      result.push(
+        ...renderPassage({
+          passageTitle,
+          passageContent: tsPassage,
+          passageStyle: "plain",
+          showPassageTitle,
+          compact,
+          usesSentenceInsertMarkers: false,
+          contentWidthHpu,
+        }),
+      );
+    }
+
+    // 3. [주제 힌트] (있으면) — 회색 context (renderGloss 색 규칙 미러, 라벨만 주제 힌트).
+    if (blocks.gloss) {
+      result.push(...renderContext({ type: "context", label: "주제 힌트", content: blocks.gloss }));
+    }
+
+    if (blocks.topic) {
+      // 4a. cloze — [주제문]((A)(B) 파란 배지 + 고정폭 빈칸선) + [보기] 칩.
+      result.push(
+        ...renderSummary({ type: "summary", label: "주제문", content: blocks.topic }, contentWidthHpu),
+      );
+      if (blocks.wordBank) result.push(...renderWordBank(blocks.wordBank));
+    } else if (blocks.scrambled) {
+      // 4b. scrambled — [배열 단어] 칩(WORD_ORDER 류). 셔플된 제시어뿐, 정답 어순 미노출.
+      result.push(
+        ...renderScrambled({
+          type: "scrambled",
+          label: "배열 단어",
+          content: blocks.scrambled,
+          items: blocks.scrambled
+            .split(/\s*\/\s*/)
+            .map((w) => w.trim())
+            .filter(Boolean),
+        }),
+      );
+    }
+
+    // 5. 영작 답란 (서술형 writing space) — 정답 미포함 경로에서만. 화살표 없음.
+    if (showAnswerSpace && (item.answerSpaceLines ?? 0) > 0) {
+      const lines = Math.max(1, Math.min(12, item.answerSpaceLines ?? 3));
+      for (let i = 0; i < lines; i++) {
+        result.push({
+          kind: "tbl",
+          colWidthsHpu: [contentWidthHpu],
+          borders: { left: NO, right: NO, top: NO, bottom: ANSWER_LINE },
+          rows: [
+            {
+              heightHpu: 720,
+              cells: [
+                {
+                  widthHpu: contentWidthHpu,
+                  heightHpu: 720,
+                  vAlign: "BOTTOM",
+                  borders: { left: NO, right: NO, top: NO, bottom: ANSWER_LINE },
+                  margins: { left: 0, right: 0, top: i === 0 ? 80 : 120, bottom: 0 },
+                  blocks: [{ kind: "p", style: { spaceAfter: 0 }, runs: [] }],
+                },
+              ],
+            },
+          ],
+        });
+      }
+    }
+
+    // 6. 정답·해설 (교사면, includeAnswers=true 일 때만). 정답계열은 여기서만.
+    if (includeAnswers) {
+      result.push(
+        ...renderAnswerBlock({
+          correctAnswer: formatStoredQuestionCorrectAnswer({
+            ...item.sourceQuestion,
+            correctAnswer: item.correctAnswer ?? item.sourceQuestion.correctAnswer ?? "",
+          }),
+          explanation: item.sourceQuestion.explanation,
+          hasOptions: false,
+          contentWidthHpu,
+        }),
+      );
+    }
+
+    void GIVEN_BORDER;
+    return result;
+  }
 
   // ── SUMMARY_WRITING (요약문 영작) 전용 렌더 ──
   //   SUMMARY_COMPLETE 의 헤더/박스 구조를 미러하되, 정답 자동채움(maskSummary +

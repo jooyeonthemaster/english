@@ -189,13 +189,17 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     ? normalizeQuestionText(normalizedFields.questionText)
     : normalizedQuestionTextForPaper(questionForPaper);
   const passageContent = normalizePassageText(question.passage?.content || "");
-  // 요약문 영작(SUMMARY_WRITING)은 원본 지문을 시험지에 "무조건 함께" 가져온다(사용자 요구).
-  // 레퍼런스(내신 논술형 영작)도 지문을 문제에 포함하며, 학생은 지문을 읽고 요약문을 영작한다.
+  // 요약문 영작(SUMMARY_WRITING)·주제문 영작(TOPIC_SENTENCE_WRITING)은 원본 지문을 시험지에
+  // "무조건 함께" 가져온다(사용자 요구·레퍼런스 형식). 학생은 지문을 읽고 요약문/주제문을 영작한다.
   // SUMMARY_COMPLETE 와 동일하게 INLINE_SOURCE 로 처리 — 지문은 structuredSegments() 가
-  // 문제 안(요약문 위)에 박스로 인라인 렌더하고, 별도 출처 지문 블록은 억제된다.
-  const includeSourcePassage = isSummaryWritingSubtype(question.subType)
-    ? true
-    : shouldIncludeSourcePassageByDefault(question);
+  // 문제 안(요약문/주제문 위)에 박스로 인라인 렌더하고, 별도 출처 지문 블록은 억제된다.
+  // 장문 세트 멤버는 materializeSetMember 가 자기완결로 마킹 지문을 주입하므로
+  // 여기서 setId 강제 분기는 두지 않는다(dongju 자기완결 렌더 채택 + 주제문 영작 강제포함 합류).
+  const includeSourcePassage =
+    isSummaryWritingSubtype(question.subType) ||
+    question.subType === "TOPIC_SENTENCE_WRITING"
+      ? true
+      : shouldIncludeSourcePassageByDefault(question);
   const normalizedQuestion = {
     ...effectiveQuestion,
     questionText: normalizedQuestionText,
@@ -247,6 +251,9 @@ const SET_MEMBER_KEEP_BODY_SUBTYPES = new Set([
   "SUMMARY_COMPLETE_MC",
   "SUMMARY_COMPLETE",
   "SUMMARY_WRITING",
+  // 주제문 영작도 요약문 영작과 동일한 박스형 구조 본문([지문]/[주제 힌트]/[주제문]/
+  // [보기]/[배열 단어])을 structuredSegments 가 그리므로, 세트 멤버여도 본문을 보존한다.
+  "TOPIC_SENTENCE_WRITING",
 ]);
 
 function materializeSetMember(item: PaperItem): PaperItem {
@@ -655,6 +662,11 @@ function normalizeSummaryCompletionQuestionText(
   // \uB4E4\uC5B4\uC788\uACE0 \uC815\uB2F5\uACC4\uC5F4([\uBE48\uCE78 \uC815\uB2F5]/modelAnswer \uB4F1)\uC740 \uC560\uCD08\uC5D0 \uC9C1\uB82C\uD654\uB418\uC9C0 \uC54A\uB294\uB2E4.
   // \uB530\uB77C\uC11C \uC815\uB2F5 \uC81C\uAC70\uAC00 \uBD88\uD544\uC694\uD558\uBA70, \uD559\uC0DD\uB178\uCD9C \uB9C8\uCEE4\uB97C \uADF8\uB300\uB85C \uBCF4\uC874\uD55C\uB2E4.
   if (subType === "SUMMARY_WRITING") return text;
+
+  // 주제문 영작(TOPIC_SENTENCE_WRITING): questionText 에는 [주제 힌트]/[주제문]/[보기]/[배열 단어]만
+  // 들어있고 정답계열(modelAnswer/blanks[].answer 등)은 애초에 직렬화되지 않는다.
+  // 따라서 정답 제거가 불필요하며, 학생노출 마커를 그대로 보존한다(SUMMARY_WRITING 미러).
+  if (subType === "TOPIC_SENTENCE_WRITING") return text;
 
   if (subType !== "SUMMARY_COMPLETE_MC") return text;
 

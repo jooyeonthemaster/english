@@ -42,6 +42,8 @@ export interface BuildEditPromptInput {
 const TYPE_EDIT_GUARDS: Record<string, string> = {
   SUMMARY_WRITING:
     "정답 계열(blanks.answer·modelAnswer·acceptableVariants·requiredLemmas)은 학생에게 보이는 요약문/보기/첫글자 단서에 절대 노출하지 마세요. 빈칸은 빈칸으로 남깁니다.",
+  TOPIC_SENTENCE_WRITING:
+    "mode 는 베이스라인과 동일하게 유지하세요(scrambled↔cloze 전환 금지). 정답 계열(modelAnswer·blanks.answer·acceptableVariants·requiredLemmas·wordBankDistractors·scoringCriteria)은 학생에게 보이는 어떤 필드(scrambledWords·wordBank·summaryWithBlanks·koreanGloss)에도 절대 노출하지 마세요. scrambled 모드: 학생노출은 셔플된 scrambledWords 칩뿐이며 정답 어순(modelAnswer 순서)대로 나열하면 안 됩니다(반드시 섞어서). cloze 모드: summaryWithBlanks 는 (A)/(B) 마커로 마스킹하고 정답 어구를 포함하지 마세요. 미끼는 정답의 동의어/활용형으로만(무관 미끼 금지), koreanGloss 에 정답 어구를 1:1 직역해 나열하지 마세요.",
   GRAMMAR_ERROR:
     "밑줄(expression)은 최소 문법 단위(1~4단어)만. 절·문장 통밑줄 금지. 정답 1개(설정상 다르면 그 수)만 isError=true.",
   GRAMMAR_CHOICE_COMBO:

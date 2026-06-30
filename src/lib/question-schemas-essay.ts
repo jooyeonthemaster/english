@@ -198,6 +198,108 @@ export const wordOrderSchema = z.object({
 });
 export type WordOrderQuestion = z.infer<typeof wordOrderSchema>;
 
+// ── 주제문 영작 (TOPIC_SENTENCE_WRITING) ──
+// 글을 논리적으로 분석해 "글의 주제"를 추출하고, 주제문(12~14단어) 또는 학술 명사구(≤12단어)로
+// 만들어 ① 제시어 배열(scrambled) 또는 ② 빈칸 완성(cloze)으로 출제하는 내신 킬러 서술형.
+// SUMMARY_WRITING(요약문 영작) + WORD_ORDER(배열 영작)의 하이브리드 — 필드명을 재사용해
+// 마스킹/렌더/직렬화 인프라를 공유한다.
+// 🔒비밀(학생 비노출): blanks[].answer / acceptableVariants / requiredLemmas / modelAnswer /
+//   wordBankDistractors / scoringCriteria. 👁학생노출: mode / topicForm / summaryWithBlanks /
+//   blanks[].(label|firstLetterHint|targetWordCount|connectorFrameAfter) / koreanGloss /
+//   wordBank / scrambledWords.
+
+const topicSentenceWritingBlankSchema = summaryWritingBlankSchema;
+
+const topicSentenceWritingFields = {
+  ...commonFields,
+  mode: z
+    .enum(["scrambled", "cloze"])
+    .describe("출제 방식: scrambled=제시어 배열, cloze=주제문 빈칸 완성"),
+  topicForm: z
+    .enum(["sentence", "nounPhrase"])
+    .optional()
+    .describe("주제 형태: sentence=주제문(12~14단어), nounPhrase=주제 명사구(≤12단어 학술표현)"),
+  // 👁공통 단서
+  koreanGloss: z
+    .string()
+    .optional()
+    .describe("👁학생노출(hintEnabled): [주제 힌트] 한국어. 정답 어구를 1:1 직역 나열하지 말 것(누수)"),
+  // ── scrambled 모드 (WORD_ORDER 류) ──
+  scrambledWords: z
+    .array(z.string())
+    .optional()
+    .describe("👁학생노출(mode=scrambled): 제시어 칩(셔플됨, 미끼 포함 가능). 정답 어순과 같으면 안 됨"),
+  // ── cloze 모드 (SUMMARY_WRITING 류) ──
+  summaryWithBlanks: z
+    .string()
+    .optional()
+    .describe("👁학생노출(mode=cloze): (A){,(B)} placeholder만 담은 주제문. 정답 어구 절대 미포함"),
+  wordBank: z
+    .array(z.string())
+    .optional()
+    .describe("👁학생노출(mode=cloze): [보기] 제시어 칩(셔플, 미끼 포함). 중복 필요 단어는 같은 문자열 2개로"),
+  wordBankDistractors: z
+    .array(z.string())
+    .optional()
+    .describe("🔒비밀: wordBank/scrambledWords 중 정답에 쓰이지 않는 미끼 목록(검수/교사면 전용)"),
+  // 메타(설정 반영, optional)
+  clueMode: z
+    .enum(["none", "firstLetter", "firstLetterDashes", "skeleton", "wordCount", "koreanChunk"])
+    .optional(),
+  targetWordsMode: z.enum(["exact", "approx", "hidden"]).optional(),
+  wordBankFidelity: z.enum(["verbatim", "inflected", "mixed"]).optional(),
+  blankAssignment: z.enum(["separate", "shared"]).optional(),
+  sourceMode: z.enum(["explicit", "paraphrase", "inference"]).optional(),
+  sourceSentenceParaphrase: z.boolean().optional(),
+  // 🔒정답계열
+  modelAnswer: z
+    .string()
+    .describe("🔒비밀: 완성된 주제문/명사구 전체(영어). correctAnswer와 동기화"),
+  acceptableVariants: z
+    .array(z.string())
+    .optional()
+    .describe("🔒비밀: 전체 답안 수준의 동치 정답"),
+  scoringCriteria: z
+    .array(z.string())
+    .optional()
+    .describe("🔒비밀: 부분점수 채점 기준(한국어, 교사면 전용)"),
+};
+
+export const topicSentenceWritingSchema = z.object({
+  ...topicSentenceWritingFields,
+  blanks: z
+    .array(topicSentenceWritingBlankSchema)
+    .max(2)
+    .optional()
+    .describe("주제문 빈칸 1~2개 (mode=cloze 일 때만)"),
+});
+export type TopicSentenceWritingQuestion = z.infer<typeof topicSentenceWritingSchema>;
+
+export function buildTopicSentenceWritingSchema(blankCount: number) {
+  const n = Math.min(2, Math.max(1, Math.round(blankCount)));
+  const labels = Array.from({ length: n }, (_, index) => `(${String.fromCharCode(65 + index)})`);
+  const labelSchema = z.enum(labels as [string, ...string[]]);
+
+  return z.object({
+    ...topicSentenceWritingFields,
+    summaryWithBlanks: z
+      .string()
+      .optional()
+      .describe(
+        `👁학생노출(mode=cloze): ${labels.join(", ")}를 각 1회 포함하는 영어 주제문. 정답 어구 포함 금지`,
+      ),
+    blanks: z
+      .array(
+        topicSentenceWritingBlankSchema.extend({
+          label: labelSchema,
+        }),
+      )
+      .max(n)
+      .optional()
+      .describe(`${n}개 주제문 빈칸 (mode=cloze 일 때만)`),
+  });
+}
+
 // ── 문법 오류 수정 ──
 
 const grammarCorrectionUnderlinedSegmentSchema = z.object({

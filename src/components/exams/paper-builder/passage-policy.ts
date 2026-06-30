@@ -32,6 +32,8 @@ export const QUESTION_PASSAGE_FLOW_RULES: Record<string, PassageFlow> = {
   // SUMMARY_COMPLETE 와 동일하게 source + INLINE_SOURCE — 지문이 문제 안(요약문 위)에 인라인 렌더된다.
   SUMMARY_WRITING: "source",
   WORD_ORDER: "source",
+  // 주제문 영작: 원본 지문을 시험지에 함께 포함(주제를 도출할 글이 필요). SUMMARY_WRITING 미러.
+  TOPIC_SENTENCE_WRITING: "source",
   GRAMMAR_CORRECTION: "embedded",
   CONTEXT_MEANING: "embedded",
   SYNONYM: "source",
@@ -54,6 +56,7 @@ const INLINE_SOURCE_PASSAGE_SUBTYPES = new Set([
   "SUMMARY_COMPLETE",
   "SUMMARY_WRITING",
   "WORD_ORDER",
+  "TOPIC_SENTENCE_WRITING",
   "SYNONYM",
 ]);
 
@@ -130,6 +133,7 @@ const HIDEABLE_SOURCE_PASSAGE_SUBTYPES = new Set([
   "SENTENCE_TRANSFORM", // 문장 전환
   "SUMMARY_COMPLETE", // 요약문 완성
   "WORD_ORDER", // 배열 영작
+  "TOPIC_SENTENCE_WRITING", // 주제문 영작
   "SYNONYM", // 동의어
 ]);
 
