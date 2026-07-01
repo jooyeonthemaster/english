@@ -53,7 +53,7 @@ import {
   shouldIgnoreCardSelectionClick,
   useDeferredCardSelectionClick,
 } from "./shared/card-click";
-import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
+import { formatGrammarCorrectionChange, repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import {
   optionDisplayTextForSubtype,
@@ -275,7 +275,11 @@ export function QuestionBankCard({
     questionText: q.questionText,
     structuredData: q.structuredData,
   });
-  const displayCorrectAnswer = formatStoredQuestionCorrectAnswer(q);
+  // 문법 오류 수정은 카드에 "틀린부분 → 고친부분"(easily → easy)으로 표시(정답표/저장은 불변).
+  const displayCorrectAnswer =
+    q.subType === "GRAMMAR_CORRECTION"
+      ? formatGrammarCorrectionChange(structuredQuestion ?? q)
+      : formatStoredQuestionCorrectAnswer(q);
 
   // 생성 플랜(일반/프리미엄) — 태그 우선, 없으면 구조화 데이터(_generationPlan) 폴백.
   const planTags: string[] = Array.isArray(q.tags)

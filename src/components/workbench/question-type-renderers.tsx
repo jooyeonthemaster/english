@@ -52,7 +52,7 @@ import {
 } from "@/lib/summary-complete-mc";
 import { summaryWritingMaskedSummary } from "@/lib/summary-writing";
 import {
-  buildGrammarCorrectionAnswerSlots,
+  formatGrammarCorrectionChange,
   formatGrammarCorrectionCorrectAnswer,
   grammarCorrectionErrorSentenceForQuestionText,
 } from "@/lib/grammar-correction-display";
@@ -631,21 +631,17 @@ export function GrammarCorrectionRenderer({ q }: { q: GrammarCorrectionQuestion 
         correction: q.correctedPart || q.correctAnswer,
       }];
   const passageWithLabels = grammarCorrectionErrorSentenceForQuestionText(q);
-  const answerSlots = buildGrammarCorrectionAnswerSlots(q).split("\n").filter(Boolean);
   const formattedAnswer = formatGrammarCorrectionCorrectAnswer(q) || q.correctAnswer;
+  // 문법 오류 수정은 빈칸 유형이 아니라 밑줄 오류를 고치는 유형 → 답란(빈칸) 미표시.
+  // 정답은 "틀린부분 → 고친부분"을 파란 글씨로 상시 표시(취소선 없음, 검수 편의).
+  const changeDisplay = formatGrammarCorrectionChange(q);
 
   return (
     <>
       <Direction text={q.direction} />
       <PassageBlock>{renderPassageFormatted(passageWithLabels || "")}</PassageBlock>
-      {answerSlots.length > 0 && (
-        <div className="space-y-2 rounded-lg border border-slate-200 bg-white p-3">
-          {answerSlots.map((slot, index) => (
-            <div key={index} className="font-mono text-[12.5px] text-slate-700">
-              {renderPassageFormatted(slot)}
-            </div>
-          ))}
-        </div>
+      {changeDisplay && (
+        <div className="pl-1 text-[13px] font-semibold text-blue-700">{changeDisplay}</div>
       )}
       <AnswerRevealSection>
         <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 space-y-2">

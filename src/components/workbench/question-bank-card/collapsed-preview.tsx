@@ -3,7 +3,7 @@
 
 import React from "react";
 import { renderFormatted } from "./render-formatted";
-import { grammarMarkerDisplayLabel } from "@/components/exams/paper-builder/option-display";
+import { grammarMarkerDisplayLabel, shouldRenderOptionListForSubtype } from "@/components/exams/paper-builder/option-display";
 import { SUBTYPE_LABELS } from "../question-type-filter";
 
 // 카드를 접었을 때 보여줄 미리보기:
@@ -37,8 +37,12 @@ export function CollapsedPreview({
   );
   // 보기 텍스트가 없는 마커 유형(어법·어휘·삽입·무관) — 정답을 회색 박스 대신
   // 파란 원형 배지(숫자)로 표시해 일반 선지 배지와 디자인을 통일한다.
+  // ⚠️ G1: 마커 유형에 한정한다. 서술형(자유 텍스트 정답)은 정답 문장 속 a~j 낱글자가
+  //    parseCorrectAnswerLabels 정규식(괄호 optional)에 과매치돼 가짜 객관식 배지로
+  //    둔갑하므로, 배지를 만들지 않고 아래 displayCorrectAnswer "정답:" 텍스트 박스로 흘려보낸다.
+  const isMarkerType = !!subType && !shouldRenderOptionListForSubtype(subType);
   const answerBadgeLabels =
-    correctOptions.length === 0
+    correctOptions.length === 0 && isMarkerType
       ? Array.from(parseCorrectAnswerLabels(displayCorrectAnswer || correctAnswer))
       : [];
 
@@ -96,8 +100,8 @@ export function CollapsedPreview({
           ))}
         </div>
       ) : displayCorrectAnswer ? (
-        <div className="text-[12px] bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded border border-slate-200">
-          <span className="font-medium">정답:</span>{" "}
+        // 서술형 텍스트 정답 — '정답' 원/알약 배지 없이 정답 멘트만 파란 글씨로(사용자 요청).
+        <div className="pl-1 text-[13px] font-semibold text-blue-700">
           {renderFormatted(displayCorrectAnswer, subType)}
         </div>
       ) : null}
