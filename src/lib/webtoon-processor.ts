@@ -4,10 +4,14 @@ import {
   type AtlasImageSize,
   type GenerateImageRequest,
   generateImage,
-  getAtlasImageModel,
 } from "@/lib/atlas";
 import { refundCredits } from "@/lib/credits";
 import { buildWebtoonImagePrompt } from "@/lib/webtoon-prompts";
+import {
+  DEFAULT_WEBTOON_IMAGE_PLAN,
+  WEBTOON_IMAGE_PLANS,
+  planForModelId,
+} from "@/lib/webtoon-models";
 import { uploadRemoteImageToWebtoonBucket } from "@/lib/webtoon-storage";
 import type {
   WebtoonStyleId,
@@ -102,6 +106,11 @@ export async function processWebtoonGeneration(
     return { ok: false, reason: "WEBTOON_NOT_FOUND_AFTER_CLAIM" };
   }
 
+  // Legacy rows created before the 2-tier model have imageModel === null; fall
+  // back to the default plan so they keep generating. New rows always carry a
+  // model id set by the API route.
+  const plan = planForModelId(webtoon.imageModel) ?? WEBTOON_IMAGE_PLANS[DEFAULT_WEBTOON_IMAGE_PLAN];
+
   const prompt = buildWebtoonImagePrompt({
     passageTitle: webtoon.passage.title,
     passageContent: webtoon.passage.content,
@@ -113,24 +122,36 @@ export async function processWebtoonGeneration(
   const imageOutputFormat = "jpeg";
   const promptHash = createHash("sha256").update(prompt, "utf8").digest("hex");
 
+  // Audit metadata (best-effort): record the plan's chosen params. STANDARD
+  // (nano-banana) stores resolution in imageSize and has no quality; PREMIUM
+  // (gpt-image-2) stores pixel size + quality.
+  const auditImageSize = plan.params.size ?? plan.params.resolution ?? null;
+  const auditImageQuality = plan.params.quality ?? null;
+
   try {
     await prisma.webtoon.update({
       where: { id: webtoonId },
       data: {
         promptSnapshot: prompt,
         promptHash,
-        imageModel: getAtlasImageModel(),
-        imageSize: imageOptions.size,
-        imageQuality: imageOptions.quality,
+        imageModel: plan.modelId,
+        imageSize: auditImageSize,
+        imageQuality: auditImageQuality,
         imageOutputFormat,
       },
     });
 
     const result = await generateImage({
       prompt,
-      size: imageOptions.size,
-      quality: imageOptions.quality,
+      model: plan.modelId,
+      // gpt-image-2 family params (ignored by nano-banana body builder)
+      size: plan.params.size as AtlasImageSize | undefined,
+      quality: plan.params.quality,
       outputFormat: imageOutputFormat,
+      // nano-banana family params (ignored by gpt-image-2 body builder)
+      aspectRatio: plan.params.aspectRatio,
+      resolution: plan.params.resolution,
+      thinkingLevel: plan.params.thinkingLevel,
       timeoutMs: imageOptions.timeoutMs,
       pollIntervalMs: 2500,
       maxAttempts: imageOptions.maxAttempts,
@@ -176,7 +197,7 @@ export async function processWebtoonGeneration(
       try {
         await refundCredits(
           webtoon.academyId,
-          "WEBTOON_IMAGE",
+          plan.operationType,
           webtoon.creditTransactionId,
           `Webtoon generation failed: ${message}`,
         );

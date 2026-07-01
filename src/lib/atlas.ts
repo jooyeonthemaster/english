@@ -15,13 +15,53 @@ export type AtlasImageSize =
 
 export interface GenerateImageRequest {
   prompt: string;
+  /** AtlasCloud model id. Defaults to env MODEL (gpt-image-2). nano-banana models
+   *  switch the request body to aspect_ratio + resolution + thinking_level. */
+  model?: string;
   size?: AtlasImageSize;
   quality?: 'low' | 'medium' | 'high';
   outputFormat?: 'jpeg' | 'png';
+  /** nano-banana family — aspect ratio (e.g. "9:16"). */
+  aspectRatio?: string;
+  /** nano-banana family — resolution bucket. */
+  resolution?: '1k' | '2k' | '4k';
+  /** nano-banana family — internal reasoning depth. */
+  thinkingLevel?: 'default' | 'high' | 'minimal';
   enableBase64?: boolean;
   timeoutMs?: number;
   pollIntervalMs?: number;
   maxAttempts?: number;
+}
+
+/** nano-banana models take a different request shape than gpt-image-2. */
+function isNanoBananaModel(model: string): boolean {
+  return /nano-banana/i.test(model);
+}
+
+/** Build the AtlasCloud generateImage body for the chosen model family. */
+function buildGenerationBody(req: GenerateImageRequest): Record<string, unknown> {
+  const model = req.model ?? MODEL;
+  const base: Record<string, unknown> = {
+    model,
+    prompt: req.prompt,
+    enable_sync_mode: false,
+    enable_base64_output: req.enableBase64 ?? false,
+  };
+  if (isNanoBananaModel(model)) {
+    return {
+      ...base,
+      aspect_ratio: req.aspectRatio ?? '9:16',
+      resolution: req.resolution ?? '2k',
+      thinking_level: req.thinkingLevel ?? 'high',
+    };
+  }
+  // gpt-image-2 (default) family
+  return {
+    ...base,
+    size: req.size ?? '2160x3840',
+    quality: req.quality ?? 'high',
+    output_format: req.outputFormat ?? 'jpeg',
+  };
 }
 
 export function getAtlasImageModel(): string {
@@ -63,15 +103,7 @@ function authHeaders(): HeadersInit {
 }
 
 async function startGeneration(req: GenerateImageRequest): Promise<{ id: string; pollUrl: string }> {
-  const body: Record<string, unknown> = {
-    model: MODEL,
-    prompt: req.prompt,
-    size: req.size ?? '2160x3840',
-    quality: req.quality ?? 'high',
-    output_format: req.outputFormat ?? 'jpeg',
-    enable_sync_mode: false,
-    enable_base64_output: req.enableBase64 ?? false
-  };
+  const body = buildGenerationBody(req);
 
   const res = await fetch(`${BASE_URL}/model/generateImage`, {
     method: 'POST',

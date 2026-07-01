@@ -8,6 +8,7 @@ import { getProviderBillingSyncStatus, type ProviderBillingSyncTarget, syncProvi
 import { prisma } from "@/lib/prisma";
 import { requireAdminAuth } from "@/lib/auth-admin";
 import { getOperationTypeLabel, getTransactionTypeLabel, TRANSACTION_TYPES } from "@/lib/admin-members-labels";
+import { isWebtoonImageOperationType } from "@/lib/webtoon-models";
 import type { AcademyTransactionFilters, AcademyTransactionListResult, AcademyUsageAccumulator, AcademyUsageSummary, BucketAccumulator, CostPeriodMode, CreditOperationSummary, OperationsCostDashboard, OperationsCostOptions, SourceAccumulator } from "./operations-cost-types";
 import { addKstDays, bucketKeyForDate, buildRange, fixedCostForBucket, kstDateToUtc, parseDateInput } from "./operations-cost-datetime";
 import { DEFAULT_USD_KRW_RATE, addBucketApiCost, addSourceApiCost, buildBillingReconciliationSummary, emptyCostBucket, formatMissingPricingKey, getApiCostSourceKey, getApiCostSourceLabel, getOperationLabel, hasProviderPricing, readFormString, readNumberEnv, readOptionalFormNumber, readPricingConfig, toCostBucket, toTotals, totalsToCostBucket } from "./operations-cost-compute";
@@ -323,7 +324,9 @@ export async function getOperationsCostDashboard(
       tx.type === "CONSUMPTION" &&
       tx.referenceType !== "WORKBENCH_AI_JOB" &&
       tx.operationType !== "TEXT_EXTRACTION" &&
-      tx.operationType !== "WEBTOON_IMAGE",
+      // 웹툰 이미지 크레딧은 모든 등급(WEBTOON_IMAGE / WEBTOON_IMAGE_PREMIUM)을
+      // platform-api-costs 웹툰 원장에서 별도 집계하므로 여기서 제외(이중 계상 방지).
+      !isWebtoonImageOperationType(tx.operationType),
   );
   const directCredits = directCreditTransactions.reduce(
     (sum, tx) => sum + Math.abs(tx.amount),

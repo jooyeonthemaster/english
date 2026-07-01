@@ -12,6 +12,7 @@ import {
   isWebtoonLanguageId,
   type WebtoonStyleId,
 } from "@/app/(director)/director/workbench/webtoon/webtoon-page-types";
+import { resolveWebtoonImagePlan } from "@/lib/webtoon-models";
 
 export const runtime = "nodejs";
 
@@ -29,6 +30,7 @@ interface RequestBody {
   style?: string;
   language?: string;
   customPrompt?: string;
+  plan?: string;
 }
 
 interface QueuedItem {
@@ -61,6 +63,7 @@ export async function POST(req: NextRequest) {
     : DEFAULT_WEBTOON_LANGUAGE;
   const customPrompt =
     typeof body.customPrompt === "string" ? body.customPrompt.slice(0, 1000) : "";
+  const plan = resolveWebtoonImagePlan(body.plan);
 
   if (passageIds.length === 0 || !style) {
     return NextResponse.json(
@@ -92,10 +95,12 @@ export async function POST(req: NextRequest) {
 
     let txId: string;
     try {
-      const result = await deductCredits(staff.academyId, "WEBTOON_IMAGE", staff.id, {
+      const result = await deductCredits(staff.academyId, plan.operationType, staff.id, {
         passageId,
         style,
         language,
+        plan: plan.id,
+        model: plan.modelId,
       });
       txId = result.transactionId;
     } catch (err) {
@@ -124,6 +129,7 @@ export async function POST(req: NextRequest) {
         customPrompt: customPrompt || null,
         status: "PENDING",
         creditTransactionId: txId,
+        imageModel: plan.modelId,
       },
       select: { id: true },
     });
@@ -139,7 +145,7 @@ export async function POST(req: NextRequest) {
     } catch (dispatchErr) {
       const message = dispatchErr instanceof Error ? dispatchErr.message : "dispatch error";
       try {
-        await refundCredits(staff.academyId, "WEBTOON_IMAGE", txId, "Webtoon dispatch failed");
+        await refundCredits(staff.academyId, plan.operationType, txId, "Webtoon dispatch failed");
       } catch {
         // Best effort: the row is still marked FAILED so the operator can retry.
       }

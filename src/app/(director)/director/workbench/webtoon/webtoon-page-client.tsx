@@ -31,6 +31,10 @@ import {
   IntakeTab,
 } from "@/app/(director)/director/workbench/generate/intake/intake-surface";
 import {
+  DEFAULT_WEBTOON_IMAGE_PLAN,
+  type WebtoonImagePlanId,
+} from "@/lib/webtoon-models";
+import {
   DEFAULT_WEBTOON_LANGUAGE,
   type WebtoonLanguageId,
   type WebtoonStyleId,
@@ -89,6 +93,9 @@ export function WebtoonPageClient({
   }, []);
 
   // ─── 웹툰 옵션 ───
+  const [plan, setPlan] = useState<WebtoonImagePlanId>(
+    DEFAULT_WEBTOON_IMAGE_PLAN,
+  );
   const [style, setStyle] = useState<WebtoonStyleId>("KOREAN_WEBTOON");
   const [language, setLanguage] = useState<WebtoonLanguageId>(
     DEFAULT_WEBTOON_LANGUAGE,
@@ -362,6 +369,7 @@ export function WebtoonPageClient({
     async (
       localId: string,
       opts: {
+        plan: WebtoonImagePlanId;
         style: WebtoonStyleId;
         language: WebtoonLanguageId;
         customPrompt: string;
@@ -400,6 +408,7 @@ export function WebtoonPageClient({
           opts.style,
           opts.customPrompt,
           opts.language,
+          opts.plan,
         );
         // 큐잉이 성공했을 때만 이 행을 워크스페이스에서 비운다. 실패하면
         // (네트워크/크레딧 부족 등) 작성한 지문을 보존해 바로 재시도할 수 있게 한다.
@@ -457,6 +466,8 @@ export function WebtoonPageClient({
                   rows={rows}
                   setRows={setRows}
                   saving={generating}
+                  plan={plan}
+                  setPlan={setPlan}
                   style={style}
                   setStyle={setStyle}
                   language={language}

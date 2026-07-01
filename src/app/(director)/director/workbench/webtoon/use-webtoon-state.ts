@@ -2,6 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import {
+  DEFAULT_WEBTOON_IMAGE_PLAN,
+  type WebtoonImagePlanId,
+} from "@/lib/webtoon-models";
 import type {
   WebtoonRow,
   WebtoonStyleId,
@@ -124,6 +128,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
       style: WebtoonStyleId,
       customPrompt: string,
       language: WebtoonLanguageId = DEFAULT_WEBTOON_LANGUAGE,
+      plan: WebtoonImagePlanId = DEFAULT_WEBTOON_IMAGE_PLAN,
     ): Promise<number> => {
       if (passages.length === 0) return 0;
 
@@ -134,7 +139,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
         const res = await fetch("/api/ai/webtoon/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ passageIds, style, language, customPrompt }),
+          body: JSON.stringify({ passageIds, style, language, customPrompt, plan }),
         });
         resData = await res.json();
 
@@ -175,7 +180,8 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
       }
 
       toast.message(`${queuedIds.length}개 웹툰 생성을 시작했습니다.`, {
-        description: "완료되면 이 화면에 자동으로 표시됩니다.",
+        description:
+          "생성에는 약 3분이 걸려요. 다른 작업을 계속하셔도 완료되면 이 화면에 자동으로 표시됩니다.",
       });
       return queuedIds.length;
     },

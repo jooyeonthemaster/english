@@ -9,6 +9,7 @@ import {
   MIN_CONTENT_CHARS,
   type PassageInputRow as RowData,
 } from "@/components/workbench/passage-registration/passage-input/types";
+import type { WebtoonImagePlanId } from "@/lib/webtoon-models";
 import type {
   WebtoonStyleId,
   WebtoonLanguageId,
@@ -22,6 +23,8 @@ interface WebtoonInputStackProps {
   saving: boolean;
 
   // 직전 선택을 기억하는 공유 기본값 — 카드별 모달이 이 값을 시드로 쓴다.
+  plan: WebtoonImagePlanId;
+  setPlan: (p: WebtoonImagePlanId) => void;
   style: WebtoonStyleId;
   setStyle: (s: WebtoonStyleId) => void;
   language: WebtoonLanguageId;
@@ -33,6 +36,7 @@ interface WebtoonInputStackProps {
   onGenerateRow: (
     localId: string,
     opts: {
+      plan: WebtoonImagePlanId;
       style: WebtoonStyleId;
       language: WebtoonLanguageId;
       customPrompt: string;
@@ -59,6 +63,8 @@ export function WebtoonInputStack({
   rows,
   setRows,
   saving,
+  plan,
+  setPlan,
   style,
   setStyle,
   language,
@@ -188,6 +194,8 @@ export function WebtoonInputStack({
           }}
           passageTitle={settingsRow.title.trim()}
           passagePreview={previewOf(settingsRow.content)}
+          plan={plan}
+          setPlan={setPlan}
           style={style}
           setStyle={setStyle}
           language={language}
@@ -195,7 +203,12 @@ export function WebtoonInputStack({
           customPrompt={customPrompt}
           setCustomPrompt={setCustomPrompt}
           onConfirm={() =>
-            onGenerateRow(settingsRow.localId, { style, language, customPrompt })
+            onGenerateRow(settingsRow.localId, {
+              plan,
+              style,
+              language,
+              customPrompt,
+            })
           }
         />
       ) : null}

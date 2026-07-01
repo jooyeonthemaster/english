@@ -28,7 +28,8 @@ export const CREDIT_COSTS = {
   PASSAGE_VARIANT: 2,          // AI 지문 변형 — 전체(관련/상반 주제·난이도·길이)로 새 지문 한 편 생성
 
   // Webtoon
-  WEBTOON_IMAGE: 5,            // 한 지문 → 멀티패널 단일 9:16 웹툰 이미지
+  WEBTOON_IMAGE: 5,            // 일반(STANDARD) — Gemini nano-banana-2 로 9:16 웹툰 이미지
+  WEBTOON_IMAGE_PREMIUM: 10,   // 프리미엄(PREMIUM) — GPT Image 2 로 9:16 웹툰 이미지
 } as const;
 
 export type OperationType = keyof typeof CREDIT_COSTS;
@@ -49,7 +50,8 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
   PASSAGE_RESTORATION: "AI 지문 복원",
   PASSAGE_TRANSFORM: "AI 지문 변형",
   PASSAGE_VARIANT: "AI 지문 변형 (전체)",
-  WEBTOON_IMAGE: "웹툰 이미지 생성",
+  WEBTOON_IMAGE: "웹툰 이미지 생성 (일반)",
+  WEBTOON_IMAGE_PREMIUM: "웹툰 이미지 생성 (프리미엄)",
 };
 
 // Top-up pricing tiers (KRW per credit pack)
