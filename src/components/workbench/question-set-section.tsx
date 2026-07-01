@@ -16,7 +16,6 @@ import { toast } from "sonner";
 import { WorkbenchLoadingCard } from "@/components/workbench/workbench-loading-card";
 
 import {
-  approveQuestionSet,
   deleteQuestionSet,
   listQuestionSets,
   splitQuestionSetMember,
@@ -40,6 +39,9 @@ export function QuestionSetSection({
   inline = false,
   normalItems,
   showSets = true,
+  selectedQuestionIds,
+  onToggleSetSelection,
+  collectionId,
 }: {
   /** 값이 바뀌면 세트를 다시 불러온다(생성 완료 신호 등). */
   refreshKey?: unknown;
@@ -65,6 +67,12 @@ export function QuestionSetSection({
   }>;
   /** 세트 카드를 끼울지(보통 목록 1페이지에서만 true — 세트는 최신이라 1페이지에 위치). */
   showSets?: boolean;
+  /** 현재 선택된 문항 id 집합(일반 카드와 공유). 세트 = 멤버 전체가 여기 있으면 체크됨. */
+  selectedQuestionIds?: ReadonlySet<string>;
+  /** 세트 체크 토글 — 멤버 문항 id 전체를 선택/해제한다. 미지정 시 세트 체크박스 숨김. */
+  onToggleSetSelection?: (memberQuestionIds: string[], select: boolean) => void;
+  /** 활성 폴더 id — 있으면 그 폴더에 멤버가 속한 세트만 표시(일반 문제와 동일). 미지정 시 전체. */
+  collectionId?: string;
 }) {
   const [sets, setSets] = useState<QuestionSetForRender[]>([]);
   // 분리 진행 중인 멤버 questionId(스피너 표시용). 분리는 세트를 바꾸지 않고 복제본만
@@ -78,7 +86,7 @@ export function QuestionSetSection({
 
   const refresh = useCallback(async () => {
     try {
-      const data = await listQuestionSets({ limit: 50 });
+      const data = await listQuestionSets({ limit: 50, collectionId });
       setSets(data);
       // 카운트는 여기서 부모에 보고(effect 내 동기 setState 회피).
       onCountChange?.(data.length);
@@ -86,7 +94,7 @@ export function QuestionSetSection({
       setSets([]);
       onCountChange?.(0);
     }
-  }, [onCountChange]);
+  }, [onCountChange, collectionId]);
 
   useEffect(() => {
     // 마운트/refreshKey 변경 시 데이터 페치.
@@ -125,14 +133,6 @@ export function QuestionSetSection({
       }
     },
     [refresh, onMemberSplit],
-  );
-
-  const handleApproveSet = useCallback(
-    async (setId: string) => {
-      await approveQuestionSet(setId);
-      await refresh();
-    },
-    [refresh],
   );
 
   const handleDeleteSet = useCallback(
@@ -288,28 +288,38 @@ export function QuestionSetSection({
 
   // 세트 카드 한 장 — self-start 래퍼로 감싸 일반 카드와 동일하게 자연 높이로 흐른다.
   // (영역 선택 마키는 세트 카드에서 시작하지 않도록 무시 표식.)
-  const renderSetCard = (set: QuestionSetForRender) => (
-    <div key={set.id} data-drag-select-ignore className="min-w-0 self-start">
-      <QuestionSetCard
-        set={set}
-        compact
-        onSplitMember={handleSplit}
-        onEdit={() => {
-          const first = set.members[0];
-          if (first) handleEditMember(set, first.questionId);
-        }}
-        recentlyViewed={
-          lastViewedSetId === set.id && detailSetId !== set.id
-        }
-        onOpenDetail={() => {
-          setDetailSetId(set.id);
-          setLastViewedSetId(set.id);
-        }}
-        onApprove={() => handleApproveSet(set.id)}
-        onDelete={() => handleDeleteSet(set.id)}
-      />
-    </div>
-  );
+  const renderSetCard = (set: QuestionSetForRender) => {
+    // 세트 선택 = 멤버 문항 전체가 선택 집합에 있는가(일반 카드 체크박스와 동일 selectedIds 공유).
+    const memberIds = set.members.map((m) => m.questionId);
+    const allSelected =
+      memberIds.length > 0 &&
+      memberIds.every((id) => selectedQuestionIds?.has(id));
+    return (
+      <div key={set.id} data-drag-select-ignore className="min-w-0 self-start">
+        <QuestionSetCard
+          set={set}
+          selected={allSelected}
+          onToggleSelect={
+            onToggleSetSelection
+              ? () => onToggleSetSelection(memberIds, !allSelected)
+              : undefined
+          }
+          onSplitMember={handleSplit}
+          onApproveMember={handleApproveMember}
+          onUnapproveMember={handleUnapproveMember}
+          onEditMember={(questionId) => handleEditMember(set, questionId)}
+          recentlyViewed={
+            lastViewedSetId === set.id && detailSetId !== set.id
+          }
+          onOpenDetail={() => {
+            setDetailSetId(set.id);
+            setLastViewedSetId(set.id);
+          }}
+          onDelete={() => handleDeleteSet(set.id)}
+        />
+      </div>
+    );
+  };
 
   const setDialogs = (
     <>

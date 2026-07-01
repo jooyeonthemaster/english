@@ -17,6 +17,9 @@ export function CollapsedPreview({
   correctAnswer,
   displayCorrectAnswer = correctAnswer,
   subType,
+  // 지문 렌더 전용 subType 오버라이드. 세트 병합 지문처럼 여러 유형 마커가 섞인 지문은
+  // null 로 넘겨 (A) 라벨을 원문자로 바꾸지 않고 펼침 뷰와 동일하게 표시한다. 미지정 시 subType.
+  passageSubType = subType,
 }: {
   direction: string;
   passage: string;
@@ -24,6 +27,7 @@ export function CollapsedPreview({
   correctAnswer: string;
   displayCorrectAnswer?: string;
   subType?: string | null;
+  passageSubType?: string | null;
 }) {
   // 어법 판단(GRAMMAR_ERROR)만 라벨/마커를 원형숫자(①)로 표시(시험지 렌더 동일). 타 유형 무영향.
   const isGrammarError = subType === "GRAMMAR_ERROR";
@@ -68,7 +72,7 @@ export function CollapsedPreview({
       {passage && (
         <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
           <div className="font-mono text-[12px] leading-[1.8] text-slate-700 whitespace-pre-wrap line-clamp-2">
-            {renderFormatted(passage, subType)}
+            {renderFormatted(passage, passageSubType)}
           </div>
         </div>
       )}

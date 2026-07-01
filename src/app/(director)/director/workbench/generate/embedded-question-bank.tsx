@@ -64,6 +64,7 @@ import {
 } from "@/actions/workbench";
 import { createExam } from "@/actions/exams";
 import { QuestionSetSection } from "@/components/workbench/question-set-section";
+import { getAcademyQuestionSetMemberMap } from "@/actions/question-sets";
 import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
 
 import {
@@ -351,6 +352,15 @@ export function EmbeddedQuestionBank({
 
   // ─── Folder manager (client-side, like QuestionBankClient) ───
   const [collectionsLoaded, setCollectionsLoaded] = useState(false);
+  // 세트 멤버 questionId → setId 맵 — 폴더 카운트에서 세트를 "1개"로 세는 데 쓴다.
+  // 세트 생성/분리(setRefreshKey) 때 갱신.
+  const [setMemberMap, setSetMemberMap] = useState<Record<string, string>>({});
+  useEffect(() => {
+    getAcademyQuestionSetMemberMap()
+      .then(setSetMemberMap)
+      .catch(() => {});
+  }, [setRefreshKey]);
+
   const folders = useFolderManager({
     initialCollections: [],
     initialMembership: {},
@@ -362,6 +372,7 @@ export function EmbeddedQuestionBank({
       removeFromCollection: removeQuestionsFromCollection,
     },
     itemLabel: "문제",
+    questionSetIdOf: (id) => setMemberMap[id] ?? null,
   });
 
   // Hydrate collections + membership once.
@@ -656,6 +667,22 @@ export function EmbeddedQuestionBank({
     });
   }, [displayedQuestionIds, setSelectedIds]);
 
+  // 세트 카드 체크박스 — 세트의 멤버 문항 id 전체를 선택/해제(일반 카드와 동일 selectedIds 공유).
+  // 시험지 빌더가 setId 로 묶어 렌더하므로 멤버를 개별 id 로 담아도 세트가 유지된다.
+  const handleToggleSetSelection = useCallback(
+    (memberQuestionIds: string[], select: boolean) => {
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        for (const id of memberQuestionIds) {
+          if (select) next.add(id);
+          else next.delete(id);
+        }
+        return next;
+      });
+    },
+    [setSelectedIds],
+  );
+
   // ─── Grid view mode (separate storage key from question-management) ───
   const [gridCols, setGridCols] = usePersistedState<2 | 3 | "list">(
     "smoat:view-mode:generate-embedded-question-bank",
@@ -945,7 +972,8 @@ export function EmbeddedQuestionBank({
   }, [folders, clearSelection]);
 
   const handleDragToFolder = useCallback(
-    async (itemId: string, folderId: string, copy: boolean) => {
+    async (itemId: string | string[], folderId: string, copy: boolean) => {
+      // 세트 드래그면 itemId 가 멤버 배열 — 훅이 배열째 받아 전체를 폴더에 넣는다.
       const success = await folders.handleDragToFolder(
         itemId,
         folderId,
@@ -958,9 +986,13 @@ export function EmbeddedQuestionBank({
   );
 
   const handleDragToRoot = useCallback(
-    async (itemId: string, copy: boolean) => {
+    async (itemId: string | string[], copy: boolean) => {
       if (copy || !folders.activeFolder) return;
-      const ids = selectedIds.has(itemId) ? selectedIds : new Set([itemId]);
+      // 세트는 멤버 전체(배열)를 폴더에서 뺀다.
+      const draggedIds = Array.isArray(itemId) ? itemId : [itemId];
+      const ids = draggedIds.some((id) => selectedIds.has(id))
+        ? selectedIds
+        : new Set(draggedIds);
       const success = await folders.handleRemoveFromFolder(ids);
       if (success) clearSelection();
     },
@@ -1506,9 +1538,12 @@ export function EmbeddedQuestionBank({
                 <>
                   <div className="mb-3">
                     <QuestionSetSection
-                      refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}`}
+                      refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
                       onCountChange={setSetCount}
                       onMemberSplit={handleSplitCreated}
+                      selectedQuestionIds={selectedIds}
+                      onToggleSetSelection={handleToggleSetSelection}
+                      collectionId={folders.activeFolder ?? undefined}
                       gridClassName={`grid items-start gap-3 ${
                         gridCols === 2
                           ? "grid-cols-1 md:grid-cols-2"
@@ -1578,9 +1613,12 @@ export function EmbeddedQuestionBank({
                   <QuestionSetSection
                     inline
                     showSets={currentPage === 1}
-                    refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}`}
+                    refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
                     onCountChange={setSetCount}
                     onMemberSplit={handleSplitCreated}
+                    selectedQuestionIds={selectedIds}
+                    onToggleSetSelection={handleToggleSetSelection}
+                    collectionId={folders.activeFolder ?? undefined}
                     normalItems={displayedQuestions.map((q, idx) => {
                       const startIdx = (currentPage - 1) * PAGE_SIZE;
                       return {

@@ -60,8 +60,8 @@ interface QuestionLibraryPanelProps {
   onNavigateToRoot: () => void;
   onRenameFolder: (id: string, name: string) => void;
   onDeleteFolder: (id: string) => void;
-  onDragToFolder: (itemId: string, folderId: string, copy: boolean) => void;
-  onDragToRoot: (itemId: string, copy: boolean) => void;
+  onDragToFolder: (itemId: string | string[], folderId: string, copy: boolean) => void;
+  onDragToRoot: (itemId: string | string[], copy: boolean) => void;
   /**
    * 마키(영역 드래그) 시작 영역을 이 패널 바깥(시험지 미리보기창 포함, 빌더 전체)까지
    * 넓히기 위한 boundary. 빌더 루트에서 내려준다.

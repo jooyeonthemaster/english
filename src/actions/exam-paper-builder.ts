@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireStaffAuth } from "@/lib/auth";
+import { getQuestionCollections } from "@/actions/workbench/collections-question";
 
 export interface ExamPaperBuilderItemInput {
   localId?: string;
@@ -169,11 +170,8 @@ export async function getExamPaperBuilderData(academyId: string) {
       orderBy: [{ starred: "desc" }, { createdAt: "desc" }],
       take: 1000,
     }),
-    prisma.questionCollection.findMany({
-      where: { academyId },
-      include: { _count: { select: { items: true, children: true } } },
-      orderBy: { name: "asc" },
-    }),
+    // 세트=1 로 세는 폴더 카운트를 공유(생성/관리 페이지와 동일한 배지 숫자).
+    getQuestionCollections(academyId),
     prisma.class.findMany({
       where: { academyId, isActive: true },
       select: { id: true, name: true },

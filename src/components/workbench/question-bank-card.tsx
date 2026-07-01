@@ -168,6 +168,16 @@ export function QuestionBankCard({
   // 삭제 시점 라벨(예: "오늘 삭제", "3일 전 삭제") — 호출부에서 계산해 넘긴다.
   // 검수 도장(ReviewStatusStamp) 자리에 대신 노출한다.
   deletedLabel,
+  // 지문 세트 멤버 전용 — 세트 전 멤버 변형을 병합한 지문(reconstructPassageView).
+  // 세트 멤버는 structuredData 의 passageWith* 가 stripped 라 타입 렌더러가 지문을 안 그리므로,
+  // 여기 넘긴 병합 지문을 유니버설 렌더러로 본문 상단에 별도 표시한다(혼합 마커 안전).
+  mergedPassage,
+  // 헤더 아래 삽입할 부가 행(세트 카드의 문항 탭·세트 배지·분리 버튼 등). 미지정 시 미표시.
+  headerExtra,
+  // 선택 체크박스를 숨긴다(세트 카드가 선택 미배선일 때 죽은 체크박스 방지).
+  hideCheckbox = false,
+  // 영역선택(마키) 대상에서 제외 — data-drag-item-id 를 찍지 않는다(세트 카드 오선택 방지).
+  suppressDragItem = false,
 }: {
   q: QuestionBankItem;
   num: number;
@@ -219,6 +229,10 @@ export function QuestionBankCard({
   onRestore?: () => void;
   actionBusy?: boolean;
   deletedLabel?: string | null;
+  mergedPassage?: string;
+  headerExtra?: React.ReactNode;
+  hideCheckbox?: boolean;
+  suppressDragItem?: boolean;
 }) {
   const [isDragging, setIsDragging] = useState(false);
   // 카드 접힘/펼침 — 기본은 접힘(의문문 + 지문 2줄 + 정답만 보이는 미리보기).
@@ -353,6 +367,8 @@ export function QuestionBankCard({
   // 접힘 미리보기용 지문 — 파싱된 지문/요약/단락 섹션을 우선 쓰고,
   // 없으면 본문 첫 섹션, 그래도 없으면 참조 지문(q.passage) 본문을 쓴다.
   const collapsedPassage = useMemo(() => {
+    // 세트 멤버는 병합 변형 지문을 우선 표시(2줄 미리보기도 밑줄/빈칸/마커 유지).
+    if (mergedPassage) return mergedPassage;
     const candidate =
       bodySections.find(
         (s) =>
@@ -361,7 +377,7 @@ export function QuestionBankCard({
           s.type === "paragraphs",
       ) ?? bodySections.find((s) => typeof s.content === "string" && s.content);
     return candidate?.content || q.passage?.content || "";
-  }, [bodySections, q.passage]);
+  }, [bodySections, q.passage, mergedPassage]);
 
   // Make card draggable — 단, 네이티브 드래그는 "손잡이(DragHandle)"에만 등록한다.
   // 카드 본문은 draggable 이 아니므로 본문 위에서는 영역 선택(마키)이 동작하고,
@@ -508,7 +524,7 @@ export function QuestionBankCard({
   const card = (
     <Card
       ref={dragRef}
-      data-drag-item-id={selectionDisabled ? undefined : q.id}
+      data-drag-item-id={selectionDisabled || suppressDragItem ? undefined : q.id}
       data-question-card-id={q.id}
       onMouseDown={preventCardDoubleClickTextSelection}
       onClick={handleCardClick}
@@ -539,7 +555,7 @@ export function QuestionBankCard({
             <DragHandle ref={dragHandleRef} className="shrink-0" />
           )}
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
-            {!embedded && (
+            {!embedded && !hideCheckbox && (
               <Checkbox
                 checked={selected}
                 aria-disabled={selectionDisabled}
@@ -607,7 +623,8 @@ export function QuestionBankCard({
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
             )}
-            {/* 지문 참조 토글 — 클릭하면 아래에 원문 지문이 펼쳐진다. */}
+            {/* 지문 참조 토글 — 지문 이름(지문 N)은 항상 표시. 클릭하면 아래에 지문을 펼친다.
+                세트 멤버(mergedPassage)는 원본 raw 대신 병합 변형 지문을 펼쳐 빈칸 정답 누설을 막는다. */}
             {q.passage && viewSize !== "sm" && (
               <button
                 type="button"
@@ -666,13 +683,27 @@ export function QuestionBankCard({
           </div>
         </div>
 
+        {/* 세트 카드 부가 행 — 헤더 아래 문항 탭/세트 배지/분리 등. 일반 카드는 미표시. */}
+        {headerExtra && (
+          <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+            {headerExtra}
+          </div>
+        )}
+
         <div className="flex flex-col gap-2">
-          {/* 지문 참조 펼침 콘텐츠 — 토글은 헤더의 '지문 N' 버튼으로 이동. */}
-          {q.passage && viewSize !== "sm" && passageOpen && q.passage.content && (
+          {/* 지문 참조 펼침 콘텐츠 — 헤더의 '지문 N' 토글로 연다. 세트 멤버는 원본 raw 대신
+              병합 변형 지문(밑줄/빈칸/마커)을 보여줘 빈칸 정답 누설을 막는다. */}
+          {q.passage && viewSize !== "sm" && passageOpen && (
             <div className="shrink-0 rounded-lg border border-slate-100 bg-slate-50 px-2.5 py-2">
-              <p className="text-[11px] text-slate-500 leading-relaxed font-mono whitespace-pre-line max-h-[250px] overflow-y-auto">
-                {q.passage.content}
-              </p>
+              {mergedPassage ? (
+                <p className="text-[11px] text-slate-500 leading-relaxed font-mono whitespace-pre-line max-h-[250px] overflow-y-auto">
+                  {renderFormatted(mergedPassage, null)}
+                </p>
+              ) : q.passage.content ? (
+                <p className="text-[11px] text-slate-500 leading-relaxed font-mono whitespace-pre-line max-h-[250px] overflow-y-auto">
+                  {q.passage.content}
+                </p>
+              ) : null}
             </div>
           )}
 
@@ -687,6 +718,8 @@ export function QuestionBankCard({
               // 마커 유형(어법·어휘·삽입·무관)도 전체 옵션을 넘겨 정답 배지 +
               // 정답 단어/구를 함께 보여준다. 옵션이 비면 번호 배지로 폴백된다.
               passage={collapsedPassage}
+              // 세트 병합 지문은 여러 유형 마커가 섞여 있으므로 null(중립)로 렌더한다.
+              passageSubType={mergedPassage ? null : q.subType}
               options={displayOptions}
               correctAnswer={q.correctAnswer}
               displayCorrectAnswer={displayCorrectAnswer}
@@ -694,13 +727,25 @@ export function QuestionBankCard({
             />
           ) : (
             <>
+              {/* 세트 병합 변형 지문 — 유니버설 렌더러(renderFormatted)로 본문 상단에 표시.
+                  멤버 타입 무관하게 밑줄/빈칸/(A)마커를 모두 그린다. 세트 멤버는 structuredData
+                  passageWith* 가 stripped 라 타입 렌더러가 지문을 안 그리므로 중복되지 않는다.
+                  (그래서 아래 StructuredQuestionRenderer 에 sourcePassageContent 도 넘기지 않는다.) */}
+              {mergedPassage && (
+                <div className="shrink-0 rounded-lg border border-slate-100 bg-slate-50 px-2.5 py-2">
+                  <p className="max-h-[280px] overflow-y-auto whitespace-pre-line font-mono text-[12px] leading-[1.9] text-slate-700">
+                    {renderFormatted(mergedPassage, null)}
+                  </p>
+                </div>
+              )}
+
               {/* 전체 구조화 렌더링 */}
               {structuredQuestion ? (
                 <StructuredQuestionRenderer
                   question={structuredQuestion}
                   index={num - 1}
                   hideHeader
-                  sourcePassageContent={q.passage?.content}
+                  sourcePassageContent={mergedPassage ? undefined : q.passage?.content}
                   // 임베드(상세 팝업) 마커 유형은 정답 배지를 본문 아래에 직접 그리고
                   // 해설은 바깥 ExplanationSection 으로 내려, 렌더러 내부 '해설 보기'를
                   // 숨긴다(정답 배지가 '해설 보기' 위로 오도록). 일반 목록 카드는 기존 유지.

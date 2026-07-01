@@ -19,6 +19,8 @@ type GrammarCorrectionQuestionTextLike = {
 
 type GrammarCorrectionStoredQuestionLike = {
   subType?: unknown;
+  _typeId?: unknown;
+  typeId?: unknown;
   correctAnswer?: unknown;
   structuredData?: unknown;
 };
@@ -122,7 +124,12 @@ export function formatGrammarCorrectionCorrectAnswerForStoredQuestion(
   question: GrammarCorrectionStoredQuestionLike,
 ): string {
   const fallback = normalizeDisplayString(question.correctAnswer);
-  if (question.subType !== "GRAMMAR_CORRECTION") return fallback;
+  // 세트 멤버는 subType 대신 typeId(=q.subType 매핑)를 실어오므로 세 필드를 모두 본다
+  // (storedQuestionType 과 동일 규약). `||` 사용 — 빈 문자열 subType 에도 안전하게 폴백.
+  const resolvedType = normalizeDisplayString(
+    question.subType || question._typeId || question.typeId,
+  );
+  if (resolvedType !== "GRAMMAR_CORRECTION") return fallback;
   return formatGrammarCorrectionCorrectAnswer(
     readStructuredData(question.structuredData),
   ) || fallback;

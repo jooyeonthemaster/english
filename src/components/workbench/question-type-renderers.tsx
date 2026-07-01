@@ -69,7 +69,11 @@ import {
 // 수능/모의고사 객관식 (10 types)
 // ============================================================================
 
-function SourcePassageBlock({ q }: { q: { _sourcePassageContent?: unknown } }) {
+function SourcePassageBlock({
+  q,
+}: {
+  q: { _sourcePassageContent?: unknown; _setMember?: unknown };
+}) {
   const sourcePassage =
     typeof q._sourcePassageContent === "string"
       ? q._sourcePassageContent.trim()
@@ -78,6 +82,10 @@ function SourcePassageBlock({ q }: { q: { _sourcePassageContent?: unknown } }) {
   if (sourcePassage) {
     return <PassageBlock>{sourcePassage}</PassageBlock>;
   }
+
+  // 지문 세트 멤버는 병합 변형 지문을 카드/모달 본문 상단에 별도 표시하므로,
+  // "원문 지문을 참고하세요" 안내를 숨긴다(중복·오해 방지).
+  if (q._setMember === true) return null;
 
   return (
     <div className="text-[11px] text-slate-400 italic flex items-center gap-1">

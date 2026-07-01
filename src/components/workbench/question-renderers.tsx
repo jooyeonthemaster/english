@@ -668,6 +668,12 @@ function replaceDisplaySlice(
 
 /** Check if a question has the expected structured fields for its type */
 function hasStructuredFields(typeId: string, q: any): boolean {
+  // 지문 세트 멤버는 passageWith*(구운 지문)를 저장하지 않고 anchor 만 들고 있으므로 위 필드
+  // 검사에 걸려 FallbackRenderer 로 떨어진다(정답/해설 중복 렌더 유발). 세트 멤버는 유형별
+  // 필드(markedExpressions/underlinedPronoun/summaryWithBlanks 등)를 그대로 보유하니 타입
+  // 렌더러로 보낸다 — 지문(passageWith*)만 비어 렌더 안 되고, 병합 변형 지문은 카드가 본문
+  // 상단에 유니버설 렌더러로 별도 표시한다.
+  if (q?._setMember === true) return true;
   switch (typeId) {
     case "BLANK_INFERENCE":
       return !!q.passageWithBlank && !!q.direction;

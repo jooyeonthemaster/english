@@ -64,8 +64,8 @@ interface FolderSectionProps {
   onNavigateToFolder: (id: string) => void;
   onRenameFolder: (id: string, name: string) => void;
   onDeleteFolder: (id: string) => void;
-  onDragToFolder: (itemId: string, folderId: string, copy: boolean) => void;
-  onDragToRoot?: (itemId: string, copy: boolean) => void;
+  onDragToFolder: (itemId: string | string[], folderId: string, copy: boolean) => void;
+  onDragToRoot?: (itemId: string | string[], copy: boolean) => void;
   breadcrumbPath?: CollectionItem[];
   onNavigateToRoot?: () => void;
   /** If true, use full FolderCard inside folders, FolderChip at root */
@@ -149,7 +149,7 @@ interface ParentFolderButtonProps {
   dragItemType: "question" | "passage" | "exam";
   dragItemIdKey: string;
   onClick: () => void;
-  onFileDrop: (itemId: string, copy: boolean) => void;
+  onFileDrop: (itemId: string | string[], copy: boolean) => void;
 }
 
 interface RootFolderChipProps {
@@ -160,7 +160,7 @@ interface RootFolderChipProps {
   dragItemType: "question" | "passage" | "exam";
   dragItemIdKey: string;
   onClick: () => void;
-  onFileDrop?: (itemId: string, copy: boolean) => void;
+  onFileDrop?: (itemId: string | string[], copy: boolean) => void;
 }
 
 function RootFolderChip({
@@ -186,7 +186,11 @@ function RootFolderChip({
       onDragLeave: () => setIsDragOver(false),
       onDrop: ({ source }) => {
         setIsDragOver(false);
-        const itemId = source.data[dragItemIdKey] as string;
+        // 세트 드래그는 멤버 전체(questionIds)를 실어옴 → 있으면 배열째(단일은 fallback).
+        const arr = source.data.questionIds as string[] | undefined;
+        const itemId = (Array.isArray(arr) && arr.length > 0
+          ? arr
+          : source.data[dragItemIdKey]) as string | string[];
         const isCopy = (window.event as DragEvent | null)?.shiftKey ?? false;
         onFileDrop(itemId, isCopy);
       },
@@ -261,7 +265,11 @@ function ParentFolderButton({
       onDragLeave: () => setIsDragOver(false),
       onDrop: ({ source }) => {
         setIsDragOver(false);
-        const itemId = source.data[dragItemIdKey] as string;
+        // 세트 드래그는 멤버 전체(questionIds)를 실어옴 → 있으면 배열째(단일은 fallback).
+        const arr = source.data.questionIds as string[] | undefined;
+        const itemId = (Array.isArray(arr) && arr.length > 0
+          ? arr
+          : source.data[dragItemIdKey]) as string | string[];
         const isCopy = (window.event as DragEvent | null)?.shiftKey ?? false;
         onFileDrop(itemId, isCopy);
       },
@@ -329,7 +337,7 @@ export function FolderSection({
     if (parentFolderId) onNavigateToFolder(parentFolderId);
     else onNavigateToRoot?.();
   };
-  const handleDropToParent = (itemId: string, copy: boolean) => {
+  const handleDropToParent = (itemId: string | string[], copy: boolean) => {
     if (parentFolderId) onDragToFolder(itemId, parentFolderId, copy);
     else onDragToRoot?.(itemId, copy);
   };

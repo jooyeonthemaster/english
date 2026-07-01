@@ -27,7 +27,7 @@ interface FolderChipProps {
   onClick: () => void;
   onRename: (id: string, name: string) => void;
   onDelete: (id: string) => void;
-  onFileDrop: (itemId: string, folderId: string, copy: boolean) => void;
+  onFileDrop: (itemId: string | string[], folderId: string, copy: boolean) => void;
 }
 
 export function FolderChip({
@@ -57,7 +57,12 @@ export function FolderChip({
       onDragLeave: () => setIsDragOver(false),
       onDrop: ({ source }) => {
         setIsDragOver(false);
-        const itemId = source.data[dragItemIdKey] as string;
+        // 세트 카드 드래그는 멤버 questionId 전체(questionIds)를 실어온다 — 있으면 배열째 전달해
+        // 세트 문항 전부를 폴더에 넣는다(일반 단일 드래그는 questionIds 미존재 → 단일 fallback).
+        const arr = source.data.questionIds as string[] | undefined;
+        const itemId = (Array.isArray(arr) && arr.length > 0
+          ? arr
+          : source.data[dragItemIdKey]) as string | string[];
         const isCopy = (window.event as DragEvent | null)?.shiftKey ?? false;
         onFileDrop(itemId, collection.id, isCopy);
       },

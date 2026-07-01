@@ -342,18 +342,20 @@ export function ExamPaperBuilderClient({
     itemLabel: "문제",
   });
 
-  // 드래그한 문제를 폴더에 담기/이동(빈 selection이라 단일 문제만 대상).
+  // 드래그한 문제를 폴더에 담기/이동(빈 selection이라 단일 문제만 대상). 세트 드래그면 itemId 가
+  // 멤버 배열 — 훅이 배열째 받아 전체를 넣는다.
   const handleDragQuestionToFolder = useCallback(
-    (itemId: string, folderId: string, copy: boolean) => {
+    (itemId: string | string[], folderId: string, copy: boolean) => {
       void folders.handleDragToFolder(itemId, folderId, copy, new Set<string>());
     },
     [folders],
   );
-  // "전체 문제"로 드래그하면 현재 폴더에서 제거한다(복사 드롭은 무시).
+  // "전체 문제"로 드래그하면 현재 폴더에서 제거한다(복사 드롭은 무시). 세트는 멤버 전체 제거.
   const handleDragQuestionToRoot = useCallback(
-    (itemId: string, copy: boolean) => {
+    (itemId: string | string[], copy: boolean) => {
       if (copy || !folders.activeFolder) return;
-      void folders.handleRemoveFromFolder(new Set<string>([itemId]));
+      const ids = Array.isArray(itemId) ? itemId : [itemId];
+      void folders.handleRemoveFromFolder(new Set<string>(ids));
     },
     [folders],
   );

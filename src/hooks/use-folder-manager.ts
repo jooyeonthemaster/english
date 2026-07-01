@@ -34,6 +34,9 @@ interface UseFolderManagerOptions {
   actions: FolderActions;
   /** Label used in toast messages (e.g. "지문" or "문제") */
   itemLabel: string;
+  /** questionId → setId 역참조. 있으면 폴더 카운트에서 세트 멤버를 "세트 1개"로 센다
+   *  (일반 문제와 동일 시각 단위). 미지정(지문/추출 폴더 등)이면 raw 멤버 수로 폴백. */
+  questionSetIdOf?: (itemId: string) => string | null | undefined;
 }
 
 const UNDO_TOAST_DURATION = 8000;
@@ -57,6 +60,7 @@ export function useFolderManager({
   initialMembership,
   actions,
   itemLabel,
+  questionSetIdOf,
 }: UseFolderManagerOptions) {
   // ─── State ───
   const [collections, setCollections] = useState<CollectionItem[]>(
@@ -107,6 +111,24 @@ export function useFolderManager({
     [activeFolder, membership],
   );
 
+  // 폴더 카운트 = 일반 문제(setId 없음) + 서로 다른 세트(distinct setId). questionSetIdOf 미지정 시
+  // 기존처럼 raw 멤버 수(지문/추출 폴더 등 세트 개념이 없는 표면은 그대로).
+  const countItems = useCallback(
+    (ids: Set<string> | undefined): number => {
+      if (!ids) return 0;
+      if (!questionSetIdOf) return ids.size;
+      let regular = 0;
+      const sets = new Set<string>();
+      for (const id of ids) {
+        const setId = questionSetIdOf(id);
+        if (setId) sets.add(setId);
+        else regular += 1;
+      }
+      return regular + sets.size;
+    },
+    [questionSetIdOf],
+  );
+
   const syncCollectionCounts = useCallback(
     (nextMembership: Record<string, Set<string>>) => {
       setCollections((prev) =>
@@ -114,12 +136,12 @@ export function useFolderManager({
           ...c,
           _count: {
             ...c._count,
-            items: nextMembership[c.id]?.size ?? 0,
+            items: countItems(nextMembership[c.id]),
           },
         })),
       );
     },
-    [],
+    [countItems],
   );
 
   const applyMembershipSnapshot = useCallback(

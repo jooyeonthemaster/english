@@ -98,6 +98,8 @@ import { useQuestionEditor } from "./question-bank-client/use-question-editor";
 import { useUrlFilters } from "@/hooks/use-url-filters";
 import { useSelection } from "@/hooks/use-selection";
 import { useFolderManager } from "@/hooks/use-folder-manager";
+import { getAcademyQuestionSetMemberMap } from "@/actions/question-sets";
+import { QuestionSetSection } from "@/components/workbench/question-set-section";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -279,6 +281,16 @@ export function QuestionBankClient({
   }
 
   // Folder manager
+  // 세트 섹션이 보고하는 (폴더 스코프) 세트 수 — 빈-상태 판정용(폴더에 세트만 있어도 빈 화면 방지).
+  const [setCount, setSetCount] = useState(0);
+  // 세트 멤버 questionId → setId 맵 — 폴더 카운트에서 세트를 "1개"로 센다(마운트 1회).
+  const [setMemberMap, setSetMemberMap] = useState<Record<string, string>>({});
+  useEffect(() => {
+    getAcademyQuestionSetMemberMap()
+      .then(setSetMemberMap)
+      .catch(() => {});
+  }, []);
+
   const folders = useFolderManager({
     initialCollections,
     initialMembership,
@@ -290,6 +302,7 @@ export function QuestionBankClient({
       removeFromCollection: removeQuestionsFromCollection,
     },
     itemLabel: "문제",
+    questionSetIdOf: (id) => setMemberMap[id] ?? null,
   });
 
   // Grid view mode
@@ -678,7 +691,8 @@ export function QuestionBankClient({
 
   // ─── Folder drag handler (wraps hook's handler with selectedIds) ───
   const handleDragToFolder = useCallback(
-    async (itemId: string, folderId: string, copy: boolean) => {
+    async (itemId: string | string[], folderId: string, copy: boolean) => {
+      // 세트 드래그면 itemId 가 멤버 배열 — 훅이 배열을 그대로 받아 전체를 폴더에 넣는다.
       const success = await folders.handleDragToFolder(
         itemId,
         folderId,
@@ -691,9 +705,13 @@ export function QuestionBankClient({
   );
 
   const handleDragToRoot = useCallback(
-    async (itemId: string, copy: boolean) => {
+    async (itemId: string | string[], copy: boolean) => {
       if (copy || !folders.activeFolder) return;
-      const ids = selectedIds.has(itemId) ? selectedIds : new Set([itemId]);
+      // 세트는 멤버 전체(배열)를 폴더에서 뺀다.
+      const draggedIds = Array.isArray(itemId) ? itemId : [itemId];
+      const ids = draggedIds.some((id) => selectedIds.has(id))
+        ? selectedIds
+        : new Set(draggedIds);
       const success = await folders.handleRemoveFromFolder(ids);
       if (success) clearSelection();
     },
@@ -1254,7 +1272,9 @@ export function QuestionBankClient({
                       : undefined
                   }
                 />
-              ) : displayedQuestions.length === 0 && !isNavPending ? (
+              ) : displayedQuestions.length === 0 &&
+                setCount === 0 &&
+                !isNavPending ? (
                 <div className="py-12 text-center">
                   <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />
                   <p className="text-[13px] text-slate-400">
@@ -1280,61 +1300,75 @@ export function QuestionBankClient({
                         : "grid-cols-1"
                   }`}
                 >
-                  {displayedQuestions.map((q, idx) => {
-                    const startIdx = (currentPage - 1) * 20;
-                    if (showingPendingOnly) {
-                      return (
-                        <QuestionCard
-                          key={q.id}
-                          q={q}
-                          num={startIdx + idx + 1}
-                          selected={selectedIds.has(q.id)}
-                          recentlyViewed={
-                            lastViewedQuestionId === q.id &&
-                            detailQuestionId !== q.id
-                          }
-                          onToggle={() => toggleSelect(q.id)}
-                          onApprove={() => handleApprove(q.id)}
-                          onDetail={() => openDetail(q.id)}
-                          onEdit={() => editor.openEditor(q.id)}
-                          readonly
-                          compact
-                          showReviewActions
-                          openOnCardClick
-                        />
-                      );
-                    }
-                    const similarAnalysis = getSimilarSourceAnalysis(q);
-                    return (
-                      <QuestionBankCard
-                        key={q.id}
-                        q={q}
-                        num={startIdx + idx + 1}
-                        selected={selectedIds.has(q.id)}
-                        recentlyViewed={
-                          lastViewedQuestionId === q.id &&
-                          detailQuestionId !== q.id
-                        }
-                        onToggle={() => toggleSelect(q.id)}
-                        onDelete={() => handleDelete(q.id)}
-                        onApprove={() => handleApprove(q.id)}
-                        onUnapprove={() => handleUnapprove(q.id)}
-                        onToggleStar={() => handleToggleStar(q.id)}
-                        onDetail={() => openDetail(q.id)}
-                        onEdit={() => editor.openEditor(q.id)}
-                        onShowAnalysis={
-                          similarAnalysis
-                            ? () => setSourceAnalysis(similarAnalysis)
-                            : undefined
-                        }
-                        viewSize={viewSize}
-                        cardClickSelects
-                        showDetailButton
-                        dragRequiresSelection
-                        getDragQuestionIds={getDragQuestionIds}
-                      />
-                    );
-                  })}
+                  {/* 지문 세트 — 일반 문제와 한 그리드에 섞어 렌더(생성 페이지와 동일). 폴더 인식
+                      (collectionId). 미검수-만 보기(showingPendingOnly)에선 세트 숨김. M3 회피:
+                      관리 페이지에선 세트 체크 선택(onToggleSetSelection) 미배선 → 일괄삭제 orphan 방지. */}
+                  <QuestionSetSection
+                    inline
+                    showSets={currentPage === 1 && !showingPendingOnly}
+                    refreshKey={`${folders.activeFolder ?? "all"}:${filters.approved}`}
+                    onCountChange={setSetCount}
+                    onMemberSplit={() => router.refresh()}
+                    collectionId={folders.activeFolder ?? undefined}
+                    normalItems={displayedQuestions.map((q, idx) => {
+                      const startIdx = (currentPage - 1) * 20;
+                      const similarAnalysis = showingPendingOnly
+                        ? null
+                        : getSimilarSourceAnalysis(q);
+                      return {
+                        id: q.id,
+                        createdAt: q.createdAt,
+                        node: showingPendingOnly ? (
+                          <QuestionCard
+                            key={q.id}
+                            q={q}
+                            num={startIdx + idx + 1}
+                            selected={selectedIds.has(q.id)}
+                            recentlyViewed={
+                              lastViewedQuestionId === q.id &&
+                              detailQuestionId !== q.id
+                            }
+                            onToggle={() => toggleSelect(q.id)}
+                            onApprove={() => handleApprove(q.id)}
+                            onDetail={() => openDetail(q.id)}
+                            onEdit={() => editor.openEditor(q.id)}
+                            readonly
+                            compact
+                            showReviewActions
+                            openOnCardClick
+                          />
+                        ) : (
+                          <QuestionBankCard
+                            key={q.id}
+                            q={q}
+                            num={startIdx + idx + 1}
+                            selected={selectedIds.has(q.id)}
+                            recentlyViewed={
+                              lastViewedQuestionId === q.id &&
+                              detailQuestionId !== q.id
+                            }
+                            onToggle={() => toggleSelect(q.id)}
+                            onDelete={() => handleDelete(q.id)}
+                            onApprove={() => handleApprove(q.id)}
+                            onUnapprove={() => handleUnapprove(q.id)}
+                            onToggleStar={() => handleToggleStar(q.id)}
+                            onDetail={() => openDetail(q.id)}
+                            onEdit={() => editor.openEditor(q.id)}
+                            onShowAnalysis={
+                              similarAnalysis
+                                ? () => setSourceAnalysis(similarAnalysis)
+                                : undefined
+                            }
+                            viewSize={viewSize}
+                            cardClickSelects
+                            showDetailButton
+                            dragRequiresSelection
+                            getDragQuestionIds={getDragQuestionIds}
+                          />
+                        ),
+                      };
+                    })}
+                  />
                 </DragSelect>
               )}
             </div>
