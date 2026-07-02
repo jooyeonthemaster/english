@@ -414,6 +414,31 @@
   }
 }
 
+/* 관리자 미확인(한 번도 클릭 안 한) 게시글 행: 클릭 전까지 파란색으로 천천히 숨쉬듯
+   반짝인다. 목록 컨테이너가 overflow-hidden 이라 바깥 글로우는 잘리므로 안쪽 링 +
+   옅은 배경 틴트로 표현한다. */
+@keyframes admin-unread-glow {
+  0%, 100% {
+    box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0), inset 0 0 14px 0 rgba(37, 99, 235, 0);
+    background-color: rgba(37, 99, 235, 0);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 0 1px rgba(37, 99, 235, 0.35),
+      inset 0 0 16px 2px rgba(37, 99, 235, 0.1);
+    background-color: rgba(37, 99, 235, 0.06);
+  }
+}
+.admin-unread-glow {
+  animation: admin-unread-glow 3s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-unread-glow {
+    animation: none;
+    background-color: rgba(37, 99, 235, 0.05);
+  }
+}
+
 /* 크레딧 뱃지 변화 강조: 폰트가 살짝 커졌다가 원래대로, 색이 잠깐 변했다가 복귀 */
 @keyframes credit-flash-down {
   0% { transform: scale(1); }

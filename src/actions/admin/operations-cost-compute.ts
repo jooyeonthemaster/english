@@ -203,6 +203,11 @@ export function getApiCostSourceKey(cost: {
   if (cost.sourceType === "TUTOR_AI_LOG") return "tutor-ai";
   if (cost.sourceType === "WORKBENCH_AI_JOB") return "workbench-ai";
   if (cost.sourceType === "WEBTOON") return "webtoon-image";
+  if (cost.sourceType === "AI_INTERACTIVE") return "ai-interactive";
+  if (cost.sourceType === "SIMILAR_EXAM_AI") return "similar-exam";
+  if (cost.sourceType === "CUSTOM_QTYPE_AI") return "custom-qtype";
+  if (cost.sourceType === "TUTOR_GRADING") return "tutor-grading";
+  if (cost.sourceType === "WEBTOON_TEXT") return "webtoon-text";
   return cost.provider.toLowerCase();
 }
 export function getApiCostSourceLabel(cost: {
@@ -217,6 +222,11 @@ export function getApiCostSourceLabel(cost: {
   if (cost.sourceType === "TUTOR_AI_LOG") return "튜터 AI";
   if (cost.sourceType === "WORKBENCH_AI_JOB") return "워크벤치 AI";
   if (cost.sourceType === "WEBTOON") return "웹툰 이미지";
+  if (cost.sourceType === "AI_INTERACTIVE") return "인터랙티브 AI";
+  if (cost.sourceType === "SIMILAR_EXAM_AI") return "유사문항 생성";
+  if (cost.sourceType === "CUSTOM_QTYPE_AI") return "커스텀 문항유형";
+  if (cost.sourceType === "TUTOR_GRADING") return "튜터 AI 채점";
+  if (cost.sourceType === "WEBTOON_TEXT") return "웹툰 텍스트 감지";
   return cost.provider;
 }
 export function addBucketApiCost(
@@ -272,6 +282,7 @@ export function addSourceApiCost(
       unpricedCalls: 0,
       unpricedInputTokens: 0,
       unpricedOutputTokens: 0,
+      estimatedCalls: 0,
       inputTokens: 0,
       outputTokens: 0,
       costUsd: 0,
@@ -282,6 +293,9 @@ export function addSourceApiCost(
     source.unpricedCalls += calls;
     source.unpricedInputTokens += inputTokens;
     source.unpricedOutputTokens += outputTokens;
+  }
+  if (pricingSource === "ESTIMATE") {
+    source.estimatedCalls += calls;
   }
   source.inputTokens += inputTokens;
   source.outputTokens += outputTokens;

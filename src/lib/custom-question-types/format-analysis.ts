@@ -3,7 +3,8 @@ import "server-only";
 import { generateObject, NoObjectGeneratedError } from "ai";
 import { z } from "zod";
 
-import { model as geminiModel } from "@/lib/ai";
+import { model as geminiModel, GEMINI_MODEL_ID } from "@/lib/ai";
+import { recordAiCost } from "@/lib/platform-api-costs";
 
 import type { QuestionAnalysis } from "./analysis-input";
 import {
@@ -57,6 +58,8 @@ export interface AnalyzeFormatArgs {
   gradeInfo?: string;
   /** 1차 분석의 DocAI OCR 원문 — 전사 입력 하이브리드(픽셀 전사 대신 텍스트 재구성)로 루프 방지. */
   referenceText?: string;
+  /** 원가 기록 귀속용 학원 ID(잡에서 전달). */
+  academyId?: string | null;
 }
 
 function errorDetail(error: unknown): string {
@@ -158,6 +161,14 @@ async function analyzeFormatSpec(args: AnalyzeFormatArgs): Promise<FormatSpec> {
             ],
           },
         ],
+      });
+      await recordAiCost({
+        sourceType: "CUSTOM_QTYPE_AI",
+        sourceDetail: "format-spec",
+        academyId: args.academyId,
+        model: GEMINI_MODEL_ID,
+        operationType: "CUSTOM_QTYPE_GEN",
+        usage: result.usage,
       });
       const format = parseFormatSpec(result.object.format);
       const problems = validateFormatOnly(format);
@@ -299,6 +310,14 @@ async function transcribeSourceLayout(
           },
         ],
       });
+      await recordAiCost({
+        sourceType: "CUSTOM_QTYPE_AI",
+        sourceDetail: "format-transcribe",
+        academyId: args.academyId,
+        model: GEMINI_MODEL_ID,
+        operationType: "CUSTOM_QTYPE_GEN",
+        usage: result.usage,
+      });
       const sourceLayout = parseLayoutDoc(result.object.sourceLayout);
       const problems = validateSourceLayout(format, sourceLayout);
       if (problems.length > 0) {
@@ -357,6 +376,7 @@ async function analyzeAnnotations(args: {
   image: { data: Buffer; mediaType: string };
   format: FormatSpec;
   analysis: QuestionAnalysis | null;
+  academyId?: string | null;
 }): Promise<FormatAnnotation[]> {
   const result = await generateObject({
     model: geminiModel,
@@ -375,6 +395,14 @@ async function analyzeAnnotations(args: {
       },
     ],
   });
+  await recordAiCost({
+    sourceType: "CUSTOM_QTYPE_AI",
+    sourceDetail: "format-annotations",
+    academyId: args.academyId,
+    model: GEMINI_MODEL_ID,
+    operationType: "CUSTOM_QTYPE_GEN",
+    usage: result.usage,
+  });
   return formatAnnotationsSchema.parse(result.object.annotations ?? []);
 }
 
@@ -391,7 +419,12 @@ export async function analyzeQuestionFormat(args: AnalyzeFormatArgs): Promise<Fo
   // 2) 전사·어노테이션은 서로 독립 → 병렬. 둘 다 실패해도 부분 성공(전사=결정적 폴백, 어노=[]).
   const [sourceLayout, annotations] = await Promise.all([
     transcribeSourceLayout(args, format),
-    analyzeAnnotations({ image: args.image, format, analysis: args.analysis ?? null }).catch(
+    analyzeAnnotations({
+      image: args.image,
+      format,
+      analysis: args.analysis ?? null,
+      academyId: args.academyId,
+    }).catch(
       (error) => {
         console.warn(`[CUSTOM-TYPE-FORMAT-ANALYSIS] annotation pass failed: ${errorDetail(error)}`);
         return [] as FormatAnnotation[];

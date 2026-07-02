@@ -10,6 +10,26 @@ import {
 import { cn } from "@/lib/utils";
 import type { SortOrder } from "@/actions/admin-members";
 
+/** 헤더 셀 우측의 열 너비 조절 핸들(드래그). 회원별·학원별 표 공용. */
+export function ColumnResizeHandle({
+  onPointerDown,
+}: {
+  onPointerDown: (e: React.PointerEvent) => void;
+}) {
+  return (
+    <span
+      role="separator"
+      aria-orientation="vertical"
+      aria-label="열 너비 조절"
+      onPointerDown={onPointerDown}
+      onClick={(e) => e.stopPropagation()}
+      className="group/resize absolute right-0 top-0 z-10 flex h-full w-2 translate-x-1/2 cursor-col-resize touch-none items-center justify-center"
+    >
+      <span className="h-4 w-px bg-gray-200 transition-colors group-hover/resize:bg-blue-400" />
+    </span>
+  );
+}
+
 export function SortHeader({
   label,
   active,
@@ -33,6 +53,49 @@ export function SortHeader({
     >
       {label}
       <Icon className="size-3" strokeWidth={2} aria-hidden="true" />
+    </button>
+  );
+}
+
+/**
+ * 어드민 공용 필터 칩(Toss형 rounded-full pill). 활성=진한 슬레이트, 비활성=연회색.
+ * 오른쪽에 회원 수 등 카운트를 옅게 덧붙일 수 있다(선택). 피드백·세미나·튜터 툴바와
+ * 같은 톤이라 어드민 전반의 필터 칩을 이 컴포넌트로 통일한다.
+ */
+export function FilterPill({
+  active,
+  onClick,
+  label,
+  count,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+  count?: number;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className={cn(
+        "inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-[12px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40",
+        active
+          ? "bg-slate-900 text-white"
+          : "bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-800",
+      )}
+    >
+      {label}
+      {count !== undefined && (
+        <span
+          className={cn(
+            "tabular-nums text-[11px]",
+            active ? "text-white/70" : "text-slate-400",
+          )}
+        >
+          {count.toLocaleString("ko-KR")}
+        </span>
+      )}
     </button>
   );
 }

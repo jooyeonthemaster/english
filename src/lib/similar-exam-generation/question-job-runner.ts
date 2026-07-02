@@ -214,6 +214,7 @@ async function runJob(jobId: string): Promise<void> {
       images: [referenceImage],
       gradeInfo: job.gradeInfo ?? undefined,
       manualCropOnly: true,
+      academyId: job.academyId,
     });
 
     const allQuestions = analysis.groups.flatMap((group) => group.questions);

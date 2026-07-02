@@ -14,6 +14,7 @@ import {
   type QuestionGenerationPlan,
 } from "@/lib/question-generation-plans";
 import { toUserFacingQuestionGenerationError } from "@/lib/question-generation-llm";
+import { recordAiCost } from "@/lib/platform-api-costs";
 import { resolveEditModelId } from "@/lib/question-ai-edit/model-config";
 import { runQuestionEdit } from "@/lib/question-ai-edit/run-edit";
 
@@ -231,6 +232,16 @@ export async function POST(request: NextRequest) {
         { status: 422 },
       );
     }
+
+    await recordAiCost({
+      sourceType: "AI_INTERACTIVE",
+      sourceDetail: "question-edit",
+      operationType: "QUESTION_MODIFY",
+      academyId: staff.academyId,
+      model: result.meta.modelId,
+      inputTokens: result.meta.inputTokens,
+      outputTokens: result.meta.outputTokens,
+    });
 
     return NextResponse.json({
       ok: true,

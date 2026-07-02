@@ -110,13 +110,14 @@ async function runJob(jobId: string): Promise<void> {
         analysis: analyzed.primary,
         gradeInfo: job.gradeInfo ?? undefined,
         referenceText: analyzed.referenceText,
+        academyId: job.academyId,
       });
     } catch (err) {
       const detail = err instanceof Error ? err.message : String(err);
       console.warn(`[custom-type-analysis-worker] format pass failed (continuing v1): ${detail}`);
     }
 
-    const compiled = await compileCustomType(analyzed.primary, formatResult);
+    const compiled = await compileCustomType(analyzed.primary, formatResult, job.academyId);
 
     // 버전 source 페이로드(v2): 내용 분석 + 해부 어노테이션 + 원본 이미지 잡 ID(해부 뷰 이미지 서빙용).
     const sourcePayload = {

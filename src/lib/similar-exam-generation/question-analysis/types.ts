@@ -14,6 +14,8 @@ export interface AnalyzeQuestionItemArgs {
   gradeInfo?: string;
   /** User-cropped reference image. Bypass legacy full-page bbox crop follow-up. */
   manualCropOnly?: boolean;
+  /** 원가 기록 귀속용 학원 ID(백그라운드 잡 페이로드에서 전달). */
+  academyId?: string | null;
 }
 
 export interface QuestionAnalysisResult {

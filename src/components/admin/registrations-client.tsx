@@ -12,6 +12,8 @@ import {
   STATUS_TABS,
   getDistrict,
 } from "./registrations-client/constants";
+
+const VALID_STATUS_TABS = new Set(STATUS_TABS.map((t) => t.value));
 import { DistrictGrid } from "./registrations-client/district-grid";
 import { RegistrationsTable } from "./registrations-client/registrations-table";
 import { ApproveDialog } from "./registrations-client/approve-dialog";
@@ -26,15 +28,20 @@ import type {
 interface RegistrationsClientProps {
   initialRegistrations: Registration[];
   plans: Plan[];
+  /** 대시보드 등에서 넘어올 때 초기 상태 필터 */
+  initialStatus?: string;
 }
 
 export function RegistrationsClient({
   initialRegistrations,
   plans,
+  initialStatus,
 }: RegistrationsClientProps) {
   const router = useRouter();
   const [, startTransition] = useTransition();
-  const [activeTab, setActiveTab] = useState("ALL");
+  const [activeTab, setActiveTab] = useState(
+    initialStatus && VALID_STATUS_TABS.has(initialStatus) ? initialStatus : "ALL",
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [campaignTab, setCampaignTab] = useState<"ALL" | "CAMPAIGN" | "GENERAL">("ALL");
   const [districtFilter, setDistrictFilter] = useState<string | null>(null);

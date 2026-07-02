@@ -45,12 +45,17 @@ export function CreditAdjustModal({
   const router = useRouter();
   const [direction, setDirection] = useState<Direction>("grant");
   const [amount, setAmount] = useState<string>("");
+  const [expiryDays, setExpiryDays] = useState<string>("");
   const [reason, setReason] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const numericAmount = (() => {
     const n = parseInt(amount.replace(/,/g, ""), 10);
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  })();
+  const numericExpiry = (() => {
+    const n = parseInt(expiryDays.replace(/,/g, ""), 10);
     return Number.isFinite(n) && n > 0 ? n : 0;
   })();
   const signedAmount = direction === "grant" ? numericAmount : -numericAmount;
@@ -76,6 +81,7 @@ export function CreditAdjustModal({
   function reset() {
     setDirection("grant");
     setAmount("");
+    setExpiryDays("");
     setReason("");
     setError(null);
   }
@@ -95,6 +101,8 @@ export function CreditAdjustModal({
         memberId,
         amount: signedAmount,
         reason: reason.trim(),
+        // Only a grant carries a validity window; 0 = ride the existing expiry.
+        expiryDays: direction === "grant" && numericExpiry > 0 ? numericExpiry : undefined,
       });
       if (!res.success) {
         setError(res.error);
@@ -231,6 +239,35 @@ export function CreditAdjustModal({
               </button>
             )}
           </div>
+
+          {/* Validity (grant only) — extends the balance-wide expiry by
+              (remaining + this). Blank rides the existing expiry (promo-like). */}
+          {direction === "grant" && (
+            <div className="space-y-1.5">
+              <Label htmlFor="adjust-expiry" className="text-[12px] text-gray-700">
+                소멸기한 (일)
+                <span className="text-[11px] text-gray-400 font-normal ml-1.5">
+                  (비우면 기존 소멸기한 유지)
+                </span>
+              </Label>
+              <Input
+                id="adjust-expiry"
+                type="text"
+                inputMode="numeric"
+                value={expiryDays}
+                onChange={(e) =>
+                  setExpiryDays(e.target.value.replace(/[^\d]/g, ""))
+                }
+                placeholder="예: 30 (30일). 비우면 기존 소멸기한에 합산 없이 유지"
+                className="h-10 text-[14px] tabular-nums"
+              />
+              {numericExpiry > 0 && (
+                <p className="text-[11px] text-gray-500">
+                  기존 잔여 소멸기한에 <b>+{numericExpiry}일</b>이 더해져 갱신됩니다.
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Reason */}
           <div className="space-y-1.5">

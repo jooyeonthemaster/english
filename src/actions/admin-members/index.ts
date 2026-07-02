@@ -25,11 +25,31 @@ export {
   type TransactionListResult,
 } from "./get-member-transactions";
 
+export {
+  getMemberPurchases,
+  type MemberPurchaseItem,
+} from "./get-member-purchases";
+
 export { adjustMemberCredits } from "./adjust-member-credits";
+
+export {
+  adjustMembersCredits,
+  type BulkAdjustItemResult,
+} from "./adjust-members-credits";
+
+export {
+  setMemberCreditExpiry,
+  setMembersCreditExpiry,
+  wipeMemberCredits,
+  wipeMembersCredits,
+  type BulkCreditItemResult,
+} from "./set-member-credit-expiry";
 
 export { toggleMemberActive } from "./toggle-member-active";
 
 export { updateMemberMemo } from "./update-member-memo";
+
+export { moveMemberAcademy } from "./move-member-academy";
 
 export { toggleMemberSmsOptOut } from "./toggle-sms-opt-out";
 

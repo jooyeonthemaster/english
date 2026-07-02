@@ -35,7 +35,7 @@ async function runTransform<T>({
   prompt: string;
   temperature: number;
   logPrefix: string;
-}): Promise<T> {
+}): Promise<{ object: T; usage: unknown }> {
   let lastError: unknown;
   for (let attempt = 0; attempt <= TRANSFORM_MAX_RETRIES; attempt += 1) {
     const startedAt = Date.now();
@@ -60,7 +60,7 @@ async function runTransform<T>({
       console.log(
         `[${logPrefix}] ${TRANSFORM_MODEL_ID} attempt ${attempt + 1} ok in ${Date.now() - startedAt}ms`,
       );
-      return result.object as T;
+      return { object: result.object as T, usage: result.usage };
     } catch (err) {
       lastError = err;
       console.warn(
@@ -188,8 +188,8 @@ export async function runParaphrase({
   passageText: string;
   selectedText: string;
   avoidTexts?: string[];
-}): Promise<ParaphraseResult> {
-  const result = await runTransform({
+}): Promise<ParaphraseResult & { usage: unknown; modelId: string }> {
+  const { object: result, usage } = await runTransform({
     schema: paraphraseResultSchema,
     prompt: buildParaphrasePrompt({ passageText, selectedText, avoidTexts }),
     // 동의어 선택의 다양성이 필요 — "다시 생성" 시 다른 결과가 나와야 한다.
@@ -229,6 +229,8 @@ export async function runParaphrase({
     ...result,
     rewrittenText: rewritten,
     changes: cleanParaphraseChanges(result.changes || [], selectedText),
+    usage,
+    modelId: TRANSFORM_MODEL_ID,
   };
 }
 
@@ -240,8 +242,8 @@ export async function runPrepend({
   passageText: string;
   avoidTexts?: string[];
   sentenceCount?: number;
-}): Promise<PrependResult> {
-  const result = await runTransform({
+}): Promise<PrependResult & { usage: unknown; modelId: string }> {
+  const { object: result, usage } = await runTransform({
     schema: prependResultSchema,
     prompt: buildPrependPrompt({ passageText, avoidTexts, sentenceCount }),
     temperature: 0.8,
@@ -262,5 +264,5 @@ export async function runPrepend({
   if (normalize(passageText).startsWith(normalize(paragraph).slice(0, 80))) {
     throw new Error("생성된 문단이 지문 첫머리와 중복됩니다. 다시 시도해주세요.");
   }
-  return { ...result, paragraph };
+  return { ...result, paragraph, usage, modelId: TRANSFORM_MODEL_ID };
 }

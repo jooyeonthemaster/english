@@ -11,6 +11,7 @@ export interface CreditSummary {
   totalAllocated: number;
   isLow: boolean;
   threshold: number;
+  expiresAt: string | null;
   planName?: string;
   planTier?: string;
 }
@@ -34,6 +35,7 @@ export const TYPE_LABELS: Record<string, string> = {
   REFUND: "환불",
   RESET: "리셋",
   ROLLOVER: "이월",
+  EXPIRATION: "소멸",
 };
 
 export const FILTER_OPTIONS = [

@@ -3,8 +3,6 @@ import {
   AlertTriangle,
   ArrowDownRight,
   ArrowUpRight,
-  CalendarDays,
-  CalendarRange,
   ChevronLeft,
   ChevronRight,
   Coins,
@@ -23,6 +21,9 @@ import {
   type CostBucket,
   type CostPeriodMode,
 } from "@/actions/admin";
+import { getFeatureMarginAnalysis } from "@/actions/admin/feature-margin";
+import { CostPeriodControls } from "@/components/admin/cost-period-controls";
+import { FeatureMarginView } from "@/components/admin/feature-margin-view";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -42,13 +43,106 @@ type PageProps = {
     month?: string;
     start?: string;
     end?: string;
+    view?: string;
   }>;
 };
+
+type CostView = "dashboard" | "margin";
 
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 
 export default async function AdminCostsPage({ searchParams }: PageProps) {
   const params = await searchParams;
+  const view: CostView = params.view === "margin" ? "margin" : "dashboard";
+
+  if (view === "margin") {
+    // 손익 대시보드와 동일한 기간 파라미터(mode/date/month/start/end)를 재사용.
+    // 기본은 '오늘'(daily + 오늘 날짜).
+    const marginMode: CostPeriodMode =
+      params.mode === "monthly" ? "monthly" : "daily";
+    const marginToday = todayKstInput();
+    const marginDate = normalizeDateInput(params.date) ?? marginToday;
+    const marginMonth =
+      normalizeMonthInput(params.month) ?? marginDate.slice(0, 7);
+    const marginStart = normalizeDateInput(params.start);
+    const marginEnd = normalizeDateInput(params.end);
+    const marginIsRange = Boolean(marginStart && marginEnd);
+    const {
+      range,
+      label: marginLabel,
+      displayDate: marginDisplayDate,
+    } = resolveMarginRange({
+      mode: marginMode,
+      dateValue: marginDate,
+      monthValue: marginMonth,
+      startValue: marginStart,
+      endValue: marginEnd,
+    });
+    const margin = await getFeatureMarginAnalysis(range, marginDisplayDate);
+    const marginPrevHref = buildPreviousNextHref({
+      mode: marginMode,
+      dateValue: marginDate,
+      monthValue: marginMonth,
+      startValue: marginStart,
+      endValue: marginEnd,
+      direction: -1,
+      view: "margin",
+    });
+    const marginNextHref = buildPreviousNextHref({
+      mode: marginMode,
+      dateValue: marginDate,
+      monthValue: marginMonth,
+      startValue: marginStart,
+      endValue: marginEnd,
+      direction: 1,
+      view: "margin",
+    });
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-[22px] font-bold text-gray-900">원가 분석</h1>
+          <p className="mt-1 text-[13px] text-gray-400">
+            API 사용량, 결제 매출, 운영 손익
+          </p>
+        </div>
+        <CostTabs view="margin" />
+
+        <section className="rounded-xl border border-gray-100 bg-white px-5 py-4">
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+            <div className="flex items-center gap-2">
+              <IconLink href={marginPrevHref} label="이전">
+                <ChevronLeft className="size-4" />
+              </IconLink>
+              <div className="min-w-0 px-2">
+                <p className="text-[12px] font-medium text-gray-400">
+                  원가 집계 기간
+                </p>
+                <p className="truncate text-[18px] font-bold text-gray-900">
+                  {marginLabel}
+                </p>
+              </div>
+              <IconLink href={marginNextHref} label="다음">
+                <ChevronRight className="size-4" />
+              </IconLink>
+            </div>
+
+            <CostPeriodControls
+              mode={marginMode}
+              dateValue={marginDate}
+              monthValue={marginMonth}
+              startValue={marginStart}
+              endValue={marginEnd}
+              isRange={marginIsRange}
+              view="margin"
+            />
+          </div>
+        </section>
+
+        <FeatureMarginView data={margin} />
+      </div>
+    );
+  }
+
   const mode: CostPeriodMode = params.mode === "monthly" ? "monthly" : "daily";
   const today = todayKstInput();
   const dateValue = normalizeDateInput(params.date) ?? today;
@@ -88,16 +182,6 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
     endValue,
     direction: 1,
   });
-  const dailyHref = buildModeHref("daily", {
-    dateValue,
-    startValue,
-    endValue,
-  });
-  const monthlyHref = buildModeHref("monthly", {
-    monthValue,
-    startValue,
-    endValue,
-  });
   const pricingEffectiveFromValue =
     startValue ??
     (mode === "monthly"
@@ -117,25 +201,14 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <h1 className="text-[22px] font-bold text-gray-900">원가 분석</h1>
-          <p className="mt-1 text-[13px] text-gray-400">
-            API 사용량, 결제 매출, 운영 손익
-          </p>
-        </div>
-
-        <div className="inline-flex h-9 w-fit items-center rounded-lg border border-gray-200 bg-white p-1">
-          <PeriodLink active={mode === "daily"} href={dailyHref}>
-            <CalendarDays className="size-3.5" />
-            일별
-          </PeriodLink>
-          <PeriodLink active={mode === "monthly"} href={monthlyHref}>
-            <CalendarRange className="size-3.5" />
-            월별
-          </PeriodLink>
-        </div>
+      <div>
+        <h1 className="text-[22px] font-bold text-gray-900">원가 분석</h1>
+        <p className="mt-1 text-[13px] text-gray-400">
+          API 사용량, 결제 매출, 운영 손익
+        </p>
       </div>
+
+      <CostTabs view="dashboard" />
 
       {dashboard.missingPricingKeys.length > 0 && (
         <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-[13px] text-amber-800">
@@ -168,63 +241,14 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
             </IconLink>
           </div>
 
-          <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
-            <form action="/admin/costs" className="flex flex-wrap items-center gap-2">
-              <input type="hidden" name="mode" value={mode} />
-              {mode === "daily" ? (
-                <input
-                  type="date"
-                  name="date"
-                  defaultValue={dateValue}
-                  className="h-9 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-700 outline-none focus:border-slate-400"
-                />
-              ) : (
-                <input
-                  type="month"
-                  name="month"
-                  defaultValue={monthValue}
-                  className="h-9 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-700 outline-none focus:border-slate-400"
-                />
-              )}
-              <button
-                type="submit"
-                className="inline-flex h-9 items-center justify-center rounded-md bg-slate-900 px-3 text-[12px] font-semibold text-white transition-colors hover:bg-slate-800"
-              >
-                적용
-              </button>
-            </form>
-
-            <form action="/admin/costs" className="flex flex-wrap items-center gap-2">
-              <input type="hidden" name="mode" value={mode} />
-              <input
-                type="date"
-                name="start"
-                defaultValue={startValue ?? dateValue}
-                className="h-9 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-700 outline-none focus:border-slate-400"
-              />
-              <span className="text-[12px] text-gray-300">-</span>
-              <input
-                type="date"
-                name="end"
-                defaultValue={endValue ?? dateValue}
-                className="h-9 rounded-md border border-gray-200 bg-white px-3 text-[13px] text-gray-700 outline-none focus:border-slate-400"
-              />
-              <button
-                type="submit"
-                className="inline-flex h-9 items-center justify-center rounded-md border border-gray-200 bg-white px-3 text-[12px] font-semibold text-gray-700 transition-colors hover:bg-gray-50"
-              >
-                기간 적용
-              </button>
-              {isRange && (
-                <Link
-                  href={mode === "daily" ? `/admin/costs?mode=daily&date=${dateValue}` : `/admin/costs?mode=monthly&month=${monthValue}`}
-                  className="inline-flex h-9 items-center justify-center rounded-md px-2 text-[12px] font-semibold text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-700"
-                >
-                  초기화
-                </Link>
-              )}
-            </form>
-          </div>
+          <CostPeriodControls
+            mode={mode}
+            dateValue={dateValue}
+            monthValue={monthValue}
+            startValue={startValue}
+            endValue={endValue}
+            isRange={isRange}
+          />
         </div>
       </section>
 
@@ -277,9 +301,9 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
             <Badge
               variant="secondary"
               className="border-0 bg-gray-100 text-[11px] text-gray-500"
-              title={`적용 환율 ${dashboard.fxRate.date} · ${dashboard.fxRate.source === "ECB" ? "ECB 일별 기준환율" : "기본값"}`}
+              title={`적용 환율 (전일 종가 기준) · 기준일 ${dashboard.fxRate.date} · ${dashboard.fxRate.source === "ECB" ? "ECB 기준환율" : "기본값"}`}
             >
-              USD {formatNumber(dashboard.fxRate.rate)}원 · {formatBadgeDate(dashboard.fxRate.date)}
+              USD {formatNumber(dashboard.fxRate.rate)}원 · 전일 {formatBadgeDate(dashboard.fxRate.date)}
               {dashboard.fxRate.source !== "ECB" && " (기본)"}
             </Badge>
           </div>
@@ -345,10 +369,16 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
                               단가 미설정
                             </Badge>
                           )}
+                          {source.estimatedCalls > 0 && (
+                            <Badge className="border-0 bg-sky-100 px-1.5 py-0 text-[10px] font-semibold text-sky-700">
+                              추정 단가
+                            </Badge>
+                          )}
                         </div>
                         <p className="text-[12px] text-gray-400">
                           {formatNumber(source.calls)}회 · {formatNumber(source.inputTokens + source.outputTokens)} tokens
                           {source.unpricedCalls > 0 && ` · ${formatNumber(source.unpricedCalls)}회 0원 처리`}
+                          {source.estimatedCalls > 0 && ` · ${formatNumber(source.estimatedCalls)}회 추정 반영`}
                         </p>
                       </div>
                       <div className="text-right">
@@ -906,27 +936,28 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
   );
 }
 
-function PeriodLink({
-  active,
-  href,
-  children,
-}: {
-  active: boolean;
-  href: string;
-  children: ReactNode;
-}) {
+function CostTabs({ view }: { view: CostView }) {
+  const tabs: { key: CostView; label: string; href: string }[] = [
+    { key: "dashboard", label: "손익 대시보드", href: "/admin/costs" },
+    { key: "margin", label: "기능별 마진", href: "/admin/costs?view=margin" },
+  ];
   return (
-    <Link
-      href={href}
-      className={cn(
-        "inline-flex h-7 items-center gap-1.5 rounded-md px-3 text-[12px] font-semibold transition-colors",
-        active
-          ? "bg-slate-900 text-white"
-          : "text-gray-500 hover:bg-gray-100 hover:text-gray-900",
-      )}
-    >
-      {children}
-    </Link>
+    <div className="inline-flex h-9 w-fit items-center rounded-lg border border-gray-200 bg-white p-1">
+      {tabs.map((tab) => (
+        <Link
+          key={tab.key}
+          href={tab.href}
+          className={cn(
+            "inline-flex h-7 items-center gap-1.5 rounded-md px-3 text-[12px] font-semibold transition-colors",
+            view === tab.key
+              ? "bg-slate-900 text-white"
+              : "text-gray-500 hover:bg-gray-100 hover:text-gray-900",
+          )}
+        >
+          {tab.label}
+        </Link>
+      ))}
+    </div>
   );
 }
 
@@ -1049,27 +1080,6 @@ function summaryMetricLabel(
   return mode === "range" ? `선택 기간 ${metric}` : `${summaryLabel} ${metric}`;
 }
 
-function buildModeHref(
-  mode: CostPeriodMode,
-  values: {
-    dateValue?: string;
-    monthValue?: string;
-    startValue: string | null;
-    endValue: string | null;
-  },
-) {
-  const params = new URLSearchParams({ mode });
-  if (values.startValue && values.endValue) {
-    params.set("start", values.startValue);
-    params.set("end", values.endValue);
-  } else if (mode === "monthly" && values.monthValue) {
-    params.set("month", values.monthValue);
-  } else if (mode === "daily" && values.dateValue) {
-    params.set("date", values.dateValue);
-  }
-  return `/admin/costs?${params.toString()}`;
-}
-
 function buildPreviousNextHref({
   mode,
   dateValue,
@@ -1077,6 +1087,7 @@ function buildPreviousNextHref({
   startValue,
   endValue,
   direction,
+  view,
 }: {
   mode: CostPeriodMode;
   dateValue: string;
@@ -1084,8 +1095,10 @@ function buildPreviousNextHref({
   startValue: string | null;
   endValue: string | null;
   direction: -1 | 1;
+  view?: CostView;
 }) {
   const params = new URLSearchParams({ mode });
+  if (view) params.set("view", view);
   if (startValue && endValue) {
     const span = diffInputDays(startValue, endValue) + 1;
     params.set("start", addDaysInput(startValue, span * direction));
@@ -1164,6 +1177,48 @@ function lastDayOfMonthInput(value: string) {
     String(date.getUTCMonth() + 1).padStart(2, "0"),
     String(date.getUTCDate()).padStart(2, "0"),
   ].join("-");
+}
+
+// 기능별 마진 원가 집계 기간을 KST 반열림 구간 [start, end) 으로 변환.
+function resolveMarginRange(args: {
+  mode: CostPeriodMode;
+  dateValue: string;
+  monthValue: string;
+  startValue: string | null;
+  endValue: string | null;
+}): { range: { start: Date; end: Date }; label: string; displayDate: string } {
+  const kstStart = (d: string) => new Date(`${d}T00:00:00+09:00`);
+  const dayAfter = (d: string) =>
+    new Date(kstStart(d).getTime() + 24 * 60 * 60 * 1000);
+  const dot = (d: string) => d.replace(/-/g, "."); // 2026-07-02 → 2026.07.02
+
+  if (args.startValue && args.endValue) {
+    const [s, e] =
+      args.startValue <= args.endValue
+        ? [args.startValue, args.endValue]
+        : [args.endValue, args.startValue];
+    return {
+      range: { start: kstStart(s), end: dayAfter(e) },
+      label: `${dot(s)} ~ ${dot(e)}`,
+      displayDate: e,
+    };
+  }
+
+  if (args.mode === "monthly") {
+    const first = `${args.monthValue}-01`;
+    const last = lastDayOfMonthInput(args.monthValue);
+    return {
+      range: { start: kstStart(first), end: dayAfter(last) },
+      label: dot(args.monthValue),
+      displayDate: last,
+    };
+  }
+
+  return {
+    range: { start: kstStart(args.dateValue), end: dayAfter(args.dateValue) },
+    label: dot(args.dateValue),
+    displayDate: args.dateValue,
+  };
 }
 
 function diffInputDays(start: string, end: string) {

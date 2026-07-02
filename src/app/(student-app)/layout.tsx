@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { BusinessInfoBlock } from "@/components/legal/business-info-block";
 import { StudentHeader } from "@/components/layout/student-header";
+import { SiteBannerHost } from "@/components/site-banners/site-banner-host";
 import { QueryProvider } from "@/providers/query-provider";
 import { useHeaderData } from "@/hooks/use-student-data";
 
@@ -198,6 +199,8 @@ function StudentAppLayoutInner({ children }: { children: React.ReactNode }) {
             ))}
           </div>
         </div>
+
+        <SiteBannerHost />
       </div>
     </div>
   );

@@ -1,6 +1,10 @@
 import { createHmac, randomUUID, timingSafeEqual } from "crypto";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import {
+  expiresAtConflictSql,
+  expiresAtInsertSql,
+} from "@/lib/credit-expiry";
 
 /**
  * 무통장입금 자동확인 (manual bank transfer, auto-credited via deposit alerts)
@@ -371,18 +375,30 @@ export async function grantBankDepositTopUp(
       });
       const monthlyAllocation = activeSub?.plan.monthlyCredits ?? 0;
 
+      // Extend the balance-wide expiry by the purchased product's validity
+      // (keyed by creditAmount, UNIQUE). 0/null = never expires.
+      const productRows = await tx.$queryRaw<
+        Array<{ expiryDays: number | null }>
+      >`
+        SELECT "expiryDays" FROM credit_top_up_products
+        WHERE "creditAmount" = ${topUp.creditAmount}
+        LIMIT 1
+      `;
+      const expiryDays = productRows[0]?.expiryDays ?? 0;
+
       const balances = await tx.$queryRaw<Array<{ balance: number }>>`
         INSERT INTO credit_balances (
-          id, "academyId", balance, "monthlyAllocation", "bonusCredits", "totalAllocated", "updatedAt"
+          id, "academyId", balance, "monthlyAllocation", "bonusCredits", "totalAllocated", "expiresAt", "updatedAt"
         )
         VALUES (
           ${randomUUID()}, ${topUp.academyId}, ${topUp.creditAmount},
-          ${monthlyAllocation}, ${topUp.creditAmount}, ${topUp.creditAmount}, NOW()
+          ${monthlyAllocation}, ${topUp.creditAmount}, ${topUp.creditAmount}, ${expiresAtInsertSql(expiryDays)}, NOW()
         )
         ON CONFLICT ("academyId") DO UPDATE
           SET balance = credit_balances.balance + EXCLUDED.balance,
               "bonusCredits" = credit_balances."bonusCredits" + EXCLUDED."bonusCredits",
               "totalAllocated" = credit_balances."totalAllocated" + EXCLUDED."totalAllocated",
+              "expiresAt" = ${expiresAtConflictSql(expiryDays)},
               "updatedAt" = NOW()
         RETURNING balance
       `;

@@ -1,6 +1,7 @@
 import { generateObject } from "ai";
-import { model } from "@/lib/ai";
+import { model, GEMINI_MODEL_ID } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
+import { recordAiCost } from "@/lib/platform-api-costs";
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
 import { getStaffSession } from "@/lib/auth";
@@ -173,8 +174,9 @@ export async function POST(request: NextRequest) {
     }
 
     let object: z.infer<typeof responseSchema>;
+    let aiUsage: unknown;
     try {
-      const { object: _object } = await generateObject({
+      const { object: _object, usage: _usage } = await generateObject({
         model,
         schema: responseSchema,
         prompt: `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신 시험 출제 전문가입니다.
@@ -224,10 +226,20 @@ ${analysisContext}
 15. 빈칸은 반드시 언더스코어 5개 이상으로 표시하세요 (예: "The key is to focus on _____ rather than goals.")`,
       });
       object = _object;
+      aiUsage = _usage;
     } catch (aiError) {
       await refundCredits(staff.academyId, "QUESTION_GEN_SINGLE", creditResult.transactionId, "AI generation failed");
       throw aiError;
     }
+
+    await recordAiCost({
+      sourceType: "AI_INTERACTIVE",
+      sourceDetail: "generate-questions",
+      academyId: staff.academyId,
+      model: GEMINI_MODEL_ID,
+      operationType: "QUESTION_GEN_SINGLE",
+      usage: aiUsage,
+    });
 
     return NextResponse.json({ questions: object.questions, creditsRemaining: creditResult.balanceAfter });
   } catch (error) {

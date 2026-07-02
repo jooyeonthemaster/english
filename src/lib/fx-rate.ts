@@ -4,8 +4,13 @@ import { prisma } from "@/lib/prisma";
 // Daily USD->KRW exchange rate, sourced from the ECB daily reference rate via
 // the free Frankfurter API (no API key required). Rates are cached per KST date
 // in the daily_fx_rates table and fetched lazily (self-healing): the first time
-// a date is needed, we fetch + store it. Platform API costs convert USD->KRW
-// with the rate for the usage date instead of a fixed 1350 fallback.
+// a date is needed, we fetch + store it.
+//
+// 원가 환산 규칙: 어떤 날짜 D 에 발생한 원가는 **전일(D-1) 종가 기준 공식 환율**로
+// 환산한다. ECB 기준환율은 당일 16:00 CET(≈KST 자정) 이후에야 고시되므로, 당일 원가를
+// 당일 환율로 잡으면 값이 하루 종일 불안정하다. 전일 종가는 D 시작 시점에 이미 확정돼
+// 있어 결정론적이고 매일 자동 갱신된다(회계·세무의 전일 매매기준율 관행과 동일).
+// 주말/공휴일이면 Frankfurter 가 직전 영업일 종가를 반환한다.
 
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 const DEFAULT_USD_KRW_RATE = 1350;
@@ -27,6 +32,19 @@ export function kstDateString(date: Date): string {
 
 export function kstTodayString(): string {
   return kstDateString(new Date());
+}
+
+// 전일(D-1) KST 날짜 문자열. 주말/공휴일 보정은 Frankfurter 가 직전 영업일 종가를
+// 반환하는 것으로 처리되므로 여기서는 단순 하루 차감만 한다.
+export function previousKstDateString(dateStr: string): string {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  date.setUTCDate(date.getUTCDate() - 1);
+  return [
+    date.getUTCFullYear(),
+    String(date.getUTCMonth() + 1).padStart(2, "0"),
+    String(date.getUTCDate()).padStart(2, "0"),
+  ].join("-");
 }
 
 function envDefaultRate(): number {
@@ -120,10 +138,11 @@ async function loadOrFetch(dateStr: string): Promise<number | null> {
 
 /**
  * Resolve the USD->KRW rate to apply to a cost incurred on `usageAt`.
+ * 전일(D-1) 종가 기준 공식 환율을 사용한다(당일 환율 미고시 구간의 불안정성 제거).
  * Falls back to the most recent known rate, then the env/default rate.
  */
 export async function resolveUsdKrwRate(usageAt: Date): Promise<number> {
-  const dateStr = kstDateString(usageAt);
+  const dateStr = previousKstDateString(kstDateString(usageAt));
   const direct = await loadOrFetch(dateStr);
   if (direct !== null) return direct;
 
@@ -135,20 +154,22 @@ export async function resolveUsdKrwRate(usageAt: Date): Promise<number> {
 
 export interface UsdKrwRateInfo {
   rate: number;
+  /** 적용된 환율의 기준일 = 요청일의 전일(종가 기준일). */
   date: string;
   source: "ECB" | "기본값";
 }
 
 /**
- * Resolve the rate for display on the cost dashboard. Returns the rate for the
- * requested date, falling back to the latest stored rate, then the default.
+ * Resolve the rate for display on the cost dashboard for costs dated `dateStr`.
+ * 원가 기록과 동일하게 전일(D-1) 종가 기준 환율을 반환하고, `date`에는 그 기준일을 담는다.
  */
 export async function getUsdKrwRate(dateStr: string): Promise<UsdKrwRateInfo> {
-  const direct = await loadOrFetch(dateStr);
-  if (direct !== null) return { rate: direct, date: dateStr, source: "ECB" };
+  const rateDate = previousKstDateString(dateStr);
+  const direct = await loadOrFetch(rateDate);
+  if (direct !== null) return { rate: direct, date: rateDate, source: "ECB" };
 
   const latest = await latestStoredRate();
-  if (latest !== null) return { rate: latest, date: dateStr, source: "ECB" };
+  if (latest !== null) return { rate: latest, date: rateDate, source: "ECB" };
 
-  return { rate: envDefaultRate(), date: dateStr, source: "기본값" };
+  return { rate: envDefaultRate(), date: rateDate, source: "기본값" };
 }

@@ -1,8 +1,9 @@
 import { generateText } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 
-import { model } from "@/lib/ai";
+import { GEMINI_MODEL_ID, model } from "@/lib/ai";
 import { getStaffSession } from "@/lib/auth";
+import { recordAiCost } from "@/lib/platform-api-costs";
 
 export const maxDuration = 60;
 
@@ -53,6 +54,15 @@ export async function POST(req: NextRequest) {
           ],
         },
       ],
+    });
+
+    await recordAiCost({
+      sourceType: "AI_INTERACTIVE",
+      sourceDetail: "extract-text",
+      academyId: staff.academyId,
+      model: GEMINI_MODEL_ID,
+      operationType: "TEXT_EXTRACTION",
+      usage: result.usage,
     });
 
     return NextResponse.json({ text: result.text.trim() });

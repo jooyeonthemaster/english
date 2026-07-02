@@ -7,6 +7,11 @@
 // to prevent drift between the two enforcement points.
 export const MAX_ADJUSTMENT_AMOUNT = 1_000_000;
 
+// Upper bound for an admin-set credit validity window (10 years). Lives here
+// (not in the "use server" action module) because server-action files may only
+// export async functions.
+export const MAX_GRANT_EXPIRY_DAYS = 3650;
+
 export const TRANSACTION_TYPES = [
   "ALLOCATION",
   "CONSUMPTION",
@@ -15,6 +20,7 @@ export const TRANSACTION_TYPES = [
   "REFUND",
   "RESET",
   "ROLLOVER",
+  "EXPIRATION",
 ] as const;
 
 export type TransactionType = (typeof TRANSACTION_TYPES)[number];
@@ -27,6 +33,7 @@ const TRANSACTION_TYPE_LABELS: Record<TransactionType, string> = {
   REFUND: "환불",
   RESET: "초기화",
   ROLLOVER: "이월",
+  EXPIRATION: "소멸",
 };
 
 // MUST stay in sync with OPERATION_TYPE_ALLOWLIST in

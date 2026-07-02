@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
 import { AdminShell } from "@/components/layout/admin-shell";
+import { SiteBannerHost } from "@/components/site-banners/site-banner-host";
 
 export default async function TeacherLayout({
   children,
@@ -21,6 +22,7 @@ export default async function TeacherLayout({
   return (
     <AdminShell staff={staff} basePath="/teacher">
       {children}
+      <SiteBannerHost />
     </AdminShell>
   );
 }

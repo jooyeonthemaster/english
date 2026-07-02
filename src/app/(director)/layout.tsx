@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getStaffSession } from "@/lib/auth";
 import { AdminShell } from "@/components/layout/admin-shell";
 import { JooyeonWelcomeModal } from "@/components/layout/jooyeon-welcome-modal";
-import { FeedbackProgram } from "@/components/feedback/feedback-program";
+import { SiteBannerHost } from "@/components/site-banners/site-banner-host";
 import { ReviewDrawerProvider } from "@/components/layout/review-drawer-context";
 import { SidebarFocusProvider } from "@/components/layout/sidebar-focus-context";
 import { ActivityTracker } from "@/components/layout/activity-tracker";
@@ -31,7 +31,7 @@ export default async function DirectorLayout({
             {children}
             <ActivityTracker />
             <JooyeonWelcomeModal staffEmail={staff.email} />
-            <FeedbackProgram staffEmail={staff.email} />
+            <SiteBannerHost />
           </TaskQueueRouteHost>
         </AdminShell>
       </SidebarFocusProvider>

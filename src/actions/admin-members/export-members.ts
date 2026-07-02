@@ -77,9 +77,12 @@ export type ExportMode =
  *  - "all" : 상세 15컬럼 전체 회원(분석·관리용)
  *  - "info": 정보성 발송대상만, 뿌리오 업로드 양식 (마케팅 동의 불필요)
  *  - "ad"  : 광고성 발송대상만, 뿌리오 업로드 양식 (마케팅 동의 필수 — 법적 전제)
+ * @param memberIds
+ *  지정 시 해당 회원(Staff.id)만 대상으로 내보낸다(회원 목록에서 다중 선택 시).
+ *  미지정이면 전체 원장 회원. 내부/허수 계정 제외·발송대상 판정 규칙은 동일하게 적용.
  */
 export async function exportMembers(
-  opts: { mode?: ExportMode } = {},
+  opts: { mode?: ExportMode; memberIds?: string[] } = {},
 ): Promise<ExportMembersResult> {
   const session = await requireAdminAuth();
   if (!isSuperAdmin(session)) {
@@ -87,8 +90,18 @@ export async function exportMembers(
     throw new Error("회원 내보내기는 SUPER_ADMIN 권한이 필요합니다");
   }
 
+  // 선택 내보내기: 중복 제거 후 id 필터. 빈 배열이면(선택 0명) 선택 필터를 무시하지
+  // 않고 "대상 없음"으로 취급 — 실수로 전체가 나가는 것을 방지한다.
+  const selectedIds =
+    opts.memberIds !== undefined
+      ? [...new Set(opts.memberIds.filter((id) => typeof id === "string" && id))]
+      : undefined;
+
   const staffRows = await prisma.staff.findMany({
-    where: { role: "DIRECTOR" },
+    where: {
+      role: "DIRECTOR",
+      ...(selectedIds !== undefined ? { id: { in: selectedIds } } : {}),
+    },
     orderBy: { createdAt: "desc" },
     include: {
       academy: {

@@ -6,6 +6,7 @@
 import { generateText, Output } from "ai";
 import { z } from "zod";
 import { getTutorModel, getTutorModelNameForAudit } from "@/lib/tutor/ai";
+import { recordAiCost } from "@/lib/platform-api-costs";
 
 export const AiGradeResultSchema = z.object({
   verdict: z.enum(["correct", "partial", "incorrect"]),
@@ -27,6 +28,8 @@ export interface AiGradeInput {
   conditions?: string[];
   transformType?: string;
   rubric?: string[];
+  /** 원가 기록 귀속용 학원 ID(채점 컨텍스트/학생 학원에서 전달). */
+  academyId?: string | null;
 }
 
 const SYSTEM = [
@@ -67,9 +70,18 @@ export async function aiGradeText(input: AiGradeInput): Promise<AiGradeResult & 
       },
     },
   });
+  const model = getTutorModelNameForAudit();
+  await recordAiCost({
+    sourceType: "TUTOR_GRADING",
+    sourceDetail: "ai-grade",
+    academyId: input.academyId,
+    model,
+    operationType: "AI_GRADING",
+    usage: result.usage,
+  });
   return {
     ...result.output,
-    model: getTutorModelNameForAudit(),
+    model,
     latencyMs: Date.now() - startedAt,
   };
 }

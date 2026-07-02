@@ -228,6 +228,7 @@ export async function reanalyzeAdditionalQuestions(args: {
   images: QuestionAnalysisImage[];
   schoolType?: string;
   gradeInfo?: string;
+  academyId?: string | null;
 }): Promise<{
   analysis: SingleItemAnalysis;
   attempts: number;
@@ -329,6 +330,7 @@ export async function reanalyzeAdditionalQuestions(args: {
         total: locatedQuestions.length,
         questionNumber: target.question.source.questionNumber ?? null,
       },
+      academyId: args.academyId,
     });
     attempts += followUp.attempts;
     if (!followUp.ok) {
@@ -413,6 +415,7 @@ export async function reanalyzeAdditionalQuestions(args: {
         total: missingInventory.length,
         questionNumber: item.questionNumber ?? null,
       },
+      academyId: args.academyId,
     });
     attempts += followUp.attempts;
 

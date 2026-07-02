@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { OPERATION_LABELS } from "@/lib/credit-costs";
 import type { OperationType } from "@/lib/credit-costs";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
@@ -32,6 +33,43 @@ declare global {
 }
 
 // ─── Page Component ─────────────────────────────────────────────────────────
+
+// 소멸시효까지 남은 시간을 초 단위로 실시간 표시.
+function ExpiryCountdown({ expiresAt }: { expiresAt: string }) {
+  const target = new Date(expiresAt).getTime();
+  const [now, setNow] = useState<number | null>(null);
+
+  useEffect(() => {
+    setNow(Date.now());
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // 마운트 전에는 서버/클라이언트 시간 차로 인한 hydration 불일치를 피한다.
+  if (now === null) {
+    return (
+      <span className="font-semibold text-white tabular-nums">계산 중…</span>
+    );
+  }
+
+  const diff = target - now;
+  if (diff <= 0) {
+    return <span className="font-semibold text-white tabular-nums">소멸됨</span>;
+  }
+
+  const totalSeconds = Math.floor(diff / 1000);
+  const days = Math.floor(totalSeconds / 86_400);
+  const hours = Math.floor((totalSeconds % 86_400) / 3_600);
+  const minutes = Math.floor((totalSeconds % 3_600) / 60);
+  const seconds = totalSeconds % 60;
+  const pad = (n: number) => String(n).padStart(2, "0");
+
+  return (
+    <span className="font-semibold text-white tabular-nums">
+      {days}일 {pad(hours)}시간 {pad(minutes)}분 {pad(seconds)}초
+    </span>
+  );
+}
 
 export default function CreditsPage() {
   const {
@@ -260,6 +298,21 @@ export default function CreditsPage() {
                   {summary.totalConsumed.toLocaleString()} 크레딧
                 </span>
               </div>
+              {/* 크레딧 소멸 예정일 + 실시간 카운트다운 */}
+              {summary.balance > 0 && summary.expiresAt && (
+                <div className="mt-3 border-t border-white/15 pt-3">
+                  <div className="flex items-baseline justify-between text-[12px] text-blue-200">
+                    <span>소멸 예정일</span>
+                    <span className="font-semibold text-white tabular-nums">
+                      {new Date(summary.expiresAt).toLocaleDateString("ko-KR")}
+                    </span>
+                  </div>
+                  <div className="mt-1.5 flex items-baseline justify-between text-[12px] text-blue-200">
+                    <span>소멸까지</span>
+                    <ExpiryCountdown expiresAt={summary.expiresAt} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

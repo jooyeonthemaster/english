@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import {
   adminGetHelpPost,
   adminReplyHelpPost,
@@ -20,9 +19,12 @@ import {
   type HelpBoard,
 } from "@/lib/help-center";
 import { StatusBadge } from "@/components/help-center/status-badge";
+import { AttachmentGallery } from "@/components/help-center/attachment-gallery";
+import { ImageAttachmentField } from "@/components/help-center/image-attachment-field";
+import type { Attachment } from "@/lib/image-attachment";
 import { formatDateTime } from "@/lib/utils";
 import { toast } from "sonner";
-import { ArrowLeft, Lock, Pin, Trash2, ShieldCheck, ThumbsUp, X } from "lucide-react";
+import { ArrowLeft, Lock, Pin, Trash2, ShieldCheck, ThumbsUp } from "lucide-react";
 
 export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; postId: string }) {
   const router = useRouter();
@@ -34,7 +36,7 @@ export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; pos
   const [loading, setLoading] = useState(true);
   const [reply, setReply] = useState("");
   const [replyStatus, setReplyStatus] = useState<string>("");
-  const [lightbox, setLightbox] = useState<{ url: string; name: string } | null>(null);
+  const [replyAttachments, setReplyAttachments] = useState<Attachment[]>([]);
   const [isPending, startTransition] = useTransition();
 
   const load = useCallback(() => {
@@ -50,15 +52,16 @@ export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; pos
   }, [load]);
 
   function submitReply() {
-    if (!reply.trim()) {
-      toast.error("답변 내용을 입력하세요.");
+    if (!reply.trim() && replyAttachments.length === 0) {
+      toast.error("답변 내용 또는 이미지를 입력하세요.");
       return;
     }
     startTransition(async () => {
       try {
-        await adminReplyHelpPost(postId, reply, replyStatus || undefined);
+        await adminReplyHelpPost(postId, reply, replyStatus || undefined, replyAttachments);
         setReply("");
         setReplyStatus("");
+        setReplyAttachments([]);
         load();
         toast.success("답변이 등록되었습니다. 작성자에게 알림이 발송됩니다.");
       } catch {
@@ -182,20 +185,7 @@ export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; pos
         <div className="whitespace-pre-wrap text-[14px] leading-relaxed text-gray-700">
           {post.content}
         </div>
-        {post.attachments.length > 0 && (
-          <div className="flex flex-wrap gap-3 pt-1">
-            {post.attachments.map((a, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => setLightbox({ url: a.url, name: a.name })}
-                className="block cursor-zoom-in overflow-hidden rounded-lg border transition hover:opacity-90"
-              >
-                <Image src={a.url} alt={a.name} width={160} height={160} unoptimized className="h-28 w-28 object-cover" />
-              </button>
-            ))}
-          </div>
-        )}
+        <AttachmentGallery attachments={post.attachments} size={112} className="pt-1" />
       </div>
 
       {/* Quick status */}
@@ -247,7 +237,10 @@ export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; pos
                     {formatDateTime(new Date(r.createdAt))}
                   </span>
                 </div>
-                <div className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">{r.content}</div>
+                {r.content && (
+                  <div className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">{r.content}</div>
+                )}
+                <AttachmentGallery attachments={r.attachments} size={96} className="mt-2" />
               </div>
             ))}
           </div>
@@ -262,6 +255,7 @@ export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; pos
             rows={4}
             className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm resize-y focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none"
           />
+          <ImageAttachmentField value={replyAttachments} onChange={setReplyAttachments} />
           <div className="flex items-center justify-between gap-2">
             <select
               value={replyStatus}
@@ -277,7 +271,7 @@ export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; pos
             </select>
             <button
               onClick={submitReply}
-              disabled={isPending || !reply.trim()}
+              disabled={isPending || (!reply.trim() && replyAttachments.length === 0)}
               className="h-9 px-4 rounded-xl bg-blue-600 text-white text-[13px] font-semibold hover:bg-blue-700 disabled:opacity-50"
             >
               답변 등록
@@ -286,33 +280,6 @@ export function AdminHelpDetailClient({ board, postId }: { board: HelpBoard; pos
         </div>
       </div>
 
-      {/* 이미지 라이트박스 — 별도 탭이 아닌 팝업으로 크게 보기 */}
-      {lightbox && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-6"
-          onClick={() => setLightbox(null)}
-          role="dialog"
-          aria-modal="true"
-        >
-          <button
-            type="button"
-            onClick={() => setLightbox(null)}
-            aria-label="닫기"
-            className="absolute right-5 top-5 flex size-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
-          >
-            <X className="size-5" />
-          </button>
-          <Image
-            src={lightbox.url}
-            alt={lightbox.name}
-            width={2000}
-            height={2000}
-            unoptimized
-            onClick={(e) => e.stopPropagation()}
-            className="max-h-[88vh] w-auto max-w-[92vw] cursor-default rounded-lg object-contain shadow-2xl"
-          />
-        </div>
-      )}
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { StatusBadge } from "@/components/help-center/status-badge";
 import { HelpPostFormDialog } from "@/components/help-center/help-post-form-dialog";
+import { OpenChatCta } from "@/components/help-center/open-chat-cta";
 import { getHelpPosts, toggleHelpUpvote, type HelpPostListItem } from "@/actions/help-center";
 import {
   boardCategories,
@@ -113,10 +114,13 @@ export function HelpBoardClient({ board, initialPosts }: HelpBoardClientProps) {
           <h1 className="text-2xl font-bold tracking-tight">{meta.title}</h1>
           <p className="text-muted-foreground text-sm mt-1">{meta.subtitle}</p>
         </div>
-        <Button onClick={() => setDialogOpen(true)}>
-          <Plus className="size-4" />
-          글 작성
-        </Button>
+        <div className="flex items-center gap-2">
+          <OpenChatCta />
+          <Button onClick={() => setDialogOpen(true)}>
+            <Plus className="size-4" />
+            글 작성
+          </Button>
+        </div>
       </div>
 
       {/* Toolbar: mine / sort + filter / search popovers + view toggle */}

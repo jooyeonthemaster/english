@@ -113,6 +113,7 @@ export interface HelpReplyView {
   authorName: string;
   content: string;
   isOfficial: boolean;
+  attachments: { name: string; url: string; size?: number; type?: string }[];
   createdAt: string;
 }
 
@@ -202,6 +203,9 @@ export async function getHelpPost(
         authorName: r.authorName,
         content: r.content,
         isOfficial: r.isOfficial,
+        attachments: Array.isArray(r.attachments)
+          ? (r.attachments as { name: string; url: string; size?: number; type?: string }[])
+          : [],
         createdAt: r.createdAt.toISOString(),
       })),
       createdAt: post.createdAt.toISOString(),
@@ -319,10 +323,18 @@ export async function toggleHelpUpvote(postId: string) {
   return { success: true, upvoted: true };
 }
 
-/** 작성자(또는 누구나)의 후속 댓글. authorRole=STAFF. */
-export async function addHelpReply(postId: string, content: string) {
+/** 작성자(또는 누구나)의 후속 댓글. authorRole=STAFF. 이미지 첨부 가능. */
+export async function addHelpReply(
+  postId: string,
+  content: string,
+  attachments?: { name: string; url: string; size?: number; type?: string }[],
+) {
   const staff = await requireStaffAuth();
-  const validated = helpReplySchema.parse({ postId, content });
+  const validated = helpReplySchema.parse({ postId, content, attachments });
+
+  if (!validated.content.trim() && !validated.attachments?.length) {
+    throw new Error("내용 또는 이미지를 입력하세요.");
+  }
 
   const post = await prisma.helpPost.findUnique({
     where: { id: postId },
@@ -338,6 +350,7 @@ export async function addHelpReply(postId: string, content: string) {
       authorName: staff.academyName || staff.name,
       content: validated.content,
       isOfficial: false,
+      attachments: validated.attachments?.length ? validated.attachments : undefined,
     },
   });
 

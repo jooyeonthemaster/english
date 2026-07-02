@@ -16,7 +16,11 @@ import { Button } from "@/components/ui/button";
 import { exportMembers } from "@/actions/admin-members";
 import type { ExportMode } from "@/actions/admin-members/export-members";
 
-function triggerDownload(filename: string, contentBase64: string, mimeType: string) {
+export function triggerDownload(
+  filename: string,
+  contentBase64: string,
+  mimeType: string,
+) {
   // 서버가 base64로 인코딩한 파일 바이트(발송용=CP949, 전체=UTF-8)를 그대로 복원.
   const bin = atob(contentBase64);
   const bytes = new Uint8Array(bin.length);

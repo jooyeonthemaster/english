@@ -99,6 +99,7 @@ export async function getMembers(filters: MemberListFilters = {}) {
               bonusCredits: true,
               totalConsumed: true,
               totalAllocated: true,
+              expiresAt: true,
             },
           },
           // SMS 발송 제외 플래그 — academy_feature_flags 재사용(마이그레이션 불필요)
@@ -126,6 +127,28 @@ export async function getMembers(filters: MemberListFilters = {}) {
     lastUsageRows.map((r) => [r.academyId, r._max.createdAt]),
   );
 
+  // 학원별 "가장 최근 구입한 상품" — 완료된 크레딧 충전(CreditTopUp) 중 최신 1건.
+  // distinct(academyId) + orderBy(academyId, completedAt desc)로 학원당 최신 행만.
+  const latestTopUpRows = academyIds.length
+    ? await prisma.creditTopUp.findMany({
+        where: { academyId: { in: academyIds }, status: "COMPLETED" },
+        orderBy: [
+          { academyId: "asc" },
+          { completedAt: { sort: "desc", nulls: "last" } },
+        ],
+        distinct: ["academyId"],
+        select: {
+          academyId: true,
+          orderName: true,
+          creditAmount: true,
+          price: true,
+          completedAt: true,
+          createdAt: true,
+        },
+      })
+    : [];
+  const latestTopUpMap = new Map(latestTopUpRows.map((t) => [t.academyId, t]));
+
   const mapped = staffRows.map((s) => ({
     id: s.id,
     name: s.name,
@@ -147,6 +170,8 @@ export async function getMembers(filters: MemberListFilters = {}) {
     })(),
     // 문자 발송 대상 관리용 플래그 — 화면 목록에서 바로 토글/표시한다.
     smsOptOut: s.academy.academyFeatureFlags[0]?.enabled ?? false,
+    // 마케팅 수신 동의 — 광고성 발송 대상 필터에 쓰인다(정보통신망법 opt-in).
+    marketingConsent: s.marketingConsent === true,
     isInternal: isInternalAccount({
       name: s.name,
       academyName: s.academy.name,
@@ -167,6 +192,17 @@ export async function getMembers(filters: MemberListFilters = {}) {
           currentPeriodEnd: s.academy.subscriptions[0].currentPeriodEnd,
         }
       : null,
+    // 가장 최근 구입한 상품(완료된 충전). 목록의 "최근 구입 상품" 열/정렬에 사용.
+    latestPurchase: (() => {
+      const t = latestTopUpMap.get(s.academyId);
+      if (!t) return null;
+      return {
+        name: t.orderName ?? `${t.creditAmount.toLocaleString("ko-KR")} 크레딧`,
+        creditAmount: t.creditAmount,
+        price: t.price,
+        purchasedAt: t.completedAt ?? t.createdAt,
+      };
+    })(),
     creditBalance: s.academy.creditBalance ?? null,
   }));
 

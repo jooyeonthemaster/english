@@ -553,6 +553,7 @@ export async function submitTutorActivityAction(
     payload: activity.payload,
     maxScore: activity.maxScore,
     response,
+    academyId: session.academyId,
   });
   const hintUsedCount = Math.max(0, Math.round(Number(meta?.hintUsedCount ?? 0)));
   // 단계적 힌트 감점(현재: 원문 열람 1회당 context_window 0.25, 누적 상한 0.5).

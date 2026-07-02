@@ -51,8 +51,59 @@ export interface CreditSummary {
   totalAllocated: number;
   isLow: boolean;
   threshold: number;
+  expiresAt: string | null;
   planName?: string;
   planTier?: string;
+}
+
+// ─── Expiry ────────────────────────────────────────────────────────────────
+
+/**
+ * Lazily expire a balance whose single `expiresAt` has passed. Idempotent and
+ * race-safe: a guarded `UPDATE ... FOR UPDATE` CTE zeroes the balance and clears
+ * the clock in one statement, and only the writer that actually zeroed a
+ * positive balance appends the EXPIRATION ledger row.
+ *
+ * Called at read time (checkBalance/getCreditSummary) and before every deduction
+ * so expired credits are neither spendable nor displayed. Returns the number of
+ * credits expired (0 if nothing was due).
+ */
+export async function sweepExpiredCredits(academyId: string): Promise<number> {
+  return prisma.$transaction(async (tx) => {
+    const rows = await tx.$queryRaw<Array<{ expired_amount: number }>>`
+      WITH target AS (
+        SELECT "academyId", balance AS old_balance
+        FROM credit_balances
+        WHERE "academyId" = ${academyId}
+          AND "expiresAt" IS NOT NULL
+          AND "expiresAt" <= NOW()
+        FOR UPDATE
+      )
+      UPDATE credit_balances cb
+      SET balance = 0,
+          "bonusCredits" = 0,
+          "expiresAt" = NULL,
+          "updatedAt" = NOW()
+      FROM target
+      WHERE cb."academyId" = target."academyId"
+      RETURNING target.old_balance AS expired_amount
+    `;
+
+    const expired = rows[0]?.expired_amount ?? 0;
+    if (expired > 0) {
+      await tx.creditTransaction.create({
+        data: {
+          academyId,
+          type: "EXPIRATION",
+          amount: -expired,
+          balanceAfter: 0,
+          description: "크레딧 소멸 (유효기간 만료)",
+          referenceType: "CREDIT_EXPIRY",
+        },
+      });
+    }
+    return expired;
+  });
 }
 
 // ─── Core Functions ──────────────────────────────────────────────────────────
@@ -73,13 +124,19 @@ export async function deductCredits(
   if (CREDIT_COSTS[operationType] === undefined) throw new Error(`Unknown operation type: ${operationType}`);
   if (!Number.isFinite(cost) || cost <= 0) throw new Error(`Invalid credit cost: ${cost}`);
 
+  // Expire first so a lapsed balance can't be spent, then deduct.
+  await sweepExpiredCredits(academyId);
+
   // Wrap in transaction for atomic deduction + audit log
   return await prisma.$transaction(async (tx) => {
-    // Atomic decrement with guard — PostgreSQL row-level lock
+    // Atomic decrement with guard — PostgreSQL row-level lock. The expiry
+    // predicate is belt-and-suspenders against a balance that lapses between
+    // the sweep above and this statement.
     const result = await tx.creditBalance.updateMany({
       where: {
         academyId,
         balance: { gte: cost },
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
       },
       data: {
         balance: { decrement: cost },
@@ -221,6 +278,7 @@ export async function checkBalance(
   academyId: string,
   operationType?: OperationType,
 ): Promise<BalanceCheck> {
+  await sweepExpiredCredits(academyId);
   const creditBalance = await prisma.creditBalance.findUnique({
     where: { academyId },
   });
@@ -244,6 +302,7 @@ export async function checkBalance(
  * Get full credit summary for dashboard display.
  */
 export async function getCreditSummary(academyId: string): Promise<CreditSummary> {
+  await sweepExpiredCredits(academyId);
   const [creditBalance, subscription] = await Promise.all([
     prisma.creditBalance.findUnique({ where: { academyId } }),
     prisma.academySubscription.findFirst({
@@ -262,6 +321,7 @@ export async function getCreditSummary(academyId: string): Promise<CreditSummary
       totalAllocated: 0,
       isLow: true,
       threshold: 50,
+      expiresAt: null,
     };
   }
 
@@ -273,6 +333,7 @@ export async function getCreditSummary(academyId: string): Promise<CreditSummary
     totalAllocated: creditBalance.totalAllocated,
     isLow: creditBalance.balance <= creditBalance.lowCreditThreshold,
     threshold: creditBalance.lowCreditThreshold,
+    expiresAt: creditBalance.expiresAt?.toISOString() ?? null,
     planName: subscription?.plan.name,
     planTier: subscription?.plan.tier,
   };

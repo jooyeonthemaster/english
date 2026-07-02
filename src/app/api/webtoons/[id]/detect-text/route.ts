@@ -54,7 +54,11 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
 
   let textDoc: WebtoonTextDoc;
   try {
-    textDoc = await detectWebtoonText({ imageBuffer, originalUrl: webtoon.imageUrl });
+    textDoc = await detectWebtoonText({
+      imageBuffer,
+      originalUrl: webtoon.imageUrl,
+      academyId: staff.academyId,
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown";
     console.error("[webtoon detect-text] failed", { id, message });

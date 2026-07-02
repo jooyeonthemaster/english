@@ -3,7 +3,7 @@ import { getRegistrations, getPlans } from "@/actions/admin";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RegistrationsClient } from "@/components/admin/registrations-client";
 
-async function RegistrationsContent() {
+async function RegistrationsContent({ initialStatus }: { initialStatus?: string }) {
   const [registrations, plans] = await Promise.all([
     getRegistrations(),
     getPlans(),
@@ -13,6 +13,7 @@ async function RegistrationsContent() {
     <RegistrationsClient
       initialRegistrations={registrations}
       plans={plans}
+      initialStatus={initialStatus}
     />
   );
 }
@@ -26,7 +27,12 @@ function RegistrationsSkeleton() {
   );
 }
 
-export default function RegistrationsPage() {
+export default async function RegistrationsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status } = await searchParams;
   return (
     <div className="space-y-6">
       <div>
@@ -37,7 +43,7 @@ export default function RegistrationsPage() {
       </div>
 
       <Suspense fallback={<RegistrationsSkeleton />}>
-        <RegistrationsContent />
+        <RegistrationsContent initialStatus={status} />
       </Suspense>
     </div>
   );

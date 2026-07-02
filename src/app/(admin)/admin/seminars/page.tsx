@@ -3,8 +3,13 @@ import { AdminSeminarsClient } from "@/components/admin/help/admin-seminars-clie
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminSeminarsPage() {
-  const requests = await adminGetSeminarRequests();
+export default async function AdminSeminarsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status } = await searchParams;
+  const requests = await adminGetSeminarRequests({ status, page: 1 });
   return (
     <div className="space-y-6">
       <div>
@@ -13,7 +18,7 @@ export default async function AdminSeminarsPage() {
           신규 고객의 온보딩 세미나 신청을 접수하고 일정을 조율합니다
         </p>
       </div>
-      <AdminSeminarsClient initialRequests={requests} />
+      <AdminSeminarsClient initialData={requests} initialStatus={status} />
     </div>
   );
 }

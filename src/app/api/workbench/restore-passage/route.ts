@@ -17,6 +17,7 @@ import {
   buildFallbackM1Restoration,
   hasUnresolvedM1ProblemArtifacts,
 } from "@/lib/extraction/m1-restoration";
+import { recordAiCost } from "@/lib/platform-api-costs";
 
 // 복원 전용 경량 모델 — 추출 파이프라인 passage-restoration 스테이지와 동일.
 // (scripts/test-restoration-lite.ts 22케이스 검증: lite 가 3.5-flash 보다
@@ -175,6 +176,7 @@ export async function POST(req: NextRequest) {
     ).catch(() => {});
 
   let result: RestorationResult;
+  let restoreUsage: unknown;
   try {
     // flash-lite 직접 호출 — 45s × 2시도, SDK 내부 재시도 차단(중첩 과금 방지),
     // 비재시도성 오류는 즉시 중단. passage-transform 과 동일 규율.
@@ -184,7 +186,7 @@ export async function POST(req: NextRequest) {
       for (let attempt = 0; attempt < RESTORE_MAX_ATTEMPTS; attempt += 1) {
         const startedAt = Date.now();
         try {
-          const { object } = await generateObject({
+          const { object, usage } = await generateObject({
             model: googleGenerativeAI(RESTORE_MODEL_ID),
             schema: restorationSchema,
             prompt,
@@ -196,6 +198,7 @@ export async function POST(req: NextRequest) {
               google: { thinkingConfig: { thinkingBudget: 0 } },
             },
           });
+          restoreUsage = usage;
           console.log(
             `[WORKBENCH-PASTE-RESTORE] ${RESTORE_MODEL_ID} attempt ${attempt + 1} ok in ${Date.now() - startedAt}ms`,
           );
@@ -240,6 +243,16 @@ export async function POST(req: NextRequest) {
       degraded: true,
     });
   }
+
+  // AI 복원 호출이 성공적으로 응답을 반환했으므로 원가를 기록한다.
+  await recordAiCost({
+    sourceType: "AI_INTERACTIVE",
+    sourceDetail: "restore-passage",
+    academyId: staff.academyId,
+    model: RESTORE_MODEL_ID,
+    operationType: "PASSAGE_RESTORATION",
+    usage: restoreUsage,
+  });
 
   // Post-hoc safety: if obvious problem artifacts survived, never report a clean
   // "RESTORED" — downgrade and warn so the user reviews.

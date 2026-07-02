@@ -60,9 +60,26 @@ export interface ReferralOverviewStats {
   creditsIssued: number;
 }
 
+const REFERRALS_PAGE_SIZE = 50;
+
 export interface ReferralOverview {
   rows: ReferralOverviewRow[];
   stats: ReferralOverviewStats;
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface HeldReferralsResult {
+  rows: HeldReferralRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+function normalizePage(page?: number): number {
+  if (!Number.isFinite(page) || (page ?? 0) < 1) return 1;
+  return Math.floor(page as number);
 }
 
 export interface HeldReferralRow {
@@ -125,13 +142,19 @@ function asStatus(raw: string): ReferralStatus {
 // ─── Reads ────────────────────────────────────────────────────────────────
 
 /** Recent referral rows + aggregate stats, with academy NAMES joined. */
-export async function getReferralOverview(): Promise<ReferralOverview> {
+export async function getReferralOverview(
+  params?: { page?: number },
+): Promise<ReferralOverview> {
   await requireAdminAuth();
+
+  const page = normalizePage(params?.page);
+  const pageSize = REFERRALS_PAGE_SIZE;
 
   const [rows, grouped] = await Promise.all([
     prisma.referral.findMany({
       orderBy: { createdAt: "desc" },
-      take: 200,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       select: {
         id: true,
         status: true,
@@ -185,39 +208,56 @@ export async function getReferralOverview(): Promise<ReferralOverview> {
       reviewedAt: r.reviewedAt?.toISOString() ?? null,
     })),
     stats,
+    total: stats.totalSignups,
+    page,
+    pageSize,
   };
 }
 
 /** HELD rows awaiting review — with fraud score / signals + academy names. */
-export async function getHeldReferrals(): Promise<HeldReferralRow[]> {
+export async function getHeldReferrals(
+  params?: { page?: number },
+): Promise<HeldReferralsResult> {
   await requireAdminAuth();
 
-  const rows = await prisma.referral.findMany({
-    where: { status: "HELD" },
-    orderBy: [{ fraudScore: "desc" }, { createdAt: "desc" }],
-    take: 200,
-    select: {
+  const page = normalizePage(params?.page);
+  const pageSize = REFERRALS_PAGE_SIZE;
+
+  const [rows, total] = await Promise.all([
+    prisma.referral.findMany({
+      where: { status: "HELD" },
+      orderBy: [{ fraudScore: "desc" }, { createdAt: "desc" }],
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      select: {
       id: true,
       referrerReward: true,
       referredReward: true,
       fraudScore: true,
       fraudSignals: true,
       createdAt: true,
-      referrerAcademy: { select: { name: true } },
-      referredAcademy: { select: { name: true } },
-    },
-  });
+        referrerAcademy: { select: { name: true } },
+        referredAcademy: { select: { name: true } },
+      },
+    }),
+    prisma.referral.count({ where: { status: "HELD" } }),
+  ]);
 
-  return rows.map((r) => ({
-    id: r.id,
-    referrerAcademyName: r.referrerAcademy?.name ?? "(삭제된 학원)",
-    referredAcademyName: r.referredAcademy?.name ?? "(삭제된 학원)",
-    referrerReward: r.referrerReward,
-    referredReward: r.referredReward,
-    fraudScore: r.fraudScore,
-    fraudSignals: coerceFraudSignals(r.fraudSignals),
-    createdAt: r.createdAt.toISOString(),
-  }));
+  return {
+    rows: rows.map((r) => ({
+      id: r.id,
+      referrerAcademyName: r.referrerAcademy?.name ?? "(삭제된 학원)",
+      referredAcademyName: r.referredAcademy?.name ?? "(삭제된 학원)",
+      referrerReward: r.referrerReward,
+      referredReward: r.referredReward,
+      fraudScore: r.fraudScore,
+      fraudSignals: coerceFraudSignals(r.fraudSignals),
+      createdAt: r.createdAt.toISOString(),
+    })),
+    total,
+    page,
+    pageSize,
+  };
 }
 
 /** Full mission catalog for the admin table. */
