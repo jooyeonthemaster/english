@@ -14,6 +14,18 @@ interface ExtractionJobRow {
   createdAt: string;
   m1DraftPipelineError?: boolean;
   firstPageImageUrl?: string | null;
+  /** metadata.subject 파생 필드 — "KOREAN"=국어 라우트 발(發) 잡, null=영어. */
+  subject?: "KOREAN" | null;
+}
+
+/**
+ * 작업 드로어의 추출 잡 목록 URL — 현재 워크스페이스(경로) 기준 과목 스코프.
+ * 국어 라우트(/director/korean/**)에 마운트되면 subject=KOREAN(국어 잡만),
+ * 그 외(영어 workbench)는 파라미터 없음 = 서버 기본(국어 잡 제외).
+ */
+export function extractionJobsListUrl(pathname: string): string {
+  const korean = pathname.startsWith("/director/korean");
+  return `/api/extraction/jobs?limit=50${korean ? "&subject=KOREAN" : ""}`;
 }
 
 function mapStatus(raw: string): TaskStatus {
@@ -91,14 +103,27 @@ async function deleteExtractionJob(jobId: string, status: TaskStatus) {
 export const extractionAdapter: TaskAdapter = {
   domain: "extraction",
   async fetchTasks(signal): Promise<BaseTask[]> {
-    const res = await fetch("/api/extraction/jobs?limit=50", {
-      credentials: "include",
-      cache: "no-store",
-      signal,
-    });
+    const res = await fetch(
+      extractionJobsListUrl(
+        typeof window === "undefined" ? "" : window.location.pathname,
+      ),
+      {
+        credentials: "include",
+        cache: "no-store",
+        signal,
+      },
+    );
     if (!res.ok) return [];
     const data = (await res.json()) as { jobs?: ExtractionJobRow[] };
     const jobs = (data.jobs ?? []).filter((job) => job.mode === "PASSAGE_ONLY");
+
+    // 잡카드 상세 진입 경로도 마운트된 워크스페이스에 맞춘다 — 국어 라우트에서
+    // 클릭하면 국어 자료관리로, 그 밖(영어)은 종전 경로(무회귀).
+    const jobsBasePath = (
+      typeof window === "undefined" ? "" : window.location.pathname
+    ).startsWith("/director/korean")
+      ? "/director/korean/extraction/jobs"
+      : "/director/workbench/extraction/jobs";
 
     return jobs.map<BaseTask>((job) => {
       const status = mapStatus(job.status);
@@ -147,7 +172,7 @@ export const extractionAdapter: TaskAdapter = {
         status,
         errorBadge: job.m1DraftPipelineError ? "저장 실패" : undefined,
         createdAt: job.createdAt,
-        href: `/director/workbench/extraction/jobs?jobId=${job.id}`,
+        href: `${jobsBasePath}?jobId=${job.id}`,
         thumbnailUrl: job.firstPageImageUrl ?? null,
         onDelete: () => deleteExtractionJob(job.id, status),
       };
