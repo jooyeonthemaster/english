@@ -13,6 +13,8 @@ import {
   AnswerRevealContext,
   HideAnswerLineContext,
   QuestionTypeLabelContext,
+  SuppressInlinePassageContext,
+  InlinePassageOverrideContext,
 } from "./question-renderer-primitives";
 import { CustomLayoutRenderer } from "./custom-layout-renderer";
 import {
@@ -59,6 +61,8 @@ export function StructuredQuestionRenderer({
   answerRevealMode = "default",
   hideAnswerLine = false,
   showTypeLabel = false,
+  suppressInlinePassage = false,
+  inlinePassageOverride,
 }: {
   question: any;
   index: number;
@@ -73,6 +77,10 @@ export function StructuredQuestionRenderer({
   answerRevealMode?: "default" | "show-all" | "as-explanation" | "hidden";
   /** true 면 "정답: N" 줄(AnswerLine)을 숨긴다. 문제 관리 카드용. */
   hideAnswerLine?: boolean;
+  /** 세트 통합 지문을 바깥에서 이미 렌더한 경우, 타입별 본문 안의 지문 박스만 숨긴다. */
+  suppressInlinePassage?: boolean;
+  /** 세트 상세처럼 타입별 본문 안의 지문 위치에 통합 변형 지문을 대신 표시한다. */
+  inlinePassageOverride?: string;
 }) {
   const questionForRender = enrichQuestionForDisplay(question, sourcePassageContent);
   const typeId = questionForRender._typeId as string | undefined;
@@ -93,6 +101,8 @@ export function StructuredQuestionRenderer({
         showTypeLabel ? typeLabel || meta?.label || typeId || null : null
       }
     >
+    <SuppressInlinePassageContext.Provider value={suppressInlinePassage}>
+    <InlinePassageOverrideContext.Provider value={inlinePassageOverride || null}>
     <div className={hideHeader ? "space-y-3" : "p-4 rounded-lg border border-slate-200 bg-white space-y-3"}>
       {/* Header — 외부 카드가 헤더를 제공할 때 숨김 */}
       {!hideHeader && (
@@ -144,6 +154,8 @@ export function StructuredQuestionRenderer({
         <FallbackRenderer question={questionForRender} />
       )}
     </div>
+    </InlinePassageOverrideContext.Provider>
+    </SuppressInlinePassageContext.Provider>
     </QuestionTypeLabelContext.Provider>
     </HideAnswerLineContext.Provider>
     </AnswerRevealContext.Provider>

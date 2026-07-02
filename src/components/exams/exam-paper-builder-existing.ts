@@ -192,6 +192,7 @@ function examQuestionToBuilderQuestion(
     approved: q.approved,
     starred: q.starred,
     createdAt: q.createdAt,
+    setId: q.setId ?? null,
     passage,
     explanation: q.explanation
       ? {

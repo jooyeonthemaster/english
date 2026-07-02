@@ -11,9 +11,11 @@ const repoRoot = path.resolve(__dirname, "..", "..");
 const harnessSource = `
 import whereModule from "@/actions/workbench/_question-where";
 import paperUtils from "@/components/exams/paper-builder/paper-item-utils";
+import paperItemHooks from "@/components/exams/exam-paper-builder-client-parts/use-paper-items";
 
 const { buildWorkbenchQuestionWhere, buildBuilderQuestionWhere } = whereModule;
 const { makePaperItem, buildGroups } = paperUtils;
+const { paperItemRegroupKey } = paperItemHooks;
 
 const activeWhere = buildWorkbenchQuestionWhere("academy-1", {}, "active");
 const trashWhere = buildWorkbenchQuestionWhere("academy-1", {}, "trash");
@@ -64,6 +66,7 @@ process.stdout.write(JSON.stringify({
   builderHasSetIdGate: Object.prototype.hasOwnProperty.call(builderWhere, "setId"),
   item1GroupId: item1.groupId,
   item2GroupId: item2.groupId,
+  regroupKey: paperItemRegroupKey(item1),
   groupCount: groups.length,
   firstGroupSize: groups[0]?.items?.length ?? 0,
   firstGroupIncludesPassage: Boolean(groups[0]?.includePassage),
@@ -99,6 +102,7 @@ test("question-set surfaces keep list cards grouped and exam members grouped", (
   assert.equal(summary.builderHasSetIdGate, false);
   assert.equal(summary.item1GroupId, "set:set-1");
   assert.equal(summary.item2GroupId, "set:set-1");
+  assert.equal(summary.regroupKey, "set:set-1");
   assert.equal(summary.groupCount, 1);
   assert.equal(summary.firstGroupSize, 2);
   assert.equal(summary.firstGroupIncludesPassage, true);

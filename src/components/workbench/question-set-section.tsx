@@ -44,6 +44,7 @@ export function QuestionSetSection({
   onToggleSetSelection,
   collectionId,
   filters,
+  setIds,
 }: {
   /** 값이 바뀌면 세트를 다시 불러온다(생성 완료 신호 등). */
   refreshKey?: unknown;
@@ -77,6 +78,8 @@ export function QuestionSetSection({
   collectionId?: string;
   /** 일반 문제 목록과 동일한 필터로 세트 노출 여부를 맞춘다. */
   filters?: WorkbenchQuestionFilters;
+  /** 표시 단위 페이지네이션이 이미 고른 세트 id. 있으면 이 세트들만 렌더한다. */
+  setIds?: string[];
 }) {
   const [sets, setSets] = useState<QuestionSetForRender[]>([]);
   // 분리 진행 중인 멤버 questionId(스피너 표시용). 분리는 세트를 바꾸지 않고 복제본만
@@ -90,7 +93,12 @@ export function QuestionSetSection({
 
   const refresh = useCallback(async () => {
     try {
-      const data = await listQuestionSets({ limit: 50, collectionId, filters });
+      const data = await listQuestionSets({
+        limit: setIds ? null : 50,
+        setIds,
+        collectionId,
+        filters,
+      });
       setSets(data);
       // 카운트는 여기서 부모에 보고(effect 내 동기 setState 회피).
       onCountChange?.(data.length);
@@ -98,7 +106,7 @@ export function QuestionSetSection({
       setSets([]);
       onCountChange?.(0);
     }
-  }, [onCountChange, collectionId, filters]);
+  }, [onCountChange, collectionId, filters, setIds]);
 
   useEffect(() => {
     // 마운트/refreshKey 변경 시 데이터 페치.

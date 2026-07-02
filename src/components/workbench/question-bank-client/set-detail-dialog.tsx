@@ -3,15 +3,14 @@
 // ============================================================================
 // 지문 세트 상세 모달 — 일반 문제 상세(QuestionDetailDialog)와 동일한 셸/2열 구조.
 // 왼쪽=변형 없는 원본 공유 지문 1회. 오른쪽=멤버 탭(1번/2번…)으로 한 문항씩 —
-// 리스트 카드와 동일하게 일반 문항 카드(QuestionBankCard, embedded)로 렌더(발문 위에 세트 전 멤버 변형을 병합한
-// 지문 표시) + 멤버 단위 검수/수정/분리 액션 바.
+// 일반 상세과 동일하게 일반 문항 카드(QuestionBankCard, embedded)로 렌더한다.
+// 세트 전용 차이는 멤버 탭/분리 버튼과, 발문 아래 지문 자리에 들어가는 통합 변형 지문뿐이다.
 // ============================================================================
 
 import { useState } from "react";
-import { CheckCircle2, Loader2, Pencil, Scissors, Trash2, X } from "lucide-react";
+import { FileText, Loader2, Scissors, Trash2, X } from "lucide-react";
 
 import { formatDateTime } from "@/lib/utils";
-import { InteractivePassageView } from "@/components/workbench/interactive-passage-view";
 import { QuestionBankCard } from "@/components/workbench/question-bank-card";
 import { memberToBankItem } from "@/components/workbench/question-set-card";
 import { reconstructPassageView } from "@/lib/question-sets/reconstruct";
@@ -47,11 +46,14 @@ export function SetDetailDialog({
   const members = set.members;
   // 분리/삭제로 멤버 수가 줄면 인덱스가 범위를 벗어날 수 있어 클램프.
   const safeTab = Math.min(Math.max(activeTab, 0), members.length - 1);
-  const visibleMembers = [members[safeTab]];
+  const activeMember = members[safeTab];
+  const visibleMembers = activeMember ? [activeMember] : [];
+  const activeMemberSplitting =
+    activeMember && (splittingIds?.has(activeMember.questionId) ?? false);
 
   // 세트 전 멤버 변형(밑줄·빈칸·마커)을 하나로 병합한 지문 — 리스트 카드와 동일 레시피.
-  // 각 멤버 발문 위에 표시된다(QuestionBankCard 가 유니버설 렌더러로 그림, 비구조형만). 왼쪽 패널은
-  // 변형 없는 원본(canonicalPassage) 그대로 유지.
+  // 세트 상세에서는 이 지문을 일반 유형의 지문 박스 위치(발문 아래)에 넣는다.
+  // 왼쪽 패널은 변형 없는 원본(canonicalPassage) 그대로 유지.
   const mergedPassage = reconstructPassageView(
     set.layout?.fullPassage ?? set.canonicalPassage,
     members.flatMap((m) => (Array.isArray(m.spans) ? m.spans : [])) as Anchor[],
@@ -100,11 +102,17 @@ export function SetDetailDialog({
           <div className="overflow-y-auto border-b border-slate-200 lg:border-b-0 lg:border-r">
             {set.canonicalPassage ? (
               <div className="px-6 py-5">
-                <InteractivePassageView
-                  content={set.canonicalPassage}
-                  analysisData={null}
-                  layout="vertical"
-                />
+                <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+                  <div className="flex items-center gap-1.5 border-b border-slate-100 bg-slate-50/70 px-4 py-2.5">
+                    <FileText className="h-3.5 w-3.5 text-slate-400" />
+                    <span className="text-[12px] font-semibold text-slate-600">
+                      지문 본문
+                    </span>
+                  </div>
+                  <div className="whitespace-pre-wrap px-5 py-4 font-mono text-sm leading-[2] text-slate-800">
+                    {set.canonicalPassage}
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="flex h-full items-center justify-center text-sm text-slate-400">
@@ -114,9 +122,9 @@ export function SetDetailDialog({
           </div>
 
           <div className="relative flex flex-col overflow-hidden">
-            {/* 멤버 토글 — 전체 / 1번 / 2번 … (여백에 단 탭) */}
+            {/* 멤버 토글 — 세트 상세에만 필요한 전용 탐색/분리 영역. */}
             <div className="flex shrink-0 items-center gap-1 border-b border-slate-100 px-4 py-2">
-              <span className="mr-1 text-[11px] font-semibold text-slate-400">
+              <span className="mr-1 shrink-0 text-[11px] font-semibold text-slate-400">
                 문항 보기
               </span>
               {members.map((m, i) => (
@@ -133,77 +141,46 @@ export function SetDetailDialog({
                   {i + 1}번
                 </button>
               ))}
+              <span className="flex-1" />
+              {activeMember ? (
+                <button
+                  type="button"
+                  disabled={activeMemberSplitting}
+                  onClick={() => onSplitMember(activeMember.questionId)}
+                  title="이 문항의 복제본을 단독 문항으로 추가합니다(세트는 그대로)"
+                  aria-label="분리"
+                  className="flex h-6 shrink-0 items-center gap-1 rounded-md border border-slate-200 bg-white px-1.5 text-[10.5px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {activeMemberSplitting ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <Scissors className="h-3 w-3" />
+                  )}
+                  분리
+                </button>
+              ) : null}
             </div>
 
             <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-5">
               {visibleMembers.map((m) => {
                 const memberIndex = members.indexOf(m);
-                const splitting = splittingIds?.has(m.questionId) ?? false;
                 return (
-                  <div key={m.itemId} className="space-y-1.5">
-                    {/* 액션 바 — 멤버 번호/난이도는 QuestionBankCard(embedded) 본문이 표시하므로
-                        여기선 검수/수정/분리 버튼만(번호 중복 방지). */}
-                    <div className="flex items-center gap-2">
-                      <span className="flex-1" />
-                      {/* 검수 토글 — 일반 카드와 동일 동작(멤버 단위 승인/취소). */}
-                      <button
-                        type="button"
-                        onClick={() =>
-                          m.approved
-                            ? onUnapproveMember(m.questionId)
-                            : onApproveMember(m.questionId)
-                        }
-                        title={
-                          m.approved
-                            ? "검수완료 — 누르면 검수필요로 되돌립니다"
-                            : "검수필요 — 누르면 검수완료로 표시합니다"
-                        }
-                        className={
-                          "flex h-6 shrink-0 items-center gap-1 rounded-md border bg-white px-1.5 text-[10.5px] font-semibold transition-colors " +
-                          (m.approved
-                            ? "border-emerald-500 text-emerald-600 hover:bg-emerald-50"
-                            : "border-red-200 text-red-400 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
-                        }
-                      >
-                        <CheckCircle2 className="h-3 w-3" />
-                        {m.approved ? "검수완료" : "미검수"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => onEditMember(m.questionId)}
-                        title="이 문항을 편집합니다"
-                        className="flex h-6 shrink-0 items-center gap-1 rounded-md border border-slate-200 bg-white px-1.5 text-[10.5px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-800"
-                      >
-                        <Pencil className="h-3 w-3" />
-                        수정하기
-                      </button>
-                      <button
-                        type="button"
-                        disabled={splitting}
-                        onClick={() => onSplitMember(m.questionId)}
-                        title="이 문항의 복제본을 단독 문항으로 추가합니다(세트는 그대로)"
-                        aria-label="분리"
-                        className="flex size-6 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-[10.5px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        {splitting ? (
-                          <Loader2 className="h-3 w-3 animate-spin" />
-                        ) : (
-                          <Scissors className="h-3 w-3" />
-                        )}
-                      </button>
-                    </div>
-                    {/* 멤버 본문 — 리스트 카드와 동일하게 일반 문항 카드(QuestionBankCard)로 렌더.
-                        모달은 embedded(체크박스·별·상단삭제·푸터 숨김) + 발문 위 병합 변형 지문.
-                        검수/수정/분리는 위 액션 바가 담당. 구조형은 questionText 에 지문이 있어 병합 제외. */}
+                  <div key={m.itemId}>
+                    {/* 멤버 본문 — 일반 상세과 동일하게 QuestionBankCard 의 embedded 렌더를 사용한다.
+                        검수/수정은 카드 하단 풋터가 담당하고, 세트 통합 지문은 발문 아래 지문 위치에 들어간다. */}
                     <QuestionBankCard
                       q={memberToBankItem(m, set)}
                       num={memberIndex + 1}
                       selected={false}
                       onToggle={() => {}}
+                      onApprove={() => onApproveMember(m.questionId)}
+                      onUnapprove={() => onUnapproveMember(m.questionId)}
+                      onEdit={() => onEditMember(m.questionId)}
                       embedded
                       showStar={false}
                       enableDrag={false}
                       mergedPassage={m.isStructural ? undefined : mergedPassage}
+                      mergedPassagePlacement="inline"
                     />
                   </div>
                 );

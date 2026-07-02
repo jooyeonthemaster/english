@@ -134,6 +134,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       passageTitle: group.passageTitle,
       passageContent: group.passageContent,
       includePassage: false,
+      setPrompt: group.setPrompt,
       usesSentenceInsertMarkers: group.items.some(
         (item) => item.sourceQuestion.subType === "SENTENCE_INSERT",
       ),
@@ -314,7 +315,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       const lines = passageToLines(renderedPassageContent, settings);
       const keepTogether = Boolean(group.items[0]?.keepWithPrev);
       if (keepTogether) {
-        const includeTitle = settings.showPassageTitle && Boolean(group.passageTitle);
+        const includeTitle = true;
         blocks.push({
           kind: "passage-atom",
           group,

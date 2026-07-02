@@ -42,6 +42,15 @@ export const HideAnswerLineContext = createContext(false);
  *  StructuredQuestionRenderer 가 값을 내려준다. */
 export const QuestionTypeLabelContext = createContext<string | null>(null);
 
+/** 세트 상세/세트 카드처럼 통합 변형 지문을 이미 별도로 보여주는 화면에서는
+ *  타입 렌더러 내부의 기본 지문 박스만 숨긴다. 요약문처럼 라벨이 있는 보조 박스는 유지한다. */
+export const SuppressInlinePassageContext = createContext(false);
+
+/** 세트 상세처럼 "발문 아래 지문 자리"는 유지하되, 그 자리에 세트 전체 변형이
+ *  합쳐진 지문을 보여줘야 하는 표면에서 사용한다. 라벨이 있는 요약문/해석 박스는
+ *  대체하지 않는다. */
+export const InlinePassageOverrideContext = createContext<string | null>(null);
+
 // ============================================================================
 // Shared UI primitives for question renderers
 // ============================================================================
@@ -172,6 +181,14 @@ export function PassageBlock({
   label?: string;
   excerpt?: string;
 }) {
+  const suppressInlinePassage = useContext(SuppressInlinePassageContext);
+  const inlinePassageOverride = useContext(InlinePassageOverrideContext);
+  if (suppressInlinePassage && !label) return null;
+  const displayChildren =
+    !label && inlinePassageOverride
+      ? renderPassageFormatted(inlinePassageOverride, null)
+      : children;
+
   return (
     <SelectableBlock
       blockId={label ? `passage:${label}` : "passage"}
@@ -186,7 +203,7 @@ export function PassageBlock({
           </span>
         )}
         <div className="font-mono text-[12.5px] leading-[1.9] text-slate-700 whitespace-pre-wrap">
-          {children}
+          {displayChildren}
         </div>
       </div>
     </SelectableBlock>

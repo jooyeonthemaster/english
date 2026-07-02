@@ -5,9 +5,12 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireStaffAuth } from "@/lib/auth";
 import { getQuestionCollections } from "@/actions/workbench/collections-question";
+import type { QuestionSetForRender } from "@/actions/question-sets";
+import type { Anchor } from "@/lib/question-sets/types";
 import type { WorkbenchQuestionFilters } from "./workbench/_types";
 import {
   buildBuilderQuestionWhere,
+  buildWorkbenchQuestionWhere,
   BUILDER_PAGE_SIZE,
 } from "./workbench/_question-where";
 
@@ -155,6 +158,302 @@ const BUILDER_QUESTION_INCLUDE = {
   _count: { select: { examLinks: true } },
 } as const;
 
+type BuilderQuestionSetWithItems = Prisma.QuestionSetGetPayload<{
+  include: {
+    items: {
+      include: {
+        question: {
+          include: {
+            explanation: true;
+            passage: { select: { id: true; title: true } };
+          };
+        };
+      };
+    };
+    basePassage: { select: { id: true; title: true } };
+  };
+}>;
+
+type BuilderSurfaceItem = {
+  kind: "question" | "set";
+  id: string;
+  createdAt: Date;
+  starred: boolean;
+  approved: boolean;
+  difficultyMinRank: number;
+  difficultyMaxRank: number;
+  representativeQuestionId?: string;
+  memberQuestionIds?: string[];
+};
+
+const DIFFICULTY_RANK: Record<string, number> = {
+  BASIC: 1,
+  INTERMEDIATE: 2,
+  KILLER: 3,
+};
+
+function parseBuilderSetJson<T>(value: string | null): T | null {
+  if (!value) return null;
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    return null;
+  }
+}
+
+function mapBuilderQuestionSet(set: BuilderQuestionSetWithItems): QuestionSetForRender {
+  const sharedPassage =
+    set.basePassage ??
+    set.items.find((item) => item.question.passage)?.question.passage ??
+    null;
+
+  return {
+    id: set.id,
+    status: set.status,
+    structuralMode: set.structuralMode,
+    setLabel: set.setLabel,
+    canonicalPassage: set.canonicalPassage,
+    layout: parseBuilderSetJson(set.displayedPassageLayout),
+    createdAt: set.createdAt,
+    passageTitle: sharedPassage?.title ?? null,
+    passageId: sharedPassage?.id ?? null,
+    members: set.items.map((item) => {
+      const q = item.question;
+      return {
+        itemId: item.id,
+        questionId: q.id,
+        orderInSet: item.orderInSet,
+        isStructural: item.isStructural,
+        typeId: q.subType,
+        difficulty: q.difficulty,
+        questionText: q.questionText,
+        options: parseBuilderSetJson(q.options),
+        correctAnswer: q.correctAnswer,
+        structuredData: q.structuredData,
+        spans: (item.spans as unknown as Anchor[]) ?? [],
+        approved: q.approved,
+        explanation: q.explanation
+          ? {
+              id: q.explanation.id,
+              content: q.explanation.content,
+              keyPoints: q.explanation.keyPoints,
+              wrongOptionExplanations: q.explanation.wrongOptionExplanations,
+            }
+          : null,
+      };
+    }),
+  };
+}
+
+function readDifficultyRank(value: string | null | undefined): number {
+  return value ? (DIFFICULTY_RANK[value] ?? 0) : 0;
+}
+
+function compareBuilderSurfaceItems(
+  sort: string | undefined,
+  a: BuilderSurfaceItem,
+  b: BuilderSurfaceItem,
+): number {
+  const aTime = a.createdAt.getTime();
+  const bTime = b.createdAt.getTime();
+  const tie = a.kind === b.kind ? a.id.localeCompare(b.id) : a.kind.localeCompare(b.kind);
+
+  switch (sort) {
+    case "oldest":
+      return aTime - bTime || tie;
+    case "starred":
+      return Number(b.starred) - Number(a.starred) || bTime - aTime || tie;
+    case "difficulty_desc":
+      return b.difficultyMaxRank - a.difficultyMaxRank || bTime - aTime || tie;
+    case "difficulty_asc":
+      return a.difficultyMinRank - b.difficultyMinRank || bTime - aTime || tie;
+    case "newest":
+    default:
+      return bTime - aTime || tie;
+  }
+}
+
+function buildBuilderStandaloneQuestionWhere(
+  academyId: string,
+  filters?: WorkbenchQuestionFilters,
+): Prisma.QuestionWhereInput {
+  const where = buildWorkbenchQuestionWhere(academyId, filters);
+  const q = filters?.search?.trim();
+  if (q) {
+    delete where.questionText;
+    where.OR = [
+      { questionText: { contains: q, mode: "insensitive" } },
+      { correctAnswer: { contains: q, mode: "insensitive" } },
+      { tags: { contains: q, mode: "insensitive" } },
+      { passage: { title: { contains: q, mode: "insensitive" } } },
+      { passage: { content: { contains: q, mode: "insensitive" } } },
+    ];
+  }
+  return where;
+}
+
+function buildBuilderSetMemberQuestionWhere(
+  academyId: string,
+  filters?: WorkbenchQuestionFilters,
+): Prisma.QuestionWhereInput {
+  return {
+    ...buildBuilderQuestionWhere(academyId, filters),
+    setId: { not: null },
+  };
+}
+
+function filtersWithoutApproved(
+  filters?: WorkbenchQuestionFilters,
+): WorkbenchQuestionFilters | undefined {
+  if (!filters || filters.approved === undefined) return filters;
+  return { ...filters, approved: undefined };
+}
+
+async function loadBuilderSurfaceItems(
+  academyId: string,
+  filters: WorkbenchQuestionFilters,
+): Promise<BuilderSurfaceItem[]> {
+  const setMatchFilters = filtersWithoutApproved(filters);
+  const [standaloneQuestions, sets] = await Promise.all([
+    prisma.question.findMany({
+      where: buildBuilderStandaloneQuestionWhere(academyId, filters),
+      select: {
+        id: true,
+        createdAt: true,
+        starred: true,
+        approved: true,
+        difficulty: true,
+      },
+    }),
+    prisma.questionSet.findMany({
+      where: {
+        academyId,
+        items: {
+          some: {
+            question: buildBuilderSetMemberQuestionWhere(
+              academyId,
+              setMatchFilters,
+            ),
+          },
+        },
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        items: {
+          where: { question: { academyId, deletedAt: null } },
+          orderBy: { orderInSet: "asc" },
+          select: {
+            questionId: true,
+            question: {
+              select: {
+                approved: true,
+                starred: true,
+                difficulty: true,
+              },
+            },
+          },
+        },
+      },
+    }),
+  ]);
+
+  const questionItems: BuilderSurfaceItem[] = standaloneQuestions.map((question) => {
+    const difficultyRank = readDifficultyRank(question.difficulty);
+    return {
+      kind: "question",
+      id: question.id,
+      createdAt: question.createdAt,
+      starred: question.starred,
+      approved: question.approved,
+      difficultyMinRank: difficultyRank,
+      difficultyMaxRank: difficultyRank,
+    };
+  });
+
+  const setItems: BuilderSurfaceItem[] = [];
+  for (const set of sets) {
+    const activeMembers = set.items.filter((item) => item.question);
+    if (activeMembers.length === 0) continue;
+
+    const approved = activeMembers.every((item) => item.question.approved);
+    if (filters.approved !== undefined && approved !== filters.approved) {
+      continue;
+    }
+
+    const ranks = activeMembers.map((item) =>
+      readDifficultyRank(item.question.difficulty),
+    );
+    setItems.push({
+      kind: "set",
+      id: set.id,
+      createdAt: set.createdAt,
+      starred: activeMembers.some((item) => item.question.starred),
+      approved,
+      difficultyMinRank: Math.min(...ranks),
+      difficultyMaxRank: Math.max(...ranks),
+      representativeQuestionId: activeMembers[0]?.questionId,
+      memberQuestionIds: activeMembers.map((item) => item.questionId),
+    });
+  }
+
+  return [...questionItems, ...setItems].sort((a, b) =>
+    compareBuilderSurfaceItems(filters.sort, a, b),
+  );
+}
+
+async function loadBuilderQuestionsBySurfacePage(
+  academyId: string,
+  surfaceItems: BuilderSurfaceItem[],
+): Promise<unknown[]> {
+  const representativeIds = surfaceItems
+    .map((item) =>
+      item.kind === "question" ? item.id : item.representativeQuestionId,
+    )
+    .filter((id): id is string => Boolean(id));
+  if (representativeIds.length === 0) return [];
+
+  const questions = await prisma.question.findMany({
+    where: { id: { in: representativeIds }, academyId, deletedAt: null },
+    include: BUILDER_QUESTION_INCLUDE,
+  });
+  const byId = new Map(questions.map((question) => [question.id, question]));
+  return representativeIds
+    .map((id) => byId.get(id))
+    .filter((question): question is NonNullable<typeof question> => Boolean(question));
+}
+
+function countBuilderSurfaceStatus(items: BuilderSurfaceItem[]) {
+  const all = items.length;
+  const approved = items.filter((item) => item.approved).length;
+  return { all, approved, pending: all - approved };
+}
+
+async function loadBuilderSurfacePage(
+  academyId: string,
+  filters: WorkbenchQuestionFilters,
+) {
+  const limit = filters.limit || BUILDER_PAGE_SIZE;
+  const page = Math.max(1, filters.page || 1);
+  const [items, statusBaseItems] = await Promise.all([
+    loadBuilderSurfaceItems(academyId, filters),
+    loadBuilderSurfaceItems(academyId, {
+      ...filters,
+      approved: undefined,
+    }),
+  ]);
+  const pageItems = items.slice((page - 1) * limit, page * limit);
+  const questions = await loadBuilderQuestionsBySurfacePage(academyId, pageItems);
+
+  return {
+    questions,
+    total: items.length,
+    page,
+    totalPages: Math.max(1, Math.ceil(items.length / limit)),
+    statusCounts: countBuilderSurfaceStatus(statusBaseItems),
+  };
+}
+
 // 좌측 목록은 문제관리 페이지와 동일하게 서버 페이지네이션(100/page)으로 받는다.
 // 초기 진입(SSR)은 1페이지 + 전체개수/총페이지/검수상태 개수만 내려주고, 이후 페이지/
 // 필터 변경은 클라이언트가 getExamPaperBuilderQuestionsPage 로 가져온다. 선택/미리보기는
@@ -174,22 +473,12 @@ export async function getExamPaperBuilderData(academyId: string) {
   }
 
   // 초기 필터 = 클라이언트 기본 상태와 일치(검색 없음, newest, 폴더/검수 전체).
-  const where = buildBuilderQuestionWhere(academyId, { sort: "newest" });
-
-  const [questions, total, grouped, collections, classes, schools] =
+  const [pageData, collections, classes, schools] =
     await Promise.all([
-      prisma.question.findMany({
-        where,
-        include: BUILDER_QUESTION_INCLUDE,
-        orderBy: builderOrderBy("newest"),
-        skip: 0,
-        take: BUILDER_PAGE_SIZE,
-      }),
-      prisma.question.count({ where }),
-      prisma.question.groupBy({
-        by: ["approved"],
-        where,
-        _count: { _all: true },
+      loadBuilderSurfacePage(academyId, {
+        page: 1,
+        limit: BUILDER_PAGE_SIZE,
+        sort: "newest",
       }),
       // 세트=1 로 세는 폴더 카운트를 공유(생성/관리 페이지와 동일한 배지 숫자).
       getQuestionCollections(academyId),
@@ -205,18 +494,11 @@ export async function getExamPaperBuilderData(academyId: string) {
       }),
     ]);
 
-  let all = 0;
-  let approved = 0;
-  for (const g of grouped) {
-    all += g._count._all;
-    if (g.approved) approved += g._count._all;
-  }
-
   return {
-    questions,
-    total,
-    totalPages: Math.max(1, Math.ceil(total / BUILDER_PAGE_SIZE)),
-    statusCounts: { all, approved, pending: all - approved },
+    questions: pageData.questions,
+    total: pageData.total,
+    totalPages: pageData.totalPages,
+    statusCounts: pageData.statusCounts,
     collections,
     classes,
     schools,
@@ -242,77 +524,120 @@ export async function getExamPaperBuilderQuestionsByIds(
   });
 }
 
+// 세트 멤버 하나를 시험지에 담을 때는 같은 QuestionSet 의 모든 멤버를 프리셋 순서대로
+// 함께 담아야 한다. 렌더러는 기존 PaperItem 렌더 체인을 그대로 쓰고, 여기서는 데이터만
+// "세트 단위"로 확장한다.
+export async function getExamPaperBuilderSetMemberQuestionsByQuestionIds(
+  academyId: string,
+  ids: string[],
+) {
+  const staff = await requireStaffAuth();
+  if (staff.academyId !== academyId) return [];
+  const unique = Array.from(new Set(ids.filter(Boolean)));
+  if (unique.length === 0) return [];
+
+  const seeds = await prisma.question.findMany({
+    where: {
+      id: { in: unique },
+      academyId,
+      deletedAt: null,
+      setId: { not: null },
+    },
+    select: { id: true, setId: true },
+  });
+  if (seeds.length === 0) return [];
+
+  const setIdByQuestionId = new Map(
+    seeds
+      .filter((seed): seed is { id: string; setId: string } => Boolean(seed.setId))
+      .map((seed) => [seed.id, seed.setId]),
+  );
+  const orderedSetIds: string[] = [];
+  const seenSetIds = new Set<string>();
+  for (const id of unique) {
+    const setId = setIdByQuestionId.get(id);
+    if (setId && !seenSetIds.has(setId)) {
+      seenSetIds.add(setId);
+      orderedSetIds.push(setId);
+    }
+  }
+  if (orderedSetIds.length === 0) return [];
+
+  const members = await prisma.questionSetItem.findMany({
+    where: {
+      setId: { in: orderedSetIds },
+      question: { academyId, deletedAt: null },
+    },
+    include: {
+      question: {
+        include: BUILDER_QUESTION_INCLUDE,
+      },
+    },
+    orderBy: [{ setId: "asc" }, { orderInSet: "asc" }],
+  });
+
+  const bySetId = new Map<string, typeof members>();
+  for (const member of members) {
+    const bucket = bySetId.get(member.setId) ?? [];
+    bucket.push(member);
+    bySetId.set(member.setId, bucket);
+  }
+
+  return orderedSetIds.flatMap((setId) =>
+    (bySetId.get(setId) ?? []).map((member) => member.question),
+  );
+}
+
+export async function getExamPaperBuilderQuestionSetsBySetIds(
+  academyId: string,
+  setIds: string[],
+): Promise<QuestionSetForRender[]> {
+  const staff = await requireStaffAuth();
+  if (staff.academyId !== academyId) return [];
+
+  const orderedSetIds = Array.from(
+    new Set(
+      setIds.filter(
+        (id): id is string => typeof id === "string" && id.length > 0,
+      ),
+    ),
+  );
+  if (orderedSetIds.length === 0) return [];
+
+  const sets = await prisma.questionSet.findMany({
+    where: {
+      id: { in: orderedSetIds },
+      academyId,
+      items: { some: { question: { deletedAt: null } } },
+    },
+    include: {
+      items: {
+        where: { question: { deletedAt: null } },
+        orderBy: { orderInSet: "asc" },
+        include: {
+          question: {
+            include: {
+              explanation: true,
+              passage: { select: { id: true, title: true } },
+            },
+          },
+        },
+      },
+      basePassage: { select: { id: true, title: true } },
+    },
+  });
+
+  const bySetId = new Map(sets.map((set) => [set.id, mapBuilderQuestionSet(set)]));
+  return orderedSetIds
+    .map((setId) => bySetId.get(setId))
+    .filter((set): set is QuestionSetForRender => Boolean(set));
+}
+
 // ─── 서버 페이지네이션 (문제관리 페이지와 동일 구조) ────────────────────────────
 // 좌측 목록을 cap 까지 한 번에 받지 않고 100개/page 로 서버에서 잘라 받는다. 브라우징
 // 부하를 보유 문제 수와 무관하게 일정하게 유지한다. 선택/미리보기는 ID 기반 작업세트로
 // 분리돼 getExamPaperBuilderQuestionIds + getExamPaperBuilderQuestionsByIds 가 담당한다.
 // (BUILDER_PAGE_SIZE 는 "use server" 제약상 ./workbench/_question-where 에 정의.)
-
-// 빌더 정렬값 → Prisma orderBy. 페이지 경계가 흔들리지 않도록 항상 { id } 로 최종
-// tie-break 한다(rank 페이지 계산도 이 결정적 순서를 전제로 한다). 난이도는 문자열
-// BASIC<INTERMEDIATE<KILLER 가 난이도 순과 일치해 DB 정렬로 전역 정확히 처리된다.
-function builderOrderBy(
-  sort?: string,
-): Prisma.QuestionOrderByWithRelationInput[] {
-  switch (sort) {
-    case "oldest":
-      return [{ createdAt: "asc" }, { id: "asc" }];
-    case "starred":
-      return [{ starred: "desc" }, { createdAt: "desc" }, { id: "asc" }];
-    case "difficulty_desc":
-      return [{ difficulty: "desc" }, { createdAt: "desc" }, { id: "asc" }];
-    case "difficulty_asc":
-      return [{ difficulty: "asc" }, { createdAt: "desc" }, { id: "asc" }];
-    case "newest":
-    default:
-      return [{ createdAt: "desc" }, { id: "asc" }];
-  }
-}
-
-// 정렬 순에서 target 보다 "앞"에 오는 행을 고르는 keyset 술어(OR of AND-chains).
-// rank = count(base AND before) → page = floor(rank/limit)+1. starred 는 Boolean 이라
-// gt/lt 가 없으므로 "true 가 항상 앞" 으로 특수 처리한다.
-function builderBeforeWhere(
-  sort: string | undefined,
-  t: { id: string; createdAt: Date; starred: boolean; difficulty: string },
-): Prisma.QuestionWhereInput {
-  const createdThenId = (
-    first: Prisma.QuestionWhereInput,
-  ): Prisma.QuestionWhereInput[] => [
-    first,
-    { createdAt: t.createdAt, id: { lt: t.id } },
-  ];
-  switch (sort) {
-    case "oldest":
-      return { OR: createdThenId({ createdAt: { lt: t.createdAt } }) };
-    case "starred": {
-      const or: Prisma.QuestionWhereInput[] = [];
-      if (!t.starred) or.push({ starred: true }); // starred=true 가 항상 앞
-      or.push({ starred: t.starred, createdAt: { gt: t.createdAt } });
-      or.push({ starred: t.starred, createdAt: t.createdAt, id: { lt: t.id } });
-      return { OR: or };
-    }
-    case "difficulty_desc":
-      return {
-        OR: [
-          { difficulty: { gt: t.difficulty } },
-          { difficulty: t.difficulty, createdAt: { gt: t.createdAt } },
-          { difficulty: t.difficulty, createdAt: t.createdAt, id: { lt: t.id } },
-        ],
-      };
-    case "difficulty_asc":
-      return {
-        OR: [
-          { difficulty: { lt: t.difficulty } },
-          { difficulty: t.difficulty, createdAt: { gt: t.createdAt } },
-          { difficulty: t.difficulty, createdAt: t.createdAt, id: { lt: t.id } },
-        ],
-      };
-    case "newest":
-    default:
-      return { OR: createdThenId({ createdAt: { gt: t.createdAt } }) };
-  }
-}
 
 // 목록 한 페이지 + 전체 개수/총 페이지수 + 검수상태 세그먼트 개수(statusCounts).
 // statusCounts 는 approved 필터를 뺀 집합 기준이라 한 번의 groupBy 로 계산한다.
@@ -330,47 +655,7 @@ export async function getExamPaperBuilderQuestionsPage(
   const staff = await requireStaffAuth();
   if (staff.academyId !== academyId) return empty;
 
-  const limit = filters.limit || BUILDER_PAGE_SIZE;
-  const page = Math.max(1, filters.page || 1);
-  const where = buildBuilderQuestionWhere(academyId, filters);
-  const baseWhere = buildBuilderQuestionWhere(academyId, {
-    ...filters,
-    approved: undefined,
-  });
-
-  const [questions, total, grouped] = await Promise.all([
-    prisma.question.findMany({
-      where,
-      // 100개/page 라 해설 본문 포함해도 가벼움(≈한 페이지 <1MB) → A-lite(해설 지연
-      // 로드)가 불필요해진다. 풀 include 로 받아 클라이언트 병합 로직을 없앤다.
-      include: BUILDER_QUESTION_INCLUDE,
-      orderBy: builderOrderBy(filters.sort),
-      skip: (page - 1) * limit,
-      take: limit,
-    }),
-    prisma.question.count({ where }),
-    prisma.question.groupBy({
-      by: ["approved"],
-      where: baseWhere,
-      _count: { _all: true },
-    }),
-  ]);
-
-  let all = 0;
-  let approved = 0;
-  for (const g of grouped) {
-    const c = g._count._all;
-    all += c;
-    if (g.approved) approved += c;
-  }
-
-  return {
-    questions,
-    total,
-    page,
-    totalPages: Math.max(1, Math.ceil(total / limit)),
-    statusCounts: { all, approved, pending: all - approved },
-  };
+  return loadBuilderSurfacePage(academyId, filters);
 }
 
 // 전체 선택용 — 현재 필터에 매칭되는 모든 문항 ID(정렬 순). 페이지와 무관한 작업세트
@@ -381,12 +666,10 @@ export async function getExamPaperBuilderQuestionIds(
 ): Promise<string[]> {
   const staff = await requireStaffAuth();
   if (staff.academyId !== academyId) return [];
-  const rows = await prisma.question.findMany({
-    where: buildBuilderQuestionWhere(academyId, filters),
-    orderBy: builderOrderBy(filters.sort),
-    select: { id: true },
-  });
-  return rows.map((r) => r.id);
+  const items = await loadBuilderSurfaceItems(academyId, filters);
+  return items.flatMap((item) =>
+    item.kind === "question" ? [item.id] : (item.memberQuestionIds ?? []),
+  );
 }
 
 // rank 페이지 점프용 — 현재 필터/정렬에서 특정 문항이 몇 페이지(1-base)인지. 미리보기
@@ -401,18 +684,16 @@ export async function getExamPaperBuilderQuestionPageOf(
   const limit = filters.limit || BUILDER_PAGE_SIZE;
   const target = await prisma.question.findFirst({
     where: { id: questionId, academyId, deletedAt: null },
-    select: { id: true, createdAt: true, starred: true, difficulty: true },
+    select: { id: true, setId: true },
   });
   if (!target) return null;
-  const rank = await prisma.question.count({
-    where: {
-      AND: [
-        buildBuilderQuestionWhere(academyId, filters),
-        builderBeforeWhere(filters.sort, target),
-      ],
-    },
-  });
-  return Math.floor(rank / limit) + 1;
+  const items = await loadBuilderSurfaceItems(academyId, filters);
+  const index = items.findIndex((item) =>
+    target.setId
+      ? item.kind === "set" && item.id === target.setId
+      : item.kind === "question" && item.id === target.id,
+  );
+  return index >= 0 ? Math.floor(index / limit) + 1 : null;
 }
 
 export async function saveExamPaperDraft(

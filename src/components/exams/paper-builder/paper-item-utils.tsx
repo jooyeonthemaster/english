@@ -1,6 +1,7 @@
 import * as React from "react";
 import type {
   BuilderQuestion,
+  BuilderQuestionSetRender,
   InsertablePaperBlockType,
   OptionItem,
   PaperGroup,
@@ -24,6 +25,9 @@ import { buildGrammarCorrectionQuestionTextForDisplay } from "@/lib/grammar-corr
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { formatSourcePassageForQuestionItems } from "./source-passage-markers";
 import { normalizePaperFields } from "./render-model";
+import { buildQuestionSetMergedPassage } from "@/lib/question-sets/render";
+import { reconstructPassageView } from "@/lib/question-sets/reconstruct";
+import type { Anchor } from "@/lib/question-sets/types";
 
 export function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
@@ -106,6 +110,95 @@ export function isSetMemberItem(item: PaperItem): boolean {
   return item.blockType === "question" && Boolean(item.sourceQuestion.setId);
 }
 
+function readStructuredObject(value: unknown): Record<string, unknown> {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value as Record<string, unknown>;
+  }
+  if (typeof value !== "string") return {};
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+      ? (parsed as Record<string, unknown>)
+      : {};
+  } catch {
+    return {};
+  }
+}
+
+function spansFromStructuredData(value: unknown): Anchor[] {
+  const spans = readStructuredObject(value)._spans;
+  return Array.isArray(spans) ? (spans as Anchor[]) : [];
+}
+
+function mergedSetPassageForQuestion(question: BuilderQuestion): string | null {
+  if (!question.setId || !question.setRender) return null;
+  return normalizePassageText(buildQuestionSetMergedPassage(question.setRender));
+}
+
+function setRenderFromItems(items: PaperItem[]): BuilderQuestionSetRender | null {
+  for (const item of items) {
+    const render = item.sourceQuestion.setRender;
+    if (render) return render;
+  }
+  return null;
+}
+
+function normalizedSourcePassageForItem(item: PaperItem): string {
+  return normalizePassageText(item.sourceQuestion.passage?.content || "");
+}
+
+function currentPassageDiffersFromSource(items: PaperItem[]): boolean {
+  return items.some((item) => {
+    const current = normalizePassageText(item.passageContent || "");
+    const source = normalizedSourcePassageForItem(item);
+    return Boolean(current) && current !== source;
+  });
+}
+
+function mergedSetPassageForItems(
+  passageContent: string,
+  items: PaperItem[],
+): string | null {
+  if (!items.some(isSetMemberItem)) return null;
+  if (currentPassageDiffersFromSource(items)) return passageContent;
+
+  const setRender = setRenderFromItems(items);
+  if (setRender) {
+    return normalizePassageText(buildQuestionSetMergedPassage(setRender));
+  }
+
+  const base = normalizePassageText(
+    passageContent || items.map(normalizedSourcePassageForItem).find(Boolean) || "",
+  );
+  const spans = items.flatMap((item) =>
+    spansFromStructuredData(item.sourceQuestion.structuredData),
+  );
+  if (!base || spans.length === 0) return base || null;
+  return normalizePassageText(reconstructPassageView(base, spans).text || base);
+}
+
+function formatPassageContentForGroup(
+  passageContent: string,
+  items: PaperItem[],
+): string {
+  return (
+    mergedSetPassageForItems(passageContent, items) ??
+    formatSourcePassageForQuestionItems(passageContent, items)
+  );
+}
+
+function setPromptForItems(items: PaperItem[]): string {
+  if (!items.some(isSetMemberItem)) return "";
+  const orderNums = items
+    .filter((item) => item.blockType === "question" && item.orderNum > 0)
+    .map((item) => item.orderNum);
+  if (orderNums.length === 0) return "";
+  const first = Math.min(...orderNums);
+  const last = Math.max(...orderNums);
+  const range = first === last ? `[${first}]` : `[${first}~${last}]`;
+  return `${range} 다음 글을 읽고, 물음에 답하시오.`;
+}
+
 // 커스텀 레이아웃(v2) 문항은 LayoutDoc.answerLineCount 가 서술형 답란 줄 수를
 // 명시한다(원본 문항 양식 캡처값). 있으면 기본값 로직보다 우선한다.
 function customLayoutAnswerSpaceLines(question: BuilderQuestion): number | null {
@@ -174,7 +267,8 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
   const normalizedQuestionText = normalizedFields
     ? normalizeQuestionText(normalizedFields.questionText)
     : normalizedQuestionTextForPaper(question);
-  const passageContent = normalizePassageText(question.passage?.content || "");
+  const rawPassageContent = normalizePassageText(question.passage?.content || "");
+  const passageContent = mergedSetPassageForQuestion(question) ?? rawPassageContent;
   // 요약문 영작(SUMMARY_WRITING)·주제문 영작(TOPIC_SENTENCE_WRITING)은 원본 지문을 시험지에
   // "무조건 함께" 가져온다(사용자 요구·레퍼런스 형식). 학생은 지문을 읽고 요약문/주제문을 영작한다.
   // SUMMARY_COMPLETE 와 동일하게 INLINE_SOURCE 로 처리 — 지문은 structuredSegments() 가
@@ -391,6 +485,7 @@ export function buildGroups(items: PaperItem[]): PaperGroup[] {
         includePassage: false,
         passageTitle: "",
         passageContent: "",
+        setPrompt: "",
       });
       continue;
     }
@@ -405,10 +500,11 @@ export function buildGroups(items: PaperItem[]): PaperGroup[] {
         // 제목은 폴백·정규화(빈칸 방지)하되, 지문 박스 표시는 이 묶음이
         // 아직 한 번도 안 그렸을 때만 켠다(중복 방지).
         last.passageTitle = resolvePaperItemPassageTitle(item);
-        last.passageContent = formatSourcePassageForQuestionItems(
+        last.passageContent = formatPassageContentForGroup(
           passageContent,
           last.items,
         );
+        last.setPrompt = setPromptForItems(last.items);
         if (!last.includePassage && !passageRenderedGroupIds.has(last.id)) {
           last.includePassage = true;
           passageRenderedGroupIds.add(last.id);
@@ -437,7 +533,8 @@ export function buildGroups(items: PaperItem[]): PaperGroup[] {
         items: groupItems,
         includePassage: renderPassage,
         passageTitle: resolvePaperItemPassageTitle(item),
-        passageContent: formatSourcePassageForQuestionItems(passageContent, groupItems),
+        passageContent: formatPassageContentForGroup(passageContent, groupItems),
+        setPrompt: setPromptForItems(groupItems),
       });
     }
   }

@@ -184,7 +184,8 @@ function mapSet(set: SetWithItems): QuestionSetForRender {
 export async function listQuestionSets(opts: {
   passageId?: string;
   jobId?: string;
-  limit?: number;
+  limit?: number | null;
+  setIds?: string[];
   filters?: WorkbenchQuestionFilters;
   /** 활성 폴더 id — 있으면 그 폴더에 멤버가 속한 세트만 반환(일반 문제와 동일한 컬렉션 조인).
    *  미지정 시 전체 세트(기존 동작). 세트는 원자적이라 폴더에 멤버 1개만 있어도 세트 전체를 표시. */
@@ -192,15 +193,23 @@ export async function listQuestionSets(opts: {
 }): Promise<QuestionSetForRender[]> {
   const staff = await getStaffSession();
   if (!staff) return [];
+  const setMatchFilters =
+    opts.filters?.approved === undefined
+      ? opts.filters
+      : { ...opts.filters, approved: undefined };
   const memberWhere = setMemberQuestionWhere(
     staff.academyId,
-    opts.filters,
+    setMatchFilters,
     opts.collectionId,
   );
+  const orderedSetIds = opts.setIds
+    ? Array.from(new Set(opts.setIds.filter(Boolean)))
+    : [];
 
   const sets = await prisma.questionSet.findMany({
     where: {
       academyId: staff.academyId,
+      ...(orderedSetIds.length > 0 ? { id: { in: orderedSetIds } } : {}),
       ...(opts.jobId ? { jobId: opts.jobId } : {}),
       ...(opts.passageId
         ? {
@@ -213,7 +222,12 @@ export async function listQuestionSets(opts: {
       items: { some: { question: memberWhere } },
     },
     orderBy: { createdAt: "desc" },
-    take: opts.limit ?? 50,
+    take:
+      orderedSetIds.length > 0
+        ? undefined
+        : opts.limit === null
+          ? undefined
+          : (opts.limit ?? 50),
     include: {
       items: {
         // 휴지통 가드 — 삭제(휴지통)된 세트 멤버는 세트 렌더에서 제외.
@@ -231,7 +245,17 @@ export async function listQuestionSets(opts: {
       basePassage: { select: { id: true, title: true } },
     },
   });
-  return sets.map(mapSet);
+  const mapped = sets.map(mapSet).filter((set) => {
+    if (opts.filters?.approved === undefined) return true;
+    const setApproved =
+      set.members.length > 0 && set.members.every((member) => member.approved);
+    return setApproved === opts.filters.approved;
+  });
+  if (orderedSetIds.length === 0) return mapped;
+  const byId = new Map(mapped.map((set) => [set.id, set]));
+  return orderedSetIds
+    .map((id) => byId.get(id))
+    .filter((set): set is QuestionSetForRender => Boolean(set));
 }
 
 /**

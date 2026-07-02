@@ -149,6 +149,7 @@ interface QuestionBankProps {
   view: "flat" | "passage";
   questionsData: {
     questions: QuestionItem[];
+    setIds?: string[];
     total: number;
     page: number;
     totalPages: number;
@@ -402,6 +403,7 @@ export function QuestionBankClient({
     : folders.activeFolder === null
       ? flatQuestions
       : questionsInActiveFolder;
+  const pageSetIds = questionsData?.setIds ?? [];
 
   // Selection
   const displayedQuestionIds = useMemo(
@@ -430,10 +432,6 @@ export function QuestionBankClient({
   const totalCount = isGrouped
     ? (groupedData?.total ?? 0)
     : (questionsData?.total ?? 0);
-  const allPagesSelectableCount =
-    !isGrouped && folders.activeFolder
-      ? (folders.membership[folders.activeFolder]?.size ?? 0)
-      : totalCount;
   const currentPage = isGrouped
     ? (groupedData?.page ?? 1)
     : (questionsData?.page ?? 1);
@@ -1322,7 +1320,8 @@ export function QuestionBankClient({
                   >
                     <QuestionSetSection
                       inline
-                      showSets={currentPage === 1 && !showingPendingOnly}
+                      showSets={pageSetIds.length > 0}
+                      setIds={pageSetIds}
                       refreshKey={`${folders.activeFolder ?? "all"}:${filters.approved ?? "all"}:${filters.subType ?? "all"}:${filters.difficulty ?? "all"}:${filters.search ?? ""}`}
                       onCountChange={setSetCount}
                       onMemberSplit={() => router.refresh()}

@@ -485,10 +485,12 @@ export function passageChromeHeight(
   reserveContinuation = false,
 ): number {
   const titleHeight = includeTitle && settings.showPassageTitle && group.passageTitle ? 15 : 0;
+  const setPromptHeight = includeTitle && group.setPrompt ? passageLineHeight(settings) + 4 : 0;
   const boxChrome =
     settings.passageStyle === "boxed" ? 24 : settings.passageStyle === "underlined" ? 18 : 8;
   return (
     titleHeight +
+    setPromptHeight +
     boxChrome +
     12 +
     (reserveContinuation ? passageContinuationReserveHeight(settings) : 0)
@@ -562,7 +564,7 @@ export function embeddedPassageTitleHeight(item: PaperItem, settings: Pagination
 export function estimatePassageHeight(group: PaperGroup, settings: PaginationSettings): number {
   if (!group.includePassage || !group.passageContent) return 0;
   const lines = passageToLines(group.passageContent, settings);
-  const includeTitle = settings.showPassageTitle && Boolean(group.passageTitle);
+  const includeTitle = true;
   return passageChromeHeight(group, settings, includeTitle) + lines.length * passageLineHeight(settings);
 }
 

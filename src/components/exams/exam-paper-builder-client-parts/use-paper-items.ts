@@ -30,6 +30,13 @@ export type ShuffleOptions = {
   anchorBlocks: boolean;
 };
 
+export function paperItemRegroupKey(item: PaperItem): string {
+  if (item.blockType !== "question") return `block:${item.localId}`;
+  if (item.sourceQuestion.setId) return `set:${item.sourceQuestion.setId}`;
+  if (item.sourceQuestion.passage) return `passage:${item.sourceQuestion.passage.id}`;
+  return `solo:${item.questionId}`;
+}
+
 export function usePaperItems(
   markDirty: () => void,
   initialItems: PaperItem[] = [],
@@ -751,24 +758,17 @@ export function usePaperItems(
     commitItems((current) => {
       if (current.length === 0) return current;
 
-      const groupKey = (item: PaperItem) =>
-        item.blockType !== "question"
-          ? `block:${item.localId}`
-          : item.sourceQuestion.passage
-          ? `passage:${item.sourceQuestion.passage.id}`
-          : `solo:${item.questionId}`;
-
       const firstSeen = new Map<string, number>();
       current.forEach((item, index) => {
-        const key = groupKey(item);
+        const key = paperItemRegroupKey(item);
         if (!firstSeen.has(key)) firstSeen.set(key, index);
       });
 
       const sorted = [...current]
         .map((item, index) => ({ item, index }))
         .sort((a, b) => {
-          const keyA = groupKey(a.item);
-          const keyB = groupKey(b.item);
+          const keyA = paperItemRegroupKey(a.item);
+          const keyB = paperItemRegroupKey(b.item);
           const orderA = firstSeen.get(keyA) ?? 0;
           const orderB = firstSeen.get(keyB) ?? 0;
           if (orderA !== orderB) return orderA - orderB;
@@ -779,7 +779,7 @@ export function usePaperItems(
       const seen = new Set<string>();
       const grouped = sorted.map((item) => {
         if (item.locked || item.blockType !== "question") return item;
-        const groupId = groupKey(item);
+        const groupId = paperItemRegroupKey(item);
         const includePassage = !seen.has(groupId) && shouldIncludeSourcePassageByDefault(item.sourceQuestion);
         seen.add(groupId);
         return { ...item, groupId, includePassage };

@@ -179,6 +179,9 @@ export function QuestionBankCard({
   // 세트 멤버는 structuredData 의 passageWith* 가 stripped 라 타입 렌더러가 지문을 안 그리므로,
   // 여기 넘긴 병합 지문을 유니버설 렌더러로 본문 상단에 별도 표시한다(혼합 마커 안전).
   mergedPassage,
+  // 기본은 기존처럼 본문 상단 별도 표시. 세트 상세에서는 일반 상세과 같은 순서를 위해
+  // 타입별 지문 박스 자리에서 병합 지문으로 대체한다.
+  mergedPassagePlacement = "top",
   // 헤더 아래 삽입할 부가 행(세트 카드의 문항 탭·세트 배지·분리 버튼 등). 미지정 시 미표시.
   headerExtra,
   // 선택 체크박스를 숨긴다(세트 카드가 선택 미배선일 때 죽은 체크박스 방지).
@@ -238,6 +241,7 @@ export function QuestionBankCard({
   actionBusy?: boolean;
   deletedLabel?: string | null;
   mergedPassage?: string;
+  mergedPassagePlacement?: "top" | "inline";
   headerExtra?: React.ReactNode;
   hideCheckbox?: boolean;
   suppressDragItem?: boolean;
@@ -248,6 +252,8 @@ export function QuestionBankCard({
   const [collapsed, setCollapsed] = useState(!embedded);
   const [passageOpen, setPassageOpen] = useState(false);
   const [duplicatePromptOpen, setDuplicatePromptOpen] = useState(false);
+  const inlineMergedPassage =
+    mergedPassagePlacement === "inline" ? mergedPassage : undefined;
   const dragRef = useRef<HTMLDivElement>(null);
   const dragHandleRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -754,11 +760,10 @@ export function QuestionBankCard({
             />
           ) : (
             <>
-              {/* 세트 병합 변형 지문 — 유니버설 렌더러(renderFormatted)로 본문 상단에 표시.
-                  멤버 타입 무관하게 밑줄/빈칸/(A)마커를 모두 그린다. 세트 멤버는 structuredData
-                  passageWith* 가 stripped 라 타입 렌더러가 지문을 안 그리므로 중복되지 않는다.
-                  (그래서 아래 StructuredQuestionRenderer 에 sourcePassageContent 도 넘기지 않는다.) */}
-              {mergedPassage && (
+              {/* 세트 병합 변형 지문 — 세트 안 모든 멤버의 밑줄/빈칸/마커를 합쳐 본문 상단에
+                  한 번만 표시한다. 아래 타입 렌더러는 일반 문항의 발문/보기/정답/해설 구조를
+                  유지하되, suppressInlinePassage 로 내부 지문 박스만 숨긴다. */}
+              {mergedPassage && !inlineMergedPassage && (
                 <div className="shrink-0 rounded-lg border border-slate-100 bg-slate-50 px-2.5 py-2">
                   <p className="max-h-[280px] overflow-y-auto whitespace-pre-line font-mono text-[12px] leading-[1.9] text-slate-700">
                     {renderFormatted(mergedPassage, null)}
@@ -772,7 +777,15 @@ export function QuestionBankCard({
                   question={structuredQuestion}
                   index={num - 1}
                   hideHeader
-                  sourcePassageContent={mergedPassage ? undefined : q.passage?.content}
+                  sourcePassageContent={
+                    inlineMergedPassage
+                      ? q.passage?.content || inlineMergedPassage
+                      : mergedPassage
+                        ? undefined
+                        : q.passage?.content
+                  }
+                  suppressInlinePassage={!!mergedPassage && !inlineMergedPassage}
+                  inlinePassageOverride={inlineMergedPassage}
                   // 임베드(상세 팝업) 마커 유형은 정답 배지를 본문 아래에 직접 그리고
                   // 해설은 바깥 ExplanationSection 으로 내려, 렌더러 내부 '해설 보기'를
                   // 숨긴다(정답 배지가 '해설 보기' 위로 오도록). 일반 목록 카드는 기존 유지.

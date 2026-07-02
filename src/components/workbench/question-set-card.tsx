@@ -13,14 +13,13 @@
 import { useMemo, useState } from "react";
 import { Loader2, Scissors } from "lucide-react";
 
-import { reconstructPassageView } from "@/lib/question-sets/reconstruct";
+import { buildQuestionSetMergedPassage } from "@/lib/question-sets/render";
 import { isStructuralType } from "@/lib/question-sets/types";
 import { Badge } from "@/components/ui/badge";
 import {
   QuestionBankCard,
   type QuestionBankItem,
 } from "@/components/workbench/question-bank-card";
-import type { Anchor } from "@/lib/question-sets/types";
 import type {
   QuestionSetForRender,
   QuestionSetMember,
@@ -69,11 +68,7 @@ export function memberToBankItem(
 
 /** 세트 병합 변형 지문 — 전 멤버 anchor 를 base 에 얹어 한 번만 재구성(리스트/모달 공유 레시피). */
 export function buildSetMergedPassage(set: QuestionSetForRender): string {
-  const base = set.layout?.fullPassage ?? set.canonicalPassage;
-  const anchors: Anchor[] = set.members.flatMap((m) =>
-    Array.isArray(m.spans) ? m.spans : [],
-  );
-  return reconstructPassageView(base, anchors).text;
+  return buildQuestionSetMergedPassage(set);
 }
 
 export function QuestionSetCard({

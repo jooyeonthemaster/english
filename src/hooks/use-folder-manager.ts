@@ -89,6 +89,24 @@ export function useFolderManager({
    * (total - 고유수). 다대다 멤버십이라 단순 합산(total)과 고유수(distinct)가 다르다.
    * membership이 바뀌면(드래그 이동 등) 자동 재계산돼 배지가 실시간 반영된다.
    */
+  // 폴더 카운트 = 일반 문제(setId 없음) + 서로 다른 세트(distinct setId). questionSetIdOf 미지정 시
+  // 기존처럼 raw 멤버 수(지문/추출 폴더 등 세트 개념이 없는 표면은 그대로).
+  const countItems = useCallback(
+    (ids: Set<string> | undefined): number => {
+      if (!ids) return 0;
+      if (!questionSetIdOf) return ids.size;
+      let regular = 0;
+      const sets = new Set<string>();
+      for (const id of ids) {
+        const setId = questionSetIdOf(id);
+        if (setId) sets.add(setId);
+        else regular += 1;
+      }
+      return regular + sets.size;
+    },
+    [questionSetIdOf],
+  );
+
   const cumulativeById = useMemo(() => {
     if (!cumulativeCounts) return null;
     const childrenOf = new Map<string, string[]>();
@@ -113,7 +131,7 @@ export function useFolderManager({
         visited.add(id);
         const members = membership[id];
         if (members) {
-          raw += members.size;
+          raw += countItems(members);
           for (const item of members) seenItems.add(item);
         }
         const kids = childrenOf.get(id);
@@ -121,12 +139,12 @@ export function useFolderManager({
       }
       result[root.id] = {
         total: raw,
-        duplicates: raw - seenItems.size,
+        duplicates: raw - countItems(seenItems),
         childCount: (childrenOf.get(root.id) ?? []).length,
       };
     }
     return result;
-  }, [cumulativeCounts, collections, membership]);
+  }, [cumulativeCounts, collections, countItems, membership]);
 
   /**
    * 노출용 컬렉션: 누적 모드일 때 totalItems·duplicateCount를 덧붙이고,
@@ -182,24 +200,6 @@ export function useFolderManager({
       return items.filter((item) => ids.has(item.id));
     },
     [activeFolder, membership],
-  );
-
-  // 폴더 카운트 = 일반 문제(setId 없음) + 서로 다른 세트(distinct setId). questionSetIdOf 미지정 시
-  // 기존처럼 raw 멤버 수(지문/추출 폴더 등 세트 개념이 없는 표면은 그대로).
-  const countItems = useCallback(
-    (ids: Set<string> | undefined): number => {
-      if (!ids) return 0;
-      if (!questionSetIdOf) return ids.size;
-      let regular = 0;
-      const sets = new Set<string>();
-      for (const id of ids) {
-        const setId = questionSetIdOf(id);
-        if (setId) sets.add(setId);
-        else regular += 1;
-      }
-      return regular + sets.size;
-    },
-    [questionSetIdOf],
   );
 
   const syncCollectionCounts = useCallback(

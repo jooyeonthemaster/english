@@ -322,6 +322,7 @@ export function EmbeddedQuestionBank({
   // ─── Server data (re-fetched client-side on filter change) ───
   const [questionsData, setQuestionsData] = useState<{
     questions: any[];
+    setIds?: string[];
     total: number;
     page: number;
     totalPages: number;
@@ -675,6 +676,7 @@ export function EmbeddedQuestionBank({
   const totalCount = isGrouped
     ? (groupedData?.total ?? 0)
     : (questionsData?.total ?? 0);
+  const pageSetIds = questionsData?.setIds ?? [];
   const currentPage = isGrouped
     ? (groupedData?.page ?? 1)
     : (questionsData?.page ?? 1);
@@ -1562,7 +1564,8 @@ export function EmbeddedQuestionBank({
                   <>
                     <div className="mb-3">
                       <QuestionSetSection
-                        showSets={currentPage === 1}
+                        showSets={pageSetIds.length > 0}
+                        setIds={pageSetIds}
                         refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
                         onCountChange={setSetCount}
                         onMemberSplit={handleSplitCreated}
@@ -1638,7 +1641,8 @@ export function EmbeddedQuestionBank({
                       (종류 불문 통합 정렬). 세트는 최신이라 1페이지에서만 끼운다. */}
                   <QuestionSetSection
                     inline
-                    showSets={currentPage === 1}
+                    showSets={pageSetIds.length > 0}
+                    setIds={pageSetIds}
                     refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
                     onCountChange={setSetCount}
                     onMemberSplit={handleSplitCreated}

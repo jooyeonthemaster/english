@@ -219,6 +219,160 @@ async function purgeQuestionsForAcademy(
 // Question Bank CRUD
 // ---------------------------------------------------------------------------
 
+type WorkbenchQuestionSurfaceItem = {
+  kind: "question" | "set";
+  id: string;
+  createdAt: Date;
+  starred: boolean;
+  approved: boolean;
+  difficultyMinRank: number;
+  difficultyMaxRank: number;
+  memberQuestionIds?: string[];
+};
+
+const WORKBENCH_DIFFICULTY_RANK: Record<string, number> = {
+  BASIC: 1,
+  INTERMEDIATE: 2,
+  KILLER: 3,
+};
+
+function readWorkbenchDifficultyRank(value: string | null | undefined): number {
+  return value ? (WORKBENCH_DIFFICULTY_RANK[value] ?? 0) : 0;
+}
+
+function compareWorkbenchSurfaceItems(
+  sort: string | undefined,
+  a: WorkbenchQuestionSurfaceItem,
+  b: WorkbenchQuestionSurfaceItem,
+) {
+  const aTime = a.createdAt.getTime();
+  const bTime = b.createdAt.getTime();
+  const tie =
+    a.kind === b.kind ? a.id.localeCompare(b.id) : a.kind.localeCompare(b.kind);
+
+  switch (sort) {
+    case "oldest":
+      return aTime - bTime || tie;
+    case "starred":
+      return Number(b.starred) - Number(a.starred) || bTime - aTime || tie;
+    case "difficulty_desc":
+      return b.difficultyMaxRank - a.difficultyMaxRank || bTime - aTime || tie;
+    case "difficulty_asc":
+      return a.difficultyMinRank - b.difficultyMinRank || bTime - aTime || tie;
+    case "newest":
+    default:
+      return bTime - aTime || tie;
+  }
+}
+
+function withoutReviewFilter(
+  filters?: WorkbenchQuestionFilters,
+): WorkbenchQuestionFilters | undefined {
+  if (!filters || filters.approved === undefined) return filters;
+  return { ...filters, approved: undefined };
+}
+
+function buildWorkbenchSetMemberWhere(
+  academyId: string,
+  filters?: WorkbenchQuestionFilters,
+) {
+  return {
+    ...buildWorkbenchQuestionWhere(academyId, filters, "active", {
+      includeSetMembers: true,
+    }),
+    setId: { not: null },
+  } satisfies Prisma.QuestionWhereInput;
+}
+
+async function loadWorkbenchQuestionSurfaceItems(
+  academyId: string,
+  filters?: WorkbenchQuestionFilters,
+): Promise<WorkbenchQuestionSurfaceItem[]> {
+  const setMatchFilters = withoutReviewFilter(filters);
+  const [standaloneQuestions, sets] = await Promise.all([
+    prisma.question.findMany({
+      where: buildWorkbenchQuestionWhere(academyId, filters),
+      select: {
+        id: true,
+        createdAt: true,
+        starred: true,
+        approved: true,
+        difficulty: true,
+      },
+    }),
+    prisma.questionSet.findMany({
+      where: {
+        academyId,
+        items: {
+          some: {
+            question: buildWorkbenchSetMemberWhere(academyId, setMatchFilters),
+          },
+        },
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        items: {
+          where: { question: { academyId, deletedAt: null } },
+          orderBy: { orderInSet: "asc" },
+          select: {
+            questionId: true,
+            question: {
+              select: {
+                approved: true,
+                starred: true,
+                difficulty: true,
+              },
+            },
+          },
+        },
+      },
+    }),
+  ]);
+
+  const questionItems = standaloneQuestions.map((question) => {
+    const difficultyRank = readWorkbenchDifficultyRank(question.difficulty);
+    return {
+      kind: "question" as const,
+      id: question.id,
+      createdAt: question.createdAt,
+      starred: question.starred,
+      approved: question.approved,
+      difficultyMinRank: difficultyRank,
+      difficultyMaxRank: difficultyRank,
+    };
+  });
+
+  const setItems: WorkbenchQuestionSurfaceItem[] = [];
+  for (const set of sets) {
+    const activeMembers = set.items.filter((item) => item.question);
+    if (activeMembers.length === 0) continue;
+
+    const approved = activeMembers.every((item) => item.question.approved);
+    if (filters?.approved !== undefined && approved !== filters.approved) {
+      continue;
+    }
+
+    const ranks = activeMembers.map((item) =>
+      readWorkbenchDifficultyRank(item.question.difficulty),
+    );
+    setItems.push({
+      kind: "set",
+      id: set.id,
+      createdAt: set.createdAt,
+      starred: activeMembers.some((item) => item.question.starred),
+      approved,
+      difficultyMinRank: Math.min(...ranks),
+      difficultyMaxRank: Math.max(...ranks),
+      memberQuestionIds: activeMembers.map((item) => item.questionId),
+    });
+  }
+
+  return [...questionItems, ...setItems].sort((a, b) =>
+    compareWorkbenchSurfaceItems(filters?.sort, a, b),
+  );
+}
+
 export async function getWorkbenchQuestions(
   academyId: string,
   filters?: WorkbenchQuestionFilters
@@ -227,27 +381,18 @@ export async function getWorkbenchQuestions(
 
   const page = filters?.page || 1;
   const limit = filters?.limit || 20;
-  const skip = (page - 1) * limit;
+  const surfaceItems = await loadWorkbenchQuestionSurfaceItems(academyId, filters);
+  const pageItems = surfaceItems.slice((page - 1) * limit, page * limit);
+  const questionIds = pageItems
+    .filter((item) => item.kind === "question")
+    .map((item) => item.id);
+  const setIds = pageItems
+    .filter((item) => item.kind === "set")
+    .map((item) => item.id);
 
-  const where = buildWorkbenchQuestionWhere(academyId, filters);
-
-  // Build orderBy based on sort param
-  const DIFFICULTY_ORDER_DESC = ["KILLER", "INTERMEDIATE", "BASIC"];
-  const DIFFICULTY_ORDER_ASC = ["BASIC", "INTERMEDIATE", "KILLER"];
-  let orderBy: Prisma.QuestionOrderByWithRelationInput | Prisma.QuestionOrderByWithRelationInput[] = { createdAt: "desc" }; // default: newest first
-  if (filters?.sort === "oldest") {
-    orderBy = { createdAt: "asc" as const };
-  } else if (filters?.sort === "starred") {
-    orderBy = [{ starred: "desc" as const }, { createdAt: "desc" as const }];
-  }
-  // For difficulty sorts, we still use createdAt ordering at DB level
-  // and sort in-memory since Prisma doesn't support custom enum ordering.
-  // However, for simplicity, we use a raw approach with orderBy on the field.
-  const needsDifficultySort = filters?.sort === "difficulty_desc" || filters?.sort === "difficulty_asc";
-
-  const [questions, total] = await Promise.all([
-    prisma.question.findMany({
-      where,
+  const questions = questionIds.length
+    ? await prisma.question.findMany({
+      where: { id: { in: questionIds }, academyId, deletedAt: null, setId: null },
       include: {
         passage: {
           select: {
@@ -262,24 +407,23 @@ export async function getWorkbenchQuestions(
         },
         _count: { select: { examLinks: true } },
       },
-      orderBy: needsDifficultySort ? { createdAt: "desc" as const } : orderBy,
-      skip,
-      take: limit,
-    }),
-    prisma.question.count({ where }),
-  ]);
+    })
+    : [];
+  const questionById = new Map(questions.map((question) => [question.id, question]));
+  const orderedQuestions = questionIds
+    .map((id) => questionById.get(id))
+    .filter((question): question is NonNullable<typeof question> =>
+      Boolean(question),
+    );
 
-  // In-memory sort for difficulty (since it's a string enum, not natively orderable)
-  if (needsDifficultySort) {
-    const order = filters?.sort === "difficulty_desc" ? DIFFICULTY_ORDER_DESC : DIFFICULTY_ORDER_ASC;
-    questions.sort((a, b) => {
-      const ai = order.indexOf(a.difficulty);
-      const bi = order.indexOf(b.difficulty);
-      return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
-    });
-  }
-
-  return { questions, total, page, limit, totalPages: Math.ceil(total / limit) };
+  return {
+    questions: orderedQuestions,
+    setIds,
+    total: surfaceItems.length,
+    page,
+    limit,
+    totalPages: Math.max(1, Math.ceil(surfaceItems.length / limit)),
+  };
 }
 
 /**
@@ -293,23 +437,14 @@ export async function getWorkbenchQuestionStatusCounts(
 ) {
   await requireAuth();
 
-  const { approved: _ignored, ...rest } = filters ?? {};
-  const where = buildWorkbenchQuestionWhere(academyId, rest);
-
-  const grouped = await prisma.question.groupBy({
-    by: ["approved"],
-    where,
-    _count: { _all: true },
-  });
-
-  let approved = 0;
-  let pending = 0;
-  for (const row of grouped) {
-    if (row.approved) approved += row._count._all;
-    else pending += row._count._all;
-  }
-
-  return { all: approved + pending, pending, approved };
+  const rest =
+    filters?.approved === undefined
+      ? filters
+      : { ...filters, approved: undefined };
+  const surfaceItems = await loadWorkbenchQuestionSurfaceItems(academyId, rest);
+  const approved = surfaceItems.filter((item) => item.approved).length;
+  const all = surfaceItems.length;
+  return { all, pending: all - approved, approved };
 }
 
 /**
@@ -494,12 +629,23 @@ export async function getWorkbenchQuestionIds(
       where.passageId = { not: null };
     }
 
-    const questions = await prisma.question.findMany({
-      where,
-      select: { id: true },
-      orderBy: { createdAt: "desc" },
-    });
-    const ids = questions.map((question) => question.id);
+    let ids: string[];
+    if (options?.scope === "trash" || options?.passageOnly) {
+      const questions = await prisma.question.findMany({
+        where,
+        select: { id: true },
+        orderBy: { createdAt: "desc" },
+      });
+      ids = questions.map((question) => question.id);
+    } else {
+      const surfaceItems = await loadWorkbenchQuestionSurfaceItems(
+        academyId,
+        filters,
+      );
+      ids = surfaceItems.flatMap((item) =>
+        item.kind === "question" ? [item.id] : (item.memberQuestionIds ?? []),
+      );
+    }
 
     return { success: true, ids, count: ids.length };
   } catch (error) {
