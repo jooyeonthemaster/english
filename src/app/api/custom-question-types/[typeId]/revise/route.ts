@@ -42,6 +42,7 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ typeId: st
       currentSpec: active.spec,
       typeName: active.type.name,
       instruction: parsed.data.instruction,
+      academyId: staff.academyId,
     });
     const { version } = await reviseCustomTypeVersion({
       academyId: staff.academyId,

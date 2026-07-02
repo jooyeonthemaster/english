@@ -2,7 +2,15 @@
 
 export type ProviderFilter = "all" | "google" | "kakao" | "other";
 export type ActiveFilter = "all" | "active" | "inactive";
-export type MemberSortKey = "createdAt" | "lastActiveAt" | "balance";
+export type MemberSortKey =
+  | "createdAt"
+  | "lastActiveAt"
+  | "balance"
+  | "name"
+  | "academyName"
+  | "plan"
+  | "expiresAt"
+  | "sms";
 export type SortOrder = "asc" | "desc";
 
 export interface MemberListFilters {

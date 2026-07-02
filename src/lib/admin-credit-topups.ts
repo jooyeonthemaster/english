@@ -1,9 +1,14 @@
 import { prisma } from "@/lib/prisma";
 
-export async function getAdminCreditTopUps(limit = 50) {
+export async function getAdminCreditTopUpTotalCount() {
+  return prisma.creditTopUp.count();
+}
+
+export async function getAdminCreditTopUps(limit = 50, offset = 0) {
   return prisma.creditTopUp.findMany({
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     take: Math.min(Math.max(limit, 1), 200),
+    skip: Math.max(offset, 0),
     include: {
       academy: {
         select: {

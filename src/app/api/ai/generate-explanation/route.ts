@@ -1,10 +1,11 @@
 import { generateObject } from "ai";
-import { model } from "@/lib/ai";
+import { GEMINI_MODEL_ID, model } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
 import { getStaffSession } from "@/lib/auth";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
+import { recordAiCost } from "@/lib/platform-api-costs";
 
 const explanationSchema = z.object({
   explanation: z.string(),
@@ -61,8 +62,9 @@ export async function POST(request: NextRequest) {
       : "주관식 문제";
 
     let object: z.infer<typeof explanationSchema>;
+    let aiUsage: unknown;
     try {
-    const { object: _object } = await generateObject({
+    const { object: _object, usage } = await generateObject({
       model,
       schema: explanationSchema,
       prompt: `당신은 한국 중고등학교 영어 시험 해설을 작성하는 전문가입니다.
@@ -92,10 +94,20 @@ ${question.correctAnswer}
 5. 학생이 쉽게 이해할 수 있는 명확한 한국어로 작성하세요`,
     });
     object = _object;
+    aiUsage = usage;
     } catch (aiError) {
       await refundCredits(staff.academyId, "QUESTION_EXPLANATION", creditResult.transactionId, "Explanation generation failed");
       throw aiError;
     }
+
+    await recordAiCost({
+      sourceType: "AI_INTERACTIVE",
+      sourceDetail: "generate-explanation",
+      operationType: "QUESTION_EXPLANATION",
+      academyId: staff.academyId,
+      model: GEMINI_MODEL_ID,
+      usage: aiUsage,
+    });
 
     // Save to database
     const existing = await prisma.questionExplanation.findUnique({

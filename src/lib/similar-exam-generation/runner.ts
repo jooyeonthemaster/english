@@ -177,6 +177,7 @@ export async function processSimilarExamGenerationJob(
         originalFileName: job.originalFileName,
         totalPages: job.totalPages,
         selectedPassageCount: selectedPassages.length,
+        academyId: job.academyId,
         logger: options.logger,
         onChunkStart: (chunkNumber, chunkCount) =>
           setJobState(jobId, {
@@ -204,6 +205,7 @@ export async function processSimilarExamGenerationJob(
     const generated = await generateEligibleQuestionGroups({
       profile,
       passages: selectedPassages,
+      academyId: job.academyId,
     });
     generationMs = Date.now() - generationStartedAt;
     callSummary.generation = generated.summary;

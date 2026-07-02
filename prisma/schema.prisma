@@ -2169,6 +2169,37 @@ model AdminAuditLog {
   @@map("admin_audit_logs")
 }
 
+/// SiteBanner — 최고 관리자가 관리하는, 로그인 사용자에게 뜨는 진입 배너.
+/// 템플릿(내용 편집형) 또는 이미지 배너. 여러 개를 우선순위로 큐잉해서
+/// 하나를 닫으면 다음이 열린다.
+/// type: "TEMPLATE" | "IMAGE"
+/// dismissMode: "DAILY"(오늘 하루 보지 않기) | "SESSION" | "ONCE"(다시 안 봄) | "ALWAYS"(매번)
+/// audiences: "DIRECTOR,TEACHER,STUDENT" 중 콤마 조인(앱에서 뷰어 역할로 필터).
+model SiteBanner {
+  id          String  @id @default(cuid())
+  title       String // 운영자용 내부 라벨
+  type        String  @default("TEMPLATE") // "TEMPLATE" | "IMAGE"
+  templateKey String? @map("template_key") // type=TEMPLATE 일 때 템플릿 종류
+  content     Json    @default("{}") // 템플릿 필드 값(JSON)
+  imageUrl    String? @map("image_url") @db.Text // type=IMAGE 공개 URL
+  imageAlt    String? @map("image_alt")
+  linkUrl     String? @map("link_url") @db.Text // 클릭 시 이동 대상(이미지/선택)
+  audiences   String  @default("DIRECTOR") // 콤마 조인 역할 목록
+  priority    Int     @default(0) // 낮을수록 먼저 노출
+  isActive    Boolean @default(false) @map("is_active")
+  dismissMode String  @default("DAILY") @map("dismiss_mode")
+  showDismissButton Boolean @default(true) @map("show_dismiss_button")
+  startsAt    DateTime? @map("starts_at")
+  endsAt      DateTime? @map("ends_at")
+  autoOpenOnLowCredit Boolean @default(false) @map("auto_open_on_low_credit")
+  createdByAdminId    String? @map("created_by_admin_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, priority])
+  @@map("site_banners")
+}
+
 // ============================================================================
 // 21. SUBSCRIPTION & BILLING
 // ============================================================================
@@ -2327,6 +2358,10 @@ model CreditBalance {
   totalAllocated     Int       @default(0) // Lifetime allocation
   lowCreditThreshold Int       @default(50) // Warning threshold
   lastResetAt        DateTime?
+  // Single expiry timestamp shared by the whole balance. Each purchase / admin
+  // grant with an expiry extends it by (remaining + granted days); promo/event
+  // grants ride the existing value unchanged. null = no expiry (무기한).
+  expiresAt          DateTime?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 
@@ -2378,6 +2413,9 @@ model CreditTopUpProduct {
   promotionStartsAt DateTime?
   promotionEndsAt   DateTime?
   description       String?   @db.Text
+  // Credit validity in days from grant. On purchase the buyer's balance expiry
+  // is extended by (remaining days + expiryDays). null/0 = no expiry (무기한).
+  expiryDays        Int?
   isActive          Boolean   @default(true)
   sortOrder         Int       @default(0)
   createdAt         DateTime  @default(now())
@@ -4358,6 +4396,7 @@ model HelpPostReply {
   authorName    String
   content       String   @db.Text
   isOfficial    Boolean  @default(false) // 운영자 공식답변
+  attachments   Json? // [{name,url,size,type}] 답변·댓글 이미지 첨부
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

@@ -15,6 +15,7 @@ import {
 } from "@/lib/passage-transform/schema";
 import { runParaphrase, runPrepend } from "@/lib/passage-transform/generate";
 import { runWholePassageTransform } from "@/lib/passage-transform/whole-passage";
+import { recordAiCost } from "@/lib/platform-api-costs";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -147,6 +148,15 @@ export async function POST(req: NextRequest) {
         selectedText: selectedText!.trim(),
         avoidTexts,
       });
+      await recordAiCost({
+        sourceType: "AI_INTERACTIVE",
+        sourceDetail: "passage-transform",
+        academyId: staff.academyId,
+        model: result.modelId,
+        operationType: "PASSAGE_TRANSFORM",
+        usage: result.usage,
+        metadata: { mode },
+      });
       const response: TransformResponse = {
         mode,
         text: result.rewrittenText,
@@ -158,6 +168,15 @@ export async function POST(req: NextRequest) {
 
     if (mode === "PREPEND") {
       const result = await runPrepend({ passageText, avoidTexts, sentenceCount });
+      await recordAiCost({
+        sourceType: "AI_INTERACTIVE",
+        sourceDetail: "passage-transform",
+        academyId: staff.academyId,
+        model: result.modelId,
+        operationType: "PASSAGE_TRANSFORM",
+        usage: result.usage,
+        metadata: { mode },
+      });
       const response: TransformResponse = {
         mode,
         text: result.paragraph,
@@ -173,6 +192,15 @@ export async function POST(req: NextRequest) {
       passageText,
       direction: normDirection,
       avoidTexts,
+    });
+    await recordAiCost({
+      sourceType: "AI_INTERACTIVE",
+      sourceDetail: "passage-transform",
+      academyId: staff.academyId,
+      model: result.modelId,
+      operationType: "PASSAGE_TRANSFORM",
+      usage: result.usage,
+      metadata: { mode, direction: normDirection ?? null },
     });
     // Flash-Lite 가 meta 필드를 자주 비우므로 결정론적 라벨로 폴백한다.
     const fallbackSummary = `${variantModeLabel(mode, normDirection)} 변형으로 생성한 새 지문`;

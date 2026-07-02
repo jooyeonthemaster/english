@@ -45,6 +45,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const FILTERS = [
+  { value: "ACTION", label: "미처리" },
   { value: "UNMATCHED", label: "미매칭" },
   { value: "AMBIGUOUS", label: "확인 필요" },
   { value: "MATCHED", label: "지급 완료" },
@@ -52,8 +53,20 @@ const FILTERS = [
   { value: "ALL", label: "전체" },
 ];
 
-export function BankDepositsAdminClient() {
-  const [filter, setFilter] = useState("UNMATCHED");
+const VALID_FILTERS = new Set(FILTERS.map((f) => f.value));
+
+export function BankDepositsAdminClient({
+  initialStatus,
+  focusPending = false,
+}: {
+  /** 대시보드 등에서 넘어올 때 초기 필터(status) */
+  initialStatus?: string;
+  /** 입금 대기 주문 패널을 상단에 강조 표시(대시보드 "입금 대기"에서 진입) */
+  focusPending?: boolean;
+}) {
+  const [filter, setFilter] = useState(
+    initialStatus && VALID_FILTERS.has(initialStatus) ? initialStatus : "UNMATCHED",
+  );
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [pendingOrders, setPendingOrders] = useState<PendingOrder[]>([]);
   const [counts, setCounts] = useState<Record<string, number>>({});
@@ -138,6 +151,55 @@ export function BankDepositsAdminClient() {
           새로고침
         </button>
       </div>
+
+      {/* 입금 대기 주문 패널 — 대시보드 "입금 대기"에서 진입 시 강조 */}
+      {focusPending && (
+        <div className="rounded-xl border border-sky-100 bg-sky-50/50 p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Banknote className="size-4 text-sky-600" strokeWidth={2} />
+            <h2 className="text-[14px] font-semibold text-gray-800">
+              입금 대기 주문
+            </h2>
+            <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-semibold text-sky-600">
+              {pendingOrders.length}건
+            </span>
+          </div>
+          {pendingOrders.length === 0 ? (
+            <p className="py-4 text-center text-[13px] text-gray-400">
+              입금 대기 중인 무통장입금 주문이 없습니다.
+            </p>
+          ) : (
+            <div className="flex flex-col gap-1.5">
+              {pendingOrders.map((o) => (
+                <div
+                  key={o.id}
+                  className="flex items-center justify-between rounded-lg border border-sky-100 bg-white px-3.5 py-2.5 text-[12px]"
+                >
+                  <span className="font-medium text-gray-700">
+                    {o.academyName}
+                    <span className="ml-1.5 text-gray-400">
+                      · {o.depositorName ?? "입금자명 미입력"}
+                    </span>
+                  </span>
+                  <span className="tabular-nums text-gray-500">
+                    {o.price.toLocaleString("ko-KR")}원 ·{" "}
+                    {o.creditAmount.toLocaleString("ko-KR")}C ·{" "}
+                    {new Date(o.createdAt).toLocaleString("ko-KR", {
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+          <p className="mt-2.5 text-[11px] text-gray-400">
+            입금 알림이 도착하면 아래 목록에서 해당 입금을 주문에 연결하세요.
+          </p>
+        </div>
+      )}
 
       {/* Filter tabs */}
       <div className="flex flex-wrap gap-1.5">

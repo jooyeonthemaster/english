@@ -2,13 +2,15 @@
 
 import { useState, useEffect, useTransition, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { StatusBadge } from "@/components/help-center/status-badge";
 import { HelpPostFormDialog } from "@/components/help-center/help-post-form-dialog";
+import { AttachmentGallery } from "@/components/help-center/attachment-gallery";
+import { ImageAttachmentField } from "@/components/help-center/image-attachment-field";
+import type { Attachment } from "@/lib/image-attachment";
 import {
   getHelpPost,
   deleteHelpPost,
@@ -47,6 +49,7 @@ export function HelpPostDetailClient({ board, postId }: { board: HelpBoard; post
   const [state, setState] = useState<"loading" | "ok" | "locked" | "notfound">("loading");
   const [password, setPassword] = useState("");
   const [reply, setReply] = useState("");
+  const [replyAttachments, setReplyAttachments] = useState<Attachment[]>([]);
   const [editOpen, setEditOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -98,11 +101,12 @@ export function HelpPostDetailClient({ board, postId }: { board: HelpBoard; post
   }
 
   function handleReply() {
-    if (!reply.trim()) return;
+    if (!reply.trim() && replyAttachments.length === 0) return;
     startTransition(async () => {
       try {
-        await addHelpReply(postId, reply);
+        await addHelpReply(postId, reply, replyAttachments);
         setReply("");
+        setReplyAttachments([]);
         load();
         toast.success("댓글이 등록되었습니다.");
       } catch {
@@ -223,29 +227,8 @@ export function HelpPostDetailClient({ board, postId }: { board: HelpBoard; post
 
           <div className="whitespace-pre-wrap leading-relaxed text-[15px]">{post.content}</div>
 
-          {/* Attachments */}
-          {post.attachments.length > 0 && (
-            <div className="flex flex-wrap gap-3 pt-2">
-              {post.attachments.map((a, i) => (
-                <a
-                  key={i}
-                  href={a.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block overflow-hidden rounded-lg border hover:shadow-sm"
-                >
-                  <Image
-                    src={a.url}
-                    alt={a.name}
-                    width={160}
-                    height={160}
-                    unoptimized
-                    className="h-32 w-32 object-cover"
-                  />
-                </a>
-              ))}
-            </div>
-          )}
+          {/* Attachments — 다운로드가 아닌 미리보기(클릭 시 라이트박스) */}
+          <AttachmentGallery attachments={post.attachments} size={128} className="pt-2" />
 
           {/* Upvote (feedback) */}
           {isFeedback && (
@@ -294,9 +277,12 @@ export function HelpPostDetailClient({ board, postId }: { board: HelpBoard; post
                     {formatDateTime(new Date(r.createdAt))}
                   </span>
                 </div>
-                <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
-                  {r.content}
-                </div>
+                {r.content && (
+                  <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
+                    {r.content}
+                  </div>
+                )}
+                <AttachmentGallery attachments={r.attachments} size={96} className="mt-2" />
               </div>
             ))}
           </div>
@@ -316,8 +302,13 @@ export function HelpPostDetailClient({ board, postId }: { board: HelpBoard; post
             rows={3}
             className="resize-y mt-4"
           />
-          <div className="flex justify-end">
-            <Button size="sm" onClick={handleReply} disabled={isPending || !reply.trim()}>
+          <div className="flex items-center justify-between gap-2">
+            <ImageAttachmentField value={replyAttachments} onChange={setReplyAttachments} />
+            <Button
+              size="sm"
+              onClick={handleReply}
+              disabled={isPending || (!reply.trim() && replyAttachments.length === 0)}
+            >
               댓글 등록
             </Button>
           </div>

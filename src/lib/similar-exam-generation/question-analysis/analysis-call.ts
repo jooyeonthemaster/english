@@ -1,5 +1,6 @@
 import { generateObject, type JSONValue, type LanguageModel } from "ai";
 
+import { recordAiCost } from "@/lib/platform-api-costs";
 import { buildQuestionAnalysisPrompt } from "./prompt";
 import {
   singleItemAnalysisSchema,
@@ -27,6 +28,7 @@ export interface GenerateAnalysisArgs {
   includeBoundingBoxes?: boolean;
   maxRetries?: number;
   stopAfterError?: (error: unknown) => boolean;
+  academyId?: string | null;
 }
 
 export type GenerateAnalysisResult =
@@ -83,6 +85,14 @@ export async function generateAnalysisWithRetries(
             ],
           },
         ],
+      });
+      await recordAiCost({
+        sourceType: "SIMILAR_EXAM_AI",
+        sourceDetail: "question-analysis",
+        academyId: args.academyId,
+        model: args.modelId,
+        operationType: "SIMILAR_EXAM_GEN",
+        usage: result.usage,
       });
       return {
         ok: true,

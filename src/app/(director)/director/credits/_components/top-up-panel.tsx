@@ -436,11 +436,11 @@ export function TopUpPanel({
                       </span>
                     )}
                   </div>
-                  <div className="mt-2 flex items-baseline gap-2 leading-tight tracking-tight tabular-nums">
-                    <span className="text-[24px] font-bold text-gray-400 line-through">
+                  <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 leading-tight tracking-tight tabular-nums">
+                    <span className="whitespace-nowrap text-[24px] font-bold text-gray-400 line-through">
                       {deal.listPrice.toLocaleString("ko-KR")}원
                     </span>
-                    <span className="text-[24px] font-bold text-gray-950">
+                    <span className="whitespace-nowrap text-[24px] font-bold text-gray-950">
                       {product.price.toLocaleString("ko-KR")}원
                     </span>
                   </div>
@@ -450,7 +450,7 @@ export function TopUpPanel({
                   <div className="mt-3 inline-flex w-fit rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-500">
                     기준 단가
                   </div>
-                  <div className="mt-2 text-[24px] font-bold leading-tight tracking-tight text-gray-950 tabular-nums">
+                  <div className="mt-2 whitespace-nowrap text-[24px] font-bold leading-tight tracking-tight text-gray-950 tabular-nums">
                     {product.price.toLocaleString("ko-KR")}원
                   </div>
                   {product.isPromotionActive && (
@@ -461,13 +461,15 @@ export function TopUpPanel({
                 </>
               )}
 
-              <div
-                className={cn(
-                  "topup-cta-glow mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl bg-blue-600 px-4 text-[14px] font-bold text-white transition group-hover:bg-blue-700 group-hover:scale-[1.02]",
-                  loading && "opacity-80",
-                )}
-              >
-                {loading ? "결제 준비 중" : "충전하기"}
+              <div className="mt-auto pt-4">
+                <div
+                  className={cn(
+                    "topup-cta-glow inline-flex h-11 w-full items-center justify-center rounded-xl bg-blue-600 px-4 text-[14px] font-bold text-white transition group-hover:bg-blue-700 group-hover:scale-[1.02]",
+                    loading && "opacity-80",
+                  )}
+                >
+                  {loading ? "결제 준비 중" : "충전하기"}
+                </div>
               </div>
             </button>
           );

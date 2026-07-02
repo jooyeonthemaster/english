@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useRef, useState, useTransition } from "react";
-import { Building2, Filter, Loader2, RefreshCw, X } from "lucide-react";
+import { Filter, Loader2, RefreshCw, X } from "lucide-react";
 import {
   getAcademyCostTransactions,
   type AcademyTransactionListItem,
@@ -33,12 +33,16 @@ import { cn, formatCurrency, formatNumber } from "@/lib/utils";
 type AcademyUsageRow = {
   academyId: string | null;
   name: string;
+  directorName: string | null;
+  directorEmail: string | null;
   calls: number;
   inputTokens: number;
   outputTokens: number;
   costUsd: number;
   costKrw: number;
 };
+
+type GroupBy = "academy" | "member";
 
 interface CostsAcademyUsageTableProps {
   academies: AcademyUsageRow[];
@@ -55,6 +59,7 @@ const TYPE_OPTIONS = [
   { value: "REFUND", label: getTransactionTypeLabel("REFUND") },
   { value: "RESET", label: getTransactionTypeLabel("RESET") },
   { value: "ROLLOVER", label: getTransactionTypeLabel("ROLLOVER") },
+  { value: "EXPIRATION", label: getTransactionTypeLabel("EXPIRATION") },
 ];
 
 export function CostsAcademyUsageTable({
@@ -63,6 +68,7 @@ export function CostsAcademyUsageTable({
   variableCostKrw,
 }: CostsAcademyUsageTableProps) {
   const requestIdRef = useRef(0);
+  const [groupBy, setGroupBy] = useState<GroupBy>("academy");
   const [selectedAcademy, setSelectedAcademy] = useState<AcademyUsageRow | null>(
     null,
   );
@@ -155,23 +161,46 @@ export function CostsAcademyUsageTable({
 
   return (
     <section className="rounded-xl border border-gray-100 bg-white">
-      <div className="flex items-center justify-between border-b border-gray-50 px-5 py-4">
+      <div className="flex flex-col gap-3 border-b border-gray-50 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-[14px] font-semibold text-gray-800">
-            학원별 사용량
+            {groupBy === "member" ? "회원별 사용량" : "학원별 사용량"}
           </h2>
           <p className="mt-1 text-[12px] text-gray-400">
-            {summaryLabel} API 원가 기준 · {formatNumber(academies.length)}개 학원
+            {summaryLabel} API 원가 기준 · {formatNumber(academies.length)}개{" "}
+            {groupBy === "member" ? "회원(원장)" : "학원"}
+            {groupBy === "member" && " · 원가는 학원 단위 집계"}
           </p>
         </div>
-        <Building2 className="size-4 text-gray-400" strokeWidth={1.8} />
+        <div className="inline-flex h-8 w-fit items-center rounded-lg border border-gray-200 bg-white p-0.5">
+          {(
+            [
+              { key: "academy", label: "학원별" },
+              { key: "member", label: "회원별" },
+            ] as const
+          ).map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => setGroupBy(tab.key)}
+              className={cn(
+                "inline-flex h-7 items-center rounded-md px-3 text-[12px] font-semibold transition-colors",
+                groupBy === tab.key
+                  ? "bg-slate-900 text-white"
+                  : "text-gray-500 hover:bg-gray-100 hover:text-gray-900",
+              )}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead className="h-9 pl-5 text-[12px] font-medium text-gray-400">
-                학원
+                {groupBy === "member" ? "회원" : "학원"}
               </TableHead>
               <TableHead className="h-9 text-right text-[12px] font-medium text-gray-400">
                 원가
@@ -194,7 +223,7 @@ export function CostsAcademyUsageTable({
                   colSpan={5}
                   className="py-8 text-center text-[13px] text-gray-400"
                 >
-                  집계된 학원별 사용량이 없습니다
+                  집계된 {groupBy === "member" ? "회원별" : "학원별"} 사용량이 없습니다
                 </TableCell>
               </TableRow>
             ) : (
@@ -224,16 +253,30 @@ export function CostsAcademyUsageTable({
                     }}
                   >
                     <TableCell className="pl-5 text-[13px] font-medium text-gray-800">
-                      <div className="flex items-center gap-2">
-                        <span>{academy.name}</span>
-                        {clickable ? (
-                          <span className="text-[11px] font-normal text-blue-500">
-                            거래 이력
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="truncate">
+                            {groupBy === "member"
+                              ? academy.directorName ?? "원장 미지정"
+                              : academy.name}
                           </span>
-                        ) : (
-                          <span className="text-[11px] font-normal text-gray-300">
-                            조회 불가
-                          </span>
+                          {clickable ? (
+                            <span className="shrink-0 text-[11px] font-normal text-blue-500">
+                              거래 이력
+                            </span>
+                          ) : (
+                            <span className="shrink-0 text-[11px] font-normal text-gray-300">
+                              조회 불가
+                            </span>
+                          )}
+                        </div>
+                        {groupBy === "member" && (
+                          <div className="truncate text-[11px] font-normal text-gray-400">
+                            {academy.name}
+                            {academy.directorEmail
+                              ? ` · ${academy.directorEmail}`
+                              : ""}
+                          </div>
                         )}
                       </div>
                     </TableCell>
@@ -514,6 +557,8 @@ function typeBadgeClass(type: string): string {
       return "bg-gray-100 text-gray-600";
     case "ROLLOVER":
       return "bg-indigo-50 text-indigo-700";
+    case "EXPIRATION":
+      return "bg-rose-50 text-rose-700";
     default:
       return "bg-gray-100 text-gray-600";
   }

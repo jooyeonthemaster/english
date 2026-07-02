@@ -28,6 +28,7 @@ export interface CostSourceSummary {
   unpricedCalls: number;
   unpricedInputTokens: number;
   unpricedOutputTokens: number;
+  estimatedCalls: number;
   inputTokens: number;
   outputTokens: number;
   costUsd: number;
@@ -42,6 +43,8 @@ export interface CreditOperationSummary {
 export interface AcademyUsageSummary {
   academyId: string | null;
   name: string;
+  directorName: string | null;
+  directorEmail: string | null;
   calls: number;
   inputTokens: number;
   outputTokens: number;
@@ -200,6 +203,7 @@ export type SourceAccumulator = {
   unpricedCalls: number;
   unpricedInputTokens: number;
   unpricedOutputTokens: number;
+  estimatedCalls: number;
   inputTokens: number;
   outputTokens: number;
   costUsd: number;

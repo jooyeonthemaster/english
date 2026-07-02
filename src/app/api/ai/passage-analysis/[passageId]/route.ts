@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateObject, generateText } from "ai";
 
-import { model } from "@/lib/ai";
+import { GEMINI_MODEL_ID, model } from "@/lib/ai";
 import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
 import { getStaffSession } from "@/lib/auth";
 import {
@@ -16,6 +16,7 @@ import {
   type AnalysisTone,
 } from "@/lib/passage-analysis-options";
 import { getPassageAnalysisCreditCost } from "@/lib/passage-analysis-credit-costs";
+import { recordAiCost } from "@/lib/platform-api-costs";
 import { hashContent } from "@/lib/passage-utils";
 import { prisma } from "@/lib/prisma";
 import {
@@ -169,12 +170,26 @@ export async function GET(
         persistedAnns.length > 0
           ? buildAnalysisPrompt("", persistedAnns)
           : undefined;
+      let aiUsage: { usage?: unknown; modelId: string } | null = null;
       const rawAnalysis = await runFullAnalysis(
         passage,
         autoPrompt,
         generationPlan,
         analysisTone,
+        ({ usage, modelId }) => {
+          aiUsage = { usage, modelId };
+        },
       );
+      if (aiUsage) {
+        await recordAiCost({
+          sourceType: "AI_INTERACTIVE",
+          sourceDetail: "passage-analysis",
+          operationType: "PASSAGE_ANALYSIS",
+          academyId: staff.academyId,
+          model: (aiUsage as { modelId: string }).modelId,
+          usage: (aiUsage as { usage?: unknown }).usage,
+        });
+      }
       analysisData = withAnalysisGenerationMetadata(
         rawAnalysis,
         generationPlan,
@@ -280,9 +295,17 @@ export async function POST(
 
       try {
         const { english } = body;
-        const { text } = await generateText({
+        const { text, usage } = await generateText({
           model,
           prompt: `다음 영어 문장을 자연스러운 한국어로 번역하세요. 번역만 출력하세요.\n\n영어: ${english}\n\n한국어 번역:`,
+        });
+        await recordAiCost({
+          sourceType: "AI_INTERACTIVE",
+          sourceDetail: "passage-analysis",
+          operationType: "PASSAGE_ANALYSIS",
+          academyId: staff.academyId,
+          model: GEMINI_MODEL_ID,
+          usage,
         });
         return NextResponse.json({
           korean: text.trim(),
@@ -325,7 +348,7 @@ export async function POST(
 
       try {
         const { grammarPoint } = body;
-        const { object: enhanced } = await generateObject({
+        const { object: enhanced, usage } = await generateObject({
           model,
           schema: passageAnalysisSchema.shape.grammarPoints.element,
           prompt: `다음 영어 문법 포인트를 더 자세하고 정확하게 보완해주세요.
@@ -341,6 +364,14 @@ export async function POST(
 보완된 문법 포인트를 생성하세요.
 sentenceIndex는 ${grammarPoint.sentenceIndex}로 유지하세요.
 id는 "${grammarPoint.id}"로 유지하세요.`,
+        });
+        await recordAiCost({
+          sourceType: "AI_INTERACTIVE",
+          sourceDetail: "passage-analysis",
+          operationType: "PASSAGE_ANALYSIS",
+          academyId: staff.academyId,
+          model: GEMINI_MODEL_ID,
+          usage,
         });
         return NextResponse.json({
           grammarPoint: enhanced,
@@ -400,12 +431,26 @@ id는 "${grammarPoint.id}"로 유지하세요.`,
 
     let analysisData: unknown;
     try {
+      let aiUsage: { usage?: unknown; modelId: string } | null = null;
       const rawAnalysis = await runFullAnalysis(
         passage,
         mergedPrompt || undefined,
         generationPlan,
         analysisTone,
+        ({ usage, modelId }) => {
+          aiUsage = { usage, modelId };
+        },
       );
+      if (aiUsage) {
+        await recordAiCost({
+          sourceType: "AI_INTERACTIVE",
+          sourceDetail: "passage-analysis",
+          operationType: "PASSAGE_ANALYSIS",
+          academyId: staff.academyId,
+          model: (aiUsage as { modelId: string }).modelId,
+          usage: (aiUsage as { usage?: unknown }).usage,
+        });
+      }
       analysisData = withAnalysisGenerationMetadata(
         rawAnalysis,
         generationPlan,

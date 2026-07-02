@@ -1,27 +1,47 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import {
   adminGetSeminarRequests,
   adminUpdateSeminarRequest,
   type AdminSeminarRequestView,
+  type AdminSeminarRequestsResult,
 } from "@/actions/admin-help-center";
+import { AdminPagination } from "@/components/admin/admin-pagination";
 import { SEMINAR_STATUSES, SEMINAR_CHANNELS, statusOf, labelOf } from "@/lib/help-center";
+import { useAutoRefresh } from "@/hooks/use-auto-refresh";
 import { StatusBadge } from "@/components/help-center/status-badge";
 import { formatDateTime } from "@/lib/utils";
 import { toast } from "sonner";
 import { Search, Phone, Mail, CalendarClock, Save, Video } from "lucide-react";
 
+const VALID_SEMINAR_STATUSES = new Set<string>([
+  "ALL",
+  ...SEMINAR_STATUSES.map((s) => s.value),
+]);
+
 export function AdminSeminarsClient({
-  initialRequests,
+  initialData,
+  initialStatus,
 }: {
-  initialRequests: AdminSeminarRequestView[];
+  initialData: AdminSeminarRequestsResult;
+  /** 대시보드 등에서 넘어올 때 초기 상태 필터 */
+  initialStatus?: string;
 }) {
-  const [requests, setRequests] = useState(initialRequests);
-  const [selectedId, setSelectedId] = useState<string | null>(initialRequests[0]?.id ?? null);
-  const [status, setStatus] = useState("ALL");
+  const [requests, setRequests] = useState(initialData.items);
+  const [total, setTotal] = useState(initialData.total);
+  const [page, setPage] = useState(initialData.page);
+  const pageRef = useRef(initialData.page);
+  const [selectedId, setSelectedId] = useState<string | null>(
+    initialData.items[0]?.id ?? null,
+  );
+  const [status, setStatus] = useState(
+    initialStatus && VALID_SEMINAR_STATUSES.has(initialStatus) ? initialStatus : "ALL",
+  );
   const [search, setSearch] = useState("");
   const [isPending, startTransition] = useTransition();
+
+  const totalPages = Math.max(1, Math.ceil(total / initialData.pageSize));
 
   const selected = requests.find((r) => r.id === selectedId) ?? null;
 
@@ -39,13 +59,21 @@ export function AdminSeminarsClient({
     setEditStatus(r.status);
   }
 
-  function reload(nextStatus = status) {
+  function applyResult(data: AdminSeminarRequestsResult) {
+    setRequests(data.items);
+    setTotal(data.total);
+    pageRef.current = data.page;
+    setPage(data.page);
+  }
+
+  function reload(nextStatus = status, nextPage = pageRef.current) {
     startTransition(async () => {
       const data = await adminGetSeminarRequests({
         status: nextStatus,
         search: search || undefined,
+        page: nextPage,
       });
-      setRequests(data);
+      applyResult(data);
     });
   }
 
@@ -63,13 +91,27 @@ export function AdminSeminarsClient({
         const data = await adminGetSeminarRequests({
           status,
           search: search || undefined,
+          page: pageRef.current,
         });
-        setRequests(data);
+        applyResult(data);
       } catch {
         toast.error("오류가 발생했습니다.");
       }
     });
   }
+
+  // 상세 편집 중(저장하지 않은 변경 존재)에는 자동 새로고침을 멈춰
+  // 관리자가 읽거나 작성 중인 내용이 사라지지 않게 한다.
+  const isEditingSelected =
+    !!selected &&
+    (memo !== (selected.adminMemo ?? "") ||
+      scheduledAt !== (selected.scheduledAt ? selected.scheduledAt.slice(0, 16) : "") ||
+      meetingUrl !== (selected.meetingUrl ?? "") ||
+      editStatus !== selected.status);
+
+  // 목록은 10분마다 자동 새로고침. 선택한 신청은 selectedId로 유지되고
+  // 편집 상태도 별도 상태라 읽는 도중에도 화면이 튀지 않는다.
+  useAutoRefresh(() => reload(), { paused: isEditingSelected });
 
   return (
     <div className="space-y-4">
@@ -80,7 +122,7 @@ export function AdminSeminarsClient({
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && reload()}
+            onKeyDown={(e) => e.key === "Enter" && reload(status, 1)}
             placeholder="이름·학원·연락처 검색..."
             className="w-full h-9 pl-9 pr-3 rounded-xl border border-gray-200 bg-white text-[13px] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none"
           />
@@ -91,7 +133,7 @@ export function AdminSeminarsClient({
               key={s.value}
               onClick={() => {
                 setStatus(s.value);
-                reload(s.value);
+                reload(s.value, 1);
               }}
               className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
                 status === s.value
@@ -135,6 +177,12 @@ export function AdminSeminarsClient({
               ))}
             </ul>
           )}
+          <AdminPagination
+            page={page}
+            totalPages={totalPages}
+            disabled={isPending}
+            onChange={(p) => reload(status, p)}
+          />
         </div>
 
         {/* Detail editor */}

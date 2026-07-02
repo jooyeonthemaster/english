@@ -35,42 +35,126 @@ export interface AdminHelpPostListItem {
   createdAt: string;
 }
 
+const HELP_CENTER_PAGE_SIZE = 50;
+
+export interface AdminHelpPostsResult {
+  items: AdminHelpPostListItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+function normalizeHelpPage(page?: number): number {
+  if (!Number.isFinite(page) || (page ?? 0) < 1) return 1;
+  return Math.floor(page as number);
+}
+
 export async function adminGetHelpPosts(params: {
   board: "FEEDBACK" | "SUPPORT";
   status?: string;
   search?: string;
-}): Promise<AdminHelpPostListItem[]> {
+  page?: number;
+}): Promise<AdminHelpPostsResult> {
   await requireAdminAuth();
 
+  const page = normalizeHelpPage(params.page);
+  const pageSize = HELP_CENTER_PAGE_SIZE;
+
   const where: Record<string, unknown> = { board: params.board };
-  if (params.status && params.status !== "ALL") where.status = params.status;
+  // "PENDING" = 미답변(접수 + 처리중) — 대시보드 "미답변 문의" 진입용 묶음 필터
+  if (params.status === "PENDING") {
+    where.status = { in: ["OPEN", "IN_PROGRESS"] };
+  } else if (params.status && params.status !== "ALL") {
+    where.status = params.status;
+  }
   if (params.search) where.title = { contains: params.search, mode: "insensitive" };
 
-  const posts = await prisma.helpPost.findMany({
-    where,
-    orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
-    include: {
-      _count: { select: { replies: true } },
-      replies: { where: { isOfficial: true }, select: { id: true }, take: 1 },
-    },
-    take: 500,
-  });
+  const [posts, total] = await Promise.all([
+    prisma.helpPost.findMany({
+      where,
+      orderBy: [{ isPinned: "desc" }, { createdAt: "desc" }],
+      include: {
+        _count: { select: { replies: true } },
+        replies: { where: { isOfficial: true }, select: { id: true }, take: 1 },
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+    prisma.helpPost.count({ where }),
+  ]);
 
-  return posts.map((p) => ({
-    id: p.id,
-    board: p.board,
-    category: p.category,
-    title: p.title,
-    status: p.status,
-    isPrivate: p.isPrivate,
-    isPinned: p.isPinned,
-    authorName: p.authorName,
-    academyId: p.academyId,
-    replyCount: p._count.replies,
-    upvoteCount: p.upvoteCount,
-    hasOfficialAnswer: p.replies.length > 0,
-    createdAt: p.createdAt.toISOString(),
-  }));
+  return {
+    items: posts.map((p) => ({
+      id: p.id,
+      board: p.board,
+      category: p.category,
+      title: p.title,
+      status: p.status,
+      isPrivate: p.isPrivate,
+      isPinned: p.isPinned,
+      authorName: p.authorName,
+      academyId: p.academyId,
+      replyCount: p._count.replies,
+      upvoteCount: p.upvoteCount,
+      hasOfficialAnswer: p.replies.length > 0,
+      createdAt: p.createdAt.toISOString(),
+    })),
+    total,
+    page,
+    pageSize,
+  };
+}
+
+export interface AdminSupportDashboardItem {
+  id: string;
+  title: string;
+  category: string;
+  status: string;
+  isPrivate: boolean;
+  authorName: string;
+  hasOfficialAnswer: boolean;
+  createdAt: string;
+}
+
+export interface AdminSupportDashboardResult {
+  recent: AdminSupportDashboardItem[];
+  /** 답변이 필요한(접수/처리중) 문의 수 */
+  pendingCount: number;
+}
+
+/** 대시보드용: 최근 고객지원 문의 + 미답변 건수 */
+export async function adminGetRecentSupportPosts(
+  limit = 5,
+): Promise<AdminSupportDashboardResult> {
+  await requireAdminAuth();
+
+  const [posts, pendingCount] = await Promise.all([
+    prisma.helpPost.findMany({
+      where: { board: "SUPPORT" },
+      orderBy: { createdAt: "desc" },
+      take: limit,
+      include: {
+        replies: { where: { isOfficial: true }, select: { id: true }, take: 1 },
+      },
+    }),
+    prisma.helpPost.count({
+      where: { board: "SUPPORT", status: { in: ["OPEN", "IN_PROGRESS"] } },
+    }),
+  ]);
+
+  return {
+    recent: posts.map((p) => ({
+      id: p.id,
+      title: p.title,
+      category: p.category,
+      status: p.status,
+      isPrivate: p.isPrivate,
+      authorName: p.authorName,
+      hasOfficialAnswer: p.replies.length > 0,
+      createdAt: p.createdAt.toISOString(),
+    })),
+    pendingCount,
+  };
 }
 
 export interface AdminHelpReplyView {
@@ -79,6 +163,7 @@ export interface AdminHelpReplyView {
   authorName: string;
   content: string;
   isOfficial: boolean;
+  attachments: { name: string; url: string; size?: number; type?: string }[];
   createdAt: string;
 }
 
@@ -132,6 +217,9 @@ export async function adminGetHelpPost(postId: string): Promise<AdminHelpPostDet
       authorName: r.authorName,
       content: r.content,
       isOfficial: r.isOfficial,
+      attachments: Array.isArray(r.attachments)
+        ? (r.attachments as { name: string; url: string; size?: number; type?: string }[])
+        : [],
       createdAt: r.createdAt.toISOString(),
     })),
     createdAt: post.createdAt.toISOString(),
@@ -143,9 +231,12 @@ export async function adminReplyHelpPost(
   postId: string,
   content: string,
   newStatus?: string,
+  attachments?: { name: string; url: string; size?: number; type?: string }[],
 ) {
   const admin = await requireAdminAuth();
-  if (!content.trim()) throw new Error("답변 내용을 입력하세요.");
+  if (!content.trim() && !attachments?.length) {
+    throw new Error("답변 내용 또는 이미지를 입력하세요.");
+  }
 
   const post = await prisma.helpPost.findUnique({
     where: { id: postId },
@@ -162,6 +253,7 @@ export async function adminReplyHelpPost(
         authorName: "운영팀",
         content,
         isOfficial: true,
+        attachments: attachments?.length ? attachments : undefined,
       },
     });
     if (newStatus) {
@@ -260,11 +352,22 @@ export interface AdminSeminarRequestView {
   createdAt: string;
 }
 
+export interface AdminSeminarRequestsResult {
+  items: AdminSeminarRequestView[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export async function adminGetSeminarRequests(params?: {
   status?: string;
   search?: string;
-}): Promise<AdminSeminarRequestView[]> {
+  page?: number;
+}): Promise<AdminSeminarRequestsResult> {
   await requireAdminAuth();
+
+  const page = normalizeHelpPage(params?.page);
+  const pageSize = HELP_CENTER_PAGE_SIZE;
 
   const where: Record<string, unknown> = {};
   if (params?.status && params.status !== "ALL") where.status = params.status;
@@ -276,29 +379,38 @@ export async function adminGetSeminarRequests(params?: {
     ];
   }
 
-  const rows = await prisma.seminarRequest.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    take: 500,
-  });
+  const [rows, total] = await Promise.all([
+    prisma.seminarRequest.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+    prisma.seminarRequest.count({ where }),
+  ]);
 
-  return rows.map((r) => ({
-    id: r.id,
-    academyId: r.academyId,
-    applicantName: r.applicantName,
-    phone: r.phone,
-    email: r.email,
-    academyName: r.academyName,
-    preferredChannel: r.preferredChannel,
-    preferredTimes: r.preferredTimes,
-    topic: r.topic,
-    message: r.message,
-    status: r.status,
-    adminMemo: r.adminMemo,
-    scheduledAt: r.scheduledAt?.toISOString() ?? null,
-    meetingUrl: r.meetingUrl,
-    createdAt: r.createdAt.toISOString(),
-  }));
+  return {
+    items: rows.map((r) => ({
+      id: r.id,
+      academyId: r.academyId,
+      applicantName: r.applicantName,
+      phone: r.phone,
+      email: r.email,
+      academyName: r.academyName,
+      preferredChannel: r.preferredChannel,
+      preferredTimes: r.preferredTimes,
+      topic: r.topic,
+      message: r.message,
+      status: r.status,
+      adminMemo: r.adminMemo,
+      scheduledAt: r.scheduledAt?.toISOString() ?? null,
+      meetingUrl: r.meetingUrl,
+      createdAt: r.createdAt.toISOString(),
+    })),
+    total,
+    page,
+    pageSize,
+  };
 }
 
 export async function adminUpdateSeminarRequest(

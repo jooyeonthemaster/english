@@ -27,6 +27,7 @@ import type {
   ReferralOverviewRow,
   ReferralStatus,
   HeldReferralRow,
+  HeldReferralsResult,
   MissionCatalogRow,
 } from "@/actions/admin/referrals";
 import {
@@ -36,11 +37,14 @@ import {
   toggleMission,
   upsertMission,
   sendAnnouncement,
+  getReferralOverview,
+  getHeldReferrals,
 } from "@/actions/admin/referrals";
+import { AdminPagination } from "@/components/admin/admin-pagination";
 
 interface Props {
   overview: ReferralOverview;
-  held: HeldReferralRow[];
+  held: HeldReferralsResult;
   missions: MissionCatalogRow[];
 }
 
@@ -112,8 +116,22 @@ function StatCard({ label, value, accent }: { label: string; value: number; acce
   );
 }
 
-export function ReferralManagementClient({ overview, held, missions }: Props) {
+export function ReferralManagementClient({
+  overview: initialOverview,
+  held: initialHeld,
+  missions,
+}: Props) {
   const [tab, setTab] = useState<TabKey>("overview");
+  const [overview, setOverview] = useState(initialOverview);
+  const [held, setHeld] = useState(initialHeld);
+  const [pending, startTransition] = useTransition();
+
+  function loadOverviewPage(page: number) {
+    startTransition(async () => setOverview(await getReferralOverview({ page })));
+  }
+  function loadHeldPage(page: number) {
+    startTransition(async () => setHeld(await getHeldReferrals({ page })));
+  }
 
   return (
     <div className="space-y-4">
@@ -121,7 +139,7 @@ export function ReferralManagementClient({ overview, held, missions }: Props) {
       <div className="inline-flex items-center gap-1 bg-gray-100 rounded-xl p-1">
         {TABS.map((t) => {
           const active = tab === t.key;
-          const count = t.key === "held" ? held.length : undefined;
+          const count = t.key === "held" ? held.total : undefined;
           return (
             <button
               key={t.key}
@@ -144,8 +162,12 @@ export function ReferralManagementClient({ overview, held, missions }: Props) {
         })}
       </div>
 
-      {tab === "overview" && <OverviewTab overview={overview} />}
-      {tab === "held" && <HeldTab held={held} />}
+      {tab === "overview" && (
+        <OverviewTab overview={overview} pending={pending} onPage={loadOverviewPage} />
+      )}
+      {tab === "held" && (
+        <HeldTab held={held} pending={pending} onPage={loadHeldPage} />
+      )}
       {tab === "missions" && <MissionsTab missions={missions} />}
       {tab === "announce" && <AnnounceTab />}
     </div>
@@ -154,8 +176,17 @@ export function ReferralManagementClient({ overview, held, missions }: Props) {
 
 // ─── Overview tab ─────────────────────────────────────────────────────────
 
-function OverviewTab({ overview }: { overview: ReferralOverview }) {
-  const { stats, rows } = overview;
+function OverviewTab({
+  overview,
+  pending,
+  onPage,
+}: {
+  overview: ReferralOverview;
+  pending: boolean;
+  onPage: (page: number) => void;
+}) {
+  const { stats, rows, total, page, pageSize } = overview;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
@@ -169,8 +200,11 @@ function OverviewTab({ overview }: { overview: ReferralOverview }) {
 
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
         <div className="px-5 py-3 border-b border-gray-50 text-[12px] text-gray-500">
-          최근 추천{" "}
-          <span className="font-semibold text-gray-800 tabular-nums">{rows.length}</span>건
+          총{" "}
+          <span className="font-semibold text-gray-800 tabular-nums">
+            {total.toLocaleString("ko-KR")}
+          </span>
+          건 · {Math.min(page, totalPages)}/{totalPages} 페이지
         </div>
         {rows.length === 0 ? (
           <div className="px-5 py-12 text-center text-[13px] text-gray-400">
@@ -198,6 +232,12 @@ function OverviewTab({ overview }: { overview: ReferralOverview }) {
             </Table>
           </div>
         )}
+        <AdminPagination
+          page={page}
+          totalPages={totalPages}
+          disabled={pending}
+          onChange={onPage}
+        />
       </div>
     </div>
   );
@@ -250,8 +290,19 @@ function OverviewRow({ row }: { row: ReferralOverviewRow }) {
 
 // ─── Held review tab ────────────────────────────────────────────────────────
 
-function HeldTab({ held }: { held: HeldReferralRow[] }) {
-  if (held.length === 0) {
+function HeldTab({
+  held,
+  pending,
+  onPage,
+}: {
+  held: HeldReferralsResult;
+  pending: boolean;
+  onPage: (page: number) => void;
+}) {
+  const { rows, total, page, pageSize } = held;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+  if (rows.length === 0) {
     return (
       <div className="bg-white rounded-xl border border-gray-100 px-5 py-16 text-center">
         <ShieldAlert className="size-7 text-gray-300 mx-auto mb-2" strokeWidth={1.6} />
@@ -261,9 +312,21 @@ function HeldTab({ held }: { held: HeldReferralRow[] }) {
   }
   return (
     <div className="space-y-3">
-      {held.map((row) => (
-        <HeldRow key={row.id} row={row} />
-      ))}
+      <div className="space-y-3">
+        {rows.map((row) => (
+          <HeldRow key={row.id} row={row} />
+        ))}
+      </div>
+      {totalPages > 1 && (
+        <div className="rounded-xl border border-gray-100 bg-white">
+          <AdminPagination
+            page={page}
+            totalPages={totalPages}
+            disabled={pending}
+            onChange={onPage}
+          />
+        </div>
+      )}
     </div>
   );
 }

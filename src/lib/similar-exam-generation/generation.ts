@@ -5,6 +5,8 @@ import {
   runQuestionGenerationWithEmptyRetry,
   type QuestionGenerationUsageEvent,
 } from "@/app/api/ai/generate-questions-auto/_lib/run-question-generation";
+import { recordAiCost } from "@/lib/platform-api-costs";
+import { GEMINI_MODEL_ID } from "@/lib/ai";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 
 import {
@@ -259,6 +261,7 @@ function toGroups(generated: GeneratedSlotQuestion[]): GeneratedPatternGroup[] {
 export async function generateEligibleQuestionGroups(args: {
   profile: ExamPatternProfile;
   passages: SelectedPassageForGeneration[];
+  academyId?: string | null;
 }) {
   const { items, eligibleSlots, skippedByReason, maxGeneratedQuestions } = buildItems(args);
   const groups = groupForGeneration(items);
@@ -292,6 +295,18 @@ export async function generateEligibleQuestionGroups(args: {
 
     llmAttempts += result.attempts;
     usageEvents.push(...result.usageEvents);
+    // Record cost for EACH underlying LLM call (multi-stage: retries + relaxed
+    // fallback each emit a usage event) so all tokens are captured.
+    for (const event of result.usageEvents) {
+      await recordAiCost({
+        sourceType: "SIMILAR_EXAM_AI",
+        sourceDetail: "generation",
+        academyId: args.academyId,
+        model: event.modelId || GEMINI_MODEL_ID,
+        operationType: "SIMILAR_EXAM_GEN",
+        usage: event.usage,
+      });
+    }
     if (result.relaxedFallback) relaxedFallbackGroups += 1;
 
     // Bind generated questions back to their source slots (by subType, in order).

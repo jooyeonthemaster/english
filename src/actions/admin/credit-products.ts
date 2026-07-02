@@ -11,6 +11,8 @@ const creditProductUpdateSchema = z
   .object({
     name: z.string().trim().min(1, "상품명을 입력해주세요.").max(60),
     basePrice: z.coerce.number().int().min(100).max(100_000_000),
+    // Credit validity in days. 0/blank = 무기한 (stored as null).
+    expiryDays: z.coerce.number().int().min(0).max(3650).default(0),
     discountRate: z.coerce.number().int().min(0).max(99).default(0),
     promotionName: z.string().trim().max(60).optional().nullable(),
     promotionStartsAt: z.string().trim().optional().nullable(),
@@ -84,6 +86,7 @@ export async function updateCreditTopUpProduct(
       data: {
         name: parsed.data.name,
         basePrice: parsed.data.basePrice,
+        expiryDays: parsed.data.expiryDays > 0 ? parsed.data.expiryDays : null,
         discountRate: parsed.data.discountRate,
         promotionName: parsed.data.promotionName?.trim() || null,
         promotionStartsAt:
@@ -100,7 +103,7 @@ export async function updateCreditTopUpProduct(
       },
     });
 
-    revalidatePath("/admin/credits");
+    revalidatePath("/admin/credit-plans");
     revalidatePath("/director/credits");
     revalidatePath("/credits/products");
     revalidatePath("/refund-policy");

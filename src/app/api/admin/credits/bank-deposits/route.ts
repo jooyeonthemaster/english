@@ -14,8 +14,13 @@ export async function GET(request: NextRequest) {
   }
 
   const status = request.nextUrl.searchParams.get("status");
+  // "ACTION" = 관리자 처리가 필요한 미매칭 계열(미매칭 + 확인 필요)
   const where =
-    status && status !== "ALL" ? { status } : {};
+    status === "ACTION"
+      ? { status: { in: ["UNMATCHED", "AMBIGUOUS"] } }
+      : status && status !== "ALL"
+        ? { status }
+        : {};
 
   const [notifications, pendingOrders, statusCounts] = await Promise.all([
     prisma.bankDepositNotification.findMany({
@@ -53,6 +58,8 @@ export async function GET(request: NextRequest) {
 
   const counts: Record<string, number> = {};
   for (const row of statusCounts) counts[row.status] = row._count._all;
+  // 처리 필요(미매칭 + 확인 필요) 합산 카운트
+  counts.ACTION = (counts.UNMATCHED ?? 0) + (counts.AMBIGUOUS ?? 0);
 
   return NextResponse.json({
     notifications: notifications.map((n) => ({

@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import {
   CheckCircle2,
+  Clock,
   PackageX,
   Repeat2,
   ShieldCheck,
@@ -240,6 +241,12 @@ export default async function CreditProductsPage() {
                     <p className="mt-1 text-[12px] font-medium text-slate-500">
                       {product.creditAmount.toLocaleString("ko-KR")}C 제공
                     </p>
+                    <p className="mt-0.5 text-[12px] font-medium text-blue-600">
+                      소멸시효{" "}
+                      {product.expiryDays && product.expiryDays > 0
+                        ? `결제일로부터 ${product.expiryDays.toLocaleString("ko-KR")}일`
+                        : "무기한"}
+                    </p>
                   </div>
                   {product.isPromotionActive && (
                     <span className="shrink-0 rounded-md bg-emerald-50 px-2 py-1 text-[11px] font-bold text-emerald-700">
@@ -285,6 +292,83 @@ export default async function CreditProductsPage() {
           </div>
         </section>
 
+        <section className="mt-5 rounded-2xl border border-amber-200 bg-amber-50/50 p-5 shadow-sm sm:p-6">
+          <div className="flex items-center gap-2">
+            <Clock className="size-4 text-amber-600" strokeWidth={2} />
+            <h2 className="text-[20px] font-black tracking-tight text-slate-950">
+              크레딧 소멸시효(유효기간) 안내
+            </h2>
+          </div>
+          <p className="mt-2 max-w-3xl text-[13px] leading-6 text-slate-600">
+            크레딧에는 상품별 소멸시효가 있습니다. <b>결제일(지급일)을 기준</b>으로
+            아래 기간이 지나면 남은 크레딧이 소멸됩니다. 소멸시효는 구매·지급할
+            때마다 <b>남은 기간에 새 유효기간이 더해져 연장</b>되며, 줄어들지
+            않습니다.
+          </p>
+
+          {products.length > 0 && (
+            <div className="mt-4 overflow-hidden rounded-xl border border-amber-100 bg-white">
+              <table className="w-full text-left text-[13px]">
+                <thead>
+                  <tr className="border-b border-amber-100 bg-amber-50/60 text-[12px] font-semibold text-slate-500">
+                    <th className="px-4 py-2.5">상품</th>
+                    <th className="px-4 py-2.5 text-right">크레딧</th>
+                    <th className="px-4 py-2.5 text-right">소멸시효</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-amber-50">
+                  {products.map((product) => (
+                    <tr key={product.id}>
+                      <td className="px-4 py-2.5 font-semibold text-slate-800">
+                        {product.name}
+                      </td>
+                      <td className="px-4 py-2.5 text-right tabular-nums text-slate-600">
+                        {product.creditAmount.toLocaleString("ko-KR")}C
+                      </td>
+                      <td className="px-4 py-2.5 text-right font-semibold tabular-nums text-amber-700">
+                        {product.expiryDays && product.expiryDays > 0
+                          ? `결제일로부터 ${product.expiryDays.toLocaleString("ko-KR")}일`
+                          : "무기한"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          <ul className="mt-4 space-y-2 text-[13px] leading-6 text-slate-600">
+            <ExpiryRule>
+              <b>연장 규칙</b> — 크레딧을 구매하거나 지급받으면 소멸 예정일이 "남은
+              기간 + 새 유효기간"으로 갱신됩니다. 예: 소멸까지 15일 남은 상태에서
+              스탠다드(90일)를 구매하면 소멸시효가 105일이 됩니다.
+            </ExpiryRule>
+            <ExpiryRule>
+              <b>프로모션·이벤트 크레딧</b> — 별도의 유효기간을 새로 부여하지 않고,
+              보유 중인 기존 소멸 예정일을 그대로 따릅니다.
+            </ExpiryRule>
+            <ExpiryRule>
+              <b>사용과 무관</b> — 크레딧을 사용(차감)해도 소멸 예정일은 바뀌지
+              않습니다. 소멸 예정일은 구매·지급으로만 갱신됩니다.
+            </ExpiryRule>
+            <ExpiryRule>
+              <b>만료 시</b> — 소멸 예정일이 지나면 남은 크레딧이 전액 소멸되며,
+              소멸된 크레딧은 복구·환불되지 않습니다. (계산은 24시간 기준)
+            </ExpiryRule>
+          </ul>
+          <p className="mt-3 text-[12px] text-slate-500">
+            현재 보유 중인 크레딧의 소멸 예정일은{" "}
+            <Link href="/director/credits" className="font-semibold text-blue-700 underline-offset-2 hover:underline">
+              크레딧 관리
+            </Link>{" "}
+            화면에서 확인할 수 있습니다. 자세한 기준은{" "}
+            <Link href="/terms" className="font-semibold text-blue-700 underline-offset-2 hover:underline">
+              이용약관
+            </Link>
+            을 참고해 주세요.
+          </p>
+        </section>
+
         <section className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
             <h2 className="text-[20px] font-black tracking-tight text-slate-950">
@@ -324,6 +408,11 @@ export default async function CreditProductsPage() {
               <CheckItem>
                 큰 단위로 구매하면 1C당 구매 단가는 낮아질 수 있지만, 기능별
                 차감 크레딧은 동일하게 적용됩니다.
+              </CheckItem>
+              <CheckItem>
+                크레딧에는 상품별 소멸시효(유효기간)가 있으며, 구매·지급 시
+                남은 기간에 더해 연장됩니다. 소멸 예정일이 지나면 잔여 크레딧은
+                소멸되며 환불되지 않습니다.
               </CheckItem>
               <CheckItem>
                 배송이 없는 디지털 이용권이므로 배송지 입력, 배송비, 배송조회가
@@ -391,6 +480,15 @@ function CheckItem({ children }: { children: ReactNode }) {
         className="mt-0.5 size-4 shrink-0 text-blue-600"
         strokeWidth={2}
       />
+      <span>{children}</span>
+    </li>
+  );
+}
+
+function ExpiryRule({ children }: { children: ReactNode }) {
+  return (
+    <li className="flex gap-2">
+      <Clock className="mt-0.5 size-4 shrink-0 text-amber-600" strokeWidth={2} />
       <span>{children}</span>
     </li>
   );

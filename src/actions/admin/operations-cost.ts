@@ -298,22 +298,43 @@ export async function getOperationsCostDashboard(
   const academyNames = academyIds.length
     ? await prisma.academy.findMany({
         where: { id: { in: academyIds } },
-        select: { id: true, name: true },
+        select: {
+          id: true,
+          name: true,
+          // 원가는 학원 단위 집계라 회원별 보기에선 학원의 원장(DIRECTOR)을
+          // 대표 회원으로 매핑해 표시한다.
+          staff: {
+            where: { role: "DIRECTOR" },
+            select: { name: true, email: true },
+            orderBy: { createdAt: "asc" },
+            take: 1,
+          },
+        },
       })
     : [];
   const academyNameMap = new Map(academyNames.map((academy) => [academy.id, academy.name]));
+  const academyDirectorMap = new Map(
+    academyNames.map((academy) => [academy.id, academy.staff[0] ?? null]),
+  );
   const academyUsage: AcademyUsageSummary[] = Array.from(academyUsageMap.values())
-    .map((entry) => ({
-      academyId: entry.academyId,
-      name: entry.academyId
-        ? academyNameMap.get(entry.academyId) ?? "삭제된 학원"
-        : "미지정",
-      calls: entry.calls,
-      inputTokens: entry.inputTokens,
-      outputTokens: entry.outputTokens,
-      costUsd: entry.costUsd,
-      costKrw: entry.costKrw,
-    }))
+    .map((entry) => {
+      const director = entry.academyId
+        ? academyDirectorMap.get(entry.academyId) ?? null
+        : null;
+      return {
+        academyId: entry.academyId,
+        name: entry.academyId
+          ? academyNameMap.get(entry.academyId) ?? "삭제된 학원"
+          : "미지정",
+        directorName: director?.name ?? null,
+        directorEmail: director?.email ?? null,
+        calls: entry.calls,
+        inputTokens: entry.inputTokens,
+        outputTokens: entry.outputTokens,
+        costUsd: entry.costUsd,
+        costKrw: entry.costKrw,
+      };
+    })
     .sort((a, b) => b.costKrw - a.costKrw || b.calls - a.calls);
   const untrackedWorkbenchCredits = creditTransactions
     .filter((tx) => tx.type === "CONSUMPTION" && tx.referenceType === "WORKBENCH_AI_JOB")

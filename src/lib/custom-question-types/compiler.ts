@@ -1,7 +1,8 @@
 import { generateObject, NoObjectGeneratedError } from "ai";
 import { z } from "zod";
 
-import { model as geminiModel } from "@/lib/ai";
+import { model as geminiModel, GEMINI_MODEL_ID } from "@/lib/ai";
+import { recordAiCost } from "@/lib/platform-api-costs";
 
 import type { QuestionAnalysis } from "./analysis-input";
 import type { FormatAnalysisResult } from "./format-analysis";
@@ -291,13 +292,24 @@ function buildCompilerPrompt(analysis: QuestionAnalysis): string {
   ].join("\n");
 }
 
-async function compileWithLlm(analysis: QuestionAnalysis): Promise<CompileCustomTypeResult> {
+async function compileWithLlm(
+  analysis: QuestionAnalysis,
+  academyId?: string | null,
+): Promise<CompileCustomTypeResult> {
   const result = await generateObject({
     model: geminiModel,
     schema: compilerOutputSchema,
     maxOutputTokens: LLM_COMPILE_MAX_TOKENS,
     abortSignal: AbortSignal.timeout(LLM_COMPILE_TIMEOUT_MS),
     messages: [{ role: "user", content: [{ type: "text", text: buildCompilerPrompt(analysis) }] }],
+  });
+  await recordAiCost({
+    sourceType: "CUSTOM_QTYPE_AI",
+    sourceDetail: "compile",
+    academyId,
+    model: GEMINI_MODEL_ID,
+    operationType: "CUSTOM_QTYPE_GEN",
+    usage: result.usage,
   });
   const out = result.object;
   const cls = analysis.classification;
@@ -378,9 +390,10 @@ function applyFormatToSpec(
 export async function compileCustomType(
   analysis: QuestionAnalysis,
   formatResult?: FormatAnalysisResult | null,
+  academyId?: string | null,
 ): Promise<CompileCustomTypeResult> {
   try {
-    const compiled = await compileWithLlm(analysis);
+    const compiled = await compileWithLlm(analysis, academyId);
     return { ...compiled, spec: applyFormatToSpec(compiled.spec, formatResult) };
   } catch (error) {
     let detail = error instanceof Error ? error.message : String(error);
@@ -491,6 +504,7 @@ export async function reviseCustomTypeDetailed(args: {
   currentSpec: CompiledCustomType;
   typeName: string;
   instruction: string;
+  academyId?: string | null;
 }): Promise<ReviseCustomTypeResult> {
   // ── 1) 결정 해석기: 형식 명령은 LLM 없이 즉시 반영 ──
   if (args.currentSpec.format) {
@@ -515,6 +529,14 @@ export async function reviseCustomTypeDetailed(args: {
         ],
       },
     ],
+  });
+  await recordAiCost({
+    sourceType: "CUSTOM_QTYPE_AI",
+    sourceDetail: "revise",
+    academyId: args.academyId,
+    model: GEMINI_MODEL_ID,
+    operationType: "CUSTOM_QTYPE_GEN",
+    usage: result.usage,
   });
   const out = result.object;
   let next = compiledCustomTypeSchema.parse({
@@ -548,6 +570,7 @@ export async function reviseCustomType(args: {
   currentSpec: CompiledCustomType;
   typeName: string;
   instruction: string;
+  academyId?: string | null;
 }): Promise<CompiledCustomType> {
   return (await reviseCustomTypeDetailed(args)).spec;
 }

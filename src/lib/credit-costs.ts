@@ -52,10 +52,12 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
   WEBTOON_IMAGE: "웹툰 생성",
 };
 
-// Top-up pricing tiers (KRW per credit pack)
+// Top-up pricing tiers (KRW per credit pack). expiryDays = credit validity from
+// purchase; a higher tier both grants more credits and extends the balance-wide
+// expiry by (remaining + expiryDays).
 export const TOP_UP_PACKS = [
-  { credits: 150, price: 19800, label: "스타터", perCredit: 132 },
-  { credits: 450, price: 49500, label: "스탠다드", perCredit: 110 },
-  { credits: 1500, price: 132000, label: "프리미엄", perCredit: 88 },
-  { credits: 4500, price: 330000, label: "엔터프라이즈", perCredit: 73 },
+  { credits: 150, price: 19800, label: "스타터", perCredit: 132, expiryDays: 30 },
+  { credits: 450, price: 49500, label: "스탠다드", perCredit: 110, expiryDays: 90 },
+  { credits: 1500, price: 132000, label: "프리미엄", perCredit: 88, expiryDays: 180 },
+  { credits: 4500, price: 330000, label: "엔터프라이즈", perCredit: 73, expiryDays: 365 },
 ] as const;

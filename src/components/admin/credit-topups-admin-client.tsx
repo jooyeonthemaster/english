@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { AdminPagination } from "@/components/admin/admin-pagination";
 import type { ReactNode } from "react";
 import {
   AlertTriangle,
   Banknote,
   CheckCircle2,
+  ChevronDown,
   Clock3,
   Coins,
   CreditCard,
   ExternalLink,
   Percent,
+  Tag,
   RefreshCw,
   Radio,
   RotateCcw,
@@ -25,6 +28,12 @@ import {
 } from "@/actions/admin/credit-products";
 import { cn } from "@/lib/utils";
 import { SaveButton } from "@/components/ui/save-button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type AdminTopUp = {
   id: string;
@@ -125,6 +134,7 @@ type AdminCreditProduct = {
   discountRate: number;
   discountAmount: number;
   perCredit: number;
+  expiryDays: number | null;
   estimatedAutoQuestionCount: number;
   perAutoQuestion: number;
   promotionName: string | null;
@@ -142,6 +152,7 @@ type AdminCreditProduct = {
 type ProductFormState = {
   name: string;
   basePrice: string;
+  expiryDays: string;
   discountRate: string;
   promotionName: string;
   promotionStartsAt: string;
@@ -155,7 +166,11 @@ interface Props {
   initialTopUps: AdminTopUp[];
   initialStats: AdminTopUpStats;
   initialProducts: AdminCreditProduct[];
+  initialTopUpsTotal?: number;
+  hideTitle?: boolean;
 }
+
+const TOPUPS_PAGE_SIZE = 50;
 
 const STATUS_LABELS: Record<string, string> = {
   PENDING: "결제 대기",
@@ -314,6 +329,7 @@ function productToForm(product: AdminCreditProduct): ProductFormState {
   return {
     name: product.name,
     basePrice: String(product.basePrice),
+    expiryDays: product.expiryDays != null ? String(product.expiryDays) : "",
     discountRate: String(product.discountRate),
     promotionName: product.promotionName ?? "",
     promotionStartsAt: toDatetimeLocal(product.promotionStartsAt),
@@ -328,20 +344,43 @@ export function CreditTopUpsAdminClient({
   initialTopUps,
   initialStats,
   initialProducts,
+  initialTopUpsTotal,
+  hideTitle = false,
 }: Props) {
   const [topUps, setTopUps] = useState(initialTopUps);
   const [stats, setStats] = useState(initialStats);
   const [products, setProducts] = useState(initialProducts);
+  const [page, setPage] = useState(1);
+  const [totalTopUps, setTotalTopUps] = useState(
+    initialTopUpsTotal ?? initialTopUps.length,
+  );
+  const pageRef = useRef(1);
   const [productForms, setProductForms] = useState<Record<string, ProductFormState>>(
     () =>
       Object.fromEntries(
         initialProducts.map((product) => [product.id, productToForm(product)]),
       ),
   );
-  const [connected, setConnected] = useState(false);
-  const [selectedTopUpId, setSelectedTopUpId] = useState<string | null>(
-    initialTopUps[0]?.id ?? null,
+  // Product cards are collapsed by default; admins expand the ones they edit.
+  const [expandedProducts, setExpandedProducts] = useState<Set<string>>(
+    () => new Set(),
   );
+  const toggleProduct = (id: string) =>
+    setExpandedProducts((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  const allExpanded =
+    products.length > 0 && products.every((p) => expandedProducts.has(p.id));
+  const toggleAllProducts = () =>
+    setExpandedProducts(
+      allExpanded ? new Set() : new Set(products.map((p) => p.id)),
+    );
+  const [connected, setConnected] = useState(false);
+  // 상세는 모달이므로 기본은 닫힘(null). 행을 클릭해야 열린다.
+  const [selectedTopUpId, setSelectedTopUpId] = useState<string | null>(null);
   const [selectedTopUp, setSelectedTopUp] =
     useState<AdminTopUpDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -369,20 +408,21 @@ export function CreditTopUpsAdminClient({
         topUps: AdminTopUp[];
         stats: AdminTopUpStats;
       };
-      setTopUps(data.topUps);
       setStats(data.stats);
+      // 실시간 스트림은 최신 페이지(1페이지)를 볼 때만 목록을 갱신한다.
+      // 다른 페이지를 보는 중이면 화면이 튀지 않도록 목록 교체를 건너뛴다.
+      if (pageRef.current === 1) {
+        setTopUps(data.topUps);
+        setTotalTopUps((prev) => Math.max(prev, data.topUps.length));
+      }
       setConnected(true);
     });
     source.addEventListener("error", () => setConnected(false));
     return () => source.close();
   }, []);
 
-  useEffect(() => {
-    if (!selectedTopUpId && topUps[0]) {
-      setSelectedTopUpId(topUps[0].id);
-    }
-  }, [selectedTopUpId, topUps]);
-
+  // The payment detail opens as a modal on row click — no auto-selection, so
+  // it stays closed until an admin picks a row.
   useEffect(() => {
     if (!selectedTopUpId) {
       setSelectedTopUp(null);
@@ -421,22 +461,39 @@ export function CreditTopUpsAdminClient({
     }
   }
 
-  function refresh() {
+  function fetchTopUpsPage(targetPage: number, reloadDetail = false) {
     startTransition(async () => {
-      const res = await fetch("/api/admin/credits/top-ups?limit=50", {
-        cache: "no-store",
-      });
+      const res = await fetch(
+        `/api/admin/credits/top-ups?page=${targetPage}&pageSize=${TOPUPS_PAGE_SIZE}`,
+        { cache: "no-store" },
+      );
       if (!res.ok) return;
       const data = (await res.json()) as {
         topUps: AdminTopUp[];
         stats: AdminTopUpStats;
+        total: number;
+        page: number;
       };
       setTopUps(data.topUps);
       setStats(data.stats);
-      if (selectedTopUpId) {
+      setTotalTopUps(data.total);
+      pageRef.current = data.page;
+      setPage(data.page);
+      if (reloadDetail && selectedTopUpId) {
         await loadTopUpDetail(selectedTopUpId, false);
       }
     });
+  }
+
+  function refresh() {
+    fetchTopUpsPage(pageRef.current, true);
+  }
+
+  function goToPage(targetPage: number) {
+    const totalPages = Math.max(1, Math.ceil(totalTopUps / TOPUPS_PAGE_SIZE));
+    const next = Math.min(Math.max(targetPage, 1), totalPages);
+    if (next === pageRef.current) return;
+    fetchTopUpsPage(next);
   }
 
   async function syncSelectedTopUp() {
@@ -579,6 +636,7 @@ export function CreditTopUpsAdminClient({
     const payload: CreditProductUpdateData = {
       name: form.name,
       basePrice: Number(form.basePrice || 0),
+      expiryDays: Number(form.expiryDays || 0),
       discountRate: Number(form.discountRate || 0),
       promotionName: form.promotionName,
       promotionStartsAt: toIsoOrNull(form.promotionStartsAt),
@@ -621,13 +679,20 @@ export function CreditTopUpsAdminClient({
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-[22px] font-bold text-gray-950">크레딧 결제</h1>
-          <p className="mt-1 text-[13px] text-gray-500">
-            포트원 결제 기반 크레딧 충전 현황
-          </p>
-        </div>
+      <div
+        className={cn(
+          "flex flex-col gap-3 md:flex-row md:items-center",
+          hideTitle ? "md:justify-end" : "md:justify-between",
+        )}
+      >
+        {!hideTitle && (
+          <div>
+            <h1 className="text-[22px] font-bold text-gray-950">크레딧 결제</h1>
+            <p className="mt-1 text-[13px] text-gray-500">
+              포트원 결제 기반 크레딧 충전 현황
+            </p>
+          </div>
+        )}
         <div className="flex items-center gap-2">
           <span
             className={cn(
@@ -688,197 +753,284 @@ export function CreditTopUpsAdminClient({
       <ReviewReadinessStrip />
 
       <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
-        <div className="flex flex-col gap-1 border-b border-gray-100 px-5 py-4">
-          <div className="flex items-center gap-2">
-            <Coins className="size-4 text-blue-600" strokeWidth={2} />
-            <h2 className="text-[15px] font-semibold text-gray-900">
-              충전 상품 설정
-            </h2>
+        <div className="flex items-start justify-between gap-3 border-b border-gray-100 px-5 py-4">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <Coins className="size-4 text-blue-600" strokeWidth={2} />
+              <h2 className="text-[15px] font-semibold text-gray-900">
+                충전 상품 설정
+              </h2>
+            </div>
+            <p className="text-[12px] leading-5 text-gray-500">
+              정가와 프로모션 할인율은 고객 결제 화면, 상품 정보, 포트원 결제
+              사전등록 금액에 같은 값으로 반영됩니다.
+            </p>
           </div>
-          <p className="text-[12px] leading-5 text-gray-500">
-            정가와 프로모션 할인율은 고객 결제 화면, 상품 정보, 포트원 결제
-            사전등록 금액에 같은 값으로 반영됩니다.
-          </p>
+          {products.length > 0 && (
+            <button
+              type="button"
+              onClick={toggleAllProducts}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-[12px] font-medium text-gray-600 transition hover:bg-gray-50 hover:text-gray-900"
+            >
+              <ChevronDown
+                className={cn(
+                  "size-3.5 transition-transform",
+                  allExpanded && "rotate-180",
+                )}
+                strokeWidth={2}
+              />
+              {allExpanded ? "모두 접기" : "모두 펼치기"}
+            </button>
+          )}
         </div>
 
         <div className="grid gap-3 p-5 xl:grid-cols-2">
           {products.map((product) => {
             const form = productForms[product.id] ?? productToForm(product);
             const saving = savingProductId === product.id;
+            const expanded = expandedProducts.has(product.id);
 
             return (
               <div
                 key={product.id}
-                className="rounded-lg border border-gray-200 bg-gray-50 p-4"
+                className={cn(
+                  "self-start rounded-lg border bg-gray-50 transition",
+                  expanded ? "border-blue-200" : "border-gray-200",
+                )}
               >
-                <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-[14px] font-bold text-gray-900">
-                        {product.creditAmount.toLocaleString("ko-KR")}C
-                      </span>
-                      <span
-                        className={cn(
-                          "inline-flex h-6 items-center rounded-md px-2 text-[11px] font-semibold",
-                          product.isActive
-                            ? "bg-emerald-50 text-emerald-700"
-                            : "bg-gray-100 text-gray-500",
-                        )}
-                      >
-                        {product.isActive ? "노출 중" : "비활성"}
-                      </span>
-                      {product.isPromotionActive && (
-                        <span className="inline-flex h-6 items-center rounded-md bg-blue-50 px-2 text-[11px] font-semibold text-blue-700">
-                          {product.discountRate}% 할인 중
-                        </span>
+                {/* Header — click anywhere to expand/collapse */}
+                <div className="flex items-start justify-between gap-3 p-4">
+                  <button
+                    type="button"
+                    onClick={() => toggleProduct(product.id)}
+                    aria-expanded={expanded}
+                    className="flex flex-1 items-start gap-2.5 text-left outline-none"
+                  >
+                    <ChevronDown
+                      className={cn(
+                        "mt-1 size-4 shrink-0 text-gray-400 transition-transform",
+                        expanded && "rotate-180",
                       )}
+                      strokeWidth={2}
+                    />
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-[14px] font-bold text-gray-900">
+                          {product.name}
+                        </span>
+                        <span className="text-[12px] font-medium text-gray-400">
+                          {product.creditAmount.toLocaleString("ko-KR")}C
+                        </span>
+                        <span
+                          className={cn(
+                            "inline-flex h-6 items-center rounded-md px-2 text-[11px] font-semibold",
+                            product.isActive
+                              ? "bg-emerald-50 text-emerald-700"
+                              : "bg-gray-100 text-gray-500",
+                          )}
+                        >
+                          {product.isActive ? "노출 중" : "비활성"}
+                        </span>
+                        {product.isPromotionActive && (
+                          <span className="inline-flex h-6 items-center rounded-md bg-blue-50 px-2 text-[11px] font-semibold text-blue-700">
+                            {product.discountRate}% 할인 중
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-1 text-[12px] text-gray-500">
+                        현재 결제금액 {product.price.toLocaleString("ko-KR")}원 ·{" "}
+                        자동출제 약{" "}
+                        {product.estimatedAutoQuestionCount.toLocaleString("ko-KR")}
+                        문항 · 문항당{" "}
+                        {product.perAutoQuestion.toLocaleString("ko-KR")}원
+                      </p>
                     </div>
-                    <p className="mt-1 text-[12px] text-gray-500">
-                      현재 결제금액 {product.price.toLocaleString("ko-KR")}원 ·{" "}
-                      자동출제 약{" "}
-                      {product.estimatedAutoQuestionCount.toLocaleString("ko-KR")}
-                      문항 · 문항당{" "}
-                      {product.perAutoQuestion.toLocaleString("ko-KR")}원
-                    </p>
+                  </button>
+
+                  {expanded && (
+                    <SaveButton
+                      onClick={() => saveProduct(product)}
+                      saving={saving}
+                    />
+                  )}
+                </div>
+
+                {/* Collapsible body — 기본 설정 / 프로모션 설정 구분 */}
+                {expanded && (
+                  <div className="space-y-5 border-t border-gray-200/70 px-4 pb-4 pt-4">
+                    <section className="space-y-3">
+                      <ProductSectionLabel icon={Coins} title="기본 설정" />
+                      <div className="grid gap-3 md:grid-cols-2">
+                        <AdminField label="상품명">
+                          <input
+                            value={form.name}
+                            onChange={(event) =>
+                              updateProductField(
+                                product.id,
+                                "name",
+                                event.target.value,
+                              )
+                            }
+                            className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
+                          />
+                        </AdminField>
+                        <AdminField label="정가">
+                          <input
+                            type="number"
+                            min={100}
+                            step={1000}
+                            value={form.basePrice}
+                            onChange={(event) =>
+                              updateProductField(
+                                product.id,
+                                "basePrice",
+                                event.target.value,
+                              )
+                            }
+                            className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
+                          />
+                        </AdminField>
+                        <AdminField label="크레딧 소멸기한 (일)">
+                          <input
+                            type="number"
+                            min={0}
+                            step={1}
+                            placeholder="0 = 무기한"
+                            value={form.expiryDays}
+                            onChange={(event) =>
+                              updateProductField(
+                                product.id,
+                                "expiryDays",
+                                event.target.value,
+                              )
+                            }
+                            className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
+                          />
+                          <p className="mt-1 text-[11px] leading-4 text-gray-400">
+                            결제일 기준 유효일수. 구매 시 잔여 소멸기한에 더해
+                            갱신됩니다. 비우거나 0이면 무기한.
+                          </p>
+                        </AdminField>
+                        <AdminField label="정렬">
+                          <input
+                            type="number"
+                            min={0}
+                            value={form.sortOrder}
+                            onChange={(event) =>
+                              updateProductField(
+                                product.id,
+                                "sortOrder",
+                                event.target.value,
+                              )
+                            }
+                            className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
+                          />
+                        </AdminField>
+                        <AdminField label="노출 여부">
+                          <label className="flex h-9 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-[13px] font-medium text-gray-600">
+                            <input
+                              type="checkbox"
+                              checked={form.isActive}
+                              onChange={(event) =>
+                                updateProductField(
+                                  product.id,
+                                  "isActive",
+                                  event.target.checked,
+                                )
+                              }
+                              className="size-4 accent-blue-600"
+                            />
+                            결제 화면에 노출
+                          </label>
+                        </AdminField>
+                      </div>
+                      <AdminField label="상품 설명">
+                        <textarea
+                          value={form.description}
+                          onChange={(event) =>
+                            updateProductField(
+                              product.id,
+                              "description",
+                              event.target.value,
+                            )
+                          }
+                          className="min-h-16 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-[13px] outline-none transition focus:border-blue-300"
+                        />
+                      </AdminField>
+                    </section>
+
+                    <section className="space-y-3">
+                      <ProductSectionLabel icon={Tag} title="프로모션 설정" />
+                      <div className="grid gap-3 md:grid-cols-2">
+                        <AdminField label="할인율">
+                          <div className="relative">
+                            <input
+                              type="number"
+                              min={0}
+                              max={99}
+                              value={form.discountRate}
+                              onChange={(event) =>
+                                updateProductField(
+                                  product.id,
+                                  "discountRate",
+                                  event.target.value,
+                                )
+                              }
+                              className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 pr-8 text-[13px] outline-none transition focus:border-blue-300"
+                            />
+                            <Percent className="pointer-events-none absolute right-2.5 top-2.5 size-4 text-gray-400" />
+                          </div>
+                        </AdminField>
+                        <AdminField label="프로모션 이름">
+                          <input
+                            value={form.promotionName}
+                            onChange={(event) =>
+                              updateProductField(
+                                product.id,
+                                "promotionName",
+                                event.target.value,
+                              )
+                            }
+                            placeholder="예: 신학기 할인"
+                            className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
+                          />
+                        </AdminField>
+                        <AdminField label="시작일">
+                          <input
+                            type="datetime-local"
+                            value={form.promotionStartsAt}
+                            onChange={(event) =>
+                              updateProductField(
+                                product.id,
+                                "promotionStartsAt",
+                                event.target.value,
+                              )
+                            }
+                            className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
+                          />
+                        </AdminField>
+                        <AdminField label="종료일">
+                          <input
+                            type="datetime-local"
+                            value={form.promotionEndsAt}
+                            onChange={(event) =>
+                              updateProductField(
+                                product.id,
+                                "promotionEndsAt",
+                                event.target.value,
+                              )
+                            }
+                            className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
+                          />
+                        </AdminField>
+                      </div>
+                      <p className="text-[11px] leading-4 text-gray-400">
+                        할인율을 1% 이상 넣으면 시작일·종료일이 필수입니다. 프로모션
+                        기간에만 할인가가 결제 화면에 노출됩니다.
+                      </p>
+                    </section>
                   </div>
-
-                  <SaveButton onClick={() => saveProduct(product)} saving={saving} />
-                </div>
-
-                <div className="mt-4 grid gap-3 md:grid-cols-2">
-                  <AdminField label="상품명">
-                    <input
-                      value={form.name}
-                      onChange={(event) =>
-                        updateProductField(product.id, "name", event.target.value)
-                      }
-                      className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
-                    />
-                  </AdminField>
-                  <AdminField label="정가">
-                    <input
-                      type="number"
-                      min={100}
-                      step={1000}
-                      value={form.basePrice}
-                      onChange={(event) =>
-                        updateProductField(
-                          product.id,
-                          "basePrice",
-                          event.target.value,
-                        )
-                      }
-                      className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
-                    />
-                  </AdminField>
-                  <AdminField label="할인율">
-                    <div className="relative">
-                      <input
-                        type="number"
-                        min={0}
-                        max={99}
-                        value={form.discountRate}
-                        onChange={(event) =>
-                          updateProductField(
-                            product.id,
-                            "discountRate",
-                            event.target.value,
-                          )
-                        }
-                        className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 pr-8 text-[13px] outline-none transition focus:border-blue-300"
-                      />
-                      <Percent className="pointer-events-none absolute right-2.5 top-2.5 size-4 text-gray-400" />
-                    </div>
-                  </AdminField>
-                  <AdminField label="정렬">
-                    <input
-                      type="number"
-                      min={0}
-                      value={form.sortOrder}
-                      onChange={(event) =>
-                        updateProductField(
-                          product.id,
-                          "sortOrder",
-                          event.target.value,
-                        )
-                      }
-                      className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
-                    />
-                  </AdminField>
-                  <AdminField label="프로모션 이름">
-                    <input
-                      value={form.promotionName}
-                      onChange={(event) =>
-                        updateProductField(
-                          product.id,
-                          "promotionName",
-                          event.target.value,
-                        )
-                      }
-                      placeholder="예: 신학기 할인"
-                      className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
-                    />
-                  </AdminField>
-                  <AdminField label="노출 여부">
-                    <label className="flex h-9 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-[13px] font-medium text-gray-600">
-                      <input
-                        type="checkbox"
-                        checked={form.isActive}
-                        onChange={(event) =>
-                          updateProductField(
-                            product.id,
-                            "isActive",
-                            event.target.checked,
-                          )
-                        }
-                        className="size-4 accent-blue-600"
-                      />
-                      결제 화면에 노출
-                    </label>
-                  </AdminField>
-                  <AdminField label="시작일">
-                    <input
-                      type="datetime-local"
-                      value={form.promotionStartsAt}
-                      onChange={(event) =>
-                        updateProductField(
-                          product.id,
-                          "promotionStartsAt",
-                          event.target.value,
-                        )
-                      }
-                      className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
-                    />
-                  </AdminField>
-                  <AdminField label="종료일">
-                    <input
-                      type="datetime-local"
-                      value={form.promotionEndsAt}
-                      onChange={(event) =>
-                        updateProductField(
-                          product.id,
-                          "promotionEndsAt",
-                          event.target.value,
-                        )
-                      }
-                      className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
-                    />
-                  </AdminField>
-                </div>
-
-                <AdminField label="상품 설명" className="mt-3">
-                  <textarea
-                    value={form.description}
-                    onChange={(event) =>
-                      updateProductField(
-                        product.id,
-                        "description",
-                        event.target.value,
-                      )
-                    }
-                    className="min-h-16 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-[13px] outline-none transition focus:border-blue-300"
-                  />
-                </AdminField>
+                )}
               </div>
             );
           })}
@@ -906,7 +1058,6 @@ export function CreditTopUpsAdminClient({
         </div>
       )}
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
       <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
           <div>
@@ -914,7 +1065,10 @@ export function CreditTopUpsAdminClient({
               충전 내역
             </h2>
             <p className="mt-0.5 text-[12px] text-gray-400">
-              최근 {topUps.length.toLocaleString("ko-KR")}건
+              총 {totalTopUps.toLocaleString("ko-KR")}건 ·{" "}
+              {Math.min(page, Math.max(1, Math.ceil(totalTopUps / TOPUPS_PAGE_SIZE)))}/
+              {Math.max(1, Math.ceil(totalTopUps / TOPUPS_PAGE_SIZE))} 페이지 · 행을
+              클릭하면 결제 상세가 열립니다
             </p>
           </div>
         </div>
@@ -1008,31 +1162,54 @@ export function CreditTopUpsAdminClient({
             </table>
           </div>
         )}
+
+        <AdminPagination
+          page={page}
+          totalPages={Math.max(1, Math.ceil(totalTopUps / TOPUPS_PAGE_SIZE))}
+          disabled={isPending}
+          onChange={goToPage}
+        />
       </div>
-      <TopUpDetailPanel
-        topUp={selectedTopUp}
-        loading={detailLoading}
-        syncing={syncing}
-        cancelling={cancelling}
-        closingVirtualAccount={closingVirtualAccount}
-        showCancelForm={showCancelForm}
-        cancelReason={cancelReason}
-        refundBank={refundBank}
-        refundAccountNumber={refundAccountNumber}
-        refundHolderName={refundHolderName}
-        refundHolderPhoneNumber={refundHolderPhoneNumber}
-        onSync={syncSelectedTopUp}
-        onOpenCancelForm={() => setShowCancelForm(true)}
-        onCloseCancelForm={() => setShowCancelForm(false)}
-        onCancel={cancelSelectedTopUp}
-        onCloseVirtualAccount={closeSelectedVirtualAccount}
-        onCancelReasonChange={setCancelReason}
-        onRefundBankChange={setRefundBank}
-        onRefundAccountNumberChange={setRefundAccountNumber}
-        onRefundHolderNameChange={setRefundHolderName}
-        onRefundHolderPhoneNumberChange={setRefundHolderPhoneNumber}
-      />
-      </div>
+
+      <Dialog
+        open={!!selectedTopUpId}
+        onOpenChange={(next) => {
+          if (!next) {
+            setSelectedTopUpId(null);
+            setShowCancelForm(false);
+          }
+        }}
+      >
+        <DialogContent
+          showCloseButton={false}
+          className="gap-0 overflow-y-auto p-0 sm:max-w-[880px]"
+        >
+          <DialogTitle className="sr-only">결제 상세</DialogTitle>
+          <TopUpDetailPanel
+            topUp={selectedTopUp}
+            loading={detailLoading}
+            syncing={syncing}
+            cancelling={cancelling}
+            closingVirtualAccount={closingVirtualAccount}
+            showCancelForm={showCancelForm}
+            cancelReason={cancelReason}
+            refundBank={refundBank}
+            refundAccountNumber={refundAccountNumber}
+            refundHolderName={refundHolderName}
+            refundHolderPhoneNumber={refundHolderPhoneNumber}
+            onSync={syncSelectedTopUp}
+            onOpenCancelForm={() => setShowCancelForm(true)}
+            onCloseCancelForm={() => setShowCancelForm(false)}
+            onCancel={cancelSelectedTopUp}
+            onCloseVirtualAccount={closeSelectedVirtualAccount}
+            onCancelReasonChange={setCancelReason}
+            onRefundBankChange={setRefundBank}
+            onRefundAccountNumberChange={setRefundAccountNumber}
+            onRefundHolderNameChange={setRefundHolderName}
+            onRefundHolderPhoneNumberChange={setRefundHolderPhoneNumber}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -1120,33 +1297,83 @@ function TopUpDetailPanel({
   const needsRefundAccount = topUp?.paymentMethod === "VIRTUAL_ACCOUNT";
 
   return (
-    <aside className="rounded-xl border border-gray-100 bg-white shadow-sm">
-      <div className="flex items-start justify-between border-b border-gray-100 px-5 py-4">
-        <div>
-          <h2 className="text-[15px] font-semibold text-gray-900">
-            결제 상세
-          </h2>
-          <p className="mt-0.5 text-[12px] text-gray-400">
-            상태 검증 및 운영 처리
-          </p>
-        </div>
-        {topUp &&
-          (topUp.paymentMethod === "BANK_TRANSFER" &&
-          topUp.status === "WAITING_FOR_DEPOSIT" ? (
-            <BankWaitingBadge
-              createdAt={topUp.createdAt}
-              customData={topUp.customData}
-            />
-          ) : (
-            <span
-              className={cn(
-                "inline-flex h-6 items-center rounded-md px-2 text-[11px] font-semibold",
-                getTopUpStatusDisplay(topUp).style,
-              )}
+    <div className="bg-white">
+      <div className="border-b border-gray-100 px-5 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-[15px] font-semibold text-gray-900">
+              결제 상세
+            </h2>
+            {topUp &&
+              (topUp.paymentMethod === "BANK_TRANSFER" &&
+              topUp.status === "WAITING_FOR_DEPOSIT" ? (
+                <BankWaitingBadge
+                  createdAt={topUp.createdAt}
+                  customData={topUp.customData}
+                />
+              ) : (
+                <span
+                  className={cn(
+                    "inline-flex h-6 items-center rounded-md px-2 text-[11px] font-semibold",
+                    getTopUpStatusDisplay(topUp).style,
+                  )}
+                >
+                  {getTopUpStatusDisplay(topUp).label}
+                </span>
+              ))}
+          </div>
+          <div className="flex items-center gap-2">
+            {topUp && (
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+              type="button"
+              onClick={onSync}
+              disabled={!canSync || syncing || cancelling || closingVirtualAccount}
+              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2.5 text-[12px] font-semibold text-gray-700 shadow-sm transition hover:border-blue-200 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {getTopUpStatusDisplay(topUp).label}
-            </span>
-          ))}
+              <RotateCcw
+                className={cn("size-3.5", syncing && "animate-spin")}
+                strokeWidth={2}
+              />
+              포트원 재조회
+            </button>
+            <button
+              type="button"
+              onClick={onOpenCancelForm}
+              disabled={!canCancel || syncing || cancelling || closingVirtualAccount}
+              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-rose-100 bg-rose-50 px-2.5 text-[12px] font-semibold text-rose-700 transition hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Undo2 className="size-3.5" strokeWidth={2} />
+              환불 처리
+            </button>
+            <button
+              type="button"
+              onClick={onCloseVirtualAccount}
+              disabled={
+                !canCloseVirtualAccount ||
+                syncing ||
+                cancelling ||
+                closingVirtualAccount
+              }
+              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-amber-100 bg-amber-50 px-2.5 text-[12px] font-semibold text-amber-700 transition hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <XCircle
+                className={cn("size-3.5", closingVirtualAccount && "animate-pulse")}
+                strokeWidth={2}
+              />
+              가상계좌 말소
+            </button>
+            </div>
+            )}
+            <DialogClose className="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700">
+              <X className="size-4" strokeWidth={2} />
+              <span className="sr-only">닫기</span>
+            </DialogClose>
+          </div>
+        </div>
+        <p className="mt-1.5 text-[12px] text-gray-400">
+          상태 검증 및 운영 처리
+        </p>
       </div>
 
       {!topUp ? (
@@ -1154,7 +1381,9 @@ function TopUpDetailPanel({
           {loading ? "상세 내역을 불러오는 중입니다" : "충전 내역을 선택해주세요"}
         </div>
       ) : (
-        <div className="space-y-5 p-5">
+        <div className="grid gap-5 p-5 lg:grid-cols-2 lg:items-start">
+          {/* 왼쪽: 결제 정보 · 운영 처리 */}
+          <div className="space-y-5">
           <div className="grid grid-cols-2 gap-3">
             <DetailItem label="학원" value={topUp.academy.name} />
             <DetailItem
@@ -1205,47 +1434,6 @@ function TopUpDetailPanel({
               {topUp.failureMessage}
             </div>
           )}
-
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={onSync}
-              disabled={!canSync || syncing || cancelling || closingVirtualAccount}
-              className="inline-flex h-9 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-[12px] font-semibold text-gray-700 shadow-sm transition hover:border-blue-200 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <RotateCcw
-                className={cn("size-3.5", syncing && "animate-spin")}
-                strokeWidth={2}
-              />
-              포트원 재조회
-            </button>
-            <button
-              type="button"
-              onClick={onOpenCancelForm}
-              disabled={!canCancel || syncing || cancelling || closingVirtualAccount}
-              className="inline-flex h-9 items-center gap-2 rounded-lg border border-rose-100 bg-rose-50 px-3 text-[12px] font-semibold text-rose-700 transition hover:bg-rose-100 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <Undo2 className="size-3.5" strokeWidth={2} />
-              환불 처리
-            </button>
-            <button
-              type="button"
-              onClick={onCloseVirtualAccount}
-              disabled={
-                !canCloseVirtualAccount ||
-                syncing ||
-                cancelling ||
-                closingVirtualAccount
-              }
-              className="inline-flex h-9 items-center gap-2 rounded-lg border border-amber-100 bg-amber-50 px-3 text-[12px] font-semibold text-amber-700 transition hover:bg-amber-100 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <XCircle
-                className={cn("size-3.5", closingVirtualAccount && "animate-pulse")}
-                strokeWidth={2}
-              />
-              가상계좌 말소
-            </button>
-          </div>
 
           {showCancelForm && (
             <div className="space-y-3 rounded-xl border border-rose-100 bg-rose-50/50 p-3">
@@ -1319,7 +1507,10 @@ function TopUpDetailPanel({
               </button>
             </div>
           )}
+          </div>
 
+          {/* 오른쪽: 웹훅 · 크레딧 감사 로그 */}
+          <div className="space-y-5">
           <DetailSection title="웹훅 이력">
             {topUp.webhookEvents.length === 0 ? (
               <EmptyLine text="수신된 웹훅이 없습니다" />
@@ -1383,9 +1574,10 @@ function TopUpDetailPanel({
               ))
             )}
           </DetailSection>
+          </div>
         </div>
       )}
-    </aside>
+    </div>
   );
 }
 
@@ -1505,6 +1697,23 @@ function AdminField({
   );
 }
 
+function ProductSectionLabel({
+  icon: Icon,
+  title,
+}: {
+  icon: typeof Coins;
+  title: string;
+}) {
+  return (
+    <div className="flex items-center gap-1.5">
+      <Icon className="size-3.5 text-gray-400" strokeWidth={2} />
+      <span className="text-[12px] font-bold uppercase tracking-wide text-gray-500">
+        {title}
+      </span>
+    </div>
+  );
+}
+
 function formatDate(value: Date | string | null) {
   if (!value) return "-";
   return new Date(value).toLocaleString("ko-KR", {
@@ -1532,3 +1741,4 @@ function maskLongValue(value?: string | null) {
   if (value.length <= 18) return value;
   return `${value.slice(0, 10)}...${value.slice(-6)}`;
 }
+

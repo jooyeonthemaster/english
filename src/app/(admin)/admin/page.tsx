@@ -1,210 +1,365 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { getSystemStats } from "@/actions/admin";
-import { getMembers } from "@/actions/admin-members";
-import { getProviderLabel } from "@/lib/admin-members-labels";
+import { getDashboardOverview, type DashboardOverview } from "@/actions/admin";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Building2,
-  Users,
-  Coins,
+  Banknote,
+  Hourglass,
+  UserPlus,
+  LifeBuoy,
+  Presentation,
+  AlertTriangle,
   TrendingUp,
-  Clock,
+  TrendingDown,
+  Building2,
+  FileText,
+  Coins,
+  Activity,
+  BatteryLow,
+  TimerReset,
+  ArrowRight,
 } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { formatCurrency, formatNumber, formatRelativeTime } from "@/lib/utils";
-import { DirectorProviderCard } from "@/components/admin/director-provider-card";
+import { DashboardAutoRefresh } from "@/components/admin/dashboard/dashboard-auto-refresh";
+import { TrendChart } from "@/components/admin/dashboard/trend-chart";
+
+export const dynamic = "force-dynamic";
+
+const ACTION_ICONS: Record<string, typeof Banknote> = {
+  deposits: Banknote,
+  "waiting-topups": Hourglass,
+  registrations: UserPlus,
+  support: LifeBuoy,
+  seminars: Presentation,
+};
 
 function DashboardSkeleton() {
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-[120px] rounded-xl" />
+      <Skeleton className="h-[92px] rounded-2xl" />
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-[120px] rounded-2xl" />
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Skeleton className="h-[300px] rounded-xl lg:col-span-2" />
-        <Skeleton className="h-[300px] rounded-xl" />
+        <Skeleton className="h-[260px] rounded-2xl lg:col-span-2" />
+        <Skeleton className="h-[260px] rounded-2xl" />
+      </div>
+    </div>
+  );
+}
+
+/** 어제 대비 증감 배지 */
+function Delta({ today, yesterday }: { today: number; yesterday: number }) {
+  if (yesterday === 0) {
+    if (today === 0)
+      return <span className="text-[12px] text-gray-300">어제 0</span>;
+    return (
+      <span className="inline-flex items-center gap-0.5 text-[12px] font-semibold text-emerald-600">
+        <TrendingUp className="size-3.5" strokeWidth={2} />신규
+      </span>
+    );
+  }
+  const pct = Math.round(((today - yesterday) / yesterday) * 100);
+  if (pct === 0)
+    return <span className="text-[12px] text-gray-400">어제와 같음</span>;
+  const up = pct > 0;
+  return (
+    <span
+      className={`inline-flex items-center gap-0.5 text-[12px] font-semibold ${
+        up ? "text-emerald-600" : "text-rose-500"
+      }`}
+    >
+      {up ? (
+        <TrendingUp className="size-3.5" strokeWidth={2} />
+      ) : (
+        <TrendingDown className="size-3.5" strokeWidth={2} />
+      )}
+      {Math.abs(pct)}%
+    </span>
+  );
+}
+
+function PulseCard({
+  label,
+  value,
+  today,
+  yesterday,
+  icon: Icon,
+  iconBg,
+  iconColor,
+}: {
+  label: string;
+  value: string;
+  today: number;
+  yesterday: number;
+  icon: typeof Coins;
+  iconBg: string;
+  iconColor: string;
+}) {
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 p-5">
+      <div className="flex items-center justify-between">
+        <span className="text-[12px] font-medium text-gray-400">{label}</span>
+        <div className={`flex items-center justify-center w-8 h-8 rounded-lg ${iconBg}`}>
+          <Icon className={`size-4 ${iconColor}`} strokeWidth={1.9} />
+        </div>
+      </div>
+      <div className="mt-3 text-[30px] font-bold text-gray-900 leading-none tracking-tight">
+        {value}
+      </div>
+      <div className="mt-2">
+        <Delta today={today} yesterday={yesterday} />
       </div>
     </div>
   );
 }
 
 async function DashboardContent() {
-  const [stats, recentMembers] = await Promise.all([
-    getSystemStats(),
-    getMembers({ limit: 5 }),
-  ]);
+  const data: DashboardOverview = await getDashboardOverview();
 
-  const kpiCards = [
-    {
-      label: "전체 학원 수",
-      value: formatNumber(stats.totalAcademies),
-      subtitle: `${stats.activeAcademies}개 활성`,
-      icon: Building2,
-      iconBg: "bg-blue-50",
-      iconColor: "text-blue-600",
-    },
-    {
-      label: "전체 학생 수",
-      value: formatNumber(stats.totalStudents),
-      subtitle: `직원 ${stats.totalStaff}명`,
-      icon: Users,
-      iconBg: "bg-emerald-50",
-      iconColor: "text-emerald-600",
-    },
-    {
-      label: "크레딧 사용량",
-      value: formatNumber(stats.totalCreditsConsumed),
-      subtitle: `최근 30일 거래 ${stats.transactionsLast30Days}건`,
-      icon: Coins,
-      iconBg: "bg-slate-100",
-      iconColor: "text-slate-600",
-    },
-    {
-      label: "월 매출",
-      value: formatCurrency(stats.estimatedMonthlyRevenue),
-      subtitle: `문제 ${formatNumber(stats.totalQuestions)}개 생성`,
-      icon: TrendingUp,
-      iconBg: "bg-blue-50",
-      iconColor: "text-blue-600",
-    },
-  ];
+  const totalActions = data.actionItems.reduce((s, a) => s + a.count, 0);
+  const marginPct =
+    data.month.revenue > 0
+      ? Math.round((data.month.margin / data.month.revenue) * 100)
+      : null;
 
   return (
     <div className="space-y-6">
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpiCards.map((card) => {
-          const Icon = card.icon;
+      {/* ① 액션 필요 스트립 */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        {data.actionItems.map((item) => {
+          const Icon = ACTION_ICONS[item.key] ?? AlertTriangle;
+          const active = item.count > 0;
+          const tone = !active
+            ? "border-gray-100 bg-white"
+            : item.urgent
+              ? "border-rose-200 bg-rose-50"
+              : "border-amber-200 bg-amber-50";
+          const numColor = !active
+            ? "text-gray-300"
+            : item.urgent
+              ? "text-rose-600"
+              : "text-amber-600";
           return (
-            <div
-              key={card.label}
-              className="bg-white rounded-xl border border-gray-100 p-5 flex items-start justify-between"
+            <Link
+              key={item.key}
+              href={item.href}
+              className={`rounded-2xl border p-4 transition-colors hover:brightness-[0.98] ${tone}`}
             >
-              <div className="flex flex-col gap-1">
-                <span className="text-[12px] font-medium text-gray-400 uppercase tracking-wide">
-                  {card.label}
-                </span>
-                <span className="text-[28px] font-bold text-gray-900 leading-tight">
-                  {card.value}
-                </span>
-                <span className="text-[12px] text-gray-400">{card.subtitle}</span>
+              <div className="flex items-center gap-1.5 text-[11.5px] font-medium text-gray-500">
+                <Icon className="size-3.5" strokeWidth={1.9} />
+                {item.label}
               </div>
-              <div
-                className={`flex items-center justify-center w-10 h-10 rounded-xl ${card.iconBg}`}
-              >
-                <Icon className={`size-5 ${card.iconColor}`} strokeWidth={1.8} />
+              <div className={`mt-2 text-[26px] font-bold leading-none ${numColor}`}>
+                {item.count}
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>
 
-      {/* Secondary stats row */}
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          { label: "지문", value: stats.totalPassages },
-          { label: "시험", value: stats.totalExams },
-          { label: "문제", value: stats.totalQuestions },
-        ].map((item) => (
-          <div
-            key={item.label}
-            className="bg-white rounded-xl border border-gray-100 px-4 py-3 flex items-center justify-between"
-          >
-            <span className="text-[12px] text-gray-400">{item.label}</span>
-            <span className="text-[16px] font-semibold text-gray-800">
-              {formatNumber(item.value)}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Recent Members */}
-        <div className="bg-white rounded-xl border border-gray-100 lg:col-span-2">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50">
-            <div className="flex items-center gap-2">
-              <Clock className="size-4 text-gray-400" strokeWidth={1.8} />
-              <h3 className="text-[14px] font-semibold text-gray-800">
-                최근 가입 회원
-              </h3>
+      {/* ② 오늘의 맥박 */}
+      <div>
+        <h2 className="text-[13px] font-semibold text-gray-500 mb-3">오늘 현황</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <PulseCard
+            label="오늘 매출"
+            value={formatCurrency(data.revenue.today)}
+            today={data.revenue.today}
+            yesterday={data.revenue.yesterday}
+            icon={Coins}
+            iconBg="bg-blue-50"
+            iconColor="text-blue-600"
+          />
+          <PulseCard
+            label="신규 학원"
+            value={formatNumber(data.signups.today)}
+            today={data.signups.today}
+            yesterday={data.signups.yesterday}
+            icon={Building2}
+            iconBg="bg-emerald-50"
+            iconColor="text-emerald-600"
+          />
+          <PulseCard
+            label="생성 문제"
+            value={formatNumber(data.questions.today)}
+            today={data.questions.today}
+            yesterday={data.questions.yesterday}
+            icon={FileText}
+            iconBg="bg-violet-50"
+            iconColor="text-violet-600"
+          />
+          <PulseCard
+            label="크레딧 소모"
+            value={formatNumber(data.creditsConsumed.today)}
+            today={data.creditsConsumed.today}
+            yesterday={data.creditsConsumed.yesterday}
+            icon={Activity}
+            iconBg="bg-amber-50"
+            iconColor="text-amber-600"
+          />
+          <div className="bg-white rounded-2xl border border-gray-100 p-5">
+            <div className="flex items-center justify-between">
+              <span className="text-[12px] font-medium text-gray-400">활동 학원</span>
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100">
+                <Building2 className="size-4 text-slate-600" strokeWidth={1.9} />
+              </div>
             </div>
-            <Link
-              href="/admin/members"
-              className="text-[12px] text-blue-600 hover:underline"
-            >
-              전체 보기
-            </Link>
-          </div>
-          <div className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="text-[12px] text-gray-400 font-medium h-9 pl-5">
-                    회원
-                  </TableHead>
-                  <TableHead className="text-[12px] text-gray-400 font-medium h-9">
-                    학원
-                  </TableHead>
-                  <TableHead className="text-[12px] text-gray-400 font-medium h-9">
-                    가입 경로
-                  </TableHead>
-                  <TableHead className="text-[12px] text-gray-400 font-medium h-9 pr-5">
-                    가입일
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentMembers.length === 0 ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={4}
-                      className="text-center text-[13px] text-gray-400 py-8"
-                    >
-                      회원이 없습니다
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  recentMembers.map((m) => (
-                    <TableRow
-                      key={m.id}
-                      className="hover:bg-gray-50/50"
-                    >
-                      <TableCell className="pl-5">
-                        <Link
-                          href={`/admin/members/${m.id}`}
-                          className="text-[13px] font-medium text-gray-800 hover:text-blue-600"
-                        >
-                          {m.name}
-                        </Link>
-                      </TableCell>
-                      <TableCell className="text-[13px] text-gray-600">
-                        {m.academy.name}
-                      </TableCell>
-                      <TableCell className="text-[12px] text-gray-500">
-                        {getProviderLabel(m.authProvider)}
-                      </TableCell>
-                      <TableCell className="text-[12px] text-gray-400 pr-5">
-                        {formatRelativeTime(m.createdAt)}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+            <div className="mt-3 text-[30px] font-bold text-gray-900 leading-none tracking-tight">
+              {formatNumber(data.activeAcademiesToday)}
+            </div>
+            <div className="mt-2 text-[12px] text-gray-400">
+              전체 활성 {formatNumber(data.activeAcademiesTotal)}
+            </div>
           </div>
         </div>
+      </div>
 
-        <DirectorProviderCard stats={stats.directorsByProvider} />
+      {/* ③ 이번 달 수익성 */}
+      <div>
+        <h2 className="text-[13px] font-semibold text-gray-500 mb-3">이번 달 수익성</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white rounded-2xl border border-gray-100 p-5">
+            <span className="text-[12px] font-medium text-gray-400">이번 달 매출</span>
+            <div className="mt-2 text-[26px] font-bold text-gray-900 leading-none">
+              {formatCurrency(data.month.revenue)}
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl border border-gray-100 p-5">
+            <span className="text-[12px] font-medium text-gray-400">AI 원가</span>
+            <div className="mt-2 text-[26px] font-bold text-gray-700 leading-none">
+              {formatCurrency(data.month.aiCostKrw)}
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl border border-gray-100 p-5">
+            <span className="text-[12px] font-medium text-gray-400">마진</span>
+            <div
+              className={`mt-2 text-[26px] font-bold leading-none ${
+                data.month.margin >= 0 ? "text-emerald-600" : "text-rose-600"
+              }`}
+            >
+              {formatCurrency(data.month.margin)}
+            </div>
+            {marginPct !== null && (
+              <div className="mt-1.5 text-[12px] text-gray-400">매출 대비 {marginPct}%</div>
+            )}
+          </div>
+          <div
+            className={`rounded-2xl border p-5 ${
+              data.errorsToday > 0
+                ? "border-rose-200 bg-rose-50"
+                : "border-gray-100 bg-white"
+            }`}
+          >
+            <span className="text-[12px] font-medium text-gray-400">오늘 오류</span>
+            <div
+              className={`mt-2 text-[26px] font-bold leading-none ${
+                data.errorsToday > 0 ? "text-rose-600" : "text-gray-300"
+              }`}
+            >
+              {formatNumber(data.errorsToday)}
+            </div>
+            <div className="mt-1.5 text-[12px] text-gray-400">
+              AI·추출·결제 실패 합계
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ④ 추이 + 리스크 */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="bg-white rounded-2xl border border-gray-100 p-5 lg:col-span-2">
+          <h3 className="text-[14px] font-semibold text-gray-800 mb-4">
+            최근 14일 매출·가입 추이
+          </h3>
+          <TrendChart data={data.trend} />
+        </div>
+
+        <div className="space-y-4">
+          {/* 크레딧 소진 임박 */}
+          <div className="bg-white rounded-2xl border border-gray-100">
+            <div className="flex items-center gap-2 px-5 py-3.5 border-b border-gray-50">
+              <BatteryLow className="size-4 text-amber-500" strokeWidth={1.9} />
+              <h3 className="text-[13px] font-semibold text-gray-800">
+                크레딧 소진 임박
+              </h3>
+              <span className="ml-auto text-[11px] text-gray-400">
+                {data.lowCreditAcademies.length}곳
+              </span>
+            </div>
+            {data.lowCreditAcademies.length === 0 ? (
+              <p className="px-5 py-6 text-center text-[12.5px] text-gray-400">
+                해당 학원이 없습니다
+              </p>
+            ) : (
+              <ul className="divide-y divide-gray-50">
+                {data.lowCreditAcademies.map((a) => (
+                  <li key={a.academyId}>
+                    <Link
+                      href={`/admin/members?search=${encodeURIComponent(a.name)}`}
+                      className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-50/60"
+                    >
+                      <span className="text-[13px] text-gray-700 truncate mr-2">
+                        {a.name}
+                      </span>
+                      <span className="shrink-0 text-[12px] font-semibold text-amber-600">
+                        {formatNumber(a.balance)}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {/* 체험 종료 임박 */}
+          <div className="bg-white rounded-2xl border border-gray-100">
+            <div className="flex items-center gap-2 px-5 py-3.5 border-b border-gray-50">
+              <TimerReset className="size-4 text-blue-500" strokeWidth={1.9} />
+              <h3 className="text-[13px] font-semibold text-gray-800">
+                체험 종료 임박 (7일)
+              </h3>
+              <span className="ml-auto text-[11px] text-gray-400">
+                {data.trialEndingSoon.length}곳
+              </span>
+            </div>
+            {data.trialEndingSoon.length === 0 ? (
+              <p className="px-5 py-6 text-center text-[12.5px] text-gray-400">
+                해당 학원이 없습니다
+              </p>
+            ) : (
+              <ul className="divide-y divide-gray-50">
+                {data.trialEndingSoon.map((a) => (
+                  <li key={a.academyId}>
+                    <Link
+                      href={`/admin/members?search=${encodeURIComponent(a.name)}`}
+                      className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-50/60"
+                    >
+                      <span className="text-[13px] text-gray-700 truncate mr-2">
+                        {a.name}
+                      </span>
+                      <span className="shrink-0 text-[12px] text-gray-400">
+                        {formatRelativeTime(a.trialEndsAt)}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between text-[11px] text-gray-400">
+        <span>10분마다 자동 새로고침 · 처리 필요 {totalActions}건</span>
+        <Link
+          href="/admin/costs"
+          className="inline-flex items-center gap-1 text-blue-600 hover:underline"
+        >
+          상세 원가·매출 분석 <ArrowRight className="size-3" />
+        </Link>
       </div>
     </div>
   );
@@ -213,10 +368,11 @@ async function DashboardContent() {
 export default function AdminDashboardPage() {
   return (
     <div className="space-y-6">
+      <DashboardAutoRefresh />
       <div>
         <h1 className="text-[22px] font-bold text-gray-900">대시보드</h1>
         <p className="text-[13px] text-gray-400 mt-1">
-          플랫폼 현황 및 시스템 상태
+          실시간 운영 현황 · 처리 필요 항목과 오늘의 지표
         </p>
       </div>
 

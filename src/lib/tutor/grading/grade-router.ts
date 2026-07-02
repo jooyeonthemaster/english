@@ -88,6 +88,8 @@ export interface GradeRouterInput {
   payload: unknown; // TutorActivity.payload (v2)
   maxScore: number;
   response: unknown;
+  /** 원가 기록 귀속용 학원 ID(제출 학생의 세션에서 전달). */
+  academyId?: string | null;
 }
 
 export async function gradeActivityResponse(input: GradeRouterInput): Promise<TutorGradeOutcome> {
@@ -127,6 +129,7 @@ export async function gradeActivityResponse(input: GradeRouterInput): Promise<Tu
       conditions: payload.conditions,
       transformType: payload.transformType,
       rubric: payload.rubric,
+      academyId: input.academyId,
     }),
     AI_GRADE_TIMEOUT_MS,
   );

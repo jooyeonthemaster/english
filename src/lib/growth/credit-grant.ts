@@ -13,6 +13,7 @@
  */
 
 import type { Prisma } from "@prisma/client";
+import { NO_EXPIRY_FALLBACK } from "@/lib/credit-expiry";
 
 export interface GrantResult {
   transactionId: string;
@@ -53,6 +54,9 @@ export async function grantBonusCreditsTx(
       balance: amount,
       bonusCredits: amount,
       totalAllocated: amount,
+      // 보너스/프로모션 지급은 기존 소멸일을 승계하되, 신규 잔액이면 무기한
+      // 대신 대체 시한을 부여한다(진짜 무기한 null 을 만들지 않는다).
+      expiresAt: NO_EXPIRY_FALLBACK,
     },
     update: {
       balance: { increment: amount },

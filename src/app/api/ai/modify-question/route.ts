@@ -1,10 +1,11 @@
 import { generateObject } from "ai";
-import { model } from "@/lib/ai";
+import { GEMINI_MODEL_ID, model } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
 import { getStaffSession } from "@/lib/auth";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
+import { recordAiCost } from "@/lib/platform-api-costs";
 
 const modifiedQuestionSchema = z.object({
   questionText: z.string(),
@@ -86,8 +87,9 @@ export async function POST(request: NextRequest) {
         : "없음";
 
     let object: z.infer<typeof modifiedQuestionSchema>;
+    let aiUsage: unknown;
     try {
-    const { object: _object } = await generateObject({
+    const { object: _object, usage } = await generateObject({
       model,
       schema: modifiedQuestionSchema,
       prompt: `당신은 한국 ${schoolType} 영어 시험 출제 전문가입니다.
@@ -120,10 +122,20 @@ ${instruction}
 수정된 문제 1개를 출력하세요.`,
     });
     object = _object;
+    aiUsage = usage;
     } catch (aiError) {
       await refundCredits(staff.academyId, "QUESTION_MODIFY", creditResult.transactionId, "Question modification failed");
       throw aiError;
     }
+
+    await recordAiCost({
+      sourceType: "AI_INTERACTIVE",
+      sourceDetail: "question-edit",
+      operationType: "QUESTION_MODIFY",
+      academyId: staff.academyId,
+      model: GEMINI_MODEL_ID,
+      usage: aiUsage,
+    });
 
     return NextResponse.json({ question: object, creditsRemaining: creditResult.balanceAfter });
   } catch (error) {

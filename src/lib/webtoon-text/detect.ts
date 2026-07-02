@@ -1,5 +1,6 @@
 import "server-only";
 import sharp from "sharp";
+import { recordAiCost } from "@/lib/platform-api-costs";
 import {
   WEBTOON_TEXT_DOC_VERSION,
   WEBTOON_TEXT_FONT_FAMILY,
@@ -271,6 +272,8 @@ function estimateFontPx(text: string, w: number, h: number, lang: WebtoonTextLan
 export interface DetectWebtoonTextInput {
   imageBuffer: Buffer;
   originalUrl: string;
+  /** 원가 기록 귀속용 학원 ID(웹툰/라우트에서 전달). */
+  academyId?: string | null;
 }
 
 export async function detectWebtoonText(
@@ -300,6 +303,7 @@ export async function detectWebtoonText(
       content?: { parts?: Array<{ text?: string }> };
       finishReason?: string;
     }>;
+    usageMetadata?: unknown;
     error?: { message?: string };
   };
   try {
@@ -331,6 +335,15 @@ export async function detectWebtoonText(
     if (!res.ok) {
       throw new Error(body.error?.message ?? `Gemini HTTP ${res.status}`);
     }
+    // Raw Gemini REST usage lives in usageMetadata (promptTokenCount/candidatesTokenCount).
+    await recordAiCost({
+      sourceType: "WEBTOON_TEXT",
+      sourceDetail: "detect",
+      academyId: input.academyId,
+      model,
+      operationType: "WEBTOON_TEXT_DETECT",
+      usage: body,
+    });
   } finally {
     clearTimeout(timer);
   }

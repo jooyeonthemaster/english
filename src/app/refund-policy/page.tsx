@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     : "SMOAT 크레딧의 구매, 사용, 청약철회, 환불 기준을 안내합니다.",
 };
 
-const UPDATED_AT = "2026년 6월 9일";
+const UPDATED_AT = "2026년 7월 2일";
 
 const POLICY_SECTIONS = [
   {
@@ -58,6 +58,9 @@ const POLICY_SECTIONS = [
         : []),
       "크레딧은 사용자가 AI 기능 실행을 요청하여 결과 생성, 분석, 추출, 수정 등의 디지털 서비스 제공이 시작될 때 기능별 단가에 따라 차감됩니다.",
       "구매 상품, 결제금액, 프로모션 할인 여부에 따라 1C당 원화 구매 단가는 달라질 수 있으나, 동일한 AI 기능 실행 시 차감되는 크레딧 수는 동일하게 적용됩니다.",
+      "유료 크레딧에는 상품별 소멸시효(유효기간)가 적용되며, 소멸시효는 각 상품 정보와 결제 화면에 결제일 기준 일수로 표시됩니다. 크레딧을 구매하거나 지급받으면 계정의 소멸 예정일이 '남은 기간 + 새 유효기간'으로 연장되며(단축되지 않음), 계산은 24시간(만 하루)을 기준으로 합니다.",
+      "이벤트, 프로모션, 보너스 등으로 지급되는 크레딧은 별도의 유효기간을 새로 부여하지 않고 계정이 보유한 기존 소멸 예정일을 그대로 따릅니다.",
+      "크레딧을 사용(차감)하더라도 소멸 예정일은 변경되지 않으며, 소멸 예정일이 지나면 계정에 남아 있는 크레딧은 유료·무료 구분 없이 전액 소멸되고 복구되지 않습니다.",
     ],
   },
   ...(SUBSCRIPTION_BILLING_ENABLED
@@ -94,6 +97,7 @@ const POLICY_SECTIONS = [
     title: `${SUBSCRIPTION_BILLING_ENABLED ? "5" : "4"}. 환불 제한 기준`,
     body: [
       "이미 차감된 크레딧으로 AI 결과물 생성, 학습지 생성, 텍스트 추출, 문제 수정 등 디지털 서비스 제공이 완료된 사용분은 환불되지 않습니다.",
+      "상품별 소멸시효(유효기간)가 만료되어 소멸된 크레딧은 잔여 여부와 관계없이 환불 대상에 포함되지 않습니다. 소멸시효는 결제 화면 및 상품 정보에 표시되며, 구매·지급 시 잔여 기간에 더해 연장됩니다.",
       "무상 크레딧, 이벤트 크레딧, 보너스 크레딧, 관리자 수동 지급 크레딧은 현금 환불되지 않습니다.",
       "부정 결제, 타인의 결제수단 무단 사용, 서비스 이용약관 위반, 비정상적 사용 패턴이 확인되는 경우 환불 처리가 보류되거나 제한될 수 있습니다.",
       ...(!CREDIT_TOP_UP_CARD_ONLY
@@ -260,6 +264,12 @@ export default async function RefundPolicyPage() {
                       {product.estimatedAutoQuestionCount.toLocaleString("ko-KR")}
                       문항 · {product.perAutoQuestion.toLocaleString("ko-KR")}
                       원/문항
+                    </div>
+                    <div className="mt-0.5 text-[12px] font-medium text-slate-500">
+                      소멸시효{" "}
+                      {product.expiryDays && product.expiryDays > 0
+                        ? `결제일로부터 ${product.expiryDays.toLocaleString("ko-KR")}일`
+                        : "무기한"}
                     </div>
                     {product.isPromotionActive && (
                       <div className="mt-1 text-[11px] font-semibold text-emerald-700">

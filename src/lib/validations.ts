@@ -185,9 +185,18 @@ export const helpPostSchema = z.object({
   password: z.string().max(100).optional(),
 });
 
+export const helpAttachmentSchema = z.object({
+  name: z.string(),
+  url: z.string(),
+  size: z.number().optional(),
+  type: z.string().optional(),
+});
+
 export const helpReplySchema = z.object({
   postId: z.string().min(1),
-  content: z.string().min(1, "답변 내용을 입력하세요"),
+  // 이미지만 첨부한 댓글도 허용하므로 min(1) 대신 액션에서 내용·첨부 중 하나를 요구.
+  content: z.string().max(5000).default(""),
+  attachments: z.array(helpAttachmentSchema).max(3).optional(),
 });
 
 export const seminarRequestSchema = z.object({

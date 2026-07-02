@@ -14,6 +14,10 @@ import {
   type VirtualAccountIssuedPayment,
 } from "@portone/server-sdk/payment";
 import { prisma } from "@/lib/prisma";
+import {
+  expiresAtConflictSql,
+  expiresAtInsertSql,
+} from "@/lib/credit-expiry";
 
 export const PORTONE_TOP_UP_PAY_METHODS = [
   "CARD",
@@ -593,6 +597,18 @@ async function completePaidTopUp(
       });
       const monthlyAllocation = activeSub?.plan.monthlyCredits ?? 0;
 
+      // Resolve the purchased product's validity window (keyed by creditAmount,
+      // which is UNIQUE). The buyer's balance-wide expiry is extended by
+      // (remaining + expiryDays); 0/null means the product never expires.
+      const productRows = await tx.$queryRaw<
+        Array<{ expiryDays: number | null }>
+      >`
+        SELECT "expiryDays" FROM credit_top_up_products
+        WHERE "creditAmount" = ${topUp.creditAmount}
+        LIMIT 1
+      `;
+      const expiryDays = productRows[0]?.expiryDays ?? 0;
+
       const balances = await tx.$queryRaw<Array<{ balance: number }>>`
         INSERT INTO credit_balances (
           id,
@@ -601,6 +617,7 @@ async function completePaidTopUp(
           "monthlyAllocation",
           "bonusCredits",
           "totalAllocated",
+          "expiresAt",
           "updatedAt"
         )
         VALUES (
@@ -610,12 +627,14 @@ async function completePaidTopUp(
           ${monthlyAllocation},
           ${topUp.creditAmount},
           ${topUp.creditAmount},
+          ${expiresAtInsertSql(expiryDays)},
           NOW()
         )
         ON CONFLICT ("academyId") DO UPDATE
           SET balance = credit_balances.balance + EXCLUDED.balance,
               "bonusCredits" = credit_balances."bonusCredits" + EXCLUDED."bonusCredits",
               "totalAllocated" = credit_balances."totalAllocated" + EXCLUDED."totalAllocated",
+              "expiresAt" = ${expiresAtConflictSql(expiryDays)},
               "updatedAt" = NOW()
         RETURNING balance
       `;

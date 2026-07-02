@@ -58,6 +58,7 @@ const TYPE_OPTIONS = [
   { value: "REFUND", label: getTransactionTypeLabel("REFUND") },
   { value: "RESET", label: getTransactionTypeLabel("RESET") },
   { value: "ROLLOVER", label: getTransactionTypeLabel("ROLLOVER") },
+  { value: "EXPIRATION", label: getTransactionTypeLabel("EXPIRATION") },
 ];
 
 export function TransactionTable({
@@ -349,6 +350,8 @@ function typeBadgeClass(type: string): string {
       return "bg-gray-100 text-gray-600";
     case "ROLLOVER":
       return "bg-indigo-50 text-indigo-700";
+    case "EXPIRATION":
+      return "bg-rose-50 text-rose-700";
     default:
       return "bg-gray-100 text-gray-600";
   }
