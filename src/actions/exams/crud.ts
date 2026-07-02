@@ -13,6 +13,10 @@ import type {
   ExamCreateData,
   ExamFilters,
 } from "./_types";
+import {
+  buildExamSubjectScopeWhere,
+  isMissingColumnError,
+} from "./_exam-subject-where";
 
 // ---------------------------------------------------------------------------
 // Exam CRUD
@@ -22,41 +26,67 @@ export async function getExams(academyId: string, filters?: ExamFilters) {
   const staff = await requireStaffAuth();
   if (staff.academyId !== academyId) return [];
 
-  const where: Record<string, unknown> = { academyId };
+  // 비-과목 필터는 baseWhere 에 모은다(과목 스코프는 아래에서 분기 합류).
+  const baseWhere: Record<string, unknown> = { academyId };
 
-  if (filters?.type && filters.type !== "ALL") where.type = filters.type;
-  if (filters?.status && filters.status !== "ALL") where.status = filters.status;
-  if (filters?.classId) where.classId = filters.classId;
+  if (filters?.type && filters.type !== "ALL") baseWhere.type = filters.type;
+  if (filters?.status && filters.status !== "ALL") baseWhere.status = filters.status;
+  if (filters?.classId) baseWhere.classId = filters.classId;
   if (filters?.collectionId) {
-    where.collectionItems = { some: { collectionId: filters.collectionId } };
+    baseWhere.collectionItems = { some: { collectionId: filters.collectionId } };
   }
   if (filters?.search) {
-    where.title = { contains: filters.search, mode: "insensitive" };
+    baseWhere.title = { contains: filters.search, mode: "insensitive" };
   }
   if (filters?.dateFrom || filters?.dateTo) {
     const dateFilter: Record<string, Date> = {};
     if (filters?.dateFrom) dateFilter.gte = new Date(filters.dateFrom);
     if (filters?.dateTo) dateFilter.lte = new Date(filters.dateTo);
-    where.examDate = dateFilter;
+    baseWhere.examDate = dateFilter;
   }
 
-  const exams = await prisma.exam.findMany({
-    where,
-    include: {
-      class: { select: { id: true, name: true } },
-      school: { select: { id: true, name: true } },
-      // 휴지통 가드 — 목록 카드의 "N문항" 배지는 삭제된 문제를 빼고 센다(상세/출력과 일치).
-      _count: {
-        select: {
-          questions: { where: { question: { deletedAt: null } } },
-          submissions: true,
-        },
+  const include = {
+    class: { select: { id: true, name: true } },
+    school: { select: { id: true, name: true } },
+    // 휴지통 가드 — 목록 카드의 "N문항" 배지는 삭제된 문제를 빼고 센다(상세/출력과 일치).
+    _count: {
+      select: {
+        questions: { where: { question: { deletedAt: null } } },
+        submissions: true,
       },
     },
-    orderBy: { createdAt: "desc" },
-  });
+  } as const;
+  const orderBy = { createdAt: "desc" as const };
 
-  return exams;
+  // 워크스페이스 상호 격리(유저 확정) — 판별자 일급화(P0): 국어/영어 시험지 분리는
+  // exams.subject 컬럼으로 판정한다. filters.subject 미지정=영어(subject null 또는
+  // ≠KOREAN), "KOREAN"=국어. 백필(ko-exam-set-subject.sql)이 "살아있는 KO_ 문항 1개
+  // 이상" 시험지에 'KOREAN' 을 스탬프해, 기존 none-clause(deletedAt null + KO_)와
+  // 정확한 여집합 대칭을 이룬다.
+  try {
+    return await prisma.exam.findMany({
+      where: { ...baseWhere, ...buildExamSubjectScopeWhere(filters?.subject) },
+      include,
+      orderBy,
+    });
+  } catch (error) {
+    // 우아한 강등 — subject 컬럼이 아직 없으면(P2022, surgical ALTER 이전) 레거시
+    // subType 'KO_' 조인추론으로 폴백한다. 영어=none(KO 제외), 국어=some(KO 포함),
+    // deletedAt null 로 동일 모집단 대칭. subject 를 SELECT 하지 않게 omit 한다.
+    if (!isMissingColumnError(error)) throw error;
+    return await prisma.exam.findMany({
+      where: {
+        ...baseWhere,
+        questions:
+          filters?.subject === "KOREAN"
+            ? { some: { question: { deletedAt: null, subType: { startsWith: "KO_" } } } }
+            : { none: { question: { deletedAt: null, subType: { startsWith: "KO_" } } } },
+      },
+      include,
+      orderBy,
+      omit: { subject: true },
+    });
+  }
 }
 
 export async function getExam(examId: string) {
@@ -202,6 +232,9 @@ export async function createExam(
         shuffleOptions: data.shuffleOptions || false,
         showResults: data.showResults ?? true,
         status: "DRAFT",
+        // 과목 스탬핑 — 국어 라우트 생성만 'KOREAN'. 미지정이면 INSERT 에 subject 를
+        // 아예 넣지 않아(조건부 spread) 컬럼 미ALTER DB(P2022)에서도 영어 생성 무회귀.
+        ...(data.subject ? { subject: data.subject } : {}),
       },
     });
 

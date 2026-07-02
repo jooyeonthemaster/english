@@ -6,6 +6,10 @@ import { getStaffSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { QUESTION_PERSISTENCE_TRANSACTION_TIMEOUT_MS } from "@/lib/concurrency-config";
 import { resolvePreset } from "@/lib/question-sets/presets";
+import {
+  buildQuestionSetSubjectScopeWhere,
+  isMissingColumnError,
+} from "@/actions/exams/_exam-subject-where";
 import type { Anchor, LayoutDescriptor } from "@/lib/question-sets/types";
 
 type SetWithItems = Prisma.QuestionSetGetPayload<{
@@ -141,48 +145,92 @@ function mapSet(set: SetWithItems): QuestionSetForRender {
 /**
  * 표시용 세트 목록 — 생성결과/문제관리에서 setId로 묶어 보여줄 때 사용.
  * passageId/jobId 로 필터. 멤버 포함. Academy-scoped.
+ *
+ * 과목 스코프(워크스페이스 상호 격리): subject="KOREAN" 이면 KO_* 멤버 세트만,
+ * 미지정(기본=영어 표면)이면 KO_* 멤버 세트를 완전히 제외한다 — 영어
+ * 워크스페이스에 국어 세트 0 / 국어 워크스페이스에 영어 세트 0.
  */
 export async function listQuestionSets(opts: {
   passageId?: string;
   jobId?: string;
   limit?: number;
+  subject?: "KOREAN";
 }): Promise<QuestionSetForRender[]> {
   const staff = await getStaffSession();
   if (!staff) return [];
 
-  const sets = await prisma.questionSet.findMany({
-    where: {
-      academyId: staff.academyId,
-      ...(opts.jobId ? { jobId: opts.jobId } : {}),
-      ...(opts.passageId
-        ? {
-            OR: [
-              { basePassageId: opts.passageId },
-              { items: { some: { question: { passageId: opts.passageId } } } },
-            ],
-          }
-        : {}),
-    },
-    orderBy: { createdAt: "desc" },
-    take: opts.limit ?? 50,
-    include: {
-      items: {
-        // 휴지통 가드 — 삭제(휴지통)된 세트 멤버는 세트 렌더에서 제외.
-        where: { question: { deletedAt: null } },
-        orderBy: { orderInSet: "asc" },
-        include: {
-          question: {
-            include: {
-              explanation: true,
-              passage: { select: { id: true, title: true } },
-            },
+  // passageId 스코프가 OR 를 쓰므로, 과목 스코프의 OR(영어=null|≠KOREAN)와 최상위
+  // OR 키가 충돌하지 않도록 둘을 AND 배열의 별개 원소로 합류시킨다.
+  const passageScope = opts.passageId
+    ? {
+        OR: [
+          { basePassageId: opts.passageId },
+          { items: { some: { question: { passageId: opts.passageId } } } },
+        ],
+      }
+    : null;
+
+  const baseWhere: Record<string, unknown> = {
+    academyId: staff.academyId,
+    ...(opts.jobId ? { jobId: opts.jobId } : {}),
+  };
+
+  const include = {
+    items: {
+      // 휴지통 가드 — 삭제(휴지통)된 세트 멤버는 세트 렌더에서 제외.
+      where: { question: { deletedAt: null } },
+      orderBy: { orderInSet: "asc" as const },
+      include: {
+        question: {
+          include: {
+            explanation: true,
+            passage: { select: { id: true, title: true } },
           },
         },
       },
-      basePassage: { select: { id: true, title: true } },
     },
-  });
-  return sets.map(mapSet);
+    basePassage: { select: { id: true, title: true } },
+  } as const;
+  const orderBy = { createdAt: "desc" as const };
+  const take = opts.limit ?? 50;
+
+  // 과목 스코프(워크스페이스 상호 격리) — 판별자 일급화(P0): question_sets.subject
+  // 컬럼으로 판정. 미지정=영어(KO 세트 제외), "KOREAN"=국어 세트만. 백필이 "KO_ 멤버
+  // 1개 이상" 세트에 'KOREAN' 을 스탬프(items.some KO_ 규약과 대칭).
+  try {
+    const sets = await prisma.questionSet.findMany({
+      where: {
+        ...baseWhere,
+        AND: [
+          buildQuestionSetSubjectScopeWhere(opts.subject),
+          ...(passageScope ? [passageScope] : []),
+        ],
+      },
+      orderBy,
+      take,
+      include,
+    });
+    return sets.map(mapSet);
+  } catch (error) {
+    // 우아한 강등 — subject 컬럼 미ALTER(P2022) 시 레거시 items→subType 'KO_' 조인추론.
+    if (!isMissingColumnError(error)) throw error;
+    const legacyScope =
+      opts.subject === "KOREAN"
+        ? { items: { some: { question: { subType: { startsWith: "KO_" } } } } }
+        : { items: { none: { question: { subType: { startsWith: "KO_" } } } } };
+    const legacySets = await prisma.questionSet.findMany({
+      where: {
+        ...baseWhere,
+        AND: [legacyScope, ...(passageScope ? [passageScope] : [])],
+      },
+      orderBy,
+      take,
+      include,
+      omit: { subject: true },
+    });
+    // subject 를 SELECT 하지 않았으므로 null 로 복원해 mapSet 형태(SetWithItems)를 맞춘다.
+    return legacySets.map((s) => mapSet({ ...s, subject: null }));
+  }
 }
 
 /**
