@@ -184,14 +184,15 @@ export function DraftDetailModal({
               type="button"
               onClick={() => onSave(draft)}
               disabled={busy}
-              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-bold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+              title="수정 저장"
+              aria-label="수정 저장"
+              className="inline-flex size-9 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSaving ? (
                 <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
               ) : (
                 <Save className="size-3.5" aria-hidden="true" />
               )}
-              수정 저장
             </button>
             <button
               type="button"
@@ -199,15 +200,16 @@ export function DraftDetailModal({
                 isReviewed ? onUnpromote(draft) : onPromote(draft)
               }
               disabled={busy}
+              aria-label={isReviewed ? "검수취소" : "검수완료"}
               className={
                 isReviewed
-                  ? "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-bold text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
-                  : "inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-3 text-[12px] font-bold text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  ? "inline-flex size-9 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  : "inline-flex size-9 cursor-pointer items-center justify-center rounded-md bg-blue-600 text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
               }
               title={
                 isReviewed
                   ? "이미 검수가 완료된 자료입니다. 클릭하면 검수를 취소합니다."
-                  : undefined
+                  : "검수완료"
               }
             >
               {isPromoting || isUnpromoting ? (
@@ -217,20 +219,20 @@ export function DraftDetailModal({
               ) : (
                 <CheckCircle2 className="size-3.5" aria-hidden="true" />
               )}
-              {isReviewed ? "검수취소" : "검수완료"}
             </button>
             <button
               type="button"
               onClick={() => onDelete(draft)}
               disabled={busy}
-              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 text-[12px] font-bold text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+              title="삭제"
+              aria-label="삭제"
+              className="inline-flex size-9 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isDeleting ? (
                 <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
               ) : (
                 <Trash2 className="size-3.5" aria-hidden="true" />
               )}
-              삭제
             </button>
             <button
               type="button"

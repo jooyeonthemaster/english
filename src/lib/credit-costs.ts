@@ -35,21 +35,21 @@ export type OperationType = keyof typeof CREDIT_COSTS;
 
 // Display names for UI
 export const OPERATION_LABELS: Record<OperationType, string> = {
-  QUESTION_GEN_SINGLE: "문제 생성 (단일)",
-  QUESTION_GEN_VOCAB: "어휘 문제 생성",
+  QUESTION_GEN_SINGLE: "문제 생성",
+  QUESTION_GEN_VOCAB: "어휘 문제",
   AUTO_GEN_BATCH: "자동 출제",
   LEARNING_QUESTION_GEN: "학습 문제 생성",
   PASSAGE_ANALYSIS: "학습지 생성",
   GRAMMAR_ENHANCEMENT: "문법 포인트 분석",
-  SENTENCE_RETRANSLATION: "문장 재번역",
+  SENTENCE_RETRANSLATION: "AI 재번역",
   QUESTION_EXPLANATION: "해설 생성",
   QUESTION_MODIFY: "문제 수정",
   AI_CHAT: "AI 튜터링",
   TEXT_EXTRACTION: "텍스트 추출 (OCR 무료)",
   PASSAGE_RESTORATION: "AI 지문 복원",
-  PASSAGE_TRANSFORM: "AI 지문 변형",
-  PASSAGE_VARIANT: "AI 지문 변형 (전체)",
-  WEBTOON_IMAGE: "웹툰 이미지 생성",
+  PASSAGE_TRANSFORM: "AI 문장 변형",
+  PASSAGE_VARIANT: "AI 지문 변형",
+  WEBTOON_IMAGE: "웹툰 생성",
 };
 
 // Top-up pricing tiers (KRW per credit pack)

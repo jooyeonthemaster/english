@@ -39,6 +39,8 @@ export interface SaveButtonProps extends React.ComponentProps<"button"> {
   saving?: boolean;
   /** 부차 저장 액션. 있으면 캐럿 토글 + 팝오버를 렌더한다. */
   secondaryActions?: SaveSecondaryAction[];
+  /** "저장" 라벨을 숨기고 아이콘만 정사각형 버튼으로 렌더한다(공간이 좁은 헤더용). */
+  iconOnly?: boolean;
 }
 
 const BASE_CLASS =
@@ -48,6 +50,7 @@ export function SaveButton({
   saving = false,
   disabled,
   secondaryActions,
+  iconOnly = false,
   className,
   type = "button",
   ...props
@@ -66,11 +69,16 @@ export function SaveButton({
       <button
         type={type}
         disabled={isDisabled}
-        className={cn(BASE_CLASS, "min-w-[64px] rounded-md", className)}
+        aria-label={iconOnly ? "저장" : undefined}
+        className={cn(
+          BASE_CLASS,
+          iconOnly ? "size-8 rounded-md px-0" : "min-w-[64px] rounded-md",
+          className,
+        )}
         {...props}
       >
         {icon}
-        저장
+        {!iconOnly && "저장"}
       </button>
     );
   }

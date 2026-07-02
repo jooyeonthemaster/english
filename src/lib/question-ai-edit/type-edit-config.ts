@@ -76,6 +76,7 @@ export const TYPE_TAGLINES: Record<string, string> = {
   SUMMARY_COMPLETE: "요약문 빈칸 완성(짧은 답) — 빈칸은 요지 직결 어휘.",
   SUMMARY_WRITING: "요약문 빈칸을 보기·해석·단서로 영작 — 정답계열은 절대 학생면에 노출 금지.",
   WORD_ORDER: "주어진 단어를 올바른 순서로 배열 — 힌트는 명확히.",
+  TOPIC_SENTENCE_WRITING: "글의 주제문(또는 명사구)을 배열·빈칸완성으로 영작 — 정답계열(모범답안·빈칸정답)은 절대 학생면에 노출 금지, 제시어는 셔플 유지.",
   GRAMMAR_CORRECTION: "문법 오류를 찾아 바르게 고치기 — 밑줄 구간별 오류·정정안 정합.",
   CONTEXT_MEANING: "밑줄 단어의 문맥상 의미 — 오답은 사전적·유사 의미 함정.",
   SYNONYM: "핵심 어휘의 동의어 — 오답은 비슷해 보이나 다른 단어.",

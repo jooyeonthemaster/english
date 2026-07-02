@@ -133,6 +133,7 @@ export const QUESTION_SUBTYPES = {
     { value: "SUMMARY_COMPLETE", label: "요약문 완성" },
     { value: "SUMMARY_WRITING", label: "요약문 영작" },
     { value: "WORD_ORDER", label: "배열 영작" },
+    { value: "TOPIC_SENTENCE_WRITING", label: "주제문 영작" },
     { value: "GRAMMAR_CORRECTION", label: "문법 오류 수정" },
   ],
   VOCAB: [

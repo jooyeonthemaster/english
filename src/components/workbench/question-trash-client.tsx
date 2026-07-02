@@ -8,29 +8,20 @@ import {
   RotateCcw,
   Loader2,
   ArrowLeft,
-  Check,
 } from "lucide-react";
 import { toast } from "sonner";
 
 import {
   restoreWorkbenchQuestions,
   purgeWorkbenchQuestions,
+  getWorkbenchQuestionIds,
   createQuestionCollection,
   updateQuestionCollection,
   deleteQuestionCollection,
   addQuestionsToCollection,
   removeQuestionsFromCollection,
 } from "@/actions/workbench";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { confirmNative } from "@/lib/browser-confirm";
 
 import type { CollectionItem } from "./shared/types";
 import { FolderSection } from "./shared/folder-section";
@@ -67,6 +58,7 @@ type TrashQuestionItem = Omit<QuestionBankItem, "createdAt"> & {
 };
 
 interface QuestionTrashProps {
+  academyId: string;
   questionsData: {
     questions: TrashQuestionItem[];
     total: number;
@@ -108,11 +100,46 @@ function deletedAgoLabel(deletedAt?: Date | string | null): string | null {
   return `${formatDate(then)} 삭제`;
 }
 
+// 전체 선택 체크박스 — 일부만 선택되면 indeterminate(중간) 상태로 표시한다.
+function SelectAllCheckbox({
+  checked,
+  indeterminate,
+  disabled,
+  onChange,
+  title,
+  ariaLabel,
+}: {
+  checked: boolean;
+  indeterminate: boolean;
+  disabled: boolean;
+  onChange: () => void;
+  title: string;
+  ariaLabel: string;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (ref.current) ref.current.indeterminate = indeterminate;
+  }, [indeterminate]);
+  return (
+    <input
+      ref={ref}
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      disabled={disabled}
+      title={title}
+      aria-label={ariaLabel}
+      className="size-4 cursor-pointer rounded border-slate-300 text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Main Component
 // ---------------------------------------------------------------------------
 
 export function QuestionTrashClient({
+  academyId,
   questionsData,
   filters,
   collections: initialCollections,
@@ -129,8 +156,9 @@ export function QuestionTrashClient({
     isPending: isNavPending,
   } = useUrlFilters(QUESTION_TRASH_PATH);
 
-  function handleSearch() {
-    urlSearch(searchValue);
+  function handleSearch(value?: string) {
+    // X 버튼은 빈 값을 명시적으로 넘긴다(상태 갱신은 비동기라 stale 방지).
+    urlSearch(value !== undefined ? value : searchValue);
   }
 
   // ─── Folder manager (shared collections with 문제 관리) ───
@@ -225,8 +253,6 @@ export function QuestionTrashClient({
   const [busyIds, setBusyIds] = useState<Set<string>>(new Set());
   const [bulkRestoring, setBulkRestoring] = useState(false);
   const [bulkPurging, setBulkPurging] = useState(false);
-  // 영구 삭제 확인 대상. "bulk" = 선택 일괄, string = 단일 카드 id.
-  const [purgeTarget, setPurgeTarget] = useState<"bulk" | string | null>(null);
 
   const markBusy = useCallback((ids: string[], busy: boolean) => {
     setBusyIds((prev) => {
@@ -348,92 +374,101 @@ export function QuestionTrashClient({
     router,
   ]);
 
-  // ─── Purge (permanent, AlertDialog-confirmed) ───
-  const handlePurgeConfirmed = useCallback(async () => {
-    if (purgeTarget === null) return;
-
-    if (purgeTarget === "bulk") {
-      const ids = Array.from(selectedIds);
-      if (ids.length === 0) {
-        setPurgeTarget(null);
+  // ─── Purge (permanent, 네이티브 확인창) ───
+  const handlePurgeConfirmed = useCallback(
+    async (target: "bulk" | string) => {
+      if (target === "bulk") {
+        const ids = Array.from(selectedIds);
+        if (ids.length === 0) return;
+        setBulkPurging(true);
+        markBusy(ids, true);
+        try {
+          const result = await purgeWorkbenchQuestions(ids);
+          if (!result.success) {
+            toast.error(result.error || "영구 삭제에 실패했습니다.");
+            return;
+          }
+          const purgedIds =
+            result.purgedIds?.length > 0 ? result.purgedIds : ids;
+          if (result.purged === ids.length) {
+            toast.success(`${result.purged}문항을 영구 삭제했습니다.`);
+          } else if (result.purged === 0) {
+            toast.error("삭제된 문제가 없습니다.");
+          } else {
+            toast.success(
+              `${result.purged}문항을 영구 삭제했습니다. (${ids.length - result.purged}문항 누락)`,
+            );
+          }
+          optimisticallyRemove(purgedIds);
+          clearSelection();
+          router.refresh();
+        } catch (err) {
+          toast.error(
+            err instanceof Error ? err.message : "영구 삭제에 실패했습니다.",
+          );
+        } finally {
+          markBusy(ids, false);
+          setBulkPurging(false);
+        }
         return;
       }
-      setBulkPurging(true);
-      markBusy(ids, true);
+
+      // Single card purge
+      const id = target;
+      markBusy([id], true);
       try {
-        const result = await purgeWorkbenchQuestions(ids);
+        const result = await purgeWorkbenchQuestions([id]);
         if (!result.success) {
           toast.error(result.error || "영구 삭제에 실패했습니다.");
           return;
         }
-        const purgedIds = result.purgedIds?.length > 0 ? result.purgedIds : ids;
-        if (result.purged === ids.length) {
-          toast.success(`${result.purged}문항을 영구 삭제했습니다.`);
-        } else if (result.purged === 0) {
-          toast.error("삭제된 문제가 없습니다.");
+        if (result.purged > 0) {
+          toast.success("문제를 영구 삭제했습니다.");
+          optimisticallyRemove([id]);
+          if (detailQuestionId === id) closeDetail();
+          router.refresh();
         } else {
-          toast.success(
-            `${result.purged}문항을 영구 삭제했습니다. (${ids.length - result.purged}문항 누락)`,
-          );
+          toast.error("삭제된 문제가 없습니다.");
         }
-        optimisticallyRemove(purgedIds);
-        clearSelection();
-        router.refresh();
       } catch (err) {
         toast.error(
           err instanceof Error ? err.message : "영구 삭제에 실패했습니다.",
         );
       } finally {
-        markBusy(ids, false);
-        setBulkPurging(false);
-        setPurgeTarget(null);
+        markBusy([id], false);
       }
+    },
+    [
+      selectedIds,
+      markBusy,
+      optimisticallyRemove,
+      clearSelection,
+      router,
+      detailQuestionId,
+      closeDetail,
+    ],
+  );
+
+  const PURGE_DESC = "이 작업은 되돌릴 수 없습니다. 영구적으로 삭제됩니다.";
+
+  const requestBulkPurge = useCallback(() => {
+    if (
+      !confirmNative(
+        `선택한 문제 ${selectedIds.size}문항을 영구 삭제하시겠습니까?`,
+        PURGE_DESC,
+      )
+    )
       return;
-    }
+    void handlePurgeConfirmed("bulk");
+  }, [selectedIds, handlePurgeConfirmed]);
 
-    // Single card purge
-    const id = purgeTarget;
-    markBusy([id], true);
-    try {
-      const result = await purgeWorkbenchQuestions([id]);
-      if (!result.success) {
-        toast.error(result.error || "영구 삭제에 실패했습니다.");
-        return;
-      }
-      if (result.purged > 0) {
-        toast.success("문제를 영구 삭제했습니다.");
-        optimisticallyRemove([id]);
-        if (detailQuestionId === id) closeDetail();
-        router.refresh();
-      } else {
-        toast.error("삭제된 문제가 없습니다.");
-      }
-    } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "영구 삭제에 실패했습니다.",
-      );
-    } finally {
-      markBusy([id], false);
-      setPurgeTarget(null);
-    }
-  }, [
-    purgeTarget,
-    selectedIds,
-    markBusy,
-    optimisticallyRemove,
-    clearSelection,
-    router,
-    detailQuestionId,
-    closeDetail,
-  ]);
-
-  const purgeBusy =
-    bulkPurging ||
-    (purgeTarget !== null &&
-      purgeTarget !== "bulk" &&
-      busyIds.has(purgeTarget));
-  const purgeCount =
-    purgeTarget === "bulk" ? selectedIds.size : purgeTarget ? 1 : 0;
+  const requestSinglePurge = useCallback(
+    (id: string) => {
+      if (!confirmNative("이 문제를 영구 삭제하시겠습니까?", PURGE_DESC)) return;
+      void handlePurgeConfirmed(id);
+    },
+    [handlePurgeConfirmed],
+  );
 
   // ─── Folder navigation (server-driven via collectionId URL param) ───
   const handleNavigateFolder = useCallback(
@@ -454,16 +489,74 @@ export function QuestionTrashClient({
   // ─── Selection toolbar (bulk restore + bulk purge) ───
   const hasSelection = selectedIds.size > 0;
 
+  // 전체(전 페이지) 선택 — 휴지통도 20개 페이지네이션이라 현재 페이지만 선택되면
+  // 복원/영구삭제가 한 페이지에만 적용된다. 현재 필터/폴더의 휴지통 전체 id를 가져와
+  // 선택한다(trash 스코프). 선택 직후엔 목록 재조회가 없어 선택이 유지되고, 곧장
+  // 복원/영구삭제하면 전 페이지 항목에 적용된다.
+  const [selectingAllPages, setSelectingAllPages] = useState(false);
+  const allPagesSelected =
+    total > 0 && selectedIds.size >= total;
+
+  const handleSelectAllPages = useCallback(async () => {
+    if (selectingAllPages) return;
+    setSelectingAllPages(true);
+    try {
+      const result = await getWorkbenchQuestionIds(
+        academyId,
+        {
+          ...filters,
+          page: undefined,
+          limit: undefined,
+          collectionId: filters.collectionId,
+        } as never,
+        { scope: "trash" },
+      );
+      if (!result.success) {
+        toast.error(result.error || "전체 선택에 실패했습니다.");
+        return;
+      }
+      const ids = result.ids.filter((id) => !removedIds.has(id));
+      if (ids.length === 0) {
+        toast.error("선택할 문제가 없습니다.");
+        return;
+      }
+      setSelectedIds(new Set(ids));
+      toast.success(`${ids.length}문항을 전체 페이지에서 선택했습니다.`);
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "전체 선택에 실패했습니다.",
+      );
+    } finally {
+      setSelectingAllPages(false);
+    }
+  }, [academyId, filters, removedIds, selectingAllPages, setSelectedIds]);
+
   const isAllSelected =
     displayedIds.length > 0 && displayedIds.every((id) => selectedIds.has(id));
 
-  const toggleSelectAll = useCallback(() => {
+  // 헤더 "전체 선택" 토글: 이미 전체(전 페이지) 선택 → 해제 / 여러 페이지면 전 페이지
+  // 선택 / 한 페이지뿐이면 현재 페이지 토글.
+  const handleToggleSelectAll = useCallback(() => {
+    if (allPagesSelected) {
+      setSelectedIds(new Set());
+      return;
+    }
+    if (total > displayedIds.length) {
+      void handleSelectAllPages();
+      return;
+    }
     setSelectedIds((prev) => {
       const allSelected =
         displayedIds.length > 0 && displayedIds.every((id) => prev.has(id));
       return allSelected ? new Set() : new Set(displayedIds);
     });
-  }, [displayedIds, setSelectedIds]);
+  }, [
+    allPagesSelected,
+    total,
+    displayedIds,
+    handleSelectAllPages,
+    setSelectedIds,
+  ]);
 
   // 필터(유형/난이도/정렬/검색) 토글 + 3열 토글 — 문제 관리와 동일한 컴포넌트.
   const filtersToolbar = (
@@ -481,25 +574,25 @@ export function QuestionTrashClient({
 
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2.5 gap-y-1.5">
-      {/* 선택 개수 + 전체 선택 */}
-      <button
-        type="button"
-        onClick={toggleSelectAll}
-        disabled={displayedIds.length === 0}
-        className={
-          "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border px-2.5 text-[11px] font-semibold shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
-          (isAllSelected && hasSelection
-            ? "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
-            : "border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700")
+      {/* 전체 선택 — 단순 체크박스 하나로 토글. 일부 선택 시 중간 상태. */}
+      <SelectAllCheckbox
+        checked={allPagesSelected || (isAllSelected && hasSelection)}
+        indeterminate={
+          hasSelection && !allPagesSelected && !(isAllSelected && hasSelection)
         }
-      >
-        <Check className="h-3.5 w-3.5" />
-        {isAllSelected && hasSelection ? "선택 해제" : "전체 선택"}
-      </button>
-
-      <span className="text-[12px] font-medium text-slate-500">
-        {selectedIds.size}문항 선택
-      </span>
+        disabled={displayedIds.length === 0 || selectingAllPages}
+        onChange={handleToggleSelectAll}
+        title={
+          total > displayedIds.length
+            ? `전체 ${total}문항 선택 (모든 페이지)`
+            : "전체 선택"
+        }
+        ariaLabel={
+          allPagesSelected || (isAllSelected && hasSelection)
+            ? "전체 해제"
+            : "전체 선택"
+        }
+      />
 
       <span className="h-4 w-px bg-slate-200" />
 
@@ -528,7 +621,7 @@ export function QuestionTrashClient({
 
         <button
           type="button"
-          onClick={() => setPurgeTarget("bulk")}
+          onClick={requestBulkPurge}
           disabled={!hasSelection || bulkPurging}
           title="선택한 문항 영구 삭제"
           className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-red-50 px-2.5 text-[11px] font-semibold text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
@@ -623,10 +716,10 @@ export function QuestionTrashClient({
                 backLink: (
                   <Link
                     href={QUESTION_BANK_PATH}
-                    className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                    aria-label="문제 관리로 돌아가기"
+                    className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    문제 관리로 돌아가기
                   </Link>
                 ),
               }}
@@ -683,7 +776,7 @@ export function QuestionTrashClient({
                     // 문제 관리와 동일한 리치 카드(QuestionBankCard)를 그대로 재사용한다.
                     // trashMode 로 검수/수정 풋터 대신 '복원 / 영구삭제 / 상세보기' 풋터를 노출.
                     // - onRestore: 즉시 복원
-                    // - onDelete: 영구삭제 확인 다이얼로그 오픈(setPurgeTarget)
+                    // - onDelete: 영구삭제 네이티브 확인창(requestSinglePurge)
                     // - enableDrag={false}: 휴지통에선 폴더로 드래그가 무의미(드롭 핸들러 no-op)
                     // - onToggleStar 미전달: 별표는 정적 표시(상태 변경 없음)
                     <QuestionBankCard
@@ -694,7 +787,7 @@ export function QuestionTrashClient({
                       onToggle={() => toggleSelect(q.id)}
                       onDetail={() => void openDetail(q.id)}
                       onRestore={() => void handleRestore(q.id)}
-                      onDelete={() => setPurgeTarget(q.id)}
+                      onDelete={() => requestSinglePurge(q.id)}
                       viewSize={viewSize}
                       cardClickSelects
                       showDetailButton
@@ -731,42 +824,8 @@ export function QuestionTrashClient({
         onApprove={() => {}}
         onUnapprove={() => {}}
         // 상세에서 '삭제'는 영구 삭제 확인 다이얼로그로 연결.
-        onDelete={(id) => setPurgeTarget(id)}
+        onDelete={(id) => requestSinglePurge(id)}
       />
-
-      {/* ─── Permanent-delete confirm (irreversible) ─── */}
-      <AlertDialog
-        open={purgeTarget !== null}
-        onOpenChange={(open) => {
-          if (!purgeBusy && !open) setPurgeTarget(null);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {purgeTarget === "bulk"
-                ? `선택한 문제 ${purgeCount}문항을 영구 삭제하시겠습니까?`
-                : "이 문제를 영구 삭제하시겠습니까?"}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 영구적으로 삭제됩니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={purgeBusy}>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(e) => {
-                e.preventDefault();
-                void handlePurgeConfirmed();
-              }}
-              disabled={purgeBusy}
-              className="bg-red-500 hover:bg-red-600"
-            >
-              {purgeBusy ? "삭제 중..." : "영구 삭제"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }

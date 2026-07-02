@@ -4,7 +4,7 @@ import { isFlowStructuredSubtype, questionStemAndBody } from "./question-body-la
 import { isLineGapItem, LINE_GAP_MAX_PX, BLOCK_PX_PER_PT, type PaginationSettings, type PaperGroup, type PaperItem, type PaperPage, type RenderFragment, type RenderItemPart } from "./types";
 import { DEFAULT_IMAGE_ASPECT, imageAspectFromDataUrl } from "@/lib/image-dims";
 import type { FlowBlock, PaginationResult } from "./pagination-types";
-import { GIVEN_BOX_CHROME, ITEM_RENDER_OVERHEAD, MIN_PASSAGE_START_LINES, MIN_QUESTION_START_LINES, OPTION_BLOCK_TOP_GAP, OPTION_ROW_GAP, buildStructLineBlocks, embeddedPassageBodyChrome, estimateAnswerBlockHeight, estimateObjectiveAnswerBlockHeight, estimateOptionBlockHeight, estimateTeacherNoteHeight, estimateTextLines, pageMetrics, passageChromeHeight, passageContinuationReserveHeight, passageLineHeight, passageToLines, questionBodyToLines, questionLineHeight, questionMetaHeight, questionToLines, resolveItemFontPx } from "./pagination-metrics";
+import { GIVEN_BOX_CHROME, ITEM_RENDER_OVERHEAD, MIN_PASSAGE_START_LINES, MIN_QUESTION_START_LINES, OPTION_BLOCK_TOP_GAP, OPTION_ROW_GAP, buildStructLineBlocks, embeddedPassageBodyChrome, estimateAnswerBlockHeight, estimateExplanationBlockHeight, estimateObjectiveAnswerBlockHeight, estimateOptionBlockHeight, estimateTeacherNoteHeight, estimateTextLines, pageMetrics, passageChromeHeight, passageContinuationReserveHeight, passageLineHeight, passageToLines, questionBodyToLines, questionLineHeight, questionMetaHeight, questionToLines, resolveItemFontPx } from "./pagination-metrics";
 
 export type {
   PaginationResult,
@@ -162,6 +162,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       showAnswer: false,
       showObjectiveAnswer: false,
       showCustomBlock: false,
+      showExplanation: false,
       questionRenderedLines: [],
       questionStartLineIndex: 0,
       questionTotalLines: 0,
@@ -424,6 +425,15 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       if (settings.template === "worksheet" && item.teacherNote) {
         blocks.push({ kind: "note", group, item, height: estimateTeacherNoteHeight(item, settings) });
       }
+      // 해설 포함 PDF: 각 문항 뒤에 인라인 정답·해설 블록(원자 단위)을 더한다.
+      if (settings.includeAnswers) {
+        blocks.push({
+          kind: "explanation",
+          group,
+          item,
+          height: estimateExplanationBlockHeight(item, settings),
+        });
+      }
     }
   }
 
@@ -594,6 +604,10 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
       columnHeights[columnIndex] += block.height;
     } else if (block.kind === "note") {
       ensurePart(fragment, block.item);
+      columnHeights[columnIndex] += block.height;
+    } else if (block.kind === "explanation") {
+      const part = ensurePart(fragment, block.item);
+      part.showExplanation = true;
       columnHeights[columnIndex] += block.height;
     }
 

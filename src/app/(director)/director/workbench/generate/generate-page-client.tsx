@@ -21,6 +21,7 @@ import {
   bulkDeleteWorkbenchPassages,
   bulkDeleteWorkbenchQuestions,
   createPassageCollection,
+  updatePassageCollection,
   deleteWorkbenchQuestion,
   removePassagesFromCollection,
   unapproveWorkbenchQuestion,
@@ -788,6 +789,51 @@ export function GeneratePageClient({
     [loadPassages],
   );
 
+  const handleRenamePassageCollection = useCallback(
+    async (collectionId: string, name: string) => {
+      const trimmed = name.trim();
+      if (!trimmed) return;
+      // 낙관적 갱신 후 서버 반영(실패 시 토스트). 폴더 카운트/멤버십엔 영향 없음.
+      setCollections((prev) =>
+        prev
+          .map((c) => (c.id === collectionId ? { ...c, name: trimmed } : c))
+          .slice()
+          .sort((a, b) => a.name.localeCompare(b.name, "ko")),
+      );
+      const result = await updatePassageCollection(collectionId, {
+        name: trimmed,
+      });
+      if (!result?.success) {
+        toast.error(result?.error || "폴더 이름 변경 실패");
+        void loadPassages();
+      }
+    },
+    [loadPassages],
+  );
+
+  // 상위(↑) 버튼이 "전체 지문"(루트)일 때 카드를 떨어뜨리면 현재 폴더에서 빼낸다.
+  const handleRemovePassagesFromFolder = useCallback(
+    async (passageIds: string[], collectionId: string) => {
+      const ids = Array.from(new Set(passageIds)).filter(
+        (id) => !isDraftPseudoId(id),
+      );
+      if (ids.length === 0 || !collectionId || passageBulkAction) return;
+      setPassageBulkAction("move");
+      try {
+        const result = await removePassagesFromCollection(collectionId, ids);
+        if (!result.success) {
+          toast.error(result.error || "폴더에서 빼기 실패");
+          return;
+        }
+        toast.success(`${ids.length}개 지문을 폴더에서 뺐습니다.`);
+        void loadPassages();
+      } finally {
+        setPassageBulkAction(null);
+      }
+    },
+    [passageBulkAction, loadPassages],
+  );
+
   const handleCopySelectedPassagesToCollection = useCallback(
     async (collectionId: string) => {
       const ids = [...selectedIds].filter((id) => !isDraftPseudoId(id));
@@ -848,13 +894,20 @@ export function GeneratePageClient({
           }
         };
 
-        toast.success(`${countLabel} "${folderName}"에 복사되었습니다`, {
-          duration: UNDO_TOAST_DURATION,
-          action: {
-            label: "실행 취소",
-            onClick: () => void undoFolderCopy(),
+        // 선택한 것 중 이미 이 폴더에 있어 새로 담지 않은(중복 제외) 개수.
+        const skippedCopy = ids.length - idsToAdd.length;
+        const skippedCopySuffix =
+          skippedCopy > 0 ? ` · 이미 들어있던 ${skippedCopy}개 제외` : "";
+        toast.success(
+          `${countLabel} "${folderName}"에 복사되었습니다${skippedCopySuffix}`,
+          {
+            duration: UNDO_TOAST_DURATION,
+            action: {
+              label: "실행 취소",
+              onClick: () => void undoFolderCopy(),
+            },
           },
-        });
+        );
         setSelectedIds(new Set());
         await loadPassages();
       } catch (err) {
@@ -869,7 +922,11 @@ export function GeneratePageClient({
   );
 
   const handleMovePassagesToCollection = useCallback(
-    async (passageIds: string[], collectionId: string) => {
+    async (
+      passageIds: string[],
+      collectionId: string,
+      keepFolderIds: string[] = [],
+    ) => {
       const ids = Array.from(new Set(passageIds)).filter(
         (id) => !isDraftPseudoId(id),
       );
@@ -877,6 +934,7 @@ export function GeneratePageClient({
       setPassageBulkAction("move");
       try {
         const idSet = new Set(ids);
+        const keepSet = new Set(keepFolderIds);
         const selectedPassages = passages.filter((passage) =>
           idSet.has(passage.id),
         );
@@ -888,8 +946,9 @@ export function GeneratePageClient({
             previousMembership.set(item.collectionId, list);
           }
         }
+        // Keep the item in folders the user ticked — only remove from the rest.
         const sourceCollectionIds = [...previousMembership.keys()].filter(
-          (id) => id !== collectionId,
+          (id) => id !== collectionId && !keepSet.has(id),
         );
         const targetExistingIds = new Set(
           previousMembership.get(collectionId) ?? [],
@@ -970,13 +1029,20 @@ export function GeneratePageClient({
           }
         };
 
-        toast.success(`${countLabel} "${folderName}"(으)로 이동되었습니다`, {
-          duration: UNDO_TOAST_DURATION,
-          action: {
-            label: "실행 취소",
-            onClick: () => void undoFolderMove(),
+        // 끌어온 것 중 이미 이 폴더에 있어 새로 담지 않은(중복 제외) 개수.
+        const skippedMove = ids.length - idsToAdd.length;
+        const skippedMoveSuffix =
+          skippedMove > 0 ? ` · 이미 들어있던 ${skippedMove}개 제외` : "";
+        toast.success(
+          `${countLabel} "${folderName}"(으)로 이동되었습니다${skippedMoveSuffix}`,
+          {
+            duration: UNDO_TOAST_DURATION,
+            action: {
+              label: "실행 취소",
+              onClick: () => void undoFolderMove(),
+            },
           },
-        });
+        );
         setPassages((prev) =>
           prev.map((passage) => {
             if (!idSet.has(passage.id)) return passage;
@@ -1033,6 +1099,121 @@ export function GeneratePageClient({
       await handleMovePassagesToCollection([...selectedIds], collectionId);
     },
     [handleMovePassagesToCollection, selectedIds],
+  );
+
+  // Copy (add to target, keep in current folders) by explicit ids — powers the
+  // 복사 option of the drag chooser. Mirrors the move handler's optimistic
+  // updates but only adds (never removes from sources).
+  const handleCopyPassagesToCollection = useCallback(
+    async (passageIds: string[], collectionId: string) => {
+      const ids = Array.from(new Set(passageIds)).filter(
+        (id) => !isDraftPseudoId(id),
+      );
+      if (ids.length === 0 || passageBulkAction) return;
+      setPassageBulkAction("move");
+      try {
+        const idSet = new Set(ids);
+        const targetPassages = passages.filter((passage) =>
+          idSet.has(passage.id),
+        );
+        const idsToAdd = ids.filter(
+          (id) =>
+            !targetPassages
+              .find((passage) => passage.id === id)
+              ?.collectionItems?.some(
+                (item) => item.collectionId === collectionId,
+              ),
+        );
+        if (idsToAdd.length === 0) {
+          toast.info("이미 이 폴더에 들어있는 지문입니다.");
+          return;
+        }
+        const addResult = await addPassagesToCollection(collectionId, idsToAdd);
+        if (!addResult.success) {
+          toast.error(addResult.error || "폴더에 복사하지 못했습니다.");
+          return;
+        }
+        const folderName =
+          collections.find((collection) => collection.id === collectionId)
+            ?.name || "폴더";
+        const countLabel =
+          idsToAdd.length > 1 ? `${idsToAdd.length}개 지문이` : "지문이";
+        const undoFolderCopy = async () => {
+          setPassageBulkAction("move");
+          try {
+            const undo = await removePassagesFromCollection(
+              collectionId,
+              idsToAdd,
+            );
+            if (!undo.success) {
+              toast.error(undo.error || "폴더 복사를 실행 취소하지 못했습니다.");
+              return;
+            }
+            await loadPassages();
+            toast.success("폴더 복사를 실행 취소했습니다.");
+          } catch (err) {
+            toast.error(
+              err instanceof Error
+                ? err.message
+                : "폴더 복사를 실행 취소하지 못했습니다.",
+            );
+          } finally {
+            setPassageBulkAction(null);
+          }
+        };
+        // 끌어온 것 중 이미 이 폴더에 있어 새로 담지 않은(중복 제외) 개수.
+        const skippedCopy = ids.length - idsToAdd.length;
+        const skippedCopySuffix =
+          skippedCopy > 0 ? ` · 이미 들어있던 ${skippedCopy}개 제외` : "";
+        toast.success(
+          `${countLabel} "${folderName}"에 복사되었습니다${skippedCopySuffix}`,
+          {
+            duration: UNDO_TOAST_DURATION,
+            action: { label: "실행 취소", onClick: () => void undoFolderCopy() },
+          },
+        );
+        setPassages((prev) =>
+          prev.map((passage) => {
+            if (!idSet.has(passage.id)) return passage;
+            const collectionItems = passage.collectionItems ?? [];
+            if (
+              collectionItems.some((item) => item.collectionId === collectionId)
+            ) {
+              return passage;
+            }
+            return {
+              ...passage,
+              collectionItems: [...collectionItems, { collectionId }],
+            };
+          }),
+        );
+        setCollections((prev) =>
+          prev.map((collection) =>
+            collection.id === collectionId
+              ? {
+                  ...collection,
+                  _count: {
+                    ...collection._count,
+                    items: collection._count.items + idsToAdd.length,
+                  },
+                }
+              : collection,
+          ),
+        );
+        setSelectedIds((prev) => {
+          if (!ids.some((id) => prev.has(id))) return prev;
+          return new Set([...prev].filter((id) => !idSet.has(id)));
+        });
+        void loadPassages();
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "폴더에 복사하지 못했습니다.",
+        );
+      } finally {
+        setPassageBulkAction(null);
+      }
+    },
+    [collections, loadPassages, passageBulkAction, passages],
   );
 
   const handleRemoveSelectedPassagesFromCollection = useCallback(async () => {
@@ -2541,7 +2722,10 @@ export function GeneratePageClient({
                 handleMoveSelectedPassagesToCollection
               }
               onMovePassagesToCollection={handleMovePassagesToCollection}
+              onCopyPassagesToCollection={handleCopyPassagesToCollection}
               onCreateCollection={handleCreatePassageCollection}
+              onRenameCollection={handleRenamePassageCollection}
+              onRemovePassagesFromFolder={handleRemovePassagesFromFolder}
               onRemoveSelectedFromCollection={
                 handleRemoveSelectedPassagesFromCollection
               }
@@ -2800,19 +2984,21 @@ export function GeneratePageClient({
                   <button
                     type="button"
                     onClick={() => handleUnapproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                    title="검수취소"
+                    aria-label="검수취소"
+                    className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <XCircle className="h-3.5 w-3.5" />
-                    검수취소
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={() => handleApproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                    title="검수완료"
+                    aria-label="검수완료"
+                    className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <CheckCircle2 className="h-3.5 w-3.5" />
-                    검수완료
                   </button>
                 )}
                 {/* 수정하기 — 검수완료 버튼 오른쪽. 상세를 닫고 편집기를 연다. */}
@@ -2823,10 +3009,11 @@ export function GeneratePageClient({
                     setDetailQuestion(null);
                     editor.openEditor(id);
                   }}
-                  className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                  title="수정하기"
+                  aria-label="수정하기"
+                  className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                 >
                   <SquarePen className="h-3.5 w-3.5" />
-                  수정하기
                 </button>
                 <button
                   onClick={() => setDetailQuestion(null)}

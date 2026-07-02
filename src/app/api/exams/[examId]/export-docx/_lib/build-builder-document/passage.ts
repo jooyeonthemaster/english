@@ -126,6 +126,7 @@ export function shouldPlaceInlinePassageBeforeBody(subType: string): boolean {
   return (
     subType === "CONDITIONAL_WRITING" ||
     subType === "WORD_ORDER" ||
+    subType === "TOPIC_SENTENCE_WRITING" ||
     subType === "SENTENCE_TRANSFORM"
   );
 }

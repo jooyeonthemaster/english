@@ -79,10 +79,11 @@ export function SetDetailDialog({
             <button
               type="button"
               onClick={onDeleteSet}
-              className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-semibold text-red-600 shadow-none transition-colors hover:border-red-300 hover:bg-red-50 hover:text-red-700"
+              title="세트 삭제"
+              aria-label="세트 삭제"
+              className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-[11px] font-semibold text-red-600 shadow-none transition-colors hover:border-red-300 hover:bg-red-50 hover:text-red-700"
             >
               <Trash2 className="h-3.5 w-3.5" />
-              세트 삭제
             </button>
             <button
               onClick={onClose}
@@ -181,14 +182,14 @@ export function SetDetailDialog({
                         disabled={splitting}
                         onClick={() => onSplitMember(m.questionId)}
                         title="이 문항의 복제본을 단독 문항으로 추가합니다(세트는 그대로)"
-                        className="flex h-6 shrink-0 items-center gap-1 rounded-md border border-slate-200 bg-white px-1.5 text-[10.5px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                        aria-label="분리"
+                        className="flex size-6 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-[10.5px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         {splitting ? (
                           <Loader2 className="h-3 w-3 animate-spin" />
                         ) : (
                           <Scissors className="h-3 w-3" />
                         )}
-                        분리
                       </button>
                     </div>
                     {/* 멤버 본문 — 리스트 카드와 동일하게 일반 문항 카드(QuestionBankCard)로 렌더.

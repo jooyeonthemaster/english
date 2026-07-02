@@ -30,6 +30,7 @@ import {
   FolderX,
   FilePen,
   GraduationCap,
+  Layers,
 } from "lucide-react";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { Badge } from "@/components/ui/badge";
@@ -37,7 +38,12 @@ import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import { isDirectInputPassage } from "@/lib/passage-source";
 import { PassageInlineTitle } from "@/components/workbench/passage-inline-title";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
+import { DragDropModePopover } from "@/components/workbench/shared/drag-drop-mode-popover";
 import type { CollectionItem } from "@/components/workbench/shared/types";
+import {
+  resolveFolderCount,
+  type ResolvedFolderCount,
+} from "@/components/workbench/shared/folder-count";
 import {
   type PassageCollectionItem,
   countWords,
@@ -104,7 +110,10 @@ export function PassageCardGrid({
   onCopySelectedToCollection,
   onMoveSelectedToCollection,
   onMovePassagesToCollection,
+  onCopyPassagesToCollection,
   onCreateCollection,
+  onRenameCollection,
+  onRemovePassagesFromFolder,
   onRemoveSelectedFromCollection,
   onDeleteSelectedPassages,
   passageBulkAction = null,
@@ -148,9 +157,33 @@ export function PassageCardGrid({
   const [dropTargetCollectionId, setDropTargetCollectionId] = useState<
     string | null
   >(null);
+  // When a card is dropped on a folder and copy is available, defer the
+  // move/copy decision to a chooser popover anchored at the drop point.
+  const [pendingFolderDrop, setPendingFolderDrop] = useState<{
+    ids: string[];
+    collectionId: string;
+    folderName: string;
+    anchor: { x: number; y: number };
+    currentFolders: { id: string; name: string }[];
+  } | null>(null);
   const [showNewFolderInput, setShowNewFolderInput] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
   const [creatingFolder, setCreatingFolder] = useState(false);
+  // 폴더 칩 더블클릭 → 인라인 이름 변경(관리 페이지 폴더와 동일 동작).
+  const [renamingCollectionId, setRenamingCollectionId] = useState<
+    string | null
+  >(null);
+  const [renameName, setRenameName] = useState("");
+  const startRenameCollection = (id: string, name: string) => {
+    setRenameName(name);
+    setRenamingCollectionId(id);
+  };
+  const commitRenameCollection = (id: string) => {
+    const trimmed = renameName.trim();
+    const current = collections.find((c) => c.id === id)?.name;
+    if (trimmed && trimmed !== current) void onRenameCollection?.(id, trimmed);
+    setRenamingCollectionId(null);
+  };
   const [lastCreatedCollectionId, setLastCreatedCollectionId] = useState<
     string | null
   >(null);
@@ -224,6 +257,66 @@ export function PassageCardGrid({
     [collections, selectedCollectionId],
   );
   const parentCollectionId = selectedCollection?.parentId ?? "";
+
+  // 폴더별 누적(하위 폴더 포함) 카운트. 관리 페이지와 동일하게 카드 장수(중복
+  // 포함)를 헤드라인으로, 중복 건수를 보조로 보여준다. 멤버십은 전체 지문의
+  // collectionItems에서 파생(이 화면은 academy 전체 지문을 로드하므로 완전).
+  const folderCountById = useMemo(() => {
+    const membership = new Map<string, Set<string>>();
+    for (const p of passages) {
+      for (const ci of p.collectionItems ?? []) {
+        let set = membership.get(ci.collectionId);
+        if (!set) {
+          set = new Set<string>();
+          membership.set(ci.collectionId, set);
+        }
+        set.add(p.id);
+      }
+    }
+    const childrenOf = new Map<string, string[]>();
+    for (const c of collections) {
+      if (!c.parentId) continue;
+      let arr = childrenOf.get(c.parentId);
+      if (!arr) {
+        arr = [];
+        childrenOf.set(c.parentId, arr);
+      }
+      arr.push(c.id);
+    }
+    const result = new Map<string, ResolvedFolderCount>();
+    for (const c of collections) {
+      const seen = new Set<string>();
+      const visited = new Set<string>();
+      let raw = 0;
+      const stack = [c.id];
+      while (stack.length) {
+        const id = stack.pop()!;
+        if (visited.has(id)) continue;
+        visited.add(id);
+        const m = membership.get(id);
+        if (m) {
+          raw += m.size;
+          for (const x of m) seen.add(x);
+        }
+        for (const k of childrenOf.get(id) ?? []) stack.push(k);
+      }
+      const direct = membership.get(c.id)?.size ?? c._count.items;
+      result.set(
+        c.id,
+        resolveFolderCount({
+          id: c.id,
+          parentId: c.parentId ?? null,
+          name: c.name,
+          description: null,
+          color: null,
+          _count: { items: direct, children: (childrenOf.get(c.id) ?? []).length },
+          totalItems: raw,
+          duplicateCount: raw - seen.size,
+        } as CollectionItem),
+      );
+    }
+    return result;
+  }, [collections, passages]);
   const movePickerCollections = useMemo<CollectionItem[]>(() => {
     const childCountByParent = new Map<string, number>();
     for (const collection of collections) {
@@ -604,7 +697,7 @@ export function PassageCardGrid({
             setDropTargetCollectionId((current) =>
               current === collectionId ? null : current,
             ),
-          onDrop: ({ source }) => {
+          onDrop: ({ source, location }) => {
             setDropTargetCollectionId(null);
             setDraggingPassageIds([]);
 
@@ -618,6 +711,48 @@ export function PassageCardGrid({
             const ids = Array.from(new Set(sourceIds));
             if (ids.length === 0) return;
 
+            // "전체 지문"(루트) 상위 버튼에 떨어뜨리면 현재 폴더에서 빼낸다.
+            if (collectionId === "__to_root__") {
+              void onRemovePassagesFromFolder?.(ids, selectedCollectionId);
+              return;
+            }
+
+            // With copy available, ask the user 복사 vs 이동 right at the drop
+            // point (drag used to silently move, removing from other folders —
+            // confusing when reusing the same passage across students). Without
+            // it, keep the legacy immediate-move behaviour.
+            if (onCopyPassagesToCollection) {
+              const input = location?.current?.input;
+              const folderName =
+                collections.find((c) => c.id === collectionId)?.name ?? "폴더";
+              // Folders the dragged items currently belong to (union), minus the
+              // target — so the move chooser can offer "keep here" per folder.
+              const idSet = new Set(ids);
+              const currentFolderIds = new Set<string>();
+              for (const passage of passages) {
+                if (!idSet.has(passage.id)) continue;
+                for (const item of passage.collectionItems ?? []) {
+                  if (item.collectionId !== collectionId) {
+                    currentFolderIds.add(item.collectionId);
+                  }
+                }
+              }
+              const currentFolders = collections
+                .filter((c) => currentFolderIds.has(c.id))
+                .map((c) => ({ id: c.id, name: c.name }));
+              setPendingFolderDrop({
+                ids,
+                collectionId,
+                folderName,
+                anchor: {
+                  x: input?.clientX ?? window.innerWidth / 2,
+                  y: input?.clientY ?? window.innerHeight / 2,
+                },
+                currentFolders,
+              });
+              return;
+            }
+
             void onMovePassagesToCollection(ids, collectionId);
           },
         }),
@@ -625,7 +760,16 @@ export function PassageCardGrid({
     }
 
     return () => cleanupFns.forEach((cleanup) => cleanup());
-  }, [childCollections, onMovePassagesToCollection, passageBulkAction]);
+  }, [
+    childCollections,
+    collections,
+    passages,
+    onMovePassagesToCollection,
+    onCopyPassagesToCollection,
+    onRemovePassagesFromFolder,
+    selectedCollectionId,
+    passageBulkAction,
+  ]);
 
   const renderFolderChip = (
     key: string,
@@ -635,9 +779,45 @@ export function PassageCardGrid({
     onClick: () => void,
     dropCollectionId?: string,
     tourTarget?: string,
+    countInfo?: ResolvedFolderCount,
   ) => {
     const isDropTarget =
       !!dropCollectionId && dropTargetCollectionId === dropCollectionId;
+
+    // 인라인 이름 변경 모드 — 칩 자리에 입력창을 띄운다.
+    if (
+      onRenameCollection &&
+      dropCollectionId &&
+      renamingCollectionId === dropCollectionId
+    ) {
+      return (
+        <div
+          key={key}
+          className="flex w-[64px] flex-col items-center justify-center rounded-lg border-2 border-blue-400 bg-white px-1 py-1 shadow-lg ring-2 ring-blue-200/50"
+        >
+          <Folder className="mb-0.5 size-3 text-slate-500" aria-hidden="true" />
+          <input
+            autoFocus
+            value={renameName}
+            onChange={(e) => setRenameName(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                commitRenameCollection(dropCollectionId);
+              }
+              if (e.key === "Escape") {
+                e.preventDefault();
+                setRenamingCollectionId(null);
+              }
+            }}
+            onBlur={() => commitRenameCollection(dropCollectionId)}
+            className="w-full rounded border border-blue-300 bg-white px-1 py-0.5 text-center text-[9px] font-semibold text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+            maxLength={30}
+          />
+        </div>
+      );
+    }
 
     return (
       <button
@@ -653,7 +833,13 @@ export function PassageCardGrid({
         type="button"
         data-generate-tour={tourTarget}
         onClick={onClick}
-        title={label}
+        onDoubleClick={(e) => {
+          if (onRenameCollection && dropCollectionId) {
+            e.stopPropagation();
+            startRenameCollection(dropCollectionId, label);
+          }
+        }}
+        title={onRenameCollection && dropCollectionId ? `${label} (더블클릭하여 이름 변경)` : label}
         className={
           "group relative flex w-[64px] cursor-pointer flex-col items-center justify-center rounded-lg border px-1 py-1 shadow-sm transition-all " +
           (active || isDropTarget
@@ -679,13 +865,32 @@ export function PassageCardGrid({
           {label}
         </span>
         <span
+          title={countInfo?.tooltip}
           className={
-            "text-[8.5px] tabular-nums " +
-            (active || isDropTarget ? "text-blue-500" : "text-slate-400")
+            "flex items-center gap-0.5 text-[8.5px] tabular-nums " +
+            (countInfo?.includesSubfolders || active || isDropTarget
+              ? "text-blue-500"
+              : "text-slate-400")
           }
         >
-          {count}개
+          {countInfo?.includesSubfolders ? (
+            <Layers className="size-2" aria-hidden="true" />
+          ) : null}
+          {countInfo ? countInfo.display : count}개
         </span>
+        {countInfo?.note ? (
+          <span
+            title={countInfo.tooltip}
+            className={
+              "text-[7px] font-semibold leading-none " +
+              (countInfo.noteTone === "duplicate"
+                ? "text-amber-500"
+                : "text-blue-400")
+            }
+          >
+            {countInfo.note}
+          </span>
+        ) : null}
       </button>
     );
   };
@@ -697,9 +902,11 @@ export function PassageCardGrid({
     return (
       <button
         ref={(node) => {
-          if (!parentCollectionId) return;
-          if (node) folderDropRefs.current.set(parentCollectionId, node);
-          else folderDropRefs.current.delete(parentCollectionId);
+          // 상위가 실제 폴더면 그 id로, "전체 지문"(루트)이면 sentinel로 등록 →
+          // 드롭 시 현재 폴더에서 빼낸다.
+          const key = parentCollectionId || "__to_root__";
+          if (node) folderDropRefs.current.set(key, node);
+          else folderDropRefs.current.delete(key);
         }}
         type="button"
         onClick={() => setSelectedCollectionId(parentCollectionId)}
@@ -826,6 +1033,7 @@ export function PassageCardGrid({
                     c.id === lastCreatedCollectionId
                       ? "library-folder-created-drop-target"
                       : undefined,
+                    folderCountById.get(c.id),
                   ),
                 )}
                 {onCreateCollection ? (
@@ -1551,6 +1759,46 @@ export function PassageCardGrid({
           </button>
         </div>
       ) : null}
+      <DragDropModePopover
+        key={
+          pendingFolderDrop
+            ? `${pendingFolderDrop.collectionId}:${pendingFolderDrop.anchor.x}:${pendingFolderDrop.anchor.y}`
+            : "none"
+        }
+        pending={
+          pendingFolderDrop
+            ? {
+                itemId: pendingFolderDrop.ids[0],
+                folderId: pendingFolderDrop.collectionId,
+                folderName: pendingFolderDrop.folderName,
+                anchor: pendingFolderDrop.anchor,
+                currentFolders: pendingFolderDrop.currentFolders,
+                // 폴더 안에서 드래그할 때만 "이동"(현재 폴더에서 빼서 옮김)을
+                // 제공한다. 루트(전체 지문)면 undefined → 단일 "담기"만 노출.
+                sourceFolderName: selectedCollection?.name,
+              }
+            : null
+        }
+        itemLabel="지문"
+        onChoose={({ copy }) => {
+          if (pendingFolderDrop) {
+            const { ids, collectionId } = pendingFolderDrop;
+            if (copy) {
+              void onCopyPassagesToCollection?.(ids, collectionId);
+            } else {
+              // 이동 = "지금 보고 있는 폴더"에서만 빼고 옮긴다(관리 페이지와 동일).
+              // 다른 폴더의 사본은 keepFolderIds로 보존하고 현재 폴더만 제거한다.
+              // (루트에선 빼낼 현재 폴더가 없어 팝오버가 단일 "담기"만 띄운다.)
+              const keepFolderIds = pendingFolderDrop.currentFolders
+                .map((f) => f.id)
+                .filter((id) => id !== selectedCollectionId);
+              void onMovePassagesToCollection?.(ids, collectionId, keepFolderIds);
+            }
+          }
+          setPendingFolderDrop(null);
+        }}
+        onCancel={() => setPendingFolderDrop(null)}
+      />
     </div>
   );
 }

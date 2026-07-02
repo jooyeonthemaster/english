@@ -173,11 +173,12 @@ export function DraftDetailModal({
               disabled={busy}
               aria-pressed={isReviewed}
               className={
-                "inline-flex h-9 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border bg-white px-3 text-[12px] font-bold transition-all outline-none focus-visible:ring-[3px] focus-visible:ring-emerald-500/40 disabled:cursor-not-allowed disabled:opacity-60 " +
+                "inline-flex size-9 cursor-pointer items-center justify-center rounded-md border bg-white transition-all outline-none focus-visible:ring-[3px] focus-visible:ring-emerald-500/40 disabled:cursor-not-allowed disabled:opacity-60 " +
                 (isReviewed
                   ? "border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
                   : "border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
               }
+              aria-label={isReviewed ? "검수완료" : "미검수"}
               title={
                 isReviewed
                   ? "검수완료 — 누르면 검수를 취소합니다"
@@ -189,33 +190,34 @@ export function DraftDetailModal({
               ) : (
                 <CheckCircle2 className="size-3.5" aria-hidden="true" />
               )}
-              {isReviewed ? "검수완료" : "미검수"}
             </button>
             <button
               type="button"
               onClick={() => onSave(draft)}
               disabled={busy}
-              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-slate-900 bg-slate-900 px-3 text-[12px] font-bold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+              title="저장"
+              aria-label="저장"
+              className="inline-flex size-9 cursor-pointer items-center justify-center rounded-md border border-slate-900 bg-slate-900 text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSaving ? (
                 <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
               ) : (
                 <Save className="size-3.5" aria-hidden="true" />
               )}
-              저장
             </button>
             <button
               type="button"
               onClick={() => onDelete(draft)}
               disabled={busy}
-              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 text-[12px] font-bold text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+              title="삭제"
+              aria-label="삭제"
+              className="inline-flex size-9 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isDeleting ? (
                 <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
               ) : (
                 <Trash2 className="size-3.5" aria-hidden="true" />
               )}
-              삭제
             </button>
             <button
               type="button"

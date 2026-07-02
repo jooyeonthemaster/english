@@ -26,7 +26,12 @@ export async function getMembers(filters: MemberListFilters = {}) {
   const search = (filters.search ?? "").trim().slice(0, MAX_SEARCH_LENGTH);
   const sortKey = filters.sortKey ?? "createdAt";
   const sortOrder = filters.sortOrder ?? "desc";
-  const limit = Math.min(Math.max(filters.limit ?? 100, 1), 500);
+  // limit 미지정 시 전체 로드 — 회원 검색이 일부(이전 500명 캡)가 아니라 전 범위를
+  // 대상으로 이뤄지도록. 명시적으로 넘긴 경우에만 상한(5000)을 적용한다.
+  const limit =
+    filters.limit === undefined
+      ? undefined
+      : Math.min(Math.max(filters.limit, 1), 5000);
 
   const conditions: Prisma.StaffWhereInput[] = [{ role: "DIRECTOR" }];
 
@@ -56,10 +61,10 @@ export async function getMembers(filters: MemberListFilters = {}) {
     });
   }
 
-  // NOTE: balance sort is performed in memory after a wide DB pull capped by
-  // `limit`. For typical admin-side member counts this is acceptable. If the
-  // member table grows past low-thousands, migrate to a raw join with
-  // ORDER BY credit_balances.balance DESC.
+  // NOTE: balance sort is performed in memory after a full DB pull (no take
+  // when limit is unset). For typical admin-side member counts this is
+  // acceptable. If the member table grows past low-thousands, migrate to a raw
+  // join with ORDER BY credit_balances.balance DESC and server-side search.
   // lastActiveAt(=로그인/사용 중 최근)은 파생값이라 DB 정렬이 불가 — 화면(클라이언트)
   // 에서 정렬한다. balance와 동일하게 넓게 떠서 메모리 정렬(회원 수가 수천 미만 가정).
   const dbOrderBy: Prisma.StaffOrderByWithRelationInput =
@@ -70,7 +75,7 @@ export async function getMembers(filters: MemberListFilters = {}) {
   const staffRows = await prisma.staff.findMany({
     where: { AND: conditions },
     orderBy: dbOrderBy,
-    take: limit,
+    ...(limit !== undefined ? { take: limit } : {}),
     include: {
       academy: {
         select: {

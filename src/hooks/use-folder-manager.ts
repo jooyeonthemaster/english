@@ -37,6 +37,12 @@ interface UseFolderManagerOptions {
   /** questionId → setId 역참조. 있으면 폴더 카운트에서 세트 멤버를 "세트 1개"로 센다
    *  (일반 문제와 동일 시각 단위). 미지정(지문/추출 폴더 등)이면 raw 멤버 수로 폴백. */
   questionSetIdOf?: (itemId: string) => string | null | undefined;
+  /**
+   * 폴더 배지를 하위 폴더까지 합산한 누적(중복 제거) 수치로 노출할지. 켜면
+   * 노출되는 collections/childFolders 각각에 totalItems가 채워진다. 지문/시험지
+   * 처럼 별도 카운트 구조를 쓰는 화면은 끈 채로 둔다(직속 수치만 사용).
+   */
+  cumulativeCounts?: boolean;
 }
 
 const UNDO_TOAST_DURATION = 8000;
@@ -61,6 +67,7 @@ export function useFolderManager({
   actions,
   itemLabel,
   questionSetIdOf,
+  cumulativeCounts = false,
 }: UseFolderManagerOptions) {
   // ─── State ───
   const [collections, setCollections] = useState<CollectionItem[]>(
@@ -76,10 +83,76 @@ export function useFolderManager({
 
   // ─── Derived state ───
 
+  /**
+   * 폴더별 하위 폴더 누적치. total = 카드 장수(중복 포함, 사용자가 트리를 훑을 때
+   * 실제로 보는 수), duplicates = 같은 아이템이 여러 폴더에 복사돼 생긴 중복 건수
+   * (total - 고유수). 다대다 멤버십이라 단순 합산(total)과 고유수(distinct)가 다르다.
+   * membership이 바뀌면(드래그 이동 등) 자동 재계산돼 배지가 실시간 반영된다.
+   */
+  const cumulativeById = useMemo(() => {
+    if (!cumulativeCounts) return null;
+    const childrenOf = new Map<string, string[]>();
+    for (const c of collections) {
+      if (!c.parentId) continue;
+      const siblings = childrenOf.get(c.parentId);
+      if (siblings) siblings.push(c.id);
+      else childrenOf.set(c.parentId, [c.id]);
+    }
+    const result: Record<
+      string,
+      { total: number; duplicates: number; childCount: number }
+    > = {};
+    for (const root of collections) {
+      const seenItems = new Set<string>();
+      const visited = new Set<string>();
+      let raw = 0; // 폴더별 직속 수의 단순 합(= 카드 장수)
+      const stack = [root.id];
+      while (stack.length) {
+        const id = stack.pop()!;
+        if (visited.has(id)) continue; // cycle/diamond 가드
+        visited.add(id);
+        const members = membership[id];
+        if (members) {
+          raw += members.size;
+          for (const item of members) seenItems.add(item);
+        }
+        const kids = childrenOf.get(id);
+        if (kids) for (const k of kids) stack.push(k);
+      }
+      result[root.id] = {
+        total: raw,
+        duplicates: raw - seenItems.size,
+        childCount: (childrenOf.get(root.id) ?? []).length,
+      };
+    }
+    return result;
+  }, [cumulativeCounts, collections, membership]);
+
+  /**
+   * 노출용 컬렉션: 누적 모드일 때 totalItems·duplicateCount를 덧붙이고,
+   * _count.children을 라이브 트리 기준으로 덮어쓴다. 서버 _count.children은
+   * fetch 시점 값이라 세션 중 하위 폴더를 새로 만들면 stale → 누적 배지가 안
+   * 켜지는 버그를 막는다(배지 ON 판정은 _count.children에 의존).
+   */
+  const exposedCollections = useMemo(() => {
+    if (!cumulativeById) return collections;
+    return collections.map((c) => {
+      const agg = cumulativeById[c.id];
+      return agg
+        ? {
+            ...c,
+            totalItems: agg.total,
+            duplicateCount: agg.duplicates,
+            _count: { ...c._count, children: agg.childCount },
+          }
+        : c;
+    });
+  }, [collections, cumulativeById]);
+
   /** Child folders of the current active folder. */
   const childFolders = useMemo(
-    () => collections.filter((c) => c.parentId === activeFolder),
-    [collections, activeFolder],
+    () => exposedCollections.filter((c) => c.parentId === activeFolder),
+    [exposedCollections, activeFolder],
   );
 
   /** Breadcrumb path from root to the active folder. */
@@ -268,8 +341,12 @@ export function useFolderManager({
           toast.success("폴더 추가를 실행 취소했습니다.");
         };
 
+        // 끌어온/선택한 것 중 이미 폴더에 있어 추가하지 않은(중복 제외) 개수.
+        const skippedCount = ids.length - addedIds.length;
+        const skippedSuffix =
+          skippedCount > 0 ? ` (이미 들어있던 ${skippedCount}개 제외)` : "";
         toast.success(
-          `${addedIds.length}개 ${itemLabel}이(가) 폴더에 추가되었습니다.`,
+          `${addedIds.length}개 ${itemLabel}이(가) 폴더에 추가되었습니다.${skippedSuffix}`,
           {
             duration: UNDO_TOAST_DURATION,
             action: {
@@ -348,6 +425,8 @@ export function useFolderManager({
       folderId: string,
       copy: boolean,
       selectedIds: Set<string>,
+      /** Move only: source folders to KEEP the item in (skip removal). */
+      keepFolderIds: string[] = [],
     ) => {
       // If dragged item is part of selection, move ALL selected items
       const draggedIds = Array.isArray(itemId) ? itemId : [itemId];
@@ -357,15 +436,26 @@ export function useFolderManager({
         : Array.from(new Set(draggedIds));
       if (idsToMove.length === 0) return false;
 
+      const keepSet = new Set(keepFolderIds);
       const targetExisting = membership[folderId] ?? new Set<string>();
       const idsToAdd = idsToMove.filter((id) => !targetExisting.has(id));
-      const hasFolderChanges =
-        idsToAdd.length > 0 ||
-        (!copy &&
-          Object.entries(membership).some(
-            ([colId, ids]) =>
-              colId !== folderId && idsToMove.some((id) => ids.has(id)),
-          ));
+
+      // 이동(move)은 "지금 보고 있는 폴더"(activeFolder)에서만 항목을 빼고 대상
+      // 폴더로 옮긴다. 같은 항목이 다른 폴더(예: 형제 하위폴더)에 복사돼 있어도
+      // 그 사본은 건드리지 않는다. 루트(activeFolder=null)에선 빼낼 현재 폴더가
+      // 없으므로 추가만 한다.
+      const sourceFolder =
+        !copy &&
+        activeFolder &&
+        activeFolder !== folderId &&
+        !keepSet.has(activeFolder)
+          ? activeFolder
+          : null;
+      const sourceToRemove = sourceFolder
+        ? idsToMove.filter((id) => membership[sourceFolder]?.has(id))
+        : [];
+
+      const hasFolderChanges = idsToAdd.length > 0 || sourceToRemove.length > 0;
 
       if (!hasFolderChanges) {
         toast.info("이미 이 폴더에 들어있는 자료입니다.");
@@ -375,28 +465,17 @@ export function useFolderManager({
       try {
         const previousMembership = cloneMembership(membership);
 
-        // Remove from every other folder (move only), capturing what the
-        // server ACTUALLY removed per folder so the snapshot matches the DB.
+        // 이동: 지금 보고 있는 폴더에서만 제거(서버가 실제로 지운 목록을 받아
+        // 스냅샷이 DB와 정확히 일치하게 한다). 다른 폴더의 사본은 그대로 둔다.
         const removedByCol: Record<string, string[]> = {};
-        if (!copy) {
-          const removeOps: { colId: string; toRemove: string[] }[] = [];
-          for (const [colId, ids] of Object.entries(membership)) {
-            if (colId !== folderId) {
-              const toRemove = idsToMove.filter((id) => ids.has(id));
-              if (toRemove.length > 0) removeOps.push({ colId, toRemove });
-            }
-          }
-          const removeResults = await Promise.all(
-            removeOps.map((op) =>
-              actions.removeFromCollection(op.colId, op.toRemove),
-            ),
+        if (sourceFolder && sourceToRemove.length > 0) {
+          const r = await actions.removeFromCollection(
+            sourceFolder,
+            sourceToRemove,
           );
-          removeOps.forEach((op, i) => {
-            const r = removeResults[i];
-            removedByCol[op.colId] = r?.success
-              ? (r.removedIds ?? op.toRemove)
-              : [];
-          });
+          removedByCol[sourceFolder] = r?.success
+            ? (r.removedIds ?? sourceToRemove)
+            : [];
         }
 
         // Add to the target folder, using the server's real insert list.
@@ -438,6 +517,11 @@ export function useFolderManager({
           toastCount > 1
             ? `${toastCount}개 ${itemLabel}이(가)`
             : `${itemLabel}이(가)`;
+        // 끌어온 것 중 이미 대상 폴더에 들어있어 새로 추가하지 않은(중복 제외) 개수.
+        // 예: 421개를 끌었는데 41개가 이미 폴더에 있었다면 "이미 들어있던 41개 제외".
+        const skippedCount = idsToMove.length - idsToAdd.length;
+        const skippedSuffix =
+          skippedCount > 0 ? ` · 이미 들어있던 ${skippedCount}개 제외` : "";
 
         const undoFolderMove = async () => {
           try {
@@ -474,8 +558,8 @@ export function useFolderManager({
 
         toast.success(
           copy
-            ? `${countLabel} "${folderName}"에 복사되었습니다`
-            : `${countLabel} "${folderName}"(으)로 이동되었습니다`,
+            ? `${countLabel} "${folderName}"에 복사되었습니다${skippedSuffix}`
+            : `${countLabel} "${folderName}"(으)로 이동되었습니다${skippedSuffix}`,
           {
             duration: UNDO_TOAST_DURATION,
             action: {
@@ -491,7 +575,14 @@ export function useFolderManager({
         return false;
       }
     },
-    [membership, collections, actions, itemLabel, applyMembershipSnapshot],
+    [
+      membership,
+      collections,
+      actions,
+      itemLabel,
+      applyMembershipSnapshot,
+      activeFolder,
+    ],
   );
 
   // ─── Navigation ───
@@ -510,7 +601,7 @@ export function useFolderManager({
 
   return {
     // State
-    collections,
+    collections: exposedCollections,
     membership,
     activeFolder,
     showNewFolder,

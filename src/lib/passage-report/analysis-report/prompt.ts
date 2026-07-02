@@ -290,11 +290,11 @@ export function buildLearningWorksheetPrompt(input: BuildAnalysisReportPromptInp
   - vocabularyCloze.passage must contain numbered blanks such as "(1) __________"; never output "[answer]①" or a filled answer next to the number.
   - Put word-order writing only in workbookSet.wordOrders. Do not duplicate the same word-order item in drills.wordOrders.
   - topicGist.topicTitle은 영어 제목형으로, 지문 중심 대비/반박/인과를 담습니다. gist는 한국어 한 문장으로 "글쓴이의 최종 주장"이 드러나야 하며, 소재 소개로 끝내면 안 됩니다.
-  - grammarSelection.passage는 원문을 거의 유지하되 어법 포인트 4~8곳에 [A / B] 형식 선택지를 직접 넣고 번호를 붙입니다. choices에는 각 번호의 options, answer, explanation을 모두 씁니다.
+  - grammarSelection.passage는 ❗**원문의 모든 문장을 순서대로 한 문장도 빠짐없이 그대로 포함**해야 합니다(요약·생략·문장 합치기 금지). 그 본문 위에서 어법 포인트 4~8곳만 [A / B] 형식 선택지로 바꾸고 번호를 붙입니다. choices에는 각 번호의 options, answer, explanation을 모두 씁니다. 원문 문장이 하나라도 빠지면 실패입니다.
   - 어법 선택지의 정답 위치는 반드시 섞으세요. 모든 정답이 첫 번째 선택지에 오면 실패입니다. 최소 2개 이상은 두 번째 선택지가 정답이 되게 하세요.
   - 어법 포인트는 다음 중 지문에 자연스럽게 있는 것만 고릅니다: 수동/능동, 준동사(분사·to부정사·동명사), 관계사/동격 that, 주어-동사 수일치, 병렬구조, 형용사/부사, 대명사 지시, 접속사/전치사, 시제/완료, 비교급/강조. 단어 뜻만 알면 풀리는 문제는 어법 선택으로 만들지 마세요.
   - 어법 오답은 실제 문법적으로 왜 틀리는지 설명 가능해야 합니다. "어색하다" 같은 해설은 금지합니다.
-  - vocabularyCloze.passage는 원문 흐름을 유지하되 핵심 어휘 8~16개를 번호가 붙은 빈칸으로 만듭니다. blanks에는 정답, 뜻, 문맥 단서를 씁니다. 대상은 주제어, 논리 전환어, 평가어, 비유 핵심어, 콜로케이션 중심으로 고르고, 고유명사/숫자/쉽게 유추 불가능한 주변어는 피하세요.
+  - vocabularyCloze.passage는 ❗**원문의 모든 문장을 순서대로 한 문장도 빠짐없이 그대로 포함**해야 합니다(요약·생략·바꿔쓰기 금지). 그 본문 위에서 핵심 어휘 8~16개만 번호가 붙은 빈칸 "(1) __________" 으로 바꿉니다. blanks에는 정답, 뜻, 문맥 단서를 씁니다. 대상은 주제어, 논리 전환어, 평가어, 비유 핵심어, 콜로케이션 중심으로 고르고, 고유명사/숫자/쉽게 유추 불가능한 주변어는 피하세요. 원문 문장이 하나라도 빠지면 실패입니다.
   - wordOrders는 지문 핵심 문장 1~3개를 골라 한국어 단서와 원문 어순 조각을 섞은 chunks, 정답 문장을 제공합니다. chunks는 반드시 정답 순서와 다르게 뒤섞으세요. 정답 문장을 앞에서부터 그대로 자른 배열은 실패입니다.
 - 수능추론 5문항 세트는 별도 품질 집중 호출에서 생성합니다. 여기서는 inferenceSet을 만들지 말고 workbookSet, cloze, practice, drills에 집중하세요.
 - questions: inferenceSet에 들어가지 않는 추가 객관식이 정말 필요할 때만 0~3개 생성하세요. 어법/어휘/배열은 drills에 우선 배치하고, 객관식화가 더 자연스러울 때만 questions에 포함하세요.

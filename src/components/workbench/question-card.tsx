@@ -557,14 +557,24 @@ export function QuestionCard({
                   );
                 })()}
 
-              {/* Non-MC answer */}
+              {/* Non-MC answer — 서술형(영작 등)은 객관식 정답 배지와 동일하게
+                  파란 원 '답' + 오른쪽 파란 글씨로 표시(문제카드·상세 디자인 통일). */}
               {options.length === 0 &&
                 displayCorrectAnswer &&
-                !flatDisplayQuestionText.includes(displayCorrectAnswer) && (
+                !flatDisplayQuestionText.includes(displayCorrectAnswer) &&
+                (q.subType &&
+                QUESTION_TYPE_META[q.subType]?.category === "서술형" ? (
+                  <div className="flex items-start gap-2 pl-1 text-[13px] font-semibold text-blue-700">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
+                      답
+                    </span>
+                    <span>{displayCorrectAnswer}</span>
+                  </div>
+                ) : (
                   <div className="text-[12px] bg-slate-100 text-slate-700 px-2.5 py-1.5 rounded border border-slate-200">
                     <span className="font-medium">정답:</span> {displayCorrectAnswer}
                   </div>
-                )}
+                ))}
 
               {/* Explanation (+ 동형 '분석 정보' 등 detailExtra 슬롯) */}
               {showDetailButton && onDetail ? (

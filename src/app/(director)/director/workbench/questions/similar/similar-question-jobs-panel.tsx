@@ -495,29 +495,32 @@ export function SimilarQuestionJobsPanel({
                   <button
                     type="button"
                     onClick={() => setAnalysisModal(detailAnalysis)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                    title="분석 정보"
+                    aria-label="분석 정보"
+                    className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <Sparkles className="h-3.5 w-3.5" />
-                    분석 정보
                   </button>
                 ) : null}
                 {detailQuestion.approved ? (
                   <button
                     type="button"
                     onClick={() => handleUnapproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-700"
+                    title="검수취소"
+                    aria-label="검수취소"
+                    className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-700"
                   >
                     <XCircle className="h-3.5 w-3.5" />
-                    검수취소
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={() => handleApproveQuestion(detailQuestion.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                    title="검수완료"
+                    aria-label="검수완료"
+                    className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <CheckCircle2 className="h-3.5 w-3.5" />
-                    검수완료
                   </button>
                 )}
                 <button

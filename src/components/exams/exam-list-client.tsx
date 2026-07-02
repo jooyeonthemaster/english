@@ -23,16 +23,7 @@ import {
   removeExamsFromCollection,
   updateExamCollection,
 } from "@/actions/exams";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { confirmNative } from "@/lib/browser-confirm";
 
 // Shared folder modules
 import type { CollectionItem } from "@/components/workbench/shared/types";
@@ -170,10 +161,8 @@ export function ExamListClient({
     (v): v is ExamViewMode =>
       v === "grid-3" || v === "grid-2" || v === "list",
   );
-  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [quickViewExamId, setQuickViewExamId] = useState<string | null>(null);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
-  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
   // 동형 생성 시험지의 분석 정보(설정의 patternProfile 기반).
   const [analysisExam, setAnalysisExam] = useState(null);
@@ -187,6 +176,8 @@ export function ExamListClient({
     initialMembership,
     actions: folderActions,
     itemLabel: "시험",
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    cumulativeCounts: true,
   });
   const { filterByActiveFolder } = folder;
 
@@ -281,9 +272,16 @@ export function ExamListClient({
   }, []);
 
   // ─── Delete handler ───
-  async function handleDelete() {
-    if (!deleteId) return;
-    const targetId = deleteId;
+  async function handleDelete(targetId: string) {
+    if (!targetId) return;
+    if (
+      !confirmNative(
+        "시험을 삭제하시겠습니까?",
+        "이 작업은 되돌릴 수 없습니다. 시험과 관련된 모든 데이터가 삭제됩니다.",
+      )
+    ) {
+      return;
+    }
     const result = await deleteExam(targetId);
     if (result.success) {
       toast.success("시험이 삭제되었습니다.");
@@ -296,13 +294,20 @@ export function ExamListClient({
     } else {
       toast.error(result.error || "삭제에 실패했습니다.");
     }
-    setDeleteId(null);
   }
 
   // ─── Bulk delete handler ───
   const handleBulkDelete = useCallback(async () => {
     const ids = Array.from(selection.selectedIds);
     if (ids.length === 0 || bulkDeleting) return;
+    if (
+      !confirmNative(
+        `선택한 시험 ${ids.length}부를 삭제하시겠습니까?`,
+        "이 작업은 되돌릴 수 없습니다. 초안 상태의 시험만 삭제되며, 배포된 시험은 자동으로 건너뜁니다.",
+      )
+    ) {
+      return;
+    }
     setBulkDeleting(true);
     try {
       const result = await bulkDeleteExams(ids);
@@ -347,7 +352,6 @@ export function ExamListClient({
         });
       }
       selection.clearSelection();
-      setBulkDeleteOpen(false);
       router.refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
@@ -404,9 +408,9 @@ export function ExamListClient({
       {/* Bulk delete */}
       <button
         type="button"
-        onClick={() => setBulkDeleteOpen(true)}
+        onClick={() => void handleBulkDelete()}
         disabled={selection.selectedIds.size === 0 || bulkDeleting}
-        className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {bulkDeleting ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -421,7 +425,7 @@ export function ExamListClient({
   // ─── Toolbar row (mirrors question-bank-client) ───
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-      <div className="flex items-center gap-2">
+      <div className="flex w-full min-w-0 flex-wrap items-center gap-2 md:w-auto md:flex-nowrap">
         <SelectAllCheckbox
           checked={selection.isAllSelected && selection.selectedIds.size > 0}
           indeterminate={
@@ -434,7 +438,7 @@ export function ExamListClient({
         />
         <div
           className={
-            "flex items-center gap-3 " +
+            "flex min-w-0 flex-wrap items-center gap-1.5 md:flex-nowrap md:gap-3 " +
             (selection.selectedIds.size > 0
               ? ""
               : "pointer-events-none opacity-50")
@@ -456,7 +460,7 @@ export function ExamListClient({
           ) : null}
         </div>
       </div>
-      <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+      <div className="ml-auto flex w-full shrink-0 flex-wrap items-center justify-end gap-2 md:w-auto">
         <FiltersToolbar
           search={search}
           setSearch={setSearch}
@@ -490,7 +494,7 @@ export function ExamListClient({
             </p>
           </div>
         ) : (
-          <section className="flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <section className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             {/* Sticky layer 1 — folder section (page identity + folders) */}
             <div
               ref={folderStickyRef}
@@ -562,7 +566,7 @@ export function ExamListClient({
                 </div>
               ) : viewType !== "list" ? (
                 <DragSelect
-                  className={`grid ${EXAM_GRID_COL_CLASS[viewType]} gap-3`}
+                  className={`grid min-w-0 ${EXAM_GRID_COL_CLASS[viewType]} gap-3`}
                   value={selection.selectedIds}
                   onChange={selection.setSelectedIds}
                 >
@@ -576,7 +580,7 @@ export function ExamListClient({
                       onEdit={(id) =>
                         router.push(`/director/workbench/exams/${id}/edit`)
                       }
-                      onDelete={setDeleteId}
+                      onDelete={handleDelete}
                       onShowAnalysis={
                         analysisByExamId.has(exam.id) ? handleShowAnalysis : undefined
                       }
@@ -600,7 +604,7 @@ export function ExamListClient({
                       onEdit={(id) =>
                         router.push(`/director/workbench/exams/${id}/edit`)
                       }
-                      onDelete={setDeleteId}
+                      onDelete={handleDelete}
                       onShowAnalysis={
                         analysisByExamId.has(exam.id) ? handleShowAnalysis : undefined
                       }
@@ -612,64 +616,6 @@ export function ExamListClient({
           </section>
         )}
       </div>
-
-      {/* Delete Dialog */}
-      <AlertDialog
-        open={!!deleteId}
-        onOpenChange={(open) => !open && setDeleteId(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>시험을 삭제하시겠습니까?</AlertDialogTitle>
-            <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 시험과 관련된 모든 데이터가
-              삭제됩니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              className="bg-red-500 hover:bg-red-600"
-            >
-              삭제
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* Bulk Delete Dialog */}
-      <AlertDialog
-        open={bulkDeleteOpen}
-        onOpenChange={(open) => {
-          if (!bulkDeleting) setBulkDeleteOpen(open);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              선택한 시험 {selection.selectedIds.size}부를 삭제하시겠습니까?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 초안 상태의 시험만 삭제되며,
-              배포된 시험은 자동으로 건너뜁니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={bulkDeleting}>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(e) => {
-                e.preventDefault();
-                void handleBulkDelete();
-              }}
-              disabled={bulkDeleting}
-              className="bg-red-500 hover:bg-red-600"
-            >
-              {bulkDeleting ? "삭제 중..." : "삭제"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
       <ExamQuickViewDialog
         examId={quickViewExamId}

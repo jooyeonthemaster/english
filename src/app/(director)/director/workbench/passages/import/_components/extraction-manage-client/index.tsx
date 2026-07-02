@@ -26,16 +26,7 @@ import {
 import { toast } from "sonner";
 
 import { ExtractionTaskListIcon } from "@/components/icons/workflow-icons";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { confirmNative } from "@/lib/browser-confirm";
 import {
   addDraftsToCollection,
   createM1DraftCollection,
@@ -55,7 +46,7 @@ import { useSelection } from "@/hooks/use-selection";
 import { useQueueDrawer } from "../queue-drawer-context";
 
 import { DraftDetailModal } from "./components/draft-detail-modal";
-import { DraftFolderSection } from "./components/draft-folder-section";
+import { FolderSection } from "@/components/workbench/shared/folder-section";
 import { DraftGrid, type GridCols } from "./components/draft-grid";
 import { DraftSelectionToolbar } from "./components/draft-selection-toolbar";
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
@@ -275,6 +266,8 @@ export function ExtractionManageClient({
       removeFromCollection: removeDraftsFromCollection,
     },
     itemLabel: "자료",
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    cumulativeCounts: true,
   });
 
   // ─── Per-job review popup state ───
@@ -297,10 +290,6 @@ export function ExtractionManageClient({
   const [taskSortOrder, setTaskSortOrder] = useState<TaskSortOrder>(
     readStoredTaskSortOrder,
   );
-  const [reanalyzeDialogOpen, setReanalyzeDialogOpen] = useState(false);
-  const [pendingBulkAnalysisDrafts, setPendingBulkAnalysisDrafts] = useState<
-    M1PassageDraftWithJob[] | null
-  >(null);
   // Visible tasks reported by TaskQueueInlineList. We need the actual list (not
   // just a count) so task-level checkboxes can map back to the underlying
   // drafts that the selection actions operate on.
@@ -699,17 +688,6 @@ export function ExtractionManageClient({
           : `${bulkAnalysisRunnableDrafts.length}개 자료를 AI 분석 큐에 등록합니다. 예상 소모: ${bulkAnalysisTotalCreditCost.toLocaleString("ko-KR")} 크레딧.`
         : "분석할 수 있는 자료가 없습니다.";
 
-  const pendingAnalysisDrafts = useMemo(
-    () => pendingBulkAnalysisDrafts ?? [],
-    [pendingBulkAnalysisDrafts],
-  );
-  const pendingAlreadyAnalyzedCount =
-    pendingAnalysisDrafts.filter(isDraftAnalyzed).length;
-  const pendingUnanalyzedDrafts = useMemo(
-    () => pendingAnalysisDrafts.filter(isDraftReadyForAnalysis),
-    [pendingAnalysisDrafts],
-  );
-
   const clearActionSelection = useCallback(() => {
     if (selectedIds.size > 0) {
       clearSelection();
@@ -747,25 +725,42 @@ export function ExtractionManageClient({
       return;
     }
 
-    if (bulkAnalysisAlreadyAnalyzedCount > 0) {
-      setPendingBulkAnalysisDrafts(bulkAnalysisRunnableDrafts);
-      setReanalyzeDialogOpen(true);
+    const alreadyAnalyzedCount =
+      bulkAnalysisRunnableDrafts.filter(isDraftAnalyzed).length;
+
+    if (alreadyAnalyzedCount > 0) {
+      const unanalyzedDrafts = bulkAnalysisRunnableDrafts.filter(
+        isDraftReadyForAnalysis,
+      );
+      const rejectClause =
+        unanalyzedDrafts.length > 0
+          ? `취소를 누르면 이미 분석된 지문은 제외하고 ${unanalyzedDrafts.length}개만 진행합니다.`
+          : "취소를 누르면 이번 일괄 분석은 취소됩니다.";
+      const approved = confirmNative(
+        "이미 분석된 지문이 있습니다",
+        `${alreadyAnalyzedCount}개는 이미 분석이 된 지문입니다. 추가 분석을 진행하시겠습니까?\n\n확인을 누르면 선택한 ${bulkAnalysisRunnableDrafts.length}개 전체를 새 분석 큐에 등록합니다. ${rejectClause}`,
+      );
+
+      if (approved) {
+        // 확인(승인): 선택한 전체를 새 분석 큐에 등록
+        await runBulkAnalyze(bulkAnalysisRunnableDrafts);
+      } else if (unanalyzedDrafts.length > 0) {
+        // 취소(거절): 이미 분석된 지문은 제외하고 미분석분만 진행
+        await runBulkAnalyze(unanalyzedDrafts);
+      } else {
+        // 취소(거절): 진행할 미분석 지문이 없으면 일괄 분석 취소
+        toast.info("추가 분석을 취소했습니다.");
+      }
       return;
     }
 
     await runBulkAnalyze(bulkAnalysisRunnableDrafts);
   }, [
-    bulkAnalysisAlreadyAnalyzedCount,
     bulkAnalysisRunnableDrafts,
     bulkAnalyzing,
     onBulkAnalyze,
     runBulkAnalyze,
   ]);
-
-  const handleReanalysisDialogOpenChange = useCallback((open: boolean) => {
-    setReanalyzeDialogOpen(open);
-    if (!open) setPendingBulkAnalysisDrafts(null);
-  }, []);
 
   // ─── Load checked drafts into the embedder's right "지문" stack ───
   // Mirrors the bulk-analyze selection (actionTargetIds → drafts with content)
@@ -776,22 +771,6 @@ export function ExtractionManageClient({
     onLoadSelectedDrafts(bulkAnalysisRunnableDrafts);
     clearActionSelection();
   }, [onLoadSelectedDrafts, bulkAnalysisRunnableDrafts, clearActionSelection]);
-
-  const rejectReanalysis = useCallback(() => {
-    if (pendingUnanalyzedDrafts.length === 0) {
-      toast.info("추가 분석을 취소했습니다.");
-      setPendingBulkAnalysisDrafts(null);
-      return;
-    }
-    void runBulkAnalyze(pendingUnanalyzedDrafts);
-    setPendingBulkAnalysisDrafts(null);
-  }, [pendingUnanalyzedDrafts, runBulkAnalyze]);
-
-  const approveReanalysis = useCallback(() => {
-    if (pendingAnalysisDrafts.length === 0) return;
-    void runBulkAnalyze(pendingAnalysisDrafts);
-    setPendingBulkAnalysisDrafts(null);
-  }, [pendingAnalysisDrafts, runBulkAnalyze]);
 
   const toggleGroupCheck = useCallback(
     (ids: string[], select: boolean) => {
@@ -1009,7 +988,9 @@ export function ExtractionManageClient({
       compact={embedded}
       searchValue={display.searchValue}
       onSearchChange={display.setSearchValue}
-      onSearchSubmit={() => display.setAppliedSearch(display.searchValue)}
+      onSearchSubmit={(value) =>
+        display.setAppliedSearch(value ?? display.searchValue)
+      }
       showFilters={showMaterialFilters}
       onToggleFilters={() => setShowMaterialFilters((v) => !v)}
       hasActiveFilter={materialHasActiveFilter}
@@ -1246,9 +1227,16 @@ export function ExtractionManageClient({
                     : "bg-white")
                 }
               >
-                <DraftFolderSection
+                <FolderSection
                   embedded
-                  gridOnly={embedded}
+                  dragItemType="draft"
+                  // 임베드(학습지 생성 좌측)는 그리드 전용, standalone(자료추출)은
+                  // 정렬·검색·리스트(밀러) 풀 컨트롤. 둘 다 높이 조절 가능.
+                  enableFolderControls={!embedded}
+                  resizableGrid={embedded}
+                  treatRootAsFolder
+                  rootLabel="전체 자료"
+                  storageKey="extraction-drafts"
                   childFolders={folders.childFolders}
                   allFolders={folders.collections}
                   activeFolder={folders.activeFolder}
@@ -1282,13 +1270,18 @@ export function ExtractionManageClient({
                         : draftsInActiveFolder.length,
                     itemLabel: "자료",
                   }}
-                  resultScope={data.resultScope}
-                  onBackToAllResults={showAllResults}
                   toolbar={
-                    // 임베드(학습지 생성)는 잡 카드 대신 개별 자료(DraftGrid)를 보여주므로
-                    // 잡 단위 검색/필터 툴바를 두지 않는다 — 자료 검색은 DraftGrid 의
-                    // filtersToolbar 가 담당한다. (standalone 은 원래 이 슬롯이 undefined.)
-                    undefined
+                    // "전체 결과로" 되돌리기 — 단일 잡으로 드릴인했을 때만. (예전
+                    // DraftFolderSection의 resultScope/onBackToAllResults를 toolbar로 이전)
+                    data.resultScope === "job" ? (
+                      <button
+                        type="button"
+                        onClick={showAllResults}
+                        className="shrink-0 cursor-pointer rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700"
+                      >
+                        전체 결과로
+                      </button>
+                    ) : undefined
                   }
                 />
               </div>
@@ -1683,38 +1676,6 @@ export function ExtractionManageClient({
             onTitleChange={actions.updateDraftTitle}
           />
         ) : null}
-
-        <AlertDialog
-          open={reanalyzeDialogOpen}
-          onOpenChange={handleReanalysisDialogOpenChange}
-        >
-          <AlertDialogContent className="max-w-sm">
-            <AlertDialogHeader>
-              <AlertDialogTitle>이미 분석된 지문이 있습니다</AlertDialogTitle>
-              <AlertDialogDescription className="space-y-2 leading-relaxed">
-                <span className="block">
-                  {pendingAlreadyAnalyzedCount}개는 이미 분석이 된 지문입니다.
-                  추가 분석을 진행하시겠습니까?
-                </span>
-                <span className="block">
-                  승인하면 선택한 {pendingAnalysisDrafts.length}개 전체를 새
-                  분석 큐에 등록합니다.
-                  {pendingUnanalyzedDrafts.length > 0
-                    ? ` 거절하면 이미 분석된 지문은 제외하고 ${pendingUnanalyzedDrafts.length}개만 진행합니다.`
-                    : " 거절하면 이번 일괄 분석은 취소됩니다."}
-                </span>
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={rejectReanalysis}>
-                거절
-              </AlertDialogCancel>
-              <AlertDialogAction onClick={approveReanalysis}>
-                승인
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </div>
     </div>
   );

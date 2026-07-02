@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { Database, FileText, Filter, Rows3, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { QuestionBankCard } from "@/components/workbench/question-bank-card";
 import { DragSelect } from "@/components/ui/drag-select";
 import { PassageGroupedView } from "@/components/workbench/question-bank-passage-view";
 import { FolderSection } from "@/components/workbench/shared/folder-section";
+import { Pagination } from "@/components/workbench/shared/pagination";
 import { QuestionFiltersToolbar } from "@/components/workbench/question-bank-client/filters-toolbar";
 import {
   GridToggle,
@@ -23,7 +25,15 @@ const LIBRARY_VIEW_OPTIONS = [
 ] satisfies ReadonlyArray<ViewModeCycleOption<"questions" | "passages">>;
 
 interface QuestionLibraryPanelProps {
+  // 서버 페이지네이션: filteredQuestions 는 "현재 페이지(100개)"의 결과다.
   filteredQuestions: BuilderQuestion[];
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  listLoading: boolean;
+  // 전체 선택(페이지 경계 무관) — 필터 매칭 전체를 시험지에 담는/빼는 비동기 토글.
+  selectAllPending: boolean;
+  onToggleSelectAllFiltered: () => void;
   selectedQuestionIds: Set<string>;
   search: string;
   setSearch: (value: string) => void;
@@ -60,7 +70,11 @@ interface QuestionLibraryPanelProps {
   onNavigateToRoot: () => void;
   onRenameFolder: (id: string, name: string) => void;
   onDeleteFolder: (id: string) => void;
-  onDragToFolder: (itemId: string | string[], folderId: string, copy: boolean) => void;
+  onDragToFolder: (
+    itemId: string | string[],
+    folderId: string,
+    copy: boolean,
+  ) => void;
   onDragToRoot: (itemId: string | string[], copy: boolean) => void;
   /**
    * 마키(영역 드래그) 시작 영역을 이 패널 바깥(시험지 미리보기창 포함, 빌더 전체)까지
@@ -71,6 +85,12 @@ interface QuestionLibraryPanelProps {
 
 export function QuestionLibraryPanel({
   filteredQuestions,
+  page,
+  totalPages,
+  onPageChange,
+  listLoading,
+  selectAllPending,
+  onToggleSelectAllFiltered,
   selectedQuestionIds,
   search,
   setSearch,
@@ -111,6 +131,27 @@ export function QuestionLibraryPanel({
   const [libraryView, setLibraryView] = useState<"questions" | "passages">("questions");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // 패널이 좁아지면 카드가 세로로 짓눌려(한 글자씩 줄바꿈) 읽기 어려워지므로,
+  // 일정 너비 이하에서는 사용자가 2/3열을 골라도 무조건 1열로 강제한다.
+  const FORCE_SINGLE_COLUMN_WIDTH = 500;
+  const [panelWidth, setPanelWidth] = useState<number | null>(null);
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setPanelWidth(entry.contentRect.width);
+      }
+    });
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+  const forceSingleColumn =
+    panelWidth !== null && panelWidth < FORCE_SINGLE_COLUMN_WIDTH;
+  const effectiveGridColumns: QuestionGridCols = forceSingleColumn
+    ? "list"
+    : gridColumns;
+
   // 시험지 미리보기에서 문항을 클릭하면 좌측 목록의 해당 카드로 스크롤한다(이미 보이는
   // 경우엔 가만히 둔다). 지문별 보기에서 접혀 있는 그룹은 카드가 DOM에 없을 수 있어
   // 스크롤 대상이 없으면 조용히 넘어간다.
@@ -136,7 +177,7 @@ export function QuestionLibraryPanel({
         (containerRect.height - targetRect.height) / 2,
       behavior: "smooth",
     });
-  }, [activeQuestionId, libraryView, gridColumns]);
+  }, [activeQuestionId, libraryView, effectiveGridColumns]);
   const [expandedPassageIds, setExpandedPassageIds] = useState<Record<string, boolean>>({});
   const questionById = useMemo(
     () => new Map(filteredQuestions.map((question) => [question.id, question])),
@@ -196,7 +237,16 @@ export function QuestionLibraryPanel({
     [onToggleSelect],
   );
 
-  const buildDragQuestionIds = useCallback((draggedId: string) => [draggedId], []);
+  // 끄는 카드가 선택(체크)에 포함되면 선택 전체를 드래그 대상으로 삼는다(다중 폴더 이동).
+  // 포함되지 않으면 그 카드만. — 가상화로 화면 밖 카드가 DOM 에 없어도 선택은 id 집합이라
+  // 전체가 함께 이동한다.
+  const buildDragQuestionIds = useCallback(
+    (draggedId: string) =>
+      selectedQuestionIds.has(draggedId)
+        ? Array.from(selectedQuestionIds)
+        : [draggedId],
+    [selectedQuestionIds],
+  );
 
   // 체크한 순서를 카드에 1,2,3… 번호로 보여 주기 위한 맵(드롭 순서 = 이 순서).
   const selectionOrder = useMemo(() => {
@@ -240,9 +290,54 @@ export function QuestionLibraryPanel({
   );
 
   // 3열은 카드를 한 단계 작게(md), 2열/목록은 기본(lg)로 — questions 페이지 동일.
-  const viewSize: "lg" | "md" = gridColumns === 3 ? "md" : "lg";
+  const viewSize: "lg" | "md" = effectiveGridColumns === 3 ? "md" : "lg";
+
+  // ─── 목록 가상화 ───
+  // 수백~1000+ 문항을 한 번에 마운트하면 좌측 패널이 무거워지므로, 문제별 보기는
+  // row 단위로 가상화해 보이는 카드만 DOM에 올린다. 페이지네이션/무한스크롤이 아니라
+  // "보이는 것만 렌더"이므로 전체 선택·드래그 데이터(id 기반)는 영향받지 않는다.
+  // (지문별 보기는 그룹 접힘 구조라 1차 범위에서 제외 — PassageGroupedView 그대로.)
+  const columnsCount =
+    effectiveGridColumns === 3 ? 3 : effectiveGridColumns === 2 ? 2 : 1;
+  const rowCount = Math.ceil(filteredQuestions.length / columnsCount);
+  const rowVirtualizer = useVirtualizer({
+    count: rowCount,
+    getScrollElement: () => scrollContainerRef.current,
+    // 접힌 콤팩트 카드의 대략 높이(+행 간격). 실제 높이는 measureElement 로 보정된다.
+    estimateSize: () => 200,
+    overscan: 6,
+  });
+
+  // 미리보기에서 클릭한 문항이 가상화로 아직 마운트되지 않았으면, 먼저 해당 row 로
+  // 가상 스크롤해 카드를 DOM 에 올린다. 카드가 올라오면 위의 활성카드 스크롤 effect 가
+  // 중앙으로 맞춘다. (지문별 보기는 가상화 대상이 아니라 그대로 둔다.)
+  useEffect(() => {
+    if (!activeQuestionId || libraryView !== "questions") return;
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const alreadyRendered = container.querySelector(
+      `[data-question-card-id="${CSS.escape(activeQuestionId)}"]`,
+    );
+    if (alreadyRendered) return;
+    const flatIndex = filteredQuestions.findIndex(
+      (q) => q.id === activeQuestionId,
+    );
+    if (flatIndex < 0) return;
+    rowVirtualizer.scrollToIndex(Math.floor(flatIndex / columnsCount), {
+      align: "center",
+    });
+  }, [
+    activeQuestionId,
+    libraryView,
+    filteredQuestions,
+    columnsCount,
+    rowVirtualizer,
+  ]);
 
   // 전체 선택 — 현재 필터된 문제 전체의 선택 상태.
+  // 체크박스 시각 상태는 "현재 페이지" 기준(페이지의 모든 카드가 선택됐는지)으로 둔다.
+  // 단 클릭 동작은 페이지 경계를 넘어 "필터 매칭 전체"를 시험지에 담는/빼는 전역 토글
+  // (onToggleSelectAllFiltered)을 호출한다 — 서버에서 전체 ID 를 받아 처리한다.
   const selectableFilteredQuestions = filteredQuestions;
   const allFilteredSelected =
     selectableFilteredQuestions.length > 0 &&
@@ -250,23 +345,7 @@ export function QuestionLibraryPanel({
   const someFilteredSelected = selectableFilteredQuestions.some((q) =>
     selectedQuestionIds.has(q.id),
   );
-  const toggleSelectAllFiltered = () => {
-    if (allFilteredSelected) {
-      const filteredIdSet = new Set(selectableFilteredQuestions.map((q) => q.id));
-      applySelectedQuestionIds(
-        new Set(
-          Array.from(selectedQuestionIds).filter((id) => !filteredIdSet.has(id)),
-        ),
-      );
-    } else {
-      applySelectedQuestionIds(
-        new Set([
-          ...Array.from(selectedQuestionIds),
-          ...selectableFilteredQuestions.map((q) => q.id),
-        ]),
-      );
-    }
-  };
+  const toggleSelectAllFiltered = onToggleSelectAllFiltered;
 
   // ─── 지금 화면을 좁히고 있는 필터를 사람이 읽을 수 있게 요약한다 ───
   // statusCounts.all 은 검수상태 세그먼트를 제외한 모든 필터(폴더·유형·난이도·중요·
@@ -364,9 +443,9 @@ export function QuestionLibraryPanel({
               if (el) el.indeterminate = someFilteredSelected && !allFilteredSelected;
             }}
             onChange={toggleSelectAllFiltered}
-            disabled={selectableFilteredQuestions.length === 0}
-            title="현재 목록 문제 전체 추가"
-            aria-label="현재 목록 문제 전체 추가"
+            disabled={statusCounts.all === 0 || selectAllPending}
+            title={`필터 매칭 전체(${statusCounts.all}개) 시험지에 담기`}
+            aria-label={`필터 매칭 전체(${statusCounts.all}개) 시험지에 담기`}
             className="mr-auto size-4 shrink-0 cursor-pointer rounded border-slate-300 text-blue-600 accent-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
           />
 
@@ -516,7 +595,7 @@ export function QuestionLibraryPanel({
         ) : libraryView === "passages" ? (
           <PassageGroupedView
             passages={groupedPassages}
-            gridCols={gridColumns}
+            gridCols={effectiveGridColumns}
             viewSize={viewSize}
             selectedIds={selectedQuestionIds}
             setSelectedIds={applySelectedQuestionIds}
@@ -546,50 +625,105 @@ export function QuestionLibraryPanel({
             activeQuestionId={activeQuestionId}
             usageCounts={paperQuestionCounts}
             collapsible
+            compact
             expandedPassageIds={expandedPassageIds}
             setExpandedPassageIds={setExpandedPassageIds}
           />
         ) : (
-          // 마키 시작은 패널 전체(상위 DragSelect)에서 처리하므로 여기선 그리드만 둔다.
+          // 마키 시작은 패널 전체(상위 DragSelect)에서 처리하므로 여기선 가상 행만 둔다.
+          // row 가상화: 보이는 행의 카드만 마운트하고, 전체 높이는 spacer 로 확보한다.
           <div
-            className={cn(
-              "grid gap-3",
-              gridColumns === 2
-                ? "grid-cols-2"
-                : gridColumns === 3
-                  ? "grid-cols-3"
-                  : "grid-cols-1",
-            )}
+            style={{
+              height: rowVirtualizer.getTotalSize(),
+              position: "relative",
+              width: "100%",
+            }}
           >
-            {filteredQuestions.map((question, index) => {
-              const usageCount = paperQuestionCounts.get(question.id) || 0;
-              const selected = selectedQuestionIds.has(question.id);
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const start = virtualRow.index * columnsCount;
+              const rowQuestions = filteredQuestions.slice(
+                start,
+                start + columnsCount,
+              );
               return (
-                <QuestionBankCard
-                  key={question.id}
-                  q={question}
-                  num={index + 1}
-                  selected={selected}
-                  onToggle={() => {
-                    onToggleSelect(question.id);
+                <div
+                  key={virtualRow.key}
+                  data-index={virtualRow.index}
+                  ref={rowVirtualizer.measureElement}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    transform: `translateY(${virtualRow.start}px)`,
                   }}
-                  onDetail={() => onShowDetail(question)}
-                  viewSize={viewSize}
-                  showManagementActions={false}
-                  enableDrag
-                  compactUsageLabel
-                  cardClickSelects
-                  showDetailButton
-                  dragRequiresSelection
-                  getDragQuestionIds={buildDragQuestionIds}
-                  selectionIndex={selectionOrder.get(question.id)}
-                  active={activeQuestionId === question.id}
-                  duplicateCount={usageCount > 1 ? usageCount : undefined}
-                  selectedCardHighlight={false}
-                  collapsible
-                />
+                >
+                  {/* 행 사이 간격은 측정 높이에 포함되도록 pb 로 준다(세로 gap 대체). */}
+                  <div
+                    className={cn(
+                      "grid gap-2.5 pb-2.5",
+                      effectiveGridColumns === 2
+                        ? "grid-cols-2"
+                        : effectiveGridColumns === 3
+                          ? "grid-cols-3"
+                          : "grid-cols-1",
+                    )}
+                  >
+                    {rowQuestions.map((question, columnIndex) => {
+                      const index = start + columnIndex;
+                      const usageCount =
+                        paperQuestionCounts.get(question.id) || 0;
+                      const selected = selectedQuestionIds.has(question.id);
+                      return (
+                        <QuestionBankCard
+                          key={question.id}
+                          q={question}
+                          num={index + 1}
+                          selected={selected}
+                          onToggle={() => {
+                            onToggleSelect(question.id);
+                          }}
+                          onDetail={() => onShowDetail(question)}
+                          viewSize={viewSize}
+                          showManagementActions={false}
+                          enableDrag
+                          compactUsageLabel
+                          cardClickSelects
+                          showDetailButton
+                          dragRequiresSelection
+                          getDragQuestionIds={buildDragQuestionIds}
+                          selectionIndex={selectionOrder.get(question.id)}
+                          active={activeQuestionId === question.id}
+                          duplicateCount={
+                            usageCount > 1 ? usageCount : undefined
+                          }
+                          selectedCardHighlight={false}
+                          collapsible
+                          compact
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
+          </div>
+        )}
+        {/* 페이지네이션 — 스크롤 목록의 "맨 끝"에 둬서 끝까지 내려야 보이게 한다(문제관리
+            페이지와 동일). 고정 푸터가 아니라 콘텐츠와 함께 스크롤된다. 문제별 보기 전용
+            (지문별은 그룹 접힘이라 별도). listLoading 중에도 버튼은 노출해 연타 허용. */}
+        {libraryView === "questions" && totalPages > 1 && (
+          <div
+            className={cn(
+              "px-2 pb-2 transition-opacity",
+              listLoading && "pointer-events-none opacity-60",
+            )}
+          >
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onGoToPage={onPageChange}
+            />
           </div>
         )}
       </div>

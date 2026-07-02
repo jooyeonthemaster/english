@@ -12,6 +12,7 @@ import {
   grammarCorrectionErrorSentenceForQuestionText,
 } from "@/lib/grammar-correction-display";
 import { isSummaryWriting, summaryWritingStudentParts } from "@/lib/summary-writing";
+import { isTopicSentenceWriting, topicSentenceWritingStudentParts } from "@/lib/topic-sentence-writing";
 
 // ─── Constants ───────────────────────────────────────────
 
@@ -154,6 +155,12 @@ export function buildQuestionText(q: any): string {
   // SW-LEAK-1: SUMMARY_WRITING 은 학생 안전 블록만 직렬화([빈칸 정답]·modelAnswer 미포함)
   if (isSummaryWriting(q?._typeId) || isSummaryWriting(q?.subType)) {
     parts.push(...summaryWritingStudentParts(q));
+    if (q.questionText && !q.direction) parts.push(q.questionText);
+    return parts.join("\n\n");
+  }
+  // SW-LEAK-1: TOPIC_SENTENCE_WRITING 도 학생 안전 블록만 직렬화(정답·modelAnswer 미포함)
+  if (isTopicSentenceWriting(q?._typeId) || isTopicSentenceWriting(q?.subType)) {
+    parts.push(...topicSentenceWritingStudentParts(q));
     if (q.questionText && !q.direction) parts.push(q.questionText);
     return parts.join("\n\n");
   }

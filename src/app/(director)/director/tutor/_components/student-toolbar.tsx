@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { GRADES, STUDENT_STATUSES } from "@/lib/constants";
+import { useSearchDebounce } from "@/hooks/use-search-debounce";
 import type { HubFilters, HubSchool, UpdateParams } from "./types";
 
 const STATUS_TABS = [{ value: "ALL", label: "전체" }, ...STUDENT_STATUSES];
@@ -29,6 +30,10 @@ export function StudentToolbar({
 }) {
   const router = useRouter();
   const [search, setSearch] = useState(filters.search ?? "");
+  // 타이핑 즉시(라이브) 검색 — 입력 멈추면 커밋, Enter·버튼은 즉시 커밋.
+  const { schedule, flush } = useSearchDebounce((v) =>
+    updateParams({ search: v || undefined, page: undefined }),
+  );
 
   return (
     <div className="flex h-12 items-center gap-2 overflow-x-auto">
@@ -36,16 +41,19 @@ export function StudentToolbar({
         <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#8B95A1]" />
         <Input
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            schedule(e.target.value);
+          }}
           onKeyDown={(e) => {
-            if (e.key === "Enter") updateParams({ search: search || undefined, page: undefined });
+            if (e.key === "Enter") flush(search);
           }}
           placeholder="이름·학생코드 검색"
           className="h-9 w-44 rounded-lg pl-9 text-sm sm:w-56"
         />
       </div>
       <Button
-        onClick={() => updateParams({ search: search || undefined, page: undefined })}
+        onClick={() => flush(search)}
         variant="outline"
         className="h-9 shrink-0 rounded-lg border-[#E5E8EB] text-sm font-bold text-[#4E5968] hover:bg-[#F7F8FA]"
       >

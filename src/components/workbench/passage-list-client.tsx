@@ -24,16 +24,7 @@ import type {
 } from "./passage-list-client/filters-toolbar";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { confirmNative } from "@/lib/browser-confirm";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 import { PassageFileRow } from "@/components/workbench/passage-file-row";
 import { PassageFileCard } from "@/components/workbench/passage-file-card";
@@ -49,6 +40,7 @@ import {
   setPassageReviewed,
   bulkSetPassageReviewed,
   getWorkbenchPassages,
+  getWorkbenchPassageIds,
 } from "@/actions/workbench";
 
 // Shared modules
@@ -310,9 +302,12 @@ export function PassageListClient({
   const [dupLoading, setDupLoading] = useState(false);
   const [dupError, setDupError] = useState<string | null>(null);
   const [pageMode, setPageMode] = useState<"list" | "duplicates">("list");
-  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
   const [bulkReviewing, setBulkReviewing] = useState(false);
+  // "전체 페이지 선택" 진행 중 플래그 — 루트 목록은 20개 페이지네이션이라
+  // selectAll()은 현재 페이지만 잡는다. 페이지 밖 지문까지 한 번에 선택하려면
+  // 서버에서 현재 필터의 전체 id를 받아 selection 에 채운다.
+  const [selectingAllPages, setSelectingAllPages] = useState(false);
   // Optimistic local removal — router.refresh() updates server-side props
   // eventually, but we hide deleted rows immediately so the user doesn't have
   // to wait (and so the duplicates view, which has its own client-side cache,
@@ -397,6 +392,8 @@ export function PassageListClient({
     initialMembership,
     actions: folderActions,
     itemLabel: "학습지",
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    cumulativeCounts: true,
   });
   const { filterByActiveFolder } = folder;
   const folderActiveId = folder.activeFolder;
@@ -416,7 +413,9 @@ export function PassageListClient({
     });
     getWorkbenchPassages(academyId, {
       collectionId: folderActiveId,
-      hasReport: true,
+      // 폴더 안에서는 "담긴 멤버 전체"를 보여준다. 학습지(PRIME 보고서)가 아직
+      // 없는 지문(업로드 직후 분석 대기 등)도 폴더에 담겼으면 그대로 노출해
+      // "30개 넣었는데 27개만 보임"을 막는다. (루트 목록은 hasReport 유지)
       page: 1,
       limit: 1000,
     })
@@ -522,8 +521,82 @@ export function PassageListClient({
 
   const selection = useSelection(passageIds);
 
+  // 루트 목록(폴더 밖)에서 현재 필터에 해당하는 모든 페이지의 지문을 한 번에
+  // 선택한다. 폴더 안에서는 folderView가 이미 전체 멤버(≤1000)를 로드하므로
+  // 기존 selection.selectAll()로 충분해 이 동선이 필요 없다.
+  const handleSelectAllPages = useCallback(async () => {
+    if (selectingAllPages) return;
+    setSelectingAllPages(true);
+    try {
+      const result = await getWorkbenchPassageIds(academyId, {
+        ...filters,
+        page: undefined,
+        limit: undefined,
+        // 루트 목록 모집단과 동일하게: 생성 완료된 학습지(PRIME 보고서)만.
+        hasReport: true,
+      });
+      if (!result.success) {
+        toast.error(result.error || "전체 선택에 실패했습니다.");
+        return;
+      }
+      const ids = result.ids.filter(
+        (id) =>
+          !removedIds.has(id) &&
+          !(hideDuplicates && duplicateMembersToHide.has(id)),
+      );
+      if (ids.length === 0) {
+        toast.error("선택할 학습지가 없습니다.");
+        return;
+      }
+      selection.setSelectedIds(new Set(ids));
+      toast.success(`${ids.length}편을 전체 페이지에서 선택했습니다.`);
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "전체 선택에 실패했습니다.",
+      );
+    } finally {
+      setSelectingAllPages(false);
+    }
+  }, [
+    academyId,
+    filters,
+    removedIds,
+    hideDuplicates,
+    duplicateMembersToHide,
+    selectingAllPages,
+    selection,
+  ]);
+
   // Stats
   const totalCount = passagesData.total;
+
+  // 헤더 체크박스 = "전체 선택"(현재 페이지가 아니라 현재 스코프 전체).
+  // - 폴더 안: 멤버 전체가 이미 페이지 제한 없이 로드돼 있으므로 selectAll(=표시분 전체).
+  // - 루트(전체): 페이지네이션이라 다음 페이지까지 포함해 getWorkbenchPassageIds 로 전부 선택.
+  // 이미 전체가 선택돼 있으면 해제. → 하위 폴더/루트 어디서든 전체 선택→폴더 이동 일관 동작.
+  const isAllSelectedAcrossScope =
+    selection.selectedIds.size > 0 &&
+    (folder.activeFolder
+      ? selection.isAllSelected
+      : totalCount > 0 && selection.selectedIds.size >= totalCount);
+  const handleToggleSelectAll = useCallback(() => {
+    if (isAllSelectedAcrossScope) {
+      selection.clearSelection();
+      return;
+    }
+    if (!folder.activeFolder && totalCount > displayedPassages.length) {
+      void handleSelectAllPages();
+    } else {
+      selection.selectAll();
+    }
+  }, [
+    isAllSelectedAcrossScope,
+    folder.activeFolder,
+    totalCount,
+    displayedPassages.length,
+    handleSelectAllPages,
+    selection,
+  ]);
 
   // ─── Folder action wrappers (pass selectedIds from selection hook) ───
   const onAddToFolder = useCallback(
@@ -563,14 +636,41 @@ export function PassageListClient({
   }, [folder, selection]);
 
   const onDragToFolder = useCallback(
-    (itemId: string, folderId: string, copy: boolean) => {
+    (
+      itemId: string,
+      folderId: string,
+      copy: boolean,
+      keepFolderIds: string[] = [],
+    ) => {
       folder
-        .handleDragToFolder(itemId, folderId, copy, selection.selectedIds)
+        .handleDragToFolder(
+          itemId,
+          folderId,
+          copy,
+          selection.selectedIds,
+          keepFolderIds,
+        )
         .then((success) => {
           if (success) selection.clearSelection();
         });
     },
     [folder, selection],
+  );
+
+  // Folders the dragged item (or whole selection, if the item is selected)
+  // currently belongs to — powers the "keep in this folder" toggles when moving.
+  const getItemFolders = useCallback(
+    (itemId: string) => {
+      const ids = selection.selectedIds.has(itemId)
+        ? selection.selectedIds
+        : new Set([itemId]);
+      return folder.collections
+        .filter((c) =>
+          [...ids].some((id) => folder.membership[c.id]?.has(id)),
+        )
+        .map((c) => ({ id: c.id, name: c.name }));
+    },
+    [folder.collections, folder.membership, selection.selectedIds],
   );
 
   const onDragToRoot = useCallback(
@@ -614,7 +714,7 @@ export function PassageListClient({
       schools={schools}
       searchValue={searchValue}
       onSearchChange={setSearchValue}
-      onSearchSubmit={() => handleSearch(searchValue)}
+      onSearchSubmit={(value) => handleSearch(value ?? searchValue)}
       updateFilter={updateFilter}
       sortOrder={sortOrder}
       onSortOrderChange={setSortOrder}
@@ -669,7 +769,6 @@ export function PassageListClient({
         return next;
       });
       selection.clearSelection();
-      setBulkDeleteOpen(false);
       router.refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
@@ -777,7 +876,14 @@ export function PassageListClient({
   const bulkDeleteAction = (
     <button
       type="button"
-      onClick={() => setBulkDeleteOpen(true)}
+      onClick={() => {
+        if (selection.selectedIds.size === 0 || bulkDeleting) return;
+        const ok = confirmNative(
+          `선택한 학습지 ${selection.selectedIds.size}편을 삭제하시겠습니까?`,
+          "이 작업은 되돌릴 수 없습니다. 학습지에 연결된 분석/문제 데이터도 함께 삭제될 수 있습니다.",
+        );
+        if (ok) void handleBulkDelete();
+      }}
       disabled={selection.selectedIds.size === 0 || bulkDeleting}
       title="삭제"
       aria-label="삭제"
@@ -810,23 +916,37 @@ export function PassageListClient({
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
         <div className="flex items-center gap-2">
           <SelectAllCheckbox
-            checked={
-              selection.isAllSelected && selection.selectedIds.size > 0
-            }
+            checked={isAllSelectedAcrossScope}
             indeterminate={
-              selection.selectedIds.size > 0 && !selection.isAllSelected
+              selection.selectedIds.size > 0 && !isAllSelectedAcrossScope
             }
-            disabled={displayedPassages.length === 0}
-            onChange={() =>
-              selection.selectedIds.size > 0
-                ? selection.clearSelection()
-                : selection.selectAll()
+            disabled={displayedPassages.length === 0 || selectingAllPages}
+            onChange={handleToggleSelectAll}
+            title={
+              isAllSelectedAcrossScope
+                ? `전체 ${selection.selectedIds.size}편 선택됨 — 클릭 시 해제`
+                : `전체 ${totalCount}편 선택`
             }
-            title={`${selection.selectedIds.size}개 선택`}
             ariaLabel={
-              selection.selectedIds.size > 0 ? "선택 해제" : "전체 선택"
+              isAllSelectedAcrossScope ? "전체 해제" : "전체 페이지 선택"
             }
           />
+          {!embedded &&
+          !folder.activeFolder &&
+          pageMode === "list" &&
+          passagesData.total > displayedPassages.length ? (
+            <button
+              type="button"
+              onClick={() => void handleSelectAllPages()}
+              disabled={selectingAllPages}
+              className="whitespace-nowrap text-xs font-medium text-blue-600 underline-offset-2 hover:underline disabled:opacity-50"
+              title="현재 필터의 모든 페이지에 있는 학습지를 선택"
+            >
+              {selectingAllPages
+                ? "선택 중…"
+                : `전체 ${passagesData.total}편 선택`}
+            </button>
+          ) : null}
           <div
             className={
               "flex items-center gap-3 " +
@@ -913,6 +1033,7 @@ export function PassageListClient({
                 onDeleteFolder={folder.handleDeleteFolder}
                 onDragToFolder={onDragToFolder}
                 onDragToRoot={onDragToRoot}
+                getItemFolders={getItemFolders}
                 breadcrumbPath={folder.breadcrumbPath}
                 onNavigateToRoot={() => {
                   folder.setActiveFolder(null);
@@ -1029,7 +1150,7 @@ export function PassageListClient({
                             className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-3"
                             value={selection.selectedIds}
                             onChange={selection.setSelectedIds}
-                            itemScopeRef={passageListBoundaryRef}
+                            boundaryRef={passageListBoundaryRef}
                           >
                             {group.items.map((p) => {
                               const adapted = {
@@ -1109,7 +1230,7 @@ export function PassageListClient({
                     className="space-y-1.5"
                     value={selection.selectedIds}
                     onChange={selection.setSelectedIds}
-                    itemScopeRef={passageListBoundaryRef}
+                    boundaryRef={passageListBoundaryRef}
                   >
                     {displayedPassages.map((p) => (
                       <PassageFileRow
@@ -1130,7 +1251,7 @@ export function PassageListClient({
                     }
                     value={selection.selectedIds}
                     onChange={selection.setSelectedIds}
-                    itemScopeRef={passageListBoundaryRef}
+                    boundaryRef={passageListBoundaryRef}
                   >
                     {displayedPassages.map((p) => (
                       <PassageFileCard
@@ -1165,39 +1286,6 @@ export function PassageListClient({
           />
         )}
       </div>
-
-      {/* ─── Bulk Delete Confirmation ─── */}
-      <AlertDialog
-        open={bulkDeleteOpen}
-        onOpenChange={(open) => {
-          if (!bulkDeleting) setBulkDeleteOpen(open);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              선택한 학습지 {selection.selectedIds.size}편을 삭제하시겠습니까?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 학습지에 연결된 분석/문제 데이터도
-              함께 삭제될 수 있습니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={bulkDeleting}>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(e) => {
-                e.preventDefault();
-                void handleBulkDelete();
-              }}
-              disabled={bulkDeleting}
-              className="bg-red-500 hover:bg-red-600"
-            >
-              {bulkDeleting ? "삭제 중..." : "삭제"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
       {/* ─── Analysis Modal ─── */}
       {modalPassage && (

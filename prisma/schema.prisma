@@ -2420,6 +2420,7 @@ model CreditTopUp {
   academy           Academy               @relation(fields: [academyId], references: [id])
   creditTransaction CreditTransaction?    @relation(fields: [creditTransactionId], references: [id])
   webhookEvents     PortOneWebhookEvent[]
+  bankDeposits      BankDepositNotification[]
 
   @@index([academyId])
   @@index([academyId, status, createdAt])
@@ -2457,6 +2458,32 @@ model PortOneWebhookEvent {
   @@index([subscriptionPaymentId])
   @@index([status, receivedAt])
   @@map("portone_webhook_events")
+}
+
+/// BankDepositNotification — inbound bank deposit alerts (무통장입금 자동확인)
+/// Relayed from a bank SMS/push forwarder. Idempotent on externalId.
+/// status: "MATCHED" | "UNMATCHED" | "AMBIGUOUS" | "IGNORED" | "FAILED"
+model BankDepositNotification {
+  id             String    @id @default(cuid())
+  externalId     String    @unique // dedup key from relay (SMS hash / provider id)
+  source         String    @default("sms") // relay channel
+  rawText        String    @db.Text
+  amount         Int // 입금 금액 (원)
+  depositorName  String? // 입금자명 (정규화 전 원본)
+  bankName       String?
+  status         String    @default("UNMATCHED")
+  matchedTopUpId String? // CreditTopUp matched & credited
+  note           String?   @db.Text
+  occurredAt     DateTime? // 은행이 알려준 입금 시각
+  receivedAt     DateTime  @default(now())
+  processedAt    DateTime?
+
+  matchedTopUp CreditTopUp? @relation(fields: [matchedTopUpId], references: [id], onDelete: SetNull)
+
+  @@index([status, receivedAt])
+  @@index([amount])
+  @@index([matchedTopUpId])
+  @@map("bank_deposit_notifications")
 }
 
 // ============================================================================
@@ -4286,4 +4313,92 @@ model AcademyFeatureFlag {
   @@unique([academyId, key])
   @@index([academyId, enabled])
   @@map("academy_feature_flags")
+}
+
+// ============================================================================
+// HELP CENTER — 헬프센터
+// 피드백/고객지원 통합 게시판(HelpPost) + 1:1 세미나 신청(SeminarRequest).
+// 글로벌(비테넌트): academyId로 목록을 필터링하지 않고 전체 학원 글을 노출한다.
+// 작성=Staff(원장), 답변/상태관리=SuperAdmin. 비밀글은 작성자 본인+운영자만 열람.
+// ============================================================================
+
+model HelpPost {
+  id            String   @id @default(cuid())
+  board         String // "FEEDBACK" | "SUPPORT"
+  academyId     String? // 작성 학원(맥락·감사용, 목록 필터에는 사용 안 함)
+  authorStaffId String?
+  authorName    String // 표시명(학원명/작성자)
+  category      String   @default("ETC")
+  title         String
+  content       String   @db.Text
+  status        String   @default("OPEN")
+  isPrivate     Boolean  @default(false) // 비밀글(본인+운영자만 열람)
+  passwordHash  String? // bcrypt
+  isPinned      Boolean  @default(false) // 운영자 상단 고정(피드백 로드맵/공지)
+  viewCount     Int      @default(0)
+  upvoteCount   Int      @default(0) // 피드백 공감(비정규화 카운터)
+  attachments   Json? // [{name,url,size,type}] 고객지원 첨부
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  replies HelpPostReply[]
+  upvotes HelpPostUpvote[]
+
+  @@index([board, status, createdAt])
+  @@index([board, isPinned, createdAt])
+  @@map("help_posts")
+}
+
+model HelpPostReply {
+  id            String   @id @default(cuid())
+  postId        String
+  authorRole    String // "ADMIN" | "STAFF"
+  authorStaffId String?
+  authorAdminId String?
+  authorName    String
+  content       String   @db.Text
+  isOfficial    Boolean  @default(false) // 운영자 공식답변
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  post HelpPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId, createdAt])
+  @@map("help_post_replies")
+}
+
+model HelpPostUpvote {
+  id        String   @id @default(cuid())
+  postId    String
+  staffId   String
+  createdAt DateTime @default(now())
+
+  post HelpPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, staffId])
+  @@map("help_post_upvotes")
+}
+
+model SeminarRequest {
+  id               String    @id @default(cuid())
+  academyId        String?
+  staffId          String?
+  applicantName    String
+  phone            String
+  email            String?
+  academyName      String?
+  preferredChannel String    @default("PHONE") // "PHONE" | "KAKAO" | "EITHER"
+  preferredTimes   String? // 선호 시간대 칩 + 메모
+  topic            String? // 관심 주제 칩
+  message          String?   @db.Text
+  status           String    @default("RECEIVED") // RECEIVED→CONTACTED→SCHEDULED→DONE / CANCELED
+  adminMemo        String?   @db.Text
+  scheduledAt      DateTime?
+  meetingUrl       String? // 운영자가 입력하는 줌(Zoom) 등 화상 접속 링크 — 신청자에게 노출
+  handledByAdminId String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([status, createdAt])
+  @@map("seminar_requests")
 }

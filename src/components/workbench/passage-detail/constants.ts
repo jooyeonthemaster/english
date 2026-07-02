@@ -31,7 +31,9 @@ export const EXAM_TYPE_GROUPS = [
       { id: "SENTENCE_TRANSFORM", label: "문장 전환" },
       { id: "FILL_BLANK_KEY", label: "핵심 표현 빈칸" },
       { id: "SUMMARY_COMPLETE", label: "요약문 완성" },
+      { id: "SUMMARY_WRITING", label: "요약문 영작" },
       { id: "WORD_ORDER", label: "배열 영작" },
+      { id: "TOPIC_SENTENCE_WRITING", label: "주제문 영작" },
       { id: "GRAMMAR_CORRECTION", label: "문법 오류 수정" },
     ],
   },
@@ -58,7 +60,7 @@ export const Q_SUBTYPE_LABELS: Record<string, string> = {
   SENTENCE_INSERT: "문장 삽입", SENTENCE_ORDER: "글의 순서", TOPIC: "주제 추론", MAIN_IDEA: "요지/주장", TOPIC_MAIN_IDEA: "주제/요지",
   TITLE: "제목 추론", IMPLIED_MEANING: "함축 의미 추론", REFERENCE: "지칭 추론", CONTENT_MATCH: "내용 일치", SUMMARY_COMPLETE_MC: "요약문 완성(객관식)",
   IRRELEVANT: "무관한 문장", CONDITIONAL_WRITING: "조건부 영작", SENTENCE_TRANSFORM: "문장 전환",
-  FILL_BLANK_KEY: "핵심 표현 빈칸", SUMMARY_COMPLETE: "요약문 완성", WORD_ORDER: "배열 영작",
+  FILL_BLANK_KEY: "핵심 표현 빈칸", SUMMARY_COMPLETE: "요약문 완성", SUMMARY_WRITING: "요약문 영작", WORD_ORDER: "배열 영작", TOPIC_SENTENCE_WRITING: "주제문 영작",
   GRAMMAR_CORRECTION: "문법 오류 수정", CONTEXT_MEANING: "문맥 속 의미", SYNONYM: "동의어", ANTONYM: "반의어",
 };
 

@@ -645,24 +645,25 @@ export function WebtoonTextEditor({
             <button
               type="button"
               onClick={onBack}
-              title="이전 단계로 돌아가기"
-              className="flex h-8 items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+              title="돌아가기"
+              aria-label="돌아가기"
+              className="flex size-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50"
             >
               <ArrowLeft className="size-3.5" />
-              돌아가기
             </button>
           ) : null}
           {onDelete ? (
             <Button
               variant="ghost"
-              size="sm"
+              size="icon-sm"
+              title="삭제"
+              aria-label="삭제"
               onClick={() => {
                 if (window.confirm("이 웹툰을 삭제할까요? 되돌릴 수 없습니다.")) onDelete();
               }}
-              className="h-8 text-xs text-red-500 hover:bg-red-50 hover:text-red-600"
+              className="text-red-500 hover:bg-red-50 hover:text-red-600"
             >
-              <Trash2 className="mr-1 h-3.5 w-3.5" />
-              삭제
+              <Trash2 className="h-3.5 w-3.5" />
             </Button>
           ) : null}
           <button
@@ -726,16 +727,18 @@ export function WebtoonTextEditor({
             onClick={handleSave}
             saving={saving}
             disabled={saving || phase !== "ready"}
+            iconOnly
           />
           {/* 인쇄 */}
           <button
             type="button"
             onClick={handlePrint}
             disabled={phase !== "ready"}
-            className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            title="인쇄"
+            aria-label="인쇄"
+            className="flex size-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Printer className="size-3.5" />
-            인쇄
           </button>
           {/* 배포하기 (primary) */}
           <button
@@ -757,9 +760,9 @@ export function WebtoonTextEditor({
         </div>
       ) : null}
 
-      <div className="flex min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
         {/* left panel — recognized text list (학습지 편집창 좌측 패널 UI) */}
-        <aside className="flex h-full min-h-0 w-[300px] shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white">
+        <aside className="flex max-h-[40vh] min-h-0 shrink-0 flex-col overflow-hidden border-b border-slate-200 bg-white lg:h-full lg:max-h-none lg:w-[300px] lg:border-b-0 lg:border-r">
           <div className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-200 bg-white px-3.5">
             <div className="min-w-0">
               <p className="truncate text-[12px] font-black text-slate-800">인식된 텍스트</p>
@@ -784,7 +787,7 @@ export function WebtoonTextEditor({
 
         {/* canvas area — relative parent so the zoom control stays fixed while the
             scroller pans the (possibly zoomed-in) canvas */}
-        <div className="relative min-w-0 flex-1">
+        <div className="relative min-h-[50vh] min-w-0 shrink-0 lg:min-h-0 lg:shrink lg:flex-1">
           <div ref={stageWrapRef} className="absolute inset-0 flex overflow-auto">
             {phase === "error" ? (
               <div className="m-auto text-center text-slate-500">
@@ -835,7 +838,7 @@ export function WebtoonTextEditor({
         </div>
 
         {/* right panel — speech-bubble editor (학습지 편집창 우측 패널 UI) */}
-        <aside className="flex h-full min-h-0 w-[320px] shrink-0 flex-col overflow-hidden border-l border-slate-200 bg-slate-50/80">
+        <aside className="flex min-h-0 shrink-0 flex-col overflow-hidden border-t border-slate-200 bg-slate-50/80 lg:h-full lg:w-[320px] lg:border-t-0 lg:border-l">
           <div className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-slate-200 bg-white px-3.5">
             <div className="min-w-0">
               <p className="truncate text-[12px] font-black text-slate-800">말풍선 편집</p>
@@ -863,18 +866,20 @@ export function WebtoonTextEditor({
                     }
                     disabled={!(selected.text !== selected.sourceText || selected.edited)}
                     title="원본으로 되돌리기"
-                    className="flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] text-slate-500 hover:bg-slate-100 disabled:opacity-40"
+                    aria-label="원본으로 되돌리기"
+                    className="flex size-7 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 disabled:opacity-40"
                   >
-                    <RotateCcw className="size-3.5" /> 원본
+                    <RotateCcw className="size-3.5" />
                   </button>
                 ) : null}
                 <button
                   type="button"
                   onClick={() => removeOrEraseBox(selected)}
                   title={selected.added ? "박스 삭제" : "원본 글자 지우기"}
-                  className="flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] text-rose-500 hover:bg-rose-50"
+                  aria-label={selected.added ? "박스 삭제" : "원본 글자 지우기"}
+                  className="flex size-7 items-center justify-center rounded-md text-rose-500 hover:bg-rose-50"
                 >
-                  <Trash2 className="size-3.5" /> {selected.added ? "삭제" : "지우기"}
+                  <Trash2 className="size-3.5" />
                 </button>
               </div>
             ) : null}

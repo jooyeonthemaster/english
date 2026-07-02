@@ -120,13 +120,13 @@ export function ExamFileCard({
         onClick(exam.id);
       }}
       className={cn(
-        "group relative flex min-h-[232px] flex-row overflow-hidden rounded-xl border bg-white transition-all duration-200 hover:shadow-md cursor-pointer",
+        "group relative flex min-h-[232px] w-full min-w-0 max-w-full flex-row overflow-hidden rounded-xl border bg-white transition-all duration-200 hover:shadow-md cursor-pointer",
         selected ? "ring-2 ring-blue-400 border-blue-300" : "border-slate-200 hover:border-slate-300",
         isDragging && "opacity-40 scale-95",
       )}
     >
       {/* 좌측: 첫 장 실제 렌더 미리보기 — 카드 높이를 위→아래로 가득 채운다 */}
-      <div className="relative w-[164px] shrink-0 self-stretch overflow-hidden border-r border-slate-100 bg-white">
+      <div className="relative w-[42%] min-w-[118px] max-w-[164px] shrink-0 self-stretch overflow-hidden border-r border-slate-100 bg-white md:w-[164px]">
         <ExamCardPaperPreview examId={exam.id} />
       </div>
 

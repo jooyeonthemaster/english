@@ -231,10 +231,9 @@ export function ExamQuickViewDialog({
                 disabled={!examId}
                 title="시험지 수정"
                 aria-label="시험지 수정"
-                className="inline-flex h-7 items-center gap-1.5 rounded-md border border-blue-100 bg-blue-50 px-2.5 text-[11px] font-semibold text-blue-700 transition-colors hover:border-blue-200 hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex size-7 shrink-0 items-center justify-center rounded-md border border-blue-100 bg-blue-50 text-[11px] font-semibold text-blue-700 transition-colors hover:border-blue-200 hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <PencilLine className="h-3.5 w-3.5" />
-                수정
               </button>
             </div>
           </div>

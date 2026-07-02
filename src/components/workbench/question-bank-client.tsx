@@ -36,16 +36,7 @@ import {
   updateQuestionCollection,
 } from "@/actions/workbench";
 import { createExam } from "@/actions/exams";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { confirmNative } from "@/lib/browser-confirm";
 
 // Shared modules
 import type { CollectionItem } from "./shared/types";
@@ -98,8 +89,6 @@ import { useQuestionEditor } from "./question-bank-client/use-question-editor";
 import { useUrlFilters } from "@/hooks/use-url-filters";
 import { useSelection } from "@/hooks/use-selection";
 import { useFolderManager } from "@/hooks/use-folder-manager";
-import { getAcademyQuestionSetMemberMap } from "@/actions/question-sets";
-import { QuestionSetSection } from "@/components/workbench/question-set-section";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -276,21 +265,12 @@ export function QuestionBankClient({
     isPending: isNavPending,
   } = useUrlFilters(QUESTION_BANK_PATH);
 
-  function handleSearch() {
-    urlSearch(searchValue);
+  function handleSearch(value?: string) {
+    // X 버튼은 빈 값을 명시적으로 넘긴다(상태 갱신은 비동기라 stale 방지).
+    urlSearch(value !== undefined ? value : searchValue);
   }
 
   // Folder manager
-  // 세트 섹션이 보고하는 (폴더 스코프) 세트 수 — 빈-상태 판정용(폴더에 세트만 있어도 빈 화면 방지).
-  const [setCount, setSetCount] = useState(0);
-  // 세트 멤버 questionId → setId 맵 — 폴더 카운트에서 세트를 "1개"로 센다(마운트 1회).
-  const [setMemberMap, setSetMemberMap] = useState<Record<string, string>>({});
-  useEffect(() => {
-    getAcademyQuestionSetMemberMap()
-      .then(setSetMemberMap)
-      .catch(() => {});
-  }, []);
-
   const folders = useFolderManager({
     initialCollections,
     initialMembership,
@@ -302,7 +282,9 @@ export function QuestionBankClient({
       removeFromCollection: removeQuestionsFromCollection,
     },
     itemLabel: "문제",
-    questionSetIdOf: (id) => setMemberMap[id] ?? null,
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    // 세트 멤버는 목록에 문항당 1카드로 노출(이동주 UI)되므로 카운트도 멤버 수 그대로.
+    cumulativeCounts: true,
   });
 
   // Grid view mode
@@ -421,33 +403,12 @@ export function QuestionBankClient({
   );
   const { selectedIds, setSelectedIds, toggleSelect, clearSelection } =
     useSelection(getDisplayedIds);
-  const isCurrentPageSelected =
-    displayedQuestionIds.length > 0 &&
-    displayedQuestionIds.every((id) => selectedIds.has(id));
-
-  const handleSelectCurrentPage = useCallback(() => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      const shouldClearPage =
-        displayedQuestionIds.length > 0 &&
-        displayedQuestionIds.every((id) => next.has(id));
-
-      for (const id of displayedQuestionIds) {
-        if (shouldClearPage) next.delete(id);
-        else next.add(id);
-      }
-
-      return next;
-    });
-  }, [displayedQuestionIds, setSelectedIds]);
-
   // Exam dialog
   const [createExamOpen, setCreateExamOpen] = useState(false);
   const [examTitle, setExamTitle] = useState("");
   const [creatingExam, setCreatingExam] = useState(false);
 
   // Bulk delete
-  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
 
   // Bulk approve (검수완료)
@@ -517,6 +478,20 @@ export function QuestionBankClient({
     selectingAllPages,
     setSelectedIds,
   ]);
+
+  // 헤더 체크박스 = "전체 페이지 선택". 현재 페이지만이 아니라 현재 폴더/필터의 전체
+  // 문항(getWorkbenchQuestionIds)을 선택한다 → 하위 폴더 안에서도 전체 선택→이동 가능.
+  // 이미 전체가 선택돼 있으면 해제한다.
+  const allFilteredSelected =
+    totalCount > 0 && selectedIds.size >= totalCount;
+  const someSelected = selectedIds.size > 0 && !allFilteredSelected;
+  const handleToggleSelectAll = useCallback(() => {
+    if (allFilteredSelected) {
+      clearSelection();
+      return;
+    }
+    void handleSelectAllPages();
+  }, [allFilteredSelected, clearSelection, handleSelectAllPages]);
 
   const editor = useQuestionEditor((id) => {
     selectedIds.delete(id);
@@ -691,17 +666,37 @@ export function QuestionBankClient({
 
   // ─── Folder drag handler (wraps hook's handler with selectedIds) ───
   const handleDragToFolder = useCallback(
-    async (itemId: string | string[], folderId: string, copy: boolean) => {
-      // 세트 드래그면 itemId 가 멤버 배열 — 훅이 배열을 그대로 받아 전체를 폴더에 넣는다.
+    // 세트 드래그면 itemId 가 멤버 배열 — 훅이 배열을 그대로 받아 전체를 폴더에 넣는다.
+    async (
+      itemId: string | string[],
+      folderId: string,
+      copy: boolean,
+      keepFolderIds: string[] = [],
+    ) => {
       const success = await folders.handleDragToFolder(
         itemId,
         folderId,
         copy,
         selectedIds,
+        keepFolderIds,
       );
       if (success) clearSelection();
     },
     [folders, selectedIds, clearSelection],
+  );
+
+  // Folders the dragged question (or whole selection) currently belongs to —
+  // powers the "keep in this folder" toggles when moving.
+  const getItemFolders = useCallback(
+    (itemId: string) => {
+      const ids = selectedIds.has(itemId) ? selectedIds : new Set([itemId]);
+      return folders.collections
+        .filter((c) =>
+          [...ids].some((id) => folders.membership[c.id]?.has(id)),
+        )
+        .map((c) => ({ id: c.id, name: c.name }));
+    },
+    [folders.collections, folders.membership, selectedIds],
   );
 
   const handleDragToRoot = useCallback(
@@ -783,7 +778,6 @@ export function QuestionBankClient({
         return next;
       });
       clearSelection();
-      setBulkDeleteOpen(false);
       router.refresh();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
@@ -942,7 +936,16 @@ export function QuestionBankClient({
 
       <button
         type="button"
-        onClick={() => setBulkDeleteOpen(true)}
+        onClick={() => {
+          if (
+            !confirmNative(
+              `선택한 문제 ${selectedIds.size}문항을 삭제하시겠습니까?`,
+              "이 작업은 되돌릴 수 없습니다. 문제에 연결된 해설/시험 연결도 함께 삭제됩니다.",
+            )
+          )
+            return;
+          void handleBulkDelete();
+        }}
         disabled={selectedIds.size === 0 || bulkDeleting}
         title="삭제"
         aria-label="삭제"
@@ -1058,22 +1061,38 @@ export function QuestionBankClient({
   // 카드들을 글로우시켜 "문항을 먼저 고르세요"를 유도한다.
   const cardZoneRef = useRef<HTMLDivElement>(null);
 
+  // 페이지 이동(currentPage 변경) 시 카드 목록 맨 위로 부드럽게 스크롤한다.
+  // 최초 마운트에서는 스크롤하지 않는다(불필요한 점프 방지).
+  const pageScrollSkipRef = useRef(true);
+  useEffect(() => {
+    if (pageScrollSkipRef.current) {
+      pageScrollSkipRef.current = false;
+      return;
+    }
+    cardZoneRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [currentPage]);
+
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-      <div className="flex flex-1 items-center gap-2 min-w-0">
+      <div className="flex w-full min-w-0 flex-wrap items-center gap-2 md:w-auto md:flex-1 md:flex-nowrap">
         <SelectAllCheckbox
-          checked={isCurrentPageSelected && selectedIds.size > 0}
-          indeterminate={selectedIds.size > 0 && !isCurrentPageSelected}
-          disabled={displayedQuestions.length === 0}
-          onChange={handleSelectCurrentPage}
-          title={`${selectedIds.size}문항 선택`}
-          ariaLabel={
-            isCurrentPageSelected ? "현재 페이지 해제" : "현재 페이지 선택"
+          checked={allFilteredSelected}
+          indeterminate={someSelected}
+          disabled={
+            (totalCount === 0 && displayedQuestions.length === 0) ||
+            selectingAllPages
           }
+          onChange={handleToggleSelectAll}
+          title={
+            allFilteredSelected
+              ? `전체 ${selectedIds.size}문항 선택됨 — 클릭 시 해제`
+              : `전체 ${totalCount}문항 선택`
+          }
+          ariaLabel={allFilteredSelected ? "전체 해제" : "전체 페이지 선택"}
         />
         <div
           className={
-            "flex shrink-0 items-center gap-3 " +
+            "flex min-w-0 flex-wrap items-center gap-1.5 md:shrink-0 md:flex-nowrap md:gap-3 " +
             (selectedIds.size > 0 ? "" : "pointer-events-none opacity-50")
           }
           aria-disabled={selectedIds.size === 0}
@@ -1092,6 +1111,18 @@ export function QuestionBankClient({
             </button>
           ) : null}
         </div>
+        {/* 휴지통 — 삭제 버튼 바로 오른쪽에 두어 "삭제 → 휴지통" 흐름을 잇는다.
+            삭제(빨강)와 달리 무채색(슬레이트)으로 두어 단순 이동 링크임을 구분.
+            텍스트 펄이라 h-9로 살짝 키웠다. 선택과 무관하게 항상 활성. */}
+        <Link
+          href="/director/workbench/questions/trash"
+          title="삭제한 문제 보관함"
+          aria-label="휴지통"
+          className="flex h-9 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-slate-50 px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-100 hover:text-slate-700"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+          휴지통
+        </Link>
         {/* 시험지 만들기 — 흐림 처리되는 액션 클러스터 밖에 둬 비활성 시
             또렷한 회색으로 보이게 한다. */}
         <button
@@ -1115,29 +1146,20 @@ export function QuestionBankClient({
             setCreateExamOpen(true);
           }}
           className={
-            "flex h-12 grow items-center justify-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[14px] font-bold text-white shadow-sm transition-colors " +
+            "flex h-10 min-w-[9rem] flex-[1_1_9rem] items-center justify-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[13px] font-bold text-white shadow-sm transition-colors md:h-12 md:min-w-0 md:basis-auto md:grow md:text-[14px] " +
             (selectedIds.size === 0 || creatingExam
               ? "cursor-not-allowed border-blue-200 bg-blue-300 shadow-none"
               : "cursor-pointer border-blue-600 bg-blue-600 hover:border-blue-700 hover:bg-blue-700")
           }
         >
-          <ClipboardList className="size-5" />
-          다음으로 (시험지 생성)
+          <ClipboardList className="size-4 md:size-5" />
+          <span className="md:hidden">시험지 생성</span>
+          <span className="hidden md:inline">다음으로 (시험지 생성)</span>
         </button>
       </div>
-      <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+      <div className="ml-auto flex w-full shrink-0 flex-wrap items-center justify-end gap-2 md:w-auto">
         {filtersToolbar}
         {gridToggle}
-        {/* 휴지통 — 삭제한 문제는 여기로 모인다(라벨 노출로 발견성↑). */}
-        <Link
-          href="/director/workbench/questions/trash"
-          title="삭제한 문제 보관함"
-          aria-label="휴지통"
-          className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
-        >
-          <Trash2 className="h-3.5 w-3.5" />
-          휴지통
-        </Link>
       </div>
     </div>
   );
@@ -1185,6 +1207,7 @@ export function QuestionBankClient({
                 onDeleteFolder={folders.handleDeleteFolder}
                 onDragToFolder={handleDragToFolder}
                 onDragToRoot={handleDragToRoot}
+                getItemFolders={getItemFolders}
                 breadcrumbPath={folders.breadcrumbPath}
                 onNavigateToRoot={handleNavigateToRoot}
                 useCardInsideFolder={false}
@@ -1215,6 +1238,8 @@ export function QuestionBankClient({
             <div
               ref={cardZoneRef}
               className="relative min-w-0 px-4 pb-3 pt-3 sm:px-5"
+              // 페이지 이동 스크롤 시 스티키 폴더/툴바 아래에 카드 첫 줄이 오도록 여백 확보.
+              style={{ scrollMarginTop: folderStickyHeight + 56 }}
             >
               {showNavLoading ? (
                 <div className="absolute inset-0 z-10 flex items-start justify-center bg-white/55 pt-12 backdrop-blur-[1px]">
@@ -1272,9 +1297,7 @@ export function QuestionBankClient({
                       : undefined
                   }
                 />
-              ) : displayedQuestions.length === 0 &&
-                setCount === 0 &&
-                !isNavPending ? (
+              ) : displayedQuestions.length === 0 && !isNavPending ? (
                 <div className="py-12 text-center">
                   <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />
                   <p className="text-[13px] text-slate-400">
@@ -1300,75 +1323,63 @@ export function QuestionBankClient({
                         : "grid-cols-1"
                   }`}
                 >
-                  {/* 지문 세트 — 일반 문제와 한 그리드에 섞어 렌더(생성 페이지와 동일). 폴더 인식
-                      (collectionId). 미검수-만 보기(showingPendingOnly)에선 세트 숨김. M3 회피:
-                      관리 페이지에선 세트 체크 선택(onToggleSetSelection) 미배선 → 일괄삭제 orphan 방지. */}
-                  <QuestionSetSection
-                    inline
-                    showSets={currentPage === 1 && !showingPendingOnly}
-                    refreshKey={`${folders.activeFolder ?? "all"}:${filters.approved}`}
-                    onCountChange={setSetCount}
-                    onMemberSplit={() => router.refresh()}
-                    collectionId={folders.activeFolder ?? undefined}
-                    normalItems={displayedQuestions.map((q, idx) => {
-                      const startIdx = (currentPage - 1) * 20;
-                      const similarAnalysis = showingPendingOnly
-                        ? null
-                        : getSimilarSourceAnalysis(q);
-                      return {
-                        id: q.id,
-                        createdAt: q.createdAt,
-                        node: showingPendingOnly ? (
-                          <QuestionCard
-                            key={q.id}
-                            q={q}
-                            num={startIdx + idx + 1}
-                            selected={selectedIds.has(q.id)}
-                            recentlyViewed={
-                              lastViewedQuestionId === q.id &&
-                              detailQuestionId !== q.id
-                            }
-                            onToggle={() => toggleSelect(q.id)}
-                            onApprove={() => handleApprove(q.id)}
-                            onDetail={() => openDetail(q.id)}
-                            onEdit={() => editor.openEditor(q.id)}
-                            readonly
-                            compact
-                            showReviewActions
-                            openOnCardClick
-                          />
-                        ) : (
-                          <QuestionBankCard
-                            key={q.id}
-                            q={q}
-                            num={startIdx + idx + 1}
-                            selected={selectedIds.has(q.id)}
-                            recentlyViewed={
-                              lastViewedQuestionId === q.id &&
-                              detailQuestionId !== q.id
-                            }
-                            onToggle={() => toggleSelect(q.id)}
-                            onDelete={() => handleDelete(q.id)}
-                            onApprove={() => handleApprove(q.id)}
-                            onUnapprove={() => handleUnapprove(q.id)}
-                            onToggleStar={() => handleToggleStar(q.id)}
-                            onDetail={() => openDetail(q.id)}
-                            onEdit={() => editor.openEditor(q.id)}
-                            onShowAnalysis={
-                              similarAnalysis
-                                ? () => setSourceAnalysis(similarAnalysis)
-                                : undefined
-                            }
-                            viewSize={viewSize}
-                            cardClickSelects
-                            showDetailButton
-                            dragRequiresSelection
-                            getDragQuestionIds={getDragQuestionIds}
-                          />
-                        ),
-                      };
-                    })}
-                  />
+                  {/* 세트 멤버도 문항당 1카드로 이 목록에 흐른다(이동주 UI — _question-where
+                      의 inSet 필터 제거). 세트 한 장 카드는 생성 직후 큐·세트 상세 모달에서만. */}
+                  {displayedQuestions.map((q, idx) => {
+                    const startIdx = (currentPage - 1) * 20;
+                    if (showingPendingOnly) {
+                      return (
+                        <QuestionCard
+                          key={q.id}
+                          q={q}
+                          num={startIdx + idx + 1}
+                          selected={selectedIds.has(q.id)}
+                          recentlyViewed={
+                            lastViewedQuestionId === q.id &&
+                            detailQuestionId !== q.id
+                          }
+                          onToggle={() => toggleSelect(q.id)}
+                          onApprove={() => handleApprove(q.id)}
+                          onDetail={() => openDetail(q.id)}
+                          onEdit={() => editor.openEditor(q.id)}
+                          readonly
+                          compact
+                          showReviewActions
+                          openOnCardClick
+                        />
+                      );
+                    }
+                    const similarAnalysis = getSimilarSourceAnalysis(q);
+                    return (
+                      <QuestionBankCard
+                        key={q.id}
+                        q={q}
+                        num={startIdx + idx + 1}
+                        selected={selectedIds.has(q.id)}
+                        recentlyViewed={
+                          lastViewedQuestionId === q.id &&
+                          detailQuestionId !== q.id
+                        }
+                        onToggle={() => toggleSelect(q.id)}
+                        onDelete={() => handleDelete(q.id)}
+                        onApprove={() => handleApprove(q.id)}
+                        onUnapprove={() => handleUnapprove(q.id)}
+                        onToggleStar={() => handleToggleStar(q.id)}
+                        onDetail={() => openDetail(q.id)}
+                        onEdit={() => editor.openEditor(q.id)}
+                        onShowAnalysis={
+                          similarAnalysis
+                            ? () => setSourceAnalysis(similarAnalysis)
+                            : undefined
+                        }
+                        viewSize={viewSize}
+                        cardClickSelects
+                        showDetailButton
+                        dragRequiresSelection
+                        getDragQuestionIds={getDragQuestionIds}
+                      />
+                    );
+                  })}
                 </DragSelect>
               )}
             </div>
@@ -1448,37 +1459,6 @@ export function QuestionBankClient({
         onBack={editorCameFromDetail ? backToDetail : undefined}
       />
 
-      <AlertDialog
-        open={bulkDeleteOpen}
-        onOpenChange={(open) => {
-          if (!bulkDeleting) setBulkDeleteOpen(open);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              선택한 문제 {selectedIds.size}문항을 삭제하시겠습니까?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 문제에 연결된 해설/시험 연결도 함께
-              삭제됩니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={bulkDeleting}>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(e) => {
-                e.preventDefault();
-                void handleBulkDelete();
-              }}
-              disabled={bulkDeleting}
-              className="bg-red-500 hover:bg-red-600"
-            >
-              {bulkDeleting ? "삭제 중..." : "삭제"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }

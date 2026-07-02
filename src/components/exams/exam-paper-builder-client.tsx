@@ -6,13 +6,14 @@ import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element
 import { ChevronRight, GripVertical, RotateCcw, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { type BuilderQuestion, DEFAULT_PAPER_COVER, type Density, type HeaderPatch, LINE_GAP_MARKER, type PaginationSettings, type PaperCover, type PaperSize, type PaperTemplate, type PassageStyle } from "./paper-builder/types";
-import { DEFAULT_INSTRUCTIONS, PAPER_SIZE_SPECS, SUBTYPE_LABELS } from "./paper-builder/constants";
-import { buildGroups, formatDateInput, parseTags } from "./paper-builder/paper-item-utils";
+import { DEFAULT_INSTRUCTIONS, PAPER_SIZE_SPECS } from "./paper-builder/constants";
+import { buildGroups, formatDateInput } from "./paper-builder/paper-item-utils";
 import { asDensity, asPaperSize, asPaperTemplate, asPassageStyle, buildPaperItemsFromExam, formatExamDate, parseBuilderSettings } from "./exam-paper-builder-existing";
 import { DEFAULT_TEMPLATE_SETTINGS, normalizePaperCover, readSavedTemplateSettings } from "./paper-builder/saved-template-settings";
 import { deleteExamPaperBuilderDraft, type ExamPaperBuilderDraft, type ExamPaperBuilderDraftState, getExamPaperBuilderDraftKey, readExamPaperBuilderDraft, writeExamPaperBuilderDraft } from "./paper-builder/indexeddb-drafts";
 import { useSidebarFocus } from "@/components/layout/sidebar-focus-context";
 import { paginateGroups } from "./paper-builder/pagination";
+import { buildAnswerKeyLayout, EMPTY_ANSWER_KEY_LAYOUT } from "./paper-builder/answer-key-layout";
 import { usePrintPortal } from "./paper-builder/hooks/use-print-portal";
 import { PrintStyles } from "./paper-builder/components/print-styles";
 import { BuilderPropertiesPanel } from "./paper-builder/components/builder-properties-panel";
@@ -30,8 +31,16 @@ import { ExamPaperGenerationIcon } from "@/components/icons/workflow-icons";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { useFolderManager } from "@/hooks/use-folder-manager";
 import type { CollectionItem } from "@/components/workbench/shared/types";
-import { addQuestionsToCollection, createQuestionCollection, deleteQuestionCollection, removeQuestionsFromCollection, updateQuestionCollection } from "@/actions/workbench";
+import { addQuestionsToCollection, createQuestionCollection, deleteQuestionCollection, getAcademyQuestionCollectionMembership, getQuestionCollections, removeQuestionsFromCollection, updateQuestionCollection } from "@/actions/workbench";
 import { incrementExamPrintCount } from "@/actions/exams";
+import {
+  getExamPaperBuilderQuestionsByIds,
+  getExamPaperBuilderQuestionsPage,
+  getExamPaperBuilderQuestionIds,
+  getExamPaperBuilderQuestionPageOf,
+} from "@/actions/exam-paper-builder";
+import { BUILDER_PAGE_SIZE } from "@/actions/workbench/_question-where";
+import type { WorkbenchQuestionFilters } from "@/actions/workbench/_types";
 import { Button } from "@/components/ui/button";
 import { SaveButton } from "@/components/ui/save-button";
 import { useBeforeUnloadWarning } from "@/components/shared/use-unsaved-close-guard";
@@ -42,11 +51,14 @@ import { cn } from "@/lib/utils";
 import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
 import { BUILDER_DRAFT_AUTOSAVE_DELAY_MS, BUILDER_HEADER_AUTO_HIDE_DELAY_MS, BUILDER_HEADER_HIDE_ZONE_PX, LEFT_PANEL_COLLAPSED_STORAGE_KEY, PANEL_DRAG_THRESHOLD, PANEL_MIN_CENTER, PANEL_TOGGLE_HANDLE_WIDTH, PANEL_WIDTH_STORAGE_KEY, PREVIEW_PAGE_GAP, RIGHT_PANEL_COLLAPSED_STORAGE_KEY, THUMBNAILS_COLLAPSED_STORAGE_KEY, THUMBNAILS_WIDTH_STORAGE_KEY } from "./exam-paper-builder-client-parts/builder-constants";
 import type { BuilderPanelTab, ExamPaperBuilderClientProps, PanelResizeSide, PanelWidths, SaveDraftOptions } from "./exam-paper-builder-client-parts/builder-types";
-import { asAutoPointTotal, buildDefaultSaveAsTitle, clampPanelWidths, clampThumbnailsWidth, formatBuilderDraftUpdatedAt, getQuestionDropInsertion, hasMeaningfulBuilderDraft, readStoredLeftPanelCollapsed, readStoredPanelWidths, readStoredRightPanelCollapsed, readStoredThumbnailsCollapsed, readStoredThumbnailsWidth, samePanelWidths, sortBuilderQuestions } from "./exam-paper-builder-client-parts/builder-helpers";
+import { asAutoPointTotal, buildDefaultSaveAsTitle, clampPanelWidths, clampThumbnailsWidth, formatBuilderDraftUpdatedAt, getQuestionDropInsertion, hasMeaningfulBuilderDraft, readStoredLeftPanelCollapsed, readStoredPanelWidths, readStoredRightPanelCollapsed, readStoredThumbnailsCollapsed, readStoredThumbnailsWidth, samePanelWidths } from "./exam-paper-builder-client-parts/builder-helpers";
 import { PageThumbnails } from "./exam-paper-builder-client-parts/page-thumbnails";
 export function ExamPaperBuilderClient({
   academyId,
   questions,
+  total: initialTotal,
+  totalPages: initialTotalPages,
+  statusCounts: initialStatusCounts,
   collections,
   classes,
   schools,
@@ -277,6 +289,8 @@ export function ExamPaperBuilderClient({
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(
     readStoredLeftPanelCollapsed,
   );
+  // 모바일(<lg) 전용 2단계 흐름: 1) 문제 선택 ↔ 2) 미리보기·저장. 데스크톱은 영향 없음.
+  const [mobileStep, setMobileStep] = useState<"select" | "preview">("select");
   const [thumbnailsWidth, setThumbnailsWidth] = useState(
     readStoredThumbnailsWidth,
   );
@@ -296,10 +310,40 @@ export function ExamPaperBuilderClient({
     return () => setSidebarCollapseRequested(false);
   }, [setSidebarCollapseRequested]);
 
-  const questionById = useMemo(
-    () => new Map(questions.map((question) => [question.id, question])),
-    [questions],
+  // 미리보기/선택 작업세트용 풀 캐시 — 현재 페이지에 없는(다른 페이지·시드된) 문항을
+  // getExamPaperBuilderQuestionsByIds 로 배치 로드해 보관한다. questionById 에 병합돼
+  // 미리보기 추가 시 "현재 페이지에 없는 문항"도 정상적으로 올라간다.
+  const [fetchedQuestions, setFetchedQuestions] = useState<
+    Map<string, BuilderQuestion>
+  >(() => new Map());
+
+  // ─── 좌측 목록: 서버 페이지네이션(100/page, 문제관리 페이지와 동일 구조) ───
+  // 한 페이지(pageQuestions)만 메모리에 둔다. SSR 로 받은 1페이지(questions prop)로
+  // 시작하고, 페이지/필터 변경 시 getExamPaperBuilderQuestionsPage 로 다시 받는다.
+  const [pageQuestions, setPageQuestions] = useState<BuilderQuestion[]>(
+    () => questions,
   );
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(initialTotal);
+  const [totalPages, setTotalPages] = useState(initialTotalPages);
+  const [statusCounts, setStatusCounts] = useState(initialStatusCounts);
+  const [listLoading, setListLoading] = useState(false);
+  // 폴더 드래그 등 "필터는 그대로지만 목록이 바뀐" 경우 강제 재조회용 카운터.
+  const [listRefreshKey, setListRefreshKey] = useState(0);
+
+  // 검색 입력 debounce — 키 입력마다 서버를 때리지 않도록 300ms 후 적용.
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(search.trim()), 300);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  const questionById = useMemo(() => {
+    const map = new Map<string, BuilderQuestion>();
+    for (const [id, q] of fetchedQuestions) map.set(id, q);
+    for (const question of pageQuestions) map.set(question.id, question);
+    return map;
+  }, [pageQuestions, fetchedQuestions]);
 
   // ─── 파일(폴더) 관리 — questions 페이지와 동일한 중첩 폴더 구조를 컴팩트하게 ───
   // 초기 컬렉션을 폴더 매니저가 기대하는 CollectionItem 형태로 변환한다.
@@ -340,25 +384,110 @@ export function ExamPaperBuilderClient({
       removeFromCollection: removeQuestionsFromCollection,
     },
     itemLabel: "문제",
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    cumulativeCounts: true,
   });
 
-  // 드래그한 문제를 폴더에 담기/이동(빈 selection이라 단일 문제만 대상). 세트 드래그면 itemId 가
-  // 멤버 배열 — 훅이 배열째 받아 전체를 넣는다.
-  const handleDragQuestionToFolder = useCallback(
-    (itemId: string | string[], folderId: string, copy: boolean) => {
-      void folders.handleDragToFolder(itemId, folderId, copy, new Set<string>());
-    },
-    [folders],
+  // 시험지 관리 페이지와 동일한 폴더 카운트(하위 합산·중복)를 위해, 페이징된
+  // 20문항 기반 멤버십 대신 학원 전체 문제 컬렉션·멤버십을 마운트 시 한 번
+  // 하이드레이트한다(폴더 탐색은 서버 collectionId 필터라 영향 없음).
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const [cols, membership] = await Promise.all([
+          getQuestionCollections(academyId),
+          getAcademyQuestionCollectionMembership(academyId),
+        ]);
+        if (cancelled) return;
+        folders.setCollections(cols as unknown as CollectionItem[]);
+        const next: Record<string, Set<string>> = {};
+        for (const [k, v] of Object.entries(membership ?? {})) {
+          next[k] = new Set(v as string[]);
+        }
+        folders.setMembership(next);
+      } catch {
+        // 실패 시 페이징 멤버십 폴백 유지(배지가 다소 적게 보일 수 있음)
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [academyId]);
+
+  // 현재 필터 상태 → 서버 조회 파라미터. 폴더 활성값은 collectionId 로 서버에 전달한다.
+  const buildListFilters = useCallback(
+    (targetPage: number): WorkbenchQuestionFilters => ({
+      page: targetPage,
+      limit: BUILDER_PAGE_SIZE,
+      sort,
+      search: debouncedSearch || undefined,
+      difficulty: difficulty === "ALL" ? undefined : difficulty,
+      subType: selectedSubTypes.length ? selectedSubTypes.join(",") : undefined,
+      starred: starredOnly ? true : undefined,
+      approved:
+        approvedFilter === "approved"
+          ? true
+          : approvedFilter === "pending"
+            ? false
+            : undefined,
+      collectionId: folders.activeFolder ?? undefined,
+    }),
+    [
+      sort,
+      debouncedSearch,
+      difficulty,
+      selectedSubTypes,
+      starredOnly,
+      approvedFilter,
+      folders.activeFolder,
+    ],
   );
-  // "전체 문제"로 드래그하면 현재 폴더에서 제거한다(복사 드롭은 무시). 세트는 멤버 전체 제거.
-  const handleDragQuestionToRoot = useCallback(
-    (itemId: string | string[], copy: boolean) => {
-      if (copy || !folders.activeFolder) return;
-      const ids = Array.isArray(itemId) ? itemId : [itemId];
-      void folders.handleRemoveFromFolder(new Set<string>(ids));
-    },
-    [folders],
+
+  // 필터 변경 감지용 시그니처 — 바뀌면 page 를 1 로 리셋한다(현재 페이지가 범위 밖이
+  // 되는 것 방지). 페이지 번호 자체는 시그니처에서 제외한다.
+  const listFilterSig = useMemo(
+    () => JSON.stringify(buildListFilters(0)),
+    [buildListFilters],
   );
+
+  // 좌측 목록 서버 조회 — 페이지/필터/강제갱신 변경 시 현재 페이지를 다시 받는다.
+  // 최초 마운트는 SSR 1페이지(props)를 그대로 쓰고 재조회하지 않는다.
+  const listMountedRef = useRef(false);
+  const listSigRef = useRef(listFilterSig);
+  useEffect(() => {
+    if (!listMountedRef.current) {
+      listMountedRef.current = true;
+      listSigRef.current = listFilterSig;
+      return;
+    }
+    // 필터가 바뀌었고 1페이지가 아니면, page=1 로 리셋만 하고 다음 렌더에서 조회한다.
+    if (listSigRef.current !== listFilterSig && page !== 1) {
+      listSigRef.current = listFilterSig;
+      setPage(1);
+      return;
+    }
+    listSigRef.current = listFilterSig;
+    let cancelled = false;
+    setListLoading(true);
+    void getExamPaperBuilderQuestionsPage(academyId, buildListFilters(page))
+      .then((res) => {
+        if (cancelled) return;
+        setPageQuestions(res.questions as unknown as BuilderQuestion[]);
+        setTotalCount(res.total);
+        setTotalPages(res.totalPages);
+        setStatusCounts(res.statusCounts);
+      })
+      .finally(() => {
+        if (!cancelled) setListLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // listFilterSig 가 필터 변화를 대표하므로 개별 필터 deps 는 생략한다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [academyId, page, listFilterSig, listRefreshKey]);
 
   const paperQuestionCounts = useMemo(
     () => {
@@ -393,6 +522,35 @@ export function ExamPaperBuilderClient({
     return ids;
   }, [paperItems]);
 
+  // 드래그한 문제를 폴더에 담기/이동. 체크된(=시험지에 올라간) 문항 전체가 선택으로
+  // 간주되어, 끄는 카드가 그 선택에 포함되면 selectedPaperQuestionIds 전체가 함께
+  // 이동한다(useFolderManager.handleDragToFolder 가 selection 포함 여부로 판단).
+  // 폴더 이동은 시험지 멤버십과 무관하므로 선택(=시험지 구성)은 그대로 둔다.
+  const handleDragQuestionToFolder = useCallback(
+    (itemId: string | string[], folderId: string, copy: boolean) => {
+      void folders
+        .handleDragToFolder(itemId, folderId, copy, selectedPaperQuestionIds)
+        // 폴더가 활성 필터면 멤버십 변화가 서버 목록에 반영되도록 재조회한다.
+        .finally(() => setListRefreshKey((k) => k + 1));
+    },
+    [folders, selectedPaperQuestionIds],
+  );
+  // "전체 문제"로 드래그하면 현재 폴더에서 제거한다(복사 드롭은 무시). 끄는 카드가
+  // 선택에 포함되면 선택 전체를, 아니면 그 카드만 폴더에서 뺀다.
+  const handleDragQuestionToRoot = useCallback(
+    (itemId: string | string[], copy: boolean) => {
+      if (copy || !folders.activeFolder) return;
+      const dragged = Array.isArray(itemId) ? itemId : [itemId];
+      const ids = dragged.some((id) => selectedPaperQuestionIds.has(id))
+        ? selectedPaperQuestionIds
+        : new Set<string>(dragged);
+      void folders
+        .handleRemoveFromFolder(ids)
+        .finally(() => setListRefreshKey((k) => k + 1));
+    },
+    [folders, selectedPaperQuestionIds],
+  );
+
   // 워드프로세서식 빈 줄(line-gap) 여백은 "미리보기에서만" 조절하는 요소다. 우측 편집
   // 패널(블록 목록·선택 블록·블록 수)에는 일반 블록으로 노출하지 않도록 걸러낸다.
   const panelPaperItems = useMemo(
@@ -409,6 +567,33 @@ export function ExamPaperBuilderClient({
     activeItem && activeItem.blockType === "question"
       ? activeItem.questionId
       : null;
+
+  // 미리보기 블록 클릭 → 좌측 카드 글로우/스크롤. 서버 페이지네이션이라 대상 카드가
+  // 다른 페이지에 있을 수 있다. 현재 페이지에 없으면 rank 로 그 문항의 페이지를 계산해
+  // 점프한다(점프 후 패널의 기존 scroll-to-active 가 글로우/스크롤을 마무리). 같은 id
+  // 로 중복 점프하지 않도록 ref 로 가드한다.
+  const lastGlowJumpRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!activeQuestionId) {
+      lastGlowJumpRef.current = null;
+      return;
+    }
+    if (pageQuestions.some((q) => q.id === activeQuestionId)) return; // 현재 페이지에 있음
+    if (lastGlowJumpRef.current === activeQuestionId) return; // 이미 점프 시도함
+    lastGlowJumpRef.current = activeQuestionId;
+    let cancelled = false;
+    void getExamPaperBuilderQuestionPageOf(
+      academyId,
+      activeQuestionId,
+      buildListFilters(1),
+    ).then((targetPage) => {
+      if (cancelled || !targetPage) return;
+      setPage(targetPage);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeQuestionId, pageQuestions, academyId, buildListFilters]);
 
   // 문항(블록)을 선택하면 빈 줄 캐럿은 해제한다(둘은 상호 배타).
   useEffect(() => {
@@ -505,79 +690,55 @@ export function ExamPaperBuilderClient({
     canRedo,
   ]);
 
-  // 빈 줄이 칸/페이지를 넘어가면 캐럿이 다음 쪽으로 이동하므로, 화면 밖으로 나간 경우
-  // 미리보기를 캐럿(빈 줄 자리)이 보이도록 따라 스크롤한다(워드프로세서처럼 시야가 따라감).
-  useEffect(() => {
-    const anchor = lineCaret?.afterLocalId;
-    if (!anchor) return;
-    const raf = window.requestAnimationFrame(() => {
-      const scroller = previewScrollerRef.current;
-      const target = scroller?.querySelector<HTMLElement>(
-        `[data-line-gap-anchor="${CSS.escape(anchor)}"]`,
-      );
-      if (!scroller || !target) return;
-      const scrollerRect = scroller.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
-      const fullyVisible =
-        targetRect.top >= scrollerRect.top + 8 &&
-        targetRect.bottom <= scrollerRect.bottom - 8;
-      if (fullyVisible) return;
-      scroller.scrollTo({
-        top:
-          scroller.scrollTop +
-          targetRect.top -
-          scrollerRect.top -
-          scrollerRect.height / 2,
-        behavior: "smooth",
-      });
-    });
-    return () => window.cancelAnimationFrame(raf);
-  }, [lineCaret, previewScrollerRef]);
+  const addQuestionIdsToPaper = useCallback(
+    async (ids: Iterable<string>) => {
+      const seen = new Set<string>();
+      const orderedIds: string[] = [];
+      const missingIds: string[] = [];
 
-  // 블록 삽입 직후: 새 블록(특히 다음 쪽으로 넘어간 이미지)이 화면 밖이면 그 위치까지
-  // 부드럽게 스크롤해 사용자에게 보여준다. paperItems 변경(삽입→재배치) 후 DOM 이 갱신된
-  // 뒤 RAF 로 스크롤한다(타이밍 안전). 이미 보이면 그대로 둔다.
-  useEffect(() => {
-    if (!pendingScrollItemId) return;
-    const raf = window.requestAnimationFrame(() => {
-      const scroller = previewScrollerRef.current;
-      const target = scroller?.querySelector<HTMLElement>(
-        `[data-paper-item-id="${CSS.escape(pendingScrollItemId)}"]`,
-      );
-      if (!scroller || !target) return; // 아직 렌더 전 — paperItems 갱신 시 재시도.
-      const scrollerRect = scroller.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
-      const fullyVisible =
-        targetRect.top >= scrollerRect.top + 8 &&
-        targetRect.bottom <= scrollerRect.bottom - 8;
-      if (!fullyVisible) {
-        scroller.scrollTo({
-          top:
-            scroller.scrollTop + targetRect.top - scrollerRect.top - 72,
-          behavior: "smooth",
-        });
+      for (const id of ids) {
+        if (!id || seen.has(id) || paperQuestionCounts.has(id)) continue;
+        seen.add(id);
+        orderedIds.push(id);
+        if (!questionById.has(id)) missingIds.push(id);
       }
-      setPendingScrollItemId(null);
-    });
-    return () => window.cancelAnimationFrame(raf);
-  }, [pendingScrollItemId, paperItems, previewScrollerRef]);
+      if (orderedIds.length === 0) return;
 
-  const addQuestionIdsToPaper = useCallback((ids: Iterable<string>) => {
-    const seen = new Set<string>();
-    const selectedQuestions: BuilderQuestion[] = [];
+      // 로드 상한을 넘었거나 시드된 id 중 목록에 없는 문항은 배치 로드해 병합한다.
+      // questionById 는 다음 렌더에 갱신되므로, 이번 호출에선 합쳐진 맵을 직접 만들어 쓴다.
+      let resolved = questionById;
+      if (missingIds.length > 0) {
+        try {
+          const fetched = (await getExamPaperBuilderQuestionsByIds(
+            academyId,
+            missingIds,
+          )) as unknown as BuilderQuestion[];
+          if (fetched.length > 0) {
+            setFetchedQuestions((prev) => {
+              const next = new Map(prev);
+              for (const q of fetched) next.set(q.id, q);
+              return next;
+            });
+            const merged = new Map(questionById);
+            for (const q of fetched) merged.set(q.id, q);
+            resolved = merged;
+          }
+        } catch {
+          toast.error("일부 문항을 불러오지 못했습니다.");
+        }
+      }
 
-    for (const id of ids) {
-      if (seen.has(id) || paperQuestionCounts.has(id)) continue;
-      const question = questionById.get(id);
-      if (!question) continue;
-      seen.add(id);
-      selectedQuestions.push(question);
-    }
-
-    if (selectedQuestions.length > 0) {
-      addQuestionsAtDropTarget(selectedQuestions, null, "after");
-    }
-  }, [addQuestionsAtDropTarget, paperQuestionCounts, questionById]);
+      const selectedQuestions: BuilderQuestion[] = [];
+      for (const id of orderedIds) {
+        const question = resolved.get(id);
+        if (question) selectedQuestions.push(question);
+      }
+      if (selectedQuestions.length > 0) {
+        addQuestionsAtDropTarget(selectedQuestions, null, "after");
+      }
+    },
+    [academyId, addQuestionsAtDropTarget, paperQuestionCounts, questionById],
+  );
 
   const removeQuestionIdFromPaper = useCallback((id: string) => {
     const targets = paperItems.filter(
@@ -598,7 +759,7 @@ export function ExamPaperBuilderClient({
       window.sessionStorage.removeItem(EXAM_SEED_QUESTION_IDS_KEY);
       const ids = JSON.parse(raw);
       if (Array.isArray(ids) && ids.length > 0) {
-        addQuestionIdsToPaper(
+        void addQuestionIdsToPaper(
           ids.filter((value): value is string => typeof value === "string"),
         );
       }
@@ -612,7 +773,7 @@ export function ExamPaperBuilderClient({
       removeQuestionIdFromPaper(id);
       return;
     }
-    addQuestionIdsToPaper([id]);
+    void addQuestionIdsToPaper([id]);
   }, [addQuestionIdsToPaper, removeQuestionIdFromPaper, selectedPaperQuestionIds]);
 
   const applyPaperQuestionSelection = useCallback((nextSelectedIds: Set<string>) => {
@@ -624,8 +785,46 @@ export function ExamPaperBuilderClient({
     );
 
     for (const id of toRemove) removeQuestionIdFromPaper(id);
-    addQuestionIdsToPaper(toAdd);
+    void addQuestionIdsToPaper(toAdd);
   }, [addQuestionIdsToPaper, removeQuestionIdFromPaper, selectedPaperQuestionIds]);
+
+  // 전체 선택(페이지 경계 무관) — 현재 필터에 매칭되는 모든 문항 ID 를 서버에서 받아
+  // 시험지에 일괄 추가/제거한다. 선택 = 시험지 구성이므로 곧바로 미리보기에 반영된다.
+  // 수천 개를 한 번에 담으면 풀 데이터 로드(addQuestionIdsToPaper)가 무거우므로,
+  // 진행 토스트로 사용자에게 알린다.
+  const [selectAllPending, setSelectAllPending] = useState(false);
+  const handleToggleSelectAllFiltered = useCallback(async () => {
+    if (selectAllPending) return;
+    setSelectAllPending(true);
+    try {
+      const ids = await getExamPaperBuilderQuestionIds(
+        academyId,
+        buildListFilters(1),
+      );
+      if (ids.length === 0) return;
+      const allSelected = ids.every((id) => selectedPaperQuestionIds.has(id));
+      const next = new Set(selectedPaperQuestionIds);
+      if (allSelected) {
+        for (const id of ids) next.delete(id);
+      } else {
+        for (const id of ids) next.add(id);
+        if (ids.length > 300) {
+          toast.message(`${ids.length}개 문항을 시험지에 담는 중…`);
+        }
+      }
+      applyPaperQuestionSelection(next);
+    } catch {
+      toast.error("전체 선택을 처리하지 못했습니다.");
+    } finally {
+      setSelectAllPending(false);
+    }
+  }, [
+    selectAllPending,
+    academyId,
+    buildListFilters,
+    selectedPaperQuestionIds,
+    applyPaperQuestionSelection,
+  ]);
 
   const builderDraftState = useMemo<ExamPaperBuilderDraftState>(
     () => ({
@@ -840,72 +1039,9 @@ export function ExamPaperBuilderClient({
       });
   }, [builderDraftKey]);
 
-  const activeFolderMembership = folders.activeFolder
-    ? folders.membership[folders.activeFolder]
-    : null;
-
-  // 검수 상태를 제외한 모든 필터(폴더·검색·유형·난이도·중요)를 적용한 집합.
-  // 검수 상태 세그먼트의 개수 표기는 이 집합을 기준으로 계산한다.
-  const baseFilteredQuestions = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    return questions.filter((question) => {
-      if (activeFolderMembership && !activeFolderMembership.has(question.id)) {
-        return false;
-      }
-      if (difficulty !== "ALL" && question.difficulty !== difficulty)
-        return false;
-      if (
-        selectedSubTypes.length > 0 &&
-        !selectedSubTypes.includes(question.subType || "")
-      ) {
-        return false;
-      }
-      if (starredOnly && !question.starred) return false;
-      if (query) {
-        const tags = parseTags(question.tags).join(" ");
-        const haystack = [
-          question.questionText,
-          question.correctAnswer,
-          question.passage?.title || "",
-          question.passage?.content || "",
-          tags,
-          SUBTYPE_LABELS[question.subType || ""] || "",
-        ]
-          .join(" ")
-          .toLowerCase();
-        if (!haystack.includes(query)) return false;
-      }
-      return true;
-    });
-  }, [
-    questions,
-    search,
-    activeFolderMembership,
-    difficulty,
-    selectedSubTypes,
-    starredOnly,
-  ]);
-
-  const statusCounts = useMemo(() => {
-    let approved = 0;
-    for (const question of baseFilteredQuestions) {
-      if (question.approved) approved += 1;
-    }
-    return {
-      all: baseFilteredQuestions.length,
-      approved,
-      pending: baseFilteredQuestions.length - approved,
-    };
-  }, [baseFilteredQuestions]);
-
-  const filteredQuestions = useMemo(() => {
-    const afterStatus = baseFilteredQuestions.filter((question) => {
-      if (approvedFilter === "approved") return question.approved;
-      if (approvedFilter === "pending") return !question.approved;
-      return true;
-    });
-    return sortBuilderQuestions(afterStatus, sort);
-  }, [baseFilteredQuestions, approvedFilter, sort]);
+  // 목록 필터링·정렬·페이지네이션·검수상태 개수는 모두 서버가 수행한다
+  // (getExamPaperBuilderQuestionsPage). pageQuestions 가 곧 "현재 페이지의 결과",
+  // statusCounts 는 서버 집계값이다.
 
   useEffect(() => {
     const autoHideTimer = window.setTimeout(() => {
@@ -932,6 +1068,10 @@ export function ExamPaperBuilderClient({
   }, [headerVisible]);
 
   const paperGroups = useMemo(() => buildGroups(paperItems), [paperItems]);
+  // 해설 포함 PDF 인쇄 중에만 true — 켜지면 각 문항 뒤에 인라인 정답·해설을 페이지네이션/
+  // 렌더에 포함하고(아래 includeAnswers), 맨 뒤 정답표는 빼며(DOCX 해설과 동일), 인쇄가
+  // 끝나면 afterprint 에서 다시 끈다. 평소 편집 미리보기에는 영향이 없다.
+  const [explanationPrint, setExplanationPrint] = useState(false);
   const paginationSettings = useMemo<PaginationSettings>(
     () => ({
       paperSize,
@@ -943,6 +1083,7 @@ export function ExamPaperBuilderClient({
       showQuestionMeta,
       template,
       forceTwoPerPage,
+      includeAnswers: explanationPrint,
     }),
     [
       paperSize,
@@ -954,6 +1095,7 @@ export function ExamPaperBuilderClient({
       showQuestionMeta,
       template,
       forceTwoPerPage,
+      explanationPrint,
     ],
   );
   const paginationResult = useMemo(
@@ -962,16 +1104,120 @@ export function ExamPaperBuilderClient({
   );
   const paperPages = paginationResult.pages;
   const overflowItemIds = paginationResult.overflowItems;
+  // 시험지 맨 뒤 정답표 페이지(들). PDF(=미리보기 인쇄)에 정답지가 빠지지 않도록
+  // 미리보기 DOM 의 마지막 페이지로 렌더한다. 문항이 없으면 pages 가 비어 안 그려진다.
+  // 해설 포함 PDF(인라인)일 때는 맨 뒤 정답표를 빼고(DOCX 해설과 동일), 평소 문제만
+  // 미리보기/PDF 에는 정답표를 붙인다.
+  const answerKey = useMemo(
+    () =>
+      explanationPrint
+        ? EMPTY_ANSWER_KEY_LAYOUT
+        : buildAnswerKeyLayout(paperItems, { paperSize, density }),
+    [paperItems, paperSize, density, explanationPrint],
+  );
   // 표지(cover.enabled)는 본문 페이지 앞에 한 장 더 렌더되므로, scale 컨테이너의
   // 높이를 예약하는 zoom-spacer 높이에 표지 한 장 + 간격을 더해야 스크롤이 잘리지 않는다.
   const singlePageHeight =
     previewBaseWidth * PAPER_SIZE_SPECS[paperSize].heightRatio;
-  const renderedPageCount = paperPages.length + (cover.enabled ? 1 : 0);
+  const renderedPageCount =
+    paperPages.length + (cover.enabled ? 1 : 0) + answerKey.pages.length;
   const previewContentHeight =
     renderedPageCount > 0
       ? renderedPageCount * singlePageHeight +
         (renderedPageCount - 1) * PREVIEW_PAGE_GAP
       : 0;
+
+  // ─── 미리보기 가상화 보조 ───
+  // 페이지를 지연 마운트(preview-pages.tsx)하면 화면 밖 페이지의 카드/캐럿은 DOM 에
+  // 없어 querySelector 로 못 찾는다. 그 경우를 위해 항목 localId → 페이지 인덱스 맵을
+  // 만들어, 대상이 아직 마운트되지 않았을 때 페이지 높이로 스크롤 위치를 정확히 추정한다
+  // (모든 페이지 높이가 singlePageHeight 로 균일하므로 추정이 정확하다).
+  const itemPageIndex = useMemo(() => {
+    const map = new Map<string, number>();
+    paperPages.forEach((columns, pageIndex) => {
+      for (const column of columns) {
+        for (const fragment of column) {
+          for (const part of fragment.parts) {
+            const localId = part.source?.localId;
+            if (localId && !map.has(localId)) map.set(localId, pageIndex);
+          }
+        }
+      }
+    });
+    return map;
+  }, [paperPages]);
+
+  const scrollPreviewToItem = useCallback(
+    (localId: string, topMargin: number) => {
+      const scroller = previewScrollerRef.current;
+      if (!scroller) return;
+      // 1) 이미 마운트돼 DOM 에 있으면 그 요소 기준으로 정확히 스크롤.
+      const target = scroller.querySelector<HTMLElement>(
+        `[data-paper-item-id="${CSS.escape(localId)}"], [data-line-gap-anchor="${CSS.escape(localId)}"]`,
+      );
+      if (target) {
+        const scrollerRect = scroller.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+        const fullyVisible =
+          targetRect.top >= scrollerRect.top + 8 &&
+          targetRect.bottom <= scrollerRect.bottom - 8;
+        if (!fullyVisible) {
+          scroller.scrollTo({
+            top:
+              scroller.scrollTop +
+              targetRect.top -
+              scrollerRect.top -
+              topMargin,
+            behavior: "smooth",
+          });
+        }
+        return;
+      }
+      // 2) 아직 지연 마운트 전이면 페이지 인덱스로 위치를 추정해 스크롤(→ 마운트 유발).
+      const pageIndex = itemPageIndex.get(localId);
+      if (pageIndex == null) return;
+      const coverOffset = cover.enabled ? singlePageHeight + PREVIEW_PAGE_GAP : 0;
+      const estimatedTop =
+        (coverOffset + pageIndex * (singlePageHeight + PREVIEW_PAGE_GAP)) *
+        previewZoom;
+      scroller.scrollTo({
+        top: Math.max(0, estimatedTop - topMargin),
+        behavior: "smooth",
+      });
+    },
+    [
+      cover.enabled,
+      itemPageIndex,
+      previewScrollerRef,
+      previewZoom,
+      singlePageHeight,
+    ],
+  );
+
+  // 빈 줄이 칸/페이지를 넘어가면 캐럿이 다음 쪽으로 이동하므로, 화면 밖으로 나간 경우
+  // 미리보기를 캐럿(빈 줄 자리)이 보이도록 따라 스크롤한다(워드프로세서처럼 시야가 따라감).
+  useEffect(() => {
+    const anchor = lineCaret?.afterLocalId;
+    if (!anchor) return;
+    const raf = window.requestAnimationFrame(() => {
+      scrollPreviewToItem(anchor, previewScrollerRef.current
+        ? previewScrollerRef.current.getBoundingClientRect().height / 2
+        : 0);
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [lineCaret, previewScrollerRef, scrollPreviewToItem]);
+
+  // 블록 삽입 직후: 새 블록(특히 다음 쪽으로 넘어간 이미지)이 화면 밖이면 그 위치까지
+  // 부드럽게 스크롤해 사용자에게 보여준다. paperItems 변경(삽입→재배치) 후 DOM 이 갱신된
+  // 뒤 RAF 로 스크롤한다(타이밍 안전). 이미 보이면 그대로 둔다.
+  useEffect(() => {
+    if (!pendingScrollItemId) return;
+    const raf = window.requestAnimationFrame(() => {
+      scrollPreviewToItem(pendingScrollItemId, 72);
+      setPendingScrollItemId(null);
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [pendingScrollItemId, paperItems, previewScrollerRef, scrollPreviewToItem]);
   // 토글 핸들은 접힘 여부와 무관하게 항상 표시한다.
   const leftColumnWidth = leftPanelCollapsed ? 0 : panelWidths.left;
   const rightColumnWidth = rightPanelCollapsed ? 0 : panelWidths.right;
@@ -1428,6 +1674,36 @@ export function ExamPaperBuilderClient({
     window.setTimeout(() => window.print(), 50);
   }
 
+  // 해설 포함 PDF: 인라인 정답·해설을 켜고(재페이지네이션) 레이아웃이 적용된 다음 인쇄한다.
+  function handlePrintWithAnswers() {
+    if (paperItems.length === 0) {
+      toast.error("인쇄할 문제를 먼저 선택해주세요.");
+      return;
+    }
+    if (savedExamId) {
+      void incrementExamPrintCount(savedExamId);
+    }
+    setExplanationPrint(true);
+  }
+
+  useEffect(() => {
+    if (!explanationPrint) return;
+    // 해설 포함 재페이지네이션 + 전 페이지 강제 마운트가 레이아웃까지 반영된 뒤 인쇄한다
+    // (rAF 로 한 프레임 양보 후 약간의 지연 — 페이지 수가 많아도 빈 인쇄가 없게).
+    let timer = 0;
+    const raf = window.requestAnimationFrame(() => {
+      timer = window.setTimeout(() => window.print(), 120);
+    });
+    // 인쇄 종료(또는 취소) 후 인라인 해설 모드를 해제해 편집 미리보기를 원래대로 되돌린다.
+    const handleAfterPrint = () => setExplanationPrint(false);
+    window.addEventListener("afterprint", handleAfterPrint, { once: true });
+    return () => {
+      window.cancelAnimationFrame(raf);
+      window.clearTimeout(timer);
+      window.removeEventListener("afterprint", handleAfterPrint);
+    };
+  }, [explanationPrint]);
+
   usePrintPortal(paperSize);
 
   function triggerDocxDownload(examId: string, withAnswers: boolean) {
@@ -1613,6 +1889,67 @@ export function ExamPaperBuilderClient({
             : "translate-x-0 translate-y-0 opacity-100",
         )}
       />
+      {/* 모바일 전용 단계 전환 바 — 1) 문제 선택 ↔ 2) 미리보기·저장 */}
+      <div className="no-print flex shrink-0 items-center gap-1.5 border-b border-slate-200 bg-white px-2 py-1.5 lg:hidden">
+        <button
+          type="button"
+          onClick={() => setMobileStep("select")}
+          aria-pressed={mobileStep === "select"}
+          className={cn(
+            "flex h-9 flex-1 items-center justify-center gap-1.5 rounded-md text-[13px] font-bold transition-colors",
+            mobileStep === "select"
+              ? "bg-blue-600 text-white shadow-sm"
+              : "bg-slate-100 text-slate-500 active:bg-slate-200",
+          )}
+        >
+          <span
+            className={cn(
+              "flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-black",
+              mobileStep === "select"
+                ? "bg-white/25 text-white"
+                : "bg-white text-slate-400",
+            )}
+          >
+            1
+          </span>
+          문제 선택
+          {questionItemsCount > 0 && (
+            <span
+              className={cn(
+                "ml-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums",
+                mobileStep === "select"
+                  ? "bg-white/20 text-white"
+                  : "bg-blue-50 text-blue-600",
+              )}
+            >
+              {questionItemsCount}
+            </span>
+          )}
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileStep("preview")}
+          aria-pressed={mobileStep === "preview"}
+          className={cn(
+            "flex h-9 flex-1 items-center justify-center gap-1.5 rounded-md text-[13px] font-bold transition-colors",
+            mobileStep === "preview"
+              ? "bg-blue-600 text-white shadow-sm"
+              : "bg-slate-100 text-slate-500 active:bg-slate-200",
+          )}
+        >
+          <span
+            className={cn(
+              "flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-black",
+              mobileStep === "preview"
+                ? "bg-white/25 text-white"
+                : "bg-white text-slate-400",
+            )}
+          >
+            2
+          </span>
+          미리보기 · 저장
+        </button>
+      </div>
       <div
         ref={builderGridRef}
         className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden bg-white lg:[grid-template-columns:var(--exam-builder-grid-columns)]"
@@ -1626,8 +1963,20 @@ export function ExamPaperBuilderClient({
           // 접혀도 그리드 1번 컬럼 자리를 채워 나머지 컬럼이 밀리지 않게 한다.
           <div aria-hidden className="min-w-0 overflow-hidden" />
         ) : (
+          <div
+            className={cn(
+              "overflow-hidden lg:contents",
+              mobileStep === "select" ? "grid h-full" : "hidden",
+            )}
+          >
           <QuestionLibraryPanel
-            filteredQuestions={filteredQuestions}
+            filteredQuestions={pageQuestions}
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            listLoading={listLoading}
+            selectAllPending={selectAllPending}
+            onToggleSelectAllFiltered={handleToggleSelectAllFiltered}
             search={search}
             setSearch={setSearch}
             selectedSubTypes={selectedSubTypes}
@@ -1647,7 +1996,7 @@ export function ExamPaperBuilderClient({
             onToggleSelect={togglePaperQuestionSelection}
             setSelectedQuestionIds={applyPaperQuestionSelection}
             onShowDetail={setDetailQuestion}
-            totalQuestionCount={questions.length}
+            totalQuestionCount={totalCount}
             childFolders={folders.childFolders}
             activeFolder={folders.activeFolder}
             breadcrumbPath={folders.breadcrumbPath}
@@ -1663,6 +2012,7 @@ export function ExamPaperBuilderClient({
             onDragToFolder={handleDragQuestionToFolder}
             onDragToRoot={handleDragQuestionToRoot}
           />
+          </div>
         )}
 
         {leftPanelCollapsed ? (
@@ -1695,7 +2045,8 @@ export function ExamPaperBuilderClient({
 
         <section
           className={cn(
-            "flex min-w-0 flex-col overflow-hidden",
+            "min-w-0 flex-col overflow-hidden lg:flex lg:h-auto",
+            mobileStep === "preview" ? "flex h-full" : "hidden",
             isEditingExistingExam ? "bg-slate-200/80" : "bg-slate-100/70",
           )}
         >
@@ -1711,6 +2062,7 @@ export function ExamPaperBuilderClient({
             onRedo={redo}
             onPrint={handlePrint}
             onDownloadPdf={handlePrint}
+            onDownloadPdfWithAnswers={handlePrintWithAnswers}
             onDownloadDocx={handleDownloadDocx}
             onDownloadDocxWithAnswers={handleDownloadDocxWithAnswers}
             onDownloadHwpx={handleDownloadHwpx}
@@ -1842,6 +2194,9 @@ export function ExamPaperBuilderClient({
                   previewBaseWidth={previewBaseWidth}
                   previewZoom={previewZoom}
                   previewContentHeight={previewContentHeight}
+                  singlePageHeight={singlePageHeight}
+                  answerKey={answerKey}
+                  forceMountAll={explanationPrint}
                   title={title}
                   paperSize={paperSize}
                   subtitle={subtitle}
@@ -2039,7 +2394,9 @@ export function ExamPaperBuilderClient({
 
       {detailQuestion && (
         <QuestionDetailModal
-          question={detailQuestion}
+          // 해설은 마운트 후 백그라운드 병합되므로, 열려 있는 동안에도 최신(해설 포함)
+          // 버전을 questionById 에서 끌어와 도착 즉시 모달에 반영한다.
+          question={questionById.get(detailQuestion.id) ?? detailQuestion}
           onClose={() => setDetailQuestion(null)}
         />
       )}

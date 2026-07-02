@@ -51,6 +51,7 @@ type AdminTopUp = {
   cancelledAt?: Date | string | null;
   createdAt: Date | string;
   updatedAt: Date | string;
+  customData?: unknown;
   academy: {
     id: string;
     name: string;
@@ -173,6 +174,114 @@ const STATUS_STYLES: Record<string, string> = {
   CANCELLED: "bg-gray-100 text-gray-600",
   REFUNDED: "bg-amber-50 text-amber-700",
 };
+
+const BANK_WINDOW_MINUTES = (() => {
+  const raw = Number(process.env.NEXT_PUBLIC_BANK_DEPOSIT_MATCH_WINDOW_MINUTES);
+  return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 30;
+})();
+
+// 무통장입금 입금 대기가 시간창을 넘기면 더이상 자동매칭되지 않으므로 "시간 초과"로 표기.
+function getTopUpStatusDisplay(topUp: {
+  paymentMethod: string | null;
+  status: string;
+  createdAt: Date | string;
+}): { label: string; style: string } {
+  const expired =
+    topUp.paymentMethod === "BANK_TRANSFER" &&
+    topUp.status === "WAITING_FOR_DEPOSIT" &&
+    Date.now() - new Date(topUp.createdAt).getTime() >
+      BANK_WINDOW_MINUTES * 60_000;
+  if (expired) {
+    return { label: "시간 초과", style: "bg-gray-100 text-gray-500" };
+  }
+  return {
+    label: STATUS_LABELS[topUp.status] ?? topUp.status,
+    style: STATUS_STYLES[topUp.status] ?? "bg-gray-100 text-gray-600",
+  };
+}
+
+function formatOrderNo(id: string): string {
+  return id.slice(-8).toUpperCase();
+}
+
+const CONFIRM_WINDOW_MS = 30 * 60_000;
+
+function readConfirmStartedAt(customData: unknown): number | null {
+  if (
+    customData &&
+    typeof customData === "object" &&
+    !Array.isArray(customData)
+  ) {
+    const v = (customData as Record<string, unknown>).confirmStartedAt;
+    if (typeof v === "string") {
+      const t = new Date(v).getTime();
+      return Number.isFinite(t) ? t : null;
+    }
+  }
+  return null;
+}
+
+// 무통장입금 입금 대기 주문의 라이브 배지: 입금 대기(카운트다운) / 입금 확인중(카운트업) /
+// 입금 확인 실패 / 시간 초과. 디렉터 화면과 동일 기준.
+function BankWaitingBadge({
+  createdAt,
+  customData,
+}: {
+  createdAt: Date | string;
+  customData: unknown;
+}) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const pad = (n: number) => String(n).padStart(2, "0");
+
+  const confirmAt = readConfirmStartedAt(customData);
+  if (confirmAt != null) {
+    const elapsed = now - confirmAt;
+    if (elapsed >= CONFIRM_WINDOW_MS) {
+      return (
+        <span className="inline-flex h-6 items-center rounded-md bg-rose-50 px-2 text-[11px] font-semibold text-rose-600">
+          입금 확인 실패
+        </span>
+      );
+    }
+    const mm = Math.floor(elapsed / 60_000);
+    const ss = Math.floor((elapsed % 60_000) / 1000);
+    return (
+      <span className="inline-flex h-6 items-center gap-1 rounded-md bg-indigo-50 px-2 text-[11px] font-semibold tabular-nums text-indigo-700">
+        <Clock3 className="size-3" strokeWidth={2.2} />
+        입금 확인중 {pad(mm)}:{pad(ss)}
+      </span>
+    );
+  }
+
+  const expiresAt =
+    new Date(createdAt).getTime() + BANK_WINDOW_MINUTES * 60_000;
+  const leftMs = Math.max(expiresAt - now, 0);
+  if (leftMs <= 0) {
+    return (
+      <span className="inline-flex h-6 items-center rounded-md bg-gray-100 px-2 text-[11px] font-semibold text-gray-500">
+        시간 초과
+      </span>
+    );
+  }
+  const mm = Math.floor(leftMs / 60_000);
+  const ss = Math.floor((leftMs % 60_000) / 1000);
+  const urgent = leftMs <= 5 * 60_000;
+  return (
+    <span
+      className={cn(
+        "inline-flex h-6 items-center gap-1 rounded-md px-2 text-[11px] font-semibold tabular-nums",
+        urgent ? "bg-amber-50 text-amber-700" : "bg-sky-50 text-sky-700",
+      )}
+    >
+      <Clock3 className="size-3" strokeWidth={2.2} />
+      입금 대기 {pad(mm)}:{pad(ss)}
+    </span>
+  );
+}
 
 const BANK_OPTIONS = [
   { value: "SHINHAN", label: "신한은행" },
@@ -819,7 +928,8 @@ export function CreditTopUpsAdminClient({
             <table className="w-full min-w-[920px] text-left">
               <thead>
                 <tr className="border-b border-gray-50 bg-gray-50/60 text-[11px] font-semibold text-gray-400">
-                  <th className="px-5 py-3">일시</th>
+                  <th className="px-5 py-3">주문번호</th>
+                  <th className="px-4 py-3">일시</th>
                   <th className="px-4 py-3">학원</th>
                   <th className="px-4 py-3">상태</th>
                   <th className="px-4 py-3 text-right">결제금액</th>
@@ -832,6 +942,7 @@ export function CreditTopUpsAdminClient({
               <tbody className="divide-y divide-gray-50">
                 {topUps.map((topUp) => {
                   const selected = selectedTopUpId === topUp.id;
+                  const statusDisplay = getTopUpStatusDisplay(topUp);
                   return (
                   <tr
                     key={topUp.id}
@@ -841,7 +952,10 @@ export function CreditTopUpsAdminClient({
                       selected && "bg-blue-50/60",
                     )}
                   >
-                    <td className="px-5 py-3 text-[12px] text-gray-500">
+                    <td className="px-5 py-3 text-[12px] font-medium tabular-nums text-gray-600">
+                      {formatOrderNo(topUp.id)}
+                    </td>
+                    <td className="px-4 py-3 text-[12px] text-gray-500">
                       {formatDate(topUp.createdAt)}
                     </td>
                     <td className="px-4 py-3">
@@ -853,14 +967,22 @@ export function CreditTopUpsAdminClient({
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span
-                        className={cn(
-                          "inline-flex h-6 items-center rounded-md px-2 text-[11px] font-semibold",
-                          STATUS_STYLES[topUp.status] ?? "bg-gray-100 text-gray-600",
-                        )}
-                      >
-                        {STATUS_LABELS[topUp.status] ?? topUp.status}
-                      </span>
+                      {topUp.paymentMethod === "BANK_TRANSFER" &&
+                      topUp.status === "WAITING_FOR_DEPOSIT" ? (
+                        <BankWaitingBadge
+                          createdAt={topUp.createdAt}
+                          customData={topUp.customData}
+                        />
+                      ) : (
+                        <span
+                          className={cn(
+                            "inline-flex h-6 items-center rounded-md px-2 text-[11px] font-semibold",
+                            statusDisplay.style,
+                          )}
+                        >
+                          {statusDisplay.label}
+                        </span>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-right text-[13px] font-semibold tabular-nums text-gray-900">
                       {topUp.price.toLocaleString("ko-KR")}원
@@ -1008,16 +1130,23 @@ function TopUpDetailPanel({
             상태 검증 및 운영 처리
           </p>
         </div>
-        {topUp && (
-          <span
-            className={cn(
-              "inline-flex h-6 items-center rounded-md px-2 text-[11px] font-semibold",
-              STATUS_STYLES[topUp.status] ?? "bg-gray-100 text-gray-600",
-            )}
-          >
-            {STATUS_LABELS[topUp.status] ?? topUp.status}
-          </span>
-        )}
+        {topUp &&
+          (topUp.paymentMethod === "BANK_TRANSFER" &&
+          topUp.status === "WAITING_FOR_DEPOSIT" ? (
+            <BankWaitingBadge
+              createdAt={topUp.createdAt}
+              customData={topUp.customData}
+            />
+          ) : (
+            <span
+              className={cn(
+                "inline-flex h-6 items-center rounded-md px-2 text-[11px] font-semibold",
+                getTopUpStatusDisplay(topUp).style,
+              )}
+            >
+              {getTopUpStatusDisplay(topUp).label}
+            </span>
+          ))}
       </div>
 
       {!topUp ? (
@@ -1043,6 +1172,7 @@ function TopUpDetailPanel({
           </div>
 
           <div className="space-y-2 rounded-xl border border-gray-100 p-3">
+            <DetailRow label="주문번호" value={formatOrderNo(topUp.id)} mono />
             <DetailRow label="주문명" value={topUp.orderName ?? "-"} />
             <DetailRow label="결제수단" value={formatPayMethod(topUp.paymentMethod)} />
             <DetailRow label="포트원 상태" value={topUp.portoneStatus ?? "-"} />
@@ -1392,6 +1522,7 @@ function formatPayMethod(value: string | null) {
     TRANSFER: "계좌이체",
     VIRTUAL_ACCOUNT: "가상계좌",
     MOBILE: "휴대폰",
+    BANK_TRANSFER: "무통장입금",
   };
   return value ? labels[value] ?? value : "-";
 }

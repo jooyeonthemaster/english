@@ -35,6 +35,7 @@ import {
   SummaryCompleteRenderer,
   SummaryWritingRenderer,
   WordOrderRenderer,
+  TopicSentenceWritingRenderer,
   GrammarCorrectionRenderer,
   ContextMeaningRenderer,
   SynonymRenderer,
@@ -213,7 +214,8 @@ function enrichQuestionForDisplay(question: any, rawSourcePassageContent?: strin
     normalizedQuestion?._typeId === "SENTENCE_TRANSFORM" ||
     normalizedQuestion?._typeId === "SUMMARY_COMPLETE" ||
     normalizedQuestion?._typeId === "SUMMARY_WRITING" ||
-    normalizedQuestion?._typeId === "WORD_ORDER";
+    normalizedQuestion?._typeId === "WORD_ORDER" ||
+    normalizedQuestion?._typeId === "TOPIC_SENTENCE_WRITING";
 
   if (sourceBackedType && sourcePassageContent) {
     return {
@@ -712,6 +714,10 @@ function hasStructuredFields(typeId: string, q: any): boolean {
       return !!q.summaryWithBlanks && !!q.blanks;
     case "WORD_ORDER":
       return !!q.scrambledWords;
+    case "TOPIC_SENTENCE_WRITING":
+      return q.mode === "scrambled"
+        ? !!(q.scrambledWords?.length)
+        : !!(q.blanks && q.summaryWithBlanks);
     case "GRAMMAR_CORRECTION":
       return !!q.passageWithUnderline && !!q.underlinedSegments && !!q.correctedPart;
     case "SYNONYM":
@@ -771,6 +777,8 @@ function renderTypedQuestion(typeId: string, q: any): React.ReactNode {
       return <SummaryWritingRenderer q={q} />;
     case "WORD_ORDER":
       return <WordOrderRenderer q={q} />;
+    case "TOPIC_SENTENCE_WRITING":
+      return <TopicSentenceWritingRenderer q={q as any} />;
     case "GRAMMAR_CORRECTION":
       return <GrammarCorrectionRenderer q={q} />;
     case "CONTEXT_MEANING":

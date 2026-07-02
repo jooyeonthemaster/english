@@ -15,17 +15,7 @@ import {
 import { TEMPLATE_META } from "../paper-builder/templates";
 import type { PaperSize, PaperTemplate } from "../paper-builder/types";
 import { SaveButton } from "@/components/ui/save-button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { confirmNative } from "@/lib/browser-confirm";
 
 // 다운로드 메뉴용 파일 포맷 아이콘 — 파일 모양 안에 포맷 텍스트(PDF/DOCX/HWPX)를 키컬러
 // 밴드로 박는다. 해설 포함 버전은 파일 두 개가 겹친 모양(stacked).
@@ -120,6 +110,7 @@ interface PreviewToolbarProps {
   onRedo?: () => void;
   onPrint: () => void;
   onDownloadPdf: () => void;
+  onDownloadPdfWithAnswers: () => void;
   onDownloadDocx: () => void;
   onDownloadDocxWithAnswers: () => void;
   onDownloadHwpx: () => void;
@@ -143,6 +134,7 @@ export function PreviewToolbar({
   onRedo,
   onPrint,
   onDownloadPdf,
+  onDownloadPdfWithAnswers,
   onDownloadDocx,
   onDownloadDocxWithAnswers,
   onDownloadHwpx,
@@ -203,7 +195,7 @@ export function PreviewToolbar({
   return (
     <div
       ref={toolbarRef}
-      className="flex h-11 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4"
+      className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-slate-200 bg-white px-2 lg:gap-3 lg:px-4"
     >
       <div className="flex min-w-0 items-center gap-2">
         <Eye className="h-3.5 w-3.5 text-slate-400" />
@@ -268,10 +260,10 @@ export function PreviewToolbar({
         <button
           onClick={onPrint}
           disabled={actionDisabled}
-          className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex h-8 items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:min-w-[64px]"
         >
           <Printer className="h-3.5 w-3.5" />
-          인쇄
+          <span className="hidden lg:inline">인쇄</span>
         </button>
         <div ref={downloadMenuRef} className="relative">
           <button
@@ -279,10 +271,10 @@ export function PreviewToolbar({
             onClick={() => setDownloadOpen((open) => !open)}
             disabled={actionDisabled}
             aria-expanded={downloadOpen}
-            className="flex h-8 min-w-[98px] items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-8 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:min-w-[98px] lg:px-3"
           >
             {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
-            다운로드
+            <span className="hidden lg:inline">다운로드</span>
             <ChevronDown className="h-3 w-3 text-slate-400" />
           </button>
           {downloadOpen && (
@@ -297,6 +289,14 @@ export function PreviewToolbar({
                 <span className="ml-auto rounded-sm bg-rose-50 px-1 py-px text-[9px] font-bold leading-none text-rose-600">
                   미리보기 그대로
                 </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => runDownload(onDownloadPdfWithAnswers)}
+                className="flex h-9 w-full items-center gap-2 px-3 text-left text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+              >
+                <FormatFileIcon label="PDF" color={FORMAT_COLORS.pdf} stacked />
+                PDF 해설
               </button>
               <div className="my-1 h-px bg-slate-100" />
               <button
@@ -341,37 +341,26 @@ export function PreviewToolbar({
           )}
         </div>
         {onResetPaper ? (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <button
-                type="button"
-                disabled={isPending || paperItemsCount === 0}
-                title="시험지 전체 비우기 (처음부터 다시)"
-                aria-label="시험지 전체 비우기"
-                className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-red-300 text-red-500 transition-all hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
-              >
-                <Trash2 className="size-3.5" aria-hidden="true" />
-              </button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>정말로 삭제하시겠습니까?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  이 시험지의 모든 문항·블록이 삭제되고 처음부터 다시 시작합니다.
-                  이 작업은 되돌릴 수 없습니다.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>취소</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={onResetPaper}
-                  className="bg-rose-600 hover:bg-rose-700 focus-visible:ring-rose-400"
-                >
-                  전체 삭제
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <button
+            type="button"
+            disabled={isPending || paperItemsCount === 0}
+            onClick={() => {
+              if (
+                !confirmNative(
+                  "정말로 삭제하시겠습니까?",
+                  "이 시험지의 모든 문항·블록이 삭제되고 처음부터 다시 시작합니다. 이 작업은 되돌릴 수 없습니다.",
+                )
+              ) {
+                return;
+              }
+              onResetPaper();
+            }}
+            title="시험지 전체 비우기 (처음부터 다시)"
+            aria-label="시험지 전체 비우기"
+            className="inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-red-300 text-red-500 transition-all hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+          >
+            <Trash2 className="size-3.5" aria-hidden="true" />
+          </button>
         ) : null}
       </div>
     </div>

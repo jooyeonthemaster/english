@@ -23,6 +23,7 @@ import {
   type SummaryCompleteQuestion,
   type SummaryWritingQuestion,
   type WordOrderQuestion,
+  type TopicSentenceWritingQuestion,
   type GrammarCorrectionQuestion,
   type ContextMeaningQuestion,
   type SynonymQuestion,
@@ -456,12 +457,12 @@ export function ConditionalWritingRenderer({ q }: { q: ConditionalWritingQuestio
       <SourcePassageBlock q={q as ConditionalWritingQuestion & { _sourcePassageContent?: unknown }} />
       <GivenSentenceBox sentence={q.referenceSentence} label="영작할 우리말" />
       <ConditionsBox conditions={q.conditions} />
+      {/* 모범 답안은 '해설 보기'를 누르지 않아도 바로 보이도록 토글 밖에 둔다. */}
+      <ModelAnswer answer={q.modelAnswer} />
       <AnswerRevealSection>
-        <ModelAnswer answer={q.modelAnswer} />
         {q.scoringCriteria && q.scoringCriteria.length > 0 && (
           <ConditionsBox conditions={q.scoringCriteria} label="채점 기준" />
         )}
-        <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} />
       </AnswerRevealSection>
     </>
@@ -475,12 +476,12 @@ export function SentenceTransformRenderer({ q }: { q: SentenceTransformQuestion 
       <SourcePassageBlock q={q as SentenceTransformQuestion & { _sourcePassageContent?: unknown }} />
       <GivenSentenceBox sentence={q.originalSentence} label="원래 문장" />
       <ConditionsBox conditions={q.conditions} label="전환 조건" blockId="conditions" />
+      {/* 모범 답안은 '해설 보기'를 누르지 않아도 바로 보이도록 토글 밖에 둔다. */}
+      <ModelAnswer answer={q.modelAnswer} />
       <AnswerRevealSection>
-        <ModelAnswer answer={q.modelAnswer} />
         {q.scoringCriteria && q.scoringCriteria.length > 0 && (
           <ConditionsBox conditions={q.scoringCriteria} label="채점 기준" />
         )}
-        <AnswerLine answer={q.correctAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} />
       </AnswerRevealSection>
     </>
@@ -622,6 +623,87 @@ export function WordOrderRenderer({ q }: { q: WordOrderQuestion }) {
   );
 }
 
+export function TopicSentenceWritingRenderer({ q }: { q: TopicSentenceWritingQuestion }) {
+  // 주제문 영작 = SUMMARY_WRITING(요약문 영작, cloze) + WORD_ORDER(배열 영작, scrambled) 하이브리드.
+  // mode 로 분기하되 두 레퍼런스 렌더러의 학생노출 마크업을 그대로 미러한다.
+  // 👁학생노출: koreanGloss(주제 힌트) / scrambledWords(셔플 칩) / 마스킹된 summaryWithBlanks / wordBank.
+  // 🔒비밀: modelAnswer / blanks[].answer / acceptableVariants / scoringCriteria → AnswerRevealSection 안에서만.
+  const koreanGloss = typeof q.koreanGloss === "string" ? q.koreanGloss.trim() : "";
+  const isCloze = q.mode === "cloze";
+
+  // scrambled: 셔플된 제시어 칩(정답 어순 노출 금지 — WORD_ORDER 와 동일하게 scrambledWords 칩만).
+  const scrambledWords = Array.isArray(q.scrambledWords)
+    ? q.scrambledWords.map((w) => (typeof w === "string" ? w.trim() : "")).filter(Boolean)
+    : [];
+  // cloze: 마스킹 통과한 주제문 + 보기 칩. (' / ' join→split 왕복 금지 — chunk 칩의 슬래시 보존)
+  const maskedTopic = isCloze ? summaryWritingMaskedSummary(q) : "";
+  const wordBank = Array.isArray(q.wordBank)
+    ? q.wordBank.map((w) => (typeof w === "string" ? w.trim() : "")).filter(Boolean)
+    : [];
+  const blanks = Array.isArray(q.blanks) ? q.blanks : [];
+
+  return (
+    <>
+      <Direction text={q.direction} />
+      <SourcePassageBlock q={q as TopicSentenceWritingQuestion & { _sourcePassageContent?: unknown }} />
+      {/* [주제 힌트] — 회색(slate) 박스. PassageBlock=slate-50 */}
+      {koreanGloss && <PassageBlock label="주제 힌트">{koreanGloss}</PassageBlock>}
+      {isCloze ? (
+        <>
+          {/* [주제문] — (A)(B) 파란 배지 + 파란 밑줄선. 마스킹 통과본만(정답어구 미포함) */}
+          <PassageBlock label="주제문">{renderSummaryBlankMarkers(maskedTopic)}</PassageBlock>
+          {/* [보기] — SUMMARY_WRITING 칩 스타일. 미끼도 동일 스타일(시각 구분 없음). 비밀 미끼목록 미노출 */}
+          {wordBank.length > 0 && (
+            <div className="flex flex-wrap gap-2 p-3 rounded-lg bg-slate-50 border border-slate-200">
+              {wordBank.map((word, i) => (
+                <span key={i} className="inline-block px-2.5 py-1 rounded-md bg-white border border-slate-300 text-[12px] font-medium text-slate-700 shadow-sm">
+                  {word}
+                </span>
+              ))}
+            </div>
+          )}
+        </>
+      ) : (
+        // [배열 단어] — WORD_ORDER 칩 스타일. 셔플된 scrambledWords 만 노출(정답 어순 비밀).
+        <div className="flex flex-wrap gap-2 p-3 rounded-lg bg-slate-50 border border-slate-200">
+          {scrambledWords.map((word, i) => (
+            <span key={i} className="inline-block px-2.5 py-1 rounded-md bg-white border border-slate-300 text-[12px] font-medium text-slate-700 shadow-sm">
+              {word}
+            </span>
+          ))}
+        </div>
+      )}
+      <AnswerRevealSection>
+        <ModelAnswer answer={q.modelAnswer} />
+        {isCloze && blanks.length > 0 && (
+          <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 space-y-1">
+            <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">빈칸 정답</span>
+            {blanks.map((b, i) => (
+              <div key={i} className="text-[12px] text-emerald-800 flex items-start gap-2">
+                <span className="font-bold shrink-0">{b.label}</span>
+                <span>
+                  {b.answer}
+                  {Array.isArray(b.acceptableVariants) && b.acceptableVariants.length > 0 && (
+                    <span className="text-emerald-600"> / {b.acceptableVariants.join(" / ")}</span>
+                  )}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+        {Array.isArray(q.acceptableVariants) && q.acceptableVariants.length > 0 && (
+          <ConditionsBox conditions={q.acceptableVariants} label="동치 정답" />
+        )}
+        {Array.isArray(q.scoringCriteria) && q.scoringCriteria.length > 0 && (
+          <ConditionsBox conditions={q.scoringCriteria} label="채점 기준" />
+        )}
+        <AnswerLine answer={q.correctAnswer} />
+        <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} />
+      </AnswerRevealSection>
+    </>
+  );
+}
+
 export function GrammarCorrectionRenderer({ q }: { q: GrammarCorrectionQuestion }) {
   const errorSegments = Array.isArray(q.underlinedSegments)
     ? q.underlinedSegments.filter((item) => item.isError)
@@ -648,8 +730,12 @@ export function GrammarCorrectionRenderer({ q }: { q: GrammarCorrectionQuestion 
     <>
       <Direction text={q.direction} />
       <PassageBlock>{renderPassageFormatted(passageWithLabels || "")}</PassageBlock>
-      {changeDisplay && (
+      {/* 정답은 "틀린부분 → 고친부분" 파란 글씨로 토글 밖 상시 표시(오류·수정 모두 보여
+          '답' 배지(ModelAnswer)보다 정보가 많아 그걸 대체). 상세 수정 비교·해설은 토글 안. */}
+      {changeDisplay ? (
         <div className="pl-1 text-[13px] font-semibold text-blue-700">{changeDisplay}</div>
+      ) : (
+        <ModelAnswer answer={formattedAnswer} />
       )}
       <AnswerRevealSection>
         <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 space-y-2">
@@ -668,7 +754,6 @@ export function GrammarCorrectionRenderer({ q }: { q: GrammarCorrectionQuestion 
             <p className="text-[13px] text-emerald-800 leading-relaxed font-medium">{q.correctedSentence}</p>
           )}
         </div>
-        <AnswerLine answer={formattedAnswer} />
         <ExplanationSection explanation={q.explanation} keyPoints={q.keyPoints} />
       </AnswerRevealSection>
     </>
@@ -683,14 +768,7 @@ export function ContextMeaningRenderer({ q }: { q: ContextMeaningQuestion }) {
   return (
     <>
       <Direction text={q.direction} />
-      {q.underlinedWord && (
-        <SelectableBlock blockId="underlinedWord" label="밑줄 단어" field="underlinedWord" excerpt={blockExcerpt(q.underlinedWord)}>
-          <div className="rounded-lg bg-violet-50 border border-violet-200 px-3 py-2">
-            <span className="text-[10px] font-bold text-violet-600 uppercase tracking-wider">밑줄 단어</span>
-            <p className="text-[15px] font-bold text-violet-900 mt-0.5">{q.underlinedWord}</p>
-          </div>
-        </SelectableBlock>
-      )}
+      {/* 밑줄 단어는 아래 지문에 이미 밑줄로 표시되므로 별도 '밑줄 단어' 블록은 생략(중복 제거). */}
       <PassageBlock>{renderUnderlinedText(q.passageWithUnderline)}</PassageBlock>
       <OptionList options={q.options} correctAnswer={q.correctAnswer} />
       <AnswerRevealSection>

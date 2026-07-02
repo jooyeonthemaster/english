@@ -23,9 +23,9 @@ export function ReportPages({
   const logoDataUrl = report.cover?.showLogo === false ? undefined : report.cover?.logoDataUrl;
 
   const natural = useMemo(
-    () => reportFlowItems(report, edit ? { med: edit.med, sectionEdit: edit.sectionEdit, setCustom: edit.setCustom, insertTextAfter: edit.insertTextAfter, ced: edit.ced, onActivity: edit.onActivity } : undefined),
+    () => reportFlowItems(report, edit ? { med: edit.med, sectionEdit: edit.sectionEdit, setCustom: edit.setCustom, insertTextAfter: edit.insertTextAfter, ced: edit.ced, onActivity: edit.onActivity, onSectionHeading: edit.onSectionHeading } : undefined),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [report, edit?.med, edit?.sectionEdit, edit?.setCustom, edit?.ced, edit?.onActivity],
+    [report, edit?.med, edit?.sectionEdit, edit?.setCustom, edit?.ced, edit?.onActivity, edit?.onSectionHeading],
   );
 
   const items = useMemo(() => {

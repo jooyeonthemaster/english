@@ -18,6 +18,7 @@ import type {
   ActionResult,
   SaveQuestionData,
 } from "./_types";
+import { buildWorkbenchQuestionWhere } from "./_question-where";
 
 function toPrismaJson(value: unknown): Prisma.InputJsonValue | undefined {
   if (value === undefined || value === null) return undefined;
@@ -86,48 +87,6 @@ function enrichGeneratedQuestionPlanMetadata(q: SaveQuestionData) {
       : q.structuredData;
 
   return { tags, structuredData };
-}
-
-function buildWorkbenchQuestionWhere(
-  academyId: string,
-  filters?: WorkbenchQuestionFilters,
-  scope: "active" | "trash" = "active",
-): Prisma.QuestionWhereInput {
-  const where: Prisma.QuestionWhereInput = { academyId };
-
-  // 휴지통(soft delete) 단일 게이트 — 모든 워크벤치 문제 조회는 이 헬퍼를 거친다.
-  // "active"=살아있는 문제만(deletedAt:null), "trash"=휴지통에 있는 것만.
-  // 이 한 줄을 빼먹으면 삭제된 문제가 문제은행/지문별 뷰/빌더 피커에 새어나간다.
-  where.deletedAt = scope === "trash" ? { not: null } : null;
-
-  // 장문 세트 members render only as a set (their passage is stored as anchors, not
-  // baked into questionText), so they must NOT appear as standalone bank cards.
-  where.inSet = false;
-
-  if (filters?.type) {
-    // Support comma-separated multi-type: "MULTIPLE_CHOICE,SHORT_ANSWER"
-    const types = filters.type.split(",").filter(Boolean);
-    where.type = types.length > 1 ? { in: types } : types[0];
-  }
-  if (filters?.subType) {
-    // Support comma-separated multi-subtype: "BLANK_INFERENCE,GRAMMAR_ERROR"
-    const subs = filters.subType.split(",").filter(Boolean);
-    where.subType = subs.length > 1 ? { in: subs } : subs[0];
-  }
-  if (filters?.difficulty) where.difficulty = filters.difficulty;
-  if (filters?.passageId) where.passageId = filters.passageId;
-  if (filters?.collectionId) {
-    where.collectionItems = { some: { collectionId: filters.collectionId } };
-  }
-  if (filters?.tags) where.tags = { contains: filters.tags };
-  if (filters?.aiGenerated !== undefined) where.aiGenerated = filters.aiGenerated;
-  if (filters?.approved !== undefined) where.approved = filters.approved;
-  if (filters?.starred !== undefined) where.starred = filters.starred;
-  if (filters?.search) {
-    where.questionText = { contains: filters.search, mode: "insensitive" };
-  }
-
-  return where;
 }
 
 function revalidateQuestionBankPaths() {
@@ -390,8 +349,8 @@ export async function getWorkbenchQuestionsGroupedByPassage(
         school: { select: { id: true, name: true } },
         analysis: { select: { id: true, updatedAt: true } },
         // 휴지통 가드 — "(전체 N)" 배지가 아래 카드 목록(questionWhere)과 같은 집합을 세도록
-        // deletedAt:null + inSet:false 로 맞춘다(삭제문제·세트멤버 제외).
-        _count: { select: { questions: { where: { deletedAt: null, inSet: false } } } },
+        // deletedAt:null 로 맞춘다(세트 멤버도 이제 일반 카드로 노출되므로 함께 센다).
+        _count: { select: { questions: { where: { deletedAt: null } } } },
         questions: {
           where: questionWhere,
           include: {
@@ -512,7 +471,7 @@ export async function getWorkbenchQuestion(questionId: string) {
 export async function getWorkbenchQuestionIds(
   academyId: string,
   filters?: WorkbenchQuestionFilters,
-  options?: { passageOnly?: boolean },
+  options?: { passageOnly?: boolean; scope?: "active" | "trash" },
 ): Promise<{ success: boolean; ids: string[]; count: number; error?: string }> {
   try {
     const staff = await requireAuth();
@@ -525,7 +484,12 @@ export async function getWorkbenchQuestionIds(
       };
     }
 
-    const where = buildWorkbenchQuestionWhere(staff.academyId, filters);
+    // scope="trash"면 휴지통(deletedAt!=null) 전체 id — 휴지통 전체선택(전 페이지)용.
+    const where = buildWorkbenchQuestionWhere(
+      staff.academyId,
+      filters,
+      options?.scope ?? "active",
+    );
     if (options?.passageOnly && !filters?.passageId) {
       where.passageId = { not: null };
     }

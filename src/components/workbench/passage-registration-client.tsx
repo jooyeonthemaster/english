@@ -149,6 +149,7 @@ export function PassageRegistrationClient({
     loadPassages,
     handleCreatePassageCollection,
     handleCopySelectedPassagesToCollection,
+    handleCopyPassagesToCollection,
     handleMovePassagesToCollection,
     handleMoveSelectedPassagesToCollection,
     handleRemoveSelectedPassagesFromCollection,
@@ -926,6 +927,7 @@ export function PassageRegistrationClient({
                   handleMoveSelectedPassagesToCollection
                 }
                 onMovePassagesToCollection={handleMovePassagesToCollection}
+                onCopyPassagesToCollection={handleCopyPassagesToCollection}
                 onCreateCollection={handleCreatePassageCollection}
                 onRemoveSelectedFromCollection={
                   handleRemoveSelectedPassagesFromCollection

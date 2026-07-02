@@ -76,6 +76,10 @@ function structuralCount(subType: string, q: Record<string, unknown>): number | 
     case "SUMMARY_COMPLETE":
     case "SUMMARY_COMPLETE_MC":
       return len(q.blanks);
+    case "TOPIC_SENTENCE_WRITING":
+      // cloze 모드는 빈칸 수, scrambled 모드는 제시어 수가 구조 카운트.
+      // 둘 다 없으면 0(개념상 구조 없음) — deriveEditSchemaOptions 와 정확히 일치.
+      return len(q.blanks) ?? len(q.scrambledWords) ?? 0;
     case "SENTENCE_INSERT":
     case "IRRELEVANT":
     case "CONTENT_MATCH":

@@ -337,12 +337,15 @@ function InfoRow({
   tone,
   title,
   highlight = false,
+  href,
   children,
 }: {
   icon: LucideIcon;
   tone: "blue" | "emerald" | "kakao";
   title: string;
   highlight?: boolean;
+  /** 지정 시 행 전체가 새 탭으로 열리는 링크처럼 동작한다(오픈채팅방 바로가기 버튼과 동일). */
+  href?: string;
   children: ReactNode;
 }) {
   const tileClass =
@@ -370,10 +373,26 @@ function InfoRow({
   // The feedback-call row gets a subtle laser border to draw the eye. The
   // negative inset lets the highlight bleed slightly wider than the text column
   // while keeping its icon aligned with the plain row below it.
-  if (highlight) {
-    return <div className="feedback-laser -mx-3 rounded-xl px-3 py-2.5">{row}</div>;
+  const content = highlight ? (
+    <div className="feedback-laser -mx-3 rounded-xl px-3 py-2.5">{row}</div>
+  ) : (
+    row
+  );
+
+  // href 가 있으면 행 전체를 새 탭 링크로 감싸 클릭 가능한 영역으로 만든다.
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`block cursor-pointer rounded-xl transition-transform hover:-translate-y-0.5 active:scale-[0.99] ${FOCUS_RING}`}
+      >
+        {content}
+      </a>
+    );
   }
-  return row;
+  return content;
 }
 
 const DISMISS_TODAY_CLASS =
@@ -398,16 +417,17 @@ function StepIntro({
       >
         함께 만드는 베타에 초대합니다
       </h2>
-      <p className="mt-2 text-[13.5px] leading-[1.5] text-slate-500 break-keep">
-        정식 출시 전, <span className="font-semibold text-slate-700">{FREE_UNTIL_LABEL}까지 모든 기능을 무료로</span> 드려요.
-        <br />
-        직접 써보시고 들려주신 의견이 SMOAT를 더 좋게 만듭니다.
-      </p>
 
       <div className="my-5 h-px bg-slate-100" />
 
       <div className="space-y-3.5">
-        <InfoRow icon={KakaoTalkIcon} tone="kakao" title="오픈채팅방 피드백" highlight>
+        <InfoRow
+          icon={KakaoTalkIcon}
+          tone="kakao"
+          title="오픈채팅방 피드백"
+          highlight
+          href={FEEDBACK_OPEN_CHAT_URL}
+        >
           오픈채팅방에 오셔서 피드백을 남겨주시면{" "}
           <span className="font-bold text-emerald-700">추가 무료 크레딧</span>을 드려요.
         </InfoRow>

@@ -9,12 +9,14 @@ import {
   grammarCorrectionErrorSentenceForQuestionText,
 } from "@/lib/grammar-correction-display";
 import { isSummaryWriting, summaryWritingStudentParts } from "@/lib/summary-writing";
+import { isTopicSentenceWriting, topicSentenceWritingStudentParts } from "@/lib/topic-sentence-writing";
 
 export function buildQuestionText(q: any): string {
   const parts: string[] = [];
   const isSummaryCompleteMc = q?._typeId === "SUMMARY_COMPLETE_MC" || q?.subType === "SUMMARY_COMPLETE_MC";
   const isGrammarCorrection = q?._typeId === "GRAMMAR_CORRECTION" || q?.subType === "GRAMMAR_CORRECTION";
   const isSwriting = isSummaryWriting(q?._typeId) || isSummaryWriting(q?.subType);
+  const isTswriting = isTopicSentenceWriting(q?._typeId) || isTopicSentenceWriting(q?.subType);
   if (isGrammarCorrection) {
     const text = buildGrammarCorrectionQuestionTextForDisplay(q);
     if (text) return text;
@@ -23,6 +25,12 @@ export function buildQuestionText(q: any): string {
   // SW-LEAK-1: SUMMARY_WRITING 은 학생 안전 블록만 직렬화([빈칸 정답]·modelAnswer 미포함)
   if (isSwriting) {
     parts.push(...summaryWritingStudentParts(q));
+    if (q.questionText) parts.push(q.questionText);
+    return parts.join("\n\n") || "";
+  }
+  // SW-LEAK-1: TOPIC_SENTENCE_WRITING 도 학생 안전 블록만 직렬화(정답·modelAnswer 미포함)
+  if (isTswriting) {
+    parts.push(...topicSentenceWritingStudentParts(q));
     if (q.questionText) parts.push(q.questionText);
     return parts.join("\n\n") || "";
   }

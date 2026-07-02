@@ -30,6 +30,7 @@ export interface DerivedEditSchemaOptions {
   summaryCompleteMcBlankCount?: number;
   summaryCompleteBlankCount?: number;
   summaryWritingBlankCount?: number;
+  topicSentenceWritingBlankCount?: number;
   contentMatchOptionCount?: number;
   contentMatchAnswerCount?: number;
   vocabChoiceMarkerCount?: number;
@@ -92,6 +93,12 @@ export function deriveEditSchemaOptions(
       break;
     case "SUMMARY_WRITING":
       opts.summaryWritingBlankCount = arrLen(baseline.blanks) ?? 1;
+      break;
+    case "TOPIC_SENTENCE_WRITING":
+      // cloze 모드 빈칸 수만 스키마(.max(n))에 반영. scrambled 모드는 blanks 부재 → 1로
+      // 폴백(동적 빌더 미적용 = base 스키마). scrambled 의 제시어 개수 고정은 run-edit
+      // 의 structuralCount(blanks ?? scrambledWords) 게이트가 담당(둘이 정확히 일치).
+      opts.topicSentenceWritingBlankCount = arrLen(baseline.blanks) ?? 1;
       break;
     case "CONTENT_MATCH":
       opts.contentMatchOptionCount = arrLen(baseline.options) ?? 5;

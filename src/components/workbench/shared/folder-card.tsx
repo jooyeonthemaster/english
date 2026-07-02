@@ -17,18 +17,30 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { CollectionItem } from "./types";
+import type { CollectionItem, DragItemType } from "./types";
+import { resolveFolderCount } from "./folder-count";
+import {
+  folderDropCanDrop,
+  folderDropItemId,
+  isCopyDragModifier,
+} from "./folder-drag";
 
 interface FolderCardProps {
   collection: CollectionItem;
-  dragItemType: "question" | "passage" | "exam";
+  dragItemType: DragItemType;
   dragItemIdKey: string;
   itemCountLabel: string;
   selected?: boolean;
   onClick: () => void;
   onRename: (id: string, name: string) => void;
   onDelete: (id: string) => void;
-  onFileDrop: (itemId: string | string[], folderId: string, copy: boolean) => void;
+  onFileDrop: (
+    itemId: string | string[],
+    folderId: string,
+    folderName: string,
+    anchor: { x: number; y: number },
+    copyShortcut: boolean,
+  ) => void;
 }
 
 export function FolderCard({
@@ -57,21 +69,29 @@ export function FolderCard({
     if (!el) return;
     return dropTargetForElements({
       element: el,
-      canDrop: ({ source }) => source.data.type === dragItemType,
+      canDrop: ({ source }) => folderDropCanDrop(dragItemType, source.data.type),
       onDragEnter: () => setIsDragOver(true),
       onDragLeave: () => setIsDragOver(false),
-      onDrop: ({ source }) => {
+      onDrop: ({ source, location }) => {
         setIsDragOver(false);
-        // 세트 드래그는 멤버 전체(questionIds)를 실어옴 → 있으면 배열째 전달(단일은 fallback).
-        const arr = source.data.questionIds as string[] | undefined;
-        const itemId = (Array.isArray(arr) && arr.length > 0
-          ? arr
-          : source.data[dragItemIdKey]) as string | string[];
-        const isCopy = (window.event as DragEvent | null)?.shiftKey ?? false;
-        onFileDrop(itemId, collection.id, isCopy);
+        const itemId = folderDropItemId(source.data, dragItemIdKey);
+        const input = location?.current?.input;
+        const anchor = {
+          x: input?.clientX ?? window.innerWidth / 2,
+          y: input?.clientY ?? window.innerHeight / 2,
+        };
+        // 평소엔 복사/이동 팝오버로 묻고, Alt/Ctrl을 누른 채 드롭하면 팝오버
+        // 없이 바로 복사한다(OS 복사-드래그 관례).
+        onFileDrop(
+          itemId,
+          collection.id,
+          collection.name,
+          anchor,
+          isCopyDragModifier(input),
+        );
       },
     });
-  }, [collection.id, onFileDrop, dragItemType, dragItemIdKey]);
+  }, [collection.id, collection.name, onFileDrop, dragItemType, dragItemIdKey]);
 
   return (
     <div
@@ -127,9 +147,28 @@ export function FolderCard({
             {collection.name}
           </p>
         )}
-        <p className="text-[11px] text-slate-400 mt-0.5">
-          {collection._count.items}개 {itemCountLabel}
-        </p>
+        {(() => {
+          const count = resolveFolderCount(collection);
+          return (
+            <p
+              title={count.tooltip}
+              className="text-[11px] text-slate-400 mt-0.5"
+            >
+              {count.display}개 {itemCountLabel}
+              {count.note ? (
+                <span
+                  className={`ml-1 font-semibold ${
+                    count.noteTone === "duplicate"
+                      ? "text-amber-600"
+                      : "text-blue-500"
+                  }`}
+                >
+                  · {count.note}
+                </span>
+              ) : null}
+            </p>
+          );
+        })()}
       </div>
 
       {/* Context menu — 포털 렌더라 부모 overflow에 잘리지 않고 항상 위에 뜬다 */}

@@ -10,6 +10,8 @@ import {
 } from "@/lib/legal/payment-processor";
 
 const SUBSCRIPTION_BILLING_ENABLED = FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING;
+const BANK_DEPOSIT_ENABLED =
+  process.env.NEXT_PUBLIC_BANK_DEPOSIT_ENABLED === "true";
 
 export const metadata: Metadata = {
   title: "개인정보처리방침",
@@ -29,6 +31,11 @@ const PRIVACY_SECTIONS = [
       SUBSCRIPTION_BILLING_ENABLED
         ? "결제 내역은 구독 갱신, 크레딧 지급, 결제 검증, 환불 처리, 세무·회계 증빙, 분쟁 대응, 부정 결제 탐지를 위해 보관·이용합니다."
         : "결제 내역은 크레딧 지급, 결제 검증, 환불 처리, 세무·회계 증빙, 분쟁 대응, 부정 결제 탐지를 위해 보관·이용합니다.",
+      ...(BANK_DEPOSIT_ENABLED
+        ? [
+            "무통장입금(계좌이체) 결제 시 입금 사실 확인과 크레딧 자동 지급을 위해 회원이 입력한 입금자명과 입금 내역(입금금액, 입금시각, 입금은행)을 처리합니다.",
+          ]
+        : []),
     ],
   },
   {
@@ -41,6 +48,11 @@ const PRIVACY_SECTIONS = [
         ? "결제 정보: 결제금액, 결제수단, 결제일시, 주문명, 구독 이용 기간 및 다음 갱신일, 포트원 결제 ID, PG 거래 ID, 빌링키 식별 정보, 결제 상태, 영수증 URL, 취소·환불 내역"
         : "결제 정보: 결제금액, 결제수단, 결제일시, 주문명, 포트원 결제 ID, PG 거래 ID, 결제 상태, 영수증 URL, 취소·환불 내역",
       "환불 처리 정보: 환불 사유, 예금주, 은행명, 계좌번호, 환불 확인을 위한 연락처 등 환불 처리에 필요한 최소 정보",
+      ...(BANK_DEPOSIT_ENABLED
+        ? [
+            "무통장입금 정보: 입금자명, 입금금액, 입금시각, 입금은행 등 무통장입금(계좌이체) 입금 사실 확인 및 주문 대조에 필요한 정보",
+          ]
+        : []),
       "고객지원 정보: 문의 내용, 첨부자료, 처리 결과, 상담 이력",
     ],
   },
@@ -59,6 +71,11 @@ const PRIVACY_SECTIONS = [
           ]
         : []),
       "회사는 원칙적으로 카드번호, 유효기간, CVC 등 민감한 결제수단 원문 정보를 직접 저장하지 않으며, 결제 처리에 필요한 정보는 포트원 및 PG사가 관련 법령과 보안 기준에 따라 처리합니다.",
+      ...(BANK_DEPOSIT_ENABLED
+        ? [
+            "무통장입금(계좌이체)은 포트원 및 PG사를 거치지 않고, 회사가 지정한 입금 계좌로의 입금 사실을 회사가 직접 확인하여 크레딧을 지급합니다. 이 과정에서 입금 알림 정보(입금자명, 입금금액, 입금시각, 입금은행)와 회원이 입력한 입금자명을 대조하며, 해당 정보는 입금 확인과 회계 증빙 목적으로 회사가 보관합니다.",
+          ]
+        : []),
       SUBSCRIPTION_BILLING_ENABLED
         ? CREDIT_TOP_UP_CARD_ONLY
           ? "신용카드 결제 상태 확인, 영수증 확인, 결제 취소, 환불, 정기결제 예약·해지를 위해 포트원 결제 ID, PG 거래 ID, 빌링키 식별 정보, 결제 상태, 금액, 결제수단, 영수증 정보 등을 저장합니다."
@@ -231,6 +248,9 @@ export default function PrivacyPage() {
             {PAYMENT_PG_NAME}를 통해 크레딧 결제 승인·취소·환불 상태를 확인합니다.
             환불계좌 정보는 {CREDIT_TOP_UP_REFUND_ACCOUNT_TEXT}
             필요한 최소 범위로 수집합니다.
+            {BANK_DEPOSIT_ENABLED
+              ? " 무통장입금(계좌이체)은 PG사를 거치지 않고 회사가 지정 계좌의 입금 사실을 직접 확인하며, 입금자명과 입금 내역은 입금 확인·회계 증빙 목적으로만 처리합니다."
+              : ""}
           </p>
         </section>
 

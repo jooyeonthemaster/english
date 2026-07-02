@@ -22,12 +22,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { useSearchDebounce } from "@/hooks/use-search-debounce";
+
 import type { SortOrder, StatusFilter } from "./manage-header";
 
 interface ManageFiltersBarProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
-  onSearchSubmit: () => void;
+  onSearchSubmit: (value?: string) => void;
 
   // Filter toggle — controlled by the parent so the expanded panel can be
   // rendered full-width below the header (see ManageFiltersPanel).
@@ -47,6 +49,9 @@ export function ManageFiltersBar({
   hasActiveFilter,
   compact = false,
 }: ManageFiltersBarProps) {
+  // 타이핑 즉시(라이브) 검색 — 입력 멈추면 커밋, Enter·지우기는 즉시 커밋.
+  const { schedule, flush } = useSearchDebounce((v) => onSearchSubmit(v));
+
   return (
     <div
       className={
@@ -104,14 +109,20 @@ export function ManageFiltersBar({
                 autoFocus
                 placeholder="자료 검색"
                 value={searchValue}
-                onChange={(e) => onSearchChange(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && onSearchSubmit()}
+                onChange={(e) => {
+                  onSearchChange(e.target.value);
+                  schedule(e.target.value);
+                }}
+                onKeyDown={(e) => e.key === "Enter" && flush(searchValue)}
                 className="h-8 w-full rounded-md border border-slate-200 bg-white pl-7 pr-7 text-[12px] text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
               />
               {searchValue ? (
                 <button
                   type="button"
-                  onClick={() => onSearchChange("")}
+                  onClick={() => {
+                    onSearchChange("");
+                    flush("");
+                  }}
                   className="absolute right-1.5 top-1/2 inline-flex size-4 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
                   aria-label="검색 지우기"
                 >

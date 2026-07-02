@@ -77,6 +77,7 @@ export default async function QuestionTrashPage({ searchParams }: PageProps) {
 
   return (
     <QuestionTrashClient
+      academyId={staff.academyId}
       questionsData={questionsData}
       filters={filters}
       collections={trashCollections as never}

@@ -1,5 +1,12 @@
 import type { NextConfig } from "next";
 
+// 서비스 사용자는 전원 한국에 있으므로 모든 타임스탬프 기준을 한국시간(KST)으로 고정한다.
+// 배포 서버(Vercel/Node)는 기본 UTC라 SSR·서버액션에서 toLocale*()·new Date() 표시가
+// 9시간 어긋난다. 핵심 포매터(src/lib/utils.ts)는 Intl로 Asia/Seoul을 명시해 TZ에
+// 무관하게 동작하지만, 직접 toLocale*()를 쓰는 곳까지 일괄로 맞추려고 런타임 TZ 자체를
+// Asia/Seoul로 고정한다. (호스팅 대시보드에도 환경변수 TZ=Asia/Seoul 설정 권장.)
+process.env.TZ = process.env.TZ ?? "Asia/Seoul";
+
 const nextConfig: NextConfig = {
   // IR 덱(정적, public/ir/) — /ir 로 접근 가능하게만 하고 메인 어디에도 링크하지 않음.
   // public 파일은 정확한 경로만 매칭되므로 /ir → /ir/index.html 리라이트가 필요.

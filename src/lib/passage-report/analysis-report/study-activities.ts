@@ -208,18 +208,78 @@ const splitWords = (en: string): string[] => en.trim().split(/\s+/).filter(Boole
 // 품사 타깃 빈칸용 닫힌 목록 (AI 없이 안전하게 분류 가능한 기능어만). verb 는 조동사·be동사로 한정.
 const PREP_SET = new Set([
   "in", "on", "at", "to", "for", "with", "by", "from", "of", "about", "into", "onto", "over", "under",
-  "between", "among", "through", "during", "before", "after", "against", "without", "within", "upon",
-  "toward", "towards", "across", "behind", "beyond", "beside", "above", "below", "around", "near", "off",
+  "between", "among", "amongst", "through", "throughout", "during", "before", "after", "against",
+  "without", "within", "upon", "toward", "towards", "across", "behind", "beyond", "beside", "besides",
+  "above", "below", "around", "near", "off", "despite", "via", "per", "amid", "amidst", "atop", "unto",
+  "till", "underneath", "alongside", "notwithstanding", "versus", "regarding", "concerning",
 ]);
 const CONJ_SET = new Set([
   "and", "but", "or", "so", "yet", "nor", "because", "although", "though", "while", "whereas", "if",
   "unless", "since", "as", "when", "whenever", "where", "wherever", "whether", "than", "once", "until",
   "however", "therefore", "thus", "moreover", "furthermore", "nevertheless", "meanwhile", "instead",
+  "lest", "albeit",
 ]);
+// 조동사·be동사로 한정(target="verb" 용). need/dare/done/doing 등 내용어 동음어는 일부러 제외해
+// target="verb" 오선택과 내용어 과잉제외를 막는다(원형 조동사·완료/진행 보조형만).
 const AUX_SET = new Set([
   "is", "are", "was", "were", "be", "been", "being", "am", "has", "have", "had", "do", "does", "did",
   "will", "would", "shall", "should", "can", "could", "may", "might", "must",
 ]);
+
+// ── 내용어(content) 빈칸에서 제외할 기능어(닫힌 품사) 전수 목록 ──
+// 핵심 원리: 내용어(명사·일반동사·형용사·어휘성 부사)는 '열린 품사'라 전수 열거가 불가능하지만,
+// 기능어(관사·한정사·대명사·전치사·접속사·조동사·접속부사·소사·부정어·wh-어·수량사)는 '닫힌 품사'라
+// 유한하게 전수 열거할 수 있다 → 기능어 목록을 빼면 AI 없이도 결정론적으로 내용어만 남는다.
+// (2글자 이하 기능어 the/a/to/of/in/is/it… 는 WORD_RE(3글자+)에서 이미 걸러진다. 여기서 잡는 건
+//  the/for/and/but/with/that/this/are/has/have/their/which/when/not/all/some… 같은 3글자+ 기능어다.)
+// 모호어(like/as/that/than/since…)는 사용자 요구대로 "기능어 누출 0"을 빈칸 개수보다 우선 →
+// 이미 PREP/CONJ 목록에 있으므로 내용어에서 제외된다.
+const ARTICLE_DET_SET = new Set([
+  "the", "an", "this", "that", "these", "those", "such", "another", "other",
+  "each", "every", "either", "neither", "any", "some", "all", "both", "half",
+  "much", "many", "more", "most", "few", "fewer", "fewest", "less", "least", "little",
+  "several", "enough",
+]);
+const PRONOUN_SET = new Set([
+  "you", "he", "she", "it", "we", "they", "him", "her", "them", "his", "its",
+  "our", "your", "their", "mine", "yours", "hers", "ours", "theirs",
+  "myself", "yourself", "himself", "herself", "itself", "ourselves", "yourselves", "themselves",
+  "who", "whom", "whose", "which", "what", "whoever", "whomever", "whatever", "whichever",
+  "one", "ones", "oneself", "none", "anyone", "anybody", "anything",
+  "someone", "somebody", "something", "everyone", "everybody", "everything",
+  "nobody", "nothing", "everywhere", "somewhere", "anywhere", "nowhere",
+]);
+const PARTICLE_ADV_SET = new Set([
+  "not", "nor", "never", "very", "too", "just", "only", "even", "also", "still", "yet",
+  "already", "ever", "again", "almost", "quite", "rather", "somewhat", "fairly",
+  "really", "indeed", "perhaps", "maybe", "probably", "possibly", "certainly", "surely",
+  "actually", "basically", "simply", "merely", "hardly", "scarcely", "barely",
+  "thus", "hence", "therefore", "however", "moreover", "furthermore", "nevertheless",
+  "nonetheless", "meanwhile", "otherwise", "instead", "besides", "accordingly",
+  "consequently", "likewise", "similarly", "conversely", "anyway", "anyhow",
+  "here", "there", "then", "now", "else", "altogether", "overall",
+]);
+const WH_SET = new Set([
+  "when", "where", "why", "how", "whether", "whenever", "wherever", "whereas",
+  "whereby", "wherein", "whereupon",
+]);
+
+/** 내용어 빈칸에서 제외할 기능어(닫힌 품사) 전수 집합 — prep/conj/aux + 관사·대명사·소사·wh-어 합집합. */
+const FUNCTION_WORDS = new Set<string>([
+  ...PREP_SET,
+  ...CONJ_SET,
+  ...AUX_SET,
+  ...ARTICLE_DET_SET,
+  ...PRONOUN_SET,
+  ...PARTICLE_ADV_SET,
+  ...WH_SET,
+]);
+
+/** 단어(소문자·구두점 제거)가 기능어(닫힌 품사)인지 — 내용어 빈칸 필터·테스트에서 공용으로 쓴다. */
+export function isFunctionWord(word: string): boolean {
+  const bare = word.replace(/[^A-Za-z'’-]/g, "").toLowerCase();
+  return bare.length > 0 && FUNCTION_WORDS.has(bare);
+}
 
 /** 빈칸 후보 인덱스 — target 에 따라 내용어 / 전치사 / 접속사 / (조)동사로 필터. tokens 는 공백 보존 분할. */
 function clozeCandidateIdx(tokens: string[], target: ActivityParams["target"]): number[] {
@@ -232,7 +292,10 @@ function clozeCandidateIdx(tokens: string[], target: ActivityParams["target"]): 
       if (target === "prep") return PREP_SET.has(bare);
       if (target === "conj") return CONJ_SET.has(bare);
       if (target === "verb") return AUX_SET.has(bare);
-      return WORD_RE.test(tok); // content / all — 기존 내용어 기준 유지
+      // 내용어(기본값): 3글자+ 영단어이면서 기능어(닫힌 품사)가 아닌 것만. 전치사·접속사·관사·
+      // 대명사·조동사·접속부사 누출을 결정론적으로 차단한다(빈칸 개수보다 필터 우선 — 사용자 요구).
+      if (target === "content") return WORD_RE.test(tok) && !FUNCTION_WORDS.has(bare);
+      return WORD_RE.test(tok); // all(미지정 호환) — 기존 동작 유지(기능어 포함)
     });
 }
 

@@ -43,6 +43,7 @@ export const QUESTION_TYPE_META: Record<string, QuestionTypeMeta> = {
   SUMMARY_COMPLETE:     { typeId: "SUMMARY_COMPLETE",     category: "서술형", label: "요약문 완성",    includesPassage: false, description: "요약문의 빈칸을 완성하는 문제" },
   SUMMARY_WRITING:      { typeId: "SUMMARY_WRITING",      category: "서술형", label: "요약문 영작",    includesPassage: false, description: "요약문의 빈칸을 [보기]·해석·단서를 활용해 영어로 영작하는 문제" },
   WORD_ORDER:           { typeId: "WORD_ORDER",           category: "서술형", label: "배열 영작",      includesPassage: false, description: "주어진 단어를 올바른 순서로 배열하는 문제" },
+  TOPIC_SENTENCE_WRITING: { typeId: "TOPIC_SENTENCE_WRITING", category: "서술형", label: "주제문 영작", includesPassage: false, description: "글의 주제를 주제문(또는 명사구)으로 만들어 제시어 배열 또는 빈칸 완성으로 영작하는 문제" },
   GRAMMAR_CORRECTION:   { typeId: "GRAMMAR_CORRECTION",   category: "서술형", label: "문법 오류 수정",  includesPassage: false, description: "문법 오류를 찾아 바르게 고치는 문제" },
   CONTEXT_MEANING:      { typeId: "CONTEXT_MEANING",      category: "어휘",   label: "문맥 속 의미",   includesPassage: true,  description: "밑줄 친 단어의 문맥상 의미를 찾는 문제" },
   SYNONYM:              { typeId: "SYNONYM",              category: "어휘",   label: "동의어",        includesPassage: false, description: "핵심 어휘의 동의어를 찾는 문제" },
@@ -76,6 +77,7 @@ export {
   summaryCompleteSchema, type SummaryCompleteQuestion,
   summaryWritingSchema, type SummaryWritingQuestion,
   wordOrderSchema, type WordOrderQuestion,
+  topicSentenceWritingSchema, type TopicSentenceWritingQuestion,
   grammarCorrectionSchema, type GrammarCorrectionQuestion,
 } from "./question-schemas-essay";
 
@@ -90,7 +92,7 @@ export {
 // ---------------------------------------------------------------------------
 
 import { blankInferenceSchema as _bi, grammarErrorSchema as _ge, grammarChoiceComboSchema as _gcc, vocabChoiceSchema as _vc, sentenceOrderSchema as _so, sentenceInsertSchema as _si, topicSchema as _to, mainIdeaSchema as _mi, topicMainIdeaSchema as _tm, titleSchema as _ti, impliedMeaningSchema as _im, referenceSchema as _rf, contentMatchSchema as _cm, summaryCompleteMcSchema as _scm, irrelevantSchema as _ir } from "./question-schemas-mc";
-import { conditionalWritingSchema as _cw, sentenceTransformSchema as _st, fillBlankKeySchema as _fb, summaryCompleteSchema as _sc, summaryWritingSchema as _sw, wordOrderSchema as _wo, grammarCorrectionSchema as _gc } from "./question-schemas-essay";
+import { conditionalWritingSchema as _cw, sentenceTransformSchema as _st, fillBlankKeySchema as _fb, summaryCompleteSchema as _sc, summaryWritingSchema as _sw, wordOrderSchema as _wo, topicSentenceWritingSchema as _tsw, grammarCorrectionSchema as _gc } from "./question-schemas-essay";
 import { contextMeaningSchema as _cx, synonymSchema as _sy, antonymSchema as _an } from "./question-schemas-vocab";
 
 export const QUESTION_SCHEMAS: Record<string, z.ZodType> = {
@@ -98,7 +100,7 @@ export const QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   SENTENCE_ORDER: _so, SENTENCE_INSERT: _si, TOPIC: _to, MAIN_IDEA: _mi, TOPIC_MAIN_IDEA: _tm,
   TITLE: _ti, IMPLIED_MEANING: _im, REFERENCE: _rf, CONTENT_MATCH: _cm, SUMMARY_COMPLETE_MC: _scm, IRRELEVANT: _ir,
   CONDITIONAL_WRITING: _cw, SENTENCE_TRANSFORM: _st, FILL_BLANK_KEY: _fb,
-  SUMMARY_COMPLETE: _sc, SUMMARY_WRITING: _sw, WORD_ORDER: _wo, GRAMMAR_CORRECTION: _gc,
+  SUMMARY_COMPLETE: _sc, SUMMARY_WRITING: _sw, WORD_ORDER: _wo, TOPIC_SENTENCE_WRITING: _tsw, GRAMMAR_CORRECTION: _gc,
   CONTEXT_MEANING: _cx, SYNONYM: _sy, ANTONYM: _an,
 };
 
@@ -127,7 +129,7 @@ export const STRUCTURED_TYPE_PROMPTS: Record<string, string> = {
 // ---------------------------------------------------------------------------
 
 import type { BlankInferenceQuestion as BIQ, GrammarErrorQuestion as GEQ, GrammarChoiceComboQuestion as GCCQ, VocabChoiceQuestion as VCQ, SentenceOrderQuestion as SOQ, SentenceInsertQuestion as SIQ, TopicMainIdeaQuestion as TMQ, TitleQuestion as TIQ, ImpliedMeaningQuestion as IMQ, ReferenceQuestion as RFQ, ContentMatchQuestion as CMQ, SummaryCompleteMcQuestion as SMCQ, IrrelevantQuestion as IRQ } from "./question-schemas-mc";
-import type { ConditionalWritingQuestion as CWQ, SentenceTransformQuestion as STQ, FillBlankKeyQuestion as FBQ, SummaryCompleteQuestion as SCQ, SummaryWritingQuestion as SWQ, WordOrderQuestion as WOQ, GrammarCorrectionQuestion as GCQ } from "./question-schemas-essay";
+import type { ConditionalWritingQuestion as CWQ, SentenceTransformQuestion as STQ, FillBlankKeyQuestion as FBQ, SummaryCompleteQuestion as SCQ, SummaryWritingQuestion as SWQ, WordOrderQuestion as WOQ, TopicSentenceWritingQuestion as TSWQ, GrammarCorrectionQuestion as GCQ } from "./question-schemas-essay";
 import type { ContextMeaningQuestion as CXQ, SynonymQuestion as SYQ, AntonymQuestion as ANQ } from "./question-schemas-vocab";
 
 export type StructuredQuestion =
@@ -152,6 +154,7 @@ export type StructuredQuestion =
   | ({ _typeId: "SUMMARY_COMPLETE" } & SCQ)
   | ({ _typeId: "SUMMARY_WRITING" } & SWQ)
   | ({ _typeId: "WORD_ORDER" } & WOQ)
+  | ({ _typeId: "TOPIC_SENTENCE_WRITING" } & TSWQ)
   | ({ _typeId: "GRAMMAR_CORRECTION" } & GCQ)
   | ({ _typeId: "CONTEXT_MEANING" } & CXQ)
   | ({ _typeId: "SYNONYM" } & SYQ)

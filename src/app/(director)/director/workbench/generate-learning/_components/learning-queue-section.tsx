@@ -74,7 +74,7 @@ export function LearningQueueSection({
 
   return (
     <div className="flex-1 overflow-y-auto bg-[#F4F5F7]">
-      <div className="max-w-7xl mx-auto px-8 py-5">
+      <div className="max-w-7xl mx-auto px-4 py-5 lg:px-8">
         {/* 헤더 + 필터 */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[15px] font-bold text-slate-800">

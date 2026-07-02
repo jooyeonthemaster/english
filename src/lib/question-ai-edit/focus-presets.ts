@@ -122,6 +122,12 @@ export const EDIT_FOCUS_PRESETS: Record<string, EditFocusPreset[]> = {
     { label: "단어 재구성", instruction: "배열할 단어들을 글 맥락에 맞는 다른 핵심 문장으로 바꾸고 모범답안을 그에 맞춰. 난이도를 적절히." },
     { label: "힌트 조정", instruction: "배열 문제의 한국어 힌트(contextHint)를 더 명확히 다듬어 줘." },
   ],
+  TOPIC_SENTENCE_WRITING: [
+    { label: "제시어·미끼 조정", instruction: "제시어(scrambledWords 또는 wordBank)를 더 적절한 후보로 조정하되, 미끼(distractor)는 정답의 동의어·활용형으로 매력적으로 만들어 줘. 정답 어순(modelAnswer)이 드러나지 않도록 제시어는 반드시 셔플하고, 정답 단어 자체는 학생면에 노출하지 마." },
+    { label: "빈칸 조정", instruction: "빈칸완성(cloze) 모드의 주제문 빈칸을 글의 주제와 더 직결되는 핵심 표현으로 조정하고 각 빈칸의 정답(blanks.answer)을 그에 맞춰 정확히 채워 줘. 빈칸 개수는 유지하고, 마스킹된 주제문(summaryWithBlanks)에는 정답 어구를 절대 포함하지 마." },
+    { label: "주제 표현 다듬기", instruction: "추출한 주제 자체(모범답안 modelAnswer)를 글 전체를 더 정확히 포괄하는 주제문/명사구로 다듬고, 제시어·빈칸을 그에 정합하게 다시 맞춰 줘. 정답계열은 학생면에 노출하지 마." },
+    { label: "힌트·해석 조정", instruction: "한국어 [주제 힌트](koreanGloss)를 더 자연스럽게 다듬되, 정답 어구를 1:1로 직역해 나열하지 말고 전체 의미만 전달하도록 작성해 줘." },
+  ],
   GRAMMAR_CORRECTION: [
     { label: "오류 포인트 지정", instruction: "정정 대상 문법 오류를 특정 포인트(예: 수일치, 시제, 태)로 다시 구성하고 밑줄·정답·정정안을 정합하게 고쳐 줘." },
     { label: "정정안 정교화", instruction: "각 밑줄 구간의 오류와 정정안(correctedPart)을 더 명확히 하고 해설을 정교화해 줘." },

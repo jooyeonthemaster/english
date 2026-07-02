@@ -1,16 +1,12 @@
 "use client";
 
-import { useContext, useRef, useState, type PointerEvent, type ReactNode } from "react";
+import { useContext, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 
-import { TaskQueueContext, TaskQueueProvider, useTaskQueue } from "./context";
+import { TaskQueueContext, TaskQueueProvider } from "./context";
 import { TaskQueueDrawer } from "./components/task-queue-drawer";
 import { TaskQueueToggle } from "./components/task-queue-toggle";
 import type { TaskDomain, TaskScope } from "./types";
-
-function clampNumber(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), max);
-}
 
 function resolveTaskQueueDefaultDomain(pathname: string): TaskScope {
   if (
@@ -44,125 +40,22 @@ function resolveTaskQueueDefaultDomain(pathname: string): TaskScope {
 }
 
 function TaskQueueFloatingControls() {
-  const { open } = useTaskQueue();
-  const [floatingOffset, setFloatingOffset] = useState({ x: 0, y: 0 });
-  const floatingOffsetRef = useRef(floatingOffset);
-  const floatingFrameRef = useRef<number | null>(null);
-  const floatingMovedRef = useRef(false);
-  const floatingHostRef = useRef<HTMLDivElement | null>(null);
-  const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
-
-  function startFloatingDrag(event: PointerEvent<HTMLElement>) {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-
-    const host = floatingHostRef.current;
-    const button = toggleButtonRef.current;
-    if (!host || !button) return;
-
-    event.stopPropagation();
-
-    const rect = open ? host.getBoundingClientRect() : button.getBoundingClientRect();
-    const startX = event.clientX;
-    const startY = event.clientY;
-    const startOffset = floatingOffsetRef.current;
-    const margin = 8;
-    const minDeltaX = margin - rect.left;
-    const maxDeltaX = window.innerWidth - margin - rect.right;
-    const minDeltaY = margin - rect.top;
-    const maxDeltaY = window.innerHeight - margin - rect.bottom;
-    const pointerId = event.pointerId;
-    let didMove = false;
-    let latestOffset = startOffset;
-    const previousBodyCursor = document.body.style.cursor;
-    const previousBodyUserSelect = document.body.style.userSelect;
-
-    floatingMovedRef.current = false;
-    document.body.style.cursor = "grabbing";
-    document.body.style.userSelect = "none";
-    host.style.transition = "none";
-    host.style.willChange = "transform";
-
-    try {
-      event.currentTarget.setPointerCapture(pointerId);
-    } catch {
-      // Pointer capture is best-effort; window listeners keep the drag alive.
-    }
-
-    const applyFloatingTransform = () => {
-      floatingFrameRef.current = null;
-      host.style.transform = `translate3d(${latestOffset.x}px, ${latestOffset.y}px, 0)`;
-    };
-
-    const handlePointerMove = (moveEvent: globalThis.PointerEvent) => {
-      const rawDeltaX = moveEvent.clientX - startX;
-      const rawDeltaY = moveEvent.clientY - startY;
-      if (!didMove && Math.hypot(rawDeltaX, rawDeltaY) >= 2) {
-        didMove = true;
-        floatingMovedRef.current = true;
-      }
-
-      moveEvent.preventDefault();
-      latestOffset = {
-        x: startOffset.x + clampNumber(rawDeltaX, minDeltaX, maxDeltaX),
-        y: startOffset.y + clampNumber(rawDeltaY, minDeltaY, maxDeltaY),
-      };
-      floatingOffsetRef.current = latestOffset;
-
-      if (floatingFrameRef.current === null) {
-        floatingFrameRef.current = window.requestAnimationFrame(applyFloatingTransform);
-      }
-    };
-
-    const finishDrag = () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerup", finishDrag);
-      window.removeEventListener("pointercancel", finishDrag);
-      if (floatingFrameRef.current !== null) {
-        window.cancelAnimationFrame(floatingFrameRef.current);
-        floatingFrameRef.current = null;
-      }
-      applyFloatingTransform();
-      setFloatingOffset(latestOffset);
-      document.body.style.cursor = previousBodyCursor;
-      document.body.style.userSelect = previousBodyUserSelect;
-      host.style.transition = "";
-      host.style.willChange = "transform";
-      try {
-        event.currentTarget.releasePointerCapture(pointerId);
-      } catch {
-        // Pointer capture may already be released by the browser.
-      }
-    };
-
-    window.addEventListener("pointermove", handlePointerMove, { passive: false });
-    window.addEventListener("pointerup", finishDrag, { once: true });
-    window.addEventListener("pointercancel", finishDrag, { once: true });
-  }
-
-  function shouldIgnoreToggleClick() {
-    if (!floatingMovedRef.current) return false;
-    floatingMovedRef.current = false;
-    return true;
-  }
-
+  // 작업 목록 버튼은 "메인 페이지" 레이어(z-40, 모바일 헤더와 동일 단)에 둔다.
+  // 앱의 모든 팝업/모달은 z-50 백드롭(`fixed inset-0 z-50` + bg-black/40)으로 뜨므로,
+  // 팝업이 열리면 자동으로 이 버튼을 덮어 위에 떠 보이지 않게 된다(별도 감지 불필요).
+  //
+  // 사이드바 햄버거(좌상단)와 짝을 이루도록 우상단에 고정하되, 정렬은 픽셀 계산에
+  // 맡기지 않고 햄버거가 든 모바일 헤더와 동일한 `h-14 items-center` 박스 안에 같은
+  // size-10 버튼을 넣어 윗변을 그대로 맞춘다.
   return (
-    <div
-      ref={floatingHostRef}
-      className="pointer-events-none fixed bottom-24 right-8 z-50 flex touch-none select-none flex-col-reverse items-end gap-5"
-      style={{
-        backfaceVisibility: "hidden",
-        contain: "layout style",
-        transform: `translate3d(${floatingOffset.x}px, ${floatingOffset.y}px, 0)`,
-        willChange: "transform",
-      }}
-    >
-      <TaskQueueToggle
-        buttonRef={toggleButtonRef}
-        onDragPointerDown={startFloatingDrag}
-        shouldIgnoreClick={shouldIgnoreToggleClick}
-      />
-      <TaskQueueDrawer />
-    </div>
+    <>
+      <div className="pointer-events-none fixed right-0 top-0 z-40 flex h-14 select-none items-center pr-3">
+        <TaskQueueToggle />
+      </div>
+      <div className="pointer-events-none fixed right-3 top-14 z-40 flex select-none justify-end">
+        <TaskQueueDrawer />
+      </div>
+    </>
   );
 }
 

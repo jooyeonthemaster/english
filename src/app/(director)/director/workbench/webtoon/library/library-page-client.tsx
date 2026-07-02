@@ -188,6 +188,8 @@ export function WebtoonLibraryClient({
     initialMembership,
     actions: folderActions,
     itemLabel: "웹툰",
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    cumulativeCounts: true,
   });
   const { filterByActiveFolder } = folder;
 

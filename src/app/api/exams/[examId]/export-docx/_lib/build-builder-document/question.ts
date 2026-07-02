@@ -14,6 +14,7 @@ import { COLOR, FONT, KR_FONT } from "../styles";
 import type { DocChild } from "../types";
 import { buildAnswerBlock } from "./answer";
 import type { BuilderItemResolved, BuilderLayout } from "./model";
+import { parseTopicSentenceWritingBlocks } from "./model";
 import { buildGivenBox, buildPassage, buildPassageTitleParagraph, extractGivenBlock, parseSummaryWritingBlocks, shouldPlaceInlinePassageBeforeBody, stripOriginalBlock } from "./passage";
 import { BODY_LINE_HEIGHT, BODY_LINE_HEIGHT_COMPACT, SIZE_BODY, SIZE_BODY_COMPACT, SIZE_META, SIZE_OPTION, SIZE_OPTION_COMPACT, SIZE_QNUM, SIZE_QNUM_COMPACT, SUBTYPE_LABELS_DOCX, bodyFont, exactLineSpacing } from "./sizes";
 import { firstQuestionLineForHeader, printablePassageTitle, safeParseOptions } from "./util";
@@ -65,6 +66,7 @@ export function buildQuestionBlock(
   const summaryComplete = isSummaryCompleteSubtype(subType);
   const summaryMc = isSummaryCompleteMc(subType);
   const summaryWriting = isSummaryWriting(subType);
+  const topicSentenceWriting = subType === "TOPIC_SENTENCE_WRITING";
   const showPassageTitle = layout.showPassageTitle === true;
   const passageTitle = printablePassageTitle(item);
   const passageContent = (item.passageContent ?? item.sourceQuestion.passage?.content ?? "").trim();
@@ -87,7 +89,7 @@ export function buildQuestionBlock(
   const headerQuestionText =
     summaryPartsForHeader?.stem || genericHeaderQuestionText;
   const embeddedPassageTitle =
-    hasEmbeddedSourcePassage && !summaryWriting
+    hasEmbeddedSourcePassage && !summaryWriting && !topicSentenceWriting
       ? buildPassageTitleParagraph(passageTitle, showPassageTitle)
       : null;
   if (embeddedPassageTitle) result.push(embeddedPassageTitle);
@@ -239,6 +241,116 @@ export function buildQuestionBlock(
                 size: SIZE_META,
                 color: COLOR.gray,
                 markerColor: COLOR.black,
+              }),
+            ],
+          }),
+        );
+      }
+    } else if (topicSentenceWriting) {
+      // 주제문 영작(듀얼모드): 헤더(번호+배점+발문) 아래에
+      //   [지문](테두리 박스) → [주제 힌트](회색) →
+      //     cloze:     [주제문]((A)(B)+빈칸선) → [보기](인라인)
+      //     scrambled: [배열 단어](인라인 칩)
+      // 모드 판별은 직렬 questionText 의 [주제문] 마커 존재 여부로 한다(structuredData 미참조).
+      // 정답계열(modelAnswer/blanks[].answer 등)은 직렬화에 없으므로 절대 렌더되지 않는다(SW-LEAK-1).
+      const tsw = parseTopicSentenceWritingBlocks(questionText);
+
+      if (passageContent) {
+        result.push(
+          ...buildPassage({
+            passageTitle,
+            passageContent: inlinePassageContent || passageContent,
+            passageStyle: "plain",
+            showPassageTitle,
+            compact,
+            usesSentenceInsertMarkers: false,
+          }),
+        );
+      }
+
+      if (tsw.gloss) {
+        result.push(
+          new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            spacing: { before: 0, after: 60, ...exactLineSpacing(bodySize, lh) },
+            children: [
+              new TextRun({
+                text: "[주제 힌트] ",
+                font: bodyFont,
+                size: bodySize,
+                bold: true,
+                color: COLOR.gray,
+              }),
+              ...parseFormattedText(tsw.gloss, {
+                font: bodyFont,
+                size: bodySize,
+                color: COLOR.gray,
+              }),
+            ],
+          }),
+        );
+      }
+
+      if (tsw.summary) {
+        // cloze 모드 — 마스킹된 주제문((A)(B) + 빈칸선). [요약문] 렌더와 동일.
+        result.push(
+          new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            spacing: { after: 90, ...exactLineSpacing(bodySize, lh) },
+            children: [
+              new TextRun({
+                text: "[주제문] ",
+                font: bodyFont,
+                size: bodySize,
+                bold: true,
+              }),
+              // (A)(B) 마커는 파랑, _____ 빈칸선·본문은 영문 폰트로(parseFormattedText)
+              ...parseFormattedText(tsw.summary, {
+                font: FONT,
+                size: bodySize,
+                bold: true,
+              }),
+            ],
+          }),
+        );
+      } else if (tsw.scrambled) {
+        // scrambled 모드 — 셔플된 제시어 칩(배열 영작 류). 정답 어순 미노출(SW-LEAK-1).
+        result.push(
+          new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            spacing: { after: 90, ...exactLineSpacing(bodySize, lh) },
+            children: [
+              new TextRun({
+                text: "[배열 단어] ",
+                font: bodyFont,
+                size: bodySize,
+                bold: true,
+              }),
+              ...parseFormattedText(tsw.scrambled, {
+                font: FONT,
+                size: bodySize,
+                bold: true,
+              }),
+            ],
+          }),
+        );
+      }
+
+      if (tsw.wordBank) {
+        result.push(
+          new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            spacing: { before: 0, after: 70, ...exactLineSpacing(bodySize, lh) },
+            children: [
+              new TextRun({
+                text: "[보기] ",
+                font: bodyFont,
+                size: bodySize,
+                bold: true,
+              }),
+              ...parseFormattedText(tsw.wordBank, {
+                font: FONT,
+                size: bodySize,
               }),
             ],
           }),

@@ -256,6 +256,44 @@ export interface SummaryWritingGenerationSettings
   scoringGranularity?: "exact" | "keyword" | "rubric";
 }
 
+/**
+ * 주제문 영작(TOPIC_SENTENCE_WRITING) 세부옵션. 글의 주제를 주제문/명사구로 만들어
+ * 제시어 배열(scrambled) 또는 빈칸 완성(cloze)으로 출제한다. 여기 있는 값은 전부
+ * 👁출제옵션 또는 결정론 발문/프롬프트 합성용이며, 정답계열은 이 인터페이스에 없다.
+ */
+export interface TopicSentenceWritingGenerationSettings
+  extends QuestionLanguageGenerationSettings,
+    QuestionTypeQualityGenerationSettings {
+  /** 출제 방식. scrambled=제시어 배열, cloze=주제문 빈칸 완성. */
+  mode?: "scrambled" | "cloze";
+  /** 주제 형태. sentence=주제문(12~14단어), nounPhrase=주제 명사구(≤12단어). */
+  topicForm?: "sentence" | "nounPhrase";
+  /** [주제 힌트](한국어) 제공 여부. 기본 true. */
+  hintEnabled?: boolean;
+  /** 힌트 정밀도. KILLER에서 literal 금지. */
+  hintLooseness?: "literal" | "natural" | "gist";
+  /** 제시어 입도. chunk=다단어 구(쉬움), word=단어 단위(어려움). */
+  chunking?: "word" | "chunk" | "mixed";
+  /** 미끼(쓰지 않는 제시어) 수. 0~3. 보기/제시어가 있을 때만 유효. */
+  distractors?: number;
+  /** 제시어 어형 충실도. verbatim=그대로, inflected=어형변형 필요(시제·수). */
+  fidelity?: "verbatim" | "inflected" | "mixed";
+  /** 제시어 배열 순서. */
+  scrambleOrder?: "random" | "scrambleStrong";
+  /** (cloze) 빈칸 개수. 1~2, 기본 1. */
+  blankCount?: number;
+  /** (cloze) 빈칸 배분. blankCount>=2일 때만 유효. */
+  blankAssignment?: "separate" | "shared";
+  /** (cloze) 빈칸 단서. */
+  clueMode?: "none" | "firstLetter" | "wordCount";
+  /** 주제 출처. explicit=명시문장, paraphrase=환언, inference=상위명제 추론. */
+  sourceMode?: "explicit" | "paraphrase" | "inference";
+  /** 주제 외 표현도 변형할지(암기 무력화). 기본 false. */
+  sourceSentenceParaphrase?: boolean;
+  /** 채점 단위(메타). exact/keyword/rubric. */
+  scoringGranularity?: "exact" | "keyword" | "rubric";
+}
+
 export type QuestionLanguageToggleScope = "stem" | "stem-option";
 
 type NumericSettingMax =
@@ -288,6 +326,7 @@ export interface QuestionTypeGenerationSettings {
   GRAMMAR_CORRECTION?: GrammarCorrectionGenerationSettings;
   SUMMARY_COMPLETE?: SummaryCompleteGenerationSettings;
   SUMMARY_WRITING?: SummaryWritingGenerationSettings;
+  TOPIC_SENTENCE_WRITING?: TopicSentenceWritingGenerationSettings;
   SUMMARY_COMPLETE_MC?: SummaryCompleteMcGenerationSettings;
   IRRELEVANT?: IrrelevantGenerationSettings;
   VOCAB_CHOICE?: VocabChoiceGenerationSettings;
@@ -317,6 +356,14 @@ export interface ResolvedQuestionTypeGenerationSettings {
   summaryWritingTargetWords?: number;
   /** SUMMARY_WRITING 결정론 합성 발문(directionAutoText). AI 자유문구 금지. */
   summaryWritingDirection?: string;
+  /** TOPIC_SENTENCE_WRITING 출제 방식(scrambled/cloze). */
+  topicSentenceWritingMode?: "scrambled" | "cloze";
+  /** TOPIC_SENTENCE_WRITING 빈칸 개수(1~2). cloze 일 때만 의미. */
+  topicSentenceWritingBlankCount?: number;
+  /** TOPIC_SENTENCE_WRITING 미끼 수(0~3). */
+  topicSentenceWritingDistractorCount?: number;
+  /** TOPIC_SENTENCE_WRITING 결정론 합성 발문(directionAutoText). AI 자유문구 금지. */
+  topicSentenceWritingDirection?: string;
   contentMatchOptionCount?: number;
   contentMatchAnswerCount?: number;
   /** 내용 일치 강제 극성. undefined = AUTO(모델 결정, 기존 동작). */
@@ -399,5 +446,28 @@ export interface ResolvedSummaryWritingSettings {
   sourceSentenceParaphrase: boolean;
   scoringGranularity: NonNullable<
     SummaryWritingGenerationSettings["scoringGranularity"]
+  >;
+}
+
+// ── TOPIC_SENTENCE_WRITING(주제문 영작) 결정론 해석 + 발문 합성 ──
+
+/** 호환성 매트릭스를 적용한 TOPIC_SENTENCE_WRITING 옵션의 최종 확정본. */
+export interface ResolvedTopicSentenceWritingSettings {
+  difficulty: QuestionDifficulty;
+  mode: NonNullable<TopicSentenceWritingGenerationSettings["mode"]>;
+  topicForm: NonNullable<TopicSentenceWritingGenerationSettings["topicForm"]>;
+  hintEnabled: boolean;
+  hintLooseness: NonNullable<TopicSentenceWritingGenerationSettings["hintLooseness"]>;
+  chunking: NonNullable<TopicSentenceWritingGenerationSettings["chunking"]>;
+  distractors: number;
+  fidelity: NonNullable<TopicSentenceWritingGenerationSettings["fidelity"]>;
+  scrambleOrder: NonNullable<TopicSentenceWritingGenerationSettings["scrambleOrder"]>;
+  blankCount: number;
+  blankAssignment: NonNullable<TopicSentenceWritingGenerationSettings["blankAssignment"]>;
+  clueMode: NonNullable<TopicSentenceWritingGenerationSettings["clueMode"]>;
+  sourceMode: NonNullable<TopicSentenceWritingGenerationSettings["sourceMode"]>;
+  sourceSentenceParaphrase: boolean;
+  scoringGranularity: NonNullable<
+    TopicSentenceWritingGenerationSettings["scoringGranularity"]
   >;
 }

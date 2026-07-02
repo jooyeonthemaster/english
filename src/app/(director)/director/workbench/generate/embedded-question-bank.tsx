@@ -64,19 +64,9 @@ import {
 } from "@/actions/workbench";
 import { createExam } from "@/actions/exams";
 import { QuestionSetSection } from "@/components/workbench/question-set-section";
-import { getAcademyQuestionSetMemberMap } from "@/actions/question-sets";
 import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { confirmNative } from "@/lib/browser-confirm";
 import { DragSelect } from "@/components/ui/drag-select";
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
 import { usePersistedState } from "@/hooks/use-persisted-state";
@@ -352,15 +342,6 @@ export function EmbeddedQuestionBank({
 
   // ─── Folder manager (client-side, like QuestionBankClient) ───
   const [collectionsLoaded, setCollectionsLoaded] = useState(false);
-  // 세트 멤버 questionId → setId 맵 — 폴더 카운트에서 세트를 "1개"로 세는 데 쓴다.
-  // 세트 생성/분리(setRefreshKey) 때 갱신.
-  const [setMemberMap, setSetMemberMap] = useState<Record<string, string>>({});
-  useEffect(() => {
-    getAcademyQuestionSetMemberMap()
-      .then(setSetMemberMap)
-      .catch(() => {});
-  }, [setRefreshKey]);
-
   const folders = useFolderManager({
     initialCollections: [],
     initialMembership: {},
@@ -372,7 +353,10 @@ export function EmbeddedQuestionBank({
       removeFromCollection: removeQuestionsFromCollection,
     },
     itemLabel: "문제",
-    questionSetIdOf: (id) => setMemberMap[id] ?? null,
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    // 세트 멤버는 목록에 문항당 1카드로 노출되므로(이동주 UI) 카운트도 멤버 수 그대로
+    // — 보이는 카드 수와 배지가 일치한다.
+    cumulativeCounts: true,
   });
 
   // Hydrate collections + membership once.
@@ -570,13 +554,18 @@ export function EmbeddedQuestionBank({
     });
   }, []);
 
-  const handleSearch = useCallback(() => {
-    setFilters((prev) => ({
-      ...prev,
-      page: 1,
-      search: searchValue.trim() || undefined,
-    }));
-  }, [searchValue]);
+  const handleSearch = useCallback(
+    (value?: string) => {
+      // X 버튼은 빈 값을 명시적으로 넘긴다(상태 갱신은 비동기라 stale 방지).
+      const next = (value !== undefined ? value : searchValue).trim();
+      setFilters((prev) => ({
+        ...prev,
+        page: 1,
+        search: next || undefined,
+      }));
+    },
+    [searchValue],
+  );
 
   const goToPage = useCallback((page: number) => {
     setFilters((prev) => ({ ...prev, page }));
@@ -649,23 +638,6 @@ export function EmbeddedQuestionBank({
   );
   const { selectedIds, setSelectedIds, toggleSelect, clearSelection } =
     useSelection(getDisplayedIds);
-  const isCurrentPageSelected =
-    displayedQuestionIds.length > 0 &&
-    displayedQuestionIds.every((id) => selectedIds.has(id));
-
-  const handleSelectCurrentPage = useCallback(() => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      const shouldClearPage =
-        displayedQuestionIds.length > 0 &&
-        displayedQuestionIds.every((id) => next.has(id));
-      for (const id of displayedQuestionIds) {
-        if (shouldClearPage) next.delete(id);
-        else next.add(id);
-      }
-      return next;
-    });
-  }, [displayedQuestionIds, setSelectedIds]);
 
   // 세트 카드 체크박스 — 세트의 멤버 문항 id 전체를 선택/해제(일반 카드와 동일 selectedIds 공유).
   // 시험지 빌더가 setId 로 묶어 렌더하므로 멤버를 개별 id 로 담아도 세트가 유지된다.
@@ -708,7 +680,6 @@ export function EmbeddedQuestionBank({
   const [creatingExam, setCreatingExam] = useState(false);
 
   // ─── Bulk delete ───
-  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [bulkDeleting, setBulkDeleting] = useState(false);
 
   // ─── Bulk approve ───
@@ -922,7 +893,6 @@ export function EmbeddedQuestionBank({
         return next;
       });
       clearSelection();
-      setBulkDeleteOpen(false);
       refreshAfterMutation();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "삭제에 실패했습니다.");
@@ -972,13 +942,20 @@ export function EmbeddedQuestionBank({
   }, [folders, clearSelection]);
 
   const handleDragToFolder = useCallback(
-    async (itemId: string | string[], folderId: string, copy: boolean) => {
-      // 세트 드래그면 itemId 가 멤버 배열 — 훅이 배열째 받아 전체를 폴더에 넣는다.
+    // 세트 드래그면 itemId 가 멤버 배열 — 훅이 배열째 받아 전체를 폴더에 넣는다.
+    // keepFolderIds = 이동 시 사본을 남길 폴더들(이동/복사 팝오버의 "폴더별 남기기").
+    async (
+      itemId: string | string[],
+      folderId: string,
+      copy: boolean,
+      keepFolderIds: string[] = [],
+    ) => {
       const success = await folders.handleDragToFolder(
         itemId,
         folderId,
         copy,
         selectedIds,
+        keepFolderIds,
       );
       if (success) clearSelection();
     },
@@ -1066,6 +1043,20 @@ export function EmbeddedQuestionBank({
     selectingAllPages,
     setSelectedIds,
   ]);
+
+  // 헤더 체크박스 = "전체 페이지 선택". 현재 페이지(20개)만이 아니라 현재 필터의
+  // 전체 문항(getWorkbenchQuestionIds)을 선택한다 → 선택→드래그로 전체를 폴더 이동
+  // 가능. 이미 전체가 선택돼 있으면 해제한다.
+  const allFilteredSelected =
+    totalCount > 0 && selectedIds.size >= totalCount;
+  const someSelected = selectedIds.size > 0 && !allFilteredSelected;
+  const handleToggleSelectAll = useCallback(() => {
+    if (allFilteredSelected) {
+      clearSelection();
+      return;
+    }
+    void handleSelectAllPages();
+  }, [allFilteredSelected, clearSelection, handleSelectAllPages]);
 
   // ─── Toolbar pieces ───
   const VIEW_MODE_OPTIONS = [
@@ -1187,7 +1178,16 @@ export function EmbeddedQuestionBank({
 
       <button
         type="button"
-        onClick={() => setBulkDeleteOpen(true)}
+        onClick={() => {
+          if (
+            !confirmNative(
+              `선택한 문제 ${selectedIds.size}문항을 삭제하시겠습니까?`,
+              "이 작업은 되돌릴 수 없습니다. 문제에 연결된 해설/시험 연결도 함께 삭제됩니다.",
+            )
+          )
+            return;
+          void handleBulkDelete();
+        }}
         disabled={selectedIds.size === 0 || bulkDeleting}
         title="삭제"
         aria-label="삭제"
@@ -1282,22 +1282,35 @@ export function EmbeddedQuestionBank({
   // 카드들을 글로우시켜 "문항을 먼저 고르세요"를 유도한다.
   const cardZoneRef = useRef<HTMLDivElement>(null);
 
+  // 페이지 이동(필터.page 변경) 시 카드 목록 맨 위로 부드럽게 스크롤한다.
+  // 최초 마운트에서는 스크롤하지 않는다(불필요한 점프 방지).
+  const pageScrollSkipRef = useRef(true);
+  useEffect(() => {
+    if (pageScrollSkipRef.current) {
+      pageScrollSkipRef.current = false;
+      return;
+    }
+    cardZoneRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [filters.page]);
+
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-      <div className="flex flex-1 items-center gap-2 min-w-0">
+      <div className="flex w-full min-w-0 flex-wrap items-center gap-2 md:w-auto md:flex-1 md:flex-nowrap">
         <SelectAllCheckbox
-          checked={isCurrentPageSelected && selectedIds.size > 0}
-          indeterminate={selectedIds.size > 0 && !isCurrentPageSelected}
-          disabled={displayedQuestions.length === 0}
-          onChange={handleSelectCurrentPage}
-          title={`${selectedIds.size}문항 선택`}
-          ariaLabel={
-            isCurrentPageSelected ? "현재 페이지 해제" : "현재 페이지 선택"
+          checked={allFilteredSelected}
+          indeterminate={someSelected}
+          disabled={(totalCount === 0 && displayedQuestions.length === 0) || selectingAllPages}
+          onChange={handleToggleSelectAll}
+          title={
+            allFilteredSelected
+              ? `전체 ${selectedIds.size}문항 선택됨 — 클릭 시 해제`
+              : `전체 ${totalCount}문항 선택`
           }
+          ariaLabel={allFilteredSelected ? "전체 해제" : "전체 페이지 선택"}
         />
         <div
           className={
-            "flex shrink-0 items-center gap-3 " +
+            "flex min-w-0 flex-wrap items-center gap-1.5 md:shrink-0 md:flex-nowrap md:gap-3 " +
             (selectedIds.size > 0 ? "" : "pointer-events-none opacity-50")
           }
           aria-disabled={selectedIds.size === 0}
@@ -1348,17 +1361,18 @@ export function EmbeddedQuestionBank({
             router.push("/director/workbench/exams/create");
           }}
           className={
-            "flex h-12 grow items-center justify-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[14px] font-bold text-white shadow-sm transition-colors " +
+            "flex h-10 min-w-[9rem] flex-[1_1_9rem] items-center justify-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[13px] font-bold text-white shadow-sm transition-colors md:h-12 md:min-w-0 md:basis-auto md:grow md:text-[14px] " +
             (selectedIds.size === 0 || creatingExam
               ? "cursor-not-allowed border-blue-200 bg-blue-300 shadow-none"
               : "cursor-pointer border-blue-600 bg-blue-600 hover:border-blue-700 hover:bg-blue-700")
           }
         >
-          <ClipboardList className="size-5" />
-          다음으로 (시험지 생성)
+          <ClipboardList className="size-4 md:size-5" />
+          <span className="md:hidden">시험지 생성</span>
+          <span className="hidden md:inline">다음으로 (시험지 생성)</span>
         </button>
       </div>
-      <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+      <div className="ml-auto flex w-full shrink-0 flex-wrap items-center justify-end gap-2 md:w-auto">
         <QuestionFiltersToolbar
           filters={filters}
           searchValue={searchValue}
@@ -1521,6 +1535,8 @@ export function EmbeddedQuestionBank({
             <div
               ref={cardZoneRef}
               className="relative min-w-0 px-4 pb-3 pt-3 sm:px-5"
+              // 페이지 이동 스크롤 시 스티키 폴더/툴바 아래에 카드 첫 줄이 오도록 여백 확보.
+              style={{ scrollMarginTop: folderStickyHeight + 56 }}
             >
               {showNavLoading ? (
                 <div className="absolute inset-0 z-10 flex items-start justify-center bg-white/55 pt-12 backdrop-blur-[1px]">
@@ -1538,6 +1554,11 @@ export function EmbeddedQuestionBank({
                 <>
                   <div className="mb-3">
                     <QuestionSetSection
+                      // 목록에선 세트 카드를 끄고 멤버를 문항당 1카드로 노출(이동주 UI 설계
+                      // — _question-where 의 inSet 필터 제거와 짝). 세트 한 장 카드는 생성
+                      // 직후 큐(bottom-queue)와 세트 상세 모달에서 유지. 섹션은 분리 모달
+                      // 등 다이얼로그 관리를 위해 남긴다.
+                      showSets={false}
                       refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
                       onCountChange={setSetCount}
                       onMemberSplit={handleSplitCreated}
@@ -1612,7 +1633,9 @@ export function EmbeddedQuestionBank({
                       (종류 불문 통합 정렬). 세트는 최신이라 1페이지에서만 끼운다. */}
                   <QuestionSetSection
                     inline
-                    showSets={currentPage === 1}
+                    // 문항당 1카드(이동주 UI) — 세트 카드는 목록에서 끄고 멤버가 일반
+                    // 카드로 흐른다. 섹션은 분리 모달 등 다이얼로그 관리용으로만 유지.
+                    showSets={false}
                     refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
                     onCountChange={setSetCount}
                     onMemberSplit={handleSplitCreated}
@@ -1690,37 +1713,6 @@ export function EmbeddedQuestionBank({
         onBack={editorCameFromDetail ? backToDetail : undefined}
       />
 
-      <AlertDialog
-        open={bulkDeleteOpen}
-        onOpenChange={(o) => {
-          if (!bulkDeleting) setBulkDeleteOpen(o);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              선택한 문제 {selectedIds.size}문항을 삭제하시겠습니까?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 문제에 연결된 해설/시험 연결도 함께
-              삭제됩니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={bulkDeleting}>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={(e) => {
-                e.preventDefault();
-                void handleBulkDelete();
-              }}
-              disabled={bulkDeleting}
-              className="bg-red-500 hover:bg-red-600"
-            >
-              {bulkDeleting ? "삭제 중..." : "삭제"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </section>
   );
 }
