@@ -12,11 +12,6 @@ import {
   shouldRenderSourcePassageInsideQuestion,
 } from "./passage-policy";
 import { isSummaryWritingSubtype } from "./summary-complete-mc-layout";
-import { isInlineSourcePassageSubtype, questionStemAndBody } from "./question-body-layout";
-import {
-  enrichSetMemberStructured,
-  setMemberDisplayPassage,
-} from "@/components/workbench/question-bank-card/set-member-passage";
 import {
   normalizeInlineText,
   normalizePassageText,
@@ -99,6 +94,13 @@ export function resolvePaperItemPassageTitle(item: PaperItem): string {
   );
 }
 
+// 장문 세트(수능 43~45처럼 지문 1회 + N문항) 멤버의 그룹 ID.
+// 같은 setId 멤버는 동일한 그룹으로 묶여 공유 지문을 한 번만 출력한다.
+function setGroupIdForQuestion(question: BuilderQuestion): string | null {
+  const setId = question.setId;
+  return setId ? `set:${setId}` : null;
+}
+
 // 이 PaperItem 이 장문 세트 멤버인지(= sourceQuestion.setId 존재).
 export function isSetMemberItem(item: PaperItem): boolean {
   return item.blockType === "question" && Boolean(item.sourceQuestion.setId);
@@ -157,25 +159,9 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
   void _existingItems;
   const localId = makeLocalId(question.id);
   const customAnswerSpaceLines = customLayoutAnswerSpaceLines(question);
-  // 장문 세트 멤버는 지문/밑줄·마커가 공유 지문 + anchor(_spans)로만 저장돼 questionText 에
-  // 지문이 없다. 어법·어휘 등 passageWith* 필드로 렌더되는 유형은, 복원 지문을 그 필드에
-  // 주입해(enrich) normalizePaperFields 가 본문에 ①②③④⑤ 등으로 baking 하게 한다.
-  // (밑줄/빈칸 유형은 baking 경로가 없어 아래 materializeSetMember 가 본문에 직접 주입한다.)
-  const questionForPaper: BuilderQuestion = question.setId
-    ? {
-        ...question,
-        structuredData:
-          enrichSetMemberStructured({
-            inSet: true,
-            setId: question.setId,
-            structuredData: question.structuredData,
-            passage: question.passage,
-          }) ?? question.structuredData,
-      }
-    : question;
   // 일반 문항의 이관된 마커 유형은 표기(마커·라벨·보기순서)를 시험지 렌더 시점에 정본화.
   // 동형·미이관·도출실패는 null → 현 동작 유지(회귀 0). 생성/DB 무영향(여기서만 변환).
-  const normalizedFields = normalizePaperFields(questionForPaper, "normalized");
+  const normalizedFields = normalizePaperFields(question, "normalized");
   const options =
     normalizedFields?.options ??
     (question.subType === "SENTENCE_INSERT"
@@ -183,21 +169,22 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
       : parseOptions(question.options));
   const isSubjective = options.length === 0;
   const effectiveQuestion = normalizedFields
-    ? { ...questionForPaper, correctAnswer: normalizedFields.correctAnswer }
-    : questionForPaper;
+    ? { ...question, correctAnswer: normalizedFields.correctAnswer }
+    : question;
   const normalizedQuestionText = normalizedFields
     ? normalizeQuestionText(normalizedFields.questionText)
-    : normalizedQuestionTextForPaper(questionForPaper);
+    : normalizedQuestionTextForPaper(question);
   const passageContent = normalizePassageText(question.passage?.content || "");
   // 요약문 영작(SUMMARY_WRITING)·주제문 영작(TOPIC_SENTENCE_WRITING)은 원본 지문을 시험지에
   // "무조건 함께" 가져온다(사용자 요구·레퍼런스 형식). 학생은 지문을 읽고 요약문/주제문을 영작한다.
   // SUMMARY_COMPLETE 와 동일하게 INLINE_SOURCE 로 처리 — 지문은 structuredSegments() 가
   // 문제 안(요약문/주제문 위)에 박스로 인라인 렌더하고, 별도 출처 지문 블록은 억제된다.
-  // 장문 세트 멤버는 materializeSetMember 가 자기완결로 마킹 지문을 주입하므로
-  // 여기서 setId 강제 분기는 두지 않는다(dongju 자기완결 렌더 채택 + 주제문 영작 강제포함 합류).
-  const includeSourcePassage =
-    isSummaryWritingSubtype(question.subType) ||
-    question.subType === "TOPIC_SENTENCE_WRITING"
+  // 장문 세트 멤버는 공유 지문을 그룹 첫머리에서 "1회"만 출력한다.
+  // 요약/주제문 영작의 단독 문항 지문 강제 포함 정책은 세트가 아닐 때만 적용한다.
+  const includeSourcePassage = question.setId
+    ? Boolean(passageContent)
+    : isSummaryWritingSubtype(question.subType) ||
+        question.subType === "TOPIC_SENTENCE_WRITING"
       ? true
       : shouldIncludeSourcePassageByDefault(question);
   const normalizedQuestion = {
@@ -214,8 +201,7 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     sourceQuestion: normalizedQuestion,
     orderNum,
     points: question.points || 1,
-    // 장문 세트 멤버도 자기완결로 렌더하므로 그룹 묶음 없이 항상 솔로("single:<localId>").
-    groupId: `single:${localId}`,
+    groupId: setGroupIdForQuestion(question) ?? `single:${localId}`,
     includePassage: includeSourcePassage,
     passageTitle: normalizeInlineText(question.passage?.title || ""),
     passageContent,
@@ -238,53 +224,7 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     blockType: "question",
     ...paperBlockDefaults(),
   };
-  return materializeSetMember(item);
-}
-
-// 장문 세트 멤버를 "자기완결" 문항으로 만든다: 발문 → 마킹(밑줄/빈칸/마커) 지문 → 선지.
-// 비세트 문항은 그대로 반환. 구조 멤버(문장삽입·순서·요약)는 자체 본문 레이아웃을 유지하고,
-// 어법/어휘처럼 enrich 로 본문이 이미 baked 된 경우도 그대로 둔다. 남은 임베디드 유형
-// (지칭·빈칸·문맥의미 등, 본문이 strip 됨)만 복원 지문을 발문 아래 본문으로 주입한다.
-const SET_MEMBER_KEEP_BODY_SUBTYPES = new Set([
-  "SENTENCE_INSERT",
-  "SENTENCE_ORDER",
-  "SUMMARY_COMPLETE_MC",
-  "SUMMARY_COMPLETE",
-  "SUMMARY_WRITING",
-  // 주제문 영작도 요약문 영작과 동일한 박스형 구조 본문([지문]/[주제 힌트]/[주제문]/
-  // [보기]/[배열 단어])을 structuredSegments 가 그리므로, 세트 멤버여도 본문을 보존한다.
-  "TOPIC_SENTENCE_WRITING",
-]);
-
-function materializeSetMember(item: PaperItem): PaperItem {
-  const setId = item.sourceQuestion.setId;
-  if (!setId) return item;
-  const subType = item.sourceQuestion.subType || "";
-  if (SET_MEMBER_KEEP_BODY_SUBTYPES.has(subType)) return item;
-
-  const marked = setMemberDisplayPassage({
-    inSet: true,
-    setId,
-    structuredData: item.sourceQuestion.structuredData,
-    passage: {
-      content: item.passageContent || item.sourceQuestion.passage?.content || "",
-    },
-  });
-  if (!marked) return item;
-
-  const { stem, body } = questionStemAndBody(item);
-  // 이미 본문(레이아웃/지문)이 있으면(enrich 로 baked 된 어법·어휘 등) 그대로 둔다.
-  if (body.trim()) return item;
-
-  // INLINE_SOURCE(주제·제목·요지·내용일치·동의어 등): 지문은 structuredSegments 가 박스로
-  // 발문 아래에 그리므로, passageContent 만 마킹본으로 교체한다.
-  if (isInlineSourcePassageSubtype(subType)) {
-    return { ...item, passageContent: marked };
-  }
-
-  // 임베디드(지칭·빈칸·문맥의미 등): 발문 아래 본문으로 마킹 지문을 주입한다.
-  const nextQuestionText = stem ? `${stem}\n\n${marked}` : marked;
-  return { ...item, questionText: nextQuestionText, passageContent: marked };
+  return item;
 }
 
 function questionWithPaperItemPassage(item: PaperItem): BuilderQuestion {
@@ -310,8 +250,13 @@ function questionWithPaperItemPassage(item: PaperItem): BuilderQuestion {
 
 export function shouldRenderSourcePassageForItem(item: PaperItem): boolean {
   if (item.blockType !== "question") return false;
-  // 세트 멤버도 일반 문항과 동일하게 유형별 규칙으로 판정한다(자기완결 렌더 —
-  // 마킹 지문은 makePaperItem.materializeSetMember 가 본문/passageContent 에 주입).
+  // 장문 세트 멤버: 공유 지문을 그룹 첫머리에서 1회만 출력한다.
+  if (isSetMemberItem(item)) {
+    const passageContent = normalizePassageText(
+      item.passageContent || item.sourceQuestion.passage?.content || "",
+    );
+    return Boolean(passageContent.trim());
+  }
   // 요약문 영작은 INLINE_SOURCE(SUMMARY_COMPLETE 와 동일) — 지문은 structuredSegments() 가 문제
   // 안에 인라인으로 그리므로 여기(별도 출처 지문 블록)에서는 그리지 않는다(중복 방지).
   if (shouldRenderSourcePassageInsideQuestion(item.sourceQuestion.subType)) return false;

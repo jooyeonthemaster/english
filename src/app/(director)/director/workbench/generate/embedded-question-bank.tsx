@@ -64,6 +64,7 @@ import {
 } from "@/actions/workbench";
 import { createExam } from "@/actions/exams";
 import { QuestionSetSection } from "@/components/workbench/question-set-section";
+import { getAcademyQuestionSetMemberMap } from "@/actions/question-sets";
 import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
 
 import { confirmNative } from "@/lib/browser-confirm";
@@ -342,6 +343,13 @@ export function EmbeddedQuestionBank({
 
   // ─── Folder manager (client-side, like QuestionBankClient) ───
   const [collectionsLoaded, setCollectionsLoaded] = useState(false);
+  const [setMemberMap, setSetMemberMap] = useState<Record<string, string>>({});
+  useEffect(() => {
+    getAcademyQuestionSetMemberMap()
+      .then(setSetMemberMap)
+      .catch(() => {});
+  }, [setRefreshKey]);
+
   const folders = useFolderManager({
     initialCollections: [],
     initialMembership: {},
@@ -353,9 +361,9 @@ export function EmbeddedQuestionBank({
       removeFromCollection: removeQuestionsFromCollection,
     },
     itemLabel: "문제",
-    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
-    // 세트 멤버는 목록에 문항당 1카드로 노출되므로(이동주 UI) 카운트도 멤버 수 그대로
-    // — 보이는 카드 수와 배지가 일치한다.
+    questionSetIdOf: (id) => setMemberMap[id] ?? null,
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거). 세트 멤버는
+    // questionSetIdOf 로 한 세트를 1개로 접어, 실제 카드 단위와 배지를 맞춘다.
     cumulativeCounts: true,
   });
 
@@ -500,8 +508,8 @@ export function EmbeddedQuestionBank({
   }, [queueCounts.done, open, loadQuestions]);
 
   // ── 지문 세트 ── 일반 문항과 별개의 전용 섹션(QuestionSetSection)이 세트를 한 장의
-  // 카드로 묶어 보여준다. 여기선 빈-상태 판정용 세트 수만 추적한다.
-  const [setCount, setSetCount] = useState(0);
+  // 카드로 묶어 보여준다. null 은 아직 세트 목록 로딩 전이라 빈 상태를 확정하지 않는다.
+  const [setCount, setSetCount] = useState<number | null>(null);
 
   // Debounced spinner so fast loads don't flash.
   useEffect(() => {
@@ -1551,23 +1559,20 @@ export function EmbeddedQuestionBank({
               {queueStrip}
 
               {isGrouped ? (
-                <>
-                  <div className="mb-3">
-                    <QuestionSetSection
-                      // 목록에선 세트 카드를 끄고 멤버를 문항당 1카드로 노출(이동주 UI 설계
-                      // — _question-where 의 inSet 필터 제거와 짝). 세트 한 장 카드는 생성
-                      // 직후 큐(bottom-queue)와 세트 상세 모달에서 유지. 섹션은 분리 모달
-                      // 등 다이얼로그 관리를 위해 남긴다.
-                      showSets={false}
-                      refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
-                      onCountChange={setSetCount}
-                      onMemberSplit={handleSplitCreated}
-                      selectedQuestionIds={selectedIds}
-                      onToggleSetSelection={handleToggleSetSelection}
-                      collectionId={folders.activeFolder ?? undefined}
-                      gridClassName={`grid items-start gap-3 ${
-                        gridCols === 2
-                          ? "grid-cols-1 md:grid-cols-2"
+                  <>
+                    <div className="mb-3">
+                      <QuestionSetSection
+                        showSets={currentPage === 1}
+                        refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
+                        onCountChange={setSetCount}
+                        onMemberSplit={handleSplitCreated}
+                        selectedQuestionIds={selectedIds}
+                        onToggleSetSelection={handleToggleSetSelection}
+                        collectionId={folders.activeFolder ?? undefined}
+                        filters={effectiveFilters}
+                        gridClassName={`grid items-start gap-3 ${
+                          gridCols === 2
+                            ? "grid-cols-1 md:grid-cols-2"
                           : gridCols === 3
                             ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
                             : "grid-cols-1"
@@ -1633,15 +1638,14 @@ export function EmbeddedQuestionBank({
                       (종류 불문 통합 정렬). 세트는 최신이라 1페이지에서만 끼운다. */}
                   <QuestionSetSection
                     inline
-                    // 문항당 1카드(이동주 UI) — 세트 카드는 목록에서 끄고 멤버가 일반
-                    // 카드로 흐른다. 섹션은 분리 모달 등 다이얼로그 관리용으로만 유지.
-                    showSets={false}
+                    showSets={currentPage === 1}
                     refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
                     onCountChange={setSetCount}
                     onMemberSplit={handleSplitCreated}
                     selectedQuestionIds={selectedIds}
                     onToggleSetSelection={handleToggleSetSelection}
                     collectionId={folders.activeFolder ?? undefined}
+                    filters={effectiveFilters}
                     normalItems={displayedQuestions.map((q, idx) => {
                       const startIdx = (currentPage - 1) * PAGE_SIZE;
                       return {

@@ -31,7 +31,7 @@ export async function getQuestionCollections(academyId: string) {
   const setsByCol = new Map<string, Set<string>>();
   for (const it of items) {
     const q = it.question;
-    if (q.inSet && q.setId) {
+    if (q.setId) {
       let s = setsByCol.get(it.collectionId);
       if (!s) {
         s = new Set<string>();

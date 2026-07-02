@@ -21,6 +21,7 @@ import {
   splitQuestionSetMember,
   type QuestionSetForRender,
 } from "@/actions/question-sets";
+import type { WorkbenchQuestionFilters } from "@/actions/workbench/_types";
 import {
   approveWorkbenchQuestion,
   unapproveWorkbenchQuestion,
@@ -42,6 +43,7 @@ export function QuestionSetSection({
   selectedQuestionIds,
   onToggleSetSelection,
   collectionId,
+  filters,
 }: {
   /** 값이 바뀌면 세트를 다시 불러온다(생성 완료 신호 등). */
   refreshKey?: unknown;
@@ -73,6 +75,8 @@ export function QuestionSetSection({
   onToggleSetSelection?: (memberQuestionIds: string[], select: boolean) => void;
   /** 활성 폴더 id — 있으면 그 폴더에 멤버가 속한 세트만 표시(일반 문제와 동일). 미지정 시 전체. */
   collectionId?: string;
+  /** 일반 문제 목록과 동일한 필터로 세트 노출 여부를 맞춘다. */
+  filters?: WorkbenchQuestionFilters;
 }) {
   const [sets, setSets] = useState<QuestionSetForRender[]>([]);
   // 분리 진행 중인 멤버 questionId(스피너 표시용). 분리는 세트를 바꾸지 않고 복제본만
@@ -86,7 +90,7 @@ export function QuestionSetSection({
 
   const refresh = useCallback(async () => {
     try {
-      const data = await listQuestionSets({ limit: 50, collectionId });
+      const data = await listQuestionSets({ limit: 50, collectionId, filters });
       setSets(data);
       // 카운트는 여기서 부모에 보고(effect 내 동기 setState 회피).
       onCountChange?.(data.length);
@@ -94,7 +98,7 @@ export function QuestionSetSection({
       setSets([]);
       onCountChange?.(0);
     }
-  }, [onCountChange, collectionId]);
+  }, [onCountChange, collectionId, filters]);
 
   useEffect(() => {
     // 마운트/refreshKey 변경 시 데이터 페치.

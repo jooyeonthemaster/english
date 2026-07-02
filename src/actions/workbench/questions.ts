@@ -348,9 +348,9 @@ export async function getWorkbenchQuestionsGroupedByPassage(
         updatedAt: true,
         school: { select: { id: true, name: true } },
         analysis: { select: { id: true, updatedAt: true } },
-        // 휴지통 가드 — "(전체 N)" 배지가 아래 카드 목록(questionWhere)과 같은 집합을 세도록
-        // deletedAt:null 로 맞춘다(세트 멤버도 이제 일반 카드로 노출되므로 함께 센다).
-        _count: { select: { questions: { where: { deletedAt: null } } } },
+        // 휴지통/세트 가드 — "(전체 N)" 배지가 아래 카드 목록(questionWhere)과 같은 집합을
+        // 세도록 맞춘다. 세트 멤버는 별도 QuestionSetSection 카드로 렌더한다.
+        _count: { select: { questions: { where: { deletedAt: null, setId: null } } } },
         questions: {
           where: questionWhere,
           include: {

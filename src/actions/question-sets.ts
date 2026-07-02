@@ -9,6 +9,7 @@ import { buildGeneratedQuestionText } from "@/lib/question-generation-persistenc
 import { resolvePreset } from "@/lib/question-sets/presets";
 import { reconstructPassageView } from "@/lib/question-sets/reconstruct";
 import type { Anchor, LayoutDescriptor } from "@/lib/question-sets/types";
+import type { WorkbenchQuestionFilters } from "@/actions/workbench/_types";
 
 type SetWithItems = Prisma.QuestionSetGetPayload<{
   include: {
@@ -64,6 +65,42 @@ function parseJson<T>(value: string | null): T | null {
   } catch {
     return null;
   }
+}
+
+function setMemberQuestionWhere(
+  academyId: string,
+  filters?: WorkbenchQuestionFilters,
+  collectionId?: string,
+): Prisma.QuestionWhereInput {
+  const where: Prisma.QuestionWhereInput = {
+    academyId,
+    deletedAt: null,
+    setId: { not: null },
+  };
+
+  if (filters?.type) {
+    const types = filters.type.split(",").filter(Boolean);
+    where.type = types.length > 1 ? { in: types } : types[0];
+  }
+  if (filters?.subType) {
+    const subs = filters.subType.split(",").filter(Boolean);
+    where.subType = subs.length > 1 ? { in: subs } : subs[0];
+  }
+  if (filters?.difficulty) where.difficulty = filters.difficulty;
+  if (filters?.passageId) where.passageId = filters.passageId;
+  if (filters?.tags) where.tags = { contains: filters.tags };
+  if (filters?.aiGenerated !== undefined) where.aiGenerated = filters.aiGenerated;
+  if (filters?.approved !== undefined) where.approved = filters.approved;
+  if (filters?.starred !== undefined) where.starred = filters.starred;
+  if (filters?.search) {
+    where.questionText = { contains: filters.search, mode: "insensitive" };
+  }
+  const effectiveCollectionId = collectionId ?? filters?.collectionId;
+  if (effectiveCollectionId) {
+    where.collectionItems = { some: { collectionId: effectiveCollectionId } };
+  }
+
+  return where;
 }
 
 /** Load a 장문 세트 with its ordered members for rendering. Academy-scoped. */
@@ -148,12 +185,18 @@ export async function listQuestionSets(opts: {
   passageId?: string;
   jobId?: string;
   limit?: number;
+  filters?: WorkbenchQuestionFilters;
   /** 활성 폴더 id — 있으면 그 폴더에 멤버가 속한 세트만 반환(일반 문제와 동일한 컬렉션 조인).
    *  미지정 시 전체 세트(기존 동작). 세트는 원자적이라 폴더에 멤버 1개만 있어도 세트 전체를 표시. */
   collectionId?: string;
 }): Promise<QuestionSetForRender[]> {
   const staff = await getStaffSession();
   if (!staff) return [];
+  const memberWhere = setMemberQuestionWhere(
+    staff.academyId,
+    opts.filters,
+    opts.collectionId,
+  );
 
   const sets = await prisma.questionSet.findMany({
     where: {
@@ -167,18 +210,7 @@ export async function listQuestionSets(opts: {
             ],
           }
         : {}),
-      ...(opts.collectionId
-        ? {
-            items: {
-              some: {
-                question: {
-                  deletedAt: null,
-                  collectionItems: { some: { collectionId: opts.collectionId } },
-                },
-              },
-            },
-          }
-        : {}),
+      items: { some: { question: memberWhere } },
     },
     orderBy: { createdAt: "desc" },
     take: opts.limit ?? 50,

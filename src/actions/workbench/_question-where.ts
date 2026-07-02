@@ -5,6 +5,11 @@ import type { WorkbenchQuestionFilters } from "./_types";
 // 함수만 export 할 수 있어 상수를 이 플레인 모듈에 둔다(서버 액션·클라이언트 공용).
 export const BUILDER_PAGE_SIZE = 100;
 
+type QuestionWhereOptions = {
+  /** True for surfaces that intentionally operate on individual set members, such as the exam builder. */
+  includeSetMembers?: boolean;
+};
+
 // 문제 조회 where 빌더 — 문제은행/지문별 뷰/시험지 빌더 피커가 공유한다. "use server"
 // 모듈에서는 동기 헬퍼를 export 할 수 없으므로(모든 export 가 async 여야 함) 이 순수
 // 모듈로 분리해 questions.ts(문제은행)와 exam-paper-builder.ts(빌더)가 함께 import 한다.
@@ -12,6 +17,7 @@ export function buildWorkbenchQuestionWhere(
   academyId: string,
   filters?: WorkbenchQuestionFilters,
   scope: "active" | "trash" = "active",
+  options: QuestionWhereOptions = {},
 ): Prisma.QuestionWhereInput {
   const where: Prisma.QuestionWhereInput = { academyId };
 
@@ -20,11 +26,10 @@ export function buildWorkbenchQuestionWhere(
   // 이 한 줄을 빼먹으면 삭제된 문제가 문제은행/지문별 뷰/빌더 피커에 새어나간다.
   where.deletedAt = scope === "trash" ? { not: null } : null;
 
-  // 세트 멤버도 활성 문제은행에선 "일반 문항 카드"로 노출한다(표시 통일). 멤버는
-  // 자체 passage·structuredData·options·해설을 모두 보유하므로 일반 카드로 충실히
-  // 렌더된다(세트로 묶어 한 장으로 보여주던 것 → 문항당 1카드). 휴지통 목록은
-  // 기존 동작을 유지해 세트 멤버를 제외한다(복원 동선 단순화).
-  if (scope === "trash") where.inSet = false;
+  // 기본 워크벤치 목록은 세트 멤버를 일반 문항 카드로 중복 노출하지 않는다.
+  // 세트는 QuestionSetSection 이 한 장 카드로 렌더하고, 시험지 빌더처럼 멤버 ID가
+  // 필요한 표면만 includeSetMembers=true 로 명시적으로 opt-in 한다.
+  if (!options.includeSetMembers) where.setId = null;
 
   if (filters?.type) {
     // Support comma-separated multi-type: "MULTIPLE_CHOICE,SHORT_ANSWER"
@@ -59,7 +64,9 @@ export function buildBuilderQuestionWhere(
   academyId: string,
   filters?: WorkbenchQuestionFilters,
 ): Prisma.QuestionWhereInput {
-  const where = buildWorkbenchQuestionWhere(academyId, filters, "active");
+  const where = buildWorkbenchQuestionWhere(academyId, filters, "active", {
+    includeSetMembers: true,
+  });
   const q = filters?.search?.trim();
   if (q) {
     delete where.questionText;

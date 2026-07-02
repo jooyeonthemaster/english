@@ -50,6 +50,8 @@ export function memberToBankItem(
     aiGenerated: true,
     approved: member.approved,
     starred: false,
+    inSet: true,
+    setId: set.id,
     createdAt: set.createdAt,
     passage:
       set.passageId && set.passageTitle != null
