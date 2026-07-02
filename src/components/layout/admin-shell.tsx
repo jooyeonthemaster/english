@@ -234,7 +234,15 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
   }, []);
 
   const isDirector = displayStaff.role === "DIRECTOR";
-  const navGroups = useMemo(() => getNavGroups(basePath), [basePath]);
+  // 워크스페이스 상호 격리 — /director/korean/** 안에서는 국어 메뉴만,
+  // 그 밖(영어)에서는 국어 그룹이 아예 없는 사이드바를 쓴다(유저 확정).
+  const navWorkspace = pathname.startsWith(`${basePath}/korean`)
+    ? ("korean" as const)
+    : ("default" as const);
+  const navGroups = useMemo(
+    () => getNavGroups(basePath, navWorkspace),
+    [basePath, navWorkspace],
+  );
 
   const filteredGroups: NavGroup[] = useMemo(
     () =>

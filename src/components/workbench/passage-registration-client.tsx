@@ -66,7 +66,16 @@ export function PassageRegistrationClient({
   schools,
   initialDraftIds,
   initialPassageIds,
-}: PassageRegistrationProps) {
+  subjectScope,
+}: PassageRegistrationProps & {
+  /**
+   * 과목 스코프 — "KOREAN" 이면 국어 학습지 생성 라우트(/director/korean/passages/create)
+   * 에서 렌더된다. 미전달(undefined) = 영어 기본(기존 동작 한 줄도 안 바뀜, 무회귀).
+   * 지원되는 생성 액션(직접입력·변형 = createDirectInputPassageMaterial)에 subject 를
+   * 전파해 새 지문이 Passage.subject="KOREAN" 으로 적재되게 한다.
+   */
+  subjectScope?: "KOREAN";
+}) {
   const [bulkAnalyzing, setBulkAnalyzing] = useState(false);
 
   // Form collapse state
@@ -382,6 +391,9 @@ export function PassageRegistrationClient({
           sourcePassageId: args.sourcePassageId ?? undefined,
           variantKind: args.mode,
           variantDirection: args.direction,
+          // 국어 라우트에서 만든 변형 지문은 Passage.subject="KOREAN" 으로 적재해
+          // 국어 화면에서만 보이게 한다. 미전달(영어) = 기존 영어 버킷 그대로(무회귀).
+          subject: subjectScope,
         });
         if (!result?.success || !result.id) {
           toast.error(result?.error || "변형 지문 저장에 실패했습니다.");
@@ -402,7 +414,7 @@ export function PassageRegistrationClient({
         return false;
       }
     },
-    [loadPassages],
+    [loadPassages, subjectScope],
   );
 
   // ─── Extraction (이미지·PDF) — 문제생성과 동일하게 자동 승격 후 내 지문함 반영 ───
@@ -708,6 +720,8 @@ export function PassageRegistrationClient({
                 tags: sharedTags,
                 sourceDraftId: row.sourceDraftId ?? undefined,
                 annotations,
+                // 국어 라우트 등록이면 Passage.subject="KOREAN" 태깅(국어 지문함 노출).
+                subject: subjectScope,
               });
               if (!result.success || !result.id) {
                 throw new Error(result.error || "CREATE_FAILED");

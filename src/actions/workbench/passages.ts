@@ -5,7 +5,8 @@ import { revalidatePath } from "next/cache";
 import { requireAuth, getAcademyId } from "./_helpers";
 import { buildDuplicateIndex } from "@/lib/duplicate-detection";
 import { DIRECT_INPUT_PASSAGE_SOURCE } from "@/lib/passage-source";
-import { PRIME_REPORT_MARKER } from "./passage-constants";
+import { buildWorkbenchPassageWhere } from "./_passage-where";
+import { PRIME_REPORT_MARKERS } from "./passage-constants";
 import type {
   WorkbenchPassageFilters,
   ActionResult,
@@ -24,6 +25,11 @@ const DIRECT_INPUT_MATERIAL_LABEL = "직접 붙여넣은 지문";
 /** Sentinel `SourceMaterial.contentHash`. The `@@unique([academyId, contentHash])`
  *  index makes find-or-create return the single shared bucket per academy. */
 const DIRECT_INPUT_MATERIAL_HASH = "__SMOAT_DIRECT_INPUT_TEXT__";
+/** 국어 직접입력 버킷 — 과목별 버킷 분리. 센티널 해시가 다르므로
+ *  `@@unique([academyId, contentHash])` 아래에서 영어 버킷과 독립적으로
+ *  find-or-create 된다 (기존 영어 버킷·기존 지문 무접촉). */
+const DIRECT_INPUT_MATERIAL_LABEL_KO = "직접 붙여넣은 지문(국어)";
+const DIRECT_INPUT_MATERIAL_HASH_KO = "__SMOAT_DIRECT_INPUT_TEXT_KO__";
 /** `ExtractionJob.sourceType` marker for the text bucket (vs "PDF" | "IMAGES"). */
 const DIRECT_INPUT_SOURCE_TYPE = "TEXT";
 
@@ -32,56 +38,9 @@ const DIRECT_INPUT_SOURCE_TYPE = "TEXT";
 // Passage CRUD (Workbench)
 // ---------------------------------------------------------------------------
 
-// Shared `where` builder for the workbench passage list. Extracted so the
-// paginated list (getWorkbenchPassages) and the "전체 페이지 선택" id fetch
-// (getWorkbenchPassageIds) always scope to the SAME population — otherwise
-// 전체 선택이 목록에 없던 지문을 잡거나 일부를 빠뜨릴 수 있다.
-function buildWorkbenchPassageWhere(
-  academyId: string,
-  filters?: WorkbenchPassageFilters,
-): Record<string, unknown> {
-  const where: Record<string, unknown> = { academyId };
-
-  if (filters?.schoolId) where.schoolId = filters.schoolId;
-  if (filters?.grade) where.grade = filters.grade;
-  if (filters?.semester) where.semester = filters.semester;
-  if (filters?.publisher) where.publisher = filters.publisher;
-  if (filters?.sourceMaterialId) where.sourceMaterialId = filters.sourceMaterialId;
-  if (filters?.collectionId) {
-    where.collectionItems = { some: { collectionId: filters.collectionId } };
-  }
-  if (filters?.hasReport) {
-    // 생성이 완료된 학습지 = PRIME 분석 보고서가 존재하는 지문(soft-delete 제외).
-    where.reports = {
-      some: { generationPlan: PRIME_REPORT_MARKER, deletedAt: null },
-    };
-  }
-  if (filters?.search) {
-    where.OR = [
-      { title: { contains: filters.search, mode: "insensitive" } },
-      { content: { contains: filters.search, mode: "insensitive" } },
-    ];
-  }
-  if (filters?.analyzedOnly) {
-    if (filters?.includeDirectInput) {
-      // Analysis-complete passages OR direct-paste passages (which have no
-      // analysis yet). Pushed onto `where.AND` so it composes correctly with
-      // the `where.OR` search predicate above instead of overwriting it.
-      const analyzedOrDirectInput = {
-        OR: [
-          { analysis: { isNot: null } },
-          { source: DIRECT_INPUT_PASSAGE_SOURCE },
-        ],
-      };
-      where.AND = Array.isArray(where.AND)
-        ? [...where.AND, analyzedOrDirectInput]
-        : [analyzedOrDirectInput];
-    } else {
-      where.analysis = { isNot: null };
-    }
-  }
-  return where;
-}
+// buildWorkbenchPassageWhere 는 plain 모듈(_passage-where.ts)로 이동 —
+// "use server" 파일은 async export 만 허용하므로, API 라우트·유닛테스트와
+// where 규약(과목 스코프 포함)을 공유하려면 밖에 있어야 한다.
 
 /**
  * Return EVERY passage id matching `filters` (no pagination), academy-scoped.
@@ -139,7 +98,7 @@ export async function getWorkbenchPassages(
         analysis: { select: { id: true, updatedAt: true, analysisData: true } },
         // 카드에 "학습지 생성/수정 시각"(연월일시분)을 띄우기 위한 최신 PRIME 보고서.
         reports: {
-          where: { generationPlan: PRIME_REPORT_MARKER, deletedAt: null },
+          where: { generationPlan: { in: PRIME_REPORT_MARKERS }, deletedAt: null },
           orderBy: { updatedAt: "desc" },
           take: 1,
           select: { createdAt: true, updatedAt: true, lastEditedAt: true },
@@ -370,6 +329,9 @@ export async function createWorkbenchPassage(
           publisher: data.publisher || null,
           difficulty: data.difficulty || null,
           tags: data.tags ? JSON.stringify(data.tags) : null,
+          // 과목 태깅 — 국어 라우트 등록만 'KOREAN'. 미지정이면 subject 미포함(조건부
+          // spread)이라 영어 등록은 종전과 동일(무회귀). passages.subject 규약.
+          ...(data.subject ? { subject: data.subject } : {}),
           ...(annotationRows.length > 0
             ? { notes: { create: annotationRows } }
             : {}),
@@ -478,6 +440,12 @@ export async function createDirectInputPassageMaterial(data: {
   difficultyOverride?: string | null;
   /** Passage.tags(JSON 배열 문자열)에 저장할 태그들 — 변형본 식별·필터용. */
   tags?: string[];
+  /**
+   * 지문 과목 — 미지정/"ENGLISH" = 기존 영어 경로 그대로(무회귀),
+   * "KOREAN" = 국어 전용 직접입력 버킷에 적재 + Passage.subject="KOREAN" 저장.
+   * 갈래 태그(KO_KIND:*)는 호출부가 `tags` 로 함께 넘긴다.
+   */
+  subject?: "ENGLISH" | "KOREAN";
 }): Promise<ActionResult> {
   try {
     const staff = await requireAuth();
@@ -493,6 +461,16 @@ export async function createDirectInputPassageMaterial(data: {
       };
     }
 
+    // 국어 지문이면 과목별 직접입력 버킷(라벨·센티널 해시)을 쓴다. 그 외에는
+    // 기존 영어 버킷 그대로 — 분기 밖 로직은 과목 무관 공통.
+    const isKorean = data.subject === "KOREAN";
+    const materialLabel = isKorean
+      ? DIRECT_INPUT_MATERIAL_LABEL_KO
+      : DIRECT_INPUT_MATERIAL_LABEL;
+    const materialHash = isKorean
+      ? DIRECT_INPUT_MATERIAL_HASH_KO
+      : DIRECT_INPUT_MATERIAL_HASH;
+
     // 변형본이면 원본 메타를 academy 스코프로 조회해 승계한다.
     const sourcePassage = data.sourcePassageId
       ? await prisma.passage.findFirst({
@@ -505,9 +483,15 @@ export async function createDirectInputPassageMaterial(data: {
             publisher: true,
             difficulty: true,
             tags: true,
+            subject: true,
           },
         })
       : null;
+
+    // Passage.subject — 명시 "KOREAN" 이거나 원본(변형본 저장)이 국어면 국어로
+    // 저장. 그 외에는 미기록(null=영어 간주 관례, 기존 행과 동일).
+    const passageSubject =
+      isKorean || sourcePassage?.subject === "KOREAN" ? "KOREAN" : undefined;
 
     // 난이도 변형(EASIER/HARDER)이면 서버에서 정규 CEFR 래더로 한 칸 이동한다 —
     // 명시 difficultyOverride 가 우선, 없으면 방향 기반 시프트. 두 변형 표면이
@@ -543,7 +527,7 @@ export async function createDirectInputPassageMaterial(data: {
         // 1) Shared "직접 붙여넣은 지문" SourceMaterial — one per academy.
         //    The sentinel contentHash + unique index makes this find-or-create.
         let material = await tx.sourceMaterial.findFirst({
-          where: { academyId, contentHash: DIRECT_INPUT_MATERIAL_HASH },
+          where: { academyId, contentHash: materialHash },
           select: { id: true },
         });
         if (!material) {
@@ -551,10 +535,10 @@ export async function createDirectInputPassageMaterial(data: {
             data: {
               academyId,
               type: "HANDOUT",
-              title: DIRECT_INPUT_MATERIAL_LABEL,
-              customLabel: DIRECT_INPUT_MATERIAL_LABEL,
-              subject: "ENGLISH",
-              contentHash: DIRECT_INPUT_MATERIAL_HASH,
+              title: materialLabel,
+              customLabel: materialLabel,
+              subject: isKorean ? "KOREAN" : "ENGLISH",
+              contentHash: materialHash,
               createdById,
             },
             select: { id: true },
@@ -578,8 +562,8 @@ export async function createDirectInputPassageMaterial(data: {
               createdById,
               sourceType: DIRECT_INPUT_SOURCE_TYPE,
               mode: "PASSAGE_ONLY",
-              displayName: DIRECT_INPUT_MATERIAL_LABEL,
-              originalFileName: DIRECT_INPUT_MATERIAL_LABEL,
+              displayName: materialLabel,
+              originalFileName: materialLabel,
               sourceMaterialId: material.id,
               status: "COMPLETED",
               totalPages: 0,
@@ -601,6 +585,8 @@ export async function createDirectInputPassageMaterial(data: {
             content,
             source: DIRECT_INPUT_PASSAGE_SOURCE,
             sourceMaterialId: material.id,
+            // 과목 — 국어일 때만 기록 (undefined = 기존 영어 지문과 동일하게 null).
+            ...(passageSubject ? { subject: passageSubject } : {}),
             ...(sourcePassage
               ? {
                   schoolId: sourcePassage.schoolId,

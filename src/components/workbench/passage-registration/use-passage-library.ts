@@ -33,6 +33,12 @@ interface UsePassageLibraryArgs {
   academyId: string;
   /** Switch the intake surface to the 내 지문함 (library) view. */
   onShowLibrary?: () => void;
+  /**
+   * 과목 스코프 — "KOREAN"=국어 지문(subject='KOREAN')만 로드·직접입력 저장·새
+   * 폴더 생성. 미전달(undefined)=영어 기존 동작 그대로(로드 URL 바이트 동일,
+   * INSERT 에 subject 미포함 → 무회귀). 웹툰 국어 라우트의 지문 picker 가 켠다.
+   */
+  subjectScope?: "KOREAN";
 }
 
 /**
@@ -44,6 +50,7 @@ interface UsePassageLibraryArgs {
 export function usePassageLibrary({
   academyId,
   onShowLibrary,
+  subjectScope,
 }: UsePassageLibraryArgs) {
   // ── Passage data ──
   const [passages, setPassages] = useState<PassageItem[]>([]);
@@ -87,19 +94,30 @@ export function usePassageLibrary({
   const loadPassages = useCallback(async () => {
     setLoadingPassages(true);
     try {
+      // 국어 스코프면 scope=KOREAN 을 실어 국어 지문만 받는다(전체선택 population 도
+      // 서버에서 동일 스코프로 좁혀짐). 미전달(영어)은 파라미터를 붙이지 않아 URL 이
+      // 기존과 바이트 동일 → 무회귀.
+      const scopeQuery = subjectScope === "KOREAN" ? "&scope=KOREAN" : "";
       const response = await fetch(
-        `/api/passages/list?academyId=${academyId}&includeUnreviewed=true`,
+        `/api/passages/list?academyId=${academyId}&includeUnreviewed=true${scopeQuery}`,
       );
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || data?.error) {
+        throw new Error(data?.error || "지문 목록을 불러오지 못했습니다.");
+      }
       setPassages(data.passages || []);
       if (data.filters) setFilterOptions(data.filters);
       if (data.collections) setCollections(data.collections);
-    } catch {
-      /* ignore */
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "지문 목록을 불러오지 못했습니다.",
+      );
     } finally {
       setLoadingPassages(false);
     }
-  }, [academyId]);
+  }, [academyId, subjectScope]);
 
   const filteredPassages = useMemo(() => {
     const result = passages.filter((p) => {
@@ -258,6 +276,11 @@ export function usePassageLibrary({
           const result = await createDirectInputPassageMaterial({
             title,
             content: r.content,
+            // 국어 스코프면 subject='KOREAN' 으로 저장 → 국어 지문함에만 나타난다.
+            // 미전달(영어)은 subject 없이 기존 INSERT(무회귀).
+            ...(subjectScope === "KOREAN"
+              ? { subject: "KOREAN" as const }
+              : {}),
           });
           if (result?.success && result.id) createdIds.push(result.id);
         }
@@ -285,7 +308,7 @@ export function usePassageLibrary({
         setPasteSaving(false);
       }
     },
-    [loadPassages, onShowLibrary],
+    [loadPassages, onShowLibrary, subjectScope],
   );
 
   // ── Collections ──
@@ -296,6 +319,7 @@ export function usePassageLibrary({
       const result = await createPassageCollection({
         name: trimmed,
         parentId: parentId || undefined,
+        ...(subjectScope === "KOREAN" ? { subject: "KOREAN" as const } : {}),
       });
       if (!result.success) {
         toast.error(result.error || "폴더 생성 실패");
@@ -316,7 +340,7 @@ export function usePassageLibrary({
       void loadPassages();
       return result.id;
     },
-    [loadPassages],
+    [loadPassages, subjectScope],
   );
 
   const handleCopyPassagesToCollection = useCallback(

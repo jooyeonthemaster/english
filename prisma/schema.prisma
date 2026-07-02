@@ -3465,6 +3465,12 @@ model WebtoonCollection {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  /// 폴더 과목 — null=ENGLISH(기존 폴더 전부·영어 경로 무회귀), "KOREAN"=국어.
+  /// passages.subject·passage_collections.subject 와 동일 규약. DB 반영은 surgical
+  /// ALTER 관례(scripts/sql/ko-collections-subject.sql — migrate deploy / db push 금지):
+  ///   ALTER TABLE webtoon_collections ADD COLUMN IF NOT EXISTS subject TEXT;
+  subject String?
+
   academy  Academy                 @relation(fields: [academyId], references: [id])
   parent   WebtoonCollection?      @relation("WebtoonFolderTree", fields: [parentId], references: [id], onDelete: SetNull)
   children WebtoonCollection[]     @relation("WebtoonFolderTree")

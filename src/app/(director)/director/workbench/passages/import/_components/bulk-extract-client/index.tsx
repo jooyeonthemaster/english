@@ -40,8 +40,16 @@ export function BulkExtractClient({
   initialCreditBalance,
   initialCollections,
   initialCollectionMembership,
+  subjectScope,
 }: Props) {
   void initialCreditBalance;
+
+  // 국어 라우트면 이어하기(resume)·자료 관리 임베드를 국어 경로로 스코프한다.
+  // 미전달=영어 기본 경로(무회귀). 게이트-먼저-영어.
+  const jobsRoutePath =
+    subjectScope === "KOREAN"
+      ? "/director/korean/extraction/jobs"
+      : "/director/workbench/passages/import/jobs";
 
   const router = useRouter();
   const phase = useExtractionStore((s) => s.phase);
@@ -172,15 +180,13 @@ export function BulkExtractClient({
         "jobId",
       );
       if (resumeJobId) {
-        router.replace(
-          `/director/workbench/passages/import/jobs?jobId=${resumeJobId}`,
-        );
+        router.replace(`${jobsRoutePath}?jobId=${resumeJobId}`);
         return;
       }
     }
 
     setPhase("idle");
-  }, [router, setMode, setPhase]);
+  }, [router, setMode, setPhase, jobsRoutePath]);
 
   // (추출 완료 후 자료 관리 페이지로 자동 이동하던 동선은 제거 — 사용자가 이 페이지에
   //  머무르며 큐(작업 목록)에서 직접 결과를 확인한다.)
@@ -433,6 +439,9 @@ export function BulkExtractClient({
       originalFileName: sourceName,
       mode: "PASSAGE_ONLY",
       outputMode: adaptiveIntake ? outputMode : undefined,
+      // 국어 라우트면 subject="KOREAN"을 실어 잡 metadata.subject 로 전파 —
+      // 승급 Passage 가 국어로 스코프된다(미전달 시 영어 승급 누수 방지).
+      subject: subjectScope,
       previewSlot: slots[0] ?? null,
     });
     if (nextJobId) {
@@ -459,6 +468,7 @@ export function BulkExtractClient({
       sourceName,
       sourceType,
       startUpload,
+      subjectScope,
     ],
   );
 
@@ -488,6 +498,8 @@ export function BulkExtractClient({
           body: JSON.stringify({
             mode: "PASSAGE_ONLY",
             outputMode: adaptiveIntake ? outputMode : undefined,
+            // 국어 라우트면 subject="KOREAN" — 텍스트 잡도 국어로 스코프.
+            subject: subjectScope,
             passages: cleaned,
           }),
         });
@@ -514,6 +526,7 @@ export function BulkExtractClient({
       setError,
       setJobId,
       setPhase,
+      subjectScope,
     ],
   );
 
@@ -636,6 +649,7 @@ export function BulkExtractClient({
           refreshToken={manageRefreshToken}
           pageBleed={false}
           showJobListRow={false}
+          subjectScope={subjectScope}
         />
       </div>
     </div>

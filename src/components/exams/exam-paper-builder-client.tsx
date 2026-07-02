@@ -63,6 +63,7 @@ export function ExamPaperBuilderClient({
   classes,
   schools,
   initialExam = null,
+  subjectScope,
 }: ExamPaperBuilderClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -394,7 +395,13 @@ export function ExamPaperBuilderClient({
     void (async () => {
       try {
         const [cols, membership] = await Promise.all([
-          getQuestionCollections(academyId),
+          // 과목 스코프 유지 — 국어 편집이면 하이드레이트도 국어 폴더만 받아
+          // SSR 초기 폴더 목록(getExamPaperBuilderData)이 영어 폴더로 덮이지
+          // 않게 한다. 영어(미지정)는 종전 호출과 동일.
+          getQuestionCollections(
+            academyId,
+            subjectScope ? { subject: subjectScope } : undefined,
+          ),
           getAcademyQuestionCollectionMembership(academyId),
         ]);
         if (cancelled) return;
@@ -412,7 +419,7 @@ export function ExamPaperBuilderClient({
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [academyId]);
+  }, [academyId, subjectScope]);
 
   // 현재 필터 상태 → 서버 조회 파라미터. 폴더 활성값은 collectionId 로 서버에 전달한다.
   const buildListFilters = useCallback(
@@ -420,6 +427,9 @@ export function ExamPaperBuilderClient({
       page: targetPage,
       limit: BUILDER_PAGE_SIZE,
       sort,
+      // 과목 스코프 — 국어 시험지 편집이면 좌측 피커가 KO_* 문항만 조회한다.
+      // 영어(미지정)는 필드 자체가 undefined 라 종전 where 와 byte 동일(무회귀).
+      subject: subjectScope,
       search: debouncedSearch || undefined,
       difficulty: difficulty === "ALL" ? undefined : difficulty,
       subType: selectedSubTypes.length ? selectedSubTypes.join(",") : undefined,
@@ -434,6 +444,7 @@ export function ExamPaperBuilderClient({
     }),
     [
       sort,
+      subjectScope,
       debouncedSearch,
       difficulty,
       selectedSubTypes,
@@ -1574,6 +1585,8 @@ export function ExamPaperBuilderClient({
     const result = await saveExamPaperDraftFromBuilder({
       academyId,
       savedExamId: targetExamId,
+      // 국어 빌더 저장이면 신규 시험지에 subject='KOREAN' 스탬프(update 는 서버 불변).
+      subject: subjectScope,
       successMessage: options.successMessage,
       title: titleToSave,
       type: initialExam?.type || "OFFLINE",
@@ -1622,9 +1635,17 @@ export function ExamPaperBuilderClient({
   // initialExam이 없어 빈 상태로 다시 시작하고, 같은 저장이 IndexedDB 임시저장본도
   // 지워 복구할 길이 없다). 편집 라우트는 DB에서 내용을 다시 불러오므로, 첫 저장
   // 직후 편집 화면으로 옮겨 내용 손실을 막는다("다른 이름으로 저장"과 동일한 패턴).
+  // 저장 후 편집 라우트 진입 베이스 — 국어 시험지는 전용 경로(/director/korean/exams)
+  // 로 착륙시켜 공유 영어 경로(/director/workbench/exams)에 착륙하지 않게 한다
+  // (유저 확정: 시험지 생성/편집 경로 완전 분리). 영어는 종전 경로 불변.
+  const examEditBase =
+    subjectScope === "KOREAN"
+      ? "/director/korean/exams"
+      : "/director/workbench/exams";
+
   function goToEditAfterFreshSave(examId: string) {
     if (isEditingExistingExam) return;
-    router.replace(`/director/workbench/exams/${examId}/edit`);
+    router.replace(`${examEditBase}/${examId}/edit`);
   }
 
   function handleSave() {
@@ -1656,7 +1677,7 @@ export function ExamPaperBuilderClient({
       if (!newExamId) return;
 
       setSaveAsOpen(false);
-      router.replace(`/director/workbench/exams/${newExamId}/edit`);
+      router.replace(`${examEditBase}/${newExamId}/edit`);
     });
   }
 

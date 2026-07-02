@@ -41,8 +41,15 @@ interface PassageMin {
   content: string;
 }
 
-export function useWebtoonState({ academyId }: { academyId: string }) {
+export function useWebtoonState({
+  academyId,
+  subjectScope,
+}: {
+  academyId: string;
+  subjectScope?: "KOREAN";
+}) {
   void academyId;
+  const listScopeQuery = subjectScope === "KOREAN" ? "&scope=KOREAN" : "";
   const [items, setItems] = useState<WebtoonRow[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -57,7 +64,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
   useEffect(() => {
     isMountedRef.current = true;
     setLoading(true);
-    fetch(`/api/webtoons/list?limit=${MAX_RECENT}`)
+    fetch(`/api/webtoons/list?limit=${MAX_RECENT}${listScopeQuery}`)
       .then((r) => r.json() as Promise<ListResponse>)
       .then((data) => {
         if (!isMountedRef.current) return;
@@ -76,7 +83,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
       isMountedRef.current = false;
       if (pollTimer.current) clearTimeout(pollTimer.current);
     };
-  }, []);
+  }, [listScopeQuery]);
 
   useEffect(() => {
     const activeIds = activeKey.length > 0 ? activeKey.split(",") : [];
@@ -173,7 +180,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
         const newRows = fresh.filter((r): r is WebtoonRow => r !== null);
         setItems((prev) => mergeRows(newRows, prev));
       } catch {
-        const refreshed = await fetch(`/api/webtoons/list?limit=${MAX_RECENT}`)
+        const refreshed = await fetch(`/api/webtoons/list?limit=${MAX_RECENT}${listScopeQuery}`)
           .then((r) => r.json() as Promise<ListResponse>)
           .catch(() => null);
         if (refreshed?.ok) setItems(refreshed.items);
@@ -185,7 +192,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
       });
       return queuedIds.length;
     },
-    [],
+    [listScopeQuery],
   );
 
   const handleRetry = useCallback(
@@ -254,7 +261,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
         toast.error(err instanceof Error ? err.message : "검수 상태 변경 실패");
       }
     },
-    [items],
+    [items, listScopeQuery],
   );
 
   return {

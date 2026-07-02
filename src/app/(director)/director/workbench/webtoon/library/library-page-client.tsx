@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { WEBTOON_ROUTES, type WebtoonSubjectScope } from "../webtoon-routes";
 import { toast } from "sonner";
 import {
   CheckCircle2,
@@ -73,19 +74,14 @@ const GRID_OPTIONS: { value: GridCols; cols: number }[] = [
   { value: "grid5", cols: 5 },
 ];
 
-// ─── Server-action adapters for the shared folder manager ───
-const folderActions = {
-  createCollection: createWebtoonCollection,
-  updateCollection: updateWebtoonCollection,
-  deleteCollection: deleteWebtoonCollection,
-  addToCollection: addWebtoonsToCollection,
-  removeFromCollection: removeWebtoonsFromCollection,
-};
-
 interface WebtoonLibraryClientProps {
   academyId: string;
   collections: CollectionItem[];
   collectionMembership: Record<string, Set<string>>;
+  /** 과목 스코프 — "KOREAN"=국어 웹툰만(목록 API scope=KOREAN)+내부 네비게이션을
+   *  /director/korean/webtoon 으로 분기+새 폴더를 subject='KOREAN' 으로 생성.
+   *  미전달(undefined)=영어 기존 동작 그대로(무회귀). */
+  subjectScope?: WebtoonSubjectScope;
   /** When true, drops the full-height page chrome (height/scroll/page bg) and
    *  hides the FolderSection header so this can live inside another section
    *  (e.g. the 웹툰 생성 페이지의 '생성한 웹툰' 카드). */
@@ -102,11 +98,34 @@ export function WebtoonLibraryClient({
   academyId,
   collections: initialCollections,
   collectionMembership: initialMembership,
+  subjectScope,
   embedded = false,
   refreshSignal,
   stickyTopOffset = 0,
 }: WebtoonLibraryClientProps) {
   void academyId;
+
+  const routes = WEBTOON_ROUTES(subjectScope);
+
+  // ─── Server-action adapters for the shared folder manager ───
+  // createCollection 만 subjectScope 를 실어 감싼다(국어 라우트에서 새 폴더를
+  // subject='KOREAN' 으로 저장 → 영어 폴더 목록에 절대 나타나지 않는다). 나머지는
+  // 스코프 무관이라 그대로 공유하고, 영어(미전달)는 subject 없이 기존 INSERT.
+  const folderActions = useMemo(
+    () => ({
+      createCollection: (data: { name: string; parentId?: string }) =>
+        createWebtoonCollection(
+          subjectScope === "KOREAN"
+            ? { ...data, subject: "KOREAN" as const }
+            : data,
+        ),
+      updateCollection: updateWebtoonCollection,
+      deleteCollection: deleteWebtoonCollection,
+      addToCollection: addWebtoonsToCollection,
+      removeFromCollection: removeWebtoonsFromCollection,
+    }),
+    [subjectScope],
+  );
 
   const [items, setItems] = useState<WebtoonRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -127,11 +146,14 @@ export function WebtoonLibraryClient({
 
   // ─── Data fetch — pull the whole library (all pages) so folder filtering
   //     works across the entire set, then paginate client-side. ───
+  // 국어 스코프면 목록 API 에 scope=KOREAN 을 실어 국어 지문 웹툰만 받는다.
+  // 미전달(영어)은 파라미터를 아예 붙이지 않아 URL 이 기존과 바이트 동일 → 무회귀.
+  const scopeParam = subjectScope === "KOREAN" ? "&scope=KOREAN" : "";
   const fetchAll = useCallback(async (showSpinner = true) => {
     if (showSpinner) setLoading(true);
     try {
       const first = await fetch(
-        `/api/webtoons/list?page=1&limit=${FETCH_LIMIT}`,
+        `/api/webtoons/list?page=1&limit=${FETCH_LIMIT}${scopeParam}`,
       ).then((r) => r.json());
       if (!first.ok) throw new Error(first.error || "목록 로드 실패");
 
@@ -141,7 +163,9 @@ export function WebtoonLibraryClient({
         const pages = Math.ceil(total / FETCH_LIMIT);
         const rest = await Promise.all(
           Array.from({ length: pages - 1 }, (_, i) =>
-            fetch(`/api/webtoons/list?page=${i + 2}&limit=${FETCH_LIMIT}`)
+            fetch(
+              `/api/webtoons/list?page=${i + 2}&limit=${FETCH_LIMIT}${scopeParam}`,
+            )
               .then((r) => r.json())
               .catch(() => null),
           ),
@@ -155,7 +179,7 @@ export function WebtoonLibraryClient({
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [scopeParam]);
 
   useEffect(() => {
     void fetchAll();
@@ -448,7 +472,7 @@ export function WebtoonLibraryClient({
               지문으로 첫 웹툰을 만들어보세요
             </p>
             <div className="mt-4 flex items-center justify-center">
-              <Link href="/director/workbench/webtoon">
+              <Link href={routes.generate}>
                 <Button className="bg-blue-600 hover:bg-blue-700" size="sm">
                   <Palette className="mr-1.5 h-3.5 w-3.5" />새 웹툰 생성
                 </Button>
@@ -601,7 +625,7 @@ export function WebtoonLibraryClient({
                 {/* ─── 필터 묶음: 새 웹툰 생성 · 필터 · 검색 · 그리드 ─── */}
                 <div className="ml-auto flex shrink-0 items-center justify-end gap-1.5">
                   <Link
-                    href="/director/workbench/webtoon"
+                    href={routes.generate}
                     className="flex h-7 items-center gap-1.5 rounded-md bg-blue-600 px-2.5 text-[12px] font-semibold text-white transition-colors hover:bg-blue-700"
                   >
                     <Palette className="h-3.5 w-3.5" />새 웹툰 생성

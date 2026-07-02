@@ -52,7 +52,12 @@ export async function POST(req: NextRequest) {
   const originalFileName =
     makeTextSourceName(passages[0]?.title) +
     (pageCount > 1 ? ` 외 ${pageCount - 1}건` : "");
-  const shouldRestore = parsed.outputMode !== "verbatim";
+  // AI 원문 복원은 영어 전용 파이프라인 — 국어(subject=KOREAN) 잡은 서버에서도
+  // verbatim 으로 강제해 복원 차감/프롬프트 경로에 절대 오르지 않게 한다
+  // (파일 잡 create-job.ts 와 동일 규약).
+  const outputMode =
+    parsed.subject === "KOREAN" ? ("verbatim" as const) : parsed.outputMode;
+  const shouldRestore = outputMode !== "verbatim";
   const totalReserved = shouldRestore
     ? CREDIT_COSTS.PASSAGE_RESTORATION * pageCount
     : 0;
@@ -68,8 +73,13 @@ export async function POST(req: NextRequest) {
           createdById: staff.id,
           sourceType: "TEXT",
           mode: parsed.mode,
-          outputMode: parsed.outputMode ?? null,
+          outputMode: outputMode ?? null,
           originalFileName,
+          // subject: 과목 전파 신호 — finalize 의 SourceMaterial 생성과 승급
+          // Passage 가 이 값을 읽어 국어/영어 버킷을 분리한다. 미전달=영어(무회귀).
+          ...(parsed.subject
+            ? { metadata: { subject: parsed.subject } }
+            : {}),
           totalPages: pageCount,
           successPages: 0,
           failedPages: 0,

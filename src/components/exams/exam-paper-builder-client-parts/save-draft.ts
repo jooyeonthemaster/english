@@ -26,6 +26,8 @@ interface SaveDraftInput {
   academyId: string;
   savedExamId: string | null;
   successMessage?: string;
+  /** 과목 — "KOREAN"=국어 빌더 저장(신규 생성 시 exams.subject='KOREAN' 스탬프). */
+  subject?: "KOREAN";
   title: string;
   type?: string;
   classId: string;
@@ -124,6 +126,8 @@ export async function saveExamPaperDraftFromBuilder(input: SaveDraftInput): Prom
 
   const result = await saveExamPaperDraft(input.academyId, {
     examId: input.savedExamId,
+    // 과목 스탬핑 — 신규 국어 시험지만 'KOREAN'(update 는 서버에서 subject 불변).
+    subject: input.subject,
     title: input.title,
     type: input.type || "OFFLINE",
     classId: input.classId || null,
