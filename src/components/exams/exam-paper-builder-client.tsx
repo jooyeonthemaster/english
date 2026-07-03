@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { ChevronRight, GripVertical, RotateCcw, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
-import { type BuilderQuestion, DEFAULT_PAPER_COVER, type Density, type HeaderPatch, LINE_GAP_MARKER, type PaginationSettings, type PaperCover, type PaperSize, type PaperTemplate, type PassageStyle } from "./paper-builder/types";
+import { type BuilderQuestion, type BuilderQuestionSetRender, DEFAULT_PAPER_COVER, type Density, type HeaderPatch, LINE_GAP_MARKER, type PaginationSettings, type PaperCover, type PaperSize, type PaperTemplate, type PassageStyle } from "./paper-builder/types";
 import { DEFAULT_INSTRUCTIONS, PAPER_SIZE_SPECS } from "./paper-builder/constants";
 import { buildGroups, formatDateInput } from "./paper-builder/paper-item-utils";
 import { asDensity, asPaperSize, asPaperTemplate, asPassageStyle, buildPaperItemsFromExam, formatExamDate, parseBuilderSettings } from "./exam-paper-builder-existing";
@@ -34,6 +34,8 @@ import type { CollectionItem } from "@/components/workbench/shared/types";
 import { addQuestionsToCollection, createQuestionCollection, deleteQuestionCollection, getAcademyQuestionCollectionMembership, getQuestionCollections, removeQuestionsFromCollection, updateQuestionCollection } from "@/actions/workbench";
 import { incrementExamPrintCount } from "@/actions/exams";
 import {
+  getExamPaperBuilderSetMemberQuestionsByQuestionIds,
+  getExamPaperBuilderQuestionSetsBySetIds,
   getExamPaperBuilderQuestionsByIds,
   getExamPaperBuilderQuestionsPage,
   getExamPaperBuilderQuestionIds,
@@ -41,6 +43,10 @@ import {
 } from "@/actions/exam-paper-builder";
 import { BUILDER_PAGE_SIZE } from "@/actions/workbench/_question-where";
 import type { WorkbenchQuestionFilters } from "@/actions/workbench/_types";
+import {
+  getAcademyQuestionSetMemberMap,
+  type QuestionSetForRender,
+} from "@/actions/question-sets";
 import { Button } from "@/components/ui/button";
 import { SaveButton } from "@/components/ui/save-button";
 import { useBeforeUnloadWarning } from "@/components/shared/use-unsaved-close-guard";
@@ -53,6 +59,35 @@ import { BUILDER_DRAFT_AUTOSAVE_DELAY_MS, BUILDER_HEADER_AUTO_HIDE_DELAY_MS, BUI
 import type { BuilderPanelTab, ExamPaperBuilderClientProps, PanelResizeSide, PanelWidths, SaveDraftOptions } from "./exam-paper-builder-client-parts/builder-types";
 import { asAutoPointTotal, buildDefaultSaveAsTitle, clampPanelWidths, clampThumbnailsWidth, formatBuilderDraftUpdatedAt, getQuestionDropInsertion, hasMeaningfulBuilderDraft, readStoredLeftPanelCollapsed, readStoredPanelWidths, readStoredRightPanelCollapsed, readStoredThumbnailsCollapsed, readStoredThumbnailsWidth, samePanelWidths } from "./exam-paper-builder-client-parts/builder-helpers";
 import { PageThumbnails } from "./exam-paper-builder-client-parts/page-thumbnails";
+
+function toBuilderQuestionSetRender(
+  set: QuestionSetForRender,
+): BuilderQuestionSetRender {
+  return {
+    id: set.id,
+    setLabel: set.setLabel,
+    canonicalPassage: set.canonicalPassage,
+    layout: set.layout,
+    members: set.members.map((member) => ({
+      questionId: member.questionId,
+      orderInSet: member.orderInSet,
+      isStructural: member.isStructural,
+      typeId: member.typeId,
+      spans: Array.isArray(member.spans) ? member.spans : [],
+    })),
+  };
+}
+
+function attachSetRender(
+  question: BuilderQuestion,
+  setRenderById: Map<string, BuilderQuestionSetRender>,
+): BuilderQuestion {
+  const setId = question.setId;
+  if (!setId) return question;
+  const setRender = setRenderById.get(setId);
+  return setRender ? { ...question, setRender } : question;
+}
+
 export function ExamPaperBuilderClient({
   academyId,
   questions,
@@ -373,6 +408,13 @@ export function ExamPaperBuilderClient({
     return membership;
   }, [questions]);
 
+  const [setMemberMap, setSetMemberMap] = useState<Record<string, string>>({});
+  useEffect(() => {
+    getAcademyQuestionSetMemberMap()
+      .then(setSetMemberMap)
+      .catch(() => {});
+  }, []);
+
   const folders = useFolderManager({
     initialCollections: initialFolderCollections,
     initialMembership: initialFolderMembership,
@@ -384,6 +426,7 @@ export function ExamPaperBuilderClient({
       removeFromCollection: removeQuestionsFromCollection,
     },
     itemLabel: "문제",
+    questionSetIdOf: (id) => setMemberMap[id] ?? null,
     // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
     cumulativeCounts: true,
   });
@@ -567,6 +610,10 @@ export function ExamPaperBuilderClient({
     activeItem && activeItem.blockType === "question"
       ? activeItem.questionId
       : null;
+  const activeQuestionSetId =
+    activeItem && activeItem.blockType === "question"
+      ? (activeItem.sourceQuestion.setId ?? null)
+      : null;
 
   // 미리보기 블록 클릭 → 좌측 카드 글로우/스크롤. 서버 페이지네이션이라 대상 카드가
   // 다른 페이지에 있을 수 있다. 현재 페이지에 없으면 rank 로 그 문항의 페이지를 계산해
@@ -578,7 +625,15 @@ export function ExamPaperBuilderClient({
       lastGlowJumpRef.current = null;
       return;
     }
-    if (pageQuestions.some((q) => q.id === activeQuestionId)) return; // 현재 페이지에 있음
+    if (
+      pageQuestions.some(
+        (q) =>
+          q.id === activeQuestionId ||
+          (activeQuestionSetId && q.setId === activeQuestionSetId),
+      )
+    ) {
+      return; // 현재 페이지에 있음
+    }
     if (lastGlowJumpRef.current === activeQuestionId) return; // 이미 점프 시도함
     lastGlowJumpRef.current = activeQuestionId;
     let cancelled = false;
@@ -593,7 +648,13 @@ export function ExamPaperBuilderClient({
     return () => {
       cancelled = true;
     };
-  }, [activeQuestionId, pageQuestions, academyId, buildListFilters]);
+  }, [
+    activeQuestionId,
+    activeQuestionSetId,
+    pageQuestions,
+    academyId,
+    buildListFilters,
+  ]);
 
   // 문항(블록)을 선택하면 빈 줄 캐럿은 해제한다(둘은 상호 배타).
   useEffect(() => {
@@ -690,19 +751,22 @@ export function ExamPaperBuilderClient({
     canRedo,
   ]);
 
-  const addQuestionIdsToPaper = useCallback(
-    async (ids: Iterable<string>) => {
+  const resolveQuestionsForPaperInsertion = useCallback(
+    async (
+      ids: Iterable<string>,
+      options: { skipExisting: boolean },
+    ): Promise<BuilderQuestion[]> => {
       const seen = new Set<string>();
       const orderedIds: string[] = [];
       const missingIds: string[] = [];
 
       for (const id of ids) {
-        if (!id || seen.has(id) || paperQuestionCounts.has(id)) continue;
+        if (!id || seen.has(id)) continue;
         seen.add(id);
         orderedIds.push(id);
         if (!questionById.has(id)) missingIds.push(id);
       }
-      if (orderedIds.length === 0) return;
+      if (orderedIds.length === 0) return [];
 
       // 로드 상한을 넘었거나 시드된 id 중 목록에 없는 문항은 배치 로드해 병합한다.
       // questionById 는 다음 렌더에 갱신되므로, 이번 호출에선 합쳐진 맵을 직접 만들어 쓴다.
@@ -728,24 +792,114 @@ export function ExamPaperBuilderClient({
         }
       }
 
-      const selectedQuestions: BuilderQuestion[] = [];
+      const seedQuestions: BuilderQuestion[] = [];
       for (const id of orderedIds) {
         const question = resolved.get(id);
-        if (question) selectedQuestions.push(question);
+        if (question) seedQuestions.push(question);
       }
+      if (seedQuestions.length === 0) return [];
+
+      const setSeedIds = seedQuestions
+        .filter((question) => Boolean(question.setId))
+        .map((question) => question.id);
+      const setIds = Array.from(
+        new Set(
+          seedQuestions
+            .map((question) => question.setId)
+            .filter((setId): setId is string => Boolean(setId)),
+        ),
+      );
+      const setRenderById = new Map<string, BuilderQuestionSetRender>();
+      const setMembersBySetId = new Map<string, BuilderQuestion[]>();
+
+      if (setSeedIds.length > 0) {
+        try {
+          const [members, sets] = await Promise.all([
+            getExamPaperBuilderSetMemberQuestionsByQuestionIds(
+              academyId,
+              setSeedIds,
+            ) as Promise<BuilderQuestion[]>,
+            getExamPaperBuilderQuestionSetsBySetIds(academyId, setIds),
+          ]);
+          for (const set of sets) {
+            setRenderById.set(set.id, toBuilderQuestionSetRender(set));
+          }
+          if (members.length > 0) {
+            const renderedMembers = members.map((question) =>
+              attachSetRender(question, setRenderById),
+            );
+            setFetchedQuestions((prev) => {
+              const next = new Map(prev);
+              for (const question of renderedMembers) next.set(question.id, question);
+              return next;
+            });
+            for (const question of renderedMembers) {
+              if (!question.setId) continue;
+              const bucket = setMembersBySetId.get(question.setId) ?? [];
+              bucket.push(question);
+              setMembersBySetId.set(question.setId, bucket);
+            }
+          }
+        } catch {
+          toast.error("세트 문항 일부를 불러오지 못했습니다.");
+        }
+      }
+
+      const emittedQuestionIds = new Set<string>();
+      const expandedSetIds = new Set<string>();
+      const selectedQuestions: BuilderQuestion[] = [];
+      const emit = (question: BuilderQuestion) => {
+        if (emittedQuestionIds.has(question.id)) return;
+        emittedQuestionIds.add(question.id);
+        if (options.skipExisting && paperQuestionCounts.has(question.id)) return;
+        selectedQuestions.push(attachSetRender(question, setRenderById));
+      };
+
+      for (const question of seedQuestions) {
+        const setId = question.setId;
+        if (setId) {
+          if (expandedSetIds.has(setId)) continue;
+          expandedSetIds.add(setId);
+          const members = setMembersBySetId.get(setId);
+          if (members?.length) {
+            members.forEach(emit);
+            continue;
+          }
+        }
+        emit(question);
+      }
+
+      return selectedQuestions;
+    },
+    [academyId, paperQuestionCounts, questionById],
+  );
+
+  const addQuestionIdsToPaper = useCallback(
+    async (ids: Iterable<string>) => {
+      const selectedQuestions = await resolveQuestionsForPaperInsertion(ids, {
+        skipExisting: true,
+      });
       if (selectedQuestions.length > 0) {
         addQuestionsAtDropTarget(selectedQuestions, null, "after");
       }
     },
-    [academyId, addQuestionsAtDropTarget, paperQuestionCounts, questionById],
+    [addQuestionsAtDropTarget, resolveQuestionsForPaperInsertion],
   );
 
   const removeQuestionIdFromPaper = useCallback((id: string) => {
+    const sourceQuestion =
+      questionById.get(id) ??
+      paperItems.find(
+        (item) => item.blockType === "question" && item.questionId === id,
+      )?.sourceQuestion;
+    const setId = sourceQuestion?.setId || null;
     const targets = paperItems.filter(
-      (item) => item.blockType === "question" && item.questionId === id,
+      (item) =>
+        item.blockType === "question" &&
+        (setId ? item.sourceQuestion.setId === setId : item.questionId === id),
     );
     for (const item of targets) removeItem(item.localId);
-  }, [paperItems, removeItem]);
+  }, [paperItems, questionById, removeItem]);
 
   // 문제 생성 결과에서 '시험지 생성'으로 넘어오면, 그 문제들을 미리보기(시험지)에
   // 바로 올린다. seed id 는 sessionStorage 로 전달되고 1회 소비 후 비운다.
@@ -1274,24 +1428,28 @@ export function ExamPaperBuilderClient({
             : [];
         if (draggedIds.length === 0) return;
 
-        const dropped = draggedIds
-          .map((id) => questionById.get(id))
-          .filter((q): q is BuilderQuestion => Boolean(q));
-        if (dropped.length === 0) {
-          toast.error("문제를 찾지 못했습니다.");
-          return;
-        }
-
         const input = location.current.input;
         const insertion = getQuestionDropInsertion(
           element,
           input.clientX,
           input.clientY,
         );
-        addQuestionsAtDropTarget(dropped, insertion.targetLocalId, insertion.placement);
+        void resolveQuestionsForPaperInsertion(draggedIds, {
+          skipExisting: false,
+        }).then((dropped) => {
+          if (dropped.length === 0) {
+            toast.error("문제를 찾지 못했습니다.");
+            return;
+          }
+          addQuestionsAtDropTarget(
+            dropped,
+            insertion.targetLocalId,
+            insertion.placement,
+          );
+        });
       },
     });
-  }, [addQuestionsAtDropTarget, previewScrollerRef, questionById]);
+  }, [addQuestionsAtDropTarget, previewScrollerRef, resolveQuestionsForPaperInsertion]);
 
   useEffect(() => {
     const scroller = previewScrollerRef.current;
@@ -1970,6 +2128,7 @@ export function ExamPaperBuilderClient({
             )}
           >
           <QuestionLibraryPanel
+            academyId={academyId}
             filteredQuestions={pageQuestions}
             page={page}
             totalPages={totalPages}

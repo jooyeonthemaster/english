@@ -694,6 +694,16 @@ export function A4PaperPage({
                             passageBoxClass,
                           )}
                         >
+                          {fragment.setPrompt && isPassageStart && (
+                            <p
+                              className={cn(
+                                "mb-1 font-semibold",
+                                visual.questionClass,
+                              )}
+                            >
+                              {fragment.setPrompt}
+                            </p>
+                          )}
                           {showPassageTitle &&
                             fragment.passageTitle &&
                             isPassageStart && (

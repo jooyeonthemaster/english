@@ -5,8 +5,11 @@ import type { Prisma } from "@prisma/client";
 import { getStaffSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { QUESTION_PERSISTENCE_TRANSACTION_TIMEOUT_MS } from "@/lib/concurrency-config";
+import { buildGeneratedQuestionText } from "@/lib/question-generation-persistence";
 import { resolvePreset } from "@/lib/question-sets/presets";
+import { reconstructPassageView } from "@/lib/question-sets/reconstruct";
 import type { Anchor, LayoutDescriptor } from "@/lib/question-sets/types";
+import type { WorkbenchQuestionFilters } from "@/actions/workbench/_types";
 
 type SetWithItems = Prisma.QuestionSetGetPayload<{
   include: {
@@ -62,6 +65,42 @@ function parseJson<T>(value: string | null): T | null {
   } catch {
     return null;
   }
+}
+
+function setMemberQuestionWhere(
+  academyId: string,
+  filters?: WorkbenchQuestionFilters,
+  collectionId?: string,
+): Prisma.QuestionWhereInput {
+  const where: Prisma.QuestionWhereInput = {
+    academyId,
+    deletedAt: null,
+    setId: { not: null },
+  };
+
+  if (filters?.type) {
+    const types = filters.type.split(",").filter(Boolean);
+    where.type = types.length > 1 ? { in: types } : types[0];
+  }
+  if (filters?.subType) {
+    const subs = filters.subType.split(",").filter(Boolean);
+    where.subType = subs.length > 1 ? { in: subs } : subs[0];
+  }
+  if (filters?.difficulty) where.difficulty = filters.difficulty;
+  if (filters?.passageId) where.passageId = filters.passageId;
+  if (filters?.tags) where.tags = { contains: filters.tags };
+  if (filters?.aiGenerated !== undefined) where.aiGenerated = filters.aiGenerated;
+  if (filters?.approved !== undefined) where.approved = filters.approved;
+  if (filters?.starred !== undefined) where.starred = filters.starred;
+  if (filters?.search) {
+    where.questionText = { contains: filters.search, mode: "insensitive" };
+  }
+  const effectiveCollectionId = collectionId ?? filters?.collectionId;
+  if (effectiveCollectionId) {
+    where.collectionItems = { some: { collectionId: effectiveCollectionId } };
+  }
+
+  return where;
 }
 
 /** Load a 장문 세트 with its ordered members for rendering. Academy-scoped. */
@@ -145,14 +184,32 @@ function mapSet(set: SetWithItems): QuestionSetForRender {
 export async function listQuestionSets(opts: {
   passageId?: string;
   jobId?: string;
-  limit?: number;
+  limit?: number | null;
+  setIds?: string[];
+  filters?: WorkbenchQuestionFilters;
+  /** 활성 폴더 id — 있으면 그 폴더에 멤버가 속한 세트만 반환(일반 문제와 동일한 컬렉션 조인).
+   *  미지정 시 전체 세트(기존 동작). 세트는 원자적이라 폴더에 멤버 1개만 있어도 세트 전체를 표시. */
+  collectionId?: string;
 }): Promise<QuestionSetForRender[]> {
   const staff = await getStaffSession();
   if (!staff) return [];
+  const setMatchFilters =
+    opts.filters?.approved === undefined
+      ? opts.filters
+      : { ...opts.filters, approved: undefined };
+  const memberWhere = setMemberQuestionWhere(
+    staff.academyId,
+    setMatchFilters,
+    opts.collectionId,
+  );
+  const orderedSetIds = opts.setIds
+    ? Array.from(new Set(opts.setIds.filter(Boolean)))
+    : [];
 
   const sets = await prisma.questionSet.findMany({
     where: {
       academyId: staff.academyId,
+      ...(orderedSetIds.length > 0 ? { id: { in: orderedSetIds } } : {}),
       ...(opts.jobId ? { jobId: opts.jobId } : {}),
       ...(opts.passageId
         ? {
@@ -162,9 +219,15 @@ export async function listQuestionSets(opts: {
             ],
           }
         : {}),
+      items: { some: { question: memberWhere } },
     },
     orderBy: { createdAt: "desc" },
-    take: opts.limit ?? 50,
+    take:
+      orderedSetIds.length > 0
+        ? undefined
+        : opts.limit === null
+          ? undefined
+          : (opts.limit ?? 50),
     include: {
       items: {
         // 휴지통 가드 — 삭제(휴지통)된 세트 멤버는 세트 렌더에서 제외.
@@ -182,7 +245,35 @@ export async function listQuestionSets(opts: {
       basePassage: { select: { id: true, title: true } },
     },
   });
-  return sets.map(mapSet);
+  const mapped = sets.map(mapSet).filter((set) => {
+    if (opts.filters?.approved === undefined) return true;
+    const setApproved =
+      set.members.length > 0 && set.members.every((member) => member.approved);
+    return setApproved === opts.filters.approved;
+  });
+  if (orderedSetIds.length === 0) return mapped;
+  const byId = new Map(mapped.map((set) => [set.id, set]));
+  return orderedSetIds
+    .map((id) => byId.get(id))
+    .filter((set): set is QuestionSetForRender => Boolean(set));
+}
+
+/**
+ * 세트 멤버 questionId → setId 맵(academy 전체). 폴더 카운트에서 세트를 "1개"로 세기 위해,
+ * 멤버 문항 id 로 소속 세트를 역참조한다(휴지통 문항 제외). Academy-scoped.
+ */
+export async function getAcademyQuestionSetMemberMap(): Promise<
+  Record<string, string>
+> {
+  const staff = await getStaffSession();
+  if (!staff) return {};
+  const items = await prisma.questionSetItem.findMany({
+    where: { set: { academyId: staff.academyId }, question: { deletedAt: null } },
+    select: { questionId: true, setId: true },
+  });
+  const map: Record<string, string> = {};
+  for (const it of items) map[it.questionId] = it.setId;
+  return map;
 }
 
 /**
@@ -253,6 +344,74 @@ export async function groupQuestionsIntoSet(opts: {
   return { success: true, setId };
 }
 
+// 분리 시 유형별로 되살릴 지문 필드. reconstructPassageView 가 뱉는 형식(밑줄 __x__·
+// 마커 __(A) x__·빈칸 _____)을 그대로 buildGeneratedQuestionText 가 소비하는 필드에 담는다.
+// (anchor-extraction 불변식: reconstruct(base, spans) === 단독 문항 processor.passageWith*.)
+const SPLIT_PASSAGE_FIELD: Record<string, string> = {
+  BLANK_INFERENCE: "passageWithBlank",
+  FILL_BLANK_KEY: "passageWithBlank",
+  GRAMMAR_ERROR: "passageWithMarkers",
+  VOCAB_CHOICE: "passageWithMarkers",
+  ANTONYM: "passageWithMarkers",
+  GRAMMAR_CORRECTION: "passageWithUnderline",
+  REFERENCE: "passageWithUnderline",
+  CONTEXT_MEANING: "passageWithUnderline",
+  SYNONYM: "passageWithUnderline",
+  IMPLIED_MEANING: "passageWithUnderline",
+};
+
+function readStructuredObject(value: unknown): Record<string, unknown> {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value as Record<string, unknown>;
+  }
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+        ? (parsed as Record<string, unknown>)
+        : {};
+    } catch {
+      return {};
+    }
+  }
+  return {};
+}
+
+/**
+ * 분리(단독화) 시 멤버 지문을 되살린다 — 세트는 지문 사본을 저장하지 않고 anchor(spans)만
+ * 들고 있으므로, 그 멤버 **자기 spans 만** base 에 얹어(다른 멤버 변형은 빠짐) 단독 문항과
+ * 동일한 지문을 굽는다. 구조형(글의 순서/문장 삽입)·무변형(제목/내용일치 등)은 questionText
+ * 가 이미 완결이라 그대로 두고, 세트 표식(_setMember/_isStructural/_spans)만 벗긴다.
+ */
+function bakeSplitMemberView(
+  typeId: string | null,
+  isStructural: boolean,
+  rawSpans: unknown,
+  base: string,
+  structuredData: unknown,
+): { questionText: string | null; structuredData: Record<string, unknown> | null } {
+  const sd = readStructuredObject(structuredData);
+  const cleaned: Record<string, unknown> = { ...sd };
+  delete cleaned._setMember;
+  delete cleaned._isStructural;
+  delete cleaned._spans;
+
+  const spans = Array.isArray(rawSpans) ? (rawSpans as Anchor[]) : [];
+  const field = typeId ? SPLIT_PASSAGE_FIELD[typeId] : undefined;
+
+  // 구조형·무변형·미지원 유형·base 없음 → 지문 재생성 없이 표식만 제거.
+  if (isStructural || spans.length === 0 || !field || !base) {
+    return { questionText: null, structuredData: cleaned };
+  }
+
+  const marked = reconstructPassageView(base, spans).text;
+  const withPassage: Record<string, unknown> = { ...cleaned, [field]: marked };
+  return {
+    questionText: buildGeneratedQuestionText(withPassage),
+    structuredData: withPassage,
+  };
+}
+
 /**
  * 세트 멤버를 "분리"한다 — 세트는 그대로 두고(원본 멤버 유지), 그 문항의 복제본을
  * 단독 문항(inSet=false·setId=null)으로 하나 새로 만든다. 즉 세트에서 빼내는 게 아니라
@@ -299,14 +458,34 @@ export async function splitQuestionSetMember(
     });
   }
 
+  // 분리 문항은 그 멤버 자기 변형만 되살린다(다른 멤버 변형은 빠짐 — 원본 지문이 데이터에
+  // 다 있으니 재구성 가능). 구조형·무변형은 questionText 그대로 + 세트 표식만 제거.
+  const bakeBase =
+    parseJson<LayoutDescriptor>(
+      original.setItem?.set.displayedPassageLayout ?? null,
+    )?.fullPassage ??
+    original.setItem?.set.canonicalPassage ??
+    "";
+  const baked = bakeSplitMemberView(
+    original.subType,
+    original.setItem?.isStructural ?? false,
+    original.setItem?.spans,
+    bakeBase,
+    original.structuredData,
+  );
+
   const copy = await prisma.question.create({
     data: {
       academyId: original.academyId,
       passageId: sharedPassageId,
       type: original.type,
       subType: original.subType,
-      questionText: original.questionText,
-      structuredData: original.structuredData ?? undefined,
+      questionText: baked.questionText ?? original.questionText,
+      structuredData: baked.structuredData
+        ? (JSON.parse(
+            JSON.stringify(baked.structuredData),
+          ) as Prisma.InputJsonValue)
+        : (original.structuredData ?? undefined),
       questionImage: original.questionImage,
       options: original.options,
       correctAnswer: original.correctAnswer,

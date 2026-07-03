@@ -10,19 +10,49 @@ import { requireAuth } from "./_helpers";
 
 export async function getQuestionCollections(academyId: string) {
   await requireAuth();
-  return prisma.questionCollection.findMany({
+  const collections = await prisma.questionCollection.findMany({
     where: { academyId },
-    // 휴지통 가드 — 폴더 "N개" 배지는 삭제(휴지통)된 문제를 빼고 센다(링크는 보존되지만 미표시).
     include: {
-      _count: {
-        select: {
-          items: { where: { question: { deletedAt: null } } },
-          children: true,
-        },
-      },
+      _count: { select: { children: true } },
     },
     orderBy: { name: "asc" },
   });
+
+  // 폴더 "N개" 배지 — 지문 세트는 멤버 N개가 아니라 "세트 1개"로 센다(일반 문제와 동일한 시각 단위).
+  // 삭제(휴지통) 문제 제외. items._count(prisma)는 distinct setId 를 못 세므로 JS 로 집계.
+  const items = await prisma.questionCollectionItem.findMany({
+    where: { collection: { academyId }, question: { deletedAt: null } },
+    select: {
+      collectionId: true,
+      question: { select: { inSet: true, setId: true } },
+    },
+  });
+  const regularByCol = new Map<string, number>();
+  const setsByCol = new Map<string, Set<string>>();
+  for (const it of items) {
+    const q = it.question;
+    if (q.setId) {
+      let s = setsByCol.get(it.collectionId);
+      if (!s) {
+        s = new Set<string>();
+        setsByCol.set(it.collectionId, s);
+      }
+      s.add(q.setId);
+    } else {
+      regularByCol.set(
+        it.collectionId,
+        (regularByCol.get(it.collectionId) ?? 0) + 1,
+      );
+    }
+  }
+
+  return collections.map((c) => ({
+    ...c,
+    _count: {
+      children: c._count.children,
+      items: (regularByCol.get(c.id) ?? 0) + (setsByCol.get(c.id)?.size ?? 0),
+    },
+  }));
 }
 
 /**

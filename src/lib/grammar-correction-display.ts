@@ -19,6 +19,8 @@ type GrammarCorrectionQuestionTextLike = {
 
 type GrammarCorrectionStoredQuestionLike = {
   subType?: unknown;
+  _typeId?: unknown;
+  typeId?: unknown;
   correctAnswer?: unknown;
   structuredData?: unknown;
 };
@@ -97,18 +99,42 @@ export function formatGrammarCorrectionCorrectAnswer(
       return normalizeDisplayString(segments[0].correctedPart);
     }
     return segments
-      .map((segment) => `${segment.label} ${segment.correctedPart}`)
+      .map((segment) => [segment.label, segment.correctedPart].filter(Boolean).join(" "))
       .join(", ");
   }
 
   return normalizeDisplayString(question.correctAnswer);
 }
 
+// 카드·상세모달 화면 표시 전용: "틀린부분 → 고친부분"(예: "easily → easy"). 취소선 없이 파란 글씨용.
+// 단일 구간이면 라벨 없음, 다중이면 "(A) e1 → c1, (B) e2 → c2". 정답표/저장 correctAnswer 는
+// formatGrammarCorrectionCorrectAnswer(고친 부분만) 유지 — 화살표 표기는 여기서만.
+export function formatGrammarCorrectionChange(
+  question: GrammarCorrectionLike,
+): string {
+  const segments = readGrammarCorrectionSegmentsForDisplay(question);
+  if (segments.length === 0) return normalizeDisplayString(question.correctAnswer);
+  return segments
+    .map((segment) => {
+      const change =
+        segment.errorPart && segment.correctedPart
+          ? `${segment.errorPart} → ${segment.correctedPart}`
+          : segment.correctedPart;
+      return [segment.label, change].filter(Boolean).join(" ");
+    })
+    .join(", ");
+}
+
 export function formatGrammarCorrectionCorrectAnswerForStoredQuestion(
   question: GrammarCorrectionStoredQuestionLike,
 ): string {
   const fallback = normalizeDisplayString(question.correctAnswer);
-  if (question.subType !== "GRAMMAR_CORRECTION") return fallback;
+  // 세트 멤버는 subType 대신 typeId(=q.subType 매핑)를 실어오므로 세 필드를 모두 본다
+  // (storedQuestionType 과 동일 규약). `||` 사용 — 빈 문자열 subType 에도 안전하게 폴백.
+  const resolvedType = normalizeDisplayString(
+    question.subType || question._typeId || question.typeId,
+  );
+  if (resolvedType !== "GRAMMAR_CORRECTION") return fallback;
   return formatGrammarCorrectionCorrectAnswer(
     readStructuredData(question.structuredData),
   ) || fallback;
@@ -120,7 +146,7 @@ export function buildGrammarCorrectionAnswerSlots(
   const segments = readGrammarCorrectionSegmentsForDisplay(question);
   if (segments.length === 0) return "";
   return segments
-    .map((segment) => `${segment.label} ${GRAMMAR_CORRECTION_ANSWER_BLANK}`)
+    .map((segment) => [segment.label, GRAMMAR_CORRECTION_ANSWER_BLANK].filter(Boolean).join(" "))
     .join("\n");
 }
 
@@ -243,15 +269,21 @@ function readGrammarCorrectionSegmentsForDisplay(
     }))
     .filter((item) => item.correctedPart);
 
-  if (segments.length > 0) return segments;
+  const resolved = segments.length > 0
+    ? segments
+    : (() => {
+        const correctedPart = normalizeDisplayString(question.correctedPart || question.correctAnswer);
+        if (!correctedPart) return [];
+        return [{
+          label: grammarCorrectionLabel(0),
+          errorPart: normalizeDisplayString(question.errorPart),
+          correctedPart,
+        }];
+      })();
 
-  const correctedPart = normalizeDisplayString(question.correctedPart || question.correctAnswer);
-  if (!correctedPart) return [];
-  return [{
-    label: grammarCorrectionLabel(0),
-    errorPart: normalizeDisplayString(question.errorPart),
-    correctedPart,
-  }];
+  // 오류 구간이 하나뿐이면 (A) 라벨을 비운다 — 단일 구간은 라벨이 불필요(2개 이상만 (A)(B)(C) 부여).
+  if (resolved.length === 1) return [{ ...resolved[0], label: "" }];
+  return resolved;
 }
 
 function normalizeGrammarCorrectionLabel(value: unknown, index: number): string {
@@ -269,6 +301,10 @@ function labelGrammarCorrectionPassage(
   return passageWithUnderline.replace(/__([^_]+)__/g, (full, inner: string) => {
     const trimmed = inner.trim();
     const existing = trimmed.match(/^\(([A-Ja-j])\)\s+(.+)$/);
+    // 오류 구간이 하나면 라벨 없이 본문만 — 이미 구워진 (A)도 떼어낸다(단일 구간 라벨 제거).
+    if (segments.length === 1) {
+      return `__${existing ? existing[2] : trimmed}__`;
+    }
     if (existing) {
       const normalizedLabel = `(${existing[1].toUpperCase()})`;
       return `__${normalizedLabel} ${existing[2]}__`;

@@ -317,7 +317,7 @@ export function estimateStructuredBodyHeight(
   const fontPx = resolveItemFontPx(item, settings);
 
   if (isSummaryCompleteSubtype(subType)) {
-    const passage = summaryCompleteMcPassageForItem(item);
+    const passage = isSetMemberItem(item) ? "" : summaryCompleteMcPassageForItem(item);
     const { summary: rawSummary } = splitSummaryCompleteMcQuestionText(item.questionText);
     const summary = summaryCompleteMcSummaryForItem(item, rawSummary);
     const blocks: number[] = [];
@@ -337,9 +337,13 @@ export function estimateStructuredBodyHeight(
   }
 
   if (isInlineSourcePassageSubtype(subType)) {
-    const passage = normalizePassageText(
-      item.passageContent || item.sourceQuestion.passage?.content || "",
-    );
+    // 세트 멤버는 공유 지문을 그룹에서 1회만 그리므로, 멤버 본문 높이에서는
+    // 인라인 출처 지문 박스를 제외한다.
+    const passage = isSetMemberItem(item)
+      ? ""
+      : normalizePassageText(
+          item.passageContent || item.sourceQuestion.passage?.content || "",
+        );
     const bodyAfterStem = questionBodyAfterStem(item);
     let height = HEADER_BODY_GAP;
     if (bodyAfterStem) {
@@ -398,10 +402,12 @@ export function buildStructLineBlocks(
   const textLineH = questionLineHeight(settings, fontPx);
   const blocks: FlowBlock[] = [];
 
-  // 장문 세트 멤버도 자기완결(self-contained)로 렌더한다 — 각 멤버의 마킹 지문은
-  // makePaperItem 의 materializeSetMember 가 본문/passageContent 에 복원해 주입하므로,
-  // 여기서는 일반 문항과 동일하게 모든 구조 세그먼트를 그대로 흘려보낸다.
-  const segments = structuredSegments(item);
+  // 장문 세트 멤버: 공유 지문은 그룹 첫머리에서 1회만 출력하므로(buildGroups·A4 fragment),
+  // 멤버 본문의 인라인 "지문(passage) 박스" 세그먼트는 제거해 중복 출력을 막는다.
+  const isSetMember = isSetMemberItem(item);
+  const segments = structuredSegments(item).filter(
+    (seg) => !(isSetMember && seg.kind === "box" && seg.boxStyle === "passage"),
+  );
 
   segments.forEach((seg, segIndex) => {
     if (seg.kind === "arrow") {
@@ -479,10 +485,12 @@ export function passageChromeHeight(
   reserveContinuation = false,
 ): number {
   const titleHeight = includeTitle && settings.showPassageTitle && group.passageTitle ? 15 : 0;
+  const setPromptHeight = includeTitle && group.setPrompt ? passageLineHeight(settings) + 4 : 0;
   const boxChrome =
     settings.passageStyle === "boxed" ? 24 : settings.passageStyle === "underlined" ? 18 : 8;
   return (
     titleHeight +
+    setPromptHeight +
     boxChrome +
     12 +
     (reserveContinuation ? passageContinuationReserveHeight(settings) : 0)
@@ -556,7 +564,7 @@ export function embeddedPassageTitleHeight(item: PaperItem, settings: Pagination
 export function estimatePassageHeight(group: PaperGroup, settings: PaginationSettings): number {
   if (!group.includePassage || !group.passageContent) return 0;
   const lines = passageToLines(group.passageContent, settings);
-  const includeTitle = settings.showPassageTitle && Boolean(group.passageTitle);
+  const includeTitle = true;
   return passageChromeHeight(group, settings, includeTitle) + lines.length * passageLineHeight(settings);
 }
 

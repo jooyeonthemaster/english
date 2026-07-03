@@ -3,7 +3,7 @@
 
 import React from "react";
 import { renderFormatted } from "./render-formatted";
-import { grammarMarkerDisplayLabel } from "@/components/exams/paper-builder/option-display";
+import { grammarMarkerDisplayLabel, shouldRenderOptionListForSubtype } from "@/components/exams/paper-builder/option-display";
 import { SUBTYPE_LABELS } from "../question-type-filter";
 
 // 서술형(영작·요약 등) — 보기(options)가 없고 답이 모범 답안 문장이라, 객관식
@@ -30,6 +30,9 @@ export function CollapsedPreview({
   correctAnswer,
   displayCorrectAnswer = correctAnswer,
   subType,
+  // 지문 렌더 전용 subType 오버라이드. 세트 병합 지문처럼 여러 유형 마커가 섞인 지문은
+  // null 로 넘겨 (A) 라벨을 원문자로 바꾸지 않고 펼침 뷰와 동일하게 표시한다. 미지정 시 subType.
+  passageSubType = subType,
   isSetMember = false,
   compact = false,
 }: {
@@ -39,6 +42,7 @@ export function CollapsedPreview({
   correctAnswer: string;
   displayCorrectAnswer?: string;
   subType?: string | null;
+  passageSubType?: string | null;
   /** 장문 세트(QuestionSet) 소속 문항 — 유형 라벨 앞에 "장문" 표식을 붙여 구분한다. */
   isSetMember?: boolean;
   /** 시험지 빌더 좌측 라이브러리 전용 — 글자·여백·배지를 한 단계 줄인다. */
@@ -58,8 +62,13 @@ export function CollapsedPreview({
   );
   // 보기 텍스트가 없는 마커 유형(어법·어휘·삽입·무관) — 정답을 회색 박스 대신
   // 파란 원형 배지(숫자)로 표시해 일반 선지 배지와 디자인을 통일한다.
+  // ⚠️ G1: 마커 유형에 한정한다. 서술형(자유 텍스트 정답)은 정답 문장 속 a~j 낱글자가
+  //    parseCorrectAnswerLabels 정규식(괄호 optional)에 과매치돼 가짜 객관식 배지로
+  //    둔갑하므로, 배지를 만들지 않고 아래 displayCorrectAnswer "정답:" 텍스트 박스로 흘려보낸다.
+  const isMarkerType = !!subType && !shouldRenderOptionListForSubtype(subType);
   const answerBadgeLabels =
-    correctOptions.length === 0 && !isEssay
+    // 두 가드 모두 적용: 마커 유형 한정(G1 오버매치 방지) + 서술형 제외(에세이 가드).
+    correctOptions.length === 0 && isMarkerType && !isEssay
       ? Array.from(parseCorrectAnswerLabels(displayCorrectAnswer || correctAnswer))
       : [];
 
@@ -96,7 +105,7 @@ export function CollapsedPreview({
       {passage && (
         <div className={`rounded-lg bg-slate-50 border border-slate-200 ${passageBoxCls}`}>
           <div className={`font-mono ${passageTextCls} text-slate-700 whitespace-pre-wrap line-clamp-2`}>
-            {renderFormatted(passage, subType)}
+            {renderFormatted(passage, passageSubType)}
           </div>
         </div>
       )}
@@ -129,6 +138,7 @@ export function CollapsedPreview({
         </div>
       ) : displayCorrectAnswer ? (
         isEssay ? (
+          // 서술형 모범 답안 — 파란 '답' 배지 + 파란 글씨(이동주 UI 스타일).
           <div className={`flex items-start gap-2 pl-1 ${optionTextCls} font-semibold text-blue-700`}>
             <span className={`flex shrink-0 items-center justify-center rounded-full bg-blue-600 font-bold text-white ${badgeSizeCls}`}>
               답

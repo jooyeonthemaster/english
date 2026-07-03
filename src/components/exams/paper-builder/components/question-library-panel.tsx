@@ -3,6 +3,11 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { Database, FileText, Filter, Rows3, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { QuestionBankCard } from "@/components/workbench/question-bank-card";
+import {
+  ExamBuilderQuestionSetCard,
+} from "./exam-builder-question-set-section";
+import { getExamPaperBuilderQuestionSetsBySetIds } from "@/actions/exam-paper-builder";
+import type { QuestionSetForRender } from "@/actions/question-sets";
 import { DragSelect } from "@/components/ui/drag-select";
 import { PassageGroupedView } from "@/components/workbench/question-bank-passage-view";
 import { FolderSection } from "@/components/workbench/shared/folder-section";
@@ -26,6 +31,7 @@ const LIBRARY_VIEW_OPTIONS = [
 
 interface QuestionLibraryPanelProps {
   // 서버 페이지네이션: filteredQuestions 는 "현재 페이지(100개)"의 결과다.
+  academyId: string;
   filteredQuestions: BuilderQuestion[];
   page: number;
   totalPages: number;
@@ -84,6 +90,7 @@ interface QuestionLibraryPanelProps {
 }
 
 export function QuestionLibraryPanel({
+  academyId,
   filteredQuestions,
   page,
   totalPages,
@@ -183,6 +190,49 @@ export function QuestionLibraryPanel({
     () => new Map(filteredQuestions.map((question) => [question.id, question])),
     [filteredQuestions],
   );
+  const standaloneQuestions = useMemo(
+    () => filteredQuestions.filter((question) => !question.setId),
+    [filteredQuestions],
+  );
+  const setQuestionsOnPage = useMemo(
+    () => filteredQuestions.filter((question) => Boolean(question.setId)),
+    [filteredQuestions],
+  );
+  const setIdsOnPage = useMemo(() => {
+    const ids: string[] = [];
+    const seen = new Set<string>();
+    for (const question of filteredQuestions) {
+      if (!question.setId || seen.has(question.setId)) continue;
+      seen.add(question.setId);
+      ids.push(question.setId);
+    }
+    return ids;
+  }, [filteredQuestions]);
+  const setIdsOnPageKey = setIdsOnPage.join("\u0000");
+  const [setsById, setSetsById] = useState<Map<string, QuestionSetForRender>>(
+    () => new Map(),
+  );
+
+  useEffect(() => {
+    if (setIdsOnPage.length === 0) {
+      setSetsById(new Map());
+      return;
+    }
+    let cancelled = false;
+    void getExamPaperBuilderQuestionSetsBySetIds(academyId, setIdsOnPage)
+      .then((sets) => {
+        if (cancelled) return;
+        setSetsById(new Map(sets.map((set) => [set.id, set])));
+      })
+      .catch(() => {
+        if (!cancelled) setSetsById(new Map());
+      });
+    return () => {
+      cancelled = true;
+    };
+    // setIdsOnPageKey 가 현재 페이지의 세트 구성을 대표한다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [academyId, setIdsOnPageKey]);
   const groupedPassages = useMemo(() => {
     const groups = new Map<
       string,
@@ -200,7 +250,7 @@ export function QuestionLibraryPanel({
       }
     >();
 
-    for (const question of filteredQuestions) {
+    for (const question of standaloneQuestions) {
       const passage = question.passage;
       const key = passage?.id ?? "__no_passage__";
       const group = groups.get(key) ?? {
@@ -221,13 +271,24 @@ export function QuestionLibraryPanel({
     }
 
     return Array.from(groups.values());
-  }, [filteredQuestions]);
+  }, [standaloneQuestions]);
 
   const applySelectedQuestionIds = useCallback(
     (nextSelectedIds: Set<string>) => {
       setSelectedQuestionIds(nextSelectedIds);
     },
     [setSelectedQuestionIds],
+  );
+  const toggleSetSelection = useCallback(
+    (memberQuestionIds: string[], select: boolean) => {
+      const next = new Set(selectedQuestionIds);
+      for (const id of memberQuestionIds) {
+        if (select) next.add(id);
+        else next.delete(id);
+      }
+      applySelectedQuestionIds(next);
+    },
+    [applySelectedQuestionIds, selectedQuestionIds],
   );
 
   const toggleQuestionById = useCallback(
@@ -299,6 +360,14 @@ export function QuestionLibraryPanel({
   // (지문별 보기는 그룹 접힘 구조라 1차 범위에서 제외 — PassageGroupedView 그대로.)
   const columnsCount =
     effectiveGridColumns === 3 ? 3 : effectiveGridColumns === 2 ? 2 : 1;
+  const questionGridClassName = cn(
+    "grid gap-2.5",
+    effectiveGridColumns === 2
+      ? "grid-cols-2"
+      : effectiveGridColumns === 3
+        ? "grid-cols-3"
+        : "grid-cols-1",
+  );
   const rowCount = Math.ceil(filteredQuestions.length / columnsCount);
   const rowVirtualizer = useVirtualizer({
     count: rowCount,
@@ -319,9 +388,13 @@ export function QuestionLibraryPanel({
       `[data-question-card-id="${CSS.escape(activeQuestionId)}"]`,
     );
     if (alreadyRendered) return;
-    const flatIndex = filteredQuestions.findIndex(
-      (q) => q.id === activeQuestionId,
-    );
+    const flatIndex = filteredQuestions.findIndex((question) => {
+      if (question.id === activeQuestionId) return true;
+      const set = question.setId ? setsById.get(question.setId) : null;
+      return Boolean(
+        set?.members.some((member) => member.questionId === activeQuestionId),
+      );
+    });
     if (flatIndex < 0) return;
     rowVirtualizer.scrollToIndex(Math.floor(flatIndex / columnsCount), {
       align: "center",
@@ -330,6 +403,7 @@ export function QuestionLibraryPanel({
     activeQuestionId,
     libraryView,
     filteredQuestions,
+    setsById,
     columnsCount,
     rowVirtualizer,
   ]);
@@ -378,6 +452,60 @@ export function QuestionLibraryPanel({
     setDifficulty("ALL");
     setSelectedSubTypes([]);
     setStarredOnly(false);
+  };
+  const renderSetCard = (question: BuilderQuestion) => {
+    const set = question.setId ? setsById.get(question.setId) : null;
+    if (!set) {
+      return (
+        <div
+          key={`set-loading:${question.setId ?? question.id}`}
+          className="min-h-[180px] rounded-lg border border-slate-200 bg-slate-50/70"
+          aria-hidden
+        />
+      );
+    }
+    return (
+      <ExamBuilderQuestionSetCard
+        key={`set:${set.id}`}
+        set={set}
+        selectedQuestionIds={selectedQuestionIds}
+        onToggleSetSelection={toggleSetSelection}
+        viewSize={viewSize}
+        activeQuestionId={activeQuestionId}
+      />
+    );
+  };
+
+  const renderQuestionCard = (question: BuilderQuestion, index: number) => {
+    if (question.setId) return renderSetCard(question);
+    const usageCount = paperQuestionCounts.get(question.id) || 0;
+    const selected = selectedQuestionIds.has(question.id);
+    return (
+      <QuestionBankCard
+        key={question.id}
+        q={question}
+        num={index + 1}
+        selected={selected}
+        onToggle={() => {
+          onToggleSelect(question.id);
+        }}
+        onDetail={() => onShowDetail(question)}
+        viewSize={viewSize}
+        showManagementActions={false}
+        enableDrag
+        compactUsageLabel
+        cardClickSelects
+        showDetailButton
+        dragRequiresSelection
+        getDragQuestionIds={buildDragQuestionIds}
+        selectionIndex={selectionOrder.get(question.id)}
+        active={activeQuestionId === question.id}
+        duplicateCount={usageCount > 1 ? usageCount : undefined}
+        selectedCardHighlight={false}
+        collapsible
+        compact
+      />
+    );
   };
 
   return (
@@ -593,121 +721,92 @@ export function QuestionLibraryPanel({
             </div>
           )
         ) : libraryView === "passages" ? (
-          <PassageGroupedView
-            passages={groupedPassages}
-            gridCols={effectiveGridColumns}
-            viewSize={viewSize}
-            selectedIds={selectedQuestionIds}
-            setSelectedIds={applySelectedQuestionIds}
-            marqueeBoundaryRef={marqueeBoundaryRef}
-            onToggleSelect={toggleQuestionById}
-            onDelete={() => undefined}
-            onApprove={() => undefined}
-            onToggleStar={() => undefined}
-            onEdit={(id) => {
-              const question = questionById.get(id);
-              if (question) onShowDetail(question);
-            }}
-            onDetail={(id) => {
-              const question = questionById.get(id);
-              if (question) onShowDetail(question);
-            }}
-            showManagementActions={false}
-            showStar={false}
-            enableDrag
-            compactUsageLabel
-            cardClickSelects
-            showDetailButton
-            selectedCardHighlight={false}
-            dragRequiresSelection
-            getDragQuestionIds={buildDragQuestionIds}
-            selectionOrder={selectionOrder}
-            activeQuestionId={activeQuestionId}
-            usageCounts={paperQuestionCounts}
-            collapsible
-            compact
-            expandedPassageIds={expandedPassageIds}
-            setExpandedPassageIds={setExpandedPassageIds}
-          />
+          <>
+            {setQuestionsOnPage.length > 0 ? (
+              <div className={cn("pb-2.5", questionGridClassName)}>
+                {setQuestionsOnPage.map((question) => renderSetCard(question))}
+              </div>
+            ) : null}
+            <PassageGroupedView
+              passages={groupedPassages}
+              gridCols={effectiveGridColumns}
+              viewSize={viewSize}
+              selectedIds={selectedQuestionIds}
+              setSelectedIds={applySelectedQuestionIds}
+              marqueeBoundaryRef={marqueeBoundaryRef}
+              onToggleSelect={toggleQuestionById}
+              onDelete={() => undefined}
+              onApprove={() => undefined}
+              onToggleStar={() => undefined}
+              onEdit={(id) => {
+                const question = questionById.get(id);
+                if (question) onShowDetail(question);
+              }}
+              onDetail={(id) => {
+                const question = questionById.get(id);
+                if (question) onShowDetail(question);
+              }}
+              showManagementActions={false}
+              showStar={false}
+              enableDrag
+              compactUsageLabel
+              cardClickSelects
+              showDetailButton
+              selectedCardHighlight={false}
+              dragRequiresSelection
+              getDragQuestionIds={buildDragQuestionIds}
+              selectionOrder={selectionOrder}
+              activeQuestionId={activeQuestionId}
+              usageCounts={paperQuestionCounts}
+              collapsible
+              compact
+              expandedPassageIds={expandedPassageIds}
+              setExpandedPassageIds={setExpandedPassageIds}
+            />
+          </>
         ) : (
           // 마키 시작은 패널 전체(상위 DragSelect)에서 처리하므로 여기선 가상 행만 둔다.
           // row 가상화: 보이는 행의 카드만 마운트하고, 전체 높이는 spacer 로 확보한다.
-          <div
-            style={{
-              height: rowVirtualizer.getTotalSize(),
-              position: "relative",
-              width: "100%",
-            }}
-          >
-            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-              const start = virtualRow.index * columnsCount;
-              const rowQuestions = filteredQuestions.slice(
-                start,
-                start + columnsCount,
-              );
-              return (
-                <div
-                  key={virtualRow.key}
-                  data-index={virtualRow.index}
-                  ref={rowVirtualizer.measureElement}
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    transform: `translateY(${virtualRow.start}px)`,
-                  }}
-                >
-                  {/* 행 사이 간격은 측정 높이에 포함되도록 pb 로 준다(세로 gap 대체). */}
-                  <div
-                    className={cn(
-                      "grid gap-2.5 pb-2.5",
-                      effectiveGridColumns === 2
-                        ? "grid-cols-2"
-                        : effectiveGridColumns === 3
-                          ? "grid-cols-3"
-                          : "grid-cols-1",
-                    )}
-                  >
-                    {rowQuestions.map((question, columnIndex) => {
-                      const index = start + columnIndex;
-                      const usageCount =
-                        paperQuestionCounts.get(question.id) || 0;
-                      const selected = selectedQuestionIds.has(question.id);
-                      return (
-                        <QuestionBankCard
-                          key={question.id}
-                          q={question}
-                          num={index + 1}
-                          selected={selected}
-                          onToggle={() => {
-                            onToggleSelect(question.id);
-                          }}
-                          onDetail={() => onShowDetail(question)}
-                          viewSize={viewSize}
-                          showManagementActions={false}
-                          enableDrag
-                          compactUsageLabel
-                          cardClickSelects
-                          showDetailButton
-                          dragRequiresSelection
-                          getDragQuestionIds={buildDragQuestionIds}
-                          selectionIndex={selectionOrder.get(question.id)}
-                          active={activeQuestionId === question.id}
-                          duplicateCount={
-                            usageCount > 1 ? usageCount : undefined
-                          }
-                          selectedCardHighlight={false}
-                          collapsible
-                          compact
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <>
+            {filteredQuestions.length > 0 ? (
+              <div
+                style={{
+                  height: rowVirtualizer.getTotalSize(),
+                  position: "relative",
+                  width: "100%",
+                }}
+              >
+                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                  const start = virtualRow.index * columnsCount;
+                  const rowQuestions = filteredQuestions.slice(
+                    start,
+                    start + columnsCount,
+                  );
+                  return (
+                    <div
+                      key={virtualRow.key}
+                      data-index={virtualRow.index}
+                      ref={rowVirtualizer.measureElement}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        transform: `translateY(${virtualRow.start}px)`,
+                      }}
+                    >
+                      {/* 행 사이 간격은 측정 높이에 포함되도록 pb 로 준다(세로 gap 대체). */}
+                      <div className={cn(questionGridClassName, "pb-2.5")}>
+                        {rowQuestions.map((question, columnIndex) =>
+                          renderQuestionCard(question, start + columnIndex),
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
+          </>
         )}
         {/* 페이지네이션 — 스크롤 목록의 "맨 끝"에 둬서 끝까지 내려야 보이게 한다(문제관리
             페이지와 동일). 고정 푸터가 아니라 콘텐츠와 함께 스크롤된다. 문제별 보기 전용

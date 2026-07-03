@@ -89,6 +89,8 @@ import { useQuestionEditor } from "./question-bank-client/use-question-editor";
 import { useUrlFilters } from "@/hooks/use-url-filters";
 import { useSelection } from "@/hooks/use-selection";
 import { useFolderManager } from "@/hooks/use-folder-manager";
+import { getAcademyQuestionSetMemberMap } from "@/actions/question-sets";
+import { QuestionSetSection } from "@/components/workbench/question-set-section";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -147,6 +149,7 @@ interface QuestionBankProps {
   view: "flat" | "passage";
   questionsData: {
     questions: QuestionItem[];
+    setIds?: string[];
     total: number;
     page: number;
     totalPages: number;
@@ -271,6 +274,14 @@ export function QuestionBankClient({
   }
 
   // Folder manager
+  const [setCount, setSetCount] = useState<number | null>(null);
+  const [setMemberMap, setSetMemberMap] = useState<Record<string, string>>({});
+  useEffect(() => {
+    getAcademyQuestionSetMemberMap()
+      .then(setSetMemberMap)
+      .catch(() => {});
+  }, []);
+
   const folders = useFolderManager({
     initialCollections,
     initialMembership,
@@ -282,7 +293,9 @@ export function QuestionBankClient({
       removeFromCollection: removeQuestionsFromCollection,
     },
     itemLabel: "문제",
-    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    questionSetIdOf: (id) => setMemberMap[id] ?? null,
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거). 세트 멤버는
+    // questionSetIdOf 로 한 세트를 1개로 접어, 실제 카드 단위와 배지를 맞춘다.
     cumulativeCounts: true,
   });
 
@@ -390,6 +403,7 @@ export function QuestionBankClient({
     : folders.activeFolder === null
       ? flatQuestions
       : questionsInActiveFolder;
+  const pageSetIds = questionsData?.setIds ?? [];
 
   // Selection
   const displayedQuestionIds = useMemo(
@@ -418,10 +432,6 @@ export function QuestionBankClient({
   const totalCount = isGrouped
     ? (groupedData?.total ?? 0)
     : (questionsData?.total ?? 0);
-  const allPagesSelectableCount =
-    !isGrouped && folders.activeFolder
-      ? (folders.membership[folders.activeFolder]?.size ?? 0)
-      : totalCount;
   const currentPage = isGrouped
     ? (groupedData?.page ?? 1)
     : (questionsData?.page ?? 1);
@@ -665,8 +675,9 @@ export function QuestionBankClient({
 
   // ─── Folder drag handler (wraps hook's handler with selectedIds) ───
   const handleDragToFolder = useCallback(
+    // 세트 드래그면 itemId 가 멤버 배열 — 훅이 배열을 그대로 받아 전체를 폴더에 넣는다.
     async (
-      itemId: string,
+      itemId: string | string[],
       folderId: string,
       copy: boolean,
       keepFolderIds: string[] = [],
@@ -698,9 +709,13 @@ export function QuestionBankClient({
   );
 
   const handleDragToRoot = useCallback(
-    async (itemId: string, copy: boolean) => {
+    async (itemId: string | string[], copy: boolean) => {
       if (copy || !folders.activeFolder) return;
-      const ids = selectedIds.has(itemId) ? selectedIds : new Set([itemId]);
+      // 세트는 멤버 전체(배열)를 폴더에서 뺀다.
+      const draggedIds = Array.isArray(itemId) ? itemId : [itemId];
+      const ids = draggedIds.some((id) => selectedIds.has(id))
+        ? selectedIds
+        : new Set(draggedIds);
       const success = await folders.handleRemoveFromFolder(ids);
       if (success) clearSelection();
     },
@@ -1159,8 +1174,7 @@ export function QuestionBankClient({
   );
 
   const isEmpty =
-    (isGrouped ? groupedPassages.length === 0 : flatQuestions.length === 0) &&
-    !folders.activeFolder;
+    isGrouped && groupedPassages.length === 0 && !folders.activeFolder;
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-64px)]">
@@ -1291,88 +1305,106 @@ export function QuestionBankClient({
                       : undefined
                   }
                 />
-              ) : displayedQuestions.length === 0 && !isNavPending ? (
-                <div className="py-12 text-center">
-                  <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />
-                  <p className="text-[13px] text-slate-400">
-                    {folders.activeFolder
-                      ? "이 폴더에 문제가 없습니다."
-                      : "등록된 문제가 없습니다."}
-                  </p>
-                  {folders.activeFolder && (
-                    <p className="text-[12px] text-slate-400 mt-1">
-                      문제를 선택 후 &quot;폴더에 추가&quot;를 사용하세요.
-                    </p>
-                  )}
-                </div>
               ) : (
-                <DragSelect
-                  value={selectedIds}
-                  onChange={setSelectedIds}
-                  className={`grid gap-3 ${
-                    gridCols === 2
-                      ? "grid-cols-1 md:grid-cols-2"
-                      : gridCols === 3
-                        ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                        : "grid-cols-1"
-                  }`}
-                >
-                  {displayedQuestions.map((q, idx) => {
-                    const startIdx = (currentPage - 1) * 20;
-                    if (showingPendingOnly) {
-                      return (
-                        <QuestionCard
-                          key={q.id}
-                          q={q}
-                          num={startIdx + idx + 1}
-                          selected={selectedIds.has(q.id)}
-                          recentlyViewed={
-                            lastViewedQuestionId === q.id &&
-                            detailQuestionId !== q.id
-                          }
-                          onToggle={() => toggleSelect(q.id)}
-                          onApprove={() => handleApprove(q.id)}
-                          onDetail={() => openDetail(q.id)}
-                          onEdit={() => editor.openEditor(q.id)}
-                          readonly
-                          compact
-                          showReviewActions
-                          openOnCardClick
-                        />
-                      );
-                    }
-                    const similarAnalysis = getSimilarSourceAnalysis(q);
-                    return (
-                      <QuestionBankCard
-                        key={q.id}
-                        q={q}
-                        num={startIdx + idx + 1}
-                        selected={selectedIds.has(q.id)}
-                        recentlyViewed={
-                          lastViewedQuestionId === q.id &&
-                          detailQuestionId !== q.id
-                        }
-                        onToggle={() => toggleSelect(q.id)}
-                        onDelete={() => handleDelete(q.id)}
-                        onApprove={() => handleApprove(q.id)}
-                        onUnapprove={() => handleUnapprove(q.id)}
-                        onToggleStar={() => handleToggleStar(q.id)}
-                        onDetail={() => openDetail(q.id)}
-                        onEdit={() => editor.openEditor(q.id)}
-                        onShowAnalysis={
-                          similarAnalysis
-                            ? () => setSourceAnalysis(similarAnalysis)
-                            : undefined
-                        }
-                        viewSize={viewSize}
-                        cardClickSelects
-                        showDetailButton
-                        dragRequiresSelection
-                        getDragQuestionIds={getDragQuestionIds}
-                      />
-                    );
-                  })}
-                </DragSelect>
+                <>
+                  <DragSelect
+                    value={selectedIds}
+                    onChange={setSelectedIds}
+                    className={`grid gap-3 ${
+                      gridCols === 2
+                        ? "grid-cols-1 md:grid-cols-2"
+                        : gridCols === 3
+                          ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                          : "grid-cols-1"
+                    }`}
+                  >
+                    <QuestionSetSection
+                      inline
+                      showSets={pageSetIds.length > 0}
+                      setIds={pageSetIds}
+                      refreshKey={`${folders.activeFolder ?? "all"}:${filters.approved ?? "all"}:${filters.subType ?? "all"}:${filters.difficulty ?? "all"}:${filters.search ?? ""}`}
+                      onCountChange={setSetCount}
+                      onMemberSplit={() => router.refresh()}
+                      collectionId={folders.activeFolder ?? undefined}
+                      filters={filters}
+                      normalItems={displayedQuestions.map((q, idx) => {
+                        const startIdx = (currentPage - 1) * 20;
+                        const similarAnalysis = showingPendingOnly
+                          ? null
+                          : getSimilarSourceAnalysis(q);
+                        return {
+                          id: q.id,
+                          createdAt: q.createdAt,
+                          node: showingPendingOnly ? (
+                            <QuestionCard
+                              key={q.id}
+                              q={q}
+                              num={startIdx + idx + 1}
+                              selected={selectedIds.has(q.id)}
+                              recentlyViewed={
+                                lastViewedQuestionId === q.id &&
+                                detailQuestionId !== q.id
+                              }
+                              onToggle={() => toggleSelect(q.id)}
+                              onApprove={() => handleApprove(q.id)}
+                              onDetail={() => openDetail(q.id)}
+                              onEdit={() => editor.openEditor(q.id)}
+                              readonly
+                              compact
+                              showReviewActions
+                              openOnCardClick
+                            />
+                          ) : (
+                            <QuestionBankCard
+                              key={q.id}
+                              q={q}
+                              num={startIdx + idx + 1}
+                              selected={selectedIds.has(q.id)}
+                              recentlyViewed={
+                                lastViewedQuestionId === q.id &&
+                                detailQuestionId !== q.id
+                              }
+                              onToggle={() => toggleSelect(q.id)}
+                              onDelete={() => handleDelete(q.id)}
+                              onApprove={() => handleApprove(q.id)}
+                              onUnapprove={() => handleUnapprove(q.id)}
+                              onToggleStar={() => handleToggleStar(q.id)}
+                              onDetail={() => openDetail(q.id)}
+                              onEdit={() => editor.openEditor(q.id)}
+                              onShowAnalysis={
+                                similarAnalysis
+                                  ? () => setSourceAnalysis(similarAnalysis)
+                                  : undefined
+                              }
+                              viewSize={viewSize}
+                              cardClickSelects
+                              showDetailButton
+                              dragRequiresSelection
+                              getDragQuestionIds={getDragQuestionIds}
+                            />
+                          ),
+                        };
+                      })}
+                    />
+                  </DragSelect>
+                  {displayedQuestions.length === 0 &&
+                    setCount === 0 &&
+                    !isNavPending && (
+                      <div className="py-12 text-center">
+                        <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />
+                        <p className="text-[13px] text-slate-400">
+                          {folders.activeFolder
+                            ? "이 폴더에 문제가 없습니다."
+                            : "등록된 문제가 없습니다."}
+                        </p>
+                        {folders.activeFolder && (
+                          <p className="text-[12px] text-slate-400 mt-1">
+                            문제를 선택 후 &quot;폴더에 추가&quot;를 사용하세요.
+                          </p>
+                        )}
+                      </div>
+                    )}
+                </>
               )}
             </div>
           </section>

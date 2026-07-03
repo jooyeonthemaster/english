@@ -64,6 +64,7 @@ import {
 } from "@/actions/workbench";
 import { createExam } from "@/actions/exams";
 import { QuestionSetSection } from "@/components/workbench/question-set-section";
+import { getAcademyQuestionSetMemberMap } from "@/actions/question-sets";
 import { EXAM_SEED_QUESTION_IDS_KEY } from "@/lib/exam-paper-seed";
 
 import { confirmNative } from "@/lib/browser-confirm";
@@ -326,6 +327,7 @@ export function EmbeddedQuestionBank({
   // ─── Server data (re-fetched client-side on filter change) ───
   const [questionsData, setQuestionsData] = useState<{
     questions: any[];
+    setIds?: string[];
     total: number;
     page: number;
     totalPages: number;
@@ -347,6 +349,13 @@ export function EmbeddedQuestionBank({
 
   // ─── Folder manager (client-side, like QuestionBankClient) ───
   const [collectionsLoaded, setCollectionsLoaded] = useState(false);
+  const [setMemberMap, setSetMemberMap] = useState<Record<string, string>>({});
+  useEffect(() => {
+    getAcademyQuestionSetMemberMap()
+      .then(setSetMemberMap)
+      .catch(() => {});
+  }, [setRefreshKey]);
+
   const folders = useFolderManager({
     initialCollections: [],
     initialMembership: {},
@@ -358,7 +367,9 @@ export function EmbeddedQuestionBank({
       removeFromCollection: removeQuestionsFromCollection,
     },
     itemLabel: "문제",
-    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    questionSetIdOf: (id) => setMemberMap[id] ?? null,
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거). 세트 멤버는
+    // questionSetIdOf 로 한 세트를 1개로 접어, 실제 카드 단위와 배지를 맞춘다.
     cumulativeCounts: true,
   });
 
@@ -508,8 +519,8 @@ export function EmbeddedQuestionBank({
   }, [queueCounts.done, open, loadQuestions]);
 
   // ── 지문 세트 ── 일반 문항과 별개의 전용 섹션(QuestionSetSection)이 세트를 한 장의
-  // 카드로 묶어 보여준다. 여기선 빈-상태 판정용 세트 수만 추적한다.
-  const [setCount, setSetCount] = useState(0);
+  // 카드로 묶어 보여준다. null 은 아직 세트 목록 로딩 전이라 빈 상태를 확정하지 않는다.
+  const [setCount, setSetCount] = useState<number | null>(null);
 
   // Debounced spinner so fast loads don't flash.
   useEffect(() => {
@@ -647,6 +658,22 @@ export function EmbeddedQuestionBank({
   const { selectedIds, setSelectedIds, toggleSelect, clearSelection } =
     useSelection(getDisplayedIds);
 
+  // 세트 카드 체크박스 — 세트의 멤버 문항 id 전체를 선택/해제(일반 카드와 동일 selectedIds 공유).
+  // 시험지 빌더가 setId 로 묶어 렌더하므로 멤버를 개별 id 로 담아도 세트가 유지된다.
+  const handleToggleSetSelection = useCallback(
+    (memberQuestionIds: string[], select: boolean) => {
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        for (const id of memberQuestionIds) {
+          if (select) next.add(id);
+          else next.delete(id);
+        }
+        return next;
+      });
+    },
+    [setSelectedIds],
+  );
+
   // ─── Grid view mode (separate storage key from question-management) ───
   const [gridCols, setGridCols] = usePersistedState<2 | 3 | "list">(
     "smoat:view-mode:generate-embedded-question-bank",
@@ -659,6 +686,7 @@ export function EmbeddedQuestionBank({
   const totalCount = isGrouped
     ? (groupedData?.total ?? 0)
     : (questionsData?.total ?? 0);
+  const pageSetIds = questionsData?.setIds ?? [];
   const currentPage = isGrouped
     ? (groupedData?.page ?? 1)
     : (questionsData?.page ?? 1);
@@ -934,12 +962,20 @@ export function EmbeddedQuestionBank({
   }, [folders, clearSelection]);
 
   const handleDragToFolder = useCallback(
-    async (itemId: string, folderId: string, copy: boolean) => {
+    // 세트 드래그면 itemId 가 멤버 배열 — 훅이 배열째 받아 전체를 폴더에 넣는다.
+    // keepFolderIds = 이동 시 사본을 남길 폴더들(이동/복사 팝오버의 "폴더별 남기기").
+    async (
+      itemId: string | string[],
+      folderId: string,
+      copy: boolean,
+      keepFolderIds: string[] = [],
+    ) => {
       const success = await folders.handleDragToFolder(
         itemId,
         folderId,
         copy,
         selectedIds,
+        keepFolderIds,
       );
       if (success) clearSelection();
     },
@@ -947,9 +983,13 @@ export function EmbeddedQuestionBank({
   );
 
   const handleDragToRoot = useCallback(
-    async (itemId: string, copy: boolean) => {
+    async (itemId: string | string[], copy: boolean) => {
       if (copy || !folders.activeFolder) return;
-      const ids = selectedIds.has(itemId) ? selectedIds : new Set([itemId]);
+      // 세트는 멤버 전체(배열)를 폴더에서 뺀다.
+      const draggedIds = Array.isArray(itemId) ? itemId : [itemId];
+      const ids = draggedIds.some((id) => selectedIds.has(id))
+        ? selectedIds
+        : new Set(draggedIds);
       const success = await folders.handleRemoveFromFolder(ids);
       if (success) clearSelection();
     },
@@ -1531,16 +1571,21 @@ export function EmbeddedQuestionBank({
               {queueStrip}
 
               {isGrouped ? (
-                <>
-                  <div className="mb-3">
-                    <QuestionSetSection
-                      showSets={false}
-                      refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}`}
-                      onCountChange={setSetCount}
-                      onMemberSplit={handleSplitCreated}
-                      gridClassName={`grid items-start gap-3 ${
-                        gridCols === 2
-                          ? "grid-cols-1 md:grid-cols-2"
+                  <>
+                    <div className="mb-3">
+                      <QuestionSetSection
+                        showSets={pageSetIds.length > 0}
+                        setIds={pageSetIds}
+                        refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
+                        onCountChange={setSetCount}
+                        onMemberSplit={handleSplitCreated}
+                        selectedQuestionIds={selectedIds}
+                        onToggleSetSelection={handleToggleSetSelection}
+                        collectionId={folders.activeFolder ?? undefined}
+                        filters={effectiveFilters}
+                        gridClassName={`grid items-start gap-3 ${
+                          gridCols === 2
+                            ? "grid-cols-1 md:grid-cols-2"
                           : gridCols === 3
                             ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
                             : "grid-cols-1"
@@ -1606,10 +1651,15 @@ export function EmbeddedQuestionBank({
                       (종류 불문 통합 정렬). 세트는 최신이라 1페이지에서만 끼운다. */}
                   <QuestionSetSection
                     inline
-                    showSets={false}
-                    refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}`}
+                    showSets={pageSetIds.length > 0}
+                    setIds={pageSetIds}
+                    refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
                     onCountChange={setSetCount}
                     onMemberSplit={handleSplitCreated}
+                    selectedQuestionIds={selectedIds}
+                    onToggleSetSelection={handleToggleSetSelection}
+                    collectionId={folders.activeFolder ?? undefined}
+                    filters={effectiveFilters}
                     normalItems={displayedQuestions.map((q, idx) => {
                       const startIdx = (currentPage - 1) * pageSize;
                       return {

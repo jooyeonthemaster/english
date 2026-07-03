@@ -36,6 +36,10 @@ export function folderDropItemId(
   data: Record<string, unknown>,
   dragItemIdKey: string,
 ): string | string[] {
+  // 지문 세트 카드 드래그: 멤버 questionId 배열(questionIds)을 통째로 넘겨
+  // 세트 전체가 함께 이동/복사된다(일반 단일 드래그는 questionIds가 [자기 id]라 동작 동일).
+  const qids = data.questionIds;
+  if (Array.isArray(qids) && qids.length > 0) return qids as string[];
   if (data.type === "draft-bulk" && Array.isArray(data.draftIds)) {
     return data.draftIds as string[];
   }

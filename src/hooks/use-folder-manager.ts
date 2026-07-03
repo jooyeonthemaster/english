@@ -34,6 +34,9 @@ interface UseFolderManagerOptions {
   actions: FolderActions;
   /** Label used in toast messages (e.g. "지문" or "문제") */
   itemLabel: string;
+  /** questionId → setId 역참조. 있으면 폴더 카운트에서 세트 멤버를 "세트 1개"로 센다
+   *  (일반 문제와 동일 시각 단위). 미지정(지문/추출 폴더 등)이면 raw 멤버 수로 폴백. */
+  questionSetIdOf?: (itemId: string) => string | null | undefined;
   /**
    * 폴더 배지를 하위 폴더까지 합산한 누적(중복 제거) 수치로 노출할지. 켜면
    * 노출되는 collections/childFolders 각각에 totalItems가 채워진다. 지문/시험지
@@ -63,6 +66,7 @@ export function useFolderManager({
   initialMembership,
   actions,
   itemLabel,
+  questionSetIdOf,
   cumulativeCounts = false,
 }: UseFolderManagerOptions) {
   // ─── State ───
@@ -85,6 +89,24 @@ export function useFolderManager({
    * (total - 고유수). 다대다 멤버십이라 단순 합산(total)과 고유수(distinct)가 다르다.
    * membership이 바뀌면(드래그 이동 등) 자동 재계산돼 배지가 실시간 반영된다.
    */
+  // 폴더 카운트 = 일반 문제(setId 없음) + 서로 다른 세트(distinct setId). questionSetIdOf 미지정 시
+  // 기존처럼 raw 멤버 수(지문/추출 폴더 등 세트 개념이 없는 표면은 그대로).
+  const countItems = useCallback(
+    (ids: Set<string> | undefined): number => {
+      if (!ids) return 0;
+      if (!questionSetIdOf) return ids.size;
+      let regular = 0;
+      const sets = new Set<string>();
+      for (const id of ids) {
+        const setId = questionSetIdOf(id);
+        if (setId) sets.add(setId);
+        else regular += 1;
+      }
+      return regular + sets.size;
+    },
+    [questionSetIdOf],
+  );
+
   const cumulativeById = useMemo(() => {
     if (!cumulativeCounts) return null;
     const childrenOf = new Map<string, string[]>();
@@ -109,7 +131,7 @@ export function useFolderManager({
         visited.add(id);
         const members = membership[id];
         if (members) {
-          raw += members.size;
+          raw += countItems(members);
           for (const item of members) seenItems.add(item);
         }
         const kids = childrenOf.get(id);
@@ -117,12 +139,12 @@ export function useFolderManager({
       }
       result[root.id] = {
         total: raw,
-        duplicates: raw - seenItems.size,
+        duplicates: raw - countItems(seenItems),
         childCount: (childrenOf.get(root.id) ?? []).length,
       };
     }
     return result;
-  }, [cumulativeCounts, collections, membership]);
+  }, [cumulativeCounts, collections, countItems, membership]);
 
   /**
    * 노출용 컬렉션: 누적 모드일 때 totalItems·duplicateCount를 덧붙이고,
@@ -187,12 +209,12 @@ export function useFolderManager({
           ...c,
           _count: {
             ...c._count,
-            items: nextMembership[c.id]?.size ?? 0,
+            items: countItems(nextMembership[c.id]),
           },
         })),
       );
     },
-    [],
+    [countItems],
   );
 
   const applyMembershipSnapshot = useCallback(

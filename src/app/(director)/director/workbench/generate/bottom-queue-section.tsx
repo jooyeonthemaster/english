@@ -531,6 +531,18 @@ export function BottomQueueSection({
     [reviewFilteredSavedQuestions, savedPlanFilter],
   );
 
+  const questionSetFilters = useMemo(
+    () => ({
+      approved:
+        reviewStatusFilter === "APPROVED"
+          ? true
+          : reviewStatusFilter === "PENDING"
+            ? false
+            : undefined,
+    }),
+    [reviewStatusFilter],
+  );
+
   // 현재 세션에서 이미 카드로 보여주는 문제 id (저장 목록과의 중복 제거용)
   const sessionCardQuestionIds = useMemo(() => {
     const ids = new Set<string>();
@@ -664,7 +676,7 @@ export function BottomQueueSection({
   // ── 지문 세트 ── 일반 문항과 완전히 별개의 렌더 경로. 멤버는 inSet=true 라 일반
   // 목록에는 안 뜨고, 전용 QuestionSetSection 이 세트를 한 장의 카드로 묶어 보여준다.
   // 여기선 빈-상태 판정에 쓸 세트 수만 추적한다(섹션이 콜백으로 알려줌).
-  const [setCount, setSetCount] = useState(0);
+  const [setCount, setSetCount] = useState<number | null>(null);
 
   // Passage-grouped saved cards for the 지문별 view.
   const savedCardsForDisplayGroups = useMemo(
@@ -1381,6 +1393,7 @@ export function BottomQueueSection({
               <QuestionSetSection
                 refreshKey={savedQuestions}
                 onCountChange={setSetCount}
+                filters={questionSetFilters}
                 gridClassName={cardLayoutClassNames[cardLayoutMode]}
               />
               <DragSelect
@@ -1419,6 +1432,7 @@ export function BottomQueueSection({
             <QuestionSetSection
               refreshKey={savedQuestions}
               onCountChange={setSetCount}
+              filters={questionSetFilters}
               gridClassName={cardLayoutClassNames[cardLayoutMode]}
             />
             {savedCardsForDisplayGroups.map((group) =>

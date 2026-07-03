@@ -338,6 +338,7 @@ function buildGroups(items: PaperItem[]): PaperGroup[] {
         includePassage: false,
         passageTitle: "",
         passageContent: "",
+        setPrompt: "",
       });
       continue;
     }
@@ -357,6 +358,7 @@ function buildGroups(items: PaperItem[]): PaperGroup[] {
         includePassage: shouldRenderSeparateSourcePassage(item),
         passageTitle: resolvePaperItemPassageTitle(item),
         passageContent: item.passageContent,
+        setPrompt: "",
       });
     }
   }
