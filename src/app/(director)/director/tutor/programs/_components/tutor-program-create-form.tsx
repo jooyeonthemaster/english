@@ -5,6 +5,7 @@ import type { ComponentProps, MouseEvent } from "react";
 import { CheckCircle2, FileText, Loader2, Send, Settings2, Users, Wand2, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
+import { datetimeLocalToIso } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   countWords,
@@ -230,7 +231,8 @@ export function TutorProgramCreateForm({
           passageIds,
           publishTargetType,
           publishTargetId: publishTargetId || undefined,
-          dueAt: dueAt || undefined,
+          // 벽시계 → 절대시각(UTC ISO). 서버 타임존과 무관하게 마감시각 저장.
+          dueAt: datetimeLocalToIso(dueAt) ?? undefined,
         }),
       });
       const result = await response.json().catch(() => ({}));

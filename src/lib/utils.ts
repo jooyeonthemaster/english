@@ -52,6 +52,30 @@ export function formatTime(date: Date | string) {
   return `${p.hour}:${p.minute}`;
 }
 
+// ── <input type="datetime-local"> ↔ 절대시각(UTC ISO) ────────────────────────
+// datetime-local 값은 타임존이 없는 "벽시계" 문자열이다. 이를 서버에서 new Date()로
+// 파싱하면 '서버' 타임존으로 해석돼, 프로덕션(UTC)에선 KST 사용자의 입력이 9시간
+// 어긋나 저장된다. 따라서 저장은 반드시 브라우저(사용자 타임존)에서 ISO로 변환해
+// 보내고, 표시는 다시 로컬 벽시계로 되돌린다. (배너·플랜 편집기가 쓰던 올바른 패턴.)
+/** ISO(또는 Date) → datetime-local 입력값("YYYY-MM-DDTHH:mm", 로컬 벽시계). */
+export function isoToDatetimeLocal(
+  iso: string | Date | null | undefined,
+): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60_000);
+  return local.toISOString().slice(0, 16);
+}
+/** datetime-local 입력값(로컬 벽시계) → 절대시각(UTC ISO). 빈 값이면 null. */
+export function datetimeLocalToIso(
+  value: string | null | undefined,
+): string | null {
+  if (!value) return null;
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString();
+}
+
 // 상대시간("3시간 전")은 두 절대시각의 '차이'라 타임존과 무관하므로 그대로 둔다.
 export function formatRelativeTime(date: Date | string) {
   return formatDistanceToNow(new Date(date), { addSuffix: true, locale: ko });

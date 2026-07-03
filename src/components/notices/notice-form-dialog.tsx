@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { NOTICE_TARGET_TYPES } from "@/lib/constants";
 import { createNotice, updateNotice } from "@/actions/communication";
+import { datetimeLocalToIso, isoToDatetimeLocal } from "@/lib/utils";
 import { toast } from "sonner";
 import { Pin, Send, Bell } from "lucide-react";
 
@@ -62,6 +63,12 @@ export function NoticeFormDialog({
 
     if (!useSchedule) {
       formData.delete("publishAt");
+    } else {
+      // 벽시계 → 절대시각(UTC ISO). 서버 타임존과 무관하게 예약 시각이 저장되도록.
+      const raw = formData.get("publishAt");
+      if (typeof raw === "string" && raw) {
+        formData.set("publishAt", datetimeLocalToIso(raw) ?? raw);
+      }
     }
 
     startTransition(async () => {
@@ -215,11 +222,7 @@ export function NoticeFormDialog({
                 id="notice-publish"
                 name="publishAt"
                 type="datetime-local"
-                defaultValue={
-                  notice?.publishAt
-                    ? new Date(notice.publishAt).toISOString().slice(0, 16)
-                    : ""
-                }
+                defaultValue={isoToDatetimeLocal(notice?.publishAt)}
               />
             </div>
           )}

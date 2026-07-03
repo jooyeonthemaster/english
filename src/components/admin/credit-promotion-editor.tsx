@@ -41,6 +41,16 @@ export function toDatetimeLocal(value: string | null | undefined) {
   return local.toISOString().slice(0, 16);
 }
 
+// datetime-local 입력값(타임존 없는 벽시계 문자열)을 절대 시각(UTC ISO)으로 변환.
+// 브라우저에서 실행되므로 관리자의 실제 타임존으로 해석된다 → 서버 타임존(UTC 등)에
+// 상관없이 항상 같은 순간이 저장된다. (예전엔 서버에서 new Date(문자열)로 파싱해
+// 프로덕션 UTC 서버에서 KST 관리자의 입력이 9시간 어긋나 "저장이 안 되는" 것처럼 보였음.)
+export function fromDatetimeLocal(value: string): string {
+  if (!value) return "";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString();
+}
+
 // datetime-local 기본값(신규 프로모션): 지금 ~ +7일.
 function nowDatetimeLocal(offsetDays = 0): string {
   const d = new Date(Date.now() + offsetDays * 86_400_000);
@@ -157,8 +167,9 @@ export function PromotionEditor({
         discountValue: Number(discountValue || 0),
         bonusType,
         bonusValue: Number(bonusValue || 0),
-        startsAt,
-        endsAt,
+        // 벽시계 → 절대 시각(UTC ISO). 서버 타임존에 의존하지 않도록 클라이언트에서 변환.
+        startsAt: fromDatetimeLocal(startsAt),
+        endsAt: fromDatetimeLocal(endsAt),
         audience,
         priority: Number(priority || 0),
         isActive,

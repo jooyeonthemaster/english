@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { publishTutorProgramAction } from "@/actions/tutor";
+import { datetimeLocalToIso } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 type TargetOption = {
@@ -55,7 +56,8 @@ export function TutorPublishForm({
     formData.set("programId", programId);
     formData.set("targetType", targetType);
     if (targetId) formData.set("targetId", targetId);
-    if (dueAt) formData.set("dueAt", dueAt);
+    // 벽시계 → 절대시각(UTC ISO). 서버 타임존과 무관하게 마감시각 저장.
+    if (dueAt) formData.set("dueAt", datetimeLocalToIso(dueAt) ?? dueAt);
 
     setMessage(null);
     startTransition(async () => {

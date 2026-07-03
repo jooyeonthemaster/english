@@ -20,6 +20,23 @@ const VALID_SEMINAR_STATUSES = new Set<string>([
   ...SEMINAR_STATUSES.map((s) => s.value),
 ]);
 
+// datetime-local(로컬 벽시계) ↔ 절대시각(UTC ISO) 변환. 예전엔 저장 시 타임존 없는
+// 문자열을 그대로 서버로 보내고, 표시 땐 ISO를 slice(0,16)로 잘라 써서 프로덕션(UTC)
+// 서버에서 관리자가 입력한 KST 시각이 9시간 어긋나 원장에게 잘못된 확정 일정이 노출됐다.
+// 저장은 브라우저(관리자 타임존)에서 ISO로 변환해 보내고, 표시는 로컬 벽시계로 되돌린다.
+function isoToDatetimeLocal(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60_000);
+  return local.toISOString().slice(0, 16);
+}
+function datetimeLocalToIso(value: string): string | null {
+  if (!value) return null;
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString();
+}
+
 export function AdminSeminarsClient({
   initialData,
   initialStatus,
@@ -54,7 +71,7 @@ export function AdminSeminarsClient({
   function select(r: AdminSeminarRequestView) {
     setSelectedId(r.id);
     setMemo(r.adminMemo ?? "");
-    setScheduledAt(r.scheduledAt ? r.scheduledAt.slice(0, 16) : "");
+    setScheduledAt(isoToDatetimeLocal(r.scheduledAt));
     setMeetingUrl(r.meetingUrl ?? "");
     setEditStatus(r.status);
   }
@@ -84,7 +101,7 @@ export function AdminSeminarsClient({
         await adminUpdateSeminarRequest(selected.id, {
           status: editStatus || selected.status,
           adminMemo: memo,
-          scheduledAt: scheduledAt || null,
+          scheduledAt: datetimeLocalToIso(scheduledAt),
           meetingUrl: meetingUrl || null,
         });
         toast.success("저장되었습니다.");
@@ -105,7 +122,7 @@ export function AdminSeminarsClient({
   const isEditingSelected =
     !!selected &&
     (memo !== (selected.adminMemo ?? "") ||
-      scheduledAt !== (selected.scheduledAt ? selected.scheduledAt.slice(0, 16) : "") ||
+      scheduledAt !== isoToDatetimeLocal(selected.scheduledAt) ||
       meetingUrl !== (selected.meetingUrl ?? "") ||
       editStatus !== selected.status);
 

@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
 import { createAssignment } from "@/actions/assignments";
+import { datetimeLocalToIso } from "@/lib/utils";
 import { toast } from "sonner";
 
 // ---------------------------------------------------------------------------
@@ -83,7 +84,8 @@ export function AssignmentFormDialog({
         description: description.trim() || undefined,
         classId: classId || null,
         targetType,
-        dueDate,
+        // 벽시계 → 절대시각(UTC ISO). 서버 타임존과 무관하게 마감시각 저장.
+        dueDate: datetimeLocalToIso(dueDate) ?? dueDate,
         maxScore: maxScore ? parseInt(maxScore) : null,
       });
 
