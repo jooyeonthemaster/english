@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Live quality loop for the IRRELEVANT question type.
  *
  * Exercises the same STANDARD/Gemini workbench pipeline used by generation:
@@ -41,19 +41,19 @@ type GeneratedQuestion = Record<string, unknown>;
 function normalizeLabel(value: unknown): string {
   const text = typeof value === "string" ? value.trim() : "";
   const circledMap: Record<string, string> = {
-    "①": "1",
-    "②": "2",
-    "③": "3",
-    "④": "4",
-    "⑤": "5",
+    "??: "1",
+    "??: "2",
+    "??: "3",
+    "??: "4",
+    "??: "5",
   };
   return (circledMap[text] ?? text).replace(/^[\(\[]?([1-5])[\)\].]?\s*$/, "$1");
 }
 
 function normalizeComparableText(value: string): string {
   return value
-    .replace(/[“”]/g, "\"")
-    .replace(/[‘’]/g, "'")
+    .replace(/[?쒋?/g, "\"")
+    .replace(/[?섃?/g, "'")
     .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
@@ -237,7 +237,7 @@ async function runCase(passage: { id: string; text: string }, runIndex: number) 
     teacherIntentBlock: "",
     analysisContext: "",
     diffLabel: "KILLER",
-    diffInstruction: "same-topic but discourse-breaking 수능형 무관한 문장",
+    diffInstruction: "same-topic but discourse-breaking ?섎뒫??臾닿???臾몄옣",
     generationPlan: "STANDARD",
   }, {
     maxAttempts: 3,
@@ -263,8 +263,8 @@ async function runCase(passage: { id: string; text: string }, runIndex: number) 
 }
 
 async function main() {
-  if (!process.env.GEMINI_API_KEY && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    throw new Error("GEMINI_API_KEY or GOOGLE_GENERATIVE_AI_API_KEY is required.");
+  if (!process.env.ATLASCLOUD_API_KEY && !process.env.OPENROUTER_API_KEY) {
+    throw new Error("ATLASCLOUD_API_KEY or OPENROUTER_API_KEY is required.");
   }
 
   fs.mkdirSync(OUTDIR, { recursive: true });
@@ -282,7 +282,7 @@ async function main() {
     JSON.stringify(
       {
         generatedAt: new Date().toISOString(),
-        model: process.env.GEMINI_MODEL ?? "gemini-3.5-flash",
+        model: process.env.ATLASCLOUD_TEXT_MODEL ?? "google/gemini-3.5-flash",
         okCount,
         total: results.length,
         results,

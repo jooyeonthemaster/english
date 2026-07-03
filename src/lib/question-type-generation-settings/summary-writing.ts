@@ -184,7 +184,7 @@ export function resolveSummaryWritingSettings(
     "wordBankEnabled",
     preset.wordBankEnabled,
   );
-  const glossLooseness = readSummaryWritingEnumSetting(
+  let glossLooseness = readSummaryWritingEnumSetting(
     rawSettings,
     "glossLooseness",
     ["literal", "natural", "gist", "partial"] as const,
@@ -292,6 +292,11 @@ export function resolveSummaryWritingSettings(
   // #5: useAll → exact 표시 금지(칩 개수=정답 단어수 + 정확수 = 이중 누설) → approx 로 강등.
   if (wordBankEnabled && wordBankUsage === "useAll" && targetWordsMode === "exact") {
     targetWordsMode = "approx";
+  }
+  // #7: KILLER 에서 literal 해석 금지(직역은 번역 역행 = 사실상 정답 노출, types.ts 계약).
+  // literal 이면 natural 로 강등한다(킬러는 자연스러운 의역만 허용).
+  if (difficulty === "KILLER" && glossEnabled && glossLooseness === "literal") {
+    glossLooseness = "natural";
   }
 
   return {

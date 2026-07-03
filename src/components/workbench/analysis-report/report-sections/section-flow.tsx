@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
 import { circledNo } from "@/lib/passage-report/analysis-report/design-tokens";
 import type { AnalysisSection } from "@/lib/passage-report/analysis-report/schema";
+import { isKoAnalysisSection, type KoAnalysisSection } from "@/lib/passage-report/analysis-report/ko-schema";
 import { DelBtn, Field } from "./editable-field";
+import { koSectionFlowItems } from "./ko-section-flow";
 import { passageSectionFlow } from "./passage-flow";
 import type { FlowItem, SectionEdit, SectionFlowCtx, SectionFlowOptions, WrapKind } from "./types";
 import { vocabularySectionFlow } from "./vocabulary-flow";
@@ -9,7 +11,7 @@ import { worksheetSectionFlow } from "./worksheet-flow";
 
 // ─── 섹션 → flow item[] ───────────────────────────────────────────────────────
 export function sectionFlowItems(
-  section: AnalysisSection,
+  section: AnalysisSection | KoAnalysisSection,
   si: number,
   no: number,
   sed?: SectionEdit,
@@ -22,6 +24,12 @@ export function sectionFlowItems(
     items.push({ id: `s${si}-${key}`, sectionIndex: si, kind: section.kind, no, wrap, node, ...extra });
 
   const ctx: SectionFlowCtx = { si, no, editable, commit, push, options, sed };
+
+  // PRIME_KO 게이트 — 국어 섹션은 KO 전용 렌더러로 위임(영어 switch 무접촉).
+  if (isKoAnalysisSection(section)) {
+    koSectionFlowItems(section, ctx);
+    return items;
+  }
 
   switch (section.kind) {
     case "passage":

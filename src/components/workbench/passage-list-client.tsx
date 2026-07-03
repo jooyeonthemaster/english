@@ -134,6 +134,10 @@ interface PassageListProps {
     search?: string;
     sourceMaterialId?: string;
     collectionId?: string;
+    /** 학습지 관리(영어) 페이지가 싣는 "생성 완료 학습지만" 게이트. */
+    hasReport?: boolean;
+    /** 서버 페치와 동일한 과목 스코프 — 국어 라우트 페이지가 "KOREAN" 을 싣는다. */
+    subject?: "KOREAN";
   };
   collections: CollectionItem[];
   /** passageIds belonging to each collection, keyed by collectionId */
@@ -146,8 +150,16 @@ interface PassageListProps {
    * Route that URL-driven filters/pagination navigate to. Defaults to the
    * standalone 지문 관리 page. The 학습지 생성 page embeds this client below its
    * form and passes its own route so filtering stays on that page.
+   * subjectScope="KOREAN" 이면 기본값이 국어 라우트(/director/korean/passages)로
+   * 바뀐다 — 필터/페이지 이동이 영어 화면으로 튕기지 않는다.
    */
   basePath?: string;
+  /**
+   * 과목 스코프 — "KOREAN" 이면 국어 지문 관리(/director/korean/passages):
+   * 전체선택 population 을 subject='KOREAN' 으로 좁히고(hasReport 게이트 없음),
+   * URL 내비게이션도 국어 라우트에 머문다. 미전달 = 영어 기본(기존 UX 동일).
+   */
+  subjectScope?: "KOREAN";
   /**
    * When embedded below another page (e.g. 학습지 생성), the client must not own
    * a viewport-height scroll container. Instead it flows inside the page and its
@@ -165,8 +177,9 @@ interface PassageListProps {
 }
 
 // ─── Server action adapters ──────────────────────────────
-const folderActions = {
-  createCollection: createPassageCollection,
+// createCollection 은 컴포넌트 안에서 subjectScope 를 실어 감싼다(국어 라우트
+// 폴더 생성 → subject='KOREAN' 저장). 나머지는 스코프 무관이라 그대로 공유.
+const baseFolderActions = {
   updateCollection: updatePassageCollection,
   deleteCollection: deletePassageCollection,
   addToCollection: addPassagesToCollection,
@@ -240,12 +253,19 @@ export function PassageListClient({
   collectionMembership: initialMembership,
   sourceMaterialBadge = null,
   collectionBadge = null,
-  basePath = "/director/workbench/passages",
+  subjectScope,
+  basePath = subjectScope === "KOREAN"
+    ? "/director/korean/passages"
+    : "/director/workbench/passages",
   embedded = false,
   loadingCards = null,
   loadingCount = 0,
 }: PassageListProps) {
   const router = useRouter();
+  // 과목별 카피 — 영어 기본 목록은 "학습지"(PRIME 보고서 게이트), 국어 목록은
+  // 학습지 게이트 없이 지문 전체를 보여주므로 "지문"으로 부른다. 조사(을/를·이/가)가
+  // 달라지는 문장은 통짜 삼항으로 분기해 영어 경로 문자열을 byte 단위로 보존한다.
+  const koScope = subjectScope === "KOREAN";
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [gridCols, setGridCols] = usePersistedState<PassageGridCols>(
     "smoat:view-mode:passage-list",
@@ -256,6 +276,19 @@ export function PassageListClient({
   const [sortOrder, setSortOrder] = useState<PassageSortOrder>("newest");
   const [hideDuplicates, setHideDuplicates] = useState(false);
   const [modalPassageId, setModalPassageId] = useState<string | null>(null);
+  // 지문 카드 "상세 보기/수정" — 영어(기본)는 PRIME 분석 모달을 연다(기존 UX
+  // 그대로). 국어는 그 모달이 전부 영어 전용 파이프라인(PRIME 학습지·AI 분석·
+  // 실전 학습지 생성)이므로 국어 지문 상세 페이지로 라우팅한다.
+  const openPassageDetail = useCallback(
+    (id: string) => {
+      if (subjectScope === "KOREAN") {
+        router.push(`/director/korean/passages/${id}`);
+        return;
+      }
+      setModalPassageId(id);
+    },
+    [router, subjectScope],
+  );
   // 학습지 검수완료 토글 — 낙관적 상태. override 맵은 서버 reviewedAt 을 덮어쓰고,
   // busy 셋은 처리 중인 카드에 스피너를 띄운다.
   const [reviewOverrides, setReviewOverrides] = useState<Map<string, boolean>>(
@@ -387,11 +420,32 @@ export function PassageListClient({
   // ─── Shared hooks ───
   const { updateFilter, goToPage } = useUrlFilters(basePath);
 
+  // 폴더 생성만 과목 스코프를 실어 감싼다 — 국어 라우트에서 만든 폴더는
+  // subject='KOREAN' 으로 저장돼 영어 폴더 목록에 절대 나타나지 않는다.
+  // (영어 기본 경로는 subject 미전달 = 기존 INSERT 그대로, 무회귀.)
+  const folderActions = useMemo(
+    () => ({
+      ...baseFolderActions,
+      createCollection: (data: {
+        name: string;
+        description?: string;
+        color?: string;
+        parentId?: string;
+      }) =>
+        createPassageCollection(
+          subjectScope === "KOREAN"
+            ? { ...data, subject: "KOREAN" as const }
+            : data,
+        ),
+    }),
+    [subjectScope],
+  );
+
   const folder = useFolderManager({
     initialCollections,
     initialMembership,
     actions: folderActions,
-    itemLabel: "학습지",
+    itemLabel: koScope ? "지문" : "학습지",
     // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
     cumulativeCounts: true,
   });
@@ -418,6 +472,10 @@ export function PassageListClient({
       // "30개 넣었는데 27개만 보임"을 막는다. (루트 목록은 hasReport 유지)
       page: 1,
       limit: 1000,
+      // 국어 라우트에서는 폴더 내용도 국어 지문 스코프로 조회한다 — 기본(영어)
+      // 스코프는 subject='KOREAN' 지문을 제외하므로 이 한 줄이 없으면 국어
+      // 폴더가 항상 비어 보인다. 영어 경로는 미전달(기존 동작 그대로).
+      ...(subjectScope === "KOREAN" ? { subject: "KOREAN" as const } : {}),
     })
       .then((res) => {
         if (cancelled) return;
@@ -438,7 +496,7 @@ export function PassageListClient({
     return () => {
       cancelled = true;
     };
-  }, [folderActiveId, embedded, academyId]);
+  }, [folderActiveId, embedded, academyId, subjectScope]);
 
   // Non-first members of each duplicate group, used when 중복 숨기기 is on.
   const duplicateMembersToHide = useMemo<Set<string>>(() => {
@@ -532,8 +590,12 @@ export function PassageListClient({
         ...filters,
         page: undefined,
         limit: undefined,
-        // 루트 목록 모집단과 동일하게: 생성 완료된 학습지(PRIME 보고서)만.
-        hasReport: true,
+        // 루트 목록 모집단과 동일하게 맞춘다 — 영어(기본): 생성 완료된
+        // 학습지(PRIME 보고서)만 / 국어: subject='KOREAN' 전체(학습지 게이트 없음,
+        // 국어 라우트 서버 페치와 동일 기준).
+        ...(subjectScope === "KOREAN"
+          ? { subject: "KOREAN" as const, hasReport: undefined }
+          : { hasReport: true }),
       });
       if (!result.success) {
         toast.error(result.error || "전체 선택에 실패했습니다.");
@@ -545,7 +607,9 @@ export function PassageListClient({
           !(hideDuplicates && duplicateMembersToHide.has(id)),
       );
       if (ids.length === 0) {
-        toast.error("선택할 학습지가 없습니다.");
+        toast.error(
+          koScope ? "선택할 지문이 없습니다." : "선택할 학습지가 없습니다.",
+        );
         return;
       }
       selection.setSelectedIds(new Set(ids));
@@ -565,6 +629,8 @@ export function PassageListClient({
     duplicateMembersToHide,
     selectingAllPages,
     selection,
+    subjectScope,
+    koScope,
   ]);
 
   // Stats
@@ -753,9 +819,15 @@ export function PassageListClient({
         return;
       }
       if (result.deleted === result.requested) {
-        toast.success(`${result.deleted}편의 학습지를 삭제했습니다.`);
+        toast.success(
+          koScope
+            ? `${result.deleted}편의 지문을 삭제했습니다.`
+            : `${result.deleted}편의 학습지를 삭제했습니다.`,
+        );
       } else if (result.deleted === 0) {
-        toast.error("삭제된 학습지가 없습니다.");
+        toast.error(
+          koScope ? "삭제된 지문이 없습니다." : "삭제된 학습지가 없습니다.",
+        );
       } else {
         toast.warning(
           `${result.deleted}편 삭제됨, ${result.requested - result.deleted}편 누락`,
@@ -775,14 +847,21 @@ export function PassageListClient({
     } finally {
       setBulkDeleting(false);
     }
-  }, [selection, bulkDeleting, router]);
+  }, [selection, bulkDeleting, router, koScope]);
 
   // 카드 우상단 휴지통 — 단건 삭제(확인 후). 일괄 삭제와 동일한 서버 액션을
   // [id] 하나로 호출하고, 낙관적으로 카드를 즉시 감춘다.
   const handleDeleteOne = useCallback(
     async (id: string) => {
       if (deletingIds.has(id)) return;
-      if (!window.confirm("이 학습지를 삭제할까요? 되돌릴 수 없습니다.")) return;
+      if (
+        !window.confirm(
+          koScope
+            ? "이 지문을 삭제할까요? 되돌릴 수 없습니다."
+            : "이 학습지를 삭제할까요? 되돌릴 수 없습니다.",
+        )
+      )
+        return;
       setDeletingIds((prev) => new Set(prev).add(id));
       try {
         const result = await bulkDeleteWorkbenchPassages([id]);
@@ -790,7 +869,7 @@ export function PassageListClient({
           toast.error(result.error || "삭제에 실패했습니다.");
           return;
         }
-        toast.success("학습지를 삭제했습니다.");
+        toast.success(koScope ? "지문을 삭제했습니다." : "학습지를 삭제했습니다.");
         setRemovedIds((prev) => new Set(prev).add(id));
         router.refresh();
       } catch (err) {
@@ -803,7 +882,7 @@ export function PassageListClient({
         });
       }
     },
-    [deletingIds, router],
+    [deletingIds, router, koScope],
   );
 
   // 선택한 학습지 일괄 검수완료 — 미검수가 하나라도 있으면 검수완료로, 모두
@@ -879,8 +958,12 @@ export function PassageListClient({
       onClick={() => {
         if (selection.selectedIds.size === 0 || bulkDeleting) return;
         const ok = confirmNative(
-          `선택한 학습지 ${selection.selectedIds.size}편을 삭제하시겠습니까?`,
-          "이 작업은 되돌릴 수 없습니다. 학습지에 연결된 분석/문제 데이터도 함께 삭제될 수 있습니다.",
+          koScope
+            ? `선택한 지문 ${selection.selectedIds.size}편을 삭제하시겠습니까?`
+            : `선택한 학습지 ${selection.selectedIds.size}편을 삭제하시겠습니까?`,
+          koScope
+            ? "이 작업은 되돌릴 수 없습니다. 지문에 연결된 분석/문제 데이터도 함께 삭제될 수 있습니다."
+            : "이 작업은 되돌릴 수 없습니다. 학습지에 연결된 분석/문제 데이터도 함께 삭제될 수 있습니다.",
         );
         if (ok) void handleBulkDelete();
       }}
@@ -940,7 +1023,11 @@ export function PassageListClient({
               onClick={() => void handleSelectAllPages()}
               disabled={selectingAllPages}
               className="whitespace-nowrap text-xs font-medium text-blue-600 underline-offset-2 hover:underline disabled:opacity-50"
-              title="현재 필터의 모든 페이지에 있는 학습지를 선택"
+              title={
+                koScope
+                  ? "현재 필터의 모든 페이지에 있는 지문을 선택"
+                  : "현재 필터의 모든 페이지에 있는 학습지를 선택"
+              }
             >
               {selectingAllPages
                 ? "선택 중…"
@@ -995,6 +1082,25 @@ export function PassageListClient({
         }
       >
         {passagesData.passages.length === 0 && loadingCount === 0 ? (
+          koScope ? (
+            // 국어 빈 상태 — 국어 지문은 문제 생성 화면에서 붙여넣어 등록한다.
+            // 영어 학습지 등록 경로(/passages/create)로 절대 보내지 않는다.
+            <div className="mt-2 bg-white rounded-xl border text-center py-20">
+              <Folder className="w-12 h-12 text-slate-200 mx-auto mb-3" />
+              <p className="text-slate-500 font-medium">등록된 국어 지문이 없습니다</p>
+              <p className="text-sm text-slate-400 mt-1">
+                국어 문제 생성에서 지문을 붙여넣으면 여기에 쌓입니다
+              </p>
+              <div className="flex items-center justify-center gap-2 mt-4">
+                <Link href="/director/korean/generate">
+                  <Button className="bg-blue-600 hover:bg-blue-700" size="sm">
+                    <Plus className="w-3.5 h-3.5 mr-1.5" />
+                    국어 지문 등록
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ) : (
           <div className="mt-2 bg-white rounded-xl border text-center py-20">
             <Folder className="w-12 h-12 text-slate-200 mx-auto mb-3" />
             <p className="text-slate-500 font-medium">등록된 학습지가 없습니다</p>
@@ -1010,6 +1116,7 @@ export function PassageListClient({
               </Link>
             </div>
           </div>
+          )
         ) : (
           <section className="mt-2 flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div
@@ -1022,7 +1129,7 @@ export function PassageListClient({
                 activeFolder={folder.activeFolder}
                 dragItemType="passage"
                 dragItemIdKey="passageId"
-                itemCountLabel="학습지"
+                itemCountLabel={koScope ? "지문" : "학습지"}
                 showNewFolder={folder.showNewFolder}
                 newFolderName={folder.newFolderName}
                 onNewFolderNameChange={folder.setNewFolderName}
@@ -1043,17 +1150,17 @@ export function PassageListClient({
                 // 큰 카드(useCardInsideFolder)는 루트 칩과 크기·글자 크기가 달라
                 // 이질감이 있었다.
                 useCardInsideFolder={false}
-                rootLabel="전체 학습지"
+                rootLabel={koScope ? "전체 지문" : "전체 학습지"}
                 enableFolderControls
                 allFolders={folder.collections}
-                storageKey="passages"
+                storageKey={koScope ? "korean-passages" : "passages"}
                 treatRootAsFolder
                 pageHeader={{
                   icon: <FileText className="h-3.5 w-3.5" />,
-                  parentLabel: "학습지 관리",
-                  title: "전체 학습지",
+                  parentLabel: koScope ? "국어 지문 관리" : "학습지 관리",
+                  title: koScope ? "전체 지문" : "전체 학습지",
                   totalCount,
-                  itemLabel: "학습지",
+                  itemLabel: koScope ? "지문" : "학습지",
                   itemUnit: "편",
                 }}
               />
@@ -1080,7 +1187,8 @@ export function PassageListClient({
                     중복 그룹 모아보기
                     {visibleDupSummary ? (
                       <span className="ml-1.5 text-[11px] font-normal text-slate-400">
-                        그룹 {visibleDupSummary.groupCount}개 · 중복 학습지{" "}
+                        그룹 {visibleDupSummary.groupCount}개 · 중복{" "}
+                        {koScope ? "지문" : "학습지"}{" "}
                         {visibleDupSummary.totalDuplicateCount}편
                       </span>
                     ) : null}
@@ -1120,8 +1228,8 @@ export function PassageListClient({
                       중복 자료가 없습니다
                     </p>
                     <p className="mt-1 text-sm text-slate-400">
-                      총 {visibleDupSummary?.totalScanned ?? 0}편의 학습지를
-                      검사했습니다.
+                      총 {visibleDupSummary?.totalScanned ?? 0}편의{" "}
+                      {koScope ? "지문을" : "학습지를"} 검사했습니다.
                     </p>
                   </div>
                 ) : (
@@ -1182,7 +1290,7 @@ export function PassageListClient({
                                   passage={adapted}
                                   selected={selection.selectedIds.has(p.id)}
                                   onToggleSelect={selection.toggleSelect}
-                                  onViewDetail={setModalPassageId}
+                                  onViewDetail={openPassageDetail}
                                   dupCount={group.items.length - 1}
                                   onDelete={handleDeleteOne}
                                   deleteBusy={deletingIds.has(p.id)}
@@ -1214,13 +1322,17 @@ export function PassageListClient({
                     <FileText className="mx-auto mb-3 h-10 w-10 text-slate-200" />
                     <p className="text-[13px] text-slate-400">
                       {folder.activeFolder
-                        ? "이 폴더에 학습지가 없습니다."
-                        : "등록된 학습지가 없습니다."}
+                        ? koScope
+                          ? "이 폴더에 지문이 없습니다."
+                          : "이 폴더에 학습지가 없습니다."
+                        : koScope
+                          ? "등록된 국어 지문이 없습니다."
+                          : "등록된 학습지가 없습니다."}
                     </p>
                     {folder.activeFolder && (
                       <p className="mt-1 text-[12px] text-slate-400">
-                        학습지를 드래그하거나 선택 후 &quot;폴더에 추가&quot;를
-                        사용하세요.
+                        {koScope ? "지문을" : "학습지를"} 드래그하거나 선택 후
+                        &quot;폴더에 추가&quot;를 사용하세요.
                       </p>
                     )}
                   </div>
@@ -1238,7 +1350,7 @@ export function PassageListClient({
                         passage={p}
                         selected={selection.selectedIds.has(p.id)}
                         onToggleSelect={selection.toggleSelect}
-                        onViewDetail={setModalPassageId}
+                        onViewDetail={openPassageDetail}
                       />
                     ))}
                   </DragSelect>
@@ -1259,8 +1371,8 @@ export function PassageListClient({
                         passage={p}
                         selected={selection.selectedIds.has(p.id)}
                         onToggleSelect={selection.toggleSelect}
-                        onViewDetail={setModalPassageId}
-                        onEdit={setModalPassageId}
+                        onViewDetail={openPassageDetail}
+                        onEdit={openPassageDetail}
                         reviewed={reviewOverrides.get(p.id) ?? !!p.reviewedAt}
                         onToggleReview={handleToggleReview}
                         reviewBusy={reviewBusyIds.has(p.id)}

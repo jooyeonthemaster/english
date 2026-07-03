@@ -588,6 +588,7 @@ export function paginateGroups(groups: PaperGroup[], settings: PaginationSetting
         line: block.line,
         isSegStart: block.isSegStart,
         isSegEnd: block.isSegEnd,
+        isSourceLineStart: block.isSourceLineStart,
       });
       columnHeights[columnIndex] += block.lineHeight;
     } else if (block.kind === "option") {

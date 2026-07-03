@@ -618,25 +618,71 @@ function normalizeWorkbookTestSurface(section: LearningWorksheetSection, origina
   // (누락이 없으면 입력 그대로 → 무회귀)
   if (originalSentences.length > 0) {
     workbook.grammarSelection.passage = restoreClozePassageOriginal(workbook.grammarSelection.passage, originalSentences);
+    if (workbook.vocabularySelection) {
+      workbook.vocabularySelection.passage = restoreClozePassageOriginal(workbook.vocabularySelection.passage, originalSentences);
+    }
     workbook.vocabularyCloze.passage = restoreClozePassageOriginal(workbook.vocabularyCloze.passage, originalSentences);
   }
 
-  let grammarPassage = workbook.grammarSelection.passage;
-  workbook.grammarSelection.choices.forEach((choice, index) => {
-    choice.no = index + 1;
-    const answerIndex = choice.options.findIndex((option) => normalizeKey(option) === normalizeKey(choice.answer));
-    if (answerIndex < 0 || choice.options.length < 2) return;
+  // 정답 위치 결정론 셔플 — index 짝수는 정답을 뒤 옵션, 홀수는 앞 옵션으로 교대 배치해 '정답이
+  // 한쪽으로만 몰리지 않게' 한다. 본문 [A / B] 도 replaceBracketOptions 로 동기 치환.
+  const shuffleInlineChoicePositions = (
+    passage: string,
+    choices: { no: number; options: string[]; answer: string }[],
+  ): string => {
+    // 본문의 [ ... ] 브래킷을 '등장 순서'로 수집 → i번째 브래킷을 i번째 choice 에 위치 기반으로 매핑한다.
+    // (동일 옵션쌍이 본문에 2회 이상 등장해도, 텍스트 first-match 로 엉뚱한 브래킷을 치환해 본문↔정답표가
+    //  어긋나던 desync 를 막는다.) 브래킷 수와 choice 수가 일치할 때만 위치 매핑을 신뢰하고, 그 외에는
+    // 기존 텍스트 매칭(replaceBracketOptions)으로 안전 폴백한다(무회귀).
+    const spans: { start: number; end: number }[] = [];
+    const bracketRe = /\[[^\][]*\]/g;
+    let bm: RegExpExecArray | null;
+    while ((bm = bracketRe.exec(passage)) !== null) spans.push({ start: bm.index, end: bm.index + bm[0].length });
+    const positional = spans.length === choices.length;
 
-    const targetIndex = index % 2 === 0 ? Math.min(1, choice.options.length - 1) : 0;
-    if (answerIndex !== targetIndex) {
+    const replacements = new Map<number, string>(); // 브래킷 index → 새 텍스트(스왑된 경우만)
+    let textFallback = passage;
+    choices.forEach((choice, index) => {
+      choice.no = index + 1;
+      const answerIndex = choice.options.findIndex((option) => normalizeKey(option) === normalizeKey(choice.answer));
+      if (answerIndex < 0 || choice.options.length < 2) return;
+
+      const targetIndex = index % 2 === 0 ? Math.min(1, choice.options.length - 1) : 0;
+      if (answerIndex === targetIndex) return; // 이미 목표 위치 → 브래킷 원문 표기 그대로 둔다
+
       const previousOptions = [...choice.options];
       const nextOptions = [...choice.options];
       [nextOptions[answerIndex], nextOptions[targetIndex]] = [nextOptions[targetIndex], nextOptions[answerIndex]];
       choice.options = nextOptions;
-      grammarPassage = replaceBracketOptions(grammarPassage, previousOptions, nextOptions);
-    }
-  });
-  workbook.grammarSelection.passage = grammarPassage;
+      if (positional) replacements.set(index, `[${nextOptions.join(" / ")}]`);
+      else textFallback = replaceBracketOptions(textFallback, previousOptions, nextOptions);
+    });
+
+    if (!positional) return textFallback;
+    if (replacements.size === 0) return passage;
+    // 스왑된 브래킷만 정확한 위치에서 교체, 나머지 브래킷·본문은 원문 그대로 유지.
+    let out = "";
+    let cursor = 0;
+    spans.forEach((span, i) => {
+      const rep = replacements.get(i);
+      if (rep === undefined) return;
+      out += passage.slice(cursor, span.start) + rep;
+      cursor = span.end;
+    });
+    out += passage.slice(cursor);
+    return out;
+  };
+
+  workbook.grammarSelection.passage = shuffleInlineChoicePositions(
+    workbook.grammarSelection.passage,
+    workbook.grammarSelection.choices,
+  );
+  if (workbook.vocabularySelection) {
+    workbook.vocabularySelection.passage = shuffleInlineChoicePositions(
+      workbook.vocabularySelection.passage,
+      workbook.vocabularySelection.choices,
+    );
+  }
 
   workbook.vocabularyCloze.blanks.forEach((blank, index) => {
     blank.no = index + 1;
@@ -726,6 +772,30 @@ function validateLearningWorksheetQuality(section: LearningWorksheetSection, ori
   return [...validateWorkbookQuality(section, originalSentences), ...validateInferenceQuality(section)];
 }
 
+const WEAK_GRAMMAR_FUNCTION_OPTIONS = new Set([
+  "a",
+  "an",
+  "the",
+  "in",
+  "on",
+  "at",
+  "by",
+  "of",
+  "to",
+  "for",
+  "from",
+  "with",
+  "as",
+]);
+
+function normalizeGrammarOptionSurface(value: string): string {
+  return normalizeKey(value).replace(/[^a-z]/g, "");
+}
+
+function isWeakGrammarFunctionOption(value: string): boolean {
+  return WEAK_GRAMMAR_FUNCTION_OPTIONS.has(normalizeGrammarOptionSurface(value));
+}
+
 function validateWorkbookQuality(section: LearningWorksheetSection, originalSentences: readonly string[] = []): string[] {
   const issues: string[] = [];
   issues.push(...worksheetWordBankSurfaceIssues("key phrase cloze", section.cloze?.wordBank, section.cloze?.items));
@@ -739,6 +809,15 @@ function validateWorkbookQuality(section: LearningWorksheetSection, originalSent
       issues.push("어법 선택은 최소 4개 이상이어야 합니다.");
     }
     for (const choice of workbook.grammarSelection.choices) {
+      if (
+        choice.options.length >= 2 &&
+        new Set(choice.options.map(normalizeGrammarOptionSurface)).size < choice.options.length
+      ) {
+        issues.push(`Grammar selection ${choice.no} has options that differ only by case, punctuation, or spacing.`);
+      }
+      if (choice.options.length >= 2 && choice.options.every(isWeakGrammarFunctionOption)) {
+        issues.push(`Grammar selection ${choice.no} is too weak: both options are tiny function words, not a structural grammar frame.`);
+      }
       if (!optionIncludes(choice.options, choice.answer)) {
         issues.push(`어법 선택 ${choice.no}번 정답이 선택지 목록에 없습니다.`);
       }
@@ -756,6 +835,34 @@ function validateWorkbookQuality(section: LearningWorksheetSection, originalSent
       issues.push("어법 선택 정답이 앞 선택지에 과도하게 몰려 있습니다.");
     }
 
+    // 어휘 선택 — 어법 선택과 동일한 품질 게이트(최소 개수·정답 존재·해설 길이·정답 위치 분포)에,
+    // 어휘 전용 게이트(두 선택지가 문자만 다른 동일어가 아니어야 함)를 더한다. (base 스키마에선 optional)
+    if (workbook.vocabularySelection) {
+      if (workbook.vocabularySelection.choices.length < 4) {
+        issues.push("어휘 선택은 최소 4개 이상이어야 합니다.");
+      }
+      for (const choice of workbook.vocabularySelection.choices) {
+        if (!optionIncludes(choice.options, choice.answer)) {
+          issues.push(`어휘 선택 ${choice.no}번 정답이 선택지 목록에 없습니다.`);
+        }
+        if (choice.explanation.trim().length < 14) {
+          issues.push(`어휘 선택 ${choice.no}번 해설이 너무 짧습니다.`);
+        }
+        if (new Set(choice.options.map((option) => normalizeKey(option))).size < choice.options.length) {
+          issues.push(`어휘 선택 ${choice.no}번 선택지에 사실상 같은 단어가 중복되어 있습니다.`);
+        }
+      }
+      const vocabAnswerIndexes = workbook.vocabularySelection.choices.map((choice) =>
+        choice.options.findIndex((option) => normalizeKey(option) === normalizeKey(choice.answer)),
+      );
+      if (vocabAnswerIndexes.length >= 4 && new Set(vocabAnswerIndexes).size < 2) {
+        issues.push("어휘 선택 정답 위치가 한쪽으로만 몰려 있습니다.");
+      }
+      if (vocabAnswerIndexes.length >= 4 && vocabAnswerIndexes.filter((index) => index > 0).length < 2) {
+        issues.push("어휘 선택 정답이 앞 선택지에 과도하게 몰려 있습니다.");
+      }
+    }
+
     if (workbook.vocabularyCloze.blanks.length < 8) {
       issues.push("어휘 빈칸은 최소 8개 이상이어야 합니다.");
     }
@@ -764,6 +871,9 @@ function validateWorkbookQuality(section: LearningWorksheetSection, originalSent
     if (originalSentences.length > 0) {
       issues.push(...clozePassageCoverageIssues("어휘 빈칸 본문", workbook.vocabularyCloze.passage, originalSentences));
       issues.push(...clozePassageCoverageIssues("어법 선택 본문", workbook.grammarSelection.passage, originalSentences));
+      if (workbook.vocabularySelection) {
+        issues.push(...clozePassageCoverageIssues("어휘 선택 본문", workbook.vocabularySelection.passage, originalSentences));
+      }
     }
     for (const blank of workbook.vocabularyCloze.blanks) {
       if (!blank.meaning?.trim()) {

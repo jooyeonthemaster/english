@@ -1,8 +1,14 @@
 import { z } from "zod";
 import { AI_QUESTION_SCHEMAS, getAiResponseSchema } from "@/lib/question-ai-schemas-mc";
 import { GEMINI_QUESTION_EMPTY_RESULT_MAX_ATTEMPTS } from "@/lib/concurrency-config";
+import { KO_PASSAGE_KIND_LABELS, type KoPassageKind } from "@/lib/korean/core/passage-meta";
+import { shuffleKoMc5Options } from "@/lib/korean/core/shuffle";
+import { buildKoGenerationPrompt } from "@/lib/korean/prompts/generation";
+import { runKoSolverGate } from "@/lib/korean/quality/solver-gate";
+import { getKoTypeModule, isKoQuestionType } from "@/lib/korean/registry";
+import { readKoResolvedSettings } from "@/lib/korean/settings";
 import { postProcessQuestion } from "@/lib/question-postprocess";
-import { reshuffleTopicSentenceWritingChips } from "@/lib/topic-sentence-writing";
+import { reorderChipsAwayFromAnswer, reshuffleTopicSentenceWritingChips } from "@/lib/topic-sentence-writing";
 import { normalizePassageWhitespace } from "@/lib/question-postprocess/text-utils";
 import { QUESTION_SCHEMAS, STRUCTURED_TYPE_PROMPTS } from "@/lib/question-schemas";
 import { buildQuestionTypeSettingsPrompt, getQuestionTypeGenerationTokenFloor, readQuestionTypeDifficultySetting, readQuestionTypeGenerationPlanSetting, readSummaryWritingBlankCountSetting, readTopicSentenceWritingBlankCountSetting, resolveQuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
@@ -24,6 +30,112 @@ export type {
   QuestionGenerationUsageEvent,
   RunGenerationInput,
 } from "./run-question-generation-types";
+
+const STANDARD_GRAMMAR_KILLER_RESCUE_CODES = new Set([
+  "grammar-killer-thin-answer",
+  "grammar-killer-generic-answer-point",
+  "grammar-killer-answer-point-repeated",
+  "grammar-killer-thin-relative-animacy",
+  "grammar-killer-thin-concessive-as",
+  "grammar-killer-thin-connector",
+  "grammar-killer-thin-missing-aux",
+  "grammar-shallow-participle-adjective-answer",
+  "grammar-obvious-adjacent-sv-agreement",
+  "grammar-obvious-local-agreement",
+  "grammar-marker-too-dense",
+  "grammar-explanation-too-long-hard",
+]);
+
+const GRAMMAR_DESIGN_ISSUES_NOT_WORTH_REPAIR = new Set([
+  ...STANDARD_GRAMMAR_KILLER_RESCUE_CODES,
+  "grammar-shallow-checklist-decoys",
+  "grammar-weak-filler-decoys",
+  "grammar-too-basic-decoys",
+  "grammar-shallow-nearby-passive-decoy",
+  "grammar-shallow-than-decoy",
+  "grammar-shallow-depends-decoy",
+  "grammar-obvious-modal-gerund",
+  "grammar-obvious-modal-to-infinitive",
+  "grammar-obvious-to-gerund-after-verb",
+  "grammar-obvious-before-after-to-infinitive",
+  "grammar-obvious-object-pronoun-subject",
+  "grammar-obvious-local-pronoun-agreement",
+  "grammar-obvious-intransitive-passive",
+  "grammar-obvious-passive-to-gap-ing",
+  "grammar-obvious-adverb-adjective",
+  "grammar-obvious-what-noun-prefix",
+  "grammar-semantic-who-what-answer",
+  "grammar-semantic-how-why-answer",
+]);
+
+function isStandardGrammarKillerRequest(input: RunGenerationInput): boolean {
+  if (input.generationPlan === "PREMIUM") return false;
+  return input.plan.some(
+    (item) =>
+      item.subType === "GRAMMAR_ERROR" &&
+      item.count > 0 &&
+      readQuestionTypeDifficultySetting(
+        input.typeSettings?.GRAMMAR_ERROR,
+        input.diffLabel,
+      ) === "KILLER",
+  );
+}
+
+function shouldAttemptCandidateRepair(
+  subType: string,
+  issues: QuestionQualityIssue[],
+): boolean {
+  if (subType !== "GRAMMAR_ERROR") return true;
+  const codes = issues.map((issue) => issue.code).filter(Boolean);
+  if (codes.length === 0) return true;
+  return !codes.every((code) => GRAMMAR_DESIGN_ISSUES_NOT_WORTH_REPAIR.has(code));
+}
+
+function shouldRunStandardGrammarKillerRescue(
+  input: RunGenerationInput,
+  rejectionRecorder: RejectionRecorder,
+): boolean {
+  if (input.plan.length !== 1 || input.plan[0]?.subType !== "GRAMMAR_ERROR") {
+    return false;
+  }
+  if (!isStandardGrammarKillerRequest(input)) return false;
+
+  const qualityIssues = rejectionRecorder.issues.filter(
+    (issue) => issue.phase === "quality" && issue.subType === "GRAMMAR_ERROR",
+  );
+  if (qualityIssues.length === 0) return false;
+  return qualityIssues.every(
+    (issue) =>
+      Array.isArray(issue.codes) &&
+      issue.codes.length > 0 &&
+      issue.codes.every((code) =>
+        STANDARD_GRAMMAR_KILLER_RESCUE_CODES.has(code),
+      ),
+  );
+}
+
+function buildStandardGrammarKillerRescueInput(
+  input: RunGenerationInput,
+): RunGenerationInput {
+  const rawGrammarSettings = input.typeSettings?.GRAMMAR_ERROR;
+  const grammarSettings = isRecord(rawGrammarSettings) ? rawGrammarSettings : {};
+  return {
+    ...input,
+    typeSettings: {
+      ...(input.typeSettings ?? {}),
+      GRAMMAR_ERROR: {
+        ...grammarSettings,
+        difficulty: "INTERMEDIATE",
+      },
+    },
+    customPrompt: [
+      input.customPrompt,
+      "STANDARD GRAMMAR_ERROR KILLER rescue: previous KILLER attempts found only shallow/local targets in this passage. Generate one strong INTERMEDIATE grammar item instead of failing. Keep every answer locally plausible, source-backed, and structurally meaningful; do not label the item as KILLER.",
+    ]
+      .filter(Boolean)
+      .join("\n\n"),
+  };
+}
 export async function runQuestionGeneration(
   {
     plan,
@@ -38,6 +150,7 @@ export async function runQuestionGeneration(
     customPrompt,
     typeSettings,
     diversity,
+    koPassageKind,
     onModelUsage,
   }: RunGenerationInput,
   {
@@ -189,6 +302,18 @@ export async function runQuestionGeneration(
             sentenceOrderPointFocus,
         },
       );
+      // ── KO(국어) 유형 컨텍스트 — KO_ 게이트 전 지점이 공유한다 ─────────────
+      // koMod: 레지스트리 모듈(셔플 exempt·솔버 게이트 판정), koResolved: examMode
+      // 등 정규화 설정, koKind: 호출자가 전달한 지문 갈래. 영어 유형은 전부 null.
+      const koMod = isKoQuestionType(subType) ? getKoTypeModule(subType) : null;
+      const koResolved = koMod
+        ? readKoResolvedSettings(subType, rawTypeSettings)
+        : null;
+      const koKind: KoPassageKind | null =
+        koMod && koPassageKind && koPassageKind in KO_PASSAGE_KIND_LABELS
+          ? (koPassageKind as KoPassageKind)
+          : null;
+
       const hasAiSchema = !!AI_QUESTION_SCHEMAS[subType];
       const isStructured = hasAiSchema || !!QUESTION_SCHEMAS[subType];
       // SUMMARY_WRITING(요약문 영작)은 SUMMARY_COMPLETE 의 blankCount 경로를 미러한다.
@@ -237,33 +362,72 @@ export async function runQuestionGeneration(
       );
 
       try {
-        const { system: generationSystem, prompt: generationPrompt } =
-          buildGenerationPrompt({
-            schoolType,
-            gradeInfo,
-            passageContent,
-            teacherIntentBlock,
-            analysisContext,
-            targetPoints,
-            typePrompt,
-            structuredInstructions,
-            targetCandidateBlock,
-            typeQualityRubric,
-            typeCount,
-            diffLabel: effectiveDiffLabel,
-            diffInstruction: effectiveDiffInstruction,
-            generationPlan: effectiveGenerationPlan,
-            customPrompt: previousAttemptFeedback
-              ? [mergedCustomPrompt, previousAttemptFeedback]
-                  .filter(Boolean)
-                  .join("\n\n")
-              : mergedCustomPrompt,
-          });
+        // KO_ 게이트: 국어 유형은 buildKoGenerationPrompt(동일 {system?, prompt}
+        // 반환형 — PREMIUM anthropic 캐시 경로 재사용)로 위임. 영어 빌더는 무접촉.
+        const generationPromptInput = {
+          schoolType,
+          gradeInfo,
+          passageContent,
+          teacherIntentBlock,
+          analysisContext,
+          targetPoints,
+          typePrompt,
+          structuredInstructions,
+          targetCandidateBlock,
+          typeQualityRubric,
+          typeCount,
+          diffLabel: effectiveDiffLabel,
+          diffInstruction: effectiveDiffInstruction,
+          generationPlan: effectiveGenerationPlan,
+          customPrompt: previousAttemptFeedback
+            ? [mergedCustomPrompt, previousAttemptFeedback]
+                .filter(Boolean)
+                .join("\n\n")
+            : mergedCustomPrompt,
+        };
+        const { system: generationSystem, prompt: generationPrompt } = koMod
+          ? buildKoGenerationPrompt({
+              ...generationPromptInput,
+              examMode: koResolved?.examMode,
+              passageKindLabel: koKind
+                ? KO_PASSAGE_KIND_LABELS[koKind]
+                : undefined,
+            })
+          : buildGenerationPrompt(generationPromptInput);
+        // KO-EN-REG-1: 무게이트 PREMIUM 바닥 절은 영어 PREMIUM 기본 floor(4_096)를
+        // 올리는 무회귀 위반이라 제거(원식 환원). 단 KO+PREMIUM 은 16_384 바닥이
+        // 필요하다 — 실측(26-07-03 PREMIUM 스윕 6/7 생성실패): sonnet-5 는 flash 보다
+        // 장문이라 KO 봉투(자료·근거앵커 5개·오답해설 4개)가 8_192 에서 JSON 이
+        // 중간에 잘려 AI_TypeValidationError 로 전멸한다. koMod 게이트라 영어 경로는
+        // byte 불변.
+        const generationMaxTokens = Math.min(
+          20_000,
+          Math.max(
+            perQuestionTokenFloor,
+            (Number(typeCount) || 1) * perQuestionTokenFloor,
+            koMod && effectiveGenerationPlan === "PREMIUM" ? 16_384 : 0,
+          ),
+        );
+        const standardGrammarTokenCap =
+          subType === "GRAMMAR_ERROR" && effectiveGenerationPlan !== "PREMIUM"
+            ? Math.min(
+                20_000,
+                Math.max(
+                  effectiveDiffLabel === "KILLER" ? 12_000 : 8_192,
+                  (Number(typeCount) || 1) *
+                    (effectiveDiffLabel === "KILLER" ? 12_000 : 8_192),
+                ),
+              )
+            : generationMaxTokens;
+        const effectiveGenerationMaxTokens = Math.min(
+          generationMaxTokens,
+          standardGrammarTokenCap,
+        );
         const object = await generateWithRetry(
           responseSchema,
           generationPrompt,
           effectiveGenerationPlan,
-          Math.min(20_000, Math.max(perQuestionTokenFloor, (Number(typeCount) || 1) * perQuestionTokenFloor)),
+          effectiveGenerationMaxTokens,
           undefined,
           (result) => {
             onModelUsage?.({
@@ -352,20 +516,20 @@ export async function runQuestionGeneration(
             difficulty: effectiveDiffLabel,
           };
 
+          // 배열 영작: scrambledWords 가 정답 어순(modelAnswer)대로 읽히면 왼→오 읽기로 풀려
+          // 누수다. 기존 Math.random 1회 셔플 + 완전동일성 체크는 비결정적이고 "청크 근사정렬"
+          // (예: 청크가 거의 정답 순서)을 못 막았다. TOPIC_SENTENCE_WRITING 과 동일한 결정론
+          // 재배열(어간 부분수열로 어순 누수 판정 후 해시정렬→역순→회전, 멱등·칩불변)을 재사용한다.
           if (
             subType === "WORD_ORDER" &&
             Array.isArray(mapped.scrambledWords) &&
-            mapped.scrambledWords.length > 1
+            mapped.scrambledWords.length > 1 &&
+            typeof mapped.modelAnswer === "string"
           ) {
-            const arr = [...mapped.scrambledWords];
-            for (let i = arr.length - 1; i > 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1));
-              [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            if (arr.join("|") === mapped.scrambledWords.join("|")) {
-              [arr[0], arr[arr.length - 1]] = [arr[arr.length - 1], arr[0]];
-            }
-            mapped.scrambledWords = arr;
+            mapped.scrambledWords = reorderChipsAwayFromAnswer(
+              mapped.scrambledWords as string[],
+              mapped.modelAnswer,
+            );
           }
 
           // 주제문 영작: 보기/배열단어가 정답 어순 그대로면 누수(왼→오 읽기로 풀림). 모델
@@ -376,8 +540,26 @@ export async function runQuestionGeneration(
             mapped.wordBank = reshuffled.wordBank;
           }
 
+          // KO(국어): ① 서버 주입 koContext — examMode·passageKind 를 LLM 에코가
+          // 아니라 서버 진실로 저장하고, validateKoQuestion 이 검증 시 복원한다.
+          // ② 정답 위치 결정론 셔플 — 선지-마커 1:1 유형(lockedOptionOrder)은 제외.
+          // 둘 다 검증 "전"에 수행해 셔플 결과의 일관성까지 검증된다.
+          if (koMod) {
+            mapped.koContext = {
+              examMode: koResolved?.examMode ?? "SUNEUNG",
+              passageKind: koKind,
+            };
+            if (
+              koMod.meta.answerFormat === "MC5" &&
+              !koMod.meta.lockedOptionOrder
+            ) {
+              shuffleKoMc5Options(mapped);
+            }
+          }
+
           // 다양성 모드: 보기 배열형 유형의 보기 내용을 셔플해 정답 위치 편중을
           // 제거한다. 게이트 검증 전에 수행해 셔플 결과의 일관성까지 검증된다.
+          // (KO 는 SHUFFLE_OPTION_TYPES 미등록이라 아래 호출은 무동작 통과.)
           const finalQuestion = diversity
             ? shuffleQuestionOptionsForDiversity(mapped, subType)
             : mapped;
@@ -456,9 +638,19 @@ export async function runQuestionGeneration(
           // SHIP-FIRST 부분 repair: A(차단) 결함이 적으면(<=3종) 문항 전체 재생성 전에
           // "이 초안에서 이 결함만 고쳐라"로 후보당 1회 교정 재생성을 시도한다. 데드라인
           // 안에서만. 성공 시 교체, 실패 시 원래 탈락 경로로 폴백(무회귀·happy-path 0영향).
+          //
+          // KO 제외(KO-GEN-3): KO 는 finalize 안에서 정답 위치 셔플이 검증 "전"에
+          // 무조건(비-identity) 적용되므로, blockingErrors 의 선지 라벨(①~⑤) 좌표는
+          // 셔플 "후" 기준인데 repair 에 넘기는 draft(normalizedDraft)는 셔플 "전"
+          // 좌표다 — LLM 이 엉뚱한 선지를 고치는 체계적 오도(LLM 1회 낭비)가 된다.
+          // KO 는 strict 재시도 루프(교정 피드백 주입)가 자체 복구 경로라 skip 이
+          // 부작용 최소안이다(영어 경로는 셔플 없음 — 기존 동작 그대로).
           if (
+            !koMod &&
+            effectiveGenerationPlan !== "PREMIUM" &&
             fin.blockingErrors.length > 0 &&
             fin.blockingErrors.length <= 3 &&
+            shouldAttemptCandidateRepair(subType, fin.blockingErrors) &&
             (!deadlineAt || Date.now() < deadlineAt)
           ) {
             const repaired = await repairQuestionCandidate({
@@ -514,6 +706,52 @@ export async function runQuestionGeneration(
               sample: buildRejectionSample(subType, fin.finalQuestion),
             });
             continue;
+          }
+
+          // KO 난도5 독립 솔버 게이트 — needsSolverGate 유형만(후보당 LLM 1회 비용),
+          // strict 모드 전용(relaxed 폴백은 수율 보존을 위해 생략). 품질검증 통과
+          // "후"에 태워 결정론 게이트를 이미 통과한 후보만 비용을 쓴다. 불일치 =
+          // 후보 반려 → strict 재시도 유도(ko-solver-mismatch 는 RELAXED_BLOCKING).
+          if (koMod?.meta.needsSolverGate) {
+            if (qualityMode === "strict") {
+              const solverIssue = await runKoSolverGate({
+                question: fin.finalQuestion,
+                passage: passageContent,
+                mod: koMod,
+                generationPlan: effectiveGenerationPlan,
+                deadlineAt,
+                onModelUsage: (result) => {
+                  onModelUsage?.({
+                    phase: "question_generation",
+                    subType,
+                    qualityMode,
+                    difficulty: effectiveDiffLabel,
+                    generationPlan: effectiveGenerationPlan,
+                    usage: result.usage,
+                    provider: result.provider,
+                    modelId: result.modelId,
+                    attempts: result.attempts,
+                    durationMs: result.durationMs,
+                  });
+                },
+              });
+              if (solverIssue) {
+                console.warn(
+                  `[AUTO-GEN] KO solver gate rejected ${subType}: ${solverIssue.message}`,
+                );
+                recordRejection(rejectionRecorder, {
+                  phase: "quality",
+                  qualityMode,
+                  subType,
+                  message: solverIssue.message,
+                  codes: [solverIssue.code],
+                  sample: buildRejectionSample(subType, fin.finalQuestion),
+                });
+                continue;
+              }
+            }
+            // 통과(또는 relaxed 생략) 후보는 검수 권장 배지 — HITL 라우팅.
+            fin.finalQuestion._reviewRecommended = true;
           }
 
           // SHIP-FIRST: 취향/난이도 경고(강등된 B 코드 포함)도 검수 UI 가시성을 위해
@@ -613,6 +851,10 @@ export async function runQuestionGenerationWithEmptyRetry(
   const hasSummaryWriting = inputWithUsage.plan.some(
     (item) => item.subType === "SUMMARY_WRITING" && item.count > 0,
   );
+  const hasGrammarError = inputWithUsage.plan.some(
+    (item) => item.subType === "GRAMMAR_ERROR" && item.count > 0,
+  );
+  const hasStandardGrammarKiller = isStandardGrammarKillerRequest(inputWithUsage);
   const requestedCount = inputWithUsage.plan.reduce(
     (sum, item) => sum + Math.max(0, Math.floor(Number(item.count) || 0)),
     0,
@@ -645,9 +887,19 @@ export async function runQuestionGenerationWithEmptyRetry(
   // 영향 없고, 긴/어려운 지문에서 품질 게이트(list-like·too-easy) 통과 기회를 늘린다.
   // STANDARD(Gemini ~9s)는 기존 상한을 유지한다.
   const PREMIUM_STRICT_ATTEMPT_CAP = 5;
+  const STANDARD_GRAMMAR_KILLER_STRICT_ATTEMPT_CAP = 3;
   const attempts =
     inputWithUsage.generationPlan === "PREMIUM"
-      ? Math.max(1, Math.min(rawAttempts, PREMIUM_STRICT_ATTEMPT_CAP))
+      ? Math.max(1, Math.min(rawAttempts, PREMIUM_STRICT_ATTEMPT_CAP, requestedMaxAttempts))
+      : hasStandardGrammarKiller
+        ? Math.max(
+            1,
+            Math.min(
+              rawAttempts,
+              STANDARD_GRAMMAR_KILLER_STRICT_ATTEMPT_CAP,
+              requestedMaxAttempts,
+            ),
+          )
       : rawAttempts;
 
   let pendingFeedback: string | undefined;
@@ -669,7 +921,7 @@ export async function runQuestionGenerationWithEmptyRetry(
       deadlineAt,
     });
     const shouldRequireFullRequestedCount =
-      hasNegativeParaphraseBlank || hasBlankParaphraseAnswer;
+      hasNegativeParaphraseBlank || hasBlankParaphraseAnswer || hasGrammarError;
     const hasEnoughQuestions = shouldRequireFullRequestedCount
       ? questions.length >= requestedCount
       : questions.length > 0;
@@ -686,6 +938,7 @@ export async function runQuestionGenerationWithEmptyRetry(
     // 주입한다 (맹목 재시도 → 교정 재생성).
     pendingFeedback = buildCorrectiveRetryFeedback(
       rejectionRecorder.issues.slice(issueCountBeforeAttempt),
+      { cumulativeIssues: rejectionRecorder.issues },
     );
     if (attempt === attempts) {
       break;
@@ -698,6 +951,64 @@ export async function runQuestionGenerationWithEmptyRetry(
   if (deadlineAt && Date.now() >= deadlineAt) {
     console.warn(
       `[${logPrefix}] Time budget reached; skipping relaxed fallback, returning empty (caller refunds).`,
+    );
+    return {
+      questions: [],
+      attempts,
+      relaxedFallback: false,
+      rejectionSummary: buildRejectionSummary(rejectionRecorder),
+      usageEvents,
+    };
+  }
+
+  if (shouldRunStandardGrammarKillerRescue(inputWithUsage, rejectionRecorder)) {
+    console.warn(
+      `[${logPrefix}] STANDARD GRAMMAR_ERROR KILLER attempts only found shallow/local targets; running INTERMEDIATE rescue instead of failing.`,
+    );
+    const rescueInput = buildStandardGrammarKillerRescueInput(inputWithUsage);
+    const rescueFeedback = [
+      pendingFeedback,
+      "Rescue requirement: do not repeat the rejected KILLER-local answer pattern. Produce a strong INTERMEDIATE item with five meaningful grammar marks and exactly one clear, source-backed wrong expression.",
+    ]
+      .filter(Boolean)
+      .join("\n\n");
+    const rescueQuestions = await runQuestionGeneration(rescueInput, {
+      qualityMode: "strict",
+      rejectionRecorder,
+      attemptIndex: attempts,
+      previousAttemptFeedback: rescueFeedback,
+      deadlineAt,
+    });
+    if (rescueQuestions.length > 0) {
+      for (const question of rescueQuestions) {
+        question._requestedDifficulty = "KILLER";
+        question._difficultyDowngraded = true;
+        question._reviewRecommended = true;
+        question._qualityMode = question._qualityMode ?? "rescue";
+      }
+      return {
+        questions: rescueQuestions,
+        attempts: attempts + 1,
+        relaxedFallback: true,
+        rejectionSummary: buildRejectionSummary(rejectionRecorder),
+        usageEvents,
+      };
+    }
+    console.warn(
+      `[${logPrefix}] STANDARD GRAMMAR_ERROR KILLER rescue also failed; skipping relaxed KILLER fallback to avoid extra shallow retries.`,
+    );
+    return {
+      questions: [],
+      attempts: attempts + 1,
+      relaxedFallback: false,
+      rejectionSummary: buildRejectionSummary(rejectionRecorder),
+      usageEvents,
+    };
+  }
+
+  if (inputWithUsage.generationPlan === "PREMIUM") {
+    console.warn(
+      `[${logPrefix}] Strict premium generation exhausted after ${attempts} attempts; skipping relaxed fallback to preserve premium quality and latency.`,
     );
     return {
       questions: [],

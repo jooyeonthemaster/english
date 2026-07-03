@@ -208,6 +208,9 @@ export type StructRow = {
   line: string;
   isSegStart: boolean; // 세그먼트(박스/단락)의 전역 첫 줄인지
   isSegEnd: boolean; // 세그먼트의 전역 마지막 줄인지
+  // 원문(\n 경계) 행의 첫 랩행인지(래핑 이어짐 행은 false). 렌더 조인이 리스트/시행
+  // 판정을 원문 행 머리에만 적용하기 위한 플래그 — undefined 는 레거시(휴리스틱 폴백).
+  isSourceLineStart?: boolean;
 };
 
 export type RenderItemPart = {

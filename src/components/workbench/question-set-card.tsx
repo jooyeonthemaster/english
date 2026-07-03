@@ -24,6 +24,8 @@ import {
 
 import { optionDisplayTextForSubtype } from "@/components/exams/paper-builder/option-display";
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
+import { isKoQuestionType } from "@/lib/korean/registry";
+import { buildKoSetSharedPassage } from "@/lib/korean/sets/paper";
 import { reconstructPassageView } from "@/lib/question-sets/reconstruct";
 import { formatDateTime } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
@@ -238,8 +240,20 @@ export function QuestionSetCard({
     set.members.length > 0 && set.members.every((m) => m.approved);
 
   // 멤버 anchor 를 모두 병합해 공유 지문을 한 번만 재구성.
+  // 국어(KO) 세트는 anchor(_spans) 모델이 아니라 멤버 structuredData 의 KO 마커
+  // (㉠·ⓐ·[A])를 병합 오버레이하는 모델 — 시험지 공유지문(buildKoSetSharedPassage)
+  // 과 동일한 지문을 카드에도 그린다. 영어 세트는 기존 재구성 경로 그대로.
   const mergedPassage = useMemo(() => {
     const base = set.layout?.fullPassage ?? set.canonicalPassage;
+    if (
+      set.members.length > 0 &&
+      set.members.every((m) => isKoQuestionType(m.typeId))
+    ) {
+      return buildKoSetSharedPassage(
+        base,
+        set.members.map((m) => m.structuredData),
+      );
+    }
     const anchors: Anchor[] = set.members.flatMap((m) =>
       Array.isArray(m.spans) ? m.spans : [],
     );

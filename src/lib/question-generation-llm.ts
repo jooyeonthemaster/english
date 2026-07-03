@@ -1,32 +1,39 @@
-import { anthropic } from "@ai-sdk/anthropic";
 import { generateObject, generateText, Output } from "ai";
 import { z } from "zod";
-import { GEMINI_MODEL_ID, model as geminiModel } from "@/lib/ai";
+
+import {
+  ATLAS_CLOUD_PROVIDER,
+  ATLAS_PREMIUM_MODEL_ID,
+  ATLAS_STANDARD_MODEL_ID,
+  atlasChatModel,
+} from "@/lib/atlas-ai";
 import { GEMINI_QUESTION_MAX_RETRIES } from "@/lib/concurrency-config";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 
-type QuestionGenerationProvider = "google" | "anthropic";
+type QuestionGenerationProvider = typeof ATLAS_CLOUD_PROVIDER;
 
-const GEMINI_QUESTION_THINKING_BUDGET = readNumberEnv(
-  "GEMINI_QUESTION_THINKING_BUDGET",
-  0,
-);
-const GEMINI_QUESTION_TIMEOUT_MS = readNumberEnv(
+const STANDARD_QUESTION_TIMEOUT_MS = readNumberEnv(
   "GEMINI_QUESTION_TIMEOUT_MS",
   60_000,
+);
+const PREMIUM_QUESTION_TIMEOUT_MS = readNumberEnv(
+  "ATLASCLOUD_PREMIUM_QUESTION_TIMEOUT_MS",
+  180_000,
 );
 
 const QUESTION_GENERATION_MODEL_CONFIGS: Record<
   QuestionGenerationPlan,
-  { provider: QuestionGenerationProvider; modelId: string }
+  { provider: QuestionGenerationProvider; modelId: string; timeoutMs: number }
 > = {
   STANDARD: {
-    provider: "google",
-    modelId: GEMINI_MODEL_ID,
+    provider: ATLAS_CLOUD_PROVIDER,
+    modelId: ATLAS_STANDARD_MODEL_ID,
+    timeoutMs: STANDARD_QUESTION_TIMEOUT_MS,
   },
   PREMIUM: {
-    provider: "anthropic",
-    modelId: "claude-sonnet-4-6",
+    provider: ATLAS_CLOUD_PROVIDER,
+    modelId: ATLAS_PREMIUM_MODEL_ID,
+    timeoutMs: PREMIUM_QUESTION_TIMEOUT_MS,
   },
 };
 
@@ -41,19 +48,8 @@ interface GenerateQuestionObjectArgs<T> {
   logPrefix?: string;
   maxRetries?: number;
   maxTokens?: number;
-  /**
-   * PREMIUM(Claude) 전용 정적 시스템 프리앰블(유형 지시·루브릭·계약). 전달되면
-   * anthropic cache_control(ephemeral)을 붙인 system 블록으로 보내 동일 유형/난이도
-   * 반복 호출에서 입력 토큰 캐시 적중 → TTFT·비용 절감. Gemini 경로는 미사용.
-   */
   system?: string;
-  /** provider 호출 1회 상한(ms). 미전달 시 anthropic=180s 기본. */
   timeoutMs?: number;
-  /**
-   * 절대 시각(epoch ms). 전달되면 매 호출 abort 를 min(timeoutMs, 남은예산)으로
-   * 좁혀 Vercel 120s/trigger 600s 벽 안에서 호출이 강제종료(잡 고아) 되기 전에
-   * 스스로 abort→정상 실패+환불로 흐르게 한다. (180s abort > 120s 벽 = 고아 버그 차단.)
-   */
   deadlineAt?: number;
 }
 
@@ -66,6 +62,7 @@ interface GenerateQuestionTextArgs {
   omitMaxTokens?: boolean;
   responseFormat?: "json_object";
   isRecoverableJsonText?: (text: string) => boolean;
+  /** Deprecated. Atlas/OpenRouter reasoning is controlled in src/lib/atlas-ai.ts. */
   thinkingBudget?: number;
   timeoutMs?: number;
   temperature?: number;
@@ -111,30 +108,36 @@ export function isNonRetryableQuestionGenerationProviderError(error: unknown): b
     "api key not found",
     "api key invalid",
     "invalid api key",
+    "invalid api key provided",
     "permission denied",
     "billing",
-    // 구글 "unrestricted key" enforcement(6/19 시행)·영구 차단 안내는 계정/키
-    // 설정 문제라 한 요청 안에서의 재시도로 풀리지 않는다(실측: 동일 키가 5~11회
-    // 전부 실패). 즉시 중단해 친화 메시지+환불로 흐르게 한다. GCP 콘솔에서 키
-    // 제한을 걸어야 근본 해결됨([[project_gemini_unrestricted_key_enforcement]]).
+    "insufficient credits",
+    "credits are depleted",
+    "requires more credits",
+    "add more credits",
+    "can only afford",
+    "\"code\":402",
+    " code=402",
+    "status=402",
+    "no auth credentials found",
+    "invalid authorization",
+    "unauthorized",
+    "output_config.format.schema",
+    "output_config.format: extra inputs are not permitted",
     "unrestricted key",
     "permanent disruption",
     "will take effect on june",
   ].some((pattern) => message.includes(pattern));
 }
 
-/**
- * 모델/인프라발(發) 원시 에러 메시지를 사용자에게 보여줄 한국어 안내로 변환한다.
- * 청구·쿼터 고갈이나 일시적 서비스 장애는 영어 원문 대신 친화 메시지로 노출하고,
- * 그 외(품질 게이트 소진 등)는 원문을 그대로 둔다. 원문은 호출자가 result 에 보존한다.
- */
 export function toUserFacingQuestionGenerationError(rawMessage: string): string {
   const m = rawMessage.toLowerCase();
   const isBilling =
     m.includes("billing") ||
     m.includes("quota") ||
     m.includes("prepayment") ||
-    m.includes("spending cap");
+    m.includes("spending cap") ||
+    m.includes("insufficient credits");
   const isTransient =
     m.includes("temporary service disruptions") ||
     m.includes("unrestricted key") ||
@@ -142,7 +145,7 @@ export function toUserFacingQuestionGenerationError(rawMessage: string): string 
     m.includes("service unavailable") ||
     m.includes(" 503");
   if (isBilling) {
-    return "AI 서비스 한도 문제로 문제 생성이 일시 중단되었어요. 크레딧은 환불되었습니다. 잠시 후 다시 시도해 주세요.";
+    return "AI 서비스 한도 또는 결제 문제로 문제 생성을 일시 중단했어요. 크레딧은 환불되었습니다. 잠시 후 다시 시도해 주세요.";
   }
   if (isTransient) {
     return "일시적인 AI 서비스 문제로 생성에 실패했어요. 크레딧은 환불되었습니다. 잠시 후 다시 시도해 주세요.";
@@ -165,10 +168,6 @@ export async function generateQuestionObject<T>({
   let lastError: unknown;
   const operationStartedAt = Date.now();
 
-  // 데드라인이 있으면 호출별 abort 를 "남은 시간"으로 좁힌다. 호출 시점마다 다시
-  // 계산하며, 바닥은 1s(0/음수 AbortSignal 회피)만 둔다. 바닥을 데드라인보다 크게
-  // 두면(예전 15s) 늦은 호출이 데드라인을 그만큼 초과해 Vercel 120s 벽을 넘겼다 —
-  // 데드라인(100s)+최대 1s 초과로 묶어 벽 안에서 끝나게 한다.
   const computeAbortMs = (hardCapMs: number) => {
     if (!deadlineAt) return hardCapMs;
     const remaining = deadlineAt - Date.now();
@@ -178,9 +177,6 @@ export async function generateQuestionObject<T>({
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     const attemptStartedAt = Date.now();
     try {
-      // 첫 호출(attempt 0)은 lastError 확보를 위해 항상 1회 시도하되, 재시도는
-      // 데드라인을 넘겼으면 시작하지 않는다 — 내부 재시도 루프가 데드라인을 넘겨
-      // 함수강제종료→잡 고아로 가는 유일한 비게이트 경로였다(적대검수 발견).
       if (attempt > 0 && deadlineAt && Date.now() >= deadlineAt) {
         console.warn(
           `[${logPrefix}] Deadline reached before inner retry ${attempt}; stopping (caller refunds).`,
@@ -191,63 +187,34 @@ export async function generateQuestionObject<T>({
         console.log(`[${logPrefix}] Retry attempt ${attempt} via ${generationPlan} plan...`);
       }
 
-      if (config.provider === "google") {
-        const result = await generateObject({
-          model: geminiModel,
-          schema,
-          prompt,
-          maxOutputTokens: maxTokens,
-          abortSignal: AbortSignal.timeout(
-            computeAbortMs(GEMINI_QUESTION_TIMEOUT_MS),
-          ),
-          providerOptions: {
-            google: {
-              thinkingConfig: {
-                thinkingBudget: GEMINI_QUESTION_THINKING_BUDGET,
-              },
-            },
-          },
-        });
-
-        console.log(
-          `[${logPrefix}] ${generationPlan} ${config.modelId} attempt ${attempt} succeeded in ${Date.now() - attemptStartedAt}ms`,
-        );
-
-        return {
-          object: result.object as T,
-          usage: "usage" in result ? result.usage : undefined,
-          provider: config.provider,
-          modelId: config.modelId,
-          attempts: attempt + 1,
-          durationMs: Date.now() - operationStartedAt,
-        };
-      }
-
       const result = await generateObject({
-        model: anthropic(config.modelId),
+        model: atlasChatModel(config.modelId),
         schema,
         maxOutputTokens: maxTokens,
-        abortSignal: AbortSignal.timeout(computeAbortMs(timeoutMs ?? 180_000)),
-        // 정적 system 프리앰블이 있으면 cache_control(ephemeral)을 붙여 보낸다.
-        // 동일 유형/난이도 반복 호출(워크스페이스 N문항 생성·재시도)에서 거대한
-        // 유형 루브릭/계약 입력이 캐시 적중한다. 없으면 기존처럼 prompt 단일 사용.
+        abortSignal: AbortSignal.timeout(
+          computeAbortMs(timeoutMs ?? config.timeoutMs),
+        ),
+        ...(generationPlan === "PREMIUM"
+          ? {
+              experimental_repairText: async ({ text, error }) =>
+                repairPremiumJsonOutput({
+                  text,
+                  error,
+                  modelId: config.modelId,
+                  maxTokens,
+                  abortMs: computeAbortMs(60_000),
+                  logPrefix,
+                }),
+            }
+          : {}),
         ...(system
           ? {
               messages: [
-                {
-                  role: "system" as const,
-                  content: system,
-                  providerOptions: {
-                    anthropic: { cacheControl: { type: "ephemeral" as const } },
-                  },
-                },
+                { role: "system" as const, content: system },
                 { role: "user" as const, content: prompt },
               ],
             }
           : { prompt }),
-        providerOptions: {
-          anthropic: { structuredOutputMode: "jsonTool" },
-        },
       });
 
       console.log(
@@ -264,21 +231,42 @@ export async function generateQuestionObject<T>({
       };
     } catch (error) {
       lastError = error;
-      const message = error instanceof Error ? error.message : String(error);
-      console.warn(`[${logPrefix}] Attempt ${attempt} failed via ${generationPlan} plan: ${message}`);
-      if (isRecord(error) && error.finishReason) {
-        console.warn(`[${logPrefix}]   finishReason: ${String(error.finishReason)}`);
+      logProviderError(logPrefix, attempt, generationPlan, error);
+      // Anthropic(오픈라우터 경유) strict 구조화 출력의 "compiled grammar is too
+      // large" — 스키마가 복잡한 유형(국어 확장 봉투)에서 PREMIUM 이 400 으로
+      // 전멸한다(26-07-03 실측: KO 7유형 중 6유형). 재시도로는 절대 안 풀리는
+      // 결정론 오류이므로, 스키마를 프롬프트에 인라인하고 Output.json()(스키마
+      // 비강제)으로 1회 폴백 생성한 뒤 클라이언트에서 zod 검증한다 — 하류
+      // 품질게이트가 어차피 전 필드를 결정론 재검증하므로 안전하다.
+      if (isCompiledGrammarTooLargeError(error)) {
+        console.warn(
+          `[${logPrefix}] Structured-output grammar too large — falling back to prompt-inlined JSON mode (schema enforced client-side).`,
+        );
+        const fallback = await generateObjectViaJsonFallback({
+          schema,
+          prompt,
+          system,
+          modelId: config.modelId,
+          provider: config.provider,
+          maxTokens,
+          // JSON 모드는 strict 문법 강제가 없어 같은 유형도 응답이 더 길고 느리다
+          // (26-07-03 실측: KO_GR_HIST 180s 초과). 하드캡을 240s 로 올리되
+          // deadlineAt(Vercel 벽)은 computeAbortMs 가 계속 존중한다.
+          abortMs: computeAbortMs(Math.max(timeoutMs ?? config.timeoutMs, 240_000)),
+          deadlineAt,
+          logPrefix,
+          operationStartedAt,
+          attempt,
+        });
+        if (fallback) return fallback;
+        // 폴백 실패는 잘림·타임아웃 등 비결정 요인 — 남은 attempt 가 있으면
+        // 재시도한다(구조화 호출이 곧장 400 으로 재실패한 뒤 폴백이 다시 돈다).
+        if (attempt >= maxRetries) throw error;
+        console.warn(
+          `[${logPrefix}] JSON fallback failed; retrying (${attempt + 1}/${maxRetries}).`,
+        );
+        continue;
       }
-      if (isRecord(error) && error.usage) {
-        console.warn(`[${logPrefix}]   usage: ${JSON.stringify(error.usage).slice(0, 300)}`);
-      }
-      if (isRecord(error) && typeof error.text === "string") {
-        console.warn(`[${logPrefix}]   rawText: ${error.text.slice(0, 300)}`);
-      }
-
-      // 영구·결정적 provider 실패(billing/quota/permission/invalid-key)는
-      // provider 무관으로 즉시 중단한다. (이전엔 google 에만 적용돼 PREMIUM=
-      // anthropic 경로가 billing 에러도 maxRetries 만큼 낭비 재시도했다.)
       if (isNonRetryableQuestionGenerationProviderError(error)) {
         console.warn(
           `[${logPrefix}] Non-retryable provider error (${config.provider}); stopping retries.`,
@@ -291,6 +279,239 @@ export async function generateQuestionObject<T>({
   throw lastError;
 }
 
+/**
+ * Anthropic(오픈라우터 경유) strict 구조화 출력의 "compiled grammar is too large"
+ * 400 판정 — 스키마 복잡도 기인의 결정론 오류라 재시도가 무의미하다.
+ */
+function isCompiledGrammarTooLargeError(error: unknown): boolean {
+  const message = [
+    error instanceof Error ? error.message : String(error),
+    readErrorString(error, "responseBody"),
+    readErrorString(error, "body"),
+  ]
+    .filter(Boolean)
+    .join("\n")
+    .toLowerCase();
+  return message.includes("compiled grammar is too large");
+}
+
+/** ```json 펜스·전후 잡담을 벗겨 첫 {…} 블록만 남긴다 (폴백 텍스트 파싱용). */
+function stripJsonFences(text: string): string {
+  const unfenced = text.replace(/```(?:json)?/gi, "").trim();
+  const start = unfenced.indexOf("{");
+  const end = unfenced.lastIndexOf("}");
+  return start !== -1 && end > start ? unfenced.slice(start, end + 1) : unfenced;
+}
+
+/** 펜스 제거 후 JSON.parse — 실패 시 undefined (throw 하지 않는다). */
+function parseJsonLoose(text: string): unknown {
+  if (!text.trim()) return undefined;
+  try {
+    return JSON.parse(stripJsonFences(text));
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * grammar-too-large 폴백: 스키마를 JSON Schema 텍스트로 프롬프트에 인라인하고
+ * Output.json()(provider 스키마 비강제)으로 생성한 뒤 클라이언트에서 zod 검증한다.
+ * 하류 품질게이트가 전 필드를 결정론 재검증하므로 provider 강제 없이도 안전하다.
+ * 실패 시 null — 호출측이 원 에러를 던진다.
+ */
+async function generateObjectViaJsonFallback<T>({
+  schema,
+  prompt,
+  system,
+  modelId,
+  provider,
+  maxTokens,
+  abortMs,
+  deadlineAt,
+  logPrefix,
+  operationStartedAt,
+  attempt,
+}: {
+  schema: z.ZodType<T>;
+  prompt: string;
+  system?: string;
+  modelId: string;
+  provider: string;
+  maxTokens: number;
+  abortMs: number;
+  deadlineAt?: number;
+  logPrefix: string;
+  operationStartedAt: number;
+  attempt: number;
+}): Promise<GenerateQuestionObjectResult<T> | null> {
+  if (abortMs <= 1_000) return null;
+  // zod v4 → JSON Schema 인라인. 변환 불가 스키마(z.custom 류)면 텍스트 없이
+  // 진행 — 유형 프롬프트가 필드 구조를 이미 상세 서술한다.
+  let schemaText = "";
+  try {
+    schemaText = JSON.stringify(z.toJSONSchema(schema as never));
+  } catch {
+    /* noop */
+  }
+  const jsonInstruction = [
+    "## 출력 형식 (스키마 비강제 폴백)",
+    "마크다운·코드펜스·주석 없이 순수 JSON 객체 하나만 출력하라.",
+    schemaText ? `다음 JSON Schema 를 정확히 준수하라:\n${schemaText}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+  const userContent = `${prompt}\n\n${jsonInstruction}`;
+  try {
+    // Output.json() 미사용: output 게터가 파싱 실패 시 throw 해 원문 텍스트에
+    // 접근할 수 없게 되고("No output generated", 26-07-03 실측 2유형),
+    // response_format 이 일부 Anthropic 백엔드(output_config.format)에서
+    // 거부되기도 한다. 순수 텍스트로 받아 직접 파싱·복구한다.
+    const result = await generateText({
+      model: atlasChatModel(modelId),
+      // 사고(reasoning) 토큰이 출력 예산을 공유해 20k 에서도 JSON 이 잘렸다
+      // (26-07-03 실측 KO_GR_HIST) — 32k 로 넉넉히.
+      maxOutputTokens: 32_000,
+      abortSignal: AbortSignal.timeout(abortMs),
+      ...(system
+        ? {
+            messages: [
+              { role: "system" as const, content: system },
+              { role: "user" as const, content: userContent },
+            ],
+          }
+        : { prompt: userContent }),
+    });
+    const rawText = (result.text ?? "").trim();
+    let candidate = parseJsonLoose(rawText);
+    let parsed = candidate === undefined ? undefined : schema.safeParse(candidate);
+    if (!parsed?.success && rawText) {
+      // 잘림·따옴표 깨짐 등 — 기존 PREMIUM 복구 호출로 1회 재구성 후 재검증.
+      const repairReason = parsed
+        ? new Error(
+            parsed.error.issues
+              .slice(0, 5)
+              .map((i) => `${i.path.join(".")}: ${i.message}`)
+              .join(" | "),
+          )
+        : new Error("JSON parse failed (likely truncated output)");
+      const repairAbortMs = deadlineAt
+        ? Math.min(90_000, Math.max(1_000, deadlineAt - Date.now()))
+        : 90_000;
+      if (repairAbortMs > 5_000) {
+        const repaired = await repairPremiumJsonOutput({
+          text: rawText,
+          error: repairReason,
+          modelId,
+          maxTokens,
+          abortMs: repairAbortMs,
+          logPrefix,
+          minOutputTokens: 24_000,
+        });
+        if (repaired) {
+          candidate = parseJsonLoose(repaired);
+          if (candidate !== undefined) parsed = schema.safeParse(candidate);
+        }
+      }
+    }
+    if (!parsed?.success) {
+      const brief = parsed
+        ? parsed.error.issues
+            .slice(0, 3)
+            .map((i) => `${i.path.join(".")}: ${i.message}`)
+            .join(" | ")
+        : "JSON parse failed";
+      console.warn(`[${logPrefix}] JSON fallback failed client-side schema validation: ${brief}`);
+      return null;
+    }
+    console.log(`[${logPrefix}] JSON fallback succeeded (schema validated client-side).`);
+    return {
+      object: parsed.data as T,
+      usage: result.usage,
+      provider,
+      modelId,
+      attempts: attempt + 2,
+      durationMs: Date.now() - operationStartedAt,
+    };
+  } catch (fallbackError) {
+    console.warn(
+      `[${logPrefix}] JSON fallback call failed: ${fallbackError instanceof Error ? fallbackError.message : String(fallbackError)}`,
+    );
+    return null;
+  }
+}
+
+async function repairPremiumJsonOutput({
+  text,
+  error,
+  modelId,
+  maxTokens,
+  abortMs,
+  logPrefix,
+  minOutputTokens = 12_288,
+}: {
+  text: string;
+  error: unknown;
+  modelId: string;
+  maxTokens: number;
+  abortMs: number;
+  logPrefix: string;
+  /** 복구 응답은 전체 JSON 재방출 — 긴 국어 봉투는 폴백에서 24k 로 올린다. */
+  minOutputTokens?: number;
+}): Promise<string | null> {
+  const raw = text.trim();
+  if (raw.length === 0 || abortMs <= 1_000) return null;
+
+  const errorSummary =
+    error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+  const repairPrompt = [
+    "You are repairing a JSON response for a structured educational question-generation API.",
+    "The previous assistant output failed JSON parsing or schema validation.",
+    "Return ONLY one complete valid JSON object. Do not wrap it in markdown.",
+    "Preserve the existing question content as much as possible.",
+    "If the raw output is truncated, reconstruct the missing closing fields, arrays, and braces in the same schema style.",
+    "Do not add commentary.",
+    "",
+    `## Validation error`,
+    errorSummary.slice(0, 1_000),
+    "",
+    "## Raw broken JSON",
+    raw,
+  ].join("\n");
+
+  try {
+    const result = await generateText({
+      model: atlasChatModel(modelId),
+      prompt: repairPrompt,
+      output: Output.json(),
+      temperature: 0,
+      maxOutputTokens: Math.min(32_000, Math.max(maxTokens, minOutputTokens)),
+      abortSignal: AbortSignal.timeout(abortMs),
+    });
+    const repairedResult = result as { output?: unknown; text?: string };
+    // output 게터는 파싱 실패 시 throw 한다 — 원문 텍스트 폴백을 살리기 위해 격리.
+    let structured: unknown;
+    try {
+      structured = repairedResult.output;
+    } catch {
+      structured = undefined;
+    }
+    const repaired =
+      structured !== undefined && structured !== null
+        ? JSON.stringify(structured)
+        : stripJsonFences(repairedResult.text ?? "");
+    if (!repaired || repaired === "null") return null;
+    console.warn(`[${logPrefix}] Repaired malformed PREMIUM JSON output via continuation call.`);
+    return repaired;
+  } catch (repairError) {
+    console.warn(
+      `[${logPrefix}] PREMIUM JSON repair failed: ${
+        repairError instanceof Error ? repairError.message : String(repairError)
+      }`,
+    );
+    return null;
+  }
+}
+
 export async function generateQuestionText({
   prompt,
   generationPlan,
@@ -301,12 +522,13 @@ export async function generateQuestionText({
   responseFormat,
   isRecoverableJsonText,
   thinkingBudget,
-  timeoutMs = 180_000,
+  timeoutMs,
   temperature = 0.35,
 }: GenerateQuestionTextArgs): Promise<GenerateQuestionTextResult> {
   const config = getQuestionGenerationModelConfig(generationPlan);
   let lastError: unknown;
   const operationStartedAt = Date.now();
+  void thinkingBudget;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     const attemptStartedAt = Date.now();
@@ -315,56 +537,13 @@ export async function generateQuestionText({
         console.log(`[${logPrefix}] Retry attempt ${attempt} via ${generationPlan} plan...`);
       }
 
-      if (config.provider === "google") {
-        const result = await generateText({
-          model: geminiModel,
-          prompt,
-          maxOutputTokens: omitMaxTokens ? undefined : maxTokens,
-          temperature,
-          abortSignal: AbortSignal.timeout(Math.min(timeoutMs, GEMINI_QUESTION_TIMEOUT_MS)),
-          ...(responseFormat === "json_object"
-            ? { output: Output.json() }
-            : {}),
-          providerOptions: {
-            google: {
-              thinkingConfig: {
-                thinkingBudget: thinkingBudget ?? GEMINI_QUESTION_THINKING_BUDGET,
-              },
-            },
-          },
-        });
-
-        console.log(
-          `[${logPrefix}] ${generationPlan} ${config.modelId} text attempt ${attempt} succeeded in ${Date.now() - attemptStartedAt}ms`,
-        );
-
-        const jsonOutput =
-          responseFormat === "json_object" && "output" in result
-            ? JSON.stringify(result.output)
-            : undefined;
-
-        return {
-          text: jsonOutput ?? result.text,
-          usage: "usage" in result ? result.usage : undefined,
-          finishReason: "finishReason" in result && typeof result.finishReason === "string"
-            ? result.finishReason
-            : undefined,
-          rawFinishReason: "rawFinishReason" in result && typeof result.rawFinishReason === "string"
-            ? result.rawFinishReason
-            : undefined,
-          provider: config.provider,
-          modelId: config.modelId,
-          attempts: attempt + 1,
-          durationMs: Date.now() - operationStartedAt,
-        };
-      }
-
       const result = await generateText({
-        model: anthropic(config.modelId),
+        model: atlasChatModel(config.modelId),
         prompt,
-        maxOutputTokens: maxTokens,
+        maxOutputTokens: omitMaxTokens ? undefined : maxTokens,
         temperature,
-        abortSignal: AbortSignal.timeout(timeoutMs),
+        abortSignal: AbortSignal.timeout(timeoutMs ?? config.timeoutMs),
+        ...(responseFormat === "json_object" ? { output: Output.json() } : {}),
       });
 
       console.log(
@@ -372,14 +551,19 @@ export async function generateQuestionText({
       );
 
       return {
-        text: result.text,
+        text:
+          responseFormat === "json_object" && "output" in result
+            ? JSON.stringify(result.output)
+            : result.text,
         usage: "usage" in result ? result.usage : undefined,
-        finishReason: "finishReason" in result && typeof result.finishReason === "string"
-          ? result.finishReason
-          : undefined,
-        rawFinishReason: "rawFinishReason" in result && typeof result.rawFinishReason === "string"
-          ? result.rawFinishReason
-          : undefined,
+        finishReason:
+          "finishReason" in result && typeof result.finishReason === "string"
+            ? result.finishReason
+            : undefined,
+        rawFinishReason:
+          "rawFinishReason" in result && typeof result.rawFinishReason === "string"
+            ? result.rawFinishReason
+            : undefined,
         provider: config.provider,
         modelId: config.modelId,
         attempts: attempt + 1,
@@ -387,21 +571,7 @@ export async function generateQuestionText({
       };
     } catch (error) {
       lastError = error;
-      const message = error instanceof Error ? error.message : String(error);
-      console.warn(`[${logPrefix}] Attempt ${attempt} failed via ${generationPlan} plan: ${message}`);
-      if (isRecord(error) && error.finishReason) {
-        console.warn(`[${logPrefix}]   finishReason: ${String(error.finishReason)}`);
-      }
-      if (isRecord(error) && error.usage) {
-        console.warn(`[${logPrefix}]   usage: ${JSON.stringify(error.usage).slice(0, 300)}`);
-      }
-      if (isRecord(error) && typeof error.text === "string") {
-        console.warn(`[${logPrefix}]   rawText: ${error.text.slice(0, 300)}`);
-      }
-
-      // 영구·결정적 provider 실패(billing/quota/permission/invalid-key)는
-      // provider 무관으로 즉시 중단한다. (이전엔 google 에만 적용돼 PREMIUM=
-      // anthropic 경로가 billing 에러도 maxRetries 만큼 낭비 재시도했다.)
+      logProviderError(logPrefix, attempt, generationPlan, error);
       if (isNonRetryableQuestionGenerationProviderError(error)) {
         console.warn(
           `[${logPrefix}] Non-retryable provider error (${config.provider}); stopping retries.`,
@@ -410,21 +580,12 @@ export async function generateQuestionText({
       }
 
       const rawText = readErrorString(error, "text");
-      if (config.provider === "google" && responseFormat === "json_object" && rawText) {
+      if (responseFormat === "json_object" && rawText) {
         if (isRecoverableJsonText?.(rawText)) {
           console.warn(
             `[${logPrefix}] Falling back to recoverable raw JSON text after SDK object parsing failed.`,
           );
-          return {
-            text: rawText,
-            usage: isRecord(error) && "usage" in error ? error.usage : undefined,
-            finishReason: readErrorString(error, "finishReason"),
-            rawFinishReason: readErrorString(error, "rawFinishReason"),
-            provider: config.provider,
-            modelId: config.modelId,
-            attempts: attempt + 1,
-            durationMs: Date.now() - operationStartedAt,
-          };
+          return fallbackTextResult(rawText, error, config, attempt, operationStartedAt);
         }
 
         if (attempt < maxRetries) {
@@ -437,21 +598,99 @@ export async function generateQuestionText({
         console.warn(
           `[${logPrefix}] Falling back to raw JSON text after SDK object parsing failed.`,
         );
-        return {
-          text: rawText,
-          usage: isRecord(error) && "usage" in error ? error.usage : undefined,
-          finishReason: readErrorString(error, "finishReason"),
-          rawFinishReason: readErrorString(error, "rawFinishReason"),
-          provider: config.provider,
-          modelId: config.modelId,
-          attempts: attempt + 1,
-          durationMs: Date.now() - operationStartedAt,
-        };
+        return fallbackTextResult(rawText, error, config, attempt, operationStartedAt);
       }
     }
   }
 
   throw lastError;
+}
+
+function fallbackTextResult(
+  rawText: string,
+  error: unknown,
+  config: { provider: QuestionGenerationProvider; modelId: string },
+  attempt: number,
+  operationStartedAt: number,
+): GenerateQuestionTextResult {
+  return {
+    text: rawText,
+    usage: isRecord(error) && "usage" in error ? error.usage : undefined,
+    finishReason: readErrorString(error, "finishReason"),
+    rawFinishReason: readErrorString(error, "rawFinishReason"),
+    provider: config.provider,
+    modelId: config.modelId,
+    attempts: attempt + 1,
+    durationMs: Date.now() - operationStartedAt,
+  };
+}
+
+function logProviderError(
+  logPrefix: string,
+  attempt: number,
+  generationPlan: QuestionGenerationPlan,
+  error: unknown,
+): void {
+  const message = error instanceof Error ? error.message : String(error);
+  console.warn(`[${logPrefix}] Attempt ${attempt} failed via ${generationPlan} plan: ${message}`);
+  const details = summarizeProviderError(error);
+  if (details) {
+    console.warn(`[${logPrefix}]   providerError: ${details}`);
+  }
+  if (isRecord(error) && error.finishReason) {
+    console.warn(`[${logPrefix}]   finishReason: ${String(error.finishReason)}`);
+  }
+  if (isRecord(error) && error.usage) {
+    console.warn(`[${logPrefix}]   usage: ${JSON.stringify(error.usage).slice(0, 300)}`);
+  }
+  if (isRecord(error) && typeof error.text === "string") {
+    console.warn(`[${logPrefix}]   rawText: ${error.text.slice(0, 300)}`);
+  }
+}
+
+function summarizeProviderError(error: unknown): string | undefined {
+  const seen = new Set<unknown>();
+  const chunks: string[] = [];
+  let current: unknown = error;
+
+  for (let depth = 0; isRecord(current) && depth < 4 && !seen.has(current); depth += 1) {
+    seen.add(current);
+    const parts: string[] = [];
+    const name = current.name;
+    const status = current.statusCode ?? current.status;
+    const code = current.code;
+    if (typeof name === "string") parts.push(`name=${name}`);
+    if (typeof status === "string" || typeof status === "number") parts.push(`status=${status}`);
+    if (typeof code === "string" || typeof code === "number") parts.push(`code=${code}`);
+
+    for (const key of ["responseBody", "body", "data", "text"] as const) {
+      const value = current[key];
+      const text =
+        typeof value === "string"
+          ? value
+          : value === undefined
+            ? undefined
+            : safeJsonStringify(value);
+      if (text) {
+        parts.push(`${key}=${text.replace(/\s+/g, " ").slice(0, 1_200)}`);
+      }
+    }
+
+    if (parts.length > 0) {
+      chunks.push(`cause${depth}{${parts.join("; ")}}`);
+    }
+    current = current.cause;
+  }
+
+  return chunks.length > 0 ? chunks.join(" <- ").slice(0, 2_000) : undefined;
+}
+
+function safeJsonStringify(value: unknown): string | undefined {
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return undefined;
+  }
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

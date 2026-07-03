@@ -30,8 +30,6 @@ export interface QuestionQualityIssue {
 export const SHIP_FIRST_WARNING_CODES = new Set<string>([
   "wrong-option-explanation-count",
   "grammar-decoy-point-diversity",
-  "grammar-killer-thin-answer",
-  "grammar-correction-killer-thin-segment",
   "grammar-correction-underline-too-narrow",
   "grammar-correction-underlined-segment-short",
   "blank-killer-target-too-easy",
@@ -291,6 +289,35 @@ export function summaryWritingComparableTokens(value: string): string[] {
 export function countLiteral(text: string, literal: string): number {
   if (!text || !literal) return 0;
   return text.split(literal).length - 1;
+}
+
+
+
+/**
+ * 영작형 누수 게이트: 정답 어구의 "연속 내용토큰(≥4글자) 런"이 원본 지문에 그대로
+ * 나타나는지 검사한다. 영작형(SUMMARY_WRITING / TOPIC_SENTENCE_WRITING / WORD_ORDER /
+ * CONDITIONAL_WRITING)은 원본 지문이 문제 안에 INLINE 으로 함께 노출되므로, 정답이
+ * 지문 문장의 verbatim/near-verbatim 이면 학생이 그대로 베껴 쓸 수 있다(영작 무력화 = 본문 답 노출).
+ * 내용토큰만 비교(summaryWritingComparableTokens — 기능어/관사/전치사 등 <4글자 제외)하므로
+ * 어형/관사 차이를 흡수한다. minRun(기본 3) 이상 연속 일치 시 그 어구를 반환, 없으면 "".
+ * 단일·이중 내용어 공유는 paraphrase 의 자연스러운 겹침이라 허용(거짓양성 회피).
+ */
+export function answerRunInPassage(
+  answer: string,
+  passage: string,
+  minRun = 3,
+): string {
+  const ans = summaryWritingComparableTokens(answer);
+  const psg = summaryWritingComparableTokens(passage);
+  if (ans.length < minRun || psg.length < minRun) return "";
+  const psgSeq = ` ${psg.join(" ")} `;
+  for (let len = ans.length; len >= minRun; len -= 1) {
+    for (let i = 0; i + len <= ans.length; i += 1) {
+      const run = ans.slice(i, i + len).join(" ");
+      if (psgSeq.includes(` ${run} `)) return run;
+    }
+  }
+  return "";
 }
 
 

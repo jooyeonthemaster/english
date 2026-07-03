@@ -386,7 +386,6 @@ async function generateGeneric(
         abortSignal: AbortSignal.timeout(GENERIC_TIMEOUT_MS),
         // thinking 켜되 budget 을 한정(이전엔 0=꺼짐). thinking 토큰은 maxOutputTokens 를 공유하므로 상한을 둬
         // 본문이 잘려 NoObjectGenerated/검증실패로 3회 모두 터지는 것을 막는다. 추론은 보기 distinctness·정답 유일성용.
-        providerOptions: { google: { thinkingConfig: { thinkingBudget: 4096 } } },
         messages: [{ role: "user", content: [{ type: "text", text: prompt }] }],
       });
       const obj = result.object;

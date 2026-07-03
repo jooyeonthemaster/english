@@ -13,6 +13,8 @@ import {
 } from "@/lib/grammar-correction-display";
 import { isSummaryWriting, summaryWritingStudentParts } from "@/lib/summary-writing";
 import { isTopicSentenceWriting, topicSentenceWritingStudentParts } from "@/lib/topic-sentence-writing";
+import { getKoTypeModule } from "@/lib/korean/registry";
+import { serializeKoQuestion } from "@/lib/korean/core/render-model";
 
 // ─── Constants ───────────────────────────────────────────
 
@@ -29,6 +31,10 @@ export interface PassageItem {
   publisher: string | null;
   difficulty: string | null;
   source?: string | null;
+  /** 지문 과목 — null/미지정=영어(기존 지문 전부), "KOREAN"=국어. */
+  subject?: string | null;
+  /** Passage.tags JSON 문자열 — 국어 갈래 태그(KO_KIND:*) 판독용. */
+  tags?: string | null;
   createdAt?: string | Date;
   updatedAt?: string | Date;
   school: { id: string; name: string } | null;
@@ -143,6 +149,25 @@ export function questionSignature(parts: {
 }
 
 export function buildQuestionText(q: any): string {
+  // KO(국어) 유형 게이트: 레지스트리 렌더모델 → serializeKoQuestion 재사용.
+  // 발문+보기+조건만 직렬화(선지·지문·정답 미포함 — 정답 누수/지문 중복 방지 규약).
+  const koTypeId =
+    typeof q?._typeId === "string" && q._typeId.startsWith("KO_")
+      ? q._typeId
+      : typeof q?.subType === "string" && q.subType.startsWith("KO_")
+        ? q.subType
+        : "";
+  if (koTypeId) {
+    const koMod = getKoTypeModule(koTypeId);
+    if (koMod) {
+      try {
+        const text = serializeKoQuestion(koMod.toRenderModel(q, {}));
+        if (text) return text;
+      } catch {
+        // 렌더모델 조립 실패 → 아래 공통(발문+questionText) 경로로 폴백
+      }
+    }
+  }
   const parts: string[] = [];
   const isSummaryCompleteMc = q?._typeId === "SUMMARY_COMPLETE_MC" || q?.subType === "SUMMARY_COMPLETE_MC";
   const isGrammarCorrection = q?._typeId === "GRAMMAR_CORRECTION" || q?.subType === "GRAMMAR_CORRECTION";

@@ -91,6 +91,7 @@ export interface OperationsCostDashboard {
   };
   pricing: {
     fixedMonthlyCostKrw: number;
+    hasAtlasCloudTokenPricing: boolean;
     hasGeminiPricing: boolean;
     hasAnthropicPricing: boolean;
     hasDocumentAiPricing: boolean;
@@ -129,7 +130,7 @@ export interface OperationsCostDashboard {
   };
   billingSync: {
     googleConfigured: boolean;
-    anthropicConfigured: boolean;
+    atlasConfigured: boolean;
     missingEnv: string[];
   };
   activeSubscriptions: {
@@ -215,6 +216,8 @@ export type AcademyUsageAccumulator = {
 };
 export type PricingConfig = {
   usdToKrwRate: number;
+  atlasInputUsdPer1M: number | null;
+  atlasOutputUsdPer1M: number | null;
   geminiInputUsdPer1M: number | null;
   geminiOutputUsdPer1M: number | null;
   anthropicInputUsdPer1M: number | null;

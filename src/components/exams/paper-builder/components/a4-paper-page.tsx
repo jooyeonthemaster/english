@@ -24,6 +24,8 @@ import {
   questionStemAndBody,
   recombineQuestionText,
 } from "../question-body-layout";
+import { splitKoStructBoxRows } from "../korean/ko-paper-adapter";
+import { isKoSetGroupId } from "@/lib/korean/sets/paper";
 import { questionHasEmbeddedPassage } from "../passage-policy";
 import { TEMPLATE_VISUALS } from "../templates";
 import {
@@ -145,11 +147,23 @@ function StructuredBody({
   // 박스 본문 줄높이를 평문 본문(questionLineHeight 1.46)과 통일 — compact 모드에서
   // 박스(1.52)만 줄 간격이 넓던 불일치 해소. pagination.boxLineHeight 와 1:1 동기.
   const leading = compact ? "leading-[1.46]" : "leading-[1.58]";
+  // KO(국어) 문항 — 지문/보기/조건 박스는 전용 분기(헤더 행·출처 우측정렬·각주 축소).
+  const isKoQuestion = (subType || "").startsWith("KO_");
 
   return (
     <div className={cn("space-y-2", withTopGap && "mt-1", visualQuestionClass)}>
       {groups.map((group, groupIndex) => {
-        const text = joinRenderedLinesForDisplay(group.rows.map((row) => row.line));
+        // 지문(passage) 박스는 기존 "통짜 단일 흐름" 유지, 그 외 본문(발문/조건/보기/주어진문장
+        // 등)은 리스트·라벨 줄바꿈을 보존한다([조건] 번호 목록이 한 줄로 뭉개지던 버그 수정).
+        // sourceLineStarts: 리스트 판정을 원문 행 머리에만 적용 — 래핑 우연으로 "(A)"/"3.5"
+        // 등으로 시작하게 된 이어짐 행이 문장 중간 강제 개행으로 오탐되지 않는다.
+        const text = joinRenderedLinesForDisplay(
+          group.rows.map((row) => row.line),
+          {
+            keepListBreaks: group.style !== "passage",
+            sourceLineStarts: group.rows.map((row) => row.isSourceLineStart),
+          },
+        );
         const resumed = !group.rows[0].isSegStart;
         const continues = !group.rows[group.rows.length - 1].isSegEnd;
 
@@ -160,6 +174,66 @@ function StructuredBody({
               className="text-center text-[12px] font-bold leading-none text-slate-500"
             >
               {"\u2193"}
+            </div>
+          );
+        }
+
+        // KO(국어) 지문/보기/조건 박스 — 어댑터 행 규약으로 헤더("〈 보 기 〉"/"[조건]")·
+        // 출처(우측정렬)·각주(축소)를 분리 렌더한다. 영어 박스 분기는 아래 그대로(무변경).
+        if (isKoQuestion && (group.style === "passage" || group.style === "given")) {
+          const koView = splitKoStructBoxRows(
+            group.rows.map((row) => row.line),
+            {
+              isSegStart: !resumed,
+              style: group.style,
+              // 원문 행 경계 전부 보존(시행·대사·문단) — 래핑 이어짐 행만 공백 병합.
+              sourceLineStarts: group.rows.map((row) => row.isSourceLineStart),
+            },
+          );
+          return (
+            <div
+              key={groupIndex}
+              className={cn(
+                "whitespace-pre-line text-justify text-slate-950 font-normal py-1",
+                leading,
+                group.style === "passage" && passageBoxClass,
+              )}
+            >
+              {resumed && (
+                <span className="continuation-hint mb-1 block text-[9px] italic text-slate-400">
+                  {"(이어서)"}
+                </span>
+              )}
+              {koView.header &&
+                (koView.header === "[조건]" ? (
+                  <span className="mb-0.5 block text-[10px] font-bold tracking-wider text-slate-500">
+                    {koView.header}
+                  </span>
+                ) : (
+                  <span className="mb-1 block text-center text-[11px] font-bold text-slate-600">
+                    {koView.header}
+                  </span>
+                ))}
+              {renderFormattedInline(koView.body, subType)}
+              {koView.sourceLine && (
+                <span className="mt-0.5 block text-right text-[10px] text-slate-500">
+                  {koView.sourceLine}
+                </span>
+              )}
+              {koView.footnotes.length > 0 && (
+                <span className="mt-1 block border-t border-slate-200 pt-1">
+                  {koView.footnotes.map((note, noteIdx) => (
+                    <span key={noteIdx} className="block text-[10px] text-slate-500">
+                      {note}
+                    </span>
+                  ))}
+                </span>
+              )}
+              {continues && (
+                <span className="continuation-hint mt-1 block text-[9px] italic text-slate-400">
+                  {"(다음 칸으로 이어짐 →)"}
+                </span>
+              )}
             </div>
           );
         }
@@ -222,7 +296,9 @@ function StructuredBody({
                   </EditableText>
                 </span>
               )}
-              {group.style === "given" && !isWritingType && !resumed && (
+              {/* KO(국어)는 위 전용 분기가 처리하므로 여기 도달하지 않지만, '주어진 문장'
+                  하드코딩 헤더가 KO 박스에 새지 않도록 이중 방어 게이트를 둔다. */}
+              {group.style === "given" && !isWritingType && !isKoQuestion && !resumed && (
                 <span className="mb-0.5 block text-[9px] font-bold uppercase tracking-wider text-slate-500">
                   주어진 문장
                 </span>
@@ -741,7 +817,14 @@ export function A4PaperPage({
                                 })
                               }
                               className="block"
-                              readOnly={readOnly}
+                              // [KOSET-6] KO 세트 공유지문 박스는 편집 불가 — 이 값은
+                              // 지시문([n~m] 줄)+마커(㉠__…__)가 구워진 "파생 텍스트"라,
+                              // 커밋하면 updateGroupPassage 가 세트 멤버 전원의
+                              // passageContent 로 역기록(+normalizePassageText 접힘)하고
+                              // 다음 리렌더에서 지시문 이중 부착·마커 소실이 발생한다.
+                              readOnly={
+                                readOnly || isKoSetGroupId(fragment.groupSourceId)
+                              }
                               // 지문이 칸/쪽 경계에서 쪼개진 경우(isSplit): 평소엔 이 칸 조각만
                               // 서식 그대로 보이다가, 클릭하면 지문 전체로 펼쳐 통째로 편집한다.
                               editingChildren={
@@ -806,6 +889,11 @@ export function A4PaperPage({
                         !isCustomBlock && isFlowStructuredSubtype(subType);
                       const isAtomicStructuredQuestion =
                         !isCustomBlock && isStructuredAtomicSubtype(subType);
+                      // KO(국어) 발문은 structuredData(어댑터) 기준으로 표시된다 —
+                      // questionText 재결합 편집은 표시와 어긋나고 【보기】/【조건】
+                      // 직렬 블록을 유실시키므로 인라인 편집을 잠근다.
+                      const isKoStemLocked =
+                        !isCustomBlock && (subType || "").startsWith("KO_");
                       const renderOptionList =
                         !isCustomBlock && shouldRenderOptionListForSubtype(subType);
                       const inlinePassageTitle = !isCustomBlock
@@ -1029,7 +1117,13 @@ export function A4PaperPage({
                                   // 구조화 유형은 questionText 에 [요약문] 등 본문이
                                   // 함께 들어있어, 지시문만 재결합하면 본문이 사라진다.
                                   // 따라서 지시문 인라인 편집은 평문 유형에서만 허용.
-                                  readOnly={readOnly || item.locked || isAtomicStructuredQuestion}
+                                  // (KO 는 어댑터 표시라 동일 사유로 잠금)
+                                  readOnly={
+                                    readOnly ||
+                                    item.locked ||
+                                    isAtomicStructuredQuestion ||
+                                    isKoStemLocked
+                                  }
                                 >
                                   {renderQuestionTextInline(questionStem, subType)}
                                 </EditableText>

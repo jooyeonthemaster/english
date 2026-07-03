@@ -8,7 +8,11 @@
  */
 export const ANALYSIS_REPORT_CSS = `
 .par-root {
-  --font-ko: "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  /* 출력물(인쇄/PDF) 한글 글꼴을 시험지와 동일한 맑은 고딕으로 통일한다. CDN Pretendard
+     풀글리프 정적 빌드(굵기당 ~0.75MB)가 사용 굵기 수만큼 인쇄 스풀에 임베드돼 이미지 없는
+     텍스트 문서도 ~5MB로 부풀고 프린트 준비가 지연되던 것을, 로컬 서브셋 맑은 고딕
+     (@font-face — globals.css 의 Malgun Gothic Exam)으로 교체해 스풀 용량·로드 지연을 줄인다. */
+  --font-ko: "Malgun Gothic Exam", "Malgun Gothic", "맑은 고딕", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
   color: var(--text, #1a2233);
   font-family: var(--font-ko);
   font-size: calc(10pt * var(--par-fs, 1));

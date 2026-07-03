@@ -36,6 +36,10 @@ import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { Badge } from "@/components/ui/badge";
 import { CardDetailIconButton } from "@/components/ui/card-detail-icon-button";
 import { isDirectInputPassage } from "@/lib/passage-source";
+import {
+  KO_PASSAGE_KIND_LABELS,
+  readKoKindFromTags,
+} from "@/lib/korean/core/passage-meta";
 import { PassageInlineTitle } from "@/components/workbench/passage-inline-title";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
 import { DragDropModePopover } from "@/components/workbench/shared/drag-drop-mode-popover";
@@ -96,6 +100,7 @@ export function PassageCardGrid({
   setFilterSemester,
   analysisStatusFilter,
   setAnalysisStatusFilter,
+  subjectScope,
   passageSortOrder = "newest",
   setPassageSortOrder,
   passageStatusCounts,
@@ -1587,8 +1592,28 @@ export function PassageCardGrid({
                           {mainIdea}
                         </p>
                       )}
-                      {(p.school || p.grade || p.semester) && (
+                      {((subjectScope === "KOREAN" && p.subject === "KOREAN") ||
+                        p.school ||
+                        p.grade ||
+                        p.semester) && (
                         <div className="flex items-center gap-1.5 flex-wrap">
+                          {/* 국어 갈래 배지 — 국어 전용 그리드(subjectScope="KOREAN")
+                              에서만 렌더. 영어 화면은 국어 지문 자체가 오지 않지만
+                              스코프로 이중 차단해 픽셀 불변을 보장한다. */}
+                          {subjectScope === "KOREAN" && p.subject === "KOREAN" && (
+                            <Badge
+                              variant="outline"
+                              className="h-5 border-indigo-200 bg-indigo-50 px-1.5 text-[9px] font-semibold text-indigo-700"
+                            >
+                              국어
+                              {(() => {
+                                const kind = readKoKindFromTags(p.tags);
+                                return kind
+                                  ? ` · ${KO_PASSAGE_KIND_LABELS[kind]}`
+                                  : "";
+                              })()}
+                            </Badge>
+                          )}
                           {p.school && (
                             <Badge
                               variant="outline"

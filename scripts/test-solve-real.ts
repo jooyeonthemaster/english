@@ -22,9 +22,9 @@ for (const file of [".env", ".env.local"]) {
 }
 
 const API_KEY =
-  process.env.GEMINI_API_KEY?.trim() ||
-  process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim();
-if (!API_KEY) throw new Error("GEMINI_API_KEY missing");
+  process.env.ATLASCLOUD_API_KEY?.trim() ||
+  process.env.OPENROUTER_API_KEY?.trim();
+if (!API_KEY) throw new Error("ATLASCLOUD_API_KEY or OPENROUTER_API_KEY missing");
 
 const Q39 = `39. 글의 흐름으로 보아, 주어진 문장이 들어가기에 가장 적절한 곳을 고르시오. [3점]
 
@@ -51,30 +51,18 @@ const SYSTEM =
   '{ "answer": 1|2|3|4|5, "confidence": 0.0-1.0, "reasoning": "한국어 2~3문장 근거" }';
 
 async function solve(model: string, thinkingBudget: number, question: string) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(API_KEY!)}`;
+  const { postAtlasChatCompletionAsGeminiLike } = await import("../src/lib/atlas-chat-rest");
   const started = Date.now();
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM }] },
-      contents: [{ role: "user", parts: [{ text: question }] }],
-      generationConfig: {
-        temperature: 0,
-        topK: 1,
-        topP: 0,
-        maxOutputTokens: 8192,
-        responseMimeType: "application/json",
-        thinkingConfig: { thinkingBudget },
-      },
-    }),
+  void thinkingBudget;
+  const json = await postAtlasChatCompletionAsGeminiLike({
+    model,
+    systemPrompt: SYSTEM,
+    userPrompt: question,
+    temperature: 0,
+    topP: 0,
+    maxOutputTokens: 8192,
+    responseMimeType: "application/json",
   });
-  const json = (await res.json()) as {
-    candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
-    usageMetadata?: { thoughtsTokenCount?: number };
-    error?: { message?: string };
-  };
-  if (!res.ok) throw new Error(json.error?.message ?? `HTTP ${res.status}`);
   const text = (json.candidates?.[0]?.content?.parts ?? [])
     .map((p) => p.text ?? "")
     .join("");
@@ -84,7 +72,7 @@ async function solve(model: string, thinkingBudget: number, question: string) {
   return {
     ...parsed,
     ms: Date.now() - started,
-    thoughtTok: json.usageMetadata?.thoughtsTokenCount ?? 0,
+    thoughtTok: 0,
   };
 }
 
@@ -94,10 +82,8 @@ async function main() {
     { id: "34번 빈칸(칸트)", text: Q34, correct: 3 },
   ];
   const variants = [
-    { name: "3.5-flash  (thinking 0)", model: "gemini-3.5-flash", tb: 0 },
-    { name: "3.5-flash  (thinking 2048)", model: "gemini-3.5-flash", tb: 2048 },
-    { name: "3.1-lite   (thinking 0)", model: "gemini-3.1-flash-lite", tb: 0 },
-    { name: "3.1-lite   (thinking 2048)", model: "gemini-3.1-flash-lite", tb: 2048 },
+    { name: "3.5-flash  (reasoning none)", model: "google/gemini-3.5-flash", tb: 0 },
+    { name: "3.1-lite   (reasoning none)", model: "google/gemini-3.1-flash-lite", tb: 0 },
   ];
 
   for (const question of questions) {

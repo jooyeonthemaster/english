@@ -4,6 +4,11 @@ import { buildQuestionAnnotationBlock } from "@/lib/annotation-prompt";
 import { getStaffSession } from "@/lib/auth";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import {
+  isKoreanSubject,
+  readKoKindFromTags,
+} from "@/lib/korean/core/passage-meta";
+import { buildKoPlanningPrompt } from "@/lib/korean/prompts/planning";
+import {
   InsufficientCreditsError,
   deductCredits,
   refundCredits,
@@ -127,6 +132,13 @@ export async function POST(request: NextRequest) {
 
     const analysisContext = buildAnalysisContext(passage);
 
+    // ── KO(국어) 게이트 — 지문 과목이 KOREAN 이면 플래닝·생성에 KO 컨텍스트 주입.
+    // null/ENGLISH 지문은 아래 두 분기 모두 기존 영어 경로 byte 동일.
+    const isKoreanPassage = isKoreanSubject(passage.subject);
+    const koPassageKind = isKoreanPassage
+      ? readKoKindFromTags(passage.tags)
+      : null;
+
     let allQuestions: Record<string, unknown>[] = [];
     let rationale = "";
     try {
@@ -137,17 +149,29 @@ export async function POST(request: NextRequest) {
       );
       const { object: planResult } = await generateQuestionObject({
         schema: planSchema,
-        prompt: buildPlanningPrompt({
-          schoolType,
-          gradeInfo,
-          count,
-          passageContent: passage.content,
-          teacherIntentBlock,
-            analysisContext,
-            customPrompt,
-            diffLabel,
-            generationPlan,
-          }),
+        prompt: isKoreanPassage
+          ? buildKoPlanningPrompt({
+              schoolType,
+              gradeInfo,
+              count,
+              passageContent: passage.content,
+              teacherIntentBlock,
+              analysisContext,
+              customPrompt,
+              diffLabel,
+              passageKind: koPassageKind,
+            })
+          : buildPlanningPrompt({
+              schoolType,
+              gradeInfo,
+              count,
+              passageContent: passage.content,
+              teacherIntentBlock,
+              analysisContext,
+              customPrompt,
+              diffLabel,
+              generationPlan,
+            }),
         generationPlan,
         logPrefix: "AUTO-GEN-PLAN",
         maxTokens: 4_096,
@@ -173,6 +197,7 @@ export async function POST(request: NextRequest) {
         diffInstruction,
         generationPlan,
         customPrompt,
+        koPassageKind: koPassageKind ?? undefined,
       });
       allQuestions = generationResult.questions;
     } catch (aiError) {

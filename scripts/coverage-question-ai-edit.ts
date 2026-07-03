@@ -88,7 +88,7 @@ async function main() {
         schoolType: q.passage?.school?.type === "MIDDLE" ? "중학교" : "고등학교",
         gradeInfo: q.passage?.grade ? String(q.passage.grade) : "",
         generationPlan: plan as "STANDARD" | "PREMIUM",
-        modelId: "gemini-3.5-flash",
+        modelId: "google/gemini-3.5-flash",
         maxAttempts: 2,
       });
       const after = res.after as Rec | undefined;

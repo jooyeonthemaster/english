@@ -7,6 +7,7 @@ import { renderAnswerKey } from "./render/answer-key";
 import { estimateBlocksHeight } from "./section-xml";
 import { bodyFontForTemplate } from "@/app/api/exams/[examId]/export-docx/_lib/styles";
 import type { BuilderBlock, BuilderHeader, BuilderLayout } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
+import { suppressKoSetMemberInlinePassages } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document/ko-set-passage";
 import { type BreakPlan, computeBreakPlan, computePaginatedLayout } from "./break-plan";
 import type { FragmentRenderOptions } from "./render/fragment";
 import type { BuildHwpxOptions } from "./builder-types";
@@ -19,7 +20,10 @@ export type {
 export function buildBuilderHwpxDocument(
   opts: BuildHwpxOptions,
 ): HwpxDocument {
-  const { title, settings, resolvedItems, includeAnswers } = opts;
+  const { title, settings, includeAnswers } = opts;
+  // KO 세트 멤버는 그룹 공유지문 1박스로 렌더하므로 멤버 인라인 지문을 억제한다
+  // (라우트의 shouldForceSourcePassage 되살림 상쇄 — 영어/KO 솔로는 원소 그대로).
+  const resolvedItems = suppressKoSetMemberInlinePassages(opts.resolvedItems);
   // 템플릿(세리프/산세리프)별 본문 글꼴 — 미리보기·DOCX 와 동일 기준으로 통일.
   const bodyFont = bodyFontForTemplate(settings?.template);
   const header: BuilderHeader = settings?.header ?? {};

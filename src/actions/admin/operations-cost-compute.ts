@@ -4,6 +4,12 @@ export const DEFAULT_USD_KRW_RATE = 1350;
 export function readPricingConfig(): PricingConfig {
   return {
     usdToKrwRate: readNumberEnv("PLATFORM_USD_KRW_RATE", DEFAULT_USD_KRW_RATE),
+    atlasInputUsdPer1M:
+      readOptionalPositiveNumberEnv("ATLASCLOUD_PRICE_INPUT_PER_1M_USD") ??
+      readOptionalPositiveNumberEnv("OPENROUTER_PRICE_INPUT_PER_1M_USD"),
+    atlasOutputUsdPer1M:
+      readOptionalPositiveNumberEnv("ATLASCLOUD_PRICE_OUTPUT_PER_1M_USD") ??
+      readOptionalPositiveNumberEnv("OPENROUTER_PRICE_OUTPUT_PER_1M_USD"),
     geminiInputUsdPer1M: readOptionalPositiveNumberEnv("GEMINI_PRICE_INPUT_PER_1M_USD"),
     geminiOutputUsdPer1M: readOptionalPositiveNumberEnv("GEMINI_PRICE_OUTPUT_PER_1M_USD"),
     anthropicInputUsdPer1M: readOptionalPositiveNumberEnv("ANTHROPIC_PRICE_INPUT_PER_1M_USD"),
@@ -199,10 +205,10 @@ export function getApiCostSourceKey(cost: {
   if (cost.sourceType === "EXTRACTION_PAGE" && cost.sourceDetail === "DOCUMENT_AI_OCR") {
     return "google-document-ai";
   }
-  if (cost.sourceType === "EXTRACTION_PAGE") return "gemini-ocr";
-  if (cost.sourceType === "TUTOR_AI_LOG") return "tutor-ai";
-  if (cost.sourceType === "WORKBENCH_AI_JOB") return "workbench-ai";
-  if (cost.sourceType === "WEBTOON") return "webtoon-image";
+  if (cost.sourceType === "EXTRACTION_PAGE") return "atlascloud-ocr-extraction";
+  if (cost.sourceType === "TUTOR_AI_LOG") return "Tutor AI";
+  if (cost.sourceType === "WORKBENCH_AI_JOB") return "Workbench AI";
+  if (cost.sourceType === "WEBTOON") return "Webtoon image";
   return cost.provider.toLowerCase();
 }
 export function getApiCostSourceLabel(cost: {
@@ -213,10 +219,10 @@ export function getApiCostSourceLabel(cost: {
   if (cost.sourceType === "EXTRACTION_PAGE" && cost.sourceDetail === "DOCUMENT_AI_OCR") {
     return "Google Document AI";
   }
-  if (cost.sourceType === "EXTRACTION_PAGE") return "Gemini OCR/추출";
-  if (cost.sourceType === "TUTOR_AI_LOG") return "튜터 AI";
-  if (cost.sourceType === "WORKBENCH_AI_JOB") return "워크벤치 AI";
-  if (cost.sourceType === "WEBTOON") return "웹툰 이미지";
+  if (cost.sourceType === "EXTRACTION_PAGE") return "Atlas Cloud OCR/Extraction";
+  if (cost.sourceType === "TUTOR_AI_LOG") return "Tutor AI";
+  if (cost.sourceType === "WORKBENCH_AI_JOB") return "Workbench AI";
+  if (cost.sourceType === "WEBTOON") return "Webtoon image";
   return cost.provider;
 }
 export function addBucketApiCost(
@@ -385,6 +391,6 @@ export function getOperationLabel(operationType: string) {
   if (operationType in OPERATION_LABELS) {
     return OPERATION_LABELS[operationType as OperationType];
   }
-  if (operationType === "UNKNOWN") return "미분류";
+  if (operationType === "UNKNOWN") return "Unknown";
   return operationType;
 }

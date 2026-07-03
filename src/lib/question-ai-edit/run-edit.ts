@@ -204,9 +204,8 @@ export async function runQuestionEdit(
     try {
       const res = await runEditModel<{ questions?: unknown[]; editSummary?: string }>({
         schema: responseSchema,
-        // google 경로는 system 미사용 → system 을 prompt 앞에 붙인다.
-        prompt: provider === "google" && system ? `${system}\n\n${prompt}` : prompt,
-        system: provider === "anthropic" ? system : undefined,
+        prompt,
+        system,
         modelId,
         maxTokens: 8192,
         deadlineAt,

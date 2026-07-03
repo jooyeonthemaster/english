@@ -7,6 +7,72 @@ import { verifySocialBridgeToken } from "@/lib/social-bridge";
 import { isJooyeonSpecialAccount } from "@/lib/jooyeon-special-account";
 import { getDefaultStaffDisplayTitle, getStaffDisplayTitle } from "@/lib/staff-display";
 
+type StaffSessionSnapshot = {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  academyId: string;
+  academyName: string;
+  academySlug: string;
+  displayTitle: string;
+};
+
+function readString(value: unknown): string | null {
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function hasCompleteStaffClaims(value: Record<string, unknown>): boolean {
+  return Boolean(
+    readString(value.id) &&
+      readString(value.role) &&
+      readString(value.academyId) &&
+      readString(value.academyName) &&
+      readString(value.academySlug),
+  );
+}
+
+async function loadStaffSessionSnapshot(
+  staffId?: string | null,
+  email?: string | null,
+): Promise<StaffSessionSnapshot | null> {
+  const staff = staffId
+    ? await prisma.staff.findUnique({
+        where: { id: staffId },
+        include: { academy: { select: { name: true, slug: true, settings: true } } },
+      })
+    : email
+      ? await prisma.staff.findFirst({
+          where: { email: { equals: email, mode: "insensitive" } },
+          include: { academy: { select: { name: true, slug: true, settings: true } } },
+        })
+      : null;
+
+  if (!staff || !staff.isActive) return null;
+
+  return {
+    id: staff.id,
+    email: staff.email,
+    name: staff.name,
+    role: staff.role,
+    academyId: staff.academyId,
+    academyName: staff.academy.name,
+    academySlug: staff.academy.slug,
+    displayTitle: getStaffDisplayTitle(staff.academy.settings, staff.id, staff.role),
+  };
+}
+
+function applyStaffClaims(target: Record<string, unknown>, staff: StaffSessionSnapshot) {
+  target.id = staff.id;
+  target.email = staff.email;
+  target.name = staff.name;
+  target.role = staff.role;
+  target.academyId = staff.academyId;
+  target.academyName = staff.academyName;
+  target.academySlug = staff.academySlug;
+  target.displayTitle = staff.displayTitle;
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
@@ -116,6 +182,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
+      const tokenRecord = token as unknown as Record<string, unknown>;
       if (user) {
         const u = user as unknown as Record<string, unknown>;
         token.id = user.id;
@@ -133,20 +200,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (typeof s.academyName === "string") token.academyName = s.academyName;
         if (typeof s.displayTitle === "string") token.displayTitle = s.displayTitle;
       }
+      if (!hasCompleteStaffClaims(tokenRecord)) {
+        const staff = await loadStaffSessionSnapshot(
+          readString(tokenRecord.id) ?? readString(token.sub),
+          readString(token.email),
+        );
+        if (staff) applyStaffClaims(tokenRecord, staff);
+      }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         const su = session.user as unknown as Record<string, unknown>;
-        su.id = token.id;
-        su.role = token.role;
-        su.academyId = token.academyId;
-        su.academyName = token.academyName;
-        su.academySlug = token.academySlug;
+        const tokenRecord = token as unknown as Record<string, unknown>;
+        const staff =
+          hasCompleteStaffClaims(tokenRecord)
+            ? null
+            : await loadStaffSessionSnapshot(
+                readString(tokenRecord.id) ?? readString(token.sub),
+                readString(token.email),
+              );
+        const source = staff ?? tokenRecord;
+
+        su.id = source.id;
+        su.email = source.email ?? su.email;
+        su.name = source.name ?? su.name;
+        su.role = source.role;
+        su.academyId = source.academyId;
+        su.academyName = source.academyName;
+        su.academySlug = source.academySlug;
         su.displayTitle =
-          typeof token.displayTitle === "string" && token.displayTitle.trim()
-            ? token.displayTitle
-            : getDefaultStaffDisplayTitle(typeof token.role === "string" ? token.role : undefined);
+          typeof source.displayTitle === "string" && source.displayTitle.trim()
+            ? source.displayTitle
+            : getDefaultStaffDisplayTitle(typeof source.role === "string" ? source.role : undefined);
       }
       return session;
     },
@@ -158,20 +244,22 @@ export async function getStaffSession() {
   const session = await auth();
   if (!session?.user) return null;
   const user = session.user as unknown as Record<string, unknown>;
-  const role = user.role as string;
+  if (!hasCompleteStaffClaims(user)) {
+    return loadStaffSessionSnapshot(readString(user.id), readString(user.email));
+  }
+
+  const role = readString(user.role) ?? "";
   const displayTitle =
-    typeof user.displayTitle === "string" && user.displayTitle.trim()
-      ? user.displayTitle
-      : getDefaultStaffDisplayTitle(role);
+    readString(user.displayTitle) ?? getDefaultStaffDisplayTitle(role);
 
   return {
-    id: user.id as string,
-    email: user.email as string,
-    name: user.name as string,
+    id: readString(user.id) ?? "",
+    email: readString(user.email) ?? "",
+    name: readString(user.name) ?? "",
     role,
-    academyId: user.academyId as string,
-    academyName: user.academyName as string,
-    academySlug: user.academySlug as string,
+    academyId: readString(user.academyId) ?? "",
+    academyName: readString(user.academyName) ?? "",
+    academySlug: readString(user.academySlug) ?? "",
     displayTitle,
   };
 }

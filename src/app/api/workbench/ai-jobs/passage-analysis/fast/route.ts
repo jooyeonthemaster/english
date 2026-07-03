@@ -43,6 +43,12 @@ import {
 } from "@/lib/passage-report/analysis-report/resilient-checkpoint";
 import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import { derivePassageAnalysisFromReport } from "@/lib/passage-report/analysis-report/derive-legacy";
+import {
+  buildKoPromptInputFromPassage,
+  isKoreanPassage,
+  saveKoPrimeReport,
+} from "@/lib/passage-report/analysis-report/ko-entry";
+import { generateKoAnalysisReportResilient } from "@/lib/passage-report/analysis-report/ko-resilient-generate";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -209,6 +215,210 @@ export async function POST(req: NextRequest) {
   let generationStartedAt: number | null = null;
   let persistenceMs = 0;
   let resilientCheckpoint: ResilientCheckpoint | null = null;
+
+  // ── PRIME_KO 게이트: 국어 지문은 KO 회복형 생성기·PRIME_KO 마커로만 처리 ──────
+  // 영어 분석기·derive-legacy(PassageAnalysis 파생)·실전 학습지로 절대 흐르지 않는다.
+  // 자기완결 블록(자체 과금/환불/잡 상태) — 아래 영어 경로는 무변경.
+  if (isKoreanPassage(passage)) {
+    const koCreditCost = getPassageAnalysisCreditCost({ includeWorksheet: false });
+    let koCreditTxId: string | null = null;
+    try {
+      const creditStartedAt = Date.now();
+      const credit = await ensureWorkbenchAiJobCharged({
+        jobId: job.id,
+        academyId: job.academyId,
+        staffId: job.createdById,
+        operationType: "PASSAGE_ANALYSIS",
+        metadata: { passageId: passage.id, generationPlan, koPrime: true, creditCost: koCreditCost, fastPath: true },
+        creditCost: koCreditCost,
+      });
+      creditMs = Date.now() - creditStartedAt;
+      koCreditTxId = credit.transactionId;
+
+      generationStartedAt = Date.now();
+      const koResilient = await generateKoAnalysisReportResilient(
+        buildKoPromptInputFromPassage({
+          content: passage.content,
+          tags: passage.tags,
+          grade: passage.grade,
+          schoolType: (passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
+          customPrompt: parsed.data.customPrompt,
+        }),
+        {
+          contentHash: currentHash,
+          deadlineAt: requestStartedAt + 255_000,
+        },
+      );
+      generationMs = Date.now() - generationStartedAt;
+
+      // KO LLM 호출 토큰 합산 기록(플랫폼 원가 추적 — 영어 경로와 parity).
+      const koTokens = koResilient.usages.reduce(
+        (acc, u) => {
+          const t = readAiUsageTokens(u.usage);
+          acc.input += t.inputTokens;
+          acc.output += t.outputTokens;
+          return acc;
+        },
+        { input: 0, output: 0 },
+      );
+      if (koTokens.input > 0 || koTokens.output > 0) {
+        const koModelId = koResilient.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.5-flash";
+        await recordCostSafely({
+          sourceKey: `workbench_ai_job:${job.id}:analysis`,
+          sourceId: job.id,
+          sourceDetail: "PASSAGE_ANALYSIS",
+          academyId: job.academyId,
+          provider: providerFromModel(koModelId),
+          model: koModelId,
+          inputTokens: koTokens.input,
+          outputTokens: koTokens.output,
+          usageAt: new Date(),
+          metadata: { passageId: passage.id, generationPlan, koPrime: true, fastPath: true, calls: koResilient.usages.length },
+        });
+      }
+
+      // 품질 게이트 — 개관 폴백이거나 목표 섹션 절반 미만이면 환불 + FAILED.
+      const targetsCount = koResilient.completeness.present.length + koResilient.completeness.missing.length;
+      const koDegraded =
+        koResilient.completeness.fallback.includes("ko-overview") ||
+        koResilient.completeness.present.length < Math.ceil(targetsCount / 2);
+      if (koDegraded) {
+        if (koCreditTxId) {
+          await refundCredits(
+            job.academyId,
+            "PASSAGE_ANALYSIS",
+            koCreditTxId,
+            "PRIME_KO analysis incomplete — refunded",
+            koCreditCost,
+          ).catch((refundErr) => console.error("PRIME_KO incomplete refund failed", refundErr));
+        }
+        await prisma.workbenchAiJob.update({
+          where: { id: job.id },
+          data: {
+            status: "FAILED",
+            failedCount: 1,
+            errorMessage: "일시적인 AI 문제로 국어 분석을 완성하지 못했어요. 크레딧은 환불됐어요. 잠시 후 다시 시도해주세요.",
+            result: JSON.parse(JSON.stringify({
+              koPrime: true,
+              resilient: {
+                complete: koResilient.completeness.complete,
+                present: koResilient.completeness.present,
+                missing: koResilient.completeness.missing,
+                fallback: koResilient.completeness.fallback,
+                rounds: koResilient.rounds,
+              },
+            })),
+            completedAt: new Date(),
+          },
+        });
+        return NextResponse.json(
+          {
+            error: "Passage analysis incomplete",
+            code: "PASSAGE_ANALYSIS_INCOMPLETE",
+            details: "일시적인 AI 문제로 국어 분석을 완성하지 못했어요. 크레딧은 환불됐어요. 다시 시도해주세요.",
+            completeness: koResilient.completeness,
+          },
+          { status: 502 },
+        );
+      }
+
+      await saveKoPrimeReport(prisma, {
+        academyId: passage.academyId,
+        passageId: passage.id,
+        staffId: staff.id,
+        report: koResilient.report,
+      });
+
+      const completedAt = new Date();
+      const debugTiming = {
+        queueWaitMs: 0,
+        creditMs,
+        generationMs,
+        persistenceMs: 0,
+        totalRunMs: Date.now() - requestStartedAt,
+        cached: false,
+        fastPath: true,
+      };
+      await prisma.workbenchAiJob.update({
+        where: { id: job.id },
+        data: {
+          status: "COMPLETED",
+          successCount: 1,
+          failedCount: 0,
+          resultCount: 1,
+          result: JSON.parse(JSON.stringify({
+            cached: false,
+            passageId: passage.id,
+            generationPlan,
+            koPrime: true,
+            debugTiming,
+            fastPath: true,
+            resilient: {
+              complete: koResilient.completeness.complete,
+              present: koResilient.completeness.present,
+              missing: koResilient.completeness.missing,
+              fallback: koResilient.completeness.fallback,
+              rounds: koResilient.rounds,
+              draftUsed: koResilient.draftUsed,
+            },
+          })),
+          completedAt,
+        },
+      });
+      return NextResponse.json({
+        jobId: job.id,
+        status: "COMPLETED",
+        data: null,
+        koPrime: true,
+        cached: false,
+        generationPlan,
+        creditsRemaining: credit.balanceAfter,
+        createdAt: job.createdAt.toISOString(),
+        completedAt: completedAt.toISOString(),
+        debugTiming,
+        fastPath: true,
+      });
+    } catch (koErr) {
+      if (koErr instanceof InsufficientCreditsError) {
+        await prisma.workbenchAiJob.update({
+          where: { id: job.id },
+          data: {
+            status: "FAILED",
+            failedCount: 1,
+            errorMessage: `Insufficient credits: have ${koErr.currentBalance}, need ${koErr.requiredCredits}`,
+            completedAt: new Date(),
+          },
+        });
+        return NextResponse.json(
+          { error: "Insufficient credits", balance: koErr.currentBalance, required: koErr.requiredCredits },
+          { status: 402 },
+        );
+      }
+      if (koCreditTxId) {
+        await refundCredits(
+          job.academyId,
+          "PASSAGE_ANALYSIS",
+          koCreditTxId,
+          "PRIME_KO fast passage analysis failed",
+          koCreditCost,
+        ).catch((refundErr) => console.error("PRIME_KO fast refund failed", refundErr));
+      }
+      const classified = classifyAnalysisError(koErr);
+      await prisma.workbenchAiJob.update({
+        where: { id: job.id },
+        data: {
+          status: "FAILED",
+          failedCount: 1,
+          errorMessage: classified.message,
+          completedAt: new Date(),
+        },
+      });
+      return NextResponse.json(
+        { error: "Passage analysis failed", details: classified.message, code: classified.code },
+        { status: classified.status },
+      );
+    }
+  }
 
   try {
     // 실전 학습지 포함 요청은 캐시 단락을 타지 않는다 — 사용자가 명시적으로

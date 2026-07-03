@@ -1,4 +1,5 @@
 // Split from question-quality.ts — shared helpers in core.ts, public API via index.ts barrel.
+import { koMcTypeIds } from "@/lib/korean/registry";
 import { sentenceInsertOptionMarkerIndex } from "@/lib/sentence-insert-options";
 import { ANTONYM_MARKER_COUNT_MAX, ANTONYM_MARKER_COUNT_MIN, IRRELEVANT_SLOT_MIN, QuestionQualitySeverity, SENTENCE_INSERT_SLOT_MAX, SENTENCE_INSERT_SLOT_MIN, VOCAB_CHOICE_MARKER_COUNT_MAX, VOCAB_CHOICE_MARKER_COUNT_MIN, collectCorrectAnswerLabels, collectWrongOptionExplanations, findDuplicate, isRecord, normalizeLabel, normalizeText } from "../core";
 
@@ -30,6 +31,12 @@ export const MC_TYPE_IDS = new Set([
   "SYNONYM",
   "ANTONYM",
 ]);
+
+// KO(국어) 객관식(MC5) 유형 병합 — 레지스트리 파생. option-count(5) 게이트를
+// 영어 경로와 동일하게 재사용한다(KOQ 게이트와 이중 방어, 기존 엔트리 무변경).
+for (const koTypeId of koMcTypeIds()) {
+  MC_TYPE_IDS.add(koTypeId);
+}
 
 
 

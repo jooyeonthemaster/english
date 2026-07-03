@@ -42,6 +42,7 @@ import {
   worksheetAnswersAreHidden,
   worksheetClozeTranslationsAreHidden,
 } from "@/lib/passage-report/analysis-report/worksheet-surface";
+import { isKoAnalysisReportShape } from "@/lib/passage-report/analysis-report/ko-report-detect";
 import { notifyCreditsChanged } from "@/lib/credits-client";
 
 import {
@@ -178,6 +179,12 @@ export function AnalysisReportEditor({
   const dirty = report !== baseline;
   const canUndo = history.past.length > 0;
   const canRedo = history.future.length > 0;
+
+  // ── PRIME_KO 게이트 ── 국어 학습지 보고서에는 영어 파생 도구(학습 활동 팔레트·
+  // 단어 시험지·실전 학습지 생성)를 노출하지 않는다. 전부 영어 섹션(parsing/
+  // vocabulary/learning-worksheet) 위에서만 동작하는 영어 전용 파이프라인이다.
+  // 웹툰 삽입(과목 중립 — 서버가 지문 subject 로 프롬프트를 게이트)은 유지한다.
+  const koReport = useMemo(() => isKoAnalysisReportShape(report), [report]);
 
   useEffect(() => {
     onDraftChange?.(report, { dirty });
@@ -859,6 +866,62 @@ export function AnalysisReportEditor({
     },
     [pageList, setReport],
   );
+  // 페이지를 드래그해 임의의 최종 위치(toPi)로 이동 — movePage 의 "소유 블록" 규칙을
+  // 일반화한 버전. 페이지가 소유한 블록 묶음(첫 조각이 그 페이지에 놓인 orderId)을 통째로
+  // 빼서 대상 페이지 묶음의 앞/뒤에 끼운다. 숨김/비소유 id 는 without 에 그대로 보존돼
+  // blockOrder 에서 사라지지 않는다.
+  const reorderPages = useCallback(
+    (fromPi: number, toPi: number) => {
+      if (fromPi === toPi) return;
+      setReport((r) => {
+        const orderOf = new Map<string, string>();
+        for (const it of reportFlowItems(r)) {
+          if (isActivityAnswerId(it.id)) continue;
+          orderOf.set(it.id, orderIdOf(it));
+        }
+        const toOrder = (id: string) =>
+          orderOf.get(id) ?? (id.startsWith("c-") ? id.split("::", 1)[0] : id);
+
+        const ids = applyBlockOrder(
+          enumerateItems(r).map((b) => b.id),
+          r.blockOrder,
+        );
+        const pos = new Map(ids.map((id, i) => [id, i] as const));
+
+        const ownerPage = new Map<string, number>();
+        pageList.forEach((parts, pageIdx) => {
+          for (const part of parts) {
+            const oid = toOrder(part);
+            if (!pos.has(oid) || ownerPage.has(oid)) continue;
+            ownerPage.set(oid, pageIdx);
+          }
+        });
+
+        const movedSet = new Set(ids.filter((id) => ownerPage.get(id) === fromPi));
+        if (movedSet.size === 0) return r;
+        const targetOwned = ids.filter((id) => ownerPage.get(id) === toPi);
+        if (targetOwned.length === 0) return r;
+
+        const without = ids.filter((id) => !movedSet.has(id));
+        const moved = ids.filter((id) => movedSet.has(id)); // 내부 순서 보존
+        const anchor =
+          toPi > fromPi ? targetOwned[targetOwned.length - 1] : targetOwned[0];
+        const anchorAt = without.indexOf(anchor);
+        if (anchorAt < 0) return r;
+        const insertAt = toPi > fromPi ? anchorAt + 1 : anchorAt;
+
+        return {
+          ...r,
+          blockOrder: [
+            ...without.slice(0, insertAt),
+            ...moved,
+            ...without.slice(insertAt),
+          ],
+        };
+      });
+    },
+    [pageList, setReport],
+  );
   const onToggleCol = useCallback((si: number, key: string) => {
     setReport((r) => toggleTableCol(r, si, key));
   }, [setReport]);
@@ -1412,7 +1475,7 @@ export function AnalysisReportEditor({
             canRedo={canRedo}
             worksheetBusy={worksheetBusy}
             worksheetHasContent={toolbarWorksheetHasContent}
-            showGenerateWorksheet={!onToolbarStateChange}
+            showGenerateWorksheet={!onToolbarStateChange && !koReport}
             answerKeyIncluded={toolbarAnswerKeyIncluded}
             onToggleAnswers={() => onToggleWorksheetAnswers(toolbarWorksheetIndex)}
             onUndo={undo}
@@ -1423,6 +1486,7 @@ export function AnalysisReportEditor({
           <div className="flex min-h-0 flex-1 overflow-hidden">
         {/* 좌측 끝 — 학습 활동 팔레트 (편집 패널과 같은 세로 탭 여닫힘 매커니즘 + 부드러운 폭 애니메이션) */}
         <ActivityPaletteRail
+          koMode={koReport}
           collapsed={activityPanelCollapsed}
           onToggleCollapsed={() => setActivityPanelCollapsed((v) => !v)}
           activityWidth={activityWidth}
@@ -1439,7 +1503,7 @@ export function AnalysisReportEditor({
           activityCounts={activityCountByKind}
           onToggleOffKind={removeActivityKind}
           vocabTestSlot={
-                  canToggleToolbarVocabTestOnly ? (
+                  !koReport && canToggleToolbarVocabTestOnly ? (
                     // 헤더의 스위치가 실제 <button> 이라 카드 자체는 div[role=button] 으로(중첩 버튼 금지).
                     <div
                       role="button"
@@ -1498,6 +1562,7 @@ export function AnalysisReportEditor({
           pageInfo={thumbPageInfo}
           onDeletePage={deletePage}
           onStartRailDrag={(event) => startWidthDrag(event, "rail")}
+          onReorderPages={reorderPages}
         />
 
         {/* 중앙 — A4 캔버스 (자연 크기, 드래그 autoscroll 용 id) */}

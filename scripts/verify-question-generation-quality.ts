@@ -1,4 +1,4 @@
-import fs from "node:fs/promises";
+﻿import fs from "node:fs/promises";
 import path from "node:path";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -40,7 +40,7 @@ const CASES: VerificationCase[] = [
     difficulty: "BASIC",
     passage: TECH_RESPONSIBILITY_PASSAGE,
     targetPoints: ["they cannot carry the weight of the decision for us"],
-    focus: "함축의미 기본형: 발문-지문 밑줄-영문 선택지 구조와 쉬운 추론성",
+    focus: "?⑥텞?섎? 湲곕낯?? 諛쒕Ц-吏臾?諛묒쨪-?곷Ц ?좏깮吏 援ъ“? ?ъ슫 異붾줎??,
   },
   {
     id: "implied-intermediate",
@@ -48,7 +48,7 @@ const CASES: VerificationCase[] = [
     difficulty: "INTERMEDIATE",
     passage: TECH_RESPONSIBILITY_PASSAGE,
     targetPoints: ["they cannot carry the weight of the decision for us"],
-    focus: "함축의미 중위형: 직접 단어매칭을 피하고 facts-values 구조를 연결하는지",
+    focus: "?⑥텞?섎? 以묒쐞?? 吏곸젒 ?⑥뼱留ㅼ묶???쇳븯怨?facts-values 援ъ“瑜??곌껐?섎뒗吏",
   },
   {
     id: "implied-killer",
@@ -56,7 +56,7 @@ const CASES: VerificationCase[] = [
     difficulty: "KILLER",
     passage: TECH_RESPONSIBILITY_PASSAGE,
     targetPoints: ["they cannot carry the weight of the decision for us"],
-    focus: "함축의미 고난도형: 정답은 넓은 추론, 오답은 그럴듯한 부분독해",
+    focus: "?⑥텞?섎? 怨좊궃?꾪삎: ?뺣떟? ?볦? 異붾줎, ?ㅻ떟? 洹몃윺??븳 遺遺꾨룆??,
   },
   {
     id: "topic-intermediate",
@@ -64,7 +64,7 @@ const CASES: VerificationCase[] = [
     difficulty: "INTERMEDIATE",
     passage: URBAN_FARMING_PASSAGE,
     targetPoints: ["urban farming uses limited city spaces to provide food, environmental benefits, and social connection"],
-    focus: "주제 추론: 지문의 대상/화제 범위를 묻고 요지형 주장으로 흐르지 않는지",
+    focus: "二쇱젣 異붾줎: 吏臾몄쓽 ????붿젣 踰붿쐞瑜?臾산퀬 ?붿???二쇱옣?쇰줈 ?먮Ⅴ吏 ?딅뒗吏",
   },
   {
     id: "topic-basic",
@@ -72,7 +72,7 @@ const CASES: VerificationCase[] = [
     difficulty: "BASIC",
     passage: URBAN_FARMING_PASSAGE,
     targetPoints: ["urban farming provides food, environmental benefits, and community connection in cities"],
-    focus: "주제 기본형: 화제 범위를 명확히 잡되 너무 주장문처럼 만들지 않는지",
+    focus: "二쇱젣 湲곕낯?? ?붿젣 踰붿쐞瑜?紐낇솗???〓릺 ?덈Т 二쇱옣臾몄쿂??留뚮뱾吏 ?딅뒗吏",
   },
   {
     id: "topic-killer",
@@ -80,7 +80,7 @@ const CASES: VerificationCase[] = [
     difficulty: "KILLER",
     passage: URBAN_FARMING_PASSAGE,
     targetPoints: ["urban farming as a multidimensional urban solution, not just a food-production method"],
-    focus: "주제 고난도형: 식량/환경/공동체를 종합하는 광범위 주제와 매력 오답",
+    focus: "二쇱젣 怨좊궃?꾪삎: ?앸웾/?섍꼍/怨듬룞泥대? 醫낇빀?섎뒗 愿묐쾾??二쇱젣? 留ㅻ젰 ?ㅻ떟",
   },
   {
     id: "main-idea-basic",
@@ -88,7 +88,7 @@ const CASES: VerificationCase[] = [
     difficulty: "BASIC",
     passage: TECH_RESPONSIBILITY_PASSAGE,
     targetPoints: ["technology cannot replace human responsibility in decisions involving values"],
-    focus: "요지 기본형: 핵심 주장 문장형 선택지와 쉬운 오답 배제",
+    focus: "?붿? 湲곕낯?? ?듭떖 二쇱옣 臾몄옣???좏깮吏? ?ъ슫 ?ㅻ떟 諛곗젣",
   },
   {
     id: "main-idea-intermediate",
@@ -96,7 +96,7 @@ const CASES: VerificationCase[] = [
     difficulty: "INTERMEDIATE",
     passage: TECH_RESPONSIBILITY_PASSAGE,
     targetPoints: ["facts and numerical predictions need human value judgment to become decisions"],
-    focus: "요지 중위형: facts-values 대조와 responsibility 결론을 연결하는지",
+    focus: "?붿? 以묒쐞?? facts-values ?議곗? responsibility 寃곕줎???곌껐?섎뒗吏",
   },
   {
     id: "main-idea-killer",
@@ -104,7 +104,7 @@ const CASES: VerificationCase[] = [
     difficulty: "KILLER",
     passage: TECH_RESPONSIBILITY_PASSAGE,
     targetPoints: ["better technology relocates rather than removes human responsibility"],
-    focus: "요지/주장: 글쓴이의 핵심 주장 문장형 선택지와 고난도 오답 매력도",
+    focus: "?붿?/二쇱옣: 湲?댁씠???듭떖 二쇱옣 臾몄옣???좏깮吏? 怨좊궃???ㅻ떟 留ㅻ젰??,
   },
   {
     id: "title-killer",
@@ -112,7 +112,7 @@ const CASES: VerificationCase[] = [
     difficulty: "KILLER",
     passage: DIGITAL_DIVIDE_PASSAGE,
     targetPoints: ["closing the digital divide is an equality and opportunity issue, not only a technology issue"],
-    focus: "제목 추론: 제목다움, 과소/과대 일반화 오답 품질, 원문 지문 UI 노출",
+    focus: "?쒕ぉ 異붾줎: ?쒕ぉ?ㅼ?, 怨쇱냼/怨쇰? ?쇰컲???ㅻ떟 ?덉쭏, ?먮Ц 吏臾?UI ?몄텧",
   },
   {
     id: "title-basic",
@@ -120,7 +120,7 @@ const CASES: VerificationCase[] = [
     difficulty: "BASIC",
     passage: DIGITAL_DIVIDE_PASSAGE,
     targetPoints: ["the digital divide limits education, work, and future opportunity"],
-    focus: "제목 기본형: 글 전체를 대표하는 제목과 명백한 범위 초과 오답",
+    focus: "?쒕ぉ 湲곕낯?? 湲 ?꾩껜瑜???쒗븯???쒕ぉ怨?紐낅갚??踰붿쐞 珥덇낵 ?ㅻ떟",
   },
   {
     id: "title-intermediate",
@@ -128,7 +128,7 @@ const CASES: VerificationCase[] = [
     difficulty: "INTERMEDIATE",
     passage: DIGITAL_DIVIDE_PASSAGE,
     targetPoints: ["the digital divide is a social equality issue, not merely internet access"],
-    focus: "제목 중위형: technology/equality 대비를 제목답게 압축하는지",
+    focus: "?쒕ぉ 以묒쐞?? technology/equality ?鍮꾨? ?쒕ぉ?듦쾶 ?뺤텞?섎뒗吏",
   },
   {
     id: "summary-mc-basic",
@@ -136,7 +136,7 @@ const CASES: VerificationCase[] = [
     difficulty: "BASIC",
     passage: URBAN_FARMING_PASSAGE,
     targetPoints: ["urban farming uses limited city spaces to provide food, environmental benefits, and community connection"],
-    focus: "요약문 완성 객관식 기본형: 한 문장 요약, (A)(B) 쌍 선지, 부분정답 함정",
+    focus: "?붿빟臾??꾩꽦 媛앷???湲곕낯?? ??臾몄옣 ?붿빟, (A)(B) ???좎?, 遺遺꾩젙???⑥젙",
   },
   {
     id: "summary-mc-intermediate",
@@ -144,7 +144,7 @@ const CASES: VerificationCase[] = [
     difficulty: "INTERMEDIATE",
     passage: DIGITAL_DIVIDE_PASSAGE,
     targetPoints: ["closing the digital divide is about equality and opportunity, not only technology access"],
-    focus: "요약문 완성 객관식 중위권: 기술 접근과 사회적 기회 관계를 두 빈칸에 나누는지",
+    focus: "?붿빟臾??꾩꽦 媛앷???以묒쐞沅? 湲곗닠 ?묎렐怨??ы쉶??湲고쉶 愿怨꾨? ??鍮덉뭏???섎늻?붿?",
   },
   {
     id: "summary-mc-killer",
@@ -152,7 +152,7 @@ const CASES: VerificationCase[] = [
     difficulty: "KILLER",
     passage: TECH_RESPONSIBILITY_PASSAGE,
     targetPoints: ["better technology relocates rather than removes human responsibility in value-based decisions"],
-    focus: "요약문 완성 객관식 킬러형: 전체 논지 추상화와 A-only/B-only 근접 오답 설계",
+    focus: "?붿빟臾??꾩꽦 媛앷????щ윭?? ?꾩껜 ?쇱? 異붿긽?붿? A-only/B-only 洹쇱젒 ?ㅻ떟 ?ㅺ퀎",
   },
   {
     id: "summary-mc-killer-grandmother",
@@ -160,7 +160,7 @@ const CASES: VerificationCase[] = [
     difficulty: "KILLER",
     passage: GRANDMOTHER_HYPOTHESIS_PASSAGE,
     targetPoints: ["altruistic post-reproductive support increased family survival and was preserved through evolutionary selection"],
-    focus: "요약문 완성 객관식 킬러형: altruistic/evolutionarily 정답에서 genetically 같은 핵심 B 함정을 정답 A와 붙이고 cooperative 같은 A 함정을 정답 B와 붙이는지",
+    focus: "?붿빟臾??꾩꽦 媛앷????щ윭?? altruistic/evolutionarily ?뺣떟?먯꽌 genetically 媛숈? ?듭떖 B ?⑥젙???뺣떟 A? 遺숈씠怨?cooperative 媛숈? A ?⑥젙???뺣떟 B? 遺숈씠?붿?",
   },
   {
     id: "blank-killer-control",
@@ -168,7 +168,7 @@ const CASES: VerificationCase[] = [
     difficulty: "KILLER",
     passage: TECH_RESPONSIBILITY_PASSAGE,
     targetPoints: ["technology does not remove human judgment but rearranges where it is needed"],
-    focus: "빈칸 고난도 기준점: 기존 고품질 유형의 논리 빈칸과 오답 설계 수준 비교",
+    focus: "鍮덉뭏 怨좊궃??湲곗??? 湲곗〈 怨좏뭹吏??좏삎???쇰━ 鍮덉뭏怨??ㅻ떟 ?ㅺ퀎 ?섏? 鍮꾧탳",
     typeSettings: { BLANK_INFERENCE: { doubleNegative: false } },
   },
   {
@@ -177,20 +177,20 @@ const CASES: VerificationCase[] = [
     difficulty: "INTERMEDIATE",
     passage: URBAN_FARMING_PASSAGE,
     targetPoints: ["relative clauses, subject-verb agreement, participial phrases, comparison structures"],
-    focus: "어법 기준점: 기존 고품질 유형의 표시/선택지 출력 형태와 오답 설명",
+    focus: "?대쾿 湲곗??? 湲곗〈 怨좏뭹吏??좏삎???쒖떆/?좏깮吏 異쒕젰 ?뺥깭? ?ㅻ떟 ?ㅻ챸",
     typeSettings: { GRAMMAR_ERROR: { markerCount: 5, answerCount: 1 } },
   },
 ];
 
 const DIFFICULTY_INSTRUCTIONS: Record<Difficulty, string> = {
-  BASIC: "정답 근거가 비교적 직접적으로 드러나되 단순 복붙은 피하고, 오답은 명백하지만 너무 유치하지 않게 만든다.",
-  INTERMEDIATE: "두 문장 이상의 연결을 요구하고, 오답은 부분적으로 맞지만 핵심 범위나 논리가 어긋나게 만든다.",
-  KILLER: "핵심 논리의 전환, 범위, 함축을 종합해야 풀리며, 오답은 실제 시험처럼 매력적인 부분독해와 과잉일반화를 포함한다.",
+  BASIC: "?뺣떟 洹쇨굅媛 鍮꾧탳??吏곸젒?곸쑝濡??쒕윭?섎릺 ?⑥닚 蹂듬텤? ?쇳븯怨? ?ㅻ떟? 紐낅갚?섏?留??덈Т ?좎튂?섏? ?딄쾶 留뚮뱺??",
+  INTERMEDIATE: "??臾몄옣 ?댁긽???곌껐???붽뎄?섍퀬, ?ㅻ떟? 遺遺꾩쟻?쇰줈 留욎?留??듭떖 踰붿쐞???쇰━媛 ?닿툔?섍쾶 留뚮뱺??",
+  KILLER: "?듭떖 ?쇰━???꾪솚, 踰붿쐞, ?⑥텞??醫낇빀?댁빞 ?由щŉ, ?ㅻ떟? ?ㅼ젣 ?쒗뿕泥섎읆 留ㅻ젰?곸씤 遺遺꾨룆?댁? 怨쇱엵?쇰컲?붾? ?ы븿?쒕떎.",
 };
 
 const DIRECTOR_FEEDBACK_BLOCK = [
   "## Director feedback under verification",
-  "- IMPLIED_MEANING must use the exact Korean direction: 다음 글에서 밑줄 친 부분이 함축 의미하는 바로 가장 적절한 것은?",
+  "- IMPLIED_MEANING must use the exact Korean direction: ?ㅼ쓬 湲?먯꽌 諛묒쨪 移?遺遺꾩씠 ?⑥텞 ?섎??섎뒗 諛붾줈 媛???곸젅??寃껋??",
   "- IMPLIED_MEANING layout must be direction, then the passage with only the target expression underlined, then options.",
   "- IMPLIED_MEANING options must be English-only.",
   "- TOPIC asks the topic/subject range; MAIN_IDEA asks the writer's main point or claim; TITLE asks a title-like phrase.",
@@ -270,7 +270,7 @@ function summaryOptionPairs(question: Record<string, unknown>) {
 
     const parts = text
       .replace(/^\s*(?:[\u2460-\u2473\u3251-\u325F\u32B1-\u32BF]|\((?:[A-Ja-j]|\d{1,3})\)|(?:[A-Ja-j]|\d{1,3})[.)])\s*/, "")
-      .split(/\s*(?:……|\.{3,}|…|\/|\||;|,|\s[-–—]\s)\s*/u)
+      .split(/\s*(?:?╈?\.{3,}|??\/|\||;|,|\s[-?볛?\s)\s*/u)
       .map((part) => part.trim())
       .filter(Boolean);
 
@@ -296,12 +296,12 @@ function wrongOptionLabels(question: Record<string, unknown>): string[] {
 
 function normalizeLabel(value: unknown): string {
   return typeof value === "string"
-    ? value.replace(/^[\s①②③④⑤⑥⑦⑧⑨⑩]+/, "").trim().toLowerCase()
+    ? value.replace(/^[\s?졻몼?™몿?ㅲ뫁?╈뫃?ⓥ뫆]+/, "").trim().toLowerCase()
     : "";
 }
 
 function containsHangul(value: string): boolean {
-  return /[가-힣]/.test(value);
+  return /[媛-??/.test(value);
 }
 
 function containsLatin(value: string): boolean {
@@ -313,7 +313,7 @@ function englishWordCount(value: string): number {
 }
 
 function sentenceLikeKoreanOption(value: string): boolean {
-  return /[다요임함됨것]+[.!?]?$/.test(value.trim()) && value.trim().length >= 14;
+  return /[?ㅼ슂?꾪븿?④쾬]+[.!?]?$/.test(value.trim()) && value.trim().length >= 14;
 }
 
 function evaluateDeterministically(
@@ -345,7 +345,7 @@ function evaluateDeterministically(
     typeof question.passageWithUnderline === "string" ? question.passageWithUnderline : "";
 
   if (testCase.subType === "IMPLIED_MEANING") {
-    const exactDirection = "다음 글에서 밑줄 친 부분이 함축 의미하는 바로 가장 적절한 것은?";
+    const exactDirection = "?ㅼ쓬 湲?먯꽌 諛묒쨪 移?遺遺꾩씠 ?⑥텞 ?섎??섎뒗 諛붾줈 媛???곸젅??寃껋??";
     if (direction !== exactDirection) {
       issues.push({
         severity: "error",
@@ -376,7 +376,7 @@ function evaluateDeterministically(
         });
       }
     });
-    if (html.includes("밑줄 표현")) {
+    if (html.includes("諛묒쨪 ?쒗쁽")) {
       issues.push({
         severity: "error",
         code: "implied-ui-extra-target-box",
@@ -384,10 +384,10 @@ function evaluateDeterministically(
       });
     }
     if (
-      html.includes("표면과 함축") ||
-      html.includes("표면 의미") ||
-      html.includes("추론 간극") ||
-      html.includes("근거 흐름")
+      html.includes("?쒕㈃怨??⑥텞") ||
+      html.includes("?쒕㈃ ?섎?") ||
+      html.includes("異붾줎 媛꾧레") ||
+      html.includes("洹쇨굅 ?먮쫫")
     ) {
       issues.push({
         severity: "error",
@@ -413,7 +413,7 @@ function evaluateDeterministically(
         message: "Preview HTML does not include the actual source passage.",
       });
     }
-    if (html.includes("위 지문")) {
+    if (html.includes("??吏臾?)) {
       issues.push({
         severity: "error",
         code: "above-passage-placeholder",
@@ -585,8 +585,8 @@ async function generateForCase(testCase: VerificationCase) {
           targetPoints: testCase.targetPoints,
         },
       ],
-      schoolType: "고등학교",
-      gradeInfo: "2학년",
+      schoolType: "怨좊벑?숆탳",
+      gradeInfo: "2?숇뀈",
       passageContent: testCase.passage,
       teacherIntentBlock: DIRECTOR_FEEDBACK_BLOCK,
       analysisContext: "None.",
@@ -648,7 +648,7 @@ async function judgeWithGemini(results: Awaited<ReturnType<typeof generateForCas
   }));
 
   const prompt = [
-    "You are a senior Korean CSAT/모의고사 English question reviewer.",
+    "You are a senior Korean CSAT/紐⑥쓽怨좎궗 English question reviewer.",
     "Evaluate each generated question for real exam usability, not mere schema success.",
     "Score strictly from 1 to 5. A pass requires no format blocker, a defensible correct answer, plausible wrong options, and difficulty matching the requested level.",
     "Pay special attention to:",
@@ -669,13 +669,6 @@ async function judgeWithGemini(results: Awaited<ReturnType<typeof generateForCas
     prompt,
     maxOutputTokens: 8192,
     abortSignal: AbortSignal.timeout(120_000),
-    providerOptions: {
-      google: {
-        thinkingConfig: {
-          thinkingBudget: 0,
-        },
-      },
-    },
   });
 
   return result.object;
@@ -717,9 +710,9 @@ function buildHtmlReport(
       .join("");
     return `
       <section>
-        <h2>${escapeHtml(result.case.id)} · ${escapeHtml(result.case.subType)} · ${escapeHtml(result.case.difficulty)}</h2>
+        <h2>${escapeHtml(result.case.id)} 쨌 ${escapeHtml(result.case.subType)} 쨌 ${escapeHtml(result.case.difficulty)}</h2>
         <p class="focus">${escapeHtml(result.case.focus)}</p>
-        <div class="score">LLM score: ${evaluation?.overallScore ?? "n/a"} / 5 · pass: ${evaluation?.pass ?? false}</div>
+        <div class="score">LLM score: ${evaluation?.overallScore ?? "n/a"} / 5 쨌 pass: ${evaluation?.pass ?? false}</div>
         <h3>Rendered UI</h3>
         <div class="rendered">${result.html}</div>
         <h3>Deterministic Issues</h3>
@@ -802,8 +795,8 @@ function escapeHtml(value: unknown): string {
 }
 
 async function main() {
-  if (!process.env.GEMINI_API_KEY && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    throw new Error("GEMINI_API_KEY or GOOGLE_GENERATIVE_AI_API_KEY must be set.");
+  if (!process.env.ATLASCLOUD_API_KEY && !process.env.OPENROUTER_API_KEY) {
+    throw new Error("ATLASCLOUD_API_KEY or OPENROUTER_API_KEY must be set.");
   }
 
   await fs.mkdir(OUT_DIR, { recursive: true });
@@ -814,12 +807,12 @@ async function main() {
     results.push(await generateForCase(testCase));
   }
 
-  console.log("[VERIFY] Running Gemini quality reviewer...");
+  console.log("[VERIFY] Running Atlas quality reviewer...");
   const llmEvaluation = await judgeWithGemini(results);
 
   const report = {
     generatedAt: new Date().toISOString(),
-    model: process.env.GEMINI_MODEL ?? "gemini-3.5-flash",
+    model: process.env.ATLASCLOUD_TEXT_MODEL ?? "google/gemini-3.5-flash",
     cases: results.map((result) => ({
       id: result.case.id,
       subType: result.case.subType,
@@ -833,8 +826,8 @@ async function main() {
         htmlLength: result.html.length,
         containsSourcePassage: result.html.includes(result.case.passage.slice(0, 48)),
         containsUnderlineClass: result.html.includes("underline decoration-2"),
-        containsAbovePassagePlaceholder: result.html.includes("위 지문"),
-        containsTargetExpressionBox: result.html.includes("밑줄 표현"),
+        containsAbovePassagePlaceholder: result.html.includes("??吏臾?),
+        containsTargetExpressionBox: result.html.includes("諛묒쨪 ?쒗쁽"),
       },
     })),
   };

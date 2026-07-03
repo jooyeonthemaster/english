@@ -22,6 +22,7 @@
 import { createHash } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { isM1DraftVisible } from "@/lib/extraction/m1-draft-visibility";
+import { readRequestedSubject } from "@/lib/extraction/requested-subject";
 
 export type PromoteOutcome =
   | { draftId: string; status: "promoted"; passageId: string }
@@ -39,13 +40,25 @@ export interface PromotableDraft {
   sourcePageIndex: number[];
   restorationStatus: string;
   savedPassageId: string | null;
-  job: { id: string; originalFileName: string | null; academyId: string };
-  sourceMaterial: { id: string; schoolId: string | null } | null;
+  job: {
+    id: string;
+    originalFileName: string | null;
+    academyId: string;
+    /** ExtractionJob.metadata — 잡 명시 요청 과목(subject) 판독용. */
+    metadata?: unknown;
+  };
+  sourceMaterial: {
+    id: string;
+    schoolId: string | null;
+  } | null;
 }
 
 export const PROMOTABLE_DRAFT_INCLUDE = {
   job: {
-    select: { id: true, originalFileName: true, academyId: true },
+    // metadata: 잡 생성 시 명시된 요청 과목("KOREAN")을 승급 Passage 에 전파하기
+    // 위해 함께 읽는다(commit 경로 create-or-reuse-passage 미러). SourceMaterial
+    // .subject 는 OCR/파일명 추정이 섞여 전파 기준으로 쓰지 않는다(ISO-8).
+    select: { id: true, originalFileName: true, academyId: true, metadata: true },
   },
   sourceMaterial: {
     select: { id: true, schoolId: true },
@@ -115,6 +128,13 @@ export async function promoteM1Draft(
         data: {
           academyId: draft.job.academyId,
           schoolId: draft.sourceMaterial?.schoolId ?? null,
+          // 과목 전파 — **잡 명시 요청 과목**(metadata.subject)이 KOREAN 인
+          // 잡의 승급 Passage 만 subject='KOREAN' 으로 저장돼 국어 지문함에만
+          // 나타난다. OCR 추정(SourceMaterial.subject)은 전파에 쓰지 않는다
+          // (ISO-8). 그 외는 미기록(null=영어 관례).
+          ...(readRequestedSubject(draft.job.metadata) === "KOREAN"
+            ? { subject: "KOREAN" }
+            : {}),
           title,
           content: teacherText,
           source: draft.job.originalFileName

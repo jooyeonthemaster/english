@@ -100,7 +100,7 @@ export function buildGenerationPrompt({
   passageContent,
   teacherIntentBlock,
   analysisContext,
-  targetPoints,
+  targetPoints = [],
   typePrompt,
   structuredInstructions,
   targetCandidateBlock,
@@ -171,6 +171,14 @@ ${providerQualityContract}
 - wrongOptionExplanations가 배열 스키마이면 각 항목은 {label, explanation} 형태로 작성하세요.
 - tags는 관련 문법/어휘/유형 태그를 한국어로 작성하세요.
 - If saved passage analysis is "None", treat targetPoints as passage evidence rather than analysis items.`;
+  const compactPremiumOutputRules = `
+
+## Compact JSON discipline
+- Return only the schema object. Do not add markdown, commentary, self-review, or alternative drafts.
+- Generate exactly ${typeCount} question(s); do not include extra candidate questions, planning notes, or full passage quotations outside required fields.
+- Keep explanation to 120-450 Korean characters. Keep each wrongOptionExplanations value to one concise Korean sentence under 180 characters.
+- Keep keyPoints to exactly 3 short strings and tags to 3-5 short strings. Do not write long paragraphs inside arrays.
+- For GRAMMAR_ERROR, return the schema fields only. Do not output passageWithMarkers; the server reconstructs it. Use markedExpressions with exact source expression/correction and only the answer's wrong errorExpression.`;
 
   const prompt = `대상: 한국 ${schoolType} ${gradeInfo} 영어 시험.
 
@@ -190,7 +198,7 @@ ${targetContext}
 
 위의 분석 포인트를 반드시 문제에 반영하고, 정확히 ${typeCount}문제를 생성하세요.`;
 
-  return { system, prompt };
+  return { system: `${system}${compactPremiumOutputRules}`, prompt };
 }
 
 export const STRUCTURED_OUTPUT_INSTRUCTIONS = `\n## 출력 형식 안내

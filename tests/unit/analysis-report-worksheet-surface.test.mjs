@@ -23,6 +23,8 @@ const {
   worksheetWordBankSurfaceIssues,
   consolidateWordOrders,
   wordOrderItemIssues,
+  restoreClozePassageOriginal,
+  clozePassageCoverageIssues,
 } = surface;
 
 const failures = [];
@@ -46,6 +48,21 @@ check("vocab cloze hides bracketed answer 2", !studentVocab.includes("[exceeded]
 check("vocab cloze prints blank 1", studentVocab.includes("(1) __________"));
 check("vocab cloze prints blank 2", studentVocab.includes("(2) __________"));
 check("vocab surface audit passes sanitized output", vocabularyClozeSurfaceIssues(leakyVocab, vocabBlanks).length === 0);
+
+// ── 어휘 선택 원문복원 정답누출 회귀 잠금 (adversarial 검수 confirmed major) ──
+// AI가 원문을 축약해 내용어 대부분이 [A / B] 브래킷에 들어가면, 과거엔 커버리지가 그 문장을 '누락'으로
+// 오판하고 정답이 평문으로 든 원문 문장을 재주입(정답 누출)했다. 브래킷 옵션 단어를 present 로 세는 수정으로
+// restore 가 발동하지 않아야 한다(입력 그대로 반환 = 누출 없음).
+const vsOrig = ["Memory is actively reconstructed rather than passively preserved."];
+const vsBody = "Memory is actively [reconstructed / preserved].";
+const vsRestored = restoreClozePassageOriginal(vsBody, vsOrig);
+check("vocab selection: bracketed abbreviation is not re-injected (no answer leak)", vsRestored === vsBody);
+check("vocab selection: answer not exposed as plaintext after restore", !/reconstructed(?![^[]*\])/.test(vsRestored.replace(/\[[^\]]*\]/g, "")));
+check("vocab selection: coverage gate does not false-flag bracketed abbreviation", clozePassageCoverageIssues("어휘 선택 본문", vsBody, vsOrig).length === 0);
+// 무회귀: 진짜 통째로 빠진 원문 문장은 여전히 복원돼야 한다(수정이 검출을 무력화하지 않음).
+const vsMissingOrig = ["Cats are mammals.", "Dogs are loyal companions to humans."];
+const vsMissingBody = "Cats are mammals.";
+check("restore still injects a genuinely dropped original sentence", restoreClozePassageOriginal(vsMissingBody, vsMissingOrig).includes("loyal companions"));
 
 const phraseClozeItems = [
   { no: 1, answers: ["unconventional and unrealistic methods"] },
@@ -166,5 +183,5 @@ const summary = runHarness();
 
 test("analysis-report worksheet surface keeps student sheet clean", () => {
   assert.equal(summary.failed, 0, `worksheet surface failures: ${JSON.stringify(summary.failures)}`);
-  assert.ok(summary.passed >= 27, `expected at least 27 checks, got ${summary.passed}`);
+  assert.ok(summary.passed >= 31, `expected at least 31 checks, got ${summary.passed}`);
 });

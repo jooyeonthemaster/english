@@ -141,7 +141,6 @@ async function analyzeFormatSpec(args: AnalyzeFormatArgs): Promise<FormatSpec> {
         schema: formatOnlySchema,
         maxOutputTokens: FORMAT_MAX_TOKENS,
         abortSignal: AbortSignal.timeout(FORMAT_TIMEOUT_MS),
-        providerOptions: { google: { thinkingConfig: { thinkingBudget: 2048 } } },
         messages: [
           {
             role: "user",
@@ -288,7 +287,6 @@ async function transcribeSourceLayout(
         abortSignal: AbortSignal.timeout(TRANSCRIBE_TIMEOUT_MS),
         // thinking 0: 1차 분석(같은 이미지에서 안정 동작)과 동일 — thinking 토큰이
         // maxOutputTokens 를 공유하며 사고 루프가 finishReason=length 를 유발하는 사례 방어.
-        providerOptions: { google: { thinkingConfig: { thinkingBudget: 0 } } },
         messages: [
           {
             role: "user",
@@ -364,7 +362,6 @@ async function analyzeAnnotations(args: {
     maxOutputTokens: ANNOTATION_MAX_TOKENS,
     abortSignal: AbortSignal.timeout(ANNOTATION_TIMEOUT_MS),
     // thinking 0 — 전사 호출과 같은 이유(사고 루프 → length 방어).
-    providerOptions: { google: { thinkingConfig: { thinkingBudget: 0 } } },
     messages: [
       {
         role: "user",

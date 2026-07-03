@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { getStaffSession } from "@/lib/auth";
 import { googleGenerativeAI } from "@/lib/ai";
+import { ATLAS_RESTORATION_MODEL_ID } from "@/lib/atlas-ai";
 import {
   deductCredits,
   refundCredits,
@@ -18,11 +19,11 @@ import {
   hasUnresolvedM1ProblemArtifacts,
 } from "@/lib/extraction/m1-restoration";
 
-// 복원 전용 경량 모델 — 추출 파이프라인 passage-restoration 스테이지와 동일.
-// (scripts/test-restoration-lite.ts 22케이스 검증: lite 가 3.5-flash 보다
-// 정확·안정·2.5배 빠름 — JSON 파손·행 없음)
+// 蹂듭썝 ?꾩슜 寃쎈웾 紐⑤뜽 ??異붿텧 ?뚯씠?꾨씪??passage-restoration ?ㅽ뀒?댁?? ?숈씪.
+// (scripts/test-restoration-lite.ts 22耳?댁뒪 寃利? lite 媛 3.5-flash 蹂대떎
+// ?뺥솗쨌?덉젙쨌2.5諛?鍮좊쫫 ??JSON ?뚯넀쨌???놁쓬)
 const RESTORE_MODEL_ID =
-  process.env.GEMINI_RESTORATION_MODEL?.trim() || "gemini-3.1-flash-lite";
+  ATLAS_RESTORATION_MODEL_ID;
 const RESTORE_TIMEOUT_MS = 45_000;
 const RESTORE_MAX_ATTEMPTS = 2;
 
@@ -31,7 +32,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 
 const requestSchema = z.object({
-  passageText: z.string().min(20, "지문이 너무 짧습니다."),
+  passageText: z.string().min(20, "吏臾몄씠 ?덈Т 吏㏃뒿?덈떎."),
   // Optional answer key / linked questions pasted by the teacher. When present
   // it grounds blank-fill and grammar/vocab restoration; when absent the model
   // does a best-effort reconstruction and flags uncertainty.
@@ -44,7 +45,7 @@ const restorationSchema = z.object({
   restoredText: z
     .string()
     .describe(
-      "복원된 지문 본문. 지문 원래 언어 그대로 (영어 지문이면 영어 그대로 둔다).",
+      "蹂듭썝??吏臾?蹂몃Ц. 吏臾??먮옒 ?몄뼱 洹몃?濡?(?곸뼱 吏臾몄씠硫??곸뼱 洹몃?濡??붾떎).",
     ),
   status: z
     .enum(["RESTORED", "PARTIAL", "NO_RESTORATION_NEEDED", "FAILED"])
@@ -70,7 +71,7 @@ const restorationSchema = z.object({
           .string()
           .default("")
           .describe(
-            "이 수정을 한 이유. 반드시 한국어로 짧게 작성한다. 영어로 쓰지 말 것. 예: \"주어가 단수라 was로 교정\", \"문맥상 빈칸을 추정\".",
+            "???섏젙?????댁쑀. 諛섎뱶???쒓뎅?대줈 吏㏐쾶 ?묒꽦?쒕떎. ?곸뼱濡??곗? 留?寃? ?? \"二쇱뼱媛 ?⑥닔??was濡?援먯젙\", \"臾몃㎘??鍮덉뭏??異붿젙\".",
           ),
       }),
     )
@@ -80,11 +81,11 @@ const restorationSchema = z.object({
       z
         .string()
         .describe(
-          "선생님이 직접 확인해야 할 점. 반드시 한국어 문장으로 작성한다. 영어로 쓰지 말 것. 예: \"마지막 문장의 빈칸은 정답이 없어 문맥으로 추정했습니다 — 확인 필요.\"",
+          "?좎깮?섏씠 吏곸젒 ?뺤씤?댁빞 ???? 諛섎뱶???쒓뎅??臾몄옣?쇰줈 ?묒꽦?쒕떎. ?곸뼱濡??곗? 留?寃? ?? \"留덉?留?臾몄옣??鍮덉뭏? ?뺣떟???놁뼱 臾몃㎘?쇰줈 異붿젙?덉뒿?덈떎 ???뺤씤 ?꾩슂.\"",
         ),
     )
     .default([])
-    .describe("선생님 검토용 경고 목록. 모든 항목을 한국어로 작성한다."),
+    .describe("?좎깮??寃?좎슜 寃쎄퀬 紐⑸줉. 紐⑤뱺 ??ぉ???쒓뎅?대줈 ?묒꽦?쒕떎."),
 });
 
 type RestorationResult = z.infer<typeof restorationSchema>;
@@ -107,16 +108,16 @@ function buildRestorationPrompt(passageText: string, answerKey?: string): string
     "",
     "## Output JSON shape",
     "Return strict JSON only: { restoredText, status, changes[], warnings[] }.",
-    "- LANGUAGE — 매우 중요: 사람이 읽는 설명 필드는 반드시 한국어로 작성하세요. 즉 모든 `warnings[]` 항목과 모든 `changes[].reason` 은 한국어여야 합니다(영어로 쓰면 오답으로 간주). 읽는 사람은 한국 선생님입니다. 단, `restoredText`·`before`·`after` 는 지문 원문 언어 그대로(영어 지문이면 영어), `type` 은 영문 enum 코드 그대로 둡니다.",
+    "- LANGUAGE ??留ㅼ슦 以묒슂: ?щ엺???쎈뒗 ?ㅻ챸 ?꾨뱶??諛섎뱶???쒓뎅?대줈 ?묒꽦?섏꽭?? 利?紐⑤뱺 `warnings[]` ??ぉ怨?紐⑤뱺 `changes[].reason` ? ?쒓뎅?댁뿬???⑸땲???곸뼱濡??곕㈃ ?ㅻ떟?쇰줈 媛꾩＜). ?쎈뒗 ?щ엺? ?쒓뎅 ?좎깮?섏엯?덈떎. ?? `restoredText`쨌`before`쨌`after` ??吏臾??먮Ц ?몄뼱 洹몃?濡??곸뼱 吏臾몄씠硫??곸뼱), `type` ? ?곷Ц enum 肄붾뱶 洹몃?濡??〓땲??",
     "- restoredText: the clean restored passage as continuous prose (no markers, no chunk labels, no numbering).",
     "- status: \"RESTORED\" (fully clean & confident) | \"PARTIAL\" (some guessed blanks or leftover uncertainty) | \"NO_RESTORATION_NEEDED\" (was already clean) | \"FAILED\" (could not restore).",
-    "- changes: log EVERY substantive edit as { before, after, type, reason } — a filled blank, a corrected grammar/vocab word, a moved/inserted sentence, or a removed irrelevant sentence. `reason` 은 반드시 한국어로 짧게 작성하세요 (예: \"주어가 단수라 was 로 교정\", \"문맥상 빈칸 추정\").",
-    "  • Stripping a problem marker/label/number ((a), ①, (A) chunk labels, [3점]) is pure housekeeping — you need NOT log those.",
-    "  • A grammar / vocab / blank / word-order correction is a REPLACEMENT and MUST be logged: `before` = the original fragment with the marker stripped off (e.g. `were`, NOT `(e) were`); `after` = the corrected text that now appears in restoredText (e.g. `was`). `after` MUST be non-empty for these — an empty `after` is WRONG and loses the fix.",
-    "      RIGHT: { \"before\": \"were\", \"after\": \"was\", \"type\": \"GRAMMAR\", \"reason\": \"주어 'the trait'가 단수\" }   |   WRONG: { \"before\": \"were\", \"after\": \"\" }",
-    "      blank fill e.g.: { \"before\": \"the next ________ mini-silence\", \"after\": \"the next available mini-silence\", \"type\": \"BLANK\", \"reason\": \"문맥상\" }",
-    "  • `after` may be empty ONLY for a deliberately removed irrelevant sentence. Every entry MUST include all four fields.",
-    "- warnings (반드시 한국어로 작성): ONLY for things the teacher should double-check — guessed/uncertain blanks, ambiguous edits, leftover markers. 각 경고는 한국어로 쓰세요 (예: \"마지막 문장의 빈칸은 정답이 없어 문맥으로 추정했습니다 — 확인 필요.\"). Do NOT use warnings to narrate a correction you ALREADY logged in `changes` (log the correction in `changes`, not here).",
+    "- changes: log EVERY substantive edit as { before, after, type, reason } ??a filled blank, a corrected grammar/vocab word, a moved/inserted sentence, or a removed irrelevant sentence. `reason` ? 諛섎뱶???쒓뎅?대줈 吏㏐쾶 ?묒꽦?섏꽭??(?? \"二쇱뼱媛 ?⑥닔??was 濡?援먯젙\", \"臾몃㎘??鍮덉뭏 異붿젙\").",
+    "  ??Stripping a problem marker/label/number ((a), ?? (A) chunk labels, [3??) is pure housekeeping ??you need NOT log those.",
+    "  ??A grammar / vocab / blank / word-order correction is a REPLACEMENT and MUST be logged: `before` = the original fragment with the marker stripped off (e.g. `were`, NOT `(e) were`); `after` = the corrected text that now appears in restoredText (e.g. `was`). `after` MUST be non-empty for these ??an empty `after` is WRONG and loses the fix.",
+    "      RIGHT: { \"before\": \"were\", \"after\": \"was\", \"type\": \"GRAMMAR\", \"reason\": \"二쇱뼱 'the trait'媛 ?⑥닔\" }   |   WRONG: { \"before\": \"were\", \"after\": \"\" }",
+    "      blank fill e.g.: { \"before\": \"the next ________ mini-silence\", \"after\": \"the next available mini-silence\", \"type\": \"BLANK\", \"reason\": \"문맥상 빈칸을 보충함\" }",
+    "  ??`after` may be empty ONLY for a deliberately removed irrelevant sentence. Every entry MUST include all four fields.",
+    "- warnings (諛섎뱶???쒓뎅?대줈 ?묒꽦): ONLY for things the teacher should double-check ??guessed/uncertain blanks, ambiguous edits, leftover markers. 媛?寃쎄퀬???쒓뎅?대줈 ?곗꽭??(?? \"留덉?留?臾몄옣??鍮덉뭏? ?뺣떟???놁뼱 臾몃㎘?쇰줈 異붿젙?덉뒿?덈떎 ???뺤씤 ?꾩슂.\"). Do NOT use warnings to narrate a correction you ALREADY logged in `changes` (log the correction in `changes`, not here).",
     "",
     "## Problem-form passage",
     passageText,
@@ -142,7 +143,7 @@ export async function POST(req: NextRequest) {
 
   const { passageText, answerKey } = parsed.data;
 
-  // ◈1 (PASSAGE_RESTORATION) — same cost as the image·PDF "AI 원문 복원". Deduct
+  // ?? (PASSAGE_RESTORATION) ??same cost as the image쨌PDF "AI ?먮Ц 蹂듭썝". Deduct
   // upfront; refund only when the AI call fails or returns an unusable result.
   let creditTxId: string;
   try {
@@ -157,7 +158,7 @@ export async function POST(req: NextRequest) {
     if (err instanceof InsufficientCreditsError) {
       return NextResponse.json(
         {
-          error: "크레딧이 부족합니다.",
+          error: "?щ젅?㏃씠 遺議깊빀?덈떎.",
           balance: err.currentBalance,
           required: err.requiredCredits,
         },
@@ -176,8 +177,8 @@ export async function POST(req: NextRequest) {
 
   let result: RestorationResult;
   try {
-    // flash-lite 직접 호출 — 45s × 2시도, SDK 내부 재시도 차단(중첩 과금 방지),
-    // 비재시도성 오류는 즉시 중단. passage-transform 과 동일 규율.
+    // flash-lite 吏곸젒 ?몄텧 ??45s 횞 2?쒕룄, SDK ?대? ?ъ떆??李⑤떒(以묒꺽 怨쇨툑 諛⑹?),
+    // 鍮꾩옱?쒕룄???ㅻ쪟??利됱떆 以묐떒. passage-transform 怨??숈씪 洹쒖쑉.
     result = await (async () => {
       const prompt = buildRestorationPrompt(passageText, answerKey);
       let lastError: unknown;
@@ -192,9 +193,7 @@ export async function POST(req: NextRequest) {
             maxOutputTokens: 8192,
             maxRetries: 0,
             abortSignal: AbortSignal.timeout(RESTORE_TIMEOUT_MS),
-            providerOptions: {
-              google: { thinkingConfig: { thinkingBudget: 0 } },
-            },
+            
           });
           console.log(
             `[WORKBENCH-PASTE-RESTORE] ${RESTORE_MODEL_ID} attempt ${attempt + 1} ok in ${Date.now() - startedAt}ms`,
@@ -214,16 +213,16 @@ export async function POST(req: NextRequest) {
       }
       throw lastError instanceof Error
         ? lastError
-        : new Error("AI 복원에 실패했습니다.");
+        : new Error("AI 蹂듭썝???ㅽ뙣?덉뒿?덈떎.");
     })();
   } catch (err) {
-    // AI call failed → deterministic marker-strip fallback so the user still
+    // AI call failed ??deterministic marker-strip fallback so the user still
     // gets *something* cleaner than the raw paste.
     console.warn(
       "[WORKBENCH-PASTE-RESTORE] AI restore failed, using code fallback:",
       err instanceof Error ? err.message : err,
     );
-    await refundRestore("AI 복원 실패 — 마커 제거 폴백");
+    await refundRestore("AI 蹂듭썝 ?ㅽ뙣 ??留덉빱 ?쒓굅 ?대갚");
     const fallback = buildFallbackM1Restoration(passageText);
     return NextResponse.json({
       restoredText: fallback.restoredText,
@@ -235,14 +234,14 @@ export async function POST(req: NextRequest) {
         reason: c.reason ?? "",
       })),
       warnings: [
-        "AI 복원에 실패해 마커 제거만 적용했습니다. 빈칸·어법은 직접 확인해주세요.",
+        "AI 蹂듭썝???ㅽ뙣??留덉빱 ?쒓굅留??곸슜?덉뒿?덈떎. 鍮덉뭏쨌?대쾿? 吏곸젒 ?뺤씤?댁＜?몄슂.",
       ],
       degraded: true,
     });
   }
 
   // Post-hoc safety: if obvious problem artifacts survived, never report a clean
-  // "RESTORED" — downgrade and warn so the user reviews.
+  // "RESTORED" ??downgrade and warn so the user reviews.
   const restoredText = (result.restoredText || "").trim();
   let status = result.status;
   const warnings = [...(result.warnings || [])];
@@ -250,25 +249,25 @@ export async function POST(req: NextRequest) {
     if (status === "RESTORED" || status === "NO_RESTORATION_NEEDED") {
       status = "PARTIAL";
     }
-    warnings.push("복원본에 문제 형태 흔적이 남아 있습니다. 직접 확인·수정해주세요.");
+    warnings.push("蹂듭썝蹂몄뿉 臾몄젣 ?뺥깭 ?붿쟻???⑥븘 ?덉뒿?덈떎. 吏곸젒 ?뺤씤쨌?섏젙?댁＜?몄슂.");
   }
   if (!restoredText) {
     // Schema enforces restoredText is a string, but an empty string still
-    // passes — surface it so recurring Gemini anomalies are diagnosable.
+    // passes ??surface it so recurring Gemini anomalies are diagnosable.
     console.warn("[WORKBENCH-PASTE-RESTORE] empty restoredText from model");
-    await refundRestore("복원 결과 비어 있음");
+    await refundRestore("蹂듭썝 寃곌낵 鍮꾩뼱 ?덉쓬");
     return NextResponse.json({
       restoredText: passageText,
       status: "FAILED",
       changes: [],
-      warnings: ["복원 결과가 비어 있습니다. 원문을 직접 정리해주세요."],
+      warnings: ["蹂듭썝 寃곌낵媛 鍮꾩뼱 ?덉뒿?덈떎. ?먮Ц??吏곸젒 ?뺣━?댁＜?몄슂."],
       degraded: true,
     });
   }
 
   // The AI restoration call completed, so only failed results are refunded.
   if (status === "FAILED") {
-    await refundRestore("복원 실패");
+    await refundRestore("蹂듭썝 ?ㅽ뙣");
   }
 
   return NextResponse.json({

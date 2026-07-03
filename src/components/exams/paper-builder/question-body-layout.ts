@@ -15,6 +15,8 @@ import { questionHasEmbeddedPassage } from "./passage-policy";
 import { formatSourcePassageForQuestionItems } from "./source-passage-markers";
 import { normalizePassageText, normalizeQuestionText } from "./text-normalization";
 import type { PaperItem } from "./types";
+import { isKoQuestionType } from "@/lib/korean/registry";
+import { koStructuredSegments, isKoStructuredSubtype, koStemForItem } from "./korean/ko-paper-adapter";
 
 // ---------------------------------------------------------------------------
 // 문항을 "지시문(stem)"과 "본문(body)"으로 나누는 공통 로직.
@@ -67,7 +69,7 @@ export function isStructuredAtomicSubtype(subType?: string | null): boolean {
 }
 
 export function isFlowStructuredSubtype(subType?: string | null): boolean {
-  return isStructuredAtomicSubtype(subType) || subType === "SENTENCE_INSERT";
+  return isStructuredAtomicSubtype(subType) || subType === "SENTENCE_INSERT" || isKoStructuredSubtype(subType);
 }
 
 export function isInlineSourcePassageSubtype(subType?: string | null): boolean {
@@ -175,6 +177,13 @@ function splitTopicSentenceWritingQuestionText(text: string): TopicSentenceWriti
 
 export function questionStemAndBody(item: PaperItem): { stem: string; body: string } {
   const subType = item.sourceQuestion.subType;
+
+  // 국어(KO): 발문(stem)만 헤더에 두고, 지문/보기/조건 박스는 structuredSegments()가
+  // 그린다(SUMMARY_WRITING 미러). 문법 단독형 등 구조화 세그먼트가 없는 KO 유형은
+  // 평문 경로로 폴백한다.
+  if (isKoStructuredSubtype(subType)) {
+    return { stem: koStemForItem(item), body: "" };
+  }
 
   if (isSummaryCompleteSubtype(subType)) {
     const { stem } = splitSummaryCompleteMcQuestionText(item.questionText);
@@ -346,6 +355,11 @@ function stripOriginalBlock(text: string) {
 export function structuredSegments(item: PaperItem): StructSegment[] {
   const subType = item.sourceQuestion.subType;
 
+  // 국어(KO): 지문(마커 병합) → <보기> → <조건> 박스를 ko-paper-adapter 가 조립.
+  if (isKoStructuredSubtype(subType)) {
+    return koStructuredSegments(item);
+  }
+
   if (isSummaryCompleteSubtype(subType)) {
     const passage = summaryCompleteMcPassageForItem(item);
     const { summary: rawSummary } = splitSummaryCompleteMcQuestionText(item.questionText);
@@ -409,17 +423,24 @@ export function structuredSegments(item: PaperItem): StructSegment[] {
       ? formatSourcePassageForQuestionItems(rawPassage, [item])
       : rawPassage;
   const alreadyHasEmbeddedPassage = questionHasEmbeddedPassage(item.sourceQuestion);
+  // 출처 지문 박스는 item.includePassage 토글을 존중한다. CONDITIONAL_WRITING 처럼 정답이
+  // 지문 문장의 번역인 유형은 shouldIncludeSourcePassageByDefault 가 기본 false 로 잡아
+  // 지문을 미동봉한다(본문 답 노출 방지). 다른 INLINE source 유형은 기본 true 라 그대로 노출.
+  const includePassage = item.includePassage !== false;
   const segs: StructSegment[] = [];
   if (PASSAGE_BEFORE_BODY_SUBTYPES.has(subType || "")) {
-    if (passage) segs.push({ kind: "box", boxStyle: "passage", text: passage });
+    if (includePassage && passage) segs.push({ kind: "box", boxStyle: "passage", text: passage });
+    // SENTENCE_TRANSFORM 은 원문 문장이 지문에 밑줄로 표시되므로 [원문] 블록을 본문에서
+    // 제거해 왔다. 그러나 지문을 미동봉(includePassage=false)하면 학생이 전환 대상 문장을
+    // 볼 수 없으므로, 지문을 감출 때는 [원문] 블록을 남겨 문장을 제공한다.
     const textBody =
-      subType === "SENTENCE_TRANSFORM"
+      subType === "SENTENCE_TRANSFORM" && includePassage
         ? stripOriginalBlock(bodyAfterStem)
         : bodyAfterStem;
     if (textBody) segs.push({ kind: "text", text: textBody });
   } else {
     if (bodyAfterStem) segs.push({ kind: "text", text: bodyAfterStem });
-    if (!alreadyHasEmbeddedPassage && passage) {
+    if (includePassage && !alreadyHasEmbeddedPassage && passage) {
       segs.push({ kind: "box", boxStyle: "passage", text: passage });
     }
   }

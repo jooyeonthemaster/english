@@ -74,7 +74,7 @@ export function FeaturePageShell({ content }: { content: FeaturePageContent }) {
                 href="/register"
                 className="inline-flex h-12 items-center gap-2 rounded-full bg-blue-600 px-6 text-[15px] font-black text-white shadow-[0_18px_44px_-22px_rgba(37,99,235,0.9)] transition hover:-translate-y-0.5 hover:bg-blue-700"
               >
-                무료로 시작하기
+                시작하기
                 <ArrowRight className="size-4" />
               </Link>
               <Link
@@ -186,7 +186,7 @@ export function FeaturePageShell({ content }: { content: FeaturePageContent }) {
                 href="/register"
                 className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-7 text-[15px] font-black text-blue-700 shadow-lg transition hover:-translate-y-0.5"
               >
-                무료로 시작하기
+                시작하기
                 <ArrowRight className="size-4" />
               </Link>
               <Link

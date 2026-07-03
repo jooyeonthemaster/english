@@ -6,7 +6,7 @@
 //   npx tsx scripts/tune-passage-variant.ts related         # 한 모드만
 //   npx tsx scripts/tune-passage-variant.ts opposite lite   # 한 모드 × 한 모델
 //
-// .env 의 GEMINI_API_KEY 로 gemini-3.5-flash 와 gemini-3.1-flash-lite 를 실제로
+// .env 의 ATLASCLOUD_API_KEY 또는 OPENROUTER_API_KEY 로 Gemini 모델들을 실제로
 // 호출해, 같은 입력에 대한 두 모델 결과를 나란히 출력한다(품질·지연 비교용).
 // ============================================================================
 
@@ -33,8 +33,8 @@ import type {
   WholePassageTransformMode,
 } from "../src/lib/passage-transform/schema";
 
-const QUALITY_MODEL = "gemini-3.5-flash";
-const LITE_MODEL = "gemini-3.1-flash-lite";
+const QUALITY_MODEL = "google/gemini-3.5-flash";
+const LITE_MODEL = "google/gemini-3.1-flash-lite";
 
 const PASSAGE = {
   id: "memory",

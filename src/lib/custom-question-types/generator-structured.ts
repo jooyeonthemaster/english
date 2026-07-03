@@ -688,7 +688,6 @@ export async function generateStructuredFromSpec(args: {
         schema: structuredOutputSchema,
         maxOutputTokens: STRUCTURED_MAX_TOKENS,
         abortSignal: AbortSignal.timeout(STRUCTURED_TIMEOUT_MS),
-        providerOptions: { google: { thinkingConfig: { thinkingBudget: 4096 } } },
         messages: [{ role: "user", content: [{ type: "text", text: prompt }] }],
       });
       const out = result.object;

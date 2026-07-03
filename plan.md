@@ -26,7 +26,7 @@
 
 | Auth | NextAuth v5 (관리자) + JWT 쿠키 (학생) |
 
-| AI | Vercel AI SDK + Google Gemini 3.5 Flash (`@ai-sdk/google`, `gemini-3.5-flash`) |
+| AI | Vercel AI SDK + Atlas/OpenRouter-compatible models (`google/gemini-3.5-flash`, `anthropic/claude-sonnet-5`) |
 
 | 상태관리 | TanStack Query v5 (서버 상태) + React Context (세션) |
 
@@ -531,11 +531,11 @@ POST /api/ai/chat (스트리밍) →
 
 ### AI 모델
 
--**모델**: Google Gemini 3.5 Flash (`gemini-3.5-flash`)
+-**모델**: Atlas/OpenRouter-compatible Gemini/Claude models (`google/gemini-3.5-flash`, `anthropic/claude-sonnet-5`)
 
--**SDK**: Vercel AI SDK의 `@ai-sdk/google` 패키지
+-**SDK**: Vercel AI SDK의 OpenAI-compatible provider 패키지
 
--**환경변수**: `GOOGLE_GENERATIVE_AI_API_KEY` (Google AI Studio에서 발급)
+-**환경변수**: `ATLASCLOUD_API_KEY` or `OPENROUTER_API_KEY` (Google AI Studio에서 발급)
 
 ### 시스템 프롬프트 구조
 

@@ -1,5 +1,5 @@
 /**
- * Shared constants for the "7월 1일까지 무료 + 협업 피드백 이벤트" program.
+ * Shared constants for the feedback-collaboration program.
  *
  * Imported by BOTH the signup API route (server) and the dashboard
  * feedback-event modal / banner (client), so keep this a pure constants module
@@ -16,13 +16,9 @@ export const SIGNUP_CREDITS = 100;
 export const LOW_CREDIT_THRESHOLD = 10;
 
 /**
- * Free-trial end (KST). Mirrors FREE_TRIAL_END in the onboarding route — keep
- * both in sync if the campaign date changes.
+ * Legacy campaign end (KST). Mirrors FREE_TRIAL_END in the onboarding route.
  */
 export const FREE_TRIAL_END_ISO = "2026-07-01T23:59:59+09:00";
-
-/** Human label for the free-period end, used across UI copy. */
-export const FREE_UNTIL_LABEL = "7월 1일";
 
 /**
  * Feedback-collaboration program contact. During the free period the team

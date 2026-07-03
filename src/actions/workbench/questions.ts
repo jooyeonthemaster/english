@@ -94,6 +94,9 @@ function revalidateQuestionBankPaths() {
   revalidatePath("/director/workbench/questions");
   revalidatePath("/director/workbench/questions/trash");
   revalidatePath("/director/workbench");
+  // 국어 대칭 라우트 — 삭제/복원/영구삭제가 국어 문제 은행·휴지통에도 즉시 반영.
+  revalidatePath("/director/korean/questions");
+  revalidatePath("/director/korean/questions/trash");
 }
 
 function normalizeOptionsForSubtype(

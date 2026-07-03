@@ -1,3 +1,5 @@
+import { koTypeLabelMap } from "@/lib/korean/registry";
+
 export const TYPE_LABELS: Record<string, string> = {
   BLANK_INFERENCE: "빈칸 추론",
   GRAMMAR_ERROR: "어법 판단",
@@ -26,6 +28,10 @@ export const TYPE_LABELS: Record<string, string> = {
   SYNONYM: "동의어",
   ANTONYM: "반의어",
 };
+
+// KO(국어) 라벨 병합 — 레지스트리 파생 (기존 영어 엔트리 무변경). 미등록 시
+// _typeLabel 에 KO_ 코드가 그대로 노출된다.
+Object.assign(TYPE_LABELS, koTypeLabelMap());
 
 export const DIFF_DESCRIPTION: Record<string, string> = {
   BASIC: "기본 — 교과서 수준, 직접적 이해 위주, 쉬운 어휘와 단순 문법",

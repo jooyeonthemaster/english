@@ -11,6 +11,7 @@
 // responseSchema로 강제해 형태를 보장한다.
 // ============================================================================
 
+import { postAtlasChatCompletionAsGeminiLike } from "@/lib/atlas-chat-rest";
 import { getExtractionAiModelName } from "@/lib/extraction/model-config";
 
 export interface CropRestoreChange {
@@ -103,20 +104,6 @@ const RESPONSE_SCHEMA = {
 
 const CROP_RESTORE_TIMEOUT_MS = 90_000;
 
-function getGoogleApiKey(): string {
-  const key =
-    process.env.GEMINI_API_KEY?.trim() ||
-    process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ||
-    process.env.GOOGLE_API_KEY?.trim() ||
-    "";
-  if (!key) {
-    throw new Error(
-      "Missing env var: GOOGLE_GENERATIVE_AI_API_KEY, GEMINI_API_KEY, or GOOGLE_API_KEY",
-    );
-  }
-  return key;
-}
-
 /**
  * 크롭 이미지 1장 → {원문 OCR, 복원본, 변경점}. 단일 Gemini 멀티모달 호출.
  * 빈 출력(RECITATION 등)·형태 불일치는 throw → 호출자가 페이지 실패로 처리.
@@ -128,48 +115,16 @@ export async function restoreCropImage(params: {
   timeoutInMs?: number;
 }): Promise<CropRestoreResult> {
   const model = getExtractionAiModelName("passage-restoration");
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(
-    getGoogleApiKey(),
-  )}`;
-
-  const controller = new AbortController();
-  const timer = setTimeout(
-    () => controller.abort(),
-    params.timeoutInMs ?? CROP_RESTORE_TIMEOUT_MS,
-  );
-  let body: GeminiResponse;
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      signal: controller.signal,
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: [
-          {
-            role: "user",
-            parts: [
-              { inlineData: { mimeType: params.mimeType, data: params.base64 } },
-              { text: "Restore this passage. Return JSON only." },
-            ],
-          },
-        ],
-        generationConfig: {
-          temperature: 0.2,
-          maxOutputTokens: 8192,
-          responseMimeType: "application/json",
-          responseSchema: RESPONSE_SCHEMA,
-        },
-      }),
-    });
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      throw new Error(`Gemini crop-restore HTTP ${res.status}: ${text.slice(0, 300)}`);
-    }
-    body = (await res.json()) as GeminiResponse;
-  } finally {
-    clearTimeout(timer);
-  }
+  const body = await postAtlasChatCompletionAsGeminiLike({
+    model,
+    systemPrompt: SYSTEM_PROMPT,
+    userPrompt: "Restore this passage. Return JSON only.",
+    image: { mimeType: params.mimeType, base64: params.base64 },
+    temperature: 0.2,
+    maxOutputTokens: 8192,
+    responseMimeType: "application/json",
+    timeoutInMs: params.timeoutInMs ?? CROP_RESTORE_TIMEOUT_MS,
+  }) as GeminiResponse;
 
   const cand = body.candidates?.[0];
   const text =

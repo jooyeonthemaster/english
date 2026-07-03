@@ -1,5 +1,7 @@
 import "server-only";
 import sharp from "sharp";
+import { ATLAS_WEBTOON_DETECT_MODEL_ID } from "@/lib/atlas-ai";
+import { postAtlasChatCompletionAsGeminiLike } from "@/lib/atlas-chat-rest";
 import {
   WEBTOON_TEXT_DOC_VERSION,
   WEBTOON_TEXT_FONT_FAMILY,
@@ -19,28 +21,6 @@ import {
 // to keep the call fast/cheap; the box colour sampling uses the full-res buffer.
 
 const DETECT_MAX_W = 1280;
-
-function getGeminiKey(): string {
-  const key =
-    process.env.GEMINI_API_KEY?.trim() ||
-    process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ||
-    process.env.GOOGLE_API_KEY?.trim() ||
-    "";
-  if (!key) {
-    throw new Error(
-      "Missing Gemini key (GEMINI_API_KEY / GOOGLE_GENERATIVE_AI_API_KEY / GOOGLE_API_KEY)",
-    );
-  }
-  return key;
-}
-
-function getDetectModel(): string {
-  return (
-    process.env.GEMINI_WEBTOON_DETECT_MODEL?.trim() ||
-    process.env.GEMINI_MODEL?.trim() ||
-    "gemini-3.5-flash"
-  );
-}
 
 const SYSTEM_PROMPT = `You are a precise vision system that locates EVERY block of rendered text baked into a comic/webtoon image and returns structured JSON. Be exhaustive — never miss a text block. Group a multi-line paragraph that belongs to ONE speech bubble or ONE caption/translation box into a SINGLE region (do not split per line). Tightly bound the text's background container (the whole bubble/box), not just the glyphs.`;
 
@@ -289,12 +269,7 @@ export async function detectWebtoonText(
     .jpeg({ quality: 90 })
     .toBuffer();
 
-  const model = getDetectModel();
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(
-    getGeminiKey(),
-  )}`;
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 90_000);
+  const model = ATLAS_WEBTOON_DETECT_MODEL_ID;
   let body: {
     candidates?: Array<{
       content?: { parts?: Array<{ text?: string }> };
@@ -302,38 +277,16 @@ export async function detectWebtoonText(
     }>;
     error?: { message?: string };
   };
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      signal: controller.signal,
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: [
-          {
-            role: "user",
-            parts: [
-              { inlineData: { mimeType: "image/jpeg", data: detectBuf.toString("base64") } },
-              { text: USER_PROMPT },
-            ],
-          },
-        ],
-        generationConfig: {
-          temperature: 0,
-          responseMimeType: "application/json",
-          responseSchema: REGION_RESPONSE_SCHEMA,
-          maxOutputTokens: 16384,
-          thinkingConfig: { thinkingBudget: 0 },
-        },
-      }),
-    });
-    body = await res.json();
-    if (!res.ok) {
-      throw new Error(body.error?.message ?? `Gemini HTTP ${res.status}`);
-    }
-  } finally {
-    clearTimeout(timer);
-  }
+  body = await postAtlasChatCompletionAsGeminiLike({
+    model,
+    systemPrompt: SYSTEM_PROMPT,
+    userPrompt: USER_PROMPT,
+    image: { mimeType: "image/jpeg", base64: detectBuf.toString("base64") },
+    temperature: 0,
+    responseMimeType: "application/json",
+    maxOutputTokens: 16384,
+    timeoutInMs: 90_000,
+  });
 
   const finishReason = body.candidates?.[0]?.finishReason;
   if (finishReason && finishReason !== "STOP") {

@@ -55,34 +55,67 @@ export async function handleListJobs(req: NextRequest) {
   );
   const includeThumbnails =
     req.nextUrl.searchParams.get("thumbnails") !== "0";
+  // 과목 스코프 — 잡 생성 시 metadata.subject 에 기록된 과목("KOREAN") 기준.
+  // 기본(파라미터 없음)=영어 표면: 국어 잡 제외 / subject=KOREAN=국어 잡만.
+  // 응답이 metadata 를 제거하므로(아래 publicJob) 클라이언트 필터는 원천
+  // 불가 — 반드시 서버에서 거른다. 역사적 영어 잡은 metadata 가 NULL 이거나
+  // subject 키 자체가 없으므로, NULL 을 탈락시키는 `<>` 비교 대신
+  // IS DISTINCT FROM 으로 걸러 영어 잡이 절대 빠지지 않게 한다.
+  const subjectScope =
+    req.nextUrl.searchParams.get("subject") === "KOREAN" ? "KOREAN" : null;
 
   // Stale cleanup runs globally in the 5-min extraction-reaper — no need to run
   // it on this polled list GET. (See memory: project_vercel_egress_aijobs_polling.)
-  const jobs = await prisma.extractionJob.findMany({
-    where: { academyId: staff.academyId, deletedAt: null },
-    orderBy: { createdAt: "desc" },
-    take: limit,
-    select: {
-      id: true,
-      sourceType: true,
-      mode: true,
-      sourceMaterialId: true,
-      originalFileName: true,
-      displayName: true,
-      metadata: true,
-      status: true,
-      totalPages: true,
-      successPages: true,
-      failedPages: true,
-      pendingPages: true,
-      creditsConsumed: true,
-      creditsRefunded: true,
-      errorSummary: true,
-      createdAt: true,
-      startedAt: true,
-      completedAt: true,
-    },
-  });
+  // 과목 스코프는 Prisma JSON path 필터가 키 부재/NULL 행을 탈락시키는 함정이
+  // 있어 raw 술어로 id 를 선별한 뒤, 본 조회는 기존 select 형태 그대로 받는다.
+  const scopedIdRows = await prisma.$queryRaw<Array<{ id: string }>>(
+    Prisma.sql`
+      SELECT j.id
+      FROM "extraction_jobs" j
+      WHERE j."academyId" = ${staff.academyId}
+        AND j."deletedAt" IS NULL
+        AND ${
+          subjectScope === "KOREAN"
+            ? Prisma.sql`j.metadata->>'subject' = 'KOREAN'`
+            : Prisma.sql`j.metadata->>'subject' IS DISTINCT FROM 'KOREAN'`
+        }
+      ORDER BY j."createdAt" DESC
+      LIMIT ${limit}
+    `,
+  );
+  const scopedIds = scopedIdRows.map((row) => row.id);
+  const jobs =
+    scopedIds.length === 0
+      ? []
+      : await prisma.extractionJob.findMany({
+          where: {
+            id: { in: scopedIds },
+            academyId: staff.academyId,
+            deletedAt: null,
+          },
+          orderBy: { createdAt: "desc" },
+          take: limit,
+          select: {
+            id: true,
+            sourceType: true,
+            mode: true,
+            sourceMaterialId: true,
+            originalFileName: true,
+            displayName: true,
+            metadata: true,
+            status: true,
+            totalPages: true,
+            successPages: true,
+            failedPages: true,
+            pendingPages: true,
+            creditsConsumed: true,
+            creditsRefunded: true,
+            errorSummary: true,
+            createdAt: true,
+            startedAt: true,
+            completedAt: true,
+          },
+        });
 
   const jobIds = jobs.map((job) => job.id);
   const resultCounts =
@@ -208,6 +241,12 @@ export async function handleListJobs(req: NextRequest) {
           : countsByJob.get(job.id);
       return {
         ...publicJob,
+        // metadata.subject 파생 필드 — metadata 자체는 응답에서 제거하므로,
+        // 소비처(작업 드로어 등)가 과목을 알 수 있게 subject 만 노출한다.
+        subject:
+          jsonRecord(job.metadata)?.subject === "KOREAN"
+            ? ("KOREAN" as const)
+            : null,
         m1DraftPipelineError: hasM1DraftPipelineError(job.errorSummary),
         firstPageImageUrl: firstPageUrlByJob.get(job.id) ?? null,
         ...(counts ?? {

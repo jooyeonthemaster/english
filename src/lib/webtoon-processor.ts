@@ -97,7 +97,7 @@ export async function processWebtoonGeneration(
   const webtoon = await prisma.webtoon.findUnique({
     where: { id: webtoonId },
     include: {
-      passage: { select: { id: true, title: true, content: true } },
+      passage: { select: { id: true, title: true, content: true, subject: true } },
     },
   });
 
@@ -117,6 +117,9 @@ export async function processWebtoonGeneration(
     style: webtoon.style as WebtoonStyleId,
     language: (webtoon.language ?? "KO") as WebtoonLanguageId,
     customPrompt: webtoon.customPrompt ?? "",
+    // 과목 스레딩 — null=영어(기존 경로 byte 동일), "KOREAN"=국어 프롬프트.
+    // 인프로세스 워커·트리거 워커 모두 이 지점을 지나므로 여기 한 곳이면 충분하다.
+    subject: webtoon.passage.subject,
   });
   const imageOptions = getWebtoonImageOptions();
   const imageOutputFormat = "jpeg";

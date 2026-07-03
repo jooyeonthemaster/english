@@ -8,7 +8,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { decodeJwt } from "jose";
-import { ArrowRight, CheckCircle2, Gift, Loader2, MapPin, ShieldAlert, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle2, Loader2, MapPin, ShieldAlert } from "lucide-react";
 import { BrandIcon } from "@/components/brand/brand-mark";
 import { REFERRAL_COOKIE } from "@/lib/growth/constants";
 
@@ -23,7 +23,7 @@ const onboardingSchema = z.object({
   address: z.string().min(1, "학원 주소를 입력해주세요.").max(160, "주소는 160자 이하여야 합니다."),
   estimatedStudents: z.string().optional(),
   referralCode: z.string().optional(),
-  agree: z.boolean().refine(Boolean, "무료 이용 및 개인정보 수집 안내에 동의해주세요."),
+  agree: z.boolean().refine(Boolean, "서비스 이용 및 개인정보 수집 안내에 동의해주세요."),
   // 선택 — 마케팅 정보 수신 동의. 동의 시 SMS·카카오톡·이메일로 신규 기능/혜택 안내를 받는다.
   // (defaultValues로 false 초기화 — react-hook-form resolver 타입 일치를 위해 .default()는 쓰지 않는다)
   agreeMarketing: z.boolean(),
@@ -45,7 +45,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   email_already_used: "이미 등록된 이메일입니다. 로그인 화면에서 시도해주세요.",
   kakao_already_used: "이 카카오 계정은 이미 다른 사용자에게 연결되어 있습니다.",
   supabase_already_used: "이 Google 계정은 이미 다른 사용자에게 연결되어 있습니다.",
-  no_plan_available: "무료 체험 요금제를 찾을 수 없습니다. 관리자에게 문의해주세요.",
+  no_plan_available: "가입 가능한 요금제를 찾을 수 없습니다. 관리자에게 문의해주세요.",
   bridge_failed: "세션 생성에 실패했습니다. 다시 시도해주세요.",
 };
 
@@ -218,7 +218,7 @@ function OnboardingInner() {
               </p>
             </div>
             <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-black text-white">
-              7월 1일까지 무료
+              워크스페이스 생성
             </span>
           </div>
 
@@ -331,7 +331,7 @@ function OnboardingInner() {
                   />
                   <span className="break-keep text-[13px] font-semibold leading-5 text-slate-600">
                     <span className="mr-1 font-black text-blue-600">[필수]</span>
-                    <strong className="font-black text-slate-900">7월 1일까지 무료 이용</strong> 및 학원 계정 생성에 필요한
+                    <strong className="font-black text-slate-900">서비스 이용</strong> 및 학원 계정 생성에 필요한
                     개인정보 수집·이용에 동의합니다.
                   </span>
                 </label>
@@ -345,7 +345,7 @@ function OnboardingInner() {
                   />
                   <span className="break-keep text-[13px] font-semibold leading-5 text-slate-600">
                     <span className="mr-1 font-black text-blue-500">[선택]</span>
-                    <strong className="font-black text-slate-900">새 기능 출시·학원 맞춤 기능 제안·무료 혜택</strong> 소식을
+                    <strong className="font-black text-slate-900">새 기능 출시·학원 맞춤 기능 제안·이벤트 혜택</strong> 소식을
                     SMS·카카오톡·이메일로 가장 먼저 받아볼게요. (광고)
                     <span className="mt-1 block break-keep text-[11px] font-semibold text-slate-400">
                       미동의해도 서비스 이용에는 제한이 없으며, 언제든 수신을 해지할 수 있습니다.
@@ -381,20 +381,20 @@ function OnboardingInner() {
         </section>
 
         <section className="lg:pl-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-1.5">
-            <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-            <span className="text-[12px] font-black uppercase tracking-[0.22em] text-red-600">
-              무료 기간 고정
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5">
+            <span className="h-2 w-2 rounded-full bg-blue-500" />
+            <span className="text-[12px] font-black uppercase tracking-[0.22em] text-blue-600">
+              AI Workbench
             </span>
           </div>
           <h2 className="mt-5 max-w-[620px] text-[42px] font-black leading-[1.04] tracking-[-0.04em] text-slate-950 sm:text-[58px] break-keep">
-            7월 1일까지
+            정보 입력 후
             <br />
-            비용 0원.
+            바로 시작.
           </h2>
           <p className="mt-5 max-w-[620px] text-[16px] font-semibold leading-7 text-slate-600 break-keep">
             지문 하나만 넣으면 AI가 수능 동형 모의고사부터 내신형 문항·어휘·문법·해설까지 만들어 드립니다. 완성된 문제는
-            클릭 한 번에 실물 시험지로. 결제 없이 7월 1일까지 모든 기능을 무료로 써보세요.
+            클릭 한 번에 실물 시험지로 정리됩니다.
           </p>
 
           <div className="mt-7 grid gap-3">
@@ -414,24 +414,11 @@ function OnboardingInner() {
 
           <div className="mt-7 rounded-3xl bg-slate-950 p-5 text-white shadow-[0_30px_80px_-42px_rgba(15,23,42,0.8)]">
             <div className="flex items-center gap-2 text-[13px] font-black text-yellow-300">
-              <Sparkles className="size-4" />
-              지금은 요금제 고르지 마세요
+              실제 자료로 바로 확인하세요
             </div>
             <p className="mt-2 break-keep text-[13px] font-semibold leading-6 text-white/70">
-              실제 지문을 넣고, 동형 모의고사를 만들고, 실물 시험지까지 뽑아본 뒤에 결제 여부를 판단하면 됩니다.
+              실제 지문을 넣고, 동형 모의고사를 만들고, 실물 시험지까지 뽑아보며 워크플로를 확인할 수 있습니다.
             </p>
-          </div>
-
-          {/* 7/1 이후 리워드 티저 — 구체 약속이 아니라 "기대" 느낌으로 */}
-          <div className="mt-3 flex items-start gap-3 rounded-3xl border border-amber-200 bg-amber-50 p-5">
-            <Gift className="mt-0.5 size-5 shrink-0 text-amber-500" />
-            <div>
-              <div className="text-[13px] font-black text-amber-700">7월 1일, 끝이 아니라 새 시작 🎁</div>
-              <p className="mt-1.5 break-keep text-[13px] font-semibold leading-6 text-amber-900/70">
-                먼저 함께해주신 가입자·무료 사용자분들께는 7월 1일부터 다양한 무료 리워드가 준비될 예정이에요.
-                지금 들어온 분들만 누리는 혜택, 기대해 주세요.
-              </p>
-            </div>
           </div>
         </section>
       </div>

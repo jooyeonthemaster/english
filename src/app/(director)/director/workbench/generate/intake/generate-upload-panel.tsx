@@ -231,6 +231,12 @@ interface GenerateUploadPanelProps {
   inFlightCount: number;
   /** Suppress the built-in extraction tutorial while the page-level tour is open. */
   suppressTutorial?: boolean;
+  /**
+   * 추출 자료의 과목 — "KOREAN" 이면 잡에 subject 를 실어 SourceMaterial·승급
+   * Passage 까지 국어로 전파하고, AI 원문 복원(영어 전용) 옵션은 숨긴다.
+   * 미전달 = 영어 기본(기존 동작 그대로, 무회귀).
+   */
+  subject?: "KOREAN";
 }
 
 /**
@@ -245,8 +251,12 @@ export function GenerateUploadPanel({
   onResult,
   inFlightCount,
   suppressTutorial = false,
+  subject,
 }: GenerateUploadPanelProps) {
   const startUpload = useExtractionUpload();
+  // 국어 자료 — AI 원문 복원은 영어 전용 파이프라인이라 옵션을 숨기고
+  // '그대로 추출'만 노출한다(outputMode 는 초기값 verbatim 에서 못 벗어난다).
+  const koSubject = subject === "KOREAN";
 
   const [slots, setSlots] = useState<ClientPageSlot[]>([]);
   const [sourceName, setSourceName] = useState<string | null>(null);
@@ -505,6 +515,9 @@ export function GenerateUploadPanel({
           originalFileName: sourceName,
           mode: "PASSAGE_ONLY",
           outputMode,
+          // 과목 전파 — 국어 라우트 발 잡은 SourceMaterial/승급 Passage 가
+          // subject='KOREAN' 으로 저장돼 국어 지문함에만 나타난다.
+          subject,
           // 생성 페이지 발 잡: finalize가 서버에서 drafts를 곧바로 Passage로 승격.
           // 추출(~수십 초) 중 페이지를 떠나도 결과가 고아로 남지 않는다.
           autoPromote: true,
@@ -533,6 +546,7 @@ export function GenerateUploadPanel({
       sourceName,
       sourceType,
       startUpload,
+      subject,
     ],
   );
 
@@ -580,7 +594,7 @@ export function GenerateUploadPanel({
         ? "PDF 페이지 분리 중"
         : "작업 중";
 
-  const outputModeOptions = [
+  const allOutputModeOptions = [
     {
       v: "verbatim" as const,
       label: "그대로 추출",
@@ -610,6 +624,10 @@ export function GenerateUploadPanel({
       ),
     },
   ];
+  // 국어 자료에서는 AI 원문 복원(영어 전용) 옵션을 비노출.
+  const outputModeOptions = koSubject
+    ? allOutputModeOptions.filter((opt) => opt.v === "verbatim")
+    : allOutputModeOptions;
 
   // 검수 패널 하단에 고정되는 시작 버튼(보드 footer로 주입).
   const fileStartArea = (

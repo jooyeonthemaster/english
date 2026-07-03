@@ -6,6 +6,7 @@
 // 생성 경로 무회귀. run-edit.ts 가 품질게이트 결과와 합쳐 errors/warnings 로 처리한다.
 // ============================================================================
 
+import { KO_EDIT_BLOCKING_CODES } from "@/lib/korean/quality/codes";
 import type { QuestionQualityIssue } from "@/lib/question-quality";
 import type { DiffEntry } from "./detailed-diff";
 import type { EditFieldChange } from "./types";
@@ -53,6 +54,13 @@ export const BLOCKING_EDIT_CODES = new Set<string>([
   "type-foreign-field",
   "title-direction-foreign",
 ]);
+
+// KO(국어) 편집 차단 코드 병합 — verbatim 무결성(근거/인용/마커) 파괴는 수정
+// 경로에서도 강등 출시 금지. 불변식(SHIP_FIRST ∩ BLOCKING_EDIT = ∅)은 KO 코드가
+// SHIP_FIRST_WARNING_CODES 에 전혀 등록되지 않으므로 자동 충족된다(codes.ts 명세).
+for (const code of KO_EDIT_BLOCKING_CODES) {
+  BLOCKING_EDIT_CODES.add(code);
+}
 
 /** lastErrors 중 출시 차단 대상이 하나라도 있나(폴백 강등 금지 판정). */
 export function hasBlockingError(errors: QuestionQualityIssue[]): boolean {

@@ -548,7 +548,11 @@ export function PassageAnalysisModal({
                   />
                   <button
                     type="button"
-                    onClick={() => window.print()}
+                    onClick={() =>
+                      // 인쇄 전 웹폰트 로드 완료를 기다린다 — 폰트 미로드 상태로 window.print()가
+                      // 실행되면 브라우저가 프린트 준비 중 폰트를 받아 스풀 시작이 지연된다.
+                      void document.fonts.ready.then(() => window.print())
+                    }
                     className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50"
                   >
                     <Printer className="h-3.5 w-3.5" />

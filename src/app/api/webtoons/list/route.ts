@@ -31,8 +31,24 @@ export async function GET(req: NextRequest) {
   const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "50", 10)));
   const since = searchParams.get("since");
   const summary = searchParams.get("view") === "summary";
+  // 과목 스코프 — 지문(passage.subject) 기준 국어/영어 웹툰 분리.
+  //  - scope=KOREAN: 국어 지문 웹툰만(국어 표면 전용).
+  //  - 미지정(기본=영어): 국어 지문 웹툰 제외. 단 passageId 로 특정 지문에 이미
+  //    명시 스코프된 호출(지문 상세 보관함)은 그 지문이 곧 스코프라 과목 필터를
+  //    겹치지 않는다(국어 지문 상세의 기존 passageId 호출 무회귀).
+  const scope = searchParams.get("scope") === "KOREAN" ? "KOREAN" : null;
 
   const where: Record<string, unknown> = { academyId: staff.academyId };
+  if (scope === "KOREAN") {
+    where.passage = { is: { subject: "KOREAN" } };
+  } else if (!passageId) {
+    // passage.subject 는 nullable(기존 영어 지문 전부 null) — `not` 만 쓰면 SQL
+    // `<>` 가 NULL 행을 탈락시켜 영어 웹툰 전체가 사라진다. null 을 OR 로 명시해
+    // 영어(=subject 미기록) 지문 웹툰이 절대 빠지지 않게 한다(_passage-where 미러).
+    where.passage = {
+      is: { OR: [{ subject: null }, { subject: { not: "KOREAN" } }] },
+    };
+  }
   if (statusFilter === "active") {
     where.status = { in: ["PENDING", "GENERATING"] };
   } else if (statusFilter && ["PENDING", "GENERATING", "COMPLETED", "FAILED"].includes(statusFilter)) {

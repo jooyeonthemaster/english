@@ -24,6 +24,10 @@ import {
   questionStemAndBody,
   isStructuredAtomicSubtype,
 } from "@/components/exams/paper-builder/question-body-layout";
+import {
+  balanceKoUnderlineMarkersPerLine,
+  joinKoStructLines,
+} from "@/components/exams/paper-builder/korean/ko-paper-adapter";
 import { questionHasEmbeddedPassage } from "@/components/exams/paper-builder/passage-policy";
 import { normalizeInlineText } from "@/components/exams/paper-builder/text-normalization";
 import {
@@ -235,12 +239,25 @@ function renderStructRows(
 
   const result: BlockNode[] = [];
   const bodySize = opts.compact ? SIZE.bodyCompact : SIZE.body;
+  // KO(국어) 박스: 헤더("〈 보 기 〉"/"[조건]")·항목(ㄱ.·•)·출처·각주 행의 하드 개행을
+  // 보존하는 KO 조인 사용 + '주어진 문장' 하드코딩 라벨 억제(웹 StructuredBody 와 정합).
+  const isKoStruct = (subType || "").startsWith("KO_");
 
   for (const group of groups) {
-    const text = formatSentenceInsertPassageMarkers(
-      joinRenderedLines(group.rows.map((row) => row.line)),
-      subType === "SENTENCE_INSERT" ? "SENTENCE_INSERT" : null,
-    );
+    // KO: 원문 행 경계(isSourceLineStart) 전부 하드 개행 보존(시행·대사·문단 — 웹
+    // StructuredBody 와 동일 기준). bodyParas 가 행 단위로 문단을 만들므로, 행 경계를
+    // 넘는 __밑줄__ 마킹은 행별 균형 마크업으로 정규화해 리터럴 언더스코어를 방지한다.
+    const text = isKoStruct
+      ? balanceKoUnderlineMarkersPerLine(
+          joinKoStructLines(
+            group.rows.map((row) => row.line),
+            group.rows.map((row) => row.isSourceLineStart),
+          ),
+        )
+      : formatSentenceInsertPassageMarkers(
+          joinRenderedLines(group.rows.map((row) => row.line)),
+          subType === "SENTENCE_INSERT" ? "SENTENCE_INSERT" : null,
+        );
     const resumed = !group.rows[0].isSegStart;
     const continues = !group.rows[group.rows.length - 1].isSegEnd;
 
@@ -279,7 +296,7 @@ function renderStructRows(
           ],
         });
       }
-      if (group.style === "given" && !resumed) {
+      if (group.style === "given" && !resumed && !isKoStruct) {
         inner.push({
           kind: "p",
           style: { align: "LEFT", spaceAfter: 30, lineSpacingPct: 120 },
@@ -296,7 +313,12 @@ function renderStructRows(
         group.style === "summary" && subType === "SUMMARY_COMPLETE" && !resumed
           ? `[\uC694\uC57D\uBB38] ${text}`
           : text;
-      inner.push(...bodyParas(bodyText, opts.compact, { bold: group.style !== "passage" }));
+      // KO \uBC15\uC2A4 \uBCF8\uBB38\uC740 \uC77C\uBC18\uCCB4(\uC218\uB2A5 \uC870\uD310) \u2014 \uC601\uC5B4 given/summary \uBCFC\uB4DC \uAD00\uD589\uC740 \uBB34\uBCC0\uACBD.
+      inner.push(
+        ...bodyParas(bodyText, opts.compact, {
+          bold: group.style !== "passage" && !isKoStruct,
+        }),
+      );
       if (continues) {
         inner.push(italicMarker("(\uB2E4\uC74C \uCE78\uC73C\uB85C \uC774\uC5B4\uC9D0 \u2192)"));
       }

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Regression audit for the actual STANDARD/Gemini workbench prompt path.
  *
  * This uses runQuestionGeneration(), so it exercises the same compact prompt
@@ -198,8 +198,8 @@ async function runWithConcurrency<T, R>(
 }
 
 async function main() {
-  if (!process.env.GEMINI_API_KEY && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    throw new Error("GEMINI_API_KEY or GOOGLE_GENERATIVE_AI_API_KEY is required.");
+  if (!process.env.ATLASCLOUD_API_KEY && !process.env.OPENROUTER_API_KEY) {
+    throw new Error("ATLASCLOUD_API_KEY or OPENROUTER_API_KEY is required.");
   }
 
   fs.mkdirSync(OUTDIR, { recursive: true });

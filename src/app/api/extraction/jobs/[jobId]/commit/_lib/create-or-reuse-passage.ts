@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { Prisma as PrismaNS } from "@prisma/client";
+import { readRequestedSubject } from "@/lib/extraction/requested-subject";
 import type { JobLike, PassageInput, TxClient } from "./types";
 import { CommitPayloadError, ERR_CROSS_TENANT } from "./types";
 
@@ -42,7 +43,12 @@ export async function createOrReusePassage(
      * ranking, report) keep the linkage even for bulk-imported passages.
      */
     schoolId?: string;
-    job: JobLike;
+    /**
+     * `metadata`: ExtractionJob.metadata — 잡 생성 시 명시된 요청 과목(subject)
+     * 신호를 읽기 위한 확장. 커밋 라우트는 loadJobWithAuth 로 전체 행을 넘기므로
+     * 런타임에는 항상 실려 온다(타입만 옵셔널).
+     */
+    job: JobLike & { metadata?: unknown };
     input: PassageInput;
     /** When true, overwrite teacher-edited fields on re-commit (opt-in). */
     overwriteExisting: boolean;
@@ -57,6 +63,17 @@ export async function createOrReusePassage(
     overwriteExisting,
   } = args;
   const contentHash = sha1(input.content);
+
+  // 과목 전파 — **잡 생성 시 metadata.subject 로 명시된 요청 과목**이 "KOREAN"
+  // 일 때만 승급 Passage 에 기록한다(국어 버티컬). SourceMaterial.subject 는
+  // OCR 헤더/파일명 추정('국어 영역' 표지·'외국어영역' 파일명 오판정 가능)이
+  // 섞이므로 전파 기준으로 쓰지 않는다(ISO-8 — 영어 추출 지문이 승급 직후
+  // 영어 표면에서 실종되는 회귀 차단). 그 외는 미기록 → Passage.subject null
+  // = 영어 간주 관례 유지(기존 영어 승급 경로 byte 동일).
+  const subject =
+    readRequestedSubject(job.metadata) === "KOREAN"
+      ? ("KOREAN" as const)
+      : undefined;
 
   const data = {
     academyId,
@@ -75,6 +92,7 @@ export async function createOrReusePassage(
     sourceMaterialId,
     sourceExtractionItemId: input.sourceItemId,
     contentHash,
+    ...(subject ? { subject } : {}),
     // (adaptive-intake P1) — 승급 시 출처 페이지·산출유형을 보존. 기존엔 payload가
     // sourcePageIndex를 만들어도 컬럼이 없어 버려졌다. build-payload.ts가 이미 채움.
     sourcePageIndex: input.sourcePageIndex ?? [],

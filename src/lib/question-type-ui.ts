@@ -2,7 +2,18 @@
 // Question type UI metadata
 // ============================================================================
 
-export type QuestionTypeCategory = "수능/모의고사 객관식" | "내신 서술형" | "어휘";
+import { KO_TYPE_REGISTRY } from "@/lib/korean/registry";
+
+export type QuestionTypeCategory =
+  | "수능/모의고사 객관식"
+  | "내신 서술형"
+  | "어휘"
+  // 국어 버티컬 영역 축 (KoTypeMeta.uiGroup 과 1:1 — KO-DESIGN-SPEC §2)
+  | "국어 독서"
+  | "국어 문학"
+  | "국어 문법"
+  | "국어 화법·작문·매체"
+  | "국어 서답형";
 
 export interface QuestionTypeUiMeta {
   id: string;
@@ -278,6 +289,22 @@ export const QUESTION_TYPE_UI: Record<string, QuestionTypeUiMeta> = {
   },
 };
 
+// ── 국어 유형 병합 — KO_TYPE_REGISTRY meta 파생 (영어 엔트리 무변경, 키 추가만) ──
+// 카드/세트 편집기 등 QUESTION_TYPE_UI[typeId] 라벨 조회가 KO 유형도 해소한다.
+for (const mod of Object.values(KO_TYPE_REGISTRY)) {
+  const meta = mod.meta;
+  QUESTION_TYPE_UI[meta.typeId] = {
+    id: meta.typeId,
+    label: meta.label,
+    category: meta.uiGroup,
+    description: meta.description,
+    studentTask: meta.studentTask,
+    bestFor: meta.bestFor,
+    outputUi: meta.outputUi,
+    requiredFields: [],
+  };
+}
+
 export const QUESTION_TYPE_GROUPS = [
   {
     group: "수능/모의고사 객관식" as const,
@@ -320,3 +347,26 @@ export const QUESTION_TYPE_GROUPS = [
     ],
   },
 ];
+
+// ── 국어 유형 그룹 (별도 상수 — 의도적으로 QUESTION_TYPE_GROUPS 에 합치지 않음) ──
+// 기존 QUESTION_TYPE_GROUPS 는 generate-questions-dialog 등 영어 표면들이 그룹
+// 전체를 무조건 렌더한다. KO 그룹을 거기 병합하면 영어 지문 UI 에 국어 유형이
+// 노출되는 회귀가 생기므로, KO 그룹은 이 상수로 분리하고 소비처
+// (generation-config-panel 의 subject 게이트)가 국어 지문일 때만 사용한다.
+const KO_GROUP_ORDER = [
+  "국어 독서",
+  "국어 문학",
+  "국어 문법",
+  "국어 화법·작문·매체",
+  "국어 서답형",
+] as const;
+
+export const QUESTION_TYPE_GROUPS_KO: {
+  group: QuestionTypeCategory;
+  items: QuestionTypeUiMeta[];
+}[] = KO_GROUP_ORDER.map((group) => ({
+  group,
+  items: Object.values(KO_TYPE_REGISTRY)
+    .filter((mod) => mod.meta.uiGroup === group)
+    .map((mod) => QUESTION_TYPE_UI[mod.meta.typeId]),
+})).filter((g) => g.items.length > 0);

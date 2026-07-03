@@ -176,6 +176,11 @@ export function useExtractionUpload() {
       outputMode?: "verbatim" | "restored";
       /** 생성 페이지 발 잡: finalize가 drafts를 서버에서 곧바로 Passage로 승격. */
       autoPromote?: boolean;
+      /**
+       * 추출 자료의 과목 — "KOREAN" 이면 SourceMaterial·승급 Passage 까지
+       * 국어로 전파된다. 미전달 = 기존 영어 기본(무회귀).
+       */
+      subject?: "KOREAN";
       /** 원본 첫 장 미리보기. 크롭/이어붙임 추출과 별개로 목록 썸네일에 사용한다. */
       previewSlot?: ClientPageSlot | null;
     }): Promise<string | null> => {
@@ -186,6 +191,7 @@ export function useExtractionUpload() {
         mode,
         outputMode,
         autoPromote,
+        subject,
         previewSlot: rawPreviewSlot,
       } = opts;
       if (rawSlots.length === 0) {
@@ -212,6 +218,7 @@ export function useExtractionUpload() {
             mode,
             outputMode,
             autoPromote,
+            subject,
             totalPages: slots.length,
             originalFileName: originalFileName ?? undefined,
             previewPage: previewSlot

@@ -81,11 +81,25 @@ type View = "generate" | "gallery";
 export function WebtoonPickerModal({
   open,
   passageId,
+  subject,
+  heading,
+  pickLabel,
   onClose,
   onPick,
 }: {
   open: boolean;
   passageId?: string;
+  /**
+   * 지문 과목 — "KOREAN" 이면 국어 표면: 보관함을 이 지문 것만으로 고정해
+   * (전체 보기 토글 숨김) 영어 지문 웹툰이 국어 화면에 절대 섞이지 않는다.
+   * 생성 프롬프트 자체는 서버가 Passage.subject 로 게이트하므로 여기서는
+   * 표면 격리만 담당한다. 미전달 = 기존(영어) 동작 그대로 — 무회귀.
+   */
+  subject?: "KOREAN";
+  /** 헤더 제목/설명 오버라이드 — 삽입이 아닌 문맥(국어 지문 상세 등)에서 사용. */
+  heading?: { title: string; description: string };
+  /** 카드 hover 액션 라벨. 기본 "문서에 삽입 →" (편집기 삽입 문맥). */
+  pickLabel?: string;
   onClose: () => void;
   onPick: (pick: WebtoonPick) => void;
 }) {
@@ -109,14 +123,22 @@ export function WebtoonPickerModal({
   trackingRef.current = tracking;
   const pollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // 과목 스코프 — 국어 표면(subject=KOREAN)은 서버에 scope=KOREAN 을 넘겨 국어
+  // 지문 웹툰만 받는다. 미전달(영어)은 서버 기본 스코프(국어 웹툰 제외)가 걸리므로
+  // 그대로 둔다 — 어느 쪽도 반대 과목 웹툰이 갤러리에 섞이지 않는다.
+  const scopeParam = subject === "KOREAN" ? "&scope=KOREAN" : "";
+
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/webtoons/list?status=COMPLETED&limit=100", {
-        credentials: "include",
-        cache: "no-store",
-      });
+      const res = await fetch(
+        `/api/webtoons/list?status=COMPLETED&limit=100${scopeParam}`,
+        {
+          credentials: "include",
+          cache: "no-store",
+        },
+      );
       const data = (await res.json().catch(() => ({}))) as {
         ok?: boolean;
         items?: WebtoonListItem[];
@@ -132,7 +154,7 @@ export function WebtoonPickerModal({
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [scopeParam]);
 
   // 모달이 열릴 때: 완료 목록을 불러오고, 완료본이 있으면 보관함을, 없으면 생성 탭을 연다.
   useEffect(() => {
@@ -143,7 +165,7 @@ export function WebtoonPickerModal({
     void (async () => {
       try {
         const res = await fetch(
-          "/api/webtoons/list?status=COMPLETED&limit=100",
+          `/api/webtoons/list?status=COMPLETED&limit=100${scopeParam}`,
           { credentials: "include", cache: "no-store" },
         );
         const data = (await res.json().catch(() => ({}))) as {
@@ -174,8 +196,8 @@ export function WebtoonPickerModal({
     return () => {
       alive = false;
     };
-    // passageId 변화 시에도 다시 평가. load 는 useCallback 으로 안정적.
-  }, [open, passageId]);
+    // passageId/과목 스코프 변화 시에도 다시 평가. load 는 useCallback 으로 안정적.
+  }, [open, passageId, scopeParam]);
 
   // Esc 로 닫기
   useEffect(() => {
@@ -362,9 +384,13 @@ export function WebtoonPickerModal({
     [ratios, onPick],
   );
 
+  // 국어 표면은 항상 이 지문 스코프로 고정(영어 지문 웹툰 비노출) — 토글도 숨긴다.
+  const forceThisPassageOnly = subject === "KOREAN" && Boolean(passageId);
+
   const visible = useMemo(() => {
+    const scoped = forceThisPassageOnly || onlyThisPassage;
     const list =
-      onlyThisPassage && passageId
+      scoped && passageId
         ? items.filter((it) => it.passageId === passageId)
         : items;
     return [...list].sort((a, b) => {
@@ -372,12 +398,13 @@ export function WebtoonPickerModal({
       const bMine = b.passageId === passageId ? 0 : 1;
       return aMine - bMine;
     });
-  }, [items, onlyThisPassage, passageId]);
+  }, [items, onlyThisPassage, passageId, forceThisPassageOnly]);
 
   const activeTracking = tracking.filter(
     (t) => t.status === "PENDING" || t.status === "GENERATING",
   );
-  const galleryCount = items.length;
+  // 국어 고정 스코프에서는 배지 수도 이 지문 것만 센다(숨긴 항목을 세면 어긋남).
+  const galleryCount = forceThisPassageOnly ? visible.length : items.length;
   const planCredits = WEBTOON_IMAGE_PLANS[config.plan].credits;
 
   if (!open) return null;
@@ -391,7 +418,7 @@ export function WebtoonPickerModal({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="지문 웹툰 삽입"
+        aria-label={heading?.title ?? "지문 웹툰 삽입"}
         className="relative z-10 flex max-h-[88vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
       >
         {/* ── 헤더 ── */}
@@ -402,10 +429,11 @@ export function WebtoonPickerModal({
             </span>
             <div className="min-w-0">
               <h3 className="text-[14px] font-bold text-slate-800">
-                지문 웹툰 삽입
+                {heading?.title ?? "지문 웹툰 삽입"}
               </h3>
               <p className="mt-0.5 text-[11.5px] text-slate-500">
-                이 지문으로 웹툰을 생성하거나, 만든 웹툰을 골라 문서에 추가합니다.
+                {heading?.description ??
+                  "이 지문으로 웹툰을 생성하거나, 만든 웹툰을 골라 문서에 추가합니다."}
               </p>
             </div>
           </div>
@@ -454,7 +482,7 @@ export function WebtoonPickerModal({
           </div>
           {view === "gallery" ? (
             <div className="flex items-center gap-1.5">
-              {passageId ? (
+              {passageId && !forceThisPassageOnly ? (
                 <button
                   type="button"
                   onClick={() => setOnlyThisPassage((v) => !v)}
@@ -545,7 +573,7 @@ export function WebtoonPickerModal({
               <div className="flex h-48 flex-col items-center justify-center gap-1.5 text-center">
                 <ImageIcon className="h-6 w-6 text-slate-300" />
                 <p className="text-[13px] text-slate-400">
-                  {onlyThisPassage
+                  {forceThisPassageOnly || onlyThisPassage
                     ? "이 지문으로 생성한 완료된 웹툰이 없습니다."
                     : "완료된 웹툰이 없습니다."}
                 </p>
@@ -640,7 +668,7 @@ export function WebtoonPickerModal({
                         {languageLabel(it.language)}
                       </p>
                       <p className="mt-0.5 text-[10px] font-semibold text-blue-600 opacity-0 transition-opacity group-hover:opacity-100">
-                        문서에 삽입 →
+                        {pickLabel ?? "문서에 삽입 →"}
                       </p>
                     </div>
                   </button>

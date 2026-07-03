@@ -15,6 +15,8 @@ import {
   QuestionTypeLabelContext,
 } from "./question-renderer-primitives";
 import { CustomLayoutRenderer } from "./custom-layout-renderer";
+import { KoQuestionRenderer } from "./korean/ko-question-renderer";
+import { getKoTypeModule, isKoQuestionType } from "@/lib/korean/registry";
 import {
   BlankInferenceRenderer,
   GrammarErrorRenderer,
@@ -201,6 +203,15 @@ function enrichQuestionForDisplay(question: any, rawSourcePassageContent?: strin
     normalizedQuestion,
     sourcePassageContent,
   );
+  // KO(국어) 유형 게이트: 지문 동봉 유형(includesPassage)이 원문 지문을 렌더모델로
+  // 조립할 수 있게 원문을 _sourcePassageContent 로 실어 준다(영어 sourceBackedType
+  // 체인 무변경 — KoQuestionRenderer 가 mod.toRenderModel 에 passage 로 전달).
+  if (isKoQuestionType(normalizedQuestion?._typeId) && sourcePassageContent) {
+    return {
+      ...normalizedQuestion,
+      _sourcePassageContent: sourcePassageContent,
+    };
+  }
   const sourceBackedType =
     normalizedQuestion?._typeId === "TOPIC" ||
     normalizedQuestion?._typeId === "MAIN_IDEA" ||
@@ -670,6 +681,14 @@ function replaceDisplaySlice(
 
 /** Check if a question has the expected structured fields for its type */
 function hasStructuredFields(typeId: string, q: any): boolean {
+  // KO(국어) 유형 게이트: 레지스트리 모듈이 있고 공통 봉투 필드가 보이면 구조화
+  // 렌더(KoQuestionRenderer). 미등록 KO 유형은 false → 기존 Fallback 으로 강등.
+  if (isKoQuestionType(typeId)) {
+    return (
+      !!getKoTypeModule(typeId) &&
+      !!(q?.direction || q?.options || q?.bogi || q?.koContext)
+    );
+  }
   switch (typeId) {
     case "BLANK_INFERENCE":
       return !!q.passageWithBlank && !!q.direction;
@@ -730,6 +749,10 @@ function hasStructuredFields(typeId: string, q: any): boolean {
 
 /** Dispatch to the correct renderer */
 function renderTypedQuestion(typeId: string, q: any): React.ReactNode {
+  // KO(국어) 유형 게이트 — 레지스트리 렌더모델 소비 렌더러로 위임(기존 case 무변경).
+  if (isKoQuestionType(typeId)) {
+    return <KoQuestionRenderer q={q} />;
+  }
   switch (typeId) {
     case "BLANK_INFERENCE":
       return <BlankInferenceRenderer q={q} />;

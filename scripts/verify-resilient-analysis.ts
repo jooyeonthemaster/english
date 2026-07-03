@@ -248,6 +248,17 @@ async function main() {
             { no: 2, options: ["strengthen", "strengthens"], answer: "strengthens", explanation: "주어가 단수라 strengthens 가 맞아요." },
           ],
         },
+        vocabularySelection: {
+          title: "어휘 선택",
+          passage:
+            "Memory is actively [preserved / reconstructed]; formation is not [immediate / gradual] but takes time; it is [loosely / intimately] tied to the self, so losing access feels [trivial / devastating].",
+          choices: [
+            { no: 1, options: ["preserved", "reconstructed"], answer: "reconstructed", explanation: "능동적으로 다시 만든다는 문맥이라 재구성이 맞아요." },
+            { no: 2, options: ["immediate", "gradual"], answer: "immediate", explanation: "부정어 not 때문에 극성이 반전돼 즉각적이 정답이에요." },
+            { no: 3, options: ["loosely", "intimately"], answer: "intimately", explanation: "자아와 밀접히 연결된다는 문맥이라 intimately 예요." },
+            { no: 4, options: ["trivial", "devastating"], answer: "devastating", explanation: "접근 상실이 파괴적이라는 문맥이라 devastating 이에요." },
+          ],
+        },
         vocabularyCloze: {
           title: "어휘 빈칸 완성",
           passage: "Memory is (1)____, (2)____ retrieval (3)____ it, and (4)____ aids (5)____ plus (6)____.",

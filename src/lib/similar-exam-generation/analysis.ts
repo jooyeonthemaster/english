@@ -59,7 +59,7 @@ function dedupeInsights(values: string[]): string[] {
 /**
  * Self-contained multimodal structured call. Feeds page images + prompt to
  * Gemini and validates the response against the ExamPatternProfile schema.
- * Internal to the similar-exam module — does not depend on shared LLM helpers.
+ * Internal to the similar-exam module ??does not depend on shared LLM helpers.
  */
 async function runMultimodalAnalysis(
   prompt: string,
@@ -73,9 +73,7 @@ async function runMultimodalAnalysis(
         schema: examPatternProfileSchema,
         maxOutputTokens: ANALYSIS_MAX_TOKENS,
         abortSignal: AbortSignal.timeout(ANALYSIS_TIMEOUT_MS),
-        providerOptions: {
-          google: { thinkingConfig: { thinkingBudget: 0 } },
-        },
+        
         messages: [
           {
             role: "user",
@@ -153,7 +151,7 @@ function mergeProfiles(parts: ExamPatternProfile[]): ExamPatternProfile {
 
 /**
  * Multimodal exam-pattern analysis. Feeds the page images straight to Gemini and
- * extracts an ExamPatternProfile — no separate OCR pass. When there are many
+ * extracts an ExamPatternProfile ??no separate OCR pass. When there are many
  * pages the call is split into chunks and the partial profiles are merged.
  */
 export async function analyzeExamPattern(args: {

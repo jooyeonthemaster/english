@@ -107,11 +107,16 @@ export function formatGrammarCorrectionCorrectAnswer(
 export function formatGrammarCorrectionCorrectAnswerForStoredQuestion(
   question: GrammarCorrectionStoredQuestionLike,
 ): string {
-  const fallback = normalizeDisplayString(question.correctAnswer);
-  if (question.subType !== "GRAMMAR_CORRECTION") return fallback;
-  return formatGrammarCorrectionCorrectAnswer(
+  const explicit = normalizeDisplayString(question.correctAnswer);
+  if (question.subType !== "GRAMMAR_CORRECTION") return explicit;
+  const derived = formatGrammarCorrectionCorrectAnswer(
     readStructuredData(question.structuredData),
-  ) || fallback;
+  );
+  // 교사가 정답표에서 정답을 직접 수정하면 top-level correctAnswer 가 세그먼트 유래값과
+  // 달라진다 — 이때 교사 수정값을 우선한다. 스키마 superRefine 이 미수정 시 correctAnswer를
+  // 세그먼트 유래값과 동일하게 강제하므로, 값이 같으면 결과가 동일(무회귀).
+  if (explicit && derived && explicit !== derived) return explicit;
+  return derived || explicit;
 }
 
 export function buildGrammarCorrectionAnswerSlots(

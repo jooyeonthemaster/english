@@ -49,6 +49,7 @@ import {
   enrichSetMemberStructured,
 } from "./question-bank-card/set-member-passage";
 import { RenderedSections } from "./question-bank-card/rendered-sections";
+import { QuestionQuickActionsMenu } from "./question-bank-card/quick-actions-menu";
 import type { QuestionBankItem } from "./question-bank-card/types";
 import {
   clearCardTextSelection,
@@ -136,6 +137,9 @@ export function QuestionBankCard({
   compactUsageLabel = false,
   cardClickSelects = false,
   showDetailButton = false,
+  // 하단 날짜줄 오른쪽에 "내보내기(⋯)" 액션 매트릭스(복사×2 + 한글/워드 다운로드)를 띄운다.
+  // 문제 관리·문제 생성 목록 등 관리 화면에서만 켠다(기본 꺼짐).
+  showQuickActions = false,
   dragRequiresSelection = false,
   getDragQuestionIds,
   getDuplicateDragQuestionIds,
@@ -196,6 +200,8 @@ export function QuestionBankCard({
   cardClickSelects?: boolean;
   // 시험지 빌더: 해설보기 줄 오른쪽에 '상세 보기' 버튼을 띄운다.
   showDetailButton?: boolean;
+  // 하단 날짜줄 오른쪽 "내보내기(⋯)" 액션 매트릭스 노출 여부(복사·한글·워드).
+  showQuickActions?: boolean;
   // 영역 선택(마키) 우선 모드: 카드가 "선택된 상태"일 때만 네이티브 드래그를
   // 허용한다. 미선택 카드를 끌면 드래그 영역 선택이 동작한다.
   dragRequiresSelection?: boolean;
@@ -979,16 +985,24 @@ export function QuestionBankCard({
                     <span>시험 {q._count.examLinks}회 사용</span>
                   )}
                 </div>
-                {showTrashActions ? (
-                  deletedLabel ? (
-                    <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-500">
-                      <Trash2 className="h-3 w-3 text-slate-400" />
-                      {deletedLabel}
-                    </span>
-                  ) : null
-                ) : !showReviewActions ? (
-                  <ReviewStatusStamp approved={q.approved} className="shrink-0" />
-                ) : null}
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {showQuickActions && q.id && !trashMode && (
+                    <QuestionQuickActionsMenu q={q} />
+                  )}
+                  {showTrashActions ? (
+                    deletedLabel ? (
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-500">
+                        <Trash2 className="h-3 w-3 text-slate-400" />
+                        {deletedLabel}
+                      </span>
+                    ) : null
+                  ) : !showReviewActions ? (
+                    <ReviewStatusStamp
+                      approved={q.approved}
+                      className="shrink-0"
+                    />
+                  ) : null}
+                </div>
               </div>
             )}
             {/* 휴지통 풋터 — 검수완료/수정하기 자리에 '복원 / 영구삭제'를 같은 레이아웃으로 둔다.

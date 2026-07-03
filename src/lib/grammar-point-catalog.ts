@@ -239,14 +239,14 @@ export const GRAMMAR_CORE_ANSWER_CODES: GrammarPointCode[] = [
 ];
 
 /**
- * 핵심 집중(focus) 모드 정답 포인트 톱셋 — 강사 제공 기출 1000제 실분포 상위 6.
+ * 핵심 집중(focus) 모드 정답 포인트 톱셋 — 강사 제공 기출 1000제 실분포 상위권 + 9프레임 보강.
  * (b 관계사 867 · d 수일치 619 · k to-v/v-ing 519 · c 분사 496 · g 대명사 442 · f 형/부 310)
- * 다양성(중복방지) 모드는 코어 10개를 순회하지만, focus 모드는 이 6개 안에서만
- * 정답 포인트를 로테이션해 "고빈출 핵심에 집중"한다(나머지는 디코이로만).
+ * 다양성(중복방지) 모드는 코어 10개를 순회하지만, focus 모드는 이 8개 안에서
+ * 정답 포인트를 로테이션해 "고빈출 핵심 + 고객 9프레임"에 집중한다(나머지는 디코이로만).
  * ⚠️ 카탈로그 GRAMMAR_CORE_ANSWER_CODES 는 수능 28년 기준이라 a(정동사)를 1위로
  * 두지만, 강사 1000제에선 a 가 거의 최하위(98) — focus 셋에서 제외.
  */
-export const GRAMMAR_HIGH_YIELD_FOCUS_CODES: GrammarPointCode[] = ["b", "d", "k", "c", "g", "f"];
+export const GRAMMAR_HIGH_YIELD_FOCUS_CODES: GrammarPointCode[] = ["b", "d", "k", "c", "g", "f", "e", "h"];
 
 /** 최근 6년 오답 선택률 최상위 — 디코이(함정) 카드 우선순위. */
 export const GRAMMAR_TOP_DECOY_CODES: GrammarPointCode[] = ["b", "f", "c", "g", "d", "i"];
@@ -348,7 +348,7 @@ export interface GrammarPointGuidanceOptions {
   requestedDifficulty?: string;
   mode?: GrammarGenerationMode;
   /**
-   * 핵심 집중(focus) 모드 — true 면 정답 포인트를 고빈출 톱셋(1000제 상위 6)
+   * 핵심 집중(focus) 모드 — true 면 정답 포인트를 고빈출/9프레임 톱셋
    * 안에서만 로테이션해 출제 포인트를 집중시킨다. false/미지정이면 기존 다양성
    * (코어 10개 순회). 강사 "출제 포인트 못 잡음" 피드백 대응.
    */
@@ -393,7 +393,7 @@ export function buildGrammarPointGuidance(
     pointFocus = false,
   } = options;
 
-  // 핵심 집중 모드면 정답 포인트 풀을 고빈출 톱셋(1000제 상위 6)으로 좁힌다.
+  // 핵심 집중 모드면 정답 포인트 풀을 고빈출/9프레임 톱셋으로 좁힌다.
   // 다양성 모드는 코어 10개 전체 순회(저빈출 a·e·i·h 강제 → 출제 포인트 흩뿌림).
   const answerPool = pointFocus ? GRAMMAR_HIGH_YIELD_FOCUS_CODES : GRAMMAR_CORE_ANSWER_CODES;
 
@@ -465,7 +465,7 @@ export function buildGrammarPointGuidance(
   return [
     "## 어법 출제 포인트 가이드 (수능·평가원 28년 기출 빈도 기반)",
     pointFocus
-      ? `- ⭐ 핵심 집중 모드: 정답(오류) 포인트는 반드시 기출 최빈출 톱셋에서만 고르세요: ${coreLine}. 이 6개 밖의 포인트(정동사 단독·능수동태·병렬·목적격보어·비교·전치사 등)는 정답으로 만들지 말고 디코이로만 쓰세요 — 강사 기출 1000제에서 관계사·수일치·to부정사/동명사·분사·대명사·형부가 출제의 대부분입니다.`
+      ? `- ⭐ 핵심 집중 모드: 정답(오류) 포인트는 반드시 기출 최빈출/9프레임 톱셋에서 고르세요: ${coreLine}. 이 밖의 포인트(정동사 단독·병렬·비교·전치사 등)는 정답으로 만들지 말고 디코이로만 쓰세요 — 관계사·수일치·to부정사/동명사·분사·대명사·형부에 더해 능수동과 목적격보어까지 깨끗한 구조가 있으면 정답으로 허용합니다.`
       : `- 정답(오류로 변형하는) 포인트는 다음 최빈출 코어에서 선택하세요: ${coreLine}.`,
     pointFocus
       ? "- 같은 지문에서 여러 문항을 만들 때도 정답 포인트는 위 톱셋 안에서만 쓰고, 변화는 '다른 포인트로 바꾸기'가 아니라 '같은 포인트를 다른 문장·다른 자리·다른 디코이 구성으로' 주세요. 엉뚱한 저빈출 포인트로 변별을 시도하지 마세요."

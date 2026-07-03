@@ -125,12 +125,17 @@ export function LearningSheetPreviewModal({
     let cancelled = false;
     Promise.all([
       import("@/lib/passage-report/analysis-report/_samples/prime-practice-sample.json"),
-      import("@/lib/passage-report/analysis-report/schema"),
+      // 과목 게이트 파서 — 영어 스키마 직파싱은 PRIME_KO 보고서에서 무조건 실패해
+      // 프리뷰가 비므로, KO 모양이면 ko 스키마로 분기하는 공용 게이트를 쓴다
+      // (영어 샘플/보고서 경로는 기존 파싱과 동일 — 무회귀).
+      import("@/lib/passage-report/analysis-report/preview-parse"),
     ])
-      .then(([json, schema]) => {
+      .then(([json, previewParse]) => {
         if (cancelled) return;
-        const parsed = schema.analysisReportSchema.safeParse(json.default ?? json);
-        if (parsed.success) setSample(parsed.data);
+        const parsed = previewParse.parseAnalysisReportForPreview(
+          json.default ?? json,
+        );
+        if (parsed) setSample(parsed);
         else setLoadError(true);
       })
       .catch(() => {

@@ -1,4 +1,9 @@
 import type { ExtractionMode } from "./modes";
+import {
+  ATLAS_OCR_MODEL_ID,
+  ATLAS_RESTORATION_MODEL_ID,
+  ATLAS_STANDARD_MODEL_ID,
+} from "@/lib/atlas-ai";
 
 export type ExtractionAiStage =
   | "ocr"
@@ -19,7 +24,7 @@ export interface ExtractionAiModelConfig {
 // `||` + trim (NOT `??`): an EMPTY env (GEMINI_MODEL="") must fall back too.
 // `??` only catches null/undefined, so a blank env yielded model="" →
 // `models/:generateContent` → 404 → restoration pages all DEAD.
-const DEFAULT_GEMINI_MODEL = process.env.GEMINI_MODEL?.trim() || "gemini-3.5-flash";
+const DEFAULT_GEMINI_MODEL = ATLAS_STANDARD_MODEL_ID;
 
 const GEMINI_FLASH: ExtractionAiModelConfig = {
   model: DEFAULT_GEMINI_MODEL,
@@ -33,7 +38,7 @@ const GEMINI_FLASH: ExtractionAiModelConfig = {
 // 추출 OCR(블록 분류·구조화) 전용 모델 — 기본 flash-lite (env 로 오버라이드 가능).
 // 26-06-12 전환. 복원(아래)과 달리 그라운드트루스 하니스 검증은 없음 — 분류 품질
 // 회귀(지문/문제 경계 오류 등)가 보이면 GEMINI_OCR_MODEL=gemini-3.5-flash 즉시 롤백.
-const OCR_MODEL = process.env.GEMINI_OCR_MODEL?.trim() || "gemini-3.1-flash-lite";
+const OCR_MODEL = ATLAS_OCR_MODEL_ID;
 
 const OCR: ExtractionAiModelConfig = {
   ...GEMINI_FLASH,
@@ -46,7 +51,7 @@ const OCR: ExtractionAiModelConfig = {
 // (3.5-flash 는 16/22 — JSON 파손·요약 잔존·한글 미제거·180s 행 재현),
 // 지연 4.9s→1.9s, 건당 비용 $0.0103→$0.0017 (26-06-10 측정).
 const RESTORATION_MODEL =
-  process.env.GEMINI_RESTORATION_MODEL?.trim() || "gemini-3.1-flash-lite";
+  ATLAS_RESTORATION_MODEL_ID;
 
 // problem-evidence / source-grounding 는 복원과 작업 성격이 달라 미검증 —
 // 기존 모델을 유지한다 (passage-restoration 만 lite 로 분리).

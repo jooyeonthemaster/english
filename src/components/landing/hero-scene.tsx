@@ -396,13 +396,12 @@ export function HeroScene() {
 
           <div className="mx-auto mt-6 max-w-[880px] break-keep">
             <div className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-[12px] font-black text-white shadow-[0_18px_38px_-22px_rgba(37,99,235,0.95)] sm:text-[13px]">
-              <Zap className="size-4 fill-yellow-300 text-yellow-300" strokeWidth={2.6} />
-              2026.07.01 무료 종료
+              AI 영어 워크벤치
             </div>
             <p className="mt-3 text-[22px] font-black leading-[1.18] text-slate-950 sm:text-[30px]">
-              <span className="text-blue-600">7월 1일까지만 무료 활용 가능!!!!</span>
+              <span className="text-blue-600">실제 자료로 먼저 확인하세요</span>
               <br className="hidden sm:block" />
-              지금 안 써보면 유료 전환 전에 바로 놓칩니다.
+              학습지부터 시험지까지 바로 완성됩니다.
             </p>
             <p className="mt-2 text-[15px] font-black leading-7 text-slate-700 sm:text-[18px]">
               영어 학습지 생성, 출제 포인트, 시험지 생성까지{" "}
@@ -415,7 +414,7 @@ export function HeroScene() {
               href="/register"
               className="inline-flex h-[52px] items-center justify-center gap-2 rounded-full bg-blue-600 px-8 text-[15px] font-black text-white shadow-[0_24px_54px_-22px_rgba(37,99,235,1)] ring-4 ring-blue-500/15 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-[0_28px_64px_-24px_rgba(37,99,235,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:h-[58px] sm:px-10 sm:text-[16px]"
             >
-              지금 무료로 활용하기
+              SMOAT 시작하기
               <ArrowRight className="size-4" strokeWidth={2.5} />
             </a>
             <a

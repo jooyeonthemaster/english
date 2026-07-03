@@ -70,7 +70,7 @@ export function grammarPointCodeSurfaceMismatch(
   if (!text) return false;
   switch (code) {
     case "b": // 관계사 — 관계사/명사절 유도어가 표면에 있어야 함
-      return !/\b(?:that|what|which|who|whom|whose|where|when|why)\b/i.test(text);
+      return !/\b(?:that|what|which|who|whom|whose|where|when|why|how|whether|whereby)\b/i.test(text);
     case "c": // 분사 능/수동 — -ing/-ed/-en 또는 무접미 불규칙 분사
       return (
         !/\b[A-Za-z]+(?:ing|ed|en)\b/i.test(text) &&
@@ -81,7 +81,7 @@ export function grammarPointCodeSurfaceMismatch(
     case "k": // to-v vs v-ing — 'to + 단어' 또는 동명사(-ing)
       return !/\bto\s+[A-Za-z]/i.test(text) && !/\b[A-Za-z]+ing\b/i.test(text);
     case "l": // 전치사 vs 접속사 — 닫힌 혼동쌍 어휘
-      return !/\b(?:during|while|despite|although|though|because|since|as|if|unless|before|after|until|when|whereas|whilst)\b/i.test(text) &&
+      return !/\b(?:in|on|at|by|of|to|for|from|with|without|during|while|despite|although|though|because|since|as|if|unless|before|after|until|when|whereas|whilst)\b/i.test(text) &&
         !/\b(?:in spite of|due to|owing to|thanks to|because of|on account of)\b/i.test(text);
     case "m": // 비교·수량/정도 — 비교 표지 또는 기출(m) 수량·정도 한정사(much/many/few/little/very/almost 등)
       return !/\b(?:more|less|most|least|as|than)\b/i.test(text) &&
@@ -103,6 +103,8 @@ export function hasKillerGrammarStructure(text: string): boolean {
     /\b(?:when|while|if|unless|once|although)\s+(?:[A-Za-z]+ing|[A-Za-z]+ed|known|left|given|asked|seen)\b/i.test(normalized) ||
     /\b(?:not only|both|either|neither|from|between)\b[\s\S]{10,140}\b(?:but|and|or|nor|to)\b/i.test(normalized) ||
     /\b(?:the number of|a number of|one of|each of|neither of|either of|most of|the rest of)\b[\s\S]{10,120}\b(?:is|are|was|were|has|have|requires?|depends?|seems?)\b/i.test(normalized) ||
+    /\b(?:make|makes|made|find|finds|found|think|thinks|thought|consider|considers|considered)\s+it\s+(?:possible|impossible|easy|easier|hard|harder|difficult|necessary|important|clear|natural|useful|safe|risky|obvious|worthwhile|likely|unlikely|essential|reasonable)\s+(?:for\s+[A-Za-z][^.;!?]{0,50}\s+)?(?:to\s+[A-Za-z][A-Za-z'-]*|that\b)/i.test(normalized) ||
+    /\b(?:never|rarely|seldom|little|hardly|scarcely|only\s+(?:then|after|when|by|in|with)|not only|no sooner|under no circumstances|at no time|in no way)\b[\s\S]{0,140}\b(?:am|is|are|was|were|do|does|did|have|has|had|can|could|should|would|will|may|might|must)\s+[A-Za-z][A-Za-z'-]*/i.test(normalized) ||
     /\b(?:of|with|including|along with|as well as|who|which|that)\b[\s\S]{25,140}\b(?:is|are|was|were|has|have|requires?|depends?|seems?|make|makes)\b/i.test(normalized)
   );
 }
@@ -502,7 +504,8 @@ export function findGrammarMisplacedMarker(
     const around = `${passageWithMarkers.slice(ctxStart, marker.start)} ${passageWithMarkers.slice(marker.end, ctxEnd)}`;
     const aroundTokens = new Set(toLowerTokens(around));
     const overlap = surroundContent.filter((t) => aroundTokens.has(t)).length;
-    if (overlap === 0) return me.label ? normalizeLabel(me.label) : `(${label})`;
+    const requiredOverlap = Math.min(2, Math.ceil(surroundContent.length / 2));
+    if (overlap < requiredOverlap) return me.label ? normalizeLabel(me.label) : `(${label})`;
   }
   return null;
 }

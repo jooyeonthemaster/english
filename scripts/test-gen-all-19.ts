@@ -67,7 +67,6 @@ ${structuredInstructions}
 
   const { object } = await generateObject({
     model, schema: responseSchema, prompt,
-    providerOptions: { google: { thinkingConfig: { thinkingBudget: 4096 } } },
   });
   return (object as any).questions || [];
 }

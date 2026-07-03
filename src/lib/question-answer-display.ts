@@ -1,4 +1,5 @@
 import { formatGrammarCorrectionCorrectAnswerForStoredQuestion } from "./grammar-correction-display";
+import { getCircledNumber } from "./question-postprocess/types";
 
 type StoredQuestionCorrectAnswerLike = {
   subType?: unknown;
@@ -98,6 +99,17 @@ function storedQuestionType(question: StoredQuestionCorrectAnswerLike): string {
   return normalizeDisplayString(question.subType || question._typeId || question.typeId);
 }
 
+// 어법 판단(GRAMMAR_ERROR) 정답 라벨을 시험지/지문 마커와 동일한 원형숫자로 통일한다.
+// 지문 마커는 ①②③(원형)인데 정답표는 (A)/(C) 알파벳으로 나와 불일치가 났다(정답표 오독).
+// (A)~(J) 괄호 라벨만 ①~⑩ 로 변환하며, 이미 원형(③)이거나 라벨이 아닌 텍스트는 그대로 둔다.
+const GRAMMAR_ALPHA_LABELS = "ABCDEFGHIJ";
+function circleGrammarAnswerLabels(text: string): string {
+  return text.replace(/\(([A-Ja-j])\)/g, (full, letter: string) => {
+    const index = GRAMMAR_ALPHA_LABELS.indexOf(letter.toUpperCase());
+    return index >= 0 ? getCircledNumber(index) : full;
+  });
+}
+
 export function formatStoredQuestionCorrectAnswer(
   question: StoredQuestionCorrectAnswerLike,
 ): string {
@@ -106,6 +118,15 @@ export function formatStoredQuestionCorrectAnswer(
       question.correctAnswer,
       question.correctAnswers,
     );
+  }
+
+  if (storedQuestionType(question) === "GRAMMAR_ERROR") {
+    const raw =
+      normalizeDisplayString(question.correctAnswer) ||
+      (Array.isArray(question.correctAnswers)
+        ? question.correctAnswers.map((v) => normalizeDisplayString(v)).filter(Boolean).join(", ")
+        : "");
+    return circleGrammarAnswerLabels(raw);
   }
 
   return formatGrammarCorrectionCorrectAnswerForStoredQuestion(question);

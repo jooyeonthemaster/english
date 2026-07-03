@@ -40,6 +40,7 @@ export function QuestionSetSection({
   inline = false,
   normalItems,
   showSets = true,
+  subjectScope,
 }: {
   /** 값이 바뀌면 세트를 다시 불러온다(생성 완료 신호 등). */
   refreshKey?: unknown;
@@ -65,6 +66,11 @@ export function QuestionSetSection({
   }>;
   /** 세트 카드를 끼울지(보통 목록 1페이지에서만 true — 세트는 최신이라 1페이지에 위치). */
   showSets?: boolean;
+  /**
+   * 과목 스코프(워크스페이스 상호 격리) — "KOREAN"=국어 세트만, 미지정(영어 표면)
+   * =국어 세트 완전 제외. listQuestionSets 의 서버 필터와 동일 계약.
+   */
+  subjectScope?: "KOREAN";
 }) {
   const [sets, setSets] = useState<QuestionSetForRender[]>([]);
   // 분리 진행 중인 멤버 questionId(스피너 표시용). 분리는 세트를 바꾸지 않고 복제본만
@@ -78,7 +84,7 @@ export function QuestionSetSection({
 
   const refresh = useCallback(async () => {
     try {
-      const data = await listQuestionSets({ limit: 50 });
+      const data = await listQuestionSets({ limit: 50, subject: subjectScope });
       setSets(data);
       // 카운트는 여기서 부모에 보고(effect 내 동기 setState 회피).
       onCountChange?.(data.length);
@@ -86,7 +92,7 @@ export function QuestionSetSection({
       setSets([]);
       onCountChange?.(0);
     }
-  }, [onCountChange]);
+  }, [onCountChange, subjectScope]);
 
   useEffect(() => {
     // 마운트/refreshKey 변경 시 데이터 페치.

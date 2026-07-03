@@ -1,5 +1,15 @@
 import { AlignmentType, BorderStyle, Paragraph, TextRun, UnderlineType } from "docx";
 import { formatInlineMarkersForSubtype, optionDisplayLabel, optionDisplayTextForSubtype, optionOrdinalLabel, shouldRenderOptionListForSubtype } from "@/components/exams/paper-builder/option-display";
+import {
+  KO_BOGI_HEADER_LINE_RE,
+  KO_CONDITION_HEADER_LINE,
+  KO_FOOTNOTE_LINE_RE,
+  KO_SOURCE_LINE_RE,
+  balanceKoUnderlineMarkersPerLine,
+  koPaperRenderModel,
+  koPaperSegmentsFromModel,
+  koPaperStemText,
+} from "@/components/exams/paper-builder/korean/ko-paper-adapter";
 import { questionHasEmbeddedPassage, shouldRenderSourcePassageInsideQuestion } from "@/components/exams/paper-builder/passage-policy";
 import { sentenceOrderSegmentsFromQuestionText } from "@/components/exams/paper-builder/question-body-layout";
 import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
@@ -75,16 +85,30 @@ export function buildQuestionBlock(
     questionText,
     passage: { content: passageContent },
   });
+  // 출처 지문 인라인 렌더는 item.includePassage 토글을 존중한다(웹 question-body-layout 과 동일).
+  // CONDITIONAL_WRITING 처럼 정답이 지문 문장 번역인 유형은 기본 includePassage=false 라 미동봉.
   const inlineSourcePassage =
-    shouldRenderSourcePassageInsideQuestion(subType) && !summaryMc && !hasEmbeddedSourcePassage;
+    shouldRenderSourcePassageInsideQuestion(subType) &&
+    item.includePassage !== false &&
+    !summaryMc &&
+    !hasEmbeddedSourcePassage;
   const inlinePassageContent = passageContent
     ? formatSourcePassageForQuestionItems(passageContent, [item]).trim()
     : "";
   const summaryPartsForHeader = summaryComplete
     ? splitSummaryCompleteMcQuestionText(questionText)
     : null;
+  // KO(국어) 문항: structuredData → 렌더모델(발문·마킹지문·보기·조건). null 이면
+  // (미등록 유형·데이터 결손) 아래 표준 폴백(questionText 라인 렌더)으로 강등된다.
+  const koModel = koPaperRenderModel(item);
+  // KO 렌더모델의 stem 이 비면(데이터 결손 방어) questionText 첫 줄 폴백 — 발문이
+  // 통째로 사라진 문항이 인쇄되지 않게 한다(웹 koStemForItem 의 폴백과 동일 규칙).
+  const koStemText =
+    koModel && koModel.stem.text.trim() ? koPaperStemText(koModel) : "";
   const genericHeaderQuestionText = !summaryPartsForHeader
-    ? firstQuestionLineForHeader(questionText, subType)
+    ? koModel && koStemText
+      ? koStemText
+      : firstQuestionLineForHeader(questionText, subType)
     : "";
   const headerQuestionText =
     summaryPartsForHeader?.stem || genericHeaderQuestionText;
@@ -137,7 +161,22 @@ export function buildQuestionBlock(
   );
 
   if (questionText) {
-    if (summaryWriting) {
+    if (koModel) {
+      // KO(국어): 지문(마킹 병합)·<보기>·<조건> 박스를 어댑터 세그먼트로 렌더 —
+      // 웹 구조 렌더(structuredSegments KO 게이트)와 1:1 정합. 발문은 위 헤더에서
+      // koPaperStemText 로 이미 렌더했다. 선지/답란/정답은 아래 공통 경로.
+      for (const seg of koPaperSegmentsFromModel(koModel)) {
+        if (seg.kind !== "box") continue;
+        result.push(
+          ...buildKoStructBox(
+            seg.text,
+            seg.boxStyle === "passage" ? "passage" : "given",
+            bodySize,
+            lh,
+          ),
+        );
+      }
+    } else if (summaryWriting) {
       // 요약문 영작: 헤더(번호+배점+발문) 아래에
       //   [지문](테두리 박스) → [해석](회색) → [요약문]((A)(B)+빈칸선) → [보기](인라인) → [앞글자]
       // 지문은 "무조건" 함께 렌더한다(사용자 요구·레퍼런스 형식, SUMMARY_COMPLETE 미러).
@@ -487,8 +526,10 @@ export function buildQuestionBlock(
       );
     }
 
+    // SENTENCE_TRANSFORM: 지문을 인라인으로 보여줄 때만 [원문] 블록을 제거한다(원문이
+    // 지문에 밑줄로 노출되므로 중복). 지문을 감추면 [원문] 을 남겨 전환 대상 문장을 제공.
     const visibleRestText =
-      subType === "SENTENCE_TRANSFORM"
+      subType === "SENTENCE_TRANSFORM" && inlineSourcePassage
         ? stripOriginalBlock(restText || questionText)
         : restText || questionText;
     const questionLines = visibleRestText.split("\n");
@@ -704,4 +745,103 @@ export function buildQuestionBlock(
   }
 
   return result;
+}
+
+// -----------------------------------------------------------------------------
+// KO(국어) 박스 — 어댑터 세그먼트 텍스트(행 규약)를 DOCX 문단으로 변환.
+//   첫 행 "〈 보 기 〉" → 중앙 헤더 / "[조건]" → 볼드 라벨
+//   지문 말미 "- 작가, 「작품」 -" → 우측 정렬 / "*어휘: 뜻" → 축소 회색
+//   그 외 행 → 양끝맞춤 본문(한글 bodyFont, __밑줄__·ⓐ 마커는 parseFormattedText)
+// -----------------------------------------------------------------------------
+function buildKoStructBox(
+  text: string,
+  style: "passage" | "given",
+  bodySize: number,
+  lh: number,
+): DocChild[] {
+  // 행 경계를 넘는 __밑줄__ 마킹(운문 행간 마킹)은 행별 균형 마크업으로 정규화 —
+  // 행 단위 parseFormattedText 가 홀수 `__` 를 리터럴로 인쇄하는 결함 방지.
+  const lines = balanceKoUnderlineMarkersPerLine(text)
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const out: DocChild[] = [];
+
+  lines.forEach((line, idx) => {
+    // 헤더("〈 보 기 〉"/"[조건]")는 어댑터가 given 박스에만 만든다 — 지문 첫 행이
+    // "〈제1수〉"(연시조 수 라벨)인 경우 본문 행이 헤더로 오분류되지 않게 given 한정.
+    if (idx === 0 && style === "given" && KO_BOGI_HEADER_LINE_RE.test(line)) {
+      out.push(
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          spacing: { before: 40, after: 30 },
+          children: [
+            new TextRun({
+              text: line,
+              font: bodyFont,
+              size: SIZE_META,
+              bold: true,
+              color: COLOR.darkGray,
+            }),
+          ],
+        }),
+      );
+      return;
+    }
+    if (idx === 0 && style === "given" && line === KO_CONDITION_HEADER_LINE) {
+      out.push(
+        new Paragraph({
+          spacing: { before: 40, after: 30 },
+          children: [
+            new TextRun({
+              text: line,
+              font: bodyFont,
+              size: SIZE_META,
+              bold: true,
+              color: COLOR.gray,
+              characterSpacing: 10,
+            }),
+          ],
+        }),
+      );
+      return;
+    }
+    if (style === "passage" && KO_SOURCE_LINE_RE.test(line)) {
+      out.push(
+        new Paragraph({
+          alignment: AlignmentType.RIGHT,
+          spacing: { before: 20, after: 20 },
+          children: [
+            new TextRun({ text: line, font: bodyFont, size: SIZE_META, color: COLOR.gray }),
+          ],
+        }),
+      );
+      return;
+    }
+    if (style === "passage" && KO_FOOTNOTE_LINE_RE.test(line)) {
+      out.push(
+        new Paragraph({
+          spacing: { before: 0, after: 20 },
+          children: [
+            new TextRun({ text: line, font: bodyFont, size: SIZE_META, color: COLOR.gray }),
+          ],
+        }),
+      );
+      return;
+    }
+    out.push(
+      new Paragraph({
+        alignment: AlignmentType.JUSTIFIED,
+        spacing: {
+          after: idx < lines.length - 1 ? 40 : 0,
+          ...exactLineSpacing(bodySize, lh),
+        },
+        children: parseFormattedText(line, { font: bodyFont, size: bodySize }),
+      }),
+    );
+  });
+
+  // 박스 간/박스-선지 간격 (buildPassage 말미 spacing 관행 미러)
+  out.push(new Paragraph({ spacing: { after: 100 } }));
+  return out;
 }

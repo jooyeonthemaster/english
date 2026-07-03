@@ -179,7 +179,10 @@ export function PrimeAnalysisView({ passageId, onGenerated, legacyAnalysisData, 
         </button>
         <button
           type="button"
-          onClick={() => window.print()}
+          onClick={() =>
+            // 인쇄 전 웹폰트 로드 완료 대기 — 미로드 상태 인쇄로 인한 프린트 준비 지연 방지.
+            void document.fonts.ready.then(() => window.print())
+          }
           className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md bg-blue-600 text-[12px] font-semibold text-white hover:bg-blue-700"
         >
           <Printer className="w-3.5 h-3.5" /> 인쇄 / PDF

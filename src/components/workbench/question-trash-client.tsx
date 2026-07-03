@@ -59,6 +59,12 @@ type TrashQuestionItem = Omit<QuestionBankItem, "createdAt"> & {
 
 interface QuestionTrashProps {
   academyId: string;
+  /**
+   * 과목 스코프 — "KOREAN" 이면 국어 휴지통(/director/korean/questions/trash):
+   * URL 내비게이션·백링크가 국어 라우트에 머물고, 폴더 생성도 국어 폴더로
+   * 저장된다. 미전달 = 영어 기본(기존 UX 픽셀 동일).
+   */
+  subjectScope?: "KOREAN";
   questionsData: {
     questions: TrashQuestionItem[];
     total: number;
@@ -75,6 +81,8 @@ interface QuestionTrashProps {
     starred?: boolean;
     search?: string;
     sort?: string;
+    /** 서버 페치와 동일한 과목 스코프 — 국어 휴지통 페이지가 "KOREAN" 을 싣는다. */
+    subject?: "KOREAN";
   };
   collections: CollectionItem[];
   collectionMembership: Record<string, Set<string>>;
@@ -140,6 +148,7 @@ function SelectAllCheckbox({
 
 export function QuestionTrashClient({
   academyId,
+  subjectScope,
   questionsData,
   filters,
   collections: initialCollections,
@@ -148,13 +157,24 @@ export function QuestionTrashClient({
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(filters.search || "");
 
+  // URL 내비게이션 베이스 — 국어 휴지통은 국어 라우트에 머문다(필터/페이지
+  // 이동·백링크가 영어 화면으로 튕기지 않도록). 미전달 = 기존 영어 경로 그대로.
+  const trashPath =
+    subjectScope === "KOREAN"
+      ? "/director/korean/questions/trash"
+      : QUESTION_TRASH_PATH;
+  const bankPath =
+    subjectScope === "KOREAN"
+      ? "/director/korean/questions"
+      : QUESTION_BANK_PATH;
+
   const {
     updateFilter,
     updateFilters,
     handleSearch: urlSearch,
     goToPage,
     isPending: isNavPending,
-  } = useUrlFilters(QUESTION_TRASH_PATH);
+  } = useUrlFilters(trashPath);
 
   function handleSearch() {
     urlSearch(searchValue);
@@ -168,7 +188,14 @@ export function QuestionTrashClient({
     initialCollections,
     initialMembership,
     actions: {
-      createCollection: createQuestionCollection,
+      // 국어 휴지통에서 만든 폴더는 subject='KOREAN' 저장 — 문제 은행과 동일
+      // 폴더 풀을 공유하므로 생성 스코프도 동일해야 한다(영어=미전달, 무회귀).
+      createCollection: (data) =>
+        createQuestionCollection(
+          subjectScope === "KOREAN"
+            ? { ...data, subject: "KOREAN" as const }
+            : data,
+        ),
       updateCollection: updateQuestionCollection,
       deleteCollection: deleteQuestionCollection,
       addToCollection: addQuestionsToCollection,
@@ -714,7 +741,7 @@ export function QuestionTrashClient({
                 // 헤더 맨 앞에 '문제 관리로 돌아가기' 백링크를 끼운다(별도 상단 바 제거).
                 backLink: (
                   <Link
-                    href={QUESTION_BANK_PATH}
+                    href={bankPath}
                     className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />

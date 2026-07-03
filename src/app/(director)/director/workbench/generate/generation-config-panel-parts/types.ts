@@ -1,6 +1,7 @@
 // generation-config-panel.tsx 에서 분리한 Props 인터페이스 (verbatim 이동).
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import type { QuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
+import type { KoPassageKind } from "@/lib/korean/core/passage-meta";
 
 export interface GenerationConfigPanelProps {
   // Mode
@@ -10,6 +11,19 @@ export interface GenerationConfigPanelProps {
   editingRow?: boolean;
   /** 개별 설정 중인 지문 id — 장문 세트 모드일 때 이 지문으로 세트를 만든다. */
   activePassageId?: string | null;
+  /**
+   * 개별 설정 중인 지문의 과목 — "KOREAN" 이면 국어 유형 그룹만, 그 외
+   * (undefined/null/"ENGLISH")면 기존 영어 그룹만 노출한다. 미전달 = 기존 영어
+   * 패널과 픽셀 동일(무회귀 기본값).
+   */
+  passageSubject?: string | null;
+  /**
+   * (국어 전용) 편집 중 지문의 유효 본문 — KO 세트 빌더의 분량 게이트 판정에
+   * 쓴다. koPanel(passageSubject==="KOREAN")이 아니면 무시된다(영어 무접촉).
+   */
+  koPassageContent?: string;
+  /** (국어 전용) 지문 갈래(KO_KIND 태그) — null/미전달이면 분량 게이트만 적용. */
+  koPassageKind?: KoPassageKind | null;
   /** 개별 설정 중인 지문의 세트 프리셋(controlled) — 있으면 지문별 저장. */
   setPresetId?: string | null;
   onSetPresetChange?: (presetId: string | null) => void;

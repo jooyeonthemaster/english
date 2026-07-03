@@ -29,13 +29,12 @@ import { feedbackStore } from "@/lib/feedback-store";
 import {
   FEEDBACK_PHONE_DISPLAY,
   FEEDBACK_PHONE_TEL,
-  FREE_UNTIL_LABEL,
   LOW_CREDIT_THRESHOLD,
 } from "@/lib/feedback-program";
 
 /**
- * "협업 피드백 이벤트" — the dashboard-entry modal that frames SMOAT's free beta
- * period as a feedback-collaboration invitation (NOT an ad).
+ * "협업 피드백 이벤트" — the dashboard-entry modal that invites users into
+ * product feedback collaboration (NOT an ad).
  *
  * Mounted once in the director layout. It auto-opens once per day (gated by
  * localStorage) and can also be opened on demand from the sidebar
@@ -399,7 +398,7 @@ function StepIntro({
         함께 만드는 베타에 초대합니다
       </h2>
       <p className="mt-2 text-[13.5px] leading-[1.5] text-slate-500 break-keep">
-        정식 출시 전, <span className="font-semibold text-slate-700">{FREE_UNTIL_LABEL}까지 모든 기능을 무료로</span> 드려요.
+        정식 출시 전, 직접 사용해보신 의견을 듣고 있습니다.
         <br />
         직접 써보시고 들려주신 의견이 SMOAT를 더 좋게 만듭니다.
       </p>
@@ -519,8 +518,7 @@ function StepReveal({
       <div className="mt-4 flex items-start gap-2.5">
         <ShieldCheck className="mt-0.5 size-4 shrink-0 text-emerald-500" aria-hidden="true" />
         <p className="text-[12.5px] leading-[1.45] text-slate-500 break-keep">
-          연락을 받고 협업 유저가 되시면 추가 무료 크레딧을 드려요. 무료 기간(~{FREE_UNTIL_LABEL})
-          동안 운영되는 피드백 연락이니 부담 없이 받아주세요.
+          연락을 받고 협업 유저가 되시면 추가 무료 크레딧을 드려요. 서비스 개선을 위한 피드백 연락이니 부담 없이 받아주세요.
         </p>
       </div>
 

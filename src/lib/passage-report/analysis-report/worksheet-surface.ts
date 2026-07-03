@@ -156,11 +156,15 @@ function splitIntoSentences(text: string): string[] {
     .filter(Boolean);
 }
 
-/** 매칭용 내용 토큰 — 빈칸 (N)____, 선택지 [..], 남은 밑줄을 제거하고 소문자 단어(3+글자)만 추출. */
+/** 매칭용 내용 토큰 — 빈칸 (N)____ 는 제거, 선택지 [A / B] 는 '옵션 단어를 살려' 추출하고 남은 밑줄 제거,
+ *  소문자 단어(3+글자)만. 선택형 본문의 [A / B] 는 '원문 단어가 선택지 형태로 남아 있는 것'이므로 통째로
+ *  버리면(과거 동작) 원문 대부분이 브래킷에 든 축약 문장을 '누락'으로 오판해, 정답이 평문으로 든 원문 문장을
+ *  재주입(정답 누출)하게 된다. 옵션 단어를 present 토큰으로 살려 이 오탐을 없앤다. (빈칸형 커버리지는 브래킷이
+ *  없어 영향 없음. 실제 누락 문장은 옵션에도 없으므로 검출은 그대로 유지 = 무회귀.) */
 function clozeContentTokens(text: string): string[] {
   const stripped = text
     .replace(/\(\s*\d+\s*\)\s*[_＿]+/g, " ")
-    .replace(/\[[^\]]*\]/g, " ")
+    .replace(/\[([^\][]*)\]/g, (_m, inner: string) => ` ${inner.replace(/\//g, " ")} `)
     .replace(/[_＿]{2,}/g, " ");
   return tokenize(stripped).filter((w) => w.length >= 3);
 }

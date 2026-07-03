@@ -87,7 +87,9 @@ export function sanitizeGrammarExplanationMeta(input: unknown): string {
   if (!original.trim()) return original;
 
   // 1) 내부 필드명 제거
-  let text = original.replace(INTERNAL_FIELD_TOKENS, "");
+  let text = normalizePronounTerminologyMislabels(
+    original.replace(INTERNAL_FIELD_TOKENS, ""),
+  );
   // 2) 메타 수식어 제거
   for (const [pattern, replacement] of META_PHRASE_REPLACEMENTS) {
     text = text.replace(pattern, replacement);
@@ -125,6 +127,22 @@ export function sanitizeGrammarExplanationMeta(input: unknown): string {
 }
 
 /** keyPoints 배열 등 문자열 묶음에 일괄 적용. */
+function normalizePronounTerminologyMislabels(text: string): string {
+  return text
+    .replace(
+      /\bnoun\s+clause(?=[^\n]{0,80}\b(?:it|this|that|they|them|their)\b)/gi,
+      "pronoun reference",
+    )
+    .replace(
+      /\uBA85\uC0AC\uC808\s*\uB0B4(?=[^\n]{0,120}\b(?:it|this|that|they|them|their)\b)/gi,
+      "\uB300\uBA85\uC0AC \uC9C0\uC2DC \uAD00\uACC4\uC5D0\uC11C",
+    )
+    .replace(
+      /\uBA85\uC0AC\uC808(?=[^\n]{0,80}\uB300\uBA85\uC0AC[^\n]{0,80}\b(?:it|this|that|they|them|their)\b)/gi,
+      "\uB300\uBA85\uC0AC \uC9C0\uC2DC \uAD00\uACC4",
+    );
+}
+
 export function sanitizeGrammarExplanationList(
   values: unknown,
 ): string[] | undefined {

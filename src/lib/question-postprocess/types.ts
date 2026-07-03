@@ -2,6 +2,8 @@
 // Shared types and constants for the question post-processing engine.
 // ============================================================================
 
+import { KO_TYPE_IDS } from "../korean/registry";
+
 export type QuestionPostProcessData = Record<string, unknown>;
 
 export interface PostProcessResult {
@@ -78,3 +80,10 @@ export const PASSTHROUGH_TYPES = new Set([
   "WORD_ORDER",
   "TOPIC_SENTENCE_WRITING",
 ]);
+
+// KO(국어) 유형 전부 PASSTHROUGH — 지문 전문 복사 필드가 없고(봉투 규약)
+// 마킹지문은 렌더타임에 KoRenderModel 이 재구성하므로 영어 후처리(위치탐색·
+// 마커삽입)를 타지 않는다 (KO-DESIGN-SPEC §1).
+for (const koTypeId of KO_TYPE_IDS) {
+  PASSTHROUGH_TYPES.add(koTypeId);
+}

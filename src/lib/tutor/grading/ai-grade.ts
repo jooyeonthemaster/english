@@ -1,6 +1,6 @@
 // ============================================================================
-// Gemini Flash AI 채점 — 자유서술(직독직해/구문전환/조건영작/어법고치기) (스펙 §4.3)
-// 반드시 getTutorModel()=Gemini. Claude 금지(프로젝트 정책).
+// Gemini Flash AI 채점 ???�유?�술(직독직해/구문?�환/조건?�작/?�법고치�? (?�펙 §4.3)
+// 반드??getTutorModel()=Gemini. Claude 금�?(?�로?�트 ?�책).
 // ============================================================================
 
 import { generateText, Output } from "ai";
@@ -22,7 +22,7 @@ export interface AiGradeInput {
   variant: string; // translate | transform | conditional | correct
   studentAnswer: string;
   instruction?: string;
-  sourceText?: string; // 원문(직독직해 영어 / 전환 대상 / 오류 문장)
+  sourceText?: string; // ?�문(직독직해 ?�어 / ?�환 ?�??/ ?�류 문장)
   modelAnswer?: string;
   conditions?: string[];
   transformType?: string;
@@ -32,7 +32,7 @@ export interface AiGradeInput {
 const SYSTEM = [
   "You are a strict but fair Korean high-school English exam grader for a mobile study app.",
   "Output JSON only. Never reveal the full model answer in feedbackKo (give a hint, not the answer).",
-  "If the student answer is a verbatim copy of the given source text (sourceText), set copiedFromSource=true and scorePct=0 (베끼기 금지).",
+  "If the student answer is a verbatim copy of the given source text (sourceText), set copiedFromSource=true and scorePct=0 (베끼�?금�?).",
   "Grade by meaning and whether stated conditions are satisfied, not by surface string overlap.",
   "For Korean 직독직해(translate): accept natural Korean with correct meaning and key structural relations even if particles/word-order differ.",
   "feedbackKo: one or two concise Korean sentences coaching what to fix. Do not include model/provider names.",
@@ -61,11 +61,7 @@ export async function aiGradeText(input: AiGradeInput): Promise<AiGradeResult & 
         "wrong meaning or empty => verdict=incorrect, scorePct<=40",
       ],
     }),
-    providerOptions: {
-      google: {
-        thinkingConfig: { thinkingBudget: 0 },
-      },
-    },
+    
   });
   return {
     ...result.output,

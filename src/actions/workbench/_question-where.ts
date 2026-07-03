@@ -49,6 +49,23 @@ export function buildWorkbenchQuestionWhere(
     where.questionText = { contains: filters.search, mode: "insensitive" };
   }
 
+  // ── 과목 스코프 (항상 적용) — 국어/영어 문항 완전 분리 ──
+  // "KOREAN" = KO_* subType 문항만 / 미지정(기본=영어) = KO_* 제외.
+  // filters.subType(다중 선택)·빌더 검색 OR 과 겹치지 않게 AND 로 합류시킨다.
+  // (Prisma 의 NOT { startsWith } 는 SQL 상 NULL subType 행을 탈락시키므로
+  //  null 을 OR 로 명시해 subType 미기록 문항이 영어 목록에서 빠지지 않게 한다.)
+  where.AND = [
+    ...(Array.isArray(where.AND) ? where.AND : where.AND ? [where.AND] : []),
+    filters?.subject === "KOREAN"
+      ? { subType: { startsWith: "KO_" } }
+      : {
+          OR: [
+            { subType: null },
+            { NOT: { subType: { startsWith: "KO_" } } },
+          ],
+        },
+  ];
+
   return where;
 }
 

@@ -16,7 +16,7 @@
  *   4. 발문 단/복수: blankCount=1 발문에 "각 빈칸"이 아니라 "빈칸을". >=2 는 "각 빈칸".
  *   5. 단어수 인라인 제거: [요약문] 직렬화에 "(약 N단어)"/"(N단어)" 없어야(발문에만).
  *
- * 모델: PREMIUM(Claude claude-sonnet-4-6) 고정 → 실패 시 STANDARD(Gemini) 폴백 →
+ * 모델: PREMIUM(Claude Sonnet 5) 고정 → 실패 시 STANDARD(Gemini) 폴백 →
  *   둘 다 실패면 status:"gen_unavailable" + 합성 픽스처로 검증 진행.
  */
 

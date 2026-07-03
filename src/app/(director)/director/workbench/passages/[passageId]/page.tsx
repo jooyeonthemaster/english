@@ -21,6 +21,13 @@ export default async function PassageDetailPage({ params, searchParams }: PagePr
   // current staff's academy so deep-linked ids from other tenants 404 out.
   if (!passage || passage.academyId !== staff.academyId) notFound();
 
+  // 과목 게이트 — 국어 지문(subject='KOREAN')은 국어 상세로 보낸다. 이 화면의
+  // 도구(AI 지문 분석·PRIME 학습지·시험 추가)는 전부 영어 파이프라인이라 국어
+  // 지문에 노출되면 안 된다. 영어/기존(subject null) 지문은 기존 동작 그대로.
+  if (passage.subject === "KOREAN") {
+    redirect(`/director/korean/passages/${passageId}`);
+  }
+
   return (
     <PassageDetailClient
       passage={passage}

@@ -66,11 +66,16 @@ export async function handleCreateJob(req: NextRequest) {
     return errorResponse("INVALID_PAYLOAD", "요청 본문을 읽을 수 없습니다.", 400);
   }
 
+  // AI 원문 복원은 영어 전용 파이프라인 — 국어(subject=KOREAN) 잡은 서버에서도
+  // verbatim 으로 강제해 복원 차감/프롬프트 경로에 절대 오르지 않게 한다.
+  const outputMode =
+    parsed.subject === "KOREAN" ? ("verbatim" as const) : parsed.outputMode;
+
   // Pre-flight balance check. Pure OCR / Document AI is free; only explicit
   // AI restoration is projected here. The exact restoration count is finalized
   // later at the draft stage, so this remains a conservative upfront guard.
   const projected =
-    parsed.outputMode === "restored"
+    outputMode === "restored"
       ? parsed.totalPages * CREDIT_COSTS.PASSAGE_RESTORATION
       : 0;
   const balance = await checkBalance(staff.academyId);
@@ -108,14 +113,23 @@ export async function handleCreateJob(req: NextRequest) {
           createdById: staff.id,
           sourceType: parsed.sourceType,
           mode: parsed.mode,
-          outputMode: parsed.outputMode ?? null,
+          outputMode: outputMode ?? null,
           autoPromote: parsed.autoPromote ?? false,
           originalFileName: parsed.originalFileName,
           totalPages: parsed.totalPages,
           pendingPages: parsed.totalPages,
           creditsReserved: projected,
           status: "PENDING",
-          ...(originPath ? { metadata: { originPath } } : {}),
+          // subject: 과목 전파 신호 — finalize 의 SourceMaterial 생성과 승급
+          // Passage 가 이 값을 읽어 국어/영어 버킷을 분리한다.
+          ...(originPath || parsed.subject
+            ? {
+                metadata: {
+                  ...(originPath ? { originPath } : {}),
+                  ...(parsed.subject ? { subject: parsed.subject } : {}),
+                },
+              }
+            : {}),
         },
       });
 
@@ -172,9 +186,10 @@ export async function handleCreateJob(req: NextRequest) {
       await prisma.extractionJob.update({
         where: { id: job.id },
         data: {
-          // metadata는 통째로 교체되므로 생성 시 넣은 originPath를 보존한다
+          // metadata는 통째로 교체되므로 생성 시 넣은 originPath/subject를 보존한다
           metadata: {
             ...(originPath ? { originPath } : {}),
+            ...(parsed.subject ? { subject: parsed.subject } : {}),
             previewImageUrl: previewUploadTarget.uploadPath,
             previewMimeType: parsed.previewPage.mimeType,
             previewImageBytes: parsed.previewPage.size,

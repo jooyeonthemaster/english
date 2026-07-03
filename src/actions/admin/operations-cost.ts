@@ -362,6 +362,9 @@ export async function getOperationsCostDashboard(
     fxRate,
     pricing: {
       fixedMonthlyCostKrw: pricing.fixedMonthlyCostKrw,
+      hasAtlasCloudTokenPricing:
+        hasProviderPricing(activePricingRows, "ATLASCLOUD", "TOKENS") ||
+        (pricing.atlasInputUsdPer1M !== null && pricing.atlasOutputUsdPer1M !== null),
       hasGeminiPricing:
         hasProviderPricing(activePricingRows, "GOOGLE_GEMINI", "TOKENS") ||
         (pricing.geminiInputUsdPer1M !== null && pricing.geminiOutputUsdPer1M !== null),
@@ -562,7 +565,7 @@ export async function syncProviderBillingReconciliation(formData: FormData) {
     readOptionalFormNumber(formData, "syncUsdToKrwRate") ??
     readNumberEnv("PLATFORM_BILLING_USD_KRW_RATE", readNumberEnv("PLATFORM_USD_KRW_RATE", DEFAULT_USD_KRW_RATE));
 
-  const allowedTargets = new Set(["ALL", "GOOGLE", "ANTHROPIC"]);
+  const allowedTargets = new Set(["ALL", "GOOGLE"]);
   if (!allowedTargets.has(targetValue)) {
     throw new Error("Invalid billing sync target.");
   }
@@ -635,7 +638,6 @@ export async function createProviderBillingReconciliation(formData: FormData) {
   const allowedSources = new Set([
     "MANUAL",
     "GOOGLE_BILLING_EXPORT",
-    "ANTHROPIC_COST_REPORT",
     "ATLAS_INVOICE",
     "INVOICE",
   ]);

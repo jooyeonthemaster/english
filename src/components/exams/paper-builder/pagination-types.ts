@@ -22,6 +22,8 @@ export type FlowBlock =
       line: string;
       isSegStart: boolean;
       isSegEnd: boolean;
+      // 원문(\n 경계) 행의 첫 랩행인지 — pagination-metrics.textToLinesWithMeta 가 채운다.
+      isSourceLineStart?: boolean;
       lineHeight: number;
       segChrome: number;
       height: number;

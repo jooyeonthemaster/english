@@ -20,6 +20,7 @@ type GrammarMarkedExpression = {
   correction?: string;
   errorExpression?: string;
   surroundingText?: string;
+  pointCode?: string;
 };
 
 type GrammarOption = {
@@ -29,6 +30,7 @@ type GrammarOption = {
 
 const GRAMMAR_KEYS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"] as const;
 const GRAMMAR_LABELS = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)", "(I)", "(J)"] as const;
+const GRAMMAR_CIRCLED_NUMBERS = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"] as const;
 
 export function processGrammarError(
   passage: string,
@@ -45,11 +47,24 @@ export function processGrammarError(
   const canonicalMarkedExpressions = markedExpressions.map((me, index) => {
     const expression = normalizeString(me.expression);
     const errorExpression = normalizeString(me.errorExpression);
-    const correction =
+    let correction =
       normalizeString(me.correction) ||
       (me.isError && errorExpression && expression && errorExpression !== expression
         ? expression
         : "");
+    if (
+      me.isError &&
+      expression &&
+      correction &&
+      correction !== expression &&
+      !findGrammarExpression(passage, correction, me.surroundingText, false) &&
+      findGrammarExpression(passage, expression, me.surroundingText, false)
+    ) {
+      warnings.push(
+        `Correction normalized to source expression for ${canonicalGrammarLabel(me.label, index)}: "${correction}" -> "${expression}"`,
+      );
+      correction = expression;
+    }
 
     return {
       ...me,
@@ -57,6 +72,15 @@ export function processGrammarError(
       expression,
       errorExpression: errorExpression || undefined,
       correction: correction || undefined,
+      pointCode: canonicalGrammarPointCode(
+        me.pointCode,
+        getMarkedSurfaceExpression({
+          ...me,
+          expression,
+          errorExpression: errorExpression || undefined,
+          correction: correction || undefined,
+        }),
+      ),
     };
   });
 
@@ -145,7 +169,10 @@ export function processGrammarError(
   // 라벨 재매핑 후 어법 해설 메타 누설(출제/생성 과정 서술·내부 필드명)을
   // 결정형으로 제거한다 — 추가 LLM 호출 없이 후처리에서 청소. 게이트가 이 청소된
   // 텍스트를 검사하므로 대부분 재시도 없이 통과한다.
-  const explanation = cleanMeta(remapLabelMentions(ai.explanation));
+  const explanation = cleanMeta(normalizeGrammarExplanationSurfaceOrder(
+    remapLabelMentions(ai.explanation),
+    canonicalMarkedExpressions,
+  ));
   const answerLogic = cleanMeta(remapLabelMentions(ai.answerLogic));
   const keyPoints = Array.isArray(ai.keyPoints)
     ? ai.keyPoints.map((point) => cleanMeta(remapLabelMentions(point)))
@@ -376,6 +403,65 @@ function getSourceExpression(markedExpression: GrammarMarkedExpression): string 
   );
 }
 
+function normalizeGrammarExplanationSurfaceOrder(
+  value: unknown,
+  markedExpressions: GrammarMarkedExpression[],
+): unknown {
+  if (typeof value !== "string") return value;
+  const text = normalizeString(value);
+  if (!text) return value;
+
+  const prefixes: string[] = [];
+  for (const markedExpression of markedExpressions) {
+    if (!markedExpression.isError) continue;
+    const surface = getMarkedSurfaceExpression(markedExpression);
+    const correction = normalizeString(markedExpression.correction) || getSourceExpression(markedExpression);
+    if (!surface || !correction || normalizeComparable(surface) === normalizeComparable(correction)) {
+      continue;
+    }
+    if (explanationMentionsSurfaceBeforeCorrection(text, markedExpression.label, surface, correction)) {
+      continue;
+    }
+    prefixes.push(`${markedExpression.label} the displayed "${surface}" is wrong; it should be "${correction}".`);
+  }
+
+  if (prefixes.length === 0) return value;
+  const prefix = prefixes.join(" ");
+  if (text.startsWith(prefix)) return value;
+  return `${prefix} ${text}`;
+}
+
+function explanationMentionsSurfaceBeforeCorrection(
+  explanation: string,
+  label: string,
+  surface: string,
+  correction: string,
+): boolean {
+  const labelKey = normalizeGrammarKey(label);
+  const labelRe = labelKey ? new RegExp(`\\(${labelKey}\\)`, "i") : null;
+  const labelMatch = labelRe?.exec(explanation);
+  const segment = labelMatch
+    ? explanation.slice(labelMatch.index, labelMatch.index + 360)
+    : explanation;
+  const surfaceIndex = indexOfComparableSurface(segment, surface);
+  const correctionIndex = indexOfComparableSurface(segment, correction);
+  return surfaceIndex >= 0 && (correctionIndex < 0 || surfaceIndex <= correctionIndex);
+}
+
+function indexOfComparableSurface(text: string, surface: string): number {
+  const haystack = normalizeComparable(text);
+  const needle = normalizeComparable(surface);
+  return needle ? haystack.indexOf(needle) : -1;
+}
+
+function normalizeComparable(value: string): string {
+  return normalizeString(value)
+    .toLowerCase()
+    .replace(/[“”"']/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function canonicalizeWrongOptionExplanations(
   value: unknown,
   labelByKey: Map<string, string>,
@@ -409,6 +495,50 @@ function canonicalizeWrongOptionExplanations(
     remapped[canonicalKey || key] = explanation;
   }
   return remapped;
+}
+
+function canonicalGrammarPointCode(value: unknown, surface: string): string | undefined {
+  const code = normalizeString(value).toLowerCase();
+  if (!/^[a-m]$/.test(code)) return code || undefined;
+  if (grammarPointCodeSurfaceLooksCompatible(code, surface)) return code;
+  return inferGrammarPointCodeFromSurface(surface) ?? code;
+}
+
+function grammarPointCodeSurfaceLooksCompatible(code: string, surface: string): boolean {
+  const text = normalizeString(surface);
+  if (!text) return true;
+  switch (code) {
+    case "b":
+      return /\b(?:that|what|which|who|whom|whose|where|when|why|how|whether|whereby)\b/i.test(text);
+    case "c":
+      return /\b[A-Za-z]+(?:ing|ed|en)\b/i.test(text) || /\b(?:known|left|given|made|seen|found|built|written|driven|chosen|spoken|shown|born)\b/i.test(text);
+    case "g":
+      return /\b(?:it|its|they|them|their|theirs|themselves|itself|that|those|this|these|one|ones|he|him|his|she|her|hers|herself|himself|we|us|our|ours|you|your|yours)\b/i.test(text);
+    case "k":
+      return /\bto\s+[A-Za-z]/i.test(text) || /\b[A-Za-z]+ing\b/i.test(text);
+    case "l":
+      return /\b(?:in|on|at|by|of|to|for|from|with|without|during|while|despite|although|though|because|since|as|if|unless|before|after|until|when|whereas|whilst)\b/i.test(text) ||
+        /\b(?:in spite of|due to|owing to|thanks to|because of|on account of)\b/i.test(text);
+    case "m":
+      return /\b(?:more|less|most|least|as|than)\b/i.test(text) ||
+        /\b[A-Za-z]+(?:er|est)\b/i.test(text) ||
+        /\b(?:much|many|few|little|fewer|enough|very|almost|so|too|quite)\b/i.test(text);
+    default:
+      return true;
+  }
+}
+
+function inferGrammarPointCodeFromSurface(surface: string): string | undefined {
+  const text = normalizeString(surface);
+  if (!text) return undefined;
+  if (/\b(?:that|what|which|who|whom|whose|where|when|why|how|whether|whereby)\b/i.test(text)) return "b";
+  if (/\b(?:is|are|was|were|be|been|being|get|gets|got)\s+(?:[A-Za-z]+ed|known|made|seen|found|given|left|built|told|shown|used)\b/i.test(text)) return "e";
+  if (/\b[A-Za-z]+(?:ing|ed|en)\b/i.test(text) || /\b(?:known|left|given|made|seen|found|built|written|driven|chosen|spoken|shown|born)\b/i.test(text)) return "c";
+  if (/\b(?:it|its|they|them|their|theirs|themselves|itself|that|those|this|these|one|ones|he|him|his|she|her|hers|herself|himself|we|us|our|ours|you|your|yours)\b/i.test(text)) return "g";
+  if (/\bto\s+[A-Za-z]/i.test(text) || /\b[A-Za-z]+ing\b/i.test(text)) return "k";
+  if (/\b(?:in|on|at|by|of|to|for|from|with|without|during|while|despite|although|though|because|since|as|if|unless|before|after|until|when|whereas|whilst)\b/i.test(text)) return "l";
+  if (/\b(?:am|is|are|was|were|be|been|being|do|does|did|have|has|had|can|could|should|would|will|may|might|must|[A-Za-z]+s)\b/i.test(text)) return "a";
+  return undefined;
 }
 
 function buildLabelMap(
@@ -463,6 +593,9 @@ function collectGrammarLabels(value: unknown): string[] {
 function normalizeGrammarKey(value: unknown): string {
   const text = normalizeString(value);
   if (!text) return "";
+
+  const circledIndex = GRAMMAR_CIRCLED_NUMBERS.indexOf(text as (typeof GRAMMAR_CIRCLED_NUMBERS)[number]);
+  if (circledIndex >= 0) return GRAMMAR_KEYS[circledIndex] ?? "";
 
   const alpha = text.match(/^[([]?\s*([A-Ja-j])\s*[)\].:]?$/);
   if (alpha) return alpha[1].toUpperCase();

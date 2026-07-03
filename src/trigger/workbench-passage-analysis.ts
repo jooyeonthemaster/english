@@ -37,6 +37,12 @@ import {
   generateAnalysisReportCore,
   generateLearningWorksheet,
 } from "@/lib/passage-report/analysis-report/generate";
+import {
+  buildKoPromptInputFromPassage,
+  isKoreanPassage,
+  saveKoPrimeReport,
+} from "@/lib/passage-report/analysis-report/ko-entry";
+import { generateKoAnalysisReportCore } from "@/lib/passage-report/analysis-report/ko-resilient-generate";
 import type { AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import { derivePassageAnalysisFromReport } from "@/lib/passage-report/analysis-report/derive-legacy";
 
@@ -165,6 +171,122 @@ export const workbenchPassageAnalysisTask = task({
         triggerRunId: ctx.run.id,
       },
     });
+
+    // ── PRIME_KO 게이트: 국어 지문은 KO 생성기·PRIME_KO 마커로만 처리 ──────────
+    // 영어 분석기(generateAnalysisReportCore)·derive-legacy(PassageAnalysis 파생)로
+    // 절대 흐르지 않는다(포트맵 무회귀 위험 9위). 실전 학습지 옵션은 KO 미지원 — 기본 단가만 과금.
+    if (isKoreanPassage(job.passage)) {
+      const koCreditCost = getPassageAnalysisCreditCost({ includeWorksheet: false });
+      let koCreditTxId: string | null = null;
+      try {
+        const credit = await ensureWorkbenchAiJobCharged({
+          jobId,
+          academyId: job.academyId,
+          staffId: job.createdById,
+          operationType: "PASSAGE_ANALYSIS",
+          metadata: { passageId: job.passage.id, generationPlan, koPrime: true, creditCost: koCreditCost },
+          creditCost: koCreditCost,
+        });
+        koCreditTxId = credit.transactionId;
+
+        generationStartedAt = Date.now();
+        const koResult = await generateKoAnalysisReportCore(
+          buildKoPromptInputFromPassage({
+            content: job.passage.content,
+            tags: job.passage.tags,
+            grade: job.passage.grade,
+            schoolType: (job.passage.school?.type as "MIDDLE" | "HIGH" | undefined) ?? null,
+            customPrompt: config.customPrompt,
+          }),
+          { contentHash: currentHash, deadlineAt: Date.now() + 240_000 },
+        );
+        generationMs = Date.now() - generationStartedAt;
+        // 회복형 KO 생성의 LLM 호출 토큰 합산 기록(플랫폼 원가 추적).
+        const koTokens = koResult.usages.reduce(
+          (acc, u) => {
+            const t = readAiUsageTokens(u.usage);
+            acc.input += t.inputTokens;
+            acc.output += t.outputTokens;
+            return acc;
+          },
+          { input: 0, output: 0 },
+        );
+        if (koTokens.input > 0 || koTokens.output > 0) {
+          const koModelId = koResult.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.5-flash";
+          await recordPlatformApiUsageCost({
+            sourceKey: `workbench_ai_job:${jobId}:analysis`,
+            sourceType: "WORKBENCH_AI_JOB",
+            sourceId: jobId,
+            sourceDetail: "PASSAGE_ANALYSIS",
+            academyId: job.academyId,
+            provider: providerFromModel(koModelId),
+            model: koModelId,
+            operationType: "PASSAGE_ANALYSIS",
+            unitType: "TOKENS",
+            inputTokens: koTokens.input,
+            outputTokens: koTokens.output,
+            usageAt: new Date(),
+            metadata: { passageId: job.passage.id, generationPlan, koPrime: true, calls: koResult.usages.length },
+          });
+        }
+        if (!koResult.ok) {
+          throw new Error(koResult.error);
+        }
+        await saveKoPrimeReport(prisma, {
+          academyId: job.academyId,
+          passageId: job.passage.id,
+          staffId: job.createdById,
+          report: koResult.report,
+        });
+        await prisma.workbenchAiJob.update({
+          where: { id: jobId },
+          data: {
+            status: "COMPLETED",
+            successCount: 1,
+            failedCount: 0,
+            resultCount: 1,
+            result: { cached: false, passageId: job.passage.id, generationPlan, koPrime: true },
+            completedAt: new Date(),
+          },
+        });
+        logger.info("PRIME_KO passage analysis completed", { jobId, passageId: job.passage.id });
+        return { success: true as const, passageId: job.passage.id };
+      } catch (koErr) {
+        if (koErr instanceof InsufficientCreditsError) {
+          await prisma.workbenchAiJob.update({
+            where: { id: jobId },
+            data: {
+              status: "FAILED",
+              failedCount: 1,
+              errorMessage: `Insufficient credits: have ${koErr.currentBalance}, need ${koErr.requiredCredits}`,
+              completedAt: new Date(),
+            },
+          });
+          return { error: "INSUFFICIENT_CREDITS" as const };
+        }
+        if (koCreditTxId) {
+          await refundCredits(
+            job.academyId,
+            "PASSAGE_ANALYSIS",
+            koCreditTxId,
+            "PRIME_KO passage analysis failed",
+            koCreditCost,
+          ).catch((refundErr) => {
+            logger.error("PRIME_KO refund failed", { jobId, error: String(refundErr) });
+          });
+        }
+        await prisma.workbenchAiJob.update({
+          where: { id: jobId },
+          data: {
+            status: "FAILED",
+            failedCount: 1,
+            errorMessage: `국어 분석 생성 실패: ${String(koErr).slice(0, 300)}`,
+            completedAt: new Date(),
+          },
+        });
+        return { error: "KO_PRIME_FAILED" as const };
+      }
+    }
 
     // 실전 학습지 포함 요청은 캐시 단락을 타지 않는다 (fast 라우트와 동일 규칙).
     if (!config.forcePrimeReport && !config.includeWorksheet && job.passage.analysis && job.passage.analysis.contentHash === currentHash) {

@@ -103,7 +103,7 @@ const CONTENT: FeaturePageContent = {
   ],
   ctaTitle: "콘텐츠 제작과 학원 운영을 하나로, 영어학원 올인원",
   ctaBody:
-    "AI 문제 생성·지문 분석·시험지 제작부터 학생·원비·출결·급여·재무까지 — SMOAT 하나로 운영하세요. 지금 무료로 시작할 수 있습니다.",
+    "AI 문제 생성·지문 분석·시험지 제작부터 학생·원비·출결·급여·재무까지 — SMOAT 하나로 운영하세요. 지금 시작할 수 있습니다.",
   related: [
     {
       href: "/features/ai-question-generation",

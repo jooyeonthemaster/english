@@ -2,6 +2,11 @@ import { prisma } from "@/lib/prisma";
 import { getStaffSession } from "@/lib/auth";
 import { isM1DraftVisible } from "@/lib/extraction/m1-draft-visibility";
 import { pseudoIdForDraft } from "@/lib/extraction/draft-passage-id";
+import { buildPassageSubjectScopeWhere } from "@/actions/workbench/_passage-where";
+import {
+  buildCollectionSubjectScopeWhere,
+  isMissingColumnError,
+} from "@/actions/workbench/_collection-where";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -28,14 +33,53 @@ export async function GET(request: NextRequest) {
           .filter(Boolean),
       ),
     ).slice(0, 100);
+    // 과목 스코프 — 'KOREAN' = 국어 전용 화면(국어 지문만), 미지정 = 영어
+    // 기본(국어 지문 제외). 서버 액션(buildWorkbenchPassageWhere)과 같은 조각을
+    // 공유해 목록/전체선택 population 이 항상 일치한다.
+    const subjectScope =
+      request.nextUrl.searchParams.get("scope") === "KOREAN"
+        ? ("KOREAN" as const)
+        : undefined;
     const passageWhere = {
       academyId: staff.academyId,
       ...(passageIdsFilter.length > 0 ? { id: { in: passageIdsFilter } } : {}),
       ...(onlyAnalyzed ? { analysis: { isNot: null } } : {}),
+      ...buildPassageSubjectScopeWhere(subjectScope),
     };
     const collectionItemCount = onlyAnalyzed
       ? { where: { passage: { is: passageWhere } } }
       : true;
+
+    // 폴더(컬렉션) 목록도 지문과 동일한 과목 스코프를 적용한다 — 국어 생성
+    // 페이지(scope=KOREAN)에 영어 폴더가, 영어 화면에 국어 폴더가 새어들지
+    // 않는다. select 에 subject 가 없으므로 P2022 는 WHERE 절에서만 가능 —
+    // 컬럼 미반영 DB 는 레거시(과목 미분리·공유 폴더) 목록으로 우아하게
+    // 강등한다(collections-passage.ts getPassageCollections 패턴 미러).
+    const collectionSelect = {
+      id: true,
+      parentId: true,
+      name: true,
+      _count: { select: { items: collectionItemCount } },
+    } as const;
+    const loadCollections = async () => {
+      try {
+        return await prisma.passageCollection.findMany({
+          where: {
+            academyId: staff.academyId,
+            ...buildCollectionSubjectScopeWhere(subjectScope),
+          },
+          select: collectionSelect,
+          orderBy: { name: "asc" },
+        });
+      } catch (error) {
+        if (!isMissingColumnError(error)) throw error;
+        return prisma.passageCollection.findMany({
+          where: { academyId: staff.academyId },
+          select: collectionSelect,
+          orderBy: { name: "asc" },
+        });
+      }
+    };
 
     const [passageRows, schools, collections] = await Promise.all([
       prisma.passage.findMany({
@@ -50,6 +94,9 @@ export async function GET(request: NextRequest) {
           publisher: true,
           difficulty: true,
           source: true,
+          // 과목(null=영어)·태그(국어 갈래 KO_KIND:* 포함) — 카드 배지/필터용.
+          subject: true,
+          tags: true,
           createdAt: true,
           updatedAt: true,
           school: { select: { id: true, name: true } },
@@ -84,16 +131,7 @@ export async function GET(request: NextRequest) {
         select: { id: true, name: true },
         orderBy: { name: "asc" },
       }),
-      prisma.passageCollection.findMany({
-        where: { academyId: staff.academyId },
-        select: {
-          id: true,
-          parentId: true,
-          name: true,
-          _count: { select: { items: collectionItemCount } },
-        },
-        orderBy: { name: "asc" },
-      }),
+      loadCollections(),
     ]);
 
     const passageIds = passageRows.map((passage) => passage.id);
@@ -145,6 +183,10 @@ export async function GET(request: NextRequest) {
     // 은 숨긴다. 카드는 reviewStatus !== "COMMITTED" → 기존 "검수필요" 빨간
     // 테두리로 자동 표시된다.
     let passages: typeof realPassages = realPassages;
+    // 검수 전 자료(미승격 draft) 합류 — 과목 스코프별로 분리한다. 잡 생성 시
+    // metadata.subject 에 기록된 과목("KOREAN")을 기준으로, 국어 스코프에는
+    // 국어 잡의 draft 만, 영어(기본) 스코프에는 그 외 draft 만 합친다 —
+    // 양방향 모두 상대 과목의 검수 전 자료가 새어들지 않는다.
     if (includeUnreviewed && passageIdsFilter.length === 0 && !onlyAnalyzed) {
       try {
         const draftRows = await prisma.extractionM1PassageDraft.findMany({
@@ -170,10 +212,21 @@ export async function GET(request: NextRequest) {
             reviewStatus: true,
             metadata: true,
             createdAt: true,
+            // 잡 metadata.subject — 과목 스코프 필터(위 주석)의 판정 소스.
+            job: { select: { metadata: true } },
           },
         });
 
+        const isKoreanDraftJob = (jobMetadata: unknown): boolean =>
+          !!jobMetadata &&
+          typeof jobMetadata === "object" &&
+          !Array.isArray(jobMetadata) &&
+          (jobMetadata as Record<string, unknown>).subject === "KOREAN";
+
         const draftPseudoPassages = draftRows
+          .filter(
+            (d) => isKoreanDraftJob(d.job?.metadata) === (subjectScope === "KOREAN"),
+          )
           .filter((d) =>
             isM1DraftVisible({
               restorationStatus: d.restorationStatus,
@@ -191,6 +244,9 @@ export async function GET(request: NextRequest) {
             publisher: null,
             difficulty: null,
             source: "extraction-draft",
+            // 국어 잡의 draft 는 국어 pseudo-passage 로 표시(카드 배지 일관).
+            subject: subjectScope === "KOREAN" ? "KOREAN" : null,
+            tags: null,
             school: null,
             collectionItems: [] as { collectionId: string }[],
             analysis: null,
@@ -227,10 +283,11 @@ export async function GET(request: NextRequest) {
       filters: { schools, grades, semesters, publishers },
       collections,
     });
-  } catch {
-    return NextResponse.json({
-      passages: [],
-      filters: { schools: [], grades: [], semesters: [], publishers: [] },
-    });
+  } catch (error) {
+    console.error("[passages/list] failed", error);
+    return NextResponse.json(
+      { error: "지문 목록을 불러오지 못했습니다." },
+      { status: 500 },
+    );
   }
 }

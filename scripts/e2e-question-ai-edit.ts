@@ -50,7 +50,7 @@ async function main() {
     schoolType: q.passage?.school?.type === "MIDDLE" ? "중학교" : "고등학교",
     gradeInfo: q.passage?.grade ? String(q.passage.grade) : "",
     generationPlan: "STANDARD",
-    modelId: "gemini-3.5-flash",
+    modelId: "google/gemini-3.5-flash",
   });
 
   const checks: Array<[string, boolean]> = [];

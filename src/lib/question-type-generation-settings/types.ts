@@ -75,7 +75,8 @@ export interface GrammarErrorGenerationSettings
   /**
    * 핵심 집중 모드 — true 면 정답 포인트를 기출 1000제 고빈출 톱셋(관계사·수일치·
    * to부정사/동명사·분사·대명사·형부)으로 좁혀 출제 포인트를 집중시킨다.
-   * false/미지정이면 기존 다양성(코어 10개 순회). 기본 false.
+   * false 면 기존 다양성(코어 10개 순회). ⚠️UI 기본 시드는 ON(true) — getDefault 가
+   * pointFocus:true 로 노출하므로 강사가 끄지 않으면 집중 모드로 생성된다(GRAMMAR_CHOICE_COMBO 동일).
    */
   pointFocus?: boolean;
 }

@@ -13,9 +13,9 @@ import type { DiffEntry } from "./detailed-diff";
 
 /** 수정에 사용할 모델 식별자 — model-config.ts 의 후보 풀과 1:1. */
 export type EditModelId =
-  | "gemini-3.5-flash"
-  | "gemini-3.1-flash-lite"
-  | "claude-sonnet-4-6";
+  | "google/gemini-3.5-flash"
+  | "google/gemini-3.1-flash-lite"
+  | "anthropic/claude-sonnet-5";
 
 /** 구조화 문제 객체 — 생성기가 만드는 `_typeId` 기반 레코드와 동일 형태. */
 export type StructuredQuestionLike = Record<string, unknown>;
@@ -79,7 +79,7 @@ export interface RunQuestionEditResult {
   /** 진단/과금 계측. */
   meta: {
     modelId: EditModelId;
-    provider: "google" | "anthropic";
+    provider: "atlascloud";
     attempts: number;
     durationMs: number;
     inputTokens?: number;

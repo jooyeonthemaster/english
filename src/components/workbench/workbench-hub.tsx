@@ -189,6 +189,8 @@ export function WorkbenchHub({ stats }: { stats: WorkbenchStats }) {
         </Link>
       </div>
 
+      {/* 국어 워크스페이스는 영어 허브에 노출하지 않는다 — URL(/director/korean) 전용 진입 (워크스페이스 상호 격리). */}
+
       {/* Action Items — only when there's something to do */}
       {hasActions && (
         <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">

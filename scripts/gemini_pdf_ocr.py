@@ -17,7 +17,8 @@ import fitz
 from PIL import Image
 
 
-DEFAULT_MODEL = "gemini-3.5-flash"
+DEFAULT_MODEL = "google/gemini-3.5-flash"
+DEFAULT_ATLAS_BASE_URL = "https://api.atlascloud.ai/api/v1"
 DEFAULT_OUTPUT_DIR = Path("data/ocr/2024_suneung_english_questions")
 
 SYSTEM_PROMPT = """You are a high-accuracy OCR engine for Korean exam papers.
@@ -59,6 +60,69 @@ class GeminiResult:
     input_tokens: int | None
     output_tokens: int | None
     finish_reason: str | None = None
+
+
+def read_env(*names: str) -> str | None:
+    for name in names:
+        value = os.environ.get(name, "").strip()
+        if value:
+            return value
+    return None
+
+
+def normalize_model(model: str) -> str:
+    raw = model.strip() or DEFAULT_MODEL
+    lower = raw.lower()
+    if lower in {"gemini-3.1-flash-lite", "gemini-3.1-flash-lite-preview"}:
+        return "google/gemini-3.1-flash-lite"
+    if lower == "gemini-3.5-flash":
+        return "google/gemini-3.5-flash"
+    if lower in {
+        "claude",
+        "sonnet",
+        "claude-sonnet",
+        "claude-sonnet-4-6",
+        "claude-sonnet-4.6",
+        "anthropic/claude-sonnet-4-6",
+        "anthropic/claude-sonnet-4.6",
+    }:
+        return "anthropic/claude-sonnet-5"
+    if lower.startswith("gemini-"):
+        return f"google/{raw}"
+    if lower.startswith("claude-"):
+        return "anthropic/claude-sonnet-5"
+    return raw
+
+
+def atlas_base_url() -> str:
+    return (
+        read_env("ATLASCLOUD_TEXT_BASE_URL", "OPENROUTER_BASE_URL", "ATLASCLOUD_BASE_URL")
+        or DEFAULT_ATLAS_BASE_URL
+    ).rstrip("/")
+
+
+def atlas_api_key() -> str | None:
+    return read_env("ATLASCLOUD_TEXT_API_KEY", "ATLASCLOUD_API_KEY", "OPENROUTER_API_KEY")
+
+
+def atlas_extra_headers() -> dict[str, str]:
+    headers: dict[str, str] = {}
+    referer = read_env("OPENROUTER_HTTP_REFERER", "ATLASCLOUD_HTTP_REFERER")
+    title = read_env("OPENROUTER_X_TITLE", "ATLASCLOUD_X_TITLE")
+    if referer:
+        headers["HTTP-Referer"] = referer
+    if title:
+        headers["X-Title"] = title
+    return headers
+
+
+def reasoning_effort_for(model: str) -> str | None:
+    normalized = normalize_model(model).lower()
+    if normalized.startswith("google/gemini-"):
+        return read_env("ATLASCLOUD_GEMINI_REASONING_EFFORT") or "none"
+    if normalized.startswith("anthropic/claude-"):
+        return read_env("ATLASCLOUD_CLAUDE_REASONING_EFFORT")
+    return read_env("ATLASCLOUD_REASONING_EFFORT")
 
 
 def load_dotenv(path: Path) -> None:
@@ -166,6 +230,39 @@ def strip_markdown_fences(text: str) -> str:
     return text
 
 
+def chat_completion_to_gemini_like(body: dict[str, Any]) -> dict[str, Any]:
+    choices = body.get("choices") or []
+    choice = choices[0] if choices else {}
+    message = choice.get("message") or {}
+    content = message.get("content") or ""
+    if isinstance(content, list):
+        text = "".join(
+            part.get("text", "") for part in content if isinstance(part, dict)
+        )
+    else:
+        text = str(content)
+
+    usage = body.get("usage") or {}
+    finish_reason = choice.get("finish_reason")
+    if isinstance(finish_reason, str):
+        finish_reason = "STOP" if finish_reason == "stop" else finish_reason.upper()
+
+    return {
+        "candidates": [
+            {
+                "content": {"parts": [{"text": text}]},
+                "finishReason": finish_reason,
+            }
+        ],
+        "usageMetadata": {
+            "promptTokenCount": usage.get("prompt_tokens") or usage.get("input_tokens"),
+            "candidatesTokenCount": usage.get("completion_tokens") or usage.get("output_tokens"),
+            "totalTokenCount": usage.get("total_tokens"),
+        },
+        "rawProviderResponse": body,
+    }
+
+
 def call_gemini(
     *,
     api_key: str,
@@ -177,63 +274,65 @@ def call_gemini(
     max_retries: int,
     crop_label: str | None = None,
 ) -> GeminiResult:
-    endpoint = (
-        "https://generativelanguage.googleapis.com/v1beta/models/"
-        f"{model}:generateContent?key={api_key}"
-    )
+    normalized_model = normalize_model(model)
+    endpoint = f"{atlas_base_url()}/chat/completions"
     image_b64 = base64.b64encode(image_path.read_bytes()).decode("ascii")
     payload = {
-        "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]},
-        "contents": [
+        "model": normalized_model,
+        "messages": [
+            {"role": "system", "content": SYSTEM_PROMPT},
             {
                 "role": "user",
-                "parts": [
+                "content": [
+                    {"type": "text", "text": build_user_prompt(page_number, total_pages, crop_label)},
                     {
-                        "inlineData": {
-                            "mimeType": "image/jpeg",
-                            "data": image_b64,
-                        }
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{image_b64}"},
                     },
-                    {"text": build_user_prompt(page_number, total_pages, crop_label)},
                 ],
             }
         ],
-        "generationConfig": {
-            "temperature": 0,
-            "topK": 1,
-            "topP": 0,
-            "maxOutputTokens": 16384,
-            "thinkingConfig": {"thinkingBudget": 0},
-        },
+        "temperature": 0,
+        "top_p": 0,
+        "max_tokens": 16384,
     }
+    reasoning_effort = reasoning_effort_for(normalized_model)
+    if reasoning_effort:
+        payload["reasoning_effort"] = reasoning_effort
 
     data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
     last_error: Exception | None = None
 
     for attempt in range(max_retries + 1):
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+            **atlas_extra_headers(),
+        }
         request = urllib.request.Request(
             endpoint,
             data=data,
-            headers={"Content-Type": "application/json"},
+            headers=headers,
             method="POST",
         )
 
         try:
             with urllib.request.urlopen(request, timeout=timeout) as response:
                 body = json.loads(response.read().decode("utf-8"))
-            candidate = (body.get("candidates") or [{}])[0]
-            text = strip_markdown_fences(read_candidate_text(body))
-            usage = body.get("usageMetadata") or {}
+            gemini_like = chat_completion_to_gemini_like(body)
+            candidate = (gemini_like.get("candidates") or [{}])[0]
+            text = strip_markdown_fences(read_candidate_text(gemini_like))
+            usage = gemini_like.get("usageMetadata") or {}
             return GeminiResult(
                 text=text,
-                raw=body,
+                raw=gemini_like,
                 input_tokens=usage.get("promptTokenCount"),
                 output_tokens=usage.get("candidatesTokenCount"),
                 finish_reason=candidate.get("finishReason"),
             )
         except urllib.error.HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")
-            last_error = RuntimeError(f"Gemini HTTP {exc.code}: {detail[:1000]}")
+            last_error = RuntimeError(f"Atlas Cloud HTTP {exc.code}: {detail[:1000]}")
             if exc.code not in {429, 500, 502, 503, 504} or attempt >= max_retries:
                 raise last_error
         except (urllib.error.URLError, TimeoutError) as exc:
@@ -248,7 +347,7 @@ def call_gemini(
         )
         time.sleep(sleep_seconds)
 
-    raise RuntimeError(f"Gemini request failed: {last_error}")
+    raise RuntimeError(f"Atlas Cloud request failed: {last_error}")
 
 
 @dataclass
@@ -610,8 +709,13 @@ def result_from_existing_files(text_path: Path, response_path: Path) -> GeminiRe
 
 
 def main() -> int:
+    root = project_root()
+    os.chdir(root)
+    load_dotenv(root / ".env")
+    load_dotenv(root / ".env.local")
+
     parser = argparse.ArgumentParser(
-        description="Render PDF pages to images and OCR each page with Gemini."
+        description="Render PDF pages to images and OCR each page with Atlas/OpenRouter."
     )
     parser.add_argument(
         "--input",
@@ -625,7 +729,10 @@ def main() -> int:
         default=DEFAULT_OUTPUT_DIR,
         help="Directory for source copy, images, text files, raw responses, and manifest.",
     )
-    parser.add_argument("--model", default=os.environ.get("GEMINI_OCR_MODEL", DEFAULT_MODEL))
+    parser.add_argument(
+        "--model",
+        default=read_env("ATLASCLOUD_OCR_MODEL", "OPENROUTER_OCR_MODEL", "GEMINI_OCR_MODEL") or DEFAULT_MODEL,
+    )
     parser.add_argument("--dpi", type=int, default=200)
     parser.add_argument("--jpeg-quality", type=int, default=90)
     parser.add_argument("--timeout", type=int, default=120)
@@ -633,13 +740,9 @@ def main() -> int:
     parser.add_argument("--force", action="store_true", help="Regenerate images and OCR text.")
     args = parser.parse_args()
 
-    root = project_root()
-    os.chdir(root)
-    load_dotenv(root / ".env")
-
-    api_key = os.environ.get("GOOGLE_GENERATIVE_AI_API_KEY")
+    api_key = atlas_api_key()
     if not api_key:
-        print("Missing GOOGLE_GENERATIVE_AI_API_KEY in environment or .env", file=sys.stderr)
+        print("Missing ATLASCLOUD_API_KEY or OPENROUTER_API_KEY in environment or .env", file=sys.stderr)
         return 1
 
     output_dir = args.output_dir

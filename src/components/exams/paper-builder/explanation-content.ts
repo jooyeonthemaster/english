@@ -64,10 +64,22 @@ export function buildExplanationRows(item: PaperItem): ExplanationRow[] {
     for (const kp of keyPoints) rows.push({ type: "bullet", text: kp.trim() });
   }
 
-  const wrong = safeParseJSON<Record<string, string>>(
-    explanation.wrongOptionExplanations,
-    {},
-  );
+  // KO 봉투는 배열형([{label, explanation}]) 계약 — Record 로 정규화해야 소실되지 않는다.
+  // 영어 Record 형은 기존 경로 그대로 (DOCX/HWPX answer 렌더와 동일 규약).
+  const wrongRaw = safeParseJSON<unknown>(explanation.wrongOptionExplanations, {});
+  const wrong: Record<string, string> = Array.isArray(wrongRaw)
+    ? Object.fromEntries(
+        wrongRaw
+          .filter(
+            (e): e is { label: string; explanation: string } =>
+              !!e &&
+              typeof e === "object" &&
+              typeof (e as { label?: unknown }).label === "string" &&
+              typeof (e as { explanation?: unknown }).explanation === "string",
+          )
+          .map((e) => [e.label, e.explanation]),
+      )
+    : ((wrongRaw ?? {}) as Record<string, string>);
   const wrongEntries = Object.entries(wrong).filter(
     ([, v]) => typeof v === "string" && v.trim().length > 0,
   );

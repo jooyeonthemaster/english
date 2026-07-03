@@ -143,8 +143,9 @@ export const REPORT_LAYOUT = {
   sectionGapMm: 7, // 섹션 사이 수직 간격
   bodyFontPt: 10,
   smallFontPt: 8.5,
-  // 한글 산세리프 / 영문 세리프 — 레퍼런스의 클래식 학술 톤
-  fontKo: `"Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif`,
+  // 한글 맑은 고딕(출력물 통일·인쇄 스풀 폰트 임베드 경감) / 영문 세리프 — 클래식 학술 톤
+  // report-styles.ts 의 --font-ko 와 동기화. 실제 본문 --font-ko 는 CSS 기본값을 쓰므로 이 값은 방어적 일치용.
+  fontKo: `"Malgun Gothic Exam", "Malgun Gothic", "맑은 고딕", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif`,
   fontEnSerif: `"Noto Serif", "Times New Roman", serif`,
 } as const;
 

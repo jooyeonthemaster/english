@@ -391,6 +391,26 @@ export function worksheetAnswerKeySubsections(
         </table>
       </div>,
     );
+    if (workbook.vocabularySelection) {
+      const vocabSelection = workbook.vocabularySelection;
+      wrap(
+        "workbook-vocab-select",
+        <div className="par-ws-answer-subsection">
+          <div className="par-ws-drill-label">{vocabSelection.title}</div>
+          <table className="par-ws-key-table">
+            <tbody>
+              {vocabSelection.choices.map((choice) => (
+                <tr key={choice.no}>
+                  <td>{choice.no}</td>
+                  <td>{choice.answer}</td>
+                  <td>{choice.explanation}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>,
+      );
+    }
     wrap(
       "workbook-vocab",
       <div className="par-ws-answer-subsection">

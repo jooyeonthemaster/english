@@ -1,5 +1,11 @@
 import { type ReactNode, type PointerEvent as ReactPointerEvent, useRef } from "react";
 import { type AnalysisSection, NUMBERED_SECTION_LABELS, SECTION_LABELS_EN } from "@/lib/passage-report/analysis-report/schema";
+import {
+  isKoAnalysisSectionKind,
+  KO_NUMBERED_SECTION_LABELS,
+  KO_SECTION_LABELS_EN,
+  type KoAnalysisSectionKind,
+} from "@/lib/passage-report/analysis-report/ko-schema";
 import { Field } from "./editable-field";
 import type { TableColResize, WrapKind } from "./types";
 
@@ -52,15 +58,16 @@ export function SectionHead({
   onCommitEn,
 }: {
   no: number;
-  kind: AnalysisSection["kind"];
+  kind: AnalysisSection["kind"] | KoAnalysisSectionKind;
   labelKo?: string;
   labelEn?: string;
   editable?: boolean;
   onCommitKo?: (v: string) => void;
   onCommitEn?: (v: string) => void;
 }) {
-  const ko = labelKo ?? NUMBERED_SECTION_LABELS[kind];
-  const en = labelEn ?? SECTION_LABELS_EN[kind];
+  // PRIME_KO 폴백 — 영어 kind 는 기존 맵 그대로(무회귀), KO kind 만 KO 라벨 맵 사용.
+  const ko = labelKo ?? (isKoAnalysisSectionKind(kind) ? KO_NUMBERED_SECTION_LABELS[kind] : NUMBERED_SECTION_LABELS[kind]);
+  const en = labelEn ?? (isKoAnalysisSectionKind(kind) ? KO_SECTION_LABELS_EN[kind] : SECTION_LABELS_EN[kind]);
   return (
     <div className="par-sec-head">
       <span className="par-sec-no">{String(no).padStart(2, "0")}</span>

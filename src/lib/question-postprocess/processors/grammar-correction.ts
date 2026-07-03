@@ -60,8 +60,14 @@ export function processGrammarCorrection(
       };
     }
 
-    const correctedPart = normalizeString(segment.correctedPart);
-    const errorPart = normalizeString(segment.errorPart);
+    const correctedPart =
+      normalizeString(segment.correctedPart) ||
+      normalizeString(readIndexedValue(ai.correctedParts, index)) ||
+      (index === 0 ? normalizeString(ai.correctedPart) : "");
+    const errorPart =
+      normalizeString(segment.errorPart) ||
+      normalizeString(readIndexedValue(ai.errorParts, index)) ||
+      (index === 0 ? normalizeString(ai.errorPart) : "");
     const displayedText =
       normalizeString(segment.displayedText) ||
       (segment.isError === true && correctedPart && errorPart
@@ -105,6 +111,8 @@ export function processGrammarCorrection(
       label,
       sourceText,
       displayedText,
+      errorPart,
+      correctedPart,
     });
   }
 
@@ -184,6 +192,10 @@ function normalizeGrammarCorrectionLabel(value: unknown, index: number): string 
   if (/^\([A-J]\)$/i.test(text)) return text.toUpperCase();
   if (/^[A-J]$/i.test(text)) return `(${text.toUpperCase()})`;
   return grammarCorrectionLabel(index);
+}
+
+function readIndexedValue(value: unknown, index: number): unknown {
+  return Array.isArray(value) ? value[index] : undefined;
 }
 
 function validateErrorSegment(

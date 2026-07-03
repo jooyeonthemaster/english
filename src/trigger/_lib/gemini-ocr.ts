@@ -10,6 +10,7 @@ import {
   getExtractionAiConfig,
   type ExtractionAiStage,
 } from "@/lib/extraction/model-config";
+import { postAtlasChatCompletionAsGeminiLike } from "@/lib/atlas-chat-rest";
 
 interface GeminiGenerateContentResponse {
   candidates?: Array<{
@@ -119,25 +120,6 @@ export class GeminiHttpError extends Error {
   }
 }
 
-function getGoogleApiKey(): string {
-  const key =
-    process.env.GEMINI_API_KEY?.trim() ||
-    process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ||
-    process.env.GOOGLE_API_KEY?.trim() ||
-    "";
-  if (!key) {
-    throw new Error(
-      "Missing env var: GOOGLE_GENERATIVE_AI_API_KEY, GEMINI_API_KEY, or GOOGLE_API_KEY",
-    );
-  }
-  return key;
-}
-
-function geminiUrl(modelName = getExtractionAiConfig("ocr").model): string {
-  const key = getGoogleApiKey();
-  return `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(key)}`;
-}
-
 function readCandidateText(body: GeminiGenerateContentResponse): string {
   return (
     body.candidates?.[0]?.content?.parts
@@ -162,145 +144,53 @@ async function postGemini(
   params: GeminiOcrParams & { responseMimeType?: "application/json" },
 ): Promise<GeminiGenerateContentResponse> {
   const cfg = getExtractionAiConfig("ocr");
-  const response = await fetchWithTriggerFallback(geminiUrl(cfg.model), {
-    method: "POST",
-    headers: { "content-type": "application/json" },
+  return postAtlasChatCompletionAsGeminiLike({
+    model: cfg.model,
+    systemPrompt: params.systemPrompt,
+    userPrompt: params.userPrompt,
+    image: { mimeType: params.mimeType, base64: params.base64 },
+    temperature: cfg.temperature,
+    topP: cfg.topP,
+    maxOutputTokens: cfg.maxOutputTokens,
+    responseMimeType: params.responseMimeType,
     timeoutInMs: params.timeoutInMs,
-    body: JSON.stringify({
-      systemInstruction: {
-        parts: [{ text: params.systemPrompt }],
-      },
-      contents: [
-        {
-          role: "user",
-          parts: [
-            {
-              inlineData: {
-                mimeType: params.mimeType,
-                data: params.base64,
-              },
-            },
-            { text: params.userPrompt },
-          ],
-        },
-      ],
-      generationConfig: {
-        temperature: cfg.temperature,
-        topK: cfg.topK,
-        topP: cfg.topP,
-        maxOutputTokens: cfg.maxOutputTokens,
-        ...(params.responseMimeType
-          ? { responseMimeType: params.responseMimeType }
-          : {}),
-        thinkingConfig: { thinkingBudget: cfg.thinkingBudget },
-      },
-    }),
+    fetcher: fetchWithTriggerFallback,
   });
-
-  const body = (await response.json()) as GeminiGenerateContentResponse;
-  if (!response.ok) {
-    throw new GeminiHttpError(
-      body.error?.message ?? `Gemini HTTP ${response.status}`,
-      response.status,
-      body.error?.status,
-    );
-  }
-  return body;
 }
 
 async function postGeminiText(
   params: GeminiTextParams & { responseMimeType?: "application/json" },
 ): Promise<GeminiGenerateContentResponse> {
   const cfg = getExtractionAiConfig(params.stage);
-  const userParts: Array<
-    | { text: string }
-    | { inlineData: { mimeType: string; data: string } }
-  > = [];
-  if (params.image) {
-    userParts.push({
-      inlineData: {
-        mimeType: params.image.mimeType,
-        data: params.image.base64,
-      },
-    });
-  }
-  userParts.push({ text: params.userPrompt });
-  const response = await fetchWithTriggerFallback(geminiUrl(cfg.model), {
-    method: "POST",
-    headers: { "content-type": "application/json" },
+  return postAtlasChatCompletionAsGeminiLike({
+    model: cfg.model,
+    systemPrompt: params.systemPrompt,
+    userPrompt: params.userPrompt,
+    image: params.image,
+    temperature: cfg.temperature,
+    topP: cfg.topP,
+    maxOutputTokens: cfg.maxOutputTokens,
+    responseMimeType: params.responseMimeType,
     timeoutInMs: params.timeoutInMs,
-    body: JSON.stringify({
-      systemInstruction: {
-        parts: [{ text: params.systemPrompt }],
-      },
-      contents: [
-        {
-          role: "user",
-          parts: userParts,
-        },
-      ],
-      generationConfig: {
-        temperature: cfg.temperature,
-        topK: cfg.topK,
-        topP: cfg.topP,
-        maxOutputTokens: cfg.maxOutputTokens,
-        ...(params.responseMimeType
-          ? { responseMimeType: params.responseMimeType }
-          : {}),
-        thinkingConfig: { thinkingBudget: cfg.thinkingBudget },
-      },
-    }),
+    fetcher: fetchWithTriggerFallback,
   });
-
-  const body = (await response.json()) as GeminiGenerateContentResponse;
-  if (!response.ok) {
-    throw new GeminiHttpError(
-      body.error?.message ?? `Gemini HTTP ${response.status}`,
-      response.status,
-      body.error?.status,
-    );
-  }
-  return body;
 }
 
 async function postGeminiGroundedText(
   params: GeminiTextParams,
 ): Promise<GeminiGenerateContentResponse> {
   const cfg = getExtractionAiConfig(params.stage);
-  const response = await fetchWithTriggerFallback(geminiUrl(cfg.model), {
-    method: "POST",
-    headers: { "content-type": "application/json" },
+  return postAtlasChatCompletionAsGeminiLike({
+    model: cfg.model,
+    systemPrompt: params.systemPrompt,
+    userPrompt: params.userPrompt,
+    temperature: cfg.temperature,
+    topP: cfg.topP,
+    maxOutputTokens: cfg.maxOutputTokens,
     timeoutInMs: params.timeoutInMs,
-    body: JSON.stringify({
-      systemInstruction: {
-        parts: [{ text: params.systemPrompt }],
-      },
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: params.userPrompt }],
-        },
-      ],
-      tools: [{ google_search: {} }],
-      generationConfig: {
-        temperature: cfg.temperature,
-        topK: cfg.topK,
-        topP: cfg.topP,
-        maxOutputTokens: cfg.maxOutputTokens,
-        thinkingConfig: { thinkingBudget: cfg.thinkingBudget },
-      },
-    }),
+    enableWebSearch: true,
+    fetcher: fetchWithTriggerFallback,
   });
-
-  const body = (await response.json()) as GeminiGenerateContentResponse;
-  if (!response.ok) {
-    throw new GeminiHttpError(
-      body.error?.message ?? `Gemini HTTP ${response.status}`,
-      response.status,
-      body.error?.status,
-    );
-  }
-  return body;
 }
 
 export async function generatePlainOcrWithTriggerFetch(
@@ -421,41 +311,18 @@ async function postGeminiGroundedStructuredText(
   params: GeminiTextParams,
 ): Promise<GeminiGenerateContentResponse> {
   const cfg = getExtractionAiConfig(params.stage);
-  const response = await fetchWithTriggerFallback(geminiUrl(cfg.model), {
-    method: "POST",
-    headers: { "content-type": "application/json" },
+  return postAtlasChatCompletionAsGeminiLike({
+    model: cfg.model,
+    systemPrompt: params.systemPrompt,
+    userPrompt: params.userPrompt,
+    temperature: cfg.temperature,
+    topP: cfg.topP,
+    maxOutputTokens: cfg.maxOutputTokens,
+    responseMimeType: "application/json",
     timeoutInMs: params.timeoutInMs,
-    body: JSON.stringify({
-      systemInstruction: {
-        parts: [{ text: params.systemPrompt }],
-      },
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: params.userPrompt }],
-        },
-      ],
-      tools: [{ google_search: {} }],
-      generationConfig: {
-        temperature: cfg.temperature,
-        topK: cfg.topK,
-        topP: cfg.topP,
-        maxOutputTokens: cfg.maxOutputTokens,
-        responseMimeType: "application/json",
-        thinkingConfig: { thinkingBudget: cfg.thinkingBudget },
-      },
-    }),
+    enableWebSearch: true,
+    fetcher: fetchWithTriggerFallback,
   });
-
-  const body = (await response.json()) as GeminiGenerateContentResponse;
-  if (!response.ok) {
-    throw new GeminiHttpError(
-      body.error?.message ?? `Gemini HTTP ${response.status}`,
-      response.status,
-      body.error?.status,
-    );
-  }
-  return body;
 }
 
 export async function generateGroundedStructuredTextWithTriggerFetch<T>(
@@ -498,31 +365,13 @@ export async function runGeminiTextHealthCheck(timeoutInMs: number): Promise<{
   usage?: GeminiUsage;
 }> {
   const cfg = getExtractionAiConfig("ocr");
-  const response = await fetchWithTriggerFallback(geminiUrl(cfg.model), {
-    method: "POST",
-    headers: { "content-type": "application/json" },
+  const body = await postAtlasChatCompletionAsGeminiLike({
+    model: cfg.model,
+    userPrompt: "Reply with exactly: ok",
+    temperature: 0,
+    maxOutputTokens: 8,
     timeoutInMs,
-    body: JSON.stringify({
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: "Reply with exactly: ok" }],
-        },
-      ],
-      generationConfig: {
-        temperature: 0,
-        maxOutputTokens: 8,
-        thinkingConfig: { thinkingBudget: cfg.thinkingBudget },
-      },
-    }),
+    fetcher: fetchWithTriggerFallback,
   });
-  const body = (await response.json()) as GeminiGenerateContentResponse;
-  if (!response.ok) {
-    throw new GeminiHttpError(
-      body.error?.message ?? `Gemini HTTP ${response.status}`,
-      response.status,
-      body.error?.status,
-    );
-  }
   return { text: readCandidateText(body), usage: usageOf(body) };
 }
