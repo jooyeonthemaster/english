@@ -61,7 +61,7 @@ export function ExamPaperCard({
     <div
       data-exam-card
       className={
-        "group relative flex overflow-hidden rounded-xl border bg-white text-left shadow-sm transition hover:shadow-md focus-within:ring-2 focus-within:ring-blue-500 " +
+        "group relative flex w-full min-w-0 overflow-hidden rounded-xl border bg-white text-left shadow-sm transition hover:shadow-md focus-within:ring-2 focus-within:ring-blue-500 " +
         (selected
           ? "border-blue-400 ring-1 ring-blue-200"
           : "border-slate-200 hover:border-slate-300")
@@ -78,14 +78,14 @@ export function ExamPaperCard({
       />
 
       {/* 좌측 — 카드 끝까지 붙는 A4 첫 페이지 미리보기 (210:297) */}
-      <div className="pointer-events-none relative aspect-[210/297] w-[132px] shrink-0 self-stretch border-r border-slate-200">
+      <div className="pointer-events-none relative aspect-[210/297] w-[108px] shrink-0 self-stretch border-r border-slate-200 sm:w-[132px]">
         <PaperThumbnail paper={paper} />
       </div>
 
       {/* 우측 — 메타 (클릭은 배경 오버레이로 통과, 체크박스만 활성) */}
       <div className="pointer-events-none relative z-10 flex min-w-0 flex-1 flex-col gap-1.5 p-2.5">
         {/* 체크박스 + 제목 */}
-        <div className="flex items-start gap-2">
+        <div className="flex min-w-0 items-start gap-2">
           <button
             type="button"
             role="checkbox"
@@ -103,7 +103,7 @@ export function ExamPaperCard({
               <Square className="size-[18px] text-slate-300 transition group-hover:text-slate-400" />
             )}
           </button>
-          <h4 className="text-[13px] font-bold leading-snug text-slate-800">
+          <h4 className="min-w-0 text-[13px] font-bold leading-snug text-slate-800">
             {paper.title}
           </h4>
         </div>
@@ -126,11 +126,13 @@ export function ExamPaperCard({
         </div>
 
         {/* 푸터 — 문제 수 · 문항범위 / 열기 */}
-        <div className="mt-auto flex items-center justify-between pt-0.5">
-          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400">
+        <div className="mt-auto flex min-w-0 items-center justify-between gap-1.5 pt-0.5">
+          <span className="inline-flex min-w-0 flex-1 items-center gap-1 truncate text-[11px] font-medium text-slate-400">
             <FileText className="size-3.5" />
-            {paper.count}문제
-            {paper.qFrom ? ` · ${paper.qFrom}~${paper.qTo}번` : ""}
+            <span className="truncate">
+              {paper.count}문제
+              {paper.qFrom ? ` · ${paper.qFrom}~${paper.qTo}번` : ""}
+            </span>
           </span>
           <button
             type="button"

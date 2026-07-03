@@ -1,0 +1,27 @@
+{
+  "createdAt": "2026-07-02T13:26:04.899Z",
+  "outPath": "C:\\Users\\jooye\\Desktop\\2026project\\nara\\artifacts\\ai-audits\\grammar-quality-loop-1782998276645.jsonl",
+  "total": 6,
+  "passed": 0,
+  "failed": 6,
+  "passRate": 0,
+  "issueCounts": {
+    "llm:The (E) marker in passageWithMarkers is placed in the clause 'are generally not (E)which way because the glass is slowly sinking over time', which is a garbled corruption of the original 'are generally not that way'. This is entirely disconnected from the explanation, which discusses a totally different, unmodified part of the passage ('the way it does' near the end of the essay) and gives a fabricated surroundingText ('behaves the way that it does') that does not appear anywhere in the actual passageWithMarkers shown to the student.": 1,
+    "llm:The markedExpressions surroundingText for (E) does not match its actual location in passageWithMarkers, meaning the student-facing text and the answer-key rationale are for two different sentences — this is an internal contradiction that makes the item unusable and ungradable.": 1,
+    "llm:Replacing 'that' (a demonstrative modifying 'way') with 'which' in 'not that way' produces plain gibberish ('not which way because...') rather than a genuine grammar trap testing relative pronoun vs. relative adverb distinctions; this is not a legitimate KILLER-level test point, it's just broken syntax.": 1,
+    "llm:(D) 'be' and (E) 'which' are adjacent within the same short clause, not long-distance/cross-clause errors, failing the KILLER requirement for long-distance structural reasoning.": 1,
+    "llm:The explanation's reasoning about 'the way' + relative pronoun vs 'that'/'how' is plausible grammar content in isolation, but it is applied to the wrong textual location, rendering it invalid as written.": 1,
+    "llm:No coherent single reading of the sentence containing (D) and (E) makes sense even after 'correcting' both, since 'are generally not that way because...is slowly sinking over time' was the original, and the combined markers destroy the original meaning inconsistently with the answer key.": 1,
+    "llm:The explanation text is incoherent and self-contradictory: it spends most of its length discussing 'prevalent'/'quite' as if that were the underlined error and even suggests confusing spellings like 'quiet'/'quit', none of which relate to the actual answer or any marked option. This confuses the wrong form vs. the correction and includes nonsensical terminology ('dynamic 수식관계').": 1,
+    "llm:The core explanation for the actual correct answer (D: living vs lived) is only tacked on at the very end almost as an afterthought, making the primary explanation nearly useless for a student or teacher to use as-is.": 1,
+    "llm:Such a garbled explanation would be immediately visible to a paying academy director and would be considered unpublishable regardless of the underlying grammar point's validity.": 1,
+    "llm:The KILLER error ('afford to paying') is a trivially spotted to-infinitive-vs-gerund slip sitting directly after the word 'to' — this is far too visibly broken for an INTERMEDIATE CSAT-style item and requires no long-distance/cross-clause reasoning, violating the core design requirement for the target error.": 1,
+    "llm:Distractors (A), (C), (E) are all near-duplicate passive-voice-agreement checks (pointCodes 'e','e','c'), giving no structural variety and making the item feel padded rather than featuring genuinely attractive, differentiated traps.": 1,
+    "llm:surroundingText for (D) is internally inconsistent: it displays 'cannot afford to pay for it' (correct form) while errorExpression is 'paying' and expression is 'pay' — this field-level contamination could confuse both a reviewer and a test-taker checking option context, and reflects sloppy metadata generation.": 1,
+    "llm:The explanation calls 'afford to' a phrase with '조동사나 준조동사적 성격' which is inaccurate terminology; 'afford' is simply a main verb taking a to-infinitive complement, not a quasi-modal, so the grammar explanation misuses terminology.": 1,
+    "killer-answer-not-structurally-loaded": 1,
+    "llm:The (F) 'helping'→'can help' error is essentially a missing-main-verb detection within a single clause; it does not require any long-distance or cross-clause reasoning appropriate for a KILLER-tier item, and the stacked non-finite forms ('helping offset') make the break too visually salient for the stated difficulty.": 1,
+    "llm:The (D) 'them'→'it' trap, while a legitimate pronoun-reference issue, is also resolvable at short range: both candidate antecedents ('a disease' and 'a population') are singular, so the number mismatch is detectable without deep cross-clause tracking, weakening the KILLER justification.": 1,
+    "llm:Given two of the required distinguishing traits for KILLER difficulty (structural distance, subtlety) are not met, the item reads as a solid intermediate-level 어법 item rather than a genuine 평가원 killer question.": 1
+  }
+}

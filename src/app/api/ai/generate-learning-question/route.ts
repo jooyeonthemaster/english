@@ -5,6 +5,7 @@ import { buildCategoryPrompt } from "@/lib/learning-question-prompts";
 import { getStaffSession } from "@/lib/auth";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
+import { recordAiCost } from "@/lib/platform-api-costs";
 import { generateQuestionText } from "@/lib/question-generation-llm";
 import {
   getQuestionGenerationCreditCost,
@@ -263,6 +264,8 @@ export async function POST(request: NextRequest) {
       + "\n\n## 출력 형식\n반드시 유효한 JSON 객체로만 응답하세요. 다른 텍스트나 설명 없이 JSON만 출력하세요.";
 
     let text: string;
+    let aiUsage: unknown;
+    let aiModelId: string;
     try {
       const result = await generateQuestionText({
         prompt,
@@ -272,6 +275,8 @@ export async function POST(request: NextRequest) {
         temperature: 0.35,
       });
       text = result.text;
+      aiUsage = result.usage;
+      aiModelId = result.modelId;
     } catch (aiError) {
       await refundCredits(staff.academyId, "LEARNING_QUESTION_GEN", creditResult.transactionId, "Learning question generation failed", creditCost);
       throw aiError;
@@ -283,6 +288,14 @@ export async function POST(request: NextRequest) {
       const parsed = JSON.parse(jsonStr);
       const normalized = normalizeResults(parsed);
       const tagged = attachGenerationMetadata(normalized, generationPlan);
+      await recordAiCost({
+        sourceType: "AI_INTERACTIVE",
+        sourceDetail: "generate-learning-question",
+        academyId: staff.academyId,
+        model: aiModelId,
+        operationType: "LEARNING_QUESTION_GEN",
+        usage: aiUsage,
+      });
       return NextResponse.json({
         category,
         results: tagged,

@@ -136,10 +136,10 @@ export function MultiPassagePaste({
 
   const outputModeToggle = (
     <div
-      className="flex min-w-0 items-center gap-3"
+      className="w-full min-w-0 sm:flex sm:items-center sm:gap-3"
       data-generate-tour="paste-output-mode"
     >
-      <div className="flex shrink-0 items-center gap-1">
+      <div className="grid w-full min-w-0 grid-cols-1 gap-1 sm:flex sm:w-auto sm:shrink-0 sm:items-center">
         {outputModeOptions.map((opt) => {
           const active = effectiveOutputMode === opt.v;
           // 국어 지문은 AI 원문 복원(영어 전용) 비활성 — 그대로 등록만.
@@ -157,7 +157,7 @@ export function MultiPassagePaste({
               }
               aria-pressed={active}
               className={
-                "inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 " +
+                "inline-flex min-h-8 w-full min-w-0 cursor-pointer flex-wrap items-center justify-center gap-1.5 rounded-md border px-2.5 py-1 text-center text-[12.5px] font-semibold leading-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 sm:h-7 sm:w-auto sm:flex-nowrap sm:px-3 sm:py-0 " +
                 (active
                   ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
                   : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")
@@ -212,11 +212,11 @@ export function MultiPassagePaste({
       {/* 출력 방식 — 위 '직접 입력' 탭에서 말풍선처럼 뻗어나온 하위 선택임을
           드러낸다(직접 입력 > 그대로 추출/AI 복원의 계층감). */}
       <div className="border-b border-slate-100 px-3 pb-2 pt-2">
-        <div className="relative w-fit rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 shadow-sm">
+        <div className="relative w-full rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 shadow-sm sm:w-fit">
           {/* 말풍선 꼬리 — 브레드크럼 첫 항목 '직접 입력' 탭 중앙 아래에서 삐져나오게. */}
           <span
             aria-hidden="true"
-            className="absolute -top-[6px] left-12 z-10 h-3 w-3 -translate-x-1/2 rotate-45 rounded-[2px] border-l border-t border-blue-200 bg-blue-50"
+            className="absolute -top-[6px] left-12 z-10 hidden h-3 w-3 -translate-x-1/2 rotate-45 rounded-[2px] border-l border-t border-blue-200 bg-blue-50 sm:block"
           />
           <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
             {subjectControls}

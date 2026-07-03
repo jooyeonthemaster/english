@@ -423,7 +423,7 @@ export function ExamListClient({
         type="button"
         onClick={() => void handleBulkDelete()}
         disabled={selection.selectedIds.size === 0 || bulkDeleting}
-        className="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {bulkDeleting ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -438,7 +438,7 @@ export function ExamListClient({
   // ─── Toolbar row (mirrors question-bank-client) ───
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-      <div className="flex items-center gap-2">
+      <div className="flex w-full min-w-0 flex-wrap items-center gap-2 md:w-auto md:flex-nowrap">
         <SelectAllCheckbox
           checked={selection.isAllSelected && selection.selectedIds.size > 0}
           indeterminate={
@@ -451,7 +451,7 @@ export function ExamListClient({
         />
         <div
           className={
-            "flex items-center gap-3 " +
+            "flex min-w-0 flex-wrap items-center gap-1.5 md:flex-nowrap md:gap-3 " +
             (selection.selectedIds.size > 0
               ? ""
               : "pointer-events-none opacity-50")
@@ -473,7 +473,7 @@ export function ExamListClient({
           ) : null}
         </div>
       </div>
-      <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+      <div className="ml-auto flex w-full shrink-0 flex-wrap items-center justify-end gap-2 md:w-auto">
         <FiltersToolbar
           search={search}
           setSearch={setSearch}
@@ -507,7 +507,7 @@ export function ExamListClient({
             </p>
           </div>
         ) : (
-          <section className="flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <section className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             {/* Sticky layer 1 — folder section (page identity + folders) */}
             <div
               ref={folderStickyRef}
@@ -579,7 +579,7 @@ export function ExamListClient({
                 </div>
               ) : viewType !== "list" ? (
                 <DragSelect
-                  className={`grid ${EXAM_GRID_COL_CLASS[viewType]} gap-3`}
+                  className={`grid min-w-0 ${EXAM_GRID_COL_CLASS[viewType]} gap-3`}
                   value={selection.selectedIds}
                   onChange={selection.setSelectedIds}
                 >

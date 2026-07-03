@@ -299,7 +299,7 @@ export function WorkspaceShell({
       <div className="px-4 pt-4 pb-3">
         <div
           ref={splitContainerRef}
-          className="flex w-full min-w-0 max-w-full flex-row gap-0 overflow-hidden"
+          className="flex w-full min-w-0 max-w-full flex-col gap-2 overflow-hidden max-lg:!h-auto lg:flex-row lg:gap-0"
           style={
             {
               height: `${bodyHeight}px`,
@@ -315,7 +315,7 @@ export function WorkspaceShell({
               드래그 리사이즈 중에는 트랜지션을 꺼서 손을 즉시 따라온다. */}
           <div
             className={
-              "flex min-h-0 min-w-0 shrink-0 flex-col overflow-hidden rounded-lg " +
+              "flex min-h-0 min-w-0 shrink-0 flex-col overflow-hidden rounded-lg max-lg:!w-full " +
               (leftPaneVisible ? "border border-slate-200 " : "border-0 ") +
               (leftDragging
                 ? ""
@@ -339,7 +339,7 @@ export function WorkspaceShell({
                 onPointerDown={handleCloseLeftPanePointerDown}
                 onDoubleClick={resetLeftPaneWidth}
                 title="클릭하여 닫기 · 좌우로 드래그하여 너비 조절 · 더블 클릭하여 초기화"
-                className="group/lhandle mx-0.5 flex w-5 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1.5 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100"
+                className="group/lhandle mx-0.5 hidden w-5 shrink-0 cursor-col-resize touch-none select-none flex-col items-center justify-center gap-1.5 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100 lg:flex"
               >
                 <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
                 <span style={{ writingMode: "vertical-rl" }}>
@@ -358,7 +358,7 @@ export function WorkspaceShell({
                   toggleLeftPaneOpen();
                 }}
                 title={`클릭하여 ${leftLabel} 열기`}
-                className="mx-0.5 flex min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1.5 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600"
+                className="mx-0.5 hidden min-h-0 w-5 shrink-0 select-none flex-col items-center justify-center gap-1.5 rounded-md py-1 text-[11px] font-semibold text-slate-400 transition-colors hover:bg-blue-50 hover:text-blue-600 lg:flex"
               >
                 <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
                 <span style={{ writingMode: "vertical-rl" }}>
@@ -369,7 +369,7 @@ export function WorkspaceShell({
           ) : null}
 
           {/* RIGHT: main work surface */}
-          <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200">
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 max-lg:!min-h-[55vh] max-lg:!flex-none">
             {right}
           </div>
         </div>
@@ -383,7 +383,7 @@ export function WorkspaceShell({
           role="separator"
           aria-orientation="horizontal"
           title="드래그하여 높이 조절 · 더블 클릭하여 초기화"
-          className="group/fhandle flex h-3 cursor-row-resize select-none items-center justify-center"
+          className="group/fhandle hidden h-3 cursor-row-resize select-none items-center justify-center lg:flex"
         >
           <div className="h-0.5 w-24 rounded-full bg-slate-200 transition-colors group-hover/fhandle:bg-blue-400 group-active/fhandle:bg-blue-500" />
         </div>

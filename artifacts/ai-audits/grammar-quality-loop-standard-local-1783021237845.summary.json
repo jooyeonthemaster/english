@@ -1,0 +1,12 @@
+{
+  "createdAt": "2026-07-02T19:44:17.813Z",
+  "outPath": "C:\\Users\\jooye\\Desktop\\2026project\\nara\\artifacts\\ai-audits\\grammar-quality-loop-standard-local-1783021237845.jsonl",
+  "total": 3,
+  "passed": 1,
+  "failed": 2,
+  "passRate": 0.3333333333333333,
+  "issueCounts": {
+    "no-question": 1,
+    "main-explanation-too-thin": 1
+  }
+}

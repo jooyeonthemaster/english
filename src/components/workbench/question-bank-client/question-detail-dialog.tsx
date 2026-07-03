@@ -101,19 +101,21 @@ export function QuestionDetailDialog({
                     <button
                       type="button"
                       onClick={() => setAnalysisOpen(true)}
-                      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                      title="분석 정보"
+                      aria-label="분석 정보"
+                      className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-[11px] font-semibold text-slate-600 shadow-none transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                     >
                       <Sparkles className="h-3.5 w-3.5" />
-                      분석 정보
                     </button>
                   ) : null}
                   <button
                     type="button"
                     onClick={() => onDelete(question.id)}
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-semibold text-red-600 shadow-none transition-colors hover:border-red-300 hover:bg-red-50 hover:text-red-700"
+                    title="삭제"
+                    aria-label="삭제"
+                    className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-[11px] font-semibold text-red-600 shadow-none transition-colors hover:border-red-300 hover:bg-red-50 hover:text-red-700"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
-                    삭제
                   </button>
                 </>
               ) : null}

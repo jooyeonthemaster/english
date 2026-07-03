@@ -1,7 +1,8 @@
 import { generateObject, NoObjectGeneratedError } from "ai";
 import { z } from "zod";
 
-import { model as geminiModel } from "@/lib/ai";
+import { model as geminiModel, GEMINI_MODEL_ID } from "@/lib/ai";
+import { recordAiCost } from "@/lib/platform-api-costs";
 
 import {
   type FormatSpec,
@@ -670,6 +671,7 @@ export async function generateStructuredFromSpec(args: {
   format: FormatSpec;
   passage: string;
   gradeInfo?: string;
+  academyId?: string | null;
 }): Promise<StructuredGenerationResult> {
   const retryErrors: string[] = [];
   let lastError: unknown;
@@ -689,6 +691,14 @@ export async function generateStructuredFromSpec(args: {
         maxOutputTokens: STRUCTURED_MAX_TOKENS,
         abortSignal: AbortSignal.timeout(STRUCTURED_TIMEOUT_MS),
         messages: [{ role: "user", content: [{ type: "text", text: prompt }] }],
+      });
+      await recordAiCost({
+        sourceType: "CUSTOM_QTYPE_AI",
+        sourceDetail: "structured-generation",
+        academyId: args.academyId,
+        model: GEMINI_MODEL_ID,
+        operationType: "CUSTOM_QTYPE_GEN",
+        usage: result.usage,
       });
       const out = result.object;
 

@@ -1,7 +1,8 @@
 import { generateObject, NoObjectGeneratedError } from "ai";
 import { z } from "zod";
 
-import { model as geminiModel } from "@/lib/ai";
+import { model as geminiModel, GEMINI_MODEL_ID } from "@/lib/ai";
+import { recordAiCost } from "@/lib/platform-api-costs";
 // ── 경계: 기본 문제 생성 엔진은 import 만(절대 수정 금지). customPrompt/typeSettings 인자를 그대로 활용. ──
 import { DIFF_DESCRIPTION } from "@/app/api/ai/generate-questions-auto/_lib/constants";
 import {
@@ -18,6 +19,8 @@ export interface GenerateFromCustomTypeArgs {
   /** 동형을 입힐 새 지문. 무지문 유형이면 빈 문자열 가능. */
   passage: string;
   gradeInfo?: string;
+  /** 원가 기록 귀속용 학원 ID(라우트 세션/잡에서 전달). */
+  academyId?: string | null;
 }
 
 export interface GenerateFromCustomTypeResult {
@@ -154,6 +157,17 @@ async function generateBuiltinOverride(
     },
     { logPrefix: "CUSTOM-TYPE-BUILTIN" },
   );
+
+  for (const event of result.usageEvents) {
+    await recordAiCost({
+      sourceType: "CUSTOM_QTYPE_AI",
+      sourceDetail: "builtin-generation",
+      academyId: args.academyId,
+      model: event.modelId || GEMINI_MODEL_ID,
+      operationType: "CUSTOM_QTYPE_GEN",
+      usage: event.usage,
+    });
+  }
 
   const question = result.questions[0];
   if (!question) {
@@ -388,6 +402,14 @@ async function generateGeneric(
         // 본문이 잘려 NoObjectGenerated/검증실패로 3회 모두 터지는 것을 막는다. 추론은 보기 distinctness·정답 유일성용.
         messages: [{ role: "user", content: [{ type: "text", text: prompt }] }],
       });
+      await recordAiCost({
+        sourceType: "CUSTOM_QTYPE_AI",
+        sourceDetail: "generic-generation",
+        academyId: args.academyId,
+        model: GEMINI_MODEL_ID,
+        operationType: "CUSTOM_QTYPE_GEN",
+        usage: result.usage,
+      });
       const obj = result.object;
 
       const validationErrors = validateGeneric(spec, obj);
@@ -471,6 +493,7 @@ export async function generateFromCustomType(
         format: args.spec.format,
         passage: args.passage,
         gradeInfo: args.gradeInfo,
+        academyId: args.academyId,
       });
       return {
         question: structured.question,

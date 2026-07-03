@@ -195,7 +195,7 @@ export async function createPlan(
       },
     });
 
-    revalidatePath("/admin/plans");
+    revalidatePath("/admin/credit-plans");
     revalidatePath("/admin/registrations");
 
     return {
@@ -271,7 +271,7 @@ export async function updatePlan(
       },
     });
 
-    revalidatePath("/admin/plans");
+    revalidatePath("/admin/credit-plans");
     revalidatePath("/admin/registrations");
 
     return { success: true };
@@ -314,7 +314,7 @@ export async function deletePlan(
         },
       });
 
-      revalidatePath("/admin/plans");
+      revalidatePath("/admin/credit-plans");
       revalidatePath("/admin/registrations");
 
       return {
@@ -329,7 +329,7 @@ export async function deletePlan(
       where: { id: planId },
     });
 
-    revalidatePath("/admin/plans");
+    revalidatePath("/admin/credit-plans");
     revalidatePath("/admin/registrations");
 
     return {

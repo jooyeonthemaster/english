@@ -1,9 +1,10 @@
 import { streamText } from "ai";
-import { model } from "@/lib/ai";
+import { GEMINI_MODEL_ID, model } from "@/lib/ai";
 import { prisma } from "@/lib/prisma";
 import { getStudentSession } from "@/lib/auth-student";
 import { NextRequest, NextResponse } from "next/server";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
+import { recordAiCost } from "@/lib/platform-api-costs";
 
 export async function POST(request: NextRequest) {
   try {
@@ -170,7 +171,7 @@ ${teacherPromptsText}
       model,
       system: systemPrompt,
       messages: aiMessages,
-      onFinish: async ({ text, finishReason }) => {
+      onFinish: async ({ text, finishReason, usage }) => {
         // Refund if the generation was aborted or errored
         if (finishReason === "error") {
           try {
@@ -180,6 +181,14 @@ ${teacherPromptsText}
           }
           return;
         }
+        await recordAiCost({
+          sourceType: "AI_INTERACTIVE",
+          sourceDetail: "chat",
+          operationType: "QUESTION_EXPLANATION",
+          academyId: session.academyId,
+          model: GEMINI_MODEL_ID,
+          usage,
+        });
         const updatedMessages = [
           ...conversationHistory,
           { role: "user", content: message },

@@ -1,6 +1,7 @@
 import { generateObject } from "ai";
 
-import { model as geminiModel } from "@/lib/ai";
+import { model as geminiModel, GEMINI_MODEL_ID } from "@/lib/ai";
+import { recordAiCost } from "@/lib/platform-api-costs";
 import { downloadAsBuffer } from "@/lib/supabase-storage";
 
 import { buildPatternProfilePrompt } from "./prompts";
@@ -64,6 +65,7 @@ function dedupeInsights(values: string[]): string[] {
 async function runMultimodalAnalysis(
   prompt: string,
   images: AnalysisImage[],
+  academyId?: string | null,
 ): Promise<{ object: ExamPatternProfile; attempts: number }> {
   let lastError: unknown;
   for (let attempt = 0; attempt <= ANALYSIS_MAX_RETRIES; attempt += 1) {
@@ -87,6 +89,14 @@ async function runMultimodalAnalysis(
             ],
           },
         ],
+      });
+      await recordAiCost({
+        sourceType: "SIMILAR_EXAM_AI",
+        sourceDetail: "analysis",
+        academyId,
+        model: GEMINI_MODEL_ID,
+        operationType: "SIMILAR_EXAM_GEN",
+        usage: result.usage,
       });
       return { object: result.object as ExamPatternProfile, attempts: attempt + 1 };
     } catch (error) {
@@ -159,6 +169,7 @@ export async function analyzeExamPattern(args: {
   originalFileName: string | null;
   totalPages: number;
   selectedPassageCount: number;
+  academyId?: string | null;
   logger?: RunnerLogger;
   onChunkStart?: (chunkNumber: number, chunkCount: number) => Promise<void>;
 }): Promise<{ profile: ExamPatternProfile; summary: AnalysisSummary }> {
@@ -195,6 +206,7 @@ export async function analyzeExamPattern(args: {
         pageRange: ranges.length > 1 ? { start: start + 1, end } : undefined,
       }),
       images.slice(start, end),
+      args.academyId,
     );
     llmAttempts += attempts;
     partials.push(object);

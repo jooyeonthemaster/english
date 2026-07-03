@@ -26,7 +26,12 @@ export async function getMembers(filters: MemberListFilters = {}) {
   const search = (filters.search ?? "").trim().slice(0, MAX_SEARCH_LENGTH);
   const sortKey = filters.sortKey ?? "createdAt";
   const sortOrder = filters.sortOrder ?? "desc";
-  const limit = Math.min(Math.max(filters.limit ?? 100, 1), 500);
+  // limit 미지정 시 전체 로드 — 회원 검색이 일부(이전 500명 캡)가 아니라 전 범위를
+  // 대상으로 이뤄지도록. 명시적으로 넘긴 경우에만 상한(5000)을 적용한다.
+  const limit =
+    filters.limit === undefined
+      ? undefined
+      : Math.min(Math.max(filters.limit, 1), 5000);
 
   const conditions: Prisma.StaffWhereInput[] = [{ role: "DIRECTOR" }];
 
@@ -56,10 +61,10 @@ export async function getMembers(filters: MemberListFilters = {}) {
     });
   }
 
-  // NOTE: balance sort is performed in memory after a wide DB pull capped by
-  // `limit`. For typical admin-side member counts this is acceptable. If the
-  // member table grows past low-thousands, migrate to a raw join with
-  // ORDER BY credit_balances.balance DESC.
+  // NOTE: balance sort is performed in memory after a full DB pull (no take
+  // when limit is unset). For typical admin-side member counts this is
+  // acceptable. If the member table grows past low-thousands, migrate to a raw
+  // join with ORDER BY credit_balances.balance DESC and server-side search.
   // lastActiveAt(=로그인/사용 중 최근)은 파생값이라 DB 정렬이 불가 — 화면(클라이언트)
   // 에서 정렬한다. balance와 동일하게 넓게 떠서 메모리 정렬(회원 수가 수천 미만 가정).
   const dbOrderBy: Prisma.StaffOrderByWithRelationInput =
@@ -70,7 +75,7 @@ export async function getMembers(filters: MemberListFilters = {}) {
   const staffRows = await prisma.staff.findMany({
     where: { AND: conditions },
     orderBy: dbOrderBy,
-    take: limit,
+    ...(limit !== undefined ? { take: limit } : {}),
     include: {
       academy: {
         select: {
@@ -94,6 +99,7 @@ export async function getMembers(filters: MemberListFilters = {}) {
               bonusCredits: true,
               totalConsumed: true,
               totalAllocated: true,
+              expiresAt: true,
             },
           },
           // SMS 발송 제외 플래그 — academy_feature_flags 재사용(마이그레이션 불필요)
@@ -121,6 +127,28 @@ export async function getMembers(filters: MemberListFilters = {}) {
     lastUsageRows.map((r) => [r.academyId, r._max.createdAt]),
   );
 
+  // 학원별 "가장 최근 구입한 상품" — 완료된 크레딧 충전(CreditTopUp) 중 최신 1건.
+  // distinct(academyId) + orderBy(academyId, completedAt desc)로 학원당 최신 행만.
+  const latestTopUpRows = academyIds.length
+    ? await prisma.creditTopUp.findMany({
+        where: { academyId: { in: academyIds }, status: "COMPLETED" },
+        orderBy: [
+          { academyId: "asc" },
+          { completedAt: { sort: "desc", nulls: "last" } },
+        ],
+        distinct: ["academyId"],
+        select: {
+          academyId: true,
+          orderName: true,
+          creditAmount: true,
+          price: true,
+          completedAt: true,
+          createdAt: true,
+        },
+      })
+    : [];
+  const latestTopUpMap = new Map(latestTopUpRows.map((t) => [t.academyId, t]));
+
   const mapped = staffRows.map((s) => ({
     id: s.id,
     name: s.name,
@@ -142,6 +170,8 @@ export async function getMembers(filters: MemberListFilters = {}) {
     })(),
     // 문자 발송 대상 관리용 플래그 — 화면 목록에서 바로 토글/표시한다.
     smsOptOut: s.academy.academyFeatureFlags[0]?.enabled ?? false,
+    // 마케팅 수신 동의 — 광고성 발송 대상 필터에 쓰인다(정보통신망법 opt-in).
+    marketingConsent: s.marketingConsent === true,
     isInternal: isInternalAccount({
       name: s.name,
       academyName: s.academy.name,
@@ -162,6 +192,17 @@ export async function getMembers(filters: MemberListFilters = {}) {
           currentPeriodEnd: s.academy.subscriptions[0].currentPeriodEnd,
         }
       : null,
+    // 가장 최근 구입한 상품(완료된 충전). 목록의 "최근 구입 상품" 열/정렬에 사용.
+    latestPurchase: (() => {
+      const t = latestTopUpMap.get(s.academyId);
+      if (!t) return null;
+      return {
+        name: t.orderName ?? `${t.creditAmount.toLocaleString("ko-KR")} 크레딧`,
+        creditAmount: t.creditAmount,
+        price: t.price,
+        purchasedAt: t.completedAt ?? t.createdAt,
+      };
+    })(),
     creditBalance: s.academy.creditBalance ?? null,
   }));
 

@@ -13,6 +13,8 @@ import {
   AnswerRevealContext,
   HideAnswerLineContext,
   QuestionTypeLabelContext,
+  SuppressInlinePassageContext,
+  InlinePassageOverrideContext,
 } from "./question-renderer-primitives";
 import { CustomLayoutRenderer } from "./custom-layout-renderer";
 import { KoQuestionRenderer } from "./korean/ko-question-renderer";
@@ -61,6 +63,8 @@ export function StructuredQuestionRenderer({
   answerRevealMode = "default",
   hideAnswerLine = false,
   showTypeLabel = false,
+  suppressInlinePassage = false,
+  inlinePassageOverride,
 }: {
   question: any;
   index: number;
@@ -75,6 +79,10 @@ export function StructuredQuestionRenderer({
   answerRevealMode?: "default" | "show-all" | "as-explanation" | "hidden";
   /** true 면 "정답: N" 줄(AnswerLine)을 숨긴다. 문제 관리 카드용. */
   hideAnswerLine?: boolean;
+  /** 세트 통합 지문을 바깥에서 이미 렌더한 경우, 타입별 본문 안의 지문 박스만 숨긴다. */
+  suppressInlinePassage?: boolean;
+  /** 세트 상세처럼 타입별 본문 안의 지문 위치에 통합 변형 지문을 대신 표시한다. */
+  inlinePassageOverride?: string;
 }) {
   const questionForRender = enrichQuestionForDisplay(question, sourcePassageContent);
   const typeId = questionForRender._typeId as string | undefined;
@@ -95,6 +103,8 @@ export function StructuredQuestionRenderer({
         showTypeLabel ? typeLabel || meta?.label || typeId || null : null
       }
     >
+    <SuppressInlinePassageContext.Provider value={suppressInlinePassage}>
+    <InlinePassageOverrideContext.Provider value={inlinePassageOverride || null}>
     <div className={hideHeader ? "space-y-3" : "p-4 rounded-lg border border-slate-200 bg-white space-y-3"}>
       {/* Header — 외부 카드가 헤더를 제공할 때 숨김 */}
       {!hideHeader && (
@@ -146,6 +156,8 @@ export function StructuredQuestionRenderer({
         <FallbackRenderer question={questionForRender} />
       )}
     </div>
+    </InlinePassageOverrideContext.Provider>
+    </SuppressInlinePassageContext.Provider>
     </QuestionTypeLabelContext.Provider>
     </HideAnswerLineContext.Provider>
     </AnswerRevealContext.Provider>
@@ -689,6 +701,12 @@ function hasStructuredFields(typeId: string, q: any): boolean {
       !!(q?.direction || q?.options || q?.bogi || q?.koContext)
     );
   }
+  // 지문 세트 멤버는 passageWith*(구운 지문)를 저장하지 않고 anchor 만 들고 있으므로 위 필드
+  // 검사에 걸려 FallbackRenderer 로 떨어진다(정답/해설 중복 렌더 유발). 세트 멤버는 유형별
+  // 필드(markedExpressions/underlinedPronoun/summaryWithBlanks 등)를 그대로 보유하니 타입
+  // 렌더러로 보낸다 — 지문(passageWith*)만 비어 렌더 안 되고, 병합 변형 지문은 카드가 본문
+  // 상단에 유니버설 렌더러로 별도 표시한다.
+  if (q?._setMember === true) return true;
   switch (typeId) {
     case "BLANK_INFERENCE":
       return !!q.passageWithBlank && !!q.direction;

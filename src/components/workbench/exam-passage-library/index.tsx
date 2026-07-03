@@ -72,7 +72,7 @@ export function ExamPassageLibrary({
       {/* 본문 — 스크롤 영역 */}
       <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
         {api.loading ? (
-          <div className="grid gap-2.5 [grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
+          <div className="grid grid-cols-1 gap-2.5 sm:[grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
@@ -113,7 +113,7 @@ export function ExamPassageLibrary({
             </div>
           ) : (
             <>
-              <div className="grid gap-2.5 [grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
+              <div className="grid grid-cols-1 gap-2.5 sm:[grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
                 {api.items.map((p) => (
                   <ExamPassageCard
                     key={p.id}
@@ -154,7 +154,7 @@ export function ExamPassageLibrary({
           </div>
         ) : (
           <>
-            <div className="grid gap-2.5 [grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
+            <div className="grid grid-cols-1 gap-2.5 sm:[grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
               {api.papers.map((paper) => (
                 <ExamPaperCard
                   key={paper.examId}

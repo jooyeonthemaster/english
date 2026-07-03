@@ -101,19 +101,19 @@ export function JooyeonWelcomeModal({ staffEmail }: JooyeonWelcomeModalProps) {
               </div>
 
               <div className="mt-5 grid grid-cols-2 gap-3">
-                <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                <div className="min-w-0 rounded-2xl border border-slate-200 bg-white p-3 md:p-4">
                   <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
                     Credits
                   </p>
-                  <p className="mt-1 text-[24px] font-black tabular-nums text-slate-950">
+                  <p className="mt-1 max-w-full whitespace-nowrap text-[clamp(17px,4.65vw,24px)] font-black tabular-nums text-slate-950 md:text-[24px]">
                     {welcome.creditsLabel}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4">
+                <div className="min-w-0 rounded-2xl border border-emerald-100 bg-emerald-50/70 p-3 md:p-4">
                   <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-emerald-600">
                     Pass
                   </p>
-                  <p className="mt-1 flex items-center gap-2 text-[24px] font-black text-slate-950">
+                  <p className="mt-1 flex min-w-0 items-center gap-2 text-[clamp(20px,5.45vw,24px)] font-black text-slate-950 md:text-[24px]">
                     {welcome.passLabel}
                     <InfinityIcon className="size-5 text-emerald-500" />
                   </p>

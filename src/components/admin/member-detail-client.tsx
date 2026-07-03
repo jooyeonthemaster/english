@@ -14,10 +14,12 @@ import {
   Activity,
   Settings2,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProviderBadge } from "@/components/admin/provider-badge";
 import { CreditAdjustModal } from "@/components/admin/member-detail/credit-adjust-modal";
+import { CreditExpiryModal } from "@/components/admin/member-detail/credit-expiry-modal";
 import { ActiveToggleModal } from "@/components/admin/member-detail/active-toggle-modal";
 import { UsageBreakdown } from "@/components/admin/member-detail/usage-breakdown";
 import { UsageSparkline } from "@/components/admin/member-detail/usage-sparkline";
@@ -35,8 +37,8 @@ import {
 import { IdentitySection } from "@/components/admin/member-detail/identity-section";
 import { AcademySection } from "@/components/admin/member-detail/academy-section";
 import { MemoSection } from "@/components/admin/member-detail/memo-section";
-import { SubscriptionSection } from "@/components/admin/member-detail/subscription-section";
-import type { MemberDetail } from "@/actions/admin-members";
+import { PurchasesSection } from "@/components/admin/member-detail/purchases-section";
+import type { MemberDetail, MemberPurchaseItem } from "@/actions/admin-members";
 
 interface MemberDetailClientProps {
   member: MemberDetail;
@@ -63,31 +65,34 @@ interface MemberDetailClientProps {
     items: ActivityItem[];
     nextBefore: string | null;
   };
+  purchases: MemberPurchaseItem[];
 }
 
 export function MemberDetailClient({
   member,
   initialTransactions,
   initialActivity,
+  purchases,
 }: MemberDetailClientProps) {
   const [adjustOpen, setAdjustOpen] = useState(false);
   const [toggleOpen, setToggleOpen] = useState(false);
+  const [expiryOpen, setExpiryOpen] = useState(false);
 
   const balance = member.creditBalance?.balance ?? null;
   const totalAllocated = member.creditBalance?.totalAllocated ?? 0;
   const totalConsumed = member.creditBalance?.totalConsumed ?? 0;
   const monthlyAllocation = member.creditBalance?.monthlyAllocation ?? 0;
   const bonusCredits = member.creditBalance?.bonusCredits ?? 0;
+  const expiresAtRaw = member.creditBalance?.expiresAt ?? null;
+  const expiresAt = expiresAtRaw ? new Date(expiresAtRaw).toISOString() : null;
+  const expiresLabel = expiresAt
+    ? new Date(expiresAt).toLocaleDateString("ko-KR")
+    : null;
 
   const last30dTotal = member.dailyConsumption.reduce(
     (sum, d) => sum + d.total,
     0,
   );
-
-  const activeSubscription =
-    member.subscriptions.find(
-      (s) => s.status === "ACTIVE" || s.status === "TRIAL",
-    ) ?? member.subscriptions[0] ?? null;
 
   const knownOperationTypes = member.consumptionByOp
     .map((c) => c.operationType)
@@ -109,7 +114,7 @@ export function MemberDetailClient({
         <div className="lg:col-span-1 space-y-4">
           <IdentitySection member={member} />
           <AcademySection academy={member.academy} />
-          <SubscriptionSection activeSubscription={activeSubscription} />
+          <PurchasesSection purchases={purchases} />
         </div>
 
         <div className="lg:col-span-2 space-y-4">
@@ -120,11 +125,23 @@ export function MemberDetailClient({
               icon={<Wallet />}
               accent="primary"
               suffix={
-                balance !== null && balance < 50 ? (
-                  <span className="text-[11px] text-rose-600 font-medium">
-                    잔고 낮음
+                <div className="flex items-center justify-between gap-2">
+                  <span
+                    className={cn(
+                      "text-[11px] font-medium",
+                      expiresLabel ? "text-gray-500" : "text-gray-400",
+                    )}
+                  >
+                    {expiresLabel ? `${expiresLabel} 소멸` : "소멸기한 없음"}
                   </span>
-                ) : null
+                  <button
+                    type="button"
+                    onClick={() => setExpiryOpen(true)}
+                    className="text-[11px] font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                  >
+                    소멸기한 관리
+                  </button>
+                </div>
               }
             />
             <CreditKpi
@@ -228,6 +245,14 @@ export function MemberDetailClient({
         memberId={member.id}
         memberName={member.name}
         currentBalance={balance}
+      />
+      <CreditExpiryModal
+        open={expiryOpen}
+        onOpenChange={setExpiryOpen}
+        memberId={member.id}
+        memberName={member.name}
+        currentBalance={balance}
+        currentExpiresAt={expiresAt}
       />
       <ActiveToggleModal
         open={toggleOpen}

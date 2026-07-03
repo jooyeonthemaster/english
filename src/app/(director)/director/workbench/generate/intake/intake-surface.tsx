@@ -101,7 +101,6 @@ export function IntakeSurface({
   examBrowser,
   overlay,
   onDismissOverlay,
-  workspaceActive = false,
   onReopenWorkspace,
 }: IntakeSurfaceProps) {
   // 오버레이(워크스페이스)가 떠 있을 땐 탭이 가리키는 내용이 그 아래 깔려
@@ -120,7 +119,7 @@ export function IntakeSurface({
       {/* 탭 행 — 파일 경로(브레드크럼)처럼:
           직접 입력 · 파일업로드  ›  내 지문함  ›  워크스페이스 */}
       <div
-        className="flex h-11 shrink-0 items-center gap-1.5 overflow-x-auto border-b border-slate-100 px-3"
+        className="flex min-h-11 shrink-0 flex-wrap items-center gap-1.5 overflow-visible border-b border-slate-100 px-3 py-1.5 sm:h-11 sm:flex-nowrap sm:overflow-x-auto sm:py-0"
         data-generate-tour="intake-tabs"
       >
         {showPasteTab ? (
@@ -230,7 +229,7 @@ export function IntakeSurface({
 function BreadcrumbSep() {
   return (
     <ChevronRight
-      className="size-3.5 shrink-0 text-slate-300"
+      className="hidden size-3.5 shrink-0 text-slate-300 sm:block"
       aria-hidden="true"
     />
   );
@@ -261,7 +260,7 @@ function Tab({
       title={title}
       data-generate-tour={tourKey}
       className={
-        "inline-flex h-8 items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-slate-300 " +
+        "inline-flex h-8 max-w-full shrink-0 items-center gap-1.5 rounded-md border px-3 text-[12.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-slate-300 " +
         (active
           ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
           : "cursor-pointer border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")

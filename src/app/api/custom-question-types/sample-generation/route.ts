@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
       spec,
       passage,
       gradeInfo: parsed.data.gradeInfo,
+      academyId: staff.academyId,
     });
     return NextResponse.json({
       question: result.question,

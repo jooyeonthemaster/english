@@ -16,7 +16,11 @@ import { Button } from "@/components/ui/button";
 import { exportMembers } from "@/actions/admin-members";
 import type { ExportMode } from "@/actions/admin-members/export-members";
 
-function triggerDownload(filename: string, contentBase64: string, mimeType: string) {
+export function triggerDownload(
+  filename: string,
+  contentBase64: string,
+  mimeType: string,
+) {
   // 서버가 base64로 인코딩한 파일 바이트(발송용=CP949, 전체=UTF-8)를 그대로 복원.
   const bin = atob(contentBase64);
   const bytes = new Uint8Array(bin.length);
@@ -66,11 +70,11 @@ export function MembersExportButtons() {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
       <Button
         variant="outline"
         size="sm"
-        className="h-8 text-[12px]"
+        className="h-8 flex-1 text-[12px] sm:flex-none"
         onClick={() => run("all")}
         disabled={pending !== null}
       >
@@ -83,7 +87,7 @@ export function MembersExportButtons() {
       </Button>
       <Button
         size="sm"
-        className="h-8 text-[12px] bg-blue-600 hover:bg-blue-700"
+        className="h-8 flex-1 bg-blue-600 text-[12px] hover:bg-blue-700 sm:flex-none"
         onClick={() => run("info")}
         disabled={pending !== null}
         title="크레딧 소멸 안내 등 정보성 — 마케팅 동의 없이도 발송 가능"
@@ -98,7 +102,7 @@ export function MembersExportButtons() {
       <Button
         variant="outline"
         size="sm"
-        className="h-8 text-[12px] border-amber-300 text-amber-700 hover:bg-amber-50"
+        className="h-8 flex-1 border-amber-300 text-[12px] text-amber-700 hover:bg-amber-50 sm:flex-none"
         onClick={() => run("ad")}
         disabled={pending !== null}
         title="추가증정·이벤트 등 광고성 — 마케팅 수신동의자에게만 발송"

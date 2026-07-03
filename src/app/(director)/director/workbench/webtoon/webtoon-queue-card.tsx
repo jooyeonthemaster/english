@@ -436,25 +436,28 @@ export function PreviewModal({
           {onEdit ? (
             <button
               onClick={onEdit}
-              className="flex h-8 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+              title="수정하기"
+              aria-label="수정하기"
+              className="flex size-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-50"
             >
               <Pencil className="h-3.5 w-3.5" />
-              수정하기
             </button>
           ) : null}
           <button
             onClick={() => printImage(item)}
-            className="flex h-8 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+            title="인쇄하기"
+            aria-label="인쇄하기"
+            className="flex size-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-50"
           >
             <Printer className="h-3.5 w-3.5" />
-            인쇄하기
           </button>
           <button
             onClick={() => downloadImage(item)}
-            className="flex h-8 items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[12px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+            title="다운로드"
+            aria-label="다운로드"
+            className="flex size-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-50"
           >
             <Download className="h-3.5 w-3.5" />
-            다운로드
           </button>
           <button
             onClick={onClose}

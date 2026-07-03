@@ -39,7 +39,7 @@ export function ExamPassageCard({
       onClick={() => onToggle(passage.id)}
       onDoubleClick={() => onPreview(passage)}
       className={
-        "group relative flex cursor-pointer flex-col gap-2 rounded-xl border bg-white p-3 text-left shadow-sm transition hover:shadow-md " +
+        "group relative flex w-full min-w-0 cursor-pointer flex-col gap-2 rounded-xl border bg-white p-3 text-left shadow-sm transition hover:shadow-md " +
         (selected
           ? "border-blue-300 bg-blue-50/40 ring-2 ring-blue-500"
           : "border-slate-200 hover:border-slate-300")

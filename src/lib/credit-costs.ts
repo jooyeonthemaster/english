@@ -36,13 +36,13 @@ export type OperationType = keyof typeof CREDIT_COSTS;
 
 // Display names for UI
 export const OPERATION_LABELS: Record<OperationType, string> = {
-  QUESTION_GEN_SINGLE: "문제 생성 (단일)",
-  QUESTION_GEN_VOCAB: "어휘 문제 생성",
+  QUESTION_GEN_SINGLE: "문제 생성",
+  QUESTION_GEN_VOCAB: "어휘 문제",
   AUTO_GEN_BATCH: "자동 출제",
   LEARNING_QUESTION_GEN: "학습 문제 생성",
   PASSAGE_ANALYSIS: "학습지 생성",
   GRAMMAR_ENHANCEMENT: "문법 포인트 분석",
-  SENTENCE_RETRANSLATION: "문장 재번역",
+  SENTENCE_RETRANSLATION: "AI 재번역",
   QUESTION_EXPLANATION: "해설 생성",
   QUESTION_MODIFY: "문제 수정",
   AI_CHAT: "AI 튜터링",
@@ -54,10 +54,12 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
   WEBTOON_IMAGE_PREMIUM: "웹툰 이미지 생성 (프리미엄)",
 };
 
-// Top-up pricing tiers (KRW per credit pack)
+// Top-up pricing tiers (KRW per credit pack). expiryDays = credit validity from
+// purchase; a higher tier both grants more credits and extends the balance-wide
+// expiry by (remaining + expiryDays).
 export const TOP_UP_PACKS = [
-  { credits: 150, price: 19800, label: "스타터", perCredit: 132 },
-  { credits: 450, price: 49500, label: "스탠다드", perCredit: 110 },
-  { credits: 1500, price: 132000, label: "프리미엄", perCredit: 88 },
-  { credits: 4500, price: 330000, label: "엔터프라이즈", perCredit: 73 },
+  { credits: 150, price: 19800, label: "스타터", perCredit: 132, expiryDays: 30 },
+  { credits: 450, price: 49500, label: "스탠다드", perCredit: 110, expiryDays: 90 },
+  { credits: 1500, price: 132000, label: "프리미엄", perCredit: 88, expiryDays: 180 },
+  { credits: 4500, price: 330000, label: "엔터프라이즈", perCredit: 73, expiryDays: 365 },
 ] as const;

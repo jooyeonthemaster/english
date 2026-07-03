@@ -1,8 +1,13 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
-import { adminGetHelpPosts, type AdminHelpPostListItem } from "@/actions/admin-help-center";
+import {
+  adminGetHelpPosts,
+  type AdminHelpPostsResult,
+} from "@/actions/admin-help-center";
+import { AdminPagination } from "@/components/admin/admin-pagination";
+import { useAutoRefresh } from "@/hooks/use-auto-refresh";
 import {
   boardStatuses,
   boardCategories,
@@ -15,32 +20,99 @@ import { StatusBadge } from "@/components/help-center/status-badge";
 import { formatRelativeTime } from "@/lib/utils";
 import { Lock, Pin, MessageSquare, ThumbsUp, CheckCircle2, Search } from "lucide-react";
 
+// 관리자가 한 번이라도 연 글의 id 를 브라우저에 저장 → 클릭 전까지만 파란 글로우.
+const SEEN_KEY = "smoat_admin_help_seen";
+
+function loadSeen(): Set<string> {
+  try {
+    const raw = localStorage.getItem(SEEN_KEY);
+    return new Set(raw ? (JSON.parse(raw) as string[]) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function persistSeen(seen: Set<string>) {
+  try {
+    localStorage.setItem(SEEN_KEY, JSON.stringify([...seen]));
+  } catch {
+    // 저장 실패는 무시(글로우가 다음 방문에 다시 보일 뿐).
+  }
+}
+
 export function AdminHelpBoardClient({
   board,
-  initialPosts,
+  initialData,
+  initialStatus,
 }: {
   board: HelpBoard;
-  initialPosts: AdminHelpPostListItem[];
+  initialData: AdminHelpPostsResult;
+  /** 대시보드 등에서 넘어올 때 초기 상태 필터("PENDING"=미답변) */
+  initialStatus?: string;
 }) {
   const meta = HELP_BOARD_META[board];
   const statuses = boardStatuses(board);
   const categories = boardCategories(board);
 
-  const [posts, setPosts] = useState(initialPosts);
-  const [status, setStatus] = useState("ALL");
+  // 문의 게시판(SUPPORT)에는 접수+처리중을 묶어 보는 "미답변" 필터를 추가한다.
+  const statusFilters =
+    board === "SUPPORT"
+      ? [
+          { value: "ALL", label: "전체" },
+          { value: "PENDING", label: "미답변" },
+          ...statuses,
+        ]
+      : [{ value: "ALL", label: "전체" }, ...statuses];
+  const validStatuses = new Set(statusFilters.map((s) => s.value));
+
+  const [posts, setPosts] = useState(initialData.items);
+  const [total, setTotal] = useState(initialData.total);
+  const [page, setPage] = useState(initialData.page);
+  const pageRef = useRef(initialData.page);
+  const [status, setStatus] = useState(
+    initialStatus && validStatuses.has(initialStatus) ? initialStatus : "ALL",
+  );
   const [search, setSearch] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  function reload(nextStatus = status) {
+  // 미확인 글 글로우용. 하이드레이션 불일치를 막기 위해 마운트 후 localStorage 를 읽는다.
+  const [seen, setSeen] = useState<Set<string>>(new Set());
+  const [seenReady, setSeenReady] = useState(false);
+  useEffect(() => {
+    setSeen(loadSeen());
+    setSeenReady(true);
+  }, []);
+
+  function markSeen(postId: string) {
+    setSeen((prev) => {
+      if (prev.has(postId)) return prev;
+      const next = new Set(prev).add(postId);
+      persistSeen(next);
+      return next;
+    });
+  }
+
+  const totalPages = Math.max(1, Math.ceil(total / initialData.pageSize));
+
+  function reload(nextStatus = status, nextPage = pageRef.current) {
     startTransition(async () => {
       const data = await adminGetHelpPosts({
         board,
         status: nextStatus,
         search: search || undefined,
+        page: nextPage,
       });
-      setPosts(data);
+      setPosts(data.items);
+      setTotal(data.total);
+      pageRef.current = data.page;
+      setPage(data.page);
     });
   }
+
+  // 목록 페이지는 10분마다 자동 새로고침. 특정 글을 읽는 상세 화면은
+  // 별도 라우트(/admin/{board}/[postId])라 이 컴포넌트가 언마운트되므로
+  // 읽는 동안에는 새로고침이 일어나지 않는다.
+  useAutoRefresh(() => reload());
 
   return (
     <div className="space-y-5">
@@ -51,18 +123,18 @@ export function AdminHelpBoardClient({
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && reload()}
+            onKeyDown={(e) => e.key === "Enter" && reload(status, 1)}
             placeholder="제목 검색..."
             className="w-full h-9 pl-9 pr-3 rounded-xl border border-gray-200 bg-white text-[13px] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none"
           />
         </div>
         <div className="flex flex-wrap gap-1.5">
-          {[{ value: "ALL", label: "전체" }, ...statuses].map((s) => (
+          {statusFilters.map((s) => (
             <button
               key={s.value}
               onClick={() => {
                 setStatus(s.value);
-                reload(s.value);
+                reload(s.value, 1);
               }}
               className={`px-3 py-1.5 text-xs font-medium rounded-full border transition-colors ${
                 status === s.value
@@ -86,9 +158,10 @@ export function AdminHelpBoardClient({
         )}
         <ul className="divide-y divide-gray-50">
           {posts.map((p) => (
-            <li key={p.id}>
+            <li key={p.id} className={seenReady && !seen.has(p.id) ? "admin-unread-glow" : undefined}>
               <Link
                 href={`${meta.adminPath}/${p.id}`}
+                onClick={() => markSeen(p.id)}
                 className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50/70 transition-colors"
               >
                 <div className="flex items-center gap-2 shrink-0">
@@ -127,6 +200,12 @@ export function AdminHelpBoardClient({
             </li>
           ))}
         </ul>
+        <AdminPagination
+          page={page}
+          totalPages={totalPages}
+          disabled={isPending}
+          onChange={(p) => reload(status, p)}
+        />
       </div>
     </div>
   );

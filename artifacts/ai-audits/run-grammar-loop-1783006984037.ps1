@@ -1,0 +1,8 @@
+﻿$env:GRAMMAR_LOOP_RUNS='12'
+$env:GRAMMAR_LOOP_PLANS='STANDARD,PREMIUM'
+$env:GRAMMAR_LOOP_DIFFICULTIES='BASIC,INTERMEDIATE,KILLER'
+$env:GRAMMAR_LOOP_PASSAGES='2'
+$env:GRAMMAR_LOOP_ATTEMPTS='2'
+$env:GRAMMAR_LOOP_LLM_JUDGE='1'
+$env:GRAMMAR_LOOP_OUT='artifacts/ai-audits/grammar-quality-loop-1783006984037.jsonl'
+npx tsx scripts/audit-grammar-quality-loop.ts *> 'artifacts/ai-audits/grammar-quality-loop-1783006984037.log'

@@ -90,6 +90,7 @@ import { useQuestionEditor } from "./question-bank-client/use-question-editor";
 import { useUrlFilters } from "@/hooks/use-url-filters";
 import { useSelection } from "@/hooks/use-selection";
 import { useFolderManager } from "@/hooks/use-folder-manager";
+import { getAcademyQuestionSetMemberMap } from "@/actions/question-sets";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -154,6 +155,7 @@ interface QuestionBankProps {
   view: "flat" | "passage";
   questionsData: {
     questions: QuestionItem[];
+    setIds?: string[];
     total: number;
     page: number;
     totalPages: number;
@@ -281,13 +283,22 @@ export function QuestionBankClient({
     isPending: isNavPending,
   } = useUrlFilters(bankPath);
 
-  function handleSearch() {
-    urlSearch(searchValue);
+  function handleSearch(value?: string) {
+    // X 버튼은 빈 값을 명시적으로 넘긴다(상태 갱신은 비동기라 stale 방지).
+    urlSearch(value !== undefined ? value : searchValue);
   }
 
   // Folder manager — 폴더 생성만 과목 스코프를 실어 감싼다(국어 문제 은행에서
   // 만든 폴더는 subject='KOREAN' 저장 → 영어 폴더 목록과 완전 분리). 영어
   // 기본 경로는 subject 미전달 = 기존 INSERT 그대로(무회귀).
+  const [setCount, setSetCount] = useState<number | null>(null);
+  const [setMemberMap, setSetMemberMap] = useState<Record<string, string>>({});
+  useEffect(() => {
+    getAcademyQuestionSetMemberMap()
+      .then(setSetMemberMap)
+      .catch(() => {});
+  }, []);
+
   const folders = useFolderManager({
     initialCollections,
     initialMembership,
@@ -304,7 +315,9 @@ export function QuestionBankClient({
       removeFromCollection: removeQuestionsFromCollection,
     },
     itemLabel: "문제",
-    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거).
+    questionSetIdOf: (id) => setMemberMap[id] ?? null,
+    // 폴더 배지를 하위 폴더까지 합산한 누적 수치로 표시(중복 제거). 세트 멤버는
+    // questionSetIdOf 로 한 세트를 1개로 접어, 실제 카드 단위와 배지를 맞춘다.
     cumulativeCounts: true,
   });
 
@@ -412,6 +425,7 @@ export function QuestionBankClient({
     : folders.activeFolder === null
       ? flatQuestions
       : questionsInActiveFolder;
+  const pageSetIds = questionsData?.setIds ?? [];
 
   // Selection
   const displayedQuestionIds = useMemo(
@@ -440,10 +454,6 @@ export function QuestionBankClient({
   const totalCount = isGrouped
     ? (groupedData?.total ?? 0)
     : (questionsData?.total ?? 0);
-  const allPagesSelectableCount =
-    !isGrouped && folders.activeFolder
-      ? (folders.membership[folders.activeFolder]?.size ?? 0)
-      : totalCount;
   const currentPage = isGrouped
     ? (groupedData?.page ?? 1)
     : (questionsData?.page ?? 1);
@@ -690,8 +700,9 @@ export function QuestionBankClient({
 
   // ─── Folder drag handler (wraps hook's handler with selectedIds) ───
   const handleDragToFolder = useCallback(
+    // 세트 드래그면 itemId 가 멤버 배열 — 훅이 배열을 그대로 받아 전체를 폴더에 넣는다.
     async (
-      itemId: string,
+      itemId: string | string[],
       folderId: string,
       copy: boolean,
       keepFolderIds: string[] = [],
@@ -723,9 +734,13 @@ export function QuestionBankClient({
   );
 
   const handleDragToRoot = useCallback(
-    async (itemId: string, copy: boolean) => {
+    async (itemId: string | string[], copy: boolean) => {
       if (copy || !folders.activeFolder) return;
-      const ids = selectedIds.has(itemId) ? selectedIds : new Set([itemId]);
+      // 세트는 멤버 전체(배열)를 폴더에서 뺀다.
+      const draggedIds = Array.isArray(itemId) ? itemId : [itemId];
+      const ids = draggedIds.some((id) => selectedIds.has(id))
+        ? selectedIds
+        : new Set(draggedIds);
       const success = await folders.handleRemoveFromFolder(ids);
       if (success) clearSelection();
     },
@@ -1099,7 +1114,7 @@ export function QuestionBankClient({
 
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-      <div className="flex flex-1 items-center gap-2 min-w-0">
+      <div className="flex w-full min-w-0 flex-wrap items-center gap-2 md:w-auto md:flex-1 md:flex-nowrap">
         <SelectAllCheckbox
           checked={allFilteredSelected}
           indeterminate={someSelected}
@@ -1117,7 +1132,7 @@ export function QuestionBankClient({
         />
         <div
           className={
-            "flex shrink-0 items-center gap-3 " +
+            "flex min-w-0 flex-wrap items-center gap-1.5 md:shrink-0 md:flex-nowrap md:gap-3 " +
             (selectedIds.size > 0 ? "" : "pointer-events-none opacity-50")
           }
           aria-disabled={selectedIds.size === 0}
@@ -1176,17 +1191,18 @@ export function QuestionBankClient({
             setCreateExamOpen(true);
           }}
           className={
-            "flex h-12 grow items-center justify-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[14px] font-bold text-white shadow-sm transition-colors " +
+            "flex h-10 min-w-[9rem] flex-[1_1_9rem] items-center justify-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[13px] font-bold text-white shadow-sm transition-colors md:h-12 md:min-w-0 md:basis-auto md:grow md:text-[14px] " +
             (selectedIds.size === 0 || creatingExam
               ? "cursor-not-allowed border-blue-200 bg-blue-300 shadow-none"
               : "cursor-pointer border-blue-600 bg-blue-600 hover:border-blue-700 hover:bg-blue-700")
           }
         >
-          <ClipboardList className="size-5" />
-          다음으로 (시험지 생성)
+          <ClipboardList className="size-4 md:size-5" />
+          <span className="md:hidden">시험지 생성</span>
+          <span className="hidden md:inline">다음으로 (시험지 생성)</span>
         </button>
       </div>
-      <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+      <div className="ml-auto flex w-full shrink-0 flex-wrap items-center justify-end gap-2 md:w-auto">
         {filtersToolbar}
         {gridToggle}
       </div>
@@ -1194,8 +1210,7 @@ export function QuestionBankClient({
   );
 
   const isEmpty =
-    (isGrouped ? groupedPassages.length === 0 : flatQuestions.length === 0) &&
-    !folders.activeFolder;
+    isGrouped && groupedPassages.length === 0 && !folders.activeFolder;
 
   // 평면(flat) 목록의 문항 카드 한 장 — 기본(영어) 경로와 국어 세트 혼합 경로가
   // 같은 카드를 그리도록 공용화(렌더 결과는 기존 인라인 map 과 동일).
@@ -1449,36 +1464,54 @@ export function QuestionBankClient({
                     </div>
                   ) : null}
                 </>
-              ) : displayedQuestions.length === 0 && !isNavPending ? (
-                <div className="py-12 text-center">
-                  <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />
-                  <p className="text-[13px] text-slate-400">
-                    {folders.activeFolder
-                      ? "이 폴더에 문제가 없습니다."
-                      : "등록된 문제가 없습니다."}
-                  </p>
-                  {folders.activeFolder && (
-                    <p className="text-[12px] text-slate-400 mt-1">
-                      문제를 선택 후 &quot;폴더에 추가&quot;를 사용하세요.
-                    </p>
-                  )}
-                </div>
               ) : (
-                <DragSelect
-                  value={selectedIds}
-                  onChange={setSelectedIds}
-                  className={`grid gap-3 ${
-                    gridCols === 2
-                      ? "grid-cols-1 md:grid-cols-2"
-                      : gridCols === 3
-                        ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                        : "grid-cols-1"
-                  }`}
-                >
-                  {displayedQuestions.map((q, idx) =>
-                    renderFlatQuestionCard(q, idx),
-                  )}
-                </DragSelect>
+                <>
+                  <DragSelect
+                    value={selectedIds}
+                    onChange={setSelectedIds}
+                    className={`grid gap-3 ${
+                      gridCols === 2
+                        ? "grid-cols-1 md:grid-cols-2"
+                        : gridCols === 3
+                          ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                          : "grid-cols-1"
+                    }`}
+                  >
+                    <QuestionSetSection
+                      inline
+                      showSets={pageSetIds.length > 0}
+                      setIds={pageSetIds}
+                      refreshKey={`${folders.activeFolder ?? "all"}:${filters.approved ?? "all"}:${filters.subType ?? "all"}:${filters.difficulty ?? "all"}:${filters.search ?? ""}`}
+                      onCountChange={setSetCount}
+                      onMemberSplit={() => router.refresh()}
+                      collectionId={folders.activeFolder ?? undefined}
+                      filters={filters}
+                      normalItems={displayedQuestions.map((q, idx) => ({
+                        id: q.id,
+                        createdAt: q.createdAt,
+                        node: renderFlatQuestionCard(q, idx),
+                      }))}
+                    />
+                  </DragSelect>
+                  {displayedQuestions.length === 0 &&
+                    setCount === 0 &&
+                    !isNavPending && (
+                      <div className="py-12 text-center">
+                        <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />
+                        <p className="text-[13px] text-slate-400">
+                          {folders.activeFolder
+                            ? "이 폴더에 문제가 없습니다."
+                            : "등록된 문제가 없습니다."}
+                        </p>
+                        {folders.activeFolder && (
+                          <p className="text-[12px] text-slate-400 mt-1">
+                            문제를 선택 후 &quot;폴더에 추가&quot;를 사용하세요.
+                          </p>
+                        )}
+                      </div>
+                    )}
+                </>
+
               )}
             </div>
           </section>

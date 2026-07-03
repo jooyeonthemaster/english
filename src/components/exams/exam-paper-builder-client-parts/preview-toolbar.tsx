@@ -195,7 +195,7 @@ export function PreviewToolbar({
   return (
     <div
       ref={toolbarRef}
-      className="flex h-11 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4"
+      className="flex h-11 shrink-0 items-center justify-between gap-2 border-b border-slate-200 bg-white px-2 lg:gap-3 lg:px-4"
     >
       <div className="flex min-w-0 items-center gap-2">
         <Eye className="h-3.5 w-3.5 text-slate-400" />
@@ -260,10 +260,10 @@ export function PreviewToolbar({
         <button
           onClick={onPrint}
           disabled={actionDisabled}
-          className="flex h-8 min-w-[64px] items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex h-8 items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:min-w-[64px]"
         >
           <Printer className="h-3.5 w-3.5" />
-          인쇄
+          <span className="hidden lg:inline">인쇄</span>
         </button>
         <div ref={downloadMenuRef} className="relative">
           <button
@@ -271,10 +271,10 @@ export function PreviewToolbar({
             onClick={() => setDownloadOpen((open) => !open)}
             disabled={actionDisabled}
             aria-expanded={downloadOpen}
-            className="flex h-8 min-w-[98px] items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-8 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:min-w-[98px] lg:px-3"
           >
             {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
-            다운로드
+            <span className="hidden lg:inline">다운로드</span>
             <ChevronDown className="h-3 w-3 text-slate-400" />
           </button>
           {downloadOpen && (

@@ -6,7 +6,9 @@ import { MembersListClient } from "@/components/admin/members-list-client";
 export const dynamic = "force-dynamic";
 
 async function MembersContent() {
-  const members = await getMembers({ limit: 500 });
+  // limit 미지정 = 전체 로드. 회원 검색/정렬이 클라이언트 메모리에서 전 범위를
+  // 대상으로 이뤄지도록(이전 500명 캡 제거).
+  const members = await getMembers();
   return <MembersListClient members={members} />;
 }
 
@@ -29,7 +31,7 @@ export default function MembersPage() {
     <div className="space-y-6">
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-[22px] font-bold text-gray-900">회원 관리</h1>
+          <h1 className="text-[22px] font-bold text-gray-900">학원 · 회원 관리</h1>
           <p className="text-[13px] text-gray-400 mt-1">
             소셜·이메일로 가입한 원장 회원을 관리하고 크레딧을 조정합니다
           </p>

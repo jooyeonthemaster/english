@@ -6,7 +6,14 @@ import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdminAuth } from "@/lib/auth-admin";
-import { MAX_ADJUSTMENT_AMOUNT } from "@/lib/admin-members-labels";
+import {
+  MAX_ADJUSTMENT_AMOUNT,
+  MAX_GRANT_EXPIRY_DAYS,
+} from "@/lib/admin-members-labels";
+import {
+  expiresAtConflictSql,
+  expiresAtInsertSql,
+} from "@/lib/credit-expiry";
 import { type ActionResult, fail } from "./_shared";
 
 // ============================================================================
@@ -28,24 +35,56 @@ const adjustmentSchema = z.object({
     .trim()
     .min(5, "사유는 5자 이상 입력해주세요.")
     .max(500, "사유는 500자 이하로 입력해주세요."),
+  // Optional validity for a POSITIVE grant. >0 extends the balance-wide expiry
+  // by (remaining + expiryDays); omitted/0 rides the existing expiry (promo-like).
+  // Ignored for deductions.
+  expiryDays: z
+    .number()
+    .int()
+    .min(0)
+    .max(MAX_GRANT_EXPIRY_DAYS)
+    .optional(),
 });
 
 export async function adjustMemberCredits(input: {
   memberId: string;
   amount: number;
   reason: string;
+  expiryDays?: number;
 }): Promise<ActionResult<{ balanceAfter: number; transactionId: string }>> {
   const session = await requireAdminAuth("SUPER_ADMIN");
 
+  const res = await adjustOneMemberCredits(input, session.adminId);
+  if (res.success) {
+    revalidatePath(`/admin/members/${input.memberId}`);
+    revalidatePath(`/admin/members`);
+  }
+  return res;
+}
+
+/**
+ * Core single-member adjustment used by both the single-member action and the
+ * bulk action. Does NOT revalidate paths — callers revalidate once after they
+ * finish (so a bulk run doesn't revalidate N times). Returns the same
+ * discriminated union so the bulk caller can aggregate per-member outcomes.
+ */
+export async function adjustOneMemberCredits(
+  input: { memberId: string; amount: number; reason: string; expiryDays?: number },
+  adminId: string,
+): Promise<
+  ActionResult<{ balanceAfter: number; transactionId: string; memberName: string }>
+> {
   const parsed = adjustmentSchema.safeParse(input);
   if (!parsed.success) {
     return fail(parsed.error.issues[0]?.message ?? "입력값이 올바르지 않습니다.");
   }
   const { memberId, amount, reason } = parsed.data;
+  // Only a positive grant carries a validity window; 0/undefined = ride existing.
+  const grantExpiryDays = amount > 0 ? parsed.data.expiryDays ?? 0 : 0;
 
   const staff = await prisma.staff.findUnique({
     where: { id: memberId },
-    select: { id: true, academyId: true, role: true },
+    select: { id: true, academyId: true, role: true, name: true },
   });
   if (!staff) return fail("회원을 찾을 수 없습니다.");
   if (staff.role !== "DIRECTOR") {
@@ -108,10 +147,11 @@ export async function adjustMemberCredits(input: {
           // unique-index conflict resolution, each receiving the truthful
           // post-write balance.
           const upserted = await tx.$queryRaw<Array<{ balance: number }>>`
-            INSERT INTO credit_balances (id, "academyId", balance, "monthlyAllocation", "updatedAt")
-            VALUES (${randomUUID()}, ${staff.academyId}, ${amount}, ${planMonthlyCredits}, NOW())
+            INSERT INTO credit_balances (id, "academyId", balance, "monthlyAllocation", "expiresAt", "updatedAt")
+            VALUES (${randomUUID()}, ${staff.academyId}, ${amount}, ${planMonthlyCredits}, ${expiresAtInsertSql(grantExpiryDays)}, NOW())
             ON CONFLICT ("academyId") DO UPDATE
               SET balance = credit_balances.balance + EXCLUDED.balance,
+                  "expiresAt" = ${expiresAtConflictSql(grantExpiryDays)},
                   "updatedAt" = NOW()
             RETURNING balance
           `;
@@ -126,8 +166,12 @@ export async function adjustMemberCredits(input: {
             amount,
             balanceAfter: newBalance,
             description: reason,
-            adminId: session.adminId,
+            adminId,
             referenceType: "ADMIN_ADJUSTMENT",
+            metadata:
+              grantExpiryDays > 0
+                ? JSON.stringify({ expiryDays: grantExpiryDays })
+                : null,
           },
           select: { id: true, balanceAfter: true },
         });
@@ -146,13 +190,11 @@ export async function adjustMemberCredits(input: {
       },
     );
 
-    revalidatePath(`/admin/members/${memberId}`);
-    revalidatePath(`/admin/members`);
-
     return {
       success: true,
       balanceAfter: result.balanceAfter,
       transactionId: result.transactionId,
+      memberName: staff.name,
     };
   } catch (err) {
     const code = err instanceof Error ? err.message : "unknown_error";
@@ -166,7 +208,7 @@ export async function adjustMemberCredits(input: {
     }
     console.error("[adjustMemberCredits] failed", {
       memberId,
-      adminId: session.adminId,
+      adminId,
       err,
     });
     return fail("조정 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");

@@ -162,8 +162,10 @@ export function PassageContentModal({
                 type="button"
                 onClick={() => onToggleExtractionReview(passage)}
                 disabled={reviewBusy}
+                title={isReviewCommitted ? "검수취소" : "미검수"}
+                aria-label={isReviewCommitted ? "검수취소" : "미검수"}
                 className={
-                  "flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border px-3 text-[12px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-60 " +
+                  "inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border transition-colors disabled:cursor-not-allowed disabled:opacity-60 " +
                   (isReviewCommitted
                     ? "border-emerald-500 bg-white text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
                     : "border-red-200/80 bg-white text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
@@ -179,7 +181,6 @@ export function PassageContentModal({
                 ) : (
                   <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                 )}
-                {isReviewCommitted ? "검수취소" : "미검수"}
               </button>
             ) : null}
             <button

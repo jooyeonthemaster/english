@@ -394,6 +394,51 @@
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.45);
   }
 }
+/* 충전하기 CTA: 뒷배경으로 파란 글로우가 천천히 숨쉬듯 번졌다 사그라든다 */
+@keyframes topup-cta-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0), 0 0 0 0 rgba(37, 99, 235, 0);
+  }
+  50% {
+    box-shadow:
+      0 0 18px 2px rgba(37, 99, 235, 0.45),
+      0 0 34px 8px rgba(37, 99, 235, 0.22);
+  }
+}
+.topup-cta-glow {
+  animation: topup-cta-glow 2.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .topup-cta-glow {
+    animation: none;
+  }
+}
+
+/* 관리자 미확인(한 번도 클릭 안 한) 게시글 행: 클릭 전까지 파란색으로 천천히 숨쉬듯
+   반짝인다. 목록 컨테이너가 overflow-hidden 이라 바깥 글로우는 잘리므로 안쪽 링 +
+   옅은 배경 틴트로 표현한다. */
+@keyframes admin-unread-glow {
+  0%, 100% {
+    box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0), inset 0 0 14px 0 rgba(37, 99, 235, 0);
+    background-color: rgba(37, 99, 235, 0);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 0 1px rgba(37, 99, 235, 0.35),
+      inset 0 0 16px 2px rgba(37, 99, 235, 0.1);
+    background-color: rgba(37, 99, 235, 0.06);
+  }
+}
+.admin-unread-glow {
+  animation: admin-unread-glow 3s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-unread-glow {
+    animation: none;
+    background-color: rgba(37, 99, 235, 0.05);
+  }
+}
+
 /* 크레딧 뱃지 변화 강조: 폰트가 살짝 커졌다가 원래대로, 색이 잠깐 변했다가 복귀 */
 @keyframes credit-flash-down {
   0% { transform: scale(1); }
@@ -1795,3 +1840,396 @@ body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :
 .qbank-compact-font :where(.text-\[11px\]) { font-size: 9px !important; }
 .qbank-compact-font :where(.text-\[10px\]) { font-size: 8px !important; }
 .qbank-compact-font :where(.text-\[9px\]) { font-size: 7px !important; }
+
+/* ============================================================================
+   Mobile Responsiveness Safety Layer
+   ----------------------------------------------------------------------------
+   Desktop layouts remain governed by the existing Tailwind classes. Under md,
+   this layer keeps wide workbench/admin surfaces, custom dialogs, popovers, and
+   fixed-width controls inside the viewport instead of letting them push the
+   page horizontally.
+   ============================================================================ */
+@media (max-width: 767px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body.smoat-large-ui {
+    min-width: 0;
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body.smoat-large-ui :where(main, section, article, aside, header, footer, nav, form, div) {
+    min-width: 0;
+  }
+
+  body.smoat-large-ui :where(img, video, canvas, svg) {
+    max-width: 100%;
+  }
+
+  body.smoat-large-ui :where(input, textarea, select) {
+    max-width: 100%;
+    font-size: 16px;
+  }
+
+  body.smoat-large-ui :where(button, a, [role="button"], input, textarea, select) {
+    touch-action: manipulation;
+  }
+
+  body.smoat-large-ui :where(:not(table)[class*="w-["], :not(table)[class*="max-w-["]) {
+    max-width: 100%;
+  }
+
+  body.smoat-large-ui :where(
+    main[class*="min-w-["],
+    section[class*="min-w-["],
+    article[class*="min-w-["],
+    aside[class*="min-w-["],
+    nav[class*="min-w-["],
+    header[class*="min-w-["],
+    footer[class*="min-w-["],
+    form[class*="min-w-["],
+    div[class*="min-w-["],
+    label[class*="min-w-["],
+    span[class*="min-w-["]
+  ) {
+    min-width: 0 !important;
+  }
+
+  body.smoat-large-ui :where([class*="grid-cols-["]) {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  body.smoat-large-ui :where(.-m-6) {
+    margin: -1rem !important;
+  }
+
+  body.smoat-large-ui :where(.-mx-6) {
+    margin-left: -1rem !important;
+    margin-right: -1rem !important;
+  }
+
+  body.smoat-large-ui :where(.-ml-6) {
+    margin-left: -1rem !important;
+  }
+
+  body.smoat-large-ui :where(.-mr-6) {
+    margin-right: -1rem !important;
+  }
+
+  body.smoat-large-ui :where([data-slot="card"]) {
+    gap: 1rem;
+    border-radius: 0.75rem;
+  }
+
+  body.smoat-large-ui :where([data-slot="card-header"], [data-slot="card-content"], [data-slot="card-footer"]) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  body.smoat-large-ui :where([data-slot="dialog-content"], [data-slot="alert-dialog-content"]) {
+    width: calc(100vw - 1rem) !important;
+    max-width: calc(100vw - 1rem) !important;
+    max-height: calc(100dvh - 1rem) !important;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  body.smoat-large-ui :where([data-slot="sheet-content"]) {
+    max-width: min(92vw, 24rem) !important;
+    max-height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  body.smoat-large-ui :where(
+    [data-slot="popover-content"],
+    [data-slot="dropdown-menu-content"],
+    [data-slot="dropdown-menu-sub-content"],
+    [data-slot="select-content"]
+  ) {
+    max-width: calc(100vw - 1rem) !important;
+    max-height: calc(100dvh - 1rem) !important;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  body.smoat-large-ui :where([data-slot="table-container"]) {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body.smoat-large-ui :where([data-slot="table"]) {
+    width: max-content;
+    min-width: 100%;
+  }
+
+  body.smoat-large-ui :where([data-slot="tabs-list"]) {
+    max-width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  body.smoat-large-ui :where([data-slot="tabs-list"])::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.smoat-large-ui :where([data-slot="tabs-trigger"]) {
+    flex: 0 0 auto;
+  }
+
+  body.smoat-large-ui :where(.recharts-wrapper, .recharts-surface) {
+    max-width: 100% !important;
+  }
+
+  body.smoat-large-ui :where(.fixed.right-4, .fixed.right-6, .fixed.right-8, .fixed.right-10) {
+    left: 1rem !important;
+    right: 1rem !important;
+    width: auto !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
+
+  body.smoat-large-ui :where(.yshin-scan-line) {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  body.smoat-large-ui :where(.exam-a4-page, .exam-preview-page-frame, .par-root) {
+    min-width: revert !important;
+  }
+
+  body.smoat-large-ui :where(.exam-a4-page, .exam-preview-page-frame, .par-root) :where([class*="grid-cols-["]) {
+    grid-template-columns: revert !important;
+  }
+
+  /* -------------------------------------------------------------------------
+     Mobile Compact Density Layer
+     -------------------------------------------------------------------------
+     모바일에서는 화면 한 장에 더 많은 정보를 담기 위해 폰트/아이콘/여백을
+     전역으로 한 단계 낮춘다. 데스크톱 유틸리티는 그대로 두고, 시험지 A4·
+     분석 리포트처럼 출력 크기가 의미를 갖는 표면은 아래 예외 규칙으로 보존한다.
+     ------------------------------------------------------------------------- */
+  body.smoat-large-ui {
+    font-size: 14px;
+    --sp-1: clamp(0.25rem, 1.2vw, 0.5rem);
+    --sp-2: clamp(0.5rem, 2.35vw, 0.875rem);
+    --sp-3: clamp(0.6875rem, 3vw, 1rem);
+    --sp-4: clamp(0.875rem, 3.8vw, 1.25rem);
+    --sp-5: clamp(1.125rem, 5vw, 1.75rem);
+    --sp-6: clamp(1.5rem, 7vw, 2.5rem);
+    --gap-section: max(0.75rem, 1.6svh);
+    --gap-section-sm: max(0.5rem, 1svh);
+    --pt-page: max(0.5rem, 1svh);
+    --pb-page: max(0.75rem, 1.2svh);
+    --fs-caption: clamp(0.5rem, 2.35vw, 0.6875rem);
+    --fs-xs: clamp(0.5625rem, 2.6vw, 0.75rem);
+    --fs-sm: clamp(0.625rem, 2.85vw, 0.8125rem);
+    --fs-base: clamp(0.75rem, 3.25vw, 0.9375rem);
+    --fs-md: clamp(0.8125rem, 3.6vw, 1rem);
+    --fs-lg: clamp(0.9375rem, 4.15vw, 1.1875rem);
+    --fs-xl: clamp(1.0625rem, 4.85vw, 1.375rem);
+    --fs-2xl: clamp(1.25rem, 5.7vw, 1.75rem);
+    --header-h: clamp(2.375rem, 5.4svh, 3.25rem);
+    --tab-h: clamp(2.375rem, 5.4svh, 3.25rem);
+    --fab-size: clamp(2.375rem, 5.4svh, 3.25rem);
+    --avatar-sm: clamp(1.375rem, 6.6vw, 2rem);
+    --avatar-md: clamp(1.625rem, 8vw, 2.5rem);
+    --avatar-lg: clamp(2.625rem, 13vw, 4rem);
+    --icon-xs: clamp(0.625rem, 3vw, 0.875rem);
+    --icon-sm: clamp(0.75rem, 3.6vw, 1rem);
+    --icon-md: clamp(0.875rem, 4.2vw, 1.25rem);
+    --icon-lg: clamp(1rem, 5vw, 1.5rem);
+    --touch-min: clamp(2rem, 9.2vw, 2.75rem);
+  }
+
+  body.smoat-large-ui :where(.text-5xl):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 2rem !important; line-height: 1.08 !important; }
+  body.smoat-large-ui :where(.text-4xl):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 1.75rem !important; line-height: 1.1 !important; }
+  body.smoat-large-ui :where(.text-3xl):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 1.45rem !important; line-height: 1.15 !important; }
+  body.smoat-large-ui :where(.text-2xl):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 1.25rem !important; line-height: 1.2 !important; }
+  body.smoat-large-ui :where(.text-xl):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 1.0625rem !important; line-height: 1.25 !important; }
+  body.smoat-large-ui :where(.text-lg):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 0.9375rem !important; line-height: 1.3 !important; }
+  body.smoat-large-ui :where(.text-base):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 0.8125rem !important; line-height: 1.35 !important; }
+  body.smoat-large-ui :where(.text-sm):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 0.75rem !important; line-height: 1.35 !important; }
+  body.smoat-large-ui :where(.text-xs):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 0.6875rem !important; line-height: 1.3 !important; }
+
+  body.smoat-large-ui :where(.text-\[40px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 30px !important; }
+  body.smoat-large-ui :where(.text-\[36px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 28px !important; }
+  body.smoat-large-ui :where(.text-\[34px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 26px !important; }
+  body.smoat-large-ui :where(.text-\[32px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 25px !important; }
+  body.smoat-large-ui :where(.text-\[30px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 23px !important; }
+  body.smoat-large-ui :where(.text-\[28px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 22px !important; }
+  body.smoat-large-ui :where(.text-\[26px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 21px !important; }
+  body.smoat-large-ui :where(.text-\[24px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 19px !important; }
+  body.smoat-large-ui :where(.text-\[22px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 18px !important; }
+  body.smoat-large-ui :where(.text-\[20px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 16px !important; }
+  body.smoat-large-ui :where(.text-\[18px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 15px !important; }
+  body.smoat-large-ui :where(.text-\[17px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 14px !important; }
+  body.smoat-large-ui :where(.text-\[16px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 13.5px !important; }
+  body.smoat-large-ui :where(.text-\[15px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 12.5px !important; }
+  body.smoat-large-ui :where(.text-\[14px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 12px !important; }
+  body.smoat-large-ui :where(.text-\[13\.5px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 11.5px !important; }
+  body.smoat-large-ui :where(.text-\[13px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 11px !important; }
+  body.smoat-large-ui :where(.text-\[12\.5px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 10.5px !important; }
+  body.smoat-large-ui :where(.text-\[12px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 10.5px !important; }
+  body.smoat-large-ui :where(.text-\[11\.5px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 10px !important; }
+  body.smoat-large-ui :where(.text-\[11px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 9.5px !important; }
+  body.smoat-large-ui :where(.text-\[10\.5px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 9.25px !important; }
+  body.smoat-large-ui :where(.text-\[10px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 9px !important; }
+  body.smoat-large-ui :where(.text-\[9\.5px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 8.75px !important; }
+  body.smoat-large-ui :where(.text-\[9px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: 8.5px !important; }
+
+  /* 방금 압축한 모바일 밀도는 유지하되, 가독성을 위해 텍스트와 아이콘만 약 1pt 올린다. */
+  body.smoat-large-ui {
+    font-size: calc(14px + 1pt);
+    --fs-caption: calc(clamp(0.5rem, 2.35vw, 0.6875rem) + 1pt);
+    --fs-xs: calc(clamp(0.5625rem, 2.6vw, 0.75rem) + 1pt);
+    --fs-sm: calc(clamp(0.625rem, 2.85vw, 0.8125rem) + 1pt);
+    --fs-base: calc(clamp(0.75rem, 3.25vw, 0.9375rem) + 1pt);
+    --fs-md: calc(clamp(0.8125rem, 3.6vw, 1rem) + 1pt);
+    --fs-lg: calc(clamp(0.9375rem, 4.15vw, 1.1875rem) + 1pt);
+    --fs-xl: calc(clamp(1.0625rem, 4.85vw, 1.375rem) + 1pt);
+    --fs-2xl: calc(clamp(1.25rem, 5.7vw, 1.75rem) + 1pt);
+    --icon-xs: calc(clamp(0.625rem, 3vw, 0.875rem) + 1pt);
+    --icon-sm: calc(clamp(0.75rem, 3.6vw, 1rem) + 1pt);
+    --icon-md: calc(clamp(0.875rem, 4.2vw, 1.25rem) + 1pt);
+    --icon-lg: calc(clamp(1rem, 5vw, 1.5rem) + 1pt);
+  }
+  body.smoat-large-ui :where(.text-5xl):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(2rem + 1pt) !important; }
+  body.smoat-large-ui :where(.text-4xl):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(1.75rem + 1pt) !important; }
+  body.smoat-large-ui :where(.text-3xl):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(1.45rem + 1pt) !important; }
+  body.smoat-large-ui :where(.text-2xl):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(1.25rem + 1pt) !important; }
+  body.smoat-large-ui :where(.text-xl):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(1.0625rem + 1pt) !important; }
+  body.smoat-large-ui :where(.text-lg):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(0.9375rem + 1pt) !important; }
+  body.smoat-large-ui :where(.text-base):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(0.8125rem + 1pt) !important; }
+  body.smoat-large-ui :where(.text-sm):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(0.75rem + 1pt) !important; }
+  body.smoat-large-ui :where(.text-xs):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(0.6875rem + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[40px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(30px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[36px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(28px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[34px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(26px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[32px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(25px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[30px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(23px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[28px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(22px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[26px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(21px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[24px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(19px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[22px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(18px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[20px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(16px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[18px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(15px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[17px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(14px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[16px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(13.5px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[15px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(12.5px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[14px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(12px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[13\.5px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(11.5px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[13px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(11px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[12\.5px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(10.5px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[12px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(10.5px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[11\.5px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(10px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[11px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(9.5px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[10\.5px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(9.25px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[10px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(9px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[9\.5px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(8.75px + 1pt) !important; }
+  body.smoat-large-ui :where(.text-\[9px\]):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { font-size: calc(8.5px + 1pt) !important; }
+
+  body.smoat-large-ui :where(.leading-8):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { line-height: 1.55rem !important; }
+  body.smoat-large-ui :where(.leading-7):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { line-height: 1.4rem !important; }
+  body.smoat-large-ui :where(.leading-6):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { line-height: 1.25rem !important; }
+  body.smoat-large-ui :where(.leading-5):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { line-height: 1.1rem !important; }
+  body.smoat-large-ui :where(.leading-relaxed):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { line-height: 1.45 !important; }
+  body.smoat-large-ui :where(.leading-loose):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { line-height: 1.55 !important; }
+
+  body.smoat-large-ui :where(.p-6):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding: 1rem !important; }
+  body.smoat-large-ui :where(.p-5):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding: 0.875rem !important; }
+  body.smoat-large-ui :where(.p-4):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding: 0.75rem !important; }
+  body.smoat-large-ui :where(.p-3):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding: 0.625rem !important; }
+  body.smoat-large-ui :where(.p-2\.5):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding: 0.5rem !important; }
+
+  body.smoat-large-ui :where(.px-6):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding-left: 1rem !important; padding-right: 1rem !important; }
+  body.smoat-large-ui :where(.px-5):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding-left: 0.875rem !important; padding-right: 0.875rem !important; }
+  body.smoat-large-ui :where(.px-4):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+  body.smoat-large-ui :where(.px-3):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding-left: 0.625rem !important; padding-right: 0.625rem !important; }
+  body.smoat-large-ui :where(.px-2\.5):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
+
+  body.smoat-large-ui :where(.py-6):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding-top: 0.875rem !important; padding-bottom: 0.875rem !important; }
+  body.smoat-large-ui :where(.py-5):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+  body.smoat-large-ui :where(.py-4):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding-top: 0.625rem !important; padding-bottom: 0.625rem !important; }
+  body.smoat-large-ui :where(.py-3):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
+  body.smoat-large-ui :where(.py-2\.5):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { padding-top: 0.4rem !important; padding-bottom: 0.4rem !important; }
+
+  body.smoat-large-ui :where(.gap-6):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { gap: 1rem !important; }
+  body.smoat-large-ui :where(.gap-5):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { gap: 0.875rem !important; }
+  body.smoat-large-ui :where(.gap-4):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { gap: 0.75rem !important; }
+  body.smoat-large-ui :where(.gap-3):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { gap: 0.5rem !important; }
+  body.smoat-large-ui :where(.gap-2\.5):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) { gap: 0.4rem !important; }
+
+  body.smoat-large-ui :where(.space-y-6):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) > :not(:last-child) { margin-block-start: 0 !important; margin-block-end: 1rem !important; }
+  body.smoat-large-ui :where(.space-y-5):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) > :not(:last-child) { margin-block-start: 0 !important; margin-block-end: 0.875rem !important; }
+  body.smoat-large-ui :where(.space-y-4):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) > :not(:last-child) { margin-block-start: 0 !important; margin-block-end: 0.75rem !important; }
+  body.smoat-large-ui :where(.space-y-3):not(.exam-a4-page *):not(.exam-preview-page-frame *):not(.par-root *) > :not(:last-child) { margin-block-start: 0 !important; margin-block-end: 0.5rem !important; }
+
+  body.smoat-large-ui :where(.-m-6) { margin: -0.75rem !important; }
+  body.smoat-large-ui :where(.-mx-6) { margin-left: -0.75rem !important; margin-right: -0.75rem !important; }
+  body.smoat-large-ui :where(.-ml-6) { margin-left: -0.75rem !important; }
+  body.smoat-large-ui :where(.-mr-6) { margin-right: -0.75rem !important; }
+
+  body.smoat-large-ui :where(button.h-12, a.h-12, [role="button"].h-12) { height: 2.5rem !important; min-height: 2.5rem !important; }
+  body.smoat-large-ui :where(button.h-11, a.h-11, [role="button"].h-11) { height: 2.375rem !important; min-height: 2.375rem !important; }
+  body.smoat-large-ui :where(button.h-10, a.h-10, [role="button"].h-10) { height: 2.25rem !important; min-height: 2.25rem !important; }
+  body.smoat-large-ui :where(button.h-9, a.h-9, [role="button"].h-9) { height: 2.125rem !important; min-height: 2.125rem !important; }
+  body.smoat-large-ui :where(button.h-8, a.h-8, [role="button"].h-8) { height: 1.875rem !important; min-height: 1.875rem !important; }
+  body.smoat-large-ui :where(button.h-7, a.h-7, [role="button"].h-7) { height: 1.75rem !important; min-height: 1.75rem !important; }
+  body.smoat-large-ui :where(button.h-6, a.h-6, [role="button"].h-6) { height: 1.5rem !important; min-height: 1.5rem !important; }
+  body.smoat-large-ui :where(button.size-12, a.size-12, [role="button"].size-12) { width: 2.5rem !important; min-width: 2.5rem !important; height: 2.5rem !important; }
+  body.smoat-large-ui :where(button.size-10, a.size-10, [role="button"].size-10) { width: 2.25rem !important; min-width: 2.25rem !important; height: 2.25rem !important; }
+  body.smoat-large-ui :where(button.size-9, a.size-9, [role="button"].size-9) { width: 2.125rem !important; min-width: 2.125rem !important; height: 2.125rem !important; }
+  body.smoat-large-ui :where(button.size-8, a.size-8, [role="button"].size-8) { width: 1.875rem !important; min-width: 1.875rem !important; height: 1.875rem !important; }
+  body.smoat-large-ui :where(button.size-7, a.size-7, [role="button"].size-7) { width: 1.75rem !important; min-width: 1.75rem !important; height: 1.75rem !important; }
+  body.smoat-large-ui :where(button.size-6, a.size-6, [role="button"].size-6) { width: 1.5rem !important; min-width: 1.5rem !important; height: 1.5rem !important; }
+
+  body.smoat-large-ui :where(svg.size-8, svg.h-8.w-8) { width: 1.5rem !important; height: 1.5rem !important; }
+  body.smoat-large-ui :where(svg.size-7, svg.h-7.w-7) { width: 1.35rem !important; height: 1.35rem !important; }
+  body.smoat-large-ui :where(svg.size-6, svg.h-6.w-6) { width: 1.125rem !important; height: 1.125rem !important; }
+  body.smoat-large-ui :where(svg.size-5, svg.h-5.w-5) { width: 1rem !important; height: 1rem !important; }
+  body.smoat-large-ui :where(svg.size-4, svg.h-4.w-4) { width: 0.875rem !important; height: 0.875rem !important; }
+  body.smoat-large-ui :where(svg.size-3\.5, svg.h-3\.5.w-3\.5) { width: 0.75rem !important; height: 0.75rem !important; }
+  body.smoat-large-ui :where(svg.size-3, svg.h-3.w-3) { width: 0.65rem !important; height: 0.65rem !important; }
+  body.smoat-large-ui :where(svg.size-8, svg.h-8.w-8) { width: calc(1.5rem + 1pt) !important; height: calc(1.5rem + 1pt) !important; }
+  body.smoat-large-ui :where(svg.size-7, svg.h-7.w-7) { width: calc(1.35rem + 1pt) !important; height: calc(1.35rem + 1pt) !important; }
+  body.smoat-large-ui :where(svg.size-6, svg.h-6.w-6) { width: calc(1.125rem + 1pt) !important; height: calc(1.125rem + 1pt) !important; }
+  body.smoat-large-ui :where(svg.size-5, svg.h-5.w-5) { width: calc(1rem + 1pt) !important; height: calc(1rem + 1pt) !important; }
+  body.smoat-large-ui :where(svg.size-4, svg.h-4.w-4) { width: calc(0.875rem + 1pt) !important; height: calc(0.875rem + 1pt) !important; }
+  body.smoat-large-ui :where(svg.size-3\.5, svg.h-3\.5.w-3\.5) { width: calc(0.75rem + 1pt) !important; height: calc(0.75rem + 1pt) !important; }
+  body.smoat-large-ui :where(svg.size-3, svg.h-3.w-3) { width: calc(0.65rem + 1pt) !important; height: calc(0.65rem + 1pt) !important; }
+
+  body.smoat-large-ui :where([data-slot="card"]) {
+    gap: 0.625rem;
+    border-radius: 0.625rem;
+  }
+
+  body.smoat-large-ui :where([data-slot="card-header"], [data-slot="card-content"], [data-slot="card-footer"]) {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  body.smoat-large-ui :where(.exam-a4-page, .exam-preview-page-frame, .par-root) :where(.text-base) { font-size: 1rem !important; }
+  body.smoat-large-ui :where(.exam-a4-page, .exam-preview-page-frame, .par-root) :where(.text-\[17px\]) { font-size: 17px !important; }
+  body.smoat-large-ui :where(.exam-a4-page, .exam-preview-page-frame, .par-root) :where(.text-\[18px\]) { font-size: 18px !important; }
+  body.smoat-large-ui :where(.exam-a4-page, .exam-preview-page-frame, .par-root) :where(.text-lg) { font-size: 1.125rem !important; }
+  body.smoat-large-ui :where(.exam-a4-page, .exam-preview-page-frame, .par-root) :where(.text-xl) { font-size: 1.25rem !important; }
+  body.smoat-large-ui :where(.exam-a4-page, .exam-preview-page-frame, .par-root) :where(.text-2xl) { font-size: 1.5rem !important; }
+}
+
+/* 무통장입금 "입금 확인 실패" 시 문의하기 버튼 점멸 글로우 */
+@keyframes red-glow-blink {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  50% { box-shadow: 0 0 16px 3px rgba(239, 68, 68, 0.75); }
+}
+.animate-red-glow {
+  animation: red-glow-blink 1.2s ease-in-out infinite;
+}

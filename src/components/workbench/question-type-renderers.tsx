@@ -53,7 +53,7 @@ import {
 } from "@/lib/summary-complete-mc";
 import { summaryWritingMaskedSummary } from "@/lib/summary-writing";
 import {
-  buildGrammarCorrectionAnswerSlots,
+  formatGrammarCorrectionChange,
   formatGrammarCorrectionCorrectAnswer,
   grammarCorrectionErrorSentenceForQuestionText,
 } from "@/lib/grammar-correction-display";
@@ -70,7 +70,11 @@ import {
 // 수능/모의고사 객관식 (10 types)
 // ============================================================================
 
-function SourcePassageBlock({ q }: { q: { _sourcePassageContent?: unknown } }) {
+function SourcePassageBlock({
+  q,
+}: {
+  q: { _sourcePassageContent?: unknown; _setMember?: unknown };
+}) {
   const sourcePassage =
     typeof q._sourcePassageContent === "string"
       ? q._sourcePassageContent.trim()
@@ -79,6 +83,10 @@ function SourcePassageBlock({ q }: { q: { _sourcePassageContent?: unknown } }) {
   if (sourcePassage) {
     return <PassageBlock>{sourcePassage}</PassageBlock>;
   }
+
+  // 지문 세트 멤버는 병합 변형 지문을 카드/모달 본문 상단에 별도 표시하므로,
+  // "원문 지문을 참고하세요" 안내를 숨긴다(중복·오해 방지).
+  if (q._setMember === true) return null;
 
   return (
     <div className="text-[11px] text-slate-400 italic flex items-center gap-1">
@@ -713,25 +721,22 @@ export function GrammarCorrectionRenderer({ q }: { q: GrammarCorrectionQuestion 
         correction: q.correctedPart || q.correctAnswer,
       }];
   const passageWithLabels = grammarCorrectionErrorSentenceForQuestionText(q);
-  const answerSlots = buildGrammarCorrectionAnswerSlots(q).split("\n").filter(Boolean);
   const formattedAnswer = formatGrammarCorrectionCorrectAnswer(q) || q.correctAnswer;
+  // 문법 오류 수정은 빈칸 유형이 아니라 밑줄 오류를 고치는 유형 → 답란(빈칸) 미표시.
+  // 정답은 "틀린부분 → 고친부분"을 파란 글씨로 상시 표시(취소선 없음, 검수 편의).
+  const changeDisplay = formatGrammarCorrectionChange(q);
 
   return (
     <>
       <Direction text={q.direction} />
       <PassageBlock>{renderPassageFormatted(passageWithLabels || "")}</PassageBlock>
-      {answerSlots.length > 0 && (
-        <div className="space-y-2 rounded-lg border border-slate-200 bg-white p-3">
-          {answerSlots.map((slot, index) => (
-            <div key={index} className="font-mono text-[12.5px] text-slate-700">
-              {renderPassageFormatted(slot)}
-            </div>
-          ))}
-        </div>
+      {/* 정답은 "틀린부분 → 고친부분" 파란 글씨로 토글 밖 상시 표시(오류·수정 모두 보여
+          '답' 배지(ModelAnswer)보다 정보가 많아 그걸 대체). 상세 수정 비교·해설은 토글 안. */}
+      {changeDisplay ? (
+        <div className="pl-1 text-[13px] font-semibold text-blue-700">{changeDisplay}</div>
+      ) : (
+        <ModelAnswer answer={formattedAnswer} />
       )}
-      {/* 모범 답안(수정 결과)은 '해설 보기'를 누르지 않아도 바로 보이도록 토글 밖에
-          둔다 — 접힘 미리보기와 동일한 파란 '답' 배지. 상세 수정 비교·해설은 토글 안 유지. */}
-      <ModelAnswer answer={formattedAnswer} />
       <AnswerRevealSection>
         <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 space-y-2">
           <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block">수정</span>

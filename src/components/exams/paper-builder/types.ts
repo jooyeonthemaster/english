@@ -1,3 +1,5 @@
+import type { Anchor, LayoutDescriptor } from "@/lib/question-sets/types";
+
 export type OptionItem = { label: string; text: string };
 
 // 워드프로세서식 빈 줄로 삽입된 여백(spacer) 블록을 표시하는 마커. blockText 에 넣어
@@ -35,6 +37,7 @@ export type BuilderQuestion = {
   // 장문 세트(43~45처럼 지문 1회+N문항) membership. 솔로 문항은 null/undefined.
   // 시험지에서 같은 setId 멤버를 한 그룹으로 묶어 공유 지문을 1회만 출력하는 데 쓴다.
   setId?: string | null;
+  setRender?: BuilderQuestionSetRender | null;
   passage: {
     id: string;
     title: string;
@@ -57,6 +60,22 @@ export type BuilderQuestion = {
   collectionItems: { collectionId: string }[];
   examLinks: { exam: { id: string; title: string; createdAt: Date | string } }[];
   _count: { examLinks: number };
+};
+
+export type BuilderQuestionSetRenderMember = {
+  questionId: string;
+  orderInSet: number;
+  isStructural: boolean;
+  typeId: string | null;
+  spans: Anchor[];
+};
+
+export type BuilderQuestionSetRender = {
+  id: string;
+  setLabel: string | null;
+  canonicalPassage: string;
+  layout: LayoutDescriptor | null;
+  members: BuilderQuestionSetRenderMember[];
 };
 
 export type QuestionCollection = {
@@ -194,6 +213,7 @@ export type PaperGroup = {
   passageTitle: string;
   passageContent: string;
   includePassage: boolean;
+  setPrompt: string;
 };
 
 export type RenderOption = { option: OptionItem; originalIndex: number };
@@ -236,6 +256,7 @@ export type RenderFragment = {
   passageTitle: string;
   passageContent: string;
   includePassage: boolean;
+  setPrompt: string;
   usesSentenceInsertMarkers: boolean;
   passageRenderedLines: string[];
   passageStartLineIndex: number;

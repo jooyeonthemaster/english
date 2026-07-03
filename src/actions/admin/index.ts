@@ -13,6 +13,7 @@ export { getAcademyList, getAcademyDetail } from "./academies";
 export { adjustCredits, getCreditTransactionsAll } from "./credits";
 
 export { getSystemStats } from "./stats";
+export { getDashboardOverview, type DashboardOverview } from "./dashboard";
 export {
   createProviderBillingReconciliation,
   createProviderPricing,

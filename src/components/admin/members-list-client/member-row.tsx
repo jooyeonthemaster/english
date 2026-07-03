@@ -6,13 +6,13 @@ import { useRouter } from "next/navigation";
 import { ChevronRight, AlertTriangle, StickyNote } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { SaveButton } from "@/components/ui/save-button";
-import { ProviderBadge } from "@/components/admin/provider-badge";
 import type { MemberListItem } from "@/actions/admin-members";
 import { updateMemberMemo } from "@/actions/admin-members";
 import { SmsToggle } from "./sms-toggle";
-import { formatDate, formatRelative, getInitials, tierBadgeClass } from "./formatters";
+import { formatDate, formatRelative, getInitials } from "./formatters";
 
 const MAX_MEMO_LENGTH = 5000;
 
@@ -21,9 +21,13 @@ const LOW_BALANCE_THRESHOLD = 50;
 export function MemberRow({
   member,
   now,
+  selected,
+  onSelectChange,
 }: {
   member: MemberListItem;
   now: number;
+  selected: boolean;
+  onSelectChange: (checked: boolean) => void;
 }) {
   const router = useRouter();
   const href = `/admin/members/${member.id}`;
@@ -44,9 +48,22 @@ export function MemberRow({
   return (
     <TableRow
       onClick={handleRowClick}
-      className="group hover:bg-gray-50/60 border-b border-gray-50/60 last:border-0 cursor-pointer"
+      className={cn(
+        "group border-b border-gray-50/60 last:border-0 cursor-pointer",
+        selected ? "bg-blue-50/50 hover:bg-blue-50/70" : "hover:bg-gray-50/60",
+      )}
     >
-      <TableCell className="py-3 pl-5">
+      <TableCell
+        className="pl-5 pr-0"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Checkbox
+          checked={selected}
+          onCheckedChange={(v) => onSelectChange(v === true)}
+          aria-label={`${member.name} 선택`}
+        />
+      </TableCell>
+      <TableCell className="py-3 pl-3">
         <Link
           href={href}
           className="flex items-center gap-3 outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md -m-1 p-1"
@@ -72,10 +89,7 @@ export function MemberRow({
           </div>
         </Link>
       </TableCell>
-      <TableCell>
-        <ProviderBadge provider={member.authProvider} size="sm" />
-      </TableCell>
-      <TableCell>
+      <TableCell className="hidden xl:table-cell">
         <div className="min-w-0 max-w-[280px]">
           <div className="text-[12px] text-gray-700 truncate">
             {member.academy.name}
@@ -87,27 +101,18 @@ export function MemberRow({
         </div>
       </TableCell>
       <TableCell>
-        {member.subscription ? (
-          <Badge
-            variant="secondary"
-            className={cn(
-              "text-[11px] font-medium border-0 px-2",
-              tierBadgeClass(member.subscription.planTier),
-            )}
-          >
-            {member.subscription.planName}
-          </Badge>
-        ) : (
-          <span className="text-[11px] text-gray-300">—</span>
-        )}
+        <LatestPurchaseCell purchase={member.latestPurchase} />
       </TableCell>
       <TableCell className="text-right">
         <BalanceCell balance={member.creditBalance?.balance ?? null} />
       </TableCell>
-      <TableCell className="text-[12px] text-gray-600 tabular-nums">
+      <TableCell>
+        <ExpiryCell expiresAt={member.creditBalance?.expiresAt ?? null} now={now} />
+      </TableCell>
+      <TableCell className="hidden xl:table-cell text-[12px] text-gray-600 tabular-nums">
         {formatDate(member.createdAt)}
       </TableCell>
-      <TableCell className="text-[12px] text-gray-600 tabular-nums">
+      <TableCell className="hidden 2xl:table-cell text-[12px] text-gray-600 tabular-nums">
         {member.lastActiveAt ? (
           <span title={formatDate(member.lastActiveAt)}>
             {formatRelative(member.lastActiveAt, now)}
@@ -116,7 +121,7 @@ export function MemberRow({
           <span className="text-gray-300">활동 없음</span>
         )}
       </TableCell>
-      <TableCell>
+      <TableCell className="hidden lg:table-cell">
         <SmsToggle
           memberId={member.id}
           optOut={member.smsOptOut}
@@ -280,6 +285,56 @@ function MemoCell({
       <StickyNote className="size-3.5 shrink-0" strokeWidth={1.8} aria-hidden />
       메모 추가
     </button>
+  );
+}
+
+/** "최근 구입 상품" 셀 — 가장 최근 구입한 충전 상품명 + 크레딧·구입일. */
+export function LatestPurchaseCell({
+  purchase,
+}: {
+  purchase: MemberListItem["latestPurchase"];
+}) {
+  if (!purchase) {
+    return <span className="text-[11px] text-gray-300">구입 없음</span>;
+  }
+  return (
+    <div className="min-w-0 leading-tight">
+      <div className="text-[12.5px] text-gray-800 truncate">{purchase.name}</div>
+      <div className="text-[11px] text-gray-400 tabular-nums">
+        {purchase.creditAmount.toLocaleString("ko-KR")} C ·{" "}
+        {formatDate(purchase.purchasedAt)}
+      </div>
+    </div>
+  );
+}
+
+function ExpiryCell({
+  expiresAt,
+  now,
+}: {
+  expiresAt: Date | string | null;
+  now: number;
+}) {
+  if (!expiresAt) {
+    return <span className="text-[11px] text-gray-300">—</span>;
+  }
+  const days = Math.ceil((new Date(expiresAt).getTime() - now) / 86_400_000);
+  return (
+    <div className="tabular-nums leading-tight">
+      <div className="text-[12px] text-gray-600">{formatDate(expiresAt)}</div>
+      <div
+        className={cn(
+          "text-[11px]",
+          days < 0
+            ? "text-gray-300"
+            : days <= 7
+              ? "text-rose-500"
+              : "text-gray-400",
+        )}
+      >
+        {days < 0 ? "만료" : `D-${days}`}
+      </div>
+    </div>
   );
 }
 

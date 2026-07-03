@@ -21,6 +21,8 @@ export interface ExamQuestion {
     approved: boolean;
     starred: boolean;
     createdAt: string | Date;
+    setId?: string | null;
+    inSet?: boolean;
     passage: {
       id: string;
       title: string;

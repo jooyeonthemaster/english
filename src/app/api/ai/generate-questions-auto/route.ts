@@ -14,6 +14,7 @@ import {
   refundCredits,
 } from "@/lib/credits";
 import { prisma } from "@/lib/prisma";
+import { recordAiCost } from "@/lib/platform-api-costs";
 import { generateQuestionObject } from "@/lib/question-generation-llm";
 import {
   getQuestionGenerationCreditCost,
@@ -141,13 +142,18 @@ export async function POST(request: NextRequest) {
 
     let allQuestions: Record<string, unknown>[] = [];
     let rationale = "";
+    const aiCostRecords: Array<{ model: string; usage: unknown }> = [];
     try {
       // ═══ STEP 1: AI plans question type distribution ═══
       console.log(
         "[AUTO-GEN] Step 1: Planning started for passage:",
         passage.title?.slice(0, 30),
       );
-      const { object: planResult } = await generateQuestionObject({
+      const {
+        object: planResult,
+        usage: planUsage,
+        modelId: planModelId,
+      } = await generateQuestionObject({
         schema: planSchema,
         prompt: isKoreanPassage
           ? buildKoPlanningPrompt({
@@ -177,6 +183,7 @@ export async function POST(request: NextRequest) {
         maxTokens: 4_096,
       });
       rationale = planResult.rationale;
+      aiCostRecords.push({ model: planModelId, usage: planUsage });
 
       console.log(
         "[AUTO-GEN] Step 1 done. Plan:",
@@ -200,6 +207,10 @@ export async function POST(request: NextRequest) {
         koPassageKind: koPassageKind ?? undefined,
       });
       allQuestions = generationResult.questions;
+      // Step 2 의 모든 provider 호출(유형별·재시도·repair) 토큰을 수집.
+      for (const usageEvent of generationResult.usageEvents) {
+        aiCostRecords.push({ model: usageEvent.modelId, usage: usageEvent.usage });
+      }
     } catch (aiError) {
       // Refund credits on AI failure
       await refundCredits(
@@ -231,6 +242,18 @@ export async function POST(request: NextRequest) {
     const taggedQuestions = allQuestions.map((question) =>
       withQuestionGenerationPlanMetadata(question, generationPlan),
     );
+
+    // 계획(Step 1) + 유형별 생성(Step 2)의 모든 AI 호출 토큰을 원가 기록.
+    for (const record of aiCostRecords) {
+      await recordAiCost({
+        sourceType: "AI_INTERACTIVE",
+        sourceDetail: "generate-questions-auto",
+        academyId: staff.academyId,
+        model: record.model,
+        operationType: "AUTO_GEN_BATCH",
+        usage: record.usage,
+      });
+    }
 
     return NextResponse.json({
       questions: taggedQuestions,

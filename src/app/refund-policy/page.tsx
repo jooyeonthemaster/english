@@ -18,6 +18,8 @@ import { getPlanPricingPreview } from "@/lib/subscription-plan-pricing";
 export const dynamic = "force-dynamic";
 
 const SUBSCRIPTION_BILLING_ENABLED = FEATURE_FLAGS.SHOW_SUBSCRIPTION_BILLING;
+const BANK_DEPOSIT_ENABLED =
+  process.env.NEXT_PUBLIC_BANK_DEPOSIT_ENABLED === "true";
 
 export const metadata: Metadata = {
   title: SUBSCRIPTION_BILLING_ENABLED
@@ -29,7 +31,7 @@ export const metadata: Metadata = {
     : "SMOAT 크레딧의 구매, 사용, 청약철회, 환불 기준을 안내합니다.",
 };
 
-const UPDATED_AT = "2026년 6월 9일";
+const UPDATED_AT = "2026년 7월 2일";
 
 const POLICY_SECTIONS = [
   {
@@ -49,8 +51,16 @@ const POLICY_SECTIONS = [
             "가상계좌 결제는 계좌 발급 시점이 아니라 실제 입금 완료 및 결제 상태 확인 후 크레딧이 지급됩니다.",
           ]
         : []),
+      ...(BANK_DEPOSIT_ENABLED
+        ? [
+            "무통장입금(계좌이체)은 회원이 회사가 지정한 계좌로 입금하고, 회사가 입금자명과 입금 금액을 대조하여 입금이 확인된 후 크레딧이 지급됩니다. 입금 전에는 크레딧이 지급되지 않습니다.",
+          ]
+        : []),
       "크레딧은 사용자가 AI 기능 실행을 요청하여 결과 생성, 분석, 추출, 수정 등의 디지털 서비스 제공이 시작될 때 기능별 단가에 따라 차감됩니다.",
       "구매 상품, 결제금액, 프로모션 할인 여부에 따라 1C당 원화 구매 단가는 달라질 수 있으나, 동일한 AI 기능 실행 시 차감되는 크레딧 수는 동일하게 적용됩니다.",
+      "유료 크레딧에는 상품별 소멸시효(유효기간)가 적용되며, 소멸시효는 각 상품 정보와 결제 화면에 결제일 기준 일수로 표시됩니다. 크레딧을 구매하거나 지급받으면 계정의 소멸 예정일이 '남은 기간 + 새 유효기간'으로 연장되며(단축되지 않음), 계산은 24시간(만 하루)을 기준으로 합니다.",
+      "이벤트, 프로모션, 보너스 등으로 지급되는 크레딧은 별도의 유효기간을 새로 부여하지 않고 계정이 보유한 기존 소멸 예정일을 그대로 따릅니다.",
+      "크레딧을 사용(차감)하더라도 소멸 예정일은 변경되지 않으며, 소멸 예정일이 지나면 계정에 남아 있는 크레딧은 유료·무료 구분 없이 전액 소멸되고 복구되지 않습니다.",
     ],
   },
   ...(SUBSCRIPTION_BILLING_ENABLED
@@ -87,11 +97,17 @@ const POLICY_SECTIONS = [
     title: `${SUBSCRIPTION_BILLING_ENABLED ? "5" : "4"}. 환불 제한 기준`,
     body: [
       "이미 차감된 크레딧으로 AI 결과물 생성, 학습지 생성, 텍스트 추출, 문제 수정 등 디지털 서비스 제공이 완료된 사용분은 환불되지 않습니다.",
+      "상품별 소멸시효(유효기간)가 만료되어 소멸된 크레딧은 잔여 여부와 관계없이 환불 대상에 포함되지 않습니다. 소멸시효는 결제 화면 및 상품 정보에 표시되며, 구매·지급 시 잔여 기간에 더해 연장됩니다.",
       "무상 크레딧, 이벤트 크레딧, 보너스 크레딧, 관리자 수동 지급 크레딧은 현금 환불되지 않습니다.",
       "부정 결제, 타인의 결제수단 무단 사용, 서비스 이용약관 위반, 비정상적 사용 패턴이 확인되는 경우 환불 처리가 보류되거나 제한될 수 있습니다.",
       ...(!CREDIT_TOP_UP_CARD_ONLY
         ? [
             "가상계좌는 입금 전까지 발급 계좌 말소 또는 결제 취소가 가능하며, 입금 후에는 일반 환불 기준을 따릅니다.",
+          ]
+        : []),
+      ...(BANK_DEPOSIT_ENABLED
+        ? [
+            "무통장입금(계좌이체)으로 생성한 충전 주문은 입금 전(미입금) 상태에서는 크레딧이 지급되지 않으며, 안내된 입금 시간이 지나면 자동으로 만료·취소될 수 있습니다. 입금 후에는 일반 환불 기준을 따릅니다.",
           ]
         : []),
     ],
@@ -121,6 +137,11 @@ const POLICY_SECTIONS = [
       CREDIT_TOP_UP_CARD_ONLY
         ? "환불 가능 건은 확인 완료 후 원 결제수단 취소를 원칙으로 처리하며, 계좌 환불이 필요한 예외적인 경우에만 예금주, 은행, 계좌번호 등 환불에 필요한 최소 정보를 요청할 수 있습니다."
         : "환불 가능 건은 확인 완료 후 원 결제수단 취소를 원칙으로 처리하며, 가상계좌·계좌이체 등 환불계좌가 필요한 경우 예금주, 은행, 계좌번호 등 환불에 필요한 최소 정보를 요청할 수 있습니다.",
+      ...(BANK_DEPOSIT_ENABLED
+        ? [
+            "무통장입금(계좌이체)으로 결제한 건은 원 결제수단 취소가 적용되지 않으므로 환불 시 회원 명의의 환불 계좌로 처리하며, 예금주, 은행, 계좌번호 등 환불에 필요한 최소 정보를 요청할 수 있습니다.",
+          ]
+        : []),
     ],
   },
   {
@@ -243,6 +264,12 @@ export default async function RefundPolicyPage() {
                       {product.estimatedAutoQuestionCount.toLocaleString("ko-KR")}
                       문항 · {product.perAutoQuestion.toLocaleString("ko-KR")}
                       원/문항
+                    </div>
+                    <div className="mt-0.5 text-[12px] font-medium text-slate-500">
+                      소멸시효{" "}
+                      {product.expiryDays && product.expiryDays > 0
+                        ? `결제일로부터 ${product.expiryDays.toLocaleString("ko-KR")}일`
+                        : "무기한"}
                     </div>
                     {product.isPromotionActive && (
                       <div className="mt-1 text-[11px] font-semibold text-emerald-700">

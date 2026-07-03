@@ -119,7 +119,7 @@ export async function runWholePassageTransform({
   direction?: VariantDirection;
   avoidTexts?: string[];
   modelId?: string;
-}): Promise<WholePassageResult> {
+}): Promise<WholePassageResult & { usage: unknown; modelId: string }> {
   const tuning = tuningFor(mode, direction);
   const prompt = buildWholePassagePrompt({
     mode,
@@ -160,7 +160,7 @@ export async function runWholePassageTransform({
           Date.now() - startedAt
         }ms (${wordCount(cleaned.passage)}w from ${srcWords}w)`,
       );
-      return cleaned;
+      return { ...cleaned, usage: result.usage, modelId };
     } catch (err) {
       lastError = err;
       console.warn(

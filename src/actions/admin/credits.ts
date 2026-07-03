@@ -5,6 +5,10 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireAdminAuth } from "@/lib/auth-admin";
 import { revalidatePath } from "next/cache";
+import {
+  expiresAtConflictSql,
+  expiresAtInsertSql,
+} from "@/lib/credit-expiry";
 import { type ActionResult } from "./helpers";
 
 /**
@@ -27,6 +31,7 @@ export async function adjustCredits(
   academyId: string,
   amount: number,
   description: string,
+  expiryDays?: number,
 ): Promise<ActionResult> {
   const admin = await requireAdminAuth("SUPER_ADMIN");
 
@@ -40,6 +45,11 @@ export async function adjustCredits(
   if (trimmed.length < 5) {
     return { success: false, error: "Description must be at least 5 characters" };
   }
+  // Only a positive grant carries a validity window; else ride existing expiry.
+  const grantExpiryDays =
+    amount > 0 && Number.isFinite(expiryDays) && (expiryDays ?? 0) > 0
+      ? Math.min(Math.floor(expiryDays as number), 3650)
+      : 0;
 
   // Resolve plan's monthlyCredits — needed when initializing a CreditBalance
   // row that doesn't yet exist (so the monthly reset job uses the right
@@ -75,10 +85,11 @@ export async function adjustCredits(
           newBalance = decremented[0].balance;
         } else {
           const upserted = await tx.$queryRaw<Array<{ balance: number }>>`
-            INSERT INTO credit_balances (id, "academyId", balance, "monthlyAllocation", "updatedAt")
-            VALUES (${crypto.randomUUID()}, ${academyId}, ${amount}, ${planMonthlyCredits}, NOW())
+            INSERT INTO credit_balances (id, "academyId", balance, "monthlyAllocation", "expiresAt", "updatedAt")
+            VALUES (${crypto.randomUUID()}, ${academyId}, ${amount}, ${planMonthlyCredits}, ${expiresAtInsertSql(grantExpiryDays)}, NOW())
             ON CONFLICT ("academyId") DO UPDATE
               SET balance = credit_balances.balance + EXCLUDED.balance,
+                  "expiresAt" = ${expiresAtConflictSql(grantExpiryDays)},
                   "updatedAt" = NOW()
             RETURNING balance
           `;

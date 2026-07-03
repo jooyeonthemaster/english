@@ -20,6 +20,7 @@ import {
   KO_TYPE_SUBTYPE_MAP,
   TYPE_SUBTYPE_MAP,
 } from "../question-type-filter";
+import { useSearchDebounce } from "@/hooks/use-search-debounce";
 
 interface Filters {
   type?: string;
@@ -39,7 +40,8 @@ interface Props {
   subjectScope?: "KOREAN";
   searchValue: string;
   onSearchChange: (value: string) => void;
-  onSearchSubmit: () => void;
+  /** value 가 주어지면 그 값으로(없으면 현재 입력값으로) 검색을 커밋한다. */
+  onSearchSubmit: (value?: string) => void;
   updateFilter: (key: string, value: string) => void;
   updateFilters: (updates: Record<string, string>) => void;
   /** 필터 팝오버 맨 위에 끼워 넣을 추가 컨트롤(전체 선택·검수 상태·보기 등). */
@@ -61,6 +63,9 @@ export function QuestionFiltersToolbar({
   // 과목 스코프별 유형 트리 — 국어 라우트는 KO 그룹만, 영어(기본)는 기존 그대로.
   const typeGroups =
     subjectScope === "KOREAN" ? KO_TYPE_SUBTYPE_MAP : TYPE_SUBTYPE_MAP;
+
+  // 타이핑 즉시(라이브) 검색 — 입력 멈추면 커밋, Enter·지우기는 즉시 커밋.
+  const { schedule, flush } = useSearchDebounce((v) => onSearchSubmit(v));
 
   const [open, setOpen] = useState(false);
   const [typeSelected, setTypeSelected] = useState<Set<string>>(
@@ -401,14 +406,22 @@ export function QuestionFiltersToolbar({
                 autoFocus
                 placeholder="검색..."
                 value={searchValue}
-                onChange={(e) => onSearchChange(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && onSearchSubmit()}
+                onChange={(e) => {
+                  onSearchChange(e.target.value);
+                  schedule(e.target.value);
+                }}
+                onKeyDown={(e) => e.key === "Enter" && flush(searchValue)}
                 className="h-8 w-full rounded-md border border-slate-200 bg-white pl-7 pr-7 text-[12px] text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
               />
               {searchValue ? (
                 <button
                   type="button"
-                  onClick={() => onSearchChange("")}
+                  onClick={() => {
+                    // 입력값 비우기 + 빈 검색을 즉시 커밋 — 안 그러면 검색
+                    // 결과 목록(URL/필터 구동)이 그대로 남는다.
+                    onSearchChange("");
+                    flush("");
+                  }}
                   className="absolute right-1.5 top-1/2 inline-flex size-4 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-600"
                   aria-label="검색 지우기"
                 >

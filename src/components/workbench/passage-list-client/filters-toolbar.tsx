@@ -28,6 +28,7 @@ import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
 } from "@/components/workbench/shared/view-mode-cycle-button";
+import { useSearchDebounce } from "@/hooks/use-search-debounce";
 
 interface School {
   id: string;
@@ -54,7 +55,7 @@ interface Props {
   schools: School[];
   searchValue: string;
   onSearchChange: (v: string) => void;
-  onSearchSubmit: () => void;
+  onSearchSubmit: (value?: string) => void;
   updateFilter: (key: string, value: string) => void;
 
   sortOrder: PassageSortOrder;
@@ -100,6 +101,9 @@ export function PassageFiltersToolbar({
   gridCols,
   setGridCols,
 }: Props) {
+  // 타이핑 즉시(라이브) 검색 — 입력 멈추면 커밋, Enter는 즉시 커밋.
+  const { schedule, flush } = useSearchDebounce((v) => onSearchSubmit(v));
+
   const duplicateMode =
     pageMode === "duplicates" ? "grouped" : hideDuplicates ? "hidden" : "all";
 
@@ -278,8 +282,11 @@ export function PassageFiltersToolbar({
               autoFocus
               placeholder="지문 검색"
               value={searchValue}
-              onChange={(e) => onSearchChange(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && onSearchSubmit()}
+              onChange={(e) => {
+                onSearchChange(e.target.value);
+                schedule(e.target.value);
+              }}
+              onKeyDown={(e) => e.key === "Enter" && flush(searchValue)}
               className="h-8 w-full rounded-md border border-slate-200 bg-slate-50 pl-7 pr-2.5 text-[12px] outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
             />
           </div>

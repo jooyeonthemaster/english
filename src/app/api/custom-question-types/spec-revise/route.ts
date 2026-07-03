@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
       currentSpec,
       typeName: active.type.name,
       instruction: parsed.data.instruction,
+      academyId: staff.academyId,
     });
     return NextResponse.json({
       spec: revised.spec,

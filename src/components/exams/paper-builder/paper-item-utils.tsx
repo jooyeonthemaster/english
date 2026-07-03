@@ -470,6 +470,7 @@ export function buildGroups(items: PaperItem[]): PaperGroup[] {
         includePassage: false,
         passageTitle: "",
         passageContent: "",
+        setPrompt: "",
       });
       continue;
     }
@@ -517,6 +518,7 @@ export function buildGroups(items: PaperItem[]): PaperGroup[] {
         includePassage: renderPassage,
         passageTitle: resolvePaperItemPassageTitle(item),
         passageContent: formatSourcePassageForQuestionItems(passageContent, groupItems),
+        setPrompt: "",
       });
     }
   }

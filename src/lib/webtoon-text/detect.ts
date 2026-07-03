@@ -2,6 +2,7 @@ import "server-only";
 import sharp from "sharp";
 import { ATLAS_WEBTOON_DETECT_MODEL_ID } from "@/lib/atlas-ai";
 import { postAtlasChatCompletionAsGeminiLike } from "@/lib/atlas-chat-rest";
+import { recordAiCost } from "@/lib/platform-api-costs";
 import {
   WEBTOON_TEXT_DOC_VERSION,
   WEBTOON_TEXT_FONT_FAMILY,
@@ -251,6 +252,8 @@ function estimateFontPx(text: string, w: number, h: number, lang: WebtoonTextLan
 export interface DetectWebtoonTextInput {
   imageBuffer: Buffer;
   originalUrl: string;
+  /** 원가 기록 귀속용 학원 ID(웹툰/라우트에서 전달). */
+  academyId?: string | null;
 }
 
 export async function detectWebtoonText(
@@ -275,6 +278,7 @@ export async function detectWebtoonText(
       content?: { parts?: Array<{ text?: string }> };
       finishReason?: string;
     }>;
+    usageMetadata?: unknown;
     error?: { message?: string };
   };
   body = await postAtlasChatCompletionAsGeminiLike({
@@ -286,6 +290,15 @@ export async function detectWebtoonText(
     responseMimeType: "application/json",
     maxOutputTokens: 16384,
     timeoutInMs: 90_000,
+  });
+  // Gemini-like usage lives in usageMetadata (promptTokenCount/candidatesTokenCount).
+  await recordAiCost({
+    sourceType: "WEBTOON_TEXT",
+    sourceDetail: "detect",
+    academyId: input.academyId,
+    model,
+    operationType: "WEBTOON_TEXT_DETECT",
+    usage: body,
   });
 
   const finishReason = body.candidates?.[0]?.finishReason;

@@ -388,7 +388,7 @@ export function HeroScene() {
 
       <div className="relative z-10 mx-auto flex h-full max-w-[1220px] flex-col items-center justify-start px-5 sm:px-8">
         <div className="mx-auto max-w-[900px] text-center mt-4 sm:mt-6">
-          <h1 className="text-4xl font-black leading-[1.15] tracking-tight text-slate-950 sm:text-5xl lg:text-7xl drop-shadow-sm break-keep">
+          <h1 className="break-normal text-[34px] font-black leading-[1.15] tracking-tight text-slate-950 drop-shadow-sm sm:break-keep sm:text-5xl lg:text-7xl">
             학습지 생성부터 시험지까지,
             <br className="hidden sm:block" />
             <span className="text-blue-600">SMOAT가 한 번에 완성</span>합니다

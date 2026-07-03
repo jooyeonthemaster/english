@@ -58,12 +58,22 @@ export function useUrlFilters(basePath: string) {
     [router, searchParams, basePath],
   );
 
-  /** Convenience: push a search value through `updateFilter`. */
+  /**
+   * Commit a search value to the URL. Uses `router.replace` (not push) so that
+   * live/debounced typing doesn't leave a trail of history entries — one search
+   * session shouldn't cost several Back presses to escape.
+   */
   const handleSearch = useCallback(
     (searchValue: string) => {
-      updateFilter("search", searchValue);
+      const params = new URLSearchParams(searchParams.toString());
+      if (searchValue && searchValue !== "ALL") params.set("search", searchValue);
+      else params.delete("search");
+      params.delete("page");
+      startTransition(() => {
+        router.replace(`${basePath}?${params.toString()}`);
+      });
     },
-    [updateFilter],
+    [router, searchParams, basePath],
   );
 
   return { updateFilter, updateFilters, handleSearch, goToPage, isPending };

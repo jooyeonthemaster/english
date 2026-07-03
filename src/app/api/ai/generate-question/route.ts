@@ -29,6 +29,7 @@ import {
 import { getStaffSession } from "@/lib/auth";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
 import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
+import { recordAiCost } from "@/lib/platform-api-costs";
 import { buildQuestionAnnotationBlock } from "@/lib/annotation-prompt";
 import {
   buildGeminiCompactGenerationPrompt,
@@ -339,6 +340,20 @@ export async function POST(request: NextRequest) {
       const taggedQuestions = questions.map((question) =>
         withQuestionGenerationPlanMetadata(question, generationPlan),
       );
+
+      // 이 요청에서 발생한 모든 provider 호출(재시도·repair 포함)의 토큰을
+      // 이벤트별로 원가 기록한다 — 모델(Gemini/Claude)이 유형별로 다를 수 있어
+      // 이벤트마다 실제 modelId 로 남긴다.
+      for (const usageEvent of generationResult.usageEvents) {
+        await recordAiCost({
+          sourceType: "AI_INTERACTIVE",
+          sourceDetail: "generate-question",
+          academyId: staff.academyId,
+          model: usageEvent.modelId,
+          operationType: "QUESTION_GEN_SINGLE",
+          usage: usageEvent.usage,
+        });
+      }
 
       if (questions.length === 0) {
         await refundCredits(

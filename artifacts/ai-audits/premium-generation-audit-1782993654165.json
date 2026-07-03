@@ -1,0 +1,117 @@
+{
+  "createdAt": "2026-07-02T12:00:54.165Z",
+  "results": [
+    {
+      "ok": false,
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "type": "GRAMMAR_ERROR",
+      "difficulty": "INTERMEDIATE",
+      "attempts": 5,
+      "relaxedFallback": true,
+      "durationMs": 3568,
+      "rejectionSummary": {
+        "total": 5,
+        "phaseCounts": {
+          "model": 5,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "lastIssue": {
+          "phase": "model",
+          "qualityMode": "relaxed",
+          "subType": "GRAMMAR_ERROR",
+          "message": "Not Found"
+        },
+        "message": "Rejected candidates: 5 | Last: model/GRAMMAR_ERROR - Not Found"
+      },
+      "usageEvents": [],
+      "firstQuestion": null
+    },
+    {
+      "ok": false,
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "type": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "attempts": 6,
+      "relaxedFallback": true,
+      "durationMs": 2861,
+      "rejectionSummary": {
+        "total": 6,
+        "phaseCounts": {
+          "model": 6,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "lastIssue": {
+          "phase": "model",
+          "qualityMode": "relaxed",
+          "subType": "GRAMMAR_ERROR",
+          "message": "Not Found"
+        },
+        "message": "Rejected candidates: 6 | Last: model/GRAMMAR_ERROR - Not Found"
+      },
+      "usageEvents": [],
+      "firstQuestion": null
+    },
+    {
+      "ok": false,
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "type": "GRAMMAR_CHOICE_COMBO",
+      "difficulty": "INTERMEDIATE",
+      "attempts": 6,
+      "relaxedFallback": true,
+      "durationMs": 2841,
+      "rejectionSummary": {
+        "total": 6,
+        "phaseCounts": {
+          "model": 6,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "lastIssue": {
+          "phase": "model",
+          "qualityMode": "relaxed",
+          "subType": "GRAMMAR_CHOICE_COMBO",
+          "message": "Not Found"
+        },
+        "message": "Rejected candidates: 6 | Last: model/GRAMMAR_CHOICE_COMBO - Not Found"
+      },
+      "usageEvents": [],
+      "firstQuestion": null
+    },
+    {
+      "ok": false,
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "type": "BLANK_INFERENCE",
+      "difficulty": "INTERMEDIATE",
+      "attempts": 6,
+      "relaxedFallback": true,
+      "durationMs": 3265,
+      "rejectionSummary": {
+        "total": 6,
+        "phaseCounts": {
+          "model": 6,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "lastIssue": {
+          "phase": "model",
+          "qualityMode": "relaxed",
+          "subType": "BLANK_INFERENCE",
+          "message": "Not Found"
+        },
+        "message": "Rejected candidates: 6 | Last: model/BLANK_INFERENCE - Not Found"
+      },
+      "usageEvents": [],
+      "firstQuestion": null
+    }
+  ]
+}

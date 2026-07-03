@@ -1,0 +1,143 @@
+{
+  "createdAt": "2026-07-02T20:13:13.954Z",
+  "outPath": "C:\\Users\\jooye\\Desktop\\2026project\\nara\\artifacts\\ai-audits\\grammar-quality-loop-standard-expanded-1783022033192.jsonl",
+  "total": 3,
+  "passed": 2,
+  "failed": 1,
+  "passRate": 0.6666666666666666,
+  "byPlanDifficulty": {
+    "STANDARD:BASIC": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "passRate": 1
+    },
+    "STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "passRate": 1
+    },
+    "STANDARD:KILLER": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "passRate": 0
+    }
+  },
+  "issueCounts": {
+    "rejection:mid-word-marker": 3,
+    "rejection:grammar-shallow-local-participle-parallel": 3,
+    "rejection:grammar-shallow-depends-decoy": 6,
+    "rejection:grammar-weak-filler-decoys": 9,
+    "rejection:duplicate-option-text": 2,
+    "rejectionLast:grammar-obvious-local-agreement": 1,
+    "rejectionLast:grammar-weak-filler-decoys": 2,
+    "rejectionLast:grammar-keypoint-untested-token": 2,
+    "rejectionLast:grammar-explanation-too-long-hard": 1,
+    "rejection:grammar-noun-clause-pronoun-mislabel": 7,
+    "rejection:grammar-obvious-noun-what-relative": 4,
+    "rejection:grammar-render-marker-count": 3,
+    "rejectionLast:grammar-render-marker-count": 1,
+    "rejectionLast:grammar-noun-clause-pronoun-mislabel": 1,
+    "local:no-question": 1,
+    "rejection:grammar-killer-answer-point-repeated": 2,
+    "rejection:grammar-error-not-mutated": 2,
+    "rejection:grammar-obvious-local-agreement": 2
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-weak-filler-decoys",
+      "count": 9
+    },
+    {
+      "code": "rejection:grammar-noun-clause-pronoun-mislabel",
+      "count": 7
+    },
+    {
+      "code": "rejection:grammar-shallow-depends-decoy",
+      "count": 6
+    },
+    {
+      "code": "rejection:grammar-obvious-noun-what-relative",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-render-marker-count",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-shallow-local-participle-parallel",
+      "count": 3
+    },
+    {
+      "code": "rejection:mid-word-marker",
+      "count": 3
+    },
+    {
+      "code": "rejection:duplicate-option-text",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-error-not-mutated",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-killer-answer-point-repeated",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-obvious-local-agreement",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-keypoint-untested-token",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-weak-filler-decoys",
+      "count": 2
+    },
+    {
+      "code": "local:no-question",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-explanation-too-long-hard",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-noun-clause-pronoun-mislabel",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-obvious-local-agreement",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-render-marker-count",
+      "count": 1
+    }
+  ],
+  "worstSamples": [
+    {
+      "runIndex": 3,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-weak-filler-decoys",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-error-not-mutated",
+        "rejection:grammar-obvious-local-agreement",
+        "rejection:grammar-noun-clause-pronoun-mislabel"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 9 | Top codes: grammar-weak-filler-decoys x3, grammar-killer-answer-point-repeated x2, grammar-error-not-mutated x2, grammar-obvious-local-agreement x2, grammar-noun-clause-pronoun-mislabel x2 | Last: model/GRAMMAR_ERROR - This request requires more credits, or fewer max_tokens. You requested up to 20000 tokens, but can only afford 4198. To increase, visit https://openrouter.ai/settings/credits and add more credits"
+    }
+  ]
+}

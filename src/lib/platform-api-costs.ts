@@ -1,6 +1,8 @@
+import { randomUUID } from "node:crypto";
 import { Prisma } from "@prisma/client";
 import { getExtractionAiModelName } from "@/lib/extraction/model-config";
 import { resolveUsdKrwRate } from "@/lib/fx-rate";
+import { resolveEstimatedPricing } from "@/lib/platform-api-cost-estimates";
 import { prisma } from "@/lib/prisma";
 
 export type PlatformCostUnitType = "TOKENS" | "PAGE" | "IMAGE" | "CALL";
@@ -37,7 +39,7 @@ interface RecordApiUsageCostOptions {
 
 interface CostResolution {
   pricingId: string | null;
-  pricingSource: "DB" | "ENV" | "RECORDED" | "MISSING";
+  pricingSource: "DB" | "ENV" | "ESTIMATE" | "RECORDED" | "MISSING";
   inputUsdPer1M: number | null;
   outputUsdPer1M: number | null;
   unitUsd: number | null;
@@ -207,7 +209,12 @@ export async function syncPlatformApiUsageCostsForRange(
     });
   }
 
-  if (candidates.length === 0) return;
+  if (candidates.length === 0) {
+    // 워크벤치 등 sync 스캐너가 훑지 않는(직접 기록되는) 소스의 과거 MISSING
+    // 레코드도 새 단가/추정치로 재해결한다.
+    await reresolveMissingCosts(start, end);
+    return;
+  }
 
   const [existingCosts, pricingRows] = await Promise.all([
     getExistingCostMap(candidates.map((candidate) => candidate.sourceKey)),
@@ -245,6 +252,78 @@ export async function syncPlatformApiUsageCostsForRange(
       pricingRows,
     }),
   );
+
+  // 워크벤치 AI 등 sync 스캐너가 다시 훑지 않고 잡 완료 시점에 직접 기록되는
+  // 소스의 과거 MISSING(0원) 레코드를, 저장된 provider/model/토큰 값으로
+  // DB→ENV→ESTIMATE 단가를 재적용해 되살린다. 이미 해결된 행은 다음부터 제외.
+  await reresolveMissingCosts(start, end);
+}
+
+async function reresolveMissingCosts(start: Date, end: Date) {
+  const missingRows = await prisma.platformApiUsageCost.findMany({
+    where: { pricingSource: "MISSING", usageAt: { gte: start, lt: end } },
+    select: {
+      id: true,
+      provider: true,
+      model: true,
+      unitType: true,
+      unitCount: true,
+      calls: true,
+      inputTokens: true,
+      outputTokens: true,
+      usageAt: true,
+    },
+  });
+  if (missingRows.length === 0) return;
+
+  const pricingRows = await prisma.providerPricing.findMany({
+    where: { isActive: true },
+    select: {
+      id: true,
+      provider: true,
+      modelPattern: true,
+      unitType: true,
+      inputUsdPer1M: true,
+      outputUsdPer1M: true,
+      unitUsd: true,
+      usdToKrwRate: true,
+      effectiveFrom: true,
+      effectiveTo: true,
+    },
+  });
+
+  await mapWithConcurrency(missingRows, COST_SYNC_CONCURRENCY, async (row) => {
+    const resolution = await resolveCost(
+      {
+        sourceKey: "",
+        sourceType: "",
+        sourceId: "",
+        provider: row.provider as PlatformCostProvider,
+        model: row.model,
+        unitType: row.unitType as PlatformCostUnitType,
+        unitCount: row.unitCount,
+        calls: row.calls,
+        inputTokens: row.inputTokens,
+        outputTokens: row.outputTokens,
+        usageAt: row.usageAt,
+      },
+      pricingRows,
+    );
+    if (resolution.pricingSource === "MISSING") return;
+    await prisma.platformApiUsageCost.update({
+      where: { id: row.id },
+      data: {
+        inputUsdPer1M: decimalOrNull(resolution.inputUsdPer1M),
+        outputUsdPer1M: decimalOrNull(resolution.outputUsdPer1M),
+        unitUsd: decimalOrNull(resolution.unitUsd),
+        usdToKrwRate: new Prisma.Decimal(resolution.usdToKrwRate),
+        costUsd: new Prisma.Decimal(resolution.costUsd),
+        costKrw: resolution.costKrw,
+        pricingSource: resolution.pricingSource,
+        pricingId: resolution.pricingId,
+      },
+    });
+  });
 }
 
 export async function recordPlatformApiUsageCost(
@@ -299,11 +378,74 @@ export async function recordPlatformApiUsageCost(
   });
 }
 
+/**
+ * 인터랙티브 AI 호출(잡/로그 엔티티가 없는 1회성 호출)의 원가를 기록하는 헬퍼.
+ * - sourceKey는 매 호출마다 유니크(중복 upsert 방지) — 각 호출 = 1 원가행.
+ * - provider는 model 문자열에서 자동 판별(providerFromModel).
+ * - usage(Vercel AI SDK / SDK 원본)를 주면 토큰을 자동 파싱, 아니면 명시값 사용.
+ * - 절대 사용자 경로를 깨지 않도록 내부에서 예외를 삼킨다.
+ */
+export async function recordAiCost(input: {
+  sourceType: string;
+  sourceDetail?: string | null;
+  academyId?: string | null;
+  model: string;
+  operationType?: string | null;
+  usage?: unknown;
+  inputTokens?: number;
+  outputTokens?: number;
+  usageAt?: Date;
+  metadata?: Prisma.InputJsonValue;
+}): Promise<void> {
+  try {
+    if (!input.model) return;
+    const tokens = input.usage
+      ? readAiUsageTokens(input.usage)
+      : {
+          inputTokens: input.inputTokens ?? 0,
+          outputTokens: input.outputTokens ?? 0,
+        };
+    await recordPlatformApiUsageCost({
+      sourceKey: `${input.sourceType.toLowerCase()}:${randomUUID()}`,
+      sourceType: input.sourceType,
+      sourceId: randomUUID(),
+      sourceDetail: input.sourceDetail ?? null,
+      academyId: input.academyId ?? null,
+      provider: providerFromModel(input.model),
+      model: input.model,
+      operationType: input.operationType ?? null,
+      unitType: "TOKENS",
+      inputTokens: tokens.inputTokens,
+      outputTokens: tokens.outputTokens,
+      usageAt: input.usageAt ?? new Date(),
+      metadata: input.metadata,
+    });
+  } catch (error) {
+    console.warn(`[ai-cost] failed to record ${input.sourceType}`, error);
+  }
+}
+
 export function readAiUsageTokens(usage: unknown) {
   const record = usage && typeof usage === "object" ? (usage as Record<string, unknown>) : {};
+  // Vercel AI SDK usage / Anthropic usage / raw Gemini usageMetadata 모두 지원.
+  // Gemini REST는 { usageMetadata: { promptTokenCount, candidatesTokenCount } } 형태라
+  // 중첩 usageMetadata 도 함께 훑는다.
+  const meta =
+    record.usageMetadata && typeof record.usageMetadata === "object"
+      ? (record.usageMetadata as Record<string, unknown>)
+      : record;
   return {
-    inputTokens: Number(record.inputTokens ?? record.promptTokens ?? 0) || 0,
-    outputTokens: Number(record.outputTokens ?? record.completionTokens ?? 0) || 0,
+    inputTokens:
+      Number(
+        meta.inputTokens ?? meta.promptTokens ?? meta.promptTokenCount ?? 0,
+      ) || 0,
+    outputTokens:
+      Number(
+        meta.outputTokens ??
+          meta.completionTokens ??
+          meta.candidatesTokenCount ??
+          0,
+      ) || 0,
   };
 }
 
@@ -369,6 +511,33 @@ async function resolveCost(
       inputUsdPer1M: envPricing.inputUsdPer1M,
       outputUsdPer1M: envPricing.outputUsdPer1M,
       unitUsd: envPricing.unitUsd,
+      usdToKrwRate,
+      costUsd: roundUsd(cost),
+      costKrw: Math.round(cost * usdToKrwRate),
+    };
+  }
+
+  // 공개 리스트 가격 기반 추정 단가. DB/ENV 단가가 없어도 원가를 0원 처리하지
+  // 않고 추정치로 반영한다. 정확한 값은 어드민 단가 등록/청구 정산으로 보정.
+  const estimatedPricing = resolveEstimatedPricing(
+    input.provider,
+    input.unitType,
+    input.model,
+  );
+  if (estimatedPricing) {
+    const cost = calculateCostUsd({
+      unitType: input.unitType,
+      unitCount: sanitizeCount(input.unitCount ?? 1),
+      inputTokens: sanitizeCount(input.inputTokens ?? 0),
+      outputTokens: sanitizeCount(input.outputTokens ?? 0),
+      ...estimatedPricing,
+    });
+    return {
+      pricingId: null,
+      pricingSource: "ESTIMATE",
+      inputUsdPer1M: estimatedPricing.inputUsdPer1M,
+      outputUsdPer1M: estimatedPricing.outputUsdPer1M,
+      unitUsd: estimatedPricing.unitUsd,
       usdToKrwRate,
       costUsd: roundUsd(cost),
       costKrw: Math.round(cost * usdToKrwRate),
@@ -446,7 +615,8 @@ function hasPotentialPricing(
 ) {
   return (
     findProviderPricingInRows(input, pricingRows) !== null ||
-    readEnvPricing(input.provider, input.unitType) !== null
+    readEnvPricing(input.provider, input.unitType) !== null ||
+    resolveEstimatedPricing(input.provider, input.unitType, input.model) !== null
   );
 }
 

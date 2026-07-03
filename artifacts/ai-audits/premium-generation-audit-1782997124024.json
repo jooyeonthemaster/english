@@ -1,0 +1,592 @@
+{
+  "createdAt": "2026-07-02T12:58:44.024Z",
+  "results": [
+    {
+      "ok": true,
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "type": "GRAMMAR_ERROR",
+      "difficulty": "INTERMEDIATE",
+      "attempts": 1,
+      "relaxedFallback": false,
+      "durationMs": 70553,
+      "rejectionSummary": {
+        "total": 0,
+        "phaseCounts": {
+          "model": 0,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "message": "Rejected candidates: 0"
+      },
+      "usageEvents": [
+        {
+          "phase": "question_generation",
+          "subType": "GRAMMAR_ERROR",
+          "qualityMode": "strict",
+          "difficulty": "INTERMEDIATE",
+          "generationPlan": "PREMIUM",
+          "usage": {
+            "inputTokens": 22481,
+            "inputTokenDetails": {
+              "noCacheTokens": 22481,
+              "cacheReadTokens": 0
+            },
+            "outputTokens": 6281,
+            "outputTokenDetails": {
+              "textTokens": 6281,
+              "reasoningTokens": 0
+            },
+            "totalTokens": 28762,
+            "raw": {
+              "prompt_tokens": 22481,
+              "completion_tokens": 6281,
+              "total_tokens": 28762,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "cost": 0.107772,
+              "is_byok": false,
+              "cost_details": {
+                "upstream_inference_cost": 0.107772,
+                "upstream_inference_prompt_cost": 0.044962,
+                "upstream_inference_completions_cost": 0.06281
+              }
+            },
+            "reasoningTokens": 0,
+            "cachedInputTokens": 0
+          },
+          "provider": "atlascloud",
+          "modelId": "anthropic/claude-sonnet-5",
+          "attempts": 1,
+          "durationMs": 70535
+        }
+      ],
+      "firstQuestion": {
+        "correctAnswer": "(C)",
+        "difficulty": "INTERMEDIATE",
+        "optionCount": 5,
+        "markerCount": 5
+      },
+      "questions": [
+        {
+          "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+          "correctAnswer": "(C)",
+          "explanation": "밑줄 (C)의 are는 어법상 틀리다. 이 문장에서 대명사 it은 앞서 언급된 단수 명사 the technical term(용어)을 가리키므로 동사도 단수형 is가 와야 한다. 따라서 are는 is로 고쳐야 한다.",
+          "keyPoints": [
+            "대명사 it이 가리키는 선행 명사(the technical term)가 단수임을 확인하여 동사의 수를 일치시켜야 한다.",
+            "appear처럼 목적어를 취하지 않는 자동사는 수동태로 쓸 수 없고 능동태로만 쓰인다.",
+            "both A and B 병렬구조에서는 A와 B가 같은 품사(형용사-형용사)로 대응되어야 한다."
+          ],
+          "tags": [
+            "수일치",
+            "대명사",
+            "능동태와 수동태",
+            "병렬구조",
+            "to부정사"
+          ],
+          "difficulty": "INTERMEDIATE",
+          "correctAnswers": [
+            "(C)"
+          ],
+          "markedExpressions": [
+            {
+              "label": "(A)",
+              "expression": "appear",
+              "isError": false,
+              "errorExpression": "appear",
+              "surroundingText": "Clear and perfect as it might appear to our eyes, down at the molecular level",
+              "pointCode": "e"
+            },
+            {
+              "label": "(B)",
+              "expression": "who",
+              "isError": false,
+              "errorExpression": "who",
+              "surroundingText": "The technical term for this mess depends on who you're asking: for some scientists",
+              "pointCode": "b"
+            },
+            {
+              "label": "(C)",
+              "expression": "is",
+              "isError": true,
+              "errorExpression": "are",
+              "surroundingText": "you're asking: for some scientists it is an \"amorphous solid,\" for others",
+              "pointCode": "d",
+              "correction": "is"
+            },
+            {
+              "label": "(D)",
+              "expression": "solid",
+              "isError": false,
+              "errorExpression": "solid",
+              "surroundingText": "In theory it's both liquid and solid, though, given the way it behaves",
+              "pointCode": "i"
+            },
+            {
+              "label": "(E)",
+              "expression": "to obey",
+              "isError": false,
+              "errorExpression": "to obey",
+              "surroundingText": "does. Glass seems to obey most molecular laws. As one glassmaker put it",
+              "pointCode": "k"
+            }
+          ],
+          "options": [
+            {
+              "label": "(A)",
+              "text": "appear"
+            },
+            {
+              "label": "(B)",
+              "text": "who"
+            },
+            {
+              "label": "(C)",
+              "text": "are"
+            },
+            {
+              "label": "(D)",
+              "text": "solid"
+            },
+            {
+              "label": "(E)",
+              "text": "to obey"
+            }
+          ],
+          "wrongOptionExplanations": {
+            "(B)": "전치사 on의 목적어로 쓰인 의문사절에서 '누구에게 묻는지'를 나타내는 who는 비격식체에서 목적어 자리에도 널리 쓰이므로 who가 쓰인 것은 어법상 옳다.",
+            "(A)": "appear는 목적어를 취하지 않는 자동사이므로 수동태로 쓸 수 없고, 능동태 appear가 쓰인 것은 어법상 옳다.",
+            "(D)": "both A and B 구문에서 A(liquid)와 B는 같은 품사로 병렬되어야 하므로, 형용사 solid가 쓰인 것은 어법상 옳다.",
+            "(E)": "seem은 to부정사를 보어로 취하는 동사이므로 seems 뒤에 to obey가 온 것은 어법상 옳다."
+          },
+          "passageWithMarkers": "The structure of glass is, frankly, a bit of a mess. Clear and perfect as it might __(A) appear__ to our eyes, down at the molecular level, glass looks more like a random ball-pit of atoms. The technical term for this mess depends on __(B) who__ you're asking: for some scientists it __(C) are__ an \"amorphous solid,\" for others a \"supercooled liquid.\" In theory it's both liquid and __(D) solid__, though, given the way it behaves, in practice it's really the latter. In fact, at room temperature glass never behaves as a liquid, even an imperceptibly viscous one, even over long periods of time (though it can \"sweat\" if you don't add enough lime to the mix). Those misshapen sheets of glass you sometimes see in old stained-glass windows, thicker at the bottom than the top, are generally not that way because the glass is slowly sinking over time. Unless the church has endured temperatures of more than 400˚C, the chances are they are uneven because that's the way they were blown and solidified in the first place. Flat glass was only developed in the nineteenth century and we had to wait until the middle of the twentieth century for truly flat, thin sheets of glass. The paradox is that, despite it being one of the very oldest human-made substances, scientists still struggle to comprehend why glass behaves the way it does. Glass seems __(E) to obey__ most molecular laws. As one glassmaker put it, glass is not a material; it's a state.",
+          "_typeId": "GRAMMAR_ERROR",
+          "_typeLabel": "어법 판단",
+          "_generationPlan": "PREMIUM"
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "type": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "attempts": 1,
+      "relaxedFallback": false,
+      "durationMs": 122512,
+      "rejectionSummary": {
+        "total": 0,
+        "phaseCounts": {
+          "model": 0,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "message": "Rejected candidates: 0"
+      },
+      "usageEvents": [
+        {
+          "phase": "question_generation",
+          "subType": "GRAMMAR_ERROR",
+          "qualityMode": "strict",
+          "difficulty": "KILLER",
+          "generationPlan": "PREMIUM",
+          "usage": {
+            "inputTokens": 24098,
+            "inputTokenDetails": {
+              "noCacheTokens": 24098,
+              "cacheReadTokens": 0
+            },
+            "outputTokens": 11634,
+            "outputTokenDetails": {
+              "textTokens": 11634,
+              "reasoningTokens": 0
+            },
+            "totalTokens": 35732,
+            "raw": {
+              "prompt_tokens": 24098,
+              "completion_tokens": 11634,
+              "total_tokens": 35732,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "cost": 0.164536,
+              "is_byok": false,
+              "cost_details": {
+                "upstream_inference_cost": 0.164536,
+                "upstream_inference_prompt_cost": 0.048196,
+                "upstream_inference_completions_cost": 0.11634
+              }
+            },
+            "reasoningTokens": 0,
+            "cachedInputTokens": 0
+          },
+          "provider": "atlascloud",
+          "modelId": "anthropic/claude-sonnet-5",
+          "attempts": 1,
+          "durationMs": 122503
+        }
+      ],
+      "firstQuestion": {
+        "correctAnswer": "(E), (G)",
+        "difficulty": "KILLER",
+        "optionCount": 7,
+        "markerCount": 7
+      },
+      "questions": [
+        {
+          "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것을 모두 고르시오.",
+          "correctAnswer": "(E), (G)",
+          "explanation": "(E)에 표시된 is는 틀렸고, are로 고쳐야 한다. 주어의 핵은 'Those misshapen sheets of glass'로 복수이며, 'you sometimes see in old stained-glass windows'라는 관계절과 'thicker at the bottom than the top'라는 삽입 수식어가 주어와 동사 사이에 끼어 있어도 수일치는 복수 주어를 따라야 하므로 단수 동사 is는 쓸 수 없다. (G)에 표시된 to be는 틀렸고, being으로 고쳐야 한다. despite는 전치사이므로 뒤에는 명사(구)나 동명사가 와야 하며, to부정사를 취할 수 없다. 따라서 'despite it being one of the very oldest...'처럼 동명사 being이 와야 한다. 나머지 (A) appear, (B) who, (C) both liquid and, (D) than the top, (F) were blown and solidified는 모두 각각 능동태, 간접의문문의 의문사, 상관접속사 병렬, 비교구문, 수동태 용법상 문제가 없다.",
+          "keyPoints": [
+            "관계절과 삽입 수식어가 주어와 동사 사이에 길게 끼어들어도 수일치는 반드시 문장의 진짜 주어(복수 명사)를 기준으로 판단해야 한다.",
+            "전치사 despite 뒤에는 명사(구) 또는 동명사가 와야 하며 to부정사는 올 수 없으므로 'despite it being'의 being은 동명사로서 정확한 형태이다.",
+            "의문사절, 상관접속사 병렬구조, 능동태·수동태 선택은 문맥상 의미상 주어와 행위 대상 관계를 통해 옳고 그름을 판단해야 한다."
+          ],
+          "tags": [
+            "수일치",
+            "전치사와 동명사",
+            "간접의문문",
+            "병렬구조",
+            "능동태와 수동태",
+            "비교구문"
+          ],
+          "difficulty": "KILLER",
+          "correctAnswers": [
+            "(E)",
+            "(G)"
+          ],
+          "markedExpressions": [
+            {
+              "label": "(A)",
+              "expression": "appear",
+              "isError": false,
+              "errorExpression": "appear",
+              "surroundingText": "as it might appear to our eyes, down at the molecular level",
+              "pointCode": "e"
+            },
+            {
+              "label": "(B)",
+              "expression": "who",
+              "isError": false,
+              "errorExpression": "who",
+              "surroundingText": "term for this mess depends on who you're asking: for some",
+              "pointCode": "b"
+            },
+            {
+              "label": "(C)",
+              "expression": "both liquid and",
+              "isError": false,
+              "errorExpression": "both liquid and",
+              "surroundingText": "In theory it's both liquid and solid, though, given the way",
+              "pointCode": "i"
+            },
+            {
+              "label": "(D)",
+              "expression": "than the top",
+              "isError": false,
+              "errorExpression": "than the top",
+              "surroundingText": "windows, thicker at the bottom than the top, are generally",
+              "pointCode": "m"
+            },
+            {
+              "label": "(E)",
+              "expression": "are",
+              "isError": true,
+              "errorExpression": "is",
+              "surroundingText": "than the top, are generally not that way because the glass",
+              "pointCode": "d",
+              "correction": "are"
+            },
+            {
+              "label": "(F)",
+              "expression": "were blown and solidified",
+              "isError": false,
+              "errorExpression": "were blown and solidified",
+              "surroundingText": "that's the way they were blown and solidified in the first place.",
+              "pointCode": "e"
+            },
+            {
+              "label": "(G)",
+              "expression": "being",
+              "isError": true,
+              "errorExpression": "to be",
+              "surroundingText": "despite it being one of the very oldest human-made substances",
+              "pointCode": "k",
+              "correction": "being"
+            }
+          ],
+          "options": [
+            {
+              "label": "(A)",
+              "text": "appear"
+            },
+            {
+              "label": "(B)",
+              "text": "who"
+            },
+            {
+              "label": "(C)",
+              "text": "both liquid and"
+            },
+            {
+              "label": "(D)",
+              "text": "than the top"
+            },
+            {
+              "label": "(E)",
+              "text": "is"
+            },
+            {
+              "label": "(F)",
+              "text": "were blown and solidified"
+            },
+            {
+              "label": "(G)",
+              "text": "to be"
+            }
+          ],
+          "wrongOptionExplanations": {
+            "(A)": "'appear'는 목적어를 취하지 않는 연결동사(자동사)이므로 수동태로 쓸 수 없고, 'might appear to our eyes'처럼 능동형으로 쓰는 것이 어법상 옳다.",
+            "(B)": "'depends on who you're asking'는 전치사 on의 목적어로 쓰인 간접의문문으로, 사람을 묻는 의문사 who가 'you're asking'의 목적어 역할을 하는 명사절을 이끌고 있어 적절하다.",
+            "(C)": "상관접속사 'both A and B' 구조에서 A(liquid)와 B(solid)가 모두 보어로 쓰인 형용사로 형태가 일치하여 병렬구조가 올바르다.",
+            "(D)": "비교급 형용사 'thicker'와 짝을 이루는 'than the top'은 비교구문의 형태를 정확히 갖추고 있어 어법상 문제가 없다.",
+            "(F)": "주어 they(=유리판들)는 사람에 의해 불어서 만들어지고 굳혀지는 대상이므로 수동태 'were blown and solidified'가 의미상·문법상 올바르다."
+          },
+          "passageWithMarkers": "The structure of glass is, frankly, a bit of a mess. Clear and perfect as it might __(A) appear__ to our eyes, down at the molecular level, glass looks more like a random ball-pit of atoms. The technical term for this mess depends on __(B) who__ you're asking: for some scientists it is an \"amorphous solid,\" for others a \"supercooled liquid.\" In theory it's __(C) both liquid and__ solid, though, given the way it behaves, in practice it's really the latter. In fact, at room temperature glass never behaves as a liquid, even an imperceptibly viscous one, even over long periods of time (though it can \"sweat\" if you don't add enough lime to the mix). Those misshapen sheets of glass you sometimes see in old stained-glass windows, thicker at the bottom __(D) than the top__, __(E) is__ generally not that way because the glass is slowly sinking over time. Unless the church has endured temperatures of more than 400˚C, the chances are they are uneven because that's the way they __(F) were blown and solidified__ in the first place. Flat glass was only developed in the nineteenth century and we had to wait until the middle of the twentieth century for truly flat, thin sheets of glass. The paradox is that, despite it __(G) to be__ one of the very oldest human-made substances, scientists still struggle to comprehend why glass behaves the way it does. Glass seems to obey most molecular laws. As one glassmaker put it, glass is not a material; it's a state.",
+          "_typeId": "GRAMMAR_ERROR",
+          "_typeLabel": "어법 판단",
+          "_generationPlan": "PREMIUM"
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "type": "GRAMMAR_ERROR",
+      "difficulty": "INTERMEDIATE",
+      "attempts": 1,
+      "relaxedFallback": false,
+      "durationMs": 131888,
+      "rejectionSummary": {
+        "total": 0,
+        "phaseCounts": {
+          "model": 0,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "message": "Rejected candidates: 0"
+      },
+      "usageEvents": [
+        {
+          "phase": "question_generation",
+          "subType": "GRAMMAR_ERROR",
+          "qualityMode": "strict",
+          "difficulty": "INTERMEDIATE",
+          "generationPlan": "PREMIUM",
+          "usage": {
+            "inputTokens": 22104,
+            "inputTokenDetails": {
+              "noCacheTokens": 22104,
+              "cacheReadTokens": 0
+            },
+            "outputTokens": 10394,
+            "outputTokenDetails": {
+              "textTokens": 10394,
+              "reasoningTokens": 0
+            },
+            "totalTokens": 32498,
+            "raw": {
+              "prompt_tokens": 22104,
+              "completion_tokens": 10394,
+              "total_tokens": 32498,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "cost": 0.148148,
+              "is_byok": false,
+              "cost_details": {
+                "upstream_inference_cost": 0.148148,
+                "upstream_inference_prompt_cost": 0.044208,
+                "upstream_inference_completions_cost": 0.10394
+              }
+            },
+            "reasoningTokens": 0,
+            "cachedInputTokens": 0
+          },
+          "provider": "atlascloud",
+          "modelId": "anthropic/claude-sonnet-5",
+          "attempts": 1,
+          "durationMs": 109295
+        },
+        {
+          "phase": "question_generation",
+          "subType": "GRAMMAR_ERROR",
+          "qualityMode": "strict",
+          "difficulty": "INTERMEDIATE",
+          "generationPlan": "PREMIUM",
+          "usage": {
+            "inputTokens": 16245,
+            "inputTokenDetails": {
+              "noCacheTokens": 16245,
+              "cacheReadTokens": 0
+            },
+            "outputTokens": 1391,
+            "outputTokenDetails": {
+              "textTokens": 1391,
+              "reasoningTokens": 0
+            },
+            "totalTokens": 17636,
+            "raw": {
+              "prompt_tokens": 16245,
+              "completion_tokens": 1391,
+              "total_tokens": 17636,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "cost": 0.0464,
+              "is_byok": false,
+              "cost_details": {
+                "upstream_inference_cost": 0.0464,
+                "upstream_inference_prompt_cost": 0.03249,
+                "upstream_inference_completions_cost": 0.01391
+              }
+            },
+            "reasoningTokens": 0,
+            "cachedInputTokens": 0
+          },
+          "provider": "atlascloud",
+          "modelId": "anthropic/claude-sonnet-5",
+          "attempts": 1,
+          "durationMs": 22586
+        }
+      ],
+      "firstQuestion": {
+        "correctAnswer": "(B)",
+        "difficulty": "INTERMEDIATE",
+        "optionCount": 5,
+        "markerCount": 5
+      },
+      "questions": [
+        {
+          "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+          "correctAnswer": "(B)",
+          "explanation": "(B)의 what은 앞에 나온 명사 'rare diseases'라는 선행사를 수식하는 관계절을 이끄는 자리에 쓰였다. 그런데 what은 선행사를 포함하는 관계대명사여서 별도의 선행사와 함께 쓰일 수 없으므로, 이미 선행사 'diseases'가 존재하는 이 문맥에서는 쓸 수 없다. 따라서 (B)의 what은 어법상 틀리며 선행사를 필요로 하는 관계대명사 that으로 고쳐야 한다.",
+          "keyPoints": [
+            "선행사가 있는 관계절에는 what이 아니라 that/which를 써야 한다",
+            "관계절 내 동사의 수 일치는 진짜 선행사(수식어를 걷어낸 핵심 명사)를 기준으로 판단해야 한다(예: imbalances ~ that direct)",
+            "대명사가 가리키는 대상은 문맥상 같은 문장 안의 선행 명사와 수·의미가 일치해야 한다(it = the disease)"
+          ],
+          "tags": [
+            "관계사",
+            "that vs what",
+            "수일치",
+            "대명사 일치",
+            "분사",
+            "능동태/수동태"
+          ],
+          "difficulty": "INTERMEDIATE",
+          "markedExpressions": [
+            {
+              "label": "(A)",
+              "expression": "being employed",
+              "isError": false,
+              "correction": "being employed",
+              "errorExpression": "being employed",
+              "surroundingText": "algorithms are being employed to find treatments and drugs for rare diseases",
+              "pointCode": "e"
+            },
+            {
+              "label": "(B)",
+              "expression": "that",
+              "isError": true,
+              "correction": "that",
+              "errorExpression": "what",
+              "surroundingText": "drugs for rare diseases that to date haven't received much attention.",
+              "pointCode": "b"
+            },
+            {
+              "label": "(C)",
+              "expression": "living",
+              "isError": false,
+              "correction": "living",
+              "errorExpression": "living",
+              "surroundingText": "for it (for example, people living in the developing world), the disease",
+              "pointCode": "c"
+            },
+            {
+              "label": "(D)",
+              "expression": "direct",
+              "isError": false,
+              "correction": "direct",
+              "errorExpression": "direct",
+              "surroundingText": "in the pharmaceutical industry that direct attention to diseases that",
+              "pointCode": "d"
+            },
+            {
+              "label": "(E)",
+              "expression": "it",
+              "isError": false,
+              "correction": "it",
+              "errorExpression": "it",
+              "surroundingText": "or because it is prevalent among demographics that can pay more.",
+              "pointCode": "g"
+            }
+          ],
+          "options": [
+            {
+              "label": "(A)",
+              "text": "being employed"
+            },
+            {
+              "label": "(B)",
+              "text": "what"
+            },
+            {
+              "label": "(C)",
+              "text": "living"
+            },
+            {
+              "label": "(D)",
+              "text": "direct"
+            },
+            {
+              "label": "(E)",
+              "text": "it"
+            }
+          ],
+          "wrongOptionExplanations": {
+            "(A)": "주어 'algorithms'는 employ(사용하다)라는 행위의 대상이므로 능동이 아니라 수동형이 필요하며, 'are being employed'는 진행형 수동태로 문맥상 올바르게 쓰였다.",
+            "(C)": "'living'은 앞의 'people'을 수식하는 분사로, live는 자동사이므로 목적어 없이도 능동의 현재분사 'living'으로 쓰인 것이 어법상 옳다.",
+            "(D)": "관계대명사 'that'의 선행사는 바로 앞의 'the pharmaceutical industry'가 아니라 'imbalances'(복수)이므로, 동사는 복수형인 'direct'로 수 일치가 올바르게 되어 있다.",
+            "(E)": "'it'은 같은 문장 앞부분에 나온 단수 명사 'the disease'를 가리키므로 수와 지시 대상이 일치하여 어법상 올바르다."
+          },
+          "correctAnswers": [
+            "(B)"
+          ],
+          "passageWithMarkers": "In the pharmaceutical industry, algorithms are __(A) being employed__ to find treatments and drugs for rare diseases __(B) what__ to date haven't received much attention. The hard truth has always been that pharma devotes more research and development resources to diseases that affect the rich. The definition of rare has too often been associated with poor ― that is, even if a disease is quite prevalent in a population that cannot afford to pay for it (for example, people __(C) living__ in the developing world), the disease has been neglected compared to First World illnesses. By lowering the cost of data collection, mining, and analysis in drug development and clinical trials, AI can help offset imbalances in the pharmaceutical industry that __(D) direct__ attention to diseases that \"pay,\" whether because the disease is more common or because __(E) it__ is prevalent among demographics that can pay more. We see the democratizing power of AI to broaden the attention of the medical and research communities to find cures to traditionally neglected health issues and among traditionally neglected populations.",
+          "_typeId": "GRAMMAR_ERROR",
+          "_typeLabel": "어법 판단",
+          "_generationPlan": "PREMIUM"
+        }
+      ]
+    }
+  ]
+}

@@ -257,6 +257,7 @@ async function runJob(jobId: string): Promise<void> {
           spec,
           passage: contentById.get(passageId) ?? "",
           gradeInfo: job.gradeInfo ?? undefined,
+          academyId: job.academyId,
         });
         const createdIds = await saveGeneratedQuestionsForJob({
           academyId: job.academyId,

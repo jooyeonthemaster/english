@@ -18,6 +18,7 @@ import {
   buildFallbackM1Restoration,
   hasUnresolvedM1ProblemArtifacts,
 } from "@/lib/extraction/m1-restoration";
+import { recordAiCost } from "@/lib/platform-api-costs";
 
 // 蹂듭썝 ?꾩슜 寃쎈웾 紐⑤뜽 ??異붿텧 ?뚯씠?꾨씪??passage-restoration ?ㅽ뀒?댁?? ?숈씪.
 // (scripts/test-restoration-lite.ts 22耳?댁뒪 寃利? lite 媛 3.5-flash 蹂대떎
@@ -176,6 +177,7 @@ export async function POST(req: NextRequest) {
     ).catch(() => {});
 
   let result: RestorationResult;
+  let restoreUsage: unknown;
   try {
     // flash-lite 吏곸젒 ?몄텧 ??45s 횞 2?쒕룄, SDK ?대? ?ъ떆??李⑤떒(以묒꺽 怨쇨툑 諛⑹?),
     // 鍮꾩옱?쒕룄???ㅻ쪟??利됱떆 以묐떒. passage-transform 怨??숈씪 洹쒖쑉.
@@ -185,7 +187,7 @@ export async function POST(req: NextRequest) {
       for (let attempt = 0; attempt < RESTORE_MAX_ATTEMPTS; attempt += 1) {
         const startedAt = Date.now();
         try {
-          const { object } = await generateObject({
+          const { object, usage } = await generateObject({
             model: googleGenerativeAI(RESTORE_MODEL_ID),
             schema: restorationSchema,
             prompt,
@@ -195,6 +197,7 @@ export async function POST(req: NextRequest) {
             abortSignal: AbortSignal.timeout(RESTORE_TIMEOUT_MS),
             
           });
+          restoreUsage = usage;
           console.log(
             `[WORKBENCH-PASTE-RESTORE] ${RESTORE_MODEL_ID} attempt ${attempt + 1} ok in ${Date.now() - startedAt}ms`,
           );
@@ -239,6 +242,16 @@ export async function POST(req: NextRequest) {
       degraded: true,
     });
   }
+
+  // AI 복원 호출이 성공적으로 응답을 반환했으므로 원가를 기록한다.
+  await recordAiCost({
+    sourceType: "AI_INTERACTIVE",
+    sourceDetail: "restore-passage",
+    academyId: staff.academyId,
+    model: RESTORE_MODEL_ID,
+    operationType: "PASSAGE_RESTORATION",
+    usage: restoreUsage,
+  });
 
   // Post-hoc safety: if obvious problem artifacts survived, never report a clean
   // "RESTORED" ??downgrade and warn so the user reviews.

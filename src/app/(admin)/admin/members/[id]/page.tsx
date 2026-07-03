@@ -5,6 +5,7 @@ import { ArrowLeft, AlertCircle } from "lucide-react";
 import {
   getMemberDetail,
   getMemberTransactions,
+  getMemberPurchases,
 } from "@/actions/admin-members";
 import { getMemberActivity } from "@/actions/admin-activity";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -53,10 +54,11 @@ async function MemberContent({ memberId }: { memberId: string }) {
   // result.kind === "ok"
   const member = result.member;
 
-  // First page of transactions + activity timeline, server-fetched
-  const [txResult, activityResult] = await Promise.all([
+  // First page of transactions + activity timeline + 구입 이력, server-fetched
+  const [txResult, activityResult, purchases] = await Promise.all([
     getMemberTransactions(memberId, { limit: 30 }),
     getMemberActivity(memberId, { limit: 40 }),
+    getMemberPurchases(memberId, { limit: 50 }),
   ]);
   const initialTransactions =
     txResult.kind === "ok"
@@ -72,6 +74,7 @@ async function MemberContent({ memberId }: { memberId: string }) {
       member={member}
       initialTransactions={initialTransactions}
       initialActivity={initialActivity}
+      purchases={purchases}
     />
   );
 }

@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
 import { requireStaffAuth } from "@/lib/auth";
 import { getCreditTopUpProducts } from "@/lib/credit-top-up-products";
+import { isCardTopUpAllowed } from "@/lib/card-topup-access";
 
 export async function GET() {
   try {
-    await requireStaffAuth("DIRECTOR");
+    const staff = await requireStaffAuth("DIRECTOR");
     const products = await getCreditTopUpProducts();
-    return NextResponse.json({ products });
+    const cardEnabled = isCardTopUpAllowed({
+      academyId: staff.academyId,
+      email: staff.email,
+    });
+    return NextResponse.json({ products, cardEnabled });
   } catch (err) {
     if (err instanceof Error && err.message === "Unauthorized") {
       return NextResponse.json(

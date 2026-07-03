@@ -2,7 +2,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, type ReactNode } from "react";
-import { ChevronRight, FileText, BadgeCheck } from "lucide-react";
+import { ChevronDown, ChevronUp, FileText, BadgeCheck } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { sanitizeAiModelDisclosureText } from "@/lib/question-generation-plans";
 import { QuestionBankCard } from "./question-bank-card";
@@ -66,6 +66,8 @@ interface PassageGroupedViewProps {
   renderQuestion?: (question: any, index: number) => ReactNode;
   /** 카드 접힘(콤팩트) 모드 — fallback QuestionBankCard 로 그대로 전달. */
   collapsible?: boolean;
+  /** 시험지 빌더 좌측 라이브러리 전용 — 카드 크기 한 단계 축소. */
+  compact?: boolean;
   expandedPassageIds: Record<string, boolean>;
   setExpandedPassageIds: (
     next:
@@ -137,6 +139,7 @@ export function PassageGroupedView({
   onApproveDuplicateSelect,
   renderQuestion,
   collapsible,
+  compact = false,
   expandedPassageIds,
   setExpandedPassageIds,
   onActivePassageChange,
@@ -304,6 +307,28 @@ export function PassageGroupedView({
           passage.publisher,
         ].filter(Boolean) as string[];
 
+        const toggleOpen = () => {
+          const willOpen = !isOpen;
+          setExpandedPassageIds((prev) => ({
+            ...prev,
+            [passage.id]: willOpen,
+          }));
+          if (willOpen) {
+            activePassageIdRef.current = passage.id;
+            onActivePassageChange?.({
+              id: passage.id,
+              title: sanitizeAiModelDisclosureText(passage.title) || "(제목 없음)",
+              visibleCount,
+              totalQuestionCount: passage.totalQuestionCount,
+              hasAnalysis: Boolean(passage.analysis),
+              isOpen: true,
+            });
+          } else if (activePassageIdRef.current === passage.id) {
+            activePassageIdRef.current = null;
+            onActivePassageChange?.(null);
+          }
+        };
+
         return (
           <section
             key={passage.id}
@@ -342,41 +367,6 @@ export function PassageGroupedView({
               </div>
 
               <div className="flex flex-1 items-center gap-2.5 py-3">
-                <button
-                  type="button"
-                  aria-expanded={isOpen}
-                  aria-label={isOpen ? "그룹 접기" : "그룹 펼치기"}
-                  onClick={() => {
-                    const willOpen = !isOpen;
-                    setExpandedPassageIds((prev) => ({
-                      ...prev,
-                      [passage.id]: willOpen,
-                    }));
-                    if (willOpen) {
-                      activePassageIdRef.current = passage.id;
-                      onActivePassageChange?.({
-                        id: passage.id,
-                        title: sanitizeAiModelDisclosureText(passage.title) || "(제목 없음)",
-                        visibleCount,
-                        totalQuestionCount: passage.totalQuestionCount,
-                        hasAnalysis: Boolean(passage.analysis),
-                        isOpen: true,
-                      });
-                    } else if (activePassageIdRef.current === passage.id) {
-                      activePassageIdRef.current = null;
-                      onActivePassageChange?.(null);
-                    }
-                  }}
-                  className="flex shrink-0 cursor-pointer items-center"
-                >
-                  <ChevronRight
-                    className={`size-4 text-slate-400 motion-safe:transition-transform motion-safe:duration-150 ${
-                      isOpen ? "rotate-90" : ""
-                    }`}
-                    aria-hidden="true"
-                  />
-                </button>
-
                 <span
                   className={`flex size-7 shrink-0 items-center justify-center rounded-md ${
                     isOpen
@@ -390,27 +380,7 @@ export function PassageGroupedView({
                 <button
                   type="button"
                   aria-expanded={isOpen}
-                  onClick={() => {
-                    const willOpen = !isOpen;
-                    setExpandedPassageIds((prev) => ({
-                      ...prev,
-                      [passage.id]: willOpen,
-                    }));
-                    if (willOpen) {
-                      activePassageIdRef.current = passage.id;
-                      onActivePassageChange?.({
-                        id: passage.id,
-                        title: sanitizeAiModelDisclosureText(passage.title) || "(제목 없음)",
-                        visibleCount,
-                        totalQuestionCount: passage.totalQuestionCount,
-                        hasAnalysis: Boolean(passage.analysis),
-                        isOpen: true,
-                      });
-                    } else if (activePassageIdRef.current === passage.id) {
-                      activePassageIdRef.current = null;
-                      onActivePassageChange?.(null);
-                    }
-                  }}
+                  onClick={toggleOpen}
                   className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 text-left transition-colors hover:opacity-90"
                 >
                   <h4 className="truncate text-sm font-bold tracking-tight text-slate-900">
@@ -436,9 +406,22 @@ export function PassageGroupedView({
                       분석 완료
                     </span>
                   )}
-                  <span className="ml-auto text-[11px] font-medium text-slate-400">
-                    {isOpen ? "클릭해서 접기" : "클릭해서 펼치기"}
-                  </span>
+                </button>
+
+                {/* 펼치기/접기 토글 — 카드 오른쪽 끝. 문제카드의 접기 토글과 동일 디자인. */}
+                <button
+                  type="button"
+                  aria-expanded={isOpen}
+                  aria-label={isOpen ? "카드 접기" : "카드 펼치기"}
+                  title={isOpen ? "접기" : "펼치기"}
+                  onClick={toggleOpen}
+                  className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md text-blue-300 transition-colors hover:bg-blue-50 hover:text-blue-500"
+                >
+                  {isOpen ? (
+                    <ChevronUp className="size-4.5" />
+                  ) : (
+                    <ChevronDown className="size-4.5" />
+                  )}
                 </button>
               </div>
             </header>
@@ -511,6 +494,7 @@ export function PassageGroupedView({
                           }
                           selectionDisabled={disabled}
                           collapsible={collapsible}
+                          compact={compact}
                           duplicateCount={usageCount > 1 ? usageCount : undefined}
                           onDuplicateSelectConfirm={
                             disabled && onApproveDuplicateSelect

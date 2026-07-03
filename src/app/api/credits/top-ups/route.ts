@@ -8,11 +8,18 @@ export async function GET(request: NextRequest) {
     Math.max(Number(request.nextUrl.searchParams.get("limit") ?? 20), 1),
     100,
   );
+  const offset = Math.max(
+    Number(request.nextUrl.searchParams.get("offset") ?? 0),
+    0,
+  );
 
-  const topUps = await prisma.creditTopUp.findMany({
-    where: { academyId: staff.academyId },
+  const where = { academyId: staff.academyId };
+  const total = await prisma.creditTopUp.count({ where });
+  const rows = await prisma.creditTopUp.findMany({
+    where,
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     take: limit,
+    skip: offset,
     select: {
       id: true,
       paymentId: true,
@@ -28,8 +35,26 @@ export async function GET(request: NextRequest) {
       createdAt: true,
       completedAt: true,
       paidAt: true,
+      customData: true,
     },
   });
 
-  return NextResponse.json({ topUps });
+  const topUps = rows.map(({ customData, ...rest }) => {
+    const cd =
+      customData &&
+      typeof customData === "object" &&
+      !Array.isArray(customData)
+        ? (customData as Record<string, unknown>)
+        : null;
+    const depositorName = cd?.depositorName;
+    const confirmStartedAt = cd?.confirmStartedAt;
+    return {
+      ...rest,
+      depositorName: typeof depositorName === "string" ? depositorName : null,
+      confirmStartedAt:
+        typeof confirmStartedAt === "string" ? confirmStartedAt : null,
+    };
+  });
+
+  return NextResponse.json({ topUps, total });
 }

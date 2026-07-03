@@ -176,8 +176,9 @@ export function QuestionTrashClient({
     isPending: isNavPending,
   } = useUrlFilters(trashPath);
 
-  function handleSearch() {
-    urlSearch(searchValue);
+  function handleSearch(value?: string) {
+    // X 버튼은 빈 값을 명시적으로 넘긴다(상태 갱신은 비동기라 stale 방지).
+    urlSearch(value !== undefined ? value : searchValue);
   }
 
   // ─── Folder manager (shared collections with 문제 관리) ───
@@ -742,10 +743,10 @@ export function QuestionTrashClient({
                 backLink: (
                   <Link
                     href={bankPath}
-                    className="inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 text-[11.5px] font-semibold text-slate-600 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+                    aria-label="문제 관리로 돌아가기"
+                    className="inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
                   >
                     <ArrowLeft className="h-3.5 w-3.5" />
-                    문제 관리로 돌아가기
                   </Link>
                 ),
               }}

@@ -124,6 +124,13 @@ export type ShuffleOptions = {
   anchorBlocks: boolean;
 };
 
+export function paperItemRegroupKey(item: PaperItem): string {
+  if (item.blockType !== "question") return `block:${item.localId}`;
+  if (item.sourceQuestion.setId) return `set:${item.sourceQuestion.setId}`;
+  if (item.sourceQuestion.passage) return `passage:${item.sourceQuestion.passage.id}`;
+  return `solo:${item.questionId}`;
+}
+
 export function usePaperItems(
   markDirty: () => void,
   initialItems: PaperItem[] = [],

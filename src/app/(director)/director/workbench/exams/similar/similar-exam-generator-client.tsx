@@ -525,7 +525,7 @@ export function SimilarExamGeneratorClient({
   return (
     <div className="relative bg-[#F4F6F9] md:-m-6">
       {/* 작업 화면 — 스크롤 전 한 화면(뷰포트)을 가득 채운다 */}
-      <div className="relative flex h-[100dvh] min-h-0 flex-col overflow-hidden bg-white">
+      <div className="relative flex min-h-[100dvh] flex-col overflow-x-hidden bg-white lg:h-[100dvh] lg:min-h-0 lg:overflow-hidden">
         {/* 자동 숨김 헤더 */}
         <div
           aria-hidden={!headerVisible}
@@ -567,7 +567,7 @@ export function SimilarExamGeneratorClient({
 
         <div
           ref={gridRef}
-          className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden lg:[grid-template-columns:var(--similar-grid-columns)]"
+          className="grid grid-cols-1 gap-2 p-2 lg:min-h-0 lg:flex-1 lg:gap-0 lg:overflow-hidden lg:p-0 lg:[grid-template-columns:var(--similar-grid-columns)]"
           style={
             {
               "--similar-grid-columns": gridColumns,
@@ -580,7 +580,7 @@ export function SimilarExamGeneratorClient({
           ) : (
             <div
               ref={leftColRef}
-              className="flex min-h-0 min-w-0 flex-col overflow-hidden border-r border-slate-200"
+              className="flex h-[72vh] min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 lg:h-auto lg:min-h-0 lg:rounded-none lg:border-0 lg:border-r"
             >
               <ExtractionManageClient
                 embedded
@@ -622,7 +622,7 @@ export function SimilarExamGeneratorClient({
           )}
 
           {/* ─── 중앙: 패턴 분석 시험지 입력/미리보기 ─── */}
-          <section className="flex min-w-0 flex-col overflow-hidden bg-slate-100/70">
+          <section className="flex h-[80vh] min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-100/70 lg:h-auto lg:rounded-none lg:border-0">
             <SimilarExamToolbar
               staged={Boolean(staged)}
               totalPages={staged?.totalPages ?? 0}

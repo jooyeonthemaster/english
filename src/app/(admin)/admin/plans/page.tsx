@@ -1,42 +1,7 @@
-import { Suspense } from "react";
-import { getPlans } from "@/actions/admin";
-import { AdminPlansClient } from "@/components/admin/plans-admin-client";
-import { Skeleton } from "@/components/ui/skeleton";
+import { redirect } from "next/navigation";
 
-async function PlansContent() {
-  const plans = await getPlans({ includeInactive: true });
-  const serializedPlans = plans.map((plan) => ({
-    ...plan,
-    createdAt: plan.createdAt.toISOString(),
-    updatedAt: plan.updatedAt.toISOString(),
-  }));
-
-  return <AdminPlansClient initialPlans={serializedPlans} />;
-}
-
-function PlansSkeleton() {
-  return (
-    <div className="space-y-4">
-      <Skeleton className="h-24 rounded-xl" />
-      <Skeleton className="h-[360px] rounded-xl" />
-      <Skeleton className="h-[360px] rounded-xl" />
-    </div>
-  );
-}
-
+// Merged into the unified "크레딧 요금제 관리" page (/admin/credit-plans).
+// Lands on the subscription-plans tab. Kept as a redirect so existing links keep working.
 export default function AdminPlansPage() {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-[22px] font-bold text-gray-900">요금제 관리</h1>
-        <p className="mt-1 text-[13px] text-gray-400">
-          크레딧 충전 상품과 동일한 기준으로 구독 요금제 표시 정보를 관리합니다
-        </p>
-      </div>
-
-      <Suspense fallback={<PlansSkeleton />}>
-        <PlansContent />
-      </Suspense>
-    </div>
-  );
+  redirect("/admin/credit-plans?tab=plans");
 }

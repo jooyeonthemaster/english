@@ -1,15 +1,23 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { OPERATION_LABELS } from "@/lib/credit-costs";
 import type { OperationType } from "@/lib/credit-costs";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { cn } from "@/lib/utils";
 import { AlertCircle, ArrowDownRight, ArrowUpRight, Calendar, CheckCircle2, Coins, Filter, Gift, RefreshCw } from "lucide-react";
-import { CreditBetaNoticeDialog } from "./_components/beta-notice-dialog";
-import { FILTER_OPTIONS, OPERATION_COLORS, OPERATION_ICONS, OverviewCard, TYPE_LABELS } from "./_components/credit-overview";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { FILTER_OPTIONS, OverviewCard, TYPE_LABELS } from "./_components/credit-overview";
 import type { DanalLegacyPaymentParams, DanalLegacyPaymentResponse } from "./_components/payment-sdk";
 import { SubscriptionBillingPanel } from "./_components/subscription-billing-panel";
-import { TopUpHistory, TopUpPanel } from "./_components/top-up-panel";
+import { BankDepositGuide, TopUpHistory, TopUpMethodDialog, TopUpPanel } from "./_components/top-up-panel";
 import { useCreditsController } from "./_components/use-credits-controller";
 
 declare global {
@@ -26,41 +34,90 @@ declare global {
 
 // ─── Page Component ─────────────────────────────────────────────────────────
 
+// 소멸시효까지 남은 시간을 초 단위로 실시간 표시.
+function ExpiryCountdown({ expiresAt }: { expiresAt: string }) {
+  const target = new Date(expiresAt).getTime();
+  const [now, setNow] = useState<number | null>(null);
+
+  useEffect(() => {
+    setNow(Date.now());
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // 마운트 전에는 서버/클라이언트 시간 차로 인한 hydration 불일치를 피한다.
+  if (now === null) {
+    return (
+      <span className="font-semibold text-white tabular-nums">계산 중…</span>
+    );
+  }
+
+  const diff = target - now;
+  if (diff <= 0) {
+    return <span className="font-semibold text-white tabular-nums">소멸됨</span>;
+  }
+
+  const totalSeconds = Math.floor(diff / 1000);
+  const days = Math.floor(totalSeconds / 86_400);
+  const hours = Math.floor((totalSeconds % 86_400) / 3_600);
+  const minutes = Math.floor((totalSeconds % 3_600) / 60);
+  const seconds = totalSeconds % 60;
+  const pad = (n: number) => String(n).padStart(2, "0");
+
+  return (
+    <span className="font-semibold text-white tabular-nums">
+      {days}일 {pad(hours)}시간 {pad(minutes)}분 {pad(seconds)}초
+    </span>
+  );
+}
+
 export default function CreditsPage() {
   const {
+    bankDepositCompleted,
+    bankDepositGuide,
     cancelSubscriptionBilling,
-    closeBetaNotice,
+    cardEnabled,
+    clearBankDepositGuide,
+    confirmSelectedTopUp,
     costEntries,
+    markBankDepositPaid,
+    depositorName,
     easyPayProvider,
     filterType,
-    hideBetaNoticeForDay,
     loading,
+    openBankGuideForTopUp,
     page,
     pageSize,
     payMethod,
     payingCredits,
     paymentMessage,
+    clearPaymentMessage,
     refreshAllCreditData,
+    selectedProduct,
+    setDepositorName,
     setEasyPayProvider,
     setFilterType,
     setPage,
     setPayMethod,
+    setSelectedProduct,
     setSubscriptionConsent,
-    showBetaNotice,
     startSubscriptionBilling,
-    startTopUp,
     subscriptionBilling,
     subscriptionBusy,
     subscriptionConsent,
     subscriptionMessage,
     summary,
+    topUpPage,
+    topUpPageSize,
     topUpProducts,
     topUps,
+    topUpTotal,
+    topUpTotalPages,
+    setTopUpPage,
     totalPages,
     totalTx,
     transactions,
     txLoading,
-    usagePercent,
   } = useCreditsController();
 
   if (loading) {
@@ -78,11 +135,6 @@ export default function CreditsPage() {
 
   return (
     <>
-      <CreditBetaNoticeDialog
-        open={showBetaNotice}
-        onClose={closeBetaNotice}
-        onHideForDay={hideBetaNoticeForDay}
-      />
       <div className="space-y-5 -mx-1">
       {/* Page header */}
       <div className="flex items-center justify-between">
@@ -140,23 +192,42 @@ export default function CreditsPage() {
       <TopUpPanel
         products={topUpProducts}
         costEntries={costEntries}
+        payingCredits={payingCredits}
+        onSelectProduct={setSelectedProduct}
+        disabled={!FEATURE_FLAGS.SHOW_CREDIT_TOP_UP}
+      />
+
+      <TopUpMethodDialog
+        product={selectedProduct}
         payMethod={payMethod}
         onPayMethodChange={setPayMethod}
         easyPayProvider={easyPayProvider}
         onEasyPayProviderChange={setEasyPayProvider}
+        depositorName={depositorName}
+        onDepositorNameChange={setDepositorName}
         payingCredits={payingCredits}
-        onStartTopUp={startTopUp}
-        disabled={!FEATURE_FLAGS.SHOW_CREDIT_TOP_UP}
+        cardEnabled={cardEnabled}
+        onConfirm={confirmSelectedTopUp}
+        onClose={() => setSelectedProduct(null)}
       />
 
-      {paymentMessage && (
+      {bankDepositGuide && (
+        <BankDepositGuide
+          key={bankDepositGuide.topUpId}
+          guide={bankDepositGuide}
+          completed={bankDepositCompleted}
+          onMarkPaid={() => markBankDepositPaid(bankDepositGuide.topUpId)}
+          onClose={clearBankDepositGuide}
+        />
+      )}
+
+      {/* 오류는 팝업으로(사용자가 직접 닫음), 진행/완료 안내는 인라인 배너로 */}
+      {paymentMessage && paymentMessage.type !== "error" && (
         <div
           className={cn(
             "flex items-center gap-2 rounded-xl border px-4 py-3 text-[13px] font-medium",
             paymentMessage.type === "success" &&
               "border-emerald-100 bg-emerald-50 text-emerald-700",
-            paymentMessage.type === "error" &&
-              "border-red-100 bg-red-50 text-red-600",
             paymentMessage.type === "info" &&
               "border-blue-100 bg-blue-50 text-blue-700",
           )}
@@ -169,6 +240,34 @@ export default function CreditsPage() {
           {paymentMessage.text}
         </div>
       )}
+
+      <Dialog
+        open={paymentMessage?.type === "error"}
+        onOpenChange={(open) => {
+          if (!open) clearPaymentMessage();
+        }}
+      >
+        <DialogContent className="sm:max-w-[420px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-1.5 text-red-600">
+              <AlertCircle className="size-4" strokeWidth={2} />
+              안내
+            </DialogTitle>
+            <DialogDescription className="pt-1 text-[13px] leading-6 text-gray-600">
+              {paymentMessage?.type === "error" ? paymentMessage.text : ""}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <button
+              type="button"
+              onClick={clearPaymentMessage}
+              className="inline-flex h-10 items-center justify-center rounded-xl bg-blue-600 px-4 text-[13px] font-semibold text-white transition hover:bg-blue-700"
+            >
+              확인
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Overview cards — 2x2 grid with usage bar */}
       {summary && (
@@ -192,19 +291,28 @@ export default function CreditsPage() {
                 </span>
                 <span className="text-[13px] font-medium text-blue-200">크레딧</span>
               </div>
-              {/* Usage progress bar */}
-              <div className="mt-4">
-                <div className="flex items-center justify-between text-[11px] text-blue-200 mb-1.5">
-                  <span>이번 달 사용량</span>
-                  <span className="font-semibold text-white">{usagePercent}%</span>
-                </div>
-                <div className="w-full h-1.5 bg-white/15 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-white/80 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min(usagePercent, 100)}%` }}
-                  />
-                </div>
+              {/* 누적 사용 크레딧 */}
+              <div className="mt-4 flex items-baseline justify-between text-[12px] text-blue-200">
+                <span>총 사용량</span>
+                <span className="font-semibold text-white tabular-nums">
+                  {summary.totalConsumed.toLocaleString()} 크레딧
+                </span>
               </div>
+              {/* 크레딧 소멸 예정일 + 실시간 카운트다운 */}
+              {summary.balance > 0 && summary.expiresAt && (
+                <div className="mt-3 border-t border-white/15 pt-3">
+                  <div className="flex items-baseline justify-between text-[12px] text-blue-200">
+                    <span>소멸 예정일</span>
+                    <span className="font-semibold text-white tabular-nums">
+                      {new Date(summary.expiresAt).toLocaleDateString("ko-KR")}
+                    </span>
+                  </div>
+                  <div className="mt-1.5 flex items-baseline justify-between text-[12px] text-blue-200">
+                    <span>소멸까지</span>
+                    <ExpiryCountdown expiresAt={summary.expiresAt} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -213,6 +321,7 @@ export default function CreditsPage() {
             value={summary.monthlyAllocation}
             icon={Calendar}
             accent="blue"
+            comingSoon
           />
           <OverviewCard
             label="보너스"
@@ -223,52 +332,15 @@ export default function CreditsPage() {
         </div>
       )}
 
-      {/* Usage breakdown — compact grid */}
-      <div className="bg-white rounded-2xl border border-gray-200/60 shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100">
-          <h2 className="text-[14px] font-semibold text-gray-800">
-            기능별 크레딧 비용
-          </h2>
-          <p className="text-[12px] text-gray-400 mt-0.5">
-            구매한 크레딧 상품과 관계없이 동일하게 적용되는 기능별 차감 기준
-          </p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {costEntries.map(([op, cost], idx) => {
-            const OpIcon = OPERATION_ICONS[op] || Coins;
-            const colors = OPERATION_COLORS[op] || { bg: "bg-gray-100", text: "text-gray-500" };
-            return (
-              <div
-                key={op}
-                className={cn(
-                  "flex items-center justify-between px-5 py-3.5 hover:bg-gray-50/50 transition-colors",
-                  // grid borders
-                  idx < costEntries.length - (costEntries.length % 3 || 3) && "border-b border-gray-50",
-                  (idx + 1) % 3 !== 0 && "lg:border-r lg:border-gray-50",
-                  (idx + 1) % 2 !== 0 && "sm:border-r sm:border-gray-50 lg:border-r-0",
-                )}
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className={cn("flex items-center justify-center w-7 h-7 rounded-lg", colors.bg)}>
-                    <OpIcon className={cn("size-3.5", colors.text)} strokeWidth={1.8} />
-                  </div>
-                  <span className="text-[13px] font-medium text-gray-700">
-                    {OPERATION_LABELS[op] || op}
-                  </span>
-                </div>
-                <span className={cn(
-                  "text-[13px] font-bold tabular-nums",
-                  cost >= 5 ? "text-blue-600" : "text-gray-600",
-                )}>
-                  {cost}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      <TopUpHistory topUps={topUps} />
+      <TopUpHistory
+        topUps={topUps}
+        onSelectTopUp={openBankGuideForTopUp}
+        page={topUpPage}
+        pageSize={topUpPageSize}
+        total={topUpTotal}
+        totalPages={topUpTotalPages}
+        onPageChange={setTopUpPage}
+      />
 
       {/* Transaction history */}
       <div className="bg-white rounded-2xl border border-gray-200/60 shadow-sm overflow-hidden">

@@ -243,7 +243,9 @@ export function PassageStudyNotePrintDialog({
           <div className="flex shrink-0 items-center gap-2">
             <button
               type="button"
-              className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-slate-900 px-3 text-[12px] font-bold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+              title="바로 출력"
+              aria-label="바로 출력"
+              className="inline-flex size-8 items-center justify-center rounded-lg bg-slate-900 text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
               onClick={() =>
                 // 인쇄 전 웹폰트 로드 완료 대기 — 미로드 상태 인쇄로 인한 프린트 준비 지연 방지.
                 void document.fonts.ready.then(() => window.print())
@@ -251,7 +253,6 @@ export function PassageStudyNotePrintDialog({
               disabled={pages.length === 0}
             >
               <Printer className="h-3.5 w-3.5" />
-              바로 출력
             </button>
             <button
               type="button"

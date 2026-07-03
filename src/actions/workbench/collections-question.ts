@@ -20,23 +20,53 @@ export async function getQuestionCollections(
   },
 ) {
   await requireAuth();
-  // 휴지통 가드 — 폴더 "N개" 배지는 삭제(휴지통)된 문제를 빼고 센다(링크는 보존되지만 미표시).
-  const countSelect = {
-    _count: {
-      select: {
-        items: { where: { question: { deletedAt: null } } },
-        children: true,
-      },
+  // 폴더 "N개" 배지 — 지문 세트는 멤버 N개가 아니라 "세트 1개"로 센다(일반 문제와 동일한 시각 단위).
+  // 삭제(휴지통) 문제 제외. items._count(prisma)는 distinct setId 를 못 세므로 JS 로 집계.
+  const items = await prisma.questionCollectionItem.findMany({
+    where: { collection: { academyId }, question: { deletedAt: null } },
+    select: {
+      collectionId: true,
+      question: { select: { inSet: true, setId: true } },
     },
-  } as const;
+  });
+  const regularByCol = new Map<string, number>();
+  const setsByCol = new Map<string, Set<string>>();
+  for (const it of items) {
+    const q = it.question;
+    if (q.setId) {
+      let s = setsByCol.get(it.collectionId);
+      if (!s) {
+        s = new Set<string>();
+        setsByCol.set(it.collectionId, s);
+      }
+      s.add(q.setId);
+    } else {
+      regularByCol.set(
+        it.collectionId,
+        (regularByCol.get(it.collectionId) ?? 0) + 1,
+      );
+    }
+  }
+  const itemCountFor = (id: string) =>
+    (regularByCol.get(id) ?? 0) + (setsByCol.get(id)?.size ?? 0);
+
+  // children 카운트는 prisma 로. items 는 위 세트-인식 집계로 덮어쓴다.
+  const childrenSelect = { _count: { select: { children: true } } } as const;
   try {
-    return await prisma.questionCollection.findMany({
+    const collections = await prisma.questionCollection.findMany({
       // 과목 스코프(항상 적용) — 국어/영어 폴더 완전 분리. 기존(subject null)
       // 폴더는 전부 영어로 간주돼 영어 목록에 그대로 남는다(무회귀).
       where: { academyId, ...buildCollectionSubjectScopeWhere(opts?.subject) },
-      include: countSelect,
+      include: childrenSelect,
       orderBy: { name: "asc" },
     });
+    return collections.map((c) => ({
+      ...c,
+      _count: {
+        children: c._count.children,
+        items: itemCountFor(c.id),
+      },
+    }));
   } catch (error) {
     // 우아한 강등 — DB 에 subject 컬럼이 아직 없으면(P2022, surgical ALTER 이전)
     // 레거시(과목 미분리·공유 폴더) 목록으로 폴백한다. subject 를 SELECT 하지
@@ -53,11 +83,18 @@ export async function getQuestionCollections(
         color: true,
         createdAt: true,
         updatedAt: true,
-        ...countSelect,
+        ...childrenSelect,
       },
       orderBy: { name: "asc" },
     });
-    return rows.map((row) => ({ ...row, subject: null as string | null }));
+    return rows.map((row) => ({
+      ...row,
+      subject: null as string | null,
+      _count: {
+        children: row._count.children,
+        items: itemCountFor(row.id),
+      },
+    }));
   }
 }
 

@@ -12,6 +12,7 @@ export type CreditTopUpProductView = {
   discountRate: number;
   discountAmount: number;
   perCredit: number;
+  expiryDays: number | null;
   estimatedAutoQuestionCount: number;
   perAutoQuestion: number;
   promotionName: string | null;
@@ -40,6 +41,7 @@ export const DEFAULT_CREDIT_TOP_UP_PRODUCTS = TOP_UP_PACKS.map((pack, index) => 
     creditAmount: pack.credits,
     basePrice: pack.price,
     discountRate: 0,
+    expiryDays: pack.expiryDays,
     promotionName: null,
     promotionStartsAt: null,
     promotionEndsAt: null,
@@ -56,6 +58,7 @@ type CreditTopUpProductRecord = {
   creditAmount: number;
   basePrice: number;
   discountRate: number;
+  expiryDays: number | null;
   promotionName: string | null;
   promotionStartsAt: Date | null;
   promotionEndsAt: Date | null;
@@ -110,6 +113,7 @@ export function toCreditTopUpProductView(
     discountRate: product.discountRate,
     discountAmount: Math.max(product.basePrice - price, 0),
     perCredit: product.creditAmount > 0 ? Math.round(price / product.creditAmount) : 0,
+    expiryDays: product.expiryDays,
     estimatedAutoQuestionCount,
     perAutoQuestion:
       estimatedAutoQuestionCount > 0

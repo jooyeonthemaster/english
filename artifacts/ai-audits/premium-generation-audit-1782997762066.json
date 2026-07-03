@@ -1,0 +1,175 @@
+{
+  "createdAt": "2026-07-02T13:09:22.066Z",
+  "results": [
+    {
+      "ok": true,
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "type": "GRAMMAR_ERROR",
+      "difficulty": "INTERMEDIATE",
+      "attempts": 1,
+      "relaxedFallback": false,
+      "durationMs": 96002,
+      "rejectionSummary": {
+        "total": 0,
+        "phaseCounts": {
+          "model": 0,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "message": "Rejected candidates: 0"
+      },
+      "usageEvents": [
+        {
+          "phase": "question_generation",
+          "subType": "GRAMMAR_ERROR",
+          "qualityMode": "strict",
+          "difficulty": "INTERMEDIATE",
+          "generationPlan": "PREMIUM",
+          "usage": {
+            "inputTokens": 22582,
+            "inputTokenDetails": {
+              "noCacheTokens": 22582,
+              "cacheReadTokens": 0
+            },
+            "outputTokens": 8930,
+            "outputTokenDetails": {
+              "textTokens": 8930,
+              "reasoningTokens": 0
+            },
+            "totalTokens": 31512,
+            "raw": {
+              "prompt_tokens": 22582,
+              "completion_tokens": 8930,
+              "total_tokens": 31512,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "cost": 0.134464,
+              "is_byok": false,
+              "cost_details": {
+                "upstream_inference_cost": 0.134464,
+                "upstream_inference_prompt_cost": 0.045164,
+                "upstream_inference_completions_cost": 0.0893
+              }
+            },
+            "reasoningTokens": 0,
+            "cachedInputTokens": 0
+          },
+          "provider": "atlascloud",
+          "modelId": "anthropic/claude-sonnet-5",
+          "attempts": 1,
+          "durationMs": 95984
+        }
+      ],
+      "firstQuestion": {
+        "correctAnswer": "(C)",
+        "difficulty": "INTERMEDIATE",
+        "optionCount": 5,
+        "markerCount": 5
+      },
+      "questions": [
+        {
+          "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+          "correctAnswer": "(C)",
+          "explanation": "(C) imperceptible은 형용사 viscous를 수식하는 자리인데, 형용사는 다른 형용사를 수식할 수 없고 부사만 형용사를 수식할 수 있으므로 imperceptible이 아니라 부사 imperceptibly가 와야 한다. 나머지 (A) who, (B) it, (D) developed, (E) being은 각각 관계사 용법, 대명사 수 일치, 수동태, 전치사 뒤 동명사 규칙에 맞게 쓰인 어법상 올바른 표현이다.",
+          "keyPoints": [
+            "형용사가 다른 형용사를 수식할 때는 부사 형태가 필요하다",
+            "전치사 뒤에는 동명사가 오는 것이 원칙이다(despite + v-ing)",
+            "대명사 it은 앞서 언급된 단수 명사와 수·지시대상이 일치해야 한다"
+          ],
+          "tags": [
+            "형용사와 부사",
+            "전치사+동명사",
+            "대명사 일치",
+            "수동태",
+            "수능 어법"
+          ],
+          "difficulty": "INTERMEDIATE",
+          "markedExpressions": [
+            {
+              "label": "(A)",
+              "expression": "who",
+              "isError": false,
+              "errorExpression": "who",
+              "surroundingText": "depends on who you're asking: for some scientists",
+              "pointCode": "b"
+            },
+            {
+              "label": "(B)",
+              "expression": "it",
+              "isError": false,
+              "errorExpression": "it",
+              "surroundingText": "for some scientists it is an \"amorphous solid,\" for others a",
+              "pointCode": "g"
+            },
+            {
+              "label": "(C)",
+              "expression": "imperceptibly",
+              "isError": true,
+              "errorExpression": "imperceptible",
+              "surroundingText": "glass never behaves as a liquid, even an imperceptibly viscous one, even over long periods",
+              "pointCode": "f",
+              "correction": "imperceptibly"
+            },
+            {
+              "label": "(D)",
+              "expression": "developed",
+              "isError": false,
+              "errorExpression": "developed",
+              "surroundingText": "Flat glass was only developed in the nineteenth century and we had",
+              "pointCode": "e"
+            },
+            {
+              "label": "(E)",
+              "expression": "being",
+              "isError": false,
+              "errorExpression": "being",
+              "surroundingText": "despite it being one of the very oldest human-made substances, scientists",
+              "pointCode": "k"
+            }
+          ],
+          "options": [
+            {
+              "label": "(A)",
+              "text": "who"
+            },
+            {
+              "label": "(B)",
+              "text": "it"
+            },
+            {
+              "label": "(C)",
+              "text": "imperceptible"
+            },
+            {
+              "label": "(D)",
+              "text": "developed"
+            },
+            {
+              "label": "(E)",
+              "text": "being"
+            }
+          ],
+          "wrongOptionExplanations": {
+            "(A)": "'who you're asking'는 전치사 on의 목적어 역할을 하는 융합관계절로, 목적어 자리에서 who를 쓰는 것은 표준적으로 허용되는 용법이므로 어법상 옳다.",
+            "(B)": "it은 앞에 나온 단수 명사구 'The technical term for this mess'를 가리키므로 단수 대명사 it의 사용은 수와 지시대상이 일치하여 옳다.",
+            "(D)": "주어 'Flat glass'는 개발이라는 행위의 대상이므로 수동태 was developed가 올바르게 사용되었다.",
+            "(E)": "전치사 despite 뒤에는 동명사가 와야 하므로 being이 쓰인 것은 어법상 옳다."
+          },
+          "correctAnswers": [
+            "(C)"
+          ],
+          "passageWithMarkers": "The structure of glass is, frankly, a bit of a mess. Clear and perfect as it might appear to our eyes, down at the molecular level, glass looks more like a random ball-pit of atoms. The technical term for this mess depends on __(A) who__ you're asking: for some scientists __(B) it__ is an \"amorphous solid,\" for others a \"supercooled liquid.\" In theory it's both liquid and solid, though, given the way it behaves, in practice it's really the latter. In fact, at room temperature glass never behaves as a liquid, even an __(C) imperceptible__ viscous one, even over long periods of time (though it can \"sweat\" if you don't add enough lime to the mix). Those misshapen sheets of glass you sometimes see in old stained-glass windows, thicker at the bottom than the top, are generally not that way because the glass is slowly sinking over time. Unless the church has endured temperatures of more than 400˚C, the chances are they are uneven because that's the way they were blown and solidified in the first place. Flat glass was only __(D) developed__ in the nineteenth century and we had to wait until the middle of the twentieth century for truly flat, thin sheets of glass. The paradox is that, despite it __(E) being__ one of the very oldest human-made substances, scientists still struggle to comprehend why glass behaves the way it does. Glass seems to obey most molecular laws. As one glassmaker put it, glass is not a material; it's a state.",
+          "_typeId": "GRAMMAR_ERROR",
+          "_typeLabel": "어법 판단",
+          "_generationPlan": "PREMIUM"
+        }
+      ]
+    }
+  ]
+}

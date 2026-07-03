@@ -77,6 +77,7 @@ export async function analyzeQuestionItem(
       manualCropOnly,
       includeBoundingBoxes: manualCropOnly ? false : undefined,
       maxRetries: 0,
+      academyId: args.academyId,
     });
     totalAttempts += primary.attempts;
     if (!primary.ok) {
@@ -120,6 +121,7 @@ export async function analyzeQuestionItem(
         images,
         schoolType: args.schoolType,
         gradeInfo: args.gradeInfo,
+        academyId: args.academyId,
       });
       const complete = filterIncompleteAnalysisQuestions(followUp.analysis);
       if (complete.removedCount > 0) {

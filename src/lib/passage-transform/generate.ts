@@ -12,16 +12,15 @@ import {
 import { buildParaphrasePrompt, buildPrependPrompt } from "./prompts";
 
 // ============================================================================
-// AI 지�?변???�행�????�지??Flash-Lite 모델 ?�용.
+// AI 지문 변형 실행기 — 저지연 Flash-Lite 모델 전용.
 //
-// 문제 ?�성(STANDARD/PREMIUM ?�랜)�??�리 ??기능?� "?�?�핑?�다 ?�르?? ?��???// 빠른 ?�터?�션?�라 별도??경량 모델???�다. 모델?� env �??�버?�이??가??
+// 문제 생성(STANDARD/PREMIUM 플랜)과 달리 이 기능은 "타이핑하다 누르는" 수준의
+// 빠른 인터랙션이라 별도의 경량 모델을 쓴다. 모델은 env 로 오버라이드 가능.
 // ============================================================================
 
-// `||` + trim (NOT `??`): �?env("")???�제 모델�??�백?�야 ?�다.
-export const TRANSFORM_MODEL_ID =
-  ATLAS_TRANSFORM_MODEL_ID;
+export const TRANSFORM_MODEL_ID = ATLAS_TRANSFORM_MODEL_ID;
 
-// ?�우??maxDuration(60s) ?�에?? 25s ?�?�아??× 2?�도 = 최�? ~50s.
+// 라우트 maxDuration(60s) 안에서: 25s 타임아웃 × 2시도 = 최대 ~50s.
 const TRANSFORM_TIMEOUT_MS = 25_000;
 const TRANSFORM_MAX_RETRIES = 1;
 
@@ -35,7 +34,7 @@ async function runTransform<T>({
   prompt: string;
   temperature: number;
   logPrefix: string;
-}): Promise<T> {
+}): Promise<{ object: T; usage: unknown }> {
   let lastError: unknown;
   for (let attempt = 0; attempt <= TRANSFORM_MAX_RETRIES; attempt += 1) {
     const startedAt = Date.now();
@@ -46,27 +45,27 @@ async function runTransform<T>({
         prompt,
         temperature,
         maxOutputTokens: 4096,
-        // SDK ?��? ?�시??기본 2???� ?�리 루프가 중첩?�면 ?�출??곱으�?        // 불어?�다 ???�시?�는 ??루프?�서�?관리한??
+        // SDK 내부 재시도(기본 2회)와 우리 루프가 중첩되면 호출이 곱으로
+        // 불어난다 — 재시도는 이 루프에서만 관리한다.
         maxRetries: 0,
         abortSignal: AbortSignal.timeout(TRANSFORM_TIMEOUT_MS),
-        
       });
       console.log(
         `[${logPrefix}] ${TRANSFORM_MODEL_ID} attempt ${attempt + 1} ok in ${Date.now() - startedAt}ms`,
       );
-      return result.object as T;
+      return { object: result.object as T, usage: result.usage };
     } catch (err) {
       lastError = err;
       console.warn(
         `[${logPrefix}] ${TRANSFORM_MODEL_ID} attempt ${attempt + 1} failed in ${Date.now() - startedAt}ms:`,
         err instanceof Error ? err.message : err,
       );
-      // 비재?�도???�류(400/401/403 ????2번째 과금 ?�출 ?�이 즉시 종료.
+      // 비재시도성 오류(400/401/403 등)는 2번째 과금 호출 없이 즉시 종료.
       if (APICallError.isInstance(err) && err.isRetryable === false) {
         break;
       }
-      // 429/5xx/?�?�아????SDK ?��? ?�시?��? 껐으므�??�기??짧게 백오??
-      // ?�간 ?�산: 25s×2 + 2s = 52s < ?�우??maxDuration 60s.
+      // 429/5xx/타임아웃 — SDK 내부 재시도를 껐으므로 여기서 짧게 백오프.
+      // 시간 예산: 25s×2 + 2s = 52s < 라우트 maxDuration 60s.
       if (attempt < TRANSFORM_MAX_RETRIES) {
         await new Promise((resolve) => setTimeout(resolve, 2_000));
       }
@@ -74,18 +73,18 @@ async function runTransform<T>({
   }
   throw lastError instanceof Error
     ? lastError
-    : new Error("AI 지�?변?�에 ?�패?�습?�다.");
+    : new Error("AI 지문 변형에 실패했습니다.");
 }
 
 const normalize = (s: string) => s.replace(/\s+/g, " ").trim().toLowerCase();
 const countWords = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
-/** ?�프 문장 ????종결부???�는 ?�옴??괄호 ?�함) + 공백/문장??경계�??�다. */
+/** 러프 문장 수 — 종결부호(닫는 따옴표/괄호 포함) + 공백/문장끝 경계로 센다. */
 const countSentences = (s: string) =>
-  (s.match(/[.!?]["'?��?\]]*(?:\s|$)/g) || []).length || (s.trim() ? 1 : 0);
+  (s.match(/[.!?]["'”’)\]]*(?:\s|$)/g) || []).length || (s.trim() ? 1 : 0);
 
 /**
- * changes ?�리 ??flash-lite 가 ?�주 ?�는 ?�레�??�을 걸러?�다:
- * ?�쪽??�???"X?? / "?�Y"), ?�문??복사 ?? before===after, 중복.
+ * changes 정리 — flash-lite 가 자주 내는 쓰레기 쌍을 걸러낸다:
+ * 한쪽이 빈 쌍("X→" / "→Y"), 통문장 복사 쌍, before===after, 중복.
  */
 function cleanParaphraseChanges(
   changes: { before: string; after: string }[],
@@ -98,9 +97,9 @@ function cleanParaphraseChanges(
     const after = (c.after || "").trim();
     if (!before || !after) continue;
     if (normalize(before) === normalize(after)) continue;
-    // ?�문???�택 구간??60% ?�상) 복사 ?��? ?�이�????�어/�??��?�??�긴??
+    // 통문장(선택 구간의 60% 이상) 복사 쌍은 노이즈 — 단어/구 수준만 남긴다.
     if (before.length > Math.max(60, selectedText.length * 0.6)) continue;
-    const key = `${normalize(before)}??{normalize(after)}`;
+    const key = `${normalize(before)}→${normalize(after)}`;
     if (seen.has(key)) continue;
     seen.add(key);
     out.push({ before, after });
@@ -110,7 +109,8 @@ function cleanParaphraseChanges(
 }
 
 /**
- * PREPEND ?�전?�치 ??모델??지�?첫머리�? ??문단 ?�에 그�?�?복사?�오???�고�? * 결정론적?�로 ?�거?�다. (?�어 ?�위�?"문단 꼬리 == 지�?머리" 최장 겹침??찾아 ?�른??)
+ * PREPEND 안전장치 — 모델이 지문 첫머리를 새 문단 끝에 그대로 복사해오는 사고를
+ * 결정론적으로 제거한다. (단어 단위로 "문단 꼬리 == 지문 머리" 최장 겹침을 찾아 자른다.)
  */
 function trimOverlapWithPassageStart(
   paragraph: string,
@@ -119,7 +119,7 @@ function trimOverlapWithPassageStart(
   const paraWords = paragraph.split(/\s+/).filter(Boolean);
   const normWord = (w: string) => w.toLowerCase().replace(/[^\p{L}\p{N}']/gu, "");
   const passageWords = passageText.split(/\s+/).filter(Boolean).map(normWord);
-  // ?�어 배열�?비교??"the" vs "theatre" �??�두???�탐??차단?�다.
+  // 단어 배열로 비교해 "the" vs "theatre" 류 접두어 오탐을 차단한다.
   const tailMatchesPassageStart = (n: number) => {
     const tail = paraWords.slice(paraWords.length - n).map(normWord);
     if (passageWords.length < n) return false;
@@ -128,19 +128,19 @@ function trimOverlapWithPassageStart(
       if (tail[i] !== passageWords[i]) return false;
       if (tail[i]) contentMatches += 1;
     }
-    // 구두???�용 ?�큰(�??�규???�리???�치 ?�치???�용?�되,
-    // "최소 5?�어 겹침"?� ?�제 ?�용??5개�? ?��??�게 ?�다.
+    // 구두점 전용 토큰(빈 정규화)끼리의 위치 일치는 허용하되,
+    // "최소 5단어 겹침"은 실제 내용어 5개를 의미하게 한다.
     return contentMatches >= 5;
   };
-  // �?겹침부??검????최소 5?�어 ?�상 겹칠 ?�만 복사 ?�고�?간주.
+  // 긴 겹침부터 검사 — 최소 5단어 이상 겹칠 때만 복사 사고로 간주.
   for (let n = Math.min(paraWords.length, 80); n >= 5; n -= 1) {
     if (tailMatchesPassageStart(n)) {
       const trimmed = paraWords
         .slice(0, paraWords.length - n)
         .join(" ")
         .trim();
-      // 겹침???�라???�리가 문장 중간?�면("...these sounds,") 마�?�??�결
-      // 문장 경계까�? 추�?�??�라 미완??꼬리�??�기지 ?�는??
+      // 겹침을 잘라낸 자리가 문장 중간이면("...these sounds,") 마지막 완결
+      // 문장 경계까지 추가로 잘라 미완성 꼬리를 남기지 않는다.
       return snapToSentenceEnd(trimmed);
     }
   }
@@ -148,21 +148,21 @@ function trimOverlapWithPassageStart(
 }
 
 /**
- * ?�이 문장 종결�??�히지 ?�으�?마�?�??�결 문장까�?�??�른??
- * - 곡선 ?�옴??????·?�힘 기호 ?�쇄(."))·말줄?�표(????종결�??�정
- * - ?�어(U.S., Dr., e.g. ?? ??마침?�는 문장 경계�?취급?��? ?�음
- * - 경계 ?�정?� "종결부??+ 공백 + ?�문자/?�는 ?�옴?? ???�만
+ * 끝이 문장 종결로 닫히지 않으면 마지막 완결 문장까지로 자른다.
+ * - 곡선 따옴표(” ’)·닫힘 기호 연쇄(."))·말줄임표(…)도 종결로 인정
+ * - 약어(U.S., Dr., e.g. …) 뒤 마침표는 문장 경계로 취급하지 않음
+ * - 경계 판정은 "종결부호 + 공백 + 대문자/여는 따옴표" 일 때만
  */
-const SENTENCE_CLOSERS = `["'?��?\\]]*`;
+const SENTENCE_CLOSERS = `["'”’)\\]]*`;
 const ABBREV_TAIL =
   /(?:\b\p{Lu}|\b(?:Dr|Mr|Mrs|Ms|St|Prof|Jr|Sr|vs|etc|Fig|No|e\.g|i\.e|cf))\.$/u;
 
 function snapToSentenceEnd(text: string): string {
   const t = text.trim();
-  if (!t || new RegExp(`[.!???${SENTENCE_CLOSERS}$`, "u").test(t)) return t;
+  if (!t || new RegExp(`[.!?…]${SENTENCE_CLOSERS}$`, "u").test(t)) return t;
   let best = -1;
   const boundary = new RegExp(
-    `[.!???${SENTENCE_CLOSERS}(?=\\s+["'(\\[?��??\\p{Lu})`,
+    `[.!?…]${SENTENCE_CLOSERS}(?=\\s+["'(\\[“‘]?\\p{Lu})`,
     "gu",
   );
   for (const m of t.matchAll(boundary)) {
@@ -181,28 +181,31 @@ export async function runParaphrase({
   passageText: string;
   selectedText: string;
   avoidTexts?: string[];
-}): Promise<ParaphraseResult> {
-  const result = await runTransform({
+}): Promise<ParaphraseResult & { usage: unknown; modelId: string }> {
+  const { object: result, usage } = await runTransform({
     schema: paraphraseResultSchema,
     prompt: buildParaphrasePrompt({ passageText, selectedText, avoidTexts }),
-    // ?�의???�택???�양?�이 ?�요 ??"?�시 ?�성" ???�른 결과가 ?��????�다.
+    // 동의어 선택의 다양성이 필요 — "다시 생성" 시 다른 결과가 나와야 한다.
     temperature: 0.85,
     logPrefix: "PASSAGE-TRANSFORM-PARAPHRASE",
   });
 
   const rewritten = result.rewrittenText.trim();
-  if (!rewritten) throw new Error("변??결과가 비어 ?�습?�다.");
+  if (!rewritten) throw new Error("변형 결과가 비어 있습니다.");
   if (normalize(rewritten) === normalize(selectedText)) {
-    throw new Error("변??결과가 ?�문�??�일?�니?? ?�시 ?�도?�주?�요.");
+    throw new Error("변형 결과가 원문과 동일합니다. 다시 시도해주세요.");
   }
-  // 길이 ??�� 가????모델???�체 지문을 ?�돌?�보?�는 ?�고 방�?.
-  // (짧�? ?�택?�서??가?��? 무력?��?지 ?�게 바닥값�? 160?�로 ?�한)
+  // 길이 폭주 가드 — 모델이 전체 지문을 되돌려보내는 사고 방지.
+  // (짧은 선택에서도 가드가 무력해지지 않게 바닥값은 160자로 제한)
   if (rewritten.length > Math.max(selectedText.length * 2.5, 160)) {
-    throw new Error("변??결과가 비정?�적?�로 깁니?? ?�시 ?�도?�주?�요.");
+    throw new Error("변형 결과가 비정상적으로 깁니다. 다시 시도해주세요.");
   }
-  // ?�?� 붕괴 가???�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�?�
-  // flash-lite ??주제?�으�??�질?�인(무�? 문장???�인) ?�문??span ??만나�?  // "충실 ?�작?? ?�???�심�???문장?�로 "?�약"?�버리는 ?�고가 ??��(?�측 ?�인).
-  // 그�?�??�용?�면 ?�택 구간 ?�체가 ??문장?�로 ?�아가므�? 결과가 ?�문 ?��?  // ?�게 짧아졌거???�문?????�어 ?�반 미만) 문장 ?��? 급감?�면 거�???  // runTransform ???�시???�러�??�려보낸??무성 ?�이???�실 차단).
+  // ── 붕괴 가드 ──────────────────────────────────────────────────────────
+  // flash-lite 는 주제적으로 이질적인(무관 문장이 섞인) 다문장 span 을 만나면
+  // "충실 재작성" 대신 핵심만 한 문장으로 "요약"해버리는 사고가 잦다(실측 확인).
+  // 그대로 적용하면 선택 구간 전체가 한 문장으로 날아가므로, 결과가 원문 대비
+  // 크게 짧아졌거나(다문장 → 단어 절반 미만) 문장 수가 급감하면 거부해
+  // runTransform 의 재시도/에러로 흘려보낸다(무성 데이터 손실 차단).
   const srcWords = countWords(selectedText);
   const outWords = countWords(rewritten);
   const srcSentences = countSentences(selectedText);
@@ -212,13 +215,15 @@ export async function runParaphrase({
     srcSentences >= 3 && outSentences <= Math.floor(srcSentences / 2);
   if (wordCollapsed || sentenceCollapsed) {
     throw new Error(
-      "변??결과가 ?�문보다 ?�게 줄었?�니??문장???�약·?�락??. ?�시 ?�도?�거?? ??번에 ?�두 문장???�택??변?�해주세??",
+      "변형 결과가 원문보다 크게 줄었습니다(문장이 요약·누락됨). 다시 시도하거나, 한 번에 한두 문장씩 선택해 변형해주세요.",
     );
   }
   return {
     ...result,
     rewrittenText: rewritten,
     changes: cleanParaphraseChanges(result.changes || [], selectedText),
+    usage,
+    modelId: TRANSFORM_MODEL_ID,
   };
 }
 
@@ -230,27 +235,27 @@ export async function runPrepend({
   passageText: string;
   avoidTexts?: string[];
   sentenceCount?: number;
-}): Promise<PrependResult> {
-  const result = await runTransform({
+}): Promise<PrependResult & { usage: unknown; modelId: string }> {
+  const { object: result, usage } = await runTransform({
     schema: prependResultSchema,
     prompt: buildPrependPrompt({ passageText, avoidTexts, sentenceCount }),
     temperature: 0.8,
     logPrefix: "PASSAGE-TRANSFORM-PREPEND",
   });
 
-  // 모델??지�?�?문장??문단 ?�에 복사?�오???�고 ??겹침 꼬리�??�라?�다.
+  // 모델이 지문 첫 문장을 문단 끝에 복사해오는 사고 — 겹침 꼬리를 잘라낸다.
   const paragraph = trimOverlapWithPassageStart(
     result.paragraph.trim(),
     passageText,
   );
-  // 1문장 ?�청?�면 짧�? 결과???�상 ??최소 ?�어 가?��? 문장 ?�에 비�??�킨??
+  // 1문장 요청이면 짧은 결과도 정상 — 최소 단어 가드를 문장 수에 비례시킨다.
   const minWords = (sentenceCount ?? 3) <= 1 ? 5 : 8;
   if (!paragraph || paragraph.split(/\s+/).length < minWords) {
-    throw new Error("?�성??문단??비정?�적?�니?? ?�시 ?�도?�주?�요.");
+    throw new Error("생성된 문단이 비정상적입니다. 다시 시도해주세요.");
   }
-  // 문단 ?�체가 지�?첫머�?반복???�고 방�?.
+  // 문단 전체가 지문 첫머리 반복인 사고 방지.
   if (normalize(passageText).startsWith(normalize(paragraph).slice(0, 80))) {
-    throw new Error("?�성??문단??지�?첫머리�? 중복?�니?? ?�시 ?�도?�주?�요.");
+    throw new Error("생성된 문단이 지문 첫머리와 중복됩니다. 다시 시도해주세요.");
   }
-  return { ...result, paragraph };
+  return { ...result, paragraph, usage, modelId: TRANSFORM_MODEL_ID };
 }
