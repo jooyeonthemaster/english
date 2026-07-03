@@ -12,6 +12,7 @@
 // ============================================================================
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { Trash2 } from "lucide-react";
 
 import type { CropBox } from "@/lib/extraction/types";
 import {
@@ -82,6 +83,8 @@ export function CropCanvas({
   disabled = false,
   regionLabels,
   fit = "contain",
+  touchDraw = false,
+  showDeleteButton = false,
 }: {
   imageUrl: string;
   boxes: CropBox[];
@@ -97,6 +100,19 @@ export function CropCanvas({
    * - "width"(인라인 보드): 컬럼 폭을 꽉 채우고 높이는 비율대로. 페이지가 크게 보임.
    */
   fit?: "contain" | "width";
+  /**
+   * 터치 드래그로 영역을 그리는 모드(<lg 전용). true면 드래그 표면에
+   * touch-action:none 을 걸어 브라우저가 손가락 드래그를 스크롤로 가로채지
+   * 못하게 한다(그래야 크롭이 그려진다). false면 touch-action 기본값이라
+   * 손가락 드래그가 페이지 스크롤로 동작한다. 마우스(PC)에는 무관.
+   */
+  touchDraw?: boolean;
+  /**
+   * 활성 영역 우상단에 삭제(휴지통) 버튼을 노출한다. 키보드가 없는 터치/모바일에서
+   * 영역을 지우는 유일한 수단 — 그 자리의 'ne' 리사이즈 핸들은 삭제 버튼으로 대체된다.
+   * 마우스(PC)에는 false로 둬 기존 8핸들 + 키보드 Delete 동작을 유지한다.
+   */
+  showDeleteButton?: boolean;
 }) {
   const isWidthFit = fit === "width";
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -107,6 +123,10 @@ export function CropCanvas({
   const draftRef = useRef<CropBox | null>(null);
   const [draft, setDraft] = useState<CropBox | null>(null);
   const rafRef = useRef(0);
+  // rAF 스로틀 중 유입되는 포인터 좌표는 이 ref에만 갱신하고, 프레임에서
+  // 최신값을 읽는다 — 프레임을 예약한 첫 이벤트의 (오래된) 좌표를 쓰면
+  // 손가락을 따라오지 못해 드래그가 끊겨 보인다(특히 터치).
+  const lastPointRef = useRef<{ x: number; y: number } | null>(null);
 
   // 인스턴스마다 고유 mask id — 같은 id를 여러 CropCanvas가 쓰면 url(#id)가
   // 문서 첫 mask(=첫 이미지 박스)로 해석돼 첫 페이지 크롭이 다음 페이지 스크림에
@@ -126,13 +146,15 @@ export function CropCanvas({
       dragRef.current = mode;
 
       const handleMove = (ev: PointerEvent) => {
+        lastPointRef.current = { x: ev.clientX, y: ev.clientY };
         if (rafRef.current) return;
         rafRef.current = requestAnimationFrame(() => {
           rafRef.current = 0;
           const r = readRect();
           const drag = dragRef.current;
-          if (!r || !drag) return;
-          const { x: nx, y: ny } = toNormalized(ev.clientX, ev.clientY, r);
+          const pt = lastPointRef.current;
+          if (!r || !drag || !pt) return;
+          const { x: nx, y: ny } = toNormalized(pt.x, pt.y, r);
 
           if (drag.mode === "draw") {
             // 미리보기는 로컬 draft로만(onChange 미호출). boxes/groups·카운트 불변.
@@ -239,6 +261,18 @@ export function CropCanvas({
     [beginDrag, disabled, onActiveIndexChange],
   );
 
+  // 영역 삭제 — 키보드 Delete와 터치 삭제 버튼이 공유한다. 삭제 후 활성 지문을
+  // 하나 앞으로 옮긴다(없으면 해제).
+  const deleteBox = useCallback(
+    (index: number) => {
+      if (disabled) return;
+      const arr = boxes.filter((_, i) => i !== index);
+      onChange(arr);
+      onActiveIndexChange(arr.length > 0 ? Math.max(0, index - 1) : null);
+    },
+    [boxes, disabled, onChange, onActiveIndexChange],
+  );
+
   // 키보드: 활성 박스 이동/리사이즈/삭제
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -287,18 +321,14 @@ export function CropCanvas({
         case "Delete":
         case "Backspace": {
           e.preventDefault();
-          const arr = boxes.filter((_, i) => i !== activeIndex);
-          onChange(arr);
-          onActiveIndexChange(
-            arr.length > 0 ? Math.max(0, activeIndex - 1) : null,
-          );
+          deleteBox(activeIndex);
           break;
         }
         default:
           break;
       }
     },
-    [activeIndex, boxes, disabled, onActiveIndexChange, onChange],
+    [activeIndex, boxes, disabled, deleteBox, onChange],
   );
 
   useEffect(() => {
@@ -387,6 +417,7 @@ export function CropCanvas({
         <div
           className={
             "absolute inset-0 " +
+            (touchDraw ? "touch-none " : "") +
             (disabled ? "cursor-not-allowed" : "cursor-crosshair")
           }
           onPointerDown={handleCanvasPointerDown}
@@ -406,6 +437,7 @@ export function CropCanvas({
               style={cropBoxToStyle(box)}
               className={
                 "absolute box-border " +
+                (touchDraw ? "touch-none " : "") +
                 (disabled ? "cursor-default" : "cursor-move ") +
                 (active
                   ? "border-2 border-blue-600 ring-1 ring-blue-300/60"
@@ -417,7 +449,8 @@ export function CropCanvas({
                 {regionLabels?.[index] ?? index + 1}
               </span>
 
-              {/* 8핸들 (활성일 때만) */}
+              {/* 8핸들 (활성일 때만) — ne 코너 포함 전부 유지. 삭제 버튼은
+                  코너에서 안쪽으로 들여 겹치지 않게 한다. */}
               {active && !disabled
                 ? RESIZE_HANDLES.map((h) => (
                     <span
@@ -430,11 +463,35 @@ export function CropCanvas({
                         top: HANDLE_POS[h].top,
                         cursor: HANDLE_CURSOR[h],
                       }}
-                      className="absolute z-10 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-[2px] border border-white bg-blue-600 shadow-sm"
+                      className={
+                        "absolute z-10 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-[2px] border border-white bg-blue-600 shadow-sm " +
+                        // 터치 그리기 모드에선 핸들도 더 크게(터치 타깃 확보).
+                        (touchDraw ? "touch-none max-lg:size-4 " : "")
+                      }
                       aria-hidden="true"
                     />
                   ))
                 : null}
+
+              {/* 삭제 버튼 — 활성 영역 우상단(터치/모바일). 키보드 없는 환경에서
+                  영역을 지우는 수단. 코너의 ne 리사이즈 핸들과 겹치지 않게 안쪽
+                  (중앙쪽)으로 들여 배치한다. 박스 이동(부모 pointerdown)으로
+                  번지지 않게 pointerdown을 여기서 멈춘다. */}
+              {showDeleteButton && active && !disabled ? (
+                <button
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteBox(index);
+                  }}
+                  title="이 영역 삭제"
+                  aria-label={`크롭 영역 ${index + 1} 삭제`}
+                  className="absolute right-3 top-3 z-20 inline-flex size-7 cursor-pointer touch-none items-center justify-center rounded-md border border-white bg-red-600 text-white shadow-md transition-colors hover:bg-red-700"
+                >
+                  <Trash2 className="size-4" aria-hidden="true" />
+                </button>
+              ) : null}
             </div>
           );
         })}

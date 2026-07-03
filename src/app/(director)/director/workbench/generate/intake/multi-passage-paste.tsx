@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type MutableRefObject } from "react";
 import { toast } from "sonner";
 
 import { CREDIT_COSTS } from "@/lib/credit-costs";
@@ -22,6 +22,10 @@ interface MultiPassagePasteProps {
   saving: boolean;
   /** Hide the built-in text tutorial while the page-level tour is active. */
   suppressTutorial?: boolean;
+  /** 모바일 스텝 플로우 — 하단 고정 바에서 시작 동작을 대신 호출. */
+  startRef?: MutableRefObject<(() => void) | null>;
+  /** 누적 지문 수·작업 상태 변화 알림(하단 바 라벨용). */
+  onDraftStateChange?: (state: { count: number; busy: boolean }) => void;
 }
 
 type OutputMode = "verbatim" | "restored";
@@ -80,6 +84,8 @@ export function MultiPassagePaste({
   onSubmitRows,
   saving,
   suppressTutorial = false,
+  startRef,
+  onDraftStateChange,
 }: MultiPassagePasteProps) {
   const [outputMode, setOutputMode] = useState<OutputMode>("verbatim");
   const [restoring, setRestoring] = useState(false);
@@ -111,7 +117,7 @@ export function MultiPassagePaste({
       className="w-full min-w-0 sm:flex sm:items-center sm:gap-3"
       data-generate-tour="paste-output-mode"
     >
-      <div className="grid w-full min-w-0 grid-cols-1 gap-1 sm:flex sm:w-auto sm:shrink-0 sm:items-center">
+      <div className="grid w-full min-w-0 grid-cols-2 gap-1 sm:flex sm:w-auto sm:shrink-0 sm:items-center">
         {outputModeOptions.map((opt) => {
           const active = outputMode === opt.v;
           return (
@@ -122,16 +128,16 @@ export function MultiPassagePaste({
               disabled={busy}
               aria-pressed={active}
               className={
-                "inline-flex min-h-8 w-full min-w-0 cursor-pointer flex-wrap items-center justify-center gap-1.5 rounded-md border px-2.5 py-1 text-center text-[12.5px] font-semibold leading-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 sm:h-7 sm:w-auto sm:flex-nowrap sm:px-3 sm:py-0 " +
+                "inline-flex min-h-8 w-full min-w-0 cursor-pointer flex-nowrap items-center justify-center gap-1 overflow-hidden rounded-md border px-2 py-1 text-center text-[11px] font-semibold leading-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 sm:h-7 sm:w-auto sm:gap-1.5 sm:px-3 sm:py-0 sm:text-[12.5px] " +
                 (active
                   ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
                   : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")
               }
             >
-              {opt.label}
+              <span className="truncate">{opt.label}</span>
               <span
                 className={
-                  "rounded px-1 py-0.5 text-[9.5px] font-bold " +
+                  "shrink-0 rounded px-1 py-0.5 text-[9px] font-bold sm:text-[9.5px] " +
                   (active
                     ? opt.v === "restored"
                       ? "bg-blue-100 text-blue-700"
@@ -152,7 +158,7 @@ export function MultiPassagePaste({
     <section className="flex h-full min-h-0 flex-col overflow-hidden">
       {/* 출력 방식 — 위 '직접 입력' 탭에서 말풍선처럼 뻗어나온 하위 선택임을
           드러낸다(직접 입력 > 그대로 추출/AI 복원의 계층감). */}
-      <div className="border-b border-slate-100 px-3 pb-2 pt-2">
+      <div className="border-b border-slate-100 px-2 pb-2 pt-2 lg:px-3">
         <div className="relative w-full rounded-lg border border-blue-200 bg-blue-50 px-2 py-1 shadow-sm sm:w-fit">
           {/* 말풍선 꼬리 — 브레드크럼 첫 항목 '직접 입력' 탭 중앙 아래에서 삐져나오게. */}
           <span
@@ -215,6 +221,11 @@ export function MultiPassagePaste({
           startLabel="다음으로 (내 지문함)"
           restoredStartLabel="다음으로 (내 지문함)"
           busyLabel={restoring ? "복원 중" : "등록 중"}
+          startRef={startRef}
+          onDraftStateChange={onDraftStateChange}
+          // 문제 생성 직접 입력 탭: 모바일에서 '등록할 지문'을 하단 고정 장바구니
+          // 바로 통일(파일업로드와 동일). 페이지는 이 탭에서 공용 스텝 네비를 숨긴다.
+          mobileFixedFooter
         />
       </div>
     </section>

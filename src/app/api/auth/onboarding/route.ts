@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { createUniqueAcademyCode } from "@/lib/tutor/academy-code";
 import { verifyOnboardingToken } from "@/lib/onboarding-token";
 import { signSocialBridgeToken } from "@/lib/social-bridge";
-import { SIGNUP_CREDITS } from "@/lib/feedback-program";
+import { getSignupCredits } from "@/lib/platform-settings";
 import { processReferralOnSignup } from "@/lib/growth/referral";
 
 const FREE_TRIAL_END = new Date("2026-07-01T23:59:59+09:00");
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
   const now = new Date();
   // New signups receive a small starter allocation; additional free credits
   // are granted through the "협업 피드백 이벤트" program (see /lib/feedback-program).
-  const initialCredits = SIGNUP_CREDITS;
+  const initialCredits = await getSignupCredits();
   const placeholderPassword = await bcrypt.hash(randomBytes(32).toString("hex"), 10);
 
   let academySlug = slugify(academyName);

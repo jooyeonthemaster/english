@@ -192,6 +192,12 @@ export function BannersAdminClient({ initialBanners }: { initialBanners: AdminBa
                     <span>·</span>
                     <span>{banner.audiences.map((a) => AUDIENCE_LABELS[a]).join("·") || "대상 없음"}</span>
                     <span>·</span>
+                    <span className={banner.targetMode === "SPECIFIC" ? "font-semibold text-blue-500" : undefined}>
+                      {banner.targetMode === "SPECIFIC"
+                        ? `특정 ${banner.targetAcademyIds.length}명`
+                        : "전체 노출"}
+                    </span>
+                    <span>·</span>
                     <span>{dismissLabel(banner.dismissMode)}</span>
                     {(start || end) && (
                       <>

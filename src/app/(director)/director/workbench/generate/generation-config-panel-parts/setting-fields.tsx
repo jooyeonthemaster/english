@@ -30,7 +30,7 @@ export const renderNumberSetting = ({
       <div className="flex items-center gap-1.5">
         <span className="text-[12px] font-bold text-slate-800">{title}</span>
       </div>
-      <div className="mt-1 flex flex-wrap gap-1">
+      <div className="mt-1 flex flex-wrap gap-1 max-lg:mt-0.5">
         {badges.map((badge) => (
           <span
             key={badge}
@@ -40,7 +40,7 @@ export const renderNumberSetting = ({
           </span>
         ))}
       </div>
-      <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+      <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
         {description}
       </p>
     </div>
@@ -84,7 +84,7 @@ export const renderLanguageSetting = ({
   <div className="flex items-center justify-between gap-3">
     <div className="min-w-0">
       <span className="text-[12px] font-bold text-slate-800">{title}</span>
-      <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+      <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
         {description}
       </p>
     </div>
@@ -136,7 +136,7 @@ export const renderSegSetting = ({
         {title}
       </span>
       {(disabled && disabledHint ? disabledHint : description) ? (
-        <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+        <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
           {disabled && disabledHint ? disabledHint : description}
         </p>
       ) : null}
@@ -191,7 +191,7 @@ export const renderToggleSetting = ({
         {title}
       </span>
       {description ? (
-        <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+        <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
           {description}
         </p>
       ) : null}

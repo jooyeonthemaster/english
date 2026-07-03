@@ -57,6 +57,25 @@ export function ExamPaperCard({
 }: ExamPaperCardProps) {
   const isHakpyeong = paper.board === "학력평가";
 
+  // 회차/학년 뱃지 — 데스크톱은 제목 아래 별도 줄, 모바일은 하단 정보줄에 인라인.
+  const badges = (
+    <>
+      <span className="inline-flex items-center rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-bold tracking-tight text-slate-600">
+        {boardShortLabel(paper.board)}
+      </span>
+      {isHakpyeong && paper.grade ? (
+        <span
+          className={
+            "inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-bold " +
+            gradeBadgeClass(paper.grade)
+          }
+        >
+          {paper.grade}
+        </span>
+      ) : null}
+    </>
+  );
+
   return (
     <div
       data-exam-card
@@ -77,15 +96,63 @@ export function ExamPaperCard({
         className="absolute inset-0 z-0 cursor-pointer focus:outline-none"
       />
 
-      {/* 좌측 — 카드 끝까지 붙는 A4 첫 페이지 미리보기 (210:297) */}
-      <div className="pointer-events-none relative aspect-[210/297] w-[108px] shrink-0 self-stretch border-r border-slate-200 sm:w-[132px]">
+      {/* 좌측 — 카드 끝까지 붙는 A4 첫 페이지 미리보기 (210:297).
+          모바일(<lg)에선 썸네일을 숨겨 텍스트 메타만 간략히 보이게 한다. */}
+      <div className="pointer-events-none relative aspect-[210/297] w-[108px] shrink-0 self-stretch border-r border-slate-200 max-lg:hidden sm:w-[132px]">
         <PaperThumbnail paper={paper} />
       </div>
 
       {/* 우측 — 메타 (클릭은 배경 오버레이로 통과, 체크박스만 활성) */}
       <div className="pointer-events-none relative z-10 flex min-w-0 flex-1 flex-col gap-1.5 p-2.5">
+        {/* ── 모바일 컴팩트 행 ── 내 지문함 리스트 행과 같은 사이즈:
+            [체크박스] 제목 / (뱃지·문제수·범위) + 열기버튼, 한 행. */}
+        <div className="flex min-w-0 items-center gap-2.5 lg:hidden">
+          <button
+            type="button"
+            role="checkbox"
+            aria-checked={selected}
+            aria-label={selected ? "선택 해제" : "내 지문함에 담기 선택"}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleSelect(paper);
+            }}
+            className="pointer-events-auto shrink-0 cursor-pointer rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          >
+            {selected ? (
+              <CheckSquare className="size-[18px] text-blue-600" />
+            ) : (
+              <Square className="size-[18px] text-slate-300 transition group-hover:text-slate-400" />
+            )}
+          </button>
+          <div className="min-w-0 flex-1">
+            <h4 className="truncate text-[13px] font-bold leading-snug text-slate-800">
+              {paper.title}
+            </h4>
+            <div className="mt-0.5 flex min-w-0 items-center gap-1.5">
+              {badges}
+              <span className="truncate text-[11px] font-medium text-slate-400">
+                {paper.count}문제
+                {paper.qFrom ? ` · ${paper.qFrom}~${paper.qTo}번` : ""}
+              </span>
+            </div>
+          </div>
+          <button
+            type="button"
+            aria-label={`${paper.title} 열기`}
+            title="열기"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpen(paper);
+            }}
+            className="pointer-events-auto inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
+          >
+            <ArrowRight className="size-3.5" />
+          </button>
+        </div>
+
+        {/* ── 데스크톱 레이아웃 (썸네일 우측 메타) ── */}
         {/* 체크박스 + 제목 */}
-        <div className="flex min-w-0 items-start gap-2">
+        <div className="flex min-w-0 items-start gap-2 max-lg:hidden">
           <button
             type="button"
             role="checkbox"
@@ -109,24 +176,12 @@ export function ExamPaperCard({
         </div>
 
         {/* 뱃지 — 제목 아래 (회차/학년) */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="inline-flex items-center rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[10px] font-bold tracking-tight text-slate-600">
-            {boardShortLabel(paper.board)}
-          </span>
-          {isHakpyeong && paper.grade ? (
-            <span
-              className={
-                "inline-flex items-center rounded-md border px-1.5 py-0.5 text-[10px] font-bold " +
-                gradeBadgeClass(paper.grade)
-              }
-            >
-              {paper.grade}
-            </span>
-          ) : null}
+        <div className="flex flex-wrap items-center gap-1.5 max-lg:hidden">
+          {badges}
         </div>
 
         {/* 푸터 — 문제 수 · 문항범위 / 열기 */}
-        <div className="mt-auto flex min-w-0 items-center justify-between gap-1.5 pt-0.5">
+        <div className="mt-auto flex min-w-0 items-center justify-between gap-1.5 pt-0.5 max-lg:hidden">
           <span className="inline-flex min-w-0 flex-1 items-center gap-1 truncate text-[11px] font-medium text-slate-400">
             <FileText className="size-3.5" />
             <span className="truncate">

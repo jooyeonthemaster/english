@@ -16,11 +16,13 @@ import {
   useMemo,
   useRef,
   useState,
+  type MutableRefObject,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 import dynamic from "next/dynamic";
 import {
+  ChevronDown,
   ChevronRight,
   GripVertical,
   Keyboard,
@@ -28,6 +30,7 @@ import {
   Loader2,
   PlayCircle,
   Plus,
+  ShoppingBasket,
   Trash2,
 } from "lucide-react";
 
@@ -66,6 +69,20 @@ export interface TextInputBoardProps {
   restoredStartLabel?: string;
   busyLabel?: string;
   suppressTutorial?: boolean;
+  /**
+   * 모바일 스텝 플로우(<lg) 연동 — 주면 페이지 하단 고정 바가 시작 버튼을
+   * 대신하므로, 내장 시작 버튼은 모바일에서 숨긴다(PC는 그대로). 부모가 이
+   * ref 로 handleStart 를 호출한다.
+   */
+  startRef?: MutableRefObject<(() => void) | null>;
+  /** 누적 지문 수·작업 상태 변화 알림 — 하단 바 라벨/비활 판단용. */
+  onDraftStateChange?: (state: { count: number; busy: boolean }) => void;
+  /**
+   * 모바일(<lg)에서 우측 "등록할 지문" 패널을 '담긴 지문' 장바구니 바 + 시작
+   * 버튼의 하단 고정 클러스터로 접는다(파일업로드 크롭 보드와 통일). 호스트가
+   * 하단 스텝 네비를 숨겨야 함. 기본 false(자료추출 등은 기존 패널 그대로).
+   */
+  mobileFixedFooter?: boolean;
 }
 
 /** 본문 앞부분 미리보기(제목이 없을 때 카드 라벨로 사용). */
@@ -106,6 +123,9 @@ export function TextInputBoard({
   restoredStartLabel = "다음으로 (내 지문함)",
   busyLabel = "작업 중",
   suppressTutorial = false,
+  startRef,
+  onDraftStateChange,
+  mobileFixedFooter = false,
 }: TextInputBoardProps) {
   const [draftTitle, setDraftTitle] = useState("");
   const [draftText, setDraftText] = useState("");
@@ -237,6 +257,25 @@ export function TextInputBoard({
   const effectiveCount = passages.length + (draftValid ? 1 : 0);
   const overMax = effectiveCount > MAX_PAGES_PER_JOB;
 
+  // ── 모바일 장바구니(하단 고정) ──
+  const [isBelowLg, setIsBelowLg] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 1023.98px)");
+    const update = () => setIsBelowLg(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
+  const fixedFooter = mobileFixedFooter && isBelowLg;
+  const [cartOpen, setCartOpen] = useState(false);
+  // '지문 추가'로 담길 때마다 뱃지를 튀긴다.
+  const [cartBump, setCartBump] = useState(0);
+  const prevPassagesLenRef = useRef(0);
+  useEffect(() => {
+    if (passages.length > prevPassagesLenRef.current) setCartBump((n) => n + 1);
+    prevPassagesLenRef.current = passages.length;
+  }, [passages.length]);
+
   const addDraft = useCallback(() => {
     if (!draftValid) return;
     const id = crypto.randomUUID();
@@ -346,6 +385,19 @@ export function TextInputBoard({
     onStart,
   ]);
 
+  // 모바일 스텝 플로우: 하단 고정 바가 시작 버튼을 대신 누를 수 있게 등록.
+  useEffect(() => {
+    if (!startRef) return;
+    startRef.current = handleStart;
+    return () => {
+      startRef.current = null;
+    };
+  }, [startRef, handleStart]);
+
+  useEffect(() => {
+    onDraftStateChange?.({ count: effectiveCount, busy: locked });
+  }, [onDraftStateChange, effectiveCount, locked]);
+
   const placeholder = useMemo(
     () =>
       `본문을 입력하세요. 최소 ${TEXT_EXTRACTION_MIN_LENGTH}자 이상 입력하면 추가할 수 있습니다.\n\n예: Soft drink companies attract consumers by adding bright colors...\n\n(A) Also, the artificial flavor...\n(B) Studies have shown...\n(C) They are artificial chemicals...`,
@@ -378,11 +430,11 @@ export function TextInputBoard({
     <>
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
         {/* ── 좌: 입력창 (제목 + 본문 + 지문 추가) ───────────────────────── */}
-        <div className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 p-3.5 lg:border-b-0">
+        <div className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 p-2 lg:border-b-0 lg:p-3.5">
           {textTutorialPopup}
           <div
             ref={inputBoxRef}
-            className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-50/70 p-3"
+            className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-50/70 p-2 lg:p-3"
           >
             <div className="mb-2 flex items-center gap-2">
               <input
@@ -414,7 +466,9 @@ export function TextInputBoard({
               placeholder={placeholder}
               aria-label="본문"
               className={
-                "min-h-0 flex-1 resize-none rounded-md border-2 bg-white px-4 py-3 text-[13px] leading-7 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 " +
+                // 모바일(<lg)은 '지문 추가' 버튼까지 한 화면에 들어오도록 본문을
+                // 화면에 맞는 고정 높이로 둔다(스크롤 없이). PC(lg)는 flex-1로 채운다.
+                "min-h-0 flex-1 resize-none rounded-md border-2 bg-white px-3 py-3 text-[13px] leading-6 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:ring-2 focus:ring-blue-100 disabled:bg-slate-50 max-lg:h-[26vh] max-lg:min-h-[128px] max-lg:flex-none lg:leading-7 lg:px-4 " +
                 // 비어 있으면 파란 테두리로 입력을 유도, 내용이 있으면 회색.
                 (draftText
                   ? "border-slate-200 focus:border-blue-400"
@@ -472,6 +526,26 @@ export function TextInputBoard({
           style={{ width: reviewWidth }}
           className="flex min-h-0 flex-col bg-white max-lg:!w-full lg:shrink-0"
         >
+          {/* 모바일: '담긴 지문' 장바구니 바 + 시작 버튼을 하단 고정(파일업로드와
+              통일). 목록은 cartOpen일 때 위로 펼침. PC(lg)는 contents로 투명
+              처리해 기존 우측 '등록할 지문' 패널을 그대로 유지. */}
+          <div
+            className={
+              fixedFooter
+                ? "fixed inset-x-0 bottom-0 z-40 flex flex-col border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_20px_-10px_rgba(15,23,42,0.28)]"
+                : "contents"
+            }
+          >
+          {/* 목록(등록할 지문) — PC 항상 열림 / 모바일은 장바구니 바를 탭해 시트로. */}
+          <div
+            className={
+              fixedFooter
+                ? cartOpen
+                  ? "flex max-h-[52vh] min-h-0 flex-col border-b border-slate-100"
+                  : "hidden"
+                : "contents"
+            }
+          >
           <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-2.5">
             <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-slate-900">
               <Layers className="size-4 text-blue-600" aria-hidden="true" />
@@ -686,8 +760,64 @@ export function TextInputBoard({
             )}
           </div>
 
-          {/* ── 하단: 텍스트 추출 시작 ── */}
-          <div className="shrink-0 border-t border-slate-100 bg-white p-2.5">
+          </div>
+
+          {/* ── 모바일 '담긴 지문' 장바구니 바 — 시작 버튼 바로 위. 탭하면 위
+              목록(수정·삭제·순서변경) 시트를 펼친다. ── */}
+          {fixedFooter ? (
+            <button
+              type="button"
+              onClick={() => setCartOpen((o) => !o)}
+              aria-expanded={cartOpen}
+              aria-label={cartOpen ? "담긴 지문 목록 접기" : "담긴 지문 목록 펼치기"}
+              className="flex w-full shrink-0 items-center gap-2.5 border-t border-slate-100 bg-white px-3 py-2 text-left"
+            >
+              <span className="relative inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                <ShoppingBasket className="size-5" aria-hidden="true" />
+                {effectiveCount > 0 ? (
+                  <span
+                    key={cartBump}
+                    className="absolute -right-1.5 -top-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-extrabold leading-none text-white ring-2 ring-white [animation:cart-pop_.45s_ease-out]"
+                  >
+                    {effectiveCount}
+                  </span>
+                ) : null}
+              </span>
+              <span className="flex min-w-0 flex-1 flex-col">
+                <span className="text-[12.5px] font-bold text-slate-900">
+                  담긴 지문 {effectiveCount}개
+                </span>
+                <span className="truncate text-[10.5px] text-slate-400">
+                  {passages.length > 0
+                    ? "탭하여 목록 보기·편집"
+                    : "본문을 붙여넣고 '지문 추가'로 담아보세요"}
+                </span>
+              </span>
+              {passages.length > 0 ? (
+                <span className="max-w-[42%] shrink truncate rounded-md bg-slate-100 px-2 py-1 text-[10.5px] font-medium text-slate-500">
+                  {passages[passages.length - 1].title.trim() ||
+                    snippet(passages[passages.length - 1].text)}
+                </span>
+              ) : null}
+              <ChevronDown
+                className={
+                  "size-4 shrink-0 text-slate-400 transition-transform " +
+                  (cartOpen ? "rotate-180" : "")
+                }
+                aria-hidden="true"
+              />
+            </button>
+          ) : null}
+
+          {/* ── 하단: 텍스트 추출 시작. 모바일 고정 클러스터(fixedFooter)에선 이
+              버튼을 클러스터 맨 아래에 노출한다. 그 외 스텝 연동(startRef만 있고
+              고정 클러스터 아님)에선 페이지 하단 바가 대신하므로 <lg 에서 숨긴다. */}
+          <div
+            className={
+              "shrink-0 border-t border-slate-100 bg-white p-2.5" +
+              (startRef && !mobileFixedFooter ? " max-lg:hidden" : "")
+            }
+          >
             {overMax ? (
               <p className="mb-1.5 text-center text-[11px] font-bold text-red-600">
                 지문 한도({MAX_PAGES_PER_JOB}개) 초과 — 지문을 줄여 주세요.
@@ -702,7 +832,14 @@ export function TextInputBoard({
               onClick={handleStart}
             />
           </div>
+          </div>
           <style>{`
+          @keyframes cart-pop {
+            0% { transform: scale(1); }
+            35% { transform: scale(1.4); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+          }
           .smoat-text-review-scroll {
             container-type: inline-size;
           }

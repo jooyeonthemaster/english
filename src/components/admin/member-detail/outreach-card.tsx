@@ -22,7 +22,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import type { MemberDetail } from "@/actions/admin-members";
 import {
   analyzeUsage,
   buildSmsDraft,
@@ -35,33 +34,48 @@ import {
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-export function OutreachCard({ member }: { member: MemberDetail }) {
+export interface OutreachInput {
+  teacherName: string;
+  academyName: string;
+  phone: string | null;
+  /** 마지막 활동(로그인 등) 시각 — 재방문 유도 판단용 */
+  lastActiveAt: Date | string | null;
+  /** 학원 단위 사용 내역(회원 공통) */
+  consumptionByOp: { operationType: string | null; count: number }[];
+  dailyConsumption: { total: number }[];
+}
+
+export function OutreachCard({
+  teacherName,
+  academyName,
+  phone,
+  lastActiveAt,
+  consumptionByOp,
+  dailyConsumption,
+}: OutreachInput) {
   // 렌더 순수성 유지를 위해 "지금" 시각은 마운트 시 1회만 캡처(지연 초기화).
   const [now] = useState(() => Date.now());
   const profile = useMemo<OutreachProfile>(() => {
     const { used, unused } = analyzeUsage(
-      member.consumptionByOp.map((c) => ({
+      consumptionByOp.map((c) => ({
         operationType: c.operationType,
         count: c.count,
       })),
     );
-    // 마지막 "활동"(로그인 또는 실제 사용) 기준 — lastLoginAt만 보면 세션이 길게
-    // 유지될 때 매일 써도 "미접속"으로 잘못 잡힌다.
-    const lastActive = member.lastActiveAt ?? member.lastLoginAt;
-    const daysSinceActive = lastActive
-      ? Math.floor((now - new Date(lastActive).getTime()) / DAY_MS)
+    const daysSinceActive = lastActiveAt
+      ? Math.floor((now - new Date(lastActiveAt).getTime()) / DAY_MS)
       : null;
-    const last30dUsage = member.dailyConsumption.reduce((s, d) => s + d.total, 0);
+    const last30dUsage = dailyConsumption.reduce((s, d) => s + d.total, 0);
     return {
-      teacherName: member.name,
-      academyName: member.academy.name,
+      teacherName,
+      academyName,
       used,
       unused,
       daysSinceActive,
       last30dUsage,
-      activeDays: member.dailyConsumption.length,
+      activeDays: dailyConsumption.length,
     };
-  }, [member, now]);
+  }, [teacherName, academyName, consumptionByOp, dailyConsumption, lastActiveAt, now]);
 
   const [preset, setPreset] = useState<OutreachPreset>(() =>
     recommendPreset(profile),
@@ -88,10 +102,10 @@ export function OutreachCard({ member }: { member: MemberDetail }) {
   }
 
   async function copyPhone() {
-    if (!member.phone) return;
+    if (!phone) return;
     try {
-      await navigator.clipboard.writeText(member.phone);
-      toast.success(`전화번호 복사: ${member.phone}`);
+      await navigator.clipboard.writeText(phone);
+      toast.success(`전화번호 복사: ${phone}`);
     } catch {
       toast.error("복사에 실패했습니다");
     }
@@ -100,7 +114,7 @@ export function OutreachCard({ member }: { member: MemberDetail }) {
   const len = smsLength(text);
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+    <div>
       {/* Header */}
       <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-gray-50">
         <div className="flex items-center gap-2">
@@ -108,7 +122,7 @@ export function OutreachCard({ member }: { member: MemberDetail }) {
           <h3 className="text-[14px] font-semibold text-gray-800">맞춤 문자 생성</h3>
           <span className="text-[11px] text-gray-400">사용 내역 기반</span>
         </div>
-        {member.phone ? (
+        {phone ? (
           <Button
             variant="outline"
             size="sm"
@@ -116,7 +130,7 @@ export function OutreachCard({ member }: { member: MemberDetail }) {
             onClick={copyPhone}
           >
             <Phone className="size-3.5 mr-1.5" strokeWidth={2} aria-hidden />
-            {member.phone}
+            {phone}
           </Button>
         ) : (
           <span className="inline-flex items-center gap-1 text-[11px] text-gray-400">

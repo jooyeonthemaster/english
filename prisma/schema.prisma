@@ -2189,6 +2189,9 @@ model SiteBanner {
   isActive    Boolean @default(false) @map("is_active")
   dismissMode String  @default("DAILY") @map("dismiss_mode")
   showDismissButton Boolean @default(true) @map("show_dismiss_button")
+  // 노출 범위: "ALL"(대상 역할 전체) | "SPECIFIC"(target_academy_ids 학원만)
+  targetMode       String @default("ALL") @map("target_mode")
+  targetAcademyIds Json   @default("[]") @map("target_academy_ids") // string[] academyId
   startsAt    DateTime? @map("starts_at")
   endsAt      DateTime? @map("ends_at")
   autoOpenOnLowCredit Boolean @default(false) @map("auto_open_on_low_credit")
@@ -2198,6 +2201,15 @@ model SiteBanner {
 
   @@index([isActive, priority])
   @@map("site_banners")
+}
+
+/// PlatformSetting — 전역 운영 설정 key-value 저장소(예: 기본 가입 크레딧).
+model PlatformSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+
+  @@map("platform_settings")
 }
 
 // ============================================================================
@@ -2408,10 +2420,6 @@ model CreditTopUpProduct {
   name              String
   creditAmount      Int       @unique
   basePrice         Int
-  discountRate      Int       @default(0)
-  promotionName     String?
-  promotionStartsAt DateTime?
-  promotionEndsAt   DateTime?
   description       String?   @db.Text
   // Credit validity in days from grant. On purchase the buyer's balance expiry
   // is extended by (remaining days + expiryDays). null/0 = no expiry (무기한).
@@ -2421,8 +2429,99 @@ model CreditTopUpProduct {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
+  // A product can run MANY promotions at once (different audience/link/window).
+  // The old single-promotion columns (discountRate/bonusRate/promotion*) were
+  // migrated into CreditPromotion rows and are no longer mapped here.
+  promotions        CreditPromotion[]
+
   @@index([isActive, sortOrder])
   @@map("credit_top_up_products")
+}
+
+/// CreditPromotion — one promotion on a product. Multiple may run concurrently
+/// with different audience/link/window. Effective one is resolved per viewer by
+/// precedence (link match → priority → best buyer value → soonest end).
+model CreditPromotion {
+  id           String   @id @default(cuid())
+  productId    String
+  name         String?
+  // 할인: PERCENT면 value=할인율%(0-99), AMOUNT면 value=할인 금액(원).
+  discountType String   @default("PERCENT")
+  discountValue Int     @default(0)
+  // 크레딧 추가지급: PERCENT면 value=추가 지급률%(예 50=총150%), AMOUNT면 value=추가 크레딧 수.
+  bonusType    String   @default("PERCENT")
+  bonusValue   Int      @default(0)
+  startsAt     DateTime
+  endsAt       DateTime
+  // "ALL" = everyone, "TARGETED" = only targets OR anyone with the link.
+  audience     String   @default("ALL")
+  // Shareable link token (/credits/promo/{token}) — one per promotion.
+  linkToken    String?  @unique
+  // Higher wins when several eligible promotions overlap for the same viewer.
+  priority     Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  product     CreditTopUpProduct          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  targets     CreditPromotionTarget[]
+  bundleItems CreditPromotionBundleItem[]
+
+  @@index([productId])
+  @@index([linkToken])
+  @@map("credit_promotions")
+}
+
+/// CreditPromotionBundle — several promotions exposed through ONE shareable
+/// link (/credits/promo/b/{slug}) and landing page. Claiming the bundle seeds
+/// every member promotion's linkToken into the promo cookie, so the existing
+/// per-viewer pricing engine applies each one to its own product unchanged.
+model CreditPromotionBundle {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  name             String
+  description      String?  @db.Text
+  isActive         Boolean  @default(true)
+  createdByAdminId String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  items CreditPromotionBundleItem[]
+
+  @@map("credit_promotion_bundles")
+}
+
+/// CreditPromotionBundleItem — ordered membership of a promotion in a bundle.
+/// Members must carry a linkToken (auto-issued on save) since the cookie and
+/// pricing engine key off linkToken.
+model CreditPromotionBundleItem {
+  id          String @id @default(cuid())
+  bundleId    String
+  promotionId String
+  sortOrder   Int    @default(0)
+
+  bundle    CreditPromotionBundle @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  promotion CreditPromotion       @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+
+  @@unique([bundleId, promotionId])
+  @@index([promotionId])
+  @@map("credit_promotion_bundle_items")
+}
+
+/// CreditPromotionTarget — academies explicitly targeted by a promotion (only
+/// when audience = "TARGETED"). academyId is a plain indexed string (no FK) to
+/// avoid coupling the large Academy model; targeting is equality on academyId.
+model CreditPromotionTarget {
+  id          String   @id @default(cuid())
+  promotionId String
+  academyId   String
+  createdAt   DateTime @default(now())
+
+  promotion CreditPromotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+
+  @@unique([promotionId, academyId])
+  @@index([academyId])
+  @@map("credit_promotion_targets")
 }
 
 model CreditTopUp {

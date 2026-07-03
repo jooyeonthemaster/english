@@ -19,6 +19,7 @@ import {
   Loader2,
   PlayCircle,
   Scissors,
+  ShoppingBasket,
   UploadCloud,
 } from "lucide-react";
 
@@ -661,7 +662,7 @@ export function GenerateUploadPanel({
       className="w-full min-w-0 sm:flex sm:items-center sm:gap-3"
       data-generate-tour="output-mode"
     >
-      <div className="grid w-full min-w-0 grid-cols-1 gap-1 sm:flex sm:w-auto sm:shrink-0 sm:items-center">
+      <div className="grid w-full min-w-0 grid-cols-2 gap-1 sm:flex sm:w-auto sm:shrink-0 sm:items-center">
         {outputModeOptions.map((opt) => {
           const active = outputMode === opt.v;
           return (
@@ -673,16 +674,16 @@ export function GenerateUploadPanel({
               aria-pressed={active}
               data-generate-tour={`output-mode-${opt.v}`}
               className={
-                "inline-flex min-h-8 w-full min-w-0 cursor-pointer flex-wrap items-center justify-center gap-1.5 rounded-md border px-2.5 py-1 text-center text-[12.5px] font-semibold leading-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 sm:h-7 sm:w-auto sm:flex-nowrap sm:px-3 sm:py-0 " +
+                "inline-flex min-h-8 w-full min-w-0 cursor-pointer flex-nowrap items-center justify-center gap-1 overflow-hidden rounded-md border px-2 py-1 text-center text-[11px] font-semibold leading-tight transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 sm:h-7 sm:w-auto sm:gap-1.5 sm:px-3 sm:py-0 sm:text-[12.5px] " +
                 (active
                   ? "border-blue-600 bg-blue-50/40 text-blue-700 shadow-sm"
                   : "border-transparent text-slate-400 hover:bg-slate-50 hover:text-slate-600")
               }
             >
-              {opt.label}
+              <span className="truncate">{opt.label}</span>
               <span
                 className={
-                  "rounded px-1 py-0.5 text-[9.5px] font-bold " +
+                  "shrink-0 rounded px-1 py-0.5 text-[9px] font-bold sm:text-[9.5px] " +
                   (active
                     ? opt.v === "restored"
                       ? "bg-blue-100 text-blue-700"
@@ -869,7 +870,9 @@ export function GenerateUploadPanel({
                 ref={uploadZoneRef}
                 data-generate-tour="upload-dropzone"
                 className={
-                  "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors " +
+                  // 모바일(<lg)은 세로 스택이라 flex-1 만으론 드롭존이 쪼그라든다 —
+                  // 직접 입력 탭의 텍스트박스와 동일하게 최소 높이(45vh)를 준다.
+                  "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors max-lg:min-h-[45vh] " +
                   (dragActive
                     ? "border-blue-300 bg-blue-50"
                     : "border-slate-200 bg-slate-50/70")
@@ -899,13 +902,15 @@ export function GenerateUploadPanel({
               style={{ width: fileGuideWidth }}
               className="flex min-h-0 flex-col bg-white max-lg:!w-full lg:shrink-0"
             >
-              <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-2.5">
+              {/* 헤더·'사용 순서' 가이드는 PC 전용 — 모바일은 하단 장바구니 바가
+                  대신하고, 가이드는 유명무실하므로 숨긴다(삭제와 동일 효과). */}
+              <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-2.5 max-lg:hidden">
                 <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-slate-900">
                   <Layers className="size-4 text-blue-600" aria-hidden="true" />
                   추출될 지문 0개
                 </span>
               </div>
-              <div className="smoat-file-guide-scroll min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5">
+              <div className="smoat-file-guide-scroll min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5 max-lg:hidden">
                 <div className="smoat-file-empty-guide mx-auto flex w-full max-w-[640px] flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-4">
                   <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                     <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
@@ -937,8 +942,29 @@ export function GenerateUploadPanel({
                   </ol>
                 </div>
               </div>
-              <div className="shrink-0 border-t border-slate-100 bg-white p-2.5">
-                {fileStartArea}
+              {/* 파일 0개(빈 상태)에서도 모바일은 '담긴 지문' 장바구니 바 + '다음으로'
+                  버튼을 하단 고정 클러스터로 노출한다 — 파일 추가 후(InlineCropBoard)·
+                  직접입력 탭과 동일. PC(lg)는 contents로 투명 처리해 시작 버튼만 아사이드
+                  흐름대로. 페이지가 uploadTabActive일 때 max-lg:pb-[140px]로 자리 예약함. */}
+              <div className="max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:z-40 max-lg:flex max-lg:flex-col max-lg:border-t max-lg:border-slate-200 max-lg:bg-white max-lg:pb-[env(safe-area-inset-bottom)] max-lg:shadow-[0_-6px_20px_-10px_rgba(15,23,42,0.28)] lg:contents">
+                {/* 빈 상태 장바구니 바(담긴 지문 0개) — 파일 업로드 후 InlineCropBoard의
+                    장바구니 바로 자연스럽게 대체된다. 담긴 게 없어 펼침은 없다. */}
+                <div className="flex w-full shrink-0 items-center gap-2.5 border-t border-slate-100 bg-white px-3 py-2 lg:hidden">
+                  <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                    <ShoppingBasket className="size-5" aria-hidden="true" />
+                  </span>
+                  <span className="flex min-w-0 flex-1 flex-col">
+                    <span className="text-[12.5px] font-bold text-slate-900">
+                      담긴 지문 0개
+                    </span>
+                    <span className="truncate text-[10.5px] text-slate-400">
+                      파일을 올려 지문 영역을 잘라 담아보세요
+                    </span>
+                  </span>
+                </div>
+                <div className="shrink-0 border-t border-slate-100 bg-white p-2.5">
+                  {fileStartArea}
+                </div>
               </div>
             </aside>
           </div>
@@ -959,6 +985,8 @@ export function GenerateUploadPanel({
               footer={fileStartArea}
               onClear={clearFiles}
               outputMode={outputMode}
+              // 생성 페이지 스텝 플로우: 장바구니+추출 버튼을 하단 고정(스텝 네비 대체).
+              mobileFixedFooter
             />
           </div>
         )}

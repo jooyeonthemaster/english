@@ -44,6 +44,7 @@ import {
 } from "./intake/intake-surface";
 import { GenerateUploadPanel } from "./intake/generate-upload-panel";
 import { ExamPassageLibrary } from "@/components/workbench/exam-passage-library";
+import { triggerHintGlowWithin } from "@/lib/hint-glow";
 import type { ExamPassagePick } from "@/lib/exam-passages/types";
 import { useGenerateExtraction } from "./intake/use-generate-extraction";
 import { ExtractionLoadingCards } from "./intake/extraction-loading-cards";
@@ -62,6 +63,11 @@ import {
   type QuestionTypeGenerationSettings,
 } from "@/lib/question-type-generation-settings";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
+import {
+  MobileStepHeader,
+  MobileStepNav,
+  useIsMobileViewport,
+} from "@/components/workbench/mobile-step-flow";
 import { QuestionGenerationIcon } from "@/components/icons/workflow-icons";
 import { WorkspaceShell } from "./workspace-shell";
 import {
@@ -99,6 +105,18 @@ const GENERATE_TUTORIAL_ENABLED = false;
 // ─── Helpers ─────────────────────────────────────────────
 
 const REVIEW_ACTION_TIMEOUT_MS = 30_000;
+
+// ── 모바일 스텝 플로우 (<lg 전용) ──
+// 한 화면 = 한 기능: 지문 입력 → 내 지문함 → 워크스페이스 → 문제 확인.
+// PC(≥lg)는 기존 통합 레이아웃 그대로 — 숨김은 전부 max-lg: 클래스라서
+// 데스크톱 DOM/동작에는 영향이 없다.
+type MobileStep = "input" | "library" | "workspace" | "results";
+const MOBILE_FLOW_STEPS = [
+  { key: "input", label: "지문 입력" },
+  { key: "library", label: "내 지문함" },
+  { key: "workspace", label: "워크스페이스" },
+  { key: "results", label: "문제 확인" },
+] as const;
 
 /** Build a passage title from the first non-empty line of pasted content. */
 function derivePastedTitle(content: string): string {
@@ -201,6 +219,17 @@ export function GeneratePageClient({
   );
   const prefillAppliedRef = useRef(false);
 
+  // ?step= 딥링크/복원 — 모바일 스텝 플로우의 초기 단계. 워크스페이스는
+  // 메모리 기반이라 새로 열면 항상 비어 있으므로 지문함으로 대체한다.
+  const initialMobileStepRef = useRef<MobileStep | null>(
+    (() => {
+      const raw = searchParams.get("step");
+      if (raw === "input" || raw === "library" || raw === "results") return raw;
+      if (raw === "workspace") return "library";
+      return null;
+    })(),
+  );
+
   // ── Passage data ──
   const [passages, setPassages] = useState<PassageItem[]>([]);
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
@@ -235,9 +264,25 @@ export function GeneratePageClient({
   // Default to the intake surface, unless the user deep-linked passageIds (then
   // show the library so they see the pre-selection land).
   const [intakeView, setIntakeView] = useState<IntakeView>(
-    initialPassageIdsRef.current.length > 0 ? "library" : "intake",
+    initialPassageIdsRef.current.length > 0 ||
+      initialMobileStepRef.current === "library"
+      ? "library"
+      : "intake",
   );
   const [intakeTab, setIntakeTab] = useState<IntakeTab>("paste");
+  // 모바일(<lg) 현재 스텝 — PC 렌더링에는 관여하지 않는다.
+  const [mobileStep, setMobileStep] = useState<MobileStep>(
+    initialMobileStepRef.current ??
+      (initialPassageIdsRef.current.length > 0 ? "library" : "input"),
+  );
+  // 직접 입력 보드 연동 — 하단 고정 바의 '다음'이 등록(다음으로 내 지문함)
+  // 버튼을 대신한다. ref 로 시작 동작을, 콜백으로 누적 수·작업 상태를 받는다.
+  const pasteStartRef = useRef<(() => void) | null>(null);
+  const [pasteBoard, setPasteBoard] = useState({ count: 0, busy: false });
+  const handlePasteBoardState = useCallback(
+    (state: { count: number; busy: boolean }) => setPasteBoard(state),
+    [],
+  );
   const [pasteSaving, setPasteSaving] = useState(false);
   const [passageBulkAction, setPassageBulkAction] = useState<
     "move" | "remove" | "delete" | null
@@ -2346,6 +2391,83 @@ export function GeneratePageClient({
     [workspaceApi.rows],
   );
 
+  // ── 모바일 스텝 플로우: 전환 + URL(?step=) 동기화 ──
+  const isMobileViewport = useIsMobileViewport();
+
+  // 스텝이 가리키는 인테이크 상태를 함께 맞춘다. results 는 하단 결과
+  // 섹션만 보여주므로 인테이크 상태를 건드리지 않는다(뒤로가면 그대로 복귀).
+  const applyMobileStep = useCallback((step: MobileStep) => {
+    setMobileStep(step);
+    if (step === "input") {
+      setWorkspaceOpen(false);
+      setIntakeView("intake");
+    } else if (step === "library") {
+      setWorkspaceOpen(false);
+      setIntakeView("library");
+    } else if (step === "workspace") {
+      setWorkspaceOpen(true);
+    }
+  }, []);
+
+  const pushMobileStepUrl = useCallback((step: MobileStep) => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("step") === step) return;
+    url.searchParams.set("step", step);
+    // router.push 대신 네이티브 pushState — 서버 리페치 없이 히스토리만
+    // 쌓아 브라우저 뒤로가기가 '이전 단계'로 동작하게 한다.
+    window.history.pushState(null, "", url.toString());
+  }, []);
+
+  const goToMobileStep = useCallback(
+    (step: MobileStep) => {
+      applyMobileStep(step);
+      pushMobileStepUrl(step);
+      window.scrollTo({ top: 0 });
+    },
+    [applyMobileStep, pushMobileStepUrl],
+  );
+
+  // 브라우저 뒤로/앞으로 — URL 의 step 을 그대로 적용.
+  useEffect(() => {
+    if (!isMobileViewport) return;
+    const onPop = () => {
+      const raw = new URLSearchParams(window.location.search).get("step");
+      const step: MobileStep =
+        raw === "library" || raw === "workspace" || raw === "results"
+          ? raw
+          : "input";
+      applyMobileStep(step);
+      window.scrollTo({ top: 0 });
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [isMobileViewport, applyMobileStep]);
+
+  // 기존 UI 동작('다음으로' CTA, 워크스페이스 자동 열림/닫힘 등)이
+  // intakeView/workspaceOpen 을 바꾸면 스텝을 뒤따라 맞춘다 — 스텝을 모르는
+  // 기존 핸들러를 하나도 고치지 않기 위한 단방향 동기화. results 에서는
+  // 인테이크 상태가 화면 밖(숨김)이므로 동기화하지 않는다.
+  useEffect(() => {
+    if (!isMobileViewport) return;
+    if (mobileStep === "results") return;
+    const derived: MobileStep = workspaceVisible
+      ? "workspace"
+      : intakeView === "library"
+        ? "library"
+        : "input";
+    if (derived !== mobileStep) {
+      setMobileStep(derived);
+      pushMobileStepUrl(derived);
+      window.scrollTo({ top: 0 });
+    }
+  }, [
+    isMobileViewport,
+    workspaceVisible,
+    intakeView,
+    mobileStep,
+    pushMobileStepUrl,
+  ]);
+
   // ── 지문별 개별 설정 (워크스페이스) ───────────────────────────────
   // 워크스페이스 행을 클릭하면 우측 '유형·생성 설정'이 그 지문만 편집한다.
   // 편집 대상 행이 있으면(editingRow) 난이도·유형 개수·유형별 세부옵션을
@@ -2666,6 +2788,9 @@ export function GeneratePageClient({
       onDismissOverlay={() => setWorkspaceOpen(false)}
       workspaceActive={workspaceActive}
       onReopenWorkspace={() => setWorkspaceOpen(true)}
+      mobileStepTabs={mobileStep === "input" ? "sources" : "hidden"}
+      pasteStartRef={pasteStartRef}
+      onPasteStateChange={handlePasteBoardState}
       upload={
         <GenerateUploadPanel
           onBegin={handleExtractionBegin}
@@ -2680,6 +2805,8 @@ export function GeneratePageClient({
           busy={examImporting}
           pickLabel="다음으로 (내 지문함)"
           headerHint="고른 지문이 내 지문함에 담겨요"
+          // 모바일: '다음으로 (내 지문함)' 선택 바를 하단 고정(공용 스텝 네비 대체).
+          mobileFixedFooter
         />
       }
       library={
@@ -2854,15 +2981,146 @@ export function GeneratePageClient({
       </PassageGenerateModal>
     ) : null;
 
+  // ── 모바일 하단 이전/다음 바 구성 ──
+  const mobilePrev =
+    mobileStep === "input"
+      ? null
+      : {
+          label: "이전",
+          onClick: () =>
+            goToMobileStep(
+              mobileStep === "library"
+                ? "input"
+                : mobileStep === "workspace"
+                  ? "library"
+                  : workspaceActive
+                    ? "workspace"
+                    : "library",
+            ),
+        };
+  // 워크스페이스 스텝: 이번 세션에 생성(중/완료/오류)된 문제가 하나라도 있어야
+  // '문제 확인'이 의미 있다. 없으면 하단 CTA 를 비활성으로 눌러 '다음으로(유형선택)'
+  // 으로 먼저 생성하도록 유도한다(결과로의 이동 자체는 상단 스텝 헤더 4번 탭으로
+  // 언제든 가능 — 자유 이동은 막지 않는다).
+  const hasSessionQuestions =
+    queueCounts.done > 0 ||
+    queueCounts.generating > 0 ||
+    queueCounts.error > 0;
+  const mobileNext = (() => {
+    if (mobileStep === "input") {
+      // 직접 입력 탭에 등록할 지문이 쌓여 있으면 '다음' = 등록하고 내 지문함
+      // (콘텐츠 안의 '다음으로 (내 지문함)' 버튼을 하단 바로 옮긴 것 — 등록
+      // 성공 시 intakeView 가 library 로 바뀌며 스텝이 자동으로 넘어간다).
+      if (intakeTab === "paste" && intakeView === "intake" && pasteBoard.count > 0)
+        return {
+          label: pasteBoard.busy
+            ? "등록 중…"
+            : `다음으로 (내 지문함) · 지문 ${pasteBoard.count}개`,
+          onClick: () => pasteStartRef.current?.(),
+          disabled: pasteBoard.busy,
+        };
+      return {
+        label: "내 지문함으로",
+        onClick: () => goToMobileStep("library"),
+      };
+    }
+    if (mobileStep === "library") {
+      // 선택한 지문이 있으면 '다음'이 곧 워크스페이스 담기 — PC 의
+      // '편집(워크스페이스로)' 버튼과 같은 핸들러를 쓴다. 담기 성공 시
+      // workspaceOpen 이 켜지고 동기화 효과가 스텝을 넘긴다.
+      if (selectedIds.size > 0)
+        return {
+          label: `선택 ${selectedIds.size}개 워크스페이스로`,
+          onClick: () => void handleLoadSelectedToWorkspace(),
+        };
+      if (workspaceActive)
+        return {
+          label: "워크스페이스로",
+          onClick: () => goToMobileStep("workspace"),
+        };
+      // 비활 사유 = 선택 0개 → 눌러도 막지 말고 지문 카드들을 글로우해 선택을 유도.
+      return {
+        label: "워크스페이스로",
+        disabled: true,
+        onDisabledHint: () =>
+          triggerHintGlowWithin(document.body, "[data-drag-item-id]", {
+            max: 24,
+            // 대상이 화면 밖일 수 있으니 하단 고정 바에 가리지 않게 가운데로 스크롤.
+            scrollBlock: "center",
+          }),
+      };
+    }
+    if (mobileStep === "workspace") {
+      // 아직 이번 세션 생성물이 없으면 비활성 — 눌러도 막지 말고 지문별
+      // '다음으로(유형선택)' 버튼들을 글로우해 "먼저 문제를 생성"하도록 유도한다.
+      // (상단 스텝 헤더 4번으로는 언제든 이동 가능)
+      if (!hasSessionQuestions)
+        return {
+          label: "문제 확인",
+          disabled: true,
+          onDisabledHint: () =>
+            triggerHintGlowWithin(
+              document.body,
+              '[data-generate-tour="row-generate-button"]',
+              // 생성 버튼이 긴 지문 아래·고정 바 뒤에 가려질 수 있으니 가운데로 스크롤.
+              { scrollBlock: "center" },
+            ),
+        };
+      return {
+        label: queueCounts.generating > 0 ? "문제 확인 (생성 중)" : "문제 확인",
+        onClick: () => goToMobileStep("results"),
+      };
+    }
+    return null;
+  })();
+  const mobileNextHint =
+    mobileStep === "library" && selectedIds.size === 0 && !workspaceActive
+      ? "지문 카드를 선택하면 워크스페이스로 보낼 수 있어요"
+      : mobileStep === "workspace" && !hasSessionQuestions
+        ? "지문마다 ‘다음으로 (유형선택)’으로 문제를 먼저 생성하면 확인할 수 있어요"
+        : undefined;
+
+  // 파일업로드·직접입력·기출 탭(지문 입력 스텝)에서는 각 보드가 자체 하단 고정
+  // 액션 바(담긴 지문 + 추출/등록/담기 버튼)를 렌더하므로, 중복되는 공용 스텝 네비를
+  // 숨기고 그 높이만큼 아래 여백을 예약한다(고정 바에 콘텐츠가 가리지 않게).
+  const boardFixedFooterActive =
+    mobileStep === "input" &&
+    intakeView === "intake" &&
+    (intakeTab === "upload" || intakeTab === "paste" || intakeTab === "exam");
+
   return (
-    <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
-      <main className="flex w-full min-w-0 flex-col gap-4">
+    // min-h 뷰포트 채움은 PC 전용 — 모바일은 콘텐츠만큼만 차지해 아래
+    // 사이트 푸터 위에 빈 공간이 생기지 않게 한다.
+    <div className="-m-6 min-w-0 bg-[#F4F6F9] px-2 py-4 sm:px-4 lg:min-h-[calc(100vh-56px)] lg:px-6 xl:px-8">
+      {/* 하단 고정 바 여유는 아래 사이트 푸터가 대신 제공 — 예약 패딩 최소화.
+          파일업로드 탭만 크롭 보드의 하단 고정 액션 바 높이를 예약한다. */}
+      <main
+        className={
+          "flex w-full min-w-0 flex-col gap-4 " +
+          (boardFixedFooterActive ? "max-lg:pb-[140px]" : "max-lg:pb-1")
+        }
+      >
+        {/* 모바일 전용 스테퍼 — 현재 단계 표시 + 탭으로 즉시 이동 */}
+        <MobileStepHeader
+          steps={MOBILE_FLOW_STEPS}
+          currentKey={mobileStep}
+          onSelect={(key) => goToMobileStep(key as MobileStep)}
+        />
         {/* ═══ TOP SECTION: 내 지문함(=워크스페이스가 덮음) + 설정 ═══
             워크스페이스를 좌측 모달 패널로 띄우지 않는다. 대신 지문을
-            워크스페이스로 보내면 가운데 컬럼에서 내 지문함을 그대로 덮는다. */}
+            워크스페이스로 보내면 가운데 컬럼에서 내 지문함을 그대로 덮는다.
+            모바일 '문제 확인' 스텝에서는 이 섹션을 숨기고(언마운트 아님 —
+            진행 중 입력·워크스페이스 상태 유지) 결과 섹션만 보여준다. */}
+        <div
+          className={
+            "min-w-0" + (mobileStep === "results" ? " max-lg:hidden" : "")
+          }
+        >
         <WorkspaceShell
           leftActive={false}
           rightPaneMin={400}
+          // 모바일은 상단 앱바("문제 생성")·스테퍼와 중복이라 이 헤더를 숨긴다.
+          hideHeaderOnMobile
           header={
             <div
               data-generate-tour="page-title"
@@ -2897,14 +3155,17 @@ export function GeneratePageClient({
             </div>
           }
         />
+        </div>
 
         {/* ═══ 문제 관리 + 생성/검수 결과 (통합) — 결과 박스 위 ═══ */}
         {/* BottomQueueSection 을 EmbeddedQuestionBank 안으로 병합: 생성 큐는
             목록 맨 앞에, 완료 문제는 파란 글로우. 튜어/마키 boundary 는
-            이 섹션에 그대로 유지한다. */}
+            이 섹션에 그대로 유지한다. 모바일에서는 '문제 확인' 스텝에서만
+            노출한다(마운트는 유지 — 생성 큐 폴링·필터 상태 보존). */}
         <section
           ref={bottomQueueBoundaryRef}
           data-generate-tour="results-section"
+          className={mobileStep !== "results" ? "max-lg:hidden" : undefined}
         >
           <EmbeddedQuestionBank
             academyId={academyId}
@@ -2917,6 +3178,15 @@ export function GeneratePageClient({
             setRefreshKey={setRefreshNonce}
           />
         </section>
+
+        {/* 모바일 전용 하단 고정 이전/다음 바 */}
+        {!boardFixedFooterActive ? (
+          <MobileStepNav
+            prev={mobilePrev}
+            next={mobileNext}
+            hint={mobileNextHint}
+          />
+        ) : null}
       </main>
       {GENERATE_TUTORIAL_ENABLED ? (
         <GeneratePageTour

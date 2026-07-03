@@ -15,7 +15,7 @@ type TabKey = "credits" | "plans";
 interface Props {
   creditData: Pick<
     CreditClientProps,
-    "initialTopUps" | "initialStats" | "initialProducts" | "initialTopUpsTotal"
+    "initialTopUps" | "initialStats" | "initialTopUpsTotal"
   >;
   plansData: PlansClientProps;
   initialTab?: TabKey;
@@ -45,9 +45,10 @@ export function CreditPlansAdminClient({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-[22px] font-bold text-gray-900">상품 · 결제 관리</h1>
+        <h1 className="text-[22px] font-bold text-gray-900">결제 관리</h1>
         <p className="mt-1 text-[13px] text-gray-400">
-          상품 정보 · 프로모션 및 충전 내역을 관리합니다.
+          포트원·무통장 충전 내역과 결제 상태를 관리합니다. (상품·프로모션은
+          상품 관리 메뉴)
         </p>
       </div>
 
@@ -85,9 +86,9 @@ export function CreditPlansAdminClient({
           state (edits in progress, open detail panel) survive tab switches. */}
       <div className={cn(tab === "credits" ? "block" : "hidden")}>
         <CreditTopUpsAdminClient
+          mode="payments"
           initialTopUps={creditData.initialTopUps}
           initialStats={creditData.initialStats}
-          initialProducts={creditData.initialProducts}
           initialTopUpsTotal={creditData.initialTopUpsTotal}
           hideTitle
         />

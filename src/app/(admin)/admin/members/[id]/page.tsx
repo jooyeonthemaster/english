@@ -13,11 +13,27 @@ import { MemberDetailClient } from "@/components/admin/member-detail-client";
 
 export const dynamic = "force-dynamic";
 
+const TAB_KEYS = [
+  "overview",
+  "members",
+  "transactions",
+  "content",
+  "activity",
+] as const;
+type TabKey = (typeof TAB_KEYS)[number];
+
 interface PageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ tab?: string }>;
 }
 
-async function MemberContent({ memberId }: { memberId: string }) {
+async function MemberContent({
+  memberId,
+  initialTab,
+}: {
+  memberId: string;
+  initialTab: TabKey;
+}) {
   const result = await getMemberDetail(memberId);
 
   if (result.kind === "not_found") {
@@ -75,6 +91,7 @@ async function MemberContent({ memberId }: { memberId: string }) {
       initialTransactions={initialTransactions}
       initialActivity={initialActivity}
       purchases={purchases}
+      initialTab={initialTab}
     />
   );
 }
@@ -95,8 +112,12 @@ function DetailSkeleton() {
   );
 }
 
-export default async function MemberDetailPage({ params }: PageProps) {
+export default async function MemberDetailPage({ params, searchParams }: PageProps) {
   const { id } = await params;
+  const { tab } = await searchParams;
+  const initialTab: TabKey = TAB_KEYS.includes(tab as TabKey)
+    ? (tab as TabKey)
+    : "overview";
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 text-[12px] text-gray-500">
@@ -105,12 +126,12 @@ export default async function MemberDetailPage({ params }: PageProps) {
           className="inline-flex items-center gap-1 hover:text-gray-800 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30 rounded px-1 -mx-1"
         >
           <ArrowLeft className="size-3.5" strokeWidth={2} aria-hidden />
-          회원 목록
+          학원 · 회원 목록
         </Link>
       </div>
 
       <Suspense fallback={<DetailSkeleton />}>
-        <MemberContent memberId={id} />
+        <MemberContent memberId={id} initialTab={initialTab} />
       </Suspense>
     </div>
   );

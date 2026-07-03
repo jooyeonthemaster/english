@@ -28,6 +28,7 @@ import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-co
 import { ViewModeCycleButton } from "@/components/workbench/shared/view-mode-cycle-button";
 import { GridColsIcon } from "@/components/workbench/shared/grid-cols-icon";
 import { Pagination } from "@/components/workbench/shared/pagination";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import {
   createWebtoonCollection,
@@ -209,15 +210,19 @@ export function WebtoonLibraryClient({
     return list;
   }, [items, filterByActiveFolder, statusFilter, styleFilter, search]);
 
+  // 모바일에선 한 페이지 24 → 10개로 줄인다(데스크톱은 그대로).
+  const isMobile = useIsMobile();
+  const pageSize = isMobile ? 10 : PAGE_SIZE;
+
   // Reset to page 1 whenever the filtered set changes shape.
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   useEffect(() => {
     if (page > totalPages) setPage(1);
   }, [page, totalPages]);
 
   const pageItems = useMemo(
-    () => filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
-    [filtered, page],
+    () => filtered.slice((page - 1) * pageSize, page * pageSize),
+    [filtered, page, pageSize],
   );
 
   const filteredIds = useMemo(() => filtered.map((it) => it.id), [filtered]);

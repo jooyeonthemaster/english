@@ -70,6 +70,13 @@ export async function GET() {
   const visible = rows.filter((b) => {
     if (!parseAudiences(b.audiences).includes(viewer.role)) return false;
     if (viewer.isSpecial && b.templateKey === "feedback-invite") return false;
+    // Specific-target banners only show to viewers whose academy is listed.
+    if (b.targetMode === "SPECIFIC") {
+      const ids = Array.isArray(b.targetAcademyIds)
+        ? (b.targetAcademyIds as unknown[]).filter((v): v is string => typeof v === "string")
+        : [];
+      if (!viewer.academyId || !ids.includes(viewer.academyId)) return false;
+    }
     return true;
   });
 

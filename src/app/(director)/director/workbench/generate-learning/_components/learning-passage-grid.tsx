@@ -12,8 +12,11 @@ import {
   FolderOpen,
   X,
 } from "lucide-react";
+import { useRef } from "react";
 import { cn } from "@/lib/utils";
 import { PassageInlineTitle } from "@/components/workbench/passage-inline-title";
+import { useMobilePagination } from "@/hooks/use-mobile-pagination";
+import { Pagination } from "@/components/workbench/shared/pagination";
 import type { PassageItem } from "./generate-learning-client";
 
 // ---------------------------------------------------------------------------
@@ -82,6 +85,17 @@ export function LearningPassageGrid({
   canGenerate,
   handleBatchGenerate,
 }: Props) {
+  // 모바일 전용 10개/페이지(데스크톱은 isMobile=false 라 전체 그대로).
+  const {
+    isMobile,
+    page,
+    setPage,
+    totalPages,
+    visibleItems: visiblePassages,
+  } = useMobilePagination(passages, {
+    resetKey: `${selectedCollectionId}|${search}|${filterGrade}|${filterSchool}|${filterSemester}`,
+  });
+  const scrollRef = useRef<HTMLDivElement>(null);
   return (
     <div className="flex flex-col overflow-hidden bg-white border-r border-slate-200/80">
       {/* Selection toolbar */}
@@ -268,7 +282,7 @@ export function LearningPassageGrid({
       </div>
 
       {/* Passage card grid */}
-      <div className="flex-1 overflow-y-auto px-5 pb-4 pt-3">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 pb-4 pt-3">
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <Loader2 className="w-6 h-6 animate-spin text-blue-400" />
@@ -284,7 +298,7 @@ export function LearningPassageGrid({
           </div>
         ) : (
           <div className="grid grid-cols-2 xl:grid-cols-3 gap-2.5">
-            {passages.map((p) => {
+            {visiblePassages.map((p) => {
               const checked = selectedIds.has(p.id);
               return (
                 <div
@@ -346,6 +360,16 @@ export function LearningPassageGrid({
             })}
           </div>
         )}
+        {isMobile ? (
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onGoToPage={(next) => {
+              setPage(next);
+              scrollRef.current?.scrollTo({ top: 0 });
+            }}
+          />
+        ) : null}
       </div>
     </div>
   );

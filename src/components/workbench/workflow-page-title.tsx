@@ -34,7 +34,9 @@ export function WorkflowPageTitle({
           ) : null}
         </div>
         {description ? (
-          <p className="truncate text-[12px] font-medium text-slate-400">
+          // 모바일(<lg)은 좁아 한 줄이면 잘리므로 여러 줄로 풀어 다 보인다.
+          // 데스크톱은 헤더 한 줄 유지(lg:truncate).
+          <p className="text-[12px] font-medium leading-snug text-slate-400 lg:truncate">
             {description}
           </p>
         ) : null}
