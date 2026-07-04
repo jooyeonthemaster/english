@@ -597,16 +597,23 @@ async function completePaidTopUp(
       });
       const monthlyAllocation = activeSub?.plan.monthlyCredits ?? 0;
 
-      // Resolve the purchased product's validity window (keyed by creditAmount,
-      // which is UNIQUE). The buyer's balance-wide expiry is extended by
-      // (remaining + expiryDays); 0/null means the product never expires.
-      const productRows = await tx.$queryRaw<
-        Array<{ expiryDays: number | null }>
-      >`
-        SELECT "expiryDays" FROM credit_top_up_products
-        WHERE "creditAmount" = ${topUp.creditAmount}
-        LIMIT 1
-      `;
+      // Resolve the purchased product's validity window. Prefer the productCode
+      // snapshotted in customData — the top-up's creditAmount now reflects the
+      // GRANTED total (base + promo bonus), so it no longer equals the product's
+      // (base) creditAmount and can't be used as the lookup key. Fall back to the
+      // creditAmount lookup for legacy rows without a productCode.
+      const productCode = readCustomDataString(customData, "productCode");
+      const productRows = productCode
+        ? await tx.$queryRaw<Array<{ expiryDays: number | null }>>`
+            SELECT "expiryDays" FROM credit_top_up_products
+            WHERE code = ${productCode}
+            LIMIT 1
+          `
+        : await tx.$queryRaw<Array<{ expiryDays: number | null }>>`
+            SELECT "expiryDays" FROM credit_top_up_products
+            WHERE "creditAmount" = ${topUp.creditAmount}
+            LIMIT 1
+          `;
       const expiryDays = productRows[0]?.expiryDays ?? 0;
 
       const balances = await tx.$queryRaw<Array<{ balance: number }>>`
@@ -1013,6 +1020,15 @@ function normalizePaymentMethod(
     PaymentMethodConvenienceStore: "CONVENIENCE_STORE",
   };
   return methodType ? map[methodType] ?? methodType : null;
+}
+
+/** customData(JSON 객체)에서 문자열 필드를 안전하게 읽는다. 없으면 null. */
+function readCustomDataString(value: unknown, key: string): string | null {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    const v = (value as Record<string, unknown>)[key];
+    return typeof v === "string" && v.length > 0 ? v : null;
+  }
+  return null;
 }
 
 function parsePaymentCustomData(value: unknown): Prisma.InputJsonValue | undefined {

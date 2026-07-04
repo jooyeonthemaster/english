@@ -16,6 +16,7 @@ import {
 } from "@/lib/portone-credit-topups";
 import { getActiveCreditTopUpProductByCredits } from "@/lib/credit-top-up-products";
 import { isCardTopUpAllowed } from "@/lib/card-topup-access";
+import { PROMO_COOKIE, parsePromoTokens } from "@/lib/promo-link";
 import { BUSINESS_INFO } from "@/lib/legal/business-info";
 
 const prepareSchema = z.object({
@@ -121,7 +122,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const product = await getActiveCreditTopUpProductByCredits(parsed.data.credits);
+    // 프로모션(할인·보너스) 적용 여부는 뷰어 기준으로 서버가 재검증한다:
+    // 내 학원이 지정 대상이거나, 유효한 프로모션 링크 토큰(쿠키)을 가진 경우만.
+    const linkTokens = parsePromoTokens(request.cookies.get(PROMO_COOKIE)?.value);
+    const product = await getActiveCreditTopUpProductByCredits(
+      parsed.data.credits,
+      { academyId: staff.academyId, linkTokens },
+    );
     if (!product) {
       return NextResponse.json(
         { error: "지원하지 않는 충전 상품입니다." },
@@ -146,7 +153,11 @@ export async function POST(request: NextRequest) {
     const pgProvider = getPortOnePgProvider();
     const appUrl = getAppUrl();
     const paymentId = buildPortOnePaymentId();
-    const orderName = buildTopUpOrderName(product.creditAmount);
+    // 지급 크레딧 = 기본 + 프로모션 보너스(활성 시). 결제금액(price)은 그대로.
+    // 상품 식별은 여전히 product.creditAmount(고유키)로 하되, 실제 적립·주문명은
+    // 지급 총액을 스냅샷한다(모든 하위 지급/표시가 이 값을 읽는다).
+    const grantedCredits = product.grantedCreditAmount;
+    const orderName = buildTopUpOrderName(grantedCredits);
     const staffProfile = await getStaffPaymentProfile(staff.id);
     const customer = buildPaymentCustomer({
       academyId: staff.academyId,
@@ -161,7 +172,7 @@ export async function POST(request: NextRequest) {
     const topUp = await prisma.creditTopUp.create({
       data: {
         academyId: staff.academyId,
-        creditAmount: product.creditAmount,
+        creditAmount: grantedCredits,
         price: product.price,
         paymentMethod: payMethod,
         paymentId,
@@ -174,11 +185,12 @@ export async function POST(request: NextRequest) {
           topUpId: "",
           academyId: staff.academyId,
           staffId: staff.id,
-          credits: product.creditAmount,
+          credits: grantedCredits,
           price: product.price,
           productCode: product.code,
           basePrice: product.basePrice,
           discountRate: product.isPromotionActive ? product.discountRate : 0,
+          bonusRate: product.isPromotionActive ? product.bonusRate : 0,
         },
       },
       select: { id: true },
@@ -188,11 +200,12 @@ export async function POST(request: NextRequest) {
       topUpId: topUp.id,
       academyId: staff.academyId,
       staffId: staff.id,
-      credits: product.creditAmount,
+      credits: grantedCredits,
       price: product.price,
       productCode: product.code,
       basePrice: product.basePrice,
       discountRate: product.isPromotionActive ? product.discountRate : 0,
+      bonusRate: product.isPromotionActive ? product.bonusRate : 0,
     };
 
     await prisma.creditTopUp.update({

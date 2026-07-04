@@ -220,8 +220,10 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
 
   return (
     <div className="shrink-0 space-y-2 border-b border-slate-100 bg-white px-3 py-2.5">
-      {/* 통합 툴바 한 줄 — 체크박스 | 필터 | 검색창(길게·반응형) | 시험지별·문제별 */}
-      <div className="flex items-center gap-1.5">
+      {/* 통합 툴바 — 체크박스 | 필터 | 검색창(길게·반응형) | 시험지별·문제별.
+          모바일(<lg)은 줄바꿈해 토글·'← 시험지' 뒤로 버튼이 화면 밖으로 밀려
+          잘리지 않게 한다(검색창은 아래 전체폭으로 내림). PC 는 기존 한 줄 유지. */}
+      <div className="flex flex-wrap items-center gap-1.5 lg:flex-nowrap">
         {/* 전체선택 체크박스 — 상시 노출(시험지별/문제별 공통, 맨 왼쪽) */}
         <input
           type="checkbox"
@@ -287,8 +289,13 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
           onClear={() => filters.recons.forEach((v) => api.toggleRecon(v))}
         />
 
-        {/* 검색창 — 남는 공간을 채워 길게(반응형) */}
-        <div className="relative min-w-0 flex-1">
+        {/* 검색창 + 토글/뒤로 묶음 — 모바일은 전체폭 한 줄로 내려(order-last)
+            검색창과 '← 시험지' 뒤로 버튼을 같은 줄에 둔다. lg:contents 로
+            데스크톱에선 래퍼를 투명화해 기존 한 줄 레이아웃을 유지한다. */}
+        <div className="flex min-w-0 items-center gap-1.5 max-lg:order-last max-lg:w-full lg:contents">
+        {/* 검색창 — 남는 공간을 채워 길게(반응형). 모바일에선 이 줄의 오른쪽
+            끝으로 보낸다(order-2), 토글/뒤로 버튼은 왼쪽(order-1). */}
+        <div className="relative min-w-0 flex-1 max-lg:order-2">
           <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
           <input
             value={api.searchInput}
@@ -313,13 +320,13 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
           <button
             type="button"
             onClick={api.exitDrill}
-            className="inline-flex h-8 shrink-0 items-center gap-0.5 rounded-lg border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-500 transition hover:border-slate-300 hover:bg-slate-50"
+            className="inline-flex h-8 shrink-0 items-center gap-0.5 rounded-lg border border-slate-200 bg-white px-2.5 text-[12px] font-semibold text-slate-500 transition hover:border-slate-300 hover:bg-slate-50 max-lg:order-1"
           >
             <ChevronLeft className="size-3.5" />
             시험지
           </button>
         ) : (
-          <div className="inline-flex h-8 shrink-0 items-center overflow-hidden rounded-lg border border-slate-200">
+          <div className="inline-flex h-8 shrink-0 items-center overflow-hidden rounded-lg border border-slate-200 max-lg:order-1">
             <button
               type="button"
               onClick={api.goToPapers}
@@ -351,6 +358,7 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
             </button>
           </div>
         )}
+        </div>
       </div>
 
       {/* 적용된 필터 칩 */}

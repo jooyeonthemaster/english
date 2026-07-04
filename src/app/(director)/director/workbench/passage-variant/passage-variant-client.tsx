@@ -21,6 +21,8 @@ import { SaveButton } from "@/components/ui/save-button";
 
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
+import { useMobilePagination } from "@/hooks/use-mobile-pagination";
+import { Pagination } from "@/components/workbench/shared/pagination";
 import { createDirectInputPassageMaterial } from "@/actions/workbench";
 import {
   defaultVariantTitle,
@@ -150,6 +152,16 @@ export function PassageVariantClient({ passages }: PassageVariantClientProps) {
         p.content.toLowerCase().includes(q),
     );
   }, [passages, search]);
+
+  // 모바일 전용 10개/페이지(데스크톱은 isMobile=false 라 전체 그대로).
+  const {
+    isMobile,
+    page: sourcePage,
+    setPage: setSourcePage,
+    totalPages: sourceTotalPages,
+    visibleItems: visibleSources,
+  } = useMobilePagination(filtered, { resetKey: search });
+  const sourceListRef = useRef<HTMLDivElement>(null);
 
   // ── 생성 상태 / 결과 / 저장 ──
   const [busyKey, setBusyKey] = useState<string | null>(null);
@@ -352,7 +364,7 @@ export function PassageVariantClient({ passages }: PassageVariantClientProps) {
                 />
               </div>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto p-2">
+            <div ref={sourceListRef} className="min-h-0 flex-1 overflow-y-auto p-2">
               {filtered.length === 0 ? (
                 <div className="flex flex-col items-center justify-center gap-1.5 px-4 py-12 text-center">
                   <Library className="h-7 w-7 text-slate-300" aria-hidden="true" />
@@ -364,7 +376,7 @@ export function PassageVariantClient({ passages }: PassageVariantClientProps) {
                 </div>
               ) : (
                 <ul className="space-y-1.5">
-                  {filtered.map((p) => {
+                  {visibleSources.map((p) => {
                     const active = p.id === selectedId;
                     return (
                       <li key={p.id}>
@@ -421,6 +433,16 @@ export function PassageVariantClient({ passages }: PassageVariantClientProps) {
                   })}
                 </ul>
               )}
+              {isMobile ? (
+                <Pagination
+                  page={sourcePage}
+                  totalPages={sourceTotalPages}
+                  onGoToPage={(next) => {
+                    setSourcePage(next);
+                    sourceListRef.current?.scrollTo({ top: 0 });
+                  }}
+                />
+              ) : null}
             </div>
           </section>
 

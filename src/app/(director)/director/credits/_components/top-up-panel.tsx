@@ -78,9 +78,13 @@ export interface CreditTopUpProduct {
   price: number;
   discountRate: number;
   discountAmount: number;
+  bonusRate: number;
+  grantedCreditAmount: number;
+  bonusCredits: number;
   perCredit: number;
   estimatedAutoQuestionCount: number;
   perAutoQuestion: number;
+  expiryDays: number | null;
   promotionName: string | null;
   promotionStartsAt: string | null;
   promotionEndsAt: string | null;
@@ -379,7 +383,7 @@ export function TopUpPanel({
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-blue-50">
+      <div className="grid grid-cols-1 gap-y-1.5 divide-y divide-blue-50 md:grid-cols-4 md:gap-y-1.5 md:[grid-template-rows:repeat(7,auto)] md:divide-y-0 md:divide-x">
         {products.length === 0 ? (
           <div className="col-span-full px-5 py-12 text-center text-[13px] text-gray-400">
             현재 노출 중인 크레딧 상품이 없습니다.
@@ -387,6 +391,28 @@ export function TopUpPanel({
         ) : products.map((product) => {
           const loading = payingCredits === product.creditAmount;
           const deal = productDeals.get(product.id)!;
+          const isPromo = product.isPromotionActive;
+          const hasPromoDiscount = isPromo && product.price < product.basePrice;
+          const promoEnd = product.promotionEndsAt
+            ? new Date(product.promotionEndsAt)
+            : null;
+          const promoEndShort = promoEnd
+            ? `${promoEnd.getMonth() + 1}/${promoEnd.getDate()}`
+            : "";
+          // 카드 공통 슬롯(행)을 채우기 위한 파생값 — 같은 종류 요소가 같은 줄에 오도록.
+          const showDiscountBadge =
+            hasPromoDiscount || (!isPromo && deal.offRate > 0);
+          const badgeOffRate = hasPromoDiscount
+            ? product.discountRate
+            : deal.offRate;
+          const badgeSave = hasPromoDiscount
+            ? product.discountAmount
+            : deal.saveAmount;
+          const strikePrice = hasPromoDiscount
+            ? product.basePrice
+            : deal.listPrice;
+          const isBaseline = !isPromo && deal.offRate <= 0;
+          const hasPromoBonus = isPromo && product.bonusCredits > 0;
           return (
             <button
               key={product.id}
@@ -396,72 +422,129 @@ export function TopUpPanel({
               }}
               disabled={disabled || payingCredits !== null}
               className={cn(
-                "group relative flex min-h-[128px] flex-col text-left px-5 py-4 transition hover:bg-blue-50/50 disabled:cursor-wait disabled:opacity-70",
-                deal.isBestDeal && "bg-gradient-to-b from-rose-50/70 to-transparent",
+                // 각 카드는 7행 그리드. md 이상에선 subgrid 로 부모의 행 트랙을 공유해
+                // 카드마다 같은 슬롯이 같은 줄에 정렬된다(빈 요소는 빈 슬롯으로 예약).
+                "group relative grid grid-rows-[repeat(7,auto)] gap-y-1.5 px-5 py-4 text-left transition hover:bg-blue-50/50 disabled:cursor-wait disabled:opacity-70 md:row-span-7 md:grid-rows-subgrid md:gap-y-0",
+                isPromo && "promo-card-glow z-10 bg-emerald-50/30",
+                !isPromo &&
+                  deal.isBestDeal &&
+                  "bg-gradient-to-b from-rose-50/70 to-transparent",
               )}
             >
-              {deal.isBestDeal && deal.offRate > 0 && (
+              {!isPromo && deal.isBestDeal && deal.offRate > 0 && (
                 <span className="absolute right-3 top-3 inline-flex items-center gap-0.5 rounded-full bg-gradient-to-r from-rose-500 to-orange-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
                   <Sparkles className="size-2.5" strokeWidth={2.6} />
                   최대 할인
                 </span>
               )}
-              <div className="flex items-center gap-1.5">
-                <span className="text-[12px] font-semibold text-blue-600">
-                  {product.name}
-                </span>
-                <span className="inline-flex rounded-md bg-blue-50 px-1.5 py-0.5 text-[11px] font-bold text-blue-600 tabular-nums">
-                  {product.creditAmount.toLocaleString("ko-KR")}C
-                </span>
-              </div>
-              <div className="mt-2 text-[11px] font-medium text-gray-500">
-                자동출제 약{" "}
-                {product.estimatedAutoQuestionCount.toLocaleString("ko-KR")}
-                문항 · {product.perAutoQuestion.toLocaleString("ko-KR")}원/문항
+
+              {/* 1) 상품명 · 크레딧 · 프로모션 보너스 */}
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="text-[12px] font-semibold text-blue-600">
+                    {product.name}
+                  </span>
+                  {hasPromoBonus ? (
+                    <span className="inline-flex rounded-md bg-slate-100 px-1.5 py-0.5 text-[11px] font-bold text-slate-400 line-through decoration-slate-400 decoration-2 tabular-nums">
+                      {product.creditAmount.toLocaleString("ko-KR")}C
+                    </span>
+                  ) : (
+                    <span className="inline-flex rounded-md bg-blue-50 px-1.5 py-0.5 text-[11px] font-bold text-blue-600 tabular-nums">
+                      {product.grantedCreditAmount.toLocaleString("ko-KR")}C
+                    </span>
+                  )}
+                </div>
+                {hasPromoBonus && (
+                  <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                    <span className="inline-flex items-center gap-0.5 rounded-md bg-emerald-100 px-1.5 py-0.5 text-[10.5px] font-extrabold text-emerald-700 tabular-nums">
+                      <Sparkles className="size-2.5" strokeWidth={2.6} />
+                      +{product.bonusCredits.toLocaleString("ko-KR")}C 추가 증정
+                    </span>
+                    <span className="inline-flex rounded-md bg-blue-50 px-1.5 py-0.5 text-[10.5px] font-extrabold text-blue-700 tabular-nums">
+                      총 {product.grantedCreditAmount.toLocaleString("ko-KR")}C 지급
+                    </span>
+                  </div>
+                )}
               </div>
 
-              {deal.offRate > 0 ? (
-                <>
-                  <div className="mt-3 flex items-center gap-1.5">
+              {/* 2) 자동출제 추정 · 유효기간 — 한 줄 고정. 카드 폭(cqw)에 맞춰 폰트를
+                  자동 축소해 어떤 폭에서도 넘치지 않게 한다. text-[Npx] 계열을 피해
+                  큰글씨(smoat-large-ui) 리맵의 !important 덮어쓰기도 받지 않는다. */}
+              <div className="@container">
+                <span className="block whitespace-nowrap text-[min(13px,4.4cqw)] font-medium leading-tight text-gray-500">
+                  자동출제 약{" "}
+                  {product.estimatedAutoQuestionCount.toLocaleString("ko-KR")}
+                  문항 · {product.perAutoQuestion.toLocaleString("ko-KR")}원/문항
+                  <span className="text-gray-400">
+                    {" · "}
+                    {product.expiryDays && product.expiryDays > 0
+                      ? `유효기간 ${product.expiryDays.toLocaleString("ko-KR")}일`
+                      : "무기한 이용"}
+                  </span>
+                </span>
+              </div>
+
+              {/* 3) 프로모션 상태 (없으면 빈 슬롯) */}
+              <div className="min-w-0">
+                {isPromo && (
+                  <span className="inline-flex max-w-full items-center gap-0.5 rounded-md bg-emerald-100 px-1.5 py-0.5 text-[10.5px] font-bold text-emerald-700">
+                    <Sparkles className="size-2.5 shrink-0" strokeWidth={2.6} />
+                    <span className="truncate">
+                      {product.promotionName || "프로모션"} 적용 중
+                      {promoEndShort ? ` · ~${promoEndShort}` : ""}
+                    </span>
+                  </span>
+                )}
+              </div>
+
+              {/* 4) 할인 뱃지(% OFF · 절약) / 기준 단가 (없으면 빈 슬롯) */}
+              <div>
+                {showDiscountBadge ? (
+                  <div className="flex items-center gap-1.5">
                     <span className="inline-flex items-center gap-0.5 rounded-md bg-rose-100 px-1.5 py-0.5 text-[12px] font-extrabold tabular-nums text-rose-600">
                       <Flame className="size-3" strokeWidth={2.6} />
-                      {deal.offRate}% OFF
+                      {badgeOffRate}% OFF
                     </span>
                     <span className="text-[11px] font-bold text-rose-600 tabular-nums">
-                      {deal.saveAmount.toLocaleString("ko-KR")}원 절약
+                      {badgeSave.toLocaleString("ko-KR")}원 절약
                     </span>
-                    {product.isPromotionActive && (
-                      <span className="inline-flex rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700">
-                        {product.promotionName || "프로모션"} 적용
-                      </span>
-                    )}
                   </div>
-                  <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 leading-tight tracking-tight tabular-nums">
-                    <span className="whitespace-nowrap text-[24px] font-bold text-gray-400 line-through">
-                      {deal.listPrice.toLocaleString("ko-KR")}원
+                ) : isBaseline ? (
+                  <span className="inline-flex w-fit rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-500">
+                    기준 단가
+                  </span>
+                ) : null}
+              </div>
+
+              {/* 5) 정가 취소선 (할인 없으면 빈 슬롯) */}
+              <div className="tabular-nums">
+                {showDiscountBadge && (
+                  <span className="whitespace-nowrap text-[15px] font-semibold text-gray-400 line-through">
+                    {strikePrice.toLocaleString("ko-KR")}원
+                  </span>
+                )}
+              </div>
+
+              {/* 6) 최종 가격 (할인형은 프로모션가·빨강) */}
+              <div className="leading-tight tracking-tight tabular-nums">
+                {hasPromoDiscount ? (
+                  <span className="flex items-baseline gap-1.5">
+                    <span className="text-[11px] font-bold text-rose-500">
+                      프로모션가
                     </span>
-                    <span className="whitespace-nowrap text-[24px] font-bold text-gray-950">
+                    <span className="whitespace-nowrap text-[24px] font-extrabold text-rose-600">
                       {product.price.toLocaleString("ko-KR")}원
                     </span>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="mt-3 inline-flex w-fit rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-500">
-                    기준 단가
-                  </div>
-                  <div className="mt-2 whitespace-nowrap text-[24px] font-bold leading-tight tracking-tight text-gray-950 tabular-nums">
+                  </span>
+                ) : (
+                  <span className="whitespace-nowrap text-[24px] font-bold text-gray-950">
                     {product.price.toLocaleString("ko-KR")}원
-                  </div>
-                  {product.isPromotionActive && (
-                    <div className="mt-0.5 text-[11px] font-medium text-gray-400 line-through tabular-nums">
-                      {product.basePrice.toLocaleString("ko-KR")}원
-                    </div>
-                  )}
-                </>
-              )}
+                  </span>
+                )}
+              </div>
 
-              <div className="mt-auto pt-4">
+              {/* 7) CTA */}
+              <div className="self-end pt-3">
                 <div
                   className={cn(
                     "topup-cta-glow inline-flex h-11 w-full items-center justify-center rounded-xl bg-blue-600 px-4 text-[14px] font-bold text-white transition group-hover:bg-blue-700 group-hover:scale-[1.02]",
@@ -585,7 +668,11 @@ export function TopUpMethodDialog({
           <DialogTitle>결제 수단 선택</DialogTitle>
           <DialogDescription>
             {product
-              ? `${product.name} · ${product.creditAmount.toLocaleString("ko-KR")}C · ${product.price.toLocaleString("ko-KR")}원`
+              ? `${product.name} · ${product.grantedCreditAmount.toLocaleString("ko-KR")}C${
+                  product.bonusCredits > 0
+                    ? ` (+${product.bonusCredits.toLocaleString("ko-KR")}C 보너스)`
+                    : ""
+                } · ${product.price.toLocaleString("ko-KR")}원`
               : ""}
           </DialogDescription>
         </DialogHeader>

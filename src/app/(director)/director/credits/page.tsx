@@ -71,6 +71,77 @@ function ExpiryCountdown({ expiresAt }: { expiresAt: string }) {
   );
 }
 
+// 프로모션 링크로 진입했을 때(?promo=applied|expired) 상단에 뜨는 안내 배너.
+// 클라이언트에서 쿼리를 읽고 즉시 URL에서 제거해 새로고침 시 재노출을 막는다.
+function PromoNotice() {
+  const [promo, setPromo] = useState<"applied" | "expired" | null>(null);
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search).get("promo");
+    if (p === "applied" || p === "expired") {
+      setPromo(p);
+      const url = new URL(window.location.href);
+      url.searchParams.delete("promo");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, []);
+
+  if (!promo) return null;
+  const expired = promo === "expired";
+  return (
+    <div
+      className={cn(
+        "flex items-start justify-between gap-3 rounded-xl border px-4 py-3",
+        expired
+          ? "border-amber-200 bg-amber-50"
+          : "border-emerald-200 bg-emerald-50",
+      )}
+    >
+      <div className="flex items-start gap-2">
+        {expired ? (
+          <AlertCircle
+            className="mt-0.5 size-4 shrink-0 text-amber-600"
+            strokeWidth={2}
+          />
+        ) : (
+          <CheckCircle2
+            className="mt-0.5 size-4 shrink-0 text-emerald-600"
+            strokeWidth={2}
+          />
+        )}
+        <p
+          className={cn(
+            "text-[13px] leading-5",
+            expired ? "text-amber-800" : "text-emerald-800",
+          )}
+        >
+          {expired ? (
+            <>
+              기간이 지난 프로모션입니다. 기본 크레딧 관리 페이지로 이동했어요.
+            </>
+          ) : (
+            <>
+              프로모션이 적용되었어요! 아래 충전 상품에서 혜택가·보너스 크레딧을
+              확인하고 충전하세요.
+            </>
+          )}
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={() => setPromo(null)}
+        className={cn(
+          "shrink-0 text-[12px] font-medium transition-colors",
+          expired
+            ? "text-amber-600 hover:text-amber-800"
+            : "text-emerald-600 hover:text-emerald-800",
+        )}
+      >
+        닫기
+      </button>
+    </div>
+  );
+}
+
 export default function CreditsPage() {
   const {
     bankDepositCompleted,
@@ -136,6 +207,7 @@ export default function CreditsPage() {
   return (
     <>
       <div className="space-y-5 -mx-1">
+      <PromoNotice />
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>

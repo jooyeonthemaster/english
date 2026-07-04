@@ -13,6 +13,7 @@ import type {
 } from "@/lib/exam-passages/types";
 import { EXAM_MAX_IDS, EXAM_PAGE_SIZE } from "@/lib/exam-passages/types";
 import { toExamPick } from "@/lib/exam-passages/format";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 // 기출 지문 브라우저의 데이터·필터·선택 상태 훅.
 // /api/exam-passages 를 호출해 facet 까지 함께 받는다(첫 응답에서 facets 채움).
@@ -43,6 +44,11 @@ export function useExamPassageLibrary() {
   const [q, setQ] = useState("");
   const [filters, setFilters] = useState<MultiFilters>(EMPTY_FILTERS);
   const [page, setPage] = useState(1);
+
+  // 모바일에선 다른 목록들과 동일하게 한 페이지 10개로 통일(데스크톱은 기존 24).
+  // 드릴인(특정 시험지 열기)은 한 화면에 다 보이도록 100 유지.
+  const isMobile = useIsMobile();
+  const pageSize = isMobile ? 10 : EXAM_PAGE_SIZE;
 
   // 시험지별 ⇄ 문제별 토글(명시적). 드릴인은 별도 상태.
   const [mode, setMode] = useState<ExamViewMode>("papers");
@@ -95,14 +101,19 @@ export function useExamPassageLibrary() {
       if (filters.types.size) p.set("types", [...filters.types].join(","));
       if (filters.recons.size) p.set("recon", [...filters.recons].join(","));
       if (drillExamId) p.set("examIds", drillExamId);
-      p.set("pageSize", String(drillExamId ? 100 : EXAM_PAGE_SIZE));
+      p.set("pageSize", String(drillExamId ? 100 : pageSize));
     } else {
       p.set("group", "paper");
-      p.set("pageSize", String(EXAM_PAGE_SIZE));
+      p.set("pageSize", String(pageSize));
     }
     p.set("page", String(drillExamId ? 1 : page));
     return { params: p, showProblems };
-  }, [q, filters, page, mode, drillExamId]);
+  }, [q, filters, page, mode, drillExamId, pageSize]);
+
+  // 모바일↔데스크톱 전환으로 페이지 크기가 바뀌면 1페이지로 되돌린다(범위 밖 방지).
+  useEffect(() => {
+    setPage(1);
+  }, [pageSize]);
 
   // 목록 로드. (외부 시스템=API 동기화를 위한 비동기 로딩 플래그이므로
   // set-state-in-effect 규칙은 의도적으로 비활성화 — 파생 상태가 아님.)

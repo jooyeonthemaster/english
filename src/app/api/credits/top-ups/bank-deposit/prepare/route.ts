@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireStaffAuth } from "@/lib/auth";
 import { getActiveCreditTopUpProductByCredits } from "@/lib/credit-top-up-products";
+import { PROMO_COOKIE, parsePromoTokens } from "@/lib/promo-link";
 import {
   BANK_TRANSFER_PAY_METHOD,
   getBankDepositConfig,
@@ -40,7 +41,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const product = await getActiveCreditTopUpProductByCredits(parsed.data.credits);
+    // 프로모션 적용 여부는 뷰어(내 학원/링크 토큰) 기준으로 서버가 재검증.
+    const linkTokens = parsePromoTokens(request.cookies.get(PROMO_COOKIE)?.value);
+    const product = await getActiveCreditTopUpProductByCredits(
+      parsed.data.credits,
+      { academyId: staff.academyId, linkTokens },
+    );
     if (!product) {
       return NextResponse.json(
         { error: "지원하지 않는 충전 상품입니다." },
@@ -87,24 +93,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // 지급 크레딧 = 기본 + 프로모션 보너스(활성 시). 결제금액(price)은 그대로.
+    const grantedCredits = product.grantedCreditAmount;
+
     const topUp = await prisma.creditTopUp.create({
       data: {
         academyId: staff.academyId,
-        creditAmount: product.creditAmount,
+        creditAmount: grantedCredits,
         price: product.price,
         paymentMethod: BANK_TRANSFER_PAY_METHOD,
-        orderName: `SMOAT 크레딧 ${product.creditAmount.toLocaleString("ko-KR")}C`,
+        orderName: `SMOAT 크레딧 ${grantedCredits.toLocaleString("ko-KR")}C`,
         currency: "KRW",
         status: "WAITING_FOR_DEPOSIT",
         requestedBy: staff.id,
         customData: {
           academyId: staff.academyId,
           staffId: staff.id,
-          credits: product.creditAmount,
+          credits: grantedCredits,
           price: product.price,
           productCode: product.code,
           basePrice: product.basePrice,
           discountRate: product.isPromotionActive ? product.discountRate : 0,
+          bonusRate: product.isPromotionActive ? product.bonusRate : 0,
           flow: "bank_manual",
           depositorName,
         },

@@ -339,9 +339,11 @@ export async function grantBankDepositTopUp(
           status: string;
           requestedBy: string | null;
           creditTransactionId: string | null;
+          productCode: string | null;
         }>
       >`
-        SELECT id, "academyId", "creditAmount", price, status, "requestedBy", "creditTransactionId"
+        SELECT id, "academyId", "creditAmount", price, status, "requestedBy",
+               "creditTransactionId", "customData"->>'productCode' AS "productCode"
         FROM credit_top_ups
         WHERE id = ${topUpId}
         FOR UPDATE
@@ -375,15 +377,21 @@ export async function grantBankDepositTopUp(
       });
       const monthlyAllocation = activeSub?.plan.monthlyCredits ?? 0;
 
-      // Extend the balance-wide expiry by the purchased product's validity
-      // (keyed by creditAmount, UNIQUE). 0/null = never expires.
-      const productRows = await tx.$queryRaw<
-        Array<{ expiryDays: number | null }>
-      >`
-        SELECT "expiryDays" FROM credit_top_up_products
-        WHERE "creditAmount" = ${topUp.creditAmount}
-        LIMIT 1
-      `;
+      // Extend the balance-wide expiry by the purchased product's validity.
+      // Prefer the productCode snapshotted in customData — creditAmount now holds
+      // the GRANTED total (base + promo bonus), so it no longer matches the
+      // product's base creditAmount. Fall back to creditAmount for legacy rows.
+      const productRows = topUp.productCode
+        ? await tx.$queryRaw<Array<{ expiryDays: number | null }>>`
+            SELECT "expiryDays" FROM credit_top_up_products
+            WHERE code = ${topUp.productCode}
+            LIMIT 1
+          `
+        : await tx.$queryRaw<Array<{ expiryDays: number | null }>>`
+            SELECT "expiryDays" FROM credit_top_up_products
+            WHERE "creditAmount" = ${topUp.creditAmount}
+            LIMIT 1
+          `;
       const expiryDays = productRows[0]?.expiryDays ?? 0;
 
       const balances = await tx.$queryRaw<Array<{ balance: number }>>`

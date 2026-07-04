@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { BrandIcon } from "@/components/brand/brand-mark";
 import { createSupabaseBrowserClient } from "@/lib/supabase-auth-browser";
 import { REFERRAL_COOKIE, REFERRAL_COOKIE_MAX_AGE } from "@/lib/growth/constants";
+import { normalizeStaffCallbackUrl } from "@/lib/auth-redirect";
 
 const SOCIAL_ERROR_MESSAGES: Record<string, string> = {
   missing_code: "인증 코드가 전달되지 않았습니다. 다시 시도해주세요.",
@@ -34,9 +35,14 @@ function RegisterInner() {
   const [socialLoading, setSocialLoading] = useState<"google" | "kakao" | null>(null);
   const errorCode = searchParams.get("error");
   const error = errorCode ? SOCIAL_ERROR_MESSAGES[errorCode] ?? "회원가입 처리 중 오류가 발생했습니다." : null;
+  const rawCallbackUrl = searchParams.get("callbackUrl");
+  const callbackUrl = normalizeStaffCallbackUrl(rawCallbackUrl);
 
   // Derived directly from the URL — no effect/setState needed for the badge.
   const referralCode = searchParams.get("ref")?.trim() || null;
+  const callbackQuery = rawCallbackUrl
+    ? `callbackUrl=${encodeURIComponent(callbackUrl)}`
+    : "";
 
   // Side effects for an incoming referral code (?ref=CODE): persist it in a
   // cookie so it survives the social-OAuth round trip, and record the click
@@ -61,10 +67,12 @@ function RegisterInner() {
     setSocialLoading("google");
     try {
       const supabase = createSupabaseBrowserClient();
-      const redirectTo = `${window.location.origin}/auth/callback?intent=register`;
+      const callback = new URL("/auth/callback", window.location.origin);
+      callback.searchParams.set("intent", "register");
+      if (rawCallbackUrl) callback.searchParams.set("callbackUrl", callbackUrl);
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: { redirectTo },
+        options: { redirectTo: callback.toString() },
       });
       if (oauthError) {
         setSocialLoading(null);
@@ -76,7 +84,10 @@ function RegisterInner() {
 
   function startKakaoSignup() {
     setSocialLoading("kakao");
-    window.location.href = "/api/auth/kakao?intent=register";
+    const kakaoUrl = new URL("/api/auth/kakao", window.location.origin);
+    kakaoUrl.searchParams.set("intent", "register");
+    if (rawCallbackUrl) kakaoUrl.searchParams.set("callbackUrl", callbackUrl);
+    window.location.assign(kakaoUrl.toString());
   }
 
   return (
@@ -211,7 +222,10 @@ function RegisterInner() {
 
             <div className="border-t border-slate-100 pt-5 text-center">
               <span className="text-[13px] font-semibold text-slate-500">이미 계정이 있나요? </span>
-              <Link href="/login" className="inline-flex items-center gap-1 text-[13px] font-black text-blue-600 hover:text-blue-700">
+              <Link
+                href={callbackQuery ? `/login?${callbackQuery}` : "/login"}
+                className="inline-flex items-center gap-1 text-[13px] font-black text-blue-600 hover:text-blue-700"
+              >
                 로그인
                 <LogIn className="size-3.5" />
               </Link>

@@ -20,7 +20,6 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
-  ALL_AUDIENCES,
   AUDIENCE_LABELS,
   BANNER_TEMPLATES,
   DISMISS_MODES,
@@ -36,6 +35,7 @@ import { createBanner, updateBanner } from "@/actions/admin-banners";
 import type { AdminBannerDto } from "@/actions/admin-banners";
 import { BannerView } from "@/components/site-banners/banner-view";
 import { TEMPLATE_RENDERERS } from "@/components/site-banners/template-renderers";
+import { BannerTargetPicker } from "./banner-target-picker";
 
 interface Draft {
   title: string;
@@ -50,6 +50,8 @@ interface Draft {
   isActive: boolean;
   dismissMode: BannerDismissMode;
   showDismissButton: boolean;
+  targetMode: "ALL" | "SPECIFIC";
+  targetAcademyIds: string[];
   startsAt: string;
   endsAt: string;
   autoOpenOnLowCredit: boolean;
@@ -84,6 +86,8 @@ function draftFromDto(dto: AdminBannerDto | null): Draft {
       isActive: false,
       dismissMode: "DAILY",
       showDismissButton: true,
+      targetMode: "ALL",
+      targetAcademyIds: [],
       startsAt: "",
       endsAt: "",
       autoOpenOnLowCredit: false,
@@ -102,6 +106,8 @@ function draftFromDto(dto: AdminBannerDto | null): Draft {
     isActive: dto.isActive,
     dismissMode: dto.dismissMode,
     showDismissButton: dto.showDismissButton,
+    targetMode: dto.targetMode,
+    targetAcademyIds: dto.targetAcademyIds,
     startsAt: isoToLocalInput(dto.startsAt),
     endsAt: isoToLocalInput(dto.endsAt),
     autoOpenOnLowCredit: dto.autoOpenOnLowCredit,
@@ -131,6 +137,7 @@ export function BannerEditorModal({
   const [zoom, setZoom] = useState(0.9);
   const [editingTitle, setEditingTitle] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [targetPickerOpen, setTargetPickerOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const titleRef = useRef<HTMLInputElement | null>(null);
 
@@ -148,6 +155,7 @@ export function BannerEditorModal({
     setTab("edit");
     setZoom(0.9);
     setEditingTitle(false);
+    setTargetPickerOpen(false);
   }
 
   const template = getTemplate(draft.templateKey);
@@ -165,14 +173,6 @@ export function BannerEditorModal({
       content: withTemplateDefaults(key, d.content),
     }));
   }
-  function toggleAudience(a: BannerAudience) {
-    setDraft((d) => {
-      const has = d.audiences.includes(a);
-      const next = has ? d.audiences.filter((x) => x !== a) : [...d.audiences, a];
-      return { ...d, audiences: next.length ? next : d.audiences };
-    });
-  }
-
   async function handleUpload(file: File) {
     setUploading(true);
     try {
@@ -223,6 +223,8 @@ export function BannerEditorModal({
         isActive: draft.isActive,
         dismissMode: draft.dismissMode,
         showDismissButton: draft.showDismissButton,
+        targetMode: draft.targetMode,
+        targetAcademyIds: draft.targetAcademyIds,
         startsAt: localInputToIso(draft.startsAt) || "",
         endsAt: localInputToIso(draft.endsAt) || "",
         autoOpenOnLowCredit: draft.autoOpenOnLowCredit,
@@ -274,12 +276,13 @@ export function BannerEditorModal({
         <DialogContent
           className="flex h-[calc(100dvh-3rem)] w-[calc(100vw-3rem)] max-w-[1180px] flex-col gap-0 overflow-hidden p-0 sm:w-[calc(100vw-3rem)] sm:max-w-[1180px] sm:p-0"
           onInteractOutside={(e) => {
-            // Don't let clicks on the live-preview modal close the editor.
-            if (livePreview) e.preventDefault();
+            // Don't let clicks on nested overlays (live preview / target picker)
+            // close the editor.
+            if (livePreview || targetPickerOpen) e.preventDefault();
           }}
           onEscapeKeyDown={(e) => {
-            // ESC should close the live preview first, not the editor.
-            if (livePreview) e.preventDefault();
+            // ESC should close the nested overlay first, not the editor.
+            if (livePreview || targetPickerOpen) e.preventDefault();
           }}
         >
           {/* Single hidden file input — always mounted so both the settings
@@ -708,6 +711,7 @@ export function BannerEditorModal({
                       </div>
                     )}
 
+                    {/* 노출 대상 — 역할 + 범위(전체/특정)를 한 곳에서 설정 */}
                     <div>
                       <SectionLabel>
                         <span className="inline-flex items-center gap-1">
@@ -715,17 +719,35 @@ export function BannerEditorModal({
                           노출 대상
                         </span>
                       </SectionLabel>
-                      <div className="grid grid-cols-3 gap-1.5">
-                        {ALL_AUDIENCES.map((a) => (
-                          <Seg
-                            key={a}
-                            active={draft.audiences.includes(a)}
-                            onClick={() => toggleAudience(a)}
-                          >
-                            {AUDIENCE_LABELS[a]}
-                          </Seg>
-                        ))}
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setTargetPickerOpen(true)}
+                        className="flex w-full items-center justify-between gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-left transition-colors hover:bg-slate-50"
+                      >
+                        <span className="min-w-0">
+                          <span className="block text-[13px] font-bold text-slate-800">
+                            {draft.audiences.map((a) => AUDIENCE_LABELS[a]).join(" · ") ||
+                              "역할 미선택"}
+                          </span>
+                          <span className="mt-0.5 block text-[11.5px] text-slate-400">
+                            {draft.targetMode === "ALL"
+                              ? "전체 학원에 노출"
+                              : `특정 ${draft.targetAcademyIds.length}명에게 노출`}
+                          </span>
+                        </span>
+                        <span className="shrink-0 text-[12px] font-bold text-blue-600">설정</span>
+                      </button>
+                      {draft.audiences.length === 0 && (
+                        <p className="mt-1.5 text-[11px] leading-snug text-amber-600">
+                          역할이 선택되지 않아 아무에게도 노출되지 않아요.
+                        </p>
+                      )}
+                      {draft.targetMode === "SPECIFIC" &&
+                        draft.targetAcademyIds.length === 0 && (
+                          <p className="mt-1.5 text-[11px] leading-snug text-amber-600">
+                            선택된 대상이 없어 아무에게도 노출되지 않아요.
+                          </p>
+                        )}
                     </div>
 
                     <div>
@@ -834,6 +856,21 @@ export function BannerEditorModal({
       {livePreview && (
         <BannerView banner={previewBanner} open onDismiss={() => setLivePreview(false)} />
       )}
+
+      <BannerTargetPicker
+        open={targetPickerOpen}
+        onOpenChange={setTargetPickerOpen}
+        audiences={draft.audiences}
+        targetMode={draft.targetMode}
+        selectedIds={draft.targetAcademyIds}
+        onConfirm={(sel) =>
+          patch({
+            audiences: sel.audiences,
+            targetMode: sel.targetMode,
+            targetAcademyIds: sel.academyIds,
+          })
+        }
+      />
     </>
   );
 }
@@ -843,34 +880,6 @@ function SectionLabel({ children }: { children: ReactNode }) {
     <p className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
       {children}
     </p>
-  );
-}
-
-function Seg({
-  active,
-  onClick,
-  icon,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  icon?: ReactNode;
-  children: ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "flex h-9 items-center justify-center gap-1 rounded-md border text-[12px] font-bold transition-colors",
-        active
-          ? "border-blue-300 bg-blue-50 text-blue-700"
-          : "border-slate-200 text-slate-500 hover:bg-slate-50",
-      )}
-    >
-      {icon}
-      {children}
-    </button>
   );
 }
 

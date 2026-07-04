@@ -20,6 +20,8 @@ import {
   LifeBuoy,
   Banknote,
   Megaphone,
+  Package,
+  Ticket,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -87,7 +89,9 @@ const NAV_SECTIONS: Array<{ title: string; items: NavItem[] }> = [
   {
     title: "크레딧·결제",
     items: [
-      { label: "상품 · 결제 관리", icon: Coins, href: "/admin/credit-plans" },
+      { label: "상품 관리", icon: Package, href: "/admin/products" },
+      { label: "프로모션 관리", icon: Ticket, href: "/admin/promotions" },
+      { label: "결제 관리", icon: Coins, href: "/admin/credit-plans" },
       { label: "무통장입금", icon: Banknote, href: "/admin/credits/bank-deposits" },
       { label: "원가 분석", icon: ChartNoAxesCombined, href: "/admin/costs" },
     ],

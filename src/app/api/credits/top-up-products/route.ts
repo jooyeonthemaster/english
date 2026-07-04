@@ -1,12 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireStaffAuth } from "@/lib/auth";
 import { getCreditTopUpProducts } from "@/lib/credit-top-up-products";
 import { isCardTopUpAllowed } from "@/lib/card-topup-access";
+import { PROMO_COOKIE, parsePromoTokens } from "@/lib/promo-link";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const staff = await requireStaffAuth("DIRECTOR");
-    const products = await getCreditTopUpProducts();
+    // 프로모션 노출 판정 컨텍스트: 내 학원(지정 대상) + 링크 쿠키(링크 해금).
+    const linkTokens = parsePromoTokens(req.cookies.get(PROMO_COOKIE)?.value);
+    const products = await getCreditTopUpProducts({
+      ctx: { academyId: staff.academyId, linkTokens },
+    });
     const cardEnabled = isCardTopUpAllowed({
       academyId: staff.academyId,
       email: staff.email,

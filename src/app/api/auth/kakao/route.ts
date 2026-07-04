@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { signSocialBridgeToken } from "@/lib/social-bridge";
 import { signOnboardingToken } from "@/lib/onboarding-token";
+import { optionalStaffCallbackUrl } from "@/lib/auth-redirect";
 
 const KAKAO_AUTHORIZE_URL = "https://kauth.kakao.com/oauth/authorize";
 const KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
@@ -13,9 +14,38 @@ function parseIntent(value: string | null): AuthIntent {
   return value === "register" ? "register" : "login";
 }
 
-function errorRedirect(origin: string, code: string, intent: AuthIntent = "login") {
+function encodeState(intent: AuthIntent, callbackUrl: string | null): string {
+  const state = new URLSearchParams({ intent });
+  if (callbackUrl) state.set("callbackUrl", callbackUrl);
+  return state.toString();
+}
+
+function parseState(value: string | null): {
+  intent: AuthIntent;
+  callbackUrl: string | null;
+} {
+  if (!value) return { intent: "login", callbackUrl: null };
+  const legacyIntent = parseIntent(value);
+  if (value === "login" || value === "register") {
+    return { intent: legacyIntent, callbackUrl: null };
+  }
+
+  const state = new URLSearchParams(value);
+  return {
+    intent: parseIntent(state.get("intent")),
+    callbackUrl: optionalStaffCallbackUrl(state.get("callbackUrl")),
+  };
+}
+
+function errorRedirect(
+  origin: string,
+  code: string,
+  intent: AuthIntent = "login",
+  callbackUrl: string | null = null,
+) {
   const url = new URL(intent === "register" ? "/register" : "/login", origin);
   url.searchParams.set("error", code);
+  if (callbackUrl) url.searchParams.set("callbackUrl", callbackUrl);
   return NextResponse.redirect(url);
 }
 
@@ -23,16 +53,20 @@ export async function GET(request: NextRequest) {
   const { origin, searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const oauthError = searchParams.get("error");
-  const intent = parseIntent(searchParams.get("state") ?? searchParams.get("intent"));
+  const state = parseState(searchParams.get("state"));
+  const intent = code ? state.intent : parseIntent(searchParams.get("intent"));
+  const callbackUrl = code
+    ? state.callbackUrl
+    : optionalStaffCallbackUrl(searchParams.get("callbackUrl"));
 
   if (oauthError) {
-    return errorRedirect(origin, oauthError, intent);
+    return errorRedirect(origin, oauthError, intent, callbackUrl);
   }
 
   const clientId = process.env.KAKAO_CLIENT_ID;
   const clientSecret = process.env.KAKAO_CLIENT_SECRET;
   if (!clientId) {
-    return errorRedirect(origin, "kakao_not_configured", intent);
+    return errorRedirect(origin, "kakao_not_configured", intent, callbackUrl);
   }
 
   const redirectUri = `${origin}/api/auth/kakao`;
@@ -43,7 +77,7 @@ export async function GET(request: NextRequest) {
     authorizeUrl.searchParams.set("redirect_uri", redirectUri);
     authorizeUrl.searchParams.set("response_type", "code");
     authorizeUrl.searchParams.set("scope", "profile_nickname profile_image");
-    authorizeUrl.searchParams.set("state", intent);
+    authorizeUrl.searchParams.set("state", encodeState(intent, callbackUrl));
     return NextResponse.redirect(authorizeUrl.toString());
   }
 
@@ -74,12 +108,12 @@ export async function GET(request: NextRequest) {
       body: errorBody,
       redirect_uri_sent: redirectUri,
     });
-    return errorRedirect(origin, "kakao_token_failed", intent);
+    return errorRedirect(origin, "kakao_token_failed", intent, callbackUrl);
   }
   const tokenData: { access_token?: string } = await tokenRes.json();
   if (!tokenData.access_token) {
     console.error("[kakao-oauth] no access_token in response", tokenData);
-    return errorRedirect(origin, "kakao_token_failed", intent);
+    return errorRedirect(origin, "kakao_token_failed", intent, callbackUrl);
   }
 
   const userRes = await fetch(KAKAO_USER_URL, {
@@ -94,7 +128,7 @@ export async function GET(request: NextRequest) {
       status: userRes.status,
       body: errorBody,
     });
-    return errorRedirect(origin, "kakao_user_failed", intent);
+    return errorRedirect(origin, "kakao_user_failed", intent, callbackUrl);
   }
 
   const kakaoUser: {
@@ -119,8 +153,10 @@ export async function GET(request: NextRequest) {
   });
 
   if (staff) {
-    if (!staff.isActive) return errorRedirect(origin, "inactive", intent);
-    if (staff.role !== "DIRECTOR") return errorRedirect(origin, "not_director", intent);
+    if (!staff.isActive) return errorRedirect(origin, "inactive", intent, callbackUrl);
+    if (staff.role !== "DIRECTOR") {
+      return errorRedirect(origin, "not_director", intent, callbackUrl);
+    }
 
     await prisma.staff.update({
       where: { id: staff.id },
@@ -138,6 +174,7 @@ export async function GET(request: NextRequest) {
 
     const completeUrl = new URL("/auth/complete", origin);
     completeUrl.searchParams.set("token", bridgeToken);
+    if (callbackUrl) completeUrl.searchParams.set("callbackUrl", callbackUrl);
     return NextResponse.redirect(completeUrl);
   }
 
@@ -154,5 +191,6 @@ export async function GET(request: NextRequest) {
 
   const onboardingUrl = new URL("/auth/onboarding", origin);
   onboardingUrl.searchParams.set("token", onboardingToken);
+  if (callbackUrl) onboardingUrl.searchParams.set("callbackUrl", callbackUrl);
   return NextResponse.redirect(onboardingUrl);
 }

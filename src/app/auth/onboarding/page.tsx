@@ -11,6 +11,7 @@ import { decodeJwt } from "jose";
 import { ArrowRight, CheckCircle2, Loader2, MapPin, ShieldAlert } from "lucide-react";
 import { BrandIcon } from "@/components/brand/brand-mark";
 import { REFERRAL_COOKIE } from "@/lib/growth/constants";
+import { normalizeStaffCallbackUrl } from "@/lib/auth-redirect";
 
 const phoneRegex = /^(0\d{1,2}-?\d{3,4}-?\d{4})$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -66,6 +67,11 @@ function OnboardingInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const rawCallbackUrl = searchParams.get("callbackUrl");
+  const callbackUrl = normalizeStaffCallbackUrl(rawCallbackUrl);
+  const registerHref = rawCallbackUrl
+    ? `/register?callbackUrl=${encodeURIComponent(callbackUrl)}`
+    : "/register";
 
   const decoded = useMemo(() => {
     if (!token) return null;
@@ -145,7 +151,7 @@ function OnboardingInner() {
           <ShieldAlert className="mx-auto mb-3 size-6 text-rose-500" />
           <p className="text-sm font-bold text-slate-700">잘못된 접근입니다.</p>
           <Link
-            href="/register"
+            href={registerHref}
             className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-xl bg-blue-600 text-sm font-bold text-white hover:bg-blue-700"
           >
             회원가입 다시 시작
@@ -183,7 +189,7 @@ function OnboardingInner() {
         return;
       }
 
-      router.replace("/director/workbench/questions/generate");
+      router.replace(callbackUrl);
       router.refresh();
     } catch {
       setError("가입 처리 중 오류가 발생했습니다.");

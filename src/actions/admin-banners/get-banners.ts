@@ -23,6 +23,8 @@ export interface AdminBannerDto {
   isActive: boolean;
   dismissMode: BannerDismissMode;
   showDismissButton: boolean;
+  targetMode: "ALL" | "SPECIFIC";
+  targetAcademyIds: string[];
   startsAt: string | null;
   endsAt: string | null;
   autoOpenOnLowCredit: boolean;
@@ -37,6 +39,10 @@ function toContent(value: unknown): Record<string, string> {
     if (typeof v === "string") out[k] = v;
   }
   return out;
+}
+
+function toStringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((v): v is string => typeof v === "string") : [];
 }
 
 /** Full banner list for the admin console, ordered by priority then recency. */
@@ -61,6 +67,8 @@ export async function getBanners(): Promise<AdminBannerDto[]> {
     isActive: b.isActive,
     dismissMode: b.dismissMode as BannerDismissMode,
     showDismissButton: b.showDismissButton,
+    targetMode: b.targetMode === "SPECIFIC" ? "SPECIFIC" : "ALL",
+    targetAcademyIds: toStringArray(b.targetAcademyIds),
     startsAt: b.startsAt ? b.startsAt.toISOString() : null,
     endsAt: b.endsAt ? b.endsAt.toISOString() : null,
     autoOpenOnLowCredit: b.autoOpenOnLowCredit,

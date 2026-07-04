@@ -23,6 +23,24 @@ export async function getMemberDetail(memberId: string) {
             orderBy: { createdAt: "desc" },
           },
           creditBalance: true,
+          // 소속 회원(원장·강사) 로스터 — 학원 상세 "회원" 탭의 회원별 블록에 사용.
+          staff: {
+            orderBy: [{ role: "asc" }, { createdAt: "asc" }],
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true,
+              role: true,
+              isActive: true,
+              avatarUrl: true,
+              authProvider: true,
+              createdAt: true,
+              lastLoginAt: true,
+              kakaoId: true,
+              supabaseUserId: true,
+            },
+          },
           _count: {
             select: {
               students: true,
@@ -134,6 +152,22 @@ export async function getMemberDetail(memberId: string) {
         cancelledAt: sub.cancelledAt,
       })),
       creditBalance: academy.creditBalance,
+      // 소속 회원 로스터(원장·강사) — 회원 정보 + 아웃리치에 필요한 사람 단위 필드.
+      // PII(이메일·전화·소셜 ID)는 목록/상세와 동일한 마스킹 정책.
+      academyStaff: academy.staff.map((st) => ({
+        id: st.id,
+        name: st.name,
+        email: elevated ? st.email : maskEmail(st.email),
+        phone: elevated ? st.phone : st.phone ? REDACTED : null,
+        role: st.role,
+        isActive: st.isActive,
+        avatarUrl: st.avatarUrl,
+        authProvider: st.authProvider,
+        createdAt: st.createdAt,
+        lastLoginAt: st.lastLoginAt,
+        kakaoId: elevated ? st.kakaoId : null,
+        supabaseUserId: elevated ? st.supabaseUserId : null,
+      })),
       consumptionByOp,
       dailyConsumption,
     },

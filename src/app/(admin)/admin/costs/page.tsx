@@ -22,8 +22,10 @@ import {
   type CostPeriodMode,
 } from "@/actions/admin";
 import { getFeatureMarginAnalysis } from "@/actions/admin/feature-margin";
+import { getFreeCreditBep } from "@/actions/admin/free-credit-bep";
 import { CostPeriodControls } from "@/components/admin/cost-period-controls";
 import { FeatureMarginView } from "@/components/admin/feature-margin-view";
+import { FreeCreditBepCard } from "@/components/admin/free-credit-bep-card";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -78,7 +80,10 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
       startValue: marginStart,
       endValue: marginEnd,
     });
-    const margin = await getFeatureMarginAnalysis(range, marginDisplayDate);
+    const [margin, bep] = await Promise.all([
+      getFeatureMarginAnalysis(range, marginDisplayDate),
+      getFreeCreditBep(range, marginLabel),
+    ]);
     const marginPrevHref = buildPreviousNextHref({
       mode: marginMode,
       dateValue: marginDate,
@@ -137,6 +142,8 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
             />
           </div>
         </section>
+
+        <FreeCreditBepCard data={bep} />
 
         <FeatureMarginView data={margin} />
       </div>

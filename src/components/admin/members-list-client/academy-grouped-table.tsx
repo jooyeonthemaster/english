@@ -130,37 +130,57 @@ export function AcademyGroupedTable({
                 />
               </TableCell>
 
-              {/* 학원 — 강조 */}
+              {/* 학원 — 강조. 학원 상세(대표 원장 관점)로 이동. */}
               <TableCell className="py-3 pl-3">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div
-                    className="size-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"
-                    aria-hidden
-                  >
-                    <Building2 className="size-5" strokeWidth={1.8} />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-[14px] font-semibold text-gray-900 truncate">
-                        {g.academyName}
-                      </span>
-                      {badge && (
-                        <Badge
-                          variant="secondary"
-                          className={cn(
-                            "border-0 text-[10px] px-1.5 h-4 font-medium shrink-0",
-                            badge.className,
+                {(() => {
+                  const repId = g.members[0]?.id;
+                  const body = (
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div
+                        className="size-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"
+                        aria-hidden
+                      >
+                        <Building2 className="size-5" strokeWidth={1.8} />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span
+                            className={cn(
+                              "text-[14px] font-semibold text-gray-900 truncate",
+                              repId && "group-hover/aca:text-blue-600",
+                            )}
+                          >
+                            {g.academyName}
+                          </span>
+                          {badge && (
+                            <Badge
+                              variant="secondary"
+                              className={cn(
+                                "border-0 text-[10px] px-1.5 h-4 font-medium shrink-0",
+                                badge.className,
+                              )}
+                            >
+                              {badge.label}
+                            </Badge>
                           )}
-                        >
-                          {badge.label}
-                        </Badge>
-                      )}
+                        </div>
+                        <div className="text-[11px] text-gray-400 truncate">
+                          /{g.slug} · 회원 {g.members.length}명
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-[11px] text-gray-400 truncate">
-                      /{g.slug} · 회원 {g.members.length}명
-                    </div>
-                  </div>
-                </div>
+                  );
+                  return repId ? (
+                    <Link
+                      href={`/admin/members/${repId}`}
+                      className="group/aca block rounded-md -m-1 p-1 outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30"
+                    >
+                      {body}
+                    </Link>
+                  ) : (
+                    body
+                  );
+                })()}
               </TableCell>
 
               {/* 소속 회원 — 약하게, 복수 지원 */}

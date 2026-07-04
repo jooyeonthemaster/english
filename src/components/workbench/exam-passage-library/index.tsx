@@ -25,6 +25,11 @@ export interface ExamPassageLibraryProps {
   busy?: boolean;
   /** 상단 안내 문구. */
   headerHint?: string;
+  /**
+   * 모바일(<lg)에서 하단 선택 바를 화면 맨 아래 고정한다(문제 생성 스텝 플로우).
+   * 이때 호스트는 공용 스텝 네비를 숨겨야 중복되지 않는다. PC 는 영향 없음.
+   */
+  mobileFixedFooter?: boolean;
 }
 
 /**
@@ -36,6 +41,7 @@ export function ExamPassageLibrary({
   onPick,
   pickLabel = "내 지문함에 담기",
   busy = false,
+  mobileFixedFooter = false,
 }: ExamPassageLibraryProps) {
   const api = useExamPassageLibrary();
   const [preview, setPreview] = useState<ExamPassage | null>(null);
@@ -70,7 +76,14 @@ export function ExamPassageLibrary({
       <ExamFilterBar api={api} />
 
       {/* 본문 — 스크롤 영역 */}
-      <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
+      <div
+        ref={bodyRef}
+        className={
+          "min-h-0 flex-1 overflow-y-auto px-3 py-3" +
+          // 하단 고정 바에 마지막 카드가 가리지 않게 모바일 여백 예약.
+          (mobileFixedFooter ? " max-lg:pb-24" : "")
+        }
+      >
         {api.loading ? (
           <div className="grid grid-cols-1 gap-2.5 sm:[grid-template-columns:repeat(auto-fill,minmax(340px,1fr))]">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -174,8 +187,16 @@ export function ExamPassageLibrary({
         )}
       </div>
 
-      {/* 선택 바 — 상시 노출. 가로로 긴 담기 버튼, 하나라도 고르면 활성화. */}
-      <div className="shrink-0 border-t border-slate-200 bg-white px-3 py-2.5 shadow-[0_-3px_10px_rgba(15,23,42,0.05)]">
+      {/* 선택 바 — 상시 노출. 가로로 긴 담기 버튼, 하나라도 고르면 활성화.
+          mobileFixedFooter 면 모바일에서 화면 맨 아래 고정(스텝 플로우). */}
+      <div
+        className={
+          "shrink-0 border-t border-slate-200 bg-white px-3 py-2.5 shadow-[0_-3px_10px_rgba(15,23,42,0.05)]" +
+          (mobileFixedFooter
+            ? " max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:z-40 max-lg:pb-[calc(env(safe-area-inset-bottom)+0.625rem)] max-lg:shadow-[0_-6px_20px_-10px_rgba(15,23,42,0.28)]"
+            : "")
+        }
+      >
         {api.selectedCount > 0 ? (
           <div className="mb-1.5 flex items-center justify-between gap-2 text-[12.5px] text-slate-600">
             <span>

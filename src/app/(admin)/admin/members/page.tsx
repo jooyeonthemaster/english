@@ -1,7 +1,9 @@
 import { Suspense } from "react";
 import { getMembers } from "@/actions/admin-members";
+import { getSignupCredits } from "@/lib/platform-settings";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MembersListClient } from "@/components/admin/members-list-client";
+import { SignupCreditSetting } from "@/components/admin/signup-credit-setting";
 
 export const dynamic = "force-dynamic";
 
@@ -26,16 +28,18 @@ function MembersSkeleton() {
   );
 }
 
-export default function MembersPage() {
+export default async function MembersPage() {
+  const signupCredits = await getSignupCredits();
   return (
     <div className="space-y-6">
-      <div className="flex items-end justify-between">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-[22px] font-bold text-gray-900">학원 · 회원 관리</h1>
           <p className="text-[13px] text-gray-400 mt-1">
             소셜·이메일로 가입한 원장 회원을 관리하고 크레딧을 조정합니다
           </p>
         </div>
+        <SignupCreditSetting initialAmount={signupCredits} />
       </div>
 
       <Suspense fallback={<MembersSkeleton />}>

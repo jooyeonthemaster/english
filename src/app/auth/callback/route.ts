@@ -3,6 +3,7 @@ import { createSupabaseServerClient } from "@/lib/supabase-auth-server";
 import { prisma } from "@/lib/prisma";
 import { signSocialBridgeToken } from "@/lib/social-bridge";
 import { signOnboardingToken } from "@/lib/onboarding-token";
+import { optionalStaffCallbackUrl } from "@/lib/auth-redirect";
 
 type AuthIntent = "login" | "register";
 
@@ -10,36 +11,49 @@ function parseIntent(value: string | null): AuthIntent {
   return value === "register" ? "register" : "login";
 }
 
-function buildErrorRedirect(origin: string, code: string, intent: AuthIntent = "login") {
+function buildErrorRedirect(
+  origin: string,
+  code: string,
+  intent: AuthIntent = "login",
+  callbackUrl: string | null = null,
+) {
   const url = new URL(intent === "register" ? "/register" : "/login", origin);
   url.searchParams.set("error", code);
+  if (callbackUrl) url.searchParams.set("callbackUrl", callbackUrl);
   return NextResponse.redirect(url);
 }
 
-function buildBridgeRedirect(origin: string, bridgeToken: string) {
+function buildBridgeRedirect(origin: string, bridgeToken: string, callbackUrl: string | null) {
   const url = new URL("/auth/complete", origin);
   url.searchParams.set("token", bridgeToken);
+  if (callbackUrl) url.searchParams.set("callbackUrl", callbackUrl);
   return NextResponse.redirect(url);
 }
 
-function buildOnboardingRedirect(origin: string, onboardingToken: string) {
+function buildOnboardingRedirect(
+  origin: string,
+  onboardingToken: string,
+  callbackUrl: string | null,
+) {
   const url = new URL("/auth/onboarding", origin);
   url.searchParams.set("token", onboardingToken);
+  if (callbackUrl) url.searchParams.set("callbackUrl", callbackUrl);
   return NextResponse.redirect(url);
 }
 
 export async function GET(request: NextRequest) {
   const { origin, searchParams } = new URL(request.url);
   const intent = parseIntent(searchParams.get("intent"));
+  const callbackUrl = optionalStaffCallbackUrl(searchParams.get("callbackUrl"));
 
   const oauthError = searchParams.get("error");
   if (oauthError) {
-    return buildErrorRedirect(origin, oauthError, intent);
+    return buildErrorRedirect(origin, oauthError, intent, callbackUrl);
   }
 
   const code = searchParams.get("code");
   if (!code) {
-    return buildErrorRedirect(origin, "missing_code", intent);
+    return buildErrorRedirect(origin, "missing_code", intent, callbackUrl);
   }
 
   const supabase = await createSupabaseServerClient();
@@ -50,7 +64,7 @@ export async function GET(request: NextRequest) {
       error: error?.message,
       hasUser: !!data?.user,
     });
-    return buildErrorRedirect(origin, "exchange_failed", intent);
+    return buildErrorRedirect(origin, "exchange_failed", intent, callbackUrl);
   }
 
   const email = data.user.email;
@@ -67,7 +81,7 @@ export async function GET(request: NextRequest) {
 
   if (!email) {
     await supabase.auth.signOut();
-    return buildErrorRedirect(origin, "no_email", intent);
+    return buildErrorRedirect(origin, "no_email", intent, callbackUrl);
   }
 
   const staff = await prisma.staff.findUnique({
@@ -98,19 +112,19 @@ export async function GET(request: NextRequest) {
       supabaseUserId,
       kakaoId: null,
     });
-    return buildOnboardingRedirect(origin, onboardingToken);
+    return buildOnboardingRedirect(origin, onboardingToken, callbackUrl);
   }
   if (!staff.isActive) {
     await supabase.auth.signOut();
-    return buildErrorRedirect(origin, "inactive", intent);
+    return buildErrorRedirect(origin, "inactive", intent, callbackUrl);
   }
   if (staff.role !== "DIRECTOR") {
     await supabase.auth.signOut();
-    return buildErrorRedirect(origin, "not_director", intent);
+    return buildErrorRedirect(origin, "not_director", intent, callbackUrl);
   }
   if (staff.supabaseUserId && staff.supabaseUserId !== supabaseUserId) {
     await supabase.auth.signOut();
-    return buildErrorRedirect(origin, "account_mismatch", intent);
+    return buildErrorRedirect(origin, "account_mismatch", intent, callbackUrl);
   }
 
   await prisma.staff.update({
@@ -132,5 +146,5 @@ export async function GET(request: NextRequest) {
     provider,
   });
 
-  return buildBridgeRedirect(origin, bridgeToken);
+  return buildBridgeRedirect(origin, bridgeToken, callbackUrl);
 }

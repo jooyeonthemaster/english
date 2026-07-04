@@ -31,6 +31,7 @@ import {
   getStaffList,
   searchStudents,
 } from "@/actions/consultations";
+import { datetimeLocalToIso, isoToDatetimeLocal } from "@/lib/utils";
 import { toast } from "sonner";
 import { Search } from "lucide-react";
 
@@ -122,6 +123,11 @@ export function ConsultationFormDialog({
     formData.set("staffId", selectedStaff);
     if (selectedStudent) {
       formData.set("studentId", selectedStudent.id);
+    }
+    // 상담 날짜/시간(벽시계) → 절대시각(UTC ISO). 서버 타임존과 무관하게 저장.
+    const rawDate = formData.get("date");
+    if (typeof rawDate === "string" && rawDate) {
+      formData.set("date", datetimeLocalToIso(rawDate) ?? rawDate);
     }
 
     startTransition(async () => {
@@ -268,8 +274,8 @@ export function ConsultationFormDialog({
                 type="datetime-local"
                 defaultValue={
                   consultation?.date
-                    ? new Date(consultation.date).toISOString().slice(0, 16)
-                    : new Date().toISOString().slice(0, 16)
+                    ? isoToDatetimeLocal(consultation.date)
+                    : isoToDatetimeLocal(new Date())
                 }
                 required
               />

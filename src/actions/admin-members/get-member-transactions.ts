@@ -40,6 +40,9 @@ interface TransactionListItem {
   referenceType: string | null;
   staffId: string | null;
   adminId: string | null;
+  /** 이 거래를 발생시킨 사람 표시명(직원명 또는 관리자명) */
+  actorName: string | null;
+  actorType: "staff" | "admin" | null;
   metadata: string | null;
   createdAt: Date;
 }
@@ -90,6 +93,30 @@ export async function getMemberTransactions(
   const hasMore = items.length > limit;
   const slice = hasMore ? items.slice(0, limit) : items;
 
+  // 거래를 발생시킨 사람(직원=사용, 관리자=조정) 이름을 일괄 조회해 매핑.
+  const staffIds = [
+    ...new Set(slice.map((t) => t.staffId).filter((x): x is string => Boolean(x))),
+  ];
+  const adminIds = [
+    ...new Set(slice.map((t) => t.adminId).filter((x): x is string => Boolean(x))),
+  ];
+  const [staffRows, adminRows] = await Promise.all([
+    staffIds.length
+      ? prisma.staff.findMany({
+          where: { id: { in: staffIds } },
+          select: { id: true, name: true },
+        })
+      : Promise.resolve([]),
+    adminIds.length
+      ? prisma.superAdmin.findMany({
+          where: { id: { in: adminIds } },
+          select: { id: true, name: true },
+        })
+      : Promise.resolve([]),
+  ]);
+  const staffName = new Map(staffRows.map((s) => [s.id, s.name]));
+  const adminName = new Map(adminRows.map((a) => [a.id, a.name]));
+
   return {
     kind: "ok",
     items: slice.map((tx) => ({
@@ -105,6 +132,12 @@ export async function getMemberTransactions(
       referenceType: tx.referenceType,
       staffId: tx.staffId,
       adminId: tx.adminId,
+      actorType: tx.adminId ? "admin" : tx.staffId ? "staff" : null,
+      actorName: tx.adminId
+        ? (adminName.get(tx.adminId) ?? "관리자")
+        : tx.staffId
+          ? (staffName.get(tx.staffId) ?? null)
+          : null,
       // Per-call metadata may include API token costs / model names / prompt
       // hashes. SUPPORT-tier admins do not need this operational detail.
       metadata: elevated ? tx.metadata : null,

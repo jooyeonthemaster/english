@@ -917,8 +917,10 @@ export function GenerationConfigPanel({
                         </button>
                         <Collapsible open={groupOpen}>
                           <div className="p-2">
-                            {/* 유형 타일 그리드 — 블록형 선택 UI */}
-                            <div className="grid grid-cols-2 gap-2">
+                            {/* 유형 타일 그리드 — 블록형 선택 UI. 모바일은 1열로 두어
+                                타일(=팝오버 트리거) 폭을 넓혀 세부설정 팝오버가 좁아서
+                                잘리거나 과도하게 줄바꿈되지 않게 한다. */}
+                            <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
                               {group.items.map((item) => {
                                 const count = typeCounts[item.id] || 0;
                                 const active = count > 0;
@@ -1130,9 +1132,9 @@ export function GenerationConfigPanel({
                                       align="start"
                                       sideOffset={0}
                                       collisionPadding={12}
-                                      className="max-h-[60vh] w-[var(--radix-popover-trigger-width)] overflow-y-auto rounded-t-none border border-t-0 border-blue-300 p-0 shadow-lg"
+                                      className="max-h-[60vh] w-[var(--radix-popover-trigger-width)] overflow-y-auto rounded-t-none border border-t-0 border-blue-300 p-0 shadow-lg max-lg:max-h-[80vh]"
                                     >
-                                      <div className="flex h-9 items-center gap-2 border-b border-slate-200 bg-white px-3">
+                                      <div className="flex h-9 items-center gap-2 border-b border-slate-200 bg-white px-3 max-lg:h-8">
                                         <Settings2
                                           className="h-3.5 w-3.5 shrink-0 text-blue-500"
                                           aria-hidden="true"
@@ -1141,11 +1143,12 @@ export function GenerationConfigPanel({
                                           {item.label} 세부 설정
                                         </span>
                                       </div>
-                                      <div className="space-y-2.5 bg-slate-100 px-3 pb-3 pt-2.5">
-                                        <div className="rounded-lg border border-slate-200 bg-white px-2.5 py-2">
+                                      {/* 모바일은 스크롤 없이 한 화면에 들어오도록 간격·패딩을 조밀하게. */}
+                                      <div className="space-y-2.5 bg-slate-100 px-3 pb-3 pt-2.5 max-lg:space-y-1.5 max-lg:px-2 max-lg:pb-2 max-lg:pt-1.5">
+                                        <div className="rounded-lg border border-slate-200 bg-white px-2.5 py-2 max-lg:px-2 max-lg:py-1.5">
                                           {renderPerTypeDifficulty(item.id)}
                                         </div>
-                                        <div className="rounded-lg border border-slate-200 bg-white px-3 py-2.5">
+                                        <div className="rounded-lg border border-slate-200 bg-white px-3 py-2.5 max-lg:px-2 max-lg:py-1.5">
                                           {renderTypeDetailContent(item.id)}
                                         </div>
                                       </div>

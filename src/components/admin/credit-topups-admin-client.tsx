@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import Link from "next/link";
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import type { ReactNode } from "react";
 import {
@@ -12,7 +13,6 @@ import {
   Coins,
   CreditCard,
   ExternalLink,
-  Percent,
   Tag,
   RefreshCw,
   Radio,
@@ -26,6 +26,15 @@ import {
   updateCreditTopUpProduct,
   type CreditProductUpdateData,
 } from "@/actions/admin/credit-products";
+import type {
+  AdminCreditProductView,
+  AdminPromotionView,
+} from "@/lib/credit-top-up-products";
+import {
+  AdminField,
+  ToggleSwitch,
+  formatDate,
+} from "@/components/admin/credit-promotion-editor";
 import { cn } from "@/lib/utils";
 import { SaveButton } from "@/components/ui/save-button";
 import {
@@ -123,52 +132,39 @@ type AdminTopUpStats = {
   failedCount: number;
 };
 
-type AdminCreditProduct = {
-  id: string;
-  code: string;
-  name: string;
-  label: string;
-  creditAmount: number;
-  basePrice: number;
-  price: number;
-  discountRate: number;
-  discountAmount: number;
-  perCredit: number;
-  expiryDays: number | null;
-  estimatedAutoQuestionCount: number;
-  perAutoQuestion: number;
-  promotionName: string | null;
-  promotionStartsAt: string | null;
-  promotionEndsAt: string | null;
-  isPromotionActive: boolean;
-  hasScheduledPromotion: boolean;
-  description: string | null;
-  isActive: boolean;
-  sortOrder: number;
-  createdAt: string;
-  updatedAt: string;
-};
+// 상품 뷰(기본정보 + 계산된 요약 + 프로모션 목록)는 서버 lib 타입을 그대로 사용.
+type AdminCreditProduct = AdminCreditProductView;
 
+// 상품 기본 정보 폼(프로모션은 /admin/promotions 프로모션 관리에서 CRUD).
 type ProductFormState = {
   name: string;
   basePrice: string;
   expiryDays: string;
-  discountRate: string;
-  promotionName: string;
-  promotionStartsAt: string;
-  promotionEndsAt: string;
   description: string;
   isActive: boolean;
   sortOrder: string;
 };
 
 interface Props {
-  initialTopUps: AdminTopUp[];
-  initialStats: AdminTopUpStats;
-  initialProducts: AdminCreditProduct[];
+  // 페이지 분리: "products"=상품 관리(충전 상품 설정만), "payments"=결제 관리(내역·통계).
+  mode: "products" | "payments";
+  initialTopUps?: AdminTopUp[];
+  initialStats?: AdminTopUpStats;
+  initialProducts?: AdminCreditProduct[];
   initialTopUpsTotal?: number;
   hideTitle?: boolean;
 }
+
+const ZERO_STATS: AdminTopUpStats = {
+  todayRevenue: 0,
+  todayCount: 0,
+  todayCredits: 0,
+  completedCredits: 0,
+  completedCount: 0,
+  completedRevenue: 0,
+  pendingCount: 0,
+  failedCount: 0,
+};
 
 const TOPUPS_PAGE_SIZE = 50;
 
@@ -310,30 +306,11 @@ const BANK_OPTIONS = [
   { value: "TOSS", label: "토스뱅크" },
 ];
 
-function toDatetimeLocal(value: string | null | undefined) {
-  if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
-  return local.toISOString().slice(0, 16);
-}
-
-function toIsoOrNull(value: string) {
-  if (!value) return null;
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return null;
-  return date.toISOString();
-}
-
 function productToForm(product: AdminCreditProduct): ProductFormState {
   return {
     name: product.name,
     basePrice: String(product.basePrice),
     expiryDays: product.expiryDays != null ? String(product.expiryDays) : "",
-    discountRate: String(product.discountRate),
-    promotionName: product.promotionName ?? "",
-    promotionStartsAt: toDatetimeLocal(product.promotionStartsAt),
-    promotionEndsAt: toDatetimeLocal(product.promotionEndsAt),
     description: product.description ?? "",
     isActive: product.isActive,
     sortOrder: String(product.sortOrder),
@@ -341,12 +318,15 @@ function productToForm(product: AdminCreditProduct): ProductFormState {
 }
 
 export function CreditTopUpsAdminClient({
-  initialTopUps,
-  initialStats,
-  initialProducts,
+  mode,
+  initialTopUps = [],
+  initialStats = ZERO_STATS,
+  initialProducts = [],
   initialTopUpsTotal,
   hideTitle = false,
 }: Props) {
+  const isProducts = mode === "products";
+  const isPayments = mode === "payments";
   const [topUps, setTopUps] = useState(initialTopUps);
   const [stats, setStats] = useState(initialStats);
   const [products, setProducts] = useState(initialProducts);
@@ -401,6 +381,8 @@ export function CreditTopUpsAdminClient({
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
+    // 결제 관리 모드에서만 실시간 스트림을 연결한다(상품 관리 페이지는 불필요).
+    if (mode !== "payments") return;
     const source = new EventSource("/api/admin/credits/top-ups/stream");
     source.addEventListener("open", () => setConnected(true));
     source.addEventListener("topups", (event) => {
@@ -419,7 +401,7 @@ export function CreditTopUpsAdminClient({
     });
     source.addEventListener("error", () => setConnected(false));
     return () => source.close();
-  }, []);
+  }, [mode]);
 
   // The payment detail opens as a modal on row click — no auto-selection, so
   // it stays closed until an admin picks a row.
@@ -637,10 +619,6 @@ export function CreditTopUpsAdminClient({
       name: form.name,
       basePrice: Number(form.basePrice || 0),
       expiryDays: Number(form.expiryDays || 0),
-      discountRate: Number(form.discountRate || 0),
-      promotionName: form.promotionName,
-      promotionStartsAt: toIsoOrNull(form.promotionStartsAt),
-      promotionEndsAt: toIsoOrNull(form.promotionEndsAt),
       description: form.description,
       isActive: form.isActive,
       sortOrder: Number(form.sortOrder || 0),
@@ -693,32 +671,35 @@ export function CreditTopUpsAdminClient({
             </p>
           </div>
         )}
-        <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              "inline-flex h-9 items-center gap-2 rounded-lg border px-3 text-[12px] font-medium",
-              connected
-                ? "border-blue-100 bg-blue-50 text-blue-700"
-                : "border-gray-200 bg-white text-gray-500",
-            )}
-          >
-            <Radio className="size-3.5" strokeWidth={2} />
-            {connected ? "연결됨" : "대기 중"}
-          </span>
-          <button
-            type="button"
-            onClick={refresh}
-            className="inline-flex h-9 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-[12px] font-medium text-gray-600 shadow-sm transition hover:border-blue-200 hover:text-blue-700"
-          >
-            <RefreshCw
-              className={cn("size-3.5", isPending && "animate-spin")}
-              strokeWidth={2}
-            />
-            새로고침
-          </button>
-        </div>
+        {isPayments && (
+          <div className="flex items-center gap-2">
+            <span
+              className={cn(
+                "inline-flex h-9 items-center gap-2 rounded-lg border px-3 text-[12px] font-medium",
+                connected
+                  ? "border-blue-100 bg-blue-50 text-blue-700"
+                  : "border-gray-200 bg-white text-gray-500",
+              )}
+            >
+              <Radio className="size-3.5" strokeWidth={2} />
+              {connected ? "연결됨" : "대기 중"}
+            </span>
+            <button
+              type="button"
+              onClick={refresh}
+              className="inline-flex h-9 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-[12px] font-medium text-gray-600 shadow-sm transition hover:border-blue-200 hover:text-blue-700"
+            >
+              <RefreshCw
+                className={cn("size-3.5", isPending && "animate-spin")}
+                strokeWidth={2}
+              />
+              새로고침
+            </button>
+          </div>
+        )}
       </div>
 
+      {isPayments && (
       <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
         <MetricCard
           label="오늘 결제"
@@ -749,9 +730,11 @@ export function CreditTopUpsAdminClient({
           accent="rose"
         />
       </div>
+      )}
 
-      <ReviewReadinessStrip />
+      {isPayments && <ReviewReadinessStrip />}
 
+      {isProducts && (
       <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
         <div className="flex items-start justify-between gap-3 border-b border-gray-100 px-5 py-4">
           <div className="flex flex-col gap-1">
@@ -784,7 +767,7 @@ export function CreditTopUpsAdminClient({
           )}
         </div>
 
-        <div className="grid gap-3 p-5 xl:grid-cols-2">
+        <div className="grid gap-3 p-5">
           {products.map((product) => {
             const form = productForms[product.id] ?? productToForm(product);
             const saving = savingProductId === product.id;
@@ -831,14 +814,28 @@ export function CreditTopUpsAdminClient({
                         >
                           {product.isActive ? "노출 중" : "비활성"}
                         </span>
-                        {product.isPromotionActive && (
+                        {product.isPromotionActive && product.discountRate > 0 && (
                           <span className="inline-flex h-6 items-center rounded-md bg-blue-50 px-2 text-[11px] font-semibold text-blue-700">
                             {product.discountRate}% 할인 중
+                          </span>
+                        )}
+                        {product.isPromotionActive && product.bonusRate > 0 && (
+                          <span className="inline-flex h-6 items-center rounded-md bg-emerald-50 px-2 text-[11px] font-semibold text-emerald-700">
+                            크레딧 +{product.bonusRate}% 중
                           </span>
                         )}
                       </div>
                       <p className="mt-1 text-[12px] text-gray-500">
                         현재 결제금액 {product.price.toLocaleString("ko-KR")}원 ·{" "}
+                        {product.bonusCredits > 0 ? (
+                          <>
+                            지급{" "}
+                            <span className="font-semibold text-emerald-600">
+                              {product.grantedCreditAmount.toLocaleString("ko-KR")}C
+                            </span>{" "}
+                            (+{product.bonusCredits.toLocaleString("ko-KR")}C) ·{" "}
+                          </>
+                        ) : null}
                         자동출제 약{" "}
                         {product.estimatedAutoQuestionCount.toLocaleString("ko-KR")}
                         문항 · 문항당{" "}
@@ -848,16 +845,25 @@ export function CreditTopUpsAdminClient({
                   </button>
 
                   {expanded && (
-                    <SaveButton
-                      onClick={() => saveProduct(product)}
-                      saving={saving}
-                    />
+                    <div className="flex shrink-0 items-center gap-3">
+                      <ToggleSwitch
+                        checked={form.isActive}
+                        onChange={(v) =>
+                          updateProductField(product.id, "isActive", v)
+                        }
+                        label="결제 화면 노출"
+                      />
+                      <SaveButton
+                        onClick={() => saveProduct(product)}
+                        saving={saving}
+                      />
+                    </div>
                   )}
                 </div>
 
-                {/* Collapsible body — 기본 설정 / 프로모션 설정 구분 */}
+                {/* Collapsible body — 좌: 기본 설정 / 우: 프로모션 (넓은 화면 2단) */}
                 {expanded && (
-                  <div className="space-y-5 border-t border-gray-200/70 px-4 pb-4 pt-4">
+                  <div className="grid gap-5 border-t border-gray-200/70 px-4 pb-4 pt-4 lg:grid-cols-2 lg:items-start">
                     <section className="space-y-3">
                       <ProductSectionLabel icon={Coins} title="기본 설정" />
                       <div className="grid gap-3 md:grid-cols-2">
@@ -926,23 +932,6 @@ export function CreditTopUpsAdminClient({
                             className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
                           />
                         </AdminField>
-                        <AdminField label="노출 여부">
-                          <label className="flex h-9 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-[13px] font-medium text-gray-600">
-                            <input
-                              type="checkbox"
-                              checked={form.isActive}
-                              onChange={(event) =>
-                                updateProductField(
-                                  product.id,
-                                  "isActive",
-                                  event.target.checked,
-                                )
-                              }
-                              className="size-4 accent-blue-600"
-                            />
-                            결제 화면에 노출
-                          </label>
-                        </AdminField>
                       </div>
                       <AdminField label="상품 설명">
                         <textarea
@@ -960,74 +949,16 @@ export function CreditTopUpsAdminClient({
                     </section>
 
                     <section className="space-y-3">
-                      <ProductSectionLabel icon={Tag} title="프로모션 설정" />
-                      <div className="grid gap-3 md:grid-cols-2">
-                        <AdminField label="할인율">
-                          <div className="relative">
-                            <input
-                              type="number"
-                              min={0}
-                              max={99}
-                              value={form.discountRate}
-                              onChange={(event) =>
-                                updateProductField(
-                                  product.id,
-                                  "discountRate",
-                                  event.target.value,
-                                )
-                              }
-                              className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 pr-8 text-[13px] outline-none transition focus:border-blue-300"
-                            />
-                            <Percent className="pointer-events-none absolute right-2.5 top-2.5 size-4 text-gray-400" />
-                          </div>
-                        </AdminField>
-                        <AdminField label="프로모션 이름">
-                          <input
-                            value={form.promotionName}
-                            onChange={(event) =>
-                              updateProductField(
-                                product.id,
-                                "promotionName",
-                                event.target.value,
-                              )
-                            }
-                            placeholder="예: 신학기 할인"
-                            className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
-                          />
-                        </AdminField>
-                        <AdminField label="시작일">
-                          <input
-                            type="datetime-local"
-                            value={form.promotionStartsAt}
-                            onChange={(event) =>
-                              updateProductField(
-                                product.id,
-                                "promotionStartsAt",
-                                event.target.value,
-                              )
-                            }
-                            className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
-                          />
-                        </AdminField>
-                        <AdminField label="종료일">
-                          <input
-                            type="datetime-local"
-                            value={form.promotionEndsAt}
-                            onChange={(event) =>
-                              updateProductField(
-                                product.id,
-                                "promotionEndsAt",
-                                event.target.value,
-                              )
-                            }
-                            className="h-9 w-full rounded-lg border border-gray-200 bg-white px-3 text-[13px] outline-none transition focus:border-blue-300"
-                          />
-                        </AdminField>
+                      <div className="flex items-center gap-2">
+                        <ProductSectionLabel icon={Tag} title="프로모션" />
+                        {product.promotions.length > 0 && (
+                          <span className="rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] font-bold text-gray-500 tabular-nums">
+                            {product.promotions.length}
+                          </span>
+                        )}
                       </div>
-                      <p className="text-[11px] leading-4 text-gray-400">
-                        할인율을 1% 이상 넣으면 시작일·종료일이 필수입니다. 프로모션
-                        기간에만 할인가가 결제 화면에 노출됩니다.
-                      </p>
+
+                      <ProductPromotionSummary promotions={product.promotions} />
                     </section>
                   </div>
                 )}
@@ -1036,6 +967,7 @@ export function CreditTopUpsAdminClient({
           })}
         </div>
       </div>
+      )}
 
       {actionMessage && (
         <div
@@ -1058,6 +990,8 @@ export function CreditTopUpsAdminClient({
         </div>
       )}
 
+      {isPayments && (
+      <>
       <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
           <div>
@@ -1210,6 +1144,8 @@ export function CreditTopUpsAdminClient({
           />
         </DialogContent>
       </Dialog>
+      </>
+      )}
     </div>
   );
 }
@@ -1680,20 +1616,36 @@ function MetricCard({
   );
 }
 
-function AdminField({
-  label,
-  className,
-  children,
+
+/**
+ * 상품 블록 내 프로모션 요약 — CRUD는 /admin/promotions(프로모션 관리)로 이동했고,
+ * 여기서는 적용 중 개수와 관리 탭으로 가는 링크만 노출한다.
+ */
+function ProductPromotionSummary({
+  promotions,
 }: {
-  label: string;
-  className?: string;
-  children: ReactNode;
+  promotions: AdminPromotionView[];
 }) {
+  const running = promotions.filter((p) => p.isInWindow).length;
   return (
-    <label className={cn("block space-y-1.5", className)}>
-      <span className="text-[12px] font-semibold text-gray-500">{label}</span>
-      {children}
-    </label>
+    <div className="space-y-2 rounded-xl border border-gray-200 bg-white p-3">
+      <p className="text-[13px] font-semibold text-gray-800">
+        적용 중 프로모션 {running.toLocaleString("ko-KR")}개
+        <span className="ml-1.5 text-[11px] font-medium text-gray-400">
+          · 등록 {promotions.length.toLocaleString("ko-KR")}개
+        </span>
+      </p>
+      <p className="text-[11px] leading-4 text-gray-400">
+        프로모션의 생성·편집·링크 발급은 프로모션 관리에서 합니다.
+      </p>
+      <Link
+        href="/admin/promotions"
+        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 text-[12px] font-semibold text-blue-700 transition hover:bg-blue-100"
+      >
+        <Tag className="size-3.5" strokeWidth={2} />
+        프로모션 관리에서 편집
+      </Link>
+    </div>
   );
 }
 
@@ -1712,16 +1664,6 @@ function ProductSectionLabel({
       </span>
     </div>
   );
-}
-
-function formatDate(value: Date | string | null) {
-  if (!value) return "-";
-  return new Date(value).toLocaleString("ko-KR", {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 }
 
 function formatPayMethod(value: string | null) {

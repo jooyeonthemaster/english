@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import {
   Check,
   ChevronDown,
@@ -377,6 +378,12 @@ export function WorkspacePassageRow({
   onOpenSettings,
   genStats,
 }: WorkspacePassageRowProps) {
+  // 모바일에선 본문 편집 폰트를 3px 줄인다(13→10px). textarea·하이라이트 백드롭이
+  // 같은 값을 공유해야 줄바꿈이 어긋나지 않으므로 한 style 로 모든 레이어에 적용.
+  const isMobile = useIsMobile();
+  const editorTextStyle: React.CSSProperties = isMobile
+    ? { ...EDITOR_TEXT_STYLE, fontSize: "10px" }
+    : EDITOR_TEXT_STYLE;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const rangeBackdropRef = useRef<HTMLDivElement>(null);
@@ -1567,7 +1574,7 @@ export function WorkspacePassageRow({
                 <div
                   ref={sentenceBackdropRef}
                   aria-hidden="true"
-                  style={EDITOR_TEXT_STYLE}
+                  style={editorTextStyle}
                   className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words py-2 pl-3 pr-16 text-transparent"
                 >
                   {sentenceSegments.map((s) => {
@@ -1598,7 +1605,7 @@ export function WorkspacePassageRow({
                 <div
                   ref={rangeBackdropRef}
                   aria-hidden="true"
-                  style={EDITOR_TEXT_STYLE}
+                  style={editorTextStyle}
                   className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words py-2 pl-3 pr-16 text-transparent"
                 >
                   <span>
@@ -1634,7 +1641,7 @@ export function WorkspacePassageRow({
                 <div
                   ref={backdropRef}
                   aria-hidden="true"
-                  style={EDITOR_TEXT_STYLE}
+                  style={editorTextStyle}
                   className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre-wrap break-words py-2 pl-3 pr-16 text-transparent"
                 >
                   {(() => {
@@ -1707,7 +1714,7 @@ export function WorkspacePassageRow({
                 readOnly={editorLocked}
                 disabled={disabled}
                 spellCheck={false}
-                style={EDITOR_TEXT_STYLE}
+                style={editorTextStyle}
                 className={
                   "relative h-full min-h-[180px] flex-1 resize-none rounded-none border-0 bg-transparent py-2 pl-3 pr-16 shadow-none focus-visible:ring-0 " +
                   (editorLocked ? "text-slate-500" : "")

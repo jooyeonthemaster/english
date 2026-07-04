@@ -106,6 +106,8 @@ interface WorkspaceShellProps {
    * 더 좁아도 되므로 호출부에서 상태에 맞게 내려준다.
    */
   rightPaneMin?: number;
+  /** 모바일(<lg)에서 상단 헤더 행(제목/설명)을 숨긴다 — 상단 앱바·스테퍼와 중복될 때. */
+  hideHeaderOnMobile?: boolean;
 }
 
 export function WorkspaceShell({
@@ -117,6 +119,7 @@ export function WorkspaceShell({
   leftOpenSignal = 0,
   leftActive = true,
   rightPaneMin = RIGHT_PANE_MIN,
+  hideHeaderOnMobile = false,
 }: WorkspaceShellProps) {
   const splitContainerRef = useRef<HTMLDivElement>(null);
   const [leftPaneWidth, setLeftPaneWidth] = useState<number>(
@@ -272,7 +275,12 @@ export function WorkspaceShell({
 
   return (
     <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-4 py-3">
+      <div
+        className={
+          "flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-4 py-3" +
+          (hideHeaderOnMobile ? " max-lg:hidden" : "")
+        }
+      >
         {header}
         {collapsed ? (
           <button
@@ -296,7 +304,8 @@ export function WorkspaceShell({
         aria-hidden={collapsed}
       >
       <div className="min-h-0 overflow-hidden">
-      <div className="px-4 pt-4 pb-3">
+      {/* 모바일(<lg)은 좌우 여백을 바짝 줄여 본문 폭을 확보한다. */}
+      <div className="px-1.5 pt-4 pb-2 lg:px-4 lg:pb-3">
         <div
           ref={splitContainerRef}
           className="flex w-full min-w-0 max-w-full flex-col gap-2 overflow-hidden max-lg:!h-auto lg:flex-row lg:gap-0"
@@ -375,8 +384,9 @@ export function WorkspaceShell({
         </div>
       </div>
 
-      {/* Body vertical resize handle */}
-      <div className="relative pb-2.5">
+      {/* Body vertical resize handle — 모바일(<lg)은 리사이즈·접기가 의미
+          없으므로 행 전체를 숨겨 하단 여백을 아낀다. */}
+      <div className="relative pb-2.5 max-lg:hidden">
         <div
           onPointerDown={beginBodyResize}
           onDoubleClick={resetBodyHeight}

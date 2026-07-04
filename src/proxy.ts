@@ -1,9 +1,15 @@
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import {
+  DEFAULT_DIRECTOR_REDIRECT,
+  DEFAULT_TEACHER_REDIRECT,
+  optionalStaffCallbackUrl,
+} from "@/lib/auth-redirect";
 
 export const proxy = auth(async (req) => {
   const { pathname } = req.nextUrl;
+  const pathWithSearch = `${pathname}${req.nextUrl.search}`;
   const isStaffLoggedIn = !!req.auth?.user;
   const staffRole = (req.auth?.user as unknown as Record<string, unknown>)?.role as string | undefined;
 
@@ -27,7 +33,7 @@ export const proxy = auth(async (req) => {
   if (pathname.startsWith("/director")) {
     if (!isStaffLoggedIn) {
       const loginUrl = new URL("/login", req.nextUrl.origin);
-      loginUrl.searchParams.set("callbackUrl", pathname);
+      loginUrl.searchParams.set("callbackUrl", pathWithSearch);
       return NextResponse.redirect(loginUrl);
     }
     if (staffRole !== "DIRECTOR") {
@@ -37,7 +43,7 @@ export const proxy = auth(async (req) => {
 
   if (pathname.startsWith("/teacher") && !isStaffLoggedIn) {
     const loginUrl = new URL("/login", req.nextUrl.origin);
-    loginUrl.searchParams.set("callbackUrl", pathname);
+    loginUrl.searchParams.set("callbackUrl", pathWithSearch);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -76,10 +82,15 @@ export const proxy = auth(async (req) => {
   }
 
   if (pathname === "/login" && isStaffLoggedIn) {
+    const requested = optionalStaffCallbackUrl(req.nextUrl.searchParams.get("callbackUrl"));
     const redirectTo =
       staffRole === "DIRECTOR"
-        ? "/director/workbench/questions/generate"
-        : "/teacher";
+        ? requested?.startsWith("/director")
+          ? requested
+          : DEFAULT_DIRECTOR_REDIRECT
+        : requested?.startsWith("/teacher")
+          ? requested
+          : DEFAULT_TEACHER_REDIRECT;
     return NextResponse.redirect(new URL(redirectTo, req.nextUrl.origin));
   }
 

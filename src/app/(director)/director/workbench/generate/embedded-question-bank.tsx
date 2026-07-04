@@ -75,6 +75,7 @@ import { useSelection } from "@/hooks/use-selection";
 import { useFolderManager } from "@/hooks/use-folder-manager";
 
 import { Pagination } from "@/components/workbench/shared/pagination";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { FolderSection } from "@/components/workbench/shared/folder-section";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
 import {
@@ -319,6 +320,10 @@ export function EmbeddedQuestionBank({
 }: EmbeddedQuestionBankProps) {
   const router = useRouter();
 
+  // 모바일에선 한 페이지 카드 수를 10개로 줄인다(서버 페이지 크기 자체를 변경).
+  const isMobile = useIsMobile();
+  const pageSize = isMobile ? 10 : PAGE_SIZE;
+
   // ─── Local filter state (replaces URL searchParams) ───
   const [filters, setFilters] = useState<LocalFilters>({ page: 1 });
   const [view, setView] = useState<"flat" | "passage">("flat");
@@ -419,13 +424,18 @@ export function EmbeddedQuestionBank({
     () => ({
       ...filters,
       collectionId: folders.activeFolder ?? undefined,
-      limit: PAGE_SIZE,
+      limit: pageSize,
       // 과목 스코프 — 서버 where(buildWorkbenchQuestionWhere)가 국어/영어를
       // 완전 분리한다("KOREAN"=KO_* 만 / 미지정=KO_* 제외).
       subject: subjectScope,
     }),
-    [filters, folders.activeFolder, subjectScope],
+    [filters, folders.activeFolder, pageSize, subjectScope],
   );
+
+  // 모바일↔데스크톱 전환으로 페이지 크기가 바뀌면 1페이지로 되돌린다(범위 밖 방지).
+  useEffect(() => {
+    setFilters((prev) => (prev.page === 1 ? prev : { ...prev, page: 1 }));
+  }, [pageSize]);
 
   const loadQuestions = useCallback(async () => {
     const token = loadTokenRef.current + 1;
@@ -1559,7 +1569,7 @@ export function EmbeddedQuestionBank({
             </div>
 
             <div
-              className="sticky z-10 shrink-0 border-t border-slate-200 bg-slate-50/95 px-4 py-2 backdrop-blur-sm"
+              className="sticky z-10 shrink-0 border-t border-slate-200 bg-slate-50/95 px-2 py-2 backdrop-blur-sm lg:px-4"
               style={{ top: folderStickyHeight }}
             >
               {toolbarRow}
@@ -1567,7 +1577,7 @@ export function EmbeddedQuestionBank({
 
             <div
               ref={cardZoneRef}
-              className="relative min-w-0 px-4 pb-3 pt-3 sm:px-5"
+              className="relative min-w-0 px-2 pb-3 pt-3 lg:px-5"
               // 페이지 이동 스크롤 시 스티키 폴더/툴바 아래에 카드 첫 줄이 오도록 여백 확보.
               style={{ scrollMarginTop: folderStickyHeight + 56 }}
             >
@@ -1681,7 +1691,7 @@ export function EmbeddedQuestionBank({
                     collectionId={folders.activeFolder ?? undefined}
                     filters={effectiveFilters}
                     normalItems={displayedQuestions.map((q, idx) => {
-                      const startIdx = (currentPage - 1) * PAGE_SIZE;
+                      const startIdx = (currentPage - 1) * pageSize;
                       return {
                         id: q.id,
                         createdAt: q.createdAt,

@@ -25,13 +25,18 @@ function asElements(
  */
 export function triggerHintGlow(
   targets: Element | Iterable<Element> | null | undefined,
-  options?: { scroll?: boolean },
+  options?: { scroll?: boolean; scrollBlock?: ScrollLogicalPosition },
 ): void {
   const els = asElements(targets);
   if (els.length === 0) return;
 
   if (options?.scroll !== false) {
-    els[0].scrollIntoView({ block: "nearest", behavior: "smooth" });
+    // 기본은 최소 스크롤(nearest). 대상이 화면 아래 고정 바 뒤로 가려질 수 있는
+    // 경우엔 호출부가 "center" 를 주어 화면 가운데로 확실히 끌어올린다.
+    els[0].scrollIntoView({
+      block: options?.scrollBlock ?? "nearest",
+      behavior: "smooth",
+    });
   }
 
   for (const el of els) {
@@ -56,7 +61,11 @@ export function triggerHintGlow(
 export function triggerHintGlowWithin(
   container: Element | null | undefined,
   selector = "[data-drag-item-id]",
-  options?: { scroll?: boolean; max?: number },
+  options?: {
+    scroll?: boolean;
+    max?: number;
+    scrollBlock?: ScrollLogicalPosition;
+  },
 ): void {
   if (!container) return;
   const max = options?.max ?? 24;

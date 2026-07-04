@@ -11,6 +11,7 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import { createSupabaseBrowserClient } from "@/lib/supabase-auth-browser";
 import { getSpecialAccount } from "@/lib/special-accounts";
 import { BrandIcon } from "@/components/brand/brand-mark";
+import { normalizeStaffCallbackUrl } from "@/lib/auth-redirect";
 
 const SOCIAL_ERROR_MESSAGES: Record<string, string> = {
   missing_code: "인증 코드를 받지 못했습니다. 다시 시도해주세요.",
@@ -48,7 +49,8 @@ export default function StaffLoginPage() {
 function StaffLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
+  const rawCallbackUrl = searchParams.get("callbackUrl");
+  const callbackUrl = normalizeStaffCallbackUrl(rawCallbackUrl);
   const socialErrorCode = searchParams.get("error");
 
   const [showPassword, setShowPassword] = useState(false);
@@ -66,15 +68,18 @@ function StaffLoginForm() {
     setError(null);
     setSocialLoading(provider);
     if (provider === "kakao") {
-      window.location.href = "/api/auth/kakao";
+      const kakaoUrl = new URL("/api/auth/kakao", window.location.origin);
+      if (rawCallbackUrl) kakaoUrl.searchParams.set("callbackUrl", callbackUrl);
+      window.location.assign(kakaoUrl.toString());
       return;
     }
     try {
       const supabase = createSupabaseBrowserClient();
-      const redirectTo = `${window.location.origin}/auth/callback`;
+      const callback = new URL("/auth/callback", window.location.origin);
+      if (rawCallbackUrl) callback.searchParams.set("callbackUrl", callbackUrl);
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider,
-        options: { redirectTo },
+        options: { redirectTo: callback.toString() },
       });
       if (oauthError) {
         setError("소셜 로그인을 시작할 수 없습니다. 잠시 후 다시 시도해주세요.");
@@ -109,11 +114,15 @@ function StaffLoginForm() {
       sessionStorage.setItem(special.welcomeStorageKey, "true");
     }
     
-    if (callbackUrl) router.push(callbackUrl);
-    else if (role === "DIRECTOR") router.push("/director/workbench/questions/generate");
+    if (rawCallbackUrl) router.push(callbackUrl);
+    else if (role === "DIRECTOR") router.push(callbackUrl);
     else router.push("/teacher");
     router.refresh();
   }
+
+  const registerHref = rawCallbackUrl
+    ? `/register?callbackUrl=${encodeURIComponent(callbackUrl)}`
+    : "/register";
 
   // Animation variants
   const fadeUp: Variants = {
@@ -310,7 +319,7 @@ function StaffLoginForm() {
 
             <motion.div custom={5} initial="hidden" animate="visible" variants={fadeUp} className="mt-4">
               <a
-                href="/register"
+                href={registerHref}
                 className="flex items-center justify-center w-full h-[52px] rounded-2xl text-[15px] font-bold text-blue-600 border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-50/50 transition-all duration-200"
               >
                 학원 가입 신청하기
@@ -436,4 +445,3 @@ function StaffLoginForm() {
     </div>
   );
 }
-

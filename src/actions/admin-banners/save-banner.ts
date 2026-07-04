@@ -31,6 +31,10 @@ function normalize(raw: unknown) {
     isActive: v.isActive,
     dismissMode: v.dismissMode,
     showDismissButton: v.showDismissButton,
+    targetMode: v.targetMode,
+    // Only persist the academy list when actually scoping to specific targets.
+    targetAcademyIds:
+      v.targetMode === "SPECIFIC" ? Array.from(new Set(v.targetAcademyIds)) : [],
     startsAt: toNullableDate(v.startsAt),
     endsAt: toNullableDate(v.endsAt),
     autoOpenOnLowCredit: v.autoOpenOnLowCredit,

@@ -81,6 +81,15 @@ import type {
   PassageCardGridProps,
 } from "./passage-card-grid-types";
 import { useFolderWindowHeight } from "./use-folder-window-height";
+import { useMobilePagination } from "@/hooks/use-mobile-pagination";
+import { Pagination } from "@/components/workbench/shared/pagination";
+
+// 카드 컨테이너 기본 클래스 — 모바일은 한 줄짜리 컴팩트 리스트 행, 데스크톱은
+// 기존 세로 카드. 글로우/선택 상태 클래스는 뒤에 공통으로 덧붙는다.
+const MOBILE_ROW_CLASS =
+  "group relative flex flex-row items-center gap-2.5 overflow-hidden rounded-lg border bg-white px-3 py-2.5 transition-all duration-200 cursor-pointer active:bg-slate-50";
+const DESKTOP_CARD_CLASS =
+  "group relative flex h-[300px] flex-col overflow-hidden rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer";
 
 // ─── Component ───────────────────────────────────────
 
@@ -151,6 +160,18 @@ export function PassageCardGrid({
   reviewActionPassageIds,
 }: PassageCardGridProps) {
   const [showSearch, setShowSearch] = useState(() => passageSearch.length > 0);
+
+  // ── 모바일 전용 페이지네이션 ── PC(lg 이상)에선 isMobile 이 항상 false 라
+  // 전체(filteredPassages)를 그대로 렌더한다.
+  const {
+    isMobile,
+    page: mobilePage,
+    setPage: setMobilePage,
+    totalPages: mobileTotalPages,
+    visibleItems: visiblePassages,
+  } = useMobilePagination(filteredPassages, {
+    resetKey: `${selectedCollectionId}|${passageSearch}|${filterSchool}|${filterGrade}|${filterSemester}|${analysisStatusFilter}|${passageSortOrder}`,
+  });
   const {
     folderWindowHeight,
     folderWindowCollapsed,
@@ -1015,7 +1036,7 @@ export function PassageCardGrid({
             <div
               style={{ height: `${folderWindowHeight}px` }}
               data-generate-tour="library-folder-window"
-              className="min-h-0 overflow-y-auto bg-slate-50/70 px-5 py-2.5"
+              className="min-h-0 overflow-y-auto bg-slate-50/70 px-2 py-2.5 lg:px-5"
             >
               <div className="flex flex-wrap items-center gap-2.5">
                 {selectedCollectionId
@@ -1116,7 +1137,10 @@ export function PassageCardGrid({
                 role="separator"
                 aria-orientation="horizontal"
                 title="드래그하여 높이 조절 · 더블 클릭하여 초기화"
-                className="group/vhandle absolute left-1/2 top-1/2 inline-flex h-3 w-[200px] -translate-x-1/2 -translate-y-1/2 cursor-row-resize items-center justify-center px-1 select-none"
+                // touch-none: 브라우저가 세로 드래그를 스크롤로 가로채지 않게 해
+                // 터치에서 그랩바가 끊기지 않고 동작하게 하는 핵심. 모바일은
+                // 히트 영역을 키워(h-8) 손가락으로 잡기 쉽게 한다(PC는 h-3 유지).
+                className="group/vhandle absolute left-1/2 top-1/2 inline-flex h-8 w-[200px] -translate-x-1/2 -translate-y-1/2 cursor-row-resize touch-none items-center justify-center px-1 select-none lg:h-3"
               >
                 <div className="h-0.5 w-full rounded-full bg-slate-200 transition-colors group-hover/vhandle:bg-blue-400 group-active/vhandle:bg-blue-500" />
               </div>
@@ -1368,7 +1392,7 @@ export function PassageCardGrid({
       </div>
 
       {/* Passage card grid -- scrollable */}
-      <div ref={cardZoneRef} className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+      <div ref={cardZoneRef} className="min-h-0 flex-1 overflow-y-auto px-2 py-4 lg:px-5">
         {/* 이미지·PDF 추출 중 지문 로딩 카드(완료되면 실제 카드로 교체) */}
         {loadingCards}
         {loadingPassages ? (
@@ -1395,8 +1419,8 @@ export function PassageCardGrid({
             onChange={setSelectedIds}
             boundaryRef={marqueeBoundaryRef}
           >
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3">
-              {filteredPassages.map((p, cardIndex) => {
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-2 lg:gap-3">
+              {visiblePassages.map((p, cardIndex) => {
                 // Parse analysis
                 let aData: ParsedAnalysisSummary | null = null;
                 if (p.analysis?.analysisData) {
@@ -1458,7 +1482,7 @@ export function PassageCardGrid({
                     onClick={(e) => handlePassageCardClick(p.id, e)}
                     onDoubleClick={(e) => handlePassageCardDoubleClick(p.id, e)}
                     onKeyDown={(e) => handleCardKeyDown(p.id, e)}
-                    className={`group relative flex h-[300px] flex-col overflow-hidden rounded-xl border bg-white p-4 transition-all duration-200 hover:shadow-md cursor-pointer ${
+                    className={`${isMobile ? MOBILE_ROW_CLASS : DESKTOP_CARD_CLASS} ${
                       isChecked
                         ? "border-blue-400 ring-2 ring-blue-300/30"
                         : hasReviewDraft && !isReviewCommitted
@@ -1494,6 +1518,107 @@ export function PassageCardGrid({
                         className="pointer-events-none absolute inset-y-0 left-0 z-10 w-1 bg-blue-500"
                       />
                     ) : null}
+                    {isMobile ? (
+                      /* ── 모바일 리스트 행 ── 체크박스 · 제목/메타/1줄 미리보기 · 상세 */
+                      <>
+                        <button
+                          type="button"
+                          aria-pressed={isChecked}
+                          aria-label={`${p.title} passage ${isChecked ? "deselect" : "select"}`}
+                          onClick={(e) => toggleCheckbox(p.id, e)}
+                          className={`flex size-[20px] shrink-0 items-center justify-center rounded transition-all ${
+                            isChecked
+                              ? "border border-blue-600 bg-blue-600 text-white"
+                              : "border border-slate-300 bg-white text-transparent"
+                          }`}
+                        >
+                          <Check className="h-3 w-3" />
+                        </button>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex min-w-0 items-center gap-1.5">
+                            <span className="truncate text-[13px] font-bold text-slate-800">
+                              {p.title}
+                            </span>
+                            {isLearningGenerating ? (
+                              <span className="learning-generating-text shrink-0 whitespace-nowrap text-[10px] font-bold">
+                                생성중
+                              </span>
+                            ) : null}
+                          </div>
+                          <div className="mt-0.5 flex min-w-0 items-center gap-1.5">
+                            {(() => {
+                              const created = formatMinuteTimestamp(
+                                p.createdAt,
+                              );
+                              return created ? (
+                                <span className="shrink-0 text-[10px] tabular-nums text-slate-400">
+                                  {created}
+                                </span>
+                              ) : null;
+                            })()}
+                            <span className="truncate text-[10.5px] text-slate-400">
+                              {p.content}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex shrink-0 items-center gap-1.5">
+                          {hasReviewDraft
+                            ? (() => {
+                                const reviewBusy =
+                                  reviewActionPassageIds?.has(p.id) ?? false;
+                                const interactive = !!onToggleExtractionReview;
+                                return (
+                                  <button
+                                    type="button"
+                                    aria-pressed={isReviewCommitted}
+                                    aria-label={reviewStampLabel}
+                                    disabled={!interactive || reviewBusy}
+                                    title={
+                                      interactive
+                                        ? isReviewCommitted
+                                          ? "검수완료 — 누르면 검수필요로 되돌립니다"
+                                          : "검수필요 — 누르면 검수완료로 표시합니다"
+                                        : reviewStampLabel
+                                    }
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      if (reviewBusy) return;
+                                      onToggleExtractionReview?.(p);
+                                    }}
+                                    className={
+                                      "flex size-8 items-center justify-center rounded-md border bg-white transition-colors disabled:pointer-events-none disabled:opacity-50 " +
+                                      (isReviewCommitted
+                                        ? "border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+                                        : "border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600")
+                                    }
+                                  >
+                                    {reviewBusy ? (
+                                      <Loader2
+                                        className="size-3.5 animate-spin"
+                                        aria-hidden="true"
+                                      />
+                                    ) : (
+                                      <CheckCircle2
+                                        className="size-3.5"
+                                        aria-hidden="true"
+                                      />
+                                    )}
+                                  </button>
+                                );
+                              })()
+                            : null}
+                          <CardDetailIconButton
+                            className="size-8 shrink-0 rounded-md"
+                            iconClassName="size-3.5"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              void openPassageCard(p.id);
+                            }}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                    <>
                     {/* Header with handle + checkbox */}
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-start gap-2.5 min-w-0 flex-1">
@@ -1579,14 +1704,16 @@ export function PassageCardGrid({
 
                     {/* Content preview — 남는 세로 공간을 채워, 학습자료 요약 유무와
                         상관없이 카드 높이가 일관되게 보이도록 flex-1 로 늘린다. */}
-                    <div className="mt-2.5 min-h-0 flex-1 overflow-hidden">
-                      <p className="text-[11px] text-slate-500 leading-relaxed">
+                    <div className="mt-1.5 min-h-0 flex-1 overflow-hidden lg:mt-2.5">
+                      {/* 모바일에선 본문 미리보기를 2줄로 잘라 카드를 더 컴팩트하게.
+                          (PC는 flex-1 로 남는 공간을 채우던 기존 동작 그대로). */}
+                      <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-2 lg:line-clamp-none">
                         {p.content}
                       </p>
                     </div>
 
                     {/* Main idea + Meta */}
-                    <div className="mt-3 space-y-2">
+                    <div className="mt-2 space-y-1.5 lg:mt-3 lg:space-y-2">
                       {mainIdea && (
                         <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-2">
                           {mainIdea}
@@ -1656,7 +1783,7 @@ export function PassageCardGrid({
                     </div>
 
                     {/* 카드 맨 아래 액션 줄: 검수(완료/취소) · 상세보기 */}
-                    <div className="mt-3 flex items-end gap-1.5">
+                    <div className="mt-2 flex items-end gap-1.5 lg:mt-3">
                       {hasReviewDraft
                         ? (() => {
                             const reviewBusy =
@@ -1712,10 +1839,25 @@ export function PassageCardGrid({
                         }}
                       />
                     </div>
+                    </>
+                    )}
                   </div>
                 );
               })}
             </div>
+
+            {/* ── 모바일 전용 페이지 넘김 (공용 Pagination 디자인) ── isMobile
+                가드로 PC 에선 렌더되지 않는다(데스크톱은 전체 렌더). */}
+            {isMobile ? (
+              <Pagination
+                page={mobilePage}
+                totalPages={mobileTotalPages}
+                onGoToPage={(next) => {
+                  setMobilePage(next);
+                  cardZoneRef.current?.scrollTo({ top: 0 });
+                }}
+              />
+            ) : null}
           </DragSelect>
         )}
       </div>
@@ -1724,7 +1866,9 @@ export function PassageCardGrid({
           선택한 지문을 워크스페이스로 보내 편집하거나(없을 때) 작업 중인
           워크스페이스에 추가한다(있을 때). 목록 아래 항상 보이는 큰 버튼. */}
       {onEditSelected ? (
-        <div className="shrink-0 border-t border-slate-100 bg-white px-5 py-3">
+        // 모바일에선 하단 고정 바(MobileStepNav)가 같은 '워크스페이스로' 액션을
+        // 제공하므로 이 카드 내 CTA는 PC(lg+)에서만 노출해 중복을 없앤다.
+        <div className="hidden shrink-0 border-t border-slate-100 bg-white px-5 py-3 lg:block">
           <button
             type="button"
             // aria-disabled — 비활처럼 보이되 클릭은 살려, 선택 0개일 때 누르면 지문

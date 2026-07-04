@@ -39,6 +39,8 @@ interface Transaction {
   referenceType: string | null;
   staffId: string | null;
   adminId: string | null;
+  actorName: string | null;
+  actorType: "staff" | "admin" | null;
   metadata: string | null;
   createdAt: Date | string;
 }
@@ -200,7 +202,7 @@ export function TransactionTable({
             : "아직 거래 내역이 없습니다"}
         </div>
       ) : (
-        <div className="max-h-[420px] overflow-auto">
+        <div className="max-h-[720px] overflow-auto">
           <Table>
             <TableHeader className="sticky top-0 z-10 bg-white">
               <TableRow className="hover:bg-transparent border-b border-gray-50">
@@ -212,6 +214,9 @@ export function TransactionTable({
                 </TableHead>
                 <TableHead className="text-[11px] text-gray-400 font-medium h-9 min-w-[160px]">
                   상품
+                </TableHead>
+                <TableHead className="text-[11px] text-gray-400 font-medium h-9 w-[120px]">
+                  사용자
                 </TableHead>
                 <TableHead className="text-[11px] text-gray-400 font-medium h-9 w-[110px] text-right">
                   변동
@@ -291,6 +296,20 @@ function TransactionRow({ tx }: { tx: Transaction }) {
       <TableCell className="text-[12px] text-gray-700">
         {tx.operationType ? (
           <span>{tx.operationLabel}</span>
+        ) : (
+          <span className="text-gray-300">—</span>
+        )}
+      </TableCell>
+      <TableCell className="text-[12px]">
+        {tx.actorName ? (
+          <span className="inline-flex items-center gap-1">
+            <span className="text-gray-700 truncate">{tx.actorName}</span>
+            {tx.actorType === "admin" && (
+              <span className="shrink-0 text-[10px] text-blue-600 bg-blue-50 px-1 py-px rounded font-medium">
+                관리자
+              </span>
+            )}
+          </span>
         ) : (
           <span className="text-gray-300">—</span>
         )}

@@ -50,6 +50,25 @@ export function resolveEstimatedPricing(
     return { inputUsdPer1M: 1.5, outputUsdPer1M: 9, unitUsd: null };
   }
 
+  // AtlasCloud는 여러 모델(anthropic/*, google/*)을 토큰 단위로 중계 → 모델명으로
+  // 원 프로바이더 티어를 추정한다(직접 호출과 동일 단가). 없으면 0원 처리되던 것을 방지.
+  if (unitType === "TOKENS" && provider === "ATLASCLOUD") {
+    if (lowerModel.includes("opus")) {
+      return { inputUsdPer1M: 5, outputUsdPer1M: 25, unitUsd: null };
+    }
+    if (lowerModel.includes("haiku")) {
+      return { inputUsdPer1M: 1, outputUsdPer1M: 5, unitUsd: null };
+    }
+    if (lowerModel.includes("flash-lite")) {
+      return { inputUsdPer1M: 0.25, outputUsdPer1M: 1.5, unitUsd: null };
+    }
+    if (lowerModel.includes("gemini") || lowerModel.includes("flash")) {
+      return { inputUsdPer1M: 1.5, outputUsdPer1M: 9, unitUsd: null };
+    }
+    // sonnet·claude 및 미상 → Sonnet 티어로 보수적 추정
+    return { inputUsdPer1M: 3, outputUsdPer1M: 15, unitUsd: null };
+  }
+
   if (unitType === "PAGE" && provider === "GOOGLE_DOCUMENT_AI") {
     return { inputUsdPer1M: null, outputUsdPer1M: null, unitUsd: 0.0015 };
   }

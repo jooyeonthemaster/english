@@ -43,11 +43,11 @@ export function renderContentMatchDetail({ contentMatchAnswerCount, contentMatch
       const contentMatchPolarity =
         contentMatchSettings.matchType === "일치" ? "일치" : "불일치";
       return (
-        <div className="space-y-3">
+        <div className="space-y-3 max-lg:space-y-1.5">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <span className="text-[12px] font-bold text-slate-800">정답 유형</span>
-              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                 일치하는 것을 고를지, 일치하지 않는 것을 고를지 정합니다. 기본은 불일치입니다.
               </p>
             </div>
@@ -76,7 +76,7 @@ export function renderContentMatchDetail({ contentMatchAnswerCount, contentMatch
               ))}
             </div>
           </div>
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderNumberSetting({
               title: "보기 개수",
             badges: [
@@ -92,7 +92,7 @@ export function renderContentMatchDetail({ contentMatchAnswerCount, contentMatch
             ariaBase: "content match option count",
           })}
           </div>
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderNumberSetting({
               title: "정답 개수",
               badges: [
@@ -207,7 +207,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
       const targetStepperDisabled = targetWordsMode === "hidden";
 
       return (
-        <div className="space-y-3">
+        <div className="space-y-3 max-lg:space-y-1.5">
           {/* 빈칸 수 */}
           {renderNumberSetting({
             title: "빈칸 개수",
@@ -231,7 +231,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           })}
 
           {/* 해석 제공 */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderToggleSetting({
               title: "해석 제공",
               description:
@@ -245,7 +245,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 보기 제공 */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderToggleSetting({
               title: "보기 제공",
               description:
@@ -259,7 +259,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 보기 사용 규칙 — 보기 off면 비활성 */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderSegSetting({
               title: "보기 사용 규칙",
               description:
@@ -277,7 +277,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 미끼 수 — 보기 off 또는 usePartial 아니면 비활성 */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderNumberSetting({
               title: "미끼 단어 수",
               badges: [
@@ -309,7 +309,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 보기 어형 충실도 — 보기 off면 비활성 */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderSegSetting({
               title: "보기 어형",
               description:
@@ -329,7 +329,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 단서 방식 */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderSegSetting({
               title: "단서 방식",
               description:
@@ -347,7 +347,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 목표 단어수 표시 */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderSegSetting({
               title: "목표 단어수 표시",
               description: targetWordsModeForExactDisabled
@@ -374,7 +374,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 빈칸당 목표 단어수 스테퍼 — hidden이면 비활성 */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderNumberSetting({
               title: "빈칸당 목표 단어수",
               badges: [
@@ -402,7 +402,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 보기 배분 — 빈칸 1개면 비활성 */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderSegSetting({
               title: "보기 배분",
               description:
@@ -446,7 +446,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
       const blankCountLockedByNounPhrase = isCloze && r.topicForm === "nounPhrase";
 
       return (
-        <div className="space-y-3">
+        <div className="space-y-3 max-lg:space-y-1.5">
           {/* 출제 방식 — 두 축의 첫 번째. 최상단. */}
           {renderSegSetting({
             title: "출제 방식",
@@ -462,7 +462,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           })}
 
           {/* 주제 형태 — 두 축의 두 번째. */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderSegSetting({
               title: "주제 형태",
               description:
@@ -478,7 +478,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           </div>
 
           {/* 주제 힌트 제공 */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderToggleSetting({
               title: "주제 힌트 제공",
               description:
@@ -492,7 +492,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           </div>
 
           {/* 제시어 입도 */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderSegSetting({
               title: "제시어 입도",
               description:
@@ -508,7 +508,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           </div>
 
           {/* 미끼 단어 수 — 제시어/보기는 항상 있으므로 항상 활성. */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderNumberSetting({
               title: "미끼 단어 수",
               badges: [
@@ -535,7 +535,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           </div>
 
           {/* 제시어 어형 */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderSegSetting({
               title: "제시어 어형",
               description:
@@ -551,7 +551,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           </div>
 
           {/* 빈칸 개수 — cloze 전용. scrambled이면 비활성. */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderNumberSetting({
               title: "빈칸 개수",
               badges: [
@@ -590,7 +590,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           </div>
 
           {/* 주제 출처 */}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderSegSetting({
               title: "주제 출처",
               description:
@@ -611,7 +611,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
 
 export function renderGrammarChoiceComboDetail({ grammarChoiceComboSettings, patchTypeSettings }) {
       return (
-        <div className="space-y-3">
+        <div className="space-y-3 max-lg:space-y-1.5">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
@@ -629,13 +629,13 @@ export function renderGrammarChoiceComboDetail({ grammarChoiceComboSettings, pat
                   관계사·수일치·분사·to/-ing
                 </span>
               </div>
-              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                 켜면 세 네모의 정답(올바른 표현) 어법 포인트를 기출 최빈출
                 포인트(관계사·수일치·to부정사/동명사·분사·대명사·형용사/부사)에
                 집중합니다. 끄면 다양한 포인트로 폭넓게 돌려가며 출제합니다.
               </p>
               {grammarChoiceComboSettings.pointFocus ? (
-                <p className="mt-1 text-[10px] leading-snug text-slate-500">
+                <p className="mt-1 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                   집중 모드는 출제 포인트를 좁히므로, 같은 지문에서 많은
                   문항을 생성하면 중복 가능성이 높아집니다.
                 </p>
@@ -671,7 +671,7 @@ export function renderGrammarChoiceComboDetail({ grammarChoiceComboSettings, pat
 
 export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax, grammarErrorSettings, grammarMarkerCount, patchTypeSettings, setGrammarAnswerCount, setGrammarMarkerCount }) {
       return (
-        <div className="space-y-3">
+        <div className="space-y-3 max-lg:space-y-1.5">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
@@ -687,7 +687,7 @@ export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax,
                   표시 위치
                 </span>
               </div>
-              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                 지문에서 검토할 밑줄 표현 수입니다. 정답 수는 아래에서 따로
                 지정합니다.
               </p>
@@ -717,7 +717,7 @@ export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax,
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-[12px] font-bold text-slate-800">
@@ -732,7 +732,7 @@ export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax,
                   {grammarAnswerCount >= 2 ? "모두 고르기" : "단일 정답"}
                 </span>
               </div>
-              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                 기본값은 1개입니다. 2개 이상이면 발문에 개수를 쓰지 않고 어법상
                 틀린 것을 모두 고르라고 안내합니다.
               </p>
@@ -762,7 +762,7 @@ export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax,
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-[12px] font-bold text-slate-800">
@@ -777,13 +777,13 @@ export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax,
                   관계사·수일치·분사·to/-ing
                 </span>
               </div>
-              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                 켜면 정답 오류를 기출 최빈출 포인트(관계사·수일치·
                 to부정사/동명사·분사·대명사·형용사/부사)에 집중합니다. 끄면
                 다양한 포인트로 폭넓게 돌려가며 출제합니다.
               </p>
               {grammarErrorSettings.pointFocus ? (
-                <p className="mt-1 text-[10px] leading-snug text-slate-500">
+                <p className="mt-1 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                   집중 모드는 출제 포인트를 좁히므로, 같은 지문에서 많은
                   문항을 생성하면 중복 가능성이 높아집니다.
                 </p>
@@ -819,7 +819,7 @@ export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax,
 
 export function renderGrammarCorrectionDetail({ grammarCorrectionErrorCount, grammarCorrectionSettings, patchTypeSettings, setGrammarCorrectionErrorCount }) {
       return (
-        <div className="space-y-3">
+        <div className="space-y-3 max-lg:space-y-1.5">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
@@ -835,7 +835,7 @@ export function renderGrammarCorrectionDetail({ grammarCorrectionErrorCount, gra
                   밑줄=오류
                 </span>
               </div>
-              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                 지문에 밑줄 칠 문장/절 구간 수입니다. 선택한 모든 밑줄 구간 안에는
                 어법 오류가 숨어 있어야 합니다.
               </p>
@@ -875,7 +875,7 @@ export function renderGrammarCorrectionDetail({ grammarCorrectionErrorCount, gra
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-[12px] font-bold text-slate-800">
@@ -892,13 +892,13 @@ export function renderGrammarCorrectionDetail({ grammarCorrectionErrorCount, gra
                   관계사·수일치·분사·to/-ing
                 </span>
               </div>
-              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                 켜면 고쳐 쓸 오류를 기출 최빈출 포인트(관계사·수일치·
                 to부정사/동명사·분사·대명사·형용사/부사)에 집중합니다. 끄면
                 다양한 포인트로 폭넓게 돌려가며 출제합니다.
               </p>
               {grammarCorrectionSettings.pointFocus ? (
-                <p className="mt-1 text-[10px] leading-snug text-slate-500">
+                <p className="mt-1 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                   집중 모드는 출제 포인트를 좁히므로, 같은 지문에서 많은
                   문항을 생성하면 중복 가능성이 높아집니다.
                 </p>
@@ -949,7 +949,7 @@ export function renderSummaryCompleteMcDetail({ setSummaryCompleteMcBlankCount, 
                 객관식 조합
               </span>
             </div>
-            <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+            <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
               기본값은 2개입니다. 3개 이상이면 각 선지에 모든 빈칸 값을 맞춰
               생성합니다.
             </p>
@@ -994,7 +994,7 @@ export function renderSummaryCompleteMcDetail({ setSummaryCompleteMcBlankCount, 
 export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSettings, setBlankInferenceBlankCount, updateBlankSetting }) {
       const isMultiBlank = blankInferenceBlankCount >= 2;
       return (
-        <div className="space-y-3">
+        <div className="space-y-3 max-lg:space-y-1.5">
           {renderNumberSetting({
             title: "빈칸 개수",
             badges: [
@@ -1009,7 +1009,7 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
             onChange: setBlankInferenceBlankCount,
             ariaBase: "blank inference blank count",
           })}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderSegSetting({
               title: "빈칸 단위",
               description:
@@ -1032,7 +1032,7 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                 }),
             })}
           </div>
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-[12px] font-bold text-slate-800">
@@ -1050,7 +1050,7 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                   오답 균질화
                 </span>
               </div>
-              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                 정답 선지를 원문 그대로 내지 않고, 지문 의미를 보존한
                 패러프레이즈로 생성합니다.
               </p>
@@ -1081,7 +1081,7 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
               />
             </button>
           </div>
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span
@@ -1102,7 +1102,7 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                 </span>
               </div>
               {isMultiBlank ? (
-                <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                   빈칸 1개일 때만 사용할 수 있습니다.
                 </p>
               ) : null}
@@ -1137,7 +1137,7 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
             </button>
           </div>
 
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-[12px] font-bold text-slate-800">
@@ -1152,13 +1152,13 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                   인과·개념명명·재진술·대조
                 </span>
               </div>
-              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                 켜면 정답을 기출 최빈출 추론 논리(인과·기제, 추상 개념 명명,
                 재진술·환언, 대조 전환)에 집중합니다. 끄면 다양한 논리로 폭넓게
                 출제합니다.
               </p>
               {blankSettings.pointFocus ? (
-                <p className="mt-1 text-[10px] leading-snug text-slate-500">
+                <p className="mt-1 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                   집중 모드는 출제 논리를 좁히므로, 같은 지문에서 많은 문항을
                   생성하면 중복 가능성이 높아집니다.
                 </p>
@@ -1194,7 +1194,7 @@ export function renderVocabChoiceDetail({ patchTypeSettings, questionTypeSetting
       const vocabSynonymVariants =
         questionTypeSettings.VOCAB_CHOICE?.synonymVariants === true;
       return (
-        <div className="space-y-3">
+        <div className="space-y-3 max-lg:space-y-1.5">
           {renderNumberSetting({
             title: "밑줄 어휘 개수",
             badges: [
@@ -1209,7 +1209,7 @@ export function renderVocabChoiceDetail({ patchTypeSettings, questionTypeSetting
             onChange: setVocabChoiceMarkerCount,
             ariaBase: "vocab choice marker count",
           })}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderNumberSetting({
               title: "정답 개수",
               badges: [
@@ -1225,7 +1225,7 @@ export function renderVocabChoiceDetail({ patchTypeSettings, questionTypeSetting
               ariaBase: "vocab choice answer count",
             })}
           </div>
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
             <div className="min-w-0">
               <span className="text-[12px] font-bold text-slate-800">
                 동의어 변형 (암기 무력화)
@@ -1238,7 +1238,7 @@ export function renderVocabChoiceDetail({ patchTypeSettings, questionTypeSetting
                   난이도 ↑
                 </span>
               </div>
-              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                 밑줄 친 어휘를 모두 동의어로 바꿔 표시합니다. 지문을 외워도 표면
                 매칭으로는 못 풀고 뜻으로 판단해야 합니다.
               </p>
@@ -1275,7 +1275,7 @@ export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSett
       const sentenceInsertPointFocus =
         questionTypeSettings.SENTENCE_INSERT?.pointFocus === true;
       return (
-        <div className="space-y-3">
+        <div className="space-y-3 max-lg:space-y-1.5">
           {renderNumberSetting({
             title: "삽입 위치 개수",
             badges: [
@@ -1290,7 +1290,7 @@ export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSett
             onChange: setSentenceInsertSlotCount,
             ariaBase: "sentence insert slot count",
           })}
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
             <div className="min-w-0">
               <span className="text-[12px] font-bold text-slate-800">
                 주어진 문장 앞부분 변형
@@ -1303,7 +1303,7 @@ export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSett
                   난이도 ↑
                 </span>
               </div>
-              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                 주어진(삽입) 문장의 앞부분을 같은 의미로 바꿔, 표면 표현을 외워
                 푸는 것을 막습니다. 정답 위치는 그대로입니다.
               </p>
@@ -1330,7 +1330,7 @@ export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSett
               />
             </button>
           </div>
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
             <div className="min-w-0">
               <span className="text-[12px] font-bold text-slate-800">
                 출제 포인트 집중
@@ -1343,13 +1343,13 @@ export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSett
                   참조 해소·대조 전환
                 </span>
               </div>
-              <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+              <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                 켜면 정답 자리를 기출 최빈출 응집장치(지시어·정관사로 앞 문장을
                 가리키는 참조 해소, 내용을 뒤집는 대조 전환)로 고정하도록 집중합니다.
                 끄면 다양한 응집장치로 폭넓게 출제합니다.
               </p>
               {sentenceInsertPointFocus ? (
-                <p className="mt-1 text-[10px] leading-snug text-slate-500">
+                <p className="mt-1 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                   집중 모드는 출제 장치를 좁히므로, 같은 지문에서 많은 문항을
                   생성하면 중복 가능성이 높아집니다.
                 </p>
@@ -1425,7 +1425,7 @@ export function renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSetti
         <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
           난이도 · 이 유형만
         </span>
-        <div className="mt-1.5 flex h-8 rounded-lg bg-slate-100 p-0.5">
+        <div className="mt-1.5 flex h-8 rounded-lg bg-slate-100 p-0.5 max-lg:mt-1">
           {DIFFICULTY_TONES.map((d) => {
             const isActive = effective === d.value;
             return (
@@ -1466,14 +1466,16 @@ export function renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOpt
       generationPlan,
     );
     return (
-      <div className="space-y-3">
+      <div className="space-y-3 max-lg:space-y-1.5">
         {FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
           <div
             className={
-              numericContent ? "border-b border-slate-100 pb-3" : undefined
+              numericContent
+                ? "border-b border-slate-100 pb-3 max-lg:pb-1.5"
+                : undefined
             }
           >
-            <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500 max-lg:mb-1">
               생성 플랜 · 이 유형만
             </div>
             <div className="grid grid-cols-2 gap-2">
@@ -1514,7 +1516,7 @@ export function renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOpt
         {numericContent}
         <div
           className={
-            numericContent ? "border-t border-slate-100 pt-3" : undefined
+            numericContent ? "border-t border-slate-100 pt-3 max-lg:pt-1.5" : undefined
           }
         >
           {renderLanguageSetting({
@@ -1525,7 +1527,7 @@ export function renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOpt
           })}
         </div>
         {languageScope === "stem-option" ? (
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderLanguageSetting({
               title: "보기 언어",
               value: getTypeOptionLanguage(typeId),
@@ -1556,13 +1558,13 @@ export function renderGenericGistDetail({ getGenericAnswerCount, getGenericOptio
         { value: "NEGATIVE", label: "적절하지 않은 것" },
       ];
       return (
-        <div className="space-y-3">
+        <div className="space-y-3 max-lg:space-y-1.5">
           {showGistPolarity ? (
             <div className="border-b border-slate-100 pb-3">
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <span className="text-[12px] font-bold text-slate-800">정답 유형</span>
-                  <p className="mt-1.5 text-[10px] leading-snug text-slate-500">
+                  <p className="mt-1.5 text-[10px] leading-snug text-slate-500 max-lg:hidden">
                     {gistPolarityKind}로 &apos;적절한 것&apos;을 고를지, &apos;적절하지 않은 것&apos;을 고를지 정합니다.
                   </p>
                 </div>
@@ -1598,7 +1600,7 @@ export function renderGenericGistDetail({ getGenericAnswerCount, getGenericOptio
             onChange: (next) => setGenericOptionCount(typeId, next),
             ariaBase: `${typeId} option count`,
           })}
-          <div className="border-t border-slate-100 pt-3">
+          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
             {renderNumberSetting({
               title: "정답 개수",
               badges: [

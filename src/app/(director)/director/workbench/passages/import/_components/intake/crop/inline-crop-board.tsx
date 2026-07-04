@@ -28,13 +28,16 @@ import {
 } from "react";
 import {
   AlertCircle,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   GripVertical,
+  Hand,
   Layers,
   MousePointer2,
   Plus,
   Scissors,
+  ShoppingBasket,
   Trash2,
   X,
 } from "lucide-react";
@@ -294,6 +297,12 @@ function CropHintMiniDemo({ restored }: { restored: boolean }) {
           62% { opacity: 1; transform: translate(75px, 71px) scale(1); }
           78% { opacity: 0; transform: translate(75px, 71px) scale(1.65); }
         }
+        @keyframes cart-pop {
+          0% { transform: scale(1); }
+          35% { transform: scale(1.4); }
+          70% { transform: scale(0.9); }
+          100% { transform: scale(1); }
+        }
         @media (prefers-reduced-motion: reduce) {
           .smoat-crop-hint-demo__selection,
           .smoat-crop-hint-demo__cursor,
@@ -340,6 +349,12 @@ export const InlineCropBoard = forwardRef<
     onClear?: () => void;
     /** P7-D2 출력 방식 — "restored"면 안내문을 "지문+문제+선지 함께 크롭→AI 복원"으로. */
     outputMode?: "verbatim" | "restored";
+    /**
+     * 모바일(<lg)에서 '담긴 지문' 장바구니 바 + 추출 버튼을 화면 하단에 고정한다.
+     * 생성 페이지 스텝 플로우에서만 켜고(그 페이지는 하단 스텝 네비를 숨김), 자료추출·
+     * 커스텀·동형 등 다른 호스트는 자체 하단 UI가 있어 기본 false(흐름 내 렌더).
+     */
+    mobileFixedFooter?: boolean;
   }
 >(function InlineCropBoard(
   {
@@ -353,6 +368,7 @@ export const InlineCropBoard = forwardRef<
     footer,
     onClear,
     outputMode,
+    mobileFixedFooter = false,
   },
   ref,
 ) {
@@ -395,6 +411,39 @@ export const InlineCropBoard = forwardRef<
   const [dropOrder, setDropOrder] = useState<number | null>(null);
 
   const addInputRef = useRef<HTMLInputElement>(null);
+
+  // ── 모바일 터치 크롭 모드 ──────────────────────────────────────────────
+  // 터치 기기(coarse pointer)에선 손가락 드래그가 기본적으로 페이지 스크롤로
+  // 동작한다. 크롭 표면에 touch-action:none 을 걸어야 드래그로 영역을 그린다.
+  const [isCoarsePointer, setIsCoarsePointer] = useState(false);
+  // 그리드(coarse+lg, 예: iPad 가로) 세로 스택에서만 쓰는 스크롤↔그리기 토글.
+  // 세로 스크롤이 필요한 그리드에선 항상 그리기면 스크롤이 막히므로 남겨둔다.
+  const [touchDrawMode, setTouchDrawMode] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(pointer: coarse)");
+    const update = () => setIsCoarsePointer(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
+
+  // 모바일(<lg): 세로 스택 대신 페이지를 좌우로 넘기는 가로 페이저로 보여준다.
+  // 뷰포트 기준(coarse pointer 와 별개 — 좁은 데스크톱 창도 페이저).
+  const [isBelowLg, setIsBelowLg] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 1023.98px)");
+    const update = () => setIsBelowLg(mql.matches);
+    update();
+    mql.addEventListener("change", update);
+    return () => mql.removeEventListener("change", update);
+  }, []);
+  // 모바일 페이저는 세로 스크롤 대신 페이지 스와이프라, 스크롤 모드가 필요 없다.
+  // → 페이저(<lg)에선 토글 없이 '항상 영역 그리기'. 그리드에선 토글 값을 따른다.
+  const touchDrawActive = isCoarsePointer && (isBelowLg || touchDrawMode);
+  // 하단 고정 액션 바 활성(모바일 + 호스트가 요청한 경우만).
+  const fixedFooter = mobileFixedFooter && isBelowLg;
+  // 모바일 '담긴 지문' 장바구니 시트 펼침 여부.
+  const [cartOpen, setCartOpen] = useState(false);
 
   // ── 줌 (좌측 원본 캔버스) ──────────────────────────────────────────────
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -567,12 +616,16 @@ export const InlineCropBoard = forwardRef<
       const root = scrollerRef.current;
       if (!root) return;
       const rootRect = root.getBoundingClientRect();
+      // 모바일 페이저는 가로 스크롤이라 X축 겹침으로, PC는 세로라 Y축 겹침으로
+      // 현재 페이지를 고른다.
+      const horizontal = root.dataset.pagerAxis === "x";
       let best = 0;
       let bestOverlap = -1;
       root.querySelectorAll<HTMLElement>("[data-page-index]").forEach((el) => {
         const r = el.getBoundingClientRect();
-        const overlap =
-          Math.min(r.bottom, rootRect.bottom) - Math.max(r.top, rootRect.top);
+        const overlap = horizontal
+          ? Math.min(r.right, rootRect.right) - Math.max(r.left, rootRect.left)
+          : Math.min(r.bottom, rootRect.bottom) - Math.max(r.top, rootRect.top);
         if (overlap > bestOverlap) {
           bestOverlap = overlap;
           best = Number(el.dataset.pageIndex) || 0;
@@ -596,20 +649,32 @@ export const InlineCropBoard = forwardRef<
     return () => {
       root.removeEventListener("scroll", recomputeCurrentPage);
       ro?.disconnect();
-      if (pageRafRef.current) cancelAnimationFrame(pageRafRef.current);
+      if (pageRafRef.current) {
+        cancelAnimationFrame(pageRafRef.current);
+        // 취소한 rAF는 콜백이 실행되지 않아 스스로 0으로 못 돌아온다. 여기서
+        // 반드시 리셋해야 다음 이펙트 실행 후 recompute가 'if(pageRafRef) return'에
+        // 영구히 걸려 페이지 인디케이터가 얼어붙는 것을 막는다.
+        pageRafRef.current = 0;
+      }
     };
   }, [recomputeCurrentPage, images.length, contentWidth]);
   const scrollToPage = useCallback((i: number) => {
     const root = scrollerRef.current;
     const el = root?.querySelector<HTMLElement>(`[data-page-index="${i}"]`);
     if (!root || !el) return;
+    // 버튼 이동은 인디케이터를 즉시 갱신(부드러운 스크롤 이벤트를 기다리지 않음).
+    setCurrentPage(i);
     // scrollIntoView는 문서까지 포함한 모든 스크롤 조상을 움직여 페이지 전체가 밀린다.
-    // 미리보기 컨테이너 안에서만 스크롤하도록 scrollTop을 직접 계산해 옮긴다.
-    const top =
-      el.getBoundingClientRect().top -
-      root.getBoundingClientRect().top +
-      root.scrollTop;
-    root.scrollTo({ top, behavior: "smooth" });
+    // 미리보기 컨테이너 안에서만 스크롤하도록 직접 계산해 옮긴다.
+    const rootRect = root.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    if (root.dataset.pagerAxis === "x") {
+      const left = elRect.left - rootRect.left + root.scrollLeft;
+      root.scrollTo({ left, behavior: "smooth" });
+    } else {
+      const top = elRect.top - rootRect.top + root.scrollTop;
+      root.scrollTo({ top, behavior: "smooth" });
+    }
   }, []);
   const showThumbs = images.length >= 2;
 
@@ -699,6 +764,21 @@ export const InlineCropBoard = forwardRef<
   }, [images, boxesBySlot]);
   // 영역으로 그린 지문만 추출. 영역이 없는 페이지는 추출하지 않는다(통째 자동포함 제거).
   const totalPassages = passageCount;
+
+  // 모바일 장바구니 '담김' 애니메이션 — 지문 수가 늘 때마다 뱃지를 튀긴다.
+  const [cartBump, setCartBump] = useState(0);
+  const prevTotalRef = useRef(0);
+  useEffect(() => {
+    if (totalPassages > prevTotalRef.current) setCartBump((n) => n + 1);
+    prevTotalRef.current = totalPassages;
+  }, [totalPassages]);
+  // 목록이 접혀 있으면(모바일) 카드 onAnimationEnd가 오지 않아 glow가 안 풀린다.
+  // 타이머로 정리해 상태가 물리지 않게 한다.
+  useEffect(() => {
+    if (justAddedGroup === null) return;
+    const t = window.setTimeout(() => setJustAddedGroup(null), 900);
+    return () => window.clearTimeout(t);
+  }, [justAddedGroup]);
 
   // 검수 패널 데이터: 지문(그룹) 단위 + 조각(읽기순). 통째 이미지는 별도.
   const passages = useMemo(() => {
@@ -1315,31 +1395,35 @@ export const InlineCropBoard = forwardRef<
 
       {/* ── 가운데: 원본 캔버스(줌) ─────────────────────────────────── */}
       <div className="relative flex min-h-0 min-w-0 flex-1 flex-col border-b border-slate-100 lg:border-b-0">
-        <PreviewZoomControls
-          zoom={zoom}
-          position={ctrlPos}
-          onZoomIn={zoomIn}
-          onZoomOut={zoomOut}
-          onReset={zoomReset}
-          onFit={zoomFit}
-          onDragStart={onCtrlDrag}
-          orientation="vertical"
-          extra={
-            onClear ? (
-              <button
-                type="button"
-                onClick={onClear}
-                disabled={locked}
-                title="업로드한 파일을 모두 비웁니다"
-                aria-label="비우기"
-                className="inline-flex h-5 cursor-pointer items-center justify-center gap-1 rounded px-1 text-[8.5px] font-bold text-slate-600 transition-colors hover:bg-red-50 hover:text-red-600 disabled:cursor-default disabled:text-slate-300 disabled:hover:bg-transparent"
-              >
-                <Trash2 className="size-3" aria-hidden="true" />
-                비우기
-              </button>
-            ) : null
-          }
-        />
+        {/* 줌 컨트롤은 PC 전용 — 모바일 페이저는 페이지를 화면에 자동으로 꽉 맞추므로
+            줌이 필요 없다(비우기는 아래 모바일 상단 바로 옮긴다). */}
+        {!isBelowLg ? (
+          <PreviewZoomControls
+            zoom={zoom}
+            position={ctrlPos}
+            onZoomIn={zoomIn}
+            onZoomOut={zoomOut}
+            onReset={zoomReset}
+            onFit={zoomFit}
+            onDragStart={onCtrlDrag}
+            orientation="vertical"
+            extra={
+              onClear ? (
+                <button
+                  type="button"
+                  onClick={onClear}
+                  disabled={locked}
+                  title="업로드한 파일을 모두 비웁니다"
+                  aria-label="비우기"
+                  className="inline-flex h-5 cursor-pointer items-center justify-center gap-1 rounded px-1 text-[8.5px] font-bold text-slate-600 transition-colors hover:bg-red-50 hover:text-red-600 disabled:cursor-default disabled:text-slate-300 disabled:hover:bg-transparent"
+                >
+                  <Trash2 className="size-3" aria-hidden="true" />
+                  비우기
+                </button>
+              ) : null
+            }
+          />
+        ) : null}
         {flat.length === 0 && hintOpen ? (
           <div className="pointer-events-none absolute left-0 right-0 top-3 z-30 flex justify-center px-4">
             <div
@@ -1422,8 +1506,65 @@ export const InlineCropBoard = forwardRef<
             </div>
           </div>
         ) : null}
+        {/* 모바일 전용 상단 바: 안내 + 페이지 인디케이터(가로 페이저).
+            스크롤/그리기 토글은 폐지 — 페이저는 항상 '영역 그리기'라 손가락
+            드래그로 바로 지문 영역을 잡는다. PC(lg+)는 숨김. */}
+        {isBelowLg && images.length > 0 ? (
+          <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 bg-white px-2.5 py-1.5 lg:hidden">
+            {isCoarsePointer && !locked ? (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-[11.5px] font-bold text-blue-700">
+                <Scissors className="size-3.5" aria-hidden="true" />
+                드래그해 지문 영역 선택
+              </span>
+            ) : (
+              <span />
+            )}
+            <div className="inline-flex items-center gap-1.5">
+              {images.length >= 2 ? (
+                <div className="inline-flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => scrollToPage(Math.max(0, currentPage - 1))}
+                    disabled={currentPage <= 0}
+                    aria-label="이전 페이지"
+                    className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <ChevronLeft className="size-4" aria-hidden="true" />
+                  </button>
+                  <span className="min-w-[48px] text-center text-[12px] font-bold tabular-nums text-slate-700">
+                    {currentPage + 1} / {images.length}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      scrollToPage(Math.min(images.length - 1, currentPage + 1))
+                    }
+                    disabled={currentPage >= images.length - 1}
+                    aria-label="다음 페이지"
+                    className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <ChevronRight className="size-4" aria-hidden="true" />
+                  </button>
+                </div>
+              ) : null}
+              {onClear ? (
+                <button
+                  type="button"
+                  onClick={onClear}
+                  disabled={locked}
+                  title="업로드한 파일을 모두 비웁니다"
+                  aria-label="비우기"
+                  className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <Trash2 className="size-3.5" aria-hidden="true" />
+                </button>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
         <div
           ref={scrollerRef}
+          data-pager-axis={isBelowLg ? "x" : "y"}
           onDragOver={(event) => {
             if (!event.dataTransfer.types.includes("Files")) return;
             event.preventDefault();
@@ -1442,19 +1583,68 @@ export const InlineCropBoard = forwardRef<
               onAddFiles(event.dataTransfer.files);
           }}
           className={
-            "min-h-0 flex-1 overflow-auto bg-slate-100/70 px-3.5 py-3 " +
+            "min-h-0 flex-1 bg-slate-100/70 " +
+            (isBelowLg
+              ? "snap-x snap-mandatory overflow-x-auto overflow-y-hidden "
+              : "overflow-auto px-3.5 py-3 ") +
             (dropActive ? "ring-2 ring-inset ring-sky-400" : "")
           }
         >
+          {/* 터치 랩톱(coarse+lg 그리드): 페이저가 아닌 세로 그리드라 토글을
+              스크롤러 안에 sticky로 유지한다. 모바일 페이저는 위 상단 바가 담당. */}
+          {isCoarsePointer && !isBelowLg && images.length > 0 && !locked ? (
+            <div className="sticky top-0 z-30 mb-2 flex justify-center">
+              <div
+                role="group"
+                aria-label="터치 조작 모드"
+                className="inline-flex items-center gap-0.5 rounded-full border border-slate-200 bg-white/95 p-0.5 shadow-md backdrop-blur"
+              >
+                <button
+                  type="button"
+                  onClick={() => setTouchDrawMode(false)}
+                  aria-pressed={!touchDrawMode}
+                  className={
+                    "inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-[12px] font-bold transition-colors " +
+                    (!touchDrawMode
+                      ? "bg-slate-800 text-white shadow-sm"
+                      : "text-slate-500 hover:bg-slate-100")
+                  }
+                >
+                  <Hand className="size-3.5" aria-hidden="true" />
+                  스크롤
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTouchDrawMode(true)}
+                  aria-pressed={touchDrawMode}
+                  className={
+                    "inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-[12px] font-bold transition-colors " +
+                    (touchDrawMode
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-blue-600 hover:bg-blue-50")
+                  }
+                >
+                  <Scissors className="size-3.5" aria-hidden="true" />
+                  영역 그리기
+                </button>
+              </div>
+            </div>
+          ) : null}
           <div
             ref={contentRef}
             className={
-              "grid gap-3 " +
-              (canvasOverflow ? "justify-start" : "justify-center")
+              isBelowLg
+                ? "flex h-full"
+                : "grid gap-3 " +
+                  (canvasOverflow ? "justify-start" : "justify-center")
             }
-            style={{
-              gridTemplateColumns: `repeat(${canvasCols}, ${contentWidth}px)`,
-            }}
+            style={
+              isBelowLg
+                ? undefined
+                : {
+                    gridTemplateColumns: `repeat(${canvasCols}, ${contentWidth}px)`,
+                  }
+            }
           >
             {images.map((img, i) => {
               const sid = img.slotId ?? String(i);
@@ -1463,6 +1653,25 @@ export const InlineCropBoard = forwardRef<
               const isUncropped = boxes.length === 0;
               const isDragging = dragOrder === i;
               const isDropTarget = dropOrder === i && dragOrder !== i;
+              const canvas = (
+                <CropCanvas
+                  fit="width"
+                  imageUrl={img.previewUrl}
+                  boxes={boxes}
+                  onChange={(next, meta) => handleBoxesChange(sid, next, meta)}
+                  activeIndex={active?.slotId === sid ? active.j : null}
+                  onActiveIndexChange={(j) =>
+                    setActive(j === null ? null : { slotId: sid, j })
+                  }
+                  disabled={locked}
+                  regionLabels={groups.map((g) =>
+                    String(groupRank.get(g) ?? g),
+                  )}
+                  touchDraw={touchDrawActive}
+                  // 키보드가 없는 모바일/터치에선 활성 영역에 삭제 버튼을 노출.
+                  showDeleteButton={isBelowLg || touchDrawActive}
+                />
+              );
               return (
                 <div
                   key={sid}
@@ -1483,6 +1692,9 @@ export const InlineCropBoard = forwardRef<
                     setDropOrder(null);
                   }}
                   className={
+                    (isBelowLg
+                      ? "flex h-full w-full shrink-0 snap-center flex-col "
+                      : "") +
                     "overflow-hidden rounded-lg border bg-white shadow-sm transition-all " +
                     (isDragging
                       ? "border-blue-300 opacity-40 "
@@ -1551,22 +1763,15 @@ export const InlineCropBoard = forwardRef<
                     </button>
                   </div>
 
-                  <CropCanvas
-                    fit="width"
-                    imageUrl={img.previewUrl}
-                    boxes={boxes}
-                    onChange={(next, meta) =>
-                      handleBoxesChange(sid, next, meta)
-                    }
-                    activeIndex={active?.slotId === sid ? active.j : null}
-                    onActiveIndexChange={(j) =>
-                      setActive(j === null ? null : { slotId: sid, j })
-                    }
-                    disabled={locked}
-                    regionLabels={groups.map((g) =>
-                      String(groupRank.get(g) ?? g),
-                    )}
-                  />
+                  {isBelowLg ? (
+                    // 좌우를 화면 폭에 꽉 채워 최대한 크게 본다. 세로로 길면 이
+                    // 영역만 스크롤(페이지 간 이동은 바깥 가로 스냅이 담당).
+                    <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden bg-slate-100/50">
+                      {canvas}
+                    </div>
+                  ) : (
+                    canvas
+                  )}
                 </div>
               );
             })}
@@ -1621,6 +1826,27 @@ export const InlineCropBoard = forwardRef<
         style={{ width: reviewWidth }}
         className="flex min-h-0 flex-col border-t border-slate-100 bg-white max-lg:!w-full lg:shrink-0 lg:border-t-0"
       >
+        {/* 모바일: 장바구니 바 + 추출 버튼을 화면 하단에 고정('내 지문함으로'가
+            있던 자리). 목록(cartOpen)은 그 위로 펼쳐진다. PC(lg)는 contents로
+            투명 처리해 기존 우측 패널 레이아웃을 그대로 유지. */}
+        <div
+          className={
+            fixedFooter
+              ? "fixed inset-x-0 bottom-0 z-40 flex flex-col border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_20px_-10px_rgba(15,23,42,0.28)]"
+              : "contents"
+          }
+        >
+        {/* 목록(추출될 지문) — PC는 항상 열림. 모바일은 아래 '담긴 지문' 장바구니
+            바를 탭해 cartOpen일 때만 시트로 펼친다. */}
+        <div
+          className={
+            isBelowLg
+              ? cartOpen
+                ? "flex max-h-[52vh] min-h-0 flex-col border-b border-slate-100"
+                : "hidden"
+              : "flex min-h-0 flex-1 flex-col"
+          }
+        >
         <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-2.5">
           <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-slate-900">
             <Layers className="size-4 text-blue-600" aria-hidden="true" />
@@ -1960,6 +2186,68 @@ export const InlineCropBoard = forwardRef<
             </div>
           ) : null}
         </div>
+        </div>
+
+        {/* ── 모바일 장바구니 바 — '내 지문함' 버튼 바로 위. 담긴 지문 미리보기 +
+            개수 뱃지(담길 때 팝). 탭하면 위 목록/합치기 시트를 펼친다. ── */}
+        {isBelowLg ? (
+          <button
+            type="button"
+            onClick={() => setCartOpen((o) => !o)}
+            aria-expanded={cartOpen}
+            aria-label={cartOpen ? "담긴 지문 목록 접기" : "담긴 지문 목록 펼치기"}
+            className="flex w-full shrink-0 items-center gap-2.5 border-t border-slate-200 bg-white px-3 py-2 text-left lg:hidden"
+          >
+            <span className="relative inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+              <ShoppingBasket className="size-5" aria-hidden="true" />
+              {totalPassages > 0 ? (
+                <span
+                  key={cartBump}
+                  className="absolute -right-1.5 -top-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-extrabold leading-none text-white ring-2 ring-white [animation:cart-pop_.45s_ease-out]"
+                >
+                  {totalPassages}
+                </span>
+              ) : null}
+            </span>
+            <span className="flex min-w-0 flex-1 flex-col">
+              <span className="text-[12.5px] font-bold text-slate-900">
+                담긴 지문 {totalPassages}개
+              </span>
+              <span className="truncate text-[10.5px] text-slate-400">
+                {totalPassages > 0
+                  ? "탭하여 목록 보기·합치기"
+                  : "지문 영역을 드래그해 담아보세요"}
+              </span>
+            </span>
+            <span className="flex shrink-0 -space-x-2">
+              {passages.slice(0, 4).map((p) => {
+                const piece = p.pieces[0];
+                const img = piece ? images[piece.imageOrder] : null;
+                if (!img) return null;
+                return (
+                  <span
+                    key={`cart-${p.group}`}
+                    className="size-8 overflow-hidden rounded-md border-2 border-white bg-white shadow-sm"
+                    style={cropBgStyle(img.previewUrl, piece.box)}
+                    aria-hidden="true"
+                  />
+                );
+              })}
+              {passages.length > 4 ? (
+                <span className="inline-flex size-8 items-center justify-center rounded-md border-2 border-white bg-slate-100 text-[10px] font-bold text-slate-500 shadow-sm">
+                  +{passages.length - 4}
+                </span>
+              ) : null}
+            </span>
+            <ChevronDown
+              className={
+                "size-4 shrink-0 text-slate-400 transition-transform " +
+                (cartOpen ? "rotate-180" : "")
+              }
+              aria-hidden="true"
+            />
+          </button>
+        ) : null}
 
         {error ? (
           <div className="flex shrink-0 items-start gap-1.5 border-t border-slate-100 bg-red-50 px-3.5 py-2 text-[10.5px] font-medium leading-relaxed text-red-600">
@@ -1976,6 +2264,7 @@ export const InlineCropBoard = forwardRef<
             {footer}
           </div>
         ) : null}
+        </div>
       </aside>
     </div>
   );

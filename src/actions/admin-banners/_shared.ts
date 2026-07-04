@@ -35,6 +35,8 @@ export const bannerInputSchema = z
     isActive: z.boolean().default(false),
     dismissMode: z.enum(dismissModes),
     showDismissButton: z.boolean().default(true),
+    targetMode: z.enum(["ALL", "SPECIFIC"]).default("ALL"),
+    targetAcademyIds: z.array(z.string()).default([]),
     startsAt: z.string().datetime().nullish().or(z.literal("")),
     endsAt: z.string().datetime().nullish().or(z.literal("")),
     autoOpenOnLowCredit: z.boolean().default(false),

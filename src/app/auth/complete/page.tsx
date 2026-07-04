@@ -4,11 +4,14 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Loader2, ShieldCheck } from "lucide-react";
+import { normalizeStaffCallbackUrl } from "@/lib/auth-redirect";
 
 function CompleteInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const rawCallbackUrl = searchParams.get("callbackUrl");
+  const callbackUrl = normalizeStaffCallbackUrl(rawCallbackUrl);
   const [error, setError] = useState<string | null>(() =>
     token ? null : "missing_token",
   );
@@ -29,10 +32,14 @@ function CompleteInner() {
         setError("bridge_failed");
         return;
       }
-      router.replace("/director/workbench/questions/generate");
+      router.replace(callbackUrl);
       router.refresh();
     })();
-  }, [token, router]);
+  }, [token, router, callbackUrl]);
+
+  const loginErrorHref = rawCallbackUrl
+    ? `/login?error=${encodeURIComponent(error ?? "bridge_failed")}&callbackUrl=${encodeURIComponent(callbackUrl)}`
+    : `/login?error=${encodeURIComponent(error ?? "bridge_failed")}`;
 
   if (error) {
     return (
@@ -46,7 +53,7 @@ function CompleteInner() {
             소셜 로그인 처리 중 오류가 발생했어요. 다시 시도해주세요.
           </p>
           <button
-            onClick={() => router.replace(`/login?error=${error}`)}
+            onClick={() => router.replace(loginErrorHref)}
             className="h-11 w-full rounded-xl bg-blue-600 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
           >
             로그인 화면으로
