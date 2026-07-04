@@ -239,17 +239,23 @@ test("GRAMMAR_CORRECTION keeps only the corrected expression as the answer", () 
   assert.equal(result.formattedAnswer, "are rarely");
 });
 
-test("question text and paper builder use labeled underlined passage plus labeled answer slots", () => {
-  assert.match(result.questionText, /__\(A\) These deep-seated values/);
-  assert.match(result.questionText, /\(A\) ____________________________/);
-  assert.equal(result.answerSlots, "(A) ____________________________");
+test("single-error question uses an unlabeled underline and a plain answer slot", () => {
+  // 오류 구간이 하나뿐이면 (A) 라벨을 붙이지 않는다 — 밑줄 하나·빈칸 하나면 라벨 불필요.
+  // (2개 이상일 때만 (A)(B)(C) 로 구분 — 실제 시험 관례. codex 렌더 정합 결정.)
+  assert.match(result.questionText, /__These deep-seated values/);
+  assert.doesNotMatch(result.questionText, /__\(A\) These deep-seated values/);
+  assert.match(result.questionText, /____________________________/);
+  assert.doesNotMatch(result.answerSlots, /\(A\)/);
+  assert.match(result.answerSlots, /^_+$/);
   assert.doesNotMatch(result.questionText, /we have __is rarely__/);
   assert.doesNotMatch(result.legacyMixedQuestionText, /SHOULD_NOT_APPEAR/);
-  assert.match(result.repaired, /__\(A\) These deep-seated values/);
-  assert.match(result.repaired, /\(A\) ____________________________/);
+  assert.match(result.repaired, /__These deep-seated values/);
+  assert.doesNotMatch(result.repaired, /__\(A\) These deep-seated values/);
+  assert.match(result.repaired, /____________________________/);
   assert.doesNotMatch(result.repaired, /문장에서 밑줄 친 부분을/);
-  assert.match(result.paperQuestionText, /__\(A\) These deep-seated values/);
-  assert.match(result.paperQuestionText, /\(A\) ____________________________/);
+  assert.match(result.paperQuestionText, /__These deep-seated values/);
+  assert.doesNotMatch(result.paperQuestionText, /__\(A\) These deep-seated values/);
+  assert.match(result.paperQuestionText, /____________________________/);
   assert.equal(result.paperIncludePassage, false);
   assert.equal(result.paperAnswerSpaceLines, 0);
 });

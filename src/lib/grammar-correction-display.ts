@@ -274,15 +274,21 @@ function readGrammarCorrectionSegmentsForDisplay(
     }))
     .filter((item) => item.correctedPart);
 
-  if (segments.length > 0) return segments;
+  const resolved = segments.length > 0
+    ? segments
+    : (() => {
+        const correctedPart = normalizeDisplayString(question.correctedPart || question.correctAnswer);
+        if (!correctedPart) return [];
+        return [{
+          label: grammarCorrectionLabel(0),
+          errorPart: normalizeDisplayString(question.errorPart),
+          correctedPart,
+        }];
+      })();
 
-  const correctedPart = normalizeDisplayString(question.correctedPart || question.correctAnswer);
-  if (!correctedPart) return [];
-  return [{
-    label: grammarCorrectionLabel(0),
-    errorPart: normalizeDisplayString(question.errorPart),
-    correctedPart,
-  }];
+  // 오류 구간이 하나뿐이면 (A) 라벨을 비운다 — 단일 구간은 라벨이 불필요(2개 이상만 (A)(B)(C) 부여).
+  if (resolved.length === 1) return [{ ...resolved[0], label: "" }];
+  return resolved;
 }
 
 function normalizeGrammarCorrectionLabel(value: unknown, index: number): string {
@@ -300,6 +306,10 @@ function labelGrammarCorrectionPassage(
   return passageWithUnderline.replace(/__([^_]+)__/g, (full, inner: string) => {
     const trimmed = inner.trim();
     const existing = trimmed.match(/^\(([A-Ja-j])\)\s+(.+)$/);
+    // 오류 구간이 하나면 라벨 없이 본문만 — 이미 구워진 (A)도 떼어낸다(단일 구간 라벨 제거).
+    if (segments.length === 1) {
+      return `__${existing ? existing[2] : trimmed}__`;
+    }
     if (existing) {
       const normalizedLabel = `(${existing[1].toUpperCase()})`;
       return `__${normalizedLabel} ${existing[2]}__`;
