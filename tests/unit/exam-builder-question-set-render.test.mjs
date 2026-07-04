@@ -92,12 +92,10 @@ const groups = buildGroups([item1, item2, ordinary]);
 
 process.stdout.write(JSON.stringify({
   groupCount: groups.length,
-  firstGroupId: groups[0]?.id ?? "",
-  firstGroupIncludesPassage: Boolean(groups[0]?.includePassage),
-  firstSetPrompt: groups[0]?.setPrompt ?? "",
-  ordinaryPrompt: groups[2]?.setPrompt ?? "",
-  item1SelfContained: item1.questionText.includes(basePassage),
-  item2SelfContained: item2.questionText.includes(basePassage),
+  setPrompt: groups[0]?.setPrompt ?? "",
+  setPassage: groups[0]?.passageContent ?? "",
+  ordinaryPrompt: groups[1]?.setPrompt ?? "",
+  ordinaryPassage: groups[1]?.passageContent ?? "",
 }));
 `;
 
@@ -124,18 +122,11 @@ function runHarness() {
 
 const summary = runHarness();
 
-test("exam builder renders EN set members self-contained (no shared set prompt/passage box)", () => {
-  // 영어 세트 멤버는 자기완결로 렌더한다(로컬 우선 결정): 세트 멤버 2개 + 일반 문항 1개가
-  // 각자 솔로("single:") 그룹이 되어 총 3그룹. 공유 set prompt·병합 지문 1박스는 없고,
-  // 각 멤버는 자기 지문을 본문에 스스로 담는다(materializeSetMember).
-  assert.equal(summary.groupCount, 3);
-  assert.ok(
-    String(summary.firstGroupId).startsWith("single:"),
-    `firstGroupId=${summary.firstGroupId}`,
-  );
-  assert.equal(summary.firstGroupIncludesPassage, false);
-  assert.equal(summary.firstSetPrompt, "");
+test("exam builder renders set prompt and merged set passage only for set groups", () => {
+  assert.equal(summary.groupCount, 2);
+  assert.equal(summary.setPrompt, "[1~2] 다음 글을 읽고, 물음에 답하시오.");
+  assert.match(summary.setPassage, /__creative spark__/);
+  assert.match(summary.setPassage, /_{3,}/);
   assert.equal(summary.ordinaryPrompt, "");
-  assert.ok(summary.item1SelfContained, "set member 1 should carry its own passage body");
-  assert.ok(summary.item2SelfContained, "set member 2 should carry its own passage body");
+  assert.doesNotMatch(summary.ordinaryPassage, /__creative spark__/);
 });

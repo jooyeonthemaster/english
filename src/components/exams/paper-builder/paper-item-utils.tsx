@@ -1,6 +1,7 @@
 import * as React from "react";
 import type {
   BuilderQuestion,
+  BuilderQuestionSetRender,
   InsertablePaperBlockType,
   OptionItem,
   PaperGroup,
@@ -12,11 +13,6 @@ import {
   shouldRenderSourcePassageInsideQuestion,
 } from "./passage-policy";
 import { isSummaryWritingSubtype } from "./summary-complete-mc-layout";
-import { isInlineSourcePassageSubtype, questionStemAndBody } from "./question-body-layout";
-import {
-  enrichSetMemberStructured,
-  setMemberDisplayPassage,
-} from "@/components/workbench/question-bank-card/set-member-passage";
 import {
   normalizeInlineText,
   normalizePassageText,
@@ -29,6 +25,9 @@ import { buildGrammarCorrectionQuestionTextForDisplay } from "@/lib/grammar-corr
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
 import { formatSourcePassageForQuestionItems } from "./source-passage-markers";
 import { normalizePaperFields } from "./render-model";
+import { buildQuestionSetMergedPassage } from "@/lib/question-sets/render";
+import { reconstructPassageView } from "@/lib/question-sets/reconstruct";
+import type { Anchor } from "@/lib/question-sets/types";
 import { isKoQuestionType } from "@/lib/korean/registry";
 import {
   buildKoSetDirective,
@@ -111,6 +110,101 @@ export function isSetMemberItem(item: PaperItem): boolean {
   return item.blockType === "question" && Boolean(item.sourceQuestion.setId);
 }
 
+// ── 영어(비-KO) 장문 세트: 공유 지문 1박스 병합 렌더 (codex 방식) ──────────────
+// 세트 멤버는 지문을 저장하지 않고 span anchors(_spans)/setRender 만 갖는다. 그룹
+// 선두에 병합 지문 1박스(밑줄 __…__ + 빈칸 ___)를 그리고 '[1~2] 다음 글을 읽고,
+// 물음에 답하시오.' 안내를 붙인다. KO 세트는 이 경로가 아니라 applyKoSetSharedPassages
+// (buildKoSetSharedPassage/koSetDirective)로 처리한다 — 아래 헬퍼들은 KO 그룹에도
+// 중간값을 채우지만 applyKoSetSharedPassages 가 그 값을 덮어써 KO 동작은 불변이다.
+function readStructuredObject(value: unknown): Record<string, unknown> {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value as Record<string, unknown>;
+  }
+  if (typeof value !== "string") return {};
+  try {
+    const parsed = JSON.parse(value);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+      ? (parsed as Record<string, unknown>)
+      : {};
+  } catch {
+    return {};
+  }
+}
+
+function spansFromStructuredData(value: unknown): Anchor[] {
+  const spans = readStructuredObject(value)._spans;
+  return Array.isArray(spans) ? (spans as Anchor[]) : [];
+}
+
+function mergedSetPassageForQuestion(question: BuilderQuestion): string | null {
+  if (!question.setId || !question.setRender) return null;
+  return normalizePassageText(buildQuestionSetMergedPassage(question.setRender));
+}
+
+function setRenderFromItems(items: PaperItem[]): BuilderQuestionSetRender | null {
+  for (const item of items) {
+    const render = item.sourceQuestion.setRender;
+    if (render) return render;
+  }
+  return null;
+}
+
+function normalizedSourcePassageForItem(item: PaperItem): string {
+  return normalizePassageText(item.sourceQuestion.passage?.content || "");
+}
+
+function currentPassageDiffersFromSource(items: PaperItem[]): boolean {
+  return items.some((item) => {
+    const current = normalizePassageText(item.passageContent || "");
+    const source = normalizedSourcePassageForItem(item);
+    return Boolean(current) && current !== source;
+  });
+}
+
+function mergedSetPassageForItems(
+  passageContent: string,
+  items: PaperItem[],
+): string | null {
+  if (!items.some(isSetMemberItem)) return null;
+  if (currentPassageDiffersFromSource(items)) return passageContent;
+
+  const setRender = setRenderFromItems(items);
+  if (setRender) {
+    return normalizePassageText(buildQuestionSetMergedPassage(setRender));
+  }
+
+  const base = normalizePassageText(
+    passageContent || items.map(normalizedSourcePassageForItem).find(Boolean) || "",
+  );
+  const spans = items.flatMap((item) =>
+    spansFromStructuredData(item.sourceQuestion.structuredData),
+  );
+  if (!base || spans.length === 0) return base || null;
+  return normalizePassageText(reconstructPassageView(base, spans).text || base);
+}
+
+function formatPassageContentForGroup(
+  passageContent: string,
+  items: PaperItem[],
+): string {
+  return (
+    mergedSetPassageForItems(passageContent, items) ??
+    formatSourcePassageForQuestionItems(passageContent, items)
+  );
+}
+
+function setPromptForItems(items: PaperItem[]): string {
+  if (!items.some(isSetMemberItem)) return "";
+  const orderNums = items
+    .filter((item) => item.blockType === "question" && item.orderNum > 0)
+    .map((item) => item.orderNum);
+  if (orderNums.length === 0) return "";
+  const first = Math.min(...orderNums);
+  const last = Math.max(...orderNums);
+  const range = first === last ? `[${first}]` : `[${first}~${last}]`;
+  return `${range} 다음 글을 읽고, 물음에 답하시오.`;
+}
+
 // 커스텀 레이아웃(v2) 문항은 LayoutDoc.answerLineCount 가 서술형 답란 줄 수를
 // 명시한다(원본 문항 양식 캡처값). 있으면 기본값 로직보다 우선한다.
 function customLayoutAnswerSpaceLines(question: BuilderQuestion): number | null {
@@ -164,30 +258,16 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
   void _existingItems;
   const localId = makeLocalId(question.id);
   const customAnswerSpaceLines = customLayoutAnswerSpaceLines(question);
-  // 국어(KO) 세트 멤버: 병합-마커 공유지문 모델 — 영어 세트의 anchor(_spans) 자기완결
-  // 렌더(enrich/materializeSetMember)를 타지 않는다. groupId `set:<setId>` 로 묶고,
+  // 국어(KO) 세트 멤버: 병합-마커 공유지문 모델(로컬) — 영어 세트의 codex 병합지문
+  // (span anchors)/setRender 경로를 타지 않는다. groupId `set:<setId>` 로 묶고,
   // 멤버 문항은 지문 미동봉(includePassage=false → koStructuredSegments 가 지문 박스
-  // 억제, 발문+보기+선지만). 공유지문 1박스는 buildGroups 가 그룹 선두에 그린다.
+  // 억제, 발문+보기+선지만). 공유지문 1박스는 applyKoSetSharedPassages 가 그룹 선두에 그린다.
   const isKoSetMember = Boolean(question.setId) && isKoQuestionType(question.subType);
-  // 장문 세트 멤버는 지문/밑줄·마커가 공유 지문 + anchor(_spans)로만 저장돼 questionText 에
-  // 지문이 없다. 어법·어휘 등 passageWith* 필드로 렌더되는 유형은, 복원 지문을 그 필드에
-  // 주입해(enrich) normalizePaperFields 가 본문에 ①②③④⑤ 등으로 baking 하게 한다.
-  // (밑줄/빈칸 유형은 baking 경로가 없어 아래 materializeSetMember 가 본문에 직접 주입한다.)
-  const questionForPaper: BuilderQuestion = question.setId && !isKoSetMember
-    ? {
-        ...question,
-        structuredData:
-          enrichSetMemberStructured({
-            inSet: true,
-            setId: question.setId,
-            structuredData: question.structuredData,
-            passage: question.passage,
-          }) ?? question.structuredData,
-      }
-    : question;
   // 일반 문항의 이관된 마커 유형은 표기(마커·라벨·보기순서)를 시험지 렌더 시점에 정본화.
   // 동형·미이관·도출실패는 null → 현 동작 유지(회귀 0). 생성/DB 무영향(여기서만 변환).
-  const normalizedFields = normalizePaperFields(questionForPaper, "normalized");
+  // 영어 세트 멤버는 지문/마커를 공유 지문 1박스(codex 병합 경로)로만 그리므로 enrich·자기완결
+  // 주입을 타지 않는다 — 멤버 본문은 발문+보기만, 지문은 그룹 선두 박스가 담당한다.
+  const normalizedFields = normalizePaperFields(question, "normalized");
   const options =
     normalizedFields?.options ??
     (question.subType === "SENTENCE_INSERT"
@@ -195,31 +275,36 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
       : parseOptions(question.options));
   const isSubjective = options.length === 0;
   const effectiveQuestion = normalizedFields
-    ? { ...questionForPaper, correctAnswer: normalizedFields.correctAnswer }
-    : questionForPaper;
+    ? { ...question, correctAnswer: normalizedFields.correctAnswer }
+    : question;
   const normalizedQuestionText = normalizedFields
     ? normalizeQuestionText(normalizedFields.questionText)
-    : normalizedQuestionTextForPaper(questionForPaper);
-  // KO 세트 멤버의 지문은 공유지문 1박스(buildGroups)가 소비한다 — 단락 접힘
+    : normalizedQuestionTextForPaper(question);
+  // KO 세트 멤버의 지문은 공유지문 1박스(applyKoSetSharedPassages)가 소비한다 — 단락 접힘
   // (normalizePassageText)을 우회해 원문 개행(운문 행 구분)을 보존한다. 마커 병합
   // (buildKoMarkedPassage)이 같은 normalizeKo 폼에서 동작하므로 정규화도 그쪽에 위임.
+  // 영어 세트 멤버는 codex 병합지문: setRender 있으면 병합 지문, 없으면 원지문(정규화) —
+  // buildGroups 의 mergedSetPassageForItems 가 span anchors 로 최종 병합한다.
+  const rawPassageContent = normalizePassageText(question.passage?.content || "");
   const passageContent = isKoSetMember
     ? question.passage?.content || ""
-    : normalizePassageText(question.passage?.content || "");
+    : mergedSetPassageForQuestion(question) ?? rawPassageContent;
   // 요약문 영작(SUMMARY_WRITING)·주제문 영작(TOPIC_SENTENCE_WRITING)은 원본 지문을 시험지에
   // "무조건 함께" 가져온다(사용자 요구·레퍼런스 형식). 학생은 지문을 읽고 요약문/주제문을 영작한다.
   // SUMMARY_COMPLETE 와 동일하게 INLINE_SOURCE 로 처리 — 지문은 structuredSegments() 가
   // 문제 안(요약문/주제문 위)에 박스로 인라인 렌더하고, 별도 출처 지문 블록은 억제된다.
-  // 장문 세트 멤버는 materializeSetMember 가 자기완결로 마킹 지문을 주입하므로
-  // 여기서 setId 강제 분기는 두지 않는다(dongju 자기완결 렌더 채택 + 주제문 영작 강제포함 합류).
   // KO 세트 멤버는 지문 미동봉(공유지문 1박스 경로) — includePassage=false 가
   // koStructuredSegments 의 suppressPassage 로 전달돼 멤버 안 지문 박스를 억제한다.
+  // 영어 세트 멤버는 공유 지문을 그룹 첫머리에서 "1회"만 출력한다(codex). 요약/주제문 영작의
+  // 단독 문항 지문 강제 포함 정책은 세트가 아닐 때만 적용한다.
   const includeSourcePassage = isKoSetMember
     ? false
-    : isSummaryWritingSubtype(question.subType) ||
-        question.subType === "TOPIC_SENTENCE_WRITING"
-      ? true
-      : shouldIncludeSourcePassageByDefault(question);
+    : question.setId
+      ? Boolean(passageContent)
+      : isSummaryWritingSubtype(question.subType) ||
+          question.subType === "TOPIC_SENTENCE_WRITING"
+        ? true
+        : shouldIncludeSourcePassageByDefault(question);
   const normalizedQuestion = {
     ...effectiveQuestion,
     questionText: normalizedQuestionText,
@@ -234,9 +319,9 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     sourceQuestion: normalizedQuestion,
     orderNum,
     points: question.points || 1,
-    // 영어 장문 세트 멤버는 자기완결로 렌더하므로 그룹 묶음 없이 항상 솔로("single:<localId>").
-    // KO 세트 멤버만 `set:<setId>` 로 묶어 공유지문 1박스를 그룹 선두에 그린다.
-    groupId: isKoSetMember && question.setId ? koSetGroupId(question.setId) : `single:${localId}`,
+    // KO·영어 세트 멤버 모두 `set:<setId>` 로 묶어 공유지문 1박스를 그룹 선두에 그린다
+    // (영어=codex 병합지문, KO=applyKoSetSharedPassages). 비세트 문항은 솔로("single:<localId>").
+    groupId: question.setId ? koSetGroupId(question.setId) : `single:${localId}`,
     includePassage: includeSourcePassage,
     passageTitle: normalizeInlineText(question.passage?.title || ""),
     passageContent,
@@ -259,56 +344,10 @@ export function makePaperItem(question: BuilderQuestion, orderNum: number, _exis
     blockType: "question",
     ...paperBlockDefaults(),
   };
-  // KO 세트 멤버는 영어 anchor 자기완결 주입(materializeSetMember)을 타지 않는다 —
-  // KO 봉투에는 _spans 가 없어 setMemberDisplayPassage 가 "원본 지문"을 돌려주고,
-  // 그대로 두면 본문에 지문이 통째로 주입되는 오동작이 된다.
-  return isKoSetMember ? item : materializeSetMember(item);
-}
-
-// 장문 세트 멤버를 "자기완결" 문항으로 만든다: 발문 → 마킹(밑줄/빈칸/마커) 지문 → 선지.
-// 비세트 문항은 그대로 반환. 구조 멤버(문장삽입·순서·요약)는 자체 본문 레이아웃을 유지하고,
-// 어법/어휘처럼 enrich 로 본문이 이미 baked 된 경우도 그대로 둔다. 남은 임베디드 유형
-// (지칭·빈칸·문맥의미 등, 본문이 strip 됨)만 복원 지문을 발문 아래 본문으로 주입한다.
-const SET_MEMBER_KEEP_BODY_SUBTYPES = new Set([
-  "SENTENCE_INSERT",
-  "SENTENCE_ORDER",
-  "SUMMARY_COMPLETE_MC",
-  "SUMMARY_COMPLETE",
-  "SUMMARY_WRITING",
-  // 주제문 영작도 요약문 영작과 동일한 박스형 구조 본문([지문]/[주제 힌트]/[주제문]/
-  // [보기]/[배열 단어])을 structuredSegments 가 그리므로, 세트 멤버여도 본문을 보존한다.
-  "TOPIC_SENTENCE_WRITING",
-]);
-
-function materializeSetMember(item: PaperItem): PaperItem {
-  const setId = item.sourceQuestion.setId;
-  if (!setId) return item;
-  const subType = item.sourceQuestion.subType || "";
-  if (SET_MEMBER_KEEP_BODY_SUBTYPES.has(subType)) return item;
-
-  const marked = setMemberDisplayPassage({
-    inSet: true,
-    setId,
-    structuredData: item.sourceQuestion.structuredData,
-    passage: {
-      content: item.passageContent || item.sourceQuestion.passage?.content || "",
-    },
-  });
-  if (!marked) return item;
-
-  const { stem, body } = questionStemAndBody(item);
-  // 이미 본문(레이아웃/지문)이 있으면(enrich 로 baked 된 어법·어휘 등) 그대로 둔다.
-  if (body.trim()) return item;
-
-  // INLINE_SOURCE(주제·제목·요지·내용일치·동의어 등): 지문은 structuredSegments 가 박스로
-  // 발문 아래에 그리므로, passageContent 만 마킹본으로 교체한다.
-  if (isInlineSourcePassageSubtype(subType)) {
-    return { ...item, passageContent: marked };
-  }
-
-  // 임베디드(지칭·빈칸·문맥의미 등): 발문 아래 본문으로 마킹 지문을 주입한다.
-  const nextQuestionText = stem ? `${stem}\n\n${marked}` : marked;
-  return { ...item, questionText: nextQuestionText, passageContent: marked };
+  // 영어 세트 멤버는 자기완결 주입(materializeSetMember)을 타지 않는다 — 지문은 공유
+  // 지문 1박스(buildGroups 의 mergedSetPassageForItems)가 그룹 선두에 병합해 그린다.
+  // KO 세트 멤버는 applyKoSetSharedPassages 가 공유지문 1박스를 채운다.
+  return item;
 }
 
 function questionWithPaperItemPassage(item: PaperItem): BuilderQuestion {
@@ -334,8 +373,14 @@ function questionWithPaperItemPassage(item: PaperItem): BuilderQuestion {
 
 export function shouldRenderSourcePassageForItem(item: PaperItem): boolean {
   if (item.blockType !== "question") return false;
-  // 세트 멤버도 일반 문항과 동일하게 유형별 규칙으로 판정한다(자기완결 렌더 —
-  // 마킹 지문은 makePaperItem.materializeSetMember 가 본문/passageContent 에 주입).
+  // 장문 세트 멤버(영어·KO 공통): 공유 지문을 그룹 첫머리에서 1회만 출력한다. 지문 콘텐츠가
+  // 있으면 무조건 그린다(KO 는 이후 applyKoSetSharedPassages 가 공유지문으로 덮어쓴다).
+  if (isSetMemberItem(item)) {
+    const passageContent = normalizePassageText(
+      item.passageContent || item.sourceQuestion.passage?.content || "",
+    );
+    return Boolean(passageContent.trim());
+  }
   // 요약문 영작은 INLINE_SOURCE(SUMMARY_COMPLETE 와 동일) — 지문은 structuredSegments() 가 문제
   // 안에 인라인으로 그리므로 여기(별도 출처 지문 블록)에서는 그리지 않는다(중복 방지).
   if (shouldRenderSourcePassageInsideQuestion(item.sourceQuestion.subType)) return false;
@@ -485,10 +530,11 @@ export function buildGroups(items: PaperItem[]): PaperGroup[] {
         // 제목은 폴백·정규화(빈칸 방지)하되, 지문 박스 표시는 이 묶음이
         // 아직 한 번도 안 그렸을 때만 켠다(중복 방지).
         last.passageTitle = resolvePaperItemPassageTitle(item);
-        last.passageContent = formatSourcePassageForQuestionItems(
+        last.passageContent = formatPassageContentForGroup(
           passageContent,
           last.items,
         );
+        last.setPrompt = setPromptForItems(last.items);
         if (!last.includePassage && !passageRenderedGroupIds.has(last.id)) {
           last.includePassage = true;
           passageRenderedGroupIds.add(last.id);
@@ -517,8 +563,8 @@ export function buildGroups(items: PaperItem[]): PaperGroup[] {
         items: groupItems,
         includePassage: renderPassage,
         passageTitle: resolvePaperItemPassageTitle(item),
-        passageContent: formatSourcePassageForQuestionItems(passageContent, groupItems),
-        setPrompt: "",
+        passageContent: formatPassageContentForGroup(passageContent, groupItems),
+        setPrompt: setPromptForItems(groupItems),
       });
     }
   }
@@ -530,7 +576,11 @@ export function buildGroups(items: PaperItem[]): PaperGroup[] {
 // buildKoMarkedPassage 로 병합 오버레이한 지문 + 세트 지시문 "[n~m] 다음 글을 읽고
 // 물음에 답하시오."(번호는 그룹 내 문항 번호에서 파생). 멤버 문항은 makePaperItem 이
 // includePassage=false 로 만들어 지문 미동봉(발문+보기+선지만)이다.
-// 영어 세트("single:" 솔로)·지문("passage:") 그룹은 이 함수에 절대 걸리지 않는다.
+// 영어 세트도 `set:` 프리픽스를 쓰지만(codex 병합지문 경로), 멤버가 KO 유형이 아니라
+// isKoQuestionType every-검사에서 걸러져 이 함수에 절대 잡히지 않는다 — 영어 세트는
+// buildGroups 의 mergedSetPassageForItems/setPromptForItems 병합 결과를 그대로 유지한다.
+// KO 세트는 지시문을 passageContent 에 접합하므로 codex setPromptForItems 가 채운
+// setPrompt(쉼표 변형)를 여기서 비워 지시문 이중 노출을 막는다.
 function applyKoSetSharedPassages(groups: PaperGroup[]) {
   const renderedSetIds = new Set<string>();
   for (const group of groups) {
@@ -545,6 +595,7 @@ function applyKoSetSharedPassages(groups: PaperGroup[]) {
     // 같은 세트가 비문항 블록으로 쪼개져 그룹이 여러 개면 지문 박스는 첫 그룹만.
     if (renderedSetIds.has(group.id)) {
       group.includePassage = false;
+      group.setPrompt = "";
       continue;
     }
     const passage =
@@ -561,6 +612,7 @@ function applyKoSetSharedPassages(groups: PaperGroup[]) {
     group.passageTitle = resolvePaperItemPassageTitle(questionItems[0]);
     group.passageContent = `${directive}\n${shared}`;
     group.includePassage = true;
+    group.setPrompt = "";
   }
 }
 

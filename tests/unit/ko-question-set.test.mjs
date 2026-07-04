@@ -389,18 +389,30 @@ function koMember(id: string, subType: string, direction: string, markers: any[]
   } as any;
 
   const enItem = makePaperItem(enSetMember, 1, []);
+  // 영어 세트는 codex 공유지문 박스 방식: 멤버는 set:<setId> 로 묶이고, 밑줄·빈칸은
+  // 그룹 선두의 병합 지문 1박스에 실린다(멤버 본문에 자기완결 주입하지 않는다).
   check(
-    "EN set member stays solo single: group (자기완결 렌더)",
-    String(enItem.groupId).startsWith("single:"),
+    "EN set member grouped by set:<setId> (codex 공유지문 박스)",
+    enItem.groupId === "set:enset1",
     String(enItem.groupId),
   );
-  check(
-    "EN set member keeps materialized __They__ underline in body",
-    enItem.questionText.includes("__They__"),
-    enItem.questionText,
-  );
   const enGroups = buildGroups([enItem]);
-  check("EN set member group renders no separate passage box", enGroups[0].includePassage === false);
+  check("EN set → single shared group", enGroups.length === 1, String(enGroups.length));
+  check(
+    "EN set group renders shared passage box (지문박스 1개)",
+    enGroups[0].includePassage === true,
+    String(enGroups[0].includePassage),
+  );
+  check(
+    "EN shared passage box carries merged __They__ underline",
+    enGroups[0].passageContent.includes("__They__"),
+    enGroups[0].passageContent,
+  );
+  check(
+    "EN set prompt announces shared reading",
+    enGroups[0].setPrompt === "[1] 다음 글을 읽고, 물음에 답하시오.",
+    enGroups[0].setPrompt,
+  );
 
   // 영어 솔로 CONTENT_MATCH: 그룹/지문 동작 무회귀
   const enSolo = { ...enSetMember, id: "e2", subType: "CONTENT_MATCH", structuredData: null, setId: undefined, inSet: false,

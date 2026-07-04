@@ -96,23 +96,14 @@ function runHarness() {
 
 const summary = runHarness();
 
-test("question-set surfaces keep list cards grouped and exam members render self-contained", () => {
+test("question-set surfaces keep list cards grouped and exam members grouped", () => {
   assert.equal(summary.activeSetId, null);
   assert.equal(summary.trashSetId, null);
   assert.equal(summary.builderHasSetIdGate, false);
-  // 영어 세트 멤버는 자기완결로 렌더한다(로컬 우선 결정): 렌더 그룹은 솔로("single:"),
-  // 별도 공유지문 박스 없음. 셔플 시 함께 이동하는 논리 묶음키(regroupKey)는 setId 기반으로
-  // 유지돼 세트 멤버가 인접 배치되지만, 렌더 그룹핑과는 분리된다.
-  assert.ok(
-    String(summary.item1GroupId).startsWith("single:"),
-    `item1GroupId=${summary.item1GroupId}`,
-  );
-  assert.ok(
-    String(summary.item2GroupId).startsWith("single:"),
-    `item2GroupId=${summary.item2GroupId}`,
-  );
+  assert.equal(summary.item1GroupId, "set:set-1");
+  assert.equal(summary.item2GroupId, "set:set-1");
   assert.equal(summary.regroupKey, "set:set-1");
-  assert.equal(summary.groupCount, 2);
-  assert.equal(summary.firstGroupSize, 1);
-  assert.equal(summary.firstGroupIncludesPassage, false);
+  assert.equal(summary.groupCount, 1);
+  assert.equal(summary.firstGroupSize, 2);
+  assert.equal(summary.firstGroupIncludesPassage, true);
 });
