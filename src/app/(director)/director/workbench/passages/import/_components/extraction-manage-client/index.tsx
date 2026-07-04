@@ -137,6 +137,10 @@ interface ExtractionManageClientProps {
    *  자료 추출 embed, where the same jobs are already tracked by the global
    *  작업 목록 드로어 — so an inline copy of the row is redundant. */
   showJobListRow?: boolean;
+  /** 과목 스코프 — "KOREAN"=국어 라우트(/director/korean/extraction)에서 마운트.
+   *  국어 자료/잡만 조회·캐시한다. 미전달(undefined)=영어 기본으로, 임베더(학습지
+   *  생성)·영어 워크벤치는 종전 동작이 한 줄도 달라지지 않는다(무회귀). */
+  subjectScope?: "KOREAN";
 }
 
 const MATERIAL_GRID_OPTIONS = [
@@ -233,6 +237,7 @@ export function ExtractionManageClient({
   sessionPending = [],
   pageBleed = true,
   showJobListRow = true,
+  subjectScope,
 }: ExtractionManageClientProps) {
   const draftDetailAction =
     draftDetailActionMode === "import"
@@ -252,6 +257,7 @@ export function ExtractionManageClient({
   const data = useDraftsData({
     onJobsRefresh: queueDrawer.triggerRefresh,
     refreshToken,
+    subject: subjectScope,
   });
 
   // ─── Folder manager ───

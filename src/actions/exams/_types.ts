@@ -10,6 +10,8 @@ export interface ExamFilters {
   dateFrom?: string;
   dateTo?: string;
   search?: string;
+  /** 과목 스코프 — "KOREAN"=국어 시험지만, 미지정=영어(KO 제외, 종전 동작). */
+  subject?: "KOREAN";
 }
 
 export interface ActionResult {
@@ -37,6 +39,8 @@ export interface ExamCreateData {
   shuffleOptions?: boolean;
   showResults?: boolean;
   questions?: ExamQuestionInput[];
+  /** 과목 — "KOREAN"=국어 라우트 생성. 미지정=null(영어, 무회귀). */
+  subject?: "KOREAN";
 }
 
 export interface ExamQuestionInput {

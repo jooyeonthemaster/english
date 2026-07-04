@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Edge regression for teacher-reported generation defects:
  * - SENTENCE_INSERT: the given sentence or its source sentence must not remain visible.
  * - BLANK_INFERENCE doubleNegative: no-subject + negative-predicate double negation must fail.
@@ -169,8 +169,8 @@ async function runOne(
 }
 
 async function main() {
-  if (!process.env.GEMINI_API_KEY && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    throw new Error("GEMINI_API_KEY or GOOGLE_GENERATIVE_AI_API_KEY is required.");
+  if (!process.env.ATLASCLOUD_API_KEY && !process.env.OPENROUTER_API_KEY) {
+    throw new Error("ATLASCLOUD_API_KEY or OPENROUTER_API_KEY is required.");
   }
 
   const cases = REQUESTED_CASES.map(normalizeCaseId);

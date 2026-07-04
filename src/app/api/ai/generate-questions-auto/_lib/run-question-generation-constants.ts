@@ -1,3 +1,4 @@
+import { KO_BLOCKING_CODES } from "@/lib/korean/quality/codes";
 import { SHIP_FIRST_WARNING_CODES } from "@/lib/question-quality";
 
 export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
@@ -18,12 +19,88 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "grammar-missing-error-expression",
   "grammar-error-not-mutated",
   "grammar-error-pos-change",
+  "grammar-error-explanation-surface-order",
+  "grammar-explanation-answer-range-leak",
+  "grammar-explanation-range-shorthand",
+  "grammar-answer-in-wrong-explanations",
+  "grammar-obvious-pronoun-agreement",
+  "grammar-obvious-noun-what-relative",
+  "grammar-obvious-seem-gerund",
+  "grammar-obvious-seem-to-gerund",
+  "grammar-shallow-local-participle-parallel",
+  "grammar-obvious-to-gerund-after-verb",
+  "grammar-obvious-connector-to-what",
+  "grammar-obvious-despite-being-to-be",
+  "grammar-shallow-despite-although-gerund",
+  "grammar-debatable-attention-to-gerund",
+  "grammar-debatable-more-most-like",
+  "grammar-lexical-look-like-answer",
+  "grammar-debatable-sink-passive",
+  "grammar-shallow-because-despite-clause",
+  "grammar-obvious-modal-gerund",
+  "grammar-obvious-modal-to-infinitive",
+  "grammar-obvious-intransitive-passive",
+  "grammar-obvious-endure-passive-object",
+  "grammar-gibberish-inversion-fragment",
+  "grammar-obvious-finite-to-ing-colon",
+  "grammar-shallow-participle-adjective-answer",
+  "grammar-obvious-double-ing",
+  "grammar-obvious-local-agreement",
+  "grammar-obvious-local-pronoun-agreement",
+  "grammar-obvious-object-pronoun-subject",
+  "grammar-obvious-before-after-to-infinitive",
+  "grammar-obvious-adjacent-sv-agreement",
+  "grammar-obvious-passive-to-gap-ing",
+  "grammar-obvious-adverb-adjective",
+  "grammar-fixed-that-is-idiom",
+  "grammar-obvious-living-finite",
+  "grammar-obvious-living-lived",
+  "grammar-obvious-what-noun-prefix",
+  "grammar-killer-thin-missing-aux",
+  "grammar-debatable-who-object-decoy",
+  "grammar-debatable-discourse-though-decoy",
+  "grammar-demonstrative-that-way-decoy",
+  "grammar-semantic-who-what-answer",
+  "grammar-semantic-how-why-answer",
+  "grammar-killer-thin-relative-animacy",
+  "grammar-killer-thin-concessive-as",
+  "grammar-weak-filler-decoys",
+  "grammar-debatable-it-being-decoy",
+  "grammar-explanation-self-contradictory",
+  "grammar-explanation-typo",
+  "grammar-noun-clause-pronoun-mislabel",
+  "grammar-phrasal-verb-mislabel",
+  "grammar-vague-metadata-tag",
+  "grammar-look-like-complement-mislabel",
+  "grammar-seem-to-complement-mislabel",
+  "grammar-seem-to-object-mislabel",
+  "grammar-that-way-adverb-mislabel",
+  "grammar-human-made-postmodifier-mislabel",
+  "grammar-basic-overloaded-design",
+  "grammar-too-basic-decoys",
+  "grammar-shallow-checklist-decoys",
+  "grammar-shallow-depends-decoy",
+  "grammar-shallow-nearby-passive-decoy",
+  "grammar-shallow-than-decoy",
+  "grammar-explanation-too-long-hard",
+  "grammar-agreement-explanation-too-thin",
+  "grammar-afford-modal-mislabel",
+  "grammar-appear-adverb-mislabel",
+  "grammar-appear-pointcode-voice-mismatch",
+  "grammar-nonstandard-terminology",
+  "grammar-marker-too-dense",
+  "grammar-keypoint-token-not-source-backed",
+  "grammar-keypoint-untested-token",
+  "grammar-mixed-as-it-span",
   "grammar-decoy-point-diversity",
+  "grammar-killer-answer-point-repeated",
   "grammar-killer-thin-answer",
+  "grammar-killer-generic-answer-point",
   // 절/문장 통째 밑줄(예: 프리미엄 실측 "these digital platforms create a trusting
   // environment" 7단어)은 정답성·가독성을 해치는 명백한 결함 — relaxed 폴백에서도
   // 출하 금지. ('wide'는 strict 전용이라 의도적으로 제외 — 완전 실패 방지.)
   "grammar-underline-too-long",
+  "grammar-underline-punctuated-fragment",
   // 복수정답 시비(규범 논쟁 자리 밑줄)는 relaxed 폴백에서도 출하 금지 —
   // 정답 무효급 결함이라 미생성이 잘못된 문항보다 낫다.
   "grammar-disputed-usage-target",
@@ -100,6 +177,11 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "summary-mc-option-pair-shape",
   "summary-mc-option-language",
   "summary-mc-missing-half-correct-traps",
+  // 요약문 완성(단답) — 마커 누락/정답 인라인 노출은 relaxed 폴백에서도 출하 금지(누수·렌더 파손).
+  "summary-complete-missing-summary",
+  "summary-complete-blank-marker-count",
+  "summary-complete-answer-language",
+  "summary-complete-answer-leaks-in-summary",
   // 요약문 영작(SUMMARY_WRITING) — 누수/구조 무효 게이트는 relaxed 폴백에서도
   // 출하 금지(정답 노출·placeholder 깨짐·비영어 정답은 미생성이 잘못 생성보다 낫다).
   // sw-distractor-semantic 은 warning 이라 여기 미포함.
@@ -108,6 +190,14 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "sw-summary-blank-marker-count",
   "sw-modelanswer-present",
   "sw-answer-language",
+  // 핵심 표현 빈칸(FILL_BLANK_KEY) — 빈칸 무결성/정답 노출 게이트는 relaxed 폴백에서도
+  // 출하 금지(정답 자음골격 노출·빈칸 2개·정답이 본문에 비-빈칸 verbatim 잔존은
+  // 미생성이 잘못 생성보다 낫다). fbk-answer-residual-leak 은 단일어일 때 warning 이라
+  // 여기 있어도 차단되지 않는다(warning 은 비차단).
+  "fbk-missing-blank-marker",
+  "fbk-answer-skeleton-leak",
+  "fbk-multiple-blanks",
+  "fbk-answer-residual-leak",
   "implied-meaning-missing-expression",
   "implied-meaning-missing-underline",
   "implied-meaning-underline-count",
@@ -186,6 +276,13 @@ export const RELAXED_BLOCKING_QUALITY_CODES = new Set([
   "double-negative-clause-missing-subject",
   "double-negative-because-phrase-slot",
 ]);
+
+// KO(국어) blocking 코드 전부 등록 — 미등록 error 는 relaxed 폴백에서 warning 으로
+// 강등 출하되므로(판정단 실측) 구조·정답 무결성 결함은 relaxed 에서도 차단한다
+// (KO-DESIGN-SPEC §7). KO 코드는 SHIP_FIRST 에 없어 아래 차감의 영향을 받지 않는다.
+for (const code of KO_BLOCKING_CODES) {
+  RELAXED_BLOCKING_QUALITY_CODES.add(code);
+}
 
 // SHIP-FIRST: B(취향/난이도) 코드는 question-quality 에서 warning 으로 강등되어 절대
 // error 로 이 필터에 도달하지 않는다. 단일 진실원(SHIP_FIRST_WARNING_CODES)에서 차감해

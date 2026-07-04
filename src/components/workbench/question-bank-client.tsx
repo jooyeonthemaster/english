@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { usePersistedState } from "@/hooks/use-persisted-state";
 import { PassageGroupedView } from "./question-bank-passage-view";
+import { QuestionSetSection } from "./question-set-section";
 import { toast } from "sonner";
 import {
   deleteWorkbenchQuestion,
@@ -90,7 +91,6 @@ import { useUrlFilters } from "@/hooks/use-url-filters";
 import { useSelection } from "@/hooks/use-selection";
 import { useFolderManager } from "@/hooks/use-folder-manager";
 import { getAcademyQuestionSetMemberMap } from "@/actions/question-sets";
-import { QuestionSetSection } from "@/components/workbench/question-set-section";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -146,6 +146,12 @@ interface GroupedPassage {
 
 interface QuestionBankProps {
   academyId: string;
+  /**
+   * 과목 스코프 — "KOREAN" 이면 국어 문제 은행(/director/korean/questions):
+   * KO_* 문항만 노출, 유형 필터는 국어 그룹, URL 내비게이션도 국어 라우트 유지.
+   * 미전달 = 영어 기본(KO_* 문항 완전 배제, 기존 UX 픽셀 동일).
+   */
+  subjectScope?: "KOREAN";
   view: "flat" | "passage";
   questionsData: {
     questions: QuestionItem[];
@@ -172,6 +178,8 @@ interface QuestionBankProps {
     starred?: boolean;
     sort?: string;
     search?: string;
+    /** 서버 페치와 동일한 과목 스코프 — 국어 라우트 페이지가 "KOREAN" 을 싣는다. */
+    subject?: "KOREAN";
   };
   collections: CollectionItem[];
   collectionMembership: Record<string, Set<string>>;
@@ -244,6 +252,7 @@ function SelectAllCheckbox({
 
 export function QuestionBankClient({
   academyId,
+  subjectScope,
   view,
   questionsData,
   groupedData,
@@ -254,6 +263,12 @@ export function QuestionBankClient({
 }: QuestionBankProps) {
   const isGrouped = view === "passage";
   const router = useRouter();
+  // URL 내비게이션 베이스 — 국어 문제 은행은 국어 라우트에 머문다(필터/페이지
+  // 이동이 영어 문제 은행으로 튕기지 않도록). 미전달 = 기존 영어 경로 그대로.
+  const bankPath =
+    subjectScope === "KOREAN"
+      ? "/director/korean/questions"
+      : QUESTION_BANK_PATH;
   const [searchValue, setSearchValue] = useState(filters.search || "");
   const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
   // 동형 생성물 카드의 '분석 정보' 모달(동형 한정).
@@ -266,14 +281,16 @@ export function QuestionBankClient({
     handleSearch: urlSearch,
     goToPage,
     isPending: isNavPending,
-  } = useUrlFilters(QUESTION_BANK_PATH);
+  } = useUrlFilters(bankPath);
 
   function handleSearch(value?: string) {
     // X 버튼은 빈 값을 명시적으로 넘긴다(상태 갱신은 비동기라 stale 방지).
     urlSearch(value !== undefined ? value : searchValue);
   }
 
-  // Folder manager
+  // Folder manager — 폴더 생성만 과목 스코프를 실어 감싼다(국어 문제 은행에서
+  // 만든 폴더는 subject='KOREAN' 저장 → 영어 폴더 목록과 완전 분리). 영어
+  // 기본 경로는 subject 미전달 = 기존 INSERT 그대로(무회귀).
   const [setCount, setSetCount] = useState<number | null>(null);
   const [setMemberMap, setSetMemberMap] = useState<Record<string, string>>({});
   useEffect(() => {
@@ -286,7 +303,12 @@ export function QuestionBankClient({
     initialCollections,
     initialMembership,
     actions: {
-      createCollection: createQuestionCollection,
+      createCollection: (data) =>
+        createQuestionCollection(
+          subjectScope === "KOREAN"
+            ? { ...data, subject: "KOREAN" as const }
+            : data,
+        ),
       updateCollection: updateQuestionCollection,
       deleteCollection: deleteQuestionCollection,
       addToCollection: addQuestionsToCollection,
@@ -449,6 +471,8 @@ export function QuestionBankClient({
         page: undefined,
         limit: undefined,
         collectionId: folders.activeFolder ?? filters.collectionId,
+        // 목록(서버 페치)과 동일한 과목 스코프로 전체 선택 population 을 맞춘다.
+        ...(subjectScope === "KOREAN" ? { subject: "KOREAN" as const } : {}),
       };
       const result = await getWorkbenchQuestionIds(
         academyId,
@@ -486,6 +510,7 @@ export function QuestionBankClient({
     removedIds,
     selectingAllPages,
     setSelectedIds,
+    subjectScope,
   ]);
 
   // 헤더 체크박스 = "전체 페이지 선택". 현재 페이지만이 아니라 현재 폴더/필터의 전체
@@ -821,6 +846,11 @@ export function QuestionBankClient({
 
   const showingPendingOnly = filters.approved === false;
 
+  // ── 국어(KO) 지문 세트 ── 국어 문제 은행에서만 세트 카드(공유지문 1개 + 멤버
+  // 문항 묶음)를 노출한다. 영어 경로에서는 섹션 자체를 마운트하지 않는다(무회귀).
+  // 카운트는 국어 빈-상태 판정 보조용.
+  const [koSetCount, setKoSetCount] = useState(0);
+
   // ─── View mode toggle (문제별 / 지문별) ───
   const VIEW_MODE_OPTIONS = [
     { value: "ALL", label: "문제별", Icon: Rows3 },
@@ -1002,6 +1032,7 @@ export function QuestionBankClient({
   const filtersToolbar = (
     <QuestionFiltersToolbar
       filters={filters}
+      subjectScope={subjectScope}
       searchValue={searchValue}
       onSearchChange={setSearchValue}
       onSearchSubmit={handleSearch}
@@ -1125,7 +1156,12 @@ export function QuestionBankClient({
             좁은 폭(모바일 컨테이너)에서는 아이콘만 남겨 한 줄에 맞춘다.
             선택과 무관하게 항상 활성. */}
         <Link
-          href="/director/workbench/questions/trash"
+          // 국어 문제 은행에서는 국어 휴지통으로 — KO_* 문항만 보이는 대칭 라우트.
+          href={
+            subjectScope === "KOREAN"
+              ? "/director/korean/questions/trash"
+              : "/director/workbench/questions/trash"
+          }
           title="삭제한 문제 보관함"
           aria-label="휴지통"
           className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-slate-50 @max-[30rem]:w-7 @max-[30rem]:px-0 px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-100 hover:text-slate-700 md:h-9"
@@ -1177,6 +1213,61 @@ export function QuestionBankClient({
 
   const isEmpty =
     isGrouped && groupedPassages.length === 0 && !folders.activeFolder;
+
+  // 평면(flat) 목록의 문항 카드 한 장 — 기본(영어) 경로와 국어 세트 혼합 경로가
+  // 같은 카드를 그리도록 공용화(렌더 결과는 기존 인라인 map 과 동일).
+  const renderFlatQuestionCard = (q, idx) => {
+    const startIdx = (currentPage - 1) * 20;
+    if (showingPendingOnly) {
+      return (
+        <QuestionCard
+          key={q.id}
+          q={q}
+          num={startIdx + idx + 1}
+          selected={selectedIds.has(q.id)}
+          recentlyViewed={
+            lastViewedQuestionId === q.id && detailQuestionId !== q.id
+          }
+          onToggle={() => toggleSelect(q.id)}
+          onApprove={() => handleApprove(q.id)}
+          onDetail={() => openDetail(q.id)}
+          onEdit={() => editor.openEditor(q.id)}
+          readonly
+          compact
+          showReviewActions
+          openOnCardClick
+        />
+      );
+    }
+    const similarAnalysis = getSimilarSourceAnalysis(q);
+    return (
+      <QuestionBankCard
+        key={q.id}
+        q={q}
+        num={startIdx + idx + 1}
+        selected={selectedIds.has(q.id)}
+        recentlyViewed={
+          lastViewedQuestionId === q.id && detailQuestionId !== q.id
+        }
+        onToggle={() => toggleSelect(q.id)}
+        onDelete={() => handleDelete(q.id)}
+        onApprove={() => handleApprove(q.id)}
+        onUnapprove={() => handleUnapprove(q.id)}
+        onToggleStar={() => handleToggleStar(q.id)}
+        onDetail={() => openDetail(q.id)}
+        onEdit={() => editor.openEditor(q.id)}
+        onShowAnalysis={
+          similarAnalysis ? () => setSourceAnalysis(similarAnalysis) : undefined
+        }
+        viewSize={viewSize}
+        cardClickSelects
+        showDetailButton
+        showQuickActions
+        dragRequiresSelection
+        getDragQuestionIds={getDragQuestionIds}
+      />
+    );
+  };
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-64px)]">
@@ -1260,6 +1351,26 @@ export function QuestionBankClient({
                 </div>
               ) : null}
               {isGrouped ? (
+                <>
+                  {/* 국어 문제 은행 — 지문 세트(공유지문 1개+멤버 묶음) 전용 섹션.
+                      영어 경로에서는 마운트하지 않는다(무회귀). */}
+                  {subjectScope === "KOREAN" ? (
+                    <div className="mb-3">
+                      <QuestionSetSection
+                        subjectScope="KOREAN"
+                        showSets={!folders.activeFolder}
+                        onCountChange={setKoSetCount}
+                        onMemberSplit={() => router.refresh()}
+                        gridClassName={`grid items-start gap-3 ${
+                          gridCols === 2
+                            ? "grid-cols-1 md:grid-cols-2"
+                            : gridCols === 3
+                              ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                              : "grid-cols-1"
+                        }`}
+                      />
+                    </div>
+                  ) : null}
                 <PassageGroupedView
                   passages={groupedPassages}
                   gridCols={gridCols}
@@ -1277,6 +1388,7 @@ export function QuestionBankClient({
                   openDetailQuestionId={detailQuestionId}
                   cardClickSelects
                   showDetailButton
+                  showQuickActions
                   dragRequiresSelection
                   expandedPassageIds={expandedPassageIds}
                   setExpandedPassageIds={setExpandedPassageIds}
@@ -1307,6 +1419,53 @@ export function QuestionBankClient({
                       : undefined
                   }
                 />
+                </>
+              ) : subjectScope === "KOREAN" ? (
+                // 국어 문제 은행(flat) — 1페이지에서 지문 세트 카드를 일반 카드와
+                // createdAt 최신순으로 섞어 노출(임베디드 문제은행과 동일 패턴).
+                <>
+                  <DragSelect
+                    value={selectedIds}
+                    onChange={setSelectedIds}
+                    className={`grid gap-3 ${
+                      gridCols === 2
+                        ? "grid-cols-1 md:grid-cols-2"
+                        : gridCols === 3
+                          ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                          : "grid-cols-1"
+                    }`}
+                  >
+                    <QuestionSetSection
+                      inline
+                      subjectScope="KOREAN"
+                      showSets={currentPage === 1 && !folders.activeFolder}
+                      onCountChange={setKoSetCount}
+                      onMemberSplit={() => router.refresh()}
+                      normalItems={displayedQuestions.map((q, idx) => ({
+                        id: q.id,
+                        createdAt: q.createdAt,
+                        node: renderFlatQuestionCard(q, idx),
+                      }))}
+                    />
+                  </DragSelect>
+                  {displayedQuestions.length === 0 &&
+                  koSetCount === 0 &&
+                  !isNavPending ? (
+                    <div className="py-12 text-center">
+                      <Database className="w-10 h-10 text-slate-200 mx-auto mb-3" />
+                      <p className="text-[13px] text-slate-400">
+                        {folders.activeFolder
+                          ? "이 폴더에 문제가 없습니다."
+                          : "등록된 문제가 없습니다."}
+                      </p>
+                      {folders.activeFolder && (
+                        <p className="text-[12px] text-slate-400 mt-1">
+                          문제를 선택 후 &quot;폴더에 추가&quot;를 사용하세요.
+                        </p>
+                      )}
+                    </div>
+                  ) : null}
+                </>
               ) : (
                 <>
                   <DragSelect
@@ -1329,64 +1488,11 @@ export function QuestionBankClient({
                       onMemberSplit={() => router.refresh()}
                       collectionId={folders.activeFolder ?? undefined}
                       filters={filters}
-                      normalItems={displayedQuestions.map((q, idx) => {
-                        const startIdx = (currentPage - 1) * 20;
-                        const similarAnalysis = showingPendingOnly
-                          ? null
-                          : getSimilarSourceAnalysis(q);
-                        return {
-                          id: q.id,
-                          createdAt: q.createdAt,
-                          node: showingPendingOnly ? (
-                            <QuestionCard
-                              key={q.id}
-                              q={q}
-                              num={startIdx + idx + 1}
-                              selected={selectedIds.has(q.id)}
-                              recentlyViewed={
-                                lastViewedQuestionId === q.id &&
-                                detailQuestionId !== q.id
-                              }
-                              onToggle={() => toggleSelect(q.id)}
-                              onApprove={() => handleApprove(q.id)}
-                              onDetail={() => openDetail(q.id)}
-                              onEdit={() => editor.openEditor(q.id)}
-                              readonly
-                              compact
-                              showReviewActions
-                              openOnCardClick
-                            />
-                          ) : (
-                            <QuestionBankCard
-                              key={q.id}
-                              q={q}
-                              num={startIdx + idx + 1}
-                              selected={selectedIds.has(q.id)}
-                              recentlyViewed={
-                                lastViewedQuestionId === q.id &&
-                                detailQuestionId !== q.id
-                              }
-                              onToggle={() => toggleSelect(q.id)}
-                              onDelete={() => handleDelete(q.id)}
-                              onApprove={() => handleApprove(q.id)}
-                              onUnapprove={() => handleUnapprove(q.id)}
-                              onToggleStar={() => handleToggleStar(q.id)}
-                              onDetail={() => openDetail(q.id)}
-                              onEdit={() => editor.openEditor(q.id)}
-                              onShowAnalysis={
-                                similarAnalysis
-                                  ? () => setSourceAnalysis(similarAnalysis)
-                                  : undefined
-                              }
-                              viewSize={viewSize}
-                              cardClickSelects
-                              showDetailButton
-                              dragRequiresSelection
-                              getDragQuestionIds={getDragQuestionIds}
-                            />
-                          ),
-                        };
-                      })}
+                      normalItems={displayedQuestions.map((q, idx) => ({
+                        id: q.id,
+                        createdAt: q.createdAt,
+                        node: renderFlatQuestionCard(q, idx),
+                      }))}
                     />
                   </DragSelect>
                   {displayedQuestions.length === 0 &&
@@ -1407,6 +1513,7 @@ export function QuestionBankClient({
                       </div>
                     )}
                 </>
+
               )}
             </div>
           </section>

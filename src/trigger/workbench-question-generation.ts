@@ -9,6 +9,10 @@ import {
 } from "@/lib/concurrency-config";
 import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
 import {
+  isKoreanSubject,
+  readKoKindFromTags,
+} from "@/lib/korean/core/passage-meta";
+import {
   InsufficientCreditsError,
   refundCredits,
 } from "@/lib/credits";
@@ -276,6 +280,11 @@ export const workbenchQuestionGenerationTask = task({
             config.mode === "MANUAL" && config.questionType
               ? { [config.questionType]: config.questionTypeSettings }
               : undefined,
+          // KO(국어) 지문이면 갈래 태그를 전달 — KO_ 유형 생성 프롬프트·koContext
+          // 에서만 소비되고, 영어 지문(null/ENGLISH)은 undefined 로 기존과 동일.
+          koPassageKind: isKoreanSubject(job.passage.subject)
+            ? (readKoKindFromTags(job.passage.tags) ?? undefined)
+            : undefined,
         },
         {
           logPrefix: "WORKBENCH-Q-GEN",

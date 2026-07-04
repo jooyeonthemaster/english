@@ -1,5 +1,6 @@
 import { type ReactNode } from "react";
 import { type AnalysisSection, type CustomBlock, type FontRun, type ReportMeta } from "@/lib/passage-report/analysis-report/schema";
+import type { KoAnalysisSectionKind } from "@/lib/passage-report/analysis-report/ko-schema";
 
 // ─── 편집 컨텍스트 ────────────────────────────────────────────────────────────
 export interface SectionEdit {
@@ -39,7 +40,7 @@ export type WrapKind =
 export interface FlowItem {
   id: string;
   sectionIndex: number; // -1 = 타이틀/커스텀/표지
-  kind: AnalysisSection["kind"] | "title" | "custom" | "cover";
+  kind: AnalysisSection["kind"] | KoAnalysisSectionKind | "title" | "custom" | "cover";
   no: number;
   wrap: WrapKind;
   node: ReactNode;

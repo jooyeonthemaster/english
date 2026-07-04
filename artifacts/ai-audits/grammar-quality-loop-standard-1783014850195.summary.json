@@ -1,0 +1,23 @@
+{
+  "createdAt": "2026-07-02T18:03:56.034Z",
+  "outPath": "C:\\Users\\jooye\\Desktop\\2026project\\nara\\artifacts\\ai-audits\\grammar-quality-loop-standard-1783014850195.jsonl",
+  "total": 6,
+  "passed": 0,
+  "failed": 6,
+  "passRate": 0,
+  "issueCounts": {
+    "llm:keyPoint 2 mislabels 'made' as a post-nominal (후치 수식) past participle, but it is a pre-nominal compound (human-made) — this contradicts the correct wrongOptionExplanation for (D) and misuses grammar terminology.": 1,
+    "llm:keyPoint 1 conflates 'participle-noun active/passive relation' with the actual tested point (adjective complement in a concessive inversion with 'appear'), producing an incoherent/irrelevant grammar description.": 1,
+    "llm:Explanation for (D) labels 'that' as a '지시부사' (demonstrative adverb), but it's actually a demonstrative determiner modifying the noun 'way', not an adverb.": 1,
+    "llm:Explanation for (E) calls 'to obey' the '목적어'(object) of 'seem', but 'seem' is an intransitive/copular verb; the infinitive is a complement, not a direct object.": 1,
+    "llm:Two of four wrong-option explanations misuse core grammatical terminology, which undermines the pedagogical reliability of the item.": 1,
+    "llm:The concessive-inversion explanation for (A) is accurate but the overall explanation set inconsistency in rigor lowers polish expected at 평가원 level.": 1,
+    "main-explanation-too-thin": 1,
+    "llm:Main explanation for (B) is correctly targeted but never addresses why 'top' (the noun right before the verb) tempts a wrong singular reading, leaving the core KILLER trap under-explained.": 1,
+    "llm:Distractors (C), (D), (E) are single-step, textbook-level checks (adjective complement, complete clause after 'that', to-infinitive after 'struggle') that add little cross-clause difficulty, so only one option truly carries KILLER-level reasoning.": 1,
+    "llm:keyPoints/tags list includes a pronoun-reference point that isn't actually tested by the correct answer, creating a mismatch between stated focus and the actual error (missing finite verb).": 1,
+    "llm:The error type (missing finite verb in a noun clause) is a fairly generic/basic trap; distractors (passive voice, participle, pronoun) test unrelated points rather than forming a cohesive, elegant grammar theme.": 1,
+    "llm:Item reads as competent but ordinary academy-style work rather than 평가원-caliber craftsmanship—lacks the subtlety needed for a 'breathtaking' rating.": 1,
+    "no-question": 2
+  }
+}

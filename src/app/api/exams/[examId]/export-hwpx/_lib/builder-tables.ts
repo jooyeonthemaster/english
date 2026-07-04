@@ -3,6 +3,7 @@ import { renderPassage } from "./render/passage";
 import { type BuilderItemResolved, applyQuestionBlockFormat, renderQuestionBlock } from "./render/question";
 import { shouldForceSourcePassage, shouldRenderSourcePassageInsideQuestion } from "@/components/exams/paper-builder/passage-policy";
 import { formatSourcePassageForQuestionItems } from "@/components/exams/paper-builder/source-passage-markers";
+import { resolveKoSetSharedPassageContent } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document/ko-set-passage";
 import type { PaperPage, RenderFragment } from "@/components/exams/paper-builder/types";
 import type { BuilderBlock, BuilderLayout } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
 import { type BreakPlan, passageBreakKey, questionBreakKey } from "./break-plan";
@@ -32,6 +33,16 @@ export function resolveGroupPassage(
   first: BuilderItemResolved,
   items: BuilderItemResolved[],
 ): { passageContent: string; includePassage: boolean } {
+  // KO 세트 그룹(`set:<setId>`): 병합 마커 공유지문 1박스 + 세트 지시문 —
+  // 웹 미리보기(applyKoSetSharedPassages)·DOCX(assemble)와 동일 모델.
+  // 영어/일반 그룹은 null 이 반환되어 아래 기존 로직이 그대로 실행된다.
+  const koSetPassageContent = resolveKoSetSharedPassageContent(
+    first.groupId,
+    items,
+  );
+  if (koSetPassageContent !== null) {
+    return { passageContent: koSetPassageContent, includePassage: true };
+  }
   const rawPassageContent = (
     first.passageContent ?? first.sourceQuestion.passage?.content ?? ""
   ).trim();

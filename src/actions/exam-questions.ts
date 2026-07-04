@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireStaffAuth } from "@/lib/auth";
+import { isKoQuestionType } from "@/lib/korean/registry";
 import { revalidatePath } from "next/cache";
 
 // ---------------------------------------------------------------------------
@@ -33,7 +34,7 @@ export async function addQuestionsToExam(
 
     const questions = await prisma.question.findMany({
       where: { id: { in: questionIds }, academyId: staff.academyId, deletedAt: null },
-      select: { id: true },
+      select: { id: true, points: true, subType: true },
     });
     if (questions.length !== new Set(questionIds).size) {
       return { success: false, error: "일부 문제가 현재 학원에 속하지 않습니다." };
@@ -47,11 +48,21 @@ export async function addQuestionsToExam(
 
     let nextOrder = (maxOrder?.orderNum || 0) + 1;
 
+    // KO 문항만 저장 배점 승계 (src/actions/exams/questions.ts 와 동일 규약) — 영어는
+    // 종전 규약(무조건 1점) 원복. 영어도 points≠1 저장 경로(기출 추출 실배점·편집기
+    // 배점 필드)가 있어 무게이트 승계는 영어 시험지 총점을 소리 없이 바꾼다.
+    const pointsById = new Map(
+      questions.map((q) => [
+        q.id,
+        isKoQuestionType(q.subType) ? Math.max(1, q.points ?? 1) : 1,
+      ]),
+    );
+
     await prisma.examQuestion.createMany({
       data: questionIds.map((qId) => ({
         examId,
         questionId: qId,
-        points: 1,
+        points: pointsById.get(qId) ?? 1,
         orderNum: nextOrder++,
       })),
       skipDuplicates: true,

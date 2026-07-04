@@ -23,11 +23,24 @@ export interface WorkbenchPassageFilters {
    *  (a PRIME PassageReport, not soft-deleted) are returned. Used by the
    *  학습지 생성 페이지 하단 "학습지 목록" 패널 — 생성이 완료된 학습지만 모은다. */
   hasReport?: boolean;
+  /**
+   * 과목 스코프 — 국어/영어 완전 분리 규약(_passage-where.ts 참고).
+   *  - "KOREAN": 국어 라우트 전용 — subject === 'KOREAN' 지문만.
+   *  - 미지정(기본=영어): subject 가 null(기존 지문 전부=영어 간주) 또는
+   *    'KOREAN' 이 아닌 지문만 — 영어 화면에 국어 지문이 절대 안 보인다.
+   */
+  subject?: "KOREAN";
 }
 
 export interface WorkbenchQuestionFilters {
   type?: string;
   subType?: string;
+  /**
+   * 과목 스코프 — 국어/영어 완전 분리 규약(_question-where.ts 참고).
+   *  - "KOREAN": 국어 라우트 전용 — subType 이 'KO_' 로 시작하는 문항만.
+   *  - 미지정(기본=영어): 'KO_' subType 문항 제외(null subType 은 영어로 간주).
+   */
+  subject?: "KOREAN";
   difficulty?: string;
   passageId?: string;
   collectionId?: string;
@@ -78,6 +91,11 @@ export interface CreatePassageData {
    * source material keeps its 검수필요 status — generating is not human review.
    */
   markReviewed?: boolean;
+  /**
+   * 지문 과목 — "KOREAN"=국어 라우트에서 등록/분석한 지문(Passage.subject="KOREAN"
+   * 으로 태깅해 국어 지문함에만 노출). 미지정=영어(subject 미포함, 무회귀).
+   */
+  subject?: "KOREAN";
 }
 
 export interface SaveQuestionData {

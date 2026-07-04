@@ -4,16 +4,16 @@ import { BigQuery } from "@google-cloud/bigquery";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
-export type ProviderBillingSyncTarget = "ALL" | "GOOGLE" | "ANTHROPIC";
+export type ProviderBillingSyncTarget = "ALL" | "GOOGLE";
 
 export interface ProviderBillingSyncStatus {
   googleConfigured: boolean;
-  anthropicConfigured: boolean;
+  atlasConfigured: boolean;
   missingEnv: string[];
 }
 
 export interface ProviderBillingSyncResult {
-  provider: "GOOGLE" | "ANTHROPIC";
+  provider: "GOOGLE";
   importedRows: number;
   actualCostUsd: number;
   actualCostKrw: number;
@@ -36,7 +36,6 @@ type BillingImportRow = {
 
 const DEFAULT_USD_KRW_RATE = 1350;
 const GOOGLE_BILLING_SOURCE = "GOOGLE_BILLING_EXPORT";
-const ANTHROPIC_BILLING_SOURCE = "ANTHROPIC_COST_REPORT";
 const DEFAULT_GOOGLE_BILLING_PATTERNS = [
   "%gemini%",
   "%generative ai%",
@@ -48,14 +47,17 @@ const DEFAULT_GOOGLE_BILLING_PATTERNS = [
 export function getProviderBillingSyncStatus(): ProviderBillingSyncStatus {
   const missingEnv: string[] = [];
   const googleConfigured = Boolean(readEnv("GOOGLE_BILLING_BIGQUERY_TABLE"));
-  const anthropicConfigured = Boolean(readEnv("ANTHROPIC_ADMIN_KEY"));
+  const atlasConfigured = Boolean(
+    readEnv("ATLASCLOUD_TEXT_API_KEY") ||
+      readEnv("ATLASCLOUD_API_KEY") ||
+      readEnv("OPENROUTER_API_KEY"),
+  );
 
   if (!googleConfigured) missingEnv.push("GOOGLE_BILLING_BIGQUERY_TABLE");
-  if (!anthropicConfigured) missingEnv.push("ANTHROPIC_ADMIN_KEY");
 
   return {
     googleConfigured,
-    anthropicConfigured,
+    atlasConfigured,
     missingEnv,
   };
 }
@@ -75,9 +77,6 @@ export async function syncProviderBillingCostsForRange({
 
   if (target === "ALL" || target === "GOOGLE") {
     results.push(await syncGoogleBillingExport(periodStart, periodEnd, usdToKrwRate));
-  }
-  if (target === "ALL" || target === "ANTHROPIC") {
-    results.push(await syncAnthropicCostReport(periodStart, periodEnd, usdToKrwRate));
   }
 
   return results;
@@ -163,80 +162,6 @@ async function syncGoogleBillingExport(
 
   await replaceImportedRows(GOOGLE_BILLING_SOURCE, periodStart, periodEnd, importRows);
   return summarizeImport("GOOGLE", importRows);
-}
-
-async function syncAnthropicCostReport(
-  periodStart: Date,
-  periodEnd: Date,
-  usdToKrwRate: number,
-): Promise<ProviderBillingSyncResult> {
-  const adminKey = readEnv("ANTHROPIC_ADMIN_KEY");
-  if (!adminKey) {
-    return skipped("ANTHROPIC", "ANTHROPIC_ADMIN_KEY is not configured.");
-  }
-
-  const rows: BillingImportRow[] = [];
-  let page: string | null = null;
-
-  do {
-    const url = new URL("https://api.anthropic.com/v1/organizations/cost_report");
-    url.searchParams.set("starting_at", periodStart.toISOString());
-    url.searchParams.set("ending_at", periodEnd.toISOString());
-    url.searchParams.set("limit", "31");
-    url.searchParams.append("group_by[]", "description");
-    if (page) url.searchParams.set("page", page);
-
-    const response = await fetch(url, {
-      headers: {
-        "anthropic-version": "2023-06-01",
-        "x-api-key": adminKey,
-      },
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      const body = await response.text().catch(() => "");
-      throw new Error(`Anthropic cost report failed: ${response.status} ${body.slice(0, 300)}`);
-    }
-
-    const payload = (await response.json()) as {
-      data?: Array<{
-        starting_at: string;
-        ending_at: string;
-        results?: Array<{ amount?: string; currency?: string }>;
-      }>;
-      has_more?: boolean;
-      next_page?: string | null;
-    };
-
-    for (const bucket of payload.data ?? []) {
-      const amountMinor = (bucket.results ?? []).reduce(
-        (sum, item) => sum + Number(item.amount ?? 0),
-        0,
-      );
-      if (amountMinor === 0) continue;
-
-      const actualCostUsd = amountMinor / 100;
-      rows.push({
-        provider: "ANTHROPIC",
-        unitType: null,
-        modelPattern: null,
-        periodStart: new Date(bucket.starting_at),
-        periodEnd: new Date(bucket.ending_at),
-        actualCostUsd,
-        actualCostKrw: Math.round(actualCostUsd * usdToKrwRate),
-        usdToKrwRate,
-        source: ANTHROPIC_BILLING_SOURCE,
-        referenceId: `anthropic-cost:${bucket.starting_at}:${bucket.ending_at}`,
-        notes: "Anthropic Admin Cost Report. Amount is converted from lowest USD units.",
-      });
-    }
-
-    page = payload.has_more ? payload.next_page ?? null : null;
-  } while (page);
-
-  await replaceImportedRows(ANTHROPIC_BILLING_SOURCE, periodStart, periodEnd, rows);
-  return summarizeImport("ANTHROPIC", rows);
 }
 
 async function replaceImportedRows(

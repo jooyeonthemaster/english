@@ -16,7 +16,6 @@ const OUT = "c:/tmp/call-transcript.txt";
       model,
       maxOutputTokens: 16000,
       temperature: 0,
-      providerOptions: { google: { thinkingConfig: { thinkingBudget: 0, includeThoughts: false } } },
       messages: [
         {
           role: "user",

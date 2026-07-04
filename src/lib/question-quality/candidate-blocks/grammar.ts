@@ -60,8 +60,62 @@ export type GrammarGenerationCandidate = {
 };
 
 
+export function buildGrammarNineFrameGuide(
+  mode: "judgment" | "correction" | "worksheet",
+  requestedDifficulty?: string,
+): string {
+  const difficulty = String(requestedDifficulty ?? "").toUpperCase();
+  const modeLine =
+    mode === "correction"
+      ? "For correction items, hide the error inside a clause/sentence segment; the correctedPart must be the exact source form."
+      : mode === "worksheet"
+        ? "For worksheet inline choices, each [A / B] pair must be same-slot and unambiguous, with an explanation naming the frame."
+        : "For judgment items, mark the minimal surface form only; non-answer decoys must remain grammatically correct.";
+
+  return [
+    "## CSAT nine-frame grammar design policy",
+    "- Generate structural grammar questions, not random word swaps. Prefer source-backed targets that force one clear grammatical decision.",
+    `- ${modeLine}`,
+    difficulty === "KILLER"
+      ? "- KILLER must require a long-distance or cross-clause check. A lone verb-s, article, spelling, tense-only, or locally obvious error is too thin."
+      : difficulty === "BASIC"
+        ? "- BASIC can be one-step, but the answer still needs a real grammar relation and a plausible distractor. Do not pile up advanced frames such as concessive inversion, semantic-subject gerunds, and passive parallelism in one BASIC item."
+        : "- INTERMEDIATE should require clause boundary, semantic subject, complement, or modifier-scope checking.",
+    "1. Subject-verb agreement (code d): S_head + modifiers/relative/prepositional/participle phrase + V. Distractor noun inside the modifier should pull the wrong number.",
+    "2. Gerund/infinitive/object complement (codes h/k): causative/perception/want/allow patterns decide bare infinitive, to-V, V-ing, or p.p.",
+    "3. Active vs passive voice (code e): decide from subject-agent relation, transitivity, and object presence; avoid debatable active/passive preferences.",
+    "4. Relative clauses (code b): relative pronoun leaves a gap; relative adverb or prep+relative pronoun is followed by a complete clause.",
+    "5. Nominal that vs what (code b): that + complete clause; what + incomplete clause and includes its own antecedent.",
+    "6. Participle clauses (code c): omitted subject equals main-clause subject; choose V-ing vs p.p. by active/passive relation, including with + noun + participle.",
+    "7. Dummy-object it (codes g/f): make/find/think/consider + it + OC + to-V/that-clause. Trap it vs this/that or adjective OC vs adverb.",
+    "8. Inversion (codes d/i): fronted negative/restrictive/adverbial phrase requires auxiliary/be/do inversion and may combine with agreement.",
+    "9. Adjective vs adverb (code f): subject/object complement slots after linking or 5th-form verbs require adjectives, even when Korean meaning sounds adverbial.",
+    "- A high-quality distractor is attractive locally but collapses under the frame. The explanation must cite the exact structural reason, not just say it is awkward.",
+    "- Do not choose filler or lexical surfaces as answers or decoys: thicker, more, standalone comparative than, hard, as a, As one, this/these/those, local pronouns in 'as it might appear' or 'the way it does', demonstrative 'that way', discourse 'though,', 'looks more like', or 'seems to V'. Do not mutate 'looks more like' into 'looks more likely/most like', and never create local clashes such as 'it are', 'them pushes', or 'before to flow'.",
+  ].join("\n");
+}
+
+
 
 export const GRAMMAR_GENERATION_CANDIDATE_RULES: GrammarCandidateRule[] = [
+  {
+    code: "g",
+    pattern: /\b(?:make|makes|made|find|finds|found|think|thinks|thought|consider|considers|considered)\s+it\s+(?:possible|impossible|easy|easier|hard|harder|difficult|necessary|important|clear|natural|useful|safe|risky|obvious|worthwhile|likely|unlikely|essential|reasonable)\s+(?:for\s+[A-Za-z][^.;!?]{0,50}\s+)?(?:to\s+[A-Za-z][A-Za-z'-]*|that\b)/gi,
+    note: "Dummy-object it + object complement + real object",
+    trap: "The it slot is a dummy object, not a demonstrative; the following adjective/noun complement points to the delayed to-V/that real object.",
+    mutationHint: "it <-> this/that, or adjective object-complement <-> adverb",
+    tier: "killer",
+    priority: 11,
+  },
+  {
+    code: "d",
+    pattern: /\b(?:never|rarely|seldom|little|hardly|scarcely|only\s+(?:then|after|when|by|in|with)|not only|no sooner|under no circumstances|at no time|in no way)\b[^.;!?]{0,140}\b(?:am|is|are|was|were|do|does|did|have|has|had|can|could|should|would|will|may|might|must)\s+[A-Za-z][A-Za-z'-]*/gi,
+    note: "Negative/restrictive fronting with inversion",
+    trap: "A fronted negative or restrictive phrase requires inverted auxiliary/be/do order, and the auxiliary may still need agreement with the true subject.",
+    mutationHint: "auxiliary order/agreement: Never have <-> Never has, Not only does <-> Not only do, Only then did <-> Only then does",
+    tier: "killer",
+    priority: 11,
+  },
   {
     code: "b",
     pattern: /\b(?:in|at|on|for|from|through|by|with)\s+which\b|\b(?:what|that|which|who|whom|whose|where|when)\b/gi,
@@ -109,7 +163,7 @@ export const GRAMMAR_GENERATION_CANDIDATE_RULES: GrammarCandidateRule[] = [
   },
   {
     code: "e",
-    pattern: /\b(?:is|are|was|were|be|been|being|get|gets|got)\s+(?:[A-Za-z]+ed|known|made|seen|found|given|left|built|told|shown|used)\b|\b(?:occur|occurs|happen|happens|appear|appears|disappear|disappears|consist|consists|belong|belongs)\b/gi,
+    pattern: /\b(?:is|are|was|were|be|been|being|get|gets|got)\s+(?:[A-Za-z]+ed|known|made|seen|found|given|left|built|told|shown|used)\b/gi,
     note: "능동태/수동태 및 자동사 수동 불가",
     trap: "목적어 유무와 주어가 행위자인지 대상인지 확인하게 함",
     mutationHint: "active <-> passive, 자동사에 be p.p. 금지",
@@ -182,6 +236,209 @@ export const GRAMMAR_GENERATION_CANDIDATE_RULES: GrammarCandidateRule[] = [
 ];
 
 
+function isNoisyGrammarGenerationCandidate(
+  candidate: Pick<GrammarGenerationCandidate, "expression" | "surroundingText" | "tier">,
+  requestedDifficulty?: string,
+): boolean {
+  const difficulty = String(requestedDifficulty ?? "").toUpperCase();
+  const expression = normalizeComparableText(candidate.expression);
+  const surroundingText = normalizeText(candidate.surroundingText);
+
+  if (difficulty === "BASIC" && candidate.tier === "killer") return true;
+  if (
+    difficulty === "BASIC" &&
+    /^(?:clear|perfect)$/.test(expression) &&
+    /\bclear\s+and\s+perfect\s+as\s+it\s+might\s+appear\b/i.test(surroundingText)
+  ) {
+    return true;
+  }
+  if (/^(?:hard|quite|more|misshapen|given|thicker|both liquid and|as one)$/.test(expression)) return true;
+  if (expression === "as it") return true;
+  if (/^(?:one|ones|this|these|those)$/.test(expression)) return true;
+  if (expression === "as a") return true;
+  if (/^looks?\s+more\s+like$/.test(expression)) return true;
+  if (/^seems?\s+to\s+[a-z]+$/.test(expression)) return true;
+  if (
+    /^to\s+[a-z]+$/.test(expression) &&
+    new RegExp(`\\bseems?\\s+${expression.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(surroundingText)
+  ) {
+    return true;
+  }
+  if (/^looks?$/.test(expression) && /\blooks?\s+more\s+like\b/i.test(surroundingText)) return true;
+  if (/^seems?$/.test(expression) && /\bseems?\s+to\s+[a-z]/i.test(surroundingText)) return true;
+  if (expression === "though" && /\bthough\s*,/i.test(surroundingText)) return true;
+  if (
+    /^(?:despite|in spite of|because of|due to|without|with)$/.test(expression) &&
+    /\b(?:despite|in spite of|because of|due to|without|with)\s+it\s+being\b/i.test(surroundingText)
+  ) {
+    return true;
+  }
+  if (expression === "being" && /\b(?:despite|in spite of|because of|due to|without|with)\s+it\s+being\b/i.test(surroundingText)) {
+    return true;
+  }
+  if (expression === "depends" && /\b(?:term|mess|thing|fact|answer|result)\b[^.;!?]{0,80}\bdepends\s+on\b/i.test(surroundingText)) {
+    return true;
+  }
+  if (/^(?:who|whom)$/.test(expression) && /\bwho\s+(?:you(?:'re|\s+are)?\s+)?asking\b/i.test(surroundingText)) {
+    return true;
+  }
+  if (/^(?:why|how)$/.test(expression) && /\b(?:why|how)\b[^.;!?]{0,120}\bthe\s+way\b/i.test(surroundingText)) {
+    return true;
+  }
+  if (expression === "than" && /\b(?:more|less|fewer|greater|smaller|larger|better|worse|higher|lower|thicker|thinner|older|younger|rather)\b[^.;!?]{0,90}\bthan\b/i.test(surroundingText)) {
+    return true;
+  }
+  if (
+    /^(?:they|these|those|we|it|this|that|he|she)$/.test(expression) &&
+    new RegExp(`\\b${expression.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+(?:is|are|was|were|has|have|do|does)\\b`, "i").test(surroundingText)
+  ) {
+    return true;
+  }
+  if (expression === "it" && /\b(?:as\s+it\s+might\s+appear|the\s+way\s+it\s+does)\b/i.test(surroundingText)) {
+    return true;
+  }
+  if (expression === "that" && /\bthat\s+way\b/i.test(surroundingText)) {
+    return true;
+  }
+  if (/^it'?s$/.test(expression)) return true;
+  if (expression === "uneven" && /\b(?:is|are|was|were|be|been|being|seem|seems|look|looks|become|becomes)\s+uneven\b/i.test(surroundingText)) {
+    return true;
+  }
+  if (/\bsinking\b/.test(expression) && /\bglass\s+is\s+slowly\s+sinking\b/i.test(surroundingText)) {
+    return true;
+  }
+  if (/\bappear(?:s|ed)?\b/.test(expression) && /\bas\s+it\s+might\s+appear\b/i.test(surroundingText)) {
+    return true;
+  }
+  if (
+    /^(?:is|are|was|were)\s+[a-z]+(?:ed|en|own)$/.test(expression) &&
+    new RegExp(`\\b(?:it|they|he|she|we|you)\\s+${expression.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(surroundingText)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+type ForbiddenGrammarSurface = {
+  expression: string;
+  reason: string;
+};
+
+function findForbiddenGrammarSurfaces(passage: string): ForbiddenGrammarSurface[] {
+  const normalizedPassage = normalizeText(passage);
+  const forbidden: ForbiddenGrammarSurface[] = [];
+  const seen = new Set<string>();
+  const push = (expression: string, reason: string) => {
+    const normalizedExpression = normalizeText(expression);
+    const key = normalizeComparableText(normalizedExpression);
+    if (!normalizedExpression || seen.has(key)) return;
+    seen.add(key);
+    forbidden.push({ expression: normalizedExpression, reason });
+  };
+
+  for (const match of normalizedPassage.matchAll(/\blooks?\s+more\s+like\b/gi)) {
+    push(match[0], "lexical/comparison surface, not a clean school grammar target");
+    push(match[0].match(/\blooks?\b/i)?.[0] ?? "looks", "look(s) inside looks more like is a lexical comparison decoy");
+    push("more", "filler comparative token inside looks more like");
+  }
+  for (const match of normalizedPassage.matchAll(/\bseems?\s+to\s+[A-Za-z][A-Za-z'-]*\b/gi)) {
+    push(match[0], "seem + to-infinitive is a shallow checklist decoy here");
+    push(match[0].replace(/^[A-Za-z]+\s+/, ""), "to-infinitive inside seems to V is not a meaningful decoy by itself");
+  }
+  if (/\bthough\s*,/i.test(normalizedPassage)) {
+    push("though", "discourse-adverb though with comma invites syntax disputes");
+  }
+  if (/\b(?:term|mess|thing|fact|answer|result)\b[^.;!?]{0,80}\bdepends\s+on\s+who\s+(?:you(?:'re|\s+are)\s+)?asking\b/i.test(normalizedPassage)) {
+    push("depends", "simple depends-on agreement/checklist surface");
+    push("who", "who you are asking is a semantic/person decoy, not a clean grammar frame");
+  }
+  if (/\b(?:an?\s+)?imperceptibly\s+viscous\s+one\b/i.test(normalizedPassage)) {
+    push("one", "nearby pronoun reference is too local as a decoy");
+  }
+  if (/\bthose\s+misshapen\s+sheets\b/i.test(normalizedPassage)) {
+    push("Those", "demonstrative before its noun is too local as a decoy");
+  }
+  for (const match of normalizedPassage.matchAll(/\b(?:they|these|those|we)\s+(?:are|were|have|do)\b/gi)) {
+    const pronoun = match[0].match(/\b(?:they|these|those|we)\b/i)?.[0];
+    if (pronoun) push(pronoun, "local plural pronoun before an auxiliary creates obvious it-are style mutations");
+  }
+  if (/\bthey\s+were\s+blown\b/i.test(normalizedPassage)) {
+    push("were blown", "nearby pronoun + passive phrase is too shallow as a decoy");
+  }
+  for (const match of normalizedPassage.matchAll(/\b(?:more|less|fewer|greater|smaller|larger|better|worse|higher|lower|thicker|thinner|older|younger|rather)\b[^.;!?]{0,90}\bthan\b/gi)) {
+    if (/\bthan\b/i.test(match[0])) {
+      push("than", "standalone comparative than is a filler decoy unless the full comparative frame is tested");
+    }
+  }
+  for (const match of normalizedPassage.matchAll(/\b(?:why|how)\b[^.;!?]{0,120}\bthe\s+way\b/gi)) {
+    const head = match[0].match(/\b(?:why|how)\b/i)?.[0];
+    if (head) push(head, "how/why near the way is semantic or collocational, not a grammar target");
+  }
+  if (/\bas\s+it\s+might\s+appear\b/i.test(normalizedPassage)) {
+    push("Clear", "fronted concessive adjective is too advanced as a BASIC decoy");
+    push("perfect", "fronted concessive adjective is too advanced as a BASIC decoy");
+    push("it", "local pronoun inside concessive as it might appear is a decorative decoy");
+    push("as it", "mixed connector+pronoun span");
+    push("appear", "as it might appear is not a passive/adverb target");
+  }
+  if (/\bthat\s+way\b/i.test(normalizedPassage)) {
+    push("that", "demonstrative in that way is a decorative decoy, not a real grammar frame");
+  }
+  if (/\bit\s+(?:is|was|has|does)\b|\bit's\b/i.test(normalizedPassage)) {
+    push("it", "local it + be/auxiliary is too shallow unless it is a true dummy-object frame");
+  }
+  if (/\bthe\s+way\s+it\s+does\b/i.test(normalizedPassage)) {
+    push("it", "local pronoun in the way it does is too shallow as a decoy");
+    push("does", "do-support in the way it does is too local unless it is the actual tested answer");
+  }
+  if (/\b(?:former|latter)\b/i.test(normalizedPassage)) {
+    push("latter", "former/latter is a lexical reference target, not a grammar frame");
+  }
+  for (const match of normalizedPassage.matchAll(/\bAs\s+one\b/gi)) {
+    push(match[0], "discourse/reporting phrase starter is not a grammar target");
+  }
+  if (/\bit(?:'s|\s+is)\s+not\s+a\s+solid\b/i.test(normalizedPassage)) {
+    push("it's", "contraction in it's not a solid is a low-value decoy");
+  }
+  if (/\b(?:is|are|was|were|be|been|being|seem|seems|look|looks|become|becomes)\s+uneven\b/i.test(normalizedPassage)) {
+    push("uneven", "simple predicate adjective is too local as a decoy");
+  }
+  if (/\bglass\s+is\s+slowly\s+sinking\b/i.test(normalizedPassage)) {
+    push("sinking", "sink passive/active preference is debatable here");
+  }
+  if (/\b(?:despite|in spite of|because of|due to|without|with)\s+it\s+being\b/i.test(normalizedPassage)) {
+    push("despite", "despite it being creates a formal its-being dispute");
+    push("being", "it being after a preposition is a noisy formal-register decoy");
+  }
+  if (/\bboth\s+liquid\s+and\b/i.test(normalizedPassage)) {
+    push("both liquid and", "shallow correlative fragment");
+  }
+  if (/\bas\s+a\b/i.test(normalizedPassage)) {
+    push("as a", "tiny preposition/article chunk");
+  }
+  if (/\bthicker\b/i.test(normalizedPassage)) {
+    push("thicker", "bare comparative adjective filler");
+  }
+  if (/\bwere\b[^.;!?]{0,80}\band\s+solidified\b/i.test(normalizedPassage)) {
+    push("solidified", "same-clause parallel/tense-only trap is too local");
+  }
+
+  return forbidden;
+}
+
+function buildForbiddenGrammarSurfaceBlock(passage: string): string {
+  const forbidden = findForbiddenGrammarSurfaces(passage);
+  if (forbidden.length === 0) return "";
+  return [
+    "## Forbidden grammar target surfaces detected in this passage",
+    "- These exact source surfaces are tempting but low-quality. Do not underline them, do not mutate them, and do not use them as non-answer decoys. If any appears in markedExpressions, the item will be rejected.",
+    ...forbidden.slice(0, 30).map((item) =>
+      `- "${escapePromptSnippet(item.expression)}" -- ${escapePromptSnippet(item.reason)}`,
+    ),
+  ].join("\n");
+}
+
+
 
 export function findGrammarGenerationCandidates(
   passage: string,
@@ -202,13 +459,22 @@ export function findGrammarGenerationCandidates(
           : rawExpression;
       const index = match.index ?? passage.indexOf(match[0]);
       if (index < 0) continue;
+      const surroundingText = buildSurroundingWindow(passage, index, match[0].length);
+      if (
+        isNoisyGrammarGenerationCandidate(
+          { expression, surroundingText, tier: rule.tier },
+          requestedDifficulty,
+        )
+      ) {
+        continue;
+      }
       const key = `${rule.code}:${normalizeComparableText(expression).slice(0, 80)}`;
       if (seen.has(key)) continue;
       seen.add(key);
       candidates.push({
         code: rule.code,
         expression,
-        surroundingText: buildSurroundingWindow(passage, index, match[0].length),
+        surroundingText,
         note: rule.note,
         trap: rule.trap,
         mutationHint: rule.mutationHint,
@@ -250,21 +516,30 @@ export function buildGrammarSourceCandidateBlock(
   mode: "judgment" | "correction",
   limit = 14,
 ): string {
-  const candidates = findGrammarGenerationCandidates(passage, requestedDifficulty).slice(0, limit);
+  const forbiddenSurfaceBlock = buildForbiddenGrammarSurfaceBlock(passage);
+  const candidates = selectGrammarCandidatesForPrompt(
+    findGrammarGenerationCandidates(passage, requestedDifficulty),
+    limit,
+  );
   const difficulty = String(requestedDifficulty ?? "").toUpperCase();
   if (candidates.length === 0) {
     return [
       "## Source-backed grammar target candidates",
+      forbiddenSurfaceBlock,
       "- No high-confidence grammar candidate was detected by heuristics. Still choose only exact expressions from the passage, and avoid article/spelling/tiny-preposition errors.",
-    ].join("\n");
+    ].filter(Boolean).join("\n");
   }
 
   return [
     "## Source-backed grammar target candidates",
+    forbiddenSurfaceBlock,
     "- Prefer answer and decoy targets from this list before inventing another location. Copy the expression from the original passage exactly; mutate only the answer expression.",
     mode === "correction"
       ? "- For GRAMMAR_CORRECTION, underline a wider clause/sentence containing the chosen candidate, not just the expression itself."
       : "- For GRAMMAR_ERROR, use these as marked expressions or nearby marked spans, keeping non-answer decoys grammatically correct.",
+    mode === "judgment"
+      ? "- For GRAMMAR_ERROR, every marked expression must be a real decision point. A correct decoy is still a tested grammar frame, not a decorative word, lexical adjective, pronoun, comparative particle, or local auxiliary."
+      : "",
     difficulty === "KILLER"
       ? "- KILLER priority: first try candidates tagged tier=killer. Single-token finite/nonfinite flips, adjacent subject-verb agreement, or obvious verb+s changes are rejected unless the surrounding span also contains a long-distance clause, modifier, relation, or parallel-structure check."
       : difficulty === "BASIC"
@@ -288,7 +563,35 @@ export function buildGrammarSourceCandidateBlock(
         `context="${escapePromptSnippet(candidate.surroundingText)}"`,
       ].join(" | ");
     }),
-  ].join("\n");
+  ].filter(Boolean).join("\n");
+}
+
+
+function selectGrammarCandidatesForPrompt(
+  candidates: GrammarGenerationCandidate[],
+  limit: number,
+): GrammarGenerationCandidate[] {
+  const selected: GrammarGenerationCandidate[] = [];
+  const deferred: GrammarGenerationCandidate[] = [];
+  const counts = new Map<GrammarPointCode, number>();
+  const maxPerCodeFirstPass = 2;
+
+  for (const candidate of candidates) {
+    const count = counts.get(candidate.code) ?? 0;
+    if (count < maxPerCodeFirstPass && selected.length < limit) {
+      selected.push(candidate);
+      counts.set(candidate.code, count + 1);
+      continue;
+    }
+    deferred.push(candidate);
+  }
+
+  for (const candidate of deferred) {
+    if (selected.length >= limit) break;
+    selected.push(candidate);
+  }
+
+  return selected;
 }
 
 
@@ -324,11 +627,18 @@ export function buildGrammarErrorCandidateBlock(
     ? `- 🚫 절대 밑줄 금지 자리: 지문의 "...${disputedSourceMatch[0].slice(-60)}..." 구간(복수 등위 주어 + each + 동사 — 표준 규범과 실사용이 갈리는 논쟁 자리)에는 정답으로도 디코이로도 어떤 라벨도 배치하지 마세요. 이 자리를 밑줄 치면 문항이 거부됩니다.`
     : "";
 
+  const forbiddenSurfaceBlock = buildForbiddenGrammarSurfaceBlock(passage);
+
   return [
     "## GRAMMAR_ERROR target planning guardrail",
     disputedBanLine,
+    forbiddenSurfaceBlock,
+    "- Do not underline mixed connector+pronoun chunks such as 'as it'. If testing concessive as, underline only 'as'; if testing pronoun reference, underline only the pronoun.",
     "- ⭐ Underline span = the minimal grammatical unit only (usually 1-3 words, never more than 5). expression/errorExpression IS the exact underlined surface, so keep it to the single token that carries the grammar decision (the verb / participle / relative word / pronoun / adjective-adverb / to-V / connector). NEVER underline a full clause (subject + finite verb + object) or a whole sentence — e.g. 'create', not 'these digital platforms create a trusting environment'.",
     "- ⭐ pointCode must be true to the underlined surface: the code's required token must actually appear inside the underline (b→relative word, c→participle -ing/p.p., k→to-V or -ing, g→pronoun, l→during/while/despite/because, m→comparative marker). Never fabricate a code just to fill decoy diversity.",
+    "- Never underline sentence fragments that contain punctuation such as a colon, comma, or semicolon (e.g. 'asking: for some scientists it is'). Move the underline to the exact grammar token instead.",
+    "- Point-code distribution is part of the item quality: across all marked expressions, use at least three different pointCodes and never use the same pointCode more than twice. In particular, do not use three relation/nominal-clause b-code decoys in one item; swap one for c/d/e/f/g/h/i/k/l if the passage allows it.",
+    "- Marker spacing is mandatory: never place two labels back-to-back or within fewer than two source words of each other. Prefer one marker per sentence; if two labels must share a sentence, put them in different clauses with at least 8 source words between the underlined spans.",
     `- The final item must contain ${markedCount} marked expression(s) labeled ${labels}.`,
     `- Exactly ${answerCount} marked expression(s) must be grammatically incorrect.`,
     answerCount >= 2
@@ -336,13 +646,51 @@ export function buildGrammarErrorCandidateBlock(
       : "- In the direction, use single-answer wording for one grammatically incorrect part.",
     "- If the requested answer count is lower than the marked count, keep the remaining labels grammatically correct as non-answer decoys. If it equals the marked count, every label must be intentionally incorrect and 오답 분석 can be empty.",
     "- Use the original passage as correct source text. For every answer, mutate only the marked expression and keep the original expression/correction verbatim.",
+    "- Across all difficulties, never create grotesquely broken surfaces such as modal/auxiliary + V-ing ('can paying'), modal/auxiliary + to-V ('can to pay'), passive forms of intransitive verbs ('be appeared'), seem + V-ing ('seems obeying'), fake inversion fragments ('had some church endured'), double -ing ('being employing'), adjacent local agreement flips ('the glass are'), local pronoun-auxiliary clashes ('it are', 'they is'), object pronouns in subject position ('them pushes'), before/after + to-V errors ('before to flow'), or fake grammar keywords not present in the source. BASIC may be simpler, but it must still look like a real exam trap.",
+    "- Avoid cheap filler underlines such as standalone hard, quite, more, thicker, than, one/ones, this/these/those, as a, As one, local it in it is/as it might appear/the way it does, demonstrative that way, simple does/do/did, it's, former/latter, uneven, simple depends on, looks/looks more like, seems to V, lexicalized adjectives like misshapen, or shallow correlative fragments like both liquid and; every non-answer underline must still look like a meaningful grammar decision.",
+    "- Correct decoy quality: each non-answer label must have its own plausible grammar question (agreement, voice, relative/nominal clause, participle, complement form, dummy it, inversion, adjective/adverb, connector, comparison). If a decoy can be dismissed without reading its clause, replace it.",
+    "- Option uniqueness: every markedExpressions.expression must be a different visible option. Do not reuse the same word/phrase under two labels, even if the pointCode differs.",
+    "- Avoid shallow nearby voice decoys such as 'they were blown' or 'it was made' when the subject and passive verb sit side by side; choose a target with intervening structure or a real active/passive decision.",
+    "- Do not use overly visible, overdrilled, or debatable answer mutations such as has endured temperatures -> has been endured temperatures, depends on ...: -> depending on ...:, is sinking -> was sunk, were blown and solidified -> were blown and solidifying, because -> despite before a finite clause, despite -> although before it being, looks more like -> looks most like, afford to pay -> afford paying, seems to obey -> seems obeying/to obeying, despite it being -> despite it to be, even if -> what, imperceptibly viscous -> imperceptible viscous, people living in -> people lives/lived in, the disease -> what the disease, that is, -> that being, or KILLER missing-auxiliary fragments like has been neglected -> neglected.",
+    "- Avoid formal-dispute decoys: do not mark colloquial object who (e.g. 'who you are asking'), discourse-adverb though, or the demonstrative that in 'that's the way' as a correct grammar option.",
+    "- Avoid formal-dispute gerund decoys: do not mark 'it being' after a preposition (e.g. despite it being...) as a correct grammar option, because formal tests may prefer 'its being' and the point becomes noisy.",
+    "- For INTERMEDIATE/KILLER, do not make who/what with 'asking' the answer; that is mostly semantic/person-vs-thing reading, not a structural grammar trap.",
+    "- For INTERMEDIATE/KILLER, do not make a shallow participle-adjective swap before a noun the answer (e.g. traditionally neglected populations -> traditionally neglecting populations). Use a clause, complement, semantic-subject, or long-modifier dependency.",
+    "- Avoid debatable to-V -> V-ing answer mutations when the nearby noun can take 'to + gerund' as a legitimate collocation, especially attention to finding. The answer must be structurally airtight.",
+    requestedDifficulty === "KILLER"
+      ? "- KILLER point-code discipline: the answer's grammar point must not be repeated as a same-point decoy; each non-answer underline should test a different frame so the option set feels curated, not padded."
+      : "",
+    requestedDifficulty === "KILLER"
+      ? "- KILLER answer pointCode must be a precise structural frame (b/c/d/e/f/g/h/i/k/l). Do not tag the answer as generic a or lexical/comparison m."
+      : "",
+    requestedDifficulty === "KILLER"
+      ? "- KILLER answer ban: do not make a single concessive as/though -> how idiom (e.g. Clear and perfect as it might appear) the answer. That is an idiom check, not a sufficiently layered KILLER structure."
+      : "",
+    requestedDifficulty === "KILLER"
+      ? "- KILLER answer ban: do not make a one-token connector/preposition swap such as because -> because of, although -> despite, or while -> during the answer. Connector/preposition errors are allowed only when tied to a deeper cross-clause dependency."
+      : "",
+    "- Terminology precision: do not label a plain pronoun-reference check as a noun-clause issue; name the actual school-grammar structure tested by the underline.",
+    "- Terminology precision: do not call passive participles or parallel participle phrases phrasal verbs. A phrasal verb is a verb + particle/preposition combination, not 'were blown and solidified'.",
+    "- Terminology precision: do not explain 'look(s) more like + noun phrase' as an adjective-complement test; it is a comparative/prepositional pattern.",
+    "- Terminology precision: do not call 'that' in 'that way' a demonstrative adverb; it is a demonstrative determiner modifying the noun way. Do not call seem + to-V an object pattern; the to-infinitive is a complement clause. Do not call human-made before a noun a post-nominal participle.",
+    "- Polish discipline: spellcheck all Korean and English explanation text. Never return typos such as 'dsepite'.",
+    "- Terminology discipline: never call appear an adverb. In 'as it might appear', appear is a linking/intransitive verb taking a complement, and it must not be tagged as passive voice. Use only standard school grammar terms; do not invent terms such as '전사구'.",
+    "- Explanation quality: for every incorrect label, cite the student-visible wrong surface first, then the correction. Write '(C) been associating is wrong; it should be been associated', never '(C) been associated is ...'.",
+    "- Explanation quality: for long-distance subject-verb agreement, the main explanation must name the intervening modifier/relative/appositive phrase and the true subject head; do not stop at 'the subject is plural'.",
+    "- Explanation length cap: main explanation must be a polished student-facing paragraph of 120-450 Korean characters; each wrongOptionExplanations value should be one concise sentence. Do not quote full source sentences, narrate failed hypotheses, expose scratchpad/self-correction, or write meta-review phrases such as 'let me check again', 'I will re-check the question', or Korean equivalents.",
+    "- Explanation label discipline: never use a shorthand range such as 'remaining (B)~(F)' or '나머지 (B)~(F)'. Label reordering can make ranges wrong or ugly; enumerate only the actual non-answer labels individually.",
+    "- KeyPoints discipline: mention only grammar tokens actually tested by marked options. Do not add unrelated source tokens such as unless/although if no underline tests them.",
+    "- Tag discipline: tags must name real tested grammar frames only. Do not invent vague/padded tags such as noun flow analysis, vocabulary flow analysis, or general content-flow labels.",
     "- If the passage has fewer source sentences than requested marked expressions, you may mark more than one expression in a sentence only when they test clearly different clauses or grammar relations.",
     requestedDifficulty === "KILLER"
       ? "- KILLER calibration: make the wrong forms look locally natural until the full sentence structure is checked. Do not use a lone main-verb/subject-verb/local -s error as the answer; it must require checking a relation, reduced clause, semantic subject, long modifier, complement pattern, or parallel range."
-      : "",
+      : requestedDifficulty === "INTERMEDIATE"
+        ? "- INTERMEDIATE calibration: avoid visibly broken local errors such as 'it are', 'N what ...', 'depends -> depending' before a colon, 'seems V-ing', or 'afford/want/decide to V-ing'. Do not pad with one/that/those/does decoys; the wrong form should still look locally tempting until the student checks a clause boundary, antecedent, semantic subject, complement pattern, or modifier scope."
+        : "",
+    buildGrammarNineFrameGuide("judgment", requestedDifficulty),
     // 어법끝 28년 빈도 증류 가이드 — 정답 포인트 코어 풀 + 함정 디코이 카드 +
     // (다양성 모드) variantIndex 로테이션 정답 포인트 지정.
-    // 핵심 집중 모드면 정답 포인트를 고빈출 톱셋(1000제 상위 6)으로 좁힌다.
+    // 핵심 집중 모드면 정답 포인트를 고빈출/9프레임 톱셋으로 좁힌다.
     buildGrammarPointGuidance({
       variantIndex: diversity?.variantIndex,
       usedPointCodes: diversity?.usedPointCodes,
@@ -470,6 +818,8 @@ export function buildGrammarCorrectionCandidateBlock(
     "- Do not include grammatically correct extra underlined segments for GRAMMAR_CORRECTION.",
     "- Do NOT underline only the wrong word/form. The underlined sourceText must be wider than errorPart by at least several words.",
     "- sourceText must be an original passage segment. displayedText is sourceText after changing correctedPart into errorPart inside that segment.",
+    "- REQUIRED JSON contract: every underlinedSegments item must include sourceText, displayedText, isError=true, errorPart, and correctedPart. Do not put the correction only in correctAnswer.",
+    "- Top-level correctedPart/correctedParts must mirror the correctedPart values from underlinedSegments; correctAnswer is just a display summary.",
     "- correctAnswer must list every label and correctedPart in order, joined with comma + space. It must not be the full underlined segment.",
     "- correctedParts should list every corrected expression in the same order as underlinedSegments.",
     "- Do NOT print a separate error sentence below the passage. The visible question must show the original passage with the wider underlined segment(s).",
@@ -485,6 +835,7 @@ export function buildGrammarCorrectionCandidateBlock(
           "- 🚫 correctedPart 무결성: correctedPart 는 네가 errorPart 로 바꾸기 전 sourceText 원문에 실제로 있던 바로 그 단어(들)여야 한다. 원문에도 errorPart 에도 없는 제3의 단어를 정답으로 만들지 마라 — displayedText 에 correctedPart 를 도로 넣으면 정확히 sourceText 가 되어야 한다.",
         ].join("\n")
       : "",
+    buildGrammarNineFrameGuide("correction", requestedDifficulty),
     buildGrammarPointGuidance({
       variantIndex: diversity?.variantIndex,
       usedPointCodes: diversity?.usedPointCodes,

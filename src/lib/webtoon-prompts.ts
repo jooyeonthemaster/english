@@ -2,6 +2,7 @@ import type {
   WebtoonStyleId,
   WebtoonLanguageId,
 } from "@/app/(director)/director/workbench/webtoon/webtoon-page-types";
+import { isKoreanSubject } from "@/lib/korean/core/passage-meta";
 
 export interface WebtoonImagePromptInput {
   passageTitle: string;
@@ -9,6 +10,12 @@ export interface WebtoonImagePromptInput {
   style: WebtoonStyleId;
   language?: WebtoonLanguageId;
   customPrompt?: string;
+  /**
+   * 지문 과목 — Passage.subject 를 그대로 전달한다.
+   * null/undefined/"ENGLISH" = 기존 영어 경로(출력 byte 동일 — 스냅샷 유닛 보장),
+   * "KOREAN" = 국어 지문("위 국어 지문" 문구 + 대사 기본 한국어).
+   */
+  subject?: string | null;
 }
 
 /** 화풍별 아트 디렉션 — 이미지 모델에 전달할 그림체 지시. */
@@ -36,14 +43,26 @@ const LANGUAGE_DIRECTION: Record<WebtoonLanguageId, string> = {
 };
 
 /**
+ * 국어 지문 전용 대사/자막 지시 — 국어 지문에는 '영어 원문'이 존재하지 않으므로
+ * 영어 병기/영어 전용 언어 모드(KO_EN/EN/EN_KO_GLOSS)는 이 국어 기본 지시로
+ * 우아하게 강등한다(대사 언어 기본 한국어). 국어 워크스페이스 UI 노출은 Phase B 소관.
+ */
+const KOREAN_SUBJECT_LANGUAGE_DIRECTION =
+  "모든 말풍선과 나레이션 박스를 자연스럽고 정확한 한국어로 표기한다. 지문 속 표현과 어휘를 살려 대사를 구성하고, 외국어 단어는 꼭 필요한 고유명사가 아니면 쓰지 않는다.";
+
+/**
  * 지문 한 편을 세로형 교육용 웹툰 한 장(여러 컷 통합)으로 그리기 위한 이미지 생성 프롬프트.
- * 화풍(style)·언어(language)·추가 지시(customPrompt)를 모두 반영한다.
+ * 화풍(style)·언어(language)·추가 지시(customPrompt)·과목(subject)을 모두 반영한다.
+ * 영어(비국어) 경로 출력은 subject 도입 이전과 byte 동일하다.
  */
 export function buildWebtoonImagePrompt(input: WebtoonImagePromptInput): string {
+  const isKorean = isKoreanSubject(input.subject);
   const styleDirection =
     STYLE_DIRECTION[input.style] ?? STYLE_DIRECTION.KOREAN_WEBTOON;
-  const languageDirection =
-    LANGUAGE_DIRECTION[input.language ?? "KO"] ?? LANGUAGE_DIRECTION.KO;
+  const languageDirection = isKorean
+    ? KOREAN_SUBJECT_LANGUAGE_DIRECTION
+    : (LANGUAGE_DIRECTION[input.language ?? "KO"] ?? LANGUAGE_DIRECTION.KO);
+  const subjectNoun = isKorean ? "국어" : "영어";
   const custom = (input.customPrompt ?? "").trim();
   const title = (input.passageTitle ?? "").trim();
 
@@ -52,7 +71,7 @@ export function buildWebtoonImagePrompt(input: WebtoonImagePromptInput): string 
     "",
     input.passageContent.trim(),
     "",
-    "위 영어 지문의 내용과 흐름을 한 장의 세로형(9:16) 교육용 웹툰으로 그려줘. 한국 웹툰처럼 위에서 아래로 읽는 6~8컷을 한 이미지에 통합 배치한다.",
+    `위 ${subjectNoun} 지문의 내용과 흐름을 한 장의 세로형(9:16) 교육용 웹툰으로 그려줘. 한국 웹툰처럼 위에서 아래로 읽는 6~8컷을 한 이미지에 통합 배치한다.`,
     `· 화풍: ${styleDirection}`,
     `· 대사/자막: ${languageDirection}`,
     "· 컷 사이는 여백이나 가는 구분선으로 자연스럽게 나누고, 인물의 표정·동작과 배경으로 지문의 핵심 사건이 한눈에 이해되도록 구성한다.",

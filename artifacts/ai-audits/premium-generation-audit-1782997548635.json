@@ -1,0 +1,419 @@
+{
+  "createdAt": "2026-07-02T13:05:48.635Z",
+  "results": [
+    {
+      "ok": true,
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "type": "GRAMMAR_ERROR",
+      "difficulty": "INTERMEDIATE",
+      "attempts": 1,
+      "relaxedFallback": false,
+      "durationMs": 76934,
+      "rejectionSummary": {
+        "total": 0,
+        "phaseCounts": {
+          "model": 0,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "message": "Rejected candidates: 0"
+      },
+      "usageEvents": [
+        {
+          "phase": "question_generation",
+          "subType": "GRAMMAR_ERROR",
+          "qualityMode": "strict",
+          "difficulty": "INTERMEDIATE",
+          "generationPlan": "PREMIUM",
+          "usage": {
+            "inputTokens": 22572,
+            "inputTokenDetails": {
+              "noCacheTokens": 22572,
+              "cacheReadTokens": 0
+            },
+            "outputTokens": 7146,
+            "outputTokenDetails": {
+              "textTokens": 7146,
+              "reasoningTokens": 0
+            },
+            "totalTokens": 29718,
+            "raw": {
+              "prompt_tokens": 22572,
+              "completion_tokens": 7146,
+              "total_tokens": 29718,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "cost": 0.116604,
+              "is_byok": false,
+              "cost_details": {
+                "upstream_inference_cost": 0.116604,
+                "upstream_inference_prompt_cost": 0.045144,
+                "upstream_inference_completions_cost": 0.07146
+              }
+            },
+            "reasoningTokens": 0,
+            "cachedInputTokens": 0
+          },
+          "provider": "atlascloud",
+          "modelId": "anthropic/claude-sonnet-5",
+          "attempts": 1,
+          "durationMs": 76905
+        }
+      ],
+      "firstQuestion": {
+        "correctAnswer": "(E)",
+        "difficulty": "INTERMEDIATE",
+        "optionCount": 5,
+        "markerCount": 5
+      },
+      "questions": [
+        {
+          "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+          "correctAnswer": "(E)",
+          "explanation": "(E) 'obeying'은 어법상 틀리다. 'seem'은 보어로 to부정사를 취하는 동사이므로 'seems obeying'처럼 동명사를 바로 이어 쓸 수 없다. 원문의 'to obey'처럼 'seems to obey'로 써야 어법상 옳다. 나머지 (C)~(A)는 모두 문맥과 구조상 올바르게 쓰인 표현이다.",
+          "keyPoints": [
+            "seem은 'seem to V' 형태로 to부정사를 보어로 취하는 동사이며 동명사를 바로 이어 쓰지 않는다",
+            "긴 수식어(관계사절, 분사구 등)가 주어와 동사 사이에 들어가도 동사는 문장의 진짜 주어 핵에 수를 맞춘다",
+            "등위 구조에서 반복되는 be동사(were)는 생략될 수 있으며 이때 뒤에 이어지는 과거분사도 수동의 의미를 유지한다"
+          ],
+          "tags": [
+            "어법",
+            "to부정사",
+            "수일치",
+            "능동태와수동태",
+            "대명사",
+            "형용사와부사"
+          ],
+          "difficulty": "INTERMEDIATE",
+          "markedExpressions": [
+            {
+              "label": "(A)",
+              "expression": "it",
+              "isError": false,
+              "errorExpression": "it",
+              "surroundingText": "Clear and perfect as it might appear to our eyes, down at the",
+              "pointCode": "g"
+            },
+            {
+              "label": "(B)",
+              "expression": "imperceptibly",
+              "isError": false,
+              "errorExpression": "imperceptibly",
+              "surroundingText": "behaves as a liquid, even an imperceptibly viscous one, even over long",
+              "pointCode": "f"
+            },
+            {
+              "label": "(C)",
+              "expression": "are",
+              "isError": false,
+              "errorExpression": "are",
+              "surroundingText": "than the top, are generally not that way because the glass",
+              "pointCode": "d"
+            },
+            {
+              "label": "(D)",
+              "expression": "solidified",
+              "isError": false,
+              "errorExpression": "solidified",
+              "surroundingText": "way they were blown and solidified in the first place.",
+              "pointCode": "e"
+            },
+            {
+              "label": "(E)",
+              "expression": "to obey",
+              "isError": true,
+              "errorExpression": "obeying",
+              "surroundingText": "Glass seems to obey most molecular laws.",
+              "pointCode": "k",
+              "correction": "to obey"
+            }
+          ],
+          "options": [
+            {
+              "label": "(A)",
+              "text": "it"
+            },
+            {
+              "label": "(B)",
+              "text": "imperceptibly"
+            },
+            {
+              "label": "(C)",
+              "text": "are"
+            },
+            {
+              "label": "(D)",
+              "text": "solidified"
+            },
+            {
+              "label": "(E)",
+              "text": "obeying"
+            }
+          ],
+          "wrongOptionExplanations": {
+            "(C)": "주어는 'Those misshapen sheets of glass'로 복수이며, 그 사이에 삽입된 'you sometimes see in old stained-glass windows'나 'thicker at the bottom than the top' 같은 수식어는 수일치에 영향을 주지 않는다. 따라서 복수 동사 'are'는 어법상 옳다.",
+            "(D)": "'they were blown and solidified'에서 반복되는 'were'가 생략된 구조로, 유리판이 '만들어지고 굳혀진' 대상이므로 수동의 과거분사 'solidified'가 올바르게 쓰였다.",
+            "(B)": "'imperceptibly'는 형용사 'viscous'를 수식하는 부사이므로 부사형 어미 '-ly'가 붙은 이 형태가 어법상 옳다.",
+            "(A)": "이 'it'은 뒤에 이어지는 문맥에서 언급되는 'glass'를 가리키는 단수 대명사로, 단수 명사를 받는 데 어법상 문제가 없다."
+          },
+          "correctAnswers": [
+            "(E)"
+          ],
+          "passageWithMarkers": "The structure of glass is, frankly, a bit of a mess. Clear and perfect as __(A) it__ might appear to our eyes, down at the molecular level, glass looks more like a random ball-pit of atoms. The technical term for this mess depends on who you're asking: for some scientists it is an \"amorphous solid,\" for others a \"supercooled liquid.\" In theory it's both liquid and solid, though, given the way it behaves, in practice it's really the latter. In fact, at room temperature glass never behaves as a liquid, even an __(B) imperceptibly__ viscous one, even over long periods of time (though it can \"sweat\" if you don't add enough lime to the mix). Those misshapen sheets of glass you sometimes see in old stained-glass windows, thicker at the bottom than the top, __(C) are__ generally not that way because the glass is slowly sinking over time. Unless the church has endured temperatures of more than 400˚C, the chances are they are uneven because that's the way they were blown and __(D) solidified__ in the first place. Flat glass was only developed in the nineteenth century and we had to wait until the middle of the twentieth century for truly flat, thin sheets of glass. The paradox is that, despite it being one of the very oldest human-made substances, scientists still struggle to comprehend why glass behaves the way it does. Glass seems __(E) obeying__ most molecular laws. As one glassmaker put it, glass is not a material; it's a state.",
+          "_typeId": "GRAMMAR_ERROR",
+          "_typeLabel": "어법 판단",
+          "_generationPlan": "PREMIUM"
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "type": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "attempts": 1,
+      "relaxedFallback": false,
+      "durationMs": 148661,
+      "rejectionSummary": {
+        "total": 0,
+        "phaseCounts": {
+          "model": 0,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "message": "Rejected candidates: 0"
+      },
+      "usageEvents": [
+        {
+          "phase": "question_generation",
+          "subType": "GRAMMAR_ERROR",
+          "qualityMode": "strict",
+          "difficulty": "KILLER",
+          "generationPlan": "PREMIUM",
+          "usage": {
+            "inputTokens": 24098,
+            "inputTokenDetails": {
+              "noCacheTokens": 24098,
+              "cacheReadTokens": 0
+            },
+            "outputTokens": 12086,
+            "outputTokenDetails": {
+              "textTokens": 12086,
+              "reasoningTokens": 0
+            },
+            "totalTokens": 36184,
+            "raw": {
+              "prompt_tokens": 24098,
+              "completion_tokens": 12086,
+              "total_tokens": 36184,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "cost": 0.169056,
+              "is_byok": false,
+              "cost_details": {
+                "upstream_inference_cost": 0.169056,
+                "upstream_inference_prompt_cost": 0.048196,
+                "upstream_inference_completions_cost": 0.12086
+              }
+            },
+            "reasoningTokens": 0,
+            "cachedInputTokens": 0
+          },
+          "provider": "atlascloud",
+          "modelId": "anthropic/claude-sonnet-5",
+          "attempts": 1,
+          "durationMs": 125520
+        },
+        {
+          "phase": "question_generation",
+          "subType": "GRAMMAR_ERROR",
+          "qualityMode": "strict",
+          "difficulty": "KILLER",
+          "generationPlan": "PREMIUM",
+          "usage": {
+            "inputTokens": 17779,
+            "inputTokenDetails": {
+              "noCacheTokens": 17779,
+              "cacheReadTokens": 0
+            },
+            "outputTokens": 2129,
+            "outputTokenDetails": {
+              "textTokens": 2129,
+              "reasoningTokens": 0
+            },
+            "totalTokens": 19908,
+            "raw": {
+              "prompt_tokens": 17779,
+              "completion_tokens": 2129,
+              "total_tokens": 19908,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "cost": 0.056848,
+              "is_byok": false,
+              "cost_details": {
+                "upstream_inference_cost": 0.056848,
+                "upstream_inference_prompt_cost": 0.035558,
+                "upstream_inference_completions_cost": 0.02129
+              }
+            },
+            "reasoningTokens": 0,
+            "cachedInputTokens": 0
+          },
+          "provider": "atlascloud",
+          "modelId": "anthropic/claude-sonnet-5",
+          "attempts": 1,
+          "durationMs": 23123
+        }
+      ],
+      "firstQuestion": {
+        "correctAnswer": "(C), (F)",
+        "difficulty": "KILLER",
+        "optionCount": 7,
+        "markerCount": 7
+      },
+      "questions": [
+        {
+          "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것을 모두 고르시오.",
+          "correctAnswer": "(C), (F)",
+          "explanation": "(C)의 자리는 'Those misshapen sheets of glass you sometimes see in old stained-glass windows, thicker at the bottom than the top' 전체가 주어이며, 그 핵심 명사는 복수인 'sheets'이다. 중간에 있는 'windows'나 'the top' 같은 단수 명사에 이끌려 단수 동사를 쓰면 안 되고, 복수 동사 'are'가 와야 하므로 표시된 'is'는 틀렸다. (F)의 자리에 표시된 'been'은 조동사 없이 단독으로 쓰인 과거분사인데, 'despite'라는 전치사 뒤에는 대명사 'it'을 의미상 주어로 하는 현재분사(동명사) 구문이 와야 하므로 'been'은 이 자리에 올 수 없고 'being'으로 고쳐 'it being one of the very oldest human-made substances'라는 명사절 역할을 하게 해야 한다. 나머지 (A) it, (B) than the top, (D) solidified, (E) was only developed, (G) As는 각각 대명사 지시, 비교구문, 병렬구조, 능동태/수동태, 접속사 용법상 모두 올바르다.",
+          "keyPoints": [
+            "주어와 동사 사이에 여러 수식어(관계사절, 분사구, 전치사구)가 끼어 있을 때는 수식어 속 명사에 이끌리지 않고 진짜 주어의 핵심 명사를 찾아 수를 일치시켜야 한다.",
+            "despite/with + 명사(대명사) + 분사 구조에서는 능동·진행 의미의 현재분사(-ing)가 오며, 조동사 없는 단독 과거분사는 올 수 없다.",
+            "비교구문(than), 병렬구조(and로 연결된 두 과거분사), 능동태/수동태(be+p.p.), 대명사 지시, 접속사 As의 용법도 함께 점검해야 한다."
+          ],
+          "tags": [
+            "수일치",
+            "분사구문",
+            "병렬구조",
+            "대명사",
+            "비교구문",
+            "능동태와 수동태",
+            "접속사와 전치사"
+          ],
+          "difficulty": "KILLER",
+          "correctAnswers": [
+            "(C)",
+            "(F)"
+          ],
+          "markedExpressions": [
+            {
+              "label": "(A)",
+              "expression": "it",
+              "isError": false,
+              "errorExpression": "it",
+              "surroundingText": "Clear and perfect as it might appear to our eyes, down at the",
+              "pointCode": "g"
+            },
+            {
+              "label": "(B)",
+              "expression": "than the top",
+              "isError": false,
+              "errorExpression": "than the top",
+              "surroundingText": "in old stained-glass windows, thicker at the bottom than the top, are generally",
+              "pointCode": "m"
+            },
+            {
+              "label": "(C)",
+              "expression": "are",
+              "isError": true,
+              "errorExpression": "is",
+              "surroundingText": "thicker at the bottom than the top, are generally not that way because",
+              "pointCode": "d",
+              "correction": "are"
+            },
+            {
+              "label": "(D)",
+              "expression": "solidified",
+              "isError": false,
+              "errorExpression": "solidified",
+              "surroundingText": "because that's the way they were blown and solidified in the first place.",
+              "pointCode": "i"
+            },
+            {
+              "label": "(E)",
+              "expression": "was only developed",
+              "isError": false,
+              "errorExpression": "was only developed",
+              "surroundingText": "Flat glass was only developed in the nineteenth century and we had",
+              "pointCode": "e"
+            },
+            {
+              "label": "(F)",
+              "expression": "being",
+              "isError": true,
+              "errorExpression": "been",
+              "surroundingText": "despite it being one of the very oldest human-made substances, scientists still",
+              "pointCode": "c",
+              "correction": "being"
+            },
+            {
+              "label": "(G)",
+              "expression": "As",
+              "isError": false,
+              "errorExpression": "As",
+              "surroundingText": "As one glassmaker put it, glass is not a material; it's a state.",
+              "pointCode": "l"
+            }
+          ],
+          "options": [
+            {
+              "label": "(A)",
+              "text": "it"
+            },
+            {
+              "label": "(B)",
+              "text": "than the top"
+            },
+            {
+              "label": "(C)",
+              "text": "is"
+            },
+            {
+              "label": "(D)",
+              "text": "solidified"
+            },
+            {
+              "label": "(E)",
+              "text": "was only developed"
+            },
+            {
+              "label": "(F)",
+              "text": "been"
+            },
+            {
+              "label": "(G)",
+              "text": "As"
+            }
+          ],
+          "wrongOptionExplanations": {
+            "(A)": "'as it might appear to our eyes'에서 'it'은 뒤이어 나오는 주어 'glass'를 가리키는 단수 대명사로, 수와 지시 대상이 정확히 일치하므로 올바르다.",
+            "(B)": "'thicker at the bottom than the top'는 비교급 'thicker'와 짝을 이루는 'than' 비교구문으로 형태가 올바르다.",
+            "(D)": "'they were blown and solidified'에서 'solidified'는 앞의 'blown'과 함께 조동사 'were'에 걸리는 두 번째 과거분사로, 병렬 형태가 올바르다.",
+            "(E)": "'Flat glass was only developed'는 주어 'Flat glass'가 발전시키는 행위의 대상이므로 수동태 'was developed'가 올바르게 쓰였다.",
+            "(G)": "'As one glassmaker put it'에서 'As'는 완전한 절 'one glassmaker put it'을 이끄는 접속사로 쓰였으므로 올바르다."
+          },
+          "passageWithMarkers": "The structure of glass is, frankly, a bit of a mess. Clear and perfect as __(A) it__ might appear to our eyes, down at the molecular level, glass looks more like a random ball-pit of atoms. The technical term for this mess depends on who you're asking: for some scientists it is an \"amorphous solid,\" for others a \"supercooled liquid.\" In theory it's both liquid and solid, though, given the way it behaves, in practice it's really the latter. In fact, at room temperature glass never behaves as a liquid, even an imperceptibly viscous one, even over long periods of time (though it can \"sweat\" if you don't add enough lime to the mix). Those misshapen sheets of glass you sometimes see in old stained-glass windows, thicker at the bottom __(B) than the top__, __(C) is__ generally not that way because the glass is slowly sinking over time. Unless the church has endured temperatures of more than 400˚C, the chances are they are uneven because that's the way they were blown and __(D) solidified__ in the first place. Flat glass __(E) was only developed__ in the nineteenth century and we had to wait until the middle of the twentieth century for truly flat, thin sheets of glass. The paradox is that, despite it __(F) been__ one of the very oldest human-made substances, scientists still struggle to comprehend why glass behaves the way it does. Glass seems to obey most molecular laws. __(G) As__ one glassmaker put it, glass is not a material; it's a state.",
+          "_typeId": "GRAMMAR_ERROR",
+          "_typeLabel": "어법 판단",
+          "_generationPlan": "PREMIUM"
+        }
+      ]
+    }
+  ]
+}

@@ -157,20 +157,36 @@ export function wrapParagraph(paragraph: string, maxUnits: number): string[] {
   return lines;
 }
 
-export function textToLines(text: string, columnWidth: number, fontSize: number): string[] {
+// 랩핑된 행 + "원문 행(\n 경계)의 첫 랩행인지" 플래그. 렌더 조인(joinRenderedLinesForDisplay/
+// joinKoStructLines)이 래핑 우연(문장 중간 행이 "(A)"·"3.5" 등으로 시작)을 리스트/시행으로
+// 오인하지 않도록, 원문 행 경계를 페이지네이션이 직접 내려준다.
+export type WrappedLine = { line: string; isSourceLineStart: boolean };
+
+export function textToLinesWithMeta(
+  text: string,
+  columnWidth: number,
+  fontSize: number,
+): WrappedLine[] {
   if (!text.trim()) return [];
   const maxUnits = maxUnitsPerLine(columnWidth, fontSize);
-  const lines: string[] = [];
+  const lines: WrappedLine[] = [];
 
   for (const paragraph of text.replace(/\r/g, "").split("\n")) {
     if (!paragraph.trim()) {
-      lines.push("");
+      lines.push({ line: "", isSourceLineStart: true });
       continue;
     }
-    lines.push(...wrapParagraph(paragraph.trim(), maxUnits));
+    wrapParagraph(paragraph.trim(), maxUnits).forEach((line, lineIndex) => {
+      lines.push({ line, isSourceLineStart: lineIndex === 0 });
+    });
   }
 
   return lines;
+}
+
+export function textToLines(text: string, columnWidth: number, fontSize: number): string[] {
+  // textToLinesWithMeta 와 동일 로직(위임) — 행 문자열 출력은 종전과 byte 동일.
+  return textToLinesWithMeta(text, columnWidth, fontSize).map((w) => w.line);
 }
 
 export function estimateTextLines(text: string, columnWidth: number, fontSize: number): number {
@@ -383,6 +399,17 @@ export function boxTextToLines(
   return lines.length > 0 ? lines : [""];
 }
 
+export function boxTextToLinesWithMeta(
+  text: string,
+  settings: PaginationSettings,
+  style: Extract<StructRowStyle, "passage" | "summary" | "given">,
+  fontPx?: number,
+): WrappedLine[] {
+  const fontSize = fontPx ?? densityFontPx(settings);
+  const lines = textToLinesWithMeta(text, structuredBoxTextWidth(style, settings), fontSize);
+  return lines.length > 0 ? lines : [{ line: "", isSourceLineStart: true }];
+}
+
 export function columnTextToLines(
   text: string,
   settings: PaginationSettings,
@@ -390,6 +417,18 @@ export function columnTextToLines(
 ): string[] {
   const lines = questionToLines(text, settings, fontPx);
   return lines.length > 0 ? lines : [""];
+}
+
+export function columnTextToLinesWithMeta(
+  text: string,
+  settings: PaginationSettings,
+  fontPx?: number,
+): WrappedLine[] {
+  if (!text) return [{ line: "", isSourceLineStart: true }];
+  const { columnWidth } = pageMetrics(settings, 0);
+  const fontSize = fontPx ?? densityFontPx(settings);
+  const lines = textToLinesWithMeta(normalizeQuestionText(text), columnWidth, fontSize);
+  return lines.length > 0 ? lines : [{ line: "", isSourceLineStart: true }];
 }
 
 export function buildStructLineBlocks(
@@ -428,7 +467,7 @@ export function buildStructLineBlocks(
       return;
     }
 
-    let lines: string[];
+    let lines: WrappedLine[];
     let style: StructRowStyle;
     let lineHeight: number;
     let segChrome: number;
@@ -436,23 +475,23 @@ export function buildStructLineBlocks(
 
     if (seg.kind === "box") {
       style = seg.boxStyle;
-      lines = boxTextToLines(seg.text, settings, style, fontPx);
+      lines = boxTextToLinesWithMeta(seg.text, settings, style, fontPx);
       lineHeight = boxLineH;
       segChrome = STRUCTURE_GAP + structuredBoxChrome(style, settings);
     } else if (seg.kind === "para") {
-      lines = columnTextToLines(seg.text, settings, fontPx);
+      lines = columnTextToLinesWithMeta(seg.text, settings, fontPx);
       style = "para";
       lineHeight = textLineH;
       segChrome = STRUCTURE_GAP;
       paraLabel = seg.label;
     } else {
-      lines = columnTextToLines(seg.text, settings, fontPx);
+      lines = columnTextToLinesWithMeta(seg.text, settings, fontPx);
       style = "text";
       lineHeight = textLineH;
       segChrome = STRUCTURE_GAP;
     }
 
-    lines.forEach((line, lineIndex) => {
+    lines.forEach((wrapped, lineIndex) => {
       const lineSegChrome =
         segChrome +
         (lineIndex === 0 && style === "passage"
@@ -465,9 +504,10 @@ export function buildStructLineBlocks(
         segIndex,
         style,
         paraLabel,
-        line,
+        line: wrapped.line,
         isSegStart: lineIndex === 0,
         isSegEnd: lineIndex === lines.length - 1,
+        isSourceLineStart: wrapped.isSourceLineStart,
         lineHeight,
         segChrome: lineSegChrome,
         height: lineHeight + (lineIndex === 0 ? lineSegChrome : 0),

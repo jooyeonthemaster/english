@@ -203,8 +203,7 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
   const reconciliationPeriodEndValue =
     selectedRangeEndValue ?? (mode === "monthly" ? lastDayOfMonthInput(monthValue) : dateValue);
   const hasActualReconciliation = dashboard.billingReconciliation.hasActual;
-  const canSyncBilling =
-    dashboard.billingSync.googleConfigured || dashboard.billingSync.anthropicConfigured;
+  const canSyncBilling = dashboard.billingSync.googleConfigured;
 
   return (
     <div className="space-y-6">
@@ -476,11 +475,11 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
                 </Badge>
                 <Badge className={cn(
                   "border-0 px-1.5 py-0 text-[10px] font-semibold",
-                  dashboard.billingSync.anthropicConfigured
+                  dashboard.billingSync.atlasConfigured
                     ? "bg-emerald-100 text-emerald-700"
                     : "bg-gray-200 text-gray-500",
                 )}>
-                  Anthropic {dashboard.billingSync.anthropicConfigured ? "연결" : "미설정"}
+                  AtlasCloud {dashboard.billingSync.atlasConfigured ? "연결" : "미설정"}
                 </Badge>
               </div>
 
@@ -490,9 +489,8 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
                   defaultValue="ALL"
                   className="h-9 rounded-md border border-gray-200 bg-white px-2 text-[12px] text-gray-700 outline-none focus:border-slate-400"
                 >
-                  <option value="ALL">Google + Anthropic</option>
+                  <option value="ALL">Google Billing</option>
                   <option value="GOOGLE">Google</option>
-                  <option value="ANTHROPIC">Anthropic</option>
                 </select>
                 <input
                   type="number"
@@ -570,7 +568,6 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
               >
                 <option value="MANUAL">Manual</option>
                 <option value="GOOGLE_BILLING_EXPORT">Google Billing</option>
-                <option value="ANTHROPIC_COST_REPORT">Anthropic Report</option>
                 <option value="ATLAS_INVOICE">Atlas Invoice</option>
                 <option value="INVOICE">Invoice</option>
               </select>

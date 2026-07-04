@@ -1,3 +1,4 @@
+import { buildGrammarNineFrameGuide } from "@/lib/question-quality/candidate-blocks/grammar";
 import type { AnalysisReport, LearningWorksheetSection } from "./schema";
 
 /**
@@ -259,6 +260,13 @@ export function buildLearningWorksheetPrompt(input: BuildAnalysisReportPromptInp
         { "no": 1, "options": ["been heard", "heard"], "answer": "heard", "explanation": "현재완료 능동 구조이므로 heard가 맞습니다." }
       ]
     },
+    "vocabularySelection": {
+      "title": "어휘 선택",
+      "passage": "원문 흐름을 그대로 유지하면서 핵심 어휘 지점에 [단어A / 단어B]와 번호를 넣은 본문(선택지 두 단어는 품사·형태가 동일하고 뜻만 다름)",
+      "choices": [
+        { "no": 1, "options": ["preserved", "reconstructed"], "answer": "reconstructed", "explanation": "정답은 reconstructed. 같은 문장의 'we reinterpret the past'가 '보존이 아니라 재구성'을 강제하고, 오답 preserved는 reconstructed와 상보 반의어라 '능동적으로 다시 만든다'는 문맥과 동시 참이 될 수 없어 배제됩니다." }
+      ]
+    },
     "vocabularyCloze": {
       "title": "어휘 빈칸 완성",
       "passage": "원문 흐름을 유지하면서 주요 어휘를 번호가 붙은 빈칸 또는 밑줄로 바꾼 본문",
@@ -284,7 +292,7 @@ export function buildLearningWorksheetPrompt(input: BuildAnalysisReportPromptInp
 - logicRows: 5~8개. 문장별 기능을 "주제 제시 / 오해 교정 / 양보 / 역접 / 비유 결론"처럼 시험에 도움이 되게 잡으세요.
 - cloze/practice: 8~14개 빈칸. 빈칸은 핵심어구, 연결 논리, 비유 핵심, 함축 표현 위주로 고르세요. 관사/전치사 하나처럼 학습 효과가 약한 빈칸은 피하고, 빈칸 앞뒤 문맥만으로 복원 훈련이 되게 만드세요. wordBank는 스크램블 단어 목록으로 쓰일 수 있게 정답 어구를 모두 포함하세요.
 - drills: PDF 워크북처럼 어법 선택 2~4개와 주요문장 단어배열 영작 1~2개를 가능하면 생성하세요. 지문에 억지로 만들기 어려우면 줄여도 됩니다. 단순 철자, 대소문자, 의미 차이가 거의 없는 선택지는 금지합니다.
-- workbookSet: 반드시 생성하세요. 첨부 워크북처럼 ① 주제/요지 ② 어법 선택 ③ 어휘 빈칸 완성 ④ 주요문장 단어배열 영작을 한 세트로 구성합니다.
+- workbookSet: 반드시 생성하세요. 첨부 워크북처럼 ① 주제/요지 ② 어법 선택 ③ 어휘 선택 ④ 어휘 빈칸 완성 ⑤ 주요문장 단어배열 영작을 한 세트로 구성합니다.
   - Student-facing fields must never print answers or explanations directly after the question. Keep all answers only in answer/explanation fields.
   - cloze.wordBank and practice.wordBank must be shuffled for students. Their visible order must NOT match the answer/item order.
   - vocabularyCloze.passage must contain numbered blanks such as "(1) __________"; never output "[answer]①" or a filled answer next to the number.
@@ -294,6 +302,15 @@ export function buildLearningWorksheetPrompt(input: BuildAnalysisReportPromptInp
   - 어법 선택지의 정답 위치는 반드시 섞으세요. 모든 정답이 첫 번째 선택지에 오면 실패입니다. 최소 2개 이상은 두 번째 선택지가 정답이 되게 하세요.
   - 어법 포인트는 다음 중 지문에 자연스럽게 있는 것만 고릅니다: 수동/능동, 준동사(분사·to부정사·동명사), 관계사/동격 that, 주어-동사 수일치, 병렬구조, 형용사/부사, 대명사 지시, 접속사/전치사, 시제/완료, 비교급/강조. 단어 뜻만 알면 풀리는 문제는 어법 선택으로 만들지 마세요.
   - 어법 오답은 실제 문법적으로 왜 틀리는지 설명 가능해야 합니다. "어색하다" 같은 해설은 금지합니다.
+${buildGrammarNineFrameGuide("worksheet")}
+  - vocabularySelection.passage는 ❗**원문의 모든 문장을 순서대로 한 문장도 빠짐없이 그대로 포함**해야 합니다(요약·생략·문장 합치기·바꿔쓰기 금지). 그 본문 위에서 어휘 포인트 4~8곳만 [단어A / 단어B] 형식 선택지로 바꾸고 번호를 붙입니다. choices에는 각 번호의 options, answer, explanation을 모두 씁니다. 원문 문장이 하나라도 빠지면 실패입니다. (grammarSelection.passage와 동일 규칙)
+  - ❗**어휘 선택은 어법 선택과 완전히 다릅니다 — 오직 '뜻(문맥)'으로만 정답이 갈려야 합니다.** 각 번호의 options는 **정확히 2개**로 하고, 두 선택지는 반드시 **품사·굴절·태·수가 동일한 서로 다른 어휘(lemma)**여야 합니다. 같은 단어의 형태 변이(put/be put, expected/were expected, that/what, faced/facing, 단수/복수, 능동/수동, 원급/비교급)는 절대 금지합니다 — 그것은 '어법 선택'입니다. 두 선택지를 서로 바꿔 넣어도 문장이 문법적으로는 둘 다 성립하고, 오직 뜻으로만 한쪽이 정답이어야 합니다. grammarSelection과 동일 어절을 어휘 포인트로 중복 지정하지 마세요(어법=형태, 어휘=의미로 역할 분리).
+  - 어휘 선택의 정답은 반드시 같은 문장 또는 인접 문장의 **문맥 단서**(대조 but/however/rather, 인과 because/so/thus, 예시·나열, 정의 재진술, 부정 재진술 중 최소 1개)로 **유일하게** 확정되어야 합니다. 문맥 단서가 없어 둘 다 말이 되는 중립적 자리라면 그 슬롯은 만들지 마세요("충분히 매력적이고 헷갈리지만 명확하다"가 핵심).
+  - 어휘 오답(distractor)은 정답과 **의미상 명확히 반대되거나 다른 결론을 낳는** 관계여야 합니다: ① 반의어(등급/상보/관계 반의어: preserved↔reconstructed, immediate↔gradual, accelerate↔suppress), ② 같은 의미장의 혼동 근접어(reverse/extension, uniform/dual, prospect/strain), ③ 긍/부정 평가 극성이 반대인 평가어(receptive/skeptical, reinforced/obscured). 유의어처럼 둘 다 통하는 쌍(복수정답), 철자·대소문자만 다른 쌍, 뜻 차이가 거의 없는 쌍은 금지합니다.
+  - not·never·hardly·far from·rather than 같은 부정·반전 문맥에는 **극성 반전 함정**을 세트당 최소 1개 넣으세요(단어 뜻만 보면 오답이 맞아 보이지만 부정 스코프를 계산해야 정답이 나오도록). 이때 해설에 "부정어 __ 때문에 극성이 반전된다"를 반드시 명시하세요.
+  - 대상 어휘는 **내용어(명사·동사·형용사·부사)**의 의미 핵(주제어·평가어·논리 전환어·비유 핵심어·콜로케이션 결속어)만 고릅니다. 관사·전치사·접속사 등 기능어, 고유명사·인명·지명·숫자·연도, 뜻이 자명한 쉬운 주변어, 형태로 갈리는 후보는 쓰지 마세요. 정답은 원문에 실제로 있는 단어로 하고, options의 두 단어는 지문 본문의 [A / B]와 철자·순서까지 일치시키며, 옵션 안에 대괄호 '['·']'를 넣지 마세요.
+  - 어휘 선택지의 정답 위치는 반드시 섞으세요. 모든 정답이 첫 번째 선택지에 오면 실패이며, 최소 2개 이상은 두 번째 선택지가 정답이 되게 하세요.
+  - 어휘 선택 해설(explanation)은 '어색하다/자연스럽다'가 아니라 **실제 문맥 근거**로 씁니다: (1) 정답을 강제하는 문맥 단서(어느 대조/인과/예시/정의재진술/부정재진술인지)를 원문 표현 인용으로 지목하고, (2) 오답이 왜 문맥과 모순되는지 그 의미 관계(반의/척도반대/의미장 혼동/평가극성)를 밝히세요. 문법 규칙으로 오답을 설명하면(수동이라 틀림 등) 실격입니다.
   - vocabularyCloze.passage는 ❗**원문의 모든 문장을 순서대로 한 문장도 빠짐없이 그대로 포함**해야 합니다(요약·생략·바꿔쓰기 금지). 그 본문 위에서 핵심 어휘 8~16개만 번호가 붙은 빈칸 "(1) __________" 으로 바꿉니다. blanks에는 정답, 뜻, 문맥 단서를 씁니다. 대상은 주제어, 논리 전환어, 평가어, 비유 핵심어, 콜로케이션 중심으로 고르고, 고유명사/숫자/쉽게 유추 불가능한 주변어는 피하세요. 원문 문장이 하나라도 빠지면 실패입니다.
   - wordOrders는 지문 핵심 문장 1~3개를 골라 한국어 단서와 원문 어순 조각을 섞은 chunks, 정답 문장을 제공합니다. chunks는 반드시 정답 순서와 다르게 뒤섞으세요. 정답 문장을 앞에서부터 그대로 자른 배열은 실패입니다.
 - 수능추론 5문항 세트는 별도 품질 집중 호출에서 생성합니다. 여기서는 inferenceSet을 만들지 말고 workbookSet, cloze, practice, drills에 집중하세요.
@@ -327,6 +344,7 @@ export function buildLearningWorksheetInferencePrompt(
     logicRows: worksheet.logicRows,
     workbookTopic: worksheet.workbookSet?.topicGist,
     workbookGrammarCount: worksheet.workbookSet?.grammarSelection.choices.length ?? 0,
+    workbookVocabSelectCount: worksheet.workbookSet?.vocabularySelection?.choices.length ?? 0,
     workbookVocabCount: worksheet.workbookSet?.vocabularyCloze.blanks.length ?? 0,
   };
 

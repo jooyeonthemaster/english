@@ -1,5 +1,6 @@
 import type { PointerEvent as ReactPointerEvent } from "react";
 import type { AnalysisSection, BlockMeta, CustomBlock } from "@/lib/passage-report/analysis-report/schema";
+import type { KoAnalysisSectionKind } from "@/lib/passage-report/analysis-report/ko-schema";
 import type { CoverEdit } from "../cover-templates";
 import type { ActivityAction } from "../custom-activity-renders";
 import type { MetaEdit, SectionEdit, WrapKind } from "../report-sections";
@@ -50,7 +51,7 @@ export interface ReportEdit {
 export interface ItemDescriptor {
   id: string;
   sectionIndex: number;
-  kind: AnalysisSection["kind"] | "title" | "custom" | "cover";
+  kind: AnalysisSection["kind"] | KoAnalysisSectionKind | "title" | "custom" | "cover";
   wrap: WrapKind;
   no: number;
   isSectionStart: boolean;

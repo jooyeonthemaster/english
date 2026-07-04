@@ -2,6 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import {
+  DEFAULT_WEBTOON_IMAGE_PLAN,
+  type WebtoonImagePlanId,
+} from "@/lib/webtoon-models";
 import type {
   WebtoonRow,
   WebtoonStyleId,
@@ -37,8 +41,15 @@ interface PassageMin {
   content: string;
 }
 
-export function useWebtoonState({ academyId }: { academyId: string }) {
+export function useWebtoonState({
+  academyId,
+  subjectScope,
+}: {
+  academyId: string;
+  subjectScope?: "KOREAN";
+}) {
   void academyId;
+  const listScopeQuery = subjectScope === "KOREAN" ? "&scope=KOREAN" : "";
   const [items, setItems] = useState<WebtoonRow[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -53,7 +64,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
   useEffect(() => {
     isMountedRef.current = true;
     setLoading(true);
-    fetch(`/api/webtoons/list?limit=${MAX_RECENT}`)
+    fetch(`/api/webtoons/list?limit=${MAX_RECENT}${listScopeQuery}`)
       .then((r) => r.json() as Promise<ListResponse>)
       .then((data) => {
         if (!isMountedRef.current) return;
@@ -72,7 +83,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
       isMountedRef.current = false;
       if (pollTimer.current) clearTimeout(pollTimer.current);
     };
-  }, []);
+  }, [listScopeQuery]);
 
   useEffect(() => {
     const activeIds = activeKey.length > 0 ? activeKey.split(",") : [];
@@ -124,6 +135,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
       style: WebtoonStyleId,
       customPrompt: string,
       language: WebtoonLanguageId = DEFAULT_WEBTOON_LANGUAGE,
+      plan: WebtoonImagePlanId = DEFAULT_WEBTOON_IMAGE_PLAN,
     ): Promise<number> => {
       if (passages.length === 0) return 0;
 
@@ -134,7 +146,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
         const res = await fetch("/api/ai/webtoon/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ passageIds, style, language, customPrompt }),
+          body: JSON.stringify({ passageIds, style, language, customPrompt, plan }),
         });
         resData = await res.json();
 
@@ -168,18 +180,19 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
         const newRows = fresh.filter((r): r is WebtoonRow => r !== null);
         setItems((prev) => mergeRows(newRows, prev));
       } catch {
-        const refreshed = await fetch(`/api/webtoons/list?limit=${MAX_RECENT}`)
+        const refreshed = await fetch(`/api/webtoons/list?limit=${MAX_RECENT}${listScopeQuery}`)
           .then((r) => r.json() as Promise<ListResponse>)
           .catch(() => null);
         if (refreshed?.ok) setItems(refreshed.items);
       }
 
       toast.message(`${queuedIds.length}개 웹툰 생성을 시작했습니다.`, {
-        description: "완료되면 이 화면에 자동으로 표시됩니다.",
+        description:
+          "생성에는 약 3분이 걸려요. 다른 작업을 계속하셔도 완료되면 이 화면에 자동으로 표시됩니다.",
       });
       return queuedIds.length;
     },
-    [],
+    [listScopeQuery],
   );
 
   const handleRetry = useCallback(
@@ -248,7 +261,7 @@ export function useWebtoonState({ academyId }: { academyId: string }) {
         toast.error(err instanceof Error ? err.message : "검수 상태 변경 실패");
       }
     },
-    [items],
+    [items, listScopeQuery],
   );
 
   return {

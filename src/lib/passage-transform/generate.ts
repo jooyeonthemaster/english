@@ -2,6 +2,7 @@ import { APICallError, generateObject } from "ai";
 import type { z } from "zod";
 
 import { googleGenerativeAI } from "@/lib/ai";
+import { ATLAS_TRANSFORM_MODEL_ID } from "@/lib/atlas-ai";
 import {
   paraphraseResultSchema,
   prependResultSchema,
@@ -17,9 +18,7 @@ import { buildParaphrasePrompt, buildPrependPrompt } from "./prompts";
 // 빠른 인터랙션이라 별도의 경량 모델을 쓴다. 모델은 env 로 오버라이드 가능.
 // ============================================================================
 
-// `||` + trim (NOT `??`): 빈 env("")는 실제 모델로 폴백해야 한다.
-export const TRANSFORM_MODEL_ID =
-  process.env.GEMINI_TRANSFORM_MODEL?.trim() || "gemini-3.1-flash-lite";
+export const TRANSFORM_MODEL_ID = ATLAS_TRANSFORM_MODEL_ID;
 
 // 라우트 maxDuration(60s) 안에서: 25s 타임아웃 × 2시도 = 최대 ~50s.
 const TRANSFORM_TIMEOUT_MS = 25_000;
@@ -50,12 +49,6 @@ async function runTransform<T>({
         // 불어난다 — 재시도는 이 루프에서만 관리한다.
         maxRetries: 0,
         abortSignal: AbortSignal.timeout(TRANSFORM_TIMEOUT_MS),
-        providerOptions: {
-          google: {
-            // 변형은 추론보다 지시 추종 — thinking 은 끄고 지연을 최소화한다.
-            thinkingConfig: { thinkingBudget: 0 },
-          },
-        },
       });
       console.log(
         `[${logPrefix}] ${TRANSFORM_MODEL_ID} attempt ${attempt + 1} ok in ${Date.now() - startedAt}ms`,

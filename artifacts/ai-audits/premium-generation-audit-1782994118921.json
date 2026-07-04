@@ -1,0 +1,291 @@
+{
+  "createdAt": "2026-07-02T12:08:38.921Z",
+  "results": [
+    {
+      "ok": true,
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "type": "GRAMMAR_ERROR",
+      "difficulty": "INTERMEDIATE",
+      "attempts": 1,
+      "relaxedFallback": false,
+      "durationMs": 100246,
+      "rejectionSummary": {
+        "total": 0,
+        "phaseCounts": {
+          "model": 0,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "message": "Rejected candidates: 0"
+      },
+      "usageEvents": [
+        {
+          "phase": "question_generation",
+          "subType": "GRAMMAR_ERROR",
+          "qualityMode": "strict",
+          "difficulty": "INTERMEDIATE",
+          "generationPlan": "PREMIUM",
+          "usage": {
+            "inputTokens": 22337,
+            "inputTokenDetails": {
+              "noCacheTokens": 22337,
+              "cacheReadTokens": 0
+            },
+            "outputTokens": 8792,
+            "outputTokenDetails": {
+              "textTokens": 8792,
+              "reasoningTokens": 0
+            },
+            "totalTokens": 31129,
+            "raw": {
+              "prompt_tokens": 22337,
+              "completion_tokens": 8792,
+              "total_tokens": 31129,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "cost": 0.132594,
+              "is_byok": false,
+              "cost_details": {
+                "upstream_inference_cost": 0.132594,
+                "upstream_inference_prompt_cost": 0.044674,
+                "upstream_inference_completions_cost": 0.08792
+              }
+            },
+            "reasoningTokens": 0,
+            "cachedInputTokens": 0
+          },
+          "provider": "atlascloud",
+          "modelId": "anthropic/claude-sonnet-5",
+          "attempts": 1,
+          "durationMs": 100225
+        }
+      ],
+      "firstQuestion": {
+        "correctAnswer": "(D)",
+        "difficulty": "INTERMEDIATE",
+        "optionCount": 5,
+        "markerCount": 5
+      }
+    },
+    {
+      "ok": true,
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "type": "GRAMMAR_ERROR",
+      "difficulty": "KILLER",
+      "attempts": 1,
+      "relaxedFallback": false,
+      "durationMs": 144769,
+      "rejectionSummary": {
+        "total": 0,
+        "phaseCounts": {
+          "model": 0,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "message": "Rejected candidates: 0"
+      },
+      "usageEvents": [
+        {
+          "phase": "question_generation",
+          "subType": "GRAMMAR_ERROR",
+          "qualityMode": "strict",
+          "difficulty": "KILLER",
+          "generationPlan": "PREMIUM",
+          "usage": {
+            "inputTokens": 23954,
+            "inputTokenDetails": {
+              "noCacheTokens": 23954,
+              "cacheReadTokens": 0
+            },
+            "outputTokens": 13321,
+            "outputTokenDetails": {
+              "textTokens": 13321,
+              "reasoningTokens": 0
+            },
+            "totalTokens": 37275,
+            "raw": {
+              "prompt_tokens": 23954,
+              "completion_tokens": 13321,
+              "total_tokens": 37275,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "cost": 0.181118,
+              "is_byok": false,
+              "cost_details": {
+                "upstream_inference_cost": 0.181118,
+                "upstream_inference_prompt_cost": 0.047908,
+                "upstream_inference_completions_cost": 0.13321
+              }
+            },
+            "reasoningTokens": 0,
+            "cachedInputTokens": 0
+          },
+          "provider": "atlascloud",
+          "modelId": "anthropic/claude-sonnet-5",
+          "attempts": 1,
+          "durationMs": 144761
+        }
+      ],
+      "firstQuestion": {
+        "correctAnswer": "(D), (F)",
+        "difficulty": "KILLER",
+        "optionCount": 7,
+        "markerCount": 7
+      }
+    },
+    {
+      "ok": true,
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "type": "GRAMMAR_CHOICE_COMBO",
+      "difficulty": "INTERMEDIATE",
+      "attempts": 1,
+      "relaxedFallback": false,
+      "durationMs": 142230,
+      "rejectionSummary": {
+        "total": 0,
+        "phaseCounts": {
+          "model": 0,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "message": "Rejected candidates: 0"
+      },
+      "usageEvents": [
+        {
+          "phase": "question_generation",
+          "subType": "GRAMMAR_CHOICE_COMBO",
+          "qualityMode": "strict",
+          "difficulty": "INTERMEDIATE",
+          "generationPlan": "PREMIUM",
+          "usage": {
+            "inputTokens": 14129,
+            "inputTokenDetails": {
+              "noCacheTokens": 14129,
+              "cacheReadTokens": 0
+            },
+            "outputTokens": 13368,
+            "outputTokenDetails": {
+              "textTokens": 13368,
+              "reasoningTokens": 0
+            },
+            "totalTokens": 27497,
+            "raw": {
+              "prompt_tokens": 14129,
+              "completion_tokens": 13368,
+              "total_tokens": 27497,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "cost": 0.161938,
+              "is_byok": false,
+              "cost_details": {
+                "upstream_inference_cost": 0.161938,
+                "upstream_inference_prompt_cost": 0.028258,
+                "upstream_inference_completions_cost": 0.13368
+              }
+            },
+            "reasoningTokens": 0,
+            "cachedInputTokens": 0
+          },
+          "provider": "atlascloud",
+          "modelId": "anthropic/claude-sonnet-5",
+          "attempts": 1,
+          "durationMs": 142226
+        }
+      ],
+      "firstQuestion": {
+        "correctAnswer": "3",
+        "difficulty": "INTERMEDIATE",
+        "optionCount": 5
+      }
+    },
+    {
+      "ok": true,
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "type": "BLANK_INFERENCE",
+      "difficulty": "INTERMEDIATE",
+      "attempts": 1,
+      "relaxedFallback": false,
+      "durationMs": 39543,
+      "rejectionSummary": {
+        "total": 0,
+        "phaseCounts": {
+          "model": 0,
+          "postprocess": 0,
+          "quality": 0
+        },
+        "topCodes": [],
+        "message": "Rejected candidates: 0"
+      },
+      "usageEvents": [
+        {
+          "phase": "question_generation",
+          "subType": "BLANK_INFERENCE",
+          "qualityMode": "strict",
+          "difficulty": "INTERMEDIATE",
+          "generationPlan": "PREMIUM",
+          "usage": {
+            "inputTokens": 8137,
+            "inputTokenDetails": {
+              "noCacheTokens": 8137,
+              "cacheReadTokens": 0
+            },
+            "outputTokens": 3304,
+            "outputTokenDetails": {
+              "textTokens": 3304,
+              "reasoningTokens": 0
+            },
+            "totalTokens": 11441,
+            "raw": {
+              "prompt_tokens": 8137,
+              "completion_tokens": 3304,
+              "total_tokens": 11441,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "cost": 0.049314,
+              "is_byok": false,
+              "cost_details": {
+                "upstream_inference_cost": 0.049314,
+                "upstream_inference_prompt_cost": 0.016274,
+                "upstream_inference_completions_cost": 0.03304
+              }
+            },
+            "reasoningTokens": 0,
+            "cachedInputTokens": 0
+          },
+          "provider": "atlascloud",
+          "modelId": "anthropic/claude-sonnet-5",
+          "attempts": 1,
+          "durationMs": 39532
+        }
+      ],
+      "firstQuestion": {
+        "correctAnswer": "1",
+        "difficulty": "INTERMEDIATE",
+        "optionCount": 5
+      }
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import { LineRuleType } from "docx";
 import { KR_FONT } from "../styles";
+import { koTypeLabelMap } from "@/lib/korean/registry";
 
 
 
@@ -49,6 +50,8 @@ export const SUBTYPE_LABELS_DOCX: Record<string, string> = {
   ANTONYM: "반의어",
   CUSTOM: "커스텀",
   CUSTOM_LAYOUT: "커스텀",
+  // 국어(KO_*) 유형 라벨을 레지스트리에서 병합 (영어 라벨 무변경).
+  ...koTypeLabelMap(),
 };
 
 // 미리보기 px 기준값 → docx half-point.

@@ -4,6 +4,10 @@ import { z } from "zod";
 
 import { buildQuestionAnnotationBlock } from "@/lib/annotation-prompt";
 import { getStaffSession } from "@/lib/auth";
+import {
+  isKoreanSubject,
+  readKoKindFromTags,
+} from "@/lib/korean/core/passage-meta";
 import { CREDIT_COSTS, type OperationType } from "@/lib/credit-costs";
 import {
   InsufficientCreditsError,
@@ -413,6 +417,14 @@ export async function POST(req: NextRequest) {
             ? { [config.questionType]: config.questionTypeSettings }
             : undefined,
         diversity,
+        // KO(국어) 게이트(KO-GEN-4): trigger 워커·auto 라우트와 동일 배선 —
+        // 국어 지문이면 태그의 KO_KIND 를 지문 갈래로 전달해 생성 프롬프트
+        // ('지문 갈래:' 라벨)와 koContext.passageKind 저장이 경로 간 일치하게
+        // 한다. 영어 지문은 undefined 로 기존과 완전 동일(무회귀). findFirst 가
+        // include 조회라 subject·tags 스칼라는 이미 페치되어 있다.
+        koPassageKind: isKoreanSubject(passage.subject)
+          ? (readKoKindFromTags(passage.tags) ?? undefined)
+          : undefined,
       },
       {
         logPrefix: "WORKBENCH-FAST-Q-GEN",

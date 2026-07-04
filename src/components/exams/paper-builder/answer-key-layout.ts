@@ -61,6 +61,35 @@ function chunk<T>(items: T[], size: number): T[][] {
   return out;
 }
 
+// 누적 높이가 usable 을 넘기 직전까지 항목을 담아 페이지를 나눈다(그리디).
+// 균등 chunk 와 달리 항목별 실제 높이(줄바꿈 반영)를 합산하므로, 긴 정답이
+// 여러 줄로 접혀도 .exam-a4-page overflow:hidden 으로 잘려 사라지지 않는다.
+// 페이지당 최소 1개는 보장한다(거대한 단일 정답으로 무한루프 방지).
+function packByHeight(
+  entries: AnswerEntry[],
+  usable: number,
+  gap: number,
+  heightOf: (entry: AnswerEntry) => number,
+): AnswerEntry[][] {
+  const pages: AnswerEntry[][] = [];
+  let current: AnswerEntry[] = [];
+  let used = 0;
+  for (const entry of entries) {
+    const h = heightOf(entry);
+    const add = current.length === 0 ? h : gap + h;
+    if (current.length > 0 && used + add > usable) {
+      pages.push(current);
+      current = [entry];
+      used = h;
+    } else {
+      current.push(entry);
+      used += add;
+    }
+  }
+  if (current.length > 0) pages.push(current);
+  return pages;
+}
+
 export function buildAnswerKeyLayout(
   paperItems: PaperItem[],
   opts: { paperSize: PaperSize; density: Density },
@@ -83,11 +112,37 @@ export function buildAnswerKeyLayout(
   const headerHeight = 28; // 상단 슬림 헤더(제목/정답 라벨)
   const headingHeight = 48; // "정 답 표" 제목 + 구분선 + 여백
   const usable = pageHeight - padY * 2 - headerHeight - headingHeight;
-  // 한 행의 실측 높이(글자+상하 패딩+테두리): comfortable ≈ 25.7px, compact ≈ 21.7px.
-  // 인쇄 시 .exam-a4-page 가 overflow:hidden 이라, 마지막 행이 잘리지 않게 넉넉히 잡는다.
-  const rowPx = compact ? 22 : 26;
+  // 한 행(1줄)의 실측 높이: comfortable ≈ 25.7px, compact ≈ 21.7px. 경계 클립 방지를
+  // 위해 측정값보다 살짝 넉넉히 잡는다(과대추정=페이지 증가, 데이터 소실은 없음).
+  const rowPx = compact ? 23 : 27;
   const rowsPerPage = Math.max(1, Math.floor(usable / rowPx));
 
-  const perPage = mode === "grid" ? rowsPerPage * ANSWER_KEY_COLS : rowsPerPage;
-  return { mode, rowsPerPage, pages: chunk(entries, perPage) };
+  if (mode === "grid") {
+    // grid 는 5열을 열 우선으로 채우므로 행 수(rowsPerPage)로 분할한다.
+    const perPage = rowsPerPage * ANSWER_KEY_COLS;
+    return { mode, rowsPerPage, pages: chunk(entries, perPage) };
+  }
+
+  // list(긴 정답): 항목이 wide 셀에서 여러 줄로 접힌다. 고정 행수 분할은 추정 높이를
+  // 초과하는 분량을 overflow:hidden 으로 잘라 "중간 문항 정답이 통째로 사라지는" 버그를
+  // 낸다(예: 30~36 소실). 항목별 추정 줄 수로 실제 높이를 합산해 그리디로 분할한다.
+  const padX = compact ? 28 : 34;
+  const fontPx = compact ? 10.5 : 11.5;
+  const lineHeight = compact ? 1.4 : 1.45;
+  const lineHeightPx = fontPx * lineHeight;
+  const rowPadY = compact ? 6 : 8; // py-[3px] / py-1 (상+하)
+  const borderPx = 1; // border-b
+  const gap = 4; // space-y-1
+  // wide 셀 가용 폭: 페이지 폭 - 좌우 패딩 - 번호("53.") - 간격. 글자폭은 보수적으로(과대추정).
+  const numberColPx = 26;
+  const availWidth = Math.max(120, pageWidth - padX * 2 - numberColPx);
+  const charWidthPx = fontPx * 0.58; // 영문 비례폭 보수 추정(줄 수 과대평가 → 안전)
+  const charsPerLine = Math.max(20, Math.floor(availWidth / charWidthPx));
+  const heightOf = (entry: AnswerEntry): number => {
+    const len = Math.max(1, (entry.answer || "").length);
+    const lines = Math.max(1, Math.ceil(len / charsPerLine));
+    return lines * lineHeightPx + rowPadY + borderPx;
+  };
+
+  return { mode, rowsPerPage, pages: packByHeight(entries, usable, gap, heightOf) };
 }

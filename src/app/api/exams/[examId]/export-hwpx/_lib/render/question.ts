@@ -31,6 +31,15 @@ import { renderAnswerBlock } from "./answer";
 
 import { parseQuestionSections } from "@/app/api/exams/[examId]/export-docx/_lib/parse-question-sections";
 import {
+  KO_BOGI_HEADER_LINE_RE,
+  KO_CONDITION_HEADER_LINE,
+  KO_FOOTNOTE_LINE_RE,
+  KO_SOURCE_LINE_RE,
+  koPaperRenderModel,
+  koPaperSegmentsFromModel,
+  koPaperStemText,
+} from "@/components/exams/paper-builder/korean/ko-paper-adapter";
+import {
   formatInlineMarkersForSubtype,
   optionOrdinalLabel,
   shouldRenderOptionListForSubtype,
@@ -318,8 +327,10 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
       subType,
     ),
   ).trim();
+  // SENTENCE_TRANSFORM: 지문을 인라인으로 보여줄 때만 [원문] 블록을 제거한다(원문이 지문에
+  // 밑줄로 노출되므로 중복). 지문을 감추면(includePassage=false) [원문] 을 남겨 문장을 제공.
   const displayQuestionText =
-    subType === "SENTENCE_TRANSFORM"
+    subType === "SENTENCE_TRANSFORM" && item.includePassage !== false
       ? stripOriginalBlock(questionText)
       : questionText;
   const parsedOptions = (item.options ?? safeParseOptions(item.sourceQuestion.options))
@@ -331,6 +342,99 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
   const bodySize = compact ? SIZE.bodyCompact : SIZE.body;
   const showPassageTitle = layout.showPassageTitle === true;
   const passageTitle = printablePassageTitle(item);
+
+  // ── KO(국어) 문항 전용 렌더 ──
+  //   structuredData → 렌더모델 → 어댑터 세그먼트(지문/보기/조건 박스) — 웹/DOCX 와
+  //   1:1 정합. 발문은 koPaperStemText([n점]·부정어 __밑줄__ 포함). 어댑터 해소
+  //   실패(미등록 유형·데이터 결손)면 null → 아래 표준 경로(parseQuestionSections
+  //   + 【보기】/【조건】 마커)로 비파괴 강등된다.
+  const koModel = koPaperRenderModel(item);
+  if (koModel) {
+    const headerRuns: RunNode[] = [
+      txt(`${orderNum}. `, { size: qNumSize, bold: true, color: COLORS.black }),
+    ];
+    if (showMeta) {
+      headerRuns.push(
+        txt("  ", { size: qNumSize }),
+        txt(subTypeLabel ? `[${points}점 · ${subTypeLabel}]` : `[${points}점]`, {
+          size: SIZE.meta,
+          color: COLORS.gray,
+        }),
+      );
+    }
+    const koStem = koPaperStemText(koModel).trim();
+    if (koStem) {
+      headerRuns.push(
+        txt(" ", { size: bodySize }),
+        ...parseFormattedToRuns(koStem, { size: bodySize, bold: true }),
+      );
+    }
+    result.push({
+      kind: "p",
+      style: { spaceBefore: 80, spaceAfter: 100, lineSpacingPct: 158 },
+      runs: headerRuns,
+    });
+
+    for (const seg of koPaperSegmentsFromModel(koModel)) {
+      if (seg.kind !== "box") continue;
+      result.push(
+        ...renderKoStructBox(
+          seg.text,
+          seg.boxStyle === "passage" ? "passage" : "given",
+          compact,
+        ),
+      );
+    }
+
+    if (options.length > 0) {
+      result.push(...renderOptions({ options, subType, compact, contentWidthHpu }));
+    }
+
+    // 서술형 답란 (정답 미포함 경로에서만) — 표준 경로의 답란 블록 미러.
+    if (showAnswerSpace && (item.answerSpaceLines ?? 0) > 0) {
+      const lines = Math.max(1, Math.min(12, item.answerSpaceLines ?? 3));
+      for (let i = 0; i < lines; i++) {
+        result.push({
+          kind: "tbl",
+          colWidthsHpu: [contentWidthHpu],
+          borders: { left: NO, right: NO, top: NO, bottom: ANSWER_LINE },
+          rows: [
+            {
+              heightHpu: 720,
+              cells: [
+                {
+                  widthHpu: contentWidthHpu,
+                  heightHpu: 720,
+                  vAlign: "BOTTOM",
+                  borders: { left: NO, right: NO, top: NO, bottom: ANSWER_LINE },
+                  margins: { left: 0, right: 0, top: i === 0 ? 80 : 120, bottom: 0 },
+                  blocks: [{ kind: "p", style: { spaceAfter: 0 }, runs: [] }],
+                },
+              ],
+            },
+          ],
+        });
+      }
+    }
+
+    // 정답·해설 (해설 포함 모드)
+    if (includeAnswers) {
+      result.push(
+        ...renderAnswerBlock({
+          correctAnswer: formatStoredQuestionCorrectAnswer({
+            ...item.sourceQuestion,
+            correctAnswer: item.correctAnswer ?? item.sourceQuestion.correctAnswer ?? "",
+          }),
+          explanation: item.sourceQuestion.explanation,
+          hasOptions: options.length > 0,
+          contentWidthHpu,
+        }),
+      );
+    }
+
+    void GIVEN_BORDER;
+    return result;
+  }
 
   // ── TOPIC_SENTENCE_WRITING (주제문 영작) 전용 렌더 ──
   //   SUMMARY_WRITING 파이프를 미러하되 라벨/마커만 주제문용으로 바꾸고, mode 로 분기한다.
@@ -591,8 +695,13 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
     questionText,
     passage: { content: sourcePassageContent },
   });
+  // 출처 지문 인라인 렌더는 item.includePassage 토글을 존중한다(웹/DOCX 와 동일).
+  // CONDITIONAL_WRITING 처럼 정답이 지문 문장 번역인 유형은 기본 includePassage=false 라 미동봉.
   const inlineSourcePassage =
-    shouldRenderSourcePassageInsideQuestion(subType) && !summaryMc && !hasEmbeddedSourcePassage;
+    shouldRenderSourcePassageInsideQuestion(subType) &&
+    item.includePassage !== false &&
+    !summaryMc &&
+    !hasEmbeddedSourcePassage;
   const summaryParts = summaryComplete
     ? splitSummaryCompleteMcQuestionText(displayQuestionText)
     : { stem: "", summary: "" };
@@ -868,6 +977,74 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
 
   void GIVEN_BORDER;
   return result;
+}
+
+// -----------------------------------------------------------------------------
+// KO(국어) 박스 — 어댑터 세그먼트 텍스트(행 규약)를 HWPX 문단으로 변환.
+//   첫 행 "〈 보 기 〉" → 중앙 헤더 / "[조건]" → 볼드 라벨
+//   지문 말미 "- 작가, 「작품」 -" → 우측 정렬 / "*어휘: 뜻" → 축소 회색
+//   그 외 행 → 양끝맞춤 본문(__밑줄__·ⓐ 마커는 parseFormattedToRuns) — DOCX 미러.
+// -----------------------------------------------------------------------------
+function renderKoStructBox(
+  text: string,
+  style: "passage" | "given",
+  compact: boolean,
+): BlockNode[] {
+  const bodySize = compact ? SIZE.bodyCompact : SIZE.body;
+  const lineSpacingPct = compact ? 146 : 158;
+  const lines = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const blocks: BlockNode[] = [];
+
+  lines.forEach((line, idx) => {
+    if (idx === 0 && KO_BOGI_HEADER_LINE_RE.test(line)) {
+      blocks.push({
+        kind: "p",
+        style: { align: "CENTER", spaceBefore: 40, spaceAfter: 30, lineSpacingPct: 120 },
+        runs: [txt(line, { size: SIZE.meta, bold: true, color: COLORS.darkGray })],
+      });
+      return;
+    }
+    if (idx === 0 && line === KO_CONDITION_HEADER_LINE) {
+      blocks.push({
+        kind: "p",
+        style: { align: "LEFT", spaceBefore: 40, spaceAfter: 30, lineSpacingPct: 120 },
+        runs: [txt(line, { size: SIZE.meta, bold: true, color: COLORS.gray })],
+      });
+      return;
+    }
+    if (style === "passage" && KO_SOURCE_LINE_RE.test(line)) {
+      blocks.push({
+        kind: "p",
+        style: { align: "RIGHT", spaceBefore: 20, spaceAfter: 20, lineSpacingPct: 130 },
+        runs: [txt(line, { size: SIZE.meta, color: COLORS.gray })],
+      });
+      return;
+    }
+    if (style === "passage" && KO_FOOTNOTE_LINE_RE.test(line)) {
+      blocks.push({
+        kind: "p",
+        style: { align: "LEFT", spaceAfter: 20, lineSpacingPct: 130 },
+        runs: [txt(line, { size: SIZE.meta, color: COLORS.gray })],
+      });
+      return;
+    }
+    blocks.push({
+      kind: "p",
+      style: {
+        align: "JUSTIFY",
+        spaceAfter: idx < lines.length - 1 ? 40 : 0,
+        lineSpacingPct,
+      },
+      runs: parseFormattedToRuns(line, { size: bodySize }),
+    });
+  });
+
+  // 박스 간/박스-선지 간격 (renderPassage 말미 spacing 관행 미러)
+  blocks.push({ kind: "p", style: { spaceAfter: 100 }, runs: [] });
+  return blocks;
 }
 
 // 문항 블록 단위 서식(글자 크기 pt·굵게·기울임·정렬)을 렌더 결과에 후처리로 입힌다.

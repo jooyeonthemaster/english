@@ -550,7 +550,11 @@ export function PassageAnalysisModal({
                   />
                   <button
                     type="button"
-                    onClick={() => window.print()}
+                    onClick={() =>
+                      // 인쇄 전 웹폰트 로드 완료를 기다린다 — 폰트 미로드 상태로 window.print()가
+                      // 실행되면 브라우저가 프린트 준비 중 폰트를 받아 스풀 시작이 지연된다.
+                      void document.fonts.ready.then(() => window.print())
+                    }
                     title="인쇄"
                     aria-label="인쇄"
                     className="inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50"

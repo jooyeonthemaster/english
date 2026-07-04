@@ -64,11 +64,6 @@ export async function aiGradeText(input: AiGradeInput): Promise<AiGradeResult & 
         "wrong meaning or empty => verdict=incorrect, scorePct<=40",
       ],
     }),
-    providerOptions: {
-      google: {
-        thinkingConfig: { thinkingBudget: 0 },
-      },
-    },
   });
   const model = getTutorModelNameForAudit();
   await recordAiCost({

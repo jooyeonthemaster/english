@@ -5,7 +5,7 @@
 //   npx tsx scripts/test-passage-transform.ts            # 전체 (paraphrase + prepend)
 //   npx tsx scripts/test-passage-transform.ts paraphrase # 한 모드만
 //
-// .env 의 GEMINI_API_KEY 를 그대로 사용해 flash-lite 를 실제 호출하고,
+// .env 의 ATLASCLOUD_API_KEY 또는 OPENROUTER_API_KEY 를 사용해 flash-lite 를 실제 호출하고,
 // 결과를 사람이 검수할 수 있게 출력한다.
 // ============================================================================
 

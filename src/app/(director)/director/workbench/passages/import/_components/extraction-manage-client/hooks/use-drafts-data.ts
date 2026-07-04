@@ -31,6 +31,12 @@ interface UseDraftsDataParams {
    * refetch job-meta — not just drafts — for a brand-new job to surface.
    */
   refreshToken?: number;
+  /**
+   * 과목 스코프 — "KOREAN"=국어 라우트에서 마운트돼 국어 자료/잡만 조회·캐시한다.
+   * 미전달(undefined)=영어 기본(무회귀). 캐시 슬롯과 두 fetch(잡/자료) 모두 이
+   * 값으로 스코프된다.
+   */
+  subject?: "KOREAN";
 }
 
 type ExtractionJobMetaResponse = {
@@ -69,8 +75,17 @@ function mapJobMeta(data: ExtractionJobMetaResponse): Map<string, JobMetaSnapsho
   return m;
 }
 
-async function fetchJobMeta(signal?: AbortSignal): Promise<Map<string, JobMetaSnapshot>> {
-  const res = await fetch("/api/extraction/jobs?limit=200", {
+async function fetchJobMeta(
+  subject?: "KOREAN",
+  signal?: AbortSignal,
+): Promise<Map<string, JobMetaSnapshot>> {
+  // 과목 스코프 — 국어 라우트만 subject=KOREAN(국어 잡만). 미전달=영어 기본
+  // (서버가 국어 잡 제외). list-jobs 서버 필터가 신뢰 경계다.
+  const url =
+    subject === "KOREAN"
+      ? "/api/extraction/jobs?limit=200&subject=KOREAN"
+      : "/api/extraction/jobs?limit=200";
+  const res = await fetch(url, {
     credentials: "include",
     cache: "no-store",
     signal,
@@ -82,11 +97,12 @@ async function fetchJobMeta(signal?: AbortSignal): Promise<Map<string, JobMetaSn
 export function useDraftsData({
   onJobsRefresh: _onJobsRefresh,
   refreshToken = 0,
+  subject,
 }: UseDraftsDataParams) {
   void _onJobsRefresh;
 
   const [drafts, setDrafts] = useState<M1PassageDraftWithJob[]>(
-    () => getCachedDrafts() ?? [],
+    () => getCachedDrafts(subject) ?? [],
   );
   const [selectedDraftId, setSelectedDraftId] = useState<string | null>(null);
   // Sticky "last opened" id — keeps the most recently viewed draft visually
@@ -99,14 +115,14 @@ export function useDraftsData({
     useState<M1PassageDraftWithJob | null>(null);
   const [detailLoadingId, setDetailLoadingId] = useState<string | null>(null);
   const [loadingDetails, setLoadingDetails] = useState(
-    () => getCachedDrafts() === null,
+    () => getCachedDrafts(subject) === null,
   );
   const [resultScope, setResultScope] = useState<"all" | "job">("all");
   const [jobId, setJobId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [jobMetaByJobId, setJobMetaByJobId] = useState<
     Map<string, JobMetaSnapshot>
-  >(() => getCachedJobMeta() ?? new Map());
+  >(() => getCachedJobMeta(subject) ?? new Map());
 
   const bootstrapped = useRef(false);
   const detailRequestSeq = useRef(0);
@@ -212,15 +228,15 @@ export function useDraftsData({
     // If we already have a cached snapshot, repaint instantly and fetch in
     // the background so the user sees the list right away on nav. The
     // initial first-load (no cache) still shows the skeleton.
-    if (getCachedDrafts() === null) setLoadingDetails(true);
+    if (getCachedDrafts(subject) === null) setLoadingDetails(true);
     setError(null);
     try {
       const [nextDrafts, nextJobMeta] = await Promise.all([
-        fetchAllDraftPages(),
-        fetchJobMeta(),
+        fetchAllDraftPages(subject),
+        fetchJobMeta(subject),
       ]);
-      setCachedDrafts(nextDrafts);
-      setCachedJobMeta(nextJobMeta);
+      setCachedDrafts(nextDrafts, subject);
+      setCachedJobMeta(nextJobMeta, subject);
       setDrafts(nextDrafts);
       setJobMetaByJobId(nextJobMeta);
       setSelectedDraftId(null);
@@ -233,7 +249,7 @@ export function useDraftsData({
     } finally {
       setLoadingDetails(false);
     }
-  }, []);
+  }, [subject]);
 
   // ─── Silent polling for PENDING restoration ───
   const pollJobSilent = useCallback(async (nextJobId: string) => {
@@ -269,13 +285,13 @@ export function useDraftsData({
 
   const pollAllSilent = useCallback(async () => {
     try {
-      const nextDrafts = await fetchAllDraftPages();
-      setCachedDrafts(nextDrafts);
+      const nextDrafts = await fetchAllDraftPages(subject);
+      setCachedDrafts(nextDrafts, subject);
       setDrafts(nextDrafts);
     } catch {
       /* polling errors are non-fatal */
     }
-  }, []);
+  }, [subject]);
 
   const hasPendingDrafts = useMemo(
     () => drafts.some((draft) => draft.restorationStatus === "PENDING"),
@@ -313,12 +329,12 @@ export function useDraftsData({
   const refreshJobMeta = useCallback(
     async (signal?: AbortSignal): Promise<string | null> => {
       try {
-        const m = await fetchJobMeta(signal);
+        const m = await fetchJobMeta(subject, signal);
         if (signal?.aborted) return null;
         // Detect a fresh terminal transition vs the previous poll's snapshot.
         // Skip the first run (prev === null) to avoid duplicating the bootstrap
         // `loadAllDrafts` call.
-        const prev = getCachedJobMeta();
+        const prev = getCachedJobMeta(subject);
         let shouldRefetchDrafts = false;
         if (prev) {
           for (const [id, meta] of m) {
@@ -330,7 +346,7 @@ export function useDraftsData({
             }
           }
         }
-        setCachedJobMeta(m);
+        setCachedJobMeta(m, subject);
         setJobMetaByJobId(m);
         if (shouldRefetchDrafts) void pollAllSilent();
         // Signature for adaptive-poll's change detection.
@@ -340,7 +356,7 @@ export function useDraftsData({
         return null;
       }
     },
-    [pollAllSilent],
+    [pollAllSilent, subject],
   );
 
   // ─── Job meta polling (terminal-transition detector) ───
@@ -389,7 +405,7 @@ export function useDraftsData({
             draft.id === data.draft.id ? { ...draft, ...data.draft } : draft,
           ),
         );
-        patchCachedDraft(data.draft.id, data.draft);
+        patchCachedDraft(data.draft.id, data.draft, subject);
       } catch (err) {
         if (detailRequestSeq.current !== seq) return;
         if (!optimisticDraft) {
@@ -407,7 +423,7 @@ export function useDraftsData({
         }
       }
     },
-    [drafts],
+    [drafts, subject],
   );
 
   const closeDraftDetail = useCallback(() => {

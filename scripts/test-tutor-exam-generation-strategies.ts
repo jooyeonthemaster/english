@@ -1,4 +1,4 @@
-import * as fs from "node:fs";
+﻿import * as fs from "node:fs";
 import * as path from "node:path";
 import * as dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
@@ -6,7 +6,7 @@ import { PrismaClient } from "@prisma/client";
 dotenv.config({ path: path.join(process.cwd(), ".env") });
 dotenv.config({ path: path.join(process.cwd(), ".env.local"), override: true });
 
-process.env.GEMINI_MODEL ??= "gemini-3.5-flash";
+process.env.ATLASCLOUD_TEXT_MODEL ??= "google/gemini-3.5-flash";
 process.env.GEMINI_QUESTION_THINKING_BUDGET ??= "0";
 
 const OUTDIR = path.join(process.cwd(), ".tmp", "tutor-generation-benchmarks");
@@ -22,108 +22,108 @@ const FALLBACK_PASSAGE = {
       {
         index: 0,
         english: "Few mistakes in reasoning are as common as the tendency to throw good money after bad.",
-        korean: "잘못된 추론 중 이미 나쁜 곳에 더 많은 돈을 쏟아붓는 경향만큼 흔한 것은 거의 없다.",
+        korean: "?섎せ??異붾줎 以??대? ?섏걶 怨녹뿉 ??留롮? ?덉쓣 ?잛븘遺볥뒗 寃쏀뼢留뚰겮 ?뷀븳 寃껋? 嫄곗쓽 ?녿떎.",
       },
       {
         index: 1,
         english: "Economists call it the sunk cost fallacy: the belief that past investments justify future commitments, even when the future looks dim.",
-        korean: "경제학자들은 이를 매몰 비용 오류라고 부른다.",
+        korean: "寃쎌젣?숈옄?ㅼ? ?대? 留ㅻぐ 鍮꾩슜 ?ㅻ쪟?쇨퀬 遺瑜몃떎.",
       },
       {
         index: 2,
         english: "A factory that has spent millions developing a doomed product will often keep pouring resources into it, simply because so much has already been invested.",
-        korean: "실패할 제품에 수백만 달러를 쓴 공장은 이미 많이 투자했다는 이유만으로 계속 자원을 투입하곤 한다.",
+        korean: "?ㅽ뙣???쒗뭹???섎갚留??щ윭瑜???怨듭옣? ?대? 留롮씠 ?ъ옄?덈떎???댁쑀留뚯쑝濡?怨꾩냽 ?먯썝???ъ엯?섍낀 ?쒕떎.",
       },
       {
         index: 3,
         english: "The same logic infects everyday life: people sit through bad films because they paid for the ticket, stay in unproductive relationships because of the years already invested, and persist in failing careers because turning back would feel like an admission of defeat.",
-        korean: "같은 논리는 일상에도 퍼진다.",
+        korean: "媛숈? ?쇰━???쇱긽?먮룄 ?쇱쭊??",
       },
       {
         index: 4,
         english: "Rational decision-making, by contrast, requires evaluating each new choice on its own merits, asking not what has been spent but what is still to gain.",
-        korean: "반대로 합리적 의사결정은 이미 쓴 것이 아니라 앞으로 얻을 것을 기준으로 새 선택을 평가해야 한다.",
+        korean: "諛섎?濡??⑸━???섏궗寃곗젙? ?대? ??寃껋씠 ?꾨땲???욎쑝濡??살쓣 寃껋쓣 湲곗??쇰줈 ???좏깮???됯??댁빞 ?쒕떎.",
       },
       {
         index: 5,
         english: "The hardest lesson in economics, then, may also be the hardest lesson in life.",
-        korean: "따라서 경제학의 가장 어려운 교훈은 삶의 가장 어려운 교훈이기도 하다.",
+        korean: "?곕씪??寃쎌젣?숈쓽 媛???대젮??援먰썕? ?띠쓽 媛???대젮??援먰썕?닿린???섎떎.",
       },
     ],
     vocabulary: [
       {
         word: "fallacy",
-        meaning: "오류",
+        meaning: "?ㅻ쪟",
         partOfSpeech: "noun",
         pronunciation: "",
         sentenceIndex: 1,
         difficulty: "advanced",
-        contextMeaning: "논리적으로 잘못된 믿음",
+        contextMeaning: "?쇰━?곸쑝濡??섎せ??誘우쓬",
         collocations: ["sunk cost fallacy"],
       },
       {
         word: "justify",
-        meaning: "정당화하다",
+        meaning: "?뺣떦?뷀븯??,
         partOfSpeech: "verb",
         pronunciation: "",
         sentenceIndex: 1,
         difficulty: "intermediate",
-        contextMeaning: "미래 결정을 합리적인 것처럼 보이게 하다",
+        contextMeaning: "誘몃옒 寃곗젙???⑸━?곸씤 寃껋쿂??蹂댁씠寃??섎떎",
       },
       {
         word: "commitments",
-        meaning: "헌신, 약속",
+        meaning: "?뚯떊, ?쎌냽",
         partOfSpeech: "noun",
         pronunciation: "",
         sentenceIndex: 1,
         difficulty: "intermediate",
-        contextMeaning: "앞으로 계속 자원을 투입하는 결정",
+        contextMeaning: "?욎쑝濡?怨꾩냽 ?먯썝???ъ엯?섎뒗 寃곗젙",
       },
       {
         word: "merits",
-        meaning: "장점, 가치",
+        meaning: "?μ젏, 媛移?,
         partOfSpeech: "noun",
         pronunciation: "",
         sentenceIndex: 4,
         difficulty: "advanced",
-        contextMeaning: "그 선택 자체의 현재 가치",
+        contextMeaning: "洹??좏깮 ?먯껜???꾩옱 媛移?,
       },
     ],
     grammarPoints: [
       {
         id: "g1",
         pattern: "not A but B",
-        explanation: "이미 쓴 비용이 아니라 앞으로 얻을 것을 기준으로 판단한다는 대조 구조",
+        explanation: "?대? ??鍮꾩슜???꾨땲???욎쑝濡??살쓣 寃껋쓣 湲곗??쇰줈 ?먮떒?쒕떎???議?援ъ“",
         textFragment: "not what has been spent but what is still to gain",
         sentenceIndex: 4,
         examples: [],
         level: "advanced",
-        commonMistake: "but 뒤 병렬 구조를 놓쳐 해석이 흐려짐",
-        transformations: ["not A but B 강조구문 전환"],
+        commonMistake: "but ??蹂묐젹 援ъ“瑜??볦퀜 ?댁꽍???먮젮吏?,
+        transformations: ["not A but B 媛뺤“援щЦ ?꾪솚"],
       },
       {
         id: "g2",
-        pattern: "분사구문",
-        explanation: "asking은 앞의 evaluating을 구체화하는 분사구문",
+        pattern: "遺꾩궗援щЦ",
+        explanation: "asking? ?욎쓽 evaluating??援ъ껜?뷀븯??遺꾩궗援щЦ",
         textFragment: "asking not what has been spent but what is still to gain",
         sentenceIndex: 4,
         examples: [],
         level: "intermediate",
-        commonMistake: "asking을 전치사로 오분석",
+        commonMistake: "asking???꾩튂?щ줈 ?ㅻ텇??,
       },
     ],
     structure: {
-      mainIdea: "매몰 비용에 얽매이지 말고 현재 선택의 가치로 판단해야 한다.",
-      purpose: "잘못된 의사결정 방식을 설명하고 합리적 판단 기준을 제시",
+      mainIdea: "留ㅻぐ 鍮꾩슜???쎈ℓ?댁? 留먭퀬 ?꾩옱 ?좏깮??媛移섎줈 ?먮떒?댁빞 ?쒕떎.",
+      purpose: "?섎せ???섏궗寃곗젙 諛⑹떇???ㅻ챸?섍퀬 ?⑸━???먮떒 湲곗????쒖떆",
       textType: "expository",
       paragraphSummaries: [],
       keyPoints: [
-        "과거 투자는 미래 선택을 정당화하지 않는다.",
-        "일상에서도 매몰 비용 오류가 반복된다.",
-        "합리적 판단은 앞으로 얻을 가치에 초점을 둔다.",
+        "怨쇨굅 ?ъ옄??誘몃옒 ?좏깮???뺣떦?뷀븯吏 ?딅뒗??",
+        "?쇱긽?먯꽌??留ㅻぐ 鍮꾩슜 ?ㅻ쪟媛 諛섎났?쒕떎.",
+        "?⑸━???먮떒? ?욎쑝濡??살쓣 媛移섏뿉 珥덉젏???붾떎.",
       ],
       blankSuitablePositions: ["not what has been spent but what is still to gain"],
-      orderClues: ["경제학 개념 제시 -> 공장 예시 -> 일상 예시 -> 합리적 대안"],
+      orderClues: ["寃쎌젣??媛쒕뀗 ?쒖떆 -> 怨듭옣 ?덉떆 -> ?쇱긽 ?덉떆 -> ?⑸━?????],
     },
     examDesign: {
       paraphrasableSegments: [
@@ -131,20 +131,20 @@ const FALLBACK_PASSAGE = {
           original: "throw good money after bad",
           alternatives: ["continue investing resources in a failing choice"],
           sentenceIndex: 0,
-          reason: "핵심 비유 표현",
+          reason: "?듭떖 鍮꾩쑀 ?쒗쁽",
         },
       ],
       structureTransformPoints: [
         {
           original: "Rational decision-making requires evaluating each new choice on its own merits.",
-          transformType: "not A but B 병렬 구조 활용",
+          transformType: "not A but B 蹂묐젹 援ъ“ ?쒖슜",
           example: "Rational decision-making asks not what has been spent but what is still to gain.",
           sentenceIndex: 4,
-          reason: "서술형 변형 가능성이 높음",
+          reason: "?쒖닠??蹂??媛?μ꽦???믪쓬",
         },
       ],
       summaryKeyPoints: ["past investments", "future gain", "rational decision-making"],
-      descriptiveConditions: ["not A but B 구조를 사용할 것"],
+      descriptiveConditions: ["not A but B 援ъ“瑜??ъ슜??寃?],
     },
   },
 };
@@ -205,8 +205,8 @@ function summarizeDrafts(drafts: Array<{ type: string; mode: string; maxScore: n
 }
 
 async function main() {
-  if (!process.env.GEMINI_API_KEY && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    throw new Error("Missing GEMINI_API_KEY or GOOGLE_GENERATIVE_AI_API_KEY.");
+  if (!process.env.ATLASCLOUD_API_KEY && !process.env.OPENROUTER_API_KEY) {
+    throw new Error("Missing ATLASCLOUD_API_KEY or OPENROUTER_API_KEY.");
   }
 
   const [
@@ -238,7 +238,7 @@ async function main() {
   const examStartedAt = Date.now();
   const examResult = await runQuestionGenerationWithEmptyRetry({
     plan,
-    schoolType: "고등학교",
+    schoolType: "怨좊벑?숆탳",
     gradeInfo: "",
     passageContent: fixture.content,
     teacherIntentBlock: "",
@@ -248,7 +248,7 @@ async function main() {
     diffLabel: "INTERMEDIATE",
     diffInstruction: DIFF_DESCRIPTION.INTERMEDIATE,
     generationPlan: "STANDARD",
-    customPrompt: "모바일 내신 학습용으로, 정답 근거와 오답 함정이 뚜렷한 문제를 생성한다.",
+    customPrompt: "紐⑤컮???댁떊 ?숈뒿?⑹쑝濡? ?뺣떟 洹쇨굅? ?ㅻ떟 ?⑥젙???쒕졆??臾몄젣瑜??앹꽦?쒕떎.",
     typeSettings: {
       GRAMMAR_ERROR: { markerCount: 5, answerCount: 1 },
       BLANK_INFERENCE: { doubleNegative: false },
@@ -264,7 +264,7 @@ async function main() {
   const summary = {
     fixture: { id: fixture.id, title: fixture.title, sentenceCount: fixture.analysis.sentences.length },
     env: {
-      model: process.env.GEMINI_MODEL,
+      model: process.env.ATLASCLOUD_TEXT_MODEL,
       questionThinkingBudget: process.env.GEMINI_QUESTION_THINKING_BUDGET,
       maxTypes: MAX_TYPES,
     },

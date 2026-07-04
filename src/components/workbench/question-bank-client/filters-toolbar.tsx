@@ -16,7 +16,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { TYPE_SUBTYPE_MAP } from "../question-type-filter";
+import {
+  KO_TYPE_SUBTYPE_MAP,
+  TYPE_SUBTYPE_MAP,
+} from "../question-type-filter";
 import { useSearchDebounce } from "@/hooks/use-search-debounce";
 
 interface Filters {
@@ -30,6 +33,11 @@ interface Filters {
 
 interface Props {
   filters: Filters;
+  /**
+   * 과목 스코프 — "KOREAN" 이면 유형 필터 트리가 국어 그룹(KO_*)으로 바뀐다.
+   * 미전달 = 영어 기본(기존 유형 트리 그대로, 국어 그룹 미노출).
+   */
+  subjectScope?: "KOREAN";
   searchValue: string;
   onSearchChange: (value: string) => void;
   /** value 가 주어지면 그 값으로(없으면 현재 입력값으로) 검색을 커밋한다. */
@@ -42,6 +50,7 @@ interface Props {
 
 export function QuestionFiltersToolbar({
   filters,
+  subjectScope,
   searchValue,
   onSearchChange,
   onSearchSubmit,
@@ -51,6 +60,10 @@ export function QuestionFiltersToolbar({
 }: Props) {
   const currentSubTypes = filters.subType?.split(",").filter(Boolean) || [];
 
+  // 과목 스코프별 유형 트리 — 국어 라우트는 KO 그룹만, 영어(기본)는 기존 그대로.
+  const typeGroups =
+    subjectScope === "KOREAN" ? KO_TYPE_SUBTYPE_MAP : TYPE_SUBTYPE_MAP;
+
   // 타이핑 즉시(라이브) 검색 — 입력 멈추면 커밋, Enter·지우기는 즉시 커밋.
   const { schedule, flush } = useSearchDebounce((v) => onSearchSubmit(v));
 
@@ -59,7 +72,7 @@ export function QuestionFiltersToolbar({
     new Set(currentSubTypes),
   );
   const [collapsed, setCollapsed] = useState<Set<string>>(
-    new Set(TYPE_SUBTYPE_MAP.map((g) => g.type)),
+    new Set(typeGroups.map((g) => g.type)),
   );
 
   // Sync local type selection when the URL-driven filter changes externally.
@@ -77,7 +90,7 @@ export function QuestionFiltersToolbar({
     commitTypes([...next]);
   }
 
-  function toggleGroup(group: (typeof TYPE_SUBTYPE_MAP)[number]) {
+  function toggleGroup(group: (typeof typeGroups)[number]) {
     const groupSubs = group.subtypes.map((s) => s.value);
     const allSelected = groupSubs.every((s) => typeSelected.has(s));
     const next = new Set(typeSelected);
@@ -106,10 +119,12 @@ export function QuestionFiltersToolbar({
     }
     const types = new Set<string>();
     for (const sub of selectedSubs) {
-      const group = TYPE_SUBTYPE_MAP.find((g) =>
+      const group = typeGroups.find((g) =>
         g.subtypes.some((s) => s.value === sub),
       );
-      if (group) types.add(group.type);
+      // KO 그룹의 type("KO:국어 …")은 UI 전용 pseudo-type — 실제 Question.type
+      // 컬럼 값이 아니므로 type 파라미터로 커밋하지 않는다(subType 만으로 조회).
+      if (group && !group.type.startsWith("KO:")) types.add(group.type);
     }
     updateFilters({
       type: types.size > 0 ? [...types].join(",") : "ALL",
@@ -175,7 +190,7 @@ export function QuestionFiltersToolbar({
                 ) : null}
               </div>
               <div className="max-h-[200px] overflow-y-auto rounded-md border border-slate-200 py-1">
-                {TYPE_SUBTYPE_MAP.map((group) => {
+                {typeGroups.map((group) => {
                   const groupSubs = group.subtypes.map((s) => s.value);
                   const groupSelectedCount = groupSubs.filter((s) =>
                     typeSelected.has(s),

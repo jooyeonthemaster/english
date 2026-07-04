@@ -46,6 +46,8 @@ interface PassageGroupedViewProps {
   compactUsageLabel?: boolean;
   cardClickSelects?: boolean;
   showDetailButton?: boolean;
+  // 하단 날짜줄 "내보내기(⋯)" 액션 매트릭스(복사·한글·워드) — fallback 카드로 전달.
+  showQuickActions?: boolean;
   selectedCardHighlight?: boolean;
   dragRequiresSelection?: boolean;
   getDragQuestionIds?: (draggedId: string) => string[];
@@ -122,6 +124,7 @@ export function PassageGroupedView({
   compactUsageLabel = false,
   cardClickSelects = false,
   showDetailButton = false,
+  showQuickActions = false,
   selectedCardHighlight = true,
   dragRequiresSelection = false,
   getDragQuestionIds,
@@ -477,6 +480,7 @@ export function PassageGroupedView({
                           compactUsageLabel={compactUsageLabel}
                           cardClickSelects={cardClickSelects}
                           showDetailButton={showDetailButton}
+                          showQuickActions={showQuickActions}
                           selectedCardHighlight={selectedCardHighlight}
                           dragRequiresSelection={dragRequiresSelection}
                           getDragQuestionIds={getDragQuestionIds}

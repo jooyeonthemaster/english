@@ -17,6 +17,100 @@ import {
 } from "../paper-builder/paper-item-utils";
 import { shouldIncludeSourcePassageByDefault } from "../paper-builder/passage-policy";
 import { normalizePassageText } from "../paper-builder/text-normalization";
+import { isKoSetGroupId } from "@/lib/korean/sets/paper";
+
+// [KOSET-3] KO 세트(`set:<setId>`) 연속 구간 "내부"로의 삽입을 가장 가까운 구간
+// 경계로 스냅한다. 세트 멤버 사이에 다른 항목이 끼면 buildGroups(인접 병합)가
+// 같은 세트 그룹을 둘로 쪼개, 웹은 renderedSetIds 억제로 뒤 그룹 멤버가 지문·마커
+// 없이 남고(풀이 불능), DOCX/HWPX 는 지문이 중복 인쇄된다. 삽입되는 항목 전부가
+// 같은 세트 멤버(세트 내부 재배열)면 스냅하지 않는다. 영어 그룹("single:"/
+// "passage:"/"block:")은 isKoSetGroupId 게이트 밖이라 기존 동작 그대로(무회귀).
+export function snapInsertIndexOutOfKoSetRun(
+  items: PaperItem[],
+  insertIndex: number,
+  insertedGroupIds: (string | null | undefined)[],
+): number {
+  const before = items[insertIndex - 1];
+  const after = items[insertIndex];
+  if (!before || !after) return insertIndex;
+  if (before.blockType !== "question" || after.blockType !== "question") {
+    return insertIndex;
+  }
+  const groupId = before.groupId;
+  if (!groupId || after.groupId !== groupId || !isKoSetGroupId(groupId)) {
+    return insertIndex;
+  }
+  if (
+    insertedGroupIds.length > 0 &&
+    insertedGroupIds.every((g) => g === groupId)
+  ) {
+    return insertIndex; // 같은 세트 멤버의 세트 내부 재배열은 허용.
+  }
+  // 세트 연속 구간의 경계 탐색 — 시작(start)과 끝 다음(end).
+  let start = insertIndex - 1;
+  while (
+    start > 0 &&
+    items[start - 1].blockType === "question" &&
+    items[start - 1].groupId === groupId
+  ) {
+    start -= 1;
+  }
+  let end = insertIndex;
+  while (
+    end < items.length &&
+    items[end].blockType === "question" &&
+    items[end].groupId === groupId
+  ) {
+    end += 1;
+  }
+  // 가장 가까운 경계로 스냅(동률이면 세트 뒤).
+  return insertIndex - start < end - insertIndex ? start : end;
+}
+
+// "지문별로 다시 묶기"의 순수 계산부 — 훅 밖으로 추출해 유닛 검증 가능하게 한다.
+// [KOSET-3] KO 세트(`set:<setId>`) 멤버는 groupKey=자기 groupId 로 자체 버킷을
+// 보존하고 groupId/includePassage(=false, 공유지문 1박스 경로) 재계산을 건너뛴다 —
+// passage:<id> 로 덮어쓰면 공유지문 경로(applyKoSetSharedPassages)가 해제되고
+// seen 가드로 2번째 이후 멤버가 지문 없는 문항이 된다. 세트는 연속 재배열만.
+export function computeRegroupedByPassage(current: PaperItem[]): PaperItem[] {
+  const groupKey = (item: PaperItem) =>
+    item.blockType !== "question"
+      ? `block:${item.localId}`
+      : isKoSetGroupId(item.groupId)
+      ? (item.groupId as string)
+      : item.sourceQuestion.passage
+      ? `passage:${item.sourceQuestion.passage.id}`
+      : `solo:${item.questionId}`;
+
+  const firstSeen = new Map<string, number>();
+  current.forEach((item, index) => {
+    const key = groupKey(item);
+    if (!firstSeen.has(key)) firstSeen.set(key, index);
+  });
+
+  const sorted = [...current]
+    .map((item, index) => ({ item, index }))
+    .sort((a, b) => {
+      const keyA = groupKey(a.item);
+      const keyB = groupKey(b.item);
+      const orderA = firstSeen.get(keyA) ?? 0;
+      const orderB = firstSeen.get(keyB) ?? 0;
+      if (orderA !== orderB) return orderA - orderB;
+      return a.index - b.index;
+    })
+    .map(({ item }) => item);
+
+  const seen = new Set<string>();
+  return sorted.map((item) => {
+    if (item.locked || item.blockType !== "question") return item;
+    if (isKoSetGroupId(item.groupId)) return item;
+    const groupId = groupKey(item);
+    const includePassage =
+      !seen.has(groupId) && shouldIncludeSourcePassageByDefault(item.sourceQuestion);
+    seen.add(groupId);
+    return { ...item, groupId, includePassage };
+  });
+}
 
 // ---------------------------------------------------------------------------
 // 시험지 빌더의 paperItems 상태 + mutation 헬퍼들을 한 곳에 묶은 훅.
@@ -331,10 +425,16 @@ export function usePaperItems(
         : -1;
 
       const next = [...withoutSource];
-      const insertIndex =
+      const rawInsertIndex =
         targetIndex >= 0
           ? targetIndex + (placement === "after" ? 1 : 0)
           : next.length;
+      // [KOSET-3] KO 세트 연속 구간 내부 삽입은 경계로 스냅(세트 파손 방지).
+      const insertIndex = snapInsertIndexOutOfKoSetRun(
+        withoutSource,
+        rawInsertIndex,
+        [itemToInsert.groupId],
+      );
       next.splice(insertIndex, 0, itemToInsert);
       return next;
     }, () => nextActiveId);
@@ -397,10 +497,16 @@ export function usePaperItems(
       const targetIndex = targetLocalId
         ? withoutMoved.findIndex((item) => item.localId === targetLocalId)
         : -1;
-      const insertIndex =
+      const rawInsertIndex =
         targetIndex >= 0
           ? targetIndex + (placement === "after" ? 1 : 0)
           : withoutMoved.length;
+      // [KOSET-3] KO 세트 연속 구간 내부 삽입은 경계로 스냅(세트 파손 방지).
+      const insertIndex = snapInsertIndexOutOfKoSetRun(
+        withoutMoved,
+        rawInsertIndex,
+        itemsToInsert.map((it) => it.groupId),
+      );
 
       const next = [...withoutMoved];
       next.splice(insertIndex, 0, ...itemsToInsert);
@@ -489,7 +595,14 @@ export function usePaperItems(
         ? current.findIndex((item) => item.localId === activeItemId)
         : -1;
       const next = [...current];
-      next.splice(activeIndex >= 0 ? activeIndex + 1 : current.length, 0, nextBlock);
+      // [KOSET-3] 활성 항목이 KO 세트 중간 멤버면 블록이 세트를 쪼개지 않도록
+      // 경계로 스냅(비문항 블록도 buildGroups 인접 병합을 끊어 고아를 만든다).
+      const insertIndex = snapInsertIndexOutOfKoSetRun(
+        current,
+        activeIndex >= 0 ? activeIndex + 1 : current.length,
+        [nextBlock.groupId],
+      );
+      next.splice(insertIndex, 0, nextBlock);
       return next;
     }, () => nextBlock.localId);
     return nextBlock.localId;
@@ -506,7 +619,13 @@ export function usePaperItems(
         ? current.findIndex((item) => item.localId === activeItemId)
         : -1;
       const next = [...current];
-      next.splice(activeIndex >= 0 ? activeIndex + 1 : current.length, 0, nextBlock);
+      // [KOSET-3] KO 세트 중간 삽입은 경계로 스냅(세트 파손 방지).
+      const insertIndex = snapInsertIndexOutOfKoSetRun(
+        current,
+        activeIndex >= 0 ? activeIndex + 1 : current.length,
+        [nextBlock.groupId],
+      );
+      next.splice(insertIndex, 0, nextBlock);
       return next;
     }, () => nextBlock.localId);
     return nextBlock.localId;
@@ -670,7 +789,14 @@ export function usePaperItems(
       const targetIndex = withoutSource.findIndex((item) => item.localId === targetLocalId);
       if (targetIndex < 0) return current;
       const next = [...withoutSource];
-      next.splice(placement === "after" ? targetIndex + 1 : targetIndex, 0, sourceItem);
+      // [KOSET-3] KO 세트 연속 구간 내부로의 드래그 드롭은 경계로 스냅 —
+      // 세트 사이에 끼우면 그룹이 쪼개져 고아 멤버가 지문·마커 없이 남는다.
+      const insertIndex = snapInsertIndexOutOfKoSetRun(
+        withoutSource,
+        placement === "after" ? targetIndex + 1 : targetIndex,
+        [sourceItem.groupId],
+      );
+      next.splice(insertIndex, 0, sourceItem);
       return next;
     }, () => sourceLocalId);
   }
@@ -755,38 +881,9 @@ export function usePaperItems(
   }
 
   function regroupByPassage() {
-    commitItems((current) => {
-      if (current.length === 0) return current;
-
-      const firstSeen = new Map<string, number>();
-      current.forEach((item, index) => {
-        const key = paperItemRegroupKey(item);
-        if (!firstSeen.has(key)) firstSeen.set(key, index);
-      });
-
-      const sorted = [...current]
-        .map((item, index) => ({ item, index }))
-        .sort((a, b) => {
-          const keyA = paperItemRegroupKey(a.item);
-          const keyB = paperItemRegroupKey(b.item);
-          const orderA = firstSeen.get(keyA) ?? 0;
-          const orderB = firstSeen.get(keyB) ?? 0;
-          if (orderA !== orderB) return orderA - orderB;
-          return a.index - b.index;
-        })
-        .map(({ item }) => item);
-
-      const seen = new Set<string>();
-      const grouped = sorted.map((item) => {
-        if (item.locked || item.blockType !== "question") return item;
-        const groupId = paperItemRegroupKey(item);
-        const includePassage = !seen.has(groupId) && shouldIncludeSourcePassageByDefault(item.sourceQuestion);
-        seen.add(groupId);
-        return { ...item, groupId, includePassage };
-      });
-
-      return grouped;
-    });
+    commitItems((current) =>
+      current.length === 0 ? current : computeRegroupedByPassage(current),
+    );
   }
 
   return {

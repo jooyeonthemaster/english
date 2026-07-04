@@ -1,4 +1,4 @@
-import { generateObject, type JSONValue, type LanguageModel } from "ai";
+import { generateObject, type LanguageModel } from "ai";
 
 import { recordAiCost } from "@/lib/platform-api-costs";
 import { buildQuestionAnalysisPrompt } from "./prompt";
@@ -11,8 +11,6 @@ import { ANALYSIS_MAX_RETRIES, ANALYSIS_TIMEOUT_MS } from "./constants";
 import { analysisErrorDetail, isSingleQuestionFollowUpError } from "./errors";
 import type { QuestionAnalysisImage, TargetQuestionAnalysis } from "./types";
 
-type ProviderOptions = Record<string, Record<string, JSONValue>>;
-
 export interface GenerateAnalysisArgs {
   inputText?: string;
   images: QuestionAnalysisImage[];
@@ -22,7 +20,6 @@ export interface GenerateAnalysisArgs {
   model: LanguageModel;
   modelId: string;
   maxOutputTokens: number;
-  providerOptions: ProviderOptions;
   targetQuestion?: TargetQuestionAnalysis;
   manualCropOnly?: boolean;
   includeBoundingBoxes?: boolean;
@@ -71,7 +68,6 @@ export async function generateAnalysisWithRetries(
             : singleItemAnalysisSchema,
         maxOutputTokens: args.maxOutputTokens,
         abortSignal: AbortSignal.timeout(ANALYSIS_TIMEOUT_MS),
-        providerOptions: args.providerOptions,
         messages: [
           {
             role: "user",

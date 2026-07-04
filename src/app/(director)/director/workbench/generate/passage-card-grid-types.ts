@@ -48,6 +48,9 @@ export interface PassageCardGridProps {
   setFilterSemester: (v: string) => void;
   analysisStatusFilter: PassageAnalysisStatusFilter;
   setAnalysisStatusFilter: (v: PassageAnalysisStatusFilter) => void;
+  // 과목 스코프 — "KOREAN" 이면 국어 전용 그리드(갈래 배지 노출). 미전달 =
+  // 영어 기본(국어 요소 미노출, 기존 UI 픽셀 동일).
+  subjectScope?: "KOREAN";
   // Sort controls live in the folder header. Optional — consumers that don't
   // pass them (e.g. tutor program builder) simply hide the sort control.
   passageSortOrder?: PassageSortOrder;

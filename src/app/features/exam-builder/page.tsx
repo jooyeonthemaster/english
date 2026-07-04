@@ -104,7 +104,7 @@ const CONTENT: FeaturePageContent = {
   ],
   ctaTitle: "영어 시험지 만들기, 조판은 SMOAT에 맡기세요",
   ctaBody:
-    "문항 생성부터 Word·한글 시험지 자동 조판, 영어 해설지·정답지 동시 출력까지 — SMOAT 하나로 끝냅니다. 지금 무료로 사용해 보세요.",
+    "문항 생성부터 Word·한글 시험지 자동 조판, 영어 해설지·정답지 동시 출력까지 — SMOAT 하나로 끝냅니다. 지금 사용해 보세요.",
   related: [
     {
       href: "/features/ai-question-generation",

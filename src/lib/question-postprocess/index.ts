@@ -24,6 +24,7 @@ import { processReference } from "./processors/reference";
 import { processSentenceInsert } from "./processors/sentence-insert";
 import { processSynonym } from "./processors/synonym";
 import { processVocabChoice } from "./processors/vocab-choice";
+import { isKoQuestionType } from "@/lib/korean/registry";
 import { normalizeWrongOptionExplanations } from "@/lib/question-wrong-option-explanations";
 import { buildCanonicalSentenceInsertOptionsFrom } from "@/lib/sentence-insert-options";
 import {
@@ -155,9 +156,15 @@ function normalizePostProcessResult(
     typeId,
     result.data?.options,
   );
-  const normalizedWrongOptionExplanations = normalizeWrongOptionExplanations(
-    result.data?.wrongOptionExplanations,
-  );
+  // KO(국어) 게이트(KO-GEN-2): KO 봉투는 wrongOptionExplanations 가
+  // [{label, explanation}×4] "배열형"이 계약이다 — 셔플(shuffleKoMc5Options 3단계
+  // Array.isArray 분기)·카드 렌더러(readWrongOptionExplanations)가 배열형만
+  // 소비하므로, 배열→Record 변환을 타면 셔플 재매핑이 건너뛰어져 오답 해설 키가
+  // 구(舊) 라벨로 desync 되고 카드에서 해설이 통째로 소실된다. KO 는 원형 보존.
+  const normalizedWrongOptionExplanations =
+    typeId && isKoQuestionType(typeId)
+      ? result.data?.wrongOptionExplanations
+      : normalizeWrongOptionExplanations(result.data?.wrongOptionExplanations);
   const alignedWrongOptionExplanations =
     alignWrongOptionExplanationsWithVisibleOptions(
       typeId,

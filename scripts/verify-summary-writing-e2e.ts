@@ -14,7 +14,7 @@
  *   → validateQuestionQuality("SUMMARY_WRITING", q, ...)
  *   → buildGeneratedQuestionText({_typeId, ...q}) 로 누수 검사.
  *
- * 모델: PREMIUM(Claude claude-sonnet-4-6) 우선 → 실패 시 STANDARD(Gemini) 폴백 →
+ * 모델: PREMIUM(Claude Sonnet 5) 우선 → 실패 시 STANDARD(Gemini) 폴백 →
  *   둘 다 실패(키 문제)면 status:"gen_unavailable" + 합성 픽스처 3개로 검증 진행.
  */
 

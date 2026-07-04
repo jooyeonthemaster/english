@@ -82,7 +82,10 @@ export async function repairQuestionCandidate(
       responseSchema,
       repairPrompt,
       generationPlan,
-      Math.min(20_000, Math.max(1, perQuestionTokenFloor)),
+      Math.min(
+        20_000,
+        Math.max(1, perQuestionTokenFloor, generationPlan === "PREMIUM" ? 12_288 : 0),
+      ),
       undefined,
       onModelUsage,
       { system, deadlineAt },

@@ -1,0 +1,28 @@
+{
+  "createdAt": "2026-07-02T15:13:54.896Z",
+  "outPath": "C:\\Users\\jooye\\Desktop\\2026project\\nara\\artifacts\\ai-audits\\grammar-quality-loop-1783003338134.jsonl",
+  "total": 12,
+  "passed": 3,
+  "failed": 9,
+  "passRate": 0.25,
+  "issueCounts": {
+    "llm:The explanation for distractor (C) mischaracterizes the marked word 'that' as a 'relative-adverb substitute' modifying 'the way', when in fact this 'that' is the demonstrative pronoun subject of the clause \"that's the way...\" (i.e., 'that = the unevenness'). The actual relative element modifying 'the way' is a separate, omitted 'that/in which' inside 'the way (that) they were blown and solidified'. This is a genuine grammar-terminology error that could mislead a student studying the explanation, even though it does not change which option is marked as the answer.": 1,
+    "llm:The core tested contrast (because vs. because of) is a fairly elementary distinction; while acceptable for BASIC difficulty, it does not showcase the kind of cross-clause or structurally rich trap expected of a premium 평가원-style item.": 1,
+    "llm:Distractor (B) 'is' and (E) 'seems' are trivial subject-verb agreement checks with singular concrete subjects, offering little genuine ambiguity or attractiveness as distractors.": 1,
+    "llm:The single grammatical fault hinges on a semantic distinction (who=person vs what=thing) rather than a clear structural/syntactic error typical of 평가원 어법 items (e.g., agreement, voice, relative-pronoun case, participle). Both 'who' and 'what' are fully grammatical in isolation; the disambiguation relies on inferring that 'scientists' are being asked, which is a contextual/vocabulary‑level cue rather than a hard grammatical rule, making the trap feel more like a reading‑comprehension nuance than a bona‑fide grammar violation.": 1,
+    "llm:The core explanation for (D) is grammatically wrong: it claims 'being' should attach as the finite verb for the subject 'a disease' inside the concessive clause 'even if a disease is quite prevalent...'. In fact that clause already has its own verb ('is quite prevalent'), and the actual site being tested is the fixed parenthetical idiom 'that is' (meaning 'that is to say/namely'), which is unrelated to 'a disease' as a subject. This misidentifies the sentence structure and the true grammar point being tested.": 1,
+    "llm:Because the explanation mischaracterizes the syntax, a student who correctly parses 'a disease is quite prevalent' as its own independent clause would be confused about why 'being' is wrong, undermining the pedagogical validity of the item.": 1,
+    "llm:The keyPoints list ('부사절 내의 정동사와 준동사 구별') reinforces the same incorrect analysis, compounding the issue rather than being an isolated typo.": 1,
+    "killer-answer-not-structurally-loaded": 1,
+    "main-explanation-too-thin": 1,
+    "llm:The (E) error is a simple missing-auxiliary-verb mistake ('the disease neglected compared to...') that is glaringly ungrammatical on a single, local reading — it does not require any long-distance or cross-clause structural reasoning, so it fails to meet KILLER-level difficulty.": 1,
+    "llm:The explanation for (E) is superficial: it merely states 'neglected alone cannot be a finite verb, so change to has been neglected' without any deep syntactic argument tied to the embedded conditional/relative structure, which is expected at KILLER level.": 1,
+    "llm:None of the other four options (A)-(D) involve genuinely deep cross-clause traps either; they are standard voice/agreement checks (passive government, relative pronoun, to-infinitive after afford), so the overall item lacks the multi-layered structural complexity implied by KILLER difficulty.": 1,
+    "llm:The tested point for the correct answer (C) - modifying an adjective with an adverb - is extremely basic and shallow, failing to meet the requirement for long-distance or cross-clause structure expected in high-quality CSAT items.": 1,
+    "llm:Distractors like (A) and (B) are too straightforward and lack depth or attractiveness.": 1,
+    "llm:The item is categorized as BASIC difficulty but falls into ordinary/low-quality academy tier due to the lack of deceptive distractors and standard CSAT trap structures.": 1,
+    "no-question": 1,
+    "llm:Option (B) ('hard') is too trivial and is not an attractive or realistic distractor for a CSAT-style grammar item. It lacks any competitive grammatical contrast.": 1,
+    "llm:The error target (C) 'lived' is too weak and visibly broken for a CSAT-level question; 'people living' is extremely natural, and 'people lived' as a post-modifier is instantly recognizable as wrong even to lower-level students.": 1
+  }
+}

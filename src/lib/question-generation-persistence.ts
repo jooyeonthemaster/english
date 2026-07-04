@@ -15,6 +15,8 @@ import {
   formatSummaryCompleteMcSummaryForDisplay,
   readSummaryBlankAnswersFromQuestionLike,
 } from "@/lib/summary-complete-mc";
+import { serializeKoQuestion } from "@/lib/korean/core/render-model";
+import { getKoTypeModule, isKoQuestionType } from "@/lib/korean/registry";
 import { isSummaryWriting, summaryWritingStudentParts } from "@/lib/summary-writing";
 import { isTopicSentenceWriting, topicSentenceWritingStudentParts } from "@/lib/topic-sentence-writing";
 
@@ -66,6 +68,18 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
     return q.questionText;
   }
 
+  // KO(국어) 조기반환(CUSTOM_LAYOUT/GRAMMAR_CORRECTION 전례): 발문+<보기>+<조건>만
+  // 직렬화한다 — 선지(options 컬럼 전용)·정답계열(essay.modelAnswer 등) 절대 미포함
+  // (정답 누수 0, KO-DESIGN-SPEC §4.3). 지문은 미동봉(렌더 표면이 KoRenderModel 로
+  // 재구성). 미등록 KO 유형은 validator 가 저장 전에 차단하므로 여기 도달하지 않지만,
+  // 방어적으로 아래 일반 직렬화로 폴백한다.
+  if (isKoQuestionType(typeId)) {
+    const koModule = getKoTypeModule(typeId);
+    if (koModule) {
+      return serializeKoQuestion(koModule.toRenderModel(q, { passage: undefined }));
+    }
+  }
+
   push(q.direction);
   // SW-LEAK-1: SUMMARY_WRITING 은 학생 안전 블록만 직렬화([빈칸 정답]·modelAnswer 미포함)
   if (isSummaryWriting(typeId)) {
@@ -111,7 +125,11 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
         .join("\n")}`,
     );
   }
-  push(q.sentenceWithBlank);
+  // FILL_BLANK_KEY 는 passageWithBlank(빈칸 포함 전체 지문)와 sentenceWithBlank(그 문장 하나)를
+  // 둘 다 보유한다. 둘 다 직렬화하면 빈칸 문장이 지문 끝에 한 번 더 붙어 중복 렌더된다.
+  // 전체 지문이 있으면 그 안에 문장이 이미 포함되므로 단문은 생략한다(카드 렌더 q.passageWithBlank
+  // || q.sentenceWithBlank 와 동일 의미론). 둘 다 보유하는 유형은 FILL_BLANK_KEY 뿐이라 무회귀.
+  if (!q.passageWithBlank) push(q.sentenceWithBlank);
   if (q.summaryWithBlanks) {
     const summary = isSummaryCompleteMc
       ? formatSummaryCompleteMcSummaryForDisplay(
@@ -141,6 +159,24 @@ export function buildGeneratedQuestionText(q: Record<string, unknown>): string {
   if (q.questionText && !q.direction) push(q.questionText);
 
   return parts.filter(Boolean).join("\n\n");
+}
+
+/**
+ * 생성 문항의 DB points 컬럼 값(KO-RC-3).
+ * KO(국어): 렌더모델의 유효배점(render-model.ts — structuredData.points ??
+ * meta.defaultPoints)과 동일 규칙으로 계산해, 문항 메타줄([n점 · 유형])·시험지
+ * 배점 합계·채점(eq.points)이 발문 끝 [n점] 표기와 정합되게 한다. KO 봉투는
+ * "유형 기본값과 다를 때만" points 를 내는 계약이라 structuredData.points 부재
+ * 시 모듈 defaultPoints 로 채워야 한다.
+ * 영어: 기존 1 고정 유지(발문에 배점 미표기 — 무회귀).
+ */
+export function resolveGeneratedQuestionPoints(
+  q: Record<string, unknown>,
+  subType: string | null,
+): number {
+  const koModule = subType && isKoQuestionType(subType) ? getKoTypeModule(subType) : null;
+  if (!koModule) return 1;
+  return typeof q.points === "number" ? q.points : koModule.meta.defaultPoints;
 }
 
 export async function saveGeneratedQuestionsForJob({
@@ -203,17 +239,19 @@ export async function saveGeneratedQuestionsForJob({
           }
         : undefined;
 
+    const subType =
+      typeof q._typeId === "string"
+        ? q._typeId
+        : typeof q.subType === "string"
+          ? q.subType
+          : null;
+
     return {
       data: {
         academyId,
         passageId,
         type: Array.isArray(options) ? "MULTIPLE_CHOICE" : "SHORT_ANSWER",
-        subType:
-          typeof q._typeId === "string"
-            ? q._typeId
-            : typeof q.subType === "string"
-              ? q.subType
-              : null,
+        subType,
         questionText: buildGeneratedQuestionText(q),
         structuredData: toPrismaJson(enriched),
         options: Array.isArray(options) ? JSON.stringify(options) : null,
@@ -223,7 +261,7 @@ export async function saveGeneratedQuestionsForJob({
             : typeof q.modelAnswer === "string"
               ? q.modelAnswer
               : "",
-        points: 1,
+        points: resolveGeneratedQuestionPoints(q, subType),
         difficulty:
           typeof q.difficulty === "string" ? q.difficulty : "INTERMEDIATE",
         tags: JSON.stringify(tags),

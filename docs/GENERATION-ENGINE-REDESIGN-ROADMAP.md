@@ -13,7 +13,7 @@
 
 - 크레딧 부족(1,554)·Gemini 빌링 장애(261) 제거 시 **진짜 품질 성공률 96.2%**. 진짜 엔진 품질 실패는 **169건(2.1%)**, KILLER 난이도(빈칸·무관·함축·어법)에 집중.
 - **PREMIUM(Claude) 실패의 71%(47/66)는 Claude 품질이 아니라 DB 트랜잭션 저장 버그.** Claude 평균 1.12시도, 콜당 중앙값 52s(max 194s) → 100s fast 라우트에서 STALE 8건.
-- 모델 배치: **STANDARD = `gemini-3.5-flash`**, **PREMIUM = `claude-sonnet-4-6`** (현재 구성 유지가 맞음 — Claude=프리미엄 생성 모델).
+- 모델 배치: **STANDARD = `google/gemini-3.5-flash`**, **PREMIUM = `anthropic/claude-sonnet-5`** (Atlas/OpenRouter 경유).
 - 핵심 비효율 = **실패 시 전체 재생성**(필드 하나만 깨져도 문항 통째 재생성).
 
 ## 2. 게이트 감사 결과 (151 차단코드, 적대검증 0 flip)

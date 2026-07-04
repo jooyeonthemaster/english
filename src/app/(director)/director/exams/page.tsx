@@ -26,10 +26,20 @@ export default async function ExamsPage({ searchParams }: PageProps) {
     getExamCollectionMembership(staff.academyId),
   ]);
 
-  // Convert membership arrays to Sets for client-side usage
+  // Convert membership arrays to Sets for client-side usage.
+  // [ISO-9] 폴더 멤버십을 영어 목록(getExams=KO 제외) 시험지 id 로 교집합 —
+  // 폴더에 국어 시험지가 담겨 있어도 배지 수와 실제 표시 수가 어긋나지 않는다
+  // (국어 페이지 korean/exams 의 koExamIds 교집합 로직 미러). 단, 레거시
+  // ?collectionId= 딥링크로 목록 자체가 한 폴더로 축소된 경우에는 교집합을
+  // 건너뛴다(다른 폴더 배지가 0 으로 무너지는 것 방지 — 종전 동작 유지).
+  const enExamIds = params.collectionId
+    ? null
+    : new Set(exams.map((exam) => exam.id));
   const collectionMembership: Record<string, Set<string>> = {};
   for (const [colId, examIds] of Object.entries(membershipRaw)) {
-    collectionMembership[colId] = new Set(examIds);
+    collectionMembership[colId] = new Set(
+      enExamIds ? examIds.filter((id) => enExamIds.has(id)) : examIds,
+    );
   }
 
   const clientExams = showResults

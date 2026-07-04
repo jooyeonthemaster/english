@@ -580,6 +580,7 @@ import {
   buildTopicSentenceWritingSchema,
   grammarCorrectionSchema,
 } from "./question-schemas-essay";
+import { KO_TYPE_REGISTRY } from "./korean/registry";
 
 const AI_ESSAY_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   CONDITIONAL_WRITING: conditionalWritingSchema,
@@ -597,6 +598,14 @@ export const AI_QUESTION_SCHEMAS: Record<string, z.ZodType> = {
   ...AI_VOCAB_QUESTION_SCHEMAS,
   ...AI_ESSAY_QUESTION_SCHEMAS,
 };
+
+// ── KO(국어) 유형 병합 — 레지스트리 파생 (기존 영어 엔트리 무변경) ──────────
+// KO 스키마(koQuestionEnvelope 계열)는 지문 전문 복사 필드가 없는 AI 응답
+// 스키마 그 자체다. 동적 count 슬롯이 없으므로 getAiResponseSchema if-체인은
+// 무접촉(KO 는 어떤 분기에도 걸리지 않고 base 스키마 그대로 반환).
+for (const [koTypeId, koModule] of Object.entries(KO_TYPE_REGISTRY)) {
+  AI_QUESTION_SCHEMAS[koTypeId] = koModule.schema;
+}
 
 // ---------------------------------------------------------------------------
 // Generic option-count variants — free-text option types where the visible

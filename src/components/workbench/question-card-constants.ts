@@ -1,4 +1,5 @@
 import { getCircledNumbers } from "@/lib/question-postprocess/types";
+import { koTypeLabelMap } from "@/lib/korean/registry";
 // ─── Constants ───────────────────────────────────────────
 
 export const CIRCLED_MARKER_PATTERN = "\\u2460-\\u2473\\u3251-\\u325F\\u32B1-\\u32BF";
@@ -37,6 +38,9 @@ export const SUBTYPE_LABELS: Record<string, string> = {
   CONTEXT_MEANING: "문맥 속 의미",
   SYNONYM: "동의어",
   ANTONYM: "반의어",
+  // KO(국어) 유형 라벨 — 레지스트리 파생 병합(기존 엔트리 무변경,
+  // question-type-filter.tsx 의 SUBTYPE_LABELS 와 독립 복제본 — 둘 다 병합)
+  ...koTypeLabelMap(),
 };
 
 export const DIFFICULTY_CONFIG: Record<

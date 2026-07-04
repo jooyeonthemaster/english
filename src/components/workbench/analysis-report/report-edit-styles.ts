@@ -169,6 +169,24 @@ body.par-resizing { cursor: ns-resize !important; user-select: none !important; 
 .par-root-edit .par-cov-logo-resize:focus-visible { opacity: 1; }
 .par-root-edit .par-cov-logo-resize:hover { background: #eff6ff; opacity: 1; }
 
+/* 지문 웹툰(이미지) — 네 모서리 드래그 리사이즈 (가로세로 비율 유지) */
+.par-root-edit .par-img-box { position: relative; }
+.par-root-edit .par-img-handle {
+  position: absolute; width: 14px; height: 14px; padding: 0; z-index: 8;
+  border: 1.5px solid #2563eb; background: #fff; border-radius: 999px;
+  box-shadow: 0 2px 7px rgba(15,23,42,.18); touch-action: none;
+  opacity: 0; transition: opacity .12s, transform .12s, background-color .12s;
+}
+.par-root-edit .par-img-handle-nw { left: -7px; top: -7px; cursor: nwse-resize; }
+.par-root-edit .par-img-handle-ne { right: -7px; top: -7px; cursor: nesw-resize; }
+.par-root-edit .par-img-handle-sw { left: -7px; bottom: -7px; cursor: nesw-resize; }
+.par-root-edit .par-img-handle-se { right: -7px; bottom: -7px; cursor: nwse-resize; }
+.par-root-edit .par-eline:hover .par-img-handle,
+.par-root-edit .par-eline.is-active .par-img-handle { opacity: 1; }
+.par-root-edit .par-img-handle:hover { transform: scale(1.18); background: #eff6ff; }
+.par-root-edit .par-img-box.is-resizing { outline: 2px dashed rgba(37,99,235,.6); outline-offset: 2px; }
+body.par-img-resizing { user-select: none !important; }
+
 /* 여백(spacer) 블록 — 편집 시 점선 + "여백" 라벨, 인쇄 시 순수 공백 */
 .par-root-edit .par-spacer-fill { position: relative; }
 .par-root-edit .par-spacer-fill::before {

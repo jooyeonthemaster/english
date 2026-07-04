@@ -10,6 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { KO_TYPE_REGISTRY, koTypeLabelMap } from "@/lib/korean/registry";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -53,7 +54,27 @@ export const SUBTYPE_LABELS: Record<string, string> = {
   ANTONYM: "반의어",
   CUSTOM: "커스텀",
   CUSTOM_LAYOUT: "커스텀",
+  // KO(국어) 유형 라벨 — 레지스트리 파생 병합(기존 엔트리 무변경)
+  ...koTypeLabelMap(),
 };
+
+// KO(국어) 유형 필터 그룹 — 레지스트리 meta.uiGroup 에서 파생(등록 유형만 노출).
+// 국어 라우트(subjectScope="KOREAN")의 필터 UI 전용 — 영어 화면의
+// TYPE_SUBTYPE_MAP 에는 절대 합치지 않는다(영어 문제은행 픽셀 불변).
+const KO_UI_GROUPS = ["국어 독서", "국어 문학", "국어 문법", "국어 화법·작문·매체", "국어 서답형"] as const;
+export const KO_TYPE_SUBTYPE_MAP: {
+  type: string;
+  label: string;
+  subtypes: { value: string; label: string }[];
+}[] = KO_UI_GROUPS.map((group) => ({
+  // 'KO:' 접두 pseudo-type — 실제 Question.type 이 아니므로 필터 커밋 시
+  // type 파라미터로 보내면 안 된다(filters-toolbar 의 commitTypes 가 걸러냄).
+  type: `KO:${group}`,
+  label: group,
+  subtypes: Object.values(KO_TYPE_REGISTRY)
+    .filter((mod) => mod.meta.uiGroup === group)
+    .map((mod) => ({ value: mod.meta.typeId, label: mod.meta.label })),
+})).filter((g) => g.subtypes.length > 0);
 
 // Hierarchical type → subtype grouping for filter UI
 export const TYPE_SUBTYPE_MAP: {

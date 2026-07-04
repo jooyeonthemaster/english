@@ -325,7 +325,7 @@ export const grammarCorrectionSchema = z.object({
     .describe("서버가 재구성하는 밑줄 구간 포함 지문 (__구간__ 마커 사용)"),
   errorPart: z.string().optional().describe("첫 번째 밑줄 구간 안에 숨어 있는 틀린 표현"),
   errorParts: z.array(z.string()).optional().describe("각 밑줄 구간 안에 숨어 있는 틀린 표현 목록"),
-  correctedPart: z.string().describe("첫 번째 밑줄 구간에서 학생이 써야 하는 올바른 표현"),
+  correctedPart: z.string().optional().describe("첫 번째 밑줄 구간에서 학생이 써야 하는 올바른 표현"),
   correctedParts: z.array(z.string()).optional().describe("각 밑줄 구간에서 학생이 써야 하는 올바른 표현 목록"),
   correctedSentence: z.string().optional().describe("correctedPart가 들어간 원문 문장"),
   sentenceWithError: z.string().optional().describe("legacy fallback only"),
@@ -344,7 +344,7 @@ export const grammarCorrectionSchema = z.object({
     return (
       item.correctedPart ||
       question.correctedParts?.[index] ||
-      (index === 0 ? question.correctedPart : "")
+      (index === 0 ? question.correctedPart ?? "" : "")
     ).trim();
   });
   const errorParts = errorItems.map((item, index) => {
@@ -375,14 +375,14 @@ export const grammarCorrectionSchema = z.object({
         message: "errorPart and correctedPart must be different.",
       });
     }
-    if (correctedPart && !sourceText.includes(correctedPart)) {
+    if (correctedPart && !includesLooseSchemaText(sourceText, correctedPart)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["underlinedSegments", index, "correctedPart"],
         message: "correctedPart must appear inside the original underlined sourceText.",
       });
     }
-    if (errorPart && !displayedText.includes(errorPart)) {
+    if (errorPart && !includesLooseSchemaText(displayedText, errorPart)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["underlinedSegments", index, "errorPart"],
@@ -398,16 +398,22 @@ export const grammarCorrectionSchema = z.object({
     }
   });
 
-  const expectedAnswer = correctedParts
-    .filter(Boolean)
-    .map((part, index) => `(${String.fromCharCode(65 + index)}) ${part}`)
-    .join(", ");
-  if (question.correctAnswer.trim() !== expectedAnswer) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["correctAnswer"],
-      message: "correctAnswer must equal every label and correctedPart joined by comma + space.",
-    });
-  }
+  // The generation pipeline post-processes GRAMMAR_CORRECTION and rewrites
+  // correctAnswer from underlinedSegments. Keep the schema gate focused on the
+  // source-backed mutation contract so a harmless answer-format drift can be
+  // normalized instead of causing generateObject to discard the whole question.
 });
 export type GrammarCorrectionQuestion = z.infer<typeof grammarCorrectionSchema>;
+
+function includesLooseSchemaText(text: string, fragment: string): boolean {
+  return normalizeSchemaComparable(text).includes(normalizeSchemaComparable(fragment));
+}
+
+function normalizeSchemaComparable(value: string): string {
+  return value
+    .replace(/[“”]/g, '"')
+    .replace(/[‘’]/g, "'")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}

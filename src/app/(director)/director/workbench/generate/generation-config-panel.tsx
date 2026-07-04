@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   FileText,
   GripVertical,
+  Layers,
   Minus,
   Plus,
   Settings2,
@@ -17,6 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { EXAM_TYPE_GROUPS } from "./generate-page-types";
+import { QUESTION_TYPE_GROUPS_KO } from "@/lib/question-type-ui";
 import { PromptSection } from "./prompt-section";
 import { FEATURE_FLAGS } from "@/lib/feature-flags";
 import { dispatchGenerateTourMilestone } from "@/lib/generate-tour-demo";
@@ -73,6 +75,8 @@ import {
   TYPE_ORDER_STORAGE_KEY,
 } from "./generation-config-panel-parts/constants";
 import { Collapsible } from "./generation-config-panel-parts/collapsible";
+import { KoSetBuilderSection } from "./generation-config-panel-parts/ko-set-builder";
+import { KoTypeDetailContent } from "./generation-config-panel-parts/ko-type-detail";
 import * as TypeNumericDetail from "./generation-config-panel-parts/type-numeric-detail";
 import type { GenerationConfigPanelProps } from "./generation-config-panel-parts/types";
 
@@ -84,6 +88,9 @@ export function GenerationConfigPanel({
   editingRow = false,
   hideGenerateButtons = false,
   activePassageId = null,
+  passageSubject = null,
+  koPassageContent = "",
+  koPassageKind = null,
   setPresetId,
   onSetPresetChange,
   setPresetCounts,
@@ -132,6 +139,17 @@ export function GenerationConfigPanel({
   onWorkspaceGenerate,
   tourActive = false,
 }: GenerationConfigPanelProps) {
+  // ── 국어 지문 게이트 ─────────────────────────────────────────────────
+  // passageSubject === "KOREAN" 이면 국어 유형 그룹만, 그 외(영어·null)면 기존
+  // 영어 그룹만 노출한다. 미전달 기본값(null)에서는 아래 모든 파생값이 기존과
+  // 동일해 영어 패널은 픽셀 하나 바뀌지 않는다. 드래그 정렬 저장 키는 과목별로
+  // 분리해 국어 패널이 영어 정렬(localStorage)을 덮어쓰지 않게 한다.
+  const koPanel = passageSubject === "KOREAN";
+  const panelTypeGroups = koPanel ? QUESTION_TYPE_GROUPS_KO : EXAM_TYPE_GROUPS;
+  const typeOrderStorageKey = koPanel
+    ? `${TYPE_ORDER_STORAGE_KEY}.ko`
+    : TYPE_ORDER_STORAGE_KEY;
+
   const [expandedTypeId, setExpandedTypeId] = useState<string | null>(null);
   // 카테고리 그룹 접힘 상태 — localStorage 영속(UI 취향). 투어 중엔 무시(강제 펼침).
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(() => {
@@ -166,10 +184,10 @@ export function GenerationConfigPanel({
   };
   const allTypeItems = useMemo(
     () =>
-      EXAM_TYPE_GROUPS.flatMap((group) =>
+      panelTypeGroups.flatMap((group) =>
         group.items.map((item) => ({ ...item, groupLabel: group.group })),
       ),
-    [],
+    [panelTypeGroups],
   );
   const allTypeIds = useMemo(
     () => allTypeItems.map((item) => item.id),
@@ -186,13 +204,13 @@ export function GenerationConfigPanel({
     return next;
   };
   const [typeOrder, setTypeOrder] = useState<string[]>(() => {
-    const fallback = EXAM_TYPE_GROUPS.flatMap((group) =>
+    const fallback = panelTypeGroups.flatMap((group) =>
       group.items.map((item) => item.id),
     );
     if (typeof window === "undefined") return fallback;
     try {
       const parsed = JSON.parse(
-        window.localStorage.getItem(TYPE_ORDER_STORAGE_KEY) || "[]",
+        window.localStorage.getItem(typeOrderStorageKey) || "[]",
       );
       if (Array.isArray(parsed)) {
         const known = new Set(fallback);
@@ -596,7 +614,7 @@ export function GenerationConfigPanel({
   useEffect(() => {
     try {
       window.localStorage.setItem(
-        TYPE_ORDER_STORAGE_KEY,
+        typeOrderStorageKey,
         JSON.stringify(normalizeTypeOrder(typeOrder)),
       );
     } catch {
@@ -696,6 +714,7 @@ export function GenerationConfigPanel({
 
   // 카테고리별 닷 색 — 범례와 유형 목록이 같은 색을 쓰도록 group 문자열로 매핑한다.
   const getCategoryDotClass = (category: string) => {
+    if (category.startsWith("국어")) return "bg-indigo-400";
     if (category.startsWith("수능")) return "bg-blue-400";
     if (category.startsWith("내신")) return "bg-emerald-400";
     if (category.startsWith("어휘")) return "bg-amber-400";
@@ -703,6 +722,17 @@ export function GenerationConfigPanel({
   };
 
   const renderTypeNumericDetailContent = (typeId: string) => {
+    // KO_ 게이트 — 국어 유형은 레지스트리 knob 일반 렌더러로 위임 (영어 case 무변경).
+    if (typeId.startsWith("KO_")) {
+      return (
+        <KoTypeDetailContent
+          typeId={typeId}
+          questionTypeSettings={questionTypeSettings}
+          patchTypeSettings={patchTypeSettings}
+        />
+      );
+    }
+
     if (typeId === "CONTENT_MATCH") return TypeNumericDetail.renderContentMatchDetail({ contentMatchAnswerCount, contentMatchAnswerMax, contentMatchOptionCount, contentMatchSettings, setContentMatchAnswerCount, setContentMatchOptionCount, setQuestionTypeSettings });
 
     if (typeId === "IRRELEVANT") return TypeNumericDetail.renderIrrelevantDetail({ irrelevantSlotCount, setIrrelevantSlotCount });
@@ -745,7 +775,11 @@ export function GenerationConfigPanel({
   const renderPerTypeDifficulty = (typeId) => TypeNumericDetail.renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSettings, questionTypeSettings });
 
   // Every type gets language toggles; numeric/special settings render above them.
-  const renderTypeDetailContent = (typeId) => TypeNumericDetail.renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOptionLanguage, getTypeStemLanguage, patchTypeSettings, questionTypeSettings, renderTypeNumericDetailContent, setTypeLanguage });
+  // KO 유형은 언어토글(영어 stem/option 전용)·플랜 셀렉터 없이 KO 전용 상세만 렌더.
+  const renderTypeDetailContent = (typeId) =>
+    typeId.startsWith("KO_")
+      ? renderTypeNumericDetailContent(typeId)
+      : TypeNumericDetail.renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOptionLanguage, getTypeStemLanguage, patchTypeSettings, questionTypeSettings, renderTypeNumericDetailContent, setTypeLanguage });
 
   return (
     <div className="flex flex-1 min-h-0 w-full min-w-0 flex-col overflow-hidden bg-white">
@@ -759,9 +793,13 @@ export function GenerationConfigPanel({
             {(
               [
                 { mode: "manual", label: "유형 지정", Icon: Settings2 },
-                ...(FEATURE_FLAGS.ENABLE_LONG_PASSAGE_SETS
-                  ? [{ mode: "set", label: "장문 세트", Icon: FileText }]
-                  : []),
+                // 국어 패널은 KO 세트 생성이 항상 열려 있다(전용 라우트, 플래그
+                // 불필요). 영어 패널은 기존 그대로 장문 세트 플래그 게이트.
+                ...(koPanel
+                  ? [{ mode: "set", label: "세트 생성", Icon: Layers }]
+                  : FEATURE_FLAGS.ENABLE_LONG_PASSAGE_SETS
+                    ? [{ mode: "set", label: "장문 세트", Icon: FileText }]
+                    : []),
               ] as const
             ).map(({ mode, label, Icon }) => {
               const active = genMode === mode;
@@ -1152,7 +1190,18 @@ export function GenerationConfigPanel({
           </div>
         )}
 
-        {genMode === "set" && TypeNumericDetail.renderSetBuilderSection({ activePassageId, difficulty, editingRow, generationPlan, onSetMemberOverridesByPresetChange, onSetMemberOverridesChange, onSetPresetChange, onSetPresetCountsChange, selectedIds, setDifficulty, setMemberOverrides, setMemberOverridesByPreset, setPresetCounts, setPresetId, workspaceActive, workspaceRowCount })}
+        {/* KO 세트 빌더 — 국어 패널(koPanel) 전용. 영어 장문 세트 빌더와 완전 분기. */}
+        {genMode === "set" && koPanel ? (
+          <KoSetBuilderSection
+            passageContent={koPassageContent ?? ""}
+            passageKind={koPassageKind ?? null}
+            presetCounts={setPresetCounts ?? {}}
+            onPresetCountsChange={onSetPresetCountsChange ?? (() => {})}
+            difficulty={difficulty}
+            onDifficultyChange={setDifficulty}
+          />
+        ) : null}
+        {genMode === "set" && !koPanel && TypeNumericDetail.renderSetBuilderSection({ activePassageId, difficulty, editingRow, generationPlan, onSetMemberOverridesByPresetChange, onSetMemberOverridesChange, onSetPresetChange, onSetPresetCountsChange, selectedIds, setDifficulty, setMemberOverrides, setMemberOverridesByPreset, setPresetCounts, setPresetId, workspaceActive, workspaceRowCount })}
       </div>
 
       {/* Generate Button — 워크스페이스 모드.

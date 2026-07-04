@@ -677,6 +677,11 @@ model Passage {
   tags       String? @db.Text // JSON array of tags
   order      Int     @default(0)
 
+  /// 지문 과목 — null=ENGLISH(기존 지문 전부·영어 경로 무회귀), "KOREAN"=국어.
+  /// DB 반영은 surgical ALTER 관례를 따른다 (migrate deploy / db push 금지):
+  ///   ALTER TABLE passages ADD COLUMN IF NOT EXISTS subject TEXT;
+  subject String?
+
   // ── Extraction lineage (nullable — manual passages stay untouched) ──
   sourceMaterialId       String?
   sourceExtractionItemId String? @unique
@@ -1250,6 +1255,12 @@ model Exam {
   showResults      Boolean   @default(true) // Show results immediately after submission
   settings         String?   @db.Text // JSON: additional exam settings
 
+  /// 시험지 과목 — null=ENGLISH(기존 시험지 전부·영어 경로 무회귀), "KOREAN"=국어 라우트에서 저장.
+  /// passages.subject / *_collections.subject 와 동일 규약. DB 반영은 surgical ALTER
+  /// 관례를 따른다 (scripts/sql/ko-exam-set-subject.sql — migrate deploy / db push 금지):
+  ///   ALTER TABLE exams ADD COLUMN IF NOT EXISTS subject text;
+  subject String?
+
   // ── Activity counters (시험지 관리 카드에 노출) ──
   saveCount  Int @default(0) // 빌더에서 저장된 총 횟수 (최초 생성 포함)
   editCount  Int @default(0) // 기존 시험지를 다시 저장(수정)한 횟수 (생성 제외)
@@ -1606,6 +1617,12 @@ model QuestionCollection {
   color       String? // Hex color for visual distinction
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  /// 폴더 과목 — null=ENGLISH(기존 폴더 전부·영어 경로 무회귀), "KOREAN"=국어.
+  /// passages.subject 와 동일 규약. DB 반영은 surgical ALTER 관례
+  /// (scripts/sql/ko-collections-subject.sql — migrate deploy / db push 금지):
+  ///   ALTER TABLE question_collections ADD COLUMN IF NOT EXISTS subject TEXT;
+  subject String?
 
   academy  Academy                  @relation(fields: [academyId], references: [id])
   parent   QuestionCollection?      @relation("QuestionFolderTree", fields: [parentId], references: [id], onDelete: SetNull)
@@ -2021,6 +2038,12 @@ model PassageCollection {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  /// 폴더 과목 — null=ENGLISH(기존 폴더 전부·영어 경로 무회귀), "KOREAN"=국어.
+  /// passages.subject 와 동일 규약. DB 반영은 surgical ALTER 관례
+  /// (scripts/sql/ko-collections-subject.sql — migrate deploy / db push 금지):
+  ///   ALTER TABLE passage_collections ADD COLUMN IF NOT EXISTS subject TEXT;
+  subject String?
+
   academy  Academy                 @relation(fields: [academyId], references: [id])
   parent   PassageCollection?      @relation("FolderTree", fields: [parentId], references: [id], onDelete: SetNull)
   children PassageCollection[]     @relation("FolderTree")
@@ -2056,6 +2079,12 @@ model ExamCollection {
   name        String
   description String?  @db.Text
   color       String? // Hex color for visual distinction
+
+  /// 시험지 폴더 과목 — null=ENGLISH(기존 폴더 전부·영어 무회귀), "KOREAN"=국어 라우트 생성.
+  /// passages.subject / *_collections.subject 규약. surgical ALTER (migrate deploy / db push 금지):
+  ///   ALTER TABLE exam_collections ADD COLUMN IF NOT EXISTS subject text;  (ko-exam-set-subject.sql)
+  subject     String?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -3210,6 +3239,12 @@ model QuestionSet {
   setLabel               String? // "[43~45]" — printed group header
   basePassageId          String? // optional: structural member promoted to a stored Passage (Phase 7+)
   status                 String   @default("OK")
+
+  /// 문제 세트 과목 — null=ENGLISH(기존 세트 전부·영어 무회귀), "KOREAN"=국어 세트.
+  /// passages.subject 규약. surgical ALTER (migrate deploy / db push 금지):
+  ///   ALTER TABLE question_sets ADD COLUMN IF NOT EXISTS subject text;  (ko-exam-set-subject.sql)
+  subject                String?
+
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
 
@@ -3620,6 +3655,12 @@ model WebtoonCollection {
   color       String? // Hex color for visual distinction
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  /// 폴더 과목 — null=ENGLISH(기존 폴더 전부·영어 경로 무회귀), "KOREAN"=국어.
+  /// passages.subject·passage_collections.subject 와 동일 규약. DB 반영은 surgical
+  /// ALTER 관례(scripts/sql/ko-collections-subject.sql — migrate deploy / db push 금지):
+  ///   ALTER TABLE webtoon_collections ADD COLUMN IF NOT EXISTS subject TEXT;
+  subject String?
 
   academy  Academy                 @relation(fields: [academyId], references: [id])
   parent   WebtoonCollection?      @relation("WebtoonFolderTree", fields: [parentId], references: [id], onDelete: SetNull)

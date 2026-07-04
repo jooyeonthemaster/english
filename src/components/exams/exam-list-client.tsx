@@ -55,6 +55,12 @@ interface Props {
   classes: ClassOption[];
   collections: CollectionItem[];
   collectionMembership: Record<string, Set<string>>;
+  /**
+   * 과목 컨텍스트 — "KOREAN"=국어 시험지 목록(/director/korean/exams)에서
+   * 재사용될 때. 편집 진입 URL 에 ?scope=KOREAN 을 부착해 빌더의 좌측 문제
+   * 피커/폴더가 국어 스코프로 열리게 한다. 미지정=영어 목록(종전과 동일).
+   */
+  subjectScope?: "KOREAN";
 }
 
 // ---------------------------------------------------------------------------
@@ -151,8 +157,15 @@ export function ExamListClient({
   classes,
   collections: initialCollections,
   collectionMembership: initialMembership,
+  subjectScope,
 }: Props) {
   const router = useRouter();
+  // 편집 진입 URL — 국어 목록은 국어 전용 편집 경로(/director/korean/exams)로 착륙시켜
+  // 공유 영어 경로에 착륙하지 않게 한다(유저 확정: 시험지 경로 완전 분리). 영어 불변.
+  const examEditHref = (id: string) =>
+    subjectScope === "KOREAN"
+      ? `/director/korean/exams/${id}/edit`
+      : `/director/workbench/exams/${id}/edit`;
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
@@ -597,7 +610,7 @@ export function ExamListClient({
                       onToggleSelect={selection.toggleSelect}
                       onClick={openQuickView}
                       onEdit={(id) =>
-                        router.push(`/director/workbench/exams/${id}/edit`)
+                        router.push(examEditHref(id))
                       }
                       onDelete={handleDelete}
                       onShowAnalysis={
@@ -621,7 +634,7 @@ export function ExamListClient({
                       onToggleSelect={selection.toggleSelect}
                       onClick={openQuickView}
                       onEdit={(id) =>
-                        router.push(`/director/workbench/exams/${id}/edit`)
+                        router.push(examEditHref(id))
                       }
                       onDelete={handleDelete}
                       onShowAnalysis={

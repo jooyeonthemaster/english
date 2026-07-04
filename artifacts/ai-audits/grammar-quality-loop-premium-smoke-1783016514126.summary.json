@@ -1,0 +1,11 @@
+{
+  "createdAt": "2026-07-02T18:27:58.812Z",
+  "outPath": "C:\\Users\\jooye\\Desktop\\2026project\\nara\\artifacts\\ai-audits\\grammar-quality-loop-premium-smoke-1783016514126.jsonl",
+  "total": 1,
+  "passed": 0,
+  "failed": 1,
+  "passRate": 0,
+  "issueCounts": {
+    "no-question": 1
+  }
+}

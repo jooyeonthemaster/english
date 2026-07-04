@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
 import { isSameObjectiveAnswerForSubtype } from "@/lib/sentence-insert-options";
+import { isKoQuestionType } from "@/lib/korean/registry";
+import { buildKoStudentExamText } from "@/lib/korean/student-exam-text";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -12,6 +14,29 @@ interface ActionResult {
   success: boolean;
   error?: string;
   data?: unknown;
+}
+
+// ---------------------------------------------------------------------------
+// 학생 화면용 questionText (KO-LEAK-2 게이트)
+// ---------------------------------------------------------------------------
+// KO(국어) 문항의 DB questionText 는 지문 미동봉 직렬화라, 응시/결과 화면에는
+// Passage 관계 원문으로 마킹 지문·【보기】·【조건】을 재구성해 내려보낸다
+// (toRenderModel 경유 — 정답·해설·evidence 절대 미포함, 실패 시 저장본 폴백).
+// 영어 문항은 기존 경로(repairGrammarCorrectionQuestionText) byte 불변.
+function buildStudentQuestionText(question: {
+  subType: string | null;
+  questionText: string;
+  structuredData: unknown;
+  passage?: { content: string | null } | null;
+}): string {
+  if (isKoQuestionType(question.subType)) {
+    return buildKoStudentExamText(question);
+  }
+  return repairGrammarCorrectionQuestionText({
+    subType: question.subType,
+    questionText: question.questionText,
+    structuredData: question.structuredData,
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -99,6 +124,8 @@ export async function startExam(
                 questionImage: true,
                 options: true,
                 points: true,
+                // KO 지문 재구성용(KO-LEAK-2) — 학생에게는 조립된 텍스트만 내려간다.
+                passage: { select: { content: true } },
               },
             },
           },
@@ -159,11 +186,7 @@ export async function startExam(
       points: eq.points,
       type: eq.question.type,
       subType: eq.question.subType,
-      questionText: repairGrammarCorrectionQuestionText({
-        subType: eq.question.subType,
-        questionText: eq.question.questionText,
-        structuredData: eq.question.structuredData,
-      }),
+      questionText: buildStudentQuestionText(eq.question),
       questionImage: eq.question.questionImage,
       options: eq.question.options ? JSON.parse(eq.question.options) : null,
     }));
@@ -331,7 +354,11 @@ export async function getExamResult(submissionId: string) {
             where: { question: { deletedAt: null } },
             include: {
               question: {
-                include: { explanation: true },
+                include: {
+                  explanation: true,
+                  // KO 지문 재구성용(KO-LEAK-2) — startExam 과 동일 게이트.
+                  passage: { select: { content: true } },
+                },
               },
             },
             orderBy: { orderNum: "asc" },
@@ -364,11 +391,7 @@ export async function getExamResult(submissionId: string) {
       questionId: q.id,
       type: q.type,
       subType: q.subType,
-      questionText: repairGrammarCorrectionQuestionText({
-        subType: q.subType,
-        questionText: q.questionText,
-        structuredData: q.structuredData,
-      }),
+      questionText: buildStudentQuestionText(q),
       options: q.options ? JSON.parse(q.options) : null,
       correctAnswer: q.correctAnswer,
       studentAnswer: answerText,

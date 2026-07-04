@@ -6,6 +6,12 @@ import { ActivityPalettePanel } from "./activity-palette-modal";
 import { WebtoonPickerModal } from "./webtoon-picker-modal";
 
 type Props = {
+  /**
+   * PRIME_KO(국어 학습지) 편집 컨텍스트 — 영어 전용인 학습 활동 카탈로그와
+   * 단어 시험지 슬롯을 숨기고, 과목 중립인 웹툰 삽입만 남긴다(라벨도 국어 문맥).
+   * 미전달(영어 기본)이면 기존 렌더와 동일 — 무회귀.
+   */
+  koMode?: boolean;
   collapsed: boolean;
   onToggleCollapsed: () => void;
   activityWidth: number;
@@ -26,6 +32,7 @@ type Props = {
 };
 
 export function ActivityPaletteRail({
+  koMode = false,
   collapsed,
   onToggleCollapsed,
   activityWidth,
@@ -43,6 +50,11 @@ export function ActivityPaletteRail({
   onToggleOffKind,
   vocabTestSlot,
 }: Props) {
+  // 국어(PRIME_KO) 편집기: 웹툰 삽입만 남으므로 패널 라벨을 콘텐츠 삽입 문맥으로.
+  const panelTitle = koMode ? "콘텐츠 삽입 패널" : "학습 활동 패널";
+  const panelSubtitle = koMode
+    ? "웹툰 이미지 블록 추가"
+    : "지문으로 즉석 생성 · AI 없음";
   return (
     <>
       <div
@@ -59,8 +71,8 @@ export function ActivityPaletteRail({
         >
           <div className="flex h-11 shrink-0 items-center gap-2 border-b border-slate-200 bg-white px-3.5">
             <div className="min-w-0">
-              <p className="truncate text-[12px] font-black text-slate-800">학습 활동 패널</p>
-              <p className="truncate text-[10.5px] font-semibold text-slate-400">지문으로 즉석 생성 · AI 없음</p>
+              <p className="truncate text-[12px] font-black text-slate-800">{panelTitle}</p>
+              <p className="truncate text-[10.5px] font-semibold text-slate-400">{panelSubtitle}</p>
             </div>
           </div>
           {/* dir=rtl 로 스크롤바를 왼쪽에 두고, 내용은 dir=ltr 래퍼로 정상 방향 유지 */}
@@ -88,16 +100,20 @@ export function ActivityPaletteRail({
             <WebtoonPickerModal
               open={webtoonPickerOpen}
               passageId={passageId}
+              subject={koMode ? "KOREAN" : undefined}
               onClose={onCloseWebtoonPicker}
               onPick={onPickWebtoon}
             />
-            <ActivityPalettePanel
-              report={report}
-              onPick={onPickActivity}
-              activityCounts={activityCounts}
-              onToggleOffKind={onToggleOffKind}
-              vocabTestSlot={vocabTestSlot}
-            />
+            {/* 영어 전용 학습 활동 카탈로그(빈칸·직독직해·어순·어휘) — KO 보고서에는 비노출 */}
+            {koMode ? null : (
+              <ActivityPalettePanel
+                report={report}
+                onPick={onPickActivity}
+                activityCounts={activityCounts}
+                onToggleOffKind={onToggleOffKind}
+                vocabTestSlot={vocabTestSlot}
+              />
+            )}
             </div>
           </div>
         </aside>
@@ -111,8 +127,8 @@ export function ActivityPaletteRail({
           if (!collapsed && onConsumeDragClick()) return;
           onToggleCollapsed();
         }}
-        title={collapsed ? "학습 활동 패널 열기" : "드래그하여 폭 조절 · 클릭하여 닫기"}
-        aria-label={collapsed ? "학습 활동 패널 열기" : "학습 활동 패널 닫기"}
+        title={collapsed ? `${panelTitle} 열기` : "드래그하여 폭 조절 · 클릭하여 닫기"}
+        aria-label={collapsed ? `${panelTitle} 열기` : `${panelTitle} 닫기`}
         aria-expanded={!collapsed}
         className={cn(
           "group/lhandle no-print hidden h-full min-h-0 w-5 shrink-0 touch-none select-none flex-col items-center justify-center gap-1 border-r border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 lg:flex",
@@ -124,7 +140,7 @@ export function ActivityPaletteRail({
         ) : (
           <ChevronLeft className="h-3.5 w-3.5" />
         )}
-        <span style={{ writingMode: "vertical-rl" }}>학습 활동 패널</span>
+        <span style={{ writingMode: "vertical-rl" }}>{panelTitle}</span>
         {!collapsed ? (
           <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/lhandle:opacity-70" />
         ) : null}

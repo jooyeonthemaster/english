@@ -8,7 +8,6 @@ import {
   SINGLE_QUESTION_ANALYSIS_MODEL_ID,
   singleQuestionAnalysisMaxTokens,
   singleQuestionAnalysisModel,
-  singleQuestionAnalysisProviderOptions,
 } from "./model";
 import type { QuestionInventoryItem, SingleItemAnalysis } from "./schema";
 import { generateAnalysisWithRetries } from "./analysis-call";
@@ -323,7 +322,6 @@ export async function reanalyzeAdditionalQuestions(args: {
       model: singleQuestionAnalysisModel,
       modelId: SINGLE_QUESTION_ANALYSIS_MODEL_ID,
       maxOutputTokens: singleQuestionAnalysisMaxTokens,
-      providerOptions: singleQuestionAnalysisProviderOptions,
       includeBoundingBoxes: false,
       targetQuestion: {
         ordinal,
@@ -408,7 +406,6 @@ export async function reanalyzeAdditionalQuestions(args: {
       model: singleQuestionAnalysisModel,
       modelId: SINGLE_QUESTION_ANALYSIS_MODEL_ID,
       maxOutputTokens: singleQuestionAnalysisMaxTokens,
-      providerOptions: singleQuestionAnalysisProviderOptions,
       includeBoundingBoxes: false,
       targetQuestion: {
         ordinal: index + 1,

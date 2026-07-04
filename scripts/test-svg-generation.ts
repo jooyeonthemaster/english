@@ -2,7 +2,6 @@
 import { config } from "dotenv";
 import { resolve } from "path";
 import { writeFileSync } from "fs";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { streamText } from "ai";
 
 config({ path: resolve(process.cwd(), ".env.local") });
@@ -32,22 +31,23 @@ const VISUAL_SYSTEM_PROMPT = [
   "- Include a concise diagram <title> (used as the artifact card title in the UI).",
 ].join("\n");
 
-const apiKey = process.env.GEMINI_API_KEY ?? process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-const modelName = process.env.GEMINI_MODEL ?? "gemini-3.5-flash";
+const apiKey = process.env.ATLASCLOUD_API_KEY ?? process.env.OPENROUTER_API_KEY;
+const modelName =
+  process.env.ATLASCLOUD_TUTOR_MODEL ??
+  process.env.ATLASCLOUD_TEXT_MODEL ??
+  "google/gemini-3.5-flash";
 if (!apiKey) {
-  console.error("Missing API key");
+  console.error("Missing ATLASCLOUD_API_KEY / OPENROUTER_API_KEY");
   process.exit(1);
 }
 
-const provider = createGoogleGenerativeAI({ apiKey });
-
 async function main() {
+  const { atlasChatModel } = await import("../src/lib/atlas-ai");
   const start = Date.now();
   const result = streamText({
-    model: provider(modelName),
+    model: atlasChatModel(modelName),
     maxOutputTokens: 12288,
     temperature: 0.15,
-    providerOptions: { google: { thinkingConfig: { thinkingBudget: 256 } } },
     system: VISUAL_SYSTEM_PROMPT,
     prompt: JSON.stringify({
       passage: {

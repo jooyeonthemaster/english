@@ -4,6 +4,7 @@ import { getStaffSession } from "@/lib/auth";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { deductCredits, refundCredits, InsufficientCreditsError } from "@/lib/credits";
 import { generateLearningWorksheet } from "@/lib/passage-report/analysis-report/generate";
+import { isKoreanPassage } from "@/lib/passage-report/analysis-report/ko-entry";
 import { analysisReportSchema, type AnalysisReport } from "@/lib/passage-report/analysis-report/schema";
 import { prisma } from "@/lib/prisma";
 
@@ -36,11 +37,21 @@ export async function POST(
       academyId: true,
       content: true,
       grade: true,
+      subject: true,
       school: { select: { type: true } },
     },
   });
   if (!passage || passage.academyId !== staff.academyId) {
     return NextResponse.json({ error: "지문을 찾을 수 없습니다." }, { status: 404 });
+  }
+
+  // PRIME_KO 게이트 — 실전 학습지(영어 워크북·수능추론)는 영어 전용 생성기라 국어 지문 차단.
+  // 국어 분석 보고서(PRIME_KO)에는 확인 문제(ko-check-quiz)가 이미 포함된다.
+  if (isKoreanPassage(passage)) {
+    return NextResponse.json(
+      { error: "국어 지문은 실전 학습지(영어 워크북)를 지원하지 않습니다. 국어 분석 보고서에 확인 문제가 포함돼 있어요." },
+      { status: 400 },
+    );
   }
 
   // 메인 분석 보고서(5섹션)가 있어야 워크시트를 그 위에 붙일 수 있다.

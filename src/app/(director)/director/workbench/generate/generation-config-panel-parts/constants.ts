@@ -11,12 +11,29 @@ export const TYPE_ORDER_STORAGE_KEY =
 // 각 카드를 접을 수 있게 한다. 투어 중에는 강제로 모두 펼친다.
 export const GROUP_COLLAPSE_STORAGE_KEY =
   "smoat.workbench.questions.generate.groupCollapsed.v1";
-// 렌더 순서(고정): 수능 → 내신 → 어휘. 정렬(typeOrder)은 그룹 내부에만 적용된다.
-export const GROUP_ORDER = ["수능", "내신", "어휘"] as const;
+// 렌더 순서(고정): 수능 → 내신 → 어휘 → (국어 4그룹). 정렬(typeOrder)은 그룹
+// 내부에만 적용된다. 국어 prefix 는 패널의 subject 게이트(passageSubject) 하에서만
+// 유형이 채워진다 — 영어 지문 패널에서는 빈 그룹으로 걸러져 렌더되지 않는다.
+// (prefix 미등록 시 KO 유형이 UI 에서 조용히 소실 — KO-DESIGN-SPEC §1 최우선 지점)
+export const GROUP_ORDER = [
+  "수능",
+  "내신",
+  "어휘",
+  "국어 독서",
+  "국어 문학",
+  "국어 문법",
+  "국어 화법·작문·매체",
+  "국어 서답형",
+] as const;
 export const GROUP_LABELS: Record<string, string> = {
   수능: "수능·모의고사 객관식",
   내신: "내신 서술형",
   어휘: "어휘",
+  "국어 독서": "국어 독서",
+  "국어 문학": "국어 문학",
+  "국어 문법": "국어 문법",
+  "국어 화법·작문·매체": "국어 화법·작문·매체",
+  "국어 서답형": "국어 내신 서답형",
 };
 
 // Difficulty — 세그먼트 컨트롤. 단계 식별은 컬러 닷 + 난이도별 면색(SOT).

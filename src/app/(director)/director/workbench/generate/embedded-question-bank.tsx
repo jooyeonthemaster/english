@@ -288,6 +288,11 @@ const FRESH_QUESTION_GLOW_CLASS =
 
 interface EmbeddedQuestionBankProps {
   academyId: string;
+  /**
+   * 과목 스코프 — "KOREAN" 이면 국어 문항(subType KO_*)만 조회·노출하고 유형
+   * 필터도 국어 그룹으로 바뀐다. 미전달 = 영어 기본(KO_* 문항 제외).
+   */
+  subjectScope?: "KOREAN";
   // ── Live generation queue (ported from BottomQueueSection) ──
   sessionQueue?: QueueItem[];
   queueCounts?: { generating: number; done: number; error: number };
@@ -304,6 +309,7 @@ interface EmbeddedQuestionBankProps {
 
 export function EmbeddedQuestionBank({
   academyId,
+  subjectScope,
   sessionQueue = [],
   queueCounts = { generating: 0, done: 0, error: 0 },
   queueFilter = "all",
@@ -360,7 +366,15 @@ export function EmbeddedQuestionBank({
     initialCollections: [],
     initialMembership: {},
     actions: {
-      createCollection: createQuestionCollection,
+      // 폴더 생성에 과목 스코프를 실어 감싼다 — 국어 라우트에서 만든 폴더는
+      // subject='KOREAN' 으로 저장돼 영어 폴더 목록과 완전 분리(영어 기본
+      // 경로는 subject 미전달 = 기존 INSERT 그대로, 무회귀).
+      createCollection: (data: Parameters<typeof createQuestionCollection>[0]) =>
+        createQuestionCollection(
+          subjectScope === "KOREAN"
+            ? { ...data, subject: "KOREAN" as const }
+            : data,
+        ),
       updateCollection: updateQuestionCollection,
       deleteCollection: deleteQuestionCollection,
       addToCollection: addQuestionsToCollection,
@@ -377,7 +391,11 @@ export function EmbeddedQuestionBank({
   const refreshCollections = useCallback(async () => {
     try {
       const [collections, membership] = await Promise.all([
-        getQuestionCollections(academyId),
+        // 과목 스코프 — 국어 라우트는 국어 폴더만, 영어(기본)는 국어 폴더 제외.
+        getQuestionCollections(
+          academyId,
+          subjectScope === "KOREAN" ? { subject: "KOREAN" } : undefined,
+        ),
         getAcademyQuestionCollectionMembership(academyId),
       ]);
       folders.setCollections((collections ?? []) as any);
@@ -391,7 +409,7 @@ export function EmbeddedQuestionBank({
       setCollectionsLoaded(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [academyId]);
+  }, [academyId, subjectScope]);
 
   useEffect(() => {
     if (open && !collectionsLoaded) void refreshCollections();
@@ -407,8 +425,11 @@ export function EmbeddedQuestionBank({
       ...filters,
       collectionId: folders.activeFolder ?? undefined,
       limit: pageSize,
+      // 과목 스코프 — 서버 where(buildWorkbenchQuestionWhere)가 국어/영어를
+      // 완전 분리한다("KOREAN"=KO_* 만 / 미지정=KO_* 제외).
+      subject: subjectScope,
     }),
-    [filters, folders.activeFolder, pageSize],
+    [filters, folders.activeFolder, pageSize, subjectScope],
   );
 
   // 모바일↔데스크톱 전환으로 페이지 크기가 바뀌면 1페이지로 되돌린다(범위 밖 방지).
@@ -1405,6 +1426,7 @@ export function EmbeddedQuestionBank({
       <div className="flex shrink-0 flex-nowrap items-center justify-end gap-1.5 md:ml-auto md:w-auto md:flex-wrap md:gap-2">
         <QuestionFiltersToolbar
           filters={filters}
+          subjectScope={subjectScope}
           searchValue={searchValue}
           onSearchChange={setSearchValue}
           onSearchSubmit={handleSearch}
@@ -1483,6 +1505,7 @@ export function EmbeddedQuestionBank({
         viewSize={viewSize}
         cardClickSelects
         showDetailButton
+        showQuickActions
         getDragQuestionIds={getDragQuestionIds}
         collapsedMinHeightClass={collapsedMinHeightClass}
       />
@@ -1585,21 +1608,25 @@ export function EmbeddedQuestionBank({
               {queueStrip}
 
               {isGrouped ? (
-                  <>
-                    <div className="mb-3">
-                      <QuestionSetSection
-                        showSets={pageSetIds.length > 0}
-                        setIds={pageSetIds}
-                        refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
-                        onCountChange={setSetCount}
-                        onMemberSplit={handleSplitCreated}
-                        selectedQuestionIds={selectedIds}
-                        onToggleSetSelection={handleToggleSetSelection}
-                        collectionId={folders.activeFolder ?? undefined}
-                        filters={effectiveFilters}
-                        gridClassName={`grid items-start gap-2 lg:gap-3 ${
-                          gridCols === 2
-                            ? "grid-cols-1 md:grid-cols-2"
+                <>
+                  <div className="mb-3">
+                    <QuestionSetSection
+                      // 국어 스코프에서만 세트 카드를 노출한다 — KO 세트 멤버는
+                      // inSet=true 라 세트 카드가 유일한 묶음 표면. 영어는 기존
+                      // 그대로(카운트/분리 다이얼로그만, 카드 숨김).
+                      showSets={subjectScope === "KOREAN"}
+                      subjectScope={subjectScope}
+                      setIds={pageSetIds}
+                      refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
+                      onCountChange={setSetCount}
+                      onMemberSplit={handleSplitCreated}
+                      selectedQuestionIds={selectedIds}
+                      onToggleSetSelection={handleToggleSetSelection}
+                      collectionId={folders.activeFolder ?? undefined}
+                      filters={effectiveFilters}
+                      gridClassName={`grid items-start gap-2 lg:gap-3 ${
+                        gridCols === 2
+                          ? "grid-cols-1 md:grid-cols-2"
                           : gridCols === 3
                             ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
                             : "grid-cols-1"
@@ -1665,7 +1692,10 @@ export function EmbeddedQuestionBank({
                       (종류 불문 통합 정렬). 세트는 최신이라 1페이지에서만 끼운다. */}
                   <QuestionSetSection
                     inline
-                    showSets={pageSetIds.length > 0}
+                    // 국어 스코프: 1페이지에서 세트 카드를 일반 카드와 최신순으로
+                    // 섞어 노출(세트는 최신이라 1페이지 위치). 영어는 기존 그대로.
+                    showSets={subjectScope === "KOREAN" && currentPage === 1}
+                    subjectScope={subjectScope}
                     setIds={pageSetIds}
                     refreshKey={`${open}:${queueCounts.done}:${setRefreshKey}:${folders.activeFolder ?? "all"}`}
                     onCountChange={setSetCount}

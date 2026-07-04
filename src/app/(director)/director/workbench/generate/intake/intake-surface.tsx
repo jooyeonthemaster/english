@@ -35,6 +35,17 @@ interface IntakeSurfaceProps {
   ) => boolean | void | Promise<boolean | void>;
   pasteSaving?: boolean;
   /**
+   * 직접 입력의 과목 스코프 — "KOREAN" 이면 국어 고정 붙여넣기(갈래 셀렉트·
+   * (가)(나) 힌트만 노출, 세그먼트 없음). 미전달 = 영어 기본, 기존 소비처
+   * (웹툰·유사문항 등) UI 픽셀 동일(무회귀).
+   */
+  pasteSubjectScope?: "KOREAN";
+  /**
+   * 파일업로드(이미지·PDF 추출) 탭 노출 여부. 기본 true(기존 동작). 국어
+   * 라우트는 false — 추출 파이프라인은 영어 전용이라 국어 화면에서 숨긴다.
+   */
+  showUploadTab?: boolean;
+  /**
    * Show the 직접 입력 (multi-passage paste) tab. Defaults to true (문제 생성).
    * The 학습지 생성 page sets this false — direct paste lives in its right
    * "지문" annotation stack instead, so the left panel is 이미지·PDF | 자료 관리.
@@ -94,6 +105,8 @@ export function IntakeSurface({
   library,
   onSubmitPastedRows,
   pasteSaving,
+  pasteSubjectScope,
+  showUploadTab = true,
   showPasteTab = true,
   suppressTutorial = false,
   upload,
@@ -110,7 +123,8 @@ export function IntakeSurface({
   const dismissOverlay = () => onDismissOverlay?.();
   const pasteActive =
     showPasteTab && intakeView === "intake" && intakeTab === "paste";
-  const uploadActive = intakeView === "intake" && intakeTab === "upload";
+  const uploadActive =
+    showUploadTab && intakeView === "intake" && intakeTab === "upload";
   const examActive =
     !!examBrowser && intakeView === "intake" && intakeTab === "exam";
   const libraryActive = intakeView === "library";
@@ -142,18 +156,20 @@ export function IntakeSurface({
             tourKey="intake-paste"
           />
         ) : null}
-        <Tab
-          active={uploadActive && !overlay}
-          onClick={() => {
-            dismissOverlay();
-            setIntakeView("intake");
-            setIntakeTab("upload");
-            dispatchGenerateTourMilestone("upload-tab-opened");
-          }}
-          icon={<ImageUp className="h-3.5 w-3.5" />}
-          label="파일업로드"
-          tourKey="intake-upload"
-        />
+        {showUploadTab ? (
+          <Tab
+            active={uploadActive && !overlay}
+            onClick={() => {
+              dismissOverlay();
+              setIntakeView("intake");
+              setIntakeTab("upload");
+              dispatchGenerateTourMilestone("upload-tab-opened");
+            }}
+            icon={<ImageUp className="h-3.5 w-3.5" />}
+            label="파일업로드"
+            tourKey="intake-upload"
+          />
+        ) : null}
         {examBrowser ? (
           <Tab
             active={examActive && !overlay}
@@ -221,6 +237,7 @@ export function IntakeSurface({
               onSubmitRows={onSubmitPastedRows}
               saving={pasteSaving ?? false}
               suppressTutorial={suppressTutorial}
+              subjectScope={pasteSubjectScope}
               startRef={pasteStartRef}
               onDraftStateChange={onPasteStateChange}
             />

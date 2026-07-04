@@ -43,6 +43,9 @@ import type {
   BuilderBlock,
   BuilderLayout,
 } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document";
+import { isKoQuestionType } from "@/lib/korean/registry";
+import { isKoSetGroupId } from "@/lib/korean/sets/paper";
+import { resolveKoSetSharedPassageContent } from "@/app/api/exams/[examId]/export-docx/_lib/build-builder-document/ko-set-passage";
 
 export type BreakType = "page" | "column";
 export type BreakPlan = Map<string, BreakType>;
@@ -182,12 +185,22 @@ function reconstructPaperItems(opts: {
       block.includePassage ??
       resolved?.includePassage ??
       Boolean(source?.passage);
-    const passageContent = normalizePassageText(
+    const groupId = block.groupId ?? resolved?.groupId ?? `single:${localId}`;
+    // [KOSET-2] KO 세트 멤버(`set:<setId>` 그룹 + KO 유형)는 normalizePassageText 의
+    // 단락 접힘(개행→공백)을 우회해 원문 개행(운문 행 구분)을 보존한다 — 웹
+    // makePaperItem 의 KO 분기(paper-item-utils.tsx)와 동일 게이트. 정규화는
+    // applyKoSetSharedPassages → buildKoSetSharedPassage 내부 normalizeKo 에 위임해
+    // 마커 앵커 좌표계까지 웹 미리보기/DOCX 와 일치시킨다. KO 솔로 문항·영어 전
+    // 유형은 게이트 밖이라 기존 normalizePassageText 유지(무회귀 게이트).
+    const rawPassageContent =
       block.passageContent ??
-        resolved?.passageContent ??
-        source?.passage?.content ??
-        "",
-    );
+      resolved?.passageContent ??
+      source?.passage?.content ??
+      "";
+    const passageContent =
+      isKoSetGroupId(groupId) && isKoQuestionType(subType)
+        ? rawPassageContent
+        : normalizePassageText(rawPassageContent);
     const passageTitle = normalizeInlineText(
       block.passageTitle ||
         resolved?.passageTitle ||
@@ -198,11 +211,19 @@ function reconstructPaperItems(opts: {
     return {
       localId,
       questionId,
-      // pagination 은 sourceQuestion.subType 만 읽는다.
-      sourceQuestion: { subType } as unknown as PaperItem["sourceQuestion"],
+      // pagination 은 sourceQuestion.subType 만 읽는다. structuredData 는 KO 세트
+      // 공유지문(멤버 마커 병합 — applyKoSetSharedPassages)에서만 소비되므로
+      // KO_* 유형에만 싣는다 — 영어 문항에 실으면 shouldForceSourcePassage 의
+      // 내장지문 감지 결과가 기존(미보유)과 달라져 영어 분할 계획이 변한다(무회귀 게이트).
+      sourceQuestion: {
+        subType,
+        structuredData: isKoQuestionType(subType)
+          ? source?.structuredData
+          : undefined,
+      } as unknown as PaperItem["sourceQuestion"],
       orderNum: block.orderNum ?? resolved?.orderNum ?? 0,
       points: block.points ?? resolved?.points ?? 1,
-      groupId: block.groupId ?? resolved?.groupId ?? `single:${localId}`,
+      groupId,
       includePassage,
       passageTitle,
       passageContent,
@@ -362,7 +383,33 @@ function buildGroups(items: PaperItem[]): PaperGroup[] {
       });
     }
   }
+  applyKoSetSharedPassages(groups);
   return groups;
+}
+
+// KO 세트 그룹(`set:<setId>`) 선두에 공유지문 1박스를 채운다 — 미리보기
+// (paper-item-utils.applyKoSetSharedPassages)와 동일한 후처리를 서버 복제본에도
+// 적용해, pagination(분할 계획·fragment 배치)이 미리보기와 같은 지문을 측정하게
+// 한다. 영어 세트("single:")·지문("passage:") 그룹은 helper 가 null 을 반환해
+// 절대 걸리지 않는다(무회귀 게이트).
+function applyKoSetSharedPassages(groups: PaperGroup[]) {
+  const renderedSetIds = new Set<string>();
+  for (const group of groups) {
+    const questionItems = group.items.filter(
+      (it) => it.blockType === "question",
+    );
+    const shared = resolveKoSetSharedPassageContent(group.id, questionItems);
+    if (shared === null) continue;
+    // 같은 세트가 비문항 블록으로 쪼개져 그룹이 여러 개면 지문 박스는 첫 그룹만.
+    if (renderedSetIds.has(group.id)) {
+      group.includePassage = false;
+      continue;
+    }
+    renderedSetIds.add(group.id);
+    group.passageTitle = resolvePaperItemPassageTitle(questionItems[0]);
+    group.passageContent = shared;
+    group.includePassage = true;
+  }
 }
 
 /**

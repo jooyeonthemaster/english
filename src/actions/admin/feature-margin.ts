@@ -36,6 +36,7 @@ const ESTIMATE_USD_PER_ACTION: Record<OperationType, number> = {
   PASSAGE_TRANSFORM: 0.001,
   PASSAGE_VARIANT: 0.002,
   WEBTOON_IMAGE: 0.008,
+  WEBTOON_IMAGE_PREMIUM: 0.02,
 };
 
 // 표시 순서(카테고리별).
@@ -54,6 +55,7 @@ const FEATURE_ORDER: OperationType[] = [
   "PASSAGE_TRANSFORM",
   "PASSAGE_VARIANT",
   "WEBTOON_IMAGE",
+  "WEBTOON_IMAGE_PREMIUM",
   "TEXT_EXTRACTION",
 ];
 

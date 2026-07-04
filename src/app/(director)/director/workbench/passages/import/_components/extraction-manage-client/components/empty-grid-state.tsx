@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { Database, FolderOpen, Search, UploadCloud } from "lucide-react";
 
@@ -26,6 +26,12 @@ export function EmptyGridState({
   onDropDrafts,
 }: EmptyGridStateProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  // 국어 라우트(/director/korean/**)에서는 국어 자료 추출 페이지로, 영어 워크벤치
+  // 에서는 기존 경로로 보낸다(무회귀). 착륙 라우트가 과목과 어긋나지 않게 한다.
+  const extractionHref = pathname?.startsWith("/director/korean")
+    ? "/director/korean/extraction"
+    : "/director/workbench/passages/import";
 
   if (variant === "no-drafts") {
     return (
@@ -37,7 +43,7 @@ export function EmptyGridState({
         <Sub>자료 추출 페이지에서 PDF/이미지/텍스트로 새 작업을 시작하세요.</Sub>
         <button
           type="button"
-          onClick={() => router.push("/director/workbench/passages/import")}
+          onClick={() => router.push(extractionHref)}
           className="mt-5 inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-md bg-blue-600 px-4 text-xs font-bold text-white shadow-sm motion-safe:transition-colors motion-safe:duration-200 hover:bg-blue-700"
         >
           <UploadCloud className="size-3.5" />

@@ -3,6 +3,8 @@
  * DOCX 와 같은 시각 비율을 유지하기 위해 pt/색상을 동일하게 맞춤.
  */
 
+import { koTypeLabelMap } from "@/lib/korean/registry";
+
 export const COLORS = {
   black: "#000000",
   darkGray: "#333333",
@@ -81,4 +83,6 @@ export const SUBTYPE_LABELS: Record<string, string> = {
   ANTONYM: "반의어",
   CUSTOM: "커스텀",
   CUSTOM_LAYOUT: "커스텀",
+  // 국어(KO_*) 유형 라벨 병합 (영어 라벨 무변경).
+  ...koTypeLabelMap(),
 };

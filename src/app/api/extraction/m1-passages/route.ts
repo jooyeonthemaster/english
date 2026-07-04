@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireStaff } from "@/lib/extraction/api-utils";
 import { isM1DraftVisible } from "@/lib/extraction/m1-draft-visibility";
@@ -214,13 +215,50 @@ export async function GET(req: NextRequest) {
   const draftIds = parseIdList(req.nextUrl.searchParams.get("draftIds"));
   const view = req.nextUrl.searchParams.get("view");
   const cursor = decodeListCursor(req.nextUrl.searchParams.get("cursor"));
+  // 과목 스코프 — 국어 라우트만 subject=KOREAN(국어 자료만). 미전달=영어 기본
+  // (국어 자료 제외). 자료(draft)는 그 잡의 metadata.subject 로 과목을 물려받으므로
+  // "국어 잡" id 집합(소수)만 raw 로 뽑아 KOREAN=포함 / 영어=배제한다.
+  // Prisma 의 JSON `not`/`NOT` 이 metadata NULL·subject 미기록(originPath-only) 영어
+  // 잡을 소리 없이 탈락시키는 함정을 피하고, 영어 학원(국어 잡 0개)에서는 배제 절이
+  // 아예 붙지 않아 기존 동작이 그대로 유지된다(무회귀).
+  const subjectScope =
+    req.nextUrl.searchParams.get("subject") === "KOREAN" ? "KOREAN" : null;
 
   if (view === "list") {
+    // 브로드 목록(jobId/draftIds/savedPassageId 미지정)에서만 과목 스코프를 적용한다.
+    // 특정 jobId 로 좁힌 조회는 이미 단일 잡 범위라 별도 스코프가 불필요하고,
+    // 다른 소비처(생성 페이지 savedPassageId 등)의 targeted 조회를 건드리지 않는다.
+    const applySubjectScope = !jobId && draftIds.length === 0 && !savedPassageId;
+    let koreanJobIds: string[] = [];
+    if (applySubjectScope) {
+      const rows = await prisma.$queryRaw<Array<{ id: string }>>(
+        Prisma.sql`
+          SELECT id
+          FROM "extraction_jobs"
+          WHERE "academyId" = ${staff.academyId}
+            AND "deletedAt" IS NULL
+            AND "mode" = 'PASSAGE_ONLY'
+            AND metadata->>'subject' = 'KOREAN'
+        `,
+      );
+      koreanJobIds = rows.map((row) => row.id);
+    }
+    // KOREAN=국어 잡만 / 영어=국어 잡 배제. 국어 잡이 0개면 절이 붙지 않아 영어
+    // 목록은 종전과 완전히 동일하다.
+    const subjectJobIdWhere: Record<string, unknown> = applySubjectScope
+      ? subjectScope === "KOREAN"
+        ? { jobId: { in: koreanJobIds } }
+        : koreanJobIds.length > 0
+          ? { jobId: { notIn: koreanJobIds } }
+          : {}
+      : {};
+
     const cursorDate = cursor ? new Date(cursor.jobCreatedAt) : null;
     const drafts = await prisma.extractionM1PassageDraft.findMany({
       where: {
         ...(draftIds.length > 0 ? { id: { in: draftIds } } : {}),
         ...(jobId ? { jobId } : {}),
+        ...subjectJobIdWhere,
         ...(savedPassageId ? { savedPassageId } : {}),
         deletedAt: null,
         ...(cursor && cursorDate && !Number.isNaN(cursorDate.getTime())

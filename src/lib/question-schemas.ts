@@ -125,6 +125,28 @@ export const STRUCTURED_TYPE_PROMPTS: Record<string, string> = {
 };
 
 // ---------------------------------------------------------------------------
+// 4-KO. KO(국어) 유형 병합 — 레지스트리 파생 (기존 영어 엔트리 무변경)
+// ---------------------------------------------------------------------------
+// KO_TYPE_REGISTRY 의 모듈을 메타/스키마/프롬프트 3배럴에 루프 병합한다.
+// category 는 meta.formatCategory(답형식 축: 객관식/서술형/어휘)로 기존
+// QuestionCategory 유니온에 그대로 매핑된다 — 유니온 확장 없음.
+
+import { KO_TYPE_REGISTRY } from "./korean/registry";
+
+for (const koModule of Object.values(KO_TYPE_REGISTRY)) {
+  const koMeta = koModule.meta;
+  QUESTION_TYPE_META[koMeta.typeId] = {
+    typeId: koMeta.typeId,
+    category: koMeta.formatCategory,
+    label: koMeta.label,
+    includesPassage: koMeta.includesPassage,
+    description: koMeta.description,
+  };
+  QUESTION_SCHEMAS[koMeta.typeId] = koModule.schema;
+  STRUCTURED_TYPE_PROMPTS[koMeta.typeId] = koModule.prompt;
+}
+
+// ---------------------------------------------------------------------------
 // 5. Union type
 // ---------------------------------------------------------------------------
 

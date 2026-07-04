@@ -31,6 +31,10 @@ import {
   IntakeTab,
 } from "@/app/(director)/director/workbench/generate/intake/intake-surface";
 import {
+  DEFAULT_WEBTOON_IMAGE_PLAN,
+  type WebtoonImagePlanId,
+} from "@/lib/webtoon-models";
+import {
   DEFAULT_WEBTOON_LANGUAGE,
   type WebtoonLanguageId,
   type WebtoonStyleId,
@@ -44,6 +48,7 @@ interface WebtoonPageClientProps {
   academyId: string;
   collections: CollectionItem[];
   collectionMembership: Record<string, Set<string>>;
+  subjectScope?: "KOREAN";
 }
 
 /** Build a passage title from the first non-empty line of typed content. */
@@ -60,6 +65,7 @@ export function WebtoonPageClient({
   academyId,
   collections: webtoonCollections,
   collectionMembership: webtoonCollectionMembership,
+  subjectScope,
 }: WebtoonPageClientProps) {
   // ─── 지문 입력 스택 (내 지문함에서 불러온 지문 = 행) ───
   const [rows, setRows] = useState<PassageInputRow[]>([]);
@@ -89,6 +95,9 @@ export function WebtoonPageClient({
   }, []);
 
   // ─── 웹툰 옵션 ───
+  const [plan, setPlan] = useState<WebtoonImagePlanId>(
+    DEFAULT_WEBTOON_IMAGE_PLAN,
+  );
   const [style, setStyle] = useState<WebtoonStyleId>("KOREAN_WEBTOON");
   const [language, setLanguage] = useState<WebtoonLanguageId>(
     DEFAULT_WEBTOON_LANGUAGE,
@@ -103,7 +112,10 @@ export function WebtoonPageClient({
   const [formCollapsed, setFormCollapsed] = useState(false);
 
   // ─── 웹툰 큐 (DB 폴링) — 생성 트리거 + 상단 배지(생성 중·실패) 용도 ───
-  const { items: queue, handleBatchGenerate } = useWebtoonState({ academyId });
+  const { items: queue, handleBatchGenerate } = useWebtoonState({
+    academyId,
+    subjectScope,
+  });
 
   const queueCounts = useMemo(
     () => ({
@@ -122,7 +134,13 @@ export function WebtoonPageClient({
 
   // ─── 내 지문함 라이브러리 (학습지 생성과 동일한 저장 지문 intake) ───
   const showLibrary = useCallback(() => setIntakeView("library"), []);
-  const library = usePassageLibrary({ academyId, onShowLibrary: showLibrary });
+  // subjectScope 를 실어 picker(내 지문함)를 국어 지문(subject='KOREAN')으로 좁힌다.
+  // 직접입력 저장/새 폴더도 국어로 스코프된다. 미전달(영어)은 기존 동작 그대로.
+  const library = usePassageLibrary({
+    academyId,
+    onShowLibrary: showLibrary,
+    subjectScope,
+  });
   const {
     passages,
     filteredPassages,
@@ -362,6 +380,7 @@ export function WebtoonPageClient({
     async (
       localId: string,
       opts: {
+        plan: WebtoonImagePlanId;
         style: WebtoonStyleId;
         language: WebtoonLanguageId;
         customPrompt: string;
@@ -382,17 +401,41 @@ export function WebtoonPageClient({
         // 내 지문함에서 불러온 행은 이미 저장된 Passage 이므로 재사용한다.
         let passageId = row.passageId;
         if (!passageId) {
-          const result = await createWorkbenchPassage({
-            title,
-            content: text,
-            source: row.source?.trim() || undefined,
-            sourceDraftId: row.sourceDraftId ?? undefined,
-          });
-          if (!result.success || !result.id) {
-            toast.error(result.error || "지문 등록에 실패했습니다.");
-            return false;
+          // 국어 라우트에서 워크스페이스에 직접 입력한 지문은 subject='KOREAN' 으로
+          // 저장돼야 한다 — 그래야 생성된 웹툰(passage.subject 기준 스코프)이 국어
+          // 보관함에 남고 영어 지문 목록에 새지 않는다. createWorkbenchPassage 는
+          // subject 를 받지 않으므로(passages 유닛 소유), 국어 생성 페이지와 동일한
+          // subject-aware 액션(createDirectInputPassageMaterial)을 쓴다. 영어(미전달)
+          // 경로는 기존 createWorkbenchPassage 그대로(source·draft 링크 보존, 무회귀).
+          if (subjectScope === "KOREAN") {
+            const { createDirectInputPassageMaterial } = await import(
+              "@/actions/workbench"
+            );
+            const result = await createDirectInputPassageMaterial({
+              title,
+              content: text,
+              subject: "KOREAN",
+            });
+            if (!result.success || !result.id) {
+              toast.error(result.error || "지문 등록에 실패했습니다.");
+              return false;
+            }
+            passageId = result.id;
+          } else {
+            const result = await createWorkbenchPassage({
+              title,
+              content: text,
+              source: row.source?.trim() || undefined,
+              sourceDraftId: row.sourceDraftId ?? undefined,
+              // 국어 웹툰 라우트 등록이면 Passage.subject="KOREAN" 태깅.
+              subject: subjectScope,
+            });
+            if (!result.success || !result.id) {
+              toast.error(result.error || "지문 등록에 실패했습니다.");
+              return false;
+            }
+            passageId = result.id;
           }
-          passageId = result.id;
         }
 
         const queued = await handleBatchGenerate(
@@ -400,6 +443,7 @@ export function WebtoonPageClient({
           opts.style,
           opts.customPrompt,
           opts.language,
+          opts.plan,
         );
         // 큐잉이 성공했을 때만 이 행을 워크스페이스에서 비운다. 실패하면
         // (네트워크/크레딧 부족 등) 작성한 지문을 보존해 바로 재시도할 수 있게 한다.
@@ -428,7 +472,7 @@ export function WebtoonPageClient({
         setGenerating(false);
       }
     },
-    [generating, handleBatchGenerate, loadPassages, triggerRefresh],
+    [generating, handleBatchGenerate, loadPassages, triggerRefresh, subjectScope],
   );
 
   return (
@@ -457,6 +501,8 @@ export function WebtoonPageClient({
                   rows={rows}
                   setRows={setRows}
                   saving={generating}
+                  plan={plan}
+                  setPlan={setPlan}
                   style={style}
                   setStyle={setStyle}
                   language={language}
@@ -576,6 +622,7 @@ export function WebtoonPageClient({
               academyId={academyId}
               collections={webtoonCollections}
               collectionMembership={webtoonCollectionMembership}
+              subjectScope={subjectScope}
               refreshSignal={webtoonRefreshSignal}
             />
           </section>

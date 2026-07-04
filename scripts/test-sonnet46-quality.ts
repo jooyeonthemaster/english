@@ -15,11 +15,9 @@ dotenv.config({ path: path.join(process.cwd(), ".env") });
 
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { anthropic } from "@ai-sdk/anthropic";
 import { generateObject } from "ai";
 import { z } from "zod";
 
-import { GEMINI_MODEL_ID, model as geminiModel } from "../src/lib/ai";
 import { StructuredQuestionRenderer } from "../src/components/workbench/question-renderers";
 import { STRUCTURED_TYPE_PROMPTS, QUESTION_SCHEMAS } from "../src/lib/question-schemas";
 import { AI_QUESTION_SCHEMAS, getAiResponseSchema } from "../src/lib/question-ai-schemas-mc";
@@ -99,14 +97,14 @@ const PROVIDERS: Record<TestProvider, ProviderConfig> = {
   gemini: {
     provider: "gemini",
     label: "Gemini 3.5 Flash",
-    modelId: GEMINI_MODEL_ID,
+    modelId: process.env.ATLASCLOUD_TEXT_MODEL ?? "google/gemini-3.5-flash",
     defaultConcurrency: 4,
     timeoutMs: Number(process.env.GEMINI_QUESTION_TIMEOUT_MS ?? 120_000),
   },
   anthropic: {
     provider: "anthropic",
-    label: "Claude Sonnet 4.6",
-    modelId: "claude-sonnet-4-6",
+    label: "Claude Sonnet 5",
+    modelId: process.env.ATLASCLOUD_PREMIUM_MODEL ?? "anthropic/claude-sonnet-5",
     defaultConcurrency: 3,
     timeoutMs: 180_000,
   },
@@ -157,6 +155,7 @@ const MARKING_RUBRIC = `## Marking accuracy requirements
 - Do not generate full-passage display fields such as passageWithBlank, passageWithMarkers, passageWithUnderline, or passageWithNumbers. The server reconstructs them.`;
 
 async function generateOnce(provider: ProviderConfig, typeId: string) {
+  const { atlasChatModel } = await import("../src/lib/atlas-ai");
   const typePrompt = STRUCTURED_TYPE_PROMPTS[typeId] || `${typeId} question type.`;
   const typeQualityRubric = getTypeQualityRubric(typeId, "KILLER");
   const targetCandidateBlock = buildQuestionTargetCandidateBlock(typeId, PASSAGE);
@@ -217,15 +216,10 @@ Generate exactly 1 question.`;
         console.log(`[${provider.modelId}] retry ${typeId} attempt=${attempt}`);
       }
       result = await generateObject({
-        model: provider.provider === "gemini" ? geminiModel : anthropic(provider.modelId),
+        model: atlasChatModel(provider.modelId),
         schema: responseSchema,
         prompt,
         abortSignal: AbortSignal.timeout(provider.timeoutMs),
-        providerOptions: {
-          ...(provider.provider === "gemini"
-            ? { google: { thinkingConfig: { thinkingBudget: GEMINI_THINKING_BUDGET } } }
-            : { anthropic: { structuredOutputMode: "jsonTool" } }),
-        },
       });
       break;
     } catch (error) {
@@ -543,11 +537,8 @@ function getProvidersToRun(): TestProvider[] {
 }
 
 function validateEnv() {
-  if (PROVIDERS_TO_RUN.includes("gemini") && !process.env.GEMINI_API_KEY && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    throw new Error("GEMINI_API_KEY or GOOGLE_GENERATIVE_AI_API_KEY is not set");
-  }
-  if (PROVIDERS_TO_RUN.includes("anthropic") && !process.env.ANTHROPIC_API_KEY) {
-    throw new Error("ANTHROPIC_API_KEY is not set");
+  if (!process.env.ATLASCLOUD_API_KEY && !process.env.OPENROUTER_API_KEY) {
+    throw new Error("ATLASCLOUD_API_KEY or OPENROUTER_API_KEY is not set");
   }
 }
 

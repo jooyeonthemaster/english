@@ -50,6 +50,31 @@ export function webtoonStoragePath(
   return `${academyId}/${webtoonId}.${extension}`;
 }
 
+/**
+ * 이미지 제공사(AtlasCloud)의 결과물은 모델에 따라 서로 다른 OSS 버킷에 저장된다.
+ * 일부 버킷(atlas-media)은 "referer 정책(핫링크 차단)"이 걸려 있어 특정 Referer 헤더가
+ * 붙은 요청을 403 으로 거부하고, 다른 버킷(atlas-img)은 과거 Referer 를 요구했다.
+ * 그래서 Referer 없이 먼저 시도하고(정책 버킷 통과), 403/401 이면 atlascloud Referer 로
+ * 한 번 더 시도한다 — 두 버킷 정책을 모두 커버한다.
+ */
+async function fetchRemoteImage(remoteUrl: string): Promise<Response> {
+  const attempts: (HeadersInit | undefined)[] = [
+    undefined,
+    { Referer: "https://api.atlascloud.ai/" },
+  ];
+  let last: Response | null = null;
+  for (const headers of attempts) {
+    const res = await fetch(remoteUrl, { headers, cache: "no-store" });
+    if (res.ok) return res;
+    last = res;
+    // 인증/권한(403·401) 이 아니면 재시도해도 소용없으니 중단.
+    if (res.status !== 403 && res.status !== 401) break;
+  }
+  throw new Error(
+    `Failed to download image from ${remoteUrl}: ${last?.status ?? "no response"}`,
+  );
+}
+
 export async function uploadRemoteImageToWebtoonBucket(opts: {
   remoteUrl: string;
   academyId: string;
@@ -57,13 +82,7 @@ export async function uploadRemoteImageToWebtoonBucket(opts: {
 }): Promise<{ publicUrl: string; storagePath: string; contentType: string; bytes: number }> {
   await ensureWebtoonBucket();
 
-  const upstream = await fetch(opts.remoteUrl, {
-    headers: { Referer: "https://api.atlascloud.ai/" },
-    cache: "no-store",
-  });
-  if (!upstream.ok) {
-    throw new Error(`Failed to download image from ${opts.remoteUrl}: ${upstream.status}`);
-  }
+  const upstream = await fetchRemoteImage(opts.remoteUrl);
 
   const rawContentType = upstream.headers.get("Content-Type") ?? "image/jpeg";
   const contentType = normalizeImageContentType(rawContentType);

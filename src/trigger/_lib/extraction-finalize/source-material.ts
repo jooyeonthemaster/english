@@ -1,4 +1,5 @@
 import { computeContentHash, parseSourceMeta } from "@/lib/extraction/meta-parser";
+import { readRequestedSubject } from "@/lib/extraction/requested-subject";
 import type { ExtractionMode } from "@/lib/extraction/types";
 import { prisma } from "@/lib/prisma";
 
@@ -12,6 +13,13 @@ export interface EnsureSourceMaterialInput {
   allTexts: string[];
   examMetaSignals?: Array<{ content: string; meta: unknown }>;
 }
+
+// 잡 생성 시 metadata 에 기록된 요청 과목("KOREAN") — 국어 라우트 발 추출 잡은
+// OCR/파일명 파서의 과목 추정보다 이 값을 우선한다(국어 자료가 헤더 신호
+// 부재로 ENGLISH 기본값에 떨어지는 것을 방지). 판독기는 승급 Passage 전파
+// 게이트와 공유하는 @/lib/extraction/requested-subject 단일 소스를 쓴다.
+// 여기서 기록되는 SourceMaterial.subject 는 requested ?? parsed(OCR 추정) ??
+// "ENGLISH" 로 표시 메타이며, Passage 전파는 잡 명시 subject 만 신뢰한다(ISO-8).
 
 /**
  * Create (or reuse) a SourceMaterial record for this job.
@@ -27,9 +35,10 @@ export async function ensureSourceMaterial(
 ): Promise<string | null> {
   const existing = await prisma.extractionJob.findUnique({
     where: { id: input.jobId },
-    select: { sourceMaterialId: true },
+    select: { sourceMaterialId: true, metadata: true },
   });
   if (existing?.sourceMaterialId) return existing.sourceMaterialId;
+  const requestedSubject = readRequestedSubject(existing?.metadata);
 
   const joinedHeaderText = [
     input.page1Text,
@@ -61,7 +70,7 @@ export async function ensureSourceMaterial(
       createdById: input.createdById,
       type: materialType,
       title: parsed.title,
-      subject: parsed.subject ?? "ENGLISH",
+      subject: requestedSubject ?? parsed.subject ?? "ENGLISH",
       grade: parsed.grade ?? null,
       semester: parsed.semester ?? null,
       year: parsed.year ?? null,
@@ -126,6 +135,12 @@ export async function ensureClusterSourceMaterial(
   });
   if (existing) return existing.id;
 
+  const jobRow = await prisma.extractionJob.findUnique({
+    where: { id: input.jobId },
+    select: { metadata: true },
+  });
+  const requestedSubject = readRequestedSubject(jobRow?.metadata);
+
   const materialType =
     parsed.type ?? (input.mode === "FULL_EXAM" ? "EXAM" : "OTHER");
   const created = await prisma.sourceMaterial.create({
@@ -134,7 +149,7 @@ export async function ensureClusterSourceMaterial(
       createdById: input.createdById,
       type: materialType,
       title: parsed.title,
-      subject: parsed.subject ?? "ENGLISH",
+      subject: requestedSubject ?? parsed.subject ?? "ENGLISH",
       grade: parsed.grade ?? null,
       semester: parsed.semester ?? null,
       year: parsed.year ?? null,

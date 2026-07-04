@@ -40,6 +40,7 @@ export function QuestionSetSection({
   inline = false,
   normalItems,
   showSets = true,
+  subjectScope,
   selectedQuestionIds,
   onToggleSetSelection,
   collectionId,
@@ -70,6 +71,11 @@ export function QuestionSetSection({
   }>;
   /** 세트 카드를 끼울지(보통 목록 1페이지에서만 true — 세트는 최신이라 1페이지에 위치). */
   showSets?: boolean;
+  /**
+   * 과목 스코프(워크스페이스 상호 격리) — "KOREAN"=국어 세트만, 미지정(영어 표면)
+   * =국어 세트 완전 제외. listQuestionSets 의 서버 필터와 동일 계약.
+   */
+  subjectScope?: "KOREAN";
   /** 현재 선택된 문항 id 집합(일반 카드와 공유). 세트 = 멤버 전체가 여기 있으면 체크됨. */
   selectedQuestionIds?: ReadonlySet<string>;
   /** 세트 체크 토글 — 멤버 문항 id 전체를 선택/해제한다. 미지정 시 세트 체크박스 숨김. */
@@ -95,6 +101,7 @@ export function QuestionSetSection({
     try {
       const data = await listQuestionSets({
         limit: setIds ? null : 50,
+        subject: subjectScope,
         setIds,
         collectionId,
         filters,
@@ -106,7 +113,7 @@ export function QuestionSetSection({
       setSets([]);
       onCountChange?.(0);
     }
-  }, [onCountChange, collectionId, filters, setIds]);
+  }, [onCountChange, subjectScope, collectionId, filters, setIds]);
 
   useEffect(() => {
     // 마운트/refreshKey 변경 시 데이터 페치.

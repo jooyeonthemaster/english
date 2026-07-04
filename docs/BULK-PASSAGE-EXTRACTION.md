@@ -185,7 +185,9 @@ DATABASE_URL="postgresql://..."
 DIRECT_URL="postgresql://..."
 NEXTAUTH_SECRET="..."
 NEXTAUTH_URL="..."
-GOOGLE_GENERATIVE_AI_API_KEY="..."
+ATLASCLOUD_API_KEY="..."
+ATLASCLOUD_TEXT_MODEL="google/gemini-3.5-flash"
+ATLASCLOUD_OCR_MODEL="google/gemini-3.1-flash-lite"
 
 # Bulk extraction — Supabase Storage (server-only, no NEXT_PUBLIC_ needed)
 SUPABASE_URL="https://xxxxx.supabase.co"

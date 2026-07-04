@@ -249,6 +249,38 @@ const s = section;
             )}
           </div>,
         );
+        if (workbookSet.vocabularySelection) {
+          const vocabSelection = workbookSet.vocabularySelection;
+          push(
+            "note",
+            "ws-workbook-vocab-select",
+            <div className="par-ws-block">
+              <WorksheetMiniTitle
+                {...miniHeadProps(s, patch, editable, "ws-workbook-vocab-select", vocabSelection.title, "Vocabulary Choice", (v) =>
+                  patch({ workbookSet: { ...workbookSet, vocabularySelection: { ...vocabSelection, title: v } } }),
+                )}
+              />
+              {editable ? (
+                <Field
+                  as="div"
+                  className="par-ws-workbook-passage"
+                  editable
+                  value={vocabSelection.passage}
+                  onCommit={(v) =>
+                    patch({
+                      workbookSet: {
+                        ...workbookSet,
+                        vocabularySelection: { ...vocabSelection, passage: v },
+                      },
+                    })
+                  }
+                />
+              ) : (
+                <div className="par-ws-workbook-passage">{renderGrammarChoiceText(vocabSelection.passage)}</div>
+              )}
+            </div>,
+          );
+        }
         push(
           "note",
           "ws-workbook-vocab",

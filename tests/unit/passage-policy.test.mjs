@@ -459,33 +459,41 @@ test("all question types avoid a separate pre-question source passage group", ()
   }
 });
 
-test("conditional writing renders its source passage inside the question body", () => {
+test("conditional writing hides the answer-bearing source passage by default", () => {
   assert.equal(result.conditionalWritingGroupIncludePassage, false);
   assert.equal(result.conditionalWritingStructured, true);
   assert.match(result.conditionalWritingStem, /^Translate the Korean sentence/);
   assert.equal(result.conditionalWritingBody, "");
-  assert.equal(result.conditionalWritingSegments[0]?.style, "passage");
-  assert.match(result.conditionalWritingSegments[0]?.text || "", /^To understand memory/);
-  assert.equal(result.conditionalWritingSegments[1]?.kind, "text");
-  assert.match(result.conditionalWritingSegments[1]?.text || "", /\[영작할 우리말\]/);
-  assert.match(result.conditionalWritingSegments[1]?.text || "", /\[조건\]/);
-  assert.doesNotMatch(result.conditionalWritingSegments[1]?.text || "", /\[reference\]|\[conditions\]/i);
+  // 정답이 지문 문장의 한→영 번역이므로 원본 영어 지문을 기본 미동봉한다(베껴쓰기 = 본문 답 노출 방지).
+  assert.ok(
+    !result.conditionalWritingSegments.some((segment) => segment.style === "passage"),
+    "CONDITIONAL_WRITING must not render the source passage by default (answer leak)",
+  );
+  // 첫 세그먼트는 [영작할 우리말]+[조건] 텍스트 블록(지문 박스 없음).
+  assert.equal(result.conditionalWritingSegments[0]?.kind, "text");
+  assert.match(result.conditionalWritingSegments[0]?.text || "", /\[영작할 우리말\]/);
+  assert.match(result.conditionalWritingSegments[0]?.text || "", /\[조건\]/);
+  assert.doesNotMatch(result.conditionalWritingSegments[0]?.text || "", /\[reference\]|\[conditions\]/i);
 });
 
-test("sentence transform renders the passage first and underlines the original sentence", () => {
+test("sentence transform hides the full passage but keeps the original sentence block", () => {
   assert.equal(result.sentenceTransformGroupIncludePassage, false);
   assert.equal(result.sentenceTransformStructured, true);
   assert.match(result.sentenceTransformStem, /^Rewrite the underlined part/);
   assert.equal(result.sentenceTransformBody, "");
-  assert.equal(result.sentenceTransformSegments[0]?.style, "passage");
+  // 전체 지문 미동봉(정답 출처 노출 방지) — passage 박스가 없어야 한다.
+  assert.ok(
+    !result.sentenceTransformSegments.some((segment) => segment.style === "passage"),
+    "SENTENCE_TRANSFORM must not render the full source passage by default (answer leak)",
+  );
+  // [원문](전환 대상 문장) 블록은 남아 학생이 전환할 문장을 볼 수 있어야 한다.
+  assert.equal(result.sentenceTransformSegments[0]?.kind, "text");
   assert.match(
     result.sentenceTransformSegments[0]?.text || "",
-    /__recall forces the brain to work in a vacuum\.__/,
+    /recall forces the brain to work in a vacuum/,
   );
-  assert.equal(result.sentenceTransformSegments[1]?.kind, "text");
-  assert.match(result.sentenceTransformSegments[1]?.text || "", /\[조건\]/);
-  assert.doesNotMatch(result.sentenceTransformSegments[1]?.text || "", /\[conditions\]/i);
-  assert.doesNotMatch(result.sentenceTransformSegments[1]?.text || "", /\[original\]/i);
+  assert.match(result.sentenceTransformSegments[0]?.text || "", /\[조건\]/);
+  assert.doesNotMatch(result.sentenceTransformSegments[0]?.text || "", /\[conditions\]/i);
 });
 
 test("generated and legacy conditional writing markers render in Korean", () => {

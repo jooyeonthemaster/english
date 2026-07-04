@@ -1,6 +1,7 @@
 // 이 폴더는 question-type-generation-settings.ts(2859줄)를 도메인 모듈로 분리한 것이다.
 // 각 선언은 원본에서 verbatim 이동됐고, 외부 진입점은 index.ts 배럴(경로 @/lib/question-type-generation-settings)이다.
 
+import { KO_TYPE_IDS } from "@/lib/korean/registry";
 import { copyRecordOrEmpty, isRecord } from "./shared";
 import { type QuestionGenerationLanguage, type QuestionLanguageGenerationSettings, type QuestionLanguageToggleScope } from "./types";
 
@@ -41,6 +42,16 @@ const DEFAULT_QUESTION_LANGUAGE_SETTINGS: Record<
   SYNONYM: { stemLanguage: "ko", optionLanguage: "en" },
   ANTONYM: { stemLanguage: "ko", optionLanguage: "en" },
 };
+
+// KO(국어) 유형 — 발문·선지 전부 한국어 고정 등록(레지스트리 파생, 기존 엔트리
+// 무변경). KO 는 OPTION_LANGUAGE_FREE_TYPE_IDS 미등록이라 언어 토글 scope='stem'
+// 이고, 저장값과 무관하게 구조 언어(ko)가 유지된다.
+for (const koTypeId of KO_TYPE_IDS) {
+  DEFAULT_QUESTION_LANGUAGE_SETTINGS[koTypeId] = {
+    stemLanguage: "ko",
+    optionLanguage: "ko",
+  };
+}
 
 /**
  * Types whose visible option text is free-language (Korean or English both make

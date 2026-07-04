@@ -13,6 +13,8 @@
 import { useMemo, useState } from "react";
 import { Loader2, Scissors } from "lucide-react";
 
+import { isKoQuestionType } from "@/lib/korean/registry";
+import { buildKoSetSharedPassage } from "@/lib/korean/sets/paper";
 import { buildQuestionSetMergedPassage } from "@/lib/question-sets/render";
 import { isStructuralType } from "@/lib/question-sets/types";
 import { Badge } from "@/components/ui/badge";
@@ -119,7 +121,22 @@ export function QuestionSetCard({
     : undefined;
 
   // 멤버 anchor 를 모두 병합해 공유 지문을 한 번만 재구성.
-  const mergedPassage = useMemo(() => buildSetMergedPassage(set), [set]);
+  // 국어(KO) 세트는 anchor(_spans) 모델이 아니라 멤버 structuredData 의 KO 마커
+  // (㉠·ⓐ·[A])를 병합 오버레이하는 모델 — 시험지 공유지문(buildKoSetSharedPassage)
+  // 과 동일한 지문을 카드에도 그린다. 영어 세트는 codex 렌더 정합 경로(buildSetMergedPassage).
+  const mergedPassage = useMemo(() => {
+    if (
+      set.members.length > 0 &&
+      set.members.every((m) => isKoQuestionType(m.typeId))
+    ) {
+      const base = set.layout?.fullPassage ?? set.canonicalPassage;
+      return buildKoSetSharedPassage(
+        base,
+        set.members.map((m) => m.structuredData),
+      );
+    }
+    return buildSetMergedPassage(set);
+  }, [set]);
 
   // 분리/삭제로 멤버 수가 줄면 인덱스가 범위를 벗어날 수 있어 클램프(모달과 동일).
   const safeTab = Math.min(

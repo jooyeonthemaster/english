@@ -384,6 +384,25 @@ const worksheetGrammarSelectionSchema = z.object({
     .max(12),
 });
 
+// 어휘 선택 — 어법 선택(worksheetGrammarSelectionSchema)과 '구조'는 1:1 미러링하되(본문 안 [A / B]
+// 인라인 선택지 + 번호), '내용 규칙'만 어휘 의미로 바꾼다: 두 옵션은 품사·굴절·태·수가 동일한 서로 다른
+// 어휘(lemma)이고, 오직 문맥 의미로만 정답이 갈린다(형태로 풀리면 어법 선택 영역이므로 금지).
+const worksheetVocabularySelectionSchema = z.object({
+  title: z.string().default("어휘 선택"),
+  passage: z.string(),
+  choices: z
+    .array(
+      z.object({
+        no: z.number().int().min(1).max(30),
+        options: z.array(z.string()).min(2).max(4),
+        answer: z.string(),
+        explanation: z.string(),
+      }),
+    )
+    .min(2)
+    .max(12),
+});
+
 const worksheetVocabularyClozeSchema = z.object({
   title: z.string().default("어휘 빈칸 완성"),
   passage: z.string(),
@@ -415,6 +434,9 @@ const worksheetWorkbookSetSchema = z.object({
     gist: z.string(),
   }),
   grammarSelection: worksheetGrammarSelectionSchema,
+  // 무회귀: 기존에 저장된 report 의 workbookSet 에는 vocabularySelection 이 없다 → base 스키마에선
+  // optional 로 둬야 옛 보고서·수동 편집분이 그대로 파싱된다. 신규 생성분은 아래 generation 스키마에서 강제.
+  vocabularySelection: worksheetVocabularySelectionSchema.optional(),
   vocabularyCloze: worksheetVocabularyClozeSchema,
   wordOrders: z.array(worksheetWordOrderSchema).min(1).max(4),
 });
@@ -423,6 +445,13 @@ const worksheetWorkbookGenerationSetSchema = worksheetWorkbookSetSchema.extend({
   grammarSelection: worksheetGrammarSelectionSchema.extend({
     choices: worksheetGrammarSelectionSchema.shape.choices.min(4).max(10),
   }),
+  // 어휘 선택: 프롬프트가 반드시 생성하도록 강하게 지시하되, 스키마상으로는 optional 로 둔다 —
+  // 모델(특히 STANDARD)이 이 신규 섹션을 통째로 누락해도 비회복형 생성 경로(worksheet route·trigger 워커)가
+  // 학습지 '전체'를 502 로 실패시키지 않고, 나머지 섹션은 정상 저장되도록(우아한 강등 = 구 동작 이상) 한다.
+  // 존재하면 개수는 4~8로 품질을 조인다(상한 8: 각 어휘 슬롯은 '유일 결정 문맥 단서'를 요구해 본문 예산을 더 먹음).
+  vocabularySelection: worksheetVocabularySelectionSchema
+    .extend({ choices: worksheetVocabularySelectionSchema.shape.choices.min(4).max(8) })
+    .optional(),
   vocabularyCloze: worksheetVocabularyClozeSchema.extend({
     blanks: worksheetVocabularyClozeSchema.shape.blanks.min(8).max(18),
   }),

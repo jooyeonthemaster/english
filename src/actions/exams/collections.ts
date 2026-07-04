@@ -8,29 +8,62 @@ import {
   assertExamsBelongToAcademy,
 } from "./_helpers";
 import type { ActionResult } from "./_types";
+import {
+  buildExamCollectionSubjectScopeWhere,
+  isMissingColumnError,
+} from "./_exam-subject-where";
 
 // ---------------------------------------------------------------------------
 // Exam Collections — Folder-like organization for exams
 // ---------------------------------------------------------------------------
 
-export async function getExamCollections(academyId: string) {
+export async function getExamCollections(
+  academyId: string,
+  subject?: "KOREAN",
+) {
   const staff = await requireStaffAuth();
   if (staff.academyId !== academyId) return [];
-  const collections = await prisma.examCollection.findMany({
-    where: { academyId },
-    include: {
-      _count: { select: { items: true, children: true } },
-    },
-    orderBy: { createdAt: "asc" },
-  });
-  return collections.map((c) => ({
+
+  const include = {
+    _count: { select: { items: true, children: true } },
+  } as const;
+  const orderBy = { createdAt: "asc" as const };
+  const mapRow = (c: {
+    id: string;
+    parentId: string | null;
+    name: string;
+    description: string | null;
+    color: string | null;
+    _count: { items: number; children: number };
+  }) => ({
     id: c.id,
     parentId: c.parentId,
     name: c.name,
     description: c.description,
     color: c.color,
     _count: { items: c._count.items, children: c._count.children },
-  }));
+  });
+
+  // 과목 스코프(항상 적용) — 국어/영어 시험지 폴더 완전 분리. 미지정=영어(기존 폴더
+  // 전부=subject null=영어 취급, 무회귀), "KOREAN"=국어 라우트 생성 폴더만.
+  try {
+    const collections = await prisma.examCollection.findMany({
+      where: { academyId, ...buildExamCollectionSubjectScopeWhere(subject) },
+      include,
+      orderBy,
+    });
+    return collections.map(mapRow);
+  } catch (error) {
+    // 우아한 강등 — subject 컬럼 미ALTER(P2022) 시 레거시(과목 미분리·공유 폴더) 목록.
+    if (!isMissingColumnError(error)) throw error;
+    const collections = await prisma.examCollection.findMany({
+      where: { academyId },
+      include,
+      orderBy,
+      omit: { subject: true },
+    });
+    return collections.map(mapRow);
+  }
 }
 
 export async function getExamCollectionMembership(academyId: string) {
@@ -53,8 +86,18 @@ export async function createExamCollection(data: {
   description?: string;
   parentId?: string;
   color?: string;
+  /** 폴더 과목 — "KOREAN"=국어 라우트 생성. 미지정=영어(INSERT 에 subject 미포함, 무회귀). */
+  subject?: "KOREAN";
 }): Promise<ActionResult> {
   const staff = await requireStaffAuth();
+  // 공통 INSERT 필드 — RETURNING 은 id 만(컬럼 미반영 DB에서도 안전).
+  const baseData = {
+    academyId: staff.academyId,
+    name: data.name,
+    description: data.description || null,
+    parentId: data.parentId || null,
+    color: data.color || null,
+  };
   try {
     // If a parent folder is provided, make sure it's also in this academy —
     // otherwise the caller could nest a folder under another tenant's tree.
@@ -63,17 +106,30 @@ export async function createExamCollection(data: {
     }
 
     const collection = await prisma.examCollection.create({
-      data: {
-        academyId: staff.academyId,
-        name: data.name,
-        description: data.description || null,
-        parentId: data.parentId || null,
-        color: data.color || null,
-      },
+      // 과목 스탬핑 — 국어만 'KOREAN'. 미지정이면 subject 미포함(조건부 spread).
+      data: { ...baseData, ...(data.subject ? { subject: data.subject } : {}) },
+      select: { id: true },
     });
+    if (data.subject === "KOREAN") revalidatePath("/director/korean/exams");
     revalidatePath("/director/exams");
     return { success: true, id: collection.id };
   } catch (error) {
+    // 우아한 강등 — 국어 스코프 생성인데 subject 컬럼이 아직 없으면(P2022) subject 를
+    // 빼고 재시도한다(레거시=과목 미분리 공유 폴더로 생성, 502 대신 UX 유지).
+    if (data.subject && isMissingColumnError(error)) {
+      try {
+        const collection = await prisma.examCollection.create({
+          data: baseData,
+          select: { id: true },
+        });
+        revalidatePath("/director/exams");
+        return { success: true, id: collection.id };
+      } catch (fallbackError) {
+        const message =
+          fallbackError instanceof Error ? fallbackError.message : "폴더 생성 실패";
+        return { success: false, error: message };
+      }
+    }
     const message = error instanceof Error ? error.message : "폴더 생성 실패";
     return { success: false, error: message };
   }

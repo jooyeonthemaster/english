@@ -19,6 +19,11 @@ export interface RunGenerationInput {
    * 미전달 시 기존 동작과 100% 동일 — 동형/커스텀/세트 등 다른 호출자는 무영향.
    */
   diversity?: QuestionDiversityContext;
+  /**
+   * KO(국어) 지문 갈래(KoPassageKind 값). KO_ 유형 생성 시에만 소비 — 프롬프트의
+   * 갈래 라벨과 koContext.passageKind 주입에 쓰인다. 미전달/영어 경로는 무영향.
+   */
+  koPassageKind?: string;
   onModelUsage?: (event: QuestionGenerationUsageEvent) => void;
 }
 

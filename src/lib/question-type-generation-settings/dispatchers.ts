@@ -3,6 +3,8 @@
 
 import { buildMultiBlankPointGuidance } from "@/lib/blank-point-catalog";
 import { type QuestionDifficulty } from "@/lib/difficulty";
+import { buildKoTypeSettingsPrompt } from "@/lib/korean/settings";
+import { isKoQuestionType } from "@/lib/korean/registry";
 import { getQuestionGenerationCreditCost, type QuestionGenerationPlan } from "@/lib/question-generation-plans";
 import { ANTONYM_PAIR_COUNT_DEFAULT, readAntonymPairCountSetting } from "./antonym";
 import { buildBlankGranularityPromptBlock, readBlankInferenceBlankCountSetting, readBlankInferenceGranularitySetting, readBlankInferenceParaphraseAnswerSetting } from "./blank-inference";
@@ -14,7 +16,7 @@ import { buildQuestionLanguageSettingsPrompt, defaultLanguageSettingsForType, ef
 import { readSentenceInsertParaphrasePrefixSetting, readSentenceInsertSlotCountSetting } from "./sentence-insert";
 import { readSentenceOrderPrefixVariationCountSetting } from "./sentence-order";
 import { BLANK_INFERENCE_BLANK_COUNT_DEFAULT, CONTENT_MATCH_ANSWER_COUNT_DEFAULT, CONTENT_MATCH_OPTION_COUNT_DEFAULT, MULTI_BLANK_LABELS, SENTENCE_INSERT_SLOT_COUNT_DEFAULT, SENTENCE_ORDER_PREFIX_VARIATION_COUNT_DEFAULT, combinePromptSections, getQuestionTypeSettingsForType, isRecord, readBooleanSetting, readGistAnswerPolaritySetting, readQuestionTypeDifficultySetting, readQuestionTypeGenerationPlanSetting } from "./shared";
-import { SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT, SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT, SUMMARY_WRITING_TARGET_WORDS_DEFAULT, readSummaryCompleteBlankCountSetting, readSummaryCompleteMcBlankCountSetting } from "./summary";
+import { SUMMARY_COMPLETE_BLANK_COUNT_DEFAULT, SUMMARY_COMPLETE_MC_BLANK_COUNT_DEFAULT, SUMMARY_WRITING_BLANK_COUNT_DEFAULT, readSummaryCompleteBlankCountSetting, readSummaryCompleteMcBlankCountSetting } from "./summary";
 import { buildSummaryWritingDirection, resolveSummaryWritingSettings, summaryWritingBlankLabels } from "./summary-writing";
 import { TOPIC_SENTENCE_WRITING_BLANK_COUNT_DEFAULT, TOPIC_SENTENCE_WRITING_DISTRACTOR_COUNT_DEFAULT, buildTopicSentenceWritingDirection, resolveTopicSentenceWritingSettings, topicSentenceWritingBlankLabels } from "./topic-sentence-writing";
 import { type QuestionTypeGenerationSettings, type ResolvedQuestionTypeGenerationSettings } from "./types";
@@ -362,14 +364,15 @@ export function getQuestionTypeGenerationTokenFloor(
   typeId: string,
   resolved: ResolvedQuestionTypeGenerationSettings,
 ): number {
-  if (
-    typeId === "GRAMMAR_ERROR" &&
-    ((resolved.grammarMarkerCount ?? GRAMMAR_MARKER_COUNT_DEFAULT) >
-      GRAMMAR_MARKER_COUNT_DEFAULT ||
-      (resolved.grammarAnswerCount ?? GRAMMAR_ANSWER_COUNT_DEFAULT) >
-        GRAMMAR_ANSWER_COUNT_DEFAULT)
-  ) {
+  // KO(국어): 선지 5개 전부의 근거앵커(evidence)+오답해설+한국어 해설이 실려
+  // 한글 토큰 비용이 크다 — 기본 4096이면 잘림 위험이라 확장 유형과 동일한
+  // 8192 를 바닥으로 쓴다(KO-DESIGN-SPEC §3.6). 영어 분기 무변경.
+  if (isKoQuestionType(typeId)) {
     return 8_192;
+  }
+
+  if (typeId === "GRAMMAR_ERROR") {
+    return 20_000;
   }
 
   if (
@@ -508,25 +511,13 @@ export function getDefaultQuestionTypeGenerationSettings(): QuestionTypeGenerati
       ...defaultLanguageSettingsForType("SUMMARY_COMPLETE"),
     },
     SUMMARY_WRITING: {
-      // INTERMEDIATE 프리셋(전역 기본 난이도)을 기본값으로 노출. 강사가 모달에서
-      // 바꾸지 않아도 resolveSummaryWritingSettings 가 난이도별로 재해석한다.
-      glossEnabled: true,
-      glossLooseness: "natural",
-      wordBankEnabled: true,
-      wordBankUsage: "usePartial",
-      boxDistractors: SUMMARY_WRITING_DISTRACTOR_COUNT_DEFAULT,
-      wordBankFidelity: "verbatim",
-      wordBankOrder: "scrambleStrong",
-      wordBankChunking: "word",
-      blankCount: SUMMARY_WRITING_BLANK_COUNT_DEFAULT,
-      blankAssignment: "separate",
-      targetWordsMode: "approx",
-      targetWordsPerBlank: SUMMARY_WRITING_TARGET_WORDS_DEFAULT,
-      clueMode: "none",
-      connectorFrame: "partial",
-      summarySourceMode: "paraphrase",
-      sourceSentenceParaphrase: false,
-      scoringGranularity: "keyword",
+      // ⚠️ TOPIC_SENTENCE_WRITING 과 동일하게 세부옵션을 비워 둔다(언어 설정만). 과거에는
+      // INTERMEDIATE 프리셋 값을 전부 핀(pin)으로 박아 뒀는데, 그 값이 난이도 프리셋을
+      // 가려(shadow) BASIC/INTERMEDIATE/KILLER 차이가 "점수만" 달라지는 가짜 차별화가
+      // 됐다(resolveSummaryWritingSettings 의 enum 리더가 nested 키를 프리셋보다 우선
+      // 읽기 때문). 비워 두면 미설정 옵션이 선택 난이도의 프리셋(해석·보기·어형·출처
+      // 모드 등)을 그대로 따라 기본/중급/킬러가 실제로 달라진다. 강사가 상세 패널에서
+      // 만진 옵션만 명시 키로 저장되어 프리셋을 덮어쓴다(patchTypeSettings 는 부분 패치).
       ...defaultLanguageSettingsForType("SUMMARY_WRITING"),
     },
     TOPIC_SENTENCE_WRITING: {
@@ -575,6 +566,13 @@ export function buildQuestionTypeSettingsPrompt(
   // 어긋나지 않도록 같은 난이도로 resolveSummaryWritingSettings 를 호출한다.
   fallbackDifficulty: string | null | undefined = "INTERMEDIATE",
 ): string {
+  // ── KO(국어) 게이트 — 유형 세부설정 지시는 korean/settings 에 전량 위임 ──────
+  // KO 는 발문·선지 언어가 한국어 고정(scope='stem', 구조 언어)이라 영어 언어
+  // 토글 프롬프트를 합성하지 않는다. 영어 유형 분기 무변경.
+  if (isKoQuestionType(typeId)) {
+    return buildKoTypeSettingsPrompt(typeId, rawSettings, fallbackDifficulty);
+  }
+
   const languagePrompt = buildQuestionLanguageSettingsPrompt(typeId, rawSettings);
 
   if (typeId === "GRAMMAR_ERROR") {
@@ -887,10 +885,18 @@ export function buildQuestionTypeSettingsPrompt(
       );
     }
 
-    // 해석(gloss).
+    // 해석(gloss). glossLooseness 로 정밀도를 분기한다(과거엔 natural 고정 = dead knob).
     if (sw.glossEnabled) {
+      const glossStyle =
+        sw.glossLooseness === "literal"
+          ? "가까운 직역체(쉬운 1:1 의미)로 — 단, [보기] 단어나 정답 어구를 영어 그대로/어순 그대로 노출하지는 말 것"
+          : sw.glossLooseness === "gist"
+            ? "요지만 간략히(핵심 의미를 한 문장으로 압축)"
+            : sw.glossLooseness === "partial"
+              ? "요약문의 핵심 절만 부분적으로 풀이하고 나머지는 생략"
+              : "자연스러운 의역체(표면 1:1 번역 금지)";
       lines.push(
-        `- Provide koreanGloss (Korean meaning for the [해석] box) as ONE natural Korean sentence conveying the whole summary's meaning (reference [해석] format). NEVER list the [보기] words 1:1 as a direct translation, never render the blank answer phrase word-for-word, and never reveal the English answer order.`,
+        `- Provide koreanGloss (Korean meaning for the [해석] box) — glossLooseness = ${sw.glossLooseness}: ${glossStyle}. NEVER list the [보기] words 1:1 as a direct translation, never render the blank answer phrase word-for-word, and never reveal the English answer order.`,
       );
       // v1: blankGlosses(빈칸별 1:1 직역)는 [보기]와 결합 시 정답을 노출하므로 생성 금지.
       lines.push(
@@ -908,6 +914,16 @@ export function buildQuestionTypeSettingsPrompt(
       lines.push(
         "- If the answer needs the same word twice, include that string twice in wordBank (×2 rule).",
       );
+      // wordBankOrder — 보기 나열 순서(과거엔 미방출 = dead knob).
+      if (sw.wordBankOrder === "alphabetical") {
+        lines.push(
+          "- wordBankOrder = alphabetical: after choosing the chips, list them in alphabetical order (a→z). Alphabetical order must still never coincide with the answer word order.",
+        );
+      } else if (sw.wordBankOrder === "scrambleStrong") {
+        lines.push(
+          "- wordBankOrder = scrambleStrong: shuffle so no consecutive answer-token subsequence survives, and interleave any distractors between answer words (not clustered at the end).",
+        );
+      }
       if (sw.wordBankChunking === "chunk") {
         lines.push(
           "- wordBank entries may be short chunks, but never give a key phrase as one whole chip that solves the blank by arrangement alone.",
@@ -920,6 +936,10 @@ export function buildQuestionTypeSettingsPrompt(
       } else if (sw.wordBankUsage === "usePartial") {
         lines.push(
           `- wordBankUsage = usePartial: include exactly ${sw.boxDistractors} distractor word(s) in wordBank that are NOT used in any answer, and list them in wordBankDistractors. Each distractor must be a synonym, confusable, or inflected form of an answer word (never an unrelated word, which would be trivially eliminated).`,
+        );
+      } else if (sw.wordBankUsage === "freeCount") {
+        lines.push(
+          "- wordBankUsage = freeCount: students freely pick however many chips they need from the wordBank (some chips may go unused). Include a few plausible extra chips but no formal distractor accounting is required; keep wordBankDistractors empty.",
         );
       }
       lines.push(
@@ -964,15 +984,26 @@ export function buildQuestionTypeSettingsPrompt(
       );
     }
 
-    // 연결 프레임.
-    if (sw.connectorFrame !== "bare") {
+    // 연결 프레임 — full/partial 을 실제로 다르게 지시한다(과거엔 동일 문구 = 미차별).
+    if (sw.connectorFrame === "full") {
       lines.push(
-        `- connectorFrame = ${sw.connectorFrame}: keep a fixed surrounding frame around each blank (e.g. \", which can lead to ...\") so the clause boundary is clear; put it in connectorFrameAfter when it follows a blank.`,
+        "- connectorFrame = full: keep the FULL surrounding clause frame around each blank so only the blank itself is empty and the sentence structure is fully visible; put any fixed text after a blank in connectorFrameAfter.",
+      );
+    } else if (sw.connectorFrame === "partial") {
+      lines.push(
+        "- connectorFrame = partial: provide only a SHORT connector immediately after the blank (e.g. \", which can lead to ...\") in connectorFrameAfter; the rest of the clause is absorbed into the blank so students supply more.",
       );
     }
+    // (bare: 프레임 없음 — 지시 없음.)
 
+    const scoringStyle =
+      sw.scoringGranularity === "exact"
+        ? "정확 일치 채점 — acceptableVariants 에 어순/동의구문 동치 정답을 충분히 제공해 정답 폭주를 막을 것"
+        : sw.scoringGranularity === "rubric"
+          ? "루브릭 채점 — scoringCriteria 에 항목별 배점을 명시할 것"
+          : "키워드 채점 — requiredLemmas(핵심 표제어) 중심 부분점수";
     lines.push(
-      `- scoringGranularity = ${sw.scoringGranularity}: scoring is teacher/AI passthrough. Provide scoringCriteria (Korean rubric, teacher-only) and acceptableVariants (equivalent answers) so partial credit is possible. These are SECRET — never put them in student-facing text.`,
+      `- scoringGranularity = ${sw.scoringGranularity} (${scoringStyle}): scoring is teacher/AI passthrough. Provide scoringCriteria (Korean rubric, teacher-only) and acceptableVariants (equivalent answers) so partial credit is possible. These are SECRET — never put them in student-facing text.`,
     );
 
     // 스키마 메타 필드 echo — 산문 지시(wordBankUsage 등)와 모델이 실제로 emit 해야 하는
@@ -1011,7 +1042,12 @@ export function buildQuestionTypeSettingsPrompt(
         "- Produce scrambledWords: the tokens of modelAnswer, broken into pieces and SHUFFLED. The shuffled order must NOT match modelAnswer's order (an in-order list leaks the answer).",
         tsw.chunking === "chunk"
           ? "- chunking = chunk: pieces may be short multi-word chunks, but never give one whole chunk that solves it by arrangement alone."
-          : "- chunking = word: pieces are single words (function words separate).",
+          : tsw.chunking === "mixed"
+            ? "- chunking = mixed: break the KEY content into single words but keep tight function-word groups (e.g. \"to the\", \"of a\") as small chunks — a deliberate mix of word- and chunk-sized pieces. Never give one whole chunk that solves it by arrangement alone."
+            : "- chunking = word: pieces are single words (function words separate).",
+        tsw.scrambleOrder === "scrambleStrong"
+          ? "- scrambleOrder = scrambleStrong: shuffle hard so NO consecutive answer-token subsequence survives; interleave any distractors between answer tokens (never clustered)."
+          : "- scrambleOrder = random: a plain shuffle is fine as long as the order does not match the answer.",
         "- Leave summaryWithBlanks empty and blanks empty for scrambled mode.",
       );
       if (tsw.distractors > 0) {

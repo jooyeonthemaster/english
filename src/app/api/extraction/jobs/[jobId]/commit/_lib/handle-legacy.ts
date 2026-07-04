@@ -110,6 +110,9 @@ async function resolvePassageCollection(args: {
       name: defaultName.slice(0, 120),
       description: "시험지 일괄 등록으로 자동 생성된 컬렉션",
     },
+    // RETURNING 최소화 — passage_collections.subject 컬럼 미반영 DB에서도
+    // 레거시 커밋 경로가 깨지지 않게 id 만 돌려받는다(사용처도 id 뿐).
+    select: { id: true },
   });
   return collection.id;
 }

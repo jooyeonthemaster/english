@@ -76,7 +76,6 @@ ${structuredInstructions}
     model,
     schema: responseSchema,
     prompt,
-    providerOptions: { google: { thinkingConfig: { thinkingBudget: 4096 } } },
   });
 
   const rawQuestions = (object as any).questions || [];

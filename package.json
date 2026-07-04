@@ -27,8 +27,7 @@
     "safari:open": "playwright open --browser=webkit http://localhost:3000/dev/annotation-editor"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^3.0.64",
-    "@ai-sdk/google": "^3.0.31",
+    "@ai-sdk/openai-compatible": "^2.0.56",
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.9",
     "@auth/prisma-adapter": "^2.11.1",
     "@google-cloud/bigquery": "^8.3.1",

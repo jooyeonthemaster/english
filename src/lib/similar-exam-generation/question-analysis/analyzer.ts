@@ -2,7 +2,6 @@ import {
   QUESTION_ANALYSIS_MODEL_ID,
   questionAnalysisMaxTokens,
   questionAnalysisModel,
-  questionAnalysisProviderOptions,
   questionAnalysisUseDocAi,
   SINGLE_QUESTION_ANALYSIS_MODEL_ID,
 } from "./model";
@@ -75,7 +74,6 @@ export async function analyzeQuestionItem(
       model: questionAnalysisModel,
       modelId: QUESTION_ANALYSIS_MODEL_ID,
       maxOutputTokens: questionAnalysisMaxTokens,
-      providerOptions: questionAnalysisProviderOptions,
       manualCropOnly,
       includeBoundingBoxes: manualCropOnly ? false : undefined,
       maxRetries: 0,

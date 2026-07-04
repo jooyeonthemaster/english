@@ -133,12 +133,12 @@ export async function syncPlatformApiUsageCostsForRange(
   for (const page of extractionPages) {
     if (!page.completedAt) continue;
     candidates.push({
-      sourceKey: `extraction_page:${page.id}:gemini`,
+      sourceKey: `extraction_page:${page.id}:atlas_text`,
       sourceType: "EXTRACTION_PAGE",
       sourceId: page.id,
-      sourceDetail: "GEMINI_OCR",
+      sourceDetail: "ATLASCLOUD_OCR",
       academyId: page.job.academyId,
-      provider: "GOOGLE_GEMINI",
+      provider: "ATLASCLOUD",
       model: page.modelUsed ?? getExtractionAiModelName("ocr"),
       operationType: "TEXT_EXTRACTION",
       unitType: "TOKENS",
@@ -635,12 +635,32 @@ function modelPatternScore(pattern: string | null, model?: string | null) {
 
 export function providerFromModel(model: string): PlatformCostProvider {
   const lower = model.toLowerCase();
-  if (lower.includes("claude") || lower.includes("anthropic")) return "ANTHROPIC";
-  if (lower.includes("gemini") || lower.includes("google")) return "GOOGLE_GEMINI";
+  if (
+    lower.includes("claude") ||
+    lower.includes("anthropic") ||
+    lower.includes("gemini") ||
+    lower.includes("google/") ||
+    lower.includes("openrouter") ||
+    lower.includes("moonshot") ||
+    lower.includes("kimi")
+  ) {
+    return "ATLASCLOUD";
+  }
   return "UNKNOWN";
 }
 
 function readEnvPricing(provider: PlatformCostProvider, unitType: PlatformCostUnitType) {
+  if (unitType === "TOKENS" && provider === "ATLASCLOUD") {
+    const inputUsdPer1M =
+      readPositiveEnv("ATLASCLOUD_PRICE_INPUT_PER_1M_USD") ??
+      readPositiveEnv("OPENROUTER_PRICE_INPUT_PER_1M_USD");
+    const outputUsdPer1M =
+      readPositiveEnv("ATLASCLOUD_PRICE_OUTPUT_PER_1M_USD") ??
+      readPositiveEnv("OPENROUTER_PRICE_OUTPUT_PER_1M_USD");
+    if (inputUsdPer1M !== null || outputUsdPer1M !== null) {
+      return { inputUsdPer1M, outputUsdPer1M, unitUsd: null };
+    }
+  }
   if (unitType === "TOKENS" && provider === "GOOGLE_GEMINI") {
     const inputUsdPer1M = readPositiveEnv("GEMINI_PRICE_INPUT_PER_1M_USD");
     const outputUsdPer1M = readPositiveEnv("GEMINI_PRICE_OUTPUT_PER_1M_USD");

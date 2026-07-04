@@ -161,11 +161,22 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
     }
   }
 
-  // 오답 분석
-  const wrongs = safeJSONParse<Record<string, string>>(
-    explanation.wrongOptionExplanations,
-    {},
-  );
+  // 오답 분석 — KO 봉투는 배열형([{label, explanation}]) 계약이라 Record 로 정규화
+  // (영어 Record 형은 기존 경로 그대로. 웹 explanation-content/DOCX answer 와 동일 규약).
+  const wrongsRaw = safeJSONParse<unknown>(explanation.wrongOptionExplanations, {});
+  const wrongs: Record<string, string> = Array.isArray(wrongsRaw)
+    ? Object.fromEntries(
+        wrongsRaw
+          .filter(
+            (e): e is { label: string; explanation: string } =>
+              !!e &&
+              typeof e === "object" &&
+              typeof (e as { label?: unknown }).label === "string" &&
+              typeof (e as { explanation?: unknown }).explanation === "string",
+          )
+          .map((e) => [e.label, e.explanation]),
+      )
+    : ((wrongsRaw ?? {}) as Record<string, string>);
   const wrongEntries = Object.entries(wrongs).filter(
     ([, v]) => typeof v === "string" && v.trim().length > 0,
   );

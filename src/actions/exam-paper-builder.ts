@@ -4,7 +4,6 @@ import type { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireStaffAuth } from "@/lib/auth";
-import { getQuestionCollections } from "@/actions/workbench/collections-question";
 import type { QuestionSetForRender } from "@/actions/question-sets";
 import type { Anchor } from "@/lib/question-sets/types";
 import type { WorkbenchQuestionFilters } from "./workbench/_types";
@@ -13,6 +12,10 @@ import {
   buildWorkbenchQuestionWhere,
   BUILDER_PAGE_SIZE,
 } from "./workbench/_question-where";
+import {
+  buildCollectionSubjectScopeWhere,
+  isMissingColumnError,
+} from "./workbench/_collection-where";
 
 export interface ExamPaperBuilderItemInput {
   localId?: string;
@@ -75,6 +78,12 @@ export interface ExamPaperBuilderBlockInput {
 
 export interface ExamPaperBuilderSaveInput {
   examId?: string | null;
+  /**
+   * 과목 — "KOREAN"=국어 시험지로 저장(신규 생성 시 exams.subject='KOREAN' 스탬프).
+   * 미지정=영어(subject 미포함). 재저장(examId 존재)은 subject 를 건드리지 않아
+   * 무언 재분류를 막는다(혼합 시험지 스탬프 규칙: CREATE 고정·UPDATE 보존).
+   */
+  subject?: "KOREAN";
   title: string;
   type: string;
   classId?: string | null;
@@ -458,7 +467,16 @@ async function loadBuilderSurfacePage(
 // 초기 진입(SSR)은 1페이지 + 전체개수/총페이지/검수상태 개수만 내려주고, 이후 페이지/
 // 필터 변경은 클라이언트가 getExamPaperBuilderQuestionsPage 로 가져온다. 선택/미리보기는
 // ID 기반 작업세트(getExamPaperBuilderQuestionIds + ...QuestionsByIds)가 담당한다.
-export async function getExamPaperBuilderData(academyId: string) {
+export async function getExamPaperBuilderData(
+  academyId: string,
+  opts?: {
+    /**
+     * 과목 스코프 — "KOREAN"=국어 시험지 편집: 좌측 피커 문항·폴더를 국어
+     * 전용으로 연다. 미지정=영어 기본(KO_* 문항·국어 폴더 제외, 종전과 동일).
+     */
+    subject?: "KOREAN";
+  },
+) {
   const staff = await requireStaffAuth();
   if (staff.academyId !== academyId) {
     return {
@@ -475,13 +493,48 @@ export async function getExamPaperBuilderData(academyId: string) {
   // 초기 필터 = 클라이언트 기본 상태와 일치(검색 없음, newest, 폴더/검수 전체).
   const [pageData, collections, classes, schools] =
     await Promise.all([
+      // 세트=1 카드로 세는 렌더 정합 표면(codex) 위에 과목 스코프(국어/영어 분리)를
+      // 얹는다. subject 는 loadBuilderSurfaceItems 의 standalone·set-member where 로
+      // 흘러가 KO_* 문항/영어 문항이 서로 새지 않는다.
       loadBuilderSurfacePage(academyId, {
         page: 1,
         limit: BUILDER_PAGE_SIZE,
         sort: "newest",
+        subject: opts?.subject,
       }),
-      // 세트=1 로 세는 폴더 카운트를 공유(생성/관리 페이지와 동일한 배지 숫자).
-      getQuestionCollections(academyId),
+      // 빌더 폴더 목록 — 과목 스코프(기본=영어: 국어 폴더 제외 / KOREAN=국어
+      // 폴더만)를 이 파일에서 직접 얹는다. 클라이언트가 쓰는 필드만 명시 select
+      // 해, subject 컬럼 미반영 DB 에서도 SELECT 가 컬럼을 건드리지 않게 한다
+      // (P2022 는 스코프 where 에서만 가능 → 레거시 폴백).
+      prisma.questionCollection
+        .findMany({
+          where: {
+            academyId,
+            ...buildCollectionSubjectScopeWhere(opts?.subject),
+          },
+          select: {
+            id: true,
+            parentId: true,
+            name: true,
+            color: true,
+            _count: { select: { items: true, children: true } },
+          },
+          orderBy: { name: "asc" },
+        })
+        .catch((error) => {
+          if (!isMissingColumnError(error)) throw error;
+          return prisma.questionCollection.findMany({
+            where: { academyId },
+            select: {
+              id: true,
+              parentId: true,
+              name: true,
+              color: true,
+              _count: { select: { items: true, children: true } },
+            },
+            orderBy: { name: "asc" },
+          });
+        }),
       prisma.class.findMany({
         where: { academyId, isActive: true },
         select: { id: true, name: true },
@@ -954,6 +1007,10 @@ export async function saveExamPaperDraft(
               status: "DRAFT",
               // 최초 생성도 저장 1회로 집계. 수정 횟수는 0에서 시작.
               saveCount: 1,
+              // 과목 스탬핑 — 신규 국어 시험지만 'KOREAN'. 미지정이면 subject 미포함
+              // (조건부 spread) → 영어 저장 무회귀. 이 create 가 빌더에서 저장되는
+              // 신규 시험지의 유일한 subject 스탬핑 지점이다(update 는 subject 불변).
+              ...(input.subject ? { subject: input.subject } : {}),
             },
             select: { id: true },
           });

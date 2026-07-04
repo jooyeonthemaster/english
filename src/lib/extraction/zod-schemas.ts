@@ -44,6 +44,9 @@ export const createJobRequestSchema = z.object({
   // 문제생성 페이지 발 잡: finalize가 drafts를 서버에서 곧바로 Passage로 승격.
   // 미전달=false(자료추출 페이지 등 기존 수동 검수 흐름 무영향).
   autoPromote: z.boolean().optional(),
+  // 추출 자료의 과목 — "KOREAN" 이면 잡 metadata 에 기록되고 SourceMaterial·
+  // 승급 Passage 까지 전파된다. 미전달 = 기존 영어 기본(무회귀).
+  subject: z.enum(["KOREAN"]).optional(),
   totalPages: z.number().int().min(1).max(MAX_PAGES_PER_JOB),
   originalFileName: z.string().max(255).optional(),
   /** Optional original first-page preview kept separate from extraction crops. */
@@ -86,6 +89,10 @@ export const createTextExtractionRequestSchema = z
     mode: z.literal("PASSAGE_ONLY").default("PASSAGE_ONLY"),
     // P7-D2: "verbatim"이면 AI 복원 생략(붙여넣은 텍스트 그대로 저장).
     outputMode: z.enum(["verbatim", "restored"]).optional(),
+    // 추출 자료의 과목 — "KOREAN"이면 잡 metadata에 기록돼 승급 Passage까지
+    // 국어로 전파된다. 미전달 = 기존 영어 기본(무회귀). 파일 잡(createJobRequest)
+    // 과 동일 규약.
+    subject: z.enum(["KOREAN"]).optional(),
     // 단건(하위호환). passages가 오면 무시된다.
     title: z.string().trim().max(200).optional(),
     text: z.string().trim().min(20).max(60_000).optional(),

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 100-sample audit for grammar generation quality.
  *
  * Exercises the real Gemini/STANDARD workbench generation path across
@@ -424,8 +424,8 @@ function auditGrammarError(question: Record<string, unknown>, passage: string) {
       }
     }
 
-    // 밑줄 span 길이 감사 — 화면 밑줄 = 오류는 errorExpression, 디코이는 expression.
-    // 절/문장 통째 밑줄(프리미엄 실측 결함)을 per-label 로 가시화한다.
+    // 諛묒쨪 span 湲몄씠 媛먯궗 ???붾㈃ 諛묒쨪 = ?ㅻ쪟??errorExpression, ?붿퐫?대뒗 expression.
+    // ??臾몄옣 ?듭㎏ 諛묒쨪(?꾨━誘몄뾼 ?ㅼ륫 寃고븿)??per-label 濡?媛?쒗솕?쒕떎.
     const displayedSurface = isError ? errorExpression || expression : expression;
     const surfaceWords = countWords(displayedSurface);
     if (displayedSurface && (surfaceWords > 7 || displayedSurface.length > 48)) {
@@ -433,7 +433,7 @@ function auditGrammarError(question: Record<string, unknown>, passage: string) {
         severity: "error",
         code: "grammar-audit-underline-too-long",
         label,
-        message: `Underline spans ${surfaceWords} words / ${displayedSurface.length} chars ("${displayedSurface.slice(0, 50)}") — full clause/sentence.`,
+        message: `Underline spans ${surfaceWords} words / ${displayedSurface.length} chars ("${displayedSurface.slice(0, 50)}") ??full clause/sentence.`,
       });
     } else if (displayedSurface && (surfaceWords > 5 || displayedSurface.length > 34)) {
       issues.push({
@@ -443,7 +443,7 @@ function auditGrammarError(question: Record<string, unknown>, passage: string) {
         message: `Underline wide (${surfaceWords} words / ${displayedSurface.length} chars: "${displayedSurface.slice(0, 50)}").`,
       });
     }
-    // pointCode 진실성 감사(경고) — 닫힌 토큰셋 코드만.
+    // pointCode 吏꾩떎??媛먯궗(寃쎄퀬) ???ロ엺 ?좏겙??肄붾뱶留?
     if (pointCode && grammarPointCodeSurfaceMismatchAudit(pointCode, displayedSurface)) {
       issues.push({
         severity: "warning",
@@ -763,10 +763,10 @@ function normalizeText(value: unknown): string {
 function normalizeComparableText(value: unknown): string {
   return normalizeText(value)
     .toLowerCase()
-    .replace(/[“”]/g, "\"")
-    .replace(/[‘’]/g, "'")
+    .replace(/[?쒋?/g, "\"")
+    .replace(/[?섃?/g, "'")
     .replace(/[\u200B-\u200D\uFEFF]/g, "")
-    .replace(/[^a-z0-9가-힣]+/g, " ")
+    .replace(/[^a-z0-9媛-??+/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -785,13 +785,13 @@ function countWords(text: unknown): number {
   return normalizeText(text).split(/\s+/).filter(Boolean).length;
 }
 
-// 품질게이트(grammarPointCodeSurfaceMismatch)의 감사 측 사본 — 닫힌 토큰셋 코드만.
+// ?덉쭏寃뚯씠??grammarPointCodeSurfaceMismatch)??媛먯궗 痢??щ낯 ???ロ엺 ?좏겙??肄붾뱶留?
 function grammarPointCodeSurfaceMismatchAudit(code: string, surface: string): boolean {
   const text = normalizeText(surface);
   if (!text) return false;
   switch (code.toLowerCase()) {
     case "b":
-      return !/\b(?:that|what|which|who|whom|whose|where|when|why)\b/i.test(text);
+      return !/\b(?:that|what|which|who|whom|whose|where|when|why|how|whether|whereby)\b/i.test(text);
     case "c":
       return (
         !/\b[A-Za-z]+(?:ing|ed|en)\b/i.test(text) &&
@@ -803,7 +803,7 @@ function grammarPointCodeSurfaceMismatchAudit(code: string, surface: string): bo
       return !/\bto\s+[A-Za-z]/i.test(text) && !/\b[A-Za-z]+ing\b/i.test(text);
     case "l":
       return (
-        !/\b(?:during|while|despite|although|though|because|since|as|if|unless|before|after|until|when|whereas|whilst)\b/i.test(text) &&
+        !/\b(?:in|on|at|by|of|to|for|from|with|without|during|while|despite|although|though|because|since|as|if|unless|before|after|until|when|whereas|whilst)\b/i.test(text) &&
         !/\b(?:in spite of|due to|owing to|thanks to|because of|on account of)\b/i.test(text)
       );
     case "m":
@@ -823,11 +823,11 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 async function main() {
-  if (PLAN === "STANDARD" && !process.env.GEMINI_API_KEY && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    throw new Error("GEMINI_API_KEY or GOOGLE_GENERATIVE_AI_API_KEY is required.");
+  if (PLAN === "STANDARD" && !process.env.ATLASCLOUD_API_KEY && !process.env.OPENROUTER_API_KEY) {
+    throw new Error("ATLASCLOUD_API_KEY or OPENROUTER_API_KEY is required.");
   }
-  if (PLAN === "PREMIUM" && !process.env.ANTHROPIC_API_KEY) {
-    throw new Error("ANTHROPIC_API_KEY is required for PREMIUM audit.");
+  if (PLAN === "PREMIUM" && !process.env.ATLASCLOUD_API_KEY && !process.env.OPENROUTER_API_KEY) {
+    throw new Error("ATLASCLOUD_API_KEY or OPENROUTER_API_KEY is required for PREMIUM audit.");
   }
   const cases = buildCases(TOTAL);
   console.log(

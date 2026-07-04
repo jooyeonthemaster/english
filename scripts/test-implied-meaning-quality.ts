@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Live quality loop for IMPLIED_MEANING.
  *
  * Exercises the same Gemini workbench pipeline used by
@@ -53,7 +53,7 @@ function normalizeText(value: unknown): string {
 
 function normalizeLabel(value: unknown): string {
   const text = normalizeText(value);
-  const circled = ["①", "②", "③", "④", "⑤"];
+  const circled = ["??, "??, "??, "??, "??];
   const circledIndex = circled.findIndex((label) => text.startsWith(label));
   if (circledIndex >= 0) return String(circledIndex + 1);
   const match = text.match(/^[([]?([1-5])[\]).:]?/);
@@ -155,8 +155,8 @@ async function runCase(passage: { id: string; text: string }, runIndex: number) 
 }
 
 async function main() {
-  if (!process.env.GEMINI_API_KEY && !process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-    throw new Error("GEMINI_API_KEY or GOOGLE_GENERATIVE_AI_API_KEY is required.");
+  if (!process.env.ATLASCLOUD_API_KEY && !process.env.OPENROUTER_API_KEY) {
+    throw new Error("ATLASCLOUD_API_KEY or OPENROUTER_API_KEY is required.");
   }
 
   fs.mkdirSync(OUTDIR, { recursive: true });
