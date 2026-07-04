@@ -377,8 +377,10 @@ export function WorkspaceShell({
             )
           ) : null}
 
-          {/* RIGHT: main work surface */}
-          <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 max-lg:!min-h-[55vh] max-lg:!flex-none">
+          {/* RIGHT: main work surface — 모바일(<lg)은 높이를 강제하지 않고
+              콘텐츠만큼만 차지한다(짧은 보드 아래·사이트 푸터 위 빈 공간 방지).
+              워크스페이스 오버레이의 최소 높이는 IntakeSurface 가 자체 보장. */}
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-lg border border-slate-200 max-lg:!flex-none">
             {right}
           </div>
         </div>

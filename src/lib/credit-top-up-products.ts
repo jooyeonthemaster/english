@@ -456,6 +456,7 @@ export async function getCreditProductByPromoLink(token: string): Promise<{
 export async function getPromoLandingProduct(token: string): Promise<{
   valid: boolean;
   endsAt: string | null;
+  promotionId: string;
   promotionName: string | null;
   product: CreditTopUpProductView;
 } | null> {
@@ -476,6 +477,7 @@ export async function getPromoLandingProduct(token: string): Promise<{
   return {
     valid,
     endsAt: promo.endsAt.toISOString(),
+    promotionId: promo.id,
     promotionName: promo.name,
     product: view,
   };

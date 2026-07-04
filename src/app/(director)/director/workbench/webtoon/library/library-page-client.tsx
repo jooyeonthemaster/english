@@ -175,6 +175,8 @@ export function WebtoonLibraryClient({
   // Host-triggered refresh (e.g. after a new webtoon is queued from the
   // generate page). Skips the initial mount (handled by the fetch-on-mount).
   const didMountRef = useRef(false);
+  // 모바일 페이지 넘김 시 목록 상단(스티키 헤더 포함)으로 부드럽게 스크롤.
+  const listSectionRef = useRef<HTMLElement>(null);
   useEffect(() => {
     if (!didMountRef.current) {
       didMountRef.current = true;
@@ -462,6 +464,7 @@ export function WebtoonLibraryClient({
           </div>
         ) : (
           <section
+            ref={listSectionRef}
             className={
               embedded
                 ? "flex flex-col"
@@ -799,6 +802,7 @@ export function WebtoonLibraryClient({
             onGoToPage={(p) => {
               setPage(p);
             }}
+            scrollTargetRef={listSectionRef}
           />
         ) : null}
       </div>

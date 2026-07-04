@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { ChevronDown, Cpu, FileText, Loader2, Target, X } from "lucide-react";
+import { Check, ChevronDown, Cpu, FileText, Loader2, Target, X } from "lucide-react";
 
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
@@ -35,6 +35,9 @@ interface PassageGenerateModalProps {
   generating: boolean;
   /** 이 지문으로 생성 — 호출부에서 생성 실행 후 모달을 닫는다. */
   onGenerate: () => void;
+  /** 모바일 전용 — 이 모달은 '유형 담기(설정)'만 하고 즉시 생성하지 않는다.
+   *  실제 생성은 워크스페이스 하단 '문제 확인' 일괄 생성이 담당(설정은 실시간 저장됨). */
+  configOnly?: boolean;
   /** GenerationConfigPanel (hideGenerateButtons) */
   children: ReactNode;
 }
@@ -52,6 +55,7 @@ export function PassageGenerateModal({
   needsVariant = false,
   generating,
   onGenerate,
+  configOnly = false,
   children,
 }: PassageGenerateModalProps) {
   // Esc 로 닫기 — 생성 중에는 막지 않는다(생성은 fire-and-forget 라 닫아도 진행).
@@ -104,7 +108,7 @@ export function PassageGenerateModal({
               className="inline-flex h-9 w-full min-w-0 cursor-pointer items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-2.5 transition-colors hover:bg-slate-100"
             >
               <FileText className="h-4 w-4 shrink-0 text-blue-500" aria-hidden="true" />
-              <span className="min-w-0 flex-1 truncate text-left text-[14.5px] font-semibold text-slate-900">
+              <span className="smoat-gen-modal-title min-w-0 flex-1 truncate text-left text-[14.5px] font-semibold text-slate-900">
                 {title}
               </span>
               <ChevronDown
@@ -154,31 +158,45 @@ export function PassageGenerateModal({
             type="button"
             // aria-disabled — 비활처럼 보이되 클릭은 살려, 유형 미선택(문제 0)일 때
             // 누르면 유형 카드들을 글로우해 "문항 수를 올리세요"를 유도한다.
-            aria-disabled={!canGenerate}
+            aria-disabled={configOnly ? questions === 0 : !canGenerate}
             onClick={() => {
-              if (generating) return;
               if (questions === 0) {
                 triggerHintGlowWithin(bodyRef.current, "[data-question-type-id]");
                 return;
               }
+              // 모바일(configOnly): 유형만 담고(설정은 실시간 저장됨) 워크스페이스로
+              // 복귀 — 실제 생성은 하단 '문제 확인'의 일괄 생성이 담당한다.
+              if (configOnly) {
+                onClose();
+                return;
+              }
+              if (generating) return;
               onGenerate();
             }}
             className={
-              "flex h-12 w-full items-center justify-center gap-2 rounded-xl px-4 text-[14.5px] font-bold transition-all duration-200 " +
-              (canGenerate
+              "flex h-10 lg:h-12 w-full items-center justify-center gap-1.5 lg:gap-2 rounded-xl px-4 text-[12px] lg:text-[14.5px] font-bold transition-all duration-200 " +
+              ((configOnly ? questions > 0 : canGenerate)
                 ? "bg-blue-600 text-white shadow-md shadow-blue-200/50 hover:bg-blue-700 hover:shadow-lg"
                 : "cursor-not-allowed bg-slate-100 text-slate-400")
             }
           >
-            {generating ? (
+            {generating && !configOnly ? (
               <>
-                <Loader2 className="size-5 animate-spin" aria-hidden="true" />
+                <Loader2 className="size-3.5 lg:size-5 animate-spin" aria-hidden="true" />
                 <span>생성 중…</span>
               </>
             ) : questions > 0 ? (
               <>
-                <Cpu className="size-5" aria-hidden="true" />
-                <span>다음으로 ({questions}문제생성)</span>
+                {configOnly ? (
+                  <Check className="size-3.5 lg:size-5" aria-hidden="true" />
+                ) : (
+                  <Cpu className="size-3.5 lg:size-5" aria-hidden="true" />
+                )}
+                <span>
+                  {configOnly
+                    ? `유형 담기 (${questions}문제)`
+                    : `다음으로 (${questions}문제생성)`}
+                </span>
                 {creditCost > 0 ? (
                   <CreditCostChip
                     amount={creditCost}
@@ -188,7 +206,7 @@ export function PassageGenerateModal({
               </>
             ) : (
               <>
-                <Target className="size-5" aria-hidden="true" />
+                <Target className="size-3.5 lg:size-5" aria-hidden="true" />
                 <span>유형을 선택하세요</span>
               </>
             )}

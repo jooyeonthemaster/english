@@ -10,6 +10,7 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import {
   AlertTriangle,
+  BarChart3,
   Boxes,
   Check,
   ChevronDown,
@@ -50,6 +51,8 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { PromoMonitoringPanel } from "@/components/admin/promo-monitoring-panel";
+import type { PromoMonitoringPayload } from "@/actions/admin/credit-promotion-monitoring";
 
 type PromotionRow = {
   product: AdminCreditProductView;
@@ -141,16 +144,20 @@ interface Props {
   initialProducts: AdminCreditProductView[];
   academies: PromoAcademy[];
   initialBundles: AdminBundleView[];
+  initialMonitoring: PromoMonitoringPayload;
 }
 
 export function PromotionsAdminClient({
   initialProducts,
   academies,
   initialBundles,
+  initialMonitoring,
 }: Props) {
   const [products, setProducts] = useState(initialProducts);
   const [bundles, setBundles] = useState(initialBundles);
-  const [tab, setTab] = useState<"promotions" | "bundles">("promotions");
+  const [tab, setTab] = useState<"promotions" | "bundles" | "monitoring">(
+    "promotions",
+  );
   const [origin, setOrigin] = useState("");
   useEffect(() => {
     setOrigin(window.location.origin);
@@ -200,12 +207,13 @@ export function PromotionsAdminClient({
 
   return (
     <div className="space-y-5">
-      {/* 서브탭: [프로모션] [번들] */}
+      {/* 서브탭: [프로모션] [번들] [모니터링] */}
       <div className="flex items-center gap-1 rounded-xl bg-gray-100 p-1 w-fit">
         {(
           [
             { key: "promotions", label: "프로모션", icon: Tag },
             { key: "bundles", label: "번들", icon: Boxes },
+            { key: "monitoring", label: "모니터링", icon: BarChart3 },
           ] as const
         ).map((t) => (
           <button
@@ -222,9 +230,11 @@ export function PromotionsAdminClient({
           >
             <t.icon className="size-3.5" strokeWidth={2} />
             {t.label}
-            <span className="text-[11px] font-bold tabular-nums text-gray-400">
-              {t.key === "promotions" ? rows.length : bundles.length}
-            </span>
+            {t.key !== "monitoring" && (
+              <span className="text-[11px] font-bold tabular-nums text-gray-400">
+                {t.key === "promotions" ? rows.length : bundles.length}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -357,6 +367,10 @@ export function PromotionsAdminClient({
           onOpenEditor={(bundle) => setEditingBundle(bundle)}
           onBundlesChange={setBundles}
         />
+      )}
+
+      {tab === "monitoring" && (
+        <PromoMonitoringPanel initial={initialMonitoring} />
       )}
 
       {/* 프로모션 편집 모달(기존 편집기 재사용) */}

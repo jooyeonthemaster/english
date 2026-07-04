@@ -1387,7 +1387,10 @@ export function PassageCardGrid({
       </div>
 
       {/* Passage card grid -- scrollable */}
-      <div ref={cardZoneRef} className="min-h-0 flex-1 overflow-y-auto px-2 py-4 lg:px-5">
+      <div
+        ref={cardZoneRef}
+        className="min-h-0 flex-1 overflow-y-auto px-2 py-4 scroll-mt-16 lg:px-5 lg:scroll-mt-0"
+      >
         {/* 이미지·PDF 추출 중 지문 로딩 카드(완료되면 실제 카드로 교체) */}
         {loadingCards}
         {loadingPassages ? (
@@ -1829,7 +1832,12 @@ export function PassageCardGrid({
                 totalPages={mobileTotalPages}
                 onGoToPage={(next) => {
                   setMobilePage(next);
-                  cardZoneRef.current?.scrollTo({ top: 0 });
+                  // 모바일 스텝(윈도우 스크롤)에선 cardZone 이 자체 스크롤을 하지
+                  // 않으므로 scrollTo 가 무효 → scrollIntoView 로 윈도우를 올린다.
+                  // 내부 스크롤(데스크톱)일 땐 scrollTo 가 맨 위로 되돌린다.
+                  const zone = cardZoneRef.current;
+                  zone?.scrollTo({ top: 0, behavior: "smooth" });
+                  zone?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
               />
             ) : null}

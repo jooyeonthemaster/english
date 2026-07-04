@@ -4,7 +4,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { CheckCircle2, Loader2, SquarePen, X, XCircle } from "lucide-react";
+import { CheckCircle2, ChevronDown, Loader2, ShoppingBasket, SquarePen, X, XCircle } from "lucide-react";
 import { QuestionReviewModal } from "@/components/workbench/question-review-modal";
 import { PassageAnalysisModal } from "@/components/workbench/passage-analysis-modal";
 import { PassageContentModal } from "@/components/workbench/passage-content-modal";
@@ -2393,6 +2393,8 @@ export function GeneratePageClient({
 
   // ── 모바일 스텝 플로우: 전환 + URL(?step=) 동기화 ──
   const isMobileViewport = useIsMobileViewport();
+  // 워크스페이스 스텝 하단 고정 '담긴 유형' 장바구니 펼침 상태(모바일).
+  const [workspaceCartOpen, setWorkspaceCartOpen] = useState(false);
 
   // 스텝이 가리키는 인테이크 상태를 함께 맞춘다. results 는 하단 결과
   // 섹션만 보여주므로 인테이크 상태를 건드리지 않는다(뒤로가면 그대로 복귀).
@@ -2919,6 +2921,9 @@ export function GeneratePageClient({
         needsVariant={rowNeedsVariant(activeRow)}
         generating={workspaceGenerating}
         onGenerate={handleGenerateActiveRow}
+        // 모바일: 모달은 '유형 담기'만(즉시 생성 안 함) — 생성은 아래 '문제 확인'
+        // 하단 바가 담긴 전 지문을 일괄 처리한다. 데스크톱은 기존 지문별 생성 유지.
+        configOnly={isMobileViewport}
       >
         <GenerationConfigPanel
           genMode={panelGenMode}
@@ -3006,6 +3011,20 @@ export function GeneratePageClient({
     queueCounts.done > 0 ||
     queueCounts.generating > 0 ||
     queueCounts.error > 0;
+  // 담긴 지문 중 '유형이 설정된'(=생성 대기) 지문 수·문제 수 — 모바일 '문제 확인'
+  // 버튼이 담긴 전 지문을 일괄 생성할지, 결과만 볼지 판단하는 데 쓴다.
+  const workspacePending = (() => {
+    let rows = 0;
+    let questions = 0;
+    for (const row of workspaceApi.rows) {
+      const st = workspaceRowStats.get(row.localId);
+      if (st && st.questions > 0) {
+        rows += 1;
+        questions += st.questions;
+      }
+    }
+    return { rows, questions };
+  })();
   const mobileNext = (() => {
     if (mobileStep === "input") {
       // 직접 입력 탭에 등록할 지문이 쌓여 있으면 '다음' = 등록하고 내 지문함
@@ -3051,24 +3070,60 @@ export function GeneratePageClient({
       };
     }
     if (mobileStep === "workspace") {
-      // 아직 이번 세션 생성물이 없으면 비활성 — 눌러도 막지 말고 지문별
-      // '다음으로(유형선택)' 버튼들을 글로우해 "먼저 문제를 생성"하도록 유도한다.
-      // (상단 스텝 헤더 4번으로는 언제든 이동 가능)
-      if (!hasSessionQuestions)
+      const totalWorkspaceRows = workspaceApi.rows.length;
+      // ① 담긴 지문 중 하나라도 유형이 있으면 → 생성 준비 단계. 단 '모든' 담긴
+      //    지문이 각각 유형을 담아야 활성(사용자 요청). 활성 시 담긴 전 지문을 한 번에
+      //    일괄 생성한 뒤 각 typeCounts 를 비우고(재생성 방지) 결과 스텝으로 이동한다.
+      if (workspacePending.rows > 0) {
+        if (workspacePending.rows === totalWorkspaceRows)
+          return {
+            label: `${workspacePending.rows}개 지문 문제 생성 (${workspacePending.questions}문제)`,
+            onClick: () => {
+              void handleWorkspaceGenerate();
+              workspaceApi.rows.forEach((row) => {
+                if (row.override && overrideHasTypeCounts(row.override)) {
+                  const next = { ...row.override, typeCounts: {} };
+                  workspaceApi.setOverride(
+                    row.localId,
+                    isOverrideEmpty(next) ? null : next,
+                  );
+                }
+              });
+              goToMobileStep("results");
+            },
+          };
+        // 일부 지문만 유형을 담음 → 비활성. 눌러도 막지 말고 지문 행들을 글로우해
+        // 남은 지문에도 유형을 담도록 유도한다.
+        const remaining = totalWorkspaceRows - workspacePending.rows;
         return {
-          label: "문제 확인",
+          label: `${remaining}개 지문에 유형을 더 담아주세요`,
           disabled: true,
           onDisabledHint: () =>
             triggerHintGlowWithin(
               document.body,
               '[data-generate-tour="row-generate-button"]',
-              // 생성 버튼이 긴 지문 아래·고정 바 뒤에 가려질 수 있으니 가운데로 스크롤.
               { scrollBlock: "center" },
             ),
         };
+      }
+      // ② 담긴 유형은 없지만 이미 생성물이 있으면 → 결과 보기.
+      if (hasSessionQuestions)
+        return {
+          label: queueCounts.generating > 0 ? "문제 확인 (생성 중)" : "문제 확인",
+          onClick: () => goToMobileStep("results"),
+        };
+      // ③ 아무 지문도 유형 설정이 안 됐고 생성물도 없음 → 비활성. 눌러도 막지 말고
+      //    지문별 '유형선택하고 지문 담기' 버튼들을 글로우해 유형 담기를 유도한다.
       return {
-        label: queueCounts.generating > 0 ? "문제 확인 (생성 중)" : "문제 확인",
-        onClick: () => goToMobileStep("results"),
+        label: "문제 확인",
+        disabled: true,
+        onDisabledHint: () =>
+          triggerHintGlowWithin(
+            document.body,
+            '[data-generate-tour="row-generate-button"]',
+            // 생성 버튼이 긴 지문 아래·고정 바 뒤에 가려질 수 있으니 가운데로 스크롤.
+            { scrollBlock: "center" },
+          ),
       };
     }
     return null;
@@ -3076,9 +3131,8 @@ export function GeneratePageClient({
   const mobileNextHint =
     mobileStep === "library" && selectedIds.size === 0 && !workspaceActive
       ? "지문 카드를 선택하면 워크스페이스로 보낼 수 있어요"
-      : mobileStep === "workspace" && !hasSessionQuestions
-        ? "지문마다 ‘다음으로 (유형선택)’으로 문제를 먼저 생성하면 확인할 수 있어요"
-        : undefined;
+      : // 워크스페이스 안내는 하단 '담긴 유형' 장바구니 바가 대신하므로 힌트 생략.
+        undefined;
 
   // 파일업로드·직접입력·기출 탭(지문 입력 스텝)에서는 각 보드가 자체 하단 고정
   // 액션 바(담긴 지문 + 추출/등록/담기 버튼)를 렌더하므로, 중복되는 공용 스텝 네비를
@@ -3087,6 +3141,96 @@ export function GeneratePageClient({
     mobileStep === "input" &&
     intakeView === "intake" &&
     (intakeTab === "upload" || intakeTab === "paste" || intakeTab === "exam");
+
+  // ── 워크스페이스 하단 고정 '담긴 유형' 장바구니 (모바일) ──
+  // 지문마다 유형을 담으면(모달 '유형 담기') 여기 모여, 펼치면 목록·빼기.
+  // 담긴 유형이 곧 일괄 생성 대상 — 바로 아래 '문제 생성' 버튼이 전부 생성한다.
+  const workspaceConfiguredRows = workspaceApi.rows
+    .map((row) => {
+      const st = workspaceRowStats.get(row.localId);
+      return {
+        localId: row.localId,
+        title: row.title,
+        questions: st?.questions ?? 0,
+      };
+    })
+    .filter((r) => r.questions > 0);
+  const clearRowTypes = (localId: string) => {
+    const row = workspaceApi.rows.find((r) => r.localId === localId);
+    if (!row?.override) return;
+    const next = { ...row.override, typeCounts: {} };
+    workspaceApi.setOverride(localId, isOverrideEmpty(next) ? null : next);
+  };
+  const workspaceCart = (
+    <>
+      {workspaceCartOpen && workspaceConfiguredRows.length > 0 ? (
+        <div className="flex max-h-[38vh] min-h-0 flex-col border-b border-slate-100 bg-slate-50/70">
+          <div className="min-h-0 flex-1 overflow-y-auto p-2">
+            {workspaceConfiguredRows.map((r, i) => (
+              <div
+                key={r.localId}
+                className="mb-1.5 flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-2 last:mb-0"
+              >
+                <span className="inline-flex size-5 shrink-0 items-center justify-center rounded bg-blue-600 text-[10.5px] font-bold text-white">
+                  {i + 1}
+                </span>
+                <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-slate-700">
+                  {r.title?.trim() || "제목 없는 지문"}
+                </span>
+                <span className="shrink-0 rounded bg-blue-50 px-1.5 py-0.5 text-[10.5px] font-bold text-blue-600">
+                  {r.questions}문제
+                </span>
+                <button
+                  type="button"
+                  onClick={() => clearRowTypes(r.localId)}
+                  aria-label="담은 유형 빼기"
+                  className="shrink-0 rounded-md p-1 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                >
+                  <X className="size-3.5" aria-hidden="true" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+      <button
+        type="button"
+        onClick={() => setWorkspaceCartOpen((open) => !open)}
+        aria-expanded={workspaceCartOpen}
+        aria-label={workspaceCartOpen ? "담긴 유형 목록 접기" : "담긴 유형 목록 펼치기"}
+        className="flex w-full shrink-0 items-center gap-2.5 border-b border-slate-100 bg-white px-3 py-2 text-left"
+      >
+        <span className="relative inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+          <ShoppingBasket className="size-5" aria-hidden="true" />
+          {workspacePending.rows > 0 ? (
+            <span className="absolute -right-1.5 -top-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-extrabold leading-none text-white ring-2 ring-white">
+              {workspacePending.rows}
+            </span>
+          ) : null}
+        </span>
+        <span className="flex min-w-0 flex-1 flex-col">
+          <span className="text-[12.5px] font-bold text-slate-900">
+            담긴 유형 {workspacePending.rows}지문
+            {workspacePending.questions > 0
+              ? ` · ${workspacePending.questions}문제`
+              : ""}
+          </span>
+          <span className="truncate text-[10.5px] text-slate-400">
+            {workspacePending.rows > 0
+              ? "탭하여 담긴 지문 유형 보기·빼기"
+              : "지문마다 ‘유형 담기’로 담으면 여기 모여요"}
+          </span>
+        </span>
+        <ChevronDown
+          className={
+            "size-4 shrink-0 text-slate-400 transition-transform" +
+            (workspaceCartOpen ? " rotate-180" : "")
+          }
+          aria-hidden="true"
+        />
+      </button>
+    </>
+  );
 
   return (
     // min-h 뷰포트 채움은 PC 전용 — 모바일은 콘텐츠만큼만 차지해 아래
@@ -3097,7 +3241,13 @@ export function GeneratePageClient({
       <main
         className={
           "flex w-full min-w-0 flex-col gap-4 " +
-          (boardFixedFooterActive ? "max-lg:pb-[140px]" : "max-lg:pb-1")
+          // 워크스페이스 스텝은 하단 고정 바가 '담긴 유형' 장바구니 + 생성 버튼이라
+          // 더 두꺼워 그만큼 여백을 예약(마지막 지문 카드가 안 가리게).
+          (boardFixedFooterActive
+            ? "max-lg:pb-[140px]"
+            : mobileStep === "workspace"
+              ? "max-lg:pb-[150px]"
+              : "max-lg:pb-1")
         }
       >
         {/* 모바일 전용 스테퍼 — 현재 단계 표시 + 탭으로 즉시 이동 */}
@@ -3185,6 +3335,8 @@ export function GeneratePageClient({
             prev={mobilePrev}
             next={mobileNext}
             hint={mobileNextHint}
+            // 워크스페이스 스텝: 이전/생성 버튼 위에 '담긴 유형' 장바구니 바를 얹는다.
+            cart={mobileStep === "workspace" ? workspaceCart : undefined}
           />
         ) : null}
       </main>

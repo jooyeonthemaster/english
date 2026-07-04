@@ -1469,6 +1469,16 @@
   vertical-align: bottom;
 }
 
+/* 모바일(<lg): 시험지 미리보기 인라인(contentEditable) 편집 비활성.
+   50% 축소 화면에서 캐럿 편집·캐럿 추종 서식 툴바는 조작 불가능하므로, 탭이
+   편집 필드를 뚫고 블록 래퍼로 전달돼 "블록 선택"이 되게 한다. 내용 수정은
+   하단 컨텍스트 바(MobileBlockActionBar)의 풀스크린 시트가 담당한다. */
+@media (max-width: 1023.98px) {
+  .editable-paper-field {
+    pointer-events: none;
+  }
+}
+
 /* ============================================================================
    전역 대형 UI 기준 — 문제생성 화면에서 맞춘 큰 글자/버튼 스케일을
    전체 앱으로 확장한다. 기존 컴포넌트의 촘촘한 Tailwind 폰트/버튼
@@ -1867,6 +1877,18 @@ body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :
 .qbank-compact-font :where(.text-\[10px\]) { font-size: 8px !important; }
 .qbank-compact-font :where(.text-\[9px\]) { font-size: 7px !important; }
 
+/* ---------------------------------------------------------------------------
+   문제 생성 모달(passage-generate-modal) 헤더의 지문명 — 큰글씨 모드(.smoat-large-ui)
+   에서 text-[14.5px]가 18.75px로 확대돼 모바일에서 과하게 커 보인다. 모바일(<lg)에서만
+   눌러준다. 데스크톱(≥1024px)·일반 폭은 기존 그대로. 큰글씨 !important 스케일을 이겨야
+   하므로 더 높은 특이도 + !important 로 지정.
+   --------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  body.smoat-large-ui .smoat-gen-modal-title {
+    font-size: 15px !important;
+  }
+}
+
 /* ============================================================================
    Mobile Responsiveness Safety Layer
    ----------------------------------------------------------------------------
@@ -2249,6 +2271,31 @@ body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :
   body.smoat-large-ui :where(.exam-a4-page, .exam-preview-page-frame, .par-root) :where(.text-lg) { font-size: 1.125rem !important; }
   body.smoat-large-ui :where(.exam-a4-page, .exam-preview-page-frame, .par-root) :where(.text-xl) { font-size: 1.25rem !important; }
   body.smoat-large-ui :where(.exam-a4-page, .exam-preview-page-frame, .par-root) :where(.text-2xl) { font-size: 1.5rem !important; }
+}
+
+/* ============================================================================
+   Mobile A4 report preview fit-to-width
+   ----------------------------------------------------------------------------
+   분석 리포트(.par-sheet)는 화면에서도 210mm(≈794px) 고정폭이라 모바일에서
+   폭을 넘겨 잘린다. .par-sheet 는 이미 zoom:var(--par-zoom,1) 을 읽으므로
+   모바일에서만 변수를 내려 폭에 맞게 축소한다. 데스크톱(≥768px)은 무영향.
+   단계별 max-width 로 360~430 실기기 폭에 맞춰 축소율을 조정한다.
+   (시험지 미리보기 .exam-a4-page 는 화면에서 w-full + 자체 zoom 이라 제외.)
+   ============================================================================ */
+@media (max-width: 767px) {
+  body.smoat-large-ui .par-root { --par-zoom: 0.72; }
+}
+@media (max-width: 560px) {
+  body.smoat-large-ui .par-root { --par-zoom: 0.62; }
+}
+@media (max-width: 440px) {
+  body.smoat-large-ui .par-root { --par-zoom: 0.5; }
+}
+@media (max-width: 400px) {
+  body.smoat-large-ui .par-root { --par-zoom: 0.46; }
+}
+@media (max-width: 365px) {
+  body.smoat-large-ui .par-root { --par-zoom: 0.42; }
 }
 
 /* 무통장입금 "입금 확인 실패" 시 문의하기 버튼 점멸 글로우 */

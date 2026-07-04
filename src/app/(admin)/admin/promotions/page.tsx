@@ -2,6 +2,7 @@ import { requireAdminAuth } from "@/lib/auth-admin";
 import { getAdminCreditProductsWithPromotions } from "@/lib/credit-top-up-products";
 import { listAcademiesForPromoPicker } from "@/actions/admin/credit-products";
 import { getBundles } from "@/actions/admin/credit-promotion-bundles";
+import { getPromotionMonitoring } from "@/actions/admin/credit-promotion-monitoring";
 import { PromotionsAdminClient } from "@/components/admin/promotions-admin-client";
 
 export const dynamic = "force-dynamic";
@@ -9,10 +10,11 @@ export const dynamic = "force-dynamic";
 export default async function AdminPromotionsPage() {
   await requireAdminAuth();
 
-  const [products, academies, bundles] = await Promise.all([
+  const [products, academies, bundles, monitoring] = await Promise.all([
     getAdminCreditProductsWithPromotions(),
     listAcademiesForPromoPicker(),
     getBundles(),
+    getPromotionMonitoring(),
   ]);
 
   return (
@@ -30,6 +32,7 @@ export default async function AdminPromotionsPage() {
         initialProducts={products}
         academies={academies}
         initialBundles={bundles}
+        initialMonitoring={monitoring}
       />
     </div>
   );

@@ -29,7 +29,7 @@ export default function ReportPreviewPage() {
       <div
         className="par-toolbar-noprint"
         style={{
-          position: "sticky", top: 0, zIndex: 10, display: "flex", gap: 12, alignItems: "center",
+          position: "sticky", top: 0, zIndex: 10, display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center",
           padding: "10px 16px", background: "white", borderBottom: "1px solid rgb(226,232,240)",
         }}
       >

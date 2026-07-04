@@ -952,7 +952,8 @@ export function A4PaperPage({
                             <div
                               className={cn(
                                 // 블록 왼쪽 여백에 세로(위→아래)로 띄워 블록 내용을 가리지 않게 한다.
-                                "no-print pointer-events-none absolute left-0 top-0 -translate-x-full -ml-0.5 z-20 flex flex-col items-center gap-2 rounded-lg border border-slate-200 bg-white/95 p-1 opacity-0 shadow-lg backdrop-blur transition-opacity group-hover/paper-item:pointer-events-auto group-hover/paper-item:opacity-100 group-focus-within/paper-item:pointer-events-auto group-focus-within/paper-item:opacity-100",
+                                // 모바일(<lg)에선 숨김 — 하단 컨텍스트 바(MobileBlockActionBar)가 대신한다.
+                                "no-print pointer-events-none absolute left-0 top-0 -translate-x-full -ml-0.5 z-20 hidden flex-col items-center gap-2 rounded-lg border border-slate-200 bg-white/95 p-1 opacity-0 shadow-lg backdrop-blur transition-opacity group-hover/paper-item:pointer-events-auto group-hover/paper-item:opacity-100 group-focus-within/paper-item:pointer-events-auto group-focus-within/paper-item:opacity-100 lg:flex",
                                 activeItemId === item.localId && "pointer-events-auto opacity-100",
                               )}
                             >

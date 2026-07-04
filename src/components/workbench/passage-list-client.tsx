@@ -911,6 +911,8 @@ export function PassageListClient({
 
   const [folderStickyRef, folderStickyHeight] = useMeasuredHeight(true);
   const passageListBoundaryRef = useRef<HTMLDivElement | null>(null);
+  // 모바일 페이지 넘김 시 목록 상단(스티키 헤더 포함)으로 부드럽게 스크롤.
+  const listSectionRef = useRef<HTMLElement>(null);
 
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
@@ -1011,7 +1013,10 @@ export function PassageListClient({
             </div>
           </div>
         ) : (
-          <section className="mt-2 flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <section
+            ref={listSectionRef}
+            className="mt-2 flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm"
+          >
             <div
               ref={folderStickyRef}
               className="sticky top-0 z-30 shrink-0 overflow-hidden rounded-t-2xl bg-white"
@@ -1283,6 +1288,7 @@ export function PassageListClient({
             page={passagesData.page}
             totalPages={passagesData.totalPages}
             onGoToPage={goToPage}
+            scrollTargetRef={listSectionRef}
           />
         )}
       </div>

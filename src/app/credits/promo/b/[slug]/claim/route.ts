@@ -6,6 +6,10 @@ import {
   parsePromoTokens,
   serializePromoTokens,
 } from "@/lib/promo-link";
+import {
+  recordPromoLinkEvent,
+  readClientHints,
+} from "@/lib/promo-link-events";
 
 // ============================================================================
 // 번들 "혜택 받기" — /credits/promo/b/{slug}/claim
@@ -60,6 +64,19 @@ export async function GET(
   const value = tokens.join(",");
 
   const staff = await getStaffSession();
+
+  // "혜택 받기" 클릭(CLAIM) 기록 — 실패해도 클레임 흐름을 막지 않음.
+  const { ip, userAgent } = readClientHints(req.headers);
+  await recordPromoLinkEvent({
+    kind: "CLAIM",
+    targetType: "BUNDLE",
+    linkRef: slug,
+    bundleId: bundle.id,
+    staff,
+    ip,
+    userAgent,
+  });
+
   const dest =
     staff?.role === "DIRECTOR"
       ? CREDITS_PROMO_APPLIED_PATH

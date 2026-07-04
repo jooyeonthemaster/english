@@ -643,8 +643,21 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                                   ) : null}
                                 </div>
                                 <div className="mt-1 space-y-0.5 pl-6">
-                                  {item.children.map((child) => {
-                                    const childIsActive = routeMatches(child.href, effectivePath);
+                                  {item.children.map((child, ci) => {
+                                    // 활성 판정: 정확히 일치하거나, prefix 일치이되 더 긴(더 구체적인)
+                                    // 형제가 일치하지 않을 때만. (예: /questions[문제 관리] 는
+                                    // /questions/generate[문제 생성] 의 prefix 라 둘 다 켜지던 버그 방지)
+                                    const exactMatch = effectivePath === child.href;
+                                    const prefixMatch =
+                                      routeMatches(child.href, effectivePath) && !exactMatch;
+                                    const siblingHasBetterMatch = item.children!.some(
+                                      (other, oi) =>
+                                        oi !== ci &&
+                                        routeMatches(other.href, effectivePath) &&
+                                        other.href.length > child.href.length,
+                                    );
+                                    const childIsActive =
+                                      exactMatch || (prefixMatch && !siblingHasBetterMatch);
                                     return (
                                       <Link
                                         key={child.href}

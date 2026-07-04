@@ -43,7 +43,7 @@ export function renderContentMatchDetail({ contentMatchAnswerCount, contentMatch
       const contentMatchPolarity =
         contentMatchSettings.matchType === "일치" ? "일치" : "불일치";
       return (
-        <div className="space-y-3 max-lg:space-y-1.5">
+        <div className="space-y-1.5 lg:space-y-3">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <span className="text-[12px] font-bold text-slate-800">정답 유형</span>
@@ -76,7 +76,7 @@ export function renderContentMatchDetail({ contentMatchAnswerCount, contentMatch
               ))}
             </div>
           </div>
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderNumberSetting({
               title: "보기 개수",
             badges: [
@@ -92,7 +92,7 @@ export function renderContentMatchDetail({ contentMatchAnswerCount, contentMatch
             ariaBase: "content match option count",
           })}
           </div>
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderNumberSetting({
               title: "정답 개수",
               badges: [
@@ -207,7 +207,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
       const targetStepperDisabled = targetWordsMode === "hidden";
 
       return (
-        <div className="space-y-3 max-lg:space-y-1.5">
+        <div className="space-y-1.5 lg:space-y-3">
           {/* 빈칸 수 */}
           {renderNumberSetting({
             title: "빈칸 개수",
@@ -231,7 +231,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           })}
 
           {/* 해석 제공 */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderToggleSetting({
               title: "해석 제공",
               description:
@@ -245,7 +245,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 보기 제공 */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderToggleSetting({
               title: "보기 제공",
               description:
@@ -259,7 +259,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 보기 사용 규칙 — 보기 off면 비활성 */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderSegSetting({
               title: "보기 사용 규칙",
               description:
@@ -277,7 +277,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 미끼 수 — 보기 off 또는 usePartial 아니면 비활성 */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderNumberSetting({
               title: "미끼 단어 수",
               badges: [
@@ -309,7 +309,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 보기 어형 충실도 — 보기 off면 비활성 */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderSegSetting({
               title: "보기 어형",
               description:
@@ -329,7 +329,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 단서 방식 */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderSegSetting({
               title: "단서 방식",
               description:
@@ -347,7 +347,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 목표 단어수 표시 */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderSegSetting({
               title: "목표 단어수 표시",
               description: targetWordsModeForExactDisabled
@@ -374,7 +374,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 빈칸당 목표 단어수 스테퍼 — hidden이면 비활성 */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderNumberSetting({
               title: "빈칸당 목표 단어수",
               badges: [
@@ -402,7 +402,7 @@ export function renderSummaryWritingDetail({ patchTypeSettings, questionTypeSett
           </div>
 
           {/* 보기 배분 — 빈칸 1개면 비활성 */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderSegSetting({
               title: "보기 배분",
               description:
@@ -446,7 +446,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
       const blankCountLockedByNounPhrase = isCloze && r.topicForm === "nounPhrase";
 
       return (
-        <div className="space-y-3 max-lg:space-y-1.5">
+        <div className="space-y-1.5 lg:space-y-3">
           {/* 출제 방식 — 두 축의 첫 번째. 최상단. */}
           {renderSegSetting({
             title: "출제 방식",
@@ -462,7 +462,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           })}
 
           {/* 주제 형태 — 두 축의 두 번째. */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderSegSetting({
               title: "주제 형태",
               description:
@@ -478,7 +478,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           </div>
 
           {/* 주제 힌트 제공 */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderToggleSetting({
               title: "주제 힌트 제공",
               description:
@@ -492,7 +492,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           </div>
 
           {/* 제시어 입도 */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderSegSetting({
               title: "제시어 입도",
               description:
@@ -508,7 +508,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           </div>
 
           {/* 미끼 단어 수 — 제시어/보기는 항상 있으므로 항상 활성. */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderNumberSetting({
               title: "미끼 단어 수",
               badges: [
@@ -535,7 +535,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           </div>
 
           {/* 제시어 어형 */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderSegSetting({
               title: "제시어 어형",
               description:
@@ -551,7 +551,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           </div>
 
           {/* 빈칸 개수 — cloze 전용. scrambled이면 비활성. */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderNumberSetting({
               title: "빈칸 개수",
               badges: [
@@ -590,7 +590,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
           </div>
 
           {/* 주제 출처 */}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderSegSetting({
               title: "주제 출처",
               description:
@@ -611,7 +611,7 @@ export function renderTopicSentenceWritingDetail({ patchTypeSettings, questionTy
 
 export function renderGrammarChoiceComboDetail({ grammarChoiceComboSettings, patchTypeSettings }) {
       return (
-        <div className="space-y-3 max-lg:space-y-1.5">
+        <div className="space-y-1.5 lg:space-y-3">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
@@ -671,7 +671,7 @@ export function renderGrammarChoiceComboDetail({ grammarChoiceComboSettings, pat
 
 export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax, grammarErrorSettings, grammarMarkerCount, patchTypeSettings, setGrammarAnswerCount, setGrammarMarkerCount }) {
       return (
-        <div className="space-y-3 max-lg:space-y-1.5">
+        <div className="space-y-1.5 lg:space-y-3">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
@@ -717,7 +717,7 @@ export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax,
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-1.5 lg:pt-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-[12px] font-bold text-slate-800">
@@ -762,7 +762,7 @@ export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax,
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-1.5 lg:pt-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-[12px] font-bold text-slate-800">
@@ -819,7 +819,7 @@ export function renderGrammarErrorDetail({ grammarAnswerCount, grammarAnswerMax,
 
 export function renderGrammarCorrectionDetail({ grammarCorrectionErrorCount, grammarCorrectionSettings, patchTypeSettings, setGrammarCorrectionErrorCount }) {
       return (
-        <div className="space-y-3 max-lg:space-y-1.5">
+        <div className="space-y-1.5 lg:space-y-3">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
@@ -875,7 +875,7 @@ export function renderGrammarCorrectionDetail({ grammarCorrectionErrorCount, gra
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-1.5 lg:pt-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-[12px] font-bold text-slate-800">
@@ -994,7 +994,7 @@ export function renderSummaryCompleteMcDetail({ setSummaryCompleteMcBlankCount, 
 export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSettings, setBlankInferenceBlankCount, updateBlankSetting }) {
       const isMultiBlank = blankInferenceBlankCount >= 2;
       return (
-        <div className="space-y-3 max-lg:space-y-1.5">
+        <div className="space-y-1.5 lg:space-y-3">
           {renderNumberSetting({
             title: "빈칸 개수",
             badges: [
@@ -1009,7 +1009,7 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
             onChange: setBlankInferenceBlankCount,
             ariaBase: "blank inference blank count",
           })}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderSegSetting({
               title: "빈칸 단위",
               description:
@@ -1032,7 +1032,7 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
                 }),
             })}
           </div>
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-1.5 lg:pt-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-[12px] font-bold text-slate-800">
@@ -1081,7 +1081,7 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
               />
             </button>
           </div>
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-1.5 lg:pt-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span
@@ -1137,7 +1137,7 @@ export function renderBlankInferenceDetail({ blankInferenceBlankCount, blankSett
             </button>
           </div>
 
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-1.5 lg:pt-3">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="text-[12px] font-bold text-slate-800">
@@ -1194,7 +1194,7 @@ export function renderVocabChoiceDetail({ patchTypeSettings, questionTypeSetting
       const vocabSynonymVariants =
         questionTypeSettings.VOCAB_CHOICE?.synonymVariants === true;
       return (
-        <div className="space-y-3 max-lg:space-y-1.5">
+        <div className="space-y-1.5 lg:space-y-3">
           {renderNumberSetting({
             title: "밑줄 어휘 개수",
             badges: [
@@ -1209,7 +1209,7 @@ export function renderVocabChoiceDetail({ patchTypeSettings, questionTypeSetting
             onChange: setVocabChoiceMarkerCount,
             ariaBase: "vocab choice marker count",
           })}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderNumberSetting({
               title: "정답 개수",
               badges: [
@@ -1225,7 +1225,7 @@ export function renderVocabChoiceDetail({ patchTypeSettings, questionTypeSetting
               ariaBase: "vocab choice answer count",
             })}
           </div>
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-1.5 lg:pt-3">
             <div className="min-w-0">
               <span className="text-[12px] font-bold text-slate-800">
                 동의어 변형 (암기 무력화)
@@ -1275,7 +1275,7 @@ export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSett
       const sentenceInsertPointFocus =
         questionTypeSettings.SENTENCE_INSERT?.pointFocus === true;
       return (
-        <div className="space-y-3 max-lg:space-y-1.5">
+        <div className="space-y-1.5 lg:space-y-3">
           {renderNumberSetting({
             title: "삽입 위치 개수",
             badges: [
@@ -1290,7 +1290,7 @@ export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSett
             onChange: setSentenceInsertSlotCount,
             ariaBase: "sentence insert slot count",
           })}
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-1.5 lg:pt-3">
             <div className="min-w-0">
               <span className="text-[12px] font-bold text-slate-800">
                 주어진 문장 앞부분 변형
@@ -1330,7 +1330,7 @@ export function renderSentenceInsertDetail({ patchTypeSettings, questionTypeSett
               />
             </button>
           </div>
-          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="flex items-center justify-between gap-3 border-t border-slate-100 pt-1.5 lg:pt-3">
             <div className="min-w-0">
               <span className="text-[12px] font-bold text-slate-800">
                 출제 포인트 집중
@@ -1425,7 +1425,7 @@ export function renderPerTypeDifficultyImpl({ typeId, difficulty, patchTypeSetti
         <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
           난이도 · 이 유형만
         </span>
-        <div className="mt-1.5 flex h-8 rounded-lg bg-slate-100 p-0.5 max-lg:mt-1">
+        <div className="mt-1 lg:mt-1.5 flex h-8 rounded-lg bg-slate-100 p-0.5">
           {DIFFICULTY_TONES.map((d) => {
             const isActive = effective === d.value;
             return (
@@ -1466,16 +1466,16 @@ export function renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOpt
       generationPlan,
     );
     return (
-      <div className="space-y-3 max-lg:space-y-1.5">
+      <div className="space-y-1.5 lg:space-y-3">
         {FEATURE_FLAGS.SHOW_MODEL_SELECTOR ? (
           <div
             className={
               numericContent
-                ? "border-b border-slate-100 pb-3 max-lg:pb-1.5"
+                ? "border-b border-slate-100 pb-1.5 lg:pb-3"
                 : undefined
             }
           >
-            <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500 max-lg:mb-1">
+            <div className="mb-1 lg:mb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
               생성 플랜 · 이 유형만
             </div>
             <div className="grid grid-cols-2 gap-2">
@@ -1516,7 +1516,7 @@ export function renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOpt
         {numericContent}
         <div
           className={
-            numericContent ? "border-t border-slate-100 pt-3 max-lg:pt-1.5" : undefined
+            numericContent ? "border-t border-slate-100 pt-1.5 lg:pt-3" : undefined
           }
         >
           {renderLanguageSetting({
@@ -1527,7 +1527,7 @@ export function renderTypeDetailContentImpl({ typeId, generationPlan, getTypeOpt
           })}
         </div>
         {languageScope === "stem-option" ? (
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderLanguageSetting({
               title: "보기 언어",
               value: getTypeOptionLanguage(typeId),
@@ -1558,7 +1558,7 @@ export function renderGenericGistDetail({ getGenericAnswerCount, getGenericOptio
         { value: "NEGATIVE", label: "적절하지 않은 것" },
       ];
       return (
-        <div className="space-y-3 max-lg:space-y-1.5">
+        <div className="space-y-1.5 lg:space-y-3">
           {showGistPolarity ? (
             <div className="border-b border-slate-100 pb-3">
               <div className="flex items-center justify-between gap-3">
@@ -1600,7 +1600,7 @@ export function renderGenericGistDetail({ getGenericAnswerCount, getGenericOptio
             onChange: (next) => setGenericOptionCount(typeId, next),
             ariaBase: `${typeId} option count`,
           })}
-          <div className="border-t border-slate-100 pt-3 max-lg:pt-1.5">
+          <div className="border-t border-slate-100 pt-1.5 lg:pt-3">
             {renderNumberSetting({
               title: "정답 개수",
               badges: [

@@ -184,6 +184,13 @@ export function QuestionBankCard({
   mergedPassagePlacement = "top",
   // 헤더 아래 삽입할 부가 행(세트 카드의 문항 탭·세트 배지·분리 버튼 등). 미지정 시 미표시.
   headerExtra,
+  // 부가 행 컨테이너에 덧붙일 클래스(예: 단일 문항 세트가 모바일에서 빈 행을 숨길 때 max-lg:hidden).
+  headerExtraClassName,
+  // 헤더 우측 배지 그룹(난이도·플랜 배지 옆)에 끼워 넣을 부가 요소. 세트 카드가 모바일에서
+  // '분리' 버튼을 '일반' 배지 오른쪽에 올릴 때 사용한다(호출부에서 반응형 노출을 제어).
+  headerBadgeExtra,
+  // 모바일 접힘 카드에서 발문 뒤에 인라인으로 이어붙일 배지(세트 카드의 '세트·N문항'). PC는 무영향.
+  promptInlineBadge,
   // 선택 체크박스를 숨긴다(세트 카드가 선택 미배선일 때 죽은 체크박스 방지).
   hideCheckbox = false,
   // 영역선택(마키) 대상에서 제외 — data-drag-item-id 를 찍지 않는다(세트 카드 오선택 방지).
@@ -243,6 +250,9 @@ export function QuestionBankCard({
   mergedPassage?: string;
   mergedPassagePlacement?: "top" | "inline";
   headerExtra?: React.ReactNode;
+  headerExtraClassName?: string;
+  headerBadgeExtra?: React.ReactNode;
+  promptInlineBadge?: React.ReactNode;
   hideCheckbox?: boolean;
   suppressDragItem?: boolean;
 }) {
@@ -578,7 +588,7 @@ export function QuestionBankCard({
     >
       <CardContent
         ref={contentRef}
-        className={`flex flex-1 flex-col ${compact ? "p-2 gap-1" : "p-3 gap-1.5"}`}
+        className={`flex flex-1 flex-col ${compact ? "p-1.5 gap-0.5 lg:p-2 lg:gap-1" : "p-2 gap-1 lg:p-3 lg:gap-1.5"}`}
       >
         {/* Header row — 손잡이~펼치기까지 한 줄에 세로 가운데 정렬 */}
         <div className={`flex items-center shrink-0 ${compact ? "gap-1" : "gap-1.5"}`}>
@@ -681,6 +691,7 @@ export function QuestionBankCard({
           <div className="flex items-center gap-1.5 shrink-0">
             {difficultyBadge}
             {planBadge}
+            {headerBadgeExtra}
             {typeof duplicateCount === "number" && duplicateCount > 1 && (
               <span
                 className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1 text-[11px] font-black tabular-nums text-white shadow-sm"
@@ -716,16 +727,18 @@ export function QuestionBankCard({
 
         {/* 세트 카드 부가 행 — 헤더 아래 문항 탭/세트 배지/분리 등. 일반 카드는 미표시. */}
         {headerExtra && (
-          <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+          <div
+            className={`flex shrink-0 flex-wrap items-center gap-1.5 ${headerExtraClassName ?? ""}`}
+          >
             {headerExtra}
           </div>
         )}
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1.5 lg:gap-2">
           {/* 지문 참조 펼침 콘텐츠 — 헤더의 '지문 N' 토글로 연다. 세트 멤버는 원본 raw 대신
               병합 변형 지문(밑줄/빈칸/마커)을 보여줘 빈칸 정답 누설을 막는다. */}
           {q.passage && viewSize !== "sm" && passageOpen && (
-            <div className="shrink-0 rounded-lg border border-slate-100 bg-slate-50 px-2.5 py-2">
+            <div className="shrink-0 rounded-lg border border-slate-100 bg-slate-50 px-2 py-1.5 lg:px-2.5 lg:py-2">
               {mergedPassage ? (
                 <p className="text-[11px] text-slate-500 leading-relaxed font-mono whitespace-pre-line max-h-[250px] overflow-y-auto">
                   {renderFormatted(mergedPassage, null)}
@@ -757,6 +770,7 @@ export function QuestionBankCard({
               subType={q.subType}
               isSetMember={!!q.inSet || !!q.setId}
               compact={compact}
+              setBadge={promptInlineBadge}
             />
           ) : (
             <>
@@ -764,7 +778,7 @@ export function QuestionBankCard({
                   한 번만 표시한다. 아래 타입 렌더러는 일반 문항의 발문/보기/정답/해설 구조를
                   유지하되, suppressInlinePassage 로 내부 지문 박스만 숨긴다. */}
               {mergedPassage && !inlineMergedPassage && (
-                <div className="shrink-0 rounded-lg border border-slate-100 bg-slate-50 px-2.5 py-2">
+                <div className="shrink-0 rounded-lg border border-slate-100 bg-slate-50 px-2 py-1.5 lg:px-2.5 lg:py-2">
                   <p className="max-h-[280px] overflow-y-auto whitespace-pre-line font-mono text-[12px] leading-[1.9] text-slate-700">
                     {renderFormatted(mergedPassage, null)}
                   </p>
@@ -977,7 +991,7 @@ export function QuestionBankCard({
               return bt - at;
             });
             return (
-              <div className="mt-auto flex w-full shrink-0 items-center gap-1.5 border-t border-slate-100 pt-2">
+              <div className="mt-auto flex w-full shrink-0 items-center gap-1.5 border-t border-slate-100 pt-1.5 lg:pt-2">
                 <Popover>
                   <PopoverTrigger asChild>
                     <button
@@ -1021,7 +1035,7 @@ export function QuestionBankCard({
           }
 
           return (
-            <div className="mt-auto flex w-full shrink-0 items-center gap-1.5 border-t border-slate-100 pt-2">
+            <div className="mt-auto flex w-full shrink-0 items-center gap-1.5 border-t border-slate-100 pt-1.5 lg:pt-2">
               <div className="flex min-w-0 flex-1 items-center gap-1.5 rounded-md px-1 py-1">
                 {inner}
               </div>
@@ -1035,7 +1049,7 @@ export function QuestionBankCard({
             스탬프를 위 '사용 이력' 밴드 우측으로 옮긴다. */}
         {(showTrashActions ||
           (embedded ? showReviewActions : !compactUsageLabel || showReviewActions)) && (
-          <div className="space-y-2 pt-1.5 border-t border-slate-100 shrink-0">
+          <div className="space-y-1 pt-1 lg:space-y-2 lg:pt-1.5 border-t border-slate-100 shrink-0">
             {/* 임베드(상세 팝업)는 날짜/도장 줄을 숨기고 검수·수정 버튼만 노출한다. */}
             {!embedded && (
               <div className="flex items-end justify-between gap-2">

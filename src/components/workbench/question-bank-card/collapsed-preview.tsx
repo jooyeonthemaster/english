@@ -35,6 +35,7 @@ export function CollapsedPreview({
   passageSubType = subType,
   isSetMember = false,
   compact = false,
+  setBadge,
 }: {
   direction: string;
   passage: string;
@@ -47,6 +48,8 @@ export function CollapsedPreview({
   isSetMember?: boolean;
   /** 시험지 빌더 좌측 라이브러리 전용 — 글자·여백·배지를 한 단계 줄인다. */
   compact?: boolean;
+  /** 모바일에서 발문 뒤에 인라인으로 이어붙일 세트 배지(세트 카드 전용). */
+  setBadge?: React.ReactNode;
 }) {
   // 어법 판단(GRAMMAR_ERROR)만 라벨/마커를 원형숫자(①)로 표시(시험지 렌더 동일). 타 유형 무영향.
   const isGrammarError = subType === "GRAMMAR_ERROR";
@@ -54,6 +57,13 @@ export function CollapsedPreview({
   const isEssay = !!subType && ESSAY_SUBTYPES.has(subType);
   // 발문 오른쪽에 작은 회색 글씨로 표시할 문제 유형명(예: "빈칸 추론", "조건부 영작").
   const typeLabel = subType ? SUBTYPE_LABELS[subType] : null;
+  // 발문 옆/뒤에 붙는 유형 라벨 텍스트(세트 멤버는 "장문 · " 접두).
+  const typeLabelText =
+    isSetMember && typeLabel
+      ? `장문 · ${typeLabel}`
+      : isSetMember
+        ? "장문"
+        : typeLabel;
   const badgeLabel = (label: unknown) =>
     optionBadgeLabel(isGrammarError ? grammarMarkerDisplayLabel(label) : label);
   const correctLabels = parseCorrectAnswerLabels(correctAnswer);
@@ -85,17 +95,30 @@ export function CollapsedPreview({
           고정(flex)한다. 예전 float-right는 줄 높이가 어긋나면 아래 지문 영역을
           침범해서 flex로 교체. */}
       {direction && (
-        <div className="flex items-start justify-between gap-2">
+        // 모바일: 발문 문장 끝에 세트 배지·유형 라벨을 인라인으로 이어붙여 "한 문장"처럼
+        // 흐르게 한다(예: "발문. [세트·N문항] 장문 · 유형"). PC(lg 이상)는 기존 유지 —
+        // 발문 좌측, 유형 라벨 우측 정렬(+세트 배지는 headerExtra 상단 행 그대로).
+        <div className="block lg:flex lg:items-start lg:justify-between lg:gap-2">
           <div className={`min-w-0 flex-1 ${directionTextCls} font-bold text-slate-900 leading-relaxed whitespace-pre-line`}>
             {renderFormatted(direction, subType)}
+            {(setBadge || typeLabelText) && (
+              <span className="align-middle lg:hidden">
+                {setBadge ? (
+                  <span className="mx-1 inline-flex align-middle">{setBadge}</span>
+                ) : (
+                  " "
+                )}
+                {typeLabelText && (
+                  <span className="align-middle text-[11px] font-medium text-slate-400">
+                    {typeLabelText}
+                  </span>
+                )}
+              </span>
+            )}
           </div>
-          {(typeLabel || isSetMember) && (
-            <span className="shrink-0 whitespace-nowrap text-[11px] font-medium leading-relaxed text-slate-400">
-              {isSetMember && typeLabel
-                ? `장문 · ${typeLabel}`
-                : isSetMember
-                  ? "장문"
-                  : typeLabel}
+          {typeLabelText && (
+            <span className="hidden shrink-0 self-start whitespace-nowrap text-[11px] font-medium leading-relaxed text-slate-400 lg:inline">
+              {typeLabelText}
             </span>
           )}
         </div>

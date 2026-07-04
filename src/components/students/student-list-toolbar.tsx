@@ -99,16 +99,16 @@ export function StudentListToolbar({
       </div>
 
       {/* ===== Filters Row ===== */}
-      <div className="flex items-center gap-3 mt-4">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mt-4">
         {/* Status filter */}
-        <div className="flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1">
           {[{ value: "ALL", label: "전체" }, ...STUDENT_STATUSES].map(
             (status) => (
               <button
                 key={status.value}
                 onClick={() => onUpdateParams({ status: status.value })}
                 className={cn(
-                  "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                  "shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
                   filters.status === status.value
                     ? "bg-[#191F28] text-white"
                     : "bg-[#F2F4F6] text-[#6B7684] hover:bg-[#E5E8EB]"

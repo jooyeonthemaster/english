@@ -70,7 +70,11 @@ export const DragHandle = forwardRef<
       onMouseDown={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
       className={cn(
-        "flex cursor-grab items-center justify-center rounded text-slate-300 opacity-50 transition-all hover:bg-slate-100 hover:text-slate-500 hover:opacity-100 active:cursor-grabbing group-hover:opacity-90",
+        // 네이티브 드래그는 터치에서 발화하지 않으므로 이 손잡이는 모바일(<lg)에서
+        // 동작 없는 죽은 UI다. `hidden lg:flex` 로 모바일에선 레이아웃에서 제거해
+        // 오른쪽의 flex-1 콘텐츠(체크박스+제목)가 그 자리로 확장되게 하고, PC(≥lg)는
+        // 그대로 드래그 손잡이를 노출한다.
+        "hidden lg:flex cursor-grab items-center justify-center rounded text-slate-300 opacity-50 transition-all hover:bg-slate-100 hover:text-slate-500 hover:opacity-100 active:cursor-grabbing group-hover:opacity-90",
         className,
       )}
     >

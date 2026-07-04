@@ -112,9 +112,18 @@ export function ExamBuilderQuestionSetCard({
     activeMember.isStructural || isStructuralType(activeMember.typeId || "");
   const activeMergedPassage = structural ? undefined : mergedPassage;
 
+  // 세트 배지 — 문제 생성 페이지 카드와 동일하게: PC(부가 행)는 기존 "Set - N",
+  // 모바일은 발문 뒤 인라인 "세트 · N문항"으로 보인다(모바일만 변형).
+  const setBadgeNode = (
+    <span className="inline-flex w-fit shrink-0 items-center justify-center whitespace-nowrap rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-600">
+      세트 · {set.members.length}문항
+    </span>
+  );
+
   const headerExtra = (
     <>
-      <span className="shrink-0 rounded-md border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold leading-none text-blue-600">
+      {/* PC 전용 — 모바일은 발문 뒤 인라인 배지(promptInlineBadge)로 대체. */}
+      <span className="shrink-0 rounded-md border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold leading-none text-blue-600 max-lg:hidden">
         Set - {set.members.length}
       </span>
       {set.members.length > 1 ? (
@@ -164,6 +173,8 @@ export function ExamBuilderQuestionSetCard({
       suppressDragItem
       mergedPassage={activeMergedPassage}
       headerExtra={headerExtra}
+      promptInlineBadge={setBadgeNode}
+      headerExtraClassName={set.members.length > 1 ? undefined : "max-lg:hidden"}
     />
   );
 }

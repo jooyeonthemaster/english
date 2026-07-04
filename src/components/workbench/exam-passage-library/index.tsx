@@ -49,6 +49,12 @@ export function ExamPassageLibrary({
   // 비활(처럼 보이는) 담기 버튼을 눌렀을 때 어디를 골라야 하는지 카드들을 글로우.
   const bodyRef = useRef<HTMLDivElement>(null);
 
+  // 페이지 넘김 시 스크롤 영역 맨 위(첫 카드)로 부드럽게 되돌린다.
+  const handleGoToPage = (next: number) => {
+    api.setPage(next);
+    bodyRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const handlePick = async () => {
     if (api.selectedCount === 0 || picking || busy) return;
     setPicking(true);
@@ -140,7 +146,7 @@ export function ExamPassageLibrary({
               <Pagination
                 page={api.page}
                 totalPages={api.totalPages}
-                onGoToPage={api.setPage}
+                onGoToPage={handleGoToPage}
               />
             </>
           )
@@ -181,7 +187,7 @@ export function ExamPassageLibrary({
             <Pagination
               page={api.page}
               totalPages={api.totalPages}
-              onGoToPage={api.setPage}
+              onGoToPage={handleGoToPage}
             />
           </>
         )}

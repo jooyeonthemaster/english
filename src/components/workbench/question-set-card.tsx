@@ -139,14 +139,46 @@ export function QuestionSetCard({
   const activeMergedPassage = structural ? undefined : mergedPassage;
   const splitting = splittingId === activeMember.questionId;
 
+  // 멤버 분리 버튼 — PC(lg 이상)는 헤더 부가 행(headerExtra) 우측에, 모바일(<lg)은
+  // 헤더 배지 그룹(headerBadgeExtra)의 '일반' 배지 오른쪽에 노출한다. 두 위치에 각각
+  // 반응형 래퍼로 하나만 보이게 하므로 실제로는 한 번만 렌더된다.
+  const renderSplitButton = () =>
+    handleSplitMember ? (
+      <button
+        type="button"
+        data-drag-select-ignore
+        disabled={splitting}
+        title="이 문항의 복제본을 단독 문항으로 추가합니다(세트는 그대로)"
+        onClick={(e) => {
+          e.stopPropagation();
+          void handleSplitMember(activeMember.questionId);
+        }}
+        className="flex h-6 shrink-0 items-center gap-1 rounded-md border border-slate-200 bg-white px-1.5 text-[10.5px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {splitting ? (
+          <Loader2 className="h-3 w-3 animate-spin" />
+        ) : (
+          <Scissors className="h-3 w-3" />
+        )}
+        분리
+      </button>
+    ) : null;
+
+  // 세트 배지 — PC는 헤더 아래 부가 행(headerExtra)에, 모바일은 발문 뒤 인라인
+  // (promptInlineBadge)으로 이어붙여 "한 문장"처럼 보이게 한다.
+  const setBadgeNode = (
+    <Badge
+      variant="outline"
+      className="shrink-0 gap-1 border-blue-200 bg-blue-50 text-[10px] font-bold text-blue-600"
+    >
+      세트 · {set.members.length}문항
+    </Badge>
+  );
+
   const headerExtra = (
     <>
-      <Badge
-        variant="outline"
-        className="shrink-0 gap-1 border-blue-200 bg-blue-50 text-[10px] font-bold text-blue-600"
-      >
-        세트 · {set.members.length}문항
-      </Badge>
+      {/* PC 전용 — 모바일은 발문 뒤 인라인 배지로 대체(max-lg:hidden). */}
+      <span className="contents max-lg:hidden">{setBadgeNode}</span>
       {set.members.length > 1 && (
         <span className="flex flex-wrap items-center gap-1">
           <span className="mr-0.5 shrink-0 text-[11px] font-semibold text-slate-400">
@@ -173,30 +205,20 @@ export function QuestionSetCard({
         </span>
       )}
       {handleSplitMember && (
-        <>
-          <span className="flex-1" />
-          <button
-            type="button"
-            data-drag-select-ignore
-            disabled={splitting}
-            title="이 문항의 복제본을 단독 문항으로 추가합니다(세트는 그대로)"
-            onClick={(e) => {
-              e.stopPropagation();
-              void handleSplitMember(activeMember.questionId);
-            }}
-            className="flex h-6 shrink-0 items-center gap-1 rounded-md border border-slate-200 bg-white px-1.5 text-[10.5px] font-semibold text-slate-500 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {splitting ? (
-              <Loader2 className="h-3 w-3 animate-spin" />
-            ) : (
-              <Scissors className="h-3 w-3" />
-            )}
-            분리
-          </button>
-        </>
+        // PC 전용 위치 — 부가 행 우측 끝(ml-auto). 모바일에서는 숨기고 headerBadgeExtra로 이동.
+        <span className="ml-auto hidden items-center lg:inline-flex">
+          {renderSplitButton()}
+        </span>
       )}
     </>
   );
+
+  // 모바일(<lg) 전용 — 헤더 '일반' 배지 오른쪽에 분리 버튼을 노출한다. PC에서는 숨긴다.
+  const headerBadgeExtra = handleSplitMember ? (
+    <span className="inline-flex items-center lg:hidden">
+      {renderSplitButton()}
+    </span>
+  ) : undefined;
 
   return (
     <QuestionBankCard
@@ -208,6 +230,11 @@ export function QuestionSetCard({
       suppressDragItem
       mergedPassage={activeMergedPassage}
       headerExtra={headerExtra}
+      // 모바일 발문 뒤 인라인 세트 배지 — CollapsedPreview가 lg:hidden으로 감싸 모바일만 노출.
+      promptInlineBadge={setBadgeNode}
+      // 단일 문항 세트는 모바일에서 부가 행이 비므로(배지는 인라인, 탭 없음) 그 행을 숨겨 여백 제거.
+      headerExtraClassName={set.members.length > 1 ? undefined : "max-lg:hidden"}
+      headerBadgeExtra={headerBadgeExtra}
       recentlyViewed={recentlyViewed}
       showStar={false}
       // 드래그 핸들(grip) 노출 — 일반 카드와 동일. 세트는 멤버 문항 전체를 한 덩어리로 끌어

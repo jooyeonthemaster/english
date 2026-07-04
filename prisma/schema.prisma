@@ -2524,6 +2524,33 @@ model CreditPromotionTarget {
   @@map("credit_promotion_targets")
 }
 
+/// CreditPromotionLinkEvent — 프로모션/번들 공유 링크에 대한 사용자 활동 로그.
+/// "VIEW"=랜딩(/credits/promo/...) 방문, "CLAIM"="혜택 받기" 버튼 클릭.
+/// 로그인한 원장이면 staffId/academyId 를 스냅샷하고, 비로그인(익명)이면 그
+/// 값이 null 이며 visitorKey(IP+UA 해시)로만 순 방문자를 근사한다. 링크가
+/// 재발급돼도 집계가 끊기지 않도록 token 이 아니라 promotionId/bundleId 로 묶는다.
+model CreditPromotionLinkEvent {
+  id          String   @id @default(cuid())
+  kind        String   @default("VIEW") // "VIEW" | "CLAIM"
+  targetType  String   @default("PROMO") // "PROMO" | "BUNDLE"
+  promotionId String? // targetType=PROMO 일 때
+  bundleId    String? // targetType=BUNDLE 일 때
+  linkRef     String // 클릭된 식별자: 프로모션=linkToken, 번들=slug (감사용 원본)
+  staffId     String? // 로그인한 원장 (익명이면 null)
+  academyId   String?
+  academyName String? // 표시용 스냅샷
+  visitorName String? // staff 이름 스냅샷
+  visitorKey  String? // 순 방문자 근사(로그인=staff:{id}, 익명=ip+ua+날짜 해시)
+  createdAt   DateTime @default(now())
+
+  @@index([promotionId])
+  @@index([bundleId])
+  @@index([academyId])
+  @@index([staffId])
+  @@index([createdAt])
+  @@map("credit_promotion_link_events")
+}
+
 model CreditTopUp {
   id                   String    @id @default(cuid())
   academyId            String

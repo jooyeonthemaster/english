@@ -29,6 +29,7 @@ import { confirmNative } from "@/lib/browser-confirm";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import { FolderSection } from "@/components/workbench/shared/folder-section";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
+import { Pagination } from "@/components/workbench/shared/pagination";
 import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
@@ -37,6 +38,7 @@ import {
 // Hooks
 import { useSelection } from "@/components/workbench/hooks/use-selection";
 import { useFolderManager } from "@/hooks/use-folder-manager";
+import { useMobilePagination } from "@/hooks/use-mobile-pagination";
 
 // Exam card
 import { ExamFileCard } from "./exam-file-card";
@@ -201,6 +203,20 @@ export function ExamListClient({
 
   const examIds = useMemo(() => displayedExams.map((e) => e.id), [displayedExams]);
   const selection = useSelection(examIds);
+
+  // ─── 모바일 전용: 폴더(전체 시험 포함)마다 한 페이지 10개 제한 ───
+  // 데스크톱은 useMobilePagination 이 전체를 그대로 반환해 변화 없음.
+  // 폴더 이동·검색·필터가 바뀌면 resetKey 로 1페이지로 되돌린다.
+  const {
+    isMobile,
+    page: mobilePage,
+    setPage: setMobilePage,
+    totalPages: mobileTotalPages,
+    visibleItems: visibleExams,
+    scrollTargetRef: listSectionRef,
+  } = useMobilePagination(displayedExams, {
+    resetKey: `${folder.activeFolder ?? "root"}|${search}|${typeFilter}|${statusFilter}|${classFilter}`,
+  });
 
   // ─── Folder action wrappers ───
   const onAddToFolder = useCallback(
@@ -494,7 +510,10 @@ export function ExamListClient({
             </p>
           </div>
         ) : (
-          <section className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <section
+            ref={listSectionRef}
+            className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+          >
             {/* Sticky layer 1 — folder section (page identity + folders) */}
             <div
               ref={folderStickyRef}
@@ -570,7 +589,7 @@ export function ExamListClient({
                   value={selection.selectedIds}
                   onChange={selection.setSelectedIds}
                 >
-                  {displayedExams.map((exam) => (
+                  {visibleExams.map((exam) => (
                     <ExamFileCard
                       key={exam.id}
                       exam={exam}
@@ -594,7 +613,7 @@ export function ExamListClient({
                   value={selection.selectedIds}
                   onChange={selection.setSelectedIds}
                 >
-                  {displayedExams.map((exam) => (
+                  {visibleExams.map((exam) => (
                     <ExamListRow
                       key={exam.id}
                       exam={exam}
@@ -611,6 +630,18 @@ export function ExamListClient({
                     />
                   ))}
                 </DragSelect>
+              )}
+
+              {/* 모바일 전용 페이지 넘김 — 폴더당 10개씩(데스크톱은 렌더 안 함) */}
+              {isMobile && displayedExams.length > 0 && (
+                <div className="pt-3">
+                  <Pagination
+                    page={mobilePage}
+                    totalPages={mobileTotalPages}
+                    onGoToPage={setMobilePage}
+                    scrollTargetRef={listSectionRef}
+                  />
+                </div>
               )}
             </div>
           </section>

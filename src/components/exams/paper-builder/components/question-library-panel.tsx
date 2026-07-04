@@ -821,7 +821,11 @@ export function QuestionLibraryPanel({
             <Pagination
               page={page}
               totalPages={totalPages}
-              onGoToPage={onPageChange}
+              onGoToPage={(p) => {
+                onPageChange(p);
+                // 페이지 넘김 시 스크롤 영역 맨 위(첫 카드)로 부드럽게 되돌린다.
+                scrollContainerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+              }}
             />
           </div>
         )}
