@@ -1,0 +1,730 @@
+{
+  "createdAt": "2026-07-06T03:02:49.169Z",
+  "outPath": "artifacts/ai-audits/multipassage-sweep1-20260706",
+  "total": 32,
+  "passed": 4,
+  "failed": 28,
+  "passRate": 0.125,
+  "byCell": {
+    "GRAMMAR_ERROR:STANDARD:INTERMEDIATE": {
+      "total": 4,
+      "generated": 4,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 81.5,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-correction-not-source-backed",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-error-not-mutated",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-render-marker-count",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-source-expression-not-backed",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-too-basic-decoys",
+          "count": 2
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:STANDARD:KILLER": {
+      "total": 4,
+      "generated": 4,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 63,
+      "topIssues": [
+        {
+          "code": "local:generation-notice",
+          "count": 3
+        },
+        {
+          "code": "local:quality-mode-relaxed",
+          "count": 3
+        },
+        {
+          "code": "local:review-recommended",
+          "count": 3
+        },
+        {
+          "code": "rejection:grammar-error-not-mutated",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-killer-answer-point-repeated",
+          "count": 2
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:PREMIUM:INTERMEDIATE": {
+      "total": 4,
+      "generated": 4,
+      "passed": 2,
+      "passRate": 0.5,
+      "avgScore": 91.5,
+      "topIssues": [
+        {
+          "code": "local:generation-notice",
+          "count": 2
+        },
+        {
+          "code": "local:quality-mode-relaxed",
+          "count": 2
+        },
+        {
+          "code": "local:review-recommended",
+          "count": 2
+        },
+        {
+          "code": "rejection:duplicate-option-text",
+          "count": 2
+        },
+        {
+          "code": "rejectionLast:duplicate-option-text",
+          "count": 2
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:PREMIUM:KILLER": {
+      "total": 4,
+      "generated": 4,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 76,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-killer-thin-answer",
+          "count": 4
+        },
+        {
+          "code": "local:generation-notice",
+          "count": 3
+        },
+        {
+          "code": "local:quality-mode-relaxed",
+          "count": 3
+        },
+        {
+          "code": "local:review-recommended",
+          "count": 3
+        },
+        {
+          "code": "rejectionLast:grammar-killer-thin-answer",
+          "count": 3
+        }
+      ]
+    },
+    "BLANK_INFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 4,
+      "generated": 4,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 60.5,
+      "topIssues": [
+        {
+          "code": "llmFatal:blankAnswerMode is SOURCE_EXACT but correct option ③ is the verbatim original phrase, not a paraphrase — the answer expl",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:blankAnswerMode is SOURCE_EXACT but the answerLogic/explanation describe a paraphrase (baffle the scientific community),",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:blankAnswerMode is SOURCE_EXACT but the correct answer 'confuse the wind' is verbatim copied from the sentence immediate",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:blankAnswerMode is SOURCE_EXACT but the correct option is the verbatim original sentence copied unchanged, not a distrac",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Correct answer is the exact copied sentence from the passage, so a student can solve it by simple string-matching the bl",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:STANDARD:KILLER": {
+      "total": 4,
+      "generated": 4,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 68,
+      "topIssues": [
+        {
+          "code": "llmFatal:Option length/complexity is wildly imbalanced: correct answer is a short neutral phrase (4 words) while distractors are ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:passageWithBlank replaces 'broaden the attention' but leaves '...to _____ of the medical and research communities...', p",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blank is placed on the final quoted summary line itself, which is essentially a direct restatement rather than requi",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blank is placed on the final sentence's local detail (how balconies help), not the paragraph's controlling claim; th",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blank replaces a local, low-stakes verb phrase ('played a comparable role') rather than the paragraph's controlling ",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:INTERMEDIATE": {
+      "total": 4,
+      "generated": 4,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75.8,
+      "topIssues": [
+        {
+          "code": "llmFatal:Option 3, although designed as a distractor, is grammatically and logically unnatural when inserted after 'before they..",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Option 4 is extremely attractive and arguably correct or highly debatable, as 'First World illnesses' is explicitly equa",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Option 5 contains 'eliminate all wind pressure', which is an overly easy and obviously wrong distractor, rendering the i",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The correct answer option (Option 1) is a direct, verbatim copy-paste from the source text and the option design is incr",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The correct option is 'confuse the wind', which is verbatim from the source passage under SOURCE_EXACT mode but is too m",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:KILLER": {
+      "total": 4,
+      "generated": 4,
+      "passed": 2,
+      "passRate": 0.5,
+      "avgScore": 81.8,
+      "topIssues": [
+        {
+          "code": "llmFatal:The correct answer option (5, 'expand') is a direct synonym/translation of 'broaden' rather than a high-quality PARAPHRA",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The English phrasing of the correct option \"came to take on it as red had already done\" is ungrammatical (should be \"tak",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 1, 3, and 5 are completely different in length and syntactic complexity compared to option 2 and 4, creating an u",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The blank is located on a single, short verb ('broaden'), violating the killer-difficulty guidelines which require a mea",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct answer option 5 contains grammatically broken English ('take on it' instead of the established phrasal verb ",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "local:generation-notice",
+      "count": 8
+    },
+    {
+      "code": "local:quality-mode-relaxed",
+      "count": 8
+    },
+    {
+      "code": "local:review-recommended",
+      "count": 8
+    },
+    {
+      "code": "rejection:grammar-error-not-mutated",
+      "count": 6
+    },
+    {
+      "code": "rejection:grammar-killer-thin-answer",
+      "count": 5
+    },
+    {
+      "code": "rejection:grammar-killer-answer-point-repeated",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-source-expression-not-backed",
+      "count": 4
+    },
+    {
+      "code": "rejection:duplicate-option-text",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-correction-not-source-backed",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-obvious-adjacent-sv-agreement",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-obvious-noun-what-relative",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-render-marker-count",
+      "count": 3
+    },
+    {
+      "code": "rejectionLast:grammar-error-not-mutated",
+      "count": 3
+    },
+    {
+      "code": "rejectionLast:grammar-killer-thin-answer",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-killer-overdrilled-answer",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-too-basic-decoys",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-weak-filler-decoys",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:duplicate-option-text",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-killer-answer-point-repeated",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-obvious-adjacent-sv-agreement",
+      "count": 2
+    }
+  ],
+  "issueCounts": {
+    "llmMajor:Difficulty labeled INTERMEDIATE but the subject-verb agreement error (plural 'words' vs 'shares') is a fairly standard, ": 1,
+    "llmFatal:The passage text is embedded in the sentence that discusses 'because the glass is slowly sinking over time' as fact, but": 1,
+    "llmMajor:Only 5 marked expressions marks the low end of the 5-10 range, and with only 1 error, distractor diversity is thin; (A),": 1,
+    "llmMajor:The explanation for the answer relies purely on rote lexical knowledge ('struggle only takes to-infinitive') without dee": 1,
+    "llmMajor:(B)'s explanation calls out 'relative clause and correlative modifiers' but the actual modifying phrase is just 'you som": 1,
+    "rejection:grammar-render-marker-count": 3,
+    "rejection:grammar-error-not-mutated": 6,
+    "rejection:grammar-source-expression-not-backed": 4,
+    "rejection:grammar-correction-not-source-backed": 3,
+    "rejection:grammar-too-basic-decoys": 2,
+    "rejectionLast:grammar-render-marker-count": 1,
+    "rejectionLast:grammar-error-not-mutated": 3,
+    "rejectionLast:grammar-source-expression-not-backed": 1,
+    "rejectionLast:grammar-correction-not-source-backed": 1,
+    "rejectionLast:grammar-weak-filler-decoys": 2,
+    "llmFatal:Option (D) shown to students is 'has neglected' (active), which is clearly non-idiomatic/incomplete without an object, m": 1,
+    "llmMajor:The passage clause 'the disease has neglected compared to First World illnesses' is grammatically broken (no object, dan": 1,
+    "llmMajor:pointCode values (a,b,d,e,f) are inconsistent/non-sequential with no visible c, suggesting leftover generation artifacts": 1,
+    "llmMajor:Explanation for (D) is solid but the item's overall difficulty is inflated; a mid-level student would flag 'has neglecte": 1,
+    "llmMajor:Only 5 marked expressions, at the low end of the 5-10 range, slightly thin for a fully robust item": 1,
+    "rejection:grammar-obvious-adjacent-sv-agreement": 3,
+    "rejectionLast:grammar-obvious-adjacent-sv-agreement": 2,
+    "rejectionLast:grammar-too-basic-decoys": 1,
+    "local:quality-mode-relaxed": 8,
+    "local:generation-notice": 8,
+    "local:review-recommended": 8,
+    "llmFatal:Marked (E) is 'which' but text preceding it already includes 'in' ('in Russian, which the terms...' vs displayed passage": 1,
+    "llmFatal:The task instructs generator to flag when quality gates failed (_qualityMode=relaxed, _reviewRecommended=true, explicit ": 1,
+    "llmMajor:This is a 'missing preposition before relative pronoun' error, which is essentially a spelling/completeness-level error,": 1,
+    "llmMajor:Multiple non-answer distractors reuse the same pointCode 'b' as the answer (flagged by the system's own quality warning)": 1,
+    "llmMajor:The four non-answer explanations are generic textbook explanations with no meaningful distractor design tension; none ar": 1,
+    "rejection:grammar-killer-answer-point-repeated": 4,
+    "rejection:grammar-killer-thin-answer": 5,
+    "rejectionLast:grammar-killer-answer-point-repeated": 2,
+    "llmFatal:Generator explicitly flagged relaxed quality mode and low usable-slot count; this is not a genuine KILLER-caliber item a": 1,
+    "llmFatal:(A) is a trivially shallow decoy per the generator's own quality warning, and (D) is a weak filler decoy — both fail the": 1,
+    "llmMajor:For KILLER, at least two hard-point grammar frames should differ from the answer's point (subject-verb agreement); here ": 1,
+    "llmMajor:The correct answer (C) is locally detectable almost immediately (is/are next to 'they are uneven' pattern nearby) rather": 1,
+    "llmMajor:Difficulty label KILLER is not earned: the underlined verb 'is' sits shortly after a clearly plural antecedent 'sheets o": 1,
+    "rejection:grammar-weak-filler-decoys": 2,
+    "rejectionLast:grammar-killer-generic-answer-point": 1,
+    "llmFatal:Generator explicitly flagged relaxed quality mode and review-recommended, and the answer point (even if vs even with) is": 1,
+    "llmFatal:The error is locally obvious: 'even with a disease is...' immediately reads as ungrammatical since a finite clause canno": 1,
+    "llmMajor:KILLER difficulty requires the answer to sit in the passage's most syntactically complex sentence with long-distance dep": 1,
+    "llmMajor:Distractors (A, B, D, E) are all textbook-safe, non-adjacent grammar points (subject-verb agreement, passive voice, rela": 1,
+    "llmMajor:Passage-internal quality warning confirms the answer point is outside the intended CORE-10 grammar set and was only allo": 1,
+    "rejection:grammar-killer-overdrilled-answer": 2,
+    "rejection:grammar-obvious-noun-what-relative": 3,
+    "rejection:grammar-noun-clause-pronoun-mislabel": 1,
+    "rejection:grammar-answer-point-not-core": 1,
+    "rejectionLast:grammar-answer-point-not-core": 1,
+    "llmFatal:The (B) error is a classic, easily spotted relative pronoun/adverb error (which vs where before a complete clause) — thi": 1,
+    "llmMajor:KILLER rubric requires the answer to sit in the most syntactically complex sentence and require long-distance dependency": 1,
+    "llmMajor:Distractors (A),(C),(D),(E) are all fairly shallow/standard checks (passive participle, subject-verb agreement with 'tha": 1,
+    "llmMajor:The passage itself has an awkward genuine structural issue: 'before flowing around its sides, where eventually it separa": 1,
+    "rejection:grammar-shallow-participle-adjective-answer": 1,
+    "rejection:duplicate-option-text": 3,
+    "rejection:mid-word-marker": 1,
+    "rejection:grammar-marker-count": 1,
+    "rejection:grammar-error-count": 1,
+    "rejectionLast:duplicate-option-text": 2,
+    "rejectionLast:mid-word-marker": 1,
+    "rejectionLast:grammar-marker-count": 1,
+    "rejectionLast:grammar-error-count": 1,
+    "rejection:grammar-decoy-point-monotony": 1,
+    "rejectionLast:grammar-decoy-point-monotony": 1,
+    "llmFatal:The error design 'noun + what + verb' (in a population what cannot afford...) is an extremely basic and unnatural constr": 1,
+    "llmMajor:Marked expressions (B) and (E) both test basic relative clause structures with 'that', leading to redundant testing poin": 1,
+    "rejectionLast:grammar-obvious-noun-what-relative": 1,
+    "llmFatal:The item is labeled as KILLER, but the actual grammar point tested at (D) is a very basic subject-verb agreement error w": 1,
+    "llmMajor:The option (C) 'oldest known' contains two words and is not a focused grammatical testing point for a KILLER level probl": 1,
+    "rejection:grammar-keypoint-choice-mismatch": 1,
+    "rejectionLast:grammar-killer-thin-answer": 3,
+    "llmFatal:The label 'KILLER' is highly inaccurate for this item, as 'struggle to-V' is a basic syntactic collocation rather than a": 1,
+    "llmMajor:The distractors (A, B, C, D) are too basic and lack the attractive nature required for a high-difficulty CSAT item.": 1,
+    "llmMajor:Explanation relies on standard textbook rote memorization (struggle + to-V) rather than context-driven structural analys": 1,
+    "rejection:grammar-obvious-local-agreement": 1,
+    "rejection:grammar-error-explanation-surface-order": 1,
+    "rejectionLast:grammar-obvious-local-agreement": 1,
+    "rejectionLast:grammar-error-explanation-surface-order": 1,
+    "llmFatal:The error point in (B) uses a highly over-drilled 'that vs what' modification error where 'what' immediately follows a c": 1,
+    "llmMajor:The designated 'KILLER' difficulty is not met because the mistake is a basic relative pronoun error that mid-level stude": 1,
+    "llmMajor:Non-error options like (C) and (E) are extremely basic and require almost no syntactical analysis.": 1,
+    "rejection:grammar-afford-modal-mislabel": 1,
+    "rejectionLast:grammar-afford-modal-mislabel": 1,
+    "llmFatal:The item is labeled as KILLER, but the actual error is a straightforward subject-verb agreement issue (vortices ... that": 1,
+    "llmMajor:The attractor 'spinning currents of wind' actually contains 'currents' (plural) and 'wind' (singular). Although 'wind' i": 1,
+    "llmMajor:The distractors (A), (B), (D), and (E) test very basic points like passive participles, 'where' with a complete clause, ": 1,
+    "llmFatal:blankAnswerMode is SOURCE_EXACT but the correct option is the verbatim original sentence copied unchanged, not a distrac": 1,
+    "llmFatal:the answer choice is literally identical text to originalExpression/surroundingText, meaning students can solve by patte": 1,
+    "llmMajor:The blank is a low-information verb phrase ('played a comparable role') rather than a logic-controlling term; the four d": 1,
+    "llmMajor:INTERMEDIATE requires reasoning across two sentences with cause-effect or contrast; here the correct answer is directly ": 1,
+    "llmMajor:This fails the depth requirement: a student can solve on a skim by simply recognizing the exact original wording among p": 1,
+    "llmFatal:blankAnswerMode is SOURCE_EXACT but the answerLogic/explanation describe a paraphrase (baffle the scientific community),": 1,
+    "llmFatal:Correct answer is the exact copied sentence from the passage, so a student can solve it by simple string-matching the bl": 1,
+    "llmMajor:The blank sentence itself (verbatim from source) does not require connecting two sentences via cause-effect or contrast;": 1,
+    "llmMajor:Distractors are thematically distant (historical value overlooked, production optimization failure) rather than close pa": 1,
+    "llmMajor:This item is essentially a 'find the exact repeated sentence' task, which is a known auto-generation artifact, not a gen": 1,
+    "llmFatal:blankAnswerMode is SOURCE_EXACT but correct option ③ is the verbatim original phrase, not a paraphrase — the answer expl": 1,
+    "llmFatal:Verbatim-copy answer for a blank drawn directly from the same sentence makes this trivially solvable by lexical matching": 1,
+    "llmMajor:Difficulty label INTERMEDIATE is not met: the blank can be resolved by re-reading only the sentence itself (or matching ": 1,
+    "llmMajor:wrongOptionExplanations and main explanation describe a paraphrase ('expand the focus of both healthcare providers and r": 1,
+    "llmMajor:Distractors are somewhat generic opposite-polarity statements; while plausible, none require deep two-sentence reasoning": 1,
+    "llmFatal:blankAnswerMode is SOURCE_EXACT but the correct answer 'confuse the wind' is verbatim copied from the sentence immediate": 1,
+    "llmMajor:INTERMEDIATE requires connecting two distinct sentences via cause-effect/contrast, but here the blank sentence's answer ": 1,
+    "llmMajor:Distractors are largely shallow/off-topic (predicting seasons, strengthening structure) rather than plausible paraphrase": 1,
+    "llmMajor:Using the identical original phrase as the blank target in a SOURCE_EXACT mode item removes ambiguity entirely, making t": 1,
+    "llmFatal:The blank replaces a local, low-stakes verb phrase ('played a comparable role') rather than the paragraph's controlling ": 1,
+    "llmFatal:Option length/complexity is wildly imbalanced: correct answer is a short neutral phrase (4 words) while distractors are ": 1,
+    "llmMajor:Distractors rely on obvious absolutist language ('completely overshadowed and eradicated', 'swiftly dominated') that a m": 1,
+    "llmMajor:The passage's own quality warnings flag this exact flaw (too easy for KILLER, option imbalance), confirming the item doe": 1,
+    "llmMajor:Explanation and answerLogic largely restate the surface paraphrase mapping without requiring genuine multi-sentence synt": 1,
+    "llmFatal:The blank is placed on the final quoted summary line itself, which is essentially a direct restatement rather than requi": 1,
+    "llmMajor:The passage explicitly says glass 'in practice' behaves as a solid, not liquid, and never sinks/flows — yet the answer '": 1,
+    "llmMajor:Distractor ② is arguably too close to defensible: the passage does state glass can behave differently under extreme heat": 1,
+    "llmMajor:The system's own qualityWarnings already flag the blank as 'too easy for KILLER' and 'list-like span', which the generat": 1,
+    "llmFatal:passageWithBlank replaces 'broaden the attention' but leaves '...to _____ of the medical and research communities...', p": 1,
+    "llmFatal:The blank slot doesn't match the option grammar: 'to diversify the clinical focus of the medical and research communitie": 1,
+    "llmMajor:The self-flagged _qualityWarnings admits the KILLER blank is too easy/surface-level, contradicting the KILLER label requ": 1,
+    "llmMajor:Options 2-5 are largely shallow distractors (eliminate illnesses, maximize revenue) that are obviously off-topic/extreme": 1,
+    "llmMajor:The blank is placed on a paraphrase of a single local phrase rather than the paragraph's core inferential conclusion req": 1,
+    "llmFatal:The blank is placed on the final sentence's local detail (how balconies help), not the paragraph's controlling claim; th": 1,
+    "llmFatal:This is essentially a near-verbatim paraphrase of the immediately preceding clause ('disturbing or delaying the formatio": 1,
+    "llmMajor:Distractors ① and ④ are almost transparently opposite-polarity flips (accelerating airflow, maintaining steady vortex sh": 1,
+    "llmMajor:Distractor ⑤ is a topic-shift non-sequitur (construction costs) that is too easy to spot as irrelevant, reducing effecti": 1,
+    "llmMajor:The explanation and answerLogic largely restate the paraphrase mapping rather than demonstrating genuine multi-sentence ": 1,
+    "llmFatal:The item is set to SOURCE_EXACT and the correct option (Option 1) is verbatim 'were considered colors', making it too ea": 1,
+    "llmFatal:Option 3, although designed as a distractor, is grammatically and logically unnatural when inserted after 'before they..": 1,
+    "llmMajor:The item does not meet the INTERMEDIATE difficulty rubric because using the exact source text allows a student to solve ": 1,
+    "llmFatal:The correct answer option (Option 1) is a direct, verbatim copy-paste from the source text and the option design is incr": 1,
+    "llmMajor:Option 2 is a childishly simple antonym of the correct answer, which is not attractive for an intermediate-level CSAT it": 1,
+    "llmFatal:The item is set to SOURCE_EXACT and uses the exact string from the passage. CSAT and modern high school exams require pa": 1,
+    "llmFatal:Option 4 is extremely attractive and arguably correct or highly debatable, as 'First World illnesses' is explicitly equa": 1,
+    "llmMajor:Option 4 ('focus research mainly on First World illnesses') directly corresponds to 'directs attention to diseases that ": 1,
+    "llmMajor:Lack of paraphrase makes the question a simple visual matching game rather than a logical inference question.": 1,
+    "llmFatal:The correct option is 'confuse the wind', which is verbatim from the source passage under SOURCE_EXACT mode but is too m": 1,
+    "llmFatal:Option 5 contains 'eliminate all wind pressure', which is an overly easy and obviously wrong distractor, rendering the i": 1,
+    "llmMajor:The current distractors (especially 1, 3, and 5) are highly obvious and do not trap a mid-level student effectively.": 1,
+    "llmFatal:The English phrasing of the correct option \"came to take on it as red had already done\" is ungrammatical (should be \"tak": 1,
+    "llmMajor:The original target 'played' was a single verb, making the blank '_____ a comparable role' grammatically awkward to repl": 1,
+    "llmMajor:The correct answer option 5 contains grammatically broken English ('take on it' instead of the established phrasal verb ": 1,
+    "rejection:blank-weak-distractors": 1,
+    "rejectionLast:blank-weak-distractors": 1,
+    "llmFatal:The correct answer option (5, 'expand') is a direct synonym/translation of 'broaden' rather than a high-quality PARAPHRA": 1,
+    "llmMajor:The blank is located on a single, short verb ('broaden'), violating the killer-difficulty guidelines which require a mea": 1,
+    "llmMajor:Option 1, 3, and 5 are completely different in length and syntactic complexity compared to option 2 and 4, creating an u": 1,
+    "rejection:blank-killer-polarity-shortcut": 1,
+    "rejectionLast:blank-killer-polarity-shortcut": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 5,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:Marked (E) is 'which' but text preceding it already includes 'in' ('in Russian, which the terms...' vs displayed passage",
+        "llmFatal:The task instructs generator to flag when quality gates failed (_qualityMode=relaxed, _reviewRecommended=true, explicit ",
+        "llmMajor:This is a 'missing preposition before relative pronoun' error, which is essentially a spelling/completeness-level error,",
+        "llmMajor:Multiple non-answer distractors reuse the same pointCode 'b' as the answer (flagged by the system's own quality warning)",
+        "llmMajor:The four non-answer explanations are generic textbook explanations with no meaningful distractor design tension; none ar"
+      ],
+      "answerSurfaces": [
+        "(E):in which->which"
+      ],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-killer-answer-point-repeated x2, grammar-killer-thin-answer x1, grammar-error-not-mutated x1, grammar-source-expression-not-backed x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (b) in non-answer decoys; use different grammar frames for distractors."
+    },
+    {
+      "runIndex": 6,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:Generator explicitly flagged relaxed quality mode and low usable-slot count; this is not a genuine KILLER-caliber item a",
+        "llmFatal:(A) is a trivially shallow decoy per the generator's own quality warning, and (D) is a weak filler decoy — both fail the",
+        "llmMajor:For KILLER, at least two hard-point grammar frames should differ from the answer's point (subject-verb agreement); here ",
+        "llmMajor:The correct answer (C) is locally detectable almost immediately (is/are next to 'they are uneven' pattern nearby) rather",
+        "llmMajor:Difficulty label KILLER is not earned: the underlined verb 'is' sits shortly after a clearly plural antecedent 'sheets o"
+      ],
+      "answerSurfaces": [
+        "(C):are->is"
+      ],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-weak-filler-decoys x2, grammar-render-marker-count x1, grammar-error-not-mutated x1, grammar-source-expression-not-backed x1, grammar-correction-not-source-backed x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-generic-answer-point: KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern. | grammar-weak-filler-decoys: GRAMMAR_ERROR uses weak filler decoy(s) ((B), (C)). Replace them with structurally meaningful grammar targets."
+    },
+    {
+      "runIndex": 7,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "llmScore": 58,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:Generator explicitly flagged relaxed quality mode and review-recommended, and the answer point (even if vs even with) is",
+        "llmFatal:The error is locally obvious: 'even with a disease is...' immediately reads as ungrammatical since a finite clause canno",
+        "llmMajor:KILLER difficulty requires the answer to sit in the passage's most syntactically complex sentence with long-distance dep",
+        "llmMajor:Distractors (A, B, D, E) are all textbook-safe, non-adjacent grammar points (subject-verb agreement, passive voice, rela",
+        "llmMajor:Passage-internal quality warning confirms the answer point is outside the intended CORE-10 grammar set and was only allo"
+      ],
+      "answerSurfaces": [
+        "(C):even if->even with"
+      ],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-killer-overdrilled-answer x1, grammar-obvious-noun-what-relative x1, grammar-noun-clause-pronoun-mislabel x1, grammar-answer-point-not-core x1 | Last: quality/GRAMMAR_ERROR - grammar-answer-point-not-core: Grammar answer point c(pointCode l) is outside the CORE-10 target set (a 정동사/b 관계사/c 분사/d 수일치/e 태/f 형·부/g 대명사/h 목적격보어/i 병렬/k to-v·v-ing). Rare points (j 가정법, l 전치사vs접속사, m 비교·수량) may appear only as decoys — move the answer to a CORE-10 site in the passage."
+    },
+    {
+      "runIndex": 17,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:blankAnswerMode is SOURCE_EXACT but the correct option is the verbatim original sentence copied unchanged, not a distrac",
+        "llmFatal:the answer choice is literally identical text to originalExpression/surroundingText, meaning students can solve by patte",
+        "llmMajor:The blank is a low-information verb phrase ('played a comparable role') rather than a logic-controlling term; the four d",
+        "llmMajor:INTERMEDIATE requires reasoning across two sentences with cause-effect or contrast; here the correct answer is directly ",
+        "llmMajor:This fails the depth requirement: a student can solve on a skim by simply recognizing the exact original wording among p"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 18,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:blankAnswerMode is SOURCE_EXACT but the answerLogic/explanation describe a paraphrase (baffle the scientific community),",
+        "llmFatal:Correct answer is the exact copied sentence from the passage, so a student can solve it by simple string-matching the bl",
+        "llmMajor:The blank sentence itself (verbatim from source) does not require connecting two sentences via cause-effect or contrast;",
+        "llmMajor:Distractors are thematically distant (historical value overlooked, production optimization failure) rather than close pa",
+        "llmMajor:This item is essentially a 'find the exact repeated sentence' task, which is a known auto-generation artifact, not a gen"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 19,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:blankAnswerMode is SOURCE_EXACT but correct option ③ is the verbatim original phrase, not a paraphrase — the answer expl",
+        "llmFatal:Verbatim-copy answer for a blank drawn directly from the same sentence makes this trivially solvable by lexical matching",
+        "llmMajor:Difficulty label INTERMEDIATE is not met: the blank can be resolved by re-reading only the sentence itself (or matching ",
+        "llmMajor:wrongOptionExplanations and main explanation describe a paraphrase ('expand the focus of both healthcare providers and r",
+        "llmMajor:Distractors are somewhat generic opposite-polarity statements; while plausible, none require deep two-sentence reasoning"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 21,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The blank replaces a local, low-stakes verb phrase ('played a comparable role') rather than the paragraph's controlling ",
+        "llmFatal:Option length/complexity is wildly imbalanced: correct answer is a short neutral phrase (4 words) while distractors are ",
+        "llmMajor:Distractors rely on obvious absolutist language ('completely overshadowed and eradicated', 'swiftly dominated') that a m",
+        "llmMajor:The passage's own quality warnings flag this exact flaw (too easy for KILLER, option imbalance), confirming the item doe",
+        "llmMajor:Explanation and answerLogic largely restate the surface paraphrase mapping without requiring genuine multi-sentence synt"
+      ],
+      "answerSurfaces": [
+        "②"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 23,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:passageWithBlank replaces 'broaden the attention' but leaves '...to _____ of the medical and research communities...', p",
+        "llmFatal:The blank slot doesn't match the option grammar: 'to diversify the clinical focus of the medical and research communitie",
+        "llmMajor:The self-flagged _qualityWarnings admits the KILLER blank is too easy/surface-level, contradicting the KILLER label requ",
+        "llmMajor:Options 2-5 are largely shallow distractors (eliminate illnesses, maximize revenue) that are obviously off-topic/extreme",
+        "llmMajor:The blank is placed on a paraphrase of a single local phrase rather than the paragraph's core inferential conclusion req"
+      ],
+      "answerSurfaces": [
+        "①"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 15,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "llmScore": 65,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The error point in (B) uses a highly over-drilled 'that vs what' modification error where 'what' immediately follows a c",
+        "llmMajor:The designated 'KILLER' difficulty is not met because the mistake is a basic relative pronoun error that mid-level stude",
+        "llmMajor:Non-error options like (C) and (E) are extremely basic and require almost no syntactical analysis.",
+        "rejection:grammar-error-not-mutated",
+        "rejection:grammar-killer-overdrilled-answer"
+      ],
+      "answerSurfaces": [
+        "(B):that->what"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-error-not-mutated x2, grammar-killer-overdrilled-answer x1, grammar-obvious-noun-what-relative x1, grammar-killer-thin-answer x1, grammar-afford-modal-mislabel x1 | Last: quality/GRAMMAR_ERROR - grammar-error-not-mutated: Stripping the markers reproduces the original passage unchanged — no grammar error was introduced; the answer flags unmutated source text. | grammar-error-not-mutated: The grammar error surface matches the original expression. | grammar-killer-thin-answer: KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check. | grammar-afford-modal-mislabel: Grammar explanation mislabels 'afford' as a modal/quasi-modal; explain it as a main verb taking a to-infinitive complement."
+    },
+    {
+      "runIndex": 31,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "llmScore": 65,
+      "issueKeys": [
+        "llmFatal:The correct answer option (5, 'expand') is a direct synonym/translation of 'broaden' rather than a high-quality PARAPHRA",
+        "llmMajor:The blank is located on a single, short verb ('broaden'), violating the killer-difficulty guidelines which require a mea",
+        "llmMajor:Option 1, 3, and 5 are completely different in length and syntactic complexity compared to option 2 and 4, creating an u",
+        "rejection:blank-killer-polarity-shortcut",
+        "rejectionLast:blank-killer-polarity-shortcut"
+      ],
+      "answerSurfaces": [
+        "5"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: blank-killer-polarity-shortcut x1 | Last: quality/BLANK_INFERENCE - blank-killer-polarity-shortcut: PARAPHRASE blank with a negative-polarity answer needs at least 1 negative-polarity wrong option; otherwise polarity scanning alone solves the item."
+    },
+    {
+      "runIndex": 2,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 68,
+      "issueKeys": [
+        "llmFatal:The passage text is embedded in the sentence that discusses 'because the glass is slowly sinking over time' as fact, but",
+        "llmMajor:Only 5 marked expressions marks the low end of the 5-10 range, and with only 1 error, distractor diversity is thin; (A),",
+        "llmMajor:The explanation for the answer relies purely on rote lexical knowledge ('struggle only takes to-infinitive') without dee",
+        "llmMajor:(B)'s explanation calls out 'relative clause and correlative modifiers' but the actual modifying phrase is just 'you som",
+        "rejection:grammar-render-marker-count",
+        "rejection:grammar-error-not-mutated",
+        "rejection:grammar-source-expression-not-backed",
+        "rejection:grammar-correction-not-source-backed"
+      ],
+      "answerSurfaces": [
+        "(E):to comprehend->comprehending"
+      ],
+      "rejectionSummary": "Rejected candidates: 4 | Top codes: grammar-render-marker-count x2, grammar-error-not-mutated x2, grammar-source-expression-not-backed x2, grammar-correction-not-source-backed x2, grammar-too-basic-decoys x1 | Last: quality/GRAMMAR_ERROR - grammar-render-marker-count: Expected 5 rendered grammar markers, got 3. | grammar-error-not-mutated: Stripping the markers reproduces the original passage unchanged — no grammar error was introduced; the answer flags unmutated source text. | grammar-source-expression-not-backed: The source/correction expression \"to be produced\" is not found in the original passage; GRAMMAR_ERROR must mutate a real source expression, not mark an already-correct source form as wrong. | grammar-correction-not-source-backed: The correction \"to be produced\" is not found in the original passage; use the exact original expression as the correction. | grammar-weak-filler-decoys: GRAMMAR_ERROR uses weak filler decoy(s) ((B)). Replace them with structurally meaningful grammar targets."
+    },
+    {
+      "runIndex": 20,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkqu0032mmf0g9i059aa",
+      "title": "2027학년도 6월 모평 영어 38번 · 문장삽입",
+      "llmScore": 68,
+      "issueKeys": [
+        "llmFatal:blankAnswerMode is SOURCE_EXACT but the correct answer 'confuse the wind' is verbatim copied from the sentence immediate",
+        "llmMajor:INTERMEDIATE requires connecting two distinct sentences via cause-effect/contrast, but here the blank sentence's answer ",
+        "llmMajor:Distractors are largely shallow/off-topic (predicting seasons, strengthening structure) rather than plausible paraphrase",
+        "llmMajor:Using the identical original phrase as the blank target in a SOURCE_EXACT mode item removes ambiguity entirely, making t"
+      ],
+      "answerSurfaces": [
+        "②"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

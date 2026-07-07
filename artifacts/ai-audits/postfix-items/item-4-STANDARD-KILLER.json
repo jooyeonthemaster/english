@@ -1,0 +1,125 @@
+{
+  "plan": "STANDARD",
+  "difficulty": "KILLER",
+  "passage": null,
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "exceeded",
+        "isError": false,
+        "correction": "exceeded",
+        "errorExpression": "exceeded",
+        "surroundingText": "As much on the historical as hierarchical level, it exceeded all others. Not",
+        "pointCode": "a"
+      },
+      {
+        "label": "(B)",
+        "expression": "considered",
+        "isError": false,
+        "correction": "considered",
+        "errorExpression": "considered",
+        "surroundingText": "a long time before they were considered colors and then played",
+        "pointCode": "e"
+      },
+      {
+        "label": "(C)",
+        "expression": "to diversify",
+        "isError": false,
+        "correction": "to diversify",
+        "errorExpression": "to diversify",
+        "surroundingText": "range of reds that they learned early on to diversify the palette",
+        "pointCode": "k"
+      },
+      {
+        "label": "(D)",
+        "expression": "seems",
+        "isError": false,
+        "correction": "seems",
+        "errorExpression": "seems",
+        "surroundingText": "Here the lexicon seems in keeping with pictorial practices and coloring",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "in which",
+        "isError": true,
+        "correction": "in which",
+        "errorExpression": "which",
+        "surroundingText": "is the case in Russian, in which the terms krasnyy (red)",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "exceeded"
+      },
+      {
+        "label": "(B)",
+        "text": "considered"
+      },
+      {
+        "label": "(C)",
+        "text": "to diversify"
+      },
+      {
+        "label": "(D)",
+        "text": "seems"
+      },
+      {
+        "label": "(E)",
+        "text": "which"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "주절의 주어 'it'의 서술어로 쓰인 정동사 과거형 'exceeded'는 과거의 역사적 사실을 서술하므로 어법상 옳다.",
+      "(B)": "'they'가 간주되는 대상이므로 능동인 consider 뒤의 두 목적어 구조(consider A B)가 수동태가 되어 주격보어로 명사가 남았으므로 과거분사 'considered'는 적절하다.",
+      "(C)": "동사 'learned'의 목적어로 미래지향적이거나 지향성을 담은 행동을 이끌기 위해 to부정사 구조 'to diversify'가 쓰인 것은 적절하다.",
+      "(D)": "문장의 단수 주어 핵인 'the lexicon'에 호응하여 단수 정동사인 'seems'를 쓴 수일치 판단은 어법상 명백히 옳다."
+    },
+    "explanation": "러시아어 사례를 서술하는 (E)가 포함된 문장에서, 관계사 뒤의 절 'the terms krasnyy (red) and krasivy (beautiful) [주어] belong [정동사] to the same lexical family [전치사구]'는 빠진 필수 성분이 없는 완전한 문장 구조를 이룹니다. 관계대명사 'which'는 뒤에 주어나 목적어 등이 결손된 불완전한 절을 이끌어야 하므로 이 자리에 단독으로 올 수 없으며, 선행사 'Russian'을 공간적/상황적 맥락으로 수식하는 전치사 'in'과의 결합형이 필요합니다. 따라서 'which'를 'in which'로 고쳐야 합니다. 'case'나 언어 명칭 뒤에 오는 관계사를 단순 명사 수식어로 오인하여 격 판단을 누락하지 않도록 주의해야 합니다.",
+    "keyPoints": [
+      "전치사+관계대명사 vs. 관계대명사 뒤 절의 완전성",
+      "5형식(consider) 구문의 수동태 전환 후 보어 표현",
+      "단수 주어 핵에 따른 2형식 동사 수일치"
+    ],
+    "tags": [
+      "관계사",
+      "전치사 관계대명사",
+      "수일치",
+      "수동태",
+      "준동사"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "For thousands of years in the West, red was the only color worthy of that name, the only true color. As much on the historical as hierarchical level, it __(A) exceeded__ all others. Not that they did not exist, but they had to wait a long time before they were __(B) considered__ colors and then played a comparable role in material culture, social codes, and systems of thought. It was with red that humans did their first color experiments, achieved their first successes, and then constructed a chromatic universe. It was also within the range of reds that they learned early on __(C) to diversify__ the palette and to produce varied tones and shades, as the oldest known color terms demonstrate. Here the lexicon __(D) seems__ in keeping with pictorial practices and coloring techniques. In certain languages, the same word can mean \"red\" or simply \"colored,\" depending on the context, such as coloratus in classical Latin or colorado in modern Castilian. In other languages, the words meaning \"red\" and \"beautiful\" share a common root; for example, that is the case in Russian, __(E) which__ the terms krasnyy (red) and krasivy (beautiful) belong to the same lexical family.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  },
+  "judge": {
+    "verdict": "fail",
+    "score": 76,
+    "fatalIssues": [
+      "Answer (E) only requires single-sentence completeness check, not the cross-clause/long-distance reasoning required for a KILLER item.",
+      "Explanation for (B) mislabels the consider+O+C (SVOC) pattern as '두 목적어 구조' (double-object structure), which is incorrect grammar terminology."
+    ],
+    "majorIssues": [
+      "Distractors (A),(B),(C),(D) are all fairly shallow/local checks (tense, passive+complement, infinitive, subject-verb agreement) without any real cross-sentence ambiguity, undermining KILLER billing.",
+      "(C) explanation is vague and uses non-standard phrasing ('미래지향적이거나 지향성을 담은 행동') instead of citing the established 'learn + to-V' collocation rule."
+    ],
+    "minorIssues": [
+      "Labeling scheme (pointCode a,b,d,e,k) seems arbitrary and not tied to a clear taxonomy visible to reviewers."
+    ],
+    "strengths": [
+      "The core grammar point (relative pronoun vs. preposition+relative pronoun) is legitimate and source-backed.",
+      "The clause after 'which' is genuinely complete, making the trap grammatically unambiguous."
+    ],
+    "improvementHint": "Increase distractor sophistication (e.g., embed a parallel or reduced-clause trap spanning multiple sentences) to justify KILLER difficulty, and fix the SVOC/double-object terminology error in the (B) explanation."
+  }
+}

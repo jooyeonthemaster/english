@@ -621,6 +621,40 @@ export const ANALYSIS_REPORT_CSS = `
   display: block; width: 100%; min-width: 24mm; height: 7.5mm;
   border-bottom: .45mm solid var(--ink); opacity: .72;
 }
+/* ── 단어장(학습용) 2열 컴팩트 카드 ── */
+.par-vocab-study-grid-row {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 2mm;
+  padding-bottom: 1.2mm; font-size: calc(8.7pt * var(--par-fs, 1));
+}
+.par-vocab-study-card {
+  position: relative; min-width: 0;
+  display: flex; align-items: flex-start; gap: 1.6mm;
+  border: .3mm solid var(--tint-border); background: #fff;
+  padding: 1.5mm 2mm 1.6mm; break-inside: avoid;
+}
+.par-vocab-study-card-empty { border-style: dashed; background: transparent; opacity: .45; }
+.par-vocab-study-no {
+  flex: 0 0 auto; min-width: 4.5mm; padding-top: .2mm;
+  color: var(--gold); font-weight: 800;
+  font-size: calc(7.4pt * var(--par-fs, 1)); letter-spacing: .02em;
+}
+.par-vocab-study-main { flex: 1 1 auto; min-width: 0; }
+.par-vocab-study-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 1.6mm; }
+.par-vocab-study-word { color: var(--ink); font-weight: 800; }
+.par-vocab-study-pron { color: var(--text-muted); font-size: calc(7.9pt * var(--par-fs, 1)); }
+.par-vocab-study-meaning { margin-top: .5mm; color: var(--text); line-height: 1.35; }
+.par-vocab-study-rel {
+  display: flex; flex-wrap: wrap; gap: .4mm 3.5mm;
+  margin-top: 1mm; padding-top: .9mm;
+  border-top: .25mm dashed var(--tint-border);
+  font-size: calc(7.9pt * var(--par-fs, 1)); color: var(--text-muted); font-style: italic;
+}
+.par-vocab-study-rel-item { display: inline-flex; align-items: baseline; gap: 1.2mm; min-width: 0; }
+.par-vocab-study-rel-k {
+  flex: 0 0 auto; color: var(--gold); font-weight: 800; font-style: normal;
+  font-size: calc(7.4pt * var(--par-fs, 1));
+}
+
 .par-vocab-test-head {
   display: flex; align-items: baseline; justify-content: space-between;
   border-top: .6mm solid var(--gold); border-bottom: .3mm solid var(--tint-border);

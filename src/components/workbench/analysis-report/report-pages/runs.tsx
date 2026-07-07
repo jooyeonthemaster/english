@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, type ReactNode } from "react";
+import { Fragment, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
 import type { BlockMeta } from "@/lib/passage-report/analysis-report/schema";
 import { Arrow, BOX_LIST_WRAPS, type FlowItem, TABLE_WRAPS, tableHeadRow, type WrapKind } from "../report-sections";
 import type { ColCtx, ReportEdit } from "./types";
@@ -57,10 +57,22 @@ export function RunBlock({
   measure?: boolean;
 }) {
   const editable = !!edit && !measure;
+  // 표 머리글·카드 사이 여백 등 '빈 영역' 클릭도 이 묶음의 첫 블록 선택으로 이어지게 —
+  // 단어장 아무 곳을 눌러도 우측 패널에 열 표시·레이아웃 토글이 뜬다.
+  // (행/카드(data-mid) 위 클릭은 각자 자기 블록을 선택하므로 건드리지 않는다.)
+  const selectRunArea = editable
+    ? (e: ReactMouseEvent<HTMLElement>) => {
+        if ((e.target as Element).closest("[data-mid]")) return;
+        const first = run[0];
+        if (!first) return;
+        const id = editIdOf(first);
+        if (edit!.activeId !== id) edit!.setActiveId(id);
+      }
+    : undefined;
 
   if (wrap === "vocab-grid") {
     return (
-      <div className="par-runblock par-vocab-grid-run">
+      <div className="par-runblock par-vocab-grid-run" onMouseDown={selectRunArea}>
         {run.map((it) => (
           <BlockShell key={it.id} it={it} edit={edit} meta={blockMeta?.[editIdOf(it)] ?? blockMeta?.[it.id]} measure={measure} />
         ))}
@@ -101,7 +113,7 @@ export function RunBlock({
           onCommit: editable && cols?.onCommit ? (w: Record<string, number>) => cols.onCommit!(group, w) : undefined,
         };
     return (
-      <div className="par-runblock">
+      <div className="par-runblock" onMouseDown={selectRunArea}>
         <table
           className={`par-table${isVocabTestRun ? " par-vocab-test-table" : ""}`}
           data-table-group={group}

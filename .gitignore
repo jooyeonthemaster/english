@@ -148,3 +148,5 @@ docs/grammar_1000_analysis/
 /scripts/_nemo-relclause-probe.ts
 /scripts/_reverify-analyze.mjs
 /scripts/_sc-leak-test.ts
+/e2e-v3-round2/
+/.playwright-mcp/

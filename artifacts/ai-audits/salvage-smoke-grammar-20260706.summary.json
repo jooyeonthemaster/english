@@ -1,0 +1,422 @@
+{
+  "createdAt": "2026-07-05T17:15:35.592Z",
+  "outPath": "artifacts/ai-audits/salvage-smoke-grammar-20260706",
+  "total": 8,
+  "passed": 1,
+  "failed": 7,
+  "passRate": 0.125,
+  "byCell": {
+    "GRAMMAR_ERROR:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "local:review-recommended",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-weak-filler-decoys",
+          "count": 2
+        },
+        {
+          "code": "rejectionLast:grammar-killer-answer-point-repeated",
+          "count": 2
+        },
+        {
+          "code": "llmFatal:Internal metadata shows _difficultyDowngraded=true and difficulty field is INTERMEDIATE while _requestedDifficulty is KI",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Item labeled KILLER but the actual error (subject 'the words meaning...beautiful' vs verb 'shares') is a fairly standard",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:STANDARD:INTERMEDIATE": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-weak-filler-decoys",
+          "count": 2
+        },
+        {
+          "code": "llmFatal:The passageWithMarkers and options show 'which' as the visible wrong form, but original source text actually reads 'in w",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The passageWithMarkers shows '__(E) struggling__' as the visible text, which is the errorExpression, but this contradict",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:None of the distractors require inference across sentences or contrast/causal logic linking two sentences; each is a sta",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:None of the four non-error options require connecting two sentences or contextual/causal inference; they are all single-",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:PREMIUM:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-killer-answer-point-repeated",
+          "count": 3
+        },
+        {
+          "code": "rejection:grammar-obvious-noun-what-relative",
+          "count": 3
+        },
+        {
+          "code": "local:generation-notice",
+          "count": 2
+        },
+        {
+          "code": "local:quality-mode-relaxed",
+          "count": 2
+        },
+        {
+          "code": "local:review-recommended",
+          "count": 2
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:PREMIUM:INTERMEDIATE": {
+      "total": 2,
+      "generated": 2,
+      "passed": 1,
+      "passRate": 0.5,
+      "avgScore": 83,
+      "topIssues": [
+        {
+          "code": "llmFatal:The decoy options are padding: testing extremely basic elements like singular noun repetition (one) and simple singular ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The error point in (E) (struggle to comprehending) is too elementary for an exam-style CSAT/내신 intermediate item, testin",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option (B) 'one' is a weak, non-challenging filler decoy with virtually no attractive grammatical trap.",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option (D) 'was only developed' has an overly broad underline that conflates passive voice, adverb insertion, and past t",
+          "count": 1
+        },
+        {
+          "code": "local:generation-notice",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "local:review-recommended",
+      "count": 5
+    },
+    {
+      "code": "rejection:grammar-weak-filler-decoys",
+      "count": 5
+    },
+    {
+      "code": "local:generation-notice",
+      "count": 4
+    },
+    {
+      "code": "local:quality-mode-relaxed",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-killer-answer-point-repeated",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-obvious-noun-what-relative",
+      "count": 4
+    },
+    {
+      "code": "rejectionLast:grammar-killer-answer-point-repeated",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-error-not-mutated",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-shallow-nearby-passive-decoy",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-shallow-participle-adjective-answer",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-error-not-mutated",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:Internal metadata shows _difficultyDowngraded=true and difficulty field is INTERMEDIATE while _requestedDifficulty is KI",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Item labeled KILLER but the actual error (subject 'the words meaning...beautiful' vs verb 'shares') is a fairly standard",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The decoy options are padding: testing extremely basic elements like singular noun repetition (one) and simple singular ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The error point in (B) uses 'with red what' where 'what' immediately follows a prepositional noun phrase, making the err",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The error point in (E) (struggle to comprehending) is too elementary for an exam-style CSAT/내신 intermediate item, testin",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The explanation's grammar analysis is internally incoherent: it claims the sentence is 'Flat glass was only developed...",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The passageWithMarkers and options show 'which' as the visible wrong form, but original source text actually reads 'in w",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The passageWithMarkers shows '__(E) struggling__' as the visible text, which is the errorExpression, but this contradict",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The passageWithMarkers text materially contradicts the source: (C) is rendered as 'Flat glass was only developing in the",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "local:quality-mode-rescue": 1,
+    "local:review-recommended": 5,
+    "llmFatal:Item labeled KILLER but the actual error (subject 'the words meaning...beautiful' vs verb 'shares') is a fairly standard": 1,
+    "llmFatal:Internal metadata shows _difficultyDowngraded=true and difficulty field is INTERMEDIATE while _requestedDifficulty is KI": 1,
+    "llmMajor:None of the 4 non-error options test a genuinely hard/attractive grammar point at KILLER level; (A) worthy of, (B) to di": 1,
+    "llmMajor:The distance between subject head 'words' and verb 'shares' is short (one participial phrase 'meaning red and beautiful'": 1,
+    "llmMajor:Explanation for (E) is correct and clear, but overall the item reads as an INTERMEDIATE-level agreement question mislabe": 1,
+    "rejection:grammar-shallow-participle-adjective-answer": 2,
+    "rejection:grammar-killer-answer-point-repeated": 4,
+    "rejectionLast:grammar-killer-answer-point-repeated": 4,
+    "local:quality-mode-relaxed": 4,
+    "local:generation-notice": 4,
+    "llmFatal:The passageWithMarkers text materially contradicts the source: (C) is rendered as 'Flat glass was only developing in the": 1,
+    "llmFatal:The explanation's grammar analysis is internally incoherent: it claims the sentence is 'Flat glass was only developed...": 1,
+    "llmMajor:The generator's own flags (_qualityMode=relaxed, _reviewRecommended, _scarcePassage, quality warning about marker densit": 1,
+    "llmMajor:This is not a genuine KILLER: the underlined error 'developing' vs 'developed' is a basic verb-form/tense error at the m": 1,
+    "llmMajor:Distractors (A),(B),(D),(E) are scattered across unrelated, non-adjacent grammar points (adverb, parallel participle, no": 1,
+    "rejection:grammar-weak-filler-decoys": 5,
+    "rejection:grammar-killer-generic-answer-point": 1,
+    "rejection:grammar-shallow-depends-decoy": 1,
+    "rejection:duplicate-option-text": 1,
+    "rejection:grammar-render-marker-count": 1,
+    "llmFatal:The passageWithMarkers and options show 'which' as the visible wrong form, but original source text actually reads 'in w": 1,
+    "llmMajor:The error at (E) is a fairly shallow 'missing preposition before relative pronoun' fix, detectable by anyone checking cl": 1,
+    "llmMajor:None of the four non-error options require connecting two sentences or contextual/causal inference; they are all single-": 1,
+    "llmMajor:The (B) explanation for 'As much on the historical as hierarchical level' is dubious: this is an unusual, non-standard '": 1,
+    "llmFatal:The passageWithMarkers shows '__(E) struggling__' as the visible text, which is the errorExpression, but this contradict": 1,
+    "llmMajor:The error point (gerund/participle replacing finite verb after a bare NP subject with no other verb in sight) is a very ": 1,
+    "llmMajor:None of the distractors require inference across sentences or contrast/causal logic linking two sentences; each is a sta": 1,
+    "llmMajor:The explanation for (E) is correct but overly verbose/mechanical, restating obvious facts about finite vs non-finite ver": 1,
+    "rejection:grammar-shallow-despite-although-gerund": 1,
+    "rejectionLast:grammar-shallow-despite-although-gerund": 1,
+    "rejectionLast:grammar-weak-filler-decoys": 1,
+    "llmFatal:The error point in (B) uses 'with red what' where 'what' immediately follows a prepositional noun phrase, making the err": 1,
+    "llmMajor:The item is labeled as KILLER, but the target grammar error (It is ~ that emphasis structure where that is mutated to wh": 1,
+    "llmMajor:The same pointCode 'b' is repeated for both (B) and (E), which reduces the variety of grammatical categories tested.": 1,
+    "rejection:grammar-obvious-noun-what-relative": 4,
+    "rejection:grammar-noun-clause-pronoun-mislabel": 1,
+    "rejectionLast:grammar-obvious-noun-what-relative": 1,
+    "llmFatal:The surrounding text for markedExpression (B) 'given' in the JSON ('are generally not that way because the glass is slow": 1,
+    "llmMajor:The quality fallback is clearly evident. The distractor options (A), (D), and (E) are too simple (such as basic adverb-a": 1,
+    "llmMajor:The justification for option (C) as the correct answer is grammatically correct, but the error 'you sometimes are seen' ": 1,
+    "rejection:grammar-error-not-mutated": 2,
+    "rejection:grammar-shallow-nearby-passive-decoy": 2,
+    "rejectionLast:grammar-error-not-mutated": 2,
+    "rejectionLast:grammar-shallow-nearby-passive-decoy": 1,
+    "rejectionLast:grammar-shallow-participle-adjective-answer": 1,
+    "llmFatal:The error point in (E) (struggle to comprehending) is too elementary for an exam-style CSAT/내신 intermediate item, testin": 1,
+    "llmFatal:The decoy options are padding: testing extremely basic elements like singular noun repetition (one) and simple singular ": 1,
+    "llmMajor:Option (B) 'one' is a weak, non-challenging filler decoy with virtually no attractive grammatical trap.": 1,
+    "llmMajor:Option (D) 'was only developed' has an overly broad underline that conflates passive voice, adverb insertion, and past t": 1,
+    "rejection:grammar-marker-too-dense": 1,
+    "rejectionLast:grammar-marker-too-dense": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "local:quality-mode-rescue",
+        "local:review-recommended",
+        "llmFatal:Item labeled KILLER but the actual error (subject 'the words meaning...beautiful' vs verb 'shares') is a fairly standard",
+        "llmFatal:Internal metadata shows _difficultyDowngraded=true and difficulty field is INTERMEDIATE while _requestedDifficulty is KI",
+        "llmMajor:None of the 4 non-error options test a genuinely hard/attractive grammar point at KILLER level; (A) worthy of, (B) to di",
+        "llmMajor:The distance between subject head 'words' and verb 'shares' is short (one participial phrase 'meaning red and beautiful'",
+        "llmMajor:Explanation for (E) is correct and clear, but overall the item reads as an INTERMEDIATE-level agreement question mislabe",
+        "rejection:grammar-shallow-participle-adjective-answer"
+      ],
+      "answerSurfaces": [
+        "(E):share->shares"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-shallow-participle-adjective-answer x1, grammar-killer-answer-point-repeated x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (f) in non-answer decoys; use different grammar frames for distractors."
+    },
+    {
+      "runIndex": 2,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The passageWithMarkers text materially contradicts the source: (C) is rendered as 'Flat glass was only developing in the",
+        "llmFatal:The explanation's grammar analysis is internally incoherent: it claims the sentence is 'Flat glass was only developed...",
+        "llmMajor:The generator's own flags (_qualityMode=relaxed, _reviewRecommended, _scarcePassage, quality warning about marker densit",
+        "llmMajor:This is not a genuine KILLER: the underlined error 'developing' vs 'developed' is a basic verb-form/tense error at the m",
+        "llmMajor:Distractors (A),(B),(D),(E) are scattered across unrelated, non-adjacent grammar points (adverb, parallel participle, no"
+      ],
+      "answerSurfaces": [
+        "(C):developed->developing"
+      ],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-weak-filler-decoys x2, grammar-killer-generic-answer-point x1, grammar-shallow-depends-decoy x1, duplicate-option-text x1, grammar-render-marker-count x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (k) in non-answer decoys; use different grammar frames for distractors."
+    },
+    {
+      "runIndex": 5,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 65,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The error point in (B) uses 'with red what' where 'what' immediately follows a prepositional noun phrase, making the err",
+        "llmMajor:The item is labeled as KILLER, but the target grammar error (It is ~ that emphasis structure where that is mutated to wh",
+        "llmMajor:The same pointCode 'b' is repeated for both (B) and (E), which reduces the variety of grammatical categories tested.",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-obvious-noun-what-relative"
+      ],
+      "answerSurfaces": [
+        "(B):that->what"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-answer-point-repeated x2, grammar-obvious-noun-what-relative x2, grammar-noun-clause-pronoun-mislabel x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (b) in non-answer decoys; use different grammar frames for distractors. | grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead."
+    },
+    {
+      "runIndex": 6,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 65,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The surrounding text for markedExpression (B) 'given' in the JSON ('are generally not that way because the glass is slow",
+        "llmMajor:The quality fallback is clearly evident. The distractor options (A), (D), and (E) are too simple (such as basic adverb-a",
+        "llmMajor:The justification for option (C) as the correct answer is grammatically correct, but the error 'you sometimes are seen' ",
+        "rejection:grammar-error-not-mutated",
+        "rejection:grammar-obvious-noun-what-relative"
+      ],
+      "answerSurfaces": [
+        "(C):you sometimes see->you sometimes are seen"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-error-not-mutated x2, grammar-obvious-noun-what-relative x1, grammar-killer-answer-point-repeated x1, grammar-shallow-nearby-passive-decoy x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (d) in non-answer decoys; use different grammar frames for distractors. | grammar-error-not-mutated: Stripping the markers reproduces the original passage unchanged — no grammar error was introduced; the answer flags unmutated source text. | grammar-error-not-mutated: The grammar error surface matches the original expression. | grammar-shallow-nearby-passive-decoy: Do not use a nearby pronoun + be p.p. phrase as a passive-voice decoy; it is too local and shallow."
+    },
+    {
+      "runIndex": 8,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 68,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The error point in (E) (struggle to comprehending) is too elementary for an exam-style CSAT/내신 intermediate item, testin",
+        "llmFatal:The decoy options are padding: testing extremely basic elements like singular noun repetition (one) and simple singular ",
+        "llmMajor:Option (B) 'one' is a weak, non-challenging filler decoy with virtually no attractive grammatical trap.",
+        "llmMajor:Option (D) 'was only developed' has an overly broad underline that conflates passive voice, adverb insertion, and past t",
+        "rejection:grammar-obvious-noun-what-relative"
+      ],
+      "answerSurfaces": [
+        "(E):struggle to comprehend->struggle to comprehending"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-obvious-noun-what-relative x1, grammar-shallow-nearby-passive-decoy x1, grammar-weak-filler-decoys x1, grammar-marker-too-dense x1 | Last: quality/GRAMMAR_ERROR - grammar-marker-too-dense: Grammar markers are placed too close together; adjacent underlines make the item look padded and non-CSAT-like."
+    },
+    {
+      "runIndex": 3,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:The passageWithMarkers and options show 'which' as the visible wrong form, but original source text actually reads 'in w",
+        "llmMajor:The error at (E) is a fairly shallow 'missing preposition before relative pronoun' fix, detectable by anyone checking cl",
+        "llmMajor:None of the four non-error options require connecting two sentences or contextual/causal inference; they are all single-",
+        "llmMajor:The (B) explanation for 'As much on the historical as hierarchical level' is dubious: this is an unusual, non-standard '"
+      ],
+      "answerSurfaces": [
+        "(E):in which->which"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 4,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:The passageWithMarkers shows '__(E) struggling__' as the visible text, which is the errorExpression, but this contradict",
+        "llmMajor:The error point (gerund/participle replacing finite verb after a bare NP subject with no other verb in sight) is a very ",
+        "llmMajor:None of the distractors require inference across sentences or contrast/causal logic linking two sentences; each is a sta",
+        "llmMajor:The explanation for (E) is correct but overly verbose/mechanical, restating obvious facts about finite vs non-finite ver",
+        "rejection:grammar-weak-filler-decoys",
+        "rejection:grammar-shallow-despite-although-gerund",
+        "rejectionLast:grammar-shallow-despite-although-gerund",
+        "rejectionLast:grammar-weak-filler-decoys"
+      ],
+      "answerSurfaces": [
+        "(E):struggle->struggling"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-weak-filler-decoys x2, grammar-shallow-despite-although-gerund x1 | Last: quality/GRAMMAR_ERROR - grammar-shallow-despite-although-gerund: Do not use despite -> although before 'it being' as the answer; it is an overdrilled preposition/conjunction swap. | grammar-weak-filler-decoys: GRAMMAR_ERROR uses weak filler decoy(s) ((A)). Replace them with structurally meaningful grammar targets."
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "plan": "PREMIUM",
+  "difficulty": "INTERMEDIATE",
+  "passage": null,
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "comparable",
+        "isError": false,
+        "errorExpression": "comparable",
+        "surroundingText": "and then played a comparable role in material culture, social codes",
+        "pointCode": "f"
+      },
+      {
+        "label": "(B)",
+        "expression": "to diversify",
+        "isError": false,
+        "errorExpression": "to diversify",
+        "surroundingText": "they learned early on to diversify the palette and to produce varied tones",
+        "pointCode": "k"
+      },
+      {
+        "label": "(C)",
+        "expression": "depending",
+        "isError": false,
+        "errorExpression": "depending",
+        "surroundingText": "the same word can mean \"red\" or simply \"colored,\" depending on the context",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "for example, that is the case in Russian, in which the terms krasnyy (red)",
+        "pointCode": "g"
+      },
+      {
+        "label": "(E)",
+        "expression": "belong",
+        "isError": true,
+        "errorExpression": "belongs",
+        "surroundingText": "the terms krasnyy (red) and krasivy (beautiful) belong to the same lexical family",
+        "pointCode": "d",
+        "correction": "belong"
+      }
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "comparable"
+      },
+      {
+        "label": "(B)",
+        "text": "to diversify"
+      },
+      {
+        "label": "(C)",
+        "text": "depending"
+      },
+      {
+        "label": "(D)",
+        "text": "that"
+      },
+      {
+        "label": "(E)",
+        "text": "belongs"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "played a comparable role에서 comparable은 명사 role을 수식하는 형용사 자리이므로 부사가 아니라 형용사 comparable이 어법상 맞다.",
+      "(B)": "learned early on to diversify는 learn의 목적어로 오는 to부정사이고 뒤의 to produce와 병렬을 이루므로 to diversify가 맞다.",
+      "(C)": "depending on the context는 앞 절 전체 상황을 의미상 주어로 하는 분사구문으로 능동 관계이므로 v-ing형 depending이 맞다.",
+      "(D)": "that is the case에서 that은 앞 절 전체(단어들이 어원을 공유한다는 사실)를 가리키는 단수 지시대명사이므로 맞다."
+    },
+    "explanation": "이 문장의 진짜 주어는 the terms krasnyy (red) and krasivy (beautiful)로, 등위접속사 and로 연결되어 만들어진 복수 주어이다. 밑줄 친 belongs는 단수 동사 형태인데, 두 명사가 and로 이어진 복수 주어 뒤에는 단수 동사가 올 수 없으므로 이 자리는 비문이다. 따라서 belongs는 belong으로 고쳐야 한다. krasrivy처럼 동사 바로 앞의 단수 명사 하나에만 시선이 가면 belongs를 골라 실수하기 쉬운데, and로 연결된 전체 주어의 수를 반드시 확인해야 한다.",
+    "keyPoints": [
+      "등위접속사 and로 연결된 복수 주어와 동사의 수일치",
+      "learn+to부정사 목적어 구조와 to부정사 병렬",
+      "분사구문의 의미상 주어와 능동 관계"
+    ],
+    "tags": [
+      "수일치",
+      "병렬구조",
+      "분사구문",
+      "대명사 지시",
+      "형용사 자리"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "correctAnswers": [
+      "(E)"
+    ],
+    "passageWithMarkers": "For thousands of years in the West, red was the only color worthy of that name, the only true color. As much on the historical as hierarchical level, it exceeded all others. Not that they did not exist, but they had to wait a long time before they were considered colors and then played a __(A) comparable__ role in material culture, social codes, and systems of thought. It was with red that humans did their first color experiments, achieved their first successes, and then constructed a chromatic universe. It was also within the range of reds that they learned early on __(B) to diversify__ the palette and to produce varied tones and shades, as the oldest known color terms demonstrate. Here the lexicon seems in keeping with pictorial practices and coloring techniques. In certain languages, the same word can mean \"red\" or simply \"colored,\" __(C) depending__ on the context, such as coloratus in classical Latin or colorado in modern Castilian. In other languages, the words meaning \"red\" and \"beautiful\" share a common root; for example, __(D) that__ is the case in Russian, in which the terms krasnyy (red) and krasivy (beautiful) __(E) belongs__ to the same lexical family.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "PREMIUM"
+  },
+  "judge": {
+    "verdict": "fail",
+    "score": 83,
+    "fatalIssues": [
+      "The error form 'belongs' for 'the terms A and B' is too visibly broken for a CSAT item; 'terms' is clearly plural and 'and' adds to it, making it extremely easy."
+    ],
+    "majorIssues": [
+      "Option (A) is too simple; testing a standard attributive adjective 'comparable' before a noun 'role' lacks CSAT depth.",
+      "Option (D) testing 'that' as a demonstrative pronoun in a simple independent clause is passive and rarely tested in modern CSAT."
+    ],
+    "minorIssues": [
+      "The explanation contains a typo: 'krasrivy' instead of 'krasivy'."
+    ],
+    "strengths": [
+      "The passage is an authentic, high-quality academic text appropriate for CSAT.",
+      "The options are well-distributed across the passage and correspond accurately to the markers."
+    ],
+    "improvementHint": "Make the incorrect option (E) a more sophisticated distractor by using a complex structure, such as a relative clause separating the subject and the verb, or using a less obvious subject-verb agreement trap."
+  }
+}

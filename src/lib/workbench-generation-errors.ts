@@ -28,6 +28,16 @@ export function getFriendlyQuestionGenerationError(
     return "선택한 지문을 찾을 수 없습니다. 지문 목록을 새로고침한 뒤 다시 시도해 주세요.";
   }
 
+  // AI 모델 응답 지연(aborted due to timeout)은 저장 문제가 아니다 — "no questions
+  // generated ... Last: model/... timeout" 꼴이 아래 transaction/timeout 분기에
+  // 먼저 걸려 "저장 처리 시간" 오표기가 났다(26-07-04 실측, PREMIUM 지연).
+  if (
+    lower.includes("no questions generated") &&
+    lower.includes("aborted due to timeout")
+  ) {
+    return "AI 응답이 지연되어 시간 안에 생성을 마치지 못했습니다. 다시 생성해 주세요.";
+  }
+
   if (lower.includes("transaction not found") || lower.includes("timeout")) {
     return "저장 처리 시간이 길어져 실패했습니다. 잠시 후 다시 생성해 주세요.";
   }
@@ -67,6 +77,9 @@ export function getFriendlyQuestionGenerationError(
       return "무관한 문장 후보가 품질 기준을 통과하지 못했습니다. 다시 생성하면 실패 사유를 더 정확히 기록합니다.";
     }
 
+    if (lower.includes("grammar-scarce-passage")) {
+      return "이 지문에는 어법 문제로 낼 만한 깨끗한 문법 구조가 부족합니다. 다른 지문으로 생성하거나, 밑줄 개수를 줄이거나, 어휘·제목 등 다른 유형을 시도해 보세요.";
+    }
     return "생성된 문제가 품질 기준을 통과하지 못했습니다. 다시 생성하거나 난이도/조건을 조금 낮춰 보세요.";
   }
 

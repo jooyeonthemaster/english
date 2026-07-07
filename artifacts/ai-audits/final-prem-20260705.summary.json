@@ -1,0 +1,1117 @@
+{
+  "createdAt": "2026-07-04T17:27:48.973Z",
+  "outPath": "artifacts/ai-audits/final-prem-20260705.jsonl",
+  "total": 52,
+  "passed": 25,
+  "failed": 27,
+  "passRate": 0.4807692307692308,
+  "byCell": {
+    "BLANK_INFERENCE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:Option 1 and Option 2 are functionally identical in this context ('considered colors' vs 'widely embraced as colors'), m",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The item is in SOURCE_EXACT mode, but this simply copies the exact phrase from the passage as the correct answer without",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor 2 is too similar to the correct answer (being widely embraced as colors is nearly synonymous with being consi",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:The distractors (2, 3, 4, 5) are extremely weak, obvious, or completely unrelated to the passage, making the item trivia",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct answer (option 1) is too close to a literal synonym translation of the original expression, failing the high",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The options contain crude polarity traps (e.g., 'completely/forever', 'immediately') that smart students easily filter o",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 0,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": null,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-shallow-participle-adjective-answer",
+          "count": 2
+        },
+        {
+          "code": "local:no-question",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:grammar-shallow-participle-adjective-answer",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 0,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": null,
+      "topIssues": [
+        {
+          "code": "local:no-question",
+          "count": 1
+        },
+        {
+          "code": "rejection:grammar-killer-generic-answer-point",
+          "count": 1
+        },
+        {
+          "code": "rejection:grammar-killer-thin-answer",
+          "count": 1
+        },
+        {
+          "code": "rejection:grammar-shallow-participle-adjective-answer",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:grammar-killer-generic-answer-point",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_CHOICE_COMBO:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 97,
+      "topIssues": []
+    },
+    "GRAMMAR_CHOICE_COMBO:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "VOCAB_CHOICE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "VOCAB_CHOICE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "SENTENCE_ORDER:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 0,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": null,
+      "topIssues": [
+        {
+          "code": "rejection:sentence-order-paragraph-not-source-backed",
+          "count": 2
+        },
+        {
+          "code": "local:no-question",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:sentence-order-paragraph-not-source-backed",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_ORDER:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 0,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": null,
+      "topIssues": [
+        {
+          "code": "rejection:sentence-order-paragraph-not-source-backed",
+          "count": 2
+        },
+        {
+          "code": "local:no-question",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:sentence-order-paragraph-not-source-backed",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_INSERT:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "SENTENCE_INSERT:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "TOPIC:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 97,
+      "topIssues": []
+    },
+    "TOPIC:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 98,
+      "topIssues": []
+    },
+    "MAIN_IDEA:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "MAIN_IDEA:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "TOPIC_MAIN_IDEA:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 98,
+      "topIssues": []
+    },
+    "TOPIC_MAIN_IDEA:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 97,
+      "topIssues": []
+    },
+    "TITLE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "TITLE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "IMPLIED_MEANING:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 83,
+      "topIssues": [
+        {
+          "code": "llmMajor:The distractors, especially 1, 3, and 5, are overly absolute and easy to eliminate, functioning as weak padding rather t",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The underlined target phrase 'played a comparable role' contains very little figurative depth or metaphorical complexity",
+          "count": 1
+        }
+      ]
+    },
+    "IMPLIED_MEANING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 0,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": null,
+      "topIssues": [
+        {
+          "code": "rejection:implied-meaning-noncentral-target",
+          "count": 2
+        },
+        {
+          "code": "local:no-question",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:implied-meaning-noncentral-target",
+          "count": 1
+        }
+      ]
+    },
+    "REFERENCE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 98,
+      "topIssues": []
+    },
+    "REFERENCE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 82,
+      "topIssues": [
+        {
+          "code": "llmMajor:The options are presented in Korean. Standard CSAT '지칭 추론' (reference resolution) items ALWAYS present the 5 options in ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The surroundingText 'had to wait a long time before they were considered colors and then' is truncated and does not matc",
+          "count": 1
+        }
+      ]
+    },
+    "CONTENT_MATCH:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "CONTENT_MATCH:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 83,
+      "topIssues": [
+        {
+          "code": "llmMajor:The item is labeled as KILLER, but the logic is extremely straightforward (simple opposite: 'wait a long time' vs 'fairl",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_COMPLETE_MC:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 40,
+      "topIssues": [
+        {
+          "code": "llmFatal:The summary sentence block 'summaryWithBlanks' is grammatically incomplete and cut off at the very end ('...the words fo",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The trailing blank issue in the generated sentence makes it impossible to administer to students as a proper test item.",
+          "count": 1
+        },
+        {
+          "code": "rejection:summary-mc-blank-marker-count",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:summary-mc-blank-marker-count",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_COMPLETE_MC:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "IRRELEVANT:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "IRRELEVANT:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 98,
+      "topIssues": []
+    },
+    "CONTEXT_MEANING:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:The tested word 'exceed' is too transparent in this context, making it a simple vocabulary match rather than requiring d",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors 3, 4, and 5 are too weak and obvious, offering no real competition for intermediate or high-level students.",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The options lack parallel sophistication; 'grew larger in physical size' and 'traveled farther than' are too literal and",
+          "count": 1
+        }
+      ]
+    },
+    "CONTEXT_MEANING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:The core question testing the meaning of \"exceeded\" is vastly underdeveloped for a CSAT KILLER item; options 3, 4, and 5",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Options 3, 4, and 5 are highly contrived 'padding' distractors that do not represent standard dictionary senses of the w",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The difficulty is inflated; any mid-level student can instantly match 'hierarchical level' with 'rank and importance' (O",
+          "count": 1
+        }
+      ]
+    },
+    "SYNONYM:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:The distractors (resembled, avoided, combined) are far too basic and lack the necessary semantic depth, making the answe",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The distractors do not require context-sensitive nuance discrimination, as they are instantly eliminated by any student ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The item fails the INTERMEDIATE difficulty standard; it is solvable on a basic level because 'surpassed' is a direct, el",
+          "count": 1
+        }
+      ]
+    },
+    "SYNONYM:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "llmFatal:The distractors (extended, exhausted, exchanged, excluded) are weak, shallow, and rely mostly on visual orthographic sim",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The target word 'exceeded' has a very basic, direct synonym 'surpassed', making the question trivial and easily solved i",
+          "count": 1
+        }
+      ]
+    },
+    "ANTONYM:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "ANTONYM:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 0,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": null,
+      "topIssues": [
+        {
+          "code": "local:no-question",
+          "count": 1
+        },
+        {
+          "code": "rejection:antonym-surface-form-mismatch",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:antonym-surface-form-mismatch",
+          "count": 1
+        }
+      ]
+    },
+    "CONDITIONAL_WRITING:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 82,
+      "topIssues": [
+        {
+          "code": "llmFatal:The model answer requires writing a 30-word sentence that is 95% identical to the source text, allowing students to simp",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The criteria 'took on a comparable role' is highly arbitrary; students could easily use 'played' as written in the text,",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The translation prompt ('주어진 조건에 맞게 영작하시오') does not specify that minor lexical changes from the original text are requi",
+          "count": 1
+        }
+      ]
+    },
+    "CONDITIONAL_WRITING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "llmFatal:The model answer is almost 100% verbatim to the original passage text, allowing students to simply copy-paste from the p",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The conditions are overly spoon-fed ('use had to wait instead of had waited', 'start with Not that'), which reduces the ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The minor difference of adding 'for' in 'wait for a long time' (vs 'wait a long time' in the passage) is too trivial to ",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_TRANSFORM:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 85,
+      "topIssues": [
+        {
+          "code": "llmMajor:The condition permits omitting 'that' or shifting 'here' under partial credit, creating unnecessary grading ambiguity fo",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The placement of the adverb 'here' in the model answer ('It seems that here the lexicon is...') is syntactically awkward",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_TRANSFORM:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:The label is marked as 'KILLER', but the task is a simple syntactic rewrite (Subject + seem to-V / seem + prep into It s",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The condition 'that절 안의 동사는 ... 단정적 현재시제로 표현하되...' is overly verbose and confusingly worded inside the parenthesis. Keep",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The placement of the adverb 'here' is highly flexible ('It seems that here the lexicon...', 'It seems here that the lexi",
+          "count": 1
+        }
+      ]
+    },
+    "FILL_BLANK_KEY:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:The item simply deletes an exact string ('were considered colors') from the provided passage and asks the student to cop",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Does not meet the 'INTERMEDIATE' quality bar requiring context-based paraphrasing, synthesis, or a 2-sentence inference ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The directive says \"본문에서 찾아 쓰시오\" (find and write from the text), but the blank itself is in the text, meaning the studen",
+          "count": 1
+        }
+      ]
+    },
+    "FILL_BLANK_KEY:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 68,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank is simply a direct deletion of the original text 'were considered' from the provided passage, making it a mech",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The difficulty is mislabeled as KILLER; a student can solve this by simple memory recall of the exact sentence or basic ",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_COMPLETE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blanks (A) and (B) require direct word retrieval from the text ('considered' and 'beautiful') without any paraphrasi",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The assignment of 'INTERMEDIATE' difficulty is inappropriate because a student only needs to skim the text to locate the",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The summary sentence simply repeats the exact phrasing and structural flow of the source passage ('before they were cons",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_COMPLETE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:The condition permits multiple divergent answers for (A) with varying word counts ('historical and hierarchical dominanc",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The exact phrase 'historical and hierarchical dominance' also does not exist as-is in the passage, making the subjective",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The phrase 'absolute supremacy' does not appear in the source passage, despite the direction stating '지문의 표현을 활용하여 쓰시오'.",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_WRITING:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:The Korean gloss provided for the summary ('서양에서는 오랫동안 빨간색만이 진짜 색으로 대우받았고 다른 색들은 그런 지위를 얻기까지 한참을 더 기다려야 했으며...') directl",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The model answer or core blank segment ('had to wait a long time to be considered colors') is nearly identical to the so",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The instruction requires 'about 7 words' (약 7단어) but the target answer is 10 words long, which creates unnecessary confu",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The wordBank is extremely generous/trivialized because it practically gives the entire original sentence structure with ",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_WRITING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "WORD_ORDER:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 83,
+      "topIssues": [
+        {
+          "code": "llmFatal:The model answer uses 'Other colors' with a capitalized 'O', but the scrambled word chip is 'other colors had to wait a ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Multiple correct answers are likely possible: 'other colors had to wait a long time before they could play a comparable ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The scrambled words are structured in overly large, pre-assembled chunks (e.g. 'other colors had to wait a long time', '",
+          "count": 1
+        }
+      ]
+    },
+    "WORD_ORDER:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "TOPIC_SENTENCE_WRITING:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "TOPIC_SENTENCE_WRITING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 85,
+      "topIssues": [
+        {
+          "code": "llmMajor:The summaryWithBlanks and correctAnswer are structurally out of sync: summaryWithBlanks lacks 'absolute' before (A) and ",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_CORRECTION:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "GRAMMAR_CORRECTION:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 98,
+      "topIssues": []
+    }
+  },
+  "topIssues": [
+    {
+      "code": "local:no-question",
+      "count": 6
+    },
+    {
+      "code": "rejection:sentence-order-paragraph-not-source-backed",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-shallow-participle-adjective-answer",
+      "count": 3
+    },
+    {
+      "code": "rejection:implied-meaning-noncentral-target",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-shallow-participle-adjective-answer",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:sentence-order-paragraph-not-source-backed",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:Option 1 and Option 2 are functionally identical in this context ('considered colors' vs 'widely embraced as colors'), m",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank is simply a direct deletion of the original text 'were considered' from the provided passage, making it a mech",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blanks (A) and (B) require direct word retrieval from the text ('considered' and 'beautiful') without any paraphrasi",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The condition permits multiple divergent answers for (A) with varying word counts ('historical and hierarchical dominanc",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The core question testing the meaning of \"exceeded\" is vastly underdeveloped for a CSAT KILLER item; options 3, 4, and 5",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The distractors (2, 3, 4, 5) are extremely weak, obvious, or completely unrelated to the passage, making the item trivia",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The distractors (extended, exhausted, exchanged, excluded) are weak, shallow, and rely mostly on visual orthographic sim",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The distractors (resembled, avoided, combined) are far too basic and lack the necessary semantic depth, making the answe",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The item is in SOURCE_EXACT mode, but this simply copies the exact phrase from the passage as the correct answer without",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The item simply deletes an exact string ('were considered colors') from the provided passage and asks the student to cop",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The Korean gloss provided for the summary ('서양에서는 오랫동안 빨간색만이 진짜 색으로 대우받았고 다른 색들은 그런 지위를 얻기까지 한참을 더 기다려야 했으며...') directl",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The label is marked as 'KILLER', but the task is a simple syntactic rewrite (Subject + seem to-V / seem + prep into It s",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The model answer is almost 100% verbatim to the original passage text, allowing students to simply copy-paste from the p",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The model answer or core blank segment ('had to wait a long time to be considered colors') is nearly identical to the so",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:Option 1 and Option 2 are functionally identical in this context ('considered colors' vs 'widely embraced as colors'), m": 1,
+    "llmFatal:The item is in SOURCE_EXACT mode, but this simply copies the exact phrase from the passage as the correct answer without": 1,
+    "llmMajor:Distractor 2 is too similar to the correct answer (being widely embraced as colors is nearly synonymous with being consi": 1,
+    "llmFatal:The distractors (2, 3, 4, 5) are extremely weak, obvious, or completely unrelated to the passage, making the item trivia": 1,
+    "llmMajor:The correct answer (option 1) is too close to a literal synonym translation of the original expression, failing the high": 1,
+    "llmMajor:The options contain crude polarity traps (e.g., 'completely/forever', 'immediately') that smart students easily filter o": 1,
+    "local:no-question": 6,
+    "rejection:grammar-shallow-participle-adjective-answer": 3,
+    "rejectionLast:grammar-shallow-participle-adjective-answer": 2,
+    "rejection:grammar-killer-thin-answer": 1,
+    "rejection:grammar-killer-generic-answer-point": 1,
+    "rejectionLast:grammar-killer-generic-answer-point": 1,
+    "rejection:sentence-order-paragraph-not-source-backed": 4,
+    "rejectionLast:sentence-order-paragraph-not-source-backed": 2,
+    "llmMajor:The underlined target phrase 'played a comparable role' contains very little figurative depth or metaphorical complexity": 1,
+    "llmMajor:The distractors, especially 1, 3, and 5, are overly absolute and easy to eliminate, functioning as weak padding rather t": 1,
+    "rejection:implied-meaning-noncentral-target": 2,
+    "rejectionLast:implied-meaning-noncentral-target": 1,
+    "llmMajor:The options are presented in Korean. Standard CSAT '지칭 추론' (reference resolution) items ALWAYS present the 5 options in ": 1,
+    "llmMajor:The surroundingText 'had to wait a long time before they were considered colors and then' is truncated and does not matc": 1,
+    "llmMajor:The item is labeled as KILLER, but the logic is extremely straightforward (simple opposite: 'wait a long time' vs 'fairl": 1,
+    "llmFatal:The summary sentence block 'summaryWithBlanks' is grammatically incomplete and cut off at the very end ('...the words fo": 1,
+    "llmMajor:The trailing blank issue in the generated sentence makes it impossible to administer to students as a proper test item.": 1,
+    "rejection:summary-mc-blank-marker-count": 1,
+    "rejectionLast:summary-mc-blank-marker-count": 1,
+    "llmFatal:The tested word 'exceed' is too transparent in this context, making it a simple vocabulary match rather than requiring d": 1,
+    "llmMajor:Distractors 3, 4, and 5 are too weak and obvious, offering no real competition for intermediate or high-level students.": 1,
+    "llmMajor:The options lack parallel sophistication; 'grew larger in physical size' and 'traveled farther than' are too literal and": 1,
+    "llmFatal:The core question testing the meaning of \"exceeded\" is vastly underdeveloped for a CSAT KILLER item; options 3, 4, and 5": 1,
+    "llmMajor:Options 3, 4, and 5 are highly contrived 'padding' distractors that do not represent standard dictionary senses of the w": 1,
+    "llmMajor:The difficulty is inflated; any mid-level student can instantly match 'hierarchical level' with 'rank and importance' (O": 1,
+    "llmFatal:The distractors (resembled, avoided, combined) are far too basic and lack the necessary semantic depth, making the answe": 1,
+    "llmMajor:The item fails the INTERMEDIATE difficulty standard; it is solvable on a basic level because 'surpassed' is a direct, el": 1,
+    "llmMajor:The distractors do not require context-sensitive nuance discrimination, as they are instantly eliminated by any student ": 1,
+    "llmFatal:The distractors (extended, exhausted, exchanged, excluded) are weak, shallow, and rely mostly on visual orthographic sim": 1,
+    "llmMajor:The target word 'exceeded' has a very basic, direct synonym 'surpassed', making the question trivial and easily solved i": 1,
+    "rejection:antonym-surface-form-mismatch": 1,
+    "rejectionLast:antonym-surface-form-mismatch": 1,
+    "llmFatal:The model answer requires writing a 30-word sentence that is 95% identical to the source text, allowing students to simp": 1,
+    "llmMajor:The criteria 'took on a comparable role' is highly arbitrary; students could easily use 'played' as written in the text,": 1,
+    "llmMajor:The translation prompt ('주어진 조건에 맞게 영작하시오') does not specify that minor lexical changes from the original text are requi": 1,
+    "llmFatal:The model answer is almost 100% verbatim to the original passage text, allowing students to simply copy-paste from the p": 1,
+    "llmMajor:The conditions are overly spoon-fed ('use had to wait instead of had waited', 'start with Not that'), which reduces the ": 1,
+    "llmMajor:The minor difference of adding 'for' in 'wait for a long time' (vs 'wait a long time' in the passage) is too trivial to ": 1,
+    "llmMajor:The placement of the adverb 'here' in the model answer ('It seems that here the lexicon is...') is syntactically awkward": 1,
+    "llmMajor:The condition permits omitting 'that' or shifting 'here' under partial credit, creating unnecessary grading ambiguity fo": 1,
+    "llmFatal:The label is marked as 'KILLER', but the task is a simple syntactic rewrite (Subject + seem to-V / seem + prep into It s": 1,
+    "llmMajor:The condition 'that절 안의 동사는 ... 단정적 현재시제로 표현하되...' is overly verbose and confusingly worded inside the parenthesis. Keep": 1,
+    "llmMajor:The placement of the adverb 'here' is highly flexible ('It seems that here the lexicon...', 'It seems here that the lexi": 1,
+    "llmFatal:The item simply deletes an exact string ('were considered colors') from the provided passage and asks the student to cop": 1,
+    "llmMajor:Does not meet the 'INTERMEDIATE' quality bar requiring context-based paraphrasing, synthesis, or a 2-sentence inference ": 1,
+    "llmMajor:The directive says \"본문에서 찾아 쓰시오\" (find and write from the text), but the blank itself is in the text, meaning the studen": 1,
+    "llmFatal:The blank is simply a direct deletion of the original text 'were considered' from the provided passage, making it a mech": 1,
+    "llmMajor:The difficulty is mislabeled as KILLER; a student can solve this by simple memory recall of the exact sentence or basic ": 1,
+    "llmFatal:The blanks (A) and (B) require direct word retrieval from the text ('considered' and 'beautiful') without any paraphrasi": 1,
+    "llmMajor:The summary sentence simply repeats the exact phrasing and structural flow of the source passage ('before they were cons": 1,
+    "llmMajor:The assignment of 'INTERMEDIATE' difficulty is inappropriate because a student only needs to skim the text to locate the": 1,
+    "llmFatal:The condition permits multiple divergent answers for (A) with varying word counts ('historical and hierarchical dominanc": 1,
+    "llmMajor:The phrase 'absolute supremacy' does not appear in the source passage, despite the direction stating '지문의 표현을 활용하여 쓰시오'.": 1,
+    "llmMajor:The exact phrase 'historical and hierarchical dominance' also does not exist as-is in the passage, making the subjective": 1,
+    "llmFatal:The model answer or core blank segment ('had to wait a long time to be considered colors') is nearly identical to the so": 1,
+    "llmFatal:The Korean gloss provided for the summary ('서양에서는 오랫동안 빨간색만이 진짜 색으로 대우받았고 다른 색들은 그런 지위를 얻기까지 한참을 더 기다려야 했으며...') directl": 1,
+    "llmMajor:The wordBank is extremely generous/trivialized because it practically gives the entire original sentence structure with ": 1,
+    "llmMajor:The instruction requires 'about 7 words' (약 7단어) but the target answer is 10 words long, which creates unnecessary confu": 1,
+    "llmFatal:The model answer uses 'Other colors' with a capitalized 'O', but the scrambled word chip is 'other colors had to wait a ": 1,
+    "llmMajor:The scrambled words are structured in overly large, pre-assembled chunks (e.g. 'other colors had to wait a long time', '": 1,
+    "llmMajor:Multiple correct answers are likely possible: 'other colors had to wait a long time before they could play a comparable ": 1,
+    "llmMajor:The summaryWithBlanks and correctAnswer are structurally out of sync: summaryWithBlanks lacks 'absolute' before (A) and ": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 3,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-shallow-participle-adjective-answer",
+        "rejectionLast:grammar-shallow-participle-adjective-answer"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-shallow-participle-adjective-answer x2 | Last: quality/GRAMMAR_ERROR - grammar-shallow-participle-adjective-answer: INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"constructed\" -> \"constructing\" before a noun; require deeper structure."
+    },
+    {
+      "runIndex": 4,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-killer-thin-answer",
+        "rejection:grammar-shallow-participle-adjective-answer",
+        "rejection:grammar-killer-generic-answer-point",
+        "rejectionLast:grammar-shallow-participle-adjective-answer",
+        "rejectionLast:grammar-killer-generic-answer-point"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-thin-answer x1, grammar-shallow-participle-adjective-answer x1, grammar-killer-generic-answer-point x1 | Last: quality/GRAMMAR_ERROR - grammar-shallow-participle-adjective-answer: INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"they learned\" -> \"they learning\" before a noun; require deeper structure. | grammar-killer-generic-answer-point: KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern."
+    },
+    {
+      "runIndex": 9,
+      "type": "SENTENCE_ORDER",
+      "plan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:sentence-order-paragraph-not-source-backed",
+        "rejectionLast:sentence-order-paragraph-not-source-backed"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: sentence-order-paragraph-not-source-backed x2 | Last: quality/SENTENCE_ORDER - sentence-order-paragraph-not-source-backed: SENTENCE_ORDER paragraph (B) is not found verbatim in the source passage after whitespace normalization; paragraphs must be verbatim source splits (do not rewrite them), so the answer key cannot be verified."
+    },
+    {
+      "runIndex": 10,
+      "type": "SENTENCE_ORDER",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:sentence-order-paragraph-not-source-backed",
+        "rejectionLast:sentence-order-paragraph-not-source-backed"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: sentence-order-paragraph-not-source-backed x2 | Last: quality/SENTENCE_ORDER - sentence-order-paragraph-not-source-backed: SENTENCE_ORDER paragraph (B) is not found verbatim in the source passage after whitespace normalization; paragraphs must be verbatim source splits (do not rewrite them), so the answer key cannot be verified."
+    },
+    {
+      "runIndex": 22,
+      "type": "IMPLIED_MEANING",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:implied-meaning-noncentral-target",
+        "rejectionLast:implied-meaning-noncentral-target"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: implied-meaning-noncentral-target x2 | Last: quality/IMPLIED_MEANING - implied-meaning-noncentral-target: IMPLIED_MEANING underline should be a central-claim paraphrase, metaphor, compressed conclusion, or topic/gist-level expression, not a peripheral detail."
+    },
+    {
+      "runIndex": 36,
+      "type": "ANTONYM",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:antonym-surface-form-mismatch",
+        "rejectionLast:antonym-surface-form-mismatch"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: antonym-surface-form-mismatch x1 | Last: quality/ANTONYM - antonym-surface-form-mismatch: ANTONYM pair (E) has mismatched surface forms: \"varied\" and \"uniform\" do not share past/participle form."
+    },
+    {
+      "runIndex": 27,
+      "type": "SUMMARY_COMPLETE_MC",
+      "plan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 40,
+      "issueKeys": [
+        "llmFatal:The summary sentence block 'summaryWithBlanks' is grammatically incomplete and cut off at the very end ('...the words fo",
+        "llmMajor:The trailing blank issue in the generated sentence makes it impossible to administer to students as a proper test item.",
+        "rejection:summary-mc-blank-marker-count",
+        "rejectionLast:summary-mc-blank-marker-count"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: summary-mc-blank-marker-count x1 | Last: quality/SUMMARY_COMPLETE_MC - summary-mc-blank-marker-count: summaryWithBlanks must contain (A), (B) exactly once each."
+    },
+    {
+      "runIndex": 34,
+      "type": "SYNONYM",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 65,
+      "issueKeys": [
+        "llmFatal:The distractors (extended, exhausted, exchanged, excluded) are weak, shallow, and rely mostly on visual orthographic sim",
+        "llmMajor:The target word 'exceeded' has a very basic, direct synonym 'surpassed', making the question trivial and easily solved i"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 38,
+      "type": "CONDITIONAL_WRITING",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 65,
+      "issueKeys": [
+        "llmFatal:The model answer is almost 100% verbatim to the original passage text, allowing students to simply copy-paste from the p",
+        "llmMajor:The conditions are overly spoon-fed ('use had to wait instead of had waited', 'start with Not that'), which reduces the ",
+        "llmMajor:The minor difference of adding 'for' in 'wait for a long time' (vs 'wait a long time' in the passage) is too trivial to "
+      ],
+      "answerSurfaces": [
+        "Not that other colors did not exist, but they had to wait for a long time before they were considered colors and played a comparable role in material culture, social codes, and systems of thought."
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 42,
+      "type": "FILL_BLANK_KEY",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 68,
+      "issueKeys": [
+        "llmFatal:The blank is simply a direct deletion of the original text 'were considered' from the provided passage, making it a mech",
+        "llmMajor:The difficulty is mislabeled as KILLER; a student can solve this by simple memory recall of the exact sentence or basic "
+      ],
+      "answerSurfaces": [
+        "were considered"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 75,
+      "issueKeys": [
+        "llmFatal:Option 1 and Option 2 are functionally identical in this context ('considered colors' vs 'widely embraced as colors'), m",
+        "llmFatal:The item is in SOURCE_EXACT mode, but this simply copies the exact phrase from the passage as the correct answer without",
+        "llmMajor:Distractor 2 is too similar to the correct answer (being widely embraced as colors is nearly synonymous with being consi"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 32,
+      "type": "CONTEXT_MEANING",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 75,
+      "issueKeys": [
+        "llmFatal:The core question testing the meaning of \"exceeded\" is vastly underdeveloped for a CSAT KILLER item; options 3, 4, and 5",
+        "llmMajor:Options 3, 4, and 5 are highly contrived 'padding' distractors that do not represent standard dictionary senses of the w",
+        "llmMajor:The difficulty is inflated; any mid-level student can instantly match 'hierarchical level' with 'rank and importance' (O"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

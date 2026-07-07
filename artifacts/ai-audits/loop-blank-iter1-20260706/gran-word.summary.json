@@ -1,0 +1,90 @@
+{
+  "createdAt": "2026-07-05T17:20:37.409Z",
+  "outPath": "artifacts/ai-audits/loop-blank-iter1-20260706/gran-word.jsonl",
+  "total": 1,
+  "passed": 0,
+  "failed": 1,
+  "passRate": 0,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank is a single adjective modifying 'role' inside one sentence about OTHER colors, not red — but the passage never",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The explanation asserts a 'logical contrast' where other colors eventually equal red, but the source passage gives no ev",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors (temporary, secondary, mysterious, local) are largely surface-level opposites with no strong semantic pull f",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:INTERMEDIATE bar requires connecting two sentences via cause/effect or contrast, but this item is resolvable (or unresol",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The chosen blank ('comparable') is a removable, low-stakes adjective modifying a prepositional role, not a term that con",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:The blank is a single adjective modifying 'role' inside one sentence about OTHER colors, not red — but the passage never",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The explanation asserts a 'logical contrast' where other colors eventually equal red, but the source passage gives no ev",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors (temporary, secondary, mysterious, local) are largely surface-level opposites with no strong semantic pull f",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:INTERMEDIATE bar requires connecting two sentences via cause/effect or contrast, but this item is resolvable (or unresol",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The chosen blank ('comparable') is a removable, low-stakes adjective modifying a prepositional role, not a term that con",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The blank is a single adjective modifying 'role' inside one sentence about OTHER colors, not red — but the passage never": 1,
+    "llmFatal:The explanation asserts a 'logical contrast' where other colors eventually equal red, but the source passage gives no ev": 1,
+    "llmMajor:The chosen blank ('comparable') is a removable, low-stakes adjective modifying a prepositional role, not a term that con": 1,
+    "llmMajor:Distractors (temporary, secondary, mysterious, local) are largely surface-level opposites with no strong semantic pull f": 1,
+    "llmMajor:INTERMEDIATE bar requires connecting two sentences via cause/effect or contrast, but this item is resolvable (or unresol": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The blank is a single adjective modifying 'role' inside one sentence about OTHER colors, not red — but the passage never",
+        "llmFatal:The explanation asserts a 'logical contrast' where other colors eventually equal red, but the source passage gives no ev",
+        "llmMajor:The chosen blank ('comparable') is a removable, low-stakes adjective modifying a prepositional role, not a term that con",
+        "llmMajor:Distractors (temporary, secondary, mysterious, local) are largely surface-level opposites with no strong semantic pull f",
+        "llmMajor:INTERMEDIATE bar requires connecting two sentences via cause/effect or contrast, but this item is resolvable (or unresol"
+      ],
+      "answerSurfaces": [
+        "④"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

@@ -32,7 +32,7 @@ import type { ClientPageSlot } from "@/lib/extraction/types";
 
 import { ACCEPTED } from "../constants";
 import type { InputMode } from "../types";
-import { UploadMetaChip } from "./upload-meta-chip";
+import { UploadMetaChip } from "@/components/workbench/shared/upload-meta-chip";
 import {
   InlineCropBoard,
   type InlineCropBoardCounts,

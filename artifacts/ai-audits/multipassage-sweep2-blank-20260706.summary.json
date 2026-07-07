@@ -1,0 +1,382 @@
+{
+  "createdAt": "2026-07-06T03:17:49.426Z",
+  "outPath": "artifacts/ai-audits/multipassage-sweep2-blank-20260706",
+  "total": 16,
+  "passed": 8,
+  "failed": 8,
+  "passRate": 0.5,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 4,
+      "generated": 4,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 79.3,
+      "topIssues": [
+        {
+          "code": "llmMajor:Blank replaces a removable predicate ('can help by disturbing...') rather than a logic-controlling term; the paragraph's",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Difficulty label INTERMEDIATE is not met: the correct answer is derivable almost entirely from the single blank sentence",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors ② and ④/⑤ are too extreme/obviously wrong (eradicate all diseases, allocate more to wealthy, maximize profit",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Only one wrong option (①) is a clean polarity flip; ②④⑤ are topic-drift distractors rather than logically-tempting near-",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option ④ is essentially a lightly reworded restatement of the sentence itself, so a student can solve it by local paraph",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:STANDARD:KILLER": {
+      "total": 4,
+      "generated": 4,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 73,
+      "topIssues": [
+        {
+          "code": "llmFatal:System's own qualityWarnings flag this as too easy for KILLER and note polarity-shortcut risk (only one wrong option is ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blank is placed in the final sentence, which merely restates the article's already-stated thesis verbatim; no genuin",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blank is placed on the final quotation, which is essentially a direct restatement/paraphrase of the passage's openin",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blank is placed on the final sentence's tail clause (a restatement of a local detail already stated verbatim earlier",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blank paraphrases a single local clause ('wait a long time before considered colors') rather than the paragraph's ce",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:INTERMEDIATE": {
+      "total": 4,
+      "generated": 4,
+      "passed": 4,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": [
+        {
+          "code": "rejection:blank-killer-polarity-shortcut",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:blank-killer-polarity-shortcut",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:KILLER": {
+      "total": 4,
+      "generated": 4,
+      "passed": 4,
+      "passRate": 1,
+      "avgScore": 96.8,
+      "topIssues": [
+        {
+          "code": "rejection:blank-killer-giveaway-distractors",
+          "count": 1
+        },
+        {
+          "code": "rejection:blank-paraphrase-slot-missing-subject",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:blank-killer-giveaway-distractors",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:blank-paraphrase-slot-missing-subject",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:System's own qualityWarnings flag this as too easy for KILLER and note polarity-shortcut risk (only one wrong option is ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank is placed in the final sentence, which merely restates the article's already-stated thesis verbatim; no genuin",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank is placed on the final quotation, which is essentially a direct restatement/paraphrase of the passage's openin",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank is placed on the final sentence's tail clause (a restatement of a local detail already stated verbatim earlier",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank paraphrases a single local clause ('wait a long time before considered colors') rather than the paragraph's ce",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:This is essentially a one-to-one rewording of the immediately adjacent clause, making it solvable by simple local paraph",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Blank position is a repeated/redundant point (third mitigation technique) rather than the paragraph's core thesis or a c",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Blank replaces a removable predicate ('can help by disturbing...') rather than a logic-controlling term; the paragraph's",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Difficulty label INTERMEDIATE is not met: the correct answer is derivable almost entirely from the single blank sentence",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractor ② and ③ are topically irrelevant fabrications (heat barrier, light-altering) not grounded in any real tension",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors ① and ⑤ are eliminable almost immediately by extreme/absolute wording (completely, perfectly) without needin",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors ①②④⑤ are polarity-reversals or absurd overreach (impenetrable barrier, aligning wind with sharp edges) that ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors ② and ④/⑤ are too extreme/obviously wrong (eradicate all diseases, allocate more to wealthy, maximize profit",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors ④ (replace human researchers) and ⑤ (eradicate all diseases) are wildly off-topic and easily eliminated on a",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors are thematically borrowed but not truly reasoning traps requiring two-step logic; options 2-5 are refuted by",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Explanation contains a stray formatting artifact ('Traditionally neglected(전통적으로 소외된)') mixing English/Korean awkwardly,",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:KILLER rubric requires the answer to connect at least two distinct reasoning steps/sentences; here the answer is essenti",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Only one wrong option (①) is a clean polarity flip; ②④⑤ are topic-drift distractors rather than logically-tempting near-",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option ④ is essentially a lightly reworded restatement of the sentence itself, so a student can solve it by local paraph",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option ④ largely echoes the immediate context ('disturbing or delaying formation of strong vortices' ≈ 'block developmen",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmMajor:The blank is a near-verbatim paraphrase of the immediately adjacent clause ('they had to wait a long time before...') ra": 1,
+    "llmMajor:The system's own qualityWarnings flag exactly these defects (too-broad target, list-like span, difficulty mismatch) yet ": 1,
+    "llmMajor:Option ④ is essentially a lightly reworded restatement of the sentence itself, so a student can solve it by local paraph": 1,
+    "llmMajor:The blank sentence itself contains 'despite X' which almost verbatim signals the paradox; a mid-level student can answer": 1,
+    "llmMajor:Only one wrong option (①) is a clean polarity flip; ②④⑤ are topic-drift distractors rather than logically-tempting near-": 1,
+    "llmMajor:QualityWarnings flag exactly the issues seen: originalExpression trailing tail and insufficient negative-polarity distra": 1,
+    "llmMajor:The blank spans the entire final clause (a long, list-like predicate), which is essentially copying/paraphrasing the who": 1,
+    "llmMajor:Difficulty label INTERMEDIATE is not met: the correct answer is derivable almost entirely from the single blank sentence": 1,
+    "llmMajor:Distractors ② and ④/⑤ are too extreme/obviously wrong (eradicate all diseases, allocate more to wealthy, maximize profit": 1,
+    "llmMajor:The blank sits at the very end of the last sentence, which is itself a low-information restatement; the answer is essent": 1,
+    "llmMajor:Blank replaces a removable predicate ('can help by disturbing...') rather than a logic-controlling term; the paragraph's": 1,
+    "llmMajor:Option ④ largely echoes the immediate context ('disturbing or delaying formation of strong vortices' ≈ 'block developmen": 1,
+    "llmFatal:The blank paraphrases a single local clause ('wait a long time before considered colors') rather than the paragraph's ce": 1,
+    "llmFatal:This is essentially a one-to-one rewording of the immediately adjacent clause, making it solvable by simple local paraph": 1,
+    "llmMajor:Distractors are thematically borrowed but not truly reasoning traps requiring two-step logic; options 2-5 are refuted by": 1,
+    "llmMajor:The correct answer's phrase 'socially and conceptually recognized categories' is a fairly direct rewording of 'considere": 1,
+    "llmMajor:The explanation restates the paraphrase mapping but doesn't clearly justify why two-step inference (beyond local paraphr": 1,
+    "llmFatal:The blank is placed on the final quotation, which is essentially a direct restatement/paraphrase of the passage's openin": 1,
+    "llmFatal:System's own qualityWarnings flag this as too easy for KILLER and note polarity-shortcut risk (only one wrong option is ": 1,
+    "llmMajor:Distractors ① and ⑤ are eliminable almost immediately by extreme/absolute wording (completely, perfectly) without needin": 1,
+    "llmMajor:Distractor ② and ③ are topically irrelevant fabrications (heat barrier, light-altering) not grounded in any real tension": 1,
+    "llmMajor:KILLER rubric requires the answer to connect at least two distinct reasoning steps/sentences; here the answer is essenti": 1,
+    "llmFatal:The blank is placed in the final sentence, which merely restates the article's already-stated thesis verbatim; no genuin": 1,
+    "llmMajor:The correct answer 'redirect scientific and clinical focus toward previously marginalized areas' is a fairly direct near": 1,
+    "llmMajor:Distractors ④ (replace human researchers) and ⑤ (eradicate all diseases) are wildly off-topic and easily eliminated on a": 1,
+    "llmMajor:Explanation contains a stray formatting artifact ('Traditionally neglected(전통적으로 소외된)') mixing English/Korean awkwardly,": 1,
+    "llmFatal:The blank is placed on the final sentence's tail clause (a restatement of a local detail already stated verbatim earlier": 1,
+    "llmMajor:The answer is essentially a near-verbatim paraphrase of the immediately preceding clause (disturbing/delaying formation ": 1,
+    "llmMajor:Distractors ①②④⑤ are polarity-reversals or absurd overreach (impenetrable barrier, aligning wind with sharp edges) that ": 1,
+    "llmMajor:Blank position is a repeated/redundant point (third mitigation technique) rather than the paragraph's core thesis or a c": 1,
+    "rejection:blank-killer-polarity-shortcut": 1,
+    "rejectionLast:blank-killer-polarity-shortcut": 1,
+    "rejection:blank-killer-giveaway-distractors": 1,
+    "rejection:blank-paraphrase-slot-missing-subject": 1,
+    "rejectionLast:blank-killer-giveaway-distractors": 1,
+    "rejectionLast:blank-paraphrase-slot-missing-subject": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 6,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The blank is placed on the final quotation, which is essentially a direct restatement/paraphrase of the passage's openin",
+        "llmFatal:System's own qualityWarnings flag this as too easy for KILLER and note polarity-shortcut risk (only one wrong option is ",
+        "llmMajor:Distractors ① and ⑤ are eliminable almost immediately by extreme/absolute wording (completely, perfectly) without needin",
+        "llmMajor:Distractor ② and ③ are topically irrelevant fabrications (heat barrier, light-altering) not grounded in any real tension",
+        "llmMajor:KILLER rubric requires the answer to connect at least two distinct reasoning steps/sentences; here the answer is essenti"
+      ],
+      "answerSurfaces": [
+        "④"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmMajor:The blank is a near-verbatim paraphrase of the immediately adjacent clause ('they had to wait a long time before...') ra",
+        "llmMajor:The system's own qualityWarnings flag exactly these defects (too-broad target, list-like span, difficulty mismatch) yet ",
+        "llmMajor:Option ④ is essentially a lightly reworded restatement of the sentence itself, so a student can solve it by local paraph"
+      ],
+      "answerSurfaces": [
+        "④"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 3,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmMajor:The blank spans the entire final clause (a long, list-like predicate), which is essentially copying/paraphrasing the who",
+        "llmMajor:Difficulty label INTERMEDIATE is not met: the correct answer is derivable almost entirely from the single blank sentence",
+        "llmMajor:Distractors ② and ④/⑤ are too extreme/obviously wrong (eradicate all diseases, allocate more to wealthy, maximize profit"
+      ],
+      "answerSurfaces": [
+        "①"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 4,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkqu0032mmf0g9i059aa",
+      "title": "2027학년도 6월 모평 영어 38번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmMajor:The blank sits at the very end of the last sentence, which is itself a low-information restatement; the answer is essent",
+        "llmMajor:Blank replaces a removable predicate ('can help by disturbing...') rather than a logic-controlling term; the paragraph's",
+        "llmMajor:Option ④ largely echoes the immediate context ('disturbing or delaying formation of strong vortices' ≈ 'block developmen"
+      ],
+      "answerSurfaces": [
+        "④"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 5,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:The blank paraphrases a single local clause ('wait a long time before considered colors') rather than the paragraph's ce",
+        "llmFatal:This is essentially a one-to-one rewording of the immediately adjacent clause, making it solvable by simple local paraph",
+        "llmMajor:Distractors are thematically borrowed but not truly reasoning traps requiring two-step logic; options 2-5 are refuted by",
+        "llmMajor:The correct answer's phrase 'socially and conceptually recognized categories' is a fairly direct rewording of 'considere",
+        "llmMajor:The explanation restates the paraphrase mapping but doesn't clearly justify why two-step inference (beyond local paraphr"
+      ],
+      "answerSurfaces": [
+        "①"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 7,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:The blank is placed in the final sentence, which merely restates the article's already-stated thesis verbatim; no genuin",
+        "llmMajor:The correct answer 'redirect scientific and clinical focus toward previously marginalized areas' is a fairly direct near",
+        "llmMajor:Distractors ④ (replace human researchers) and ⑤ (eradicate all diseases) are wildly off-topic and easily eliminated on a",
+        "llmMajor:Explanation contains a stray formatting artifact ('Traditionally neglected(전통적으로 소외된)') mixing English/Korean awkwardly,"
+      ],
+      "answerSurfaces": [
+        "①"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 8,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkqu0032mmf0g9i059aa",
+      "title": "2027학년도 6월 모평 영어 38번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:The blank is placed on the final sentence's tail clause (a restatement of a local detail already stated verbatim earlier",
+        "llmMajor:The answer is essentially a near-verbatim paraphrase of the immediately preceding clause (disturbing/delaying formation ",
+        "llmMajor:Distractors ①②④⑤ are polarity-reversals or absurd overreach (impenetrable barrier, aligning wind with sharp edges) that ",
+        "llmMajor:Blank position is a repeated/redundant point (third mitigation technique) rather than the paragraph's core thesis or a c"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 2,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 83,
+      "issueKeys": [
+        "llmMajor:The blank sentence itself contains 'despite X' which almost verbatim signals the paradox; a mid-level student can answer",
+        "llmMajor:Only one wrong option (①) is a clean polarity flip; ②④⑤ are topic-drift distractors rather than logically-tempting near-",
+        "llmMajor:QualityWarnings flag exactly the issues seen: originalExpression trailing tail and insufficient negative-polarity distra"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

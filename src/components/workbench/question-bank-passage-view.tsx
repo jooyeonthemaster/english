@@ -48,6 +48,10 @@ interface PassageGroupedViewProps {
   showDetailButton?: boolean;
   // 하단 날짜줄 "내보내기(⋯)" 액션 매트릭스(복사·한글·워드) — fallback 카드로 전달.
   showQuickActions?: boolean;
+  // 헤더 "생성된 문제 N개"(지문×유형 생성 이력) 팝오버 — fallback 카드로 전달.
+  showGenerationHistory?: boolean;
+  // 생성 이력 팝오버의 형제 문항 클릭 → 상세 모달 열기 — fallback 카드로 전달.
+  onOpenSiblingDetail?: (id: string) => void;
   selectedCardHighlight?: boolean;
   dragRequiresSelection?: boolean;
   getDragQuestionIds?: (draggedId: string) => string[];
@@ -125,6 +129,8 @@ export function PassageGroupedView({
   cardClickSelects = false,
   showDetailButton = false,
   showQuickActions = false,
+  showGenerationHistory = false,
+  onOpenSiblingDetail,
   selectedCardHighlight = true,
   dragRequiresSelection = false,
   getDragQuestionIds,
@@ -481,6 +487,8 @@ export function PassageGroupedView({
                           cardClickSelects={cardClickSelects}
                           showDetailButton={showDetailButton}
                           showQuickActions={showQuickActions}
+                          showGenerationHistory={showGenerationHistory}
+                          onOpenSiblingDetail={onOpenSiblingDetail}
                           selectedCardHighlight={selectedCardHighlight}
                           dragRequiresSelection={dragRequiresSelection}
                           getDragQuestionIds={getDragQuestionIds}

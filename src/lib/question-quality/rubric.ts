@@ -35,7 +35,8 @@ export const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "Keep (A)/(B)/(C) balanced in length; no chunk should be roughly twice as long as another.",
     "The three reordered paragraphs must have explicit discourse clues such as pronoun reference, chronology, contrast, or cause-effect.",
     "Shuffle paragraph labels so the correct order is not simply (A)-(B)-(C).",
-    "All options should be plausible permutations; avoid an answer that is forced by a single first-word connector only.",
+    "Every offered permutation must be superficially viable: never offer an order that starts with a chunk whose first sentence opens with an unresolved anaphor or backward-pointing connective (However/This/Such/These/In certain languages) — such options are free eliminations without reading.",
+    "The correct order must not be decided by one gross cohesion cue alone (a single pronoun link or first-word connector); at least two independent cues should converge on the answer.",
     "For KILLER, the correct order should require checking both local cohesion and the whole paragraph argument.",
   ],
   SENTENCE_INSERT: [
@@ -84,7 +85,8 @@ export const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "Underline a standalone pronoun or demonstrative that appears as its own token in the passage.",
     "The surroundingText must be the exact sentence window that contains that pronoun; the explanation must discuss that same sentence, not a different sentence or the passage conclusion.",
     "Before finalizing, verify that surroundingText contains the standalone underlinedPronoun with token boundaries. If it does not, choose another pronoun occurrence.",
-    "Options must include several grammatically or semantically plausible antecedents from the nearby context.",
+    "All five options must be distinct candidate noun phrases actually present in the passage (no invented entities), including a nearest-NP trap and a parallel-structure trap among the wrong referents.",
+    "The explanation must quote the passage sentence that resolves the pronoun, and the referent the explanation claims must be the same entity as the correctAnswer option text (a label/explanation mismatch voids the item).",
     "For KILLER, the answer should require resolving grammar, number, discourse role, and meaning; never underline inside another word.",
   ],
   CONTENT_MATCH: [
@@ -132,8 +134,16 @@ export const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "Each blank should correspond to a distinct core idea, not repeated wording.",
     "For KILLER, make blanks require abstraction and relation mapping; avoid awkward phrases or redundant word pairs.",
   ],
+  SUMMARY_WRITING: [
+    "The summary must abstract the whole passage, and each blank answer must be anchored in the passage's actual meaning, not an invented abstraction.",
+    "koreanGloss must not mirror the blank answer's wording or word order — back-translating the gloss must not reconstruct the answer.",
+    "When wordBankPolicy is usePartial, wordBankDistractors must actually be emitted (never empty) and each decoy must be a synonym, confusable, or inflected form of an answer token.",
+    "For KILLER, the blank should sit on the passage's core thesis with an abstract paraphrase and competitive, passage-grounded distractors.",
+  ],
   WORD_ORDER: [
     "Use meaningful chunks that form one natural English sentence from the passage idea.",
+    "The model answer must be a structural transformation of the source sentence (syntax/tense/voice change or meaning-preserving paraphrase), never a verbatim passage sentence to reassemble — with the passage visible, verbatim reduces the task to copy-matching.",
+    "scrambledWords must include at least one declared distractor chip (wordBankDistractors) that is a synonym or inflected form of an answer token, so chip selection is a real decision.",
     "Keep punctuation attached to a neighboring word/chunk and never create punctuation-only pieces.",
     "For KILLER, the order should require grammar plus meaning; the scrambledWords order must not already equal the model answer.",
   ],
@@ -156,8 +166,9 @@ export const TYPE_QUALITY_RUBRICS: Record<string, string[]> = {
     "For KILLER, test a higher-value grammar point such as modifier attachment, parallelism, tense logic, or agreement across distance.",
   ],
   CONTEXT_MEANING: [
-    "Underline a context-rich word or phrase, not a trivial word whose meaning is obvious in isolation.",
-    "Options must be close semantic alternatives; the correct meaning should depend on the sentence's role in the passage.",
+    "Underline a polysemous or contextually shifted word/phrase, not a trivial word whose meaning is obvious in isolation (a transparent word-to-synonym match is a failed item).",
+    "Each wrong option must be either a real dictionary sense of the same word (polysemy trap) or a contextually tempting misreading; never a random unrelated meaning.",
+    "At least two distractors must sit in the same semantic field (near domain) as the correct sense, and all options must be parallel in register, length, and part of speech.",
     "For KILLER, test nuance, stance, register, collocation, or metaphorical use rather than a dictionary synonym.",
   ],
   SYNONYM: [

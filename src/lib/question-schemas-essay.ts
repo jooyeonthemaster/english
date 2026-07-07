@@ -4,56 +4,85 @@
 
 import { z } from "zod";
 
-const commonFields = {
+// ── 필드 순서 = 생성 순서 (Wave-2 재배열) ───────────────────────────────────
+// 구조화 출력 모델은 스키마 프로퍼티 순서대로 필드를 생성한다. 종전에는
+// commonFields 스프레드가 맨 앞에 와서 correctAnswer/explanation 이 콘텐츠
+// (변형 대상/빈칸/칩)보다 먼저 생성되는 역순이었다 — Wave-1 이
+// question-ai-schemas-mc.ts 의 MC 유형에서 고친 것과 동일한 문제.
+// 서술형 7유형을 "발문 → 콘텐츠/변형 필드 → modelAnswer(콘텐츠 뒤) →
+// correctAnswer → 해설 → keyPoints → tags → difficulty" 순서로 재배열한다.
+// 필드명·타입·의미는 전부 불변(선언 순서만 변경) — 렌더러 데이터 계약 무접촉.
+const commonHeadFields = {
   direction: z.string().describe("발문 (한국어)"),
+};
+
+const commonAnswerField = {
   correctAnswer: z.string(),
+};
+
+const commonTailFields = {
   explanation: z.string().describe("정답 해설 (한국어, 상세)"),
   keyPoints: z.array(z.string()).describe("학습 포인트 3개 이상"),
   tags: z.array(z.string()).describe("관련 태그 (한국어)"),
   difficulty: z.enum(["BASIC", "INTERMEDIATE", "KILLER"]),
 };
 
+// 아직 재배열하지 않은 유형(TOPIC_SENTENCE_WRITING)용 — 기존 선언 순서 그대로 유지.
+const commonFields = {
+  ...commonHeadFields,
+  ...commonAnswerField,
+  ...commonTailFields,
+};
+
 // ── 조건부 영작 ──
 
 export const conditionalWritingSchema = z.object({
-  ...commonFields,
+  ...commonHeadFields,
   referenceSentence: z.string().describe("학생이 영작해야 할 한국어 문장 (지문의 핵심 문장을 한국어로 번역한 것)"),
   conditions: z.array(z.string()).describe("작성 조건 목록 (한국어)"),
-  modelAnswer: z.string().describe("모범 답안 (영어)"),
+  modelAnswer: z.string().describe("모범 답안 (영어). 지문 문장의 verbatim 복사 금지 — 시제/태/구문 전환 또는 패러프레이즈가 반드시 들어간 문장"),
   scoringCriteria: z.array(z.string()).optional().describe("채점 기준"),
+  ...commonAnswerField,
+  ...commonTailFields,
 });
 export type ConditionalWritingQuestion = z.infer<typeof conditionalWritingSchema>;
 
 // ── 문장 전환 ──
 
 export const sentenceTransformSchema = z.object({
-  ...commonFields,
+  ...commonHeadFields,
   originalSentence: z.string().describe("전환 대상 원래 문장"),
   conditions: z.array(z.string()).describe("전환 조건 목록 (한국어)"),
-  modelAnswer: z.string().describe("모범 답안 (영어)"),
+  modelAnswer: z.string().describe("모범 답안 (영어). 원문과 명제 의미가 동일해야 함(극성·양상 hedge 보존)"),
   scoringCriteria: z.array(z.string()).optional().describe("채점 기준"),
+  ...commonAnswerField,
+  ...commonTailFields,
 });
 export type SentenceTransformQuestion = z.infer<typeof sentenceTransformSchema>;
 
 // ── 핵심 표현 빈칸 ──
 
 export const fillBlankKeySchema = z.object({
-  ...commonFields,
+  ...commonHeadFields,
   passageWithBlank: z.string().optional().describe("Full passage with the target expression replaced by _____. Server-generated when possible."),
   sentenceWithBlank: z.string().describe("빈칸이 포함된 문장 또는 지문"),
   answer: z.string().describe("빈칸에 들어갈 핵심 표현"),
+  ...commonAnswerField,
+  ...commonTailFields,
 });
 export type FillBlankKeyQuestion = z.infer<typeof fillBlankKeySchema>;
 
 // ── 요약문 완성 ──
 
 export const summaryCompleteSchema = z.object({
-  ...commonFields,
+  ...commonHeadFields,
   summaryWithBlanks: z.string().describe("빈칸이 포함된 요약문"),
   blanks: z.array(z.object({
     label: z.string().describe("(A), (B) 등"),
     answer: z.string(),
   })),
+  ...commonAnswerField,
+  ...commonTailFields,
 });
 export type SummaryCompleteQuestion = z.infer<typeof summaryCompleteSchema>;
 
@@ -63,7 +92,7 @@ export function buildSummaryCompleteSchema(blankCount: number) {
   const labelSchema = z.enum(labels as [string, ...string[]]);
 
   return z.object({
-    ...commonFields,
+    ...commonHeadFields,
     summaryWithBlanks: z
       .string()
       .describe(`Summary sentence containing ${labels.join(", ")} exactly once each`),
@@ -76,6 +105,8 @@ export function buildSummaryCompleteSchema(blankCount: number) {
       )
       .length(n)
       .describe(`${n} short-answer summary blanks`),
+    ...commonAnswerField,
+    ...commonTailFields,
   });
 }
 
@@ -112,8 +143,10 @@ const summaryWritingBlankSchema = z.object({
     .describe("👁학생노출: 빈칸 뒤에 이어지는 고정 프레임 (예: ', which can lead to greater bias')"),
 });
 
-const summaryWritingFields = {
-  ...commonFields,
+// 필드 순서 = 생성 순서: 발문 → 학생노출 콘텐츠(요약문/단서/보기) → blanks(빈칸별
+// 정답) → modelAnswer(빈칸 정답에 의존) → correctAnswer → 해설 꼬리.
+const summaryWritingContentFields = {
+  ...commonHeadFields,
   // ── 재사용: SUMMARY_COMPLETE 인프라 ──
   summaryWithBlanks: z
     .string()
@@ -122,7 +155,7 @@ const summaryWritingFields = {
   koreanGloss: z
     .string()
     .optional()
-    .describe("👁학생노출(glossEnabled): [해석] 박스 한국어 뜻. 보기 단어를 1:1로 직역 나열하지 말 것(누수)"),
+    .describe("👁학생노출(glossEnabled): [해석] 박스 한국어 뜻. 정답 어구 구간을 1:1로 직역하지 말 것(누수) — 빈칸 의미는 문장 흐름 속 힌트 수준으로만"),
   blankGlosses: z
     .array(z.object({ label: z.string(), gloss: z.string() }))
     .optional()
@@ -134,7 +167,7 @@ const summaryWritingFields = {
   wordBankDistractors: z
     .array(z.string())
     .optional()
-    .describe("🔒비밀: wordBank 중 정답에 쓰이지 않는 미끼 목록 (검수/교사면 전용)"),
+    .describe("🔒비밀: wordBank 중 정답에 쓰이지 않는 미끼 목록 (검수/교사면 전용). usePartial이면 최소 1개 필수"),
   wordBankPolicy: z.enum(["useAll", "usePartial", "freeCount"]).optional(),
   wordBankFidelity: z.enum(["verbatim", "inflected", "mixed"]).optional(),
   blankAssignment: z.enum(["separate", "shared"]).optional(),
@@ -145,6 +178,9 @@ const summaryWritingFields = {
   connectorFrame: z.enum(["full", "partial", "bare"]).optional(),
   summarySourceMode: z.enum(["paraphrase", "inference"]).optional(),
   sourceSentenceParaphrase: z.boolean().optional(),
+};
+
+const summaryWritingAnswerFields = {
   modelAnswer: z
     .string()
     .describe("🔒비밀: 빈칸을 모두 채운 전체 모범 요약문(영어). correctAnswer와 동기화"),
@@ -157,11 +193,14 @@ const summaryWritingFields = {
     .optional()
     .describe("🔒비밀: 부분점수 채점 기준(한국어, 교사면 전용)"),
   scoringMode: z.enum(["EXACT", "LEMMA", "LLM_RUBRIC"]).optional(),
+  ...commonAnswerField,
+  ...commonTailFields,
 };
 
 export const summaryWritingSchema = z.object({
-  ...summaryWritingFields,
+  ...summaryWritingContentFields,
   blanks: z.array(summaryWritingBlankSchema).min(1).max(3).describe("요약문 빈칸 1~3개"),
+  ...summaryWritingAnswerFields,
 });
 export type SummaryWritingQuestion = z.infer<typeof summaryWritingSchema>;
 
@@ -171,7 +210,8 @@ export function buildSummaryWritingSchema(blankCount: number) {
   const labelSchema = z.enum(labels as [string, ...string[]]);
 
   return z.object({
-    ...summaryWritingFields,
+    ...summaryWritingContentFields,
+    // 키 재선언은 값만 바꾸고 위치(생성 순서)는 최초 선언 순서를 유지한다.
     summaryWithBlanks: z
       .string()
       .describe(
@@ -185,16 +225,25 @@ export function buildSummaryWritingSchema(blankCount: number) {
       )
       .length(n)
       .describe(`${n}개 요약문 영작 빈칸`),
+    ...summaryWritingAnswerFields,
   });
 }
 
 // ── 배열 영작 ──
 
 export const wordOrderSchema = z.object({
-  ...commonFields,
-  scrambledWords: z.array(z.string()).describe("뒤섞인 단어/구 목록"),
+  ...commonHeadFields,
+  scrambledWords: z.array(z.string()).describe("뒤섞인 단어/구 목록 (미끼 칩 포함 가능)"),
+  // 선언된 미끼 — Wave-1 재구성 게이트(word-order-unreconstructable)가 이 목록을
+  // 빼고 칩→정답 조립 가능성을 검증한다. 렌더러는 이 필드를 사용하지 않는다(비노출).
+  wordBankDistractors: z
+    .array(z.string())
+    .optional()
+    .describe("🔒비밀: scrambledWords 중 정답 문장(modelAnswer)에 쓰이지 않는 미끼 칩 전부. 미끼를 하나라도 넣었으면 반드시 전부 여기에 선언 (검수/교사면 전용, 학생 비노출)"),
   contextHint: z.string().optional().describe("문맥 힌트 (한국어)"),
   modelAnswer: z.string().describe("올바른 완성 문장"),
+  ...commonAnswerField,
+  ...commonTailFields,
 });
 export type WordOrderQuestion = z.infer<typeof wordOrderSchema>;
 
@@ -313,7 +362,7 @@ const grammarCorrectionUnderlinedSegmentSchema = z.object({
 });
 
 export const grammarCorrectionSchema = z.object({
-  ...commonFields,
+  ...commonHeadFields,
   underlinedSegments: z
     .array(grammarCorrectionUnderlinedSegmentSchema)
     .min(1)
@@ -329,6 +378,8 @@ export const grammarCorrectionSchema = z.object({
   correctedParts: z.array(z.string()).optional().describe("각 밑줄 구간에서 학생이 써야 하는 올바른 표현 목록"),
   correctedSentence: z.string().optional().describe("correctedPart가 들어간 원문 문장"),
   sentenceWithError: z.string().optional().describe("legacy fallback only"),
+  ...commonAnswerField,
+  ...commonTailFields,
 }).superRefine((question, ctx) => {
   const errorItems = question.underlinedSegments.filter((item) => item.isError);
   if (errorItems.length !== question.underlinedSegments.length) {

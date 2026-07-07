@@ -309,6 +309,17 @@ export function setVocabularyTestLayout(
   return setSection(report, sectionIndex, { ...sec, vocabTestLayout: layout });
 }
 
+/** 단어장(학습용 핵심 어휘) 레이아웃 — 1열 표("table") / 2열 카드("two-column"). */
+export function setVocabularyStudyLayout(
+  report: AnalysisReport,
+  sectionIndex: number,
+  layout: VocabTestLayout,
+): AnalysisReport {
+  const sec = report.sections[sectionIndex];
+  if (!sec || sec.kind !== "vocabulary") return report;
+  return setSection(report, sectionIndex, { ...sec, vocabStudyLayout: layout });
+}
+
 /** 난이도 단계(tier) 필터 설정 — 단어장 표시 + 시험지 출제 대상을 함께 거른다. 전체 선택은 undefined 로 정규화. */
 export function setVocabularyTierFilter(
   report: AnalysisReport,

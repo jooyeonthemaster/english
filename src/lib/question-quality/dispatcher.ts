@@ -4,8 +4,9 @@ import { isKoQuestionType } from "@/lib/korean/registry";
 import { validateKoQuestion } from "@/lib/korean/quality/dispatch";
 import { normalizeGrammarAnswerCount, normalizeGrammarMarkedCount } from "./candidate-blocks/grammar";
 import { validateDiversityTargetReuse } from "./candidate-blocks/shared";
-import { QuestionQualityIssue, QuestionQualitySeverity, SHIP_FIRST_WARNING_CODES, VisibleQuestionLanguage, answerRunInPassage, collectCorrectAnswerLabels, collectWrongOptionExplanations, containsStandaloneToken, countUnderlineMarkers, countWordsForQuality, findDuplicate, isRecord, isSingleEnglishToken, isTinyFunctionWord, normalizeComparableText, normalizeLabel, normalizeText } from "./core";
+import { QuestionQualityIssue, QuestionQualitySeverity, SHIP_FIRST_WARNING_CODES, VisibleQuestionLanguage, answerRunInPassage, collectCorrectAnswerLabels, collectWrongOptionExplanations, containsStandaloneToken, countUnderlineMarkers, countWordsForQuality, findDuplicate, isRecord, isSingleEnglishToken, isTinyFunctionWord, normalizeComparableText, normalizeLabel, normalizeText, summaryWritingComparableTokens } from "./core";
 import { validateAntonymQuestion } from "./validators/antonym";
+import { validateConditionalWritingConditions } from "./validators/conditional-writing";
 import { validateFillBlankKeyQuestion } from "./validators/blank/fill-key";
 import { validateBlankInferenceQuestion } from "./validators/blank/inference";
 import { validateMultiBlankInferenceQuestion } from "./validators/blank/multi";
@@ -13,11 +14,12 @@ import { validateContentMatchAnswerConsistency, validateContentMatchPolarity } f
 import { isDisputableTenseToggle, validateGrammarChoiceComboQuestion } from "./validators/grammar/combo";
 import { validateGrammarCorrectionQuestion } from "./validators/grammar/correction";
 import { validateMarkedText } from "./validators/grammar/marked";
-import { GRAMMAR_UNDERLINE_HARD_MAX_CHARS, GRAMMAR_UNDERLINE_HARD_MAX_WORDS, GRAMMAR_UNDERLINE_SOFT_MAX_CHARS, GRAMMAR_UNDERLINE_SOFT_MAX_WORDS, collectQuantityAnswerIssues, extractGrammarPointCode, findGrammarMarkerAdjacentDuplicate, findGrammarMisplacedMarker, findGrammarSurroundingMissingMarker, grammarExplanationLeaksMeta, grammarPointCodeSurfaceMismatch, isGrammarPosChangeMutation, isThinKillerGrammarErrorTarget } from "./validators/grammar/shared";
+import { GRAMMAR_UNDERLINE_HARD_MAX_CHARS, GRAMMAR_UNDERLINE_HARD_MAX_WORDS, GRAMMAR_UNDERLINE_SOFT_MAX_CHARS, GRAMMAR_UNDERLINE_SOFT_MAX_WORDS, collectQuantityAnswerIssues, extractGrammarPointCode, findGrammarAnswerPointNotCore, findGrammarKeypointChoiceMismatch, findGrammarKillerOverdrilledAnswer, findGrammarMarkerAdjacentDuplicate, findGrammarMarkerErrorFormMismatch, findGrammarMisplacedMarker, findGrammarPerceptionComplementToggle, findGrammarSurroundingMissingMarker, findNonstandardGrammarTerminology, grammarExplanationLeaksMeta, grammarPointCodeSurfaceMismatch, isGrammarPosChangeMutation, isThinKillerGrammarErrorTarget } from "./validators/grammar/shared";
 import { validateImpliedMeaningQuestion } from "./validators/implied";
 import { validateIrrelevantQuestion } from "./validators/irrelevant";
 import { validateKillerBar, validateTypeSignature } from "./validators/misc";
 import { validateOptions } from "./validators/options";
+import { validateReferenceQuestion } from "./validators/reference";
 import { validateSentenceInsertQuestion } from "./validators/sentence-insert";
 import { validateSentenceOrderQuestion } from "./validators/sentence-order";
 import { validateSummaryCompleteMcQuestion } from "./validators/summary/mc";
@@ -26,6 +28,7 @@ import { validateSummaryWritingQuestion } from "./validators/summary/writing";
 import { validateTopicSentenceWritingQuestion } from "./validators/topic-sentence/writing";
 import { validateGistNegativePolarity, validateTopicMainIdeaQuestion } from "./validators/topic";
 import { validateVocabChoiceQuestion } from "./validators/vocab";
+import { validateWordOrderReconstruction } from "./validators/word-order";
 import { chipsAreInAnswerOrder } from "@/lib/topic-sentence-writing";
 
 
@@ -464,6 +467,16 @@ function isShallowParticipleAdjectiveMutation(
   const source = normalizeComparableText(sourceForm);
   const displayed = normalizeComparableText(displayedForm);
   if (!source.endsWith("ed") || displayed !== pastEdToIng(source)) return false;
+  // 등위 동사열(", played …"/"and played …")의 -ed→-ing 는 얕은 관형 분사 플립이
+  // 아니라 병렬 깨기 — KILLER 심층 메뉴가 권장하는 함정을 이 표면 검사가 오폭하던
+  // 실측 편향(26-07-06 RCA: 동심도 to-V형 병렬 깨기는 통과·-ing형만 반려).
+  if (
+    new RegExp(`(?:,|\\band\\b|\\bor\\b)\\s+${escapeRegex(source)}\\b`, "i").test(
+      surroundingText,
+    )
+  ) {
+    return false;
+  }
   return new RegExp(
     `\\b(?:traditionally|commonly|widely|newly|previously|formerly|often)?\\s*${escapeRegex(source)}\\s+[a-z][a-z'-]*s?\\b`,
     "i",
@@ -501,9 +514,9 @@ function mislabelsAppearAsAdverb(text: string): boolean {
   return /(?:\uBD80\uC0AC\s*['"]?appear\b|\bappear['"]?\s*(?:\uC740|\uB294|\uB97C|\uC744)?\s*\uBD80\uC0AC)/i.test(text);
 }
 
-function hasNonstandardGrammarTerminology(text: string): boolean {
-  return /\uC804\uC0AC\uAD6C/.test(text);
-}
+// (26-07-06) '\uC804\uC0AC\uAD6C' \uB2E8\uC77C \uAC80\uC0AC\uC600\uB358 \uB85C\uCEEC \uD568\uC218\uB294 shared.ts \uC758
+// findNonstandardGrammarTerminology(\uC0C1\uC704\uC9D1\uD569: \uACC4\uC0AC\u00B7\uBCF4\uBB38 \uBA85\uC0AC\u00B7\uC220\uC5B4\uBD80 \uACE8\uACA9 \uB4F1 +
+// \uD559\uC0DD\uC6A9 \uB300\uCCB4 \uD45C\uD604 \uD3EC\uD568 \uBA54\uC2DC\uC9C0)\uB85C \uB300\uCCB4\uB410\uB2E4.
 
 function findGrammarExplanationTypo(text: string): string | null {
   const typoPatterns = [
@@ -989,6 +1002,32 @@ export function validateTypeSpecific(
         break;
       }
     }
+
+    // wave2 승격: "부분 겹침 경고"와 별개로, 정답이 지문 문장의 사실상 통째 복사면
+    // (내용토큰 6개 이상 + 정답 내용토큰의 80%+ 가 지문에 연속 verbatim) 영작이
+    // 받아쓰기로 전락한 정답 무효급 결함이다. 베이스라인 실측에서 CONDITIONAL_WRITING
+    // 2건·WORD_ORDER 2건이 이 형태로 경고만 받고 출하돼 llm 심사 fatal 판정
+    // (runIndex 37/38/47/48). error + RELAXED_BLOCKING 으로 차단한다.
+    // 패러프레이즈 정답(연속 런이 짧음)은 기존 경고 경로 그대로 — 무회귀.
+    for (const phrase of phrases) {
+      const phraseTokens = summaryWritingComparableTokens(phrase);
+      if (phraseTokens.length < 6) continue;
+      const fullRun = answerRunInPassage(
+        phrase,
+        passage,
+        Math.max(6, Math.ceil(phraseTokens.length * 0.8)),
+      );
+      if (fullRun) {
+        add(
+          "error",
+          typeId === "CONDITIONAL_WRITING"
+            ? "cond-writing-verbatim-answer"
+            : "writing-answer-verbatim-copy",
+          `모범답안이 원본 지문 문장의 사실상 통째 복사입니다(베껴쓰기 과제화): "${fullRun}". 정답은 지문 문장의 패러프레이즈/재구성이어야 합니다.`,
+        );
+        break;
+      }
+    }
   }
 
   if (typeId === "IRRELEVANT") {
@@ -1005,8 +1044,12 @@ export function validateTypeSpecific(
     validateSentenceInsertQuestion(question, passage, sentenceInsertSlotCount, add);
   }
 
+  if (typeId === "REFERENCE") {
+    validateReferenceQuestion(question, add);
+  }
+
   if (typeId === "SENTENCE_ORDER") {
-    validateSentenceOrderQuestion(question, add);
+    validateSentenceOrderQuestion(question, passage, add);
   }
 
   if (typeId === "VOCAB_CHOICE") {
@@ -1047,6 +1090,9 @@ export function validateTypeSpecific(
         "scrambledWords are arranged close to answer order (left-to-right reading solves it). Shuffle further away from modelAnswer order.",
       );
     }
+    // 재구성 게이트 (wave1) — 칩(선언 미끼 제외)으로 modelAnswer 를 조립할 수
+    // 있는지 토큰 멀티셋으로 검증. 조립 불가면 정답 무효급 → RELAXED_BLOCKING.
+    validateWordOrderReconstruction(question, add);
   }
 
   if (typeId === "GRAMMAR_CHOICE_COMBO") {
@@ -1210,6 +1256,23 @@ export function validateTypeSpecific(
         );
       }
     }
+    // 마커 오류형 불일치 검출 (wave5): isError 마커의 렌더 inner 는 errorExpression
+    // 그대로여야 한다 — 정답형을 지문에 박으면 학생이 보는 표면과 선지가 어긋나
+    // 무정답이 된다(실측 26-07-05 final-std: (E) 렌더 'in which'(정답형) vs 선지
+    // 'which'(오류형)). +RELAXED.
+    if (passageWithMarkers) {
+      const formMismatch = findGrammarMarkerErrorFormMismatch(
+        passageWithMarkers,
+        markedExpressions,
+      );
+      if (formMismatch) {
+        add(
+          "error",
+          "grammar-marker-error-form-mismatch",
+          `Marker ${formMismatch}'s rendered text does not equal its errorExpression — the passage shows a different (possibly correct) form than the option students must judge.`,
+        );
+      }
+    }
     // 생성 플로우 전용 '오류 미도입' 검출: 마커를 벗긴 지문이 원문과 동일하면
     // 모든 isError 자리가 원문 그대로라는 뜻 — 원문을 오류로 판정했거나 치환이
     // 빗나간 문항(정답 무효/복수정답 실측 critical). 지문에 오류가 인쇄된
@@ -1269,6 +1332,20 @@ export function validateTypeSpecific(
           "grammar-tense-only-error",
           `The grammar error is a tense-only change ("${expression}" ↔ "${errorExpression}"), which is contextually disputable; use a proven mutation type instead.`,
         );
+      }
+      // 지각동사 보어 토글 — 오류형이 지각동사 구문/명사+to-V 파스로 정문이 되어
+      // 무정답이 되는 자리 (실측 2026-07-04: "We see the ... power of AI to
+      // broaden"의 to 삭제 = see+O+원형으로 정문 → 정답 없는 문항 출하).
+      if (expression && errorExpression) {
+        const perceptionToggle = findGrammarPerceptionComplementToggle(
+          expression,
+          errorExpression,
+          normalizeText(markedExpression.surroundingText),
+          passage,
+        );
+        if (perceptionToggle) {
+          add("error", "grammar-perception-complement-toggle", perceptionToggle);
+        }
       }
       // 수량(m) 정답 시비 게이트 — 의미토글·양용명사·규범논쟁·very/more 수식 예외.
       if (expression && errorExpression) {
@@ -1713,12 +1790,25 @@ export function validateTypeSpecific(
           "KILLER GRAMMAR_ERROR should not be a simple missing auxiliary before a participle; require deeper cross-clause structure.",
         );
       }
-      if (requestedDifficulty === "KILLER" && isThinKillerGrammarErrorTarget(markedExpression)) {
+      if (requestedDifficulty === "KILLER" && isThinKillerGrammarErrorTarget(markedExpression, passage)) {
         add(
           "error",
           "grammar-killer-thin-answer",
           "KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check.",
         );
+      }
+      // 26-07-06 검수 패널 MAJOR 최다축(11건) — KILLER 정답이 과훈련 전형 패턴
+      // (one-of 수일치 / 형↔부(-ly) 맞교환 / that↔what / 인접 수일치)이면 craft 거절.
+      // INT/BASIC 에서는 정당한 포인트라 함수 자체가 KILLER 한정 자기게이트.
+      {
+        const overdrilled = findGrammarKillerOverdrilledAnswer(
+          markedExpression,
+          passage,
+          requestedDifficulty,
+        );
+        if (overdrilled) {
+          add("error", "grammar-killer-overdrilled-answer", overdrilled);
+        }
       }
       if (
         requestedDifficulty === "KILLER" &&
@@ -1854,7 +1944,13 @@ export function validateTypeSpecific(
         if (
           sourceForm === "that" &&
           displayedForm === "what" &&
-          /\b[A-Za-z][A-Za-z'-]*s?\s+that\b/i.test(surroundingText)
+          // 선행어가 계사·전치사·접속사(닫힌 목록)면 명사 선행사가 아니라 명사절/
+          // 강조구문 자리 — 이 게이트가 스스로 권장하는 출제 방향이므로 발화 금지
+          // (26-07-06 RCA: "The paradox is that"에 오발화해 교정 경로를 봉쇄,
+          // 반려 빈도 1위의 절반이 이 오탐).
+          /\b(?!(?:is|are|was|were|am|be|been|being|seems?|seemed|remains?|remained|in|with|of|to|for|at|on|by|from|about|than|except|and|or|but|so|such|not|only)\s+that\b)[A-Za-z][A-Za-z'-]*s?\s+that\b/i.test(
+            surroundingText,
+          )
         ) {
           add(
             "error",
@@ -2038,6 +2134,23 @@ export function validateTypeSpecific(
         `GRAMMAR_ERROR uses weak filler decoy(s) (${weakFillerLabels.join(", ")}). Replace them with structurally meaningful grammar targets.`,
       );
     }
+    // 26-07-06 검수 실측 2건 — ① keyPoints 가 실제 밑줄과 연동되지 않는 일반론
+    // 필러(3번째 항목이 규칙적으로 이 문항에 없는 문법 주제) 차단 ② 정답 포인트
+    // CORE-10 표적 강제(희귀 코드 j/l/m 은 디코이로만).
+    {
+      const keypointMismatch = findGrammarKeypointChoiceMismatch(
+        question.keyPoints,
+        markedExpressions,
+        question.correctAnswer,
+      );
+      if (keypointMismatch) {
+        add("error", "grammar-keypoint-choice-mismatch", keypointMismatch);
+      }
+      const nonCoreAnswer = findGrammarAnswerPointNotCore(markedExpressions);
+      if (nonCoreAnswer) {
+        add("error", "grammar-answer-point-not-core", nonCoreAnswer);
+      }
+    }
     const grammarExplanationText = [
       question.keyPoints,
       question.tags,
@@ -2081,12 +2194,14 @@ export function validateTypeSpecific(
         "Grammar metadata/explanation mislabels human-made as a post-nominal past participle; it is a pre-nominal compound adjective in this context.",
       );
     }
-    if (hasNonstandardGrammarTerminology(grammarExplanationText)) {
-      add(
-        "error",
-        "grammar-nonstandard-terminology",
-        "Grammar explanation/keyPoints uses nonstandard terminology such as '전사구'; use standard school grammar terms only.",
-      );
+    // 26-07-06 렉시콘 확장 — 실측 용어("계사" 14건·"보문 명사"·"술어부 골격" 등)를
+    // 학생용 대체 표현과 함께 지적한다(shared.ts findNonstandardGrammarTerminology
+    // 가 기존 '전사구' 포함 상위집합).
+    {
+      const nonstandardTerm = findNonstandardGrammarTerminology(grammarExplanationText);
+      if (nonstandardTerm) {
+        add("error", "grammar-nonstandard-terminology", nonstandardTerm);
+      }
     }
     const grammarExplanationTypo = findGrammarExplanationTypo(grammarExplanationText);
     if (grammarExplanationTypo) {
@@ -2245,17 +2360,20 @@ export function validateTypeSpecific(
         "Long-distance subject-verb agreement answer needs an explanation naming the intervening modifier/relative/appositive phrase and the true subject head.",
       );
     }
+    // 프롬프트 계약(4단 구조, 200~450자)의 상한 + 복수정답 여유. 기존 코드는
+    // >650 error 뒤 >900 warning 분기가 도달 불가(dead code)였다 — 경고 밴드를
+    // error 문턱 아래(500~650)로 옮겨 살렸다.
     if (normalizedGrammarExplanation.length > 650) {
       add(
         "error",
         "grammar-explanation-too-long-hard",
         "Grammar explanation is too long for a polished student-facing grammar item; explain the answer only and keep other labels in wrongOptionExplanations.",
       );
-    } else if (normalizedGrammarExplanation.length > 900) {
+    } else if (normalizedGrammarExplanation.length > 500) {
       add(
         "warning",
         "grammar-explanation-too-long",
-        "Grammar explanation is excessively long (>900 chars), suggesting a chain-of-thought dump rather than a concise student-facing rationale.",
+        "Grammar explanation exceeds the 200-450 character contract; tighten it to the 4-step structure (sentence skeleton, verdict, correction, trap).",
       );
     }
   }
@@ -2278,6 +2396,12 @@ export function validateTypeSpecific(
     if (question.difficulty === "KILLER" && question.conditions.length < 2) {
       add("warning", "killer-needs-multiple-conditions", `${typeId} KILLER should require at least two conditions.`);
     }
+  }
+
+  // 조건 기계 강제 게이트 (wave1) — conditions 가 명시한 기계 검증 가능한 제약
+  // (정확 단어 수·인용 필수/금지 토큰)을 modelAnswer 가 지키는지 보수적으로 검사.
+  if (typeId === "CONDITIONAL_WRITING") {
+    validateConditionalWritingConditions(question, add);
   }
 
   // M9: SENTENCE_TRANSFORM 전환 미이행 — modelAnswer 가 originalSentence 와 (구두점·대소문자·

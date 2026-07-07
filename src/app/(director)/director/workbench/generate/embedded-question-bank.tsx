@@ -1494,6 +1494,8 @@ export function EmbeddedQuestionBank({
         cardClickSelects
         showDetailButton
         showQuickActions
+        showGenerationHistory
+        onOpenSiblingDetail={openDetail}
         getDragQuestionIds={getDragQuestionIds}
         collapsedMinHeightClass={collapsedMinHeightClass}
       />
@@ -1635,6 +1637,8 @@ export function EmbeddedQuestionBank({
                     onEdit={editor.openEditor}
                     cardClickSelects
                     showDetailButton
+                    showGenerationHistory
+                    onOpenSiblingDetail={openDetail}
                     dragRequiresSelection
                     expandedPassageIds={expandedPassageIds}
                     setExpandedPassageIds={setExpandedPassageIds}

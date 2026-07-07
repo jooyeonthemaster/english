@@ -1,0 +1,574 @@
+{
+  "createdAt": "2026-07-05T18:31:23.628Z",
+  "outPath": "artifacts/ai-audits/loop-mcreading-iter3-20260706",
+  "total": 12,
+  "passed": 3,
+  "failed": 9,
+  "passRate": 0.25,
+  "byCell": {
+    "ANTONYM:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:The (D)/(E) pair overlap is a design flaw: 'common root' and 'same lexical family' express the identical idea, so callin",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor pairs (B) exceeded-trailed and (C) diversify-standardize are somewhat serviceable but not attractively diffic",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation for (D) is verbose and slightly redundant (repeats the same point three times), diluting the promised 'decis",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Not a genuine KILLER: 'common root' obviously means 'shared', so rare as its antonym is easily flagged as wrong even on ",
+          "count": 1
+        }
+      ]
+    },
+    "ANTONYM:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 98,
+      "topIssues": []
+    },
+    "CONTEXT_MEANING:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:'pictorial practices' most naturally reads as 'artistic customs/conventions' (option 1 sense) paired with 'coloring tech",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The distinction between option1 (customary habits) and option2 (actual applications) is razor-thin and arguably both fit",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation does not clearly articulate why 'practices' cannot mean the customary/conventional sense here versus why it ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 4 (doctors/lawyers) and option 5 (moral codes) are too easily eliminated by domain mismatch, reducing the item to",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The underlined word 'practices' in 'pictorial practices and coloring techniques' is a fairly transparent, low-polysemy-r",
+          "count": 1
+        }
+      ]
+    },
+    "CONTEXT_MEANING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:The target phrase 'in keeping with' is a transparent idiomatic expression meaning 'in agreement or harmony with', and it",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Opposite to the KILLER difficulty claim, this is a basic, low-level vocabulary match that can be solved in isolation wit",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The distractors (e.g., 'stored safely with', 'in charge of') are overly simplistic and weak literal-meaning traps, faili",
+          "count": 1
+        }
+      ]
+    },
+    "VOCAB_CHOICE:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:The trap (shun vs diversify) is immediately contradicted by the very next clause 'to produce varied tones and shades,' m",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Other four marked words (exceeded, comparable, lexicon, context) are all clearly correct with no subtlety, so there is n",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation for the correct answer only restates the immediate local clue and doesn't require connecting two separat",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:This is essentially a simple antonym swap (shun=avoid vs diversify=vary), which the rubric explicitly forbids for KILLER",
+          "count": 1
+        }
+      ]
+    },
+    "VOCAB_CHOICE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 98,
+      "topIssues": []
+    },
+    "IMPLIED_MEANING:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "rejection:implied-meaning-noncentral-target",
+          "count": 4
+        },
+        {
+          "code": "llmFatal:Generator flagged relaxed quality mode plus its own noncentral-target warning, indicating the underline is a local elabo",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The immediately following sentence ('It was also within the range of reds that they learned...to diversify the palette')",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:For a KILLER, the correct answer is derivable almost entirely from the sentence itself plus the next sentence, without n",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option ④ ('shifted the cultural dominance from red to other primary colors') is an easy elimination since it directly co",
+          "count": 1
+        }
+      ]
+    },
+    "IMPLIED_MEANING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "rejection:implied-meaning-noncentral-target",
+          "count": 2
+        },
+        {
+          "code": "llmFatal:Option 1 (\"Other colors eventually caught up to red's... status\") and Option 2 (\"Other colors gained a status... trailin",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The target underlined phrase \"played a comparable role\" is too literal, plain, and straightforward to serve as a high-qu",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The target phrase is not a metaphorical, compressed conclusion, or rich figurative expression, but simply a literal stat",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Underlining a basic phrase whose correct answer is directly restated/qualified prior in the same clause (\"had to wait a ",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_INSERT:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:markerAfterSentenceIndices places gap ③ physically before the Latin/Castilian sentence, but insertionRationale/explanati",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The distractor at gap ④ is arguably just as strong as ③: 'the lexicon' could equally refer to the Latin/Castilian exampl",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:distractorTraps at gap 5 argument is weak/circular ('두 예시 한가운데' logic) and doesn't clearly explain why 'Here' fails ther",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The given sentence lacks a strong unique cohesive cue: 'Here' and 'the lexicon' are somewhat generic and could plausibly",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Wrong-option explanation for option 1 contains a garbled phrase '어류' (fish) apparently a typo for '어휘', which is a visib",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_INSERT:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "IRRELEVANT:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "rejection:irrelevant-too-many-new-terms",
+          "count": 2
+        },
+        {
+          "code": "llmFatal:The intruder sentence (③) is NOT verbatim from the source passage—it's fabricated, violating the requirement that all ch",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This fabrication makes the item structurally invalid: the passage shown to students diverges from the actual source, und",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Because the fabricated sentence contains an explicit logical contradiction to the immediately preceding sentence, a mid-",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Options array is just labels ①-⑤ with no sentence text shown to reviewer for direct verification against source; combine",
+          "count": 1
+        }
+      ]
+    },
+    "IRRELEVANT:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 88,
+      "topIssues": [
+        {
+          "code": "llmMajor:The irrelevant sentence (③) starts with 'however'. For a KILLER difficulty item, explicit opposition markers must not be",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:implied-meaning-noncentral-target",
+      "count": 6
+    },
+    {
+      "code": "local:quality-mode-relaxed",
+      "count": 2
+    },
+    {
+      "code": "rejection:irrelevant-too-many-new-terms",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:implied-meaning-noncentral-target",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:'pictorial practices' most naturally reads as 'artistic customs/conventions' (option 1 sense) paired with 'coloring tech",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Generator flagged relaxed quality mode plus its own noncentral-target warning, indicating the underline is a local elabo",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:markerAfterSentenceIndices places gap ③ physically before the Latin/Castilian sentence, but insertionRationale/explanati",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Option 1 (\"Other colors eventually caught up to red's... status\") and Option 2 (\"Other colors gained a status... trailin",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The (D)/(E) pair overlap is a design flaw: 'common root' and 'same lexical family' express the identical idea, so callin",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The distinction between option1 (customary habits) and option2 (actual applications) is razor-thin and arguably both fit",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The distractor at gap ④ is arguably just as strong as ③: 'the lexicon' could equally refer to the Latin/Castilian exampl",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The immediately following sentence ('It was also within the range of reds that they learned...to diversify the palette')",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The intruder sentence (③) is NOT verbatim from the source passage—it's fabricated, violating the requirement that all ch",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The target phrase 'in keeping with' is a transparent idiomatic expression meaning 'in agreement or harmony with', and it",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The target underlined phrase \"played a comparable role\" is too literal, plain, and straightforward to serve as a high-qu",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The trap (shun vs diversify) is immediately contradicted by the very next clause 'to produce varied tones and shades,' m",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:This fabrication makes the item structurally invalid: the passage shown to students diverges from the actual source, und",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Because the fabricated sentence contains an explicit logical contradiction to the immediately preceding sentence, a mid-",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractor pairs (B) exceeded-trailed and (C) diversify-standardize are somewhat serviceable but not attractively diffic",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:distractorTraps at gap 5 argument is weak/circular ('두 예시 한가운데' logic) and doesn't clearly explain why 'Here' fails ther",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The (D)/(E) pair overlap is a design flaw: 'common root' and 'same lexical family' express the identical idea, so callin": 1,
+    "llmMajor:Not a genuine KILLER: 'common root' obviously means 'shared', so rare as its antonym is easily flagged as wrong even on ": 1,
+    "llmMajor:Distractor pairs (B) exceeded-trailed and (C) diversify-standardize are somewhat serviceable but not attractively diffic": 1,
+    "llmMajor:Explanation for (D) is verbose and slightly redundant (repeats the same point three times), diluting the promised 'decis": 1,
+    "llmFatal:The distinction between option1 (customary habits) and option2 (actual applications) is razor-thin and arguably both fit": 1,
+    "llmFatal:'pictorial practices' most naturally reads as 'artistic customs/conventions' (option 1 sense) paired with 'coloring tech": 1,
+    "llmMajor:The underlined word 'practices' in 'pictorial practices and coloring techniques' is a fairly transparent, low-polysemy-r": 1,
+    "llmMajor:Option 4 (doctors/lawyers) and option 5 (moral codes) are too easily eliminated by domain mismatch, reducing the item to": 1,
+    "llmMajor:Explanation does not clearly articulate why 'practices' cannot mean the customary/conventional sense here versus why it ": 1,
+    "llmFatal:The target phrase 'in keeping with' is a transparent idiomatic expression meaning 'in agreement or harmony with', and it": 1,
+    "llmMajor:Opposite to the KILLER difficulty claim, this is a basic, low-level vocabulary match that can be solved in isolation wit": 1,
+    "llmMajor:The distractors (e.g., 'stored safely with', 'in charge of') are overly simplistic and weak literal-meaning traps, faili": 1,
+    "llmFatal:The trap (shun vs diversify) is immediately contradicted by the very next clause 'to produce varied tones and shades,' m": 1,
+    "llmMajor:This is essentially a simple antonym swap (shun=avoid vs diversify=vary), which the rubric explicitly forbids for KILLER": 1,
+    "llmMajor:Other four marked words (exceeded, comparable, lexicon, context) are all clearly correct with no subtlety, so there is n": 1,
+    "llmMajor:The explanation for the correct answer only restates the immediate local clue and doesn't require connecting two separat": 1,
+    "local:quality-mode-relaxed": 2,
+    "llmFatal:Generator flagged relaxed quality mode plus its own noncentral-target warning, indicating the underline is a local elabo": 1,
+    "llmFatal:The immediately following sentence ('It was also within the range of reds that they learned...to diversify the palette')": 1,
+    "llmMajor:For a KILLER, the correct answer is derivable almost entirely from the sentence itself plus the next sentence, without n": 1,
+    "llmMajor:Option ④ ('shifted the cultural dominance from red to other primary colors') is an easy elimination since it directly co": 1,
+    "llmMajor:Option ⑤ mentions 'cosmos' which is a giveaway echo of 'universe' that doesn't require deep reasoning to reject, weakeni": 1,
+    "rejection:implied-meaning-noncentral-target": 6,
+    "rejectionLast:implied-meaning-noncentral-target": 2,
+    "local:generation-notice": 1,
+    "local:review-recommended": 1,
+    "llmFatal:The target underlined phrase \"played a comparable role\" is too literal, plain, and straightforward to serve as a high-qu": 1,
+    "llmFatal:Option 1 (\"Other colors eventually caught up to red's... status\") and Option 2 (\"Other colors gained a status... trailin": 1,
+    "llmMajor:The target phrase is not a metaphorical, compressed conclusion, or rich figurative expression, but simply a literal stat": 1,
+    "llmMajor:Underlining a basic phrase whose correct answer is directly restated/qualified prior in the same clause (\"had to wait a ": 1,
+    "rejection:implied-meaning-absolute-giveaway-option": 1,
+    "rejectionLast:implied-meaning-absolute-giveaway-option": 1,
+    "llmFatal:markerAfterSentenceIndices places gap ③ physically before the Latin/Castilian sentence, but insertionRationale/explanati": 1,
+    "llmFatal:The distractor at gap ④ is arguably just as strong as ③: 'the lexicon' could equally refer to the Latin/Castilian exampl": 1,
+    "llmMajor:The given sentence lacks a strong unique cohesive cue: 'Here' and 'the lexicon' are somewhat generic and could plausibly": 1,
+    "llmMajor:Wrong-option explanation for option 1 contains a garbled phrase '어류' (fish) apparently a typo for '어휘', which is a visib": 1,
+    "llmMajor:distractorTraps at gap 5 argument is weak/circular ('두 예시 한가운데' logic) and doesn't clearly explain why 'Here' fails ther": 1,
+    "llmFatal:The intruder sentence (③) is NOT verbatim from the source passage—it's fabricated, violating the requirement that all ch": 1,
+    "llmFatal:This fabrication makes the item structurally invalid: the passage shown to students diverges from the actual source, und": 1,
+    "llmMajor:The intruder directly contradicts the passage by asserting other colors 'did not exist' as social needs, when the passag": 1,
+    "llmMajor:Because the fabricated sentence contains an explicit logical contradiction to the immediately preceding sentence, a mid-": 1,
+    "llmMajor:Options array is just labels ①-⑤ with no sentence text shown to reviewer for direct verification against source; combine": 1,
+    "rejection:irrelevant-too-many-new-terms": 2,
+    "rejectionLast:irrelevant-too-many-new-terms": 1,
+    "llmMajor:The irrelevant sentence (③) starts with 'however'. For a KILLER difficulty item, explicit opposition markers must not be": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 9,
+      "type": "SENTENCE_INSERT",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:markerAfterSentenceIndices places gap ③ physically before the Latin/Castilian sentence, but insertionRationale/explanati",
+        "llmFatal:The distractor at gap ④ is arguably just as strong as ③: 'the lexicon' could equally refer to the Latin/Castilian exampl",
+        "llmMajor:The given sentence lacks a strong unique cohesive cue: 'Here' and 'the lexicon' are somewhat generic and could plausibly",
+        "llmMajor:Wrong-option explanation for option 1 contains a garbled phrase '어류' (fish) apparently a typo for '어휘', which is a visib",
+        "llmMajor:distractorTraps at gap 5 argument is weak/circular ('두 예시 한가운데' logic) and doesn't clearly explain why 'Here' fails ther"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 1,
+      "type": "ANTONYM",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:The (D)/(E) pair overlap is a design flaw: 'common root' and 'same lexical family' express the identical idea, so callin",
+        "llmMajor:Not a genuine KILLER: 'common root' obviously means 'shared', so rare as its antonym is easily flagged as wrong even on ",
+        "llmMajor:Distractor pairs (B) exceeded-trailed and (C) diversify-standardize are somewhat serviceable but not attractively diffic",
+        "llmMajor:Explanation for (D) is verbose and slightly redundant (repeats the same point three times), diluting the promised 'decis"
+      ],
+      "answerSurfaces": [
+        "4"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 5,
+      "type": "VOCAB_CHOICE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:The trap (shun vs diversify) is immediately contradicted by the very next clause 'to produce varied tones and shades,' m",
+        "llmMajor:This is essentially a simple antonym swap (shun=avoid vs diversify=vary), which the rubric explicitly forbids for KILLER",
+        "llmMajor:Other four marked words (exceeded, comparable, lexicon, context) are all clearly correct with no subtlety, so there is n",
+        "llmMajor:The explanation for the correct answer only restates the immediate local clue and doesn't require connecting two separat"
+      ],
+      "answerSurfaces": [
+        "3"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 7,
+      "type": "IMPLIED_MEANING",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 72,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "llmFatal:Generator flagged relaxed quality mode plus its own noncentral-target warning, indicating the underline is a local elabo",
+        "llmFatal:The immediately following sentence ('It was also within the range of reds that they learned...to diversify the palette')",
+        "llmMajor:For a KILLER, the correct answer is derivable almost entirely from the sentence itself plus the next sentence, without n",
+        "llmMajor:Option ④ ('shifted the cultural dominance from red to other primary colors') is an easy elimination since it directly co",
+        "llmMajor:Option ⑤ mentions 'cosmos' which is a giveaway echo of 'universe' that doesn't require deep reasoning to reject, weakeni",
+        "rejection:implied-meaning-noncentral-target",
+        "rejectionLast:implied-meaning-noncentral-target"
+      ],
+      "answerSurfaces": [
+        "①"
+      ],
+      "rejectionSummary": "Rejected candidates: 4 | Top codes: implied-meaning-noncentral-target x4 | Last: quality/IMPLIED_MEANING - implied-meaning-noncentral-target: IMPLIED_MEANING underline should be a central-claim paraphrase, metaphor, compressed conclusion, or topic/gist-level expression, not a peripheral detail."
+    },
+    {
+      "runIndex": 11,
+      "type": "IRRELEVANT",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:The intruder sentence (③) is NOT verbatim from the source passage—it's fabricated, violating the requirement that all ch",
+        "llmFatal:This fabrication makes the item structurally invalid: the passage shown to students diverges from the actual source, und",
+        "llmMajor:The intruder directly contradicts the passage by asserting other colors 'did not exist' as social needs, when the passag",
+        "llmMajor:Because the fabricated sentence contains an explicit logical contradiction to the immediately preceding sentence, a mid-",
+        "llmMajor:Options array is just labels ①-⑤ with no sentence text shown to reviewer for direct verification against source; combine",
+        "rejection:irrelevant-too-many-new-terms",
+        "rejectionLast:irrelevant-too-many-new-terms"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: irrelevant-too-many-new-terms x2 | Last: quality/IRRELEVANT - irrelevant-too-many-new-terms: The inserted sentence introduces too many new meaningful terms instead of staying close to the source flow."
+    },
+    {
+      "runIndex": 4,
+      "type": "CONTEXT_MEANING",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 75,
+      "issueKeys": [
+        "llmFatal:The target phrase 'in keeping with' is a transparent idiomatic expression meaning 'in agreement or harmony with', and it",
+        "llmMajor:Opposite to the KILLER difficulty claim, this is a basic, low-level vocabulary match that can be solved in isolation wit",
+        "llmMajor:The distractors (e.g., 'stored safely with', 'in charge of') are overly simplistic and weak literal-meaning traps, faili"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 3,
+      "type": "CONTEXT_MEANING",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:The distinction between option1 (customary habits) and option2 (actual applications) is razor-thin and arguably both fit",
+        "llmFatal:'pictorial practices' most naturally reads as 'artistic customs/conventions' (option 1 sense) paired with 'coloring tech",
+        "llmMajor:The underlined word 'practices' in 'pictorial practices and coloring techniques' is a fairly transparent, low-polysemy-r",
+        "llmMajor:Option 4 (doctors/lawyers) and option 5 (moral codes) are too easily eliminated by domain mismatch, reducing the item to",
+        "llmMajor:Explanation does not clearly articulate why 'practices' cannot mean the customary/conventional sense here versus why it "
+      ],
+      "answerSurfaces": [
+        "2"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 8,
+      "type": "IMPLIED_MEANING",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The target underlined phrase \"played a comparable role\" is too literal, plain, and straightforward to serve as a high-qu",
+        "llmFatal:Option 1 (\"Other colors eventually caught up to red's... status\") and Option 2 (\"Other colors gained a status... trailin",
+        "llmMajor:The target phrase is not a metaphorical, compressed conclusion, or rich figurative expression, but simply a literal stat",
+        "llmMajor:Underlining a basic phrase whose correct answer is directly restated/qualified prior in the same clause (\"had to wait a ",
+        "rejection:implied-meaning-noncentral-target"
+      ],
+      "answerSurfaces": [
+        "2"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: implied-meaning-noncentral-target x2, implied-meaning-absolute-giveaway-option x1 | Last: quality/IMPLIED_MEANING - implied-meaning-noncentral-target: IMPLIED_MEANING underline should be a central-claim paraphrase, metaphor, compressed conclusion, or topic/gist-level expression, not a peripheral detail. | implied-meaning-absolute-giveaway-option: KILLER IMPLIED_MEANING has an easily eliminated absolute-word distractor: 4 contains \"entirely\"."
+    },
+    {
+      "runIndex": 12,
+      "type": "IRRELEVANT",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 88,
+      "issueKeys": [
+        "llmMajor:The irrelevant sentence (③) starts with 'however'. For a KILLER difficulty item, explicit opposition markers must not be"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

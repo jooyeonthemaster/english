@@ -1,0 +1,137 @@
+{
+  "createdAt": "2026-07-05T18:13:34.093Z",
+  "outPath": "artifacts/ai-audits/loop-writing-iter1-sw-20260706",
+  "total": 2,
+  "passed": 0,
+  "failed": 2,
+  "passRate": 0,
+  "byCell": {
+    "SUMMARY_WRITING:PREMIUM:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 81.5,
+      "topIssues": [
+        {
+          "code": "llmFatal:The required length of blank (A) is too long (14 words) with too many open-ended syntactic possibilities, making it unsu",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The 'wordBank' contains 'disagreement' and 'scientist', but the model answer expects 'scientists' and 'disagree' (or 'di",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The acceptableVariants allow 'it still shapes' and 'traces of it still shape', containing radically different word count",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The scoring rubric uses terms not provided in the wordBank (e.g., 'researchers') as acceptable variations, which creates",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The target phrase 'whether it should be classified...' relies on supplying modal and passive syntax ('should be -ed') th",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:The required length of blank (A) is too long (14 words) with too many open-ended syntactic possibilities, making it unsu",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The 'wordBank' contains 'disagreement' and 'scientist', but the model answer expects 'scientists' and 'disagree' (or 'di",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The acceptableVariants allow 'it still shapes' and 'traces of it still shape', containing radically different word count",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The scoring rubric uses terms not provided in the wordBank (e.g., 'researchers') as acceptable variations, which creates",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The target phrase 'whether it should be classified...' relies on supplying modal and passive syntax ('should be -ed') th",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The targetWordCount is specified as 5, but the modelAnswer 'its traces still shape language today' contains 6 words, cre",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The wordBank has two 'root' tokens, which is likely a typo or duplicate, causing confusion during construction.",
+      "count": 1
+    },
+    {
+      "code": "local:generation-notice",
+      "count": 1
+    },
+    {
+      "code": "local:quality-mode-relaxed",
+      "count": 1
+    },
+    {
+      "code": "local:review-recommended",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmMajor:The wordBank has two 'root' tokens, which is likely a typo or duplicate, causing confusion during construction.": 1,
+    "llmMajor:The acceptableVariants allow 'it still shapes' and 'traces of it still shape', containing radically different word count": 1,
+    "llmMajor:The targetWordCount is specified as 5, but the modelAnswer 'its traces still shape language today' contains 6 words, cre": 1,
+    "local:quality-mode-relaxed": 1,
+    "local:generation-notice": 1,
+    "local:review-recommended": 1,
+    "llmFatal:The required length of blank (A) is too long (14 words) with too many open-ended syntactic possibilities, making it unsu": 1,
+    "llmMajor:The 'wordBank' contains 'disagreement' and 'scientist', but the model answer expects 'scientists' and 'disagree' (or 'di": 1,
+    "llmMajor:The target phrase 'whether it should be classified...' relies on supplying modal and passive syntax ('should be -ed') th": 1,
+    "llmMajor:The scoring rubric uses terms not provided in the wordBank (e.g., 'researchers') as acceptable variations, which creates": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 2,
+      "type": "SUMMARY_WRITING",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 78,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The required length of blank (A) is too long (14 words) with too many open-ended syntactic possibilities, making it unsu",
+        "llmMajor:The 'wordBank' contains 'disagreement' and 'scientist', but the model answer expects 'scientists' and 'disagree' (or 'di",
+        "llmMajor:The target phrase 'whether it should be classified...' relies on supplying modal and passive syntax ('should be -ed') th",
+        "llmMajor:The scoring rubric uses terms not provided in the wordBank (e.g., 'researchers') as acceptable variations, which creates"
+      ],
+      "answerSurfaces": [
+        "(A) scientists still disagree about whether it should be classified as a liquid or a solid",
+        "Although glass has been produced by humans for millennia and functions like a solid in every practical respect, scientists still disagree about whether it should be classified as a liquid or a solid, "
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Last: model/SUMMARY_WRITING - Forced prompt-inlined JSON generation failed (parse/schema validation)"
+    },
+    {
+      "runIndex": 1,
+      "type": "SUMMARY_WRITING",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 85,
+      "issueKeys": [
+        "llmMajor:The wordBank has two 'root' tokens, which is likely a typo or duplicate, causing confusion during construction.",
+        "llmMajor:The acceptableVariants allow 'it still shapes' and 'traces of it still shape', containing radically different word count",
+        "llmMajor:The targetWordCount is specified as 5, but the modelAnswer 'its traces still shape language today' contains 6 words, cre"
+      ],
+      "answerSurfaces": [
+        "(A) its traces still shape language today",
+        "In the West, red long held an unmatched supremacy over all other colors, a dominance so deeply rooted that its traces still shape language today, from ancient artistic experimentation to the very stru"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Last: model/SUMMARY_WRITING - Forced prompt-inlined JSON generation failed (parse/schema validation)"
+    }
+  ]
+}

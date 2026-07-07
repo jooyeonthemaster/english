@@ -1,6 +1,6 @@
 // Split from question-quality.ts — shared helpers in core.ts, public API via index.ts barrel.
 import { getCircledNumber } from "@/lib/question-postprocess/types";
-import { IRRELEVANT_SLOT_MIN, QuestionQualitySeverity, containsComparableSentence, containsStandaloneToken, contentTokens, countTokenOverlap, isRecord, normalizeComparableText, normalizeLabel, normalizeText, splitPassageSentences } from "../core";
+import { IRRELEVANT_SLOT_MIN, QuestionQualitySeverity, collectWrongOptionExplanations, containsComparableSentence, containsStandaloneToken, contentTokens, countTokenOverlap, isRecord, normalizeComparableText, normalizeLabel, normalizeText, splitPassageSentences } from "../core";
 
 
 
@@ -50,6 +50,17 @@ export function validateIrrelevantQuestion(
       `correctAnswer must point to irrelevantIndex ${irrelevantIndex}; expected option ${expectedAnswer}.`,
     );
   }
+
+  // ── 정답 라벨 단일 진실원 교차검증 (wave2: irrelevant-answer-desync) ────────
+  // 후처리(processIrrelevant)가 correctAnswer/options/wrongOptionExplanations 를
+  // irrelevantIndex 로 강제 재정렬하므로 위 index-mismatch 게이트는 후처리 뒤엔
+  // 절대 발화하지 않는다. 그러나 해설/keyPoints "산문"에 남은 모델의 원래(틀린)
+  // 원형숫자 주장은 재정렬되지 않아 그대로 출하됐다(베이스라인 실측 runIndex 29:
+  // 정답 ③인데 해설이 "무관한 문장인 ②번 문장(…삽입문 인용…)" — llm 심사 15점).
+  // 결정론 검증 가능한 표면만 잡는다: (a) "무관한 문장" 단서에 인접한 원형숫자,
+  // (b) 원형숫자 바로 뒤에 삽입문 verbatim 인용이 따라오는 경우, (c) 오답 해설
+  // 맵이 정답 라벨을 포함, (d) 렌더된 지문의 정답 마커가 삽입문을 감싸지 않음.
+  validateIrrelevantAnswerDesync(question, sentences, irrelevantIndex, add);
 
   const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
   const optionLabels = options.map((option) => normalizeLabel(option.label));
@@ -152,17 +163,16 @@ export function validateIrrelevantQuestion(
     );
   }
 
-  if (requestedDifficulty === "KILLER" && sourceOverlapRatio < 0.18) {
+  // wave2: 0.18~0.25 "경고 밴드"를 error 로 승격. 베이스라인 실측(runIndex 30,
+  // KILLER)에서 창작 삽입문("became obsolete… new pigments…")이 정확히 이 밴드에
+  // 떨어져 irrelevant-new-term-heavy 경고만 받고 출하됐고 llm 심사가 fatal 판정.
+  // 비-정답 문장 fabrication 은 irrelevant-source-not-verbatim 이 잡지만, 삽입문
+  // 자체의 어휘 드리프트를 막는 게이트는 이것뿐이므로 밴드를 차단으로 합친다.
+  if (requestedDifficulty === "KILLER" && sourceOverlapRatio < 0.25) {
     add(
       "error",
       "irrelevant-too-many-new-terms",
       "The inserted sentence introduces too many new meaningful terms instead of staying close to the source flow.",
-    );
-  } else if (requestedDifficulty === "KILLER" && sourceOverlapRatio < 0.25) {
-    add(
-      "warning",
-      "irrelevant-new-term-heavy",
-      "The inserted sentence is somewhat heavy on new terms; prefer more source-window vocabulary.",
     );
   }
 
@@ -272,6 +282,109 @@ export function validateIrrelevantQuestion(
         `The inserted sentence imports an external setting absent from the passage: ${externalCue}.`,
       );
     }
+  }
+}
+
+
+
+// 원형숫자(①~⑳) 문자 클래스 — 해설 산문 스캔용.
+const CIRCLED_DIGIT_CLASS = "[\\u2460-\\u2473]";
+
+/**
+ * wave2 게이트: 해설/keyPoints/오답해설/렌더 지문이 주장하는 "무관한 문장" 위치가
+ * 단일 진실원(irrelevantIndex → 정답 라벨)과 일치하는지 결정론 교차검증.
+ * 산문 의미 해석은 하지 않는다 — verbatim 인용·명시 단서 인접 원형숫자만 잡아
+ * 거짓양성을 배제한다(보수 원칙).
+ */
+export function validateIrrelevantAnswerDesync(
+  question: Record<string, unknown>,
+  sentences: string[],
+  irrelevantIndex: number,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const expectedLabel = String(irrelevantIndex + 1);
+  const claims: string[] = [];
+
+  const proseTexts = [
+    normalizeText(question.explanation),
+    ...(Array.isArray(question.keyPoints)
+      ? question.keyPoints.map((point: unknown) => normalizeText(point))
+      : []),
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  // (a) "무관한 문장" 단서 + 인접 원형숫자 (단서→숫자 순서).
+  const forwardCue = new RegExp(
+    `(?:무관한?\\s*문장|(?:전체\\s*)?흐름과\\s*관계\\s*없는\\s*문장|흐름\\s*무관\\s*문장)\\s*(?:인|은|는|이|:)?\\s*["'“‘(\\[]?\\s*(${CIRCLED_DIGIT_CLASS})`,
+    "g",
+  );
+  for (const match of proseTexts.matchAll(forwardCue)) {
+    if (normalizeLabel(match[1]) !== expectedLabel) {
+      claims.push(`explanation asserts the intruder is ${match[1]}`);
+    }
+  }
+  // (a') 원형숫자 → 짧은 창(16자) 안의 "무관/벗어나" 단서 (숫자→단서 순서).
+  const reverseCue = new RegExp(
+    `(${CIRCLED_DIGIT_CLASS})\\s*번?\\s*(?:문장)?\\s*[이가은는]?\\s*[^${CIRCLED_DIGIT_CLASS.slice(1, -1)}.!?]{0,16}(?:무관|흐름[을에]?서?\\s*벗어나)`,
+    "g",
+  );
+  for (const match of proseTexts.matchAll(reverseCue)) {
+    if (normalizeLabel(match[1]) !== expectedLabel) {
+      claims.push(`explanation marks ${match[1]} as off-flow`);
+    }
+  }
+
+  // (b) 원형숫자 바로 뒤 창(다음 원형숫자 전까지)에 삽입문 verbatim 인용이 있는데
+  //     그 숫자가 정답 라벨이 아니면, 해설이 삽입문을 다른 번호로 지목한 것이다.
+  const insertedSentence = sentences[irrelevantIndex] ?? "";
+  const insertedPrefix = normalizeComparableText(insertedSentence).slice(0, 40);
+  if (insertedPrefix.length >= 20) {
+    const circledRe = new RegExp(CIRCLED_DIGIT_CLASS, "g");
+    for (const match of proseTexts.matchAll(circledRe)) {
+      const label = normalizeLabel(match[0]);
+      if (label === expectedLabel || match.index === undefined) continue;
+      const rest = proseTexts.slice(match.index + match[0].length);
+      const nextCircled = rest.search(new RegExp(CIRCLED_DIGIT_CLASS));
+      const window = normalizeComparableText(
+        nextCircled >= 0 ? rest.slice(0, nextCircled) : rest.slice(0, 400),
+      );
+      if (window.includes(insertedPrefix)) {
+        claims.push(`explanation quotes the inserted sentence under ${match[0]}`);
+      }
+    }
+  }
+
+  // (c) 오답 해설 맵이 정답 라벨을 포함하면 라벨 체계가 어긋난 것.
+  const wrongExplanations = collectWrongOptionExplanations(question.wrongOptionExplanations);
+  if (wrongExplanations.has(expectedLabel)) {
+    claims.push("wrongOptionExplanations covers the answer label");
+  }
+
+  // (d) 렌더된 지문: 정답 위치의 마커가 감싼 문장이 삽입문과 다르면 렌더 desync.
+  const passageWithNumbers = normalizeText(question.passageWithNumbers);
+  if (passageWithNumbers && insertedSentence) {
+    const spans = [
+      ...passageWithNumbers.matchAll(
+        new RegExp(`(${CIRCLED_DIGIT_CLASS})\\s*__(.+?)__`, "g"),
+      ),
+    ];
+    if (spans.length === sentences.length) {
+      const spanComparable = normalizeComparableText(spans[irrelevantIndex]?.[2] ?? "")
+        .replace(/[.!?]+$/, "");
+      const insertedComparable = normalizeComparableText(insertedSentence).replace(/[.!?]+$/, "");
+      if (spanComparable && insertedComparable && spanComparable !== insertedComparable) {
+        claims.push("the rendered marker at the answer position does not wrap the inserted sentence");
+      }
+    }
+  }
+
+  if (claims.length > 0) {
+    add(
+      "error",
+      "irrelevant-answer-desync",
+      `IRRELEVANT answer references disagree with irrelevantIndex ${irrelevantIndex} (option ${expectedLabel}): ${claims.join("; ")}. correctAnswer, the inserted-sentence position, and every circled-number claim in explanation/keyPoints must agree.`,
+    );
   }
 }
 

@@ -1,0 +1,401 @@
+{
+  "createdAt": "2026-07-04T10:39:55.706Z",
+  "outPath": "artifacts/ai-audits/grammar-postfix-20260704.jsonl",
+  "total": 16,
+  "passed": 0,
+  "failed": 16,
+  "passRate": 0,
+  "byPlanDifficulty": {
+    "STANDARD:INTERMEDIATE": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "passRate": 0
+    },
+    "STANDARD:KILLER": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "passRate": 0
+    },
+    "PREMIUM:INTERMEDIATE": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "passRate": 0
+    },
+    "PREMIUM:KILLER": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "passRate": 0
+    }
+  },
+  "issueCounts": {
+    "local:no-question": 8,
+    "rejection:grammar-obvious-noun-what-relative": 7,
+    "rejection:grammar-weak-filler-decoys": 6,
+    "rejection:grammar-noun-clause-pronoun-mislabel": 4,
+    "rejection:grammar-shallow-depends-decoy": 1,
+    "rejection:grammar-render-marker-count": 1,
+    "rejectionLast:duplicate-option-text": 2,
+    "rejectionLast:grammar-obvious-noun-what-relative": 1,
+    "rejectionLast:grammar-weak-filler-decoys": 3,
+    "rejection:grammar-killer-answer-point-repeated": 6,
+    "rejectionLast:grammar-killer-answer-point-repeated": 3,
+    "llmFatal:(C)의 설명이 실제 밑줄 위치('that is,'의 is)가 아니라 다른 절('a disease is quite prevalent')의 주어-동사 일치를 근거로 들어 설명과 표시가 어긋남.": 1,
+    "llmMajor:pointCode가 (C)와 (D) 모두 'd'로 부여되어 서로 다른 문법 포인트(관용표현 vs 수일치)를 같은 항목처럼 오인시킴.": 1,
+    "llmMajor:distractor (C)의 실제 문법 근거인 'that is'(관용구, 즉)에 대한 설명이 전혀 제시되지 않아 학생이 정확한 이유를 배울 수 없음.": 1,
+    "llmMajor:전체적으로 (C) 항목의 근거 오류가 시험지 신뢰도를 크게 떨어뜨림.": 1,
+    "local:killer-answer-not-structurally-loaded": 1,
+    "llmMajor:The (D) pronoun trap only spans one sentence (disease→population→it), a fairly short reach for a KILLER label rather tha": 1,
+    "llmMajor:Distractors (A),(B),(C),(E) test basic passive/agreement/infinitive patterns with little depth, so the item leans on one": 1,
+    "llmMajor:The 'people living in the developing world' distractor lure is a parenthetical example following the blank, but the expl": 1,
+    "rejection:duplicate-option-text": 2,
+    "rejection:grammar-shallow-participle-adjective-answer": 1,
+    "rejectionLast:grammar-shallow-participle-adjective-answer": 1,
+    "llmMajor:Distractors (A)-(D) test very common, low-novelty points (demonstrative adjective, pronoun antecedent, participle, subj-": 1,
+    "llmFatal:Answer (E) only requires single-sentence completeness check, not the cross-clause/long-distance reasoning required for a": 1,
+    "llmFatal:Explanation for (B) mislabels the consider+O+C (SVOC) pattern as '두 목적어 구조' (double-object structure), which is incorrec": 1,
+    "llmMajor:Distractors (A),(B),(C),(D) are all fairly shallow/local checks (tense, passive+complement, infinitive, subject-verb agr": 1,
+    "llmMajor:(C) explanation is vague and uses non-standard phrasing ('미래지향적이거나 지향성을 담은 행동') instead of citing the established 'learn": 1,
+    "rejection:grammar-shallow-nearby-passive-decoy": 3,
+    "rejectionLast:grammar-shallow-nearby-passive-decoy": 2,
+    "llmMajor:Distractor (D) 'is' is trivial: both candidate subjects (face/structure) are singular, so no real ambiguity is created, ": 1,
+    "llmMajor:PointCode 'b' is reused for both (B) relative adverb and (C) relative pronoun, blurring the intended grammar-point taxon": 1,
+    "rejection:grammar-obvious-local-agreement": 1,
+    "rejection:grammar-error-not-mutated": 1,
+    "rejection:grammar-killer-thin-answer": 1,
+    "rejection:grammar-killer-generic-answer-point": 1,
+    "rejectionLast:grammar-killer-generic-answer-point": 1,
+    "llmFatal:The underlying grammar structure in the source passage is 'the disease has been neglected...', but in passageWithMarkers": 1,
+    "llmMajor:The distractor (E) 'democratizing' lacks a clear alternative grammar point and does not generate strong syntactic confli": 1,
+    "llmMajor:The explanation of (D) is overly wordy and does not clearly highlight that 'has neglected' is a simple active perfective": 1,
+    "rejection:grammar-explanation-self-contradictory": 1,
+    "rejectionLast:grammar-explanation-self-contradictory": 1,
+    "rejectionLast:grammar-noun-clause-pronoun-mislabel": 1,
+    "llmFatal:The error form 'belongs' for 'the terms A and B' is too visibly broken for a CSAT item; 'terms' is clearly plural and 'a": 1,
+    "llmMajor:Option (A) is too simple; testing a standard attributive adjective 'comparable' before a noun 'role' lacks CSAT depth.": 1,
+    "llmMajor:Option (D) testing 'that' as a demonstrative pronoun in a simple independent clause is passive and rarely tested in mode": 1,
+    "llmMajor:Option (E) 'by to disturb or delaying' is too visibly broken and unnatural. Preposition + to-infinitive is a high-school": 1,
+    "llmMajor:The question target does not demand deep syntactic analysis or long-distance/cross-clause context, making it feel like a": 1,
+    "rejection:grammar-obvious-adjacent-sv-agreement": 2,
+    "rejectionLast:grammar-obvious-adjacent-sv-agreement": 2,
+    "rejection:mid-word-marker": 5,
+    "rejection:grammar-marker-count": 1,
+    "rejectionLast:grammar-killer-thin-answer": 1
+  },
+  "topIssues": [
+    {
+      "code": "local:no-question",
+      "count": 8
+    },
+    {
+      "code": "rejection:grammar-obvious-noun-what-relative",
+      "count": 7
+    },
+    {
+      "code": "rejection:grammar-killer-answer-point-repeated",
+      "count": 6
+    },
+    {
+      "code": "rejection:grammar-weak-filler-decoys",
+      "count": 6
+    },
+    {
+      "code": "rejection:mid-word-marker",
+      "count": 5
+    },
+    {
+      "code": "rejection:grammar-noun-clause-pronoun-mislabel",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-shallow-nearby-passive-decoy",
+      "count": 3
+    },
+    {
+      "code": "rejectionLast:grammar-killer-answer-point-repeated",
+      "count": 3
+    },
+    {
+      "code": "rejectionLast:grammar-weak-filler-decoys",
+      "count": 3
+    },
+    {
+      "code": "rejection:duplicate-option-text",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-obvious-adjacent-sv-agreement",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:duplicate-option-text",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-obvious-adjacent-sv-agreement",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-shallow-nearby-passive-decoy",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:(C)의 설명이 실제 밑줄 위치('that is,'의 is)가 아니라 다른 절('a disease is quite prevalent')의 주어-동사 일치를 근거로 들어 설명과 표시가 어긋남.",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Answer (E) only requires single-sentence completeness check, not the cross-clause/long-distance reasoning required for a",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Explanation for (B) mislabels the consider+O+C (SVOC) pattern as '두 목적어 구조' (double-object structure), which is incorrec",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The error form 'belongs' for 'the terms A and B' is too visibly broken for a CSAT item; 'terms' is clearly plural and 'a",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The underlying grammar structure in the source passage is 'the disease has been neglected...', but in passageWithMarkers",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:(C) explanation is vague and uses non-standard phrasing ('미래지향적이거나 지향성을 담은 행동') instead of citing the established 'learn",
+      "count": 1
+    }
+  ],
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "generationPlan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-obvious-noun-what-relative",
+        "rejection:grammar-weak-filler-decoys",
+        "rejection:grammar-noun-clause-pronoun-mislabel",
+        "rejection:grammar-shallow-depends-decoy",
+        "rejection:grammar-render-marker-count",
+        "rejectionLast:duplicate-option-text",
+        "rejectionLast:grammar-obvious-noun-what-relative"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 5 | Top codes: grammar-obvious-noun-what-relative x4, grammar-weak-filler-decoys x3, grammar-noun-clause-pronoun-mislabel x1, grammar-shallow-depends-decoy x1, grammar-render-marker-count x1 | Last: quality/GRAMMAR_ERROR - duplicate-option-text: Two or more options have the same text. | grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead. | grammar-weak-filler-decoys: GRAMMAR_ERROR uses weak filler decoy(s) ((B)). Replace them with structurally meaningful grammar targets."
+    },
+    {
+      "runIndex": 2,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-obvious-noun-what-relative",
+        "rejection:grammar-weak-filler-decoys",
+        "rejection:grammar-noun-clause-pronoun-mislabel",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejectionLast:grammar-killer-answer-point-repeated",
+        "rejectionLast:grammar-weak-filler-decoys"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-obvious-noun-what-relative x2, grammar-weak-filler-decoys x2, grammar-noun-clause-pronoun-mislabel x1, grammar-killer-answer-point-repeated x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (d) in non-answer decoys; use different grammar frames for distractors. | grammar-weak-filler-decoys: GRAMMAR_ERROR uses weak filler decoy(s) ((A), (D)). Replace them with structurally meaningful grammar targets."
+    },
+    {
+      "runIndex": 8,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkqu0032mmf0g9i059aa",
+      "title": "2027학년도 6월 모평 영어 38번 · 문장삽입",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-obvious-local-agreement",
+        "rejection:grammar-error-not-mutated",
+        "rejection:grammar-killer-thin-answer",
+        "rejection:grammar-killer-generic-answer-point",
+        "rejectionLast:grammar-killer-answer-point-repeated",
+        "rejectionLast:grammar-killer-generic-answer-point"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-killer-answer-point-repeated x2, grammar-obvious-local-agreement x1, grammar-error-not-mutated x1, grammar-killer-thin-answer x1, grammar-killer-generic-answer-point x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (a) in non-answer decoys; use different grammar frames for distractors. | grammar-killer-generic-answer-point: KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern."
+    },
+    {
+      "runIndex": 9,
+      "generationPlan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 1 | Last: model/GRAMMAR_ERROR - The operation was aborted due to timeout"
+    },
+    {
+      "runIndex": 10,
+      "generationPlan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 1 | Last: model/GRAMMAR_ERROR - The operation was aborted due to timeout"
+    },
+    {
+      "runIndex": 12,
+      "generationPlan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-noun-clause-pronoun-mislabel",
+        "rejection:grammar-obvious-noun-what-relative",
+        "rejection:grammar-weak-filler-decoys",
+        "rejection:grammar-explanation-self-contradictory",
+        "rejectionLast:grammar-weak-filler-decoys",
+        "rejectionLast:grammar-explanation-self-contradictory",
+        "rejectionLast:grammar-noun-clause-pronoun-mislabel"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-noun-clause-pronoun-mislabel x2, grammar-obvious-noun-what-relative x1, grammar-weak-filler-decoys x1, grammar-explanation-self-contradictory x1 | Last: quality/GRAMMAR_ERROR - grammar-weak-filler-decoys: GRAMMAR_ERROR uses weak filler decoy(s) ((D)). Replace them with structurally meaningful grammar targets. | grammar-explanation-self-contradictory: Grammar explanation contains self-correction/scratchpad-like phrasing instead of a clean student-facing rationale. | grammar-noun-clause-pronoun-mislabel: Grammar keyPoints/explanation labels a pronoun-reference check as a noun-clause issue; use accurate school grammar terminology for the actual structure."
+    },
+    {
+      "runIndex": 14,
+      "generationPlan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-shallow-nearby-passive-decoy"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-answer-point-repeated x1, grammar-shallow-nearby-passive-decoy x1 | Last: model/GRAMMAR_ERROR - The operation was aborted due to timeout"
+    },
+    {
+      "runIndex": 16,
+      "generationPlan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkqu0032mmf0g9i059aa",
+      "title": "2027학년도 6월 모평 영어 38번 · 문장삽입",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:mid-word-marker",
+        "rejection:duplicate-option-text",
+        "rejection:grammar-marker-count",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-obvious-adjacent-sv-agreement",
+        "rejectionLast:grammar-obvious-adjacent-sv-agreement",
+        "rejectionLast:grammar-killer-thin-answer"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: mid-word-marker x5, duplicate-option-text x1, grammar-marker-count x1, grammar-killer-answer-point-repeated x1, grammar-obvious-adjacent-sv-agreement x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-adjacent-sv-agreement: GRAMMAR_ERROR answer \"flows\" is a directly adjacent subject-verb -s flip; choose an agreement target with an intervening modifier, relative clause, or attractor noun. | grammar-killer-thin-answer: KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check."
+    },
+    {
+      "runIndex": 4,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "localScore": 85,
+      "llmScore": 88,
+      "issueKeys": [
+        "local:killer-answer-not-structurally-loaded",
+        "llmMajor:The (D) pronoun trap only spans one sentence (disease→population→it), a fairly short reach for a KILLER label rather tha",
+        "llmMajor:Distractors (A),(B),(C),(E) test basic passive/agreement/infinitive patterns with little depth, so the item leans on one",
+        "llmMajor:The 'people living in the developing world' distractor lure is a parenthetical example following the blank, but the expl",
+        "rejection:duplicate-option-text",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-shallow-participle-adjective-answer",
+        "rejectionLast:duplicate-option-text"
+      ],
+      "answerSurfaces": [
+        "(D):it->them(g)"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: duplicate-option-text x1, grammar-killer-answer-point-repeated x1, grammar-shallow-participle-adjective-answer x1 | Last: quality/GRAMMAR_ERROR - duplicate-option-text: Two or more options have the same text. | grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (e) in non-answer decoys; use different grammar frames for distractors. | grammar-shallow-participle-adjective-answer: INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"been neglected\" -> \"been neglecting\" before a noun; require deeper structure."
+    },
+    {
+      "runIndex": 3,
+      "generationPlan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "localScore": 100,
+      "llmScore": 68,
+      "issueKeys": [
+        "llmFatal:(C)의 설명이 실제 밑줄 위치('that is,'의 is)가 아니라 다른 절('a disease is quite prevalent')의 주어-동사 일치를 근거로 들어 설명과 표시가 어긋남.",
+        "llmMajor:pointCode가 (C)와 (D) 모두 'd'로 부여되어 서로 다른 문법 포인트(관용표현 vs 수일치)를 같은 항목처럼 오인시킴.",
+        "llmMajor:distractor (C)의 실제 문법 근거인 'that is'(관용구, 즉)에 대한 설명이 전혀 제시되지 않아 학생이 정확한 이유를 배울 수 없음.",
+        "llmMajor:전체적으로 (C) 항목의 근거 오류가 시험지 신뢰도를 크게 떨어뜨림."
+      ],
+      "answerSurfaces": [
+        "(D):has been neglected->have been neglected(d)"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 6,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "localScore": 100,
+      "llmScore": 76,
+      "issueKeys": [
+        "llmFatal:Answer (E) only requires single-sentence completeness check, not the cross-clause/long-distance reasoning required for a",
+        "llmFatal:Explanation for (B) mislabels the consider+O+C (SVOC) pattern as '두 목적어 구조' (double-object structure), which is incorrec",
+        "llmMajor:Distractors (A),(B),(C),(D) are all fairly shallow/local checks (tense, passive+complement, infinitive, subject-verb agr",
+        "llmMajor:(C) explanation is vague and uses non-standard phrasing ('미래지향적이거나 지향성을 담은 행동') instead of citing the established 'learn",
+        "rejection:grammar-shallow-nearby-passive-decoy",
+        "rejectionLast:grammar-shallow-nearby-passive-decoy"
+      ],
+      "answerSurfaces": [
+        "(E):in which->which(b)"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-shallow-nearby-passive-decoy x1 | Last: quality/GRAMMAR_ERROR - grammar-shallow-nearby-passive-decoy: Do not use a nearby pronoun + be p.p. phrase as a passive-voice decoy; it is too local and shallow."
+    },
+    {
+      "runIndex": 11,
+      "generationPlan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "localScore": 100,
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:The underlying grammar structure in the source passage is 'the disease has been neglected...', but in passageWithMarkers",
+        "llmMajor:The distractor (E) 'democratizing' lacks a clear alternative grammar point and does not generate strong syntactic confli",
+        "llmMajor:The explanation of (D) is overly wordy and does not clearly highlight that 'has neglected' is a simple active perfective"
+      ],
+      "answerSurfaces": [
+        "(D):been neglected->neglected(e)"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

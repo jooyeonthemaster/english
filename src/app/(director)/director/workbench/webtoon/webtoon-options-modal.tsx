@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Palette, Wand2 } from "lucide-react";
+import { FileText, Loader2, Palette, Wand2, X } from "lucide-react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -74,25 +75,51 @@ export function WebtoonOptionsModal({
 
   return (
     <Dialog open={open} onOpenChange={(v) => !submitting && onOpenChange(v)}>
-      <DialogContent className="flex max-h-[88vh] flex-col gap-0 overflow-hidden rounded-2xl border-slate-200 p-0 shadow-2xl sm:max-w-md">
-        <DialogHeader className="shrink-0 border-b border-slate-100 px-5 py-4 text-left">
-          <DialogTitle className="flex items-center gap-2 text-[15px] font-bold text-slate-900">
-            <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+      <DialogContent
+        showCloseButton={false}
+        className="flex max-h-[92vh] flex-col gap-0 overflow-hidden rounded-2xl border-slate-200 p-0 shadow-2xl sm:max-w-3xl"
+      >
+        {/* 헤더 — 아이콘·제목·설명·닫기를 한 행에, 좌우 끝선은 본문(px-6)과 일치 */}
+        <DialogHeader className="shrink-0 border-b border-slate-100 px-6 py-3.5 text-left">
+          <div className="flex items-center gap-3">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
               <Palette className="size-4" aria-hidden="true" />
             </span>
-            웹툰 유형 선택
-          </DialogTitle>
-          <DialogDescription className="truncate text-[12px] text-slate-500">
-            <b className="text-slate-700">{passageTitle || "지문"}</b> — 이 지문
-            하나로 한 장의 세로형 웹툰을 생성합니다.
-          </DialogDescription>
+            <div className="min-w-0 flex-1">
+              <DialogTitle className="truncate text-[15px] font-bold text-slate-900">
+                웹툰 유형 선택
+              </DialogTitle>
+              <DialogDescription className="mt-0.5 truncate text-[12px] text-slate-500">
+                <b className="font-semibold text-slate-700">
+                  {passageTitle || "지문"}
+                </b>{" "}
+                — 이 지문 하나로 한 장의 세로형 웹툰을 생성합니다.
+              </DialogDescription>
+            </div>
+            <DialogClose asChild>
+              <button
+                type="button"
+                aria-label="닫기"
+                disabled={submitting}
+                className="-mr-1.5 flex size-8 shrink-0 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 disabled:opacity-50"
+              >
+                <X className="size-4" aria-hidden="true" />
+              </button>
+            </DialogClose>
+          </div>
         </DialogHeader>
 
-        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-5 py-4">
+        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-4">
           {passagePreview ? (
-            <p className="line-clamp-2 rounded-lg bg-slate-50 px-3 py-2 text-[12px] leading-relaxed text-slate-500">
-              {passagePreview}
-            </p>
+            <div className="flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5">
+              <FileText
+                className="size-4 shrink-0 text-blue-500"
+                aria-hidden="true"
+              />
+              <p className="min-w-0 flex-1 truncate text-[12px] leading-relaxed text-slate-600">
+                {passagePreview}
+              </p>
+            </div>
           ) : null}
 
           <WebtoonGenerateFields
@@ -108,7 +135,7 @@ export function WebtoonOptionsModal({
           />
         </div>
 
-        <div className="shrink-0 border-t border-slate-100 px-5 py-3.5">
+        <div className="shrink-0 border-t border-slate-100 px-6 py-3">
           <button
             type="button"
             onClick={handleConfirm}
@@ -131,6 +158,10 @@ export function WebtoonOptionsModal({
               </>
             )}
           </button>
+          <p className="mt-1.5 text-center text-[11px] leading-relaxed text-slate-400">
+            생성에는 약 3분 정도 걸려요. 시작한 뒤 다른 작업을 계속하셔도
+            완료되면 결과 목록에 표시됩니다.
+          </p>
         </div>
       </DialogContent>
     </Dialog>

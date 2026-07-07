@@ -1,0 +1,482 @@
+{
+  "createdAt": "2026-07-06T01:30:20.504Z",
+  "outPath": "artifacts/ai-audits/feedback-fix-verify-20260706",
+  "total": 12,
+  "passed": 3,
+  "failed": 9,
+  "passRate": 0.25,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:A pre-existing quality-check flagged the item itself: KILLER blank is too surface-level and lacks required negative-pola",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blank replaces the entire final quoted sentence ('glass is not a material; it's a state'), making it a direct verbat",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blanked span is a verbatim sentence fragment near the start, essentially restating the topic sentence rather than re",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The correct paraphrase largely just restates the same clause with synonyms (wait a long time -> prolonged delay; conside",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor ④ (artisan mastery) is thematically unrelated/off-topic compared to the tightly clustered ①③⑤, creating uneve",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 2,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "GRAMMAR_ERROR:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 67,
+      "topIssues": [
+        {
+          "code": "llmFatal:The explanation for (E) is self-contradictory: it says the clause is complete (no gap) yet claims 'which' should attach ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The subject-verb agreement error is trivially spottable: the subject 'sheets' is plural and 'is' immediately follows a c",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This item marks only one genuine error among 5 expressions with no other viable hard traps; (A),(B),(C),(D) are shallow ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:KILLER rubric requires resistance to shortcut guessing via long-distance dependency validation; here the missing 'in' be",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No option restates or preys on the 'is/are' choice via a genuinely misleading intervening singular noun close to the ver",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:PREMIUM:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 87,
+      "topIssues": [
+        {
+          "code": "llmFatal:The target error (B) 'which's the way' is highly unnatural as a distractor and grammatically nonsensical, making it an e",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option (C) 'was only developed' and (D) 'to wait' are trivial structures with very low attractiveness as distractors.",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation for (D) is flawed/inaccurate: the text has 'had to wait', where 'had' is the past of 'have to' (semi-mod",
+          "count": 1
+        },
+        {
+          "code": "local:generation-notice",
+          "count": 1
+        },
+        {
+          "code": "local:quality-mode-relaxed",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_WRITING:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "rejection:sw-answer-not-buildable-from-wordbank",
+          "count": 2
+        },
+        {
+          "code": "llmFatal:koreanGloss explicitly states '문화적이고 언어적인 관행에 의해 형성되어 왔음' which almost mirrors the answer wording/order (cultural and li",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The wordBank contains exactly the 7 tokens needed to construct the answer (remain/disordered/highly/resist/easy/and + ca",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:wordBankDistractors are 'language' and 'culture', but the wordBank contains 'linguistic' and 'cultural' as the actual re",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:wordBankPolicy=usePartial requires wordBankDistractors to be populated with plausible decoys, but the array is empty — f",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_WRITING:PREMIUM:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 1,
+      "passRate": 0.5,
+      "avgScore": 88,
+      "topIssues": [
+        {
+          "code": "llmFatal:The required connector frame ' as recognized colors in culture and thought' is defined inside blank (A)'s configuration,",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The acceptableVariants offered contain extremely long, highly divergent phrasing (e.g., 'gain status only after waiting ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The wordBank contains duplicate/overlapping options (e.g., gain, earn, retrieve, achieve, status, recognition, legitimac",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-shallow-participle-adjective-answer",
+      "count": 2
+    },
+    {
+      "code": "rejection:sw-answer-not-buildable-from-wordbank",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-shallow-participle-adjective-answer",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:A pre-existing quality-check flagged the item itself: KILLER blank is too surface-level and lacks required negative-pola",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:koreanGloss explicitly states '문화적이고 언어적인 관행에 의해 형성되어 왔음' which almost mirrors the answer wording/order (cultural and li",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank replaces the entire final quoted sentence ('glass is not a material; it's a state'), making it a direct verbat",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blanked span is a verbatim sentence fragment near the start, essentially restating the topic sentence rather than re",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The correct paraphrase largely just restates the same clause with synonyms (wait a long time -> prolonged delay; conside",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The explanation for (E) is self-contradictory: it says the clause is complete (no gap) yet claims 'which' should attach ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The required connector frame ' as recognized colors in culture and thought' is defined inside blank (A)'s configuration,",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The subject-verb agreement error is trivially spottable: the subject 'sheets' is plural and 'is' immediately follows a c",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The target error (B) 'which's the way' is highly unnatural as a distractor and grammatically nonsensical, making it an e",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The wordBank contains exactly the 7 tokens needed to construct the answer (remain/disordered/highly/resist/easy/and + ca",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:This item marks only one genuine error among 5 expressions with no other viable hard traps; (A),(B),(C),(D) are shallow ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:wordBankDistractors are 'language' and 'culture', but the wordBank contains 'linguistic' and 'cultural' as the actual re",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:wordBankPolicy=usePartial requires wordBankDistractors to be populated with plausible decoys, but the array is empty — f",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:'categorization' is left in base form and never needs alteration despite wordBankFidelity='inflected', undermining the c",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:'shape' is a fairly literal/direct paraphrase of the passage's 'systems of thought'/'lexicon in keeping with practices' ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractor ④ (artisan mastery) is thematically unrelated/off-topic compared to the tightly clustered ①③⑤, creating uneve",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:distractors 'by' and 'and' are structural filler tokens, not real distractors testing understanding; only two genuine de",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The blanked span is a verbatim sentence fragment near the start, essentially restating the topic sentence rather than re": 1,
+    "llmFatal:The correct paraphrase largely just restates the same clause with synonyms (wait a long time -> prolonged delay; conside": 1,
+    "llmMajor:Option ③'s explanation is confusing and internally inconsistent: it claims 'other colors were named before red' but the ": 1,
+    "llmMajor:The wrongOptionExplanations and main explanation are overly verbose and partly redundant, but more importantly don't cle": 1,
+    "llmMajor:This blank does not require connecting two distant sentences under a conclusion/cause-effect signal as mandated for KILL": 1,
+    "llmFatal:A pre-existing quality-check flagged the item itself: KILLER blank is too surface-level and lacks required negative-pola": 1,
+    "llmFatal:The blank replaces the entire final quoted sentence ('glass is not a material; it's a state'), making it a direct verbat": 1,
+    "llmMajor:Distractors ① and ⑤ are somewhat easily eliminated by simple polarity/factual contradiction scanning (③ and ⑤ both claim": 1,
+    "llmMajor:The quote structure ('As one glassmaker put it, _____') makes it obvious the blank must be a pithy, quotable aphorism, w": 1,
+    "llmMajor:Distractor ④ (artisan mastery) is thematically unrelated/off-topic compared to the tightly clustered ①③⑤, creating uneve": 1,
+    "llmFatal:The explanation for (E) is self-contradictory: it says the clause is complete (no gap) yet claims 'which' should attach ": 1,
+    "llmFatal:This item marks only one genuine error among 5 expressions with no other viable hard traps; (A),(B),(C),(D) are shallow ": 1,
+    "llmMajor:KILLER rubric requires resistance to shortcut guessing via long-distance dependency validation; here the missing 'in' be": 1,
+    "llmMajor:Non-answer distractors are not uniformly attractive: (A) correlative 'as much...as' and (D) subject-verb agreement are c": 1,
+    "llmMajor:The passage's other candidate error-prone sentence, e.g. the first sentence with 'As much on the historical as hierarchi": 1,
+    "rejection:grammar-shallow-participle-adjective-answer": 2,
+    "rejectionLast:grammar-shallow-participle-adjective-answer": 2,
+    "llmFatal:The subject-verb agreement error is trivially spottable: the subject 'sheets' is plural and 'is' immediately follows a c": 1,
+    "llmMajor:Options (A),(D),(E) are all near-trivial (modal+bare infinitive, aux+bare infinitive, verb+to-infinitive collocation) wi": 1,
+    "llmMajor:No option restates or preys on the 'is/are' choice via a genuinely misleading intervening singular noun close to the ver": 1,
+    "llmMajor:The explanation correctly identifies the fix but does not address why a mid-level student might miss it beyond noting pr": 1,
+    "rejection:grammar-render-marker-count": 1,
+    "rejection:grammar-error-not-mutated": 1,
+    "rejection:grammar-source-expression-not-backed": 1,
+    "rejection:grammar-correction-not-source-backed": 1,
+    "rejection:grammar-shallow-depends-decoy": 1,
+    "rejectionLast:grammar-render-marker-count": 1,
+    "rejectionLast:grammar-error-not-mutated": 1,
+    "rejectionLast:grammar-source-expression-not-backed": 1,
+    "rejectionLast:grammar-correction-not-source-backed": 1,
+    "rejectionLast:grammar-shallow-depends-decoy": 1,
+    "rejectionLast:grammar-weak-filler-decoys": 1,
+    "local:quality-mode-relaxed": 1,
+    "local:generation-notice": 1,
+    "local:review-recommended": 1,
+    "rejection:grammar-killer-thin-answer": 1,
+    "llmFatal:The target error (B) 'which's the way' is highly unnatural as a distractor and grammatically nonsensical, making it an e": 1,
+    "llmMajor:The explanation for (D) is flawed/inaccurate: the text has 'had to wait', where 'had' is the past of 'have to' (semi-mod": 1,
+    "llmMajor:Option (C) 'was only developed' and (D) 'to wait' are trivial structures with very low attractiveness as distractors.": 1,
+    "llmFatal:wordBankDistractors are 'language' and 'culture', but the wordBank contains 'linguistic' and 'cultural' as the actual re": 1,
+    "llmFatal:koreanGloss explicitly states '문화적이고 언어적인 관행에 의해 형성되어 왔음' which almost mirrors the answer wording/order (cultural and li": 1,
+    "llmMajor:The word bank includes both base forms (culture, language) as fillers and their adjective forms (cultural, linguistic) a": 1,
+    "llmMajor:'shape' is a fairly literal/direct paraphrase of the passage's 'systems of thought'/'lexicon in keeping with practices' ": 1,
+    "llmMajor:distractors 'by' and 'and' are structural filler tokens, not real distractors testing understanding; only two genuine de": 1,
+    "rejection:sw-answer-not-buildable-from-wordbank": 2,
+    "rejectionLast:sw-answer-not-buildable-from-wordbank": 1,
+    "llmFatal:wordBankPolicy=usePartial requires wordBankDistractors to be populated with plausible decoys, but the array is empty — f": 1,
+    "llmFatal:The wordBank contains exactly the 7 tokens needed to construct the answer (remain/disordered/highly/resist/easy/and + ca": 1,
+    "llmMajor:For a KILLER item, the blank should require connecting 2+ separate passage clues with genuine ambiguity; here the wordBa": 1,
+    "llmMajor:The explanation is generic paraphrase-restatement of the answer rather than explaining why competing wordings/forms woul": 1,
+    "llmMajor:'categorization' is left in base form and never needs alteration despite wordBankFidelity='inflected', undermining the c": 1,
+    "llmFatal:The required connector frame ' as recognized colors in culture and thought' is defined inside blank (A)'s configuration,": 1,
+    "llmMajor:The acceptableVariants offered contain extremely long, highly divergent phrasing (e.g., 'gain status only after waiting ": 1,
+    "llmMajor:The wordBank contains duplicate/overlapping options (e.g., gain, earn, retrieve, achieve, status, recognition, legitimac": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 10,
+      "type": "SUMMARY_WRITING",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:wordBankPolicy=usePartial requires wordBankDistractors to be populated with plausible decoys, but the array is empty — f",
+        "llmFatal:The wordBank contains exactly the 7 tokens needed to construct the answer (remain/disordered/highly/resist/easy/and + ca",
+        "llmMajor:For a KILLER item, the blank should require connecting 2+ separate passage clues with genuine ambiguity; here the wordBa",
+        "llmMajor:The explanation is generic paraphrase-restatement of the answer rather than explaining why competing wordings/forms woul",
+        "llmMajor:'categorization' is left in base form and never needs alteration despite wordBankFidelity='inflected', undermining the c"
+      ],
+      "answerSurfaces": [
+        "(A) remains highly disordered and resists easy categorization",
+        "Despite its ancient history, glass continues to puzzle scientists because down at the molecular scale, its structure remains highly disordered and resists easy categorization, behaving in ways that de"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 5,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 62,
+      "issueKeys": [
+        "llmFatal:The explanation for (E) is self-contradictory: it says the clause is complete (no gap) yet claims 'which' should attach ",
+        "llmFatal:This item marks only one genuine error among 5 expressions with no other viable hard traps; (A),(B),(C),(D) are shallow ",
+        "llmMajor:KILLER rubric requires resistance to shortcut guessing via long-distance dependency validation; here the missing 'in' be",
+        "llmMajor:Non-answer distractors are not uniformly attractive: (A) correlative 'as much...as' and (D) subject-verb agreement are c",
+        "llmMajor:The passage's other candidate error-prone sentence, e.g. the first sentence with 'As much on the historical as hierarchi",
+        "rejection:grammar-shallow-participle-adjective-answer",
+        "rejectionLast:grammar-shallow-participle-adjective-answer"
+      ],
+      "answerSurfaces": [
+        "(E):in which->which"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-shallow-participle-adjective-answer x1 | Last: quality/GRAMMAR_ERROR - grammar-shallow-participle-adjective-answer: INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"played\" -> \"playing\" before a noun; require deeper structure."
+    },
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:The blanked span is a verbatim sentence fragment near the start, essentially restating the topic sentence rather than re",
+        "llmFatal:The correct paraphrase largely just restates the same clause with synonyms (wait a long time -> prolonged delay; conside",
+        "llmMajor:Option ③'s explanation is confusing and internally inconsistent: it claims 'other colors were named before red' but the ",
+        "llmMajor:The wrongOptionExplanations and main explanation are overly verbose and partly redundant, but more importantly don't cle",
+        "llmMajor:This blank does not require connecting two distant sentences under a conclusion/cause-effect signal as mandated for KILL"
+      ],
+      "answerSurfaces": [
+        "②"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 6,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:The subject-verb agreement error is trivially spottable: the subject 'sheets' is plural and 'is' immediately follows a c",
+        "llmMajor:Options (A),(D),(E) are all near-trivial (modal+bare infinitive, aux+bare infinitive, verb+to-infinitive collocation) wi",
+        "llmMajor:No option restates or preys on the 'is/are' choice via a genuinely misleading intervening singular noun close to the ver",
+        "llmMajor:The explanation correctly identifies the fix but does not address why a mid-level student might miss it beyond noting pr",
+        "rejection:grammar-render-marker-count",
+        "rejection:grammar-error-not-mutated",
+        "rejection:grammar-source-expression-not-backed",
+        "rejection:grammar-correction-not-source-backed"
+      ],
+      "answerSurfaces": [
+        "(B):are->is"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-render-marker-count x1, grammar-error-not-mutated x1, grammar-source-expression-not-backed x1, grammar-correction-not-source-backed x1, grammar-shallow-depends-decoy x1 | Last: quality/GRAMMAR_ERROR - grammar-render-marker-count: Expected 5 rendered grammar markers, got 4. | grammar-error-not-mutated: Stripping the markers reproduces the original passage unchanged — no grammar error was introduced; the answer flags unmutated source text. | grammar-source-expression-not-backed: The source/correction expression \"to appear\" is not found in the original passage; GRAMMAR_ERROR must mutate a real source expression, not mark an already-correct source form as wrong. | grammar-correction-not-source-backed: The correction \"to appear\" is not found in the original passage; use the exact original expression as the correction. | grammar-shallow-depends-decoy: Do not use a simple 'depends on' subject-verb match as a grammar decoy; it offers little trap value. | grammar-weak-filler-decoys: GRAMMAR_ERRO"
+    },
+    {
+      "runIndex": 9,
+      "type": "SUMMARY_WRITING",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:wordBankDistractors are 'language' and 'culture', but the wordBank contains 'linguistic' and 'cultural' as the actual re",
+        "llmFatal:koreanGloss explicitly states '문화적이고 언어적인 관행에 의해 형성되어 왔음' which almost mirrors the answer wording/order (cultural and li",
+        "llmMajor:The word bank includes both base forms (culture, language) as fillers and their adjective forms (cultural, linguistic) a",
+        "llmMajor:'shape' is a fairly literal/direct paraphrase of the passage's 'systems of thought'/'lexicon in keeping with practices' ",
+        "llmMajor:distractors 'by' and 'and' are structural filler tokens, not real distractors testing understanding; only two genuine de",
+        "rejection:sw-answer-not-buildable-from-wordbank",
+        "rejectionLast:sw-answer-not-buildable-from-wordbank"
+      ],
+      "answerSurfaces": [
+        "(A) shaped by cultural and linguistic practices",
+        "Historically, Western culture accorded red an unparalleled status where other hues were not even recognized as colors, implying that our appreciation of the visual spectrum has been shaped by cultural"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: sw-answer-not-buildable-from-wordbank x2 | Last: quality/SUMMARY_WRITING - sw-answer-not-buildable-from-wordbank: [보기](wordBank) 칩으로 정답을 조립할 수 없습니다 — 부족 토큰 (A): \"comparable\". 필요한 단어를 wordBank 에 추가하세요(중복 필요 단어는 같은 문자열을 개수만큼). 미끼 초과는 허용됩니다."
+    },
+    {
+      "runIndex": 2,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:A pre-existing quality-check flagged the item itself: KILLER blank is too surface-level and lacks required negative-pola",
+        "llmFatal:The blank replaces the entire final quoted sentence ('glass is not a material; it's a state'), making it a direct verbat",
+        "llmMajor:Distractors ① and ⑤ are somewhat easily eliminated by simple polarity/factual contradiction scanning (③ and ⑤ both claim",
+        "llmMajor:The quote structure ('As one glassmaker put it, _____') makes it obvious the blank must be a pithy, quotable aphorism, w",
+        "llmMajor:Distractor ④ (artisan mastery) is thematically unrelated/off-topic compared to the tightly clustered ①③⑤, creating uneve"
+      ],
+      "answerSurfaces": [
+        "②"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 8,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:The target error (B) 'which's the way' is highly unnatural as a distractor and grammatically nonsensical, making it an e",
+        "llmMajor:The explanation for (D) is flawed/inaccurate: the text has 'had to wait', where 'had' is the past of 'have to' (semi-mod",
+        "llmMajor:Option (C) 'was only developed' and (D) 'to wait' are trivial structures with very low attractiveness as distractors."
+      ],
+      "answerSurfaces": [
+        "(B):that's the way->which's the way"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 11,
+      "type": "SUMMARY_WRITING",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:The required connector frame ' as recognized colors in culture and thought' is defined inside blank (A)'s configuration,",
+        "llmMajor:The acceptableVariants offered contain extremely long, highly divergent phrasing (e.g., 'gain status only after waiting ",
+        "llmMajor:The wordBank contains duplicate/overlapping options (e.g., gain, earn, retrieve, achieve, status, recognition, legitimac"
+      ],
+      "answerSurfaces": [
+        "(A) wait a long period to gain status",
+        "For centuries, red so thoroughly dominated the Western color hierarchy that other hues had to wait a long period to gain status as recognized colors in culture and thought, a supremacy still traceable"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 7,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 96,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "rejection:grammar-killer-thin-answer",
+        "rejection:grammar-shallow-participle-adjective-answer",
+        "rejectionLast:grammar-shallow-participle-adjective-answer"
+      ],
+      "answerSurfaces": [
+        "(B):played->playing"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-thin-answer x1, grammar-shallow-participle-adjective-answer x1 | Last: quality/GRAMMAR_ERROR - grammar-shallow-participle-adjective-answer: INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"played\" -> \"playing\" before a noun; require deeper structure."
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+```json
+{
+  "questions": [
+    {
+      "direction": "다음 글의 요약문 빈칸 (A)에 들어갈 말을 [보기]에서 필요한 단어만 골라 (필요시 어형을 바꿔) 영작하시오. [4점]",
+      "summaryWithBlanks": "In the West, red long enjoyed unmatched status as the one genuine color, while other colors (A), a supremacy that later left its mark on both artistic traditions and the vocabulary of different languages.",
+      "koreanGloss": null,
+      "blankGlosses": [],
+      "wordBank": ["colors", "wait", "recognize", "long", "as", "before", "being", "time"],
+      "wordBankDistractors": ["recognize"],
+      "wordBankPolicy": "usePartial",
+      "wordBankFidelity": "inflected",
+      "blankAssignment": "separate",
+      "clueMode": "none",
+      "targetWordsMode": "hidden",
+      "connectorFrame": "partial",
+      "summarySourceMode": "inference",
+      "sourceSentenceParaphrase": true,
+      "blanks": [
+        {
+          "label": "(A)",
+          "answer": "had to wait a long time before being recognized as colors",
+          "acceptableVariants": [
+            "waited a long time before they were considered colors",
+            "had to wait long before being regarded as colors"
+          ],
+          "requiredLemmas": ["wait", "long", "time", "before", "colors"],
+          "targetWordCount": 10,
+          "connectorFrameAfter": ", a supremacy that later left its mark"
+        }
+      ],
+      "modelAnswer": "In the West, red long enjoyed unmatched status as the one genuine color, while other colors had to wait a long time before being recognized as colors, a supremacy that later left its mark on both artistic traditions and the vocabulary of different languages.",
+      "acceptableVariants": [
+        "In the West, red long enjoyed unmatched status as the one genuine color, while other colors waited a long time before they were considered colors, a supremacy that later left its mark on both artistic traditions and the vocabulary of different languages."
+      ],
+      "scoringCriteria": [
+        "'wait' 관련 표현(waited/had to wait) 포함 시 1점",
+        "'long time' 또는 이에 준하는 시간 지속의 의미 포함 시 1점",
+        "'colors' 또는 'considered/recognized as colors' 의미로 색으로 인정받는 내용 포함 시 1점",
+        "before/until 등 시간 접속의 논리 관계가 자연스럽게 연결되면 1점"
+      ],
+      "scoringMode": "LLM_RUBRIC",
+      "correctAnswer": "(A) had to wait a long time before being recognized as colors",
+      "explanation": "지문은 서구에서 오랫동안 빨간색만이 '진짜 색'으로 여겨졌고, 다른 색들은 색으로서든 물질문화·사회적 코드·사상 체계에서 비교될 만한 역할을 하기까지 'had to wait a long time before they were considered colors'라고 명시한다. 이는 다른 색들이 처음부터 색으로 인정받은 것이 아니라 오랜 시간이 지난 뒤에야 색의 지위를 얻었다는 뜻이므로, 빈칸에는 이러한 지연된 인정의 의미가 들어가야 한다. 이후 문장들은 빨간색을 통한 초기 색채 실험, 라틴어·러시아어의 어휘적 증거로 이어지며 빨간색의 역사적·언어적 우위를 뒷받침한다.",
+      "keyPoints": [
+        "빨간색이 오랫동안 유일한 '진짜 색'으로서 절대적 지위를 가졌다는 주제 파악",
+        "다른 색들이 색으로 인정받기까지 오랜 시간이 걸렸다는 인과관계 추론",
+        "역사적 서술을 언어적 증거(라틴어, 러시아어 어휘)와 연결하는 논리 흐름 이해"
+      ],
+      "tags": ["요약문 영작", "빈칸추론", "색채의 역사", "어휘 어원", "고난도"],
+      "difficulty": "KILLER"
+    }
+  ]
+}
+```

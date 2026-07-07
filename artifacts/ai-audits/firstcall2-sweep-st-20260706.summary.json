@@ -1,0 +1,243 @@
+{
+  "createdAt": "2026-07-06T10:47:57.137Z",
+  "outPath": "artifacts/ai-audits/firstcall2-sweep-st-20260706",
+  "total": 4,
+  "passed": 0,
+  "failed": 4,
+  "passRate": 0,
+  "byCell": {
+    "GRAMMAR_ERROR:STANDARD:KILLER": {
+      "total": 4,
+      "generated": 4,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-killer-overdrilled-answer",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-obvious-adjacent-sv-agreement",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-obvious-noun-what-relative",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-shallow-participle-adjective-answer",
+          "count": 2
+        },
+        {
+          "code": "rejectionLast:grammar-obvious-adjacent-sv-agreement",
+          "count": 2
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-killer-overdrilled-answer",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-obvious-adjacent-sv-agreement",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-obvious-noun-what-relative",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-shallow-participle-adjective-answer",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-obvious-adjacent-sv-agreement",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:Distractors (A),(C),(D),(E) are all trivially correct with no plausible trap (subject-verb agreement with 'she', adverb ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The (D) error is a simple, obvious spelling/form-level swap (frozen->freezing) immediately visible without deep structur",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The error (B) 'worn' vs 'wearing' is an obvious, local, spelling/form-level error visible without any structural analysi",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The main explanation text ('...it is unlikely that displays of historic dress would be awkward imitations...') contradic",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The original passage itself has garbled/redundant phrasing ('the reality of the external reality of the game world') whi",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The passage was altered from the original (original has plain 'which' before 'have been recorded and edited'); the error",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:This is a KILLER label but the error is a bare missing preposition before 'which' with a clear 'way ___ complete-clause'",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:This is a spurious substitution ('which'→'in which') that is trivially spotted by checking whether the following clause ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors (B),(C),(D),(E) are all trivially correct with no real ambiguity or subtlety; none require multi-step reason",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Explanation for (D) is overly long and slightly self-contradictory in framing ('생략구문' analysis) without clearly ruling o",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:For a KILLER, distractors (A),(B),(C),(E) are all fairly shallow textbook checks (pronoun reference, subject-verb parall",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:KeyPoints and wrongOptionExplanations are overwritten with dense but shallow justifications that restate surface rules r",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:KeyPoints and wrongOptionExplanations reflect only shallow single-point checks, no interaction between marked expression",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:No distractor requires connecting two separate remote clues per KILLER rubric; each option is locally verifiable without",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:No marked expression involves complex structures like relative clauses, parallelism, or subject-verb long-distance depen",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The error (B) 'worn' vs 'wearing' is an obvious, local, spelling/form-level error visible without any structural analysi": 1,
+    "llmFatal:Distractors (A),(C),(D),(E) are all trivially correct with no plausible trap (subject-verb agreement with 'she', adverb ": 1,
+    "llmMajor:No marked expression involves complex structures like relative clauses, parallelism, or subject-verb long-distance depen": 1,
+    "llmMajor:The explanation for the correct answer is clear but the overall item does not test 2+ non-trivial reasoning steps; it is": 1,
+    "llmMajor:KeyPoints and wrongOptionExplanations reflect only shallow single-point checks, no interaction between marked expression": 1,
+    "rejection:grammar-shallow-participle-adjective-answer": 2,
+    "rejection:grammar-render-marker-count": 1,
+    "rejection:grammar-killer-generic-answer-point": 1,
+    "rejection:grammar-killer-overdrilled-answer": 2,
+    "rejection:grammar-obvious-noun-what-relative": 2,
+    "rejectionLast:grammar-killer-overdrilled-answer": 1,
+    "rejectionLast:grammar-obvious-noun-what-relative": 1,
+    "rejectionLast:grammar-keypoint-choice-mismatch": 1,
+    "llmFatal:The main explanation text ('...it is unlikely that displays of historic dress would be awkward imitations...') contradic": 1,
+    "llmFatal:The (D) error is a simple, obvious spelling/form-level swap (frozen->freezing) immediately visible without deep structur": 1,
+    "llmMajor:For a KILLER, distractors (A),(B),(C),(E) are all fairly shallow textbook checks (pronoun reference, subject-verb parall": 1,
+    "llmMajor:The (D) local context 'not frozen on a display figure' is short and the antonym-like frozen/freezing swap reads awkwardl": 1,
+    "llmMajor:Explanation for (D) is overly long and slightly self-contradictory in framing ('생략구문' analysis) without clearly ruling o": 1,
+    "rejection:grammar-obvious-adjacent-sv-agreement": 2,
+    "rejectionLast:grammar-obvious-adjacent-sv-agreement": 2,
+    "llmFatal:This is a spurious substitution ('which'→'in which') that is trivially spotted by checking whether the following clause ": 1,
+    "llmFatal:The passage was altered from the original (original has plain 'which' before 'have been recorded and edited'); the error": 1,
+    "llmMajor:Distractors (B),(C),(D),(E) are all trivially correct with no real ambiguity or subtlety; none require multi-step reason": 1,
+    "llmMajor:KeyPoints and wrongOptionExplanations are overwritten with dense but shallow justifications that restate surface rules r": 1,
+    "llmMajor:The correct-answer clue ('missing subject before have been recorded') is entirely local to the underlined phrase itself,": 1,
+    "llmFatal:The original passage itself has garbled/redundant phrasing ('the reality of the external reality of the game world') whi": 1,
+    "llmFatal:This is a KILLER label but the error is a bare missing preposition before 'which' with a clear 'way ___ complete-clause'": 1,
+    "llmMajor:Only one marked expression (B) is the sole hard point tested; (A),(C),(D),(E) are fairly shallow/independent checks (ref": 1,
+    "llmMajor:The passage's own convoluted subject clause ('The avatar's bodily space...is the only way in which...') makes it unclear": 1,
+    "llmMajor:No distractor requires connecting two separate remote clues per KILLER rubric; each option is locally verifiable without": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7cba007wmm0su2vfplrv",
+      "title": "2026학년도 수능 영어 43-45번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The error (B) 'worn' vs 'wearing' is an obvious, local, spelling/form-level error visible without any structural analysi",
+        "llmFatal:Distractors (A),(C),(D),(E) are all trivially correct with no plausible trap (subject-verb agreement with 'she', adverb ",
+        "llmMajor:No marked expression involves complex structures like relative clauses, parallelism, or subject-verb long-distance depen",
+        "llmMajor:The explanation for the correct answer is clear but the overall item does not test 2+ non-trivial reasoning steps; it is",
+        "llmMajor:KeyPoints and wrongOptionExplanations reflect only shallow single-point checks, no interaction between marked expression",
+        "rejection:grammar-shallow-participle-adjective-answer",
+        "rejection:grammar-render-marker-count",
+        "rejection:grammar-killer-generic-answer-point"
+      ],
+      "answerSurfaces": [
+        "(B):wearing->worn"
+      ],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-shallow-participle-adjective-answer x2, grammar-render-marker-count x1, grammar-killer-generic-answer-point x1, grammar-killer-overdrilled-answer x1, grammar-obvious-noun-what-relative x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-overdrilled-answer: KILLER GRAMMAR_ERROR rejected: the answer is an over-drilled \"that ↔ what\" swap — the single most repeated CSAT grammar point (26 identical surfaces in the corpus). Move the error to a different, deeper site already present in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break. | grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead. | grammar-keypoint-choice-mismatch: Grammar keyPoints are not grounded in this item's actual choices: keyPoint 2"
+    },
+    {
+      "runIndex": 2,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7c3h007smm0s9gfw34jf",
+      "title": "2026학년도 수능 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The main explanation text ('...it is unlikely that displays of historic dress would be awkward imitations...') contradic",
+        "llmFatal:The (D) error is a simple, obvious spelling/form-level swap (frozen->freezing) immediately visible without deep structur",
+        "llmMajor:For a KILLER, distractors (A),(B),(C),(E) are all fairly shallow textbook checks (pronoun reference, subject-verb parall",
+        "llmMajor:The (D) local context 'not frozen on a display figure' is short and the antonym-like frozen/freezing swap reads awkwardl",
+        "llmMajor:Explanation for (D) is overly long and slightly self-contradictory in framing ('생략구문' analysis) without clearly ruling o",
+        "rejection:grammar-killer-overdrilled-answer",
+        "rejection:grammar-obvious-noun-what-relative",
+        "rejection:grammar-obvious-adjacent-sv-agreement"
+      ],
+      "answerSurfaces": [
+        "(D):frozen->freezing"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-overdrilled-answer x1, grammar-obvious-noun-what-relative x1, grammar-obvious-adjacent-sv-agreement x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-adjacent-sv-agreement: GRAMMAR_ERROR answer \"makes\" is a directly adjacent subject-verb -s flip; choose an agreement target with an intervening modifier, relative clause, or attractor noun."
+    },
+    {
+      "runIndex": 3,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7bvm007omm0sg99seww5",
+      "title": "2026학년도 수능 영어 40번 · 요약문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:This is a spurious substitution ('which'→'in which') that is trivially spotted by checking whether the following clause ",
+        "llmFatal:The passage was altered from the original (original has plain 'which' before 'have been recorded and edited'); the error",
+        "llmMajor:Distractors (B),(C),(D),(E) are all trivially correct with no real ambiguity or subtlety; none require multi-step reason",
+        "llmMajor:KeyPoints and wrongOptionExplanations are overwritten with dense but shallow justifications that restate surface rules r",
+        "llmMajor:The correct-answer clue ('missing subject before have been recorded') is entirely local to the underlined phrase itself,",
+        "rejection:grammar-obvious-adjacent-sv-agreement",
+        "rejectionLast:grammar-obvious-adjacent-sv-agreement"
+      ],
+      "answerSurfaces": [
+        "(A):which->in which"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-obvious-adjacent-sv-agreement x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-adjacent-sv-agreement: GRAMMAR_ERROR answer \"depends\" is a directly adjacent subject-verb -s flip; choose an agreement target with an intervening modifier, relative clause, or attractor noun."
+    },
+    {
+      "runIndex": 4,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7bnr007kmm0s7o4r91j4",
+      "title": "2026학년도 수능 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The original passage itself has garbled/redundant phrasing ('the reality of the external reality of the game world') whi",
+        "llmFatal:This is a KILLER label but the error is a bare missing preposition before 'which' with a clear 'way ___ complete-clause'",
+        "llmMajor:Only one marked expression (B) is the sole hard point tested; (A),(C),(D),(E) are fairly shallow/independent checks (ref",
+        "llmMajor:The passage's own convoluted subject clause ('The avatar's bodily space...is the only way in which...') makes it unclear",
+        "llmMajor:No distractor requires connecting two separate remote clues per KILLER rubric; each option is locally verifiable without"
+      ],
+      "answerSurfaces": [
+        "(B):in which->which"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

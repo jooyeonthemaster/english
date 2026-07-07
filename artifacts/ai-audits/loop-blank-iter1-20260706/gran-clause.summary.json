@@ -1,0 +1,90 @@
+{
+  "createdAt": "2026-07-05T17:21:01.367Z",
+  "outPath": "artifacts/ai-audits/loop-blank-iter1-20260706/gran-clause.jsonl",
+  "total": 1,
+  "passed": 0,
+  "failed": 1,
+  "passRate": 0,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank is verbatim copied from the immediately surrounding sentence ('they were considered colors'), so the answer is",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This is essentially a sentence-insertion/verbatim-recall task, not a true blank-inference item testing paragraph logic; ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:blankAnswerMode is SOURCE_EXACT reproducing the original clause verbatim, which for INTERMEDIATE difficulty is too shall",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors are all wildly implausible (dissolving hierarchy, abandoning diversity, preferring Russian lexicon) with no ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:INTERMEDIATE requires 2-sentence causal/contrastive linkage per rubric, but here the answer is recoverable from the sing",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:The blank is verbatim copied from the immediately surrounding sentence ('they were considered colors'), so the answer is",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:This is essentially a sentence-insertion/verbatim-recall task, not a true blank-inference item testing paragraph logic; ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:blankAnswerMode is SOURCE_EXACT reproducing the original clause verbatim, which for INTERMEDIATE difficulty is too shall",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors are all wildly implausible (dissolving hierarchy, abandoning diversity, preferring Russian lexicon) with no ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:INTERMEDIATE requires 2-sentence causal/contrastive linkage per rubric, but here the answer is recoverable from the sing",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The blank is verbatim copied from the immediately surrounding sentence ('they were considered colors'), so the answer is": 1,
+    "llmFatal:This is essentially a sentence-insertion/verbatim-recall task, not a true blank-inference item testing paragraph logic; ": 1,
+    "llmMajor:Distractors are all wildly implausible (dissolving hierarchy, abandoning diversity, preferring Russian lexicon) with no ": 1,
+    "llmMajor:INTERMEDIATE requires 2-sentence causal/contrastive linkage per rubric, but here the answer is recoverable from the sing": 1,
+    "llmMajor:blankAnswerMode is SOURCE_EXACT reproducing the original clause verbatim, which for INTERMEDIATE difficulty is too shall": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The blank is verbatim copied from the immediately surrounding sentence ('they were considered colors'), so the answer is",
+        "llmFatal:This is essentially a sentence-insertion/verbatim-recall task, not a true blank-inference item testing paragraph logic; ",
+        "llmMajor:Distractors are all wildly implausible (dissolving hierarchy, abandoning diversity, preferring Russian lexicon) with no ",
+        "llmMajor:INTERMEDIATE requires 2-sentence causal/contrastive linkage per rubric, but here the answer is recoverable from the sing",
+        "llmMajor:blankAnswerMode is SOURCE_EXACT reproducing the original clause verbatim, which for INTERMEDIATE difficulty is too shall"
+      ],
+      "answerSurfaces": [
+        "②"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

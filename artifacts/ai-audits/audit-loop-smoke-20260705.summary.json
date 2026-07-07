@@ -1,0 +1,60 @@
+{
+  "createdAt": "2026-07-04T15:08:26.888Z",
+  "outPath": "artifacts/ai-audits/audit-loop-smoke-20260705.jsonl",
+  "total": 1,
+  "passed": 0,
+  "failed": 1,
+  "passRate": 0,
+  "byCell": {
+    "TITLE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 91,
+      "topIssues": [
+        {
+          "code": "llmMajor:Option 1's phrase 'Chromatic Universe' directly lifts vocabulary from passage, making correct answer identifiable by lex",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 5's flaw ('Eastern and Western') is a fairly easy giveaway since passage explicitly says 'in the West', slightly ",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmMajor:Option 1's phrase 'Chromatic Universe' directly lifts vocabulary from passage, making correct answer identifiable by lex",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option 5's flaw ('Eastern and Western') is a fairly easy giveaway since passage explicitly says 'in the West', slightly ",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmMajor:Option 5's flaw ('Eastern and Western') is a fairly easy giveaway since passage explicitly says 'in the West', slightly ": 1,
+    "llmMajor:Option 1's phrase 'Chromatic Universe' directly lifts vocabulary from passage, making correct answer identifiable by lex": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "TITLE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 91,
+      "issueKeys": [
+        "llmMajor:Option 5's flaw ('Eastern and Western') is a fairly easy giveaway since passage explicitly says 'in the West', slightly ",
+        "llmMajor:Option 1's phrase 'Chromatic Universe' directly lifts vocabulary from passage, making correct answer identifiable by lex"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

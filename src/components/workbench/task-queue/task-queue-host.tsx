@@ -26,6 +26,11 @@ function resolveTaskQueueDefaultDomain(pathname: string): TaskScope {
   ) {
     return "question-generation";
   }
+  // "exam-report" 는 아래 "exams" 프리픽스와 겹치지 않지만, 도메인 혼동을
+  // 막기 위해 시험지 생성 분기보다 먼저 명시한다.
+  if (pathname.startsWith("/director/workbench/exam-report")) {
+    return "exam-report";
+  }
   if (
     pathname.startsWith("/director/workbench/similar-exams") ||
     pathname.startsWith("/director/workbench/exams") ||

@@ -17,12 +17,33 @@ export interface AtlasChatCompletionParams {
   systemPrompt?: string;
   userPrompt: string;
   image?: AtlasChatImageInput;
+  /** 다중 이미지(페이지 배치) — image 와 병용 시 image 가 먼저 첨부된다. 가산 확장(기존 호출 무영향). */
+  images?: AtlasChatImageInput[];
   temperature?: number;
   topP?: number;
   maxOutputTokens?: number;
   responseMimeType?: "application/json";
   timeoutInMs?: number;
   enableWebSearch?: boolean;
+  /**
+   * system 블록에 anthropic prompt-cache breakpoint(cache_control: ephemeral)를 부착한다.
+   * OpenRouter 가 anthropic 계열에만 전달하므로 호출자가 Claude 모델일 때만 켜는 것을 권장.
+   * 옵트인 — 미지정 시 기존 직렬화(단일 문자열) 그대로.
+   */
+  systemCacheControl?: boolean;
+  /**
+   * 마지막 이미지 블록에 anthropic prompt-cache breakpoint(cache_control: ephemeral)를 부착한다.
+   * 이미지 재전송(예: 문항 배치 분석)에서 배치 간 이미지 토큰 비용을 절감한다.
+   * OpenRouter 가 anthropic 계열에만 전달하므로 호출자가 Claude 모델일 때만 켤 것.
+   * 옵트인 — 미지정 시 이미지 블록에 cache_control 을 넣지 않는다(기존 직렬화 그대로).
+   */
+  imageCacheControl?: boolean;
+  /**
+   * OpenRouter reasoning 요청 오버라이드(예: { enabled: false } 로 사고 비활성).
+   * 미지정 시 기존 동작(모델별 env 기본) 그대로 — 가산 확장(기존 호출 무영향).
+   * 사고가 켜지면 출력 토큰 예산·응답시간을 사고가 잠식할 수 있다(시험 판독 실측).
+   */
+  reasoning?: Record<string, unknown>;
   fetcher?: (input: string, init: RequestInit & { timeoutInMs?: number }) => Promise<Response>;
 }
 
@@ -102,7 +123,7 @@ export async function postAtlasChatCompletionAsGeminiLike(
   assertAtlasCloudConfigured();
   const fetcher = params.fetcher ?? fetch;
   const model = normalizeAtlasModelId(params.model);
-  const reasoningRequest = atlasReasoningRequestFor(model);
+  const reasoningRequest = atlasReasoningRequestFor(model, params.reasoning);
   const response = await fetcher(`${ATLASCLOUD_BASE_URL.replace(/\/+$/, "")}/chat/completions`, {
     method: "POST",
     headers: {
@@ -143,18 +164,38 @@ export async function postAtlasChatCompletionAsGeminiLike(
 function buildMessages(params: AtlasChatCompletionParams) {
   const messages: Array<Record<string, unknown>> = [];
   if (params.systemPrompt) {
-    messages.push({ role: "system", content: params.systemPrompt });
+    messages.push({
+      role: "system",
+      content: params.systemCacheControl
+        ? [
+            {
+              type: "text",
+              text: params.systemPrompt,
+              cache_control: { type: "ephemeral" },
+            },
+          ]
+        : params.systemPrompt,
+    });
   }
 
   const content: Array<Record<string, unknown>> = [];
-  if (params.image) {
-    content.push({
+  const imageInputs = [
+    ...(params.image ? [params.image] : []),
+    ...(params.images ?? []),
+  ];
+  imageInputs.forEach((image, index) => {
+    const block: Record<string, unknown> = {
       type: "image_url",
       image_url: {
-        url: `data:${params.image.mimeType};base64,${params.image.base64}`,
+        url: `data:${image.mimeType};base64,${image.base64}`,
       },
-    });
-  }
+    };
+    // 마지막 이미지 블록에만 캐시 브레이크포인트 부착(옵트인) — 앞선 이미지들도 함께 캐시된다.
+    if (params.imageCacheControl && index === imageInputs.length - 1) {
+      block.cache_control = { type: "ephemeral" };
+    }
+    content.push(block);
+  });
   content.push({ type: "text", text: params.userPrompt });
   messages.push({ role: "user", content });
   return messages;

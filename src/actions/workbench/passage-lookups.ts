@@ -110,6 +110,35 @@ export async function getPassageQuestionIds(
 }
 
 // ---------------------------------------------------------------------------
+// 지문 × 유형(subType) 생성 이력 — 문제 카드의 "생성된 문제 N개" 팝오버용.
+// 같은 지문에서 같은 유형으로 생성된 형제 문항들을 최신순으로 돌려준다.
+// Academy-scoped(getPassageQuestionIds 와 동일한 가드): 조작된 passageId 로
+// 다른 학원의 문제 은행이 새어 나가지 않도록 academyId 를 where 에 함께 건다.
+// 세트 멤버(setId)는 세트 카드가 유일한 묶음 표면이므로 제외하고, 휴지통
+// (deletedAt) 문항도 제외한다. 지문 본문/structuredData 없는 경량 select 만.
+// ---------------------------------------------------------------------------
+export async function getPassageSubtypeQuestionHistory(
+  passageId: string,
+  subType: string,
+) {
+  const session = await requireAuth();
+  const academyId = getAcademyId(session);
+
+  return prisma.question.findMany({
+    where: { passageId, academyId, subType, deletedAt: null, setId: null },
+    select: {
+      id: true,
+      subType: true,
+      difficulty: true,
+      questionText: true,
+      approved: true,
+      createdAt: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+// ---------------------------------------------------------------------------
 // DRAFT exams list — powers the "기존 시험에 추가" dropdown in the passage
 // detail dialog. Only DRAFT status is returned so we never accidentally
 // mutate a PUBLISHED exam's question set from a quick-add flow.

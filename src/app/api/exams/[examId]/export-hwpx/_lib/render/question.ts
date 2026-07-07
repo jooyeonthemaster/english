@@ -428,6 +428,7 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
           explanation: item.sourceQuestion.explanation,
           hasOptions: options.length > 0,
           contentWidthHpu,
+          subType: item.sourceQuestion.subType,
         }),
       );
     }
@@ -557,6 +558,7 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
           explanation: item.sourceQuestion.explanation,
           hasOptions: false,
           contentWidthHpu,
+          subType: item.sourceQuestion.subType,
         }),
       );
     }
@@ -676,6 +678,7 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
           explanation: item.sourceQuestion.explanation,
           hasOptions: false,
           contentWidthHpu,
+          subType: item.sourceQuestion.subType,
         }),
       );
     }
@@ -971,6 +974,7 @@ export function renderQuestionBlock(opts: QuestionRenderOptions): BlockNode[] {
         explanation: item.sourceQuestion.explanation,
         hasOptions: options.length > 0,
         contentWidthHpu,
+        subType: item.sourceQuestion.subType,
       }),
     );
   }

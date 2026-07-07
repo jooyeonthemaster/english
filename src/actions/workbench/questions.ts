@@ -479,6 +479,10 @@ export async function getWorkbenchQuestionsGroupedByPassage(
       select: {
         id: true,
         title: true,
+        // content 는 카드의 "문제 복사"가 지문을 딸려 보내는 데 필요하다(출처지문형·국어·
+        // 세트멤버는 지문이 questionText 에 없어 q.passage.content 로만 붙일 수 있다).
+        // flat 로더(위 passage select)와 동일하게 실어 지문별 보기에서도 복사가 정합.
+        content: true,
         grade: true,
         semester: true,
         unit: true,
@@ -514,7 +518,7 @@ export async function getWorkbenchQuestionsGroupedByPassage(
     const passageSummary = {
       id: p.id,
       title: p.title,
-      content: "",
+      content: p.content ?? "",
       grade: p.grade,
       semester: p.semester,
       publisher: p.publisher,

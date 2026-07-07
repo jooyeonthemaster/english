@@ -1,0 +1,304 @@
+{
+  "createdAt": "2026-07-04T11:02:54.760Z",
+  "outPath": "artifacts/ai-audits/grammar-round2-20260704.jsonl",
+  "total": 8,
+  "passed": 0,
+  "failed": 8,
+  "passRate": 0,
+  "byPlanDifficulty": {
+    "STANDARD:INTERMEDIATE": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "passRate": 0
+    },
+    "STANDARD:KILLER": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "passRate": 0
+    }
+  },
+  "issueCounts": {
+    "local:no-question": 3,
+    "rejection:grammar-weak-filler-decoys": 5,
+    "rejection:grammar-noun-clause-pronoun-mislabel": 4,
+    "rejection:grammar-too-basic-decoys": 2,
+    "rejection:grammar-surrounding-missing-marker": 2,
+    "rejection:grammar-obvious-noun-what-relative": 1,
+    "rejectionLast:grammar-too-basic-decoys": 1,
+    "rejectionLast:grammar-weak-filler-decoys": 1,
+    "rejectionLast:grammar-noun-clause-pronoun-mislabel": 1,
+    "rejection:grammar-demonstrative-that-way-decoy": 1,
+    "rejection:duplicate-option-text": 1,
+    "rejectionLast:grammar-obvious-noun-what-relative": 1,
+    "llmFatal:Explanation for (C) claims 'is' agrees with subject 'a disease' in the even-if clause, but the marked '(C) is' is actual": 1,
+    "llmMajor:The mismatch could mislead students about what structure is being tested for (C), undermining trust in the whole item's ": 1,
+    "llmMajor:No clear indication that pointCode assignments (b,c,d,g) correspond to a documented taxonomy, making point-level QA hard": 1,
+    "local:killer-answer-not-structurally-loaded": 2,
+    "llmMajor:Answer (D) active vs passive voice error is resolvable within a single clause (subject 'the disease' + verb + no object)": 1,
+    "llmMajor:The semantic disambiguation (disease is neglected, not neglecting) is straightforward local reasoning, more consistent w": 1,
+    "rejection:grammar-killer-answer-point-repeated": 3,
+    "rejection:grammar-killer-thin-missing-aux": 1,
+    "rejectionLast:grammar-killer-answer-point-repeated": 2,
+    "rejectionLast:grammar-killer-thin-missing-aux": 1,
+    "llmMajor:(A) 'that name'을 지시형용사로 넣은 것은 CSAT식 오답 매력도가 낮아 사실상 필러 선택지로 기능함": 1,
+    "llmMajor:다섯 개 선택지 중 실질적으로 변별력 있는 문법 포인트는 (E) 하나뿐이라 종합적인 난이도 균형이 다소 떨어짐": 1,
+    "llmMajor:The (E) trap (meaning vs. meant) is a fairly common reduced-relative-clause participle issue, not a genuinely cross-clau": 1,
+    "llmMajor:The (B) explanation confuses cleft-sentence verb agreement ('단수 동사') with the emphasized element being an adverbial phra": 1,
+    "llmMajor:pointCode 'c' assigned to (E) doesn't clearly correspond to an established grammar-point taxonomy, raising doubts about ": 1,
+    "rejection:grammar-shallow-nearby-passive-decoy": 1,
+    "rejectionLast:grammar-shallow-nearby-passive-decoy": 1,
+    "llmMajor:The pronoun 'its' and its antecedent 'skyscraper designers' sit in the same sentence, so the trap doesn't require true c": 1,
+    "llmMajor:The four 'correct' distractors (pronoun 'it'→'wind', SVA 'is', adjective complement 'aerodynamic', parallel 'delaying') ": 1,
+    "llmMajor:The their/its swap is a common, somewhat predictable trap pattern rather than a genuinely deceptive 평가원-style constructi": 1,
+    "rejection:grammar-obvious-adjacent-sv-agreement": 2,
+    "rejectionLast:grammar-obvious-adjacent-sv-agreement": 2,
+    "rejection:grammar-obvious-modal-gerund": 1,
+    "rejection:grammar-obvious-local-agreement": 1
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-weak-filler-decoys",
+      "count": 5
+    },
+    {
+      "code": "rejection:grammar-noun-clause-pronoun-mislabel",
+      "count": 4
+    },
+    {
+      "code": "local:no-question",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-killer-answer-point-repeated",
+      "count": 3
+    },
+    {
+      "code": "local:killer-answer-not-structurally-loaded",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-obvious-adjacent-sv-agreement",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-surrounding-missing-marker",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-too-basic-decoys",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-killer-answer-point-repeated",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-obvious-adjacent-sv-agreement",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:Explanation for (C) claims 'is' agrees with subject 'a disease' in the even-if clause, but the marked '(C) is' is actual",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:(A) 'that name'을 지시형용사로 넣은 것은 CSAT식 오답 매력도가 낮아 사실상 필러 선택지로 기능함",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Answer (D) active vs passive voice error is resolvable within a single clause (subject 'the disease' + verb + no object)",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:No clear indication that pointCode assignments (b,c,d,g) correspond to a documented taxonomy, making point-level QA hard",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:pointCode 'c' assigned to (E) doesn't clearly correspond to an established grammar-point taxonomy, raising doubts about ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The (B) explanation confuses cleft-sentence verb agreement ('단수 동사') with the emphasized element being an adverbial phra",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The (E) trap (meaning vs. meant) is a fairly common reduced-relative-clause participle issue, not a genuinely cross-clau",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The four 'correct' distractors (pronoun 'it'→'wind', SVA 'is', adjective complement 'aerodynamic', parallel 'delaying') ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The mismatch could mislead students about what structure is being tested for (C), undermining trust in the whole item's ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The pronoun 'its' and its antecedent 'skyscraper designers' sit in the same sentence, so the trap doesn't require true c",
+      "count": 1
+    }
+  ],
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "generationPlan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-weak-filler-decoys",
+        "rejection:grammar-noun-clause-pronoun-mislabel",
+        "rejection:grammar-too-basic-decoys",
+        "rejection:grammar-surrounding-missing-marker",
+        "rejection:grammar-obvious-noun-what-relative",
+        "rejectionLast:grammar-too-basic-decoys",
+        "rejectionLast:grammar-weak-filler-decoys"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 5 | Top codes: grammar-weak-filler-decoys x4, grammar-noun-clause-pronoun-mislabel x3, grammar-too-basic-decoys x2, grammar-surrounding-missing-marker x1, grammar-obvious-noun-what-relative x1 | Last: quality/GRAMMAR_ERROR - grammar-too-basic-decoys: INTERMEDIATE/KILLER GRAMMAR_ERROR uses too-basic decoy surface \"those\"; use a structurally meaningful distractor. | grammar-weak-filler-decoys: GRAMMAR_ERROR uses weak filler decoy(s) ((C)). Replace them with structurally meaningful grammar targets. | grammar-noun-clause-pronoun-mislabel: Grammar keyPoints/explanation labels a pronoun-reference check as a noun-clause issue; use accurate school grammar terminology for the actual structure."
+    },
+    {
+      "runIndex": 2,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-surrounding-missing-marker",
+        "rejection:grammar-demonstrative-that-way-decoy",
+        "rejection:grammar-weak-filler-decoys",
+        "rejection:grammar-noun-clause-pronoun-mislabel",
+        "rejection:duplicate-option-text",
+        "rejectionLast:grammar-obvious-noun-what-relative"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-surrounding-missing-marker x1, grammar-demonstrative-that-way-decoy x1, grammar-weak-filler-decoys x1, grammar-noun-clause-pronoun-mislabel x1, duplicate-option-text x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead."
+    },
+    {
+      "runIndex": 8,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkqu0032mmf0g9i059aa",
+      "title": "2027학년도 6월 모평 영어 38번 · 문장삽입",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-obvious-modal-gerund",
+        "rejection:grammar-obvious-local-agreement",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-obvious-adjacent-sv-agreement",
+        "rejectionLast:grammar-killer-answer-point-repeated",
+        "rejectionLast:grammar-obvious-adjacent-sv-agreement"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-obvious-modal-gerund x1, grammar-obvious-local-agreement x1, grammar-killer-answer-point-repeated x1, grammar-obvious-adjacent-sv-agreement x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (d) in non-answer decoys; use different grammar frames for distractors. | grammar-obvious-adjacent-sv-agreement: GRAMMAR_ERROR answer \"give\" is a directly adjacent subject-verb -s flip; choose an agreement target with an intervening modifier, relative clause, or attractor noun."
+    },
+    {
+      "runIndex": 4,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "localScore": 85,
+      "llmScore": 80,
+      "issueKeys": [
+        "local:killer-answer-not-structurally-loaded",
+        "llmMajor:Answer (D) active vs passive voice error is resolvable within a single clause (subject 'the disease' + verb + no object)",
+        "llmMajor:The semantic disambiguation (disease is neglected, not neglecting) is straightforward local reasoning, more consistent w",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-killer-thin-missing-aux",
+        "rejectionLast:grammar-killer-answer-point-repeated",
+        "rejectionLast:grammar-killer-thin-missing-aux"
+      ],
+      "answerSurfaces": [
+        "(D):has been neglected->has neglected(e)"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-killer-answer-point-repeated x1, grammar-killer-thin-missing-aux x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (e) in non-answer decoys; use different grammar frames for distractors. | grammar-killer-thin-missing-aux: KILLER GRAMMAR_ERROR should not be a simple missing auxiliary before a participle; require deeper cross-clause structure."
+    },
+    {
+      "runIndex": 6,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "localScore": 85,
+      "llmScore": 84,
+      "issueKeys": [
+        "local:killer-answer-not-structurally-loaded",
+        "llmMajor:The (E) trap (meaning vs. meant) is a fairly common reduced-relative-clause participle issue, not a genuinely cross-clau",
+        "llmMajor:The (B) explanation confuses cleft-sentence verb agreement ('단수 동사') with the emphasized element being an adverbial phra",
+        "llmMajor:pointCode 'c' assigned to (E) doesn't clearly correspond to an established grammar-point taxonomy, raising doubts about ",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-shallow-nearby-passive-decoy",
+        "rejectionLast:grammar-shallow-nearby-passive-decoy"
+      ],
+      "answerSurfaces": [
+        "(E):meaning->meant(c)"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-answer-point-repeated x1, grammar-shallow-nearby-passive-decoy x1 | Last: quality/GRAMMAR_ERROR - grammar-shallow-nearby-passive-decoy: Do not use a nearby pronoun + be p.p. phrase as a passive-voice decoy; it is too local and shallow."
+    },
+    {
+      "runIndex": 3,
+      "generationPlan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "localScore": 100,
+      "llmScore": 68,
+      "issueKeys": [
+        "llmFatal:Explanation for (C) claims 'is' agrees with subject 'a disease' in the even-if clause, but the marked '(C) is' is actual",
+        "llmMajor:The mismatch could mislead students about what structure is being tested for (C), undermining trust in the whole item's ",
+        "llmMajor:No clear indication that pointCode assignments (b,c,d,g) correspond to a documented taxonomy, making point-level QA hard"
+      ],
+      "answerSurfaces": [
+        "(D):it->them(g)"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 7,
+      "generationPlan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkqu0032mmf0g9i059aa",
+      "title": "2027학년도 6월 모평 영어 38번 · 문장삽입",
+      "localScore": 100,
+      "llmScore": 90,
+      "issueKeys": [
+        "llmMajor:The pronoun 'its' and its antecedent 'skyscraper designers' sit in the same sentence, so the trap doesn't require true c",
+        "llmMajor:The four 'correct' distractors (pronoun 'it'→'wind', SVA 'is', adjective complement 'aerodynamic', parallel 'delaying') ",
+        "llmMajor:The their/its swap is a common, somewhat predictable trap pattern rather than a genuinely deceptive 평가원-style constructi",
+        "rejection:grammar-obvious-adjacent-sv-agreement",
+        "rejectionLast:grammar-obvious-adjacent-sv-agreement"
+      ],
+      "answerSurfaces": [
+        "(B):their->its(g)"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-obvious-adjacent-sv-agreement x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-adjacent-sv-agreement: GRAMMAR_ERROR answer \"give\" is a directly adjacent subject-verb -s flip; choose an agreement target with an intervening modifier, relative clause, or attractor noun."
+    },
+    {
+      "runIndex": 5,
+      "generationPlan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "localScore": 100,
+      "llmScore": 91,
+      "issueKeys": [
+        "llmMajor:(A) 'that name'을 지시형용사로 넣은 것은 CSAT식 오답 매력도가 낮아 사실상 필러 선택지로 기능함",
+        "llmMajor:다섯 개 선택지 중 실질적으로 변별력 있는 문법 포인트는 (E) 하나뿐이라 종합적인 난이도 균형이 다소 떨어짐"
+      ],
+      "answerSurfaces": [
+        "(E):in which->which(b)"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

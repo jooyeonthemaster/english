@@ -1,0 +1,135 @@
+{
+  "createdAt": "2026-07-04T12:31:53.367Z",
+  "outPath": "artifacts/ai-audits/grammar-glass-b-20260704.jsonl",
+  "total": 2,
+  "passed": 0,
+  "failed": 2,
+  "passRate": 0,
+  "byPlanDifficulty": {
+    "STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "passRate": 0
+    },
+    "STANDARD:KILLER": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "passRate": 0
+    }
+  },
+  "issueCounts": {
+    "local:no-question": 2,
+    "rejection:grammar-error-not-mutated": 3,
+    "rejection:grammar-source-expression-not-backed": 2,
+    "rejection:duplicate-option-text": 2,
+    "rejection:grammar-weak-filler-decoys": 4,
+    "rejection:grammar-render-marker-count": 2,
+    "rejectionLast:duplicate-option-text": 1,
+    "rejectionLast:grammar-error-not-mutated": 2,
+    "rejection:grammar-shallow-depends-decoy": 2,
+    "rejection:grammar-debatable-it-being-decoy": 1,
+    "rejection:grammar-killer-answer-point-repeated": 1,
+    "rejectionLast:grammar-render-marker-count": 1,
+    "rejectionLast:grammar-shallow-depends-decoy": 1
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-weak-filler-decoys",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-error-not-mutated",
+      "count": 3
+    },
+    {
+      "code": "local:no-question",
+      "count": 2
+    },
+    {
+      "code": "rejection:duplicate-option-text",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-render-marker-count",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-shallow-depends-decoy",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-source-expression-not-backed",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-error-not-mutated",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-debatable-it-being-decoy",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-killer-answer-point-repeated",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:duplicate-option-text",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-render-marker-count",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-shallow-depends-decoy",
+      "count": 1
+    }
+  ],
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "generationPlan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-error-not-mutated",
+        "rejection:grammar-source-expression-not-backed",
+        "rejection:duplicate-option-text",
+        "rejection:grammar-weak-filler-decoys",
+        "rejection:grammar-render-marker-count",
+        "rejectionLast:duplicate-option-text",
+        "rejectionLast:grammar-error-not-mutated"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 5 | Top codes: grammar-error-not-mutated x3, grammar-source-expression-not-backed x2, duplicate-option-text x2, grammar-weak-filler-decoys x2, grammar-render-marker-count x1 | Last: quality/GRAMMAR_ERROR - duplicate-option-text: Two or more options have the same text. | grammar-error-not-mutated: The grammar error surface matches the original expression."
+    },
+    {
+      "runIndex": 2,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-shallow-depends-decoy",
+        "rejection:grammar-weak-filler-decoys",
+        "rejection:grammar-debatable-it-being-decoy",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-render-marker-count",
+        "rejectionLast:grammar-render-marker-count",
+        "rejectionLast:grammar-error-not-mutated"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-shallow-depends-decoy x2, grammar-weak-filler-decoys x2, grammar-debatable-it-being-decoy x1, grammar-killer-answer-point-repeated x1, grammar-render-marker-count x1 | Last: quality/GRAMMAR_ERROR - grammar-render-marker-count: Expected 5 rendered grammar markers, got 4. | grammar-error-not-mutated: Stripping the markers reproduces the original passage unchanged — no grammar error was introduced; the answer flags unmutated source text. | grammar-shallow-depends-decoy: Do not use a simple 'depends on' subject-verb match as a grammar decoy; it offers little trap value."
+    }
+  ]
+}

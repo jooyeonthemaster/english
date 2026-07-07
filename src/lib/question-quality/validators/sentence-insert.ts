@@ -1,6 +1,6 @@
 // Split from question-quality.ts — shared helpers in core.ts, public API via index.ts barrel.
 import { getCircledNumbers } from "@/lib/question-postprocess/types";
-import { QuestionQualitySeverity, SENTENCE_INSERT_SLOT_MAX, SENTENCE_INSERT_SLOT_MIN, containsComparableSentence, contentTokens, findDuplicate, isRecord, normalizeComparableText, normalizeText, splitPassageSentences } from "../core";
+import { QuestionQualitySeverity, SENTENCE_INSERT_SLOT_MAX, SENTENCE_INSERT_SLOT_MIN, collectWrongOptionExplanations, containsComparableSentence, contentTokens, findDuplicate, isRecord, normalizeComparableText, normalizeText, splitPassageSentences } from "../core";
 
 
 
@@ -210,7 +210,30 @@ export function validateSentenceInsertQuestion(
     );
   }
 
+  // ── 정답 갭 단일 진실원 교차검증 (wave2: sentence-insert-answer-desync) ─────
+  // 후처리(processSentenceInsert)가 correctAnswer 를 omission gap 기준으로 결정론
+  // 재키잉하지만, 해설/insertionRationale/오답해설 "산문"의 모델 원래 주장(틀린
+  // 원형숫자)은 재정렬되지 않는다(베이스라인 실측 runIndex 12: correctAnswer ③이
+  // 위치상 옳은데 해설이 "④에 들어가는 것이 가장 적절"·오답해설이 ③을 오답으로
+  // 설명 — llm 심사 38점). 결정론 표면 3가지를 잡는다:
+  //  (1) 재구성: 정답 갭에 givenSentence 를 되끼우면 원문과 일치해야 한다(다른
+  //      갭에서만 일치하면 mis-key). 어느 갭에서도 일치하지 않으면 발화하지 않음.
+  //  (2) 해설이 명시 주장하는 갭 번호("N에 들어가는 것이 … 적절"/"정답은 N").
+  //  (3) 오답 해설 맵이 정답 라벨을 포함.
+  if (answer && /^\d+$/.test(answer)) {
+    validateSentenceInsertAnswerDesync(
+      question,
+      passage,
+      passageWithMarkers,
+      given,
+      answer,
+      expectedSlotCount,
+      add,
+    );
+  }
+
   // 4) 함정 게이트: distractorTraps 가 있으면 각 결함이 비어있지 않고 서로 달라야 함
+  // (desync 함수는 파일 하단 validateSentenceInsertAnswerDesync 참조)
   const traps = Array.isArray(question.distractorTraps)
     ? question.distractorTraps.filter(isRecord)
     : [];
@@ -238,4 +261,107 @@ export function validateSentenceInsertQuestion(
       );
     }
   }
+}
+
+
+
+// 원형숫자(①~⑳) — 갭 마커/해설 산문 스캔용.
+const SI_CIRCLED_CLASS = "[\u2460-\u2473]";
+
+/**
+ * wave2 게이트: SENTENCE_INSERT 의 correctAnswer(단일 진실원)와 재구성 위치·해설
+ * 산문 주장·오답해설 라벨 체계가 일치하는지 결정론 교차검증. 보수 원칙 — 재구성이
+ * 어느 갭에서도 원문과 일치하지 않으면(패러프레이즈/추출 경로) 그 분기는 침묵한다.
+ */
+export function validateSentenceInsertAnswerDesync(
+  question: Record<string, unknown>,
+  passage: string | undefined,
+  passageWithMarkers: string,
+  givenSentence: string,
+  answer: string,
+  expectedSlotCount: number,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  const claims: string[] = [];
+  const answerIndex = Number(answer);
+
+  // (1) 재구성 검증 — 마커 k 자리에 givenSentence 를 끼우고 나머지 마커를 지우면
+  //     원문과 비교가능 동일해지는 k 집합을 구한다. 집합이 비어있지 않은데 정답이
+  //     그 안에 없으면 mis-key 확정.
+  if (passage && passageWithMarkers && givenSentence) {
+    const circledRe = new RegExp(SI_CIRCLED_CLASS, "g");
+    const markerMatches = [...passageWithMarkers.matchAll(circledRe)];
+    if (markerMatches.length === expectedSlotCount) {
+      const passageComparable = normalizeComparableText(passage);
+      const matchingGaps: number[] = [];
+      for (let gap = 0; gap < markerMatches.length; gap += 1) {
+        let cursor = 0;
+        let rebuilt = "";
+        for (const [markerOrdinal, markerMatch] of markerMatches.entries()) {
+          if (markerMatch.index === undefined) continue;
+          rebuilt += passageWithMarkers.slice(cursor, markerMatch.index);
+          rebuilt += markerOrdinal === gap ? ` ${givenSentence} ` : " ";
+          cursor = markerMatch.index + markerMatch[0].length;
+        }
+        rebuilt += passageWithMarkers.slice(cursor);
+        if (normalizeComparableText(rebuilt) === passageComparable) {
+          matchingGaps.push(markerOrdinal1Based(gap));
+        }
+      }
+      if (matchingGaps.length > 0 && !matchingGaps.includes(answerIndex)) {
+        claims.push(
+          `restoring the given sentence reconstructs the source only at gap ${matchingGaps.join("/")}, not at the keyed answer ${answerIndex}`,
+        );
+      }
+    }
+  }
+
+  // (2) 해설/insertionRationale 이 명시 주장하는 갭 번호.
+  const proseTexts = [
+    normalizeText(question.explanation),
+    normalizeText(question.insertionRationale),
+    ...(Array.isArray(question.keyPoints)
+      ? question.keyPoints.map((point: unknown) => normalizeText(point))
+      : []),
+  ]
+    .filter(Boolean)
+    .join("\n");
+  const assertedGapRe = new RegExp(
+    `(${SI_CIRCLED_CLASS})\s*번?\s*(?:자리|위치|곳)?\s*에\s*들어가[^${SI_CIRCLED_CLASS.slice(1, -1)}.!?]{0,30}적절`,
+    "g",
+  );
+  for (const match of proseTexts.matchAll(assertedGapRe)) {
+    const asserted = normalizeSentenceInsertGapLabel(match[1]);
+    if (asserted && asserted !== answer) {
+      claims.push(`explanation asserts the correct gap is ${match[1]}`);
+    }
+  }
+  const answerDeclRe = new RegExp(`정답은?\s*[:\s"'(\[]*\s*(${SI_CIRCLED_CLASS})`, "g");
+  for (const match of proseTexts.matchAll(answerDeclRe)) {
+    const asserted = normalizeSentenceInsertGapLabel(match[1]);
+    if (asserted && asserted !== answer) {
+      claims.push(`explanation declares the answer as ${match[1]}`);
+    }
+  }
+
+  // (3) 오답 해설 맵이 정답 라벨을 포함 — 라벨 체계가 다른 갭 기준으로 쓰였다.
+  const wrongExplanations = collectWrongOptionExplanations(question.wrongOptionExplanations);
+  const wrongKeys = [...wrongExplanations.keys()].map((key) =>
+    normalizeSentenceInsertGapLabel(key),
+  );
+  if (wrongKeys.includes(answer)) {
+    claims.push("wrongOptionExplanations covers the answer gap");
+  }
+
+  if (claims.length > 0) {
+    add(
+      "error",
+      "sentence-insert-answer-desync",
+      `SENTENCE_INSERT answer references disagree with correctAnswer ${answerIndex}: ${claims.join("; ")}. The keyed gap, the omission-site reconstruction, and every gap claim in explanation/insertionRationale/wrongOptionExplanations must agree.`,
+    );
+  }
+}
+
+function markerOrdinal1Based(zeroBased: number): number {
+  return zeroBased + 1;
 }

@@ -1,0 +1,118 @@
+{
+  "plan": "PREMIUM",
+  "difficulty": "INTERMEDIATE",
+  "passage": null,
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "spinning",
+        "isError": false,
+        "errorExpression": "spinning",
+        "surroundingText": "gives rise to vortices, or spinning currents of wind, that flow downstream",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "wind at frequencies that can become dangerously self-sustaining",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "their",
+        "isError": false,
+        "errorExpression": "their",
+        "surroundingText": "skyscraper designers do everything in their powers to confuse the wind",
+        "pointCode": "g"
+      },
+      {
+        "label": "(D)",
+        "expression": "aerodynamic",
+        "isError": false,
+        "errorExpression": "aerodynamic",
+        "surroundingText": "corners of a building can likewise make it more aerodynamic",
+        "pointCode": "f"
+      },
+      {
+        "label": "(E)",
+        "expression": "disturbing",
+        "isError": true,
+        "errorExpression": "to disturb",
+        "surroundingText": "stepped corners can help by disturbing or delaying the formation of",
+        "pointCode": "k",
+        "correction": "disturbing"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "spinning"
+      },
+      {
+        "label": "(B)",
+        "text": "that"
+      },
+      {
+        "label": "(C)",
+        "text": "their"
+      },
+      {
+        "label": "(D)",
+        "text": "aerodynamic"
+      },
+      {
+        "label": "(E)",
+        "text": "to disturb"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 분사의 능동/수동을 묻는 지점으로, currents 스스로가 회전하는 주체이므로 능동의 의미를 나타내는 spinning이 쓰인 것은 어법상 옳다.",
+      "(B)": "이 자리는 관계대명사 that과 what의 쓰임을 묻는 지점으로, 선행사 frequencies가 앞에 있으므로 선행사를 필요로 하는 관계대명사 that이 쓰인 것은 어법상 옳다.",
+      "(C)": "이 자리는 대명사의 수 일치를 묻는 지점으로, 앞의 복수 명사 skyscraper designers를 가리키므로 복수 소유격 대명사 their가 쓰인 것은 어법상 옳다.",
+      "(D)": "이 자리는 목적격보어로 형용사와 부사 중 무엇이 와야 하는지를 묻는 지점으로, make it more aerodynamic 구조의 목적격보어 자리에는 형용사가 와야 하므로 aerodynamic이 쓰인 것은 어법상 옳다."
+    },
+    "explanation": "(E) \"to disturb\"는 어법상 틀린 표현이며 \"disturbing\"로 고쳐야 한다. 이 문장은 by 뒤에 동명사 두 개가 or로 연결되어 병렬을 이루는 구조로, 'can help by disturbing or delaying the formation'에서 전치사 by의 목적어 자리에 동명사가 필요하다. 전치사 뒤에는 명사 상당어구만 올 수 있으므로 밑줄 친 to disturb처럼 to부정사가 오는 것은 통사적으로 불가능하며, 뒤따르는 delaying과의 병렬 관계도 깨진다. 따라서 to disturb는 disturbing으로 고쳐야 한다. 학생들은 by를 '~함으로써'라는 의미 단서로만 읽고 뒤에 어떤 형태든 올 수 있다고 착각하기 쉬우므로 전치사의 목적어 형태 규칙을 반드시 확인해야 한다.",
+    "keyPoints": [
+      "전치사 뒤 동명사 목적어 규칙",
+      "동명사와 to부정사의 구분",
+      "등위접속사 or로 연결된 동명사 병렬"
+    ],
+    "tags": [
+      "전치사+동명사",
+      "to부정사vs동명사",
+      "병렬구조",
+      "관계대명사",
+      "분사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "To minimize building costs and maximize revenues, skyscrapers generally take the shape of squares or rectangles. These are not particularly aerodynamic shapes, and this results in a wind phenomenon called \"vortex shedding.\" As wind meets a rectangular skyscraper it pushes on the flat face of the building before flowing around its sides, where eventually it separates from the face of the structure. The difference in pressures on the front and back faces of the building gives rise to vortices, or __(A) spinning__ currents of wind, that flow downstream from the building. The vortices pull and push the building in a direction perpendicular to the wind at frequencies __(B) that__ can become dangerously self-sustaining. To minimize vortex shedding, skyscraper designers do everything in __(C) their__ powers to confuse the wind. Orienting the building so that the longer face of the structure is parallel with prevailing winds can help. Chopping or rounding off corners of a building can likewise make it more __(D) aerodynamic__. Roughing up the corners of the building through the careful placement of balconies or stepped corners can help by __(E) to disturb__ or delaying the formation of strong vortices.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "PREMIUM"
+  },
+  "judge": {
+    "verdict": "fail",
+    "score": 82,
+    "fatalIssues": [],
+    "majorIssues": [
+      "Option (E) 'by to disturb or delaying' is too visibly broken and unnatural. Preposition + to-infinitive is a high-school level basic error, lacking CSAT-grade subtlety.",
+      "The question target does not demand deep syntactic analysis or long-distance/cross-clause context, making it feel like a simplified academy item."
+    ],
+    "minorIssues": [
+      "Option (C) 'their' in 'in their powers' is part of a semi-idiomatic expression ('do everything in one's power'), though grammatically justifiable."
+    ],
+    "strengths": [
+      "Excellent passage choice on engineering/architecture, perfectly fitting the typical CSAT academic theme.",
+      "Very clean, detailed, and professional Korean explanations with accurate terminology."
+    ],
+    "improvementHint": "Make the incorrect option (E) less visually broken. A preposition followed immediately by a to-infinitve is an extremely basic, low-level error that CSAT targets would rarely format as a main question focus."
+  }
+}

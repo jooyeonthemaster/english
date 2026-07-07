@@ -10,6 +10,7 @@ import type { BlockNode, BorderSpec, RunNode } from "../types";
 import { txt } from "../types";
 import { COLORS, SIZE } from "../tokens";
 import { parseFormattedToRuns } from "../format";
+import { circleGrammarLabelMentions, grammarMarkerDisplayLabel, shouldRenderWrongAnalysisForSubtype } from "@/components/exams/paper-builder/option-display";
 import type { ExamQuestionData } from "@/app/api/exams/[examId]/export-docx/_lib/types";
 
 const THIN_BORDER: BorderSpec = {
@@ -33,11 +34,17 @@ export interface AnswerBlockOptions {
   explanation: ExamQuestionData["question"]["explanation"];
   hasOptions: boolean;
   contentWidthHpu: number;
+  /** 마커 유형 오답분석 게이트 + 어법 라벨 표시 변환용 (웹/DOCX 와 규약 동일) */
+  subType?: string | null;
 }
 
 export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
-  const { correctAnswer, explanation, hasOptions, contentWidthHpu } = opts;
+  const { correctAnswer, explanation, hasOptions, contentWidthHpu, subType } = opts;
   const result: BlockNode[] = [];
+  // 어법(GRAMMAR_ERROR)만 해설 산문의 "(A)" 라벨을 원형숫자(①②③)로 표시 변환.
+  const isGrammarError = subType === "GRAMMAR_ERROR";
+  const prose = (text: string) =>
+    isGrammarError ? circleGrammarLabelMentions(text) : text;
   const answerText = (correctAnswer || "").trim();
   const answerLabel = hasOptions ? "정답" : "정답:";
 
@@ -116,7 +123,7 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
       result.push({
         kind: "p",
         style: { leftMargin: 200, spaceAfter: 40, lineSpacingPct: 158 },
-        runs: parseFormattedToRuns(t, {
+        runs: parseFormattedToRuns(prose(t), {
           size: SIZE.explainBody,
           color: COLORS.darkGray,
         }),
@@ -143,7 +150,7 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
       if (!t) continue;
       const runs: RunNode[] = [
         txt("• ", { size: SIZE.explainBody, color: COLORS.gray }),
-        ...parseFormattedToRuns(t, {
+        ...parseFormattedToRuns(prose(t), {
           size: SIZE.explainBody,
           color: COLORS.darkGray,
         }),
@@ -180,7 +187,11 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
   const wrongEntries = Object.entries(wrongs).filter(
     ([, v]) => typeof v === "string" && v.trim().length > 0,
   );
-  if (wrongEntries.length > 0 && hasOptions) {
+  // 마커 유형(어법 등)은 선지 목록이 없어도 라벨이 지문 마커로 실재 — 오답 분석 포함.
+  if (
+    wrongEntries.length > 0 &&
+    shouldRenderWrongAnalysisForSubtype(subType, hasOptions)
+  ) {
     result.push({
       kind: "p",
       style: { spaceBefore: 60, spaceAfter: 40, leftMargin: 80 },
@@ -202,12 +213,12 @@ export function renderAnswerBlock(opts: AnswerBlockOptions): BlockNode[] {
           lineSpacingPct: 158,
         },
         runs: [
-          txt(`${label} `, {
+          txt(`${isGrammarError ? grammarMarkerDisplayLabel(label) : label} `, {
             size: SIZE.explainBody,
             bold: true,
             color: COLORS.darkGray,
           }),
-          ...parseFormattedToRuns(exp.trim(), {
+          ...parseFormattedToRuns(prose(exp.trim()), {
             size: SIZE.explainBody,
             color: COLORS.gray,
           }),

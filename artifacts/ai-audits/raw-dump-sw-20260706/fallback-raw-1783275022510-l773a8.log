@@ -1,0 +1,58 @@
+logPrefix=AUTO-GEN
+finishReason=stop
+issues=questions.0.koreanGloss: Invalid input: expected string, received null
+
+```json
+{
+  "questions": [
+    {
+      "direction": "다음 글의 요약문 빈칸 (A)에 들어갈 말을 [보기]에서 필요한 단어만 골라 (필요시 어형을 바꿔) 영작하시오. [4점]",
+      "summaryWithBlanks": "Even though glass consistently acts like a solid rather than a liquid under normal conditions, its irregular molecular arrangement means that (A) , which scientists have not yet fully resolved.",
+      "koreanGloss": null,
+      "blankGlosses": [],
+      "wordBank": ["fit","category","molecular","clear","behave","a","into","fail","structure","physical","glass","does","not","neatly"],
+      "wordBankDistractors": ["clear","physical"],
+      "wordBankPolicy": "usePartial",
+      "wordBankFidelity": "inflected",
+      "blankAssignment": "separate",
+      "clueMode": "none",
+      "targetWordsMode": "hidden",
+      "connectorFrame": "partial",
+      "summarySourceMode": "inference",
+      "sourceSentenceParaphrase": true,
+      "blanks": [
+        {
+          "label": "(A)",
+          "answer": "glass does not fit neatly into a single molecular category",
+          "acceptableVariants": [
+            "glass fails to fit neatly into a single molecular category",
+            "its molecular structure does not fit neatly into one category"
+          ],
+          "requiredLemmas": ["fit","category","molecular","glass"],
+          "targetWordCount": 9,
+          "connectorFrameAfter": ", which scientists have not yet fully resolved."
+        }
+      ],
+      "modelAnswer": "Even though glass consistently acts like a solid rather than a liquid under normal conditions, its irregular molecular arrangement means that glass does not fit neatly into a single molecular category, which scientists have not yet fully resolved.",
+      "acceptableVariants": [
+        "Even though glass consistently acts like a solid rather than a liquid under normal conditions, its irregular molecular arrangement means that its molecular structure fails to fit neatly into one category, which scientists have not yet fully resolved."
+      ],
+      "scoringCriteria": [
+        "핵심어 'fit'과 'category'(또는 동의어)가 함께 사용되면 2점",
+        "'molecular'(또는 structure 관련 표현)가 포함되면 1점",
+        "'glass'가 주어로 명시되고 문맥상 자연스러운 어형(3인칭 단수 does not fit)을 갖추면 1점"
+      ],
+      "scoringMode": "LLM_RUBRIC",
+      "correctAnswer": "(A) glass does not fit neatly into a single molecular category",
+      "explanation": "지문은 유리가 실제로는 고체처럼 행동하지만(1단락~2단락), 과학자들마다 이를 'amorphous solid' 또는 'supercooled liquid'라고 다르게 부르며 명확히 하나의 분자적 범주로 규정하지 못한다는 점, 그리고 마지막 문장에서 유리를 'material'이 아니라 'state'라고 부른 것을 근거로 유리의 분자 구조가 하나의 범주에 딱 들어맞지 않는다는 결론을 추론해야 한다. 두 근거(모순적 용어 사용 + 마지막 인용문)를 연결해야 (A)의 추상적 진술이 도출되므로 단순 문장 발췌로는 풀 수 없다.",
+      "keyPoints": [
+        "amorphous solid와 supercooled liquid라는 상반된 용어 사용이 유리의 분류 불확실성을 보여준다는 점을 파악해야 한다",
+        "마지막 문장 'glass is not a material; it's a state'가 요약문의 결론을 뒷받침하는 핵심 근거임을 인식해야 한다",
+        "지문 표면 문장을 그대로 베끼지 않고 상위 개념으로 재진술하는 능력이 필요하다"
+      ],
+      "tags": ["요약문 영작", "추론 요약", "빈칸 어구 완성", "과학 지문", "킬러문항"],
+      "difficulty": "KILLER"
+    }
+  ]
+}
+```

@@ -1,0 +1,405 @@
+{
+  "createdAt": "2026-07-04T09:39:18.374Z",
+  "outPath": "artifacts/ai-audits/grammar-baseline-20260704.jsonl",
+  "total": 16,
+  "passed": 0,
+  "failed": 16,
+  "passRate": 0,
+  "byPlanDifficulty": {
+    "STANDARD:INTERMEDIATE": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "passRate": 0
+    },
+    "STANDARD:KILLER": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "passRate": 0
+    },
+    "PREMIUM:INTERMEDIATE": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "passRate": 0
+    },
+    "PREMIUM:KILLER": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "passRate": 0
+    }
+  },
+  "issueCounts": {
+    "llmMajor:The S-V agreement trap, while legitimate, is a fairly common/predictable pattern for an 'INTERMEDIATE' killer and doesn'": 1,
+    "llmMajor:Explanation blends the relative clause and the comma-set-off adjective phrase without clearly separating their distinct ": 1,
+    "local:no-question": 8,
+    "rejection:grammar-debatable-discourse-though-decoy": 1,
+    "rejection:grammar-marker-too-dense": 2,
+    "rejection:grammar-debatable-it-being-decoy": 1,
+    "rejection:grammar-weak-filler-decoys": 2,
+    "rejection:grammar-noun-clause-pronoun-mislabel": 3,
+    "rejectionLast:grammar-obvious-local-agreement": 2,
+    "llmFatal:The tense choice (was vs. has been) isn't a clear grammatical violation; the explanation's claim that simple past can't ": 1,
+    "llmMajor:The 'error' relies only on stylistic consistency with nearby present-perfect verbs, not a firm grammatical anchor (no ti": 1,
+    "llmMajor:No long-distance/cross-clause structure elevates the difficulty; it's a single-sentence tense-consistency judgment, whic": 1,
+    "llmMajor:The remaining distractors (A, C, D, E) are conventional grammar checks (voice, gerund, agreement) that don't interact wi": 1,
+    "rejection:grammar-obvious-noun-what-relative": 3,
+    "rejection:grammar-afford-modal-mislabel": 1,
+    "rejection:grammar-explanation-too-long-hard": 4,
+    "rejectionLast:grammar-afford-modal-mislabel": 1,
+    "rejectionLast:grammar-explanation-too-long-hard": 2,
+    "rejection:grammar-killer-generic-answer-point": 5,
+    "rejection:grammar-killer-answer-point-repeated": 3,
+    "rejection:grammar-obvious-adjacent-sv-agreement": 4,
+    "rejection:grammar-underline-wide": 1,
+    "rejectionLast:grammar-obvious-adjacent-sv-agreement": 1,
+    "rejectionLast:grammar-underline-wide": 1,
+    "llmFatal:(E) wrongOptionExplanation misclassifies 'belong to the same lexical family' as a 2형식 (S+V+C) clause, but 'belong to' is": 1,
+    "llmFatal:System-flagged pointCode mismatch: (B) 'but' is tagged with grammar code 'l' that doesn't correspond to any real grammat": 1,
+    "llmMajor:The (D) error 'knowing' vs 'known' is legitimate but semantically jarring enough ('color terms knowing') that it may be ": 1,
+    "llmMajor:Cryptic pointCodes (g,l,k,c,b) appear internally inconsistent, undermining confidence that each option was authored agai": 1,
+    "rejection:grammar-shallow-nearby-passive-decoy": 3,
+    "rejectionLast:grammar-shallow-nearby-passive-decoy": 3,
+    "llmFatal:The (B) error is a simple missing-finite-verb fragment (subject 'the lexicon' sits directly before 'seeming/seems'), not": 1,
+    "llmFatal:Explanation contains a garbled/incorrect Korean phrase '도착적 실행' (should reference '회화적/pictorial' practices) — this is a": 1,
+    "llmMajor:Distractors (A),(C),(D),(E) test fairly standard, well-separated points (participle voice, dangling participle, prep+rel": 1,
+    "llmMajor:The wrongOptionExplanation for (E) mixes redundant/confusing terms ('복수 동사이자 자동사 본래의 능동형 술어') without adding grammatical": 1,
+    "rejection:grammar-explanation-self-contradictory": 1,
+    "rejectionLast:grammar-killer-generic-answer-point": 2,
+    "rejectionLast:grammar-too-basic-decoys": 1,
+    "local:main-explanation-too-thin": 1,
+    "llmMajor:Main explanation for (D) is only one sentence and doesn't elaborate on the postpositive-adjective pattern or contrast wi": 1,
+    "llmMajor:The grammar point (adjective vs. adverb after noun) is single-clause and fairly generic; while valid, it doesn't showcas": 1,
+    "rejection:grammar-obvious-local-agreement": 3,
+    "rejection:grammar-killer-thin-answer": 4,
+    "rejection:grammar-too-basic-decoys": 1,
+    "rejectionLast:grammar-killer-thin-answer": 1,
+    "llmFatal:The target error (E) is too minor and simplistic for a CSAT-style item. Distinguishing 'struggle to-V' vs 'struggle V-in": 1,
+    "llmMajor:Distractors (A) and (B) are excessively simple subject-verb agreements with no intervening clauses, making them highly u": 1,
+    "rejectionLast:grammar-obvious-noun-what-relative": 1,
+    "rejectionLast:grammar-weak-filler-decoys": 1,
+    "rejectionLast:grammar-noun-clause-pronoun-mislabel": 1,
+    "rejection:grammar-surrounding-missing-marker": 1,
+    "rejectionLast:grammar-surrounding-missing-marker": 1,
+    "local:killer-answer-not-structurally-loaded": 1,
+    "llmFatal:The target wrong form '(D) to lower' is too visibly broken and simplistic for a KILLER difficulty item, failing to requi": 1,
+    "llmMajor:The incorrect form 'By to lower' is an extremely elementary grammar error (to-infinitive directly after a preposition) i": 1,
+    "llmFatal:The target error (meant vs meaning) is too simple/visible and does not require killer-level long-distance or cross-claus": 1,
+    "llmMajor:The 'as hierarchical' underline in (A) is awkwardly truncated and does not conform to standard CSAT underlining conventi": 1,
+    "llmMajor:The grammar point codes are misaligned with the actual error categories used in formal item generation.": 1,
+    "rejection:grammar-error-not-mutated": 1
+  },
+  "topIssues": [
+    {
+      "code": "local:no-question",
+      "count": 8
+    },
+    {
+      "code": "rejection:grammar-killer-generic-answer-point",
+      "count": 5
+    },
+    {
+      "code": "rejection:grammar-explanation-too-long-hard",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-killer-thin-answer",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-obvious-adjacent-sv-agreement",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-killer-answer-point-repeated",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-noun-clause-pronoun-mislabel",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-obvious-local-agreement",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-obvious-noun-what-relative",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-shallow-nearby-passive-decoy",
+      "count": 3
+    },
+    {
+      "code": "rejectionLast:grammar-shallow-nearby-passive-decoy",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-marker-too-dense",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-weak-filler-decoys",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-explanation-too-long-hard",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-killer-generic-answer-point",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-obvious-local-agreement",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:(E) wrongOptionExplanation misclassifies 'belong to the same lexical family' as a 2형식 (S+V+C) clause, but 'belong to' is",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Explanation contains a garbled/incorrect Korean phrase '도착적 실행' (should reference '회화적/pictorial' practices) — this is a",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:System-flagged pointCode mismatch: (B) 'but' is tagged with grammar code 'l' that doesn't correspond to any real grammat",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The (B) error is a simple missing-finite-verb fragment (subject 'the lexicon' sits directly before 'seeming/seems'), not",
+      "count": 1
+    }
+  ],
+  "worstSamples": [
+    {
+      "runIndex": 2,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-debatable-discourse-though-decoy",
+        "rejection:grammar-marker-too-dense",
+        "rejection:grammar-debatable-it-being-decoy",
+        "rejection:grammar-weak-filler-decoys",
+        "rejection:grammar-noun-clause-pronoun-mislabel",
+        "rejectionLast:grammar-obvious-local-agreement"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-debatable-discourse-though-decoy x1, grammar-marker-too-dense x1, grammar-debatable-it-being-decoy x1, grammar-weak-filler-decoys x1, grammar-noun-clause-pronoun-mislabel x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-local-agreement: GRAMMAR_ERROR answer \"is\" is an adjacent determiner+noun+verb agreement flip; choose an agreement target with an intervening modifier or clause."
+    },
+    {
+      "runIndex": 4,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-killer-generic-answer-point",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-obvious-adjacent-sv-agreement",
+        "rejection:grammar-underline-wide",
+        "rejectionLast:grammar-obvious-adjacent-sv-agreement",
+        "rejectionLast:grammar-underline-wide"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-killer-generic-answer-point x1, grammar-killer-answer-point-repeated x1, grammar-obvious-adjacent-sv-agreement x1, grammar-underline-wide x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-adjacent-sv-agreement: GRAMMAR_ERROR answer \"directs\" is a directly adjacent subject-verb -s flip; choose an agreement target with an intervening modifier, relative clause, or attractor noun. | grammar-underline-wide: Underline (B) is too wide (7 words / 32 chars: \"that cannot afford to pay for it\"). Tighten it to the core grammar token (usually 1-4 words, max 5)."
+    },
+    {
+      "runIndex": 8,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkqu0032mmf0g9i059aa",
+      "title": "2027학년도 6월 모평 영어 38번 · 문장삽입",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-killer-thin-answer",
+        "rejection:grammar-killer-generic-answer-point",
+        "rejection:grammar-obvious-adjacent-sv-agreement",
+        "rejection:grammar-marker-too-dense",
+        "rejection:grammar-too-basic-decoys",
+        "rejectionLast:grammar-killer-generic-answer-point",
+        "rejectionLast:grammar-killer-thin-answer"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-killer-thin-answer x2, grammar-killer-generic-answer-point x2, grammar-obvious-adjacent-sv-agreement x1, grammar-marker-too-dense x1, grammar-too-basic-decoys x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-generic-answer-point: KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern. | grammar-killer-thin-answer: KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check."
+    },
+    {
+      "runIndex": 10,
+      "generationPlan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-killer-thin-answer"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-answer-point-repeated x1, grammar-killer-thin-answer x1 | Last: model/GRAMMAR_ERROR - The operation was aborted due to timeout"
+    },
+    {
+      "runIndex": 11,
+      "generationPlan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-obvious-adjacent-sv-agreement",
+        "rejection:grammar-surrounding-missing-marker",
+        "rejectionLast:grammar-surrounding-missing-marker"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-obvious-adjacent-sv-agreement x1, grammar-surrounding-missing-marker x1 | Last: quality/GRAMMAR_ERROR - grammar-surrounding-missing-marker: Marker b's surroundingText does not contain its own expression — the position cue points at a different sentence, risking misplacement and a mismatched explanation."
+    },
+    {
+      "runIndex": 13,
+      "generationPlan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-shallow-nearby-passive-decoy"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-shallow-nearby-passive-decoy x1 | Last: model/GRAMMAR_ERROR - The operation was aborted due to timeout"
+    },
+    {
+      "runIndex": 15,
+      "generationPlan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkqu0032mmf0g9i059aa",
+      "title": "2027학년도 6월 모평 영어 38번 · 문장삽입",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-obvious-adjacent-sv-agreement"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-obvious-adjacent-sv-agreement x1 | Last: model/GRAMMAR_ERROR - No object generated: response did not match schema."
+    },
+    {
+      "runIndex": 16,
+      "generationPlan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkqu0032mmf0g9i059aa",
+      "title": "2027학년도 6월 모평 영어 38번 · 문장삽입",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-error-not-mutated",
+        "rejection:grammar-killer-generic-answer-point",
+        "rejection:grammar-killer-thin-answer"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-error-not-mutated x1, grammar-killer-generic-answer-point x1, grammar-killer-thin-answer x1 | Last: model/GRAMMAR_ERROR - The operation was aborted due to timeout"
+    },
+    {
+      "runIndex": 12,
+      "generationPlan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "localScore": 85,
+      "llmScore": 78,
+      "issueKeys": [
+        "local:killer-answer-not-structurally-loaded",
+        "llmFatal:The target wrong form '(D) to lower' is too visibly broken and simplistic for a KILLER difficulty item, failing to requi",
+        "llmMajor:The incorrect form 'By to lower' is an extremely elementary grammar error (to-infinitive directly after a preposition) i"
+      ],
+      "answerSurfaces": [
+        "(D):lowering->to lower(k)"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 7,
+      "generationPlan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkqu0032mmf0g9i059aa",
+      "title": "2027학년도 6월 모평 영어 38번 · 문장삽입",
+      "localScore": 85,
+      "llmScore": 90,
+      "issueKeys": [
+        "local:main-explanation-too-thin",
+        "llmMajor:Main explanation for (D) is only one sentence and doesn't elaborate on the postpositive-adjective pattern or contrast wi",
+        "llmMajor:The grammar point (adjective vs. adverb after noun) is single-clause and fairly generic; while valid, it doesn't showcas",
+        "rejection:grammar-obvious-local-agreement",
+        "rejection:grammar-noun-clause-pronoun-mislabel",
+        "rejection:grammar-explanation-too-long-hard",
+        "rejectionLast:grammar-obvious-local-agreement"
+      ],
+      "answerSurfaces": [
+        "(D):perpendicular->perpendicularly(f)"
+      ],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-obvious-local-agreement x3, grammar-noun-clause-pronoun-mislabel x1, grammar-explanation-too-long-hard x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-local-agreement: GRAMMAR_ERROR answer \"are\" is an adjacent determiner+noun+verb agreement flip; choose an agreement target with an intervening modifier or clause."
+    },
+    {
+      "runIndex": 6,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "localScore": 100,
+      "llmScore": 68,
+      "issueKeys": [
+        "llmFatal:The (B) error is a simple missing-finite-verb fragment (subject 'the lexicon' sits directly before 'seeming/seems'), not",
+        "llmFatal:Explanation contains a garbled/incorrect Korean phrase '도착적 실행' (should reference '회화적/pictorial' practices) — this is a",
+        "llmMajor:Distractors (A),(C),(D),(E) test fairly standard, well-separated points (participle voice, dangling participle, prep+rel",
+        "llmMajor:The wrongOptionExplanation for (E) mixes redundant/confusing terms ('복수 동사이자 자동사 본래의 능동형 술어') without adding grammatical",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-obvious-noun-what-relative",
+        "rejection:grammar-explanation-self-contradictory",
+        "rejection:grammar-explanation-too-long-hard"
+      ],
+      "answerSurfaces": [
+        "(B):seems->seeming(d)"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-answer-point-repeated x1, grammar-obvious-noun-what-relative x1, grammar-explanation-self-contradictory x1, grammar-explanation-too-long-hard x1, grammar-killer-generic-answer-point x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-generic-answer-point: KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern. | grammar-shallow-nearby-passive-decoy: Do not use a nearby pronoun + be p.p. phrase as a passive-voice decoy; it is too local and shallow. | grammar-too-basic-decoys: INTERMEDIATE/KILLER GRAMMAR_ERROR uses too-basic decoy surface \"did\"; use a structurally meaningful distractor."
+    },
+    {
+      "runIndex": 5,
+      "generationPlan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "localScore": 100,
+      "llmScore": 74,
+      "issueKeys": [
+        "llmFatal:(E) wrongOptionExplanation misclassifies 'belong to the same lexical family' as a 2형식 (S+V+C) clause, but 'belong to' is",
+        "llmFatal:System-flagged pointCode mismatch: (B) 'but' is tagged with grammar code 'l' that doesn't correspond to any real grammat",
+        "llmMajor:The (D) error 'knowing' vs 'known' is legitimate but semantically jarring enough ('color terms knowing') that it may be ",
+        "llmMajor:Cryptic pointCodes (g,l,k,c,b) appear internally inconsistent, undermining confidence that each option was authored agai",
+        "rejection:grammar-shallow-nearby-passive-decoy",
+        "rejection:grammar-explanation-too-long-hard",
+        "rejectionLast:grammar-shallow-nearby-passive-decoy",
+        "rejectionLast:grammar-explanation-too-long-hard"
+      ],
+      "answerSurfaces": [
+        "(D):known->knowing(c)"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-shallow-nearby-passive-decoy x1, grammar-explanation-too-long-hard x1 | Last: quality/GRAMMAR_ERROR - grammar-shallow-nearby-passive-decoy: Do not use a nearby pronoun + be p.p. phrase as a passive-voice decoy; it is too local and shallow. | grammar-explanation-too-long-hard: Grammar explanation is too long for a polished student-facing grammar item; explain the answer only and keep other labels in wrongOptionExplanations."
+    }
+  ]
+}

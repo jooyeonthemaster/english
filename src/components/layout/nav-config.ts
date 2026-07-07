@@ -196,7 +196,6 @@ export function getNavGroups(
                   {
                     label: "동형 시험지 생성",
                     href: `${basePath}/workbench/similar-exams`,
-                    beta: true,
                   },
                 ]
               : []),
@@ -244,6 +243,18 @@ export function getNavGroups(
             { label: "웹툰 관리", href: `${basePath}/workbench/webtoon/library` },
           ],
         },
+        {
+          // 원래 라벨 "학생 시험 리포트"는 chevron 과 폭 경쟁으로 최소 사이드바
+          // 폭(180px)에서 말줄임될 수 있어 축약 라벨을 유지한다.
+          // (BETA 배지는 26-07-07 사이드바 전체에서 제거 — beta 필드 인프라만 존치)
+          label: "시험 리포트",
+          icon: FileBarChart,
+          href: `${basePath}/workbench/exam-report`,
+          children: [
+            { label: "리포트 생성", href: `${basePath}/workbench/exam-report` },
+            { label: "리포트 관리", href: `${basePath}/workbench/exam-report/library` },
+          ],
+        },
       ],
     },
     {
@@ -269,9 +280,9 @@ export function getNavGroups(
         // },
         // { label: "배포 관리", icon: Send, href: `${basePath}/tutor/distributions`, directorOnly: true, beta: true },
         ...(showResults
-          ? [{ label: "학습 현황", icon: Activity, href: `${basePath}/tutor/monitor`, directorOnly: true, beta: true }]
+          ? [{ label: "학습 현황", icon: Activity, href: `${basePath}/tutor/monitor`, directorOnly: true }]
           : []),
-        { label: "공지사항", icon: Megaphone, href: `${basePath}/notices`, beta: true },
+        { label: "공지사항", icon: Megaphone, href: `${basePath}/notices` },
       ],
     },
     {

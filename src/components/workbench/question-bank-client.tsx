@@ -1261,6 +1261,8 @@ export function QuestionBankClient({
         cardClickSelects
         showDetailButton
         showQuickActions
+        showGenerationHistory
+        onOpenSiblingDetail={openDetail}
         dragRequiresSelection
         getDragQuestionIds={getDragQuestionIds}
       />
@@ -1387,6 +1389,8 @@ export function QuestionBankClient({
                   cardClickSelects
                   showDetailButton
                   showQuickActions
+                  showGenerationHistory
+                  onOpenSiblingDetail={openDetail}
                   dragRequiresSelection
                   expandedPassageIds={expandedPassageIds}
                   setExpandedPassageIds={setExpandedPassageIds}

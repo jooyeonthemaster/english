@@ -1,0 +1,119 @@
+{
+  "plan": "STANDARD",
+  "difficulty": "INTERMEDIATE",
+  "passage": null,
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "called",
+        "isError": false,
+        "errorExpression": "called",
+        "surroundingText": "results in a wind phenomenon called \"vortex shedding.\" As wind meets",
+        "pointCode": "c"
+      },
+      {
+        "label": "(B)",
+        "expression": "where",
+        "isError": false,
+        "errorExpression": "where",
+        "surroundingText": "flowing around its sides, where eventually it separates from",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "that",
+        "isError": true,
+        "correction": "that",
+        "errorExpression": "what",
+        "surroundingText": "spinning currents of wind, that flow downstream from the",
+        "pointCode": "b"
+      },
+      {
+        "label": "(D)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "longer face of the structure is parallel with prevailing winds",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "aerodynamic",
+        "isError": false,
+        "errorExpression": "aerodynamic",
+        "surroundingText": "building can likewise make it more aerodynamic. Roughing up the",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(C)"
+    ],
+    "correctAnswer": "(C)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "called"
+      },
+      {
+        "label": "(B)",
+        "text": "where"
+      },
+      {
+        "label": "(C)",
+        "text": "what"
+      },
+      {
+        "label": "(D)",
+        "text": "is"
+      },
+      {
+        "label": "(E)",
+        "text": "aerodynamic"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 명사 a wind phenomenon을 수식하는 분사의 태를 묻는 곳으로, 현상이 'vortex shedding'이라고 '불리는' 대상이므로 과거분사 'called'는 어법상 옳습니다.",
+      "(B)": "이 자리는 관계사를 묻고 있으며, 선행사 its sides 뒤에서 완전한 절(it separates...)을 이끌며 부사 역할을 하므로 계속적 용법의 관계부사 'where'는 어법상 옳습니다.",
+      "(D)": "이 자리는 수일치를 묻고 있으며, so that절 내의 진짜 주어는 단수 명사인 'the longer face'이므로 단수 동사 'is'는 어법상 옳습니다.",
+      "(E)": "이 자리는 형용사와 부사의 자리를 구분하는 곳으로, 5형식 동사 make의 목적격보어 자리이므로 형용사인 'aerodynamic'은 어법상 옳습니다."
+    },
+    "explanation": "관계사절의 선행사와 격을 판정하는 문제입니다. 해당 문장에서 'vortices, or spinning currents of wind'라는 명사구 선행사가 존재하며, 뒤이어 동사 flow로 시작하는 주어가 빠진 불완전한 절이 이어지고 있습니다. 선행사를 명시적으로 가질 수 없으며 스스로 선행사를 포함하는 관계대명사인 'what'은 이 자리에 올 수 없습니다. 따라서 주격 관계대명사인 'that'(또는 which)으로 고쳐야 합니다. 선행사와 관계절 사이에 삽입구(or spinning currents of wind)가 존재하여 선행사가 없는 것처럼 보이기 쉽다는 점을 유의해야 합니다.",
+    "keyPoints": [
+      "관계대명사 that과 what의 구분",
+      "명사 뒤 분사의 후치수식 (called)",
+      "5형식 문형에서 목적격보어 자리의 형용사 (aerodynamic)"
+    ],
+    "tags": [
+      "어법",
+      "관계대명사",
+      "수일치",
+      "분사",
+      "목적격보어"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "To minimize building costs and maximize revenues, skyscrapers generally take the shape of squares or rectangles. These are not particularly aerodynamic shapes, and this results in a wind phenomenon __(A) called__ \"vortex shedding.\" As wind meets a rectangular skyscraper it pushes on the flat face of the building before flowing around its sides, __(B) where__ eventually it separates from the face of the structure. The difference in pressures on the front and back faces of the building gives rise to vortices, or spinning currents of wind, __(C) what__ flow downstream from the building. The vortices pull and push the building in a direction perpendicular to the wind at frequencies that can become dangerously self-sustaining. To minimize vortex shedding, skyscraper designers do everything in their powers to confuse the wind. Orienting the building so that the longer face of the structure __(D) is__ parallel with prevailing winds can help. Chopping or rounding off corners of a building can likewise make it more __(E) aerodynamic__. Roughing up the corners of the building through the careful placement of balconies or stepped corners can help by disturbing or delaying the formation of strong vortices.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  },
+  "judge": {
+    "verdict": "fail",
+    "score": 83,
+    "fatalIssues": [],
+    "majorIssues": [
+      "Distractor (D) 'is' is trivial: both candidate subjects (face/structure) are singular, so no real ambiguity is created, making it padding rather than a genuine number-agreement trap.",
+      "PointCode 'b' is reused for both (B) relative adverb and (C) relative pronoun, blurring the intended grammar-point taxonomy."
+    ],
+    "minorIssues": [
+      "Explanation for (D) invokes a 'real subject' distinction that doesn't actually matter since both nouns are singular, which could confuse students about what the trap tests."
+    ],
+    "strengths": [
+      "The (C) trap (that vs. what) is a classic, well-motivated CSAT-style error requiring the student to track the antecedent 'vortices, or spinning currents of wind' across an appositive.",
+      "Explanations clearly and correctly identify grammar terms (분사, 관계부사, 수일치, 목적격보어) without confusing displayed vs corrected forms.",
+      "Passage is authentic and technical, giving natural cover for the relative pronoun trap."
+    ],
+    "improvementHint": "Replace the weak (D) subject-verb distractor with a genuinely ambiguous number trap (e.g., a plural noun intervening before the verb) to make all distractors equally attractive."
+  }
+}

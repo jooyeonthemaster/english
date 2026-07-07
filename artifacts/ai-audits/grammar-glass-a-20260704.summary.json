@@ -1,0 +1,127 @@
+{
+  "createdAt": "2026-07-04T12:29:04.551Z",
+  "outPath": "artifacts/ai-audits/grammar-glass-a-20260704.jsonl",
+  "total": 2,
+  "passed": 0,
+  "failed": 2,
+  "passRate": 0,
+  "byPlanDifficulty": {
+    "STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "passRate": 0
+    },
+    "STANDARD:KILLER": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "passRate": 0
+    }
+  },
+  "issueCounts": {
+    "llmFatal:The target error 'had to waiting' is a blatant, single-word local error (modal+verb form) that any low-level student wou": 1,
+    "llmMajor:Difficulty is mismatched: distractors (A),(B),(C),(E) test legitimate but basic points (subject-verb agreement, conjunct": 1,
+    "llmMajor:No genuine trap or plausible confusion exists between 'had to wait' and any distractor's underlying grammar issue, so th": 1,
+    "local:no-question": 1,
+    "rejection:grammar-error-not-mutated": 2,
+    "rejection:grammar-shallow-depends-decoy": 2,
+    "rejection:grammar-killer-answer-point-repeated": 1,
+    "rejection:grammar-killer-generic-answer-point": 1,
+    "rejection:grammar-weak-filler-decoys": 1,
+    "rejectionLast:grammar-shallow-participle-adjective-answer": 1,
+    "rejectionLast:grammar-killer-thin-answer": 1,
+    "rejectionLast:grammar-shallow-depends-decoy": 1
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-error-not-mutated",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-shallow-depends-decoy",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:The target error 'had to waiting' is a blatant, single-word local error (modal+verb form) that any low-level student wou",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Difficulty is mismatched: distractors (A),(B),(C),(E) test legitimate but basic points (subject-verb agreement, conjunct",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:No genuine trap or plausible confusion exists between 'had to wait' and any distractor's underlying grammar issue, so th",
+      "count": 1
+    },
+    {
+      "code": "local:no-question",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-killer-answer-point-repeated",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-killer-generic-answer-point",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-weak-filler-decoys",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-killer-thin-answer",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-shallow-depends-decoy",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-shallow-participle-adjective-answer",
+      "count": 1
+    }
+  ],
+  "worstSamples": [
+    {
+      "runIndex": 2,
+      "generationPlan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "localScore": 0,
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:grammar-error-not-mutated",
+        "rejection:grammar-shallow-depends-decoy",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-killer-generic-answer-point",
+        "rejection:grammar-weak-filler-decoys",
+        "rejectionLast:grammar-shallow-participle-adjective-answer",
+        "rejectionLast:grammar-killer-thin-answer"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-error-not-mutated x2, grammar-shallow-depends-decoy x2, grammar-killer-answer-point-repeated x1, grammar-killer-generic-answer-point x1, grammar-weak-filler-decoys x1 | Last: quality/GRAMMAR_ERROR - grammar-shallow-participle-adjective-answer: INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"developed\" -> \"developing\" before a noun; require deeper structure. | grammar-killer-thin-answer: KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check. | grammar-shallow-depends-decoy: Do not use a simple 'depends on' subject-verb match as a grammar decoy; it offers little trap value."
+    },
+    {
+      "runIndex": 1,
+      "generationPlan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "localScore": 100,
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:The target error 'had to waiting' is a blatant, single-word local error (modal+verb form) that any low-level student wou",
+        "llmMajor:Difficulty is mismatched: distractors (A),(B),(C),(E) test legitimate but basic points (subject-verb agreement, conjunct",
+        "llmMajor:No genuine trap or plausible confusion exists between 'had to wait' and any distractor's underlying grammar issue, so th"
+      ],
+      "answerSurfaces": [
+        "(D):wait->waiting(a)"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

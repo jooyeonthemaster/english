@@ -1,6 +1,7 @@
 // Split from question-quality.ts — shared helpers in core.ts, public API via index.ts barrel.
 import { QuestionQualitySeverity, containsComparableSentence, containsLoose, countWordsForQuality, normalizeComparableText, normalizeGrammarCorrectionErrorCount, normalizeText } from "../../core";
-import { collectQuantityAnswerIssues, hasKillerGrammarStructure, isSimpleAgreementFlip } from "./shared";
+import { isDisputableTenseToggle } from "./combo";
+import { collectQuantityAnswerIssues, findGrammarPerceptionComplementToggle, hasKillerGrammarStructure, isSimpleAgreementFlip } from "./shared";
 
 
 
@@ -134,6 +135,27 @@ export function validateGrammarCorrectionQuestion(
     // 수량(m) 정답 시비 게이트 — 서술형 교정에도 동일 적용(의미토글·양용명사·규범논쟁).
     for (const qIssue of collectQuantityAnswerIssues(sourceCorrection, displayedError, sourceText)) {
       add("error", qIssue.code, qIssue.message);
+    }
+    // 시제 단독변경 시비 게이트 (wave1) — GRAMMAR_ERROR 와 동일: 같은 어간의
+    // 현재↔과거 토글은 문맥상 두 시제가 모두 가능해 정답 시비가 된다.
+    // 교정형은 학생이 직접 고쳐 쓰므로 시비가 그대로 복수정답이 된다.
+    if (isDisputableTenseToggle(sourceCorrection, displayedError)) {
+      add(
+        "error",
+        "grammar-correction-tense-only-error",
+        `GRAMMAR_CORRECTION segment ${index + 1} hides a tense-only change ("${sourceCorrection}" ↔ "${displayedError}"), which is contextually disputable; use a proven mutation type instead.`,
+      );
+    }
+    // 지각동사 보어 토글 게이트 (wave1) — 오류형이 지각동사 구문/명사+to-V 파스로
+    // 정문이 되면 "틀린 부분"이 존재하지 않는 무정답 문항이 된다.
+    const perceptionToggle = findGrammarPerceptionComplementToggle(
+      sourceCorrection,
+      displayedError,
+      sourceText,
+      passage,
+    );
+    if (perceptionToggle) {
+      add("error", "grammar-correction-perception-toggle", perceptionToggle);
     }
     if (
       requestedDifficulty === "KILLER" &&

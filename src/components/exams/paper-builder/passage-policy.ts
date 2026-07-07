@@ -173,7 +173,7 @@ export function questionHasEmbeddedPassage(question: PassageQuestionLike): boole
 // 정답이 "원본 지문 문장 그대로"인 유형 — 지문을 함께 보여주면 학생이 베껴 써서 영작이
 // 무력화된다(본문 답 노출). 조건부 영작은 [영작할 우리말](한국어)만으로 출제가 성립하므로
 // 원본 영어 지문을 기본 미동봉한다. (HIDEABLE 이라 출제자가 필요 시 다시 켤 수는 있다.)
-const ANSWER_BEARING_SOURCE_SUBTYPES = new Set([
+export const ANSWER_BEARING_SOURCE_SUBTYPES = new Set([
   "CONDITIONAL_WRITING",
   // 문장 전환: 정답이 원문 문장의 변형이라 전체 지문을 보여주면 정답에 가까운 원문이
   // 노출된다. 전환 대상 문장은 [원문] 블록으로 따로 제공되므로 전체 지문은 기본 미동봉한다.

@@ -1,0 +1,292 @@
+{
+  "createdAt": "2026-07-05T17:32:10.322Z",
+  "outPath": "artifacts/ai-audits/loop-blank-iter2-20260706/multi2.jsonl",
+  "total": 4,
+  "passed": 0,
+  "failed": 4,
+  "passRate": 0,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 45,
+      "topIssues": [
+        {
+          "code": "llmFatal:Since correct answer text is identical to originalExpression, students can solve it by simple lexical matching/skimming,",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The correct answer options are verbatim spans copied directly from the source text ('were considered colors', 'diversify",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors for (A) and (B) are independently implausible pairings (e.g., 'preserve pigments', 'construct chemical symme",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation does not demonstrate the required 2-sentence connection (e.g., linking 'first color experiments' sentence wi",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:This is a dual-blank item but functions as two independent single-word cloze checks rather than one coherent inference c",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 62,
+      "topIssues": [
+        {
+          "code": "llmFatal:Both blanks use verbatim spans copied directly from the source passage (originalExpression text appears unchanged in the",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This is essentially a direct quotation-restoration task, not a genuine blank-inference item testing paragraph logic; a s",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:(B) blank targets a fairly local/descriptive detail (diversifying palette) rather than the paragraph's main convergent a",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors are attractively worded but fail mainly via one-word polarity flips (simplify/standardize/eliminate/unify vs",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Double-blank format is unusual for BLANK_INFERENCE KILLER and dilutes focus—having two separate verbatim-restoration bla",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 62,
+      "topIssues": [
+        {
+          "code": "llmFatal:The correct answer option (Option 1) uses the exact verbatim phrases from the original text for both blanks without any ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The item type contains two blanks (A and B), which does not match the standard single-blank CSAT '빈칸 추론' format.",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor options 3 and 5 copy-paste the exact original phrase for blank (B) verbatim, failing to build plausible alter",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct option represents a low level of logic; extracting original sentences verbatim does not require the intermed",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 45,
+      "topIssues": [
+        {
+          "code": "llmFatal:The double-blank (A) and (B) format combined as options is completely non-standard for the single/macro blank inference ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The item relies on copy-pasting the exact source phrases 'they had to wait a long time before they were considered color",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors are created by cheap polarity reversal of the local phrases, which fails to make this a true 'KILLER' level ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct option (Option 1) is literally the original text copy-pasted, totally violating the requirement that a KILLE",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:Both blanks use verbatim spans copied directly from the source passage (originalExpression text appears unchanged in the",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Since correct answer text is identical to originalExpression, students can solve it by simple lexical matching/skimming,",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The correct answer option (Option 1) uses the exact verbatim phrases from the original text for both blanks without any ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The correct answer options are verbatim spans copied directly from the source text ('were considered colors', 'diversify",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The double-blank (A) and (B) format combined as options is completely non-standard for the single/macro blank inference ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The item relies on copy-pasting the exact source phrases 'they had to wait a long time before they were considered color",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The item type contains two blanks (A and B), which does not match the standard single-blank CSAT '빈칸 추론' format.",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:This is essentially a direct quotation-restoration task, not a genuine blank-inference item testing paragraph logic; a s",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:(B) blank targets a fairly local/descriptive detail (diversifying palette) rather than the paragraph's main convergent a",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractor options 3 and 5 copy-paste the exact original phrase for blank (B) verbatim, failing to build plausible alter",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors are attractively worded but fail mainly via one-word polarity flips (simplify/standardize/eliminate/unify vs",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors are created by cheap polarity reversal of the local phrases, which fails to make this a true 'KILLER' level ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors for (A) and (B) are independently implausible pairings (e.g., 'preserve pigments', 'construct chemical symme",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Double-blank format is unusual for BLANK_INFERENCE KILLER and dilutes focus—having two separate verbatim-restoration bla",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Explanation does not demonstrate the required 2-sentence connection (e.g., linking 'first color experiments' sentence wi",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The correct option (Option 1) is literally the original text copy-pasted, totally violating the requirement that a KILLE",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The correct option represents a low level of logic; extracting original sentences verbatim does not require the intermed",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:This is a dual-blank item but functions as two independent single-word cloze checks rather than one coherent inference c",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The correct answer options are verbatim spans copied directly from the source text ('were considered colors', 'diversify": 1,
+    "llmFatal:Since correct answer text is identical to originalExpression, students can solve it by simple lexical matching/skimming,": 1,
+    "llmMajor:Distractors for (A) and (B) are independently implausible pairings (e.g., 'preserve pigments', 'construct chemical symme": 1,
+    "llmMajor:Explanation does not demonstrate the required 2-sentence connection (e.g., linking 'first color experiments' sentence wi": 1,
+    "llmMajor:This is a dual-blank item but functions as two independent single-word cloze checks rather than one coherent inference c": 1,
+    "llmFatal:Both blanks use verbatim spans copied directly from the source passage (originalExpression text appears unchanged in the": 1,
+    "llmFatal:This is essentially a direct quotation-restoration task, not a genuine blank-inference item testing paragraph logic; a s": 1,
+    "llmMajor:Distractors are attractively worded but fail mainly via one-word polarity flips (simplify/standardize/eliminate/unify vs": 1,
+    "llmMajor:(B) blank targets a fairly local/descriptive detail (diversifying palette) rather than the paragraph's main convergent a": 1,
+    "llmMajor:Double-blank format is unusual for BLANK_INFERENCE KILLER and dilutes focus—having two separate verbatim-restoration bla": 1,
+    "llmFatal:The correct answer option (Option 1) uses the exact verbatim phrases from the original text for both blanks without any ": 1,
+    "llmFatal:The item type contains two blanks (A and B), which does not match the standard single-blank CSAT '빈칸 추론' format.": 1,
+    "llmMajor:Distractor options 3 and 5 copy-paste the exact original phrase for blank (B) verbatim, failing to build plausible alter": 1,
+    "llmMajor:The correct option represents a low level of logic; extracting original sentences verbatim does not require the intermed": 1,
+    "llmFatal:The item relies on copy-pasting the exact source phrases 'they had to wait a long time before they were considered color": 1,
+    "llmFatal:The double-blank (A) and (B) format combined as options is completely non-standard for the single/macro blank inference ": 1,
+    "llmMajor:The correct option (Option 1) is literally the original text copy-pasted, totally violating the requirement that a KILLE": 1,
+    "llmMajor:Distractors are created by cheap polarity reversal of the local phrases, which fails to make this a true 'KILLER' level ": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 45,
+      "issueKeys": [
+        "llmFatal:The correct answer options are verbatim spans copied directly from the source text ('were considered colors', 'diversify",
+        "llmFatal:Since correct answer text is identical to originalExpression, students can solve it by simple lexical matching/skimming,",
+        "llmMajor:Distractors for (A) and (B) are independently implausible pairings (e.g., 'preserve pigments', 'construct chemical symme",
+        "llmMajor:Explanation does not demonstrate the required 2-sentence connection (e.g., linking 'first color experiments' sentence wi",
+        "llmMajor:This is a dual-blank item but functions as two independent single-word cloze checks rather than one coherent inference c"
+      ],
+      "answerSurfaces": [
+        "3"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 4,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 45,
+      "issueKeys": [
+        "llmFatal:The item relies on copy-pasting the exact source phrases 'they had to wait a long time before they were considered color",
+        "llmFatal:The double-blank (A) and (B) format combined as options is completely non-standard for the single/macro blank inference ",
+        "llmMajor:The correct option (Option 1) is literally the original text copy-pasted, totally violating the requirement that a KILLE",
+        "llmMajor:Distractors are created by cheap polarity reversal of the local phrases, which fails to make this a true 'KILLER' level "
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 2,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 62,
+      "issueKeys": [
+        "llmFatal:Both blanks use verbatim spans copied directly from the source passage (originalExpression text appears unchanged in the",
+        "llmFatal:This is essentially a direct quotation-restoration task, not a genuine blank-inference item testing paragraph logic; a s",
+        "llmMajor:Distractors are attractively worded but fail mainly via one-word polarity flips (simplify/standardize/eliminate/unify vs",
+        "llmMajor:(B) blank targets a fairly local/descriptive detail (diversifying palette) rather than the paragraph's main convergent a",
+        "llmMajor:Double-blank format is unusual for BLANK_INFERENCE KILLER and dilutes focus—having two separate verbatim-restoration bla"
+      ],
+      "answerSurfaces": [
+        "3"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 3,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 62,
+      "issueKeys": [
+        "llmFatal:The correct answer option (Option 1) uses the exact verbatim phrases from the original text for both blanks without any ",
+        "llmFatal:The item type contains two blanks (A and B), which does not match the standard single-blank CSAT '빈칸 추론' format.",
+        "llmMajor:Distractor options 3 and 5 copy-paste the exact original phrase for blank (B) verbatim, failing to build plausible alter",
+        "llmMajor:The correct option represents a low level of logic; extracting original sentences verbatim does not require the intermed"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

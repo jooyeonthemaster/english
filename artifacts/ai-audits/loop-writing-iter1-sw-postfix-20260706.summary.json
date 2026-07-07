@@ -1,0 +1,107 @@
+{
+  "createdAt": "2026-07-05T18:15:08.300Z",
+  "outPath": "artifacts/ai-audits/loop-writing-iter1-sw-postfix-20260706",
+  "total": 2,
+  "passed": 0,
+  "failed": 2,
+  "passRate": 0,
+  "byCell": {
+    "SUMMARY_WRITING:PREMIUM:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 83,
+      "topIssues": [
+        {
+          "code": "llmFatal:The wordBank leaves grammatical framing and sentence structure highly ambiguous, permitting too many distinct acceptable",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The acceptable variants in the model answer are not tightly managed; having 'wait a long time to be...' vs. 'wait for a ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The scoringCriteria allows unacceptable variants like 'fail to' or 'cannot', and 'understand/comprehend', which are not ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The warning 'writing-answer-verbatim-in-passage' is valid; the phrase 'wait a long time' is lifted directly from the sou",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The wordBank contains 'remain', but 'remain' is not in the requiredLemmas or fully aligned with the strict wordBankPolic",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:The wordBank leaves grammatical framing and sentence structure highly ambiguous, permitting too many distinct acceptable",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The acceptable variants in the model answer are not tightly managed; having 'wait a long time to be...' vs. 'wait for a ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The scoringCriteria allows unacceptable variants like 'fail to' or 'cannot', and 'understand/comprehend', which are not ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The warning 'writing-answer-verbatim-in-passage' is valid; the phrase 'wait a long time' is lifted directly from the sou",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The wordBank contains 'remain', but 'remain' is not in the requiredLemmas or fully aligned with the strict wordBankPolic",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The wordBank leaves grammatical framing and sentence structure highly ambiguous, permitting too many distinct acceptable": 1,
+    "llmMajor:The warning 'writing-answer-verbatim-in-passage' is valid; the phrase 'wait a long time' is lifted directly from the sou": 1,
+    "llmMajor:The acceptable variants in the model answer are not tightly managed; having 'wait a long time to be...' vs. 'wait for a ": 1,
+    "llmMajor:The wordBank contains 'remain', but 'remain' is not in the requiredLemmas or fully aligned with the strict wordBankPolic": 1,
+    "llmMajor:The scoringCriteria allows unacceptable variants like 'fail to' or 'cannot', and 'understand/comprehend', which are not ": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "SUMMARY_WRITING",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 83,
+      "issueKeys": [
+        "llmFatal:The wordBank leaves grammatical framing and sentence structure highly ambiguous, permitting too many distinct acceptable",
+        "llmMajor:The warning 'writing-answer-verbatim-in-passage' is valid; the phrase 'wait a long time' is lifted directly from the sou",
+        "llmMajor:The acceptable variants in the model answer are not tightly managed; having 'wait a long time to be...' vs. 'wait for a "
+      ],
+      "answerSurfaces": [
+        "(A) wait a long time to be acknowledged as genuine colors",
+        "Red's long-standing supremacy in the West over other hues, which had to wait a long time to be acknowledged as genuine colors, is mirrored in the fact that color vocabulary itself often fused notions "
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 2,
+      "type": "SUMMARY_WRITING",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 83,
+      "issueKeys": [
+        "llmMajor:The wordBank contains 'remain', but 'remain' is not in the requiredLemmas or fully aligned with the strict wordBankPolic",
+        "llmMajor:The scoringCriteria allows unacceptable variants like 'fail to' or 'cannot', and 'understand/comprehend', which are not "
+      ],
+      "answerSurfaces": [
+        "(A) scientists remain unable to fully explain its behavior",
+        "Although glass has been used by humans for thousands of years and, in practice, behaves like a solid rather than a liquid, scientists remain unable to fully explain its behavior, which shows that fami"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

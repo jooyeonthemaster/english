@@ -37,6 +37,8 @@ const ESTIMATE_USD_PER_ACTION: Record<OperationType, number> = {
   PASSAGE_VARIANT: 0.002,
   WEBTOON_IMAGE: 0.008,
   WEBTOON_IMAGE_PREMIUM: 0.02,
+  EXAM_ANALYSIS: 0.057, // 문항 1개당 — v3 직접분석 실측(26-07-06): 28문항 $1.59(E1a $0.18+E1b/c $1.40)/28
+  EXAM_STUDENT_REPORT: 0.05, // 학생 1명당(5cr): E2 판독 $0.15(무과금분 포함)+E4 내러티브 ~$0.10 ≈ $0.25/5cr
 };
 
 // 표시 순서(카테고리별).
@@ -56,6 +58,8 @@ const FEATURE_ORDER: OperationType[] = [
   "PASSAGE_VARIANT",
   "WEBTOON_IMAGE",
   "WEBTOON_IMAGE_PREMIUM",
+  "EXAM_ANALYSIS",
+  "EXAM_STUDENT_REPORT",
   "TEXT_EXTRACTION",
 ];
 
@@ -73,6 +77,8 @@ const FEATURE_NOTE: Partial<Record<OperationType, string>> = {
   AI_CHAT: "메시지 1개당",
   WEBTOON_IMAGE: "이미지 1장당",
   TEXT_EXTRACTION: "페이지 1장당 · 무료 제공",
+  EXAM_ANALYSIS: "문항 1개당 · 최소 15크레딧",
+  EXAM_STUDENT_REPORT: "학생 1명당",
 };
 
 export interface MarginTierCell {

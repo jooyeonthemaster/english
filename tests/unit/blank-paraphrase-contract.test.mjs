@@ -789,6 +789,9 @@ test("PARAPHRASE mode rejects options that stack prepositions with the left cont
 test("KILLER PARAPHRASE rejects screenshot-level short local synonym answers", () => {
   assert.equal(result.killerTooEasyProcessed.success, true, result.killerTooEasyProcessed.error);
   const codes = new Set(result.killerTooEasyQuality.map((issue) => issue.code));
+  // 26-07-06 iter3 실측 후 원복: thin-span strict 차단은 컴팩트 고밀도 스팬
+  // (심사 95/96)을 오탐해 PREM KILLER relaxed율 100%를 유발 — SHIP-FIRST
+  // warning 코드(blank-paraphrase-killer-too-easy)로 유지한다.
   assert.equal(codes.has("blank-paraphrase-killer-too-easy"), true);
 });
 
@@ -825,5 +828,6 @@ test("PARAPHRASE mode rejects adverb plus gerund answers after an infinitive mar
 test("KILLER PARAPHRASE rejects giveaway extreme distractor sets", () => {
   assert.equal(result.killerGiveawayProcessed.success, true, result.killerGiveawayProcessed.error);
   const codes = new Set(result.killerGiveawayQuality.map((issue) => issue.code));
-  assert.equal(codes.has("blank-paraphrase-killer-giveaway-distractors"), true);
+  // 26-07-06 iter3: KILLER 전용 코드로 개명(비 SHIP-FIRST) — strict 차단 복원.
+  assert.equal(codes.has("blank-killer-giveaway-distractors"), true);
 });

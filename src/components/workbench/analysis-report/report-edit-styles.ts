@@ -57,6 +57,13 @@ export const ANALYSIS_REPORT_EDIT_CSS = `
 .par-root-edit .par-vocab-test-card:hover .par-vocab-test-card-exclude,
 .par-root-edit .par-eline.is-active .par-vocab-test-card-exclude,
 .par-root-edit .par-vocab-test-card-exclude:focus-visible { opacity: 1; }
+.par-root-edit .par-vocab-study-card-del {
+  position: absolute; right: -7px; top: -7px; z-index: 12;
+  margin-left: 0; opacity: 0;
+  box-shadow: 0 2px 8px rgba(15,23,42,.12);
+}
+.par-root-edit .par-vocab-study-card:hover .par-vocab-study-card-del,
+.par-root-edit .par-vocab-study-card-del:focus-visible { opacity: 1; }
 .par-root-edit .par-edit-add {
   margin-top: 2mm; font-size: 11px; padding: 3px 9px;
   border: 1px dashed #93c5fd; color: #2563eb; background: #eff6ff;

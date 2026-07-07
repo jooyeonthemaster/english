@@ -9,6 +9,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  circleGrammarLabelMentions,
+  grammarMarkerDisplayLabel,
+} from "@/components/exams/paper-builder/option-display";
 import { parseJSON } from "../shared/helpers";
 
 interface Explanation {
@@ -20,13 +24,21 @@ interface Explanation {
 
 export function ExplanationSection({
   explanation,
+  subType,
   rightSlot,
 }: {
   explanation: Explanation | null;
+  // 어법(GRAMMAR_ERROR)만 해설/핵심포인트/오답해설의 "(A)" 라벨을 시험지 표시
+  // 규약(원형숫자 ①②③)으로 변환한다 — 데이터는 (A) 유지, 표시 전용.
+  // 다른 유형은 무변환(기존과 동일 렌더).
+  subType?: string | null;
   // 해설보기와 같은 줄 오른쪽에 둘 추가 액션(예: '상세 보기' 버튼).
   rightSlot?: React.ReactNode;
 }) {
   const [explanationOpen, setExplanationOpen] = useState(false);
+  const isGrammarError = subType === "GRAMMAR_ERROR";
+  const displayProse = (text: string) =>
+    isGrammarError ? circleGrammarLabelMentions(text) : text;
 
   const hasExplanation = Boolean(explanation?.content);
   if (!hasExplanation && !rightSlot) return null;
@@ -67,7 +79,7 @@ export function ExplanationSection({
         >
           <p className="text-[10px] font-semibold text-slate-600 mb-1">해설</p>
           <p className="text-[12px] text-slate-700 leading-relaxed">
-            {explanation.content}
+            {displayProse(explanation.content)}
           </p>
           {explanation.keyPoints &&
             (() => {
@@ -84,7 +96,7 @@ export function ExplanationSection({
                         className="text-[11px] text-slate-600 flex gap-1.5"
                       >
                         <span className="text-slate-400 shrink-0">•</span>
-                        {kp}
+                        {displayProse(kp)}
                       </li>
                     ))}
                   </ul>
@@ -107,9 +119,12 @@ export function ExplanationSection({
                     {entries.map(([label, text]) => (
                       <p key={label} className="text-[11px] text-slate-600">
                         <span className="font-semibold text-slate-500">
-                          {label}.
+                          {/* 어법: "(A)." → "①" (원형숫자 자체가 라벨이라 마침표 불필요) */}
+                          {isGrammarError
+                            ? grammarMarkerDisplayLabel(label)
+                            : `${label}.`}
                         </span>{" "}
-                        {text}
+                        {displayProse(text)}
                       </p>
                     ))}
                   </div>

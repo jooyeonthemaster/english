@@ -44,8 +44,14 @@ export function processGrammarError(
     return { success: false, data: ai, warnings, error: "Missing markedExpressions field" };
   }
 
-  const canonicalMarkedExpressions = markedExpressions.map((me, index) => {
-    const expression = normalizeString(me.expression);
+  // [수리 A] 완전동일 마커 중복 제거 — 정규화·라벨 재부여 전, 파싱 직후에 수행한다.
+  // 바이트동일 중복 1개가 grammar-marker-count·grammar-error-count·
+  // duplicate-option-text·mid-word-marker 를 동시에 유발하고 blockingErrors>3 이라
+  // LLM repair 게이트(<=3)에도 안 걸려 통째 재생성되던 케이스를 재호출 없이 해소한다.
+  const dedupedMarkedExpressions = dedupeIdenticalGrammarMarkers(markedExpressions, warnings);
+
+  const canonicalMarkedExpressions = dedupedMarkedExpressions.map((me, index) => {
+    let expression = normalizeString(me.expression);
     const errorExpression = normalizeString(me.errorExpression);
     let correction =
       normalizeString(me.correction) ||
@@ -64,6 +70,29 @@ export function processGrammarError(
         `Correction normalized to source expression for ${canonicalGrammarLabel(me.label, index)}: "${correction}" -> "${expression}"`,
       );
       correction = expression;
+    }
+    // [수리 B] 필드 역할 스왑 복구 — 위 역방향 수리와 대칭. isError 마커에서
+    // expression 에 소스 대신 변형형이 들어가고(errorExpression == expression =
+    // not-mutated 시그니처) 진짜 소스는 correction 에 담긴 케이스. 지문엔
+    // correction(소스)이 실재하고 expression(표면)은 부재(=이미 정상 변형돼 심어짐)
+    // 일 때만 expression:=correction 으로 메타를 복구한다. 렌더 표면은
+    // getMarkedSurfaceExpression=errorExpression 이라 불변. 정문을 오류로 오판한
+    // 케이스(원문 표현이 지문에 실재)는 아래 두 지문-실재 조건이 자동 배제한다 —
+    // expression 이 지문에 있거나 correction 이 지문에 없으면 abstain(반려 유지).
+    if (
+      me.isError === true &&
+      expression &&
+      errorExpression &&
+      normalizeComparable(errorExpression) === normalizeComparable(expression) &&
+      correction &&
+      normalizeComparable(correction) !== normalizeComparable(expression) &&
+      findGrammarExpression(passage, correction, me.surroundingText, false) &&
+      !findGrammarExpression(passage, expression, me.surroundingText, false)
+    ) {
+      warnings.push(
+        `Expression restored to source for ${canonicalGrammarLabel(me.label, index)}: "${expression}" -> "${correction}" (role swap; display surface "${errorExpression}" unchanged)`,
+      );
+      expression = correction;
     }
 
     return {
@@ -221,10 +250,17 @@ export function processGrammarError(
 
   const passageWithMarkers = applyReplacementsRTL(passage, replacements);
 
+  // errorDesign 은 스키마가 생성 순서(설계→밑줄→해설)를 강제하려고 받는 내부
+  // 설계 메모다 — 학생/저장 데이터에 절대 남기지 않는다.
+  const { errorDesign: _errorDesign, ...aiWithoutDesign } = ai as Record<string, unknown> & {
+    errorDesign?: unknown;
+  };
+  void _errorDesign;
+
   return {
     success: true,
     data: {
-      ...ai,
+      ...aiWithoutDesign,
       direction,
       correctAnswer,
       correctAnswers,
@@ -238,6 +274,40 @@ export function processGrammarError(
     },
     warnings,
   };
+}
+
+/**
+ * [수리 A] 완전동일 마커 중복 제거. expression/errorExpression/correction/isError
+ * 네 필드가 normalizeString + 소문자 정규화 후 **완전히** 일치하는 후속 마커만
+ * 제거한다(라벨·surroundingText 는 키에서 제외 — 실측 시그니처는 이 4필드다).
+ * 한 필드라도 다르면 서로 다른 정당한 타깃일 수 있으므로 abstain(기존 반려 유지).
+ * 개수를 강제하지 않는다 — 정확히 중복 1개면 자연히 하나 줄고, 아니면 하류
+ * 검증기가 정상 반려한다.
+ */
+function dedupeIdenticalGrammarMarkers(
+  markedExpressions: GrammarMarkedExpression[],
+  warnings: string[],
+): GrammarMarkedExpression[] {
+  const dedupeKey = (value: unknown): string => normalizeString(value).toLowerCase();
+  const seen = new Set<string>();
+  const result: GrammarMarkedExpression[] = [];
+  for (const me of markedExpressions) {
+    const key = [
+      dedupeKey(me.expression),
+      dedupeKey(me.errorExpression),
+      dedupeKey(me.correction),
+      me.isError === true ? "error" : "clean",
+    ].join("\u0000"); // 정규화 텍스트에 나올 수 없는 구분자 — 필드 경계 충돌 방지.
+    if (seen.has(key)) {
+      warnings.push(
+        `Removed byte-identical duplicate grammar marker (label ${normalizeString(me.label) || "?"}): expression="${normalizeString(me.expression)}", isError=${me.isError === true}`,
+      );
+      continue;
+    }
+    seen.add(key);
+    result.push(me);
+  }
+  return result;
 }
 
 function findGrammarExpression(
@@ -283,6 +353,14 @@ function locateGrammarExpression(
       }
     }
     if (inWindow) return inWindow;
+
+    // 퍼지 윈도 폴백 — 모델의 surroundingText 가 원문과 한 글자라도 어긋나면
+    // 위 verbatim 윈도가 실패하고, 종전에는 곧장 전역 1번째 출현으로 떨어져
+    // 'that is,' 의 is 같은 동형 토큰에 오마킹됐다(실측: 해설-밑줄 desync).
+    // 전역 폴백 전에 surroundingText 와 내용어 겹침이 가장 큰 문장 안에서 먼저
+    // 찾는다.
+    const fuzzy = locateInFuzzyWindow(passage, me, warnings);
+    if (fuzzy) return fuzzy;
   }
 
   let found = findGrammarExpression(passage, sourceExpression, me.surroundingText, false);
@@ -328,6 +406,64 @@ function locateGrammarExpression(
   }
 
   return found;
+}
+
+// 퍼지 윈도 매칭용 최소 스톱워드 — 겹침 점수가 기능어로 부풀지 않게 한다.
+const FUZZY_WINDOW_STOPWORDS = new Set([
+  "the", "and", "but", "for", "with", "that", "this", "these", "those", "from",
+  "into", "onto", "over", "under", "about", "than", "then", "when", "while",
+  "have", "has", "had", "was", "were", "are", "will", "would", "could", "should",
+  "their", "there", "they", "them", "its", "his", "her", "our", "your", "not",
+]);
+
+function fuzzyContentTokens(text: string): string[] {
+  return normalizeString(text)
+    .toLowerCase()
+    .split(/[^a-z'-]+/)
+    .filter((token) => token.length >= 3 && !FUZZY_WINDOW_STOPWORDS.has(token));
+}
+
+/**
+ * surroundingText 와 내용어 겹침이 가장 큰 지문 문장을 찾아 그 안에서 표현
+ * (expression → correction → errorExpression 체인)을 탐색한다. 겹침이 2단어
+ * 미만이거나 문장을 못 찾으면 null — 그때만 기존 전역 폴백이 이어진다.
+ */
+function locateInFuzzyWindow(
+  passage: string,
+  me: GrammarMarkedExpression,
+  warnings: string[],
+): { index: number; length: number } | null {
+  const surroundingTokens = new Set(fuzzyContentTokens(me.surroundingText ?? ""));
+  if (surroundingTokens.size < 2) return null;
+
+  let best: { start: number; text: string; overlap: number } | null = null;
+  for (const match of passage.matchAll(/[^.!?]+[.!?]*/g)) {
+    const sentence = match[0];
+    if (!sentence.trim()) continue;
+    let overlap = 0;
+    for (const token of fuzzyContentTokens(sentence)) {
+      if (surroundingTokens.has(token)) overlap += 1;
+    }
+    if (overlap >= 2 && (!best || overlap > best.overlap)) {
+      best = { start: match.index ?? 0, text: sentence, overlap };
+    }
+  }
+  if (!best) return null;
+
+  const candidates: string[] = [getSourceExpression(me)];
+  if (me.isError && me.correction) candidates.push(me.correction);
+  if (me.isError && me.errorExpression) candidates.push(me.errorExpression);
+  for (const candidate of candidates) {
+    if (!normalizeString(candidate)) continue;
+    const inSentence = findGrammarExpression(best.text, candidate, undefined, false);
+    if (inSentence) {
+      warnings.push(
+        `Fuzzy-window matched for label ${me.label}: "${candidate}" in best-overlap sentence (overlap ${best.overlap})`,
+      );
+      return { index: best.start + inSentence.index, length: inSentence.length };
+    }
+  }
+  return null;
 }
 
 function findCorrectedGrammarSourceVariant(
@@ -422,7 +558,9 @@ function normalizeGrammarExplanationSurfaceOrder(
     if (explanationMentionsSurfaceBeforeCorrection(text, markedExpression.label, surface, correction)) {
       continue;
     }
-    prefixes.push(`${markedExpression.label} the displayed "${surface}" is wrong; it should be "${correction}".`);
+    // 학생에게 보이는 해설의 첫머리이므로 한국어로 삽입한다. "…로 고쳐야 한다"는
+    // sanitize 의 변형-서사 절삭('야' 어미 제외 규칙)과 충돌하지 않는 안전 문형.
+    prefixes.push(`${markedExpression.label} "${surface}"는 어법상 틀린 표현이며 "${correction}"로 고쳐야 한다.`);
   }
 
   if (prefixes.length === 0) return value;

@@ -1,0 +1,215 @@
+{
+  "createdAt": "2026-07-06T10:27:16.191Z",
+  "outPath": "artifacts/ai-audits/firstcall-sweep-prem-20260706",
+  "total": 4,
+  "passed": 1,
+  "failed": 3,
+  "passRate": 0.25,
+  "byCell": {
+    "GRAMMAR_ERROR:PREMIUM:KILLER": {
+      "total": 4,
+      "generated": 4,
+      "passed": 1,
+      "passRate": 0.25,
+      "avgScore": 79.8,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-killer-answer-point-repeated",
+          "count": 4
+        },
+        {
+          "code": "local:generation-notice",
+          "count": 2
+        },
+        {
+          "code": "local:quality-mode-relaxed",
+          "count": 2
+        },
+        {
+          "code": "local:review-recommended",
+          "count": 2
+        },
+        {
+          "code": "rejectionLast:grammar-killer-answer-point-repeated",
+          "count": 2
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-killer-answer-point-repeated",
+      "count": 4
+    },
+    {
+      "code": "local:generation-notice",
+      "count": 2
+    },
+    {
+      "code": "local:quality-mode-relaxed",
+      "count": 2
+    },
+    {
+      "code": "local:review-recommended",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-killer-answer-point-repeated",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:The explanation for (C) is extremely confusing, stating that 'makes' is the error/correction, but mixing up actual synta",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The explanation for the correct answer (A) is completely self-contradictory: it claims that 'have been recorded and edit",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The item is labeled as KILLER, but the source text is an incredibly simple, emotional narrative from a middle school / l",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The source text itself contains a major logic-altering typo in the final sentence ('it is unlikely that... would be awkw",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:For (E), the explanation claims 'they' refers to 'audiences', but contextually, 'they' in 'the experiential, risk-loaded",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The error point in (C) is a very simplistic subject-verb agreement on a relative pronoun ('that makes' vs 'that make' wi",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The grammatical justification for (E) doesn't catch that the original text's conditional logic in a counterfactual 'With",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The grammatical points tested (such as 'it' pointing to a singular idea, or 'how busy' modifier positioning) are extreme",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The wrong option explanation for (E) states that 'felt lost' would cause a comma splice, which is correct, but identifyi",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-killer-generic-answer-point",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-killer-overdrilled-answer",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-marker-too-dense",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-noun-clause-pronoun-mislabel",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-obvious-noun-what-relative",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-render-marker-count",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "local:quality-mode-relaxed": 2,
+    "local:generation-notice": 2,
+    "local:review-recommended": 2,
+    "llmFatal:The item is labeled as KILLER, but the source text is an incredibly simple, emotional narrative from a middle school / l": 1,
+    "llmMajor:The grammatical points tested (such as 'it' pointing to a singular idea, or 'how busy' modifier positioning) are extreme": 1,
+    "llmMajor:The wrong option explanation for (E) states that 'felt lost' would cause a comma splice, which is correct, but identifyi": 1,
+    "rejection:grammar-marker-too-dense": 1,
+    "rejection:grammar-killer-answer-point-repeated": 4,
+    "rejection:grammar-underline-too-long": 1,
+    "rejection:grammar-noun-clause-pronoun-mislabel": 1,
+    "rejection:grammar-killer-generic-answer-point": 1,
+    "rejectionLast:grammar-killer-generic-answer-point": 1,
+    "llmFatal:The source text itself contains a major logic-altering typo in the final sentence ('it is unlikely that... would be awkw": 1,
+    "llmFatal:The explanation for (C) is extremely confusing, stating that 'makes' is the error/correction, but mixing up actual synta": 1,
+    "llmMajor:The error point in (C) is a very simplistic subject-verb agreement on a relative pronoun ('that makes' vs 'that make' wi": 1,
+    "llmMajor:The grammatical justification for (E) doesn't catch that the original text's conditional logic in a counterfactual 'With": 1,
+    "rejection:mid-word-marker": 1,
+    "rejection:grammar-render-marker-count": 1,
+    "rejection:grammar-killer-overdrilled-answer": 1,
+    "rejection:grammar-obvious-noun-what-relative": 1,
+    "rejectionLast:grammar-obvious-adjacent-sv-agreement": 1,
+    "rejectionLast:grammar-explanation-too-long-hard": 1,
+    "llmFatal:The explanation for the correct answer (A) is completely self-contradictory: it claims that 'have been recorded and edit": 1,
+    "llmMajor:For (E), the explanation claims 'they' refers to 'audiences', but contextually, 'they' in 'the experiential, risk-loaded": 1,
+    "rejectionLast:grammar-killer-answer-point-repeated": 2
+  },
+  "worstSamples": [
+    {
+      "runIndex": 2,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7c3h007smm0s9gfw34jf",
+      "title": "2026학년도 수능 영어 41-42번 · 장문",
+      "llmScore": 68,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The source text itself contains a major logic-altering typo in the final sentence ('it is unlikely that... would be awkw",
+        "llmFatal:The explanation for (C) is extremely confusing, stating that 'makes' is the error/correction, but mixing up actual synta",
+        "llmMajor:The error point in (C) is a very simplistic subject-verb agreement on a relative pronoun ('that makes' vs 'that make' wi",
+        "llmMajor:The grammatical justification for (E) doesn't catch that the original text's conditional logic in a counterfactual 'With",
+        "rejection:mid-word-marker"
+      ],
+      "answerSurfaces": [
+        "(C):that make->that makes"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: mid-word-marker x1, grammar-render-marker-count x1, grammar-killer-answer-point-repeated x1, grammar-killer-overdrilled-answer x1, grammar-obvious-noun-what-relative x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-adjacent-sv-agreement: GRAMMAR_ERROR answer \"that makes\" is a directly adjacent subject-verb -s flip; choose an agreement target with an intervening modifier, relative clause, or attractor noun. | grammar-explanation-too-long-hard: Grammar explanation is too long for a polished student-facing grammar item; explain the answer only and keep other labels in wrongOptionExplanations."
+    },
+    {
+      "runIndex": 1,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7cba007wmm0su2vfplrv",
+      "title": "2026학년도 수능 영어 43-45번 · 장문",
+      "llmScore": 75,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The item is labeled as KILLER, but the source text is an incredibly simple, emotional narrative from a middle school / l",
+        "llmMajor:The grammatical points tested (such as 'it' pointing to a singular idea, or 'how busy' modifier positioning) are extreme",
+        "llmMajor:The wrong option explanation for (E) states that 'felt lost' would cause a comma splice, which is correct, but identifyi",
+        "rejection:grammar-marker-too-dense",
+        "rejection:grammar-killer-answer-point-repeated"
+      ],
+      "answerSurfaces": [
+        "(E):feeling lost->felt lost"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-marker-too-dense x1, grammar-killer-answer-point-repeated x1, grammar-underline-too-long x1, grammar-noun-clause-pronoun-mislabel x1, grammar-killer-generic-answer-point x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-generic-answer-point: KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern."
+    },
+    {
+      "runIndex": 3,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7bvm007omm0sg99seww5",
+      "title": "2026학년도 수능 영어 40번 · 요약문",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:The explanation for the correct answer (A) is completely self-contradictory: it claims that 'have been recorded and edit",
+        "llmMajor:For (E), the explanation claims 'they' refers to 'audiences', but contextually, 'they' in 'the experiential, risk-loaded",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejectionLast:grammar-killer-answer-point-repeated"
+      ],
+      "answerSurfaces": [
+        "(A):which->where"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-killer-answer-point-repeated x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (b) in non-answer decoys; use different grammar frames for distractors."
+    }
+  ]
+}

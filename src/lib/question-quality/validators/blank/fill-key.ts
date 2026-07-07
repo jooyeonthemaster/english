@@ -10,7 +10,7 @@ import { QuestionQualitySeverity, normalizeComparableText, normalizeText, summar
 // ---------------------------------------------------------------------------
 export function validateFillBlankKeyQuestion(
   question: Record<string, unknown>,
-  _passage: string | undefined,
+  passage: string | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const swb = normalizeText(question.sentenceWithBlank);
@@ -52,6 +52,44 @@ export function validateFillBlankKeyQuestion(
     }
   }
 
+  // (0c) 발문-정답 단어 수 모순 (wave4: fbk-direction-word-count-mismatch): 발문이
+  //   "한 단어로/두 단어로/N단어로" 같은 기계 검증 가능한 단어 수를 명시했는데
+  //   정답 단어 수가 어긋나면 채점 불능급 모순 — 베이스라인 실측: 발문 "한 단어로
+  //   쓰시오" + 정답 "were considered colors"(3단어). 이내/이하·이상 한정어는
+  //   부등식, 무한정어는 등식으로 판정하고, 수량 표현이 없으면 침묵한다.
+  {
+    const direction = normalizeText(question.direction);
+    const ansForCount = normalizeText(question.answer ?? question.correctAnswer);
+    const answerWordCount = ansForCount
+      .split(/\s+/)
+      .filter((token) => /[A-Za-z]/.test(token)).length;
+    if (direction && answerWordCount > 0) {
+      const KOREAN_NUMERALS: Record<string, number> = { 한: 1, 두: 2, 세: 3, 네: 4, 다섯: 5 };
+      const match = direction.match(/(?:([한두세네]|다섯)|(\d+))\s*(?:개의\s*)?단어/);
+      if (match) {
+        const target = match[2] ? Number(match[2]) : KOREAN_NUMERALS[match[1]];
+        const tail = direction.slice(
+          (match.index ?? 0) + match[0].length,
+          (match.index ?? 0) + match[0].length + 6,
+        );
+        const within = /이내|이하/.test(tail);
+        const atLeast = /이상/.test(tail);
+        const violated = within
+          ? answerWordCount > target
+          : atLeast
+            ? answerWordCount < target
+            : answerWordCount !== target;
+        if (Number.isFinite(target) && violated) {
+          add(
+            "error",
+            "fbk-direction-word-count-mismatch",
+            `발문이 "${match[0]}" 조건을 명시했지만 정답("${ansForCount}")은 ${answerWordCount}단어입니다 — 발문 조건과 정답이 모순됩니다. 정답 단어 수에 맞는 발문을 쓰거나 조건에 맞는 표현을 고르세요.`,
+          );
+        }
+      }
+    }
+  }
+
   // 빈 문자열이면 아래 두 검사는 스킵(가드) — 다른 게이트가 누락을 다룬다.
   if (!swb) return;
 
@@ -72,6 +110,32 @@ export function validateFillBlankKeyQuestion(
   const deobf = swb.replace(/([A-Za-z])[_·.\-]{1,2}(?=[A-Za-z])/g, "$1");
   const ans = normalizeText(question.answer ?? question.correctAnswer);
   const ansTok = summaryWritingComparableTokens(normalizeComparableText(ans));
+
+  // (3) 프레임 보존 (wave2: fbk-frame-altered): 유형 계약상 sentenceWithBlank 는
+  //   "빈칸을 제외하고 원문 그대로"·answer 는 "원문 verbatim"이다. 빈칸에 answer 를
+  //   되끼운 복원문이 원문에 존재하지 않으면 프레임이 변형된 것 — 베이스라인 실측
+  //   (runIndex 41/42): "before they ___"+"to be considered colors"(비문 프레임),
+  //   "before they could ___"+창작 정답. 복원 불일치 = 정답 무효/어법 파손급이라 차단.
+  //   빈칸 2개는 fbk-multiple-blanks 가 이미 차단하므로 단일 빈칸에서만 검사한다.
+  if (passage && ans && /_{3,}/.test(swb)) {
+    const blankMarkerCount = (swb.match(/_{3,}/g) ?? []).length;
+    if (blankMarkerCount === 1) {
+      const restoredRaw = swb.replace(/\s*_{3,}\s*/g, () => ` ${ans} `);
+      const restored = normalizeComparableText(restoredRaw)
+        .replace(/\s+([.,;:!?])/g, "$1")
+        .replace(/^[."'“”‘’…]+|[."'“”‘’…]+$/g, "")
+        .replace(/^\.{2,}\s*|\s*\.{2,}$/g, "")
+        .trim();
+      const passageComparable = normalizeComparableText(passage);
+      if (restored.length >= 20 && !passageComparable.includes(restored)) {
+        add(
+          "error",
+          "fbk-frame-altered",
+          `빈칸에 정답("${ans}")을 되끼운 문장이 원문에 없습니다 — 빈칸 삽입이 원문 어형/구문을 변형했습니다. sentenceWithBlank 는 원문 문장에서 정답 스팬만 _____ 로 바꾼 것이어야 합니다.`,
+        );
+      }
+    }
+  }
   if (
     deobf !== swb &&
     ansTok.length &&

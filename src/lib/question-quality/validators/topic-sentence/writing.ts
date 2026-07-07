@@ -1,6 +1,7 @@
 // Split from question-quality.ts — shared helpers in core.ts, public API via index.ts barrel.
 import { QuestionQualitySeverity, containsHangul, containsLatinLetter, countLiteral, isRecord, normalizeComparableText, normalizeText, summaryWritingComparableTokens } from "../../core";
 import { chipsAreInAnswerOrder, topicBlankAnswerSequence } from "@/lib/topic-sentence-writing";
+import { collectWordBankBuildBlanks, findUnbuildableWordBankBlanks } from "../summary/writing";
 
 
 
@@ -224,6 +225,24 @@ export function validateTopicSentenceWritingQuestion(
       );
     }
 
+    // TSW-GATE-STEM (tsw-cloze-degenerate-stem, wave5): 라벨을 걷어낸 줄기에 내용
+    //   토큰이 3개 미만이면 문장 골격이 없는 퇴화 stem — 실측(26-07-05 final-std
+    //   KILLER): summaryWithBlanks 가 "The (A), (B)" 뿐이라 연결 프레임이 렌더에
+    //   반영되지 않고 발문 자체가 성립하지 않았다.
+    if (summary) {
+      const stemTokens = summary
+        .replace(/\([A-J]\)/g, " ")
+        .split(/\s+/)
+        .filter((token) => /[A-Za-z]/.test(token));
+      if (stemTokens.length < 3) {
+        add(
+          "error",
+          "tsw-cloze-degenerate-stem",
+          `summaryWithBlanks 줄기에 내용 단어가 ${stemTokens.length}개뿐입니다 — 빈칸 라벨을 제외하고도 완결된 주제문 골격이 보여야 합니다.`,
+        );
+      }
+    }
+
     // TSW-GATE-BLANK-ANSWER (tsw-blank-answer-present): 각 빈칸은 비어있지 않은 answer 필요.
     if (blanks.some((blank) => !normalizeText(blank.answer))) {
       add(
@@ -277,6 +296,30 @@ export function validateTopicSentenceWritingQuestion(
           "sw-answer-not-in-summary",
           `정답 어구가 summaryWithBlanks 에 통째로 노출됩니다(누수): "${leakedPhrase}". 빈칸에는 placeholder 라벨만 두세요.`,
         );
+      }
+    }
+
+    // TSW-GATE-BUILDABLE (tsw-answer-not-buildable-from-wordbank): cloze 는 SUMMARY_WRITING
+    //   과 동일 구조(wordBank 칩 + blanks[].answer, 어형변화 허용)라 같은 F결함(정답 조립
+    //   불가)이 가능하다 — SW sw-answer-not-buildable-from-wordbank 미러. [보기] 칩 멀티셋으로
+    //   빈칸 정답을 조립할 수 없으면(필요 토큰 부족) 채점 불능(F). 어형변화·미끼 초과·
+    //   대체정답은 정상. wordBank 없는 cloze(자유 영작)는 검사하지 않는다 — 무회귀.
+    if (wordBank.length > 0) {
+      const buildBlanks = collectWordBankBuildBlanks(blanks);
+      if (buildBlanks.length > 0) {
+        const defects = findUnbuildableWordBankBlanks(wordBank, buildBlanks);
+        if (defects.length > 0) {
+          const detail = defects
+            .map(
+              (d) => `${d.label}: ${d.missing.map((token) => `"${token}"`).join(", ")}`,
+            )
+            .join(" / ");
+          add(
+            "error",
+            "tsw-answer-not-buildable-from-wordbank",
+            `[보기](wordBank) 칩으로 정답을 조립할 수 없습니다 — 부족 토큰 ${detail}. 필요한 단어를 wordBank 에 추가하세요(중복 필요 단어는 같은 문자열을 개수만큼). 미끼 초과는 허용됩니다.`,
+          );
+        }
       }
     }
   }

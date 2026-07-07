@@ -1,0 +1,80 @@
+{
+  "createdAt": "2026-07-04T16:41:08.376Z",
+  "outPath": "artifacts/ai-audits/wave3-tsw-killer-rerun2.jsonl",
+  "total": 1,
+  "passed": 0,
+  "failed": 1,
+  "passRate": 0,
+  "byCell": {
+    "TOPIC_SENTENCE_WRITING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 68,
+      "topIssues": [
+        {
+          "code": "llmFatal:The correctAnswer field does not match the blanks configuration or the summaryWithBlanks structure, violating type const",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The summaryWithBlanks template contains a different frame ('Red historically held (A) over other colors, a dominant stat",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The wordBank is intended to force inflection, but the list of words provided has multiple valid combinations causing sev",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Under the specified summaryWithBlanks, (A) is followed by 'over other colors, a dominant status (B)...', but the defined",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:The correctAnswer field does not match the blanks configuration or the summaryWithBlanks structure, violating type const",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The summaryWithBlanks template contains a different frame ('Red historically held (A) over other colors, a dominant stat",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The wordBank is intended to force inflection, but the list of words provided has multiple valid combinations causing sev",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Under the specified summaryWithBlanks, (A) is followed by 'over other colors, a dominant status (B)...', but the defined",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The correctAnswer field does not match the blanks configuration or the summaryWithBlanks structure, violating type const": 1,
+    "llmMajor:The summaryWithBlanks template contains a different frame ('Red historically held (A) over other colors, a dominant stat": 1,
+    "llmMajor:Under the specified summaryWithBlanks, (A) is followed by 'over other colors, a dominant status (B)...', but the defined": 1,
+    "llmMajor:The wordBank is intended to force inflection, but the list of words provided has multiple valid combinations causing sev": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "TOPIC_SENTENCE_WRITING",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 68,
+      "issueKeys": [
+        "llmFatal:The correctAnswer field does not match the blanks configuration or the summaryWithBlanks structure, violating type const",
+        "llmMajor:The summaryWithBlanks template contains a different frame ('Red historically held (A) over other colors, a dominant stat",
+        "llmMajor:Under the specified summaryWithBlanks, (A) is followed by 'over other colors, a dominant status (B)...', but the defined",
+        "llmMajor:The wordBank is intended to force inflection, but the list of words provided has multiple valid combinations causing sev"
+      ],
+      "answerSurfaces": [
+        "Red historically held an absolute dominance over other colors, a status (A) rooted in both early artistic practices and modern linguistic structures."
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

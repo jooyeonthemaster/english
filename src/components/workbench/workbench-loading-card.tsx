@@ -17,6 +17,12 @@ interface WorkbenchLoadingCardProps {
   statusIcon?: ElementType;
   spinIcon?: boolean;
   variant?: LoadingVariant;
+  /**
+   * 실측 진행률(0~100). 지정하면 진행바가 장식 바(CSS 고정폭 + breathe
+   * 애니메이션) 대신 실제 % 폭으로 렌더되고 width transition 이 붙는다.
+   * 미지정 시 기존 장식 바 그대로 — 기존 호출부 무회귀 계약.
+   */
+  progressPercent?: number;
   planBadge?: ReactNode;
   rightActions?: ReactNode;
   metaSlot?: ReactNode;
@@ -45,6 +51,7 @@ export function WorkbenchLoadingCard({
   statusIcon: StatusIcon = Loader2,
   spinIcon = true,
   variant = "analyzing",
+  progressPercent,
   planBadge,
   rightActions,
   metaSlot,
@@ -73,6 +80,12 @@ export function WorkbenchLoadingCard({
       ? "border-blue-200 bg-blue-50/60"
       : "border-slate-200 bg-slate-50";
   const shellSizing = fixedHeight ? "h-[340px] p-3 flex flex-col" : "p-4";
+  // 실측 진행률 모드: 값 클램프(0~100) 후 inline width 로 CSS 고정폭을 덮고,
+  // breathe(scaleX) 애니메이션은 %가 왜곡돼 보이므로 해제한다.
+  const measuredPercent =
+    typeof progressPercent === "number"
+      ? Math.min(100, Math.max(0, progressPercent))
+      : null;
 
   return (
     <div
@@ -148,7 +161,18 @@ export function WorkbenchLoadingCard({
 
       <div className={fixedHeight ? "mt-auto pt-3" : "mt-3"}>
         <div className="h-1.5 bg-white/75 rounded-full overflow-hidden ring-1 ring-blue-100/80">
-          <div className={`workbench-loading-progress h-full rounded-full ${progressClass}`} />
+          <div
+            className={`workbench-loading-progress h-full rounded-full ${progressClass}`}
+            style={
+              measuredPercent !== null
+                ? {
+                    width: `${measuredPercent}%`,
+                    animation: "none",
+                    transition: "width 0.5s ease",
+                  }
+                : undefined
+            }
+          />
         </div>
         <p className="text-[10px] text-blue-500 mt-1.5 font-medium">
           {progressLabel}

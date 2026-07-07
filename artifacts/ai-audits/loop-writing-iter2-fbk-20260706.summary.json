@@ -1,0 +1,272 @@
+{
+  "createdAt": "2026-07-05T18:17:43.229Z",
+  "outPath": "artifacts/ai-audits/loop-writing-iter2-fbk-20260706",
+  "total": 4,
+  "passed": 0,
+  "failed": 4,
+  "passRate": 0,
+  "byCell": {
+    "FILL_BLANK_KEY:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:sentenceWithBlank as given is nearly identical to passageWithBlank context, making this essentially a fill-in-the-copied",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blanked phrase 'were considered colors' is copied verbatim from the very next clause of the same sentence, so it's d",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation restates the passage narrative but doesn't justify why this exact phrase (vs. paraphrase) is the required an",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No distractors or condition design to test discrimination; a student can locate the missing words by simple proximity ma",
+          "count": 1
+        }
+      ]
+    },
+    "FILL_BLANK_KEY:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:sentenceWithBlank omits 'and then played a comparable role...' shown in passageWithBlank, creating inconsistency between",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The answer 'were considered colors' is directly copy-pasted phrasing derivable from surface lexical echo (color/colors) ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Condition 1 ('본문에 있는 단어만을 조합') combined with a required exact 3-word phrase almost trivially narrows the search space on",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:For a KILLER item, the blank should force convergence of two distinct textual clues via paraphrase, but here the answer ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No wrong-answer distractor set exists to evaluate trap quality; the item relies solely on modelAnswer exactness, but exp",
+          "count": 1
+        }
+      ]
+    },
+    "FILL_BLANK_KEY:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 62,
+      "topIssues": [
+        {
+          "code": "llmFatal:The item is a direct copy-paste of a sentence from the passage with two words blanked out ($before they were \\_\\_\\_\\_\\_$",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The problem asks students to 'find and write' from the text, but the blank itself is literally in the text. This is a re",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:For an INTERMEDIATE level, simply blanking 'considered colors' directly from the text fails the quality bar of requiring",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:There is no paraphrase, restructuring, or genuine inference logical link of 2+ sentences required; it requires zero reas",
+          "count": 1
+        }
+      ]
+    },
+    "FILL_BLANK_KEY:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 60,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank asks students to find and copy 'were considered colors' directly from the text, but the original text already ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The label 'KILLER' is highly inaccurate. A student only needs to look at the original source to find the exact matching ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The question design is extremely lazy; it literally leaves a blank in a sentence and expects the exact same words from t",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:sentenceWithBlank as given is nearly identical to passageWithBlank context, making this essentially a fill-in-the-copied",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:sentenceWithBlank omits 'and then played a comparable role...' shown in passageWithBlank, creating inconsistency between",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The answer 'were considered colors' is directly copy-pasted phrasing derivable from surface lexical echo (color/colors) ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank asks students to find and copy 'were considered colors' directly from the text, but the original text already ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blanked phrase 'were considered colors' is copied verbatim from the very next clause of the same sentence, so it's d",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The item is a direct copy-paste of a sentence from the passage with two words blanked out ($before they were \\_\\_\\_\\_\\_$",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The problem asks students to 'find and write' from the text, but the blank itself is literally in the text. This is a re",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Condition 1 ('본문에 있는 단어만을 조합') combined with a required exact 3-word phrase almost trivially narrows the search space on",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Explanation restates the passage narrative but doesn't justify why this exact phrase (vs. paraphrase) is the required an",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:For a KILLER item, the blank should force convergence of two distinct textual clues via paraphrase, but here the answer ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:For an INTERMEDIATE level, simply blanking 'considered colors' directly from the text fails the quality bar of requiring",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:No distractors or condition design to test discrimination; a student can locate the missing words by simple proximity ma",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:No wrong-answer distractor set exists to evaluate trap quality; the item relies solely on modelAnswer exactness, but exp",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The label 'KILLER' is highly inaccurate. A student only needs to look at the original source to find the exact matching ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The question design is extremely lazy; it literally leaves a blank in a sentence and expects the exact same words from t",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:There is no paraphrase, restructuring, or genuine inference logical link of 2+ sentences required; it requires zero reas",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The blanked phrase 'were considered colors' is copied verbatim from the very next clause of the same sentence, so it's d": 1,
+    "llmFatal:sentenceWithBlank as given is nearly identical to passageWithBlank context, making this essentially a fill-in-the-copied": 1,
+    "llmMajor:No distractors or condition design to test discrimination; a student can locate the missing words by simple proximity ma": 1,
+    "llmMajor:Explanation restates the passage narrative but doesn't justify why this exact phrase (vs. paraphrase) is the required an": 1,
+    "llmFatal:sentenceWithBlank omits 'and then played a comparable role...' shown in passageWithBlank, creating inconsistency between": 1,
+    "llmFatal:The answer 'were considered colors' is directly copy-pasted phrasing derivable from surface lexical echo (color/colors) ": 1,
+    "llmMajor:For a KILLER item, the blank should force convergence of two distinct textual clues via paraphrase, but here the answer ": 1,
+    "llmMajor:No wrong-answer distractor set exists to evaluate trap quality; the item relies solely on modelAnswer exactness, but exp": 1,
+    "llmMajor:Condition 1 ('본문에 있는 단어만을 조합') combined with a required exact 3-word phrase almost trivially narrows the search space on": 1,
+    "llmFatal:The item is a direct copy-paste of a sentence from the passage with two words blanked out ($before they were \\_\\_\\_\\_\\_$": 1,
+    "llmFatal:The problem asks students to 'find and write' from the text, but the blank itself is literally in the text. This is a re": 1,
+    "llmMajor:There is no paraphrase, restructuring, or genuine inference logical link of 2+ sentences required; it requires zero reas": 1,
+    "llmMajor:For an INTERMEDIATE level, simply blanking 'considered colors' directly from the text fails the quality bar of requiring": 1,
+    "llmFatal:The blank asks students to find and copy 'were considered colors' directly from the text, but the original text already ": 1,
+    "llmMajor:The label 'KILLER' is highly inaccurate. A student only needs to look at the original source to find the exact matching ": 1,
+    "llmMajor:The question design is extremely lazy; it literally leaves a blank in a sentence and expects the exact same words from t": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 4,
+      "type": "FILL_BLANK_KEY",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 60,
+      "issueKeys": [
+        "llmFatal:The blank asks students to find and copy 'were considered colors' directly from the text, but the original text already ",
+        "llmMajor:The label 'KILLER' is highly inaccurate. A student only needs to look at the original source to find the exact matching ",
+        "llmMajor:The question design is extremely lazy; it literally leaves a blank in a sentence and expects the exact same words from t"
+      ],
+      "answerSurfaces": [
+        "were considered colors"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 3,
+      "type": "FILL_BLANK_KEY",
+      "plan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 62,
+      "issueKeys": [
+        "llmFatal:The item is a direct copy-paste of a sentence from the passage with two words blanked out ($before they were \\_\\_\\_\\_\\_$",
+        "llmFatal:The problem asks students to 'find and write' from the text, but the blank itself is literally in the text. This is a re",
+        "llmMajor:There is no paraphrase, restructuring, or genuine inference logical link of 2+ sentences required; it requires zero reas",
+        "llmMajor:For an INTERMEDIATE level, simply blanking 'considered colors' directly from the text fails the quality bar of requiring"
+      ],
+      "answerSurfaces": [
+        "considered colors"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 1,
+      "type": "FILL_BLANK_KEY",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:The blanked phrase 'were considered colors' is copied verbatim from the very next clause of the same sentence, so it's d",
+        "llmFatal:sentenceWithBlank as given is nearly identical to passageWithBlank context, making this essentially a fill-in-the-copied",
+        "llmMajor:No distractors or condition design to test discrimination; a student can locate the missing words by simple proximity ma",
+        "llmMajor:Explanation restates the passage narrative but doesn't justify why this exact phrase (vs. paraphrase) is the required an"
+      ],
+      "answerSurfaces": [
+        "were considered colors"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 2,
+      "type": "FILL_BLANK_KEY",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:sentenceWithBlank omits 'and then played a comparable role...' shown in passageWithBlank, creating inconsistency between",
+        "llmFatal:The answer 'were considered colors' is directly copy-pasted phrasing derivable from surface lexical echo (color/colors) ",
+        "llmMajor:For a KILLER item, the blank should force convergence of two distinct textual clues via paraphrase, but here the answer ",
+        "llmMajor:No wrong-answer distractor set exists to evaluate trap quality; the item relies solely on modelAnswer exactness, but exp",
+        "llmMajor:Condition 1 ('본문에 있는 단어만을 조합') combined with a required exact 3-word phrase almost trivially narrows the search space on"
+      ],
+      "answerSurfaces": [
+        "were considered colors"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

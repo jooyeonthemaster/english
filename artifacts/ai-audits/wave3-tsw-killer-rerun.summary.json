@@ -1,0 +1,68 @@
+{
+  "createdAt": "2026-07-04T16:32:56.540Z",
+  "outPath": "artifacts/ai-audits/wave3-tsw-killer-rerun.jsonl",
+  "total": 1,
+  "passed": 0,
+  "failed": 1,
+  "passRate": 0,
+  "byCell": {
+    "TOPIC_SENTENCE_WRITING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 0,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": null,
+      "topIssues": [
+        {
+          "code": "rejection:scrambled-already-solved",
+          "count": 2
+        },
+        {
+          "code": "local:no-question",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:scrambled-already-solved",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:scrambled-already-solved",
+      "count": 2
+    },
+    {
+      "code": "local:no-question",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:scrambled-already-solved",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "local:no-question": 1,
+    "rejection:scrambled-already-solved": 2,
+    "rejectionLast:scrambled-already-solved": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "TOPIC_SENTENCE_WRITING",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": null,
+      "issueKeys": [
+        "local:no-question",
+        "rejection:scrambled-already-solved",
+        "rejectionLast:scrambled-already-solved"
+      ],
+      "answerSurfaces": [],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: scrambled-already-solved x2 | Last: quality/TOPIC_SENTENCE_WRITING - scrambled-already-solved: [보기](wordBank)가 빈칸 정답 어순대로 읽혀 어순이 누설됩니다(셔플 필요)."
+    }
+  ]
+}

@@ -250,6 +250,8 @@ export const vocabularySectionSchema = z
     vocabTestMode: vocabTestModeSchema.optional(),
     /** Vocabulary worksheet layout. */
     vocabTestLayout: vocabTestLayoutSchema.optional(),
+    /** 단어장(학습용 핵심 어휘) 레이아웃 — 없으면 기존 1열 표("table"). */
+    vocabStudyLayout: vocabTestLayoutSchema.optional(),
     /** Word-test rows excluded from the generated worksheet. Source vocabulary rows stay intact. */
     vocabTestExcludedKeys: z.array(z.string()).optional(),
     /** 표시할 난이도 단계(tier) 필터. 비거나 없으면: 단어장=전체, 시험지=기본(test+challenge). */

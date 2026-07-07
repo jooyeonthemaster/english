@@ -4,6 +4,7 @@ export const DOMAIN_LABELS: Record<TaskDomain, string> = {
   extraction: "자료 추출",
   "passage-analysis": "학습지 생성",
   "question-generation": "문제 생성",
+  "exam-report": "시험 리포트",
   "exam-generation": "시험지 생성",
   webtoon: "웹툰 생성",
 };
@@ -11,17 +12,19 @@ export const DOMAIN_LABELS: Record<TaskDomain, string> = {
 // Stage-specific count units so each workbench layer is visually distinct at a
 // glance. Used by task-queue list headers and other count badges. Keep aligned
 // with the unit terminology established for each management page:
-//   자료 → 권 · 지문 → 편 · 문제 → 문항 · 시험지 → 부
+//   자료 → 권 · 지문 → 편 · 문제 → 문항 · 리포트 → 건 · 시험지 → 부
 export const DOMAIN_UNITS: Record<TaskDomain, string> = {
   extraction: "권",
   "passage-analysis": "편",
   "question-generation": "문항",
+  "exam-report": "건",
   "exam-generation": "부",
   webtoon: "편",
 };
 
 export const DOMAIN_ORDER: TaskDomain[] = [
   "question-generation",
+  "exam-report",
   "exam-generation",
   "passage-analysis",
   "extraction",

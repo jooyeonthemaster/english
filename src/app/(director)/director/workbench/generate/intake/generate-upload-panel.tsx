@@ -55,7 +55,7 @@ import {
 } from "../../passages/import/_components/intake/crop/inline-crop-board";
 import { isExtractable } from "../../passages/import/_components/intake/crop/slot-meta";
 import { TutorialVideoPopup } from "../../passages/import/_components/intake/tutorial/tutorial-video-popup";
-import { UploadMetaChip } from "../../passages/import/_components/bulk-extract-client/components/upload-meta-chip";
+import { UploadMetaChip } from "@/components/workbench/shared/upload-meta-chip";
 
 // 사용법 튜토리얼 영상(@remotion/player) — 브라우저 전용이라 lazy + ssr:false.
 const CropTutorialPlayer = dynamic(

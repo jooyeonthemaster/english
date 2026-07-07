@@ -122,15 +122,24 @@ export function buildAntonymCandidateBlock(
     usedExhausted
       ? "- 이 지문의 안전 쌍은 모두 이전 문항에서 사용되었습니다. 재사용을 허용하되, 잘못된 쌍의 위치와 오답 설계를 이전 문항과 다르게 구성하세요."
       : "",
-    "- For the four non-answer options, use correctAntonym exactly as the displayed antonym.",
-    "- For the single answer option, choose one safe sourceWord and display its suggestedWrongPair as antonym; still fill correctAntonym with the real correctAntonym.",
-    "- Do not invent near-miss pairs when a suggestedWrongPair is available. This prevents vague pairs such as force-restrain or unproductive-passive from appearing.",
+    "- For the four non-answer options, use correctAntonym exactly as the displayed antonym — after checking it against the word's sense IN THIS PASSAGE (context-sense rule below).",
+    "- ⚠️ Context-sense rule: this list maps each word's MOST FREQUENT sense. If the passage uses the word in a different sense (e.g., 'common' in 'share a common root' means shared, not frequent), the listed correctAntonym is contextually wrong — never ship it as a correct pair there. That very mismatch, however, is the best raw material for the single incorrect pair (wrong-axis trap).",
     "- Never use both directions of the same pair as separate options, such as good-bad and bad-good in one item.",
-    requestedDifficulty === "KILLER"
-      ? "- KILLER calibration: make the incorrect pair a close synonym/neighbor on the same semantic field, not a second debatable antonym axis."
-      : requestedDifficulty === "BASIC"
-        ? "- BASIC calibration: use the clearest pairs from the list and avoid obscure vocabulary."
-        : "- INTERMEDIATE calibration: use clean pairs, but make the wrong pair tempting by collocation or nearby meaning.",
+    ...(requestedDifficulty === "KILLER" || requestedDifficulty === "INTERMEDIATE"
+      ? [
+          "- Answer design (the single incorrect pair) at this difficulty — a CONTEXT trap, never a flashcard giveaway:",
+          "  1) Best: wrong-axis polysemy trap — pick a source word whose passage sense differs from its everyday sense, display a legitimate dictionary antonym of the everyday sense (looks antonym-like at a glance), and set correctAntonym to the antonym of the passage sense. Example: 'common' used as shared → display \"common - rare\" (plausible but wrong axis) with correctAntonym=\"separate\".",
+          "  2) Acceptable: a same-field neighbor of the correct antonym whose nuance/degree/direction is off, so the pair only fails when re-read against the passage.",
+          "  3) 🚫 Forbidden as the answer: transparent synonym displays that any student spots without reading the passage (true - real, big - large, good - beneficial), and ultra-basic words (true/good/bad/new/long/same/old) as the answer word — they reduce the item to a vocabulary flashcard. Such words may fill at most 1-2 clean distractor pairs.",
+          requestedDifficulty === "KILLER"
+            ? "- KILLER distractor calibration: the four correct pairs stay clean and unambiguous, but do not fill them all with primary-school dictionary pairs (long-short, oldest-newest, same-different) — at most one such pair; prefer passage-anchored content words in matching form so eliminating them still requires reading."
+            : "- INTERMEDIATE distractor calibration: correct pairs stay clean, but at least two should be passage-anchored content words (not primary-school pairs), so the item is not solvable purely from word knowledge.",
+        ]
+      : [
+          "- For the single answer option, choose one safe sourceWord and display its suggestedWrongPair as antonym; still fill correctAntonym with the real correctAntonym.",
+          "- Do not invent near-miss pairs when a suggestedWrongPair is available. This prevents vague pairs such as force-restrain or unproductive-passive from appearing.",
+          "- BASIC calibration: use the clearest pairs from the list and avoid obscure vocabulary.",
+        ]),
     "### Safe source-backed ANTONYM pairs",
     ...candidateLines,
     "### Global forbidden ANTONYM pairs",

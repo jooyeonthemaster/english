@@ -1,0 +1,864 @@
+{
+  "createdAt": "2026-07-04T15:46:19.799Z",
+  "outPath": "artifacts/ai-audits/wave1-remeasure-std-20260705.jsonl",
+  "total": 28,
+  "passed": 0,
+  "failed": 28,
+  "passRate": 0,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:Blank sentence is immediately followed by its own explanation (the colon clause), so the answer is derivable by reading ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blank is verbatim copied from the source ('played a comparable role'), so blankAnswerMode SOURCE_EXACT here just tes",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blanked span is only a few words before the true content clause; it's a low-value, easily guessable slot rather than",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The correct answer option ③ is verbatim identical to the originalExpression/source span, violating SOURCE_EXACT norms of",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Difficulty label INTERMEDIATE is not honestly met; passage complexity is high (glass paradox) but the actual solving log",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank replaces a shallow, local clause ('were considered colors') rather than the paragraph's central inferential co",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The passage explicitly states glass 'never behaves as a liquid' and 'in practice it's really the latter [solid]', direct",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The quoted glassmaker line 'glass is not a material; it's a state' is a rhetorical flourish/definition, not a conclusion",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Answer content is essentially a restatement/synonym swap of 'were considered colors' with academic jargon, not a genuine",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors ②③④ are generic off-topic fabrications (chemical purity, craft superiority, pressure vs temperature) never m",
+          "count": 1
+        }
+      ]
+    },
+    "FILL_BLANK_KEY:STANDARD:INTERMEDIATE": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank word 'colors' appears verbatim in the immediately preceding sentence ('the only color'), making this a near co",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blanked sentence is the last sentence copied verbatim from the passage; solving requires zero inference, just litera",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:A student can fill the blank purely from local sentence grammar ('considered ___') plus the word 'color' repeated three ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation restates the quote rather than explaining any inferential reasoning connecting separate parts of the passage",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No 2-sentence evidence linkage is required; the blank is answerable by reading only the final sentence itself, violating",
+          "count": 1
+        }
+      ]
+    },
+    "FILL_BLANK_KEY:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:KILLER requires PARAPHRASE-mode reasoning drawing on ≥2 distinct passage clues; here the answer is a single quoted word ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:No distractors or condition design testing 2+ steps of reasoning; a student just needs to spot the sentence identical to",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blank word 'lexicon' is copied verbatim from the source sentence, not a paraphrase or inferred key expression; this ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blanked phrase 'a state' is copied verbatim from the source's final sentence, which is the sentence immediately prec",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Blanking the tail end of a directly quoted aphorism is a poor design choice for 핵심 표현 빈칸; it tests recall of surface tex",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_ORDER:STANDARD:INTERMEDIATE": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 84.5,
+      "topIssues": [
+        {
+          "code": "llmMajor:(A) and (B) are noticeably imbalanced in length (97 vs 43 words), flagged by the system's own quality warning, violating",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:(B) is a very short two-sentence chunk relative to (A) and (C), making it feel thin as a real paragraph chunk versus the",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor option 4 places (C) first and lacks a strong internal contradiction beyond missing the mess->this mess link, ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 2 (correct) 'B-A-C' happens to be the same order as source text minus given sentence, which is fine, but combined",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Wrong-option explanation for option 1 is slightly garbled/circular in phrasing, reducing clarity",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_ORDER:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:Chunk (A) is roughly 2x longer than (B) in word count (97 vs 43 words), violating the balance requirement and flagged by",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Options 4 and 5 place (C) first, which is trivially impossible since (C) opens with 'In certain languages' with no antec",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The correct order (B)-(A)-(C) relies almost entirely on the 'this mess' pronoun link from givenSentence to (B), a single",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The passage's actual original order is given->(Not that... B)->(A red range)->(C languages), but chunk (B) also contains",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors 4 and 5 (C first) are not plausible: (C) begins with a clear exemplification connector-like structure ('In c",
+          "count": 1
+        }
+      ]
+    },
+    "WORD_ORDER:STANDARD:INTERMEDIATE": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "llmFatal:System flagged that the answer is verbatim copyable from the passage, undermining the inference/paraphrase requirement e",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The produced 'sentence' is only a sentence fragment (no main subject/full clause shown as target), which is not a comple",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The scrambled chip list already appears in passage order (before, they, were considered colors, and then, played, a comp",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This is essentially a verbatim excerpt copy task, not requiring context-based inference or paraphrase as required for IN",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:INTERMEDIATE difficulty is not met: this is a direct verbatim copy from the passage requiring no context-linking or infe",
+          "count": 1
+        }
+      ]
+    },
+    "WORD_ORDER:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:The correctAnswer/modelAnswer omits the leading subject 'they' that is included in scrambledWords, so all 8 chips cannot",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The direction says to arrange words to complete a blank based on the underlined paradox sentence, but the underlined sen",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The generated modelAnswer is not actually backed by the passage: the original says 'The paradox is that, despite it bein",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The quality warning flags that the answer phrase is copied verbatim from the passage, meaning a student can just copy it",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Chunking is inconsistent: some chips are single words while 'had to' and 'a long time' are pre-bundled multi-word chunks",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_CORRECTION:STANDARD:INTERMEDIATE": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 74,
+      "topIssues": [
+        {
+          "code": "llmFatal:The explanation is self-contradictory and confused: it discusses causative verbs, wait-for structure, and to-infinitive ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This tests 'had to + V-ing' vs 'had to + V', which is a very low-value, almost too-easy grammar point (modal-like had to",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:correctAnswer field labeled '(A) played' is slightly ambiguous formatting-wise; should clarify it's the corrected word o",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:INTERMEDIATE difficulty rubric requires context-linking or two-sentence inference; here the error is purely local morpho",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The garbled explanation leaks confused reasoning/scratchpad-like text mentioning irrelevant concepts (causative verbs, o",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_CORRECTION:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 63,
+      "topIssues": [
+        {
+          "code": "llmFatal:'had waiting' is not a plausible, subtle grammar trap for KILLER level; it is a blatant, ungrammatical construction any ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The claimed error is planted by the generator, not backed by original passage grammar reasoning being genuinely tricky: ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The correctAnswer field '(A) had to wait' mixes label and answer awkwardly, and explanation calls it 'jinsdongsa vs jund",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation is muddled and partially incoherent ('정동사 준동사' framing) and does not identify the real fallacy (missing infi",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:For a KILLER label, this is a single, fairly obvious parallel-verb error (playing vs played) inside a clearly delimited ",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_CHOICE_COMBO:STANDARD:INTERMEDIATE": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 68,
+      "topIssues": [
+        {
+          "code": "llmFatal:Slot (A) 'depends on who you're asking' is idiomatic with 'who' as informal object of preposition, but the original pass",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Slot (C) tests despite vs although (preposition vs conjunction before gerund) which is a legitimate point, but combined ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:(A) 'how' fails semantically/idiomatically as much as grammatically, so students can eliminate it via meaning alone with",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:(B) emphatic-construction 'It was ~ that' analysis is questionable: 'It was with red that...' is arguably a cleft emphas",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:All three slots are simple grammar rules solvable by reading only the sentence containing the box; INTERMEDIATE requires",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_CHOICE_COMBO:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 68,
+      "topIssues": [
+        {
+          "code": "llmFatal:(A) 'others' vs 'the others' is a debatable stylistic/usage distinction, not a clear-cut grammatical error; many native ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:No slot tests a genuine hard grammar point (relatives/participles/parallelism/subjunctive) as required for KILLER; (A) i",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Slot (A) tests only tense/aspect (played vs playing) as a parallel-structure point, which is a shallow verb-form check, ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:(C) subject-verb agreement with words...meaning 'red' and 'beautiful' is a standard, well-worn trap (intervening singula",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Difficulty label KILLER is not earned: a mid-level student can solve (B) and (C) on a simple skim (basic SV agreement, d",
+          "count": 1
+        }
+      ]
+    },
+    "CONDITIONAL_WRITING:STANDARD:INTERMEDIATE": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:Given a word bank that is essentially a scrambled version of the original sentence, the task reduces to sentence reassem",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The model answer is a verbatim excerpt from the passage (word-for-word copy), so this is not a genuine inference/writing",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The model answer is verbatim copied from the source passage, not a paraphrase or inference task, which the system's own ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This fails the type bar requiring 'passage-based inference' combined with a grammatical/lexical condition—the student ju",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Conditions specify the exact final chunk 'the way they were blown and solidified in the first place', leaving virtually ",
+          "count": 1
+        }
+      ]
+    },
+    "CONDITIONAL_WRITING:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "rejection:cond-writing-condition-violated",
+          "count": 2
+        },
+        {
+          "code": "llmFatal:Model answer is copied nearly verbatim from the source passage (\"it had to wait a long time before they were considered ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Model answer is essentially a verbatim copy of the passage sentence (only 'comprehend'→'understand', 'the way it does'→'",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The condition 'it had to wait a long time before...' structure is literally handed to the student, and combined with the",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The exact-18-word-count condition is arbitrary busywork rather than a genuine grammatical/lexical constraint; it doesn't",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:cond-writing-condition-violated",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:'had waiting' is not a plausible, subtle grammar trap for KILLER level; it is a blatant, ungrammatical construction any ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:(A) 'others' vs 'the others' is a debatable stylistic/usage distinction, not a clear-cut grammatical error; many native ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Blank sentence is immediately followed by its own explanation (the colon clause), so the answer is derivable by reading ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Chunk (A) is roughly 2x longer than (B) in word count (97 vs 43 words), violating the balance requirement and flagged by",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Given a word bank that is essentially a scrambled version of the original sentence, the task reduces to sentence reassem",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:KILLER requires PARAPHRASE-mode reasoning drawing on ≥2 distinct passage clues; here the answer is a single quoted word ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Model answer is copied nearly verbatim from the source passage (\"it had to wait a long time before they were considered ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Model answer is essentially a verbatim copy of the passage sentence (only 'comprehend'→'understand', 'the way it does'→'",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:No distractors or condition design testing 2+ steps of reasoning; a student just needs to spot the sentence identical to",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:No slot tests a genuine hard grammar point (relatives/participles/parallelism/subjunctive) as required for KILLER; (A) i",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Options 4 and 5 place (C) first, which is trivially impossible since (C) opens with 'In certain languages' with no antec",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Slot (A) 'depends on who you're asking' is idiomatic with 'who' as informal object of preposition, but the original pass",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Slot (A) tests only tense/aspect (played vs playing) as a parallel-structure point, which is a shallow verb-form check, ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Slot (C) tests despite vs although (preposition vs conjunction before gerund) which is a legitimate point, but combined ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:System flagged that the answer is verbatim copyable from the passage, undermining the inference/paraphrase requirement e",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank is verbatim copied from the source ('played a comparable role'), so blankAnswerMode SOURCE_EXACT here just tes",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank replaces a shallow, local clause ('were considered colors') rather than the paragraph's central inferential co",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank word 'colors' appears verbatim in the immediately preceding sentence ('the only color'), making this a near co",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank word 'lexicon' is copied verbatim from the source sentence, not a paraphrase or inferred key expression; this ",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The blank is verbatim copied from the source ('played a comparable role'), so blankAnswerMode SOURCE_EXACT here just tes": 1,
+    "llmFatal:The blanked span is only a few words before the true content clause; it's a low-value, easily guessable slot rather than": 1,
+    "llmMajor:INTERMEDIATE requires reasoning connecting two distinct sentences with cause-effect/contrast, but here the correct answe": 1,
+    "llmMajor:Distractors are semantically distant and easily eliminated (obsolete, sharp decline, lost intrinsic values) rather than ": 1,
+    "llmMajor:The self-flagged qualityWarning about weak distractors confirms the item's own generation pipeline detected a defect tha": 1,
+    "llmFatal:The correct answer option ③ is verbatim identical to the originalExpression/source span, violating SOURCE_EXACT norms of": 1,
+    "llmFatal:Blank sentence is immediately followed by its own explanation (the colon clause), so the answer is derivable by reading ": 1,
+    "llmMajor:The blank spot is a very local, low-controlling detail (naming convention) rather than a logic-controlling sentence that": 1,
+    "llmMajor:Task essentially becomes a copy-detection exercise: since option ③ equals the removed original text word-for-word, a tes": 1,
+    "llmMajor:Difficulty label INTERMEDIATE is not honestly met; passage complexity is high (glass paradox) but the actual solving log": 1,
+    "llmFatal:The blank replaces a shallow, local clause ('were considered colors') rather than the paragraph's central inferential co": 1,
+    "llmMajor:Distractors 3, 4, 5 are extreme/absurd (subverted social codes, exclusively enhanced red's material value) and are trivi": 1,
+    "llmMajor:The system's own _qualityWarnings flag confirms the blank is too surface-level for KILLER, contradicting the difficulty ": 1,
+    "llmMajor:Answer content is essentially a restatement/synonym swap of 'were considered colors' with academic jargon, not a genuine": 1,
+    "llmFatal:The passage explicitly states glass 'never behaves as a liquid' and 'in practice it's really the latter [solid]', direct": 1,
+    "llmFatal:The quoted glassmaker line 'glass is not a material; it's a state' is a rhetorical flourish/definition, not a conclusion": 1,
+    "llmMajor:Distractors ②③④ are generic off-topic fabrications (chemical purity, craft superiority, pressure vs temperature) never m": 1,
+    "llmMajor:The self-flagged _qualityWarnings admit the item is 'too easy', 'list-like span', and 'polarity shortcut' vulnerable — t": 1,
+    "llmMajor:Explanation and answerLogic don't address the contradiction between 'never behaves as liquid/solid in practice' and pick": 1,
+    "llmFatal:The blank word 'colors' appears verbatim in the immediately preceding sentence ('the only color'), making this a near co": 1,
+    "llmMajor:A student can fill the blank purely from local sentence grammar ('considered ___') plus the word 'color' repeated three ": 1,
+    "llmMajor:Single-word constraint plus obvious repetition of 'color/colors' throughout the passage makes the answer trivially guess": 1,
+    "llmMajor:No plausible alternative or distractor discussion; explanation just restates the passage without addressing why other le": 1,
+    "llmFatal:The blanked sentence is the last sentence copied verbatim from the passage; solving requires zero inference, just litera": 1,
+    "llmMajor:No 2-sentence evidence linkage is required; the blank is answerable by reading only the final sentence itself, violating": 1,
+    "llmMajor:The blanked phrase 'a state' is a generic word, not a key collocation or inference-dependent expression, failing the typ": 1,
+    "llmMajor:Explanation restates the quote rather than explaining any inferential reasoning connecting separate parts of the passage": 1,
+    "llmFatal:The blank word 'lexicon' is copied verbatim from the source sentence, not a paraphrase or inferred key expression; this ": 1,
+    "llmFatal:No distractors or condition design testing 2+ steps of reasoning; a student just needs to spot the sentence identical to": 1,
+    "llmMajor:Direction says 'find in the passage' explicitly, which literally instructs the student to copy the word verbatim — trivi": 1,
+    "llmMajor:Explanation is verbose but ultimately just restates that the original word must be used because it fits, with no discuss": 1,
+    "llmMajor:For a KILLER fill-in-the-key-expression item, the blank should target a word requiring synthesis of multiple clues (e.g.": 1,
+    "llmFatal:The blanked phrase 'a state' is copied verbatim from the source's final sentence, which is the sentence immediately prec": 1,
+    "llmFatal:KILLER requires PARAPHRASE-mode reasoning drawing on ≥2 distinct passage clues; here the answer is a single quoted word ": 1,
+    "llmMajor:The explanation restates the whole passage summary but never explains why this is hard or what makes it a trap; there is": 1,
+    "llmMajor:Blanking the tail end of a directly quoted aphorism is a poor design choice for 핵심 표현 빈칸; it tests recall of surface tex": 1,
+    "llmMajor:No distractor/condition design is present to prevent guessing structurally (e.g., any word ending the sentence naturally": 1,
+    "llmMajor:Option 2 (correct) 'B-A-C' happens to be the same order as source text minus given sentence, which is fine, but combined": 1,
+    "llmMajor:Wrong-option explanation for option 1 is slightly garbled/circular in phrasing, reducing clarity": 1,
+    "llmMajor:(A) and (B) are noticeably imbalanced in length (97 vs 43 words), flagged by the system's own quality warning, violating": 1,
+    "llmMajor:(B) is a very short two-sentence chunk relative to (A) and (C), making it feel thin as a real paragraph chunk versus the": 1,
+    "llmMajor:Distractor option 4 places (C) first and lacks a strong internal contradiction beyond missing the mess->this mess link, ": 1,
+    "llmFatal:The passage's actual original order is given->(Not that... B)->(A red range)->(C languages), but chunk (B) also contains": 1,
+    "llmFatal:Options 4 and 5 place (C) first, which is trivially impossible since (C) opens with 'In certain languages' with no antec": 1,
+    "llmMajor:Since B-A-C is literally the untouched original sentence sequence from the source passage, the item doesn't test reorder": 1,
+    "llmMajor:Distractors 4 and 5 (C first) are not plausible: (C) begins with a clear exemplification connector-like structure ('In c": 1,
+    "llmMajor:The wrongOptionExplanations are overly verbose and somewhat use inflated/awkward meta-language ('연역적 구성', '기각합니다') that ": 1,
+    "llmFatal:Chunk (A) is roughly 2x longer than (B) in word count (97 vs 43 words), violating the balance requirement and flagged by": 1,
+    "llmFatal:The correct order (B)-(A)-(C) relies almost entirely on the 'this mess' pronoun link from givenSentence to (B), a single": 1,
+    "llmMajor:For a KILLER item, all wrong options should be genuinely tempting; option 4 (C)-(A)-(B) and 5 (C)-(B)-(A)) are easily el": 1,
+    "llmMajor:The explanation for option 1 is somewhat convoluted and doesn't clearly explain why (A) cannot immediately follow the gi": 1,
+    "llmMajor:Given the strong lexical cue ('this mess' explicitly echoing 'random ball-pit of atoms'), a mid-to-upper student can sol": 1,
+    "llmFatal:The scrambled chip list already appears in passage order (before, they, were considered colors, and then, played, a comp": 1,
+    "llmFatal:This is essentially a verbatim excerpt copy task, not requiring context-based inference or paraphrase as required for IN": 1,
+    "llmMajor:INTERMEDIATE difficulty rubric requires context-linking or cause-effect inference beyond copying one original sentence; ": 1,
+    "llmMajor:The chunking includes 'and then' bundled with 'played' isn't ideal, but more importantly there's no genuine ambiguity or": 1,
+    "llmFatal:The produced 'sentence' is only a sentence fragment (no main subject/full clause shown as target), which is not a comple": 1,
+    "llmFatal:System flagged that the answer is verbatim copyable from the passage, undermining the inference/paraphrase requirement e": 1,
+    "llmMajor:The direction says to complete '문장' but modelAnswer is just a clause fragment ending mid-sentence with no punctuation, m": 1,
+    "llmMajor:No distractor/trap design: chunks like 'one of the', 'very oldest' are pre-merged, removing genuine ordering challenge a": 1,
+    "llmMajor:INTERMEDIATE difficulty is not met: this is a direct verbatim copy from the passage requiring no context-linking or infe": 1,
+    "llmFatal:The correctAnswer/modelAnswer omits the leading subject 'they' that is included in scrambledWords, so all 8 chips cannot": 1,
+    "llmFatal:The quality warning flags that the answer phrase is copied verbatim from the passage, meaning a student can just copy it": 1,
+    "llmMajor:Chunking is inconsistent: some chips are single words while 'had to' and 'a long time' are pre-bundled multi-word chunks": 1,
+    "llmMajor:The scrambled order does not require deep grammar+meaning reasoning beyond recognizing subject-verb order; a mid-level s": 1,
+    "llmMajor:Explanation restates surface grammar (passive voice, before-clause) but doesn't address any genuine trap or alternative ": 1,
+    "llmFatal:The generated modelAnswer is not actually backed by the passage: the original says 'The paradox is that, despite it bein": 1,
+    "llmFatal:The direction says to arrange words to complete a blank based on the underlined paradox sentence, but the underlined sen": 1,
+    "llmMajor:System qualityWarning already flags verbatim answer leakage ('oldest human-made substances') directly copyable from the ": 1,
+    "llmMajor:No blank sentence/context is provided in the passage for students to reconstruct into de novo; the scrambled chunks 'it ": 1,
+    "llmMajor:Explanation calls this high difficulty due to relative clause structure, but doesn't address why other orderings (e.g., ": 1,
+    "llmMajor:correctAnswer field labeled '(A) played' is slightly ambiguous formatting-wise; should clarify it's the corrected word o": 1,
+    "llmFatal:The explanation is self-contradictory and confused: it discusses causative verbs, wait-for structure, and to-infinitive ": 1,
+    "llmFatal:This tests 'had to + V-ing' vs 'had to + V', which is a very low-value, almost too-easy grammar point (modal-like had to": 1,
+    "llmMajor:INTERMEDIATE difficulty rubric requires context-linking or two-sentence inference; here the error is purely local morpho": 1,
+    "llmMajor:The garbled explanation leaks confused reasoning/scratchpad-like text mentioning irrelevant concepts (causative verbs, o": 1,
+    "llmFatal:The claimed error is planted by the generator, not backed by original passage grammar reasoning being genuinely tricky: ": 1,
+    "llmMajor:For a KILLER label, this is a single, fairly obvious parallel-verb error (playing vs played) inside a clearly delimited ": 1,
+    "llmMajor:No long-distance dependency or structural complexity (no relative clause, no embedded modifier ambiguity) is used to obs": 1,
+    "llmMajor:The explanation includes confusing and inaccurate justification ('능동의 병렬 관계를 이룬다' and vague talk of '능수동 결합형 정동사') that ": 1,
+    "llmFatal:'had waiting' is not a plausible, subtle grammar trap for KILLER level; it is a blatant, ungrammatical construction any ": 1,
+    "llmFatal:The correctAnswer field '(A) had to wait' mixes label and answer awkwardly, and explanation calls it 'jinsdongsa vs jund": 1,
+    "llmMajor:This tests a trivial missing-word error (had to wait -> had waiting), not a genuine high-value grammar point like modifi": 1,
+    "llmMajor:No distractors or condition complexity are present beyond a single obvious fix; a mid-level student solves this on a ski": 1,
+    "llmMajor:Explanation is muddled and partially incoherent ('정동사 준동사' framing) and does not identify the real fallacy (missing infi": 1,
+    "llmMajor:All three slots are simple grammar rules solvable by reading only the sentence containing the box; INTERMEDIATE requires": 1,
+    "llmMajor:(B) emphatic-construction 'It was ~ that' analysis is questionable: 'It was with red that...' is arguably a cleft emphas": 1,
+    "llmMajor:No two-sentence causal/contrastive link is required anywhere in the item, violating the INTERMEDIATE evidence-depth requ": 1,
+    "llmFatal:Slot (A) 'depends on who you're asking' is idiomatic with 'who' as informal object of preposition, but the original pass": 1,
+    "llmFatal:Slot (C) tests despite vs although (preposition vs conjunction before gerund) which is a legitimate point, but combined ": 1,
+    "llmMajor:(A) 'how' fails semantically/idiomatically as much as grammatically, so students can eliminate it via meaning alone with": 1,
+    "llmMajor:INTERMEDIATE rubric requires reasoning connecting two sentences via cause/contrast; all three slots are single-sentence,": 1,
+    "llmMajor:Explanation for (A) is confusing and partially incoherent: it says 'whom 또는 who가 맞으며' then talks about incomplete clause": 1,
+    "llmFatal:Slot (A) tests only tense/aspect (played vs playing) as a parallel-structure point, which is a shallow verb-form check, ": 1,
+    "llmMajor:Only option 5 is wrong in 2+ slots; the system's own quality warning flags this violates the KILLER requirement of at le": 1,
+    "llmMajor:Slot (B) what vs that in a cleft sentence is a well-known, fairly easy pattern-match once students recognize 'It was ...": 1,
+    "llmMajor:(C) subject-verb agreement with words...meaning 'red' and 'beautiful' is a standard, well-worn trap (intervening singula": 1,
+    "llmFatal:No slot tests a genuine hard grammar point (relatives/participles/parallelism/subjunctive) as required for KILLER; (A) i": 1,
+    "llmFatal:(A) 'others' vs 'the others' is a debatable stylistic/usage distinction, not a clear-cut grammatical error; many native ": 1,
+    "llmMajor:Difficulty label KILLER is not earned: a mid-level student can solve (B) and (C) on a simple skim (basic SV agreement, d": 1,
+    "llmMajor:No long-distance dependency is engineered for the hardest slot; (B)'s subject 'sheets' is reasonably close to the verb d": 1,
+    "llmMajor:Explanation for (A) overexplains a subtle native-usage point in a way that risks confusing students rather than testing ": 1,
+    "llmFatal:The model answer is a verbatim excerpt from the passage (word-for-word copy), so this is not a genuine inference/writing": 1,
+    "llmFatal:Given a word bank that is essentially a scrambled version of the original sentence, the task reduces to sentence reassem": 1,
+    "llmMajor:INTERMEDIATE bar requires connecting two sentences via cause/contrast for inference; here the reference sentence and ans": 1,
+    "llmMajor:Word bank contains duplicate 'a' listed twice awkwardly ('a, comparable, ... a, long') which could confuse students abou": 1,
+    "llmMajor:No real distractor or trap in word order because the words are only assemblable in one syntactically valid order, making": 1,
+    "llmFatal:The model answer is verbatim copied from the source passage, not a paraphrase or inference task, which the system's own ": 1,
+    "llmFatal:This fails the type bar requiring 'passage-based inference' combined with a grammatical/lexical condition—the student ju": 1,
+    "llmMajor:The Korean referenceSentence is essentially a direct translation of the original English sentence, so there is no real p": 1,
+    "llmMajor:Conditions specify the exact final chunk 'the way they were blown and solidified in the first place', leaving virtually ": 1,
+    "llmMajor:No distractors or alternative wrong constructions are discussed in the explanation, so a student who merely copies gets ": 1,
+    "llmFatal:Model answer is copied nearly verbatim from the source passage (\"it had to wait a long time before they were considered ": 1,
+    "llmFatal:The condition 'it had to wait a long time before...' structure is literally handed to the student, and combined with the": 1,
+    "llmMajor:The referenceSentence (Korean) is essentially a direct translation of the original English clause, so no interpretive ga": 1,
+    "llmMajor:The explanation does not address why 'it' (not 'they' or 'red') is the correct pronoun subject or discuss any subtle tra": 1,
+    "llmMajor:No distractor traps or alternative phrasings are discussed (e.g., a plausible near-miss like 'was considered' singular a": 1,
+    "llmFatal:Model answer is essentially a verbatim copy of the passage sentence (only 'comprehend'→'understand', 'the way it does'→'": 1,
+    "llmFatal:The exact-18-word-count condition is arbitrary busywork rather than a genuine grammatical/lexical constraint; it doesn't": 1,
+    "llmMajor:No real second layer of reasoning: student can copy the passage sentence almost word-for-word and swap two lexical items": 1,
+    "llmMajor:The word-count condition creates artificial rigidity (must be exactly 18, no contractions) that tests counting skill rat": 1,
+    "llmMajor:Explanation is just word-by-word enumeration to justify the count; it doesn't explain why alternate natural phrasings wo": 1,
+    "rejection:cond-writing-condition-violated": 2,
+    "rejectionLast:cond-writing-condition-violated": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The blank is verbatim copied from the source ('played a comparable role'), so blankAnswerMode SOURCE_EXACT here just tes",
+        "llmFatal:The blanked span is only a few words before the true content clause; it's a low-value, easily guessable slot rather than",
+        "llmMajor:INTERMEDIATE requires reasoning connecting two distinct sentences with cause-effect/contrast, but here the correct answe",
+        "llmMajor:Distractors are semantically distant and easily eliminated (obsolete, sharp decline, lost intrinsic values) rather than ",
+        "llmMajor:The self-flagged qualityWarning about weak distractors confirms the item's own generation pipeline detected a defect tha"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 2,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The correct answer option ③ is verbatim identical to the originalExpression/source span, violating SOURCE_EXACT norms of",
+        "llmFatal:Blank sentence is immediately followed by its own explanation (the colon clause), so the answer is derivable by reading ",
+        "llmMajor:The blank spot is a very local, low-controlling detail (naming convention) rather than a logic-controlling sentence that",
+        "llmMajor:Task essentially becomes a copy-detection exercise: since option ③ equals the removed original text word-for-word, a tes",
+        "llmMajor:Difficulty label INTERMEDIATE is not honestly met; passage complexity is high (glass paradox) but the actual solving log"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 4,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The passage explicitly states glass 'never behaves as a liquid' and 'in practice it's really the latter [solid]', direct",
+        "llmFatal:The quoted glassmaker line 'glass is not a material; it's a state' is a rhetorical flourish/definition, not a conclusion",
+        "llmMajor:Distractors ②③④ are generic off-topic fabrications (chemical purity, craft superiority, pressure vs temperature) never m",
+        "llmMajor:The self-flagged _qualityWarnings admit the item is 'too easy', 'list-like span', and 'polarity shortcut' vulnerable — t",
+        "llmMajor:Explanation and answerLogic don't address the contradiction between 'never behaves as liquid/solid in practice' and pick"
+      ],
+      "answerSurfaces": [
+        "⑤"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 6,
+      "type": "FILL_BLANK_KEY",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The blanked sentence is the last sentence copied verbatim from the passage; solving requires zero inference, just litera",
+        "llmMajor:No 2-sentence evidence linkage is required; the blank is answerable by reading only the final sentence itself, violating",
+        "llmMajor:The blanked phrase 'a state' is a generic word, not a key collocation or inference-dependent expression, failing the typ",
+        "llmMajor:Explanation restates the quote rather than explaining any inferential reasoning connecting separate parts of the passage"
+      ],
+      "answerSurfaces": [
+        "a state"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 7,
+      "type": "FILL_BLANK_KEY",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The blank word 'lexicon' is copied verbatim from the source sentence, not a paraphrase or inferred key expression; this ",
+        "llmFatal:No distractors or condition design testing 2+ steps of reasoning; a student just needs to spot the sentence identical to",
+        "llmMajor:Direction says 'find in the passage' explicitly, which literally instructs the student to copy the word verbatim — trivi",
+        "llmMajor:Explanation is verbose but ultimately just restates that the original word must be used because it fits, with no discuss",
+        "llmMajor:For a KILLER fill-in-the-key-expression item, the blank should target a word requiring synthesis of multiple clues (e.g."
+      ],
+      "answerSurfaces": [
+        "lexicon"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 8,
+      "type": "FILL_BLANK_KEY",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The blanked phrase 'a state' is copied verbatim from the source's final sentence, which is the sentence immediately prec",
+        "llmFatal:KILLER requires PARAPHRASE-mode reasoning drawing on ≥2 distinct passage clues; here the answer is a single quoted word ",
+        "llmMajor:The explanation restates the whole passage summary but never explains why this is hard or what makes it a trap; there is",
+        "llmMajor:Blanking the tail end of a directly quoted aphorism is a poor design choice for 핵심 표현 빈칸; it tests recall of surface tex",
+        "llmMajor:No distractor/condition design is present to prevent guessing structurally (e.g., any word ending the sentence naturally"
+      ],
+      "answerSurfaces": [
+        "a state"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 14,
+      "type": "WORD_ORDER",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The produced 'sentence' is only a sentence fragment (no main subject/full clause shown as target), which is not a comple",
+        "llmFatal:System flagged that the answer is verbatim copyable from the passage, undermining the inference/paraphrase requirement e",
+        "llmMajor:The direction says to complete '문장' but modelAnswer is just a clause fragment ending mid-sentence with no punctuation, m",
+        "llmMajor:No distractor/trap design: chunks like 'one of the', 'very oldest' are pre-merged, removing genuine ordering challenge a",
+        "llmMajor:INTERMEDIATE difficulty is not met: this is a direct verbatim copy from the passage requiring no context-linking or infe"
+      ],
+      "answerSurfaces": [
+        "is that despite it being one of the very oldest human-made substances"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 15,
+      "type": "WORD_ORDER",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The correctAnswer/modelAnswer omits the leading subject 'they' that is included in scrambledWords, so all 8 chips cannot",
+        "llmFatal:The quality warning flags that the answer phrase is copied verbatim from the passage, meaning a student can just copy it",
+        "llmMajor:Chunking is inconsistent: some chips are single words while 'had to' and 'a long time' are pre-bundled multi-word chunks",
+        "llmMajor:The scrambled order does not require deep grammar+meaning reasoning beyond recognizing subject-verb order; a mid-level s",
+        "llmMajor:Explanation restates surface grammar (passive voice, before-clause) but doesn't address any genuine trap or alternative "
+      ],
+      "answerSurfaces": [
+        "had to wait a long time before they were considered colors"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 16,
+      "type": "WORD_ORDER",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The generated modelAnswer is not actually backed by the passage: the original says 'The paradox is that, despite it bein",
+        "llmFatal:The direction says to arrange words to complete a blank based on the underlined paradox sentence, but the underlined sen",
+        "llmMajor:System qualityWarning already flags verbatim answer leakage ('oldest human-made substances') directly copyable from the ",
+        "llmMajor:No blank sentence/context is provided in the passage for students to reconstruct into de novo; the scrambled chunks 'it ",
+        "llmMajor:Explanation calls this high difficulty due to relative clause structure, but doesn't address why other orderings (e.g., "
+      ],
+      "answerSurfaces": [
+        "it remains one of the oldest human-made substances whose behavior still puzzles modern science"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 18,
+      "type": "GRAMMAR_CORRECTION",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The explanation is self-contradictory and confused: it discusses causative verbs, wait-for structure, and to-infinitive ",
+        "llmFatal:This tests 'had to + V-ing' vs 'had to + V', which is a very low-value, almost too-easy grammar point (modal-like had to",
+        "llmMajor:INTERMEDIATE difficulty rubric requires context-linking or two-sentence inference; here the error is purely local morpho",
+        "llmMajor:The garbled explanation leaks confused reasoning/scratchpad-like text mentioning irrelevant concepts (causative verbs, o"
+      ],
+      "answerSurfaces": [
+        "(A) wait"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 20,
+      "type": "GRAMMAR_CORRECTION",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:'had waiting' is not a plausible, subtle grammar trap for KILLER level; it is a blatant, ungrammatical construction any ",
+        "llmFatal:The correctAnswer field '(A) had to wait' mixes label and answer awkwardly, and explanation calls it 'jinsdongsa vs jund",
+        "llmMajor:This tests a trivial missing-word error (had to wait -> had waiting), not a genuine high-value grammar point like modifi",
+        "llmMajor:No distractors or condition complexity are present beyond a single obvious fix; a mid-level student solves this on a ski",
+        "llmMajor:Explanation is muddled and partially incoherent ('정동사 준동사' framing) and does not identify the real fallacy (missing infi"
+      ],
+      "answerSurfaces": [
+        "(A) had to wait"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 22,
+      "type": "GRAMMAR_CHOICE_COMBO",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:Slot (A) 'depends on who you're asking' is idiomatic with 'who' as informal object of preposition, but the original pass",
+        "llmFatal:Slot (C) tests despite vs although (preposition vs conjunction before gerund) which is a legitimate point, but combined ",
+        "llmMajor:(A) 'how' fails semantically/idiomatically as much as grammatically, so students can eliminate it via meaning alone with",
+        "llmMajor:INTERMEDIATE rubric requires reasoning connecting two sentences via cause/contrast; all three slots are single-sentence,",
+        "llmMajor:Explanation for (A) is confusing and partially incoherent: it says 'whom 또는 who가 맞으며' then talks about incomplete clause"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

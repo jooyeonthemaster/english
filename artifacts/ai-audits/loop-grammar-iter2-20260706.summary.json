@@ -1,0 +1,252 @@
+{
+  "createdAt": "2026-07-05T17:34:30.882Z",
+  "outPath": "artifacts/ai-audits/loop-grammar-iter2-20260706",
+  "total": 4,
+  "passed": 1,
+  "failed": 3,
+  "passRate": 0.25,
+  "byCell": {
+    "GRAMMAR_ERROR:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-weak-filler-decoys",
+          "count": 3
+        },
+        {
+          "code": "llmFatal:Generator itself flagged quality-mode-relaxed and scarce passage; internal QC warnings explicitly say this is a weak/obv",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Labeled as KILLER but the error 'depended on the context' vs 'depending on the context' is a well-known, formulaic collo",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The error at (D) is 'The paradox is what, despite...' which is blatantly ungrammatical on a local skim ('is what,' follo",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The other four marked expressions (exceeded, their, early on, in which) are trivially correct with shallow, single-sente",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:PREMIUM:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 1,
+      "passRate": 0.5,
+      "avgScore": 89.5,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-error-not-mutated",
+          "count": 2
+        },
+        {
+          "code": "rejectionLast:grammar-error-not-mutated",
+          "count": 2
+        },
+        {
+          "code": "llmMajor:Decoy (B) 'thicker' is an adjective comparison modifying 'sheets of glass'. It is a weak distractor because its alternat",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The underlying grammar point for (C) is a standard subject-verb agreement with a relatively predictable distractor. Whil",
+          "count": 1
+        },
+        {
+          "code": "local:generation-notice",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-weak-filler-decoys",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-error-not-mutated",
+      "count": 3
+    },
+    {
+      "code": "local:generation-notice",
+      "count": 2
+    },
+    {
+      "code": "local:quality-mode-relaxed",
+      "count": 2
+    },
+    {
+      "code": "local:review-recommended",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-shallow-participle-adjective-answer",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-error-not-mutated",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-shallow-participle-adjective-answer",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:Generator itself flagged quality-mode-relaxed and scarce passage; internal QC warnings explicitly say this is a weak/obv",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Labeled as KILLER but the error 'depended on the context' vs 'depending on the context' is a well-known, formulaic collo",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The error at (D) is 'The paradox is what, despite...' which is blatantly ungrammatical on a local skim ('is what,' follo",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The other four marked expressions (exceeded, their, early on, in which) are trivially correct with shallow, single-sente",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:(A) depends and (E) behaves are shallow subject-verb agreement checks with no real ambiguity or distance, making them pa",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:(C) 'uneven' as adjective-vs-adverb after 'are' is a very basic 2nd-conditional complement check, offering little discri",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Decoy (B) 'thicker' is an adjective comparison modifying 'sheets of glass'. It is a weak distractor because its alternat",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors are padding: 'their' referring to 'humans', 'in which' with a clearly complete clause following, and 'early ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Explanation for (D) is verbose and partially confused, describing it as both a 'participle clause' and implying an activ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:KILLER rubric requires 2+ hard points (relative clause, participle, parallelism, subjunctive) and long-distance dependen",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Only 1 genuinely clean grammar slot was available per the generator's own notice, meaning the other 4 marked expressions",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The underlying grammar point for (C) is a standard subject-verb agreement with a relatively predictable distractor. Whil",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:Labeled as KILLER but the error 'depended on the context' vs 'depending on the context' is a well-known, formulaic collo": 1,
+    "llmFatal:The other four marked expressions (exceeded, their, early on, in which) are trivially correct with shallow, single-sente": 1,
+    "llmMajor:KILLER rubric requires 2+ hard points (relative clause, participle, parallelism, subjunctive) and long-distance dependen": 1,
+    "llmMajor:Distractors are padding: 'their' referring to 'humans', 'in which' with a clearly complete clause following, and 'early ": 1,
+    "llmMajor:Explanation for (D) is verbose and partially confused, describing it as both a 'participle clause' and implying an activ": 1,
+    "rejection:grammar-shallow-participle-adjective-answer": 2,
+    "rejectionLast:grammar-shallow-participle-adjective-answer": 2,
+    "local:quality-mode-relaxed": 2,
+    "local:generation-notice": 2,
+    "local:review-recommended": 2,
+    "llmFatal:The error at (D) is 'The paradox is what, despite...' which is blatantly ungrammatical on a local skim ('is what,' follo": 1,
+    "llmFatal:Generator itself flagged quality-mode-relaxed and scarce passage; internal QC warnings explicitly say this is a weak/obv": 1,
+    "llmMajor:(A) depends and (E) behaves are shallow subject-verb agreement checks with no real ambiguity or distance, making them pa": 1,
+    "llmMajor:(C) 'uneven' as adjective-vs-adverb after 'are' is a very basic 2nd-conditional complement check, offering little discri": 1,
+    "llmMajor:Only 1 genuinely clean grammar slot was available per the generator's own notice, meaning the other 4 marked expressions": 1,
+    "rejection:grammar-weak-filler-decoys": 4,
+    "rejection:grammar-killer-generic-answer-point": 1,
+    "rejection:grammar-shallow-depends-decoy": 1,
+    "rejection:grammar-shallow-nearby-passive-decoy": 1,
+    "rejection:grammar-error-not-mutated": 3,
+    "rejectionLast:grammar-obvious-noun-what-relative": 1,
+    "rejectionLast:grammar-weak-filler-decoys": 1,
+    "llmMajor:The underlying grammar point for (C) is a standard subject-verb agreement with a relatively predictable distractor. Whil": 1,
+    "llmMajor:Decoy (B) 'thicker' is an adjective comparison modifying 'sheets of glass'. It is a weak distractor because its alternat": 1,
+    "rejection:grammar-obvious-adjacent-sv-agreement": 1,
+    "rejection:grammar-killer-thin-answer": 1,
+    "rejection:grammar-render-marker-count": 1,
+    "rejectionLast:grammar-render-marker-count": 1,
+    "rejectionLast:grammar-surrounding-missing-marker": 1,
+    "rejectionLast:grammar-error-not-mutated": 2
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:Labeled as KILLER but the error 'depended on the context' vs 'depending on the context' is a well-known, formulaic collo",
+        "llmFatal:The other four marked expressions (exceeded, their, early on, in which) are trivially correct with shallow, single-sente",
+        "llmMajor:KILLER rubric requires 2+ hard points (relative clause, participle, parallelism, subjunctive) and long-distance dependen",
+        "llmMajor:Distractors are padding: 'their' referring to 'humans', 'in which' with a clearly complete clause following, and 'early ",
+        "llmMajor:Explanation for (D) is verbose and partially confused, describing it as both a 'participle clause' and implying an activ",
+        "rejection:grammar-shallow-participle-adjective-answer",
+        "rejectionLast:grammar-shallow-participle-adjective-answer"
+      ],
+      "answerSurfaces": [
+        "(D):depending->depended"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-shallow-participle-adjective-answer x1 | Last: quality/GRAMMAR_ERROR - grammar-shallow-participle-adjective-answer: INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"played\" -> \"playing\" before a noun; require deeper structure."
+    },
+    {
+      "runIndex": 2,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The error at (D) is 'The paradox is what, despite...' which is blatantly ungrammatical on a local skim ('is what,' follo",
+        "llmFatal:Generator itself flagged quality-mode-relaxed and scarce passage; internal QC warnings explicitly say this is a weak/obv",
+        "llmMajor:(A) depends and (E) behaves are shallow subject-verb agreement checks with no real ambiguity or distance, making them pa",
+        "llmMajor:(C) 'uneven' as adjective-vs-adverb after 'are' is a very basic 2nd-conditional complement check, offering little discri",
+        "llmMajor:Only 1 genuinely clean grammar slot was available per the generator's own notice, meaning the other 4 marked expressions"
+      ],
+      "answerSurfaces": [
+        "(D):that->what"
+      ],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-weak-filler-decoys x3, grammar-killer-generic-answer-point x1, grammar-shallow-depends-decoy x1, grammar-shallow-nearby-passive-decoy x1, grammar-error-not-mutated x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead. | grammar-weak-filler-decoys: GRAMMAR_ERROR uses weak filler decoy(s) ((A), (C)). Replace them with structurally meaningful grammar targets."
+    },
+    {
+      "runIndex": 4,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 83,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmMajor:The underlying grammar point for (C) is a standard subject-verb agreement with a relatively predictable distractor. Whil",
+        "llmMajor:Decoy (B) 'thicker' is an adjective comparison modifying 'sheets of glass'. It is a weak distractor because its alternat",
+        "rejection:grammar-error-not-mutated",
+        "rejection:grammar-obvious-adjacent-sv-agreement",
+        "rejection:grammar-killer-thin-answer"
+      ],
+      "answerSurfaces": [
+        "(C):are->is"
+      ],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-error-not-mutated x2, grammar-obvious-adjacent-sv-agreement x1, grammar-killer-thin-answer x1, grammar-weak-filler-decoys x1, grammar-render-marker-count x1 | Last: quality/GRAMMAR_ERROR - grammar-render-marker-count: Expected 5 rendered grammar markers, got 4. | grammar-surrounding-missing-marker: Marker d's surroundingText does not contain its own expression — the position cue points at a different sentence, risking misplacement and a mismatched explanation. | grammar-error-not-mutated: Stripping the markers reproduces the original passage unchanged — no grammar error was introduced; the answer flags unmutated source text. | grammar-error-not-mutated: The grammar error surface matches the original expression."
+    }
+  ]
+}

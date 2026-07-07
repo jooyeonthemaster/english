@@ -30,6 +30,10 @@ export const CREDIT_COSTS = {
   // Webtoon
   WEBTOON_IMAGE: 5,            // 일반(STANDARD) — Gemini nano-banana-2 로 9:16 웹툰 이미지
   WEBTOON_IMAGE_PREMIUM: 10,   // 프리미엄(PREMIUM) — GPT Image 2 로 9:16 웹툰 이미지
+
+  // Exam report (학생 시험 리포트)
+  EXAM_ANALYSIS: 1,            // 시험지 문항 분석 — 문항당 단가 (최소 15, costOverride 로 청구. 구조화(OCR/vision)는 무료)
+  EXAM_STUDENT_REPORT: 5,      // 학생 1명 상담 리포트 생성 (수치는 서버 결정론, 내러티브만 AI)
 } as const;
 
 export type OperationType = keyof typeof CREDIT_COSTS;
@@ -52,6 +56,8 @@ export const OPERATION_LABELS: Record<OperationType, string> = {
   PASSAGE_VARIANT: "AI 지문 변형 (전체)",
   WEBTOON_IMAGE: "웹툰 이미지 생성 (일반)",
   WEBTOON_IMAGE_PREMIUM: "웹툰 이미지 생성 (프리미엄)",
+  EXAM_ANALYSIS: "시험지 문항 분석",
+  EXAM_STUDENT_REPORT: "학생 시험 리포트",
 };
 
 // Top-up pricing tiers (KRW per credit pack). expiryDays = credit validity from

@@ -1,18 +1,3 @@
-"use client";
-
-import type { ReactNode } from "react";
-
-export function UploadMetaChip({
-  children,
-  icon,
-}: {
-  children: ReactNode;
-  icon: ReactNode;
-}) {
-  return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold text-slate-600">
-      {icon}
-      {children}
-    </span>
-  );
-}
+// (승격) UploadMetaChip 은 공용 위치로 이동했다 — 기존 import 경로 호환을 위한
+// re-export 셔닝. 신규 코드는 @/components/workbench/shared/upload-meta-chip 사용.
+export { UploadMetaChip } from "@/components/workbench/shared/upload-meta-chip";

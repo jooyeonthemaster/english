@@ -422,7 +422,7 @@ export function WebtoonPickerModal({
         className="relative z-10 flex max-h-[88vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
       >
         {/* ── 헤더 ── */}
-        <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-5 py-3.5">
+        <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-6 py-3.5">
           <div className="flex min-w-0 items-center gap-2.5">
             <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
               <ImageIcon className="size-4" />
@@ -448,7 +448,7 @@ export function WebtoonPickerModal({
         </div>
 
         {/* ── 탭(생성 / 보관함) ── */}
-        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-5 py-2.5">
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-6 py-2.5">
           <div className="flex h-9 rounded-lg bg-slate-100 p-0.5">
             <button
               type="button"
@@ -513,14 +513,14 @@ export function WebtoonPickerModal({
         {/* ── 본문 ── */}
         {view === "generate" ? (
           <>
-            <div className="min-h-0 flex-1 overflow-auto px-5 py-4">
+            <div className="min-h-0 flex-1 overflow-auto px-6 py-5">
               <WebtoonGenerateFields
                 value={config}
                 onChange={(patch) => setConfig((c) => ({ ...c, ...patch }))}
                 disabled={submitting}
               />
             </div>
-            <div className="shrink-0 border-t border-slate-100 px-5 py-3.5">
+            <div className="shrink-0 border-t border-slate-100 px-6 py-4">
               <button
                 type="button"
                 onClick={() => void handleGenerate()}
@@ -550,7 +550,7 @@ export function WebtoonPickerModal({
             </div>
           </>
         ) : (
-          <div className="min-h-0 flex-1 overflow-auto px-5 py-4">
+          <div className="min-h-0 flex-1 overflow-auto px-6 py-5">
             {loading && items.length === 0 && activeTracking.length === 0 ? (
               <div className="flex h-48 items-center justify-center gap-2 text-slate-400">
                 <Loader2 className="h-4 w-4 animate-spin" />

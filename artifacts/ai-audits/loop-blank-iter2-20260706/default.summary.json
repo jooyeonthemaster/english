@@ -1,0 +1,324 @@
+{
+  "createdAt": "2026-07-05T17:32:13.181Z",
+  "outPath": "artifacts/ai-audits/loop-blank-iter2-20260706/default.jsonl",
+  "total": 6,
+  "passed": 1,
+  "failed": 5,
+  "passRate": 0.16666666666666666,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:BASIC": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank is verbatim identical to the originalExpression text, and the correct option text is literally the exact same ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:blankAnswerMode is SOURCE_EXACT with the answer option text matching originalExpression exactly, so there is zero paraph",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Choosing the very first clause of the passage as the blank removes any need to connect across sentences; this undermines",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The quality warning flag in the JSON itself (blank-weak-distractors) confirms the distractors are weak/padding, consiste",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 86,
+      "topIssues": [
+        {
+          "code": "llmMajor:Answer requires only the single blank sentence plus immediate context (red as sole true color) — a fairly shallow one-ho",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:blankAnswerMode is SOURCE_EXACT but the correct option text 'received formal recognition as distinct hues' is not verbat",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The paraphrase level for INTERMEDIATE is quite aggressive (a full clause substitution with academic vocabulary 'distinct",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:originalExpression spans almost the entire sentence (a long, list-like clause), which the system's own qualityWarnings f",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blank essentially removes the exact sentence and asks for a near-verbatim paraphrase of a clause that is not the par",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors ②and④ import specific downstream details (linguistic differentiation, pictorial technique) that are somewhat",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct answer (③) is largely a restatement of the removed clause using synonyms (wait a long time -> prolonged dela",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation and wrongOptionExplanations are repetitive and slightly overwritten but don't add rigor beyond restating",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:BASIC": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank is too easy. A typical student can solve this by looking at the original passage or simply reading the surroun",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Using the exact same verbatim source text ('were considered colors') as option 1 is extremely unnatural for a high-quali",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 1 completely lacks any distractor value because it is verbatim, and options 2 and 3 are slightly disconnected in ",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 68,
+      "topIssues": [
+        {
+          "code": "llmFatal:The correct answer option (1) is the exact source text verbatim ('were considered colors'), making it too easy to locate",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 2 ('were instantly accepted as colors') is an obvious antonym/polarity trap that is too trivial for an intermedia",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 3 contains overly absolute language ('completely rejected in every culture') which is easily eliminated by traine",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:originalExpression spans almost the entire sentence (a long, list-like clause), which the system's own qualityWarnings f",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank essentially removes the exact sentence and asks for a near-verbatim paraphrase of a clause that is not the par",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank is too easy. A typical student can solve this by looking at the original passage or simply reading the surroun",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank is verbatim identical to the originalExpression text, and the correct option text is literally the exact same ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The correct answer option (1) is the exact source text verbatim ('were considered colors'), making it too easy to locate",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Using the exact same verbatim source text ('were considered colors') as option 1 is extremely unnatural for a high-quali",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Answer requires only the single blank sentence plus immediate context (red as sole true color) — a fairly shallow one-ho",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:blankAnswerMode is SOURCE_EXACT but the correct option text 'received formal recognition as distinct hues' is not verbat",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:blankAnswerMode is SOURCE_EXACT with the answer option text matching originalExpression exactly, so there is zero paraph",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Choosing the very first clause of the passage as the blank removes any need to connect across sentences; this undermines",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors ②and④ import specific downstream details (linguistic differentiation, pictorial technique) that are somewhat",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option 1 completely lacks any distractor value because it is verbatim, and options 2 and 3 are slightly disconnected in ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option 2 ('were instantly accepted as colors') is an obvious antonym/polarity trap that is too trivial for an intermedia",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option 3 contains overly absolute language ('completely rejected in every culture') which is easily eliminated by traine",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The correct answer (③) is largely a restatement of the removed clause using synonyms (wait a long time -> prolonged dela",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The explanation and wrongOptionExplanations are repetitive and slightly overwritten but don't add rigor beyond restating",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The paraphrase level for INTERMEDIATE is quite aggressive (a full clause substitution with academic vocabulary 'distinct",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The quality warning flag in the JSON itself (blank-weak-distractors) confirms the distractors are weak/padding, consiste",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The blank is verbatim identical to the originalExpression text, and the correct option text is literally the exact same ": 1,
+    "llmMajor:blankAnswerMode is SOURCE_EXACT with the answer option text matching originalExpression exactly, so there is zero paraph": 1,
+    "llmMajor:The quality warning flag in the JSON itself (blank-weak-distractors) confirms the distractors are weak/padding, consiste": 1,
+    "llmMajor:Choosing the very first clause of the passage as the blank removes any need to connect across sentences; this undermines": 1,
+    "llmMajor:blankAnswerMode is SOURCE_EXACT but the correct option text 'received formal recognition as distinct hues' is not verbat": 1,
+    "llmMajor:Answer requires only the single blank sentence plus immediate context (red as sole true color) — a fairly shallow one-ho": 1,
+    "llmMajor:The paraphrase level for INTERMEDIATE is quite aggressive (a full clause substitution with academic vocabulary 'distinct": 1,
+    "llmFatal:The blank essentially removes the exact sentence and asks for a near-verbatim paraphrase of a clause that is not the par": 1,
+    "llmFatal:originalExpression spans almost the entire sentence (a long, list-like clause), which the system's own qualityWarnings f": 1,
+    "llmMajor:The correct answer (③) is largely a restatement of the removed clause using synonyms (wait a long time -> prolonged dela": 1,
+    "llmMajor:Distractors ②and④ import specific downstream details (linguistic differentiation, pictorial technique) that are somewhat": 1,
+    "llmMajor:The explanation and wrongOptionExplanations are repetitive and slightly overwritten but don't add rigor beyond restating": 1,
+    "llmFatal:Using the exact same verbatim source text ('were considered colors') as option 1 is extremely unnatural for a high-quali": 1,
+    "llmFatal:The blank is too easy. A typical student can solve this by looking at the original passage or simply reading the surroun": 1,
+    "llmMajor:Option 1 completely lacks any distractor value because it is verbatim, and options 2 and 3 are slightly disconnected in ": 1,
+    "llmFatal:The correct answer option (1) is the exact source text verbatim ('were considered colors'), making it too easy to locate": 1,
+    "llmMajor:Option 2 ('were instantly accepted as colors') is an obvious antonym/polarity trap that is too trivial for an intermedia": 1,
+    "llmMajor:Option 3 contains overly absolute language ('completely rejected in every culture') which is easily eliminated by traine": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "BASIC",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The blank is verbatim identical to the originalExpression text, and the correct option text is literally the exact same ",
+        "llmMajor:blankAnswerMode is SOURCE_EXACT with the answer option text matching originalExpression exactly, so there is zero paraph",
+        "llmMajor:The quality warning flag in the JSON itself (blank-weak-distractors) confirms the distractors are weak/padding, consiste",
+        "llmMajor:Choosing the very first clause of the passage as the blank removes any need to connect across sentences; this undermines"
+      ],
+      "answerSurfaces": [
+        "①"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 5,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 68,
+      "issueKeys": [
+        "llmFatal:The correct answer option (1) is the exact source text verbatim ('were considered colors'), making it too easy to locate",
+        "llmMajor:Option 2 ('were instantly accepted as colors') is an obvious antonym/polarity trap that is too trivial for an intermedia",
+        "llmMajor:Option 3 contains overly absolute language ('completely rejected in every culture') which is easily eliminated by traine"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 3,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:The blank essentially removes the exact sentence and asks for a near-verbatim paraphrase of a clause that is not the par",
+        "llmFatal:originalExpression spans almost the entire sentence (a long, list-like clause), which the system's own qualityWarnings f",
+        "llmMajor:The correct answer (③) is largely a restatement of the removed clause using synonyms (wait a long time -> prolonged dela",
+        "llmMajor:Distractors ②and④ import specific downstream details (linguistic differentiation, pictorial technique) that are somewhat",
+        "llmMajor:The explanation and wrongOptionExplanations are repetitive and slightly overwritten but don't add rigor beyond restating"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 4,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "BASIC",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 75,
+      "issueKeys": [
+        "llmFatal:Using the exact same verbatim source text ('were considered colors') as option 1 is extremely unnatural for a high-quali",
+        "llmFatal:The blank is too easy. A typical student can solve this by looking at the original passage or simply reading the surroun",
+        "llmMajor:Option 1 completely lacks any distractor value because it is verbatim, and options 2 and 3 are slightly disconnected in "
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 2,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 86,
+      "issueKeys": [
+        "llmMajor:blankAnswerMode is SOURCE_EXACT but the correct option text 'received formal recognition as distinct hues' is not verbat",
+        "llmMajor:Answer requires only the single blank sentence plus immediate context (red as sole true color) — a fairly shallow one-ho",
+        "llmMajor:The paraphrase level for INTERMEDIATE is quite aggressive (a full clause substitution with academic vocabulary 'distinct"
+      ],
+      "answerSurfaces": [
+        "②"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

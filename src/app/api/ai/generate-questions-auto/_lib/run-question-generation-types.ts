@@ -27,7 +27,12 @@ export interface RunGenerationInput {
   onModelUsage?: (event: QuestionGenerationUsageEvent) => void;
 }
 
-export type QualityMode = "strict" | "relaxed";
+// "scarce" = 구제(salvage) 최선 생성 모드 — relaxed 에서 전 유형의 "완성도(craft)"
+// 게이트(디코이 매력도·킬러 깊이·obvious/얕음·해설 취향 계열, SALVAGE_RELAXABLE_CODES)
+// 까지 경고로 강등해 문항을 출하하되, 정답 유일성·누출·렌더 무결성 게이트는 그대로
+// 차단한다. 출하물에는 사유 notice·검수 권장이 부착된다. (26-07-06 유저 결정:
+// "생성 실패"는 최악의 결과 — 경고를 달고서라도 반드시 문항을 만들어야 한다.)
+export type QualityMode = "strict" | "relaxed" | "scarce";
 
 export type RejectionPhase = "model" | "postprocess" | "quality";
 
@@ -61,6 +66,21 @@ export interface QuestionGenerationRejectionSummary {
   message: string;
 }
 
+// 품질 게이트에서 탈락했지만 구조는 완성된 후보의 보존본 — never-fail 구제 사다리가
+// "완성도(craft) 결함만 있는 최선 후보"를 경고 부착으로 재승인할 때 쓴다.
+// F급(정답 무효·누출·렌더 파손) 코드가 하나라도 섞인 후보는 절대 재승인되지 않는다.
+export interface RejectedQuestionCandidate {
+  subType: string;
+  qualityMode: QualityMode;
+  attemptIndex: number;
+  question: Record<string, unknown>;
+  blockingCodes: string[];
+  blockingIssues: Array<{ code: string; message: string; severity: string }>;
+  warnings: Array<{ code: string; message: string; severity: string }>;
+}
+
 export interface RejectionRecorder {
   issues: QuestionGenerationRejectionIssue[];
+  /** quality 단계 탈락 후보 풀(상한 있음) — 구제 사다리 전용. */
+  pool?: RejectedQuestionCandidate[];
 }

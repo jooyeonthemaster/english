@@ -1,0 +1,154 @@
+{
+  "createdAt": "2026-07-05T18:21:18.698Z",
+  "outPath": "artifacts/ai-audits/loop-writing-iter3-fbk-20260706",
+  "total": 2,
+  "passed": 0,
+  "failed": 2,
+  "passRate": 0,
+  "byCell": {
+    "FILL_BLANK_KEY:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:No answer choices are provided despite direction saying '고르시오' (choose), yet schema/type expects either MCQ options or a",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Two contradictory answer fields: 'answer' is a passage-copy phrase ('were considered colors') while 'correctAnswer' is a",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation only justifies the chosen answer but never addresses why near-miss paraphrases or the passage-copy version w",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:For a KILLER blank-inference item, blankAnswerMode should be PARAPHRASE per spec, but 'answer' is literally lifted from ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No distractors or alternative surface forms are given at all, so there is no way to assess trap design, resistance to sh",
+          "count": 1
+        }
+      ]
+    },
+    "FILL_BLANK_KEY:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "llmFatal:It does not qualify as a KILLER question; any student can easily solve this mechanical fill-in-the-blank item by simply ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The item is not a real inference test: the correct answer is a direct, word-for-word copy-paste from the original passag",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation falsely claims this requires 2-step logic and deep context, when it is actually a basic text-retrieval t",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The instruction '본문에서 찾아 쓰시오' becomes trivial when the original passage with the blank intact is provided as part of the",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:It does not qualify as a KILLER question; any student can easily solve this mechanical fill-in-the-blank item by simply ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:No answer choices are provided despite direction saying '고르시오' (choose), yet schema/type expects either MCQ options or a",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The item is not a real inference test: the correct answer is a direct, word-for-word copy-paste from the original passag",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Two contradictory answer fields: 'answer' is a passage-copy phrase ('were considered colors') while 'correctAnswer' is a",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Explanation only justifies the chosen answer but never addresses why near-miss paraphrases or the passage-copy version w",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:For a KILLER blank-inference item, blankAnswerMode should be PARAPHRASE per spec, but 'answer' is literally lifted from ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:No distractors or alternative surface forms are given at all, so there is no way to assess trap design, resistance to sh",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The explanation falsely claims this requires 2-step logic and deep context, when it is actually a basic text-retrieval t",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The instruction '본문에서 찾아 쓰시오' becomes trivial when the original passage with the blank intact is provided as part of the",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:Two contradictory answer fields: 'answer' is a passage-copy phrase ('were considered colors') while 'correctAnswer' is a": 1,
+    "llmFatal:No answer choices are provided despite direction saying '고르시오' (choose), yet schema/type expects either MCQ options or a": 1,
+    "llmMajor:For a KILLER blank-inference item, blankAnswerMode should be PARAPHRASE per spec, but 'answer' is literally lifted from ": 1,
+    "llmMajor:No distractors or alternative surface forms are given at all, so there is no way to assess trap design, resistance to sh": 1,
+    "llmMajor:Explanation only justifies the chosen answer but never addresses why near-miss paraphrases or the passage-copy version w": 1,
+    "llmFatal:The item is not a real inference test: the correct answer is a direct, word-for-word copy-paste from the original passag": 1,
+    "llmFatal:It does not qualify as a KILLER question; any student can easily solve this mechanical fill-in-the-blank item by simply ": 1,
+    "llmMajor:The instruction '본문에서 찾아 쓰시오' becomes trivial when the original passage with the blank intact is provided as part of the": 1,
+    "llmMajor:The explanation falsely claims this requires 2-step logic and deep context, when it is actually a basic text-retrieval t": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "FILL_BLANK_KEY",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:Two contradictory answer fields: 'answer' is a passage-copy phrase ('were considered colors') while 'correctAnswer' is a",
+        "llmFatal:No answer choices are provided despite direction saying '고르시오' (choose), yet schema/type expects either MCQ options or a",
+        "llmMajor:For a KILLER blank-inference item, blankAnswerMode should be PARAPHRASE per spec, but 'answer' is literally lifted from ",
+        "llmMajor:No distractors or alternative surface forms are given at all, so there is no way to assess trap design, resistance to sh",
+        "llmMajor:Explanation only justifies the chosen answer but never addresses why near-miss paraphrases or the passage-copy version w"
+      ],
+      "answerSurfaces": [
+        "were deemed worthy of that status"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 2,
+      "type": "FILL_BLANK_KEY",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 65,
+      "issueKeys": [
+        "llmFatal:The item is not a real inference test: the correct answer is a direct, word-for-word copy-paste from the original passag",
+        "llmFatal:It does not qualify as a KILLER question; any student can easily solve this mechanical fill-in-the-blank item by simply ",
+        "llmMajor:The instruction '본문에서 찾아 쓰시오' becomes trivial when the original passage with the blank intact is provided as part of the",
+        "llmMajor:The explanation falsely claims this requires 2-step logic and deep context, when it is actually a basic text-retrieval t"
+      ],
+      "answerSurfaces": [
+        "were considered colors"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

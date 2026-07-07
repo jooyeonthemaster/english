@@ -1,6 +1,6 @@
 // Split from question-quality.ts — shared helpers in core.ts, public API via index.ts barrel.
 import { QuestionQualitySeverity, containsLoose, containsStandaloneToken, findDuplicate, isRecord, isSingleEnglishToken, isTinyFunctionWord, normalizeComparableText, normalizeLabel, normalizeText } from "../../core";
-import { collectQuantityAnswerIssues } from "./shared";
+import { collectQuantityAnswerIssues, findGrammarPerceptionComplementToggle } from "./shared";
 
 
 
@@ -128,6 +128,29 @@ export function validateGrammarChoiceComboQuestion(
     }
   }
 
+  // 해설 잘림 게이트 (wave2: combo-explanation-truncated) — 베이스라인 실측
+  // (runIndex 5): 해설이 "… (C) "로 끝나 (C) 슬롯 설명이 통째로 누락된 채 출하.
+  // 결정론 규칙: 해설 안 마지막 슬롯 라벨 뒤에 실질 내용(문장부호/공백 제외)이
+  // 전혀 없으면 생성이 잘린 것. 중간 라벨의 짧은 연결("(A)와 (B)는 …")은
+  // 오탐이라 마지막 라벨의 빈 꼬리만 잡는다(보수 원칙).
+  const explanationText = normalizeText(question.explanation);
+  if (explanationText) {
+    const labelMatches = [...explanationText.matchAll(/\(([A-C])\)/g)];
+    const lastLabel = labelMatches[labelMatches.length - 1];
+    if (lastLabel && lastLabel.index !== undefined) {
+      const tail = explanationText
+        .slice(lastLabel.index + lastLabel[0].length)
+        .replace(/[\s.,;:!?~\-–—'"“”‘’()[\]]/g, "");
+      if (tail.length === 0) {
+        add(
+          "error",
+          "combo-explanation-truncated",
+          `Explanation ends with slot label ${lastLabel[0]} but no content follows — the ${lastLabel[0]} slot is never explained (truncated generation).`,
+        );
+      }
+    }
+  }
+
   const slotCandidates: Array<{ correct: string; wrong: string; label: string }> = [];
   for (const [slotIndex, slot] of slots.entries()) {
     const correct = normalizeText(slot.correctExpression);
@@ -163,9 +186,20 @@ export function validateGrammarChoiceComboQuestion(
     if (isDisputableTenseToggle(correct, wrong)) {
       add(
         "error",
-        "grammar-tense-only-error",
+        "combo-tense-only-error",
         `Combo slot candidates "${correct}" ↔ "${wrong}" are a tense-only/do-support toggle, which is contextually disputable; a box choice must be unambiguously ungrammatical.`,
       );
+    }
+    // 지각동사 보어 토글 게이트 (wave1) — 틀린 후보가 지각동사 구문/명사+to-V
+    // 파스로 정문이 되면 두 후보 모두 옳아 복수정답 시비가 된다(정답 무효급).
+    const perceptionToggle = findGrammarPerceptionComplementToggle(
+      correct,
+      wrong,
+      normalizeText(slot.surroundingText),
+      passage,
+    );
+    if (perceptionToggle) {
+      add("error", "combo-perception-toggle", perceptionToggle);
     }
   }
 

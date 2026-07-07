@@ -2,7 +2,7 @@ import type { AnalysisSection } from "@/lib/passage-report/analysis-report/schem
 import { cn } from "@/lib/utils";
 import { DelBtn, Field } from "./editable-field";
 import type { SectionFlowCtx, VocabularyRow } from "./types";
-import { VocabBlankCell, VocabTestGridCard, isDefaultVocabularyTestTarget, rowMatchesTierFilter, vocabTestHiddenCols, vocabTestRowKey } from "./vocabulary";
+import { VocabBlankCell, VocabStudyGridCard, VocabTestGridCard, isDefaultVocabularyTestTarget, rowMatchesTierFilter, vocabTestHiddenCols, vocabTestRowKey } from "./vocabulary";
 
 export function vocabularySectionFlow(section: Extract<AnalysisSection, { kind: "vocabulary" }>, ctx: SectionFlowCtx): void {
   const { editable, commit, push, options } = ctx;
@@ -11,7 +11,42 @@ const s = section;
       const h = new Set(s.hiddenCols ?? []);
       const upd = (i: number, p: Partial<(typeof s.rows)[number]>) => commit({ ...s, rows: s.rows.map((r, j) => (j === i ? { ...r, ...p } : r)) });
       const delRow = (i: number) => commit({ ...s, rows: s.rows.filter((_, j) => j !== i) });
-      if (!options?.vocabTestOnly) {
+      if (!options?.vocabTestOnly && (s.vocabStudyLayout ?? "table") === "two-column") {
+        // 단어장 2열 카드 — 난이도 필터를 통과한 행을 순서대로 2개씩 짝지어 한 행(grid row)으로.
+        const visible = s.rows
+          .map((row, index) => ({ row, index }))
+          .filter(({ row }) => rowMatchesTierFilter(row, s.vocabTierFilter));
+        for (let j = 0; j < visible.length; j += 2) {
+          const left = visible[j];
+          const right = visible[j + 1];
+          push(
+            "vocab-grid",
+            `study-grid${left.index}`,
+            <div className="par-vocab-study-grid-row">
+              <VocabStudyGridCard
+                row={left.row}
+                no={j + 1}
+                hidden={h}
+                editable={editable}
+                onUpdate={(p) => upd(left.index, p)}
+                onDelete={() => delRow(left.index)}
+              />
+              {right ? (
+                <VocabStudyGridCard
+                  row={right.row}
+                  no={j + 2}
+                  hidden={h}
+                  editable={editable}
+                  onUpdate={(p) => upd(right.index, p)}
+                  onDelete={() => delRow(right.index)}
+                />
+              ) : (
+                <div className="par-vocab-study-card par-vocab-study-card-empty" aria-hidden />
+              )}
+            </div>,
+          );
+        }
+      } else if (!options?.vocabTestOnly) {
         s.rows.forEach((r, i) => {
           // 난이도 단계 필터 — 표시할 단계에 없으면 단어장에서 숨김(인덱스는 보존해 편집 위치 유지).
           if (!rowMatchesTierFilter(r, s.vocabTierFilter)) return;

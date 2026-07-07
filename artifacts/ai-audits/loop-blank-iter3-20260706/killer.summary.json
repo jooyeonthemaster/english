@@ -1,0 +1,242 @@
+{
+  "createdAt": "2026-07-05T17:45:08.325Z",
+  "outPath": "artifacts/ai-audits/loop-blank-iter3-20260706/killer.jsonl",
+  "total": 4,
+  "passed": 0,
+  "failed": 4,
+  "passRate": 0,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 68,
+      "topIssues": [
+        {
+          "code": "llmFatal:Difficulty is inflated: the answer is directly derivable from the immediately preceding clause 'Not that they did not ex",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blank is placed on 'Glass seems to obey most molecular laws,' a minor transitional remark, not the paragraph's contr",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blanked span is a mid-sentence detail ('had to wait a long time before...'), not the paragraph's controlling claim/c",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The correct answer 'conforms to standard physical principles' is not strongly warranted; the passage's actual paradox is",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option ③ is somewhat weak as a distractor since 'coloring techniques' appears only in a later, clearly separate sentence",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 95.5,
+      "topIssues": [
+        {
+          "code": "rejection:blank-killer-thin-span",
+          "count": 4
+        },
+        {
+          "code": "local:generation-notice",
+          "count": 2
+        },
+        {
+          "code": "local:quality-mode-relaxed",
+          "count": 2
+        },
+        {
+          "code": "local:review-recommended",
+          "count": 2
+        },
+        {
+          "code": "rejectionLast:blank-killer-thin-span",
+          "count": 2
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:blank-killer-thin-span",
+      "count": 5
+    },
+    {
+      "code": "local:generation-notice",
+      "count": 2
+    },
+    {
+      "code": "local:quality-mode-relaxed",
+      "count": 2
+    },
+    {
+      "code": "local:review-recommended",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:blank-killer-thin-span",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:Difficulty is inflated: the answer is directly derivable from the immediately preceding clause 'Not that they did not ex",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank is placed on 'Glass seems to obey most molecular laws,' a minor transitional remark, not the paragraph's contr",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blanked span is a mid-sentence detail ('had to wait a long time before...'), not the paragraph's controlling claim/c",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The correct answer 'conforms to standard physical principles' is not strongly warranted; the passage's actual paradox is",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option ③ is somewhat weak as a distractor since 'coloring techniques' appears only in a later, clearly separate sentence",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option ④ ('clear microscopic uniformity') is very easily eliminated by a single contradicting phrase ('random ball-pit o",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Options ④ and ⑤ are extreme/absolute statements that are trivially eliminable by polarity alone (violates the injunction",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The correct paraphrase 'underwent a prolonged exclusion from meaningful cultural representation' is a fairly direct one-",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The sentence before the blank explicitly states scientists 'struggle to comprehend why glass behaves the way it does' — ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:This is a declarative/summary-style blank rather than one requiring connecting two distinct argumentative threads; a mid",
+      "count": 1
+    },
+    {
+      "code": "rejection:blank-killer-giveaway-distractors",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:blank-killer-giveaway-distractors",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The blanked span is a mid-sentence detail ('had to wait a long time before...'), not the paragraph's controlling claim/c": 1,
+    "llmFatal:Difficulty is inflated: the answer is directly derivable from the immediately preceding clause 'Not that they did not ex": 1,
+    "llmMajor:Options ④ and ⑤ are extreme/absolute statements that are trivially eliminable by polarity alone (violates the injunction": 1,
+    "llmMajor:The correct paraphrase 'underwent a prolonged exclusion from meaningful cultural representation' is a fairly direct one-": 1,
+    "llmMajor:Option ③ is somewhat weak as a distractor since 'coloring techniques' appears only in a later, clearly separate sentence": 1,
+    "llmFatal:The blank is placed on 'Glass seems to obey most molecular laws,' a minor transitional remark, not the paragraph's contr": 1,
+    "llmFatal:The correct answer 'conforms to standard physical principles' is not strongly warranted; the passage's actual paradox is": 1,
+    "llmMajor:The sentence before the blank explicitly states scientists 'struggle to comprehend why glass behaves the way it does' — ": 1,
+    "llmMajor:Option ④ ('clear microscopic uniformity') is very easily eliminated by a single contradicting phrase ('random ball-pit o": 1,
+    "llmMajor:This is a declarative/summary-style blank rather than one requiring connecting two distinct argumentative threads; a mid": 1,
+    "rejection:blank-killer-thin-span": 5,
+    "rejection:blank-killer-giveaway-distractors": 1,
+    "rejectionLast:blank-killer-giveaway-distractors": 1,
+    "local:quality-mode-relaxed": 2,
+    "local:generation-notice": 2,
+    "local:review-recommended": 2,
+    "rejectionLast:blank-killer-thin-span": 2
+  },
+  "worstSamples": [
+    {
+      "runIndex": 2,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The blank is placed on 'Glass seems to obey most molecular laws,' a minor transitional remark, not the paragraph's contr",
+        "llmFatal:The correct answer 'conforms to standard physical principles' is not strongly warranted; the passage's actual paradox is",
+        "llmMajor:The sentence before the blank explicitly states scientists 'struggle to comprehend why glass behaves the way it does' — ",
+        "llmMajor:Option ④ ('clear microscopic uniformity') is very easily eliminated by a single contradicting phrase ('random ball-pit o",
+        "llmMajor:This is a declarative/summary-style blank rather than one requiring connecting two distinct argumentative threads; a mid",
+        "rejection:blank-killer-thin-span",
+        "rejection:blank-killer-giveaway-distractors",
+        "rejectionLast:blank-killer-giveaway-distractors"
+      ],
+      "answerSurfaces": [
+        "①"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: blank-killer-thin-span x1, blank-killer-giveaway-distractors x1 | Last: quality/BLANK_INFERENCE - blank-killer-giveaway-distractors: KILLER PARAPHRASE blank has too many obviously eliminable distractors; replace extreme/opposite options with passage-grounded near misses that reuse passage concepts and fail by logic (reversed cause, scope twist, half-truth)."
+    },
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:The blanked span is a mid-sentence detail ('had to wait a long time before...'), not the paragraph's controlling claim/c",
+        "llmFatal:Difficulty is inflated: the answer is directly derivable from the immediately preceding clause 'Not that they did not ex",
+        "llmMajor:Options ④ and ⑤ are extreme/absolute statements that are trivially eliminable by polarity alone (violates the injunction",
+        "llmMajor:The correct paraphrase 'underwent a prolonged exclusion from meaningful cultural representation' is a fairly direct one-",
+        "llmMajor:Option ③ is somewhat weak as a distractor since 'coloring techniques' appears only in a later, clearly separate sentence"
+      ],
+      "answerSurfaces": [
+        "②"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 3,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 95,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "rejection:blank-killer-thin-span",
+        "rejectionLast:blank-killer-thin-span"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: blank-killer-thin-span x2 | Last: quality/BLANK_INFERENCE - blank-killer-thin-span: KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+    },
+    {
+      "runIndex": 4,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 96,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "rejection:blank-killer-thin-span",
+        "rejectionLast:blank-killer-thin-span"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: blank-killer-thin-span x2 | Last: quality/BLANK_INFERENCE - blank-killer-thin-span: KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load."
+    }
+  ]
+}

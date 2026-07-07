@@ -103,6 +103,8 @@ model Academy {
   academyTheme              AcademyTheme?
   academyFeatureFlags       AcademyFeatureFlag[]
   passageReports            PassageReport[]
+  examAnalyses              ExamAnalysis[]
+  examReportStudents        ExamReportStudent[]
   // ── Growth: referral / credit missions / notifications ──
   referralCode              ReferralCode?
   referralsMade             Referral[]                @relation("ReferralsMade")
@@ -877,6 +879,84 @@ model PassageReportExport {
   @@index([reportId])
   @@index([status, createdAt])
   @@map("passage_report_exports")
+}
+
+// ============================================================================
+// 8-b. EXAM REPORT — 학생 시험 리포트 (학교 시험지 분석 + 학생별 상담 리포트)
+// ============================================================================
+
+/// ExamAnalysis — 학교 중간/기말 시험지 1부의 구조화 + AI 문항별 정밀분석
+/// status: "DRAFT" | "EXTRACTING" | "STRUCTURED" | "ANALYZING" | "ANALYZED" | "FAILED"
+/// sourceType: "IMAGE" | "PDF" | "TEXT" | "MANUAL"
+/// structure: ExamPaperStructure — {questions, sharedPassages, totalPoints} (Zod: src/lib/exam-report/schemas.ts)
+/// analysis: ExamAnalysisResult — {perQuestion: QuestionAnalysis[], examLevel} (문항별 analysisStatus 포함)
+/// version: 낙관적 락 (PATCH 시 WHERE id AND version=$expected)
+model ExamAnalysis {
+  id          String    @id @default(cuid())
+  academyId   String
+  createdById String? // Staff soft-ref (FK 아님 — 감사용)
+  title       String
+  schoolName  String?
+  grade       String?
+  subject     String    @default("ENGLISH")
+  examType    String    @default("MIDTERM") // "MIDTERM" | "FINAL" | "MOCK" | "OTHER"
+  examYear    Int?
+  semester    String?
+  status      String    @default("DRAFT")
+  sourceType  String    @default("MANUAL")
+  sourceFiles Json? // [{path, page}] — Supabase Storage(extraction-sources) 키
+  structure   Json? // ExamPaperStructure
+  analysis    Json? // ExamAnalysisResult (배치 체크포인트 증분 저장 대상)
+  reviewState Json? // {structureConfirmed, confirmedNumbers[], staleNumbers[]}
+  aiMeta      Json? // {model, calls, promptTokens, completionTokens, durationMs, structureRuns, failedNumbers[]}
+  version     Int       @default(1)
+  deletedAt   DateTime? // soft delete
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  academy  Academy             @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  students ExamReportStudent[]
+
+  @@index([academyId, status, createdAt])
+  @@index([academyId, deletedAt, updatedAt])
+  @@map("exam_analyses")
+}
+
+/// ExamReportStudent — 시험지 분석 1건에 등록된 학생 1명의 채점 + 상담 리포트
+/// responses: StudentResponse[] — status 기본 UNKNOWN, source MANUAL|AUTO, reviewed
+/// report: {current: StudentReportDoc, previous?: StudentReportDoc} — 재생성 롤백 1슬롯
+/// reportStatus: "NONE" | "GENERATING" | "GENERATED" | "FAILED"
+/// shareToken: 공개 리포트 /r/[token] — revoke 시 null, 재발급 시 신규(자동 rotate)
+model ExamReportStudent {
+  id               String    @id @default(cuid())
+  examAnalysisId   String
+  academyId        String
+  studentName      String
+  studentMeta      Json? // {school?, grade?, classroom?, note?}
+  sourceFiles      Json? // 학생 본인 시험지 페이지 [{path, page}] (v3 직접분석)
+  readState        Json? // {status, readRuns, readAt, model, uncertainties[], aiMeta} (v3 AI 답안 판독)
+  responses        Json? // StudentResponse[]
+  scoreSummary     Json? // ScoreSummary (서버 결정론 계산 캐시)
+  gradingConfirmed Boolean   @default(false)
+  report           Json? // {current, previous?}
+  reportStatus     String    @default("NONE")
+  shareToken       String?   @unique
+  shareEnabled     Boolean   @default(false)
+  sharedAt         DateTime?
+  answerToken       String?   @unique // 학생 답안입력 링크 /a/[token] — 리포트 공유 shareToken 과 별개
+  answerEnabled     Boolean   @default(false)
+  answerSubmittedAt DateTime? // 학생이 마지막으로 답안을 제출한 시각
+  version          Int       @default(1)
+  deletedAt        DateTime? // soft delete
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  academy      Academy      @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  examAnalysis ExamAnalysis @relation(fields: [examAnalysisId], references: [id], onDelete: Cascade)
+
+  @@index([examAnalysisId, deletedAt])
+  @@index([academyId, createdAt])
+  @@map("exam_report_students")
 }
 
 // ============================================================================

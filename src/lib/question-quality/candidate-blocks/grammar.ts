@@ -1,5 +1,7 @@
 // Split from question-quality.ts — shared helpers in core.ts, public API via index.ts barrel.
 import { buildGrammarPointGuidance, GRAMMAR_POINT_CATALOG, type GrammarPointCode } from "@/lib/grammar-point-catalog";
+import { buildGrammarFrameKnowledge } from "@/lib/grammar-frames";
+import { extractContainingSentence, hasLongDistanceAgreementBeforeTarget } from "../validators/grammar/shared";
 import { CandidateDiversityOptions, buildSurroundingWindow } from "./shared";
 import { countWordsForQuality, normalizeComparableText, normalizeGrammarCorrectionErrorCount, normalizeText, splitPassageSentences } from "../core";
 
@@ -65,33 +67,16 @@ export function buildGrammarNineFrameGuide(
   requestedDifficulty?: string,
 ): string {
   const difficulty = String(requestedDifficulty ?? "").toUpperCase();
-  const modeLine =
-    mode === "correction"
-      ? "For correction items, hide the error inside a clause/sentence segment; the correctedPart must be the exact source form."
-      : mode === "worksheet"
-        ? "For worksheet inline choices, each [A / B] pair must be same-slot and unambiguous, with an explanation naming the frame."
-        : "For judgment items, mark the minimal surface form only; non-answer decoys must remain grammatically correct.";
 
   return [
-    "## CSAT nine-frame grammar design policy",
-    "- Generate structural grammar questions, not random word swaps. Prefer source-backed targets that force one clear grammatical decision.",
-    `- ${modeLine}`,
+    // 9프레임 본문(구조 틀·판단·오류 설계·킬러 승격·해설 근거)은 grammar-frames.ts 정본.
+    buildGrammarFrameKnowledge(mode, requestedDifficulty),
     difficulty === "KILLER"
-      ? "- KILLER must require a long-distance or cross-clause check. A lone verb-s, article, spelling, tense-only, or locally obvious error is too thin."
+      ? "- KILLER 캘리브레이션: 정답은 장거리·절 경계 판단을 강제해야 한다. 단독 -s 플립, 관사, 철자, 시제 단독, 한눈에 보이는 로컬 오류는 KILLER 미달이다."
       : difficulty === "BASIC"
-        ? "- BASIC can be one-step, but the answer still needs a real grammar relation and a plausible distractor. Do not pile up advanced frames such as concessive inversion, semantic-subject gerunds, and passive parallelism in one BASIC item."
-        : "- INTERMEDIATE should require clause boundary, semantic subject, complement, or modifier-scope checking.",
-    "1. Subject-verb agreement (code d): S_head + modifiers/relative/prepositional/participle phrase + V. Distractor noun inside the modifier should pull the wrong number.",
-    "2. Gerund/infinitive/object complement (codes h/k): causative/perception/want/allow patterns decide bare infinitive, to-V, V-ing, or p.p.",
-    "3. Active vs passive voice (code e): decide from subject-agent relation, transitivity, and object presence; avoid debatable active/passive preferences.",
-    "4. Relative clauses (code b): relative pronoun leaves a gap; relative adverb or prep+relative pronoun is followed by a complete clause.",
-    "5. Nominal that vs what (code b): that + complete clause; what + incomplete clause and includes its own antecedent.",
-    "6. Participle clauses (code c): omitted subject equals main-clause subject; choose V-ing vs p.p. by active/passive relation, including with + noun + participle.",
-    "7. Dummy-object it (codes g/f): make/find/think/consider + it + OC + to-V/that-clause. Trap it vs this/that or adjective OC vs adverb.",
-    "8. Inversion (codes d/i): fronted negative/restrictive/adverbial phrase requires auxiliary/be/do inversion and may combine with agreement.",
-    "9. Adjective vs adverb (code f): subject/object complement slots after linking or 5th-form verbs require adjectives, even when Korean meaning sounds adverbial.",
-    "- A high-quality distractor is attractive locally but collapses under the frame. The explanation must cite the exact structural reason, not just say it is awkward.",
-    "- Do not choose filler or lexical surfaces as answers or decoys: thicker, more, standalone comparative than, hard, as a, As one, this/these/those, local pronouns in 'as it might appear' or 'the way it does', demonstrative 'that way', discourse 'though,', 'looks more like', or 'seems to V'. Do not mutate 'looks more like' into 'looks more likely/most like', and never create local clashes such as 'it are', 'them pushes', or 'before to flow'.",
+        ? "- BASIC 캘리브레이션: 1-step 판단이어도 실재하는 문법 관계와 그럴듯한 함정이 필요하다. 양보 도치·의미상 주어 동명사·수동 병렬 같은 고급 프레임을 한 문항에 쌓지 말 것."
+        : "- INTERMEDIATE 캘리브레이션: 절 경계, 의미상 주어, 보어 자리, 수식 범위 중 하나 이상을 확인해야 풀리게 설계한다.",
+    "- 좋은 함정은 로컬로는 자연스러워 보이지만 프레임(구조 틀)을 대면 무너진다. 장식용 표면(관사·단순 전치사·어휘 형용사·비교 조각·담화 표지)에 밑줄을 긋거나 'it are'·'them pushes'·'before to flow' 같은 로컬 파열 오류를 만들지 말 것.",
   ].join("\n");
 }
 
@@ -252,6 +237,13 @@ function isNoisyGrammarGenerationCandidate(
   ) {
     return true;
   }
+  // (26-07-06) 부정어 도치 규칙(코드 d)이 mid-sentence 자유관계절 목적어
+  // ("guided only by what a single ant can sense")를 부정어-도치 트랩으로
+  // 오분류해 잘못된 mutation("Never have↔Never has")과 함께 후보로 추천하는
+  // 케이스를 제거한다. 실제 도치가 아니고("by/in/with + what/which"는 전치사구
+  // 목적어), 관계사·명사절 프레임 자체는 코드 b 후보가 이미 커버하므로 프레임
+  // 커버리지는 불변 — 오분류 표기만 걷어내는 정합 필터다.
+  if (/^only\s+(?:by|in|with)\s+(?:what|which)\b/i.test(expression)) return true;
   if (/^(?:hard|quite|more|misshapen|given|thicker|both liquid and|as one)$/.test(expression)) return true;
   if (expression === "as it") return true;
   if (/^(?:one|ones|this|these|those)$/.test(expression)) return true;
@@ -319,7 +311,7 @@ function isNoisyGrammarGenerationCandidate(
   return false;
 }
 
-type ForbiddenGrammarSurface = {
+export type ForbiddenGrammarSurface = {
   expression: string;
   reason: string;
 };
@@ -422,6 +414,17 @@ function findForbiddenGrammarSurfaces(passage: string): ForbiddenGrammarSurface[
   if (/\bwere\b[^.;!?]{0,80}\band\s+solidified\b/i.test(normalizedPassage)) {
     push("solidified", "same-clause parallel/tense-only trap is too local");
   }
+  // 지각동사(+help) + 목적어 + to-V — to를 지우면 지각동사 보어(원형)로,
+  // 두면 명사+to-V 수식으로 읽혀 어느 방향의 변형도 정문이 되는 무정답 자리
+  // (실측 26-07-04: "We see the ... power of AI to broaden" → broaden 정문).
+  for (const match of normalizedPassage.matchAll(
+    /\b(?:sees?|saw|seen|seeing|watch(?:es|ed|ing)?|hear(?:s|d|ing)?|feels?|felt|notices?|noticed|observes?|observed|helps?|helped)\b[^.;:!?]{1,80}?\b(to\s+[A-Za-z][A-Za-z'-]*)\b/gi,
+  )) {
+    push(
+      match[1],
+      "verbal after a perception/help verb re-parses as a valid complement with or without to — no single wrong form exists here",
+    );
+  }
 
   return forbidden;
 }
@@ -440,6 +443,18 @@ function buildForbiddenGrammarSurfaceBlock(passage: string): string {
 
 
 
+/**
+ * 긴 후보 표면을 잘라 노출할 때 단어를 중간에서 끊지 않는다. maxChars 이내의
+ * 마지막 공백(단어 경계)에서 자르되, 경계가 없거나 너무 앞이면 문자 슬라이스로
+ * 폴백한다(단, 그 폴백 자체는 드묾 — 영어 산문은 공백이 잦다).
+ */
+function truncateGrammarExpressionAtWord(raw: string, maxChars: number): string {
+  const head = raw.slice(0, maxChars);
+  const lastBoundary = head.lastIndexOf(" ");
+  const cleanHead = lastBoundary >= Math.floor(maxChars / 3) ? head.slice(0, lastBoundary) : head;
+  return cleanHead.trim();
+}
+
 export function findGrammarGenerationCandidates(
   passage: string,
   requestedDifficulty?: string,
@@ -452,10 +467,11 @@ export function findGrammarGenerationCandidates(
       const rawExpression = normalizeText(match[0]);
       if (!rawExpression || rawExpression.length < 2) continue;
       // 후보 expression은 모델이 밑줄로 그대로 복사할 수 있으므로 짧게 유지한다
-      // (긴 후보 → 긴 밑줄 유도). 최소 문법 단위 원칙과 일치.
+      // (긴 후보 → 긴 밑줄 유도). 최소 문법 단위 원칙과 일치. 잘라낼 때는
+      // 단어 중간("...biolo...")이 아니라 마지막 완전한 단어 경계에서 자른다.
       const expression =
         rawExpression.length > 60
-          ? `${rawExpression.slice(0, 57).trim()}...`
+          ? `${truncateGrammarExpressionAtWord(rawExpression, 57)}...`
           : rawExpression;
       const index = match.index ?? passage.indexOf(match[0]);
       if (index < 0) continue;
@@ -510,6 +526,44 @@ export function grammarCandidateScore(
 
 
 
+/**
+ * 금지 표면·구두점 파편을 걷어낸 "실사용 가능" 후보만 남긴다.
+ *
+ * 배경(실측 26-07-04, glass 지문): 정규식 후보 탐지기가 그 지문의 금지 표면
+ * ("looks more like ...", "seems to obey", "asking: ...", "that way ...")을
+ * 그대로 후보로 추천 — 프롬프트가 "이 자리를 우선 써라"와 "이 표면은 금지"를
+ * 동시에 말하는 자기모순으로 모델이 게이트 거부 루프에 갇혔다. 후보 목록을
+ * 금지 표면과 동일한 기준으로 필터링해 모순을 제거한다.
+ */
+export function selectUsableGrammarCandidates(
+  passage: string,
+  requestedDifficulty?: string,
+): { candidates: GrammarGenerationCandidate[]; forbidden: ForbiddenGrammarSurface[] } {
+  const forbidden = findForbiddenGrammarSurfaces(passage);
+  const forbiddenKeys = forbidden.map((item) => normalizeComparableText(item.expression));
+  const usable = findGrammarGenerationCandidates(passage, requestedDifficulty).filter(
+    (candidate) => {
+      // 게이트(grammar-underline-punctuated-fragment)가 거부하는 구두점 포함
+      // 스팬은 후보로도 주지 않는다.
+      if (/[,;:]/.test(candidate.expression)) return false;
+      const key = normalizeComparableText(candidate.expression);
+      if (!key) return false;
+      // 금지 표면과 단어 경계 기준 상호 포함이면 제외.
+      return !forbiddenKeys.some((forbiddenKey) => {
+        if (!forbiddenKey) return false;
+        if (key === forbiddenKey) return true;
+        const shorter = key.length <= forbiddenKey.length ? key : forbiddenKey;
+        const longer = key.length <= forbiddenKey.length ? forbiddenKey : key;
+        return new RegExp(
+          `(?<![a-z0-9'-])${shorter.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![a-z0-9'-])`,
+          "i",
+        ).test(longer);
+      });
+    },
+  );
+  return { candidates: usable, forbidden };
+}
+
 export function buildGrammarSourceCandidateBlock(
   passage: string,
   requestedDifficulty: string | undefined,
@@ -518,7 +572,7 @@ export function buildGrammarSourceCandidateBlock(
 ): string {
   const forbiddenSurfaceBlock = buildForbiddenGrammarSurfaceBlock(passage);
   const candidates = selectGrammarCandidatesForPrompt(
-    findGrammarGenerationCandidates(passage, requestedDifficulty),
+    selectUsableGrammarCandidates(passage, requestedDifficulty).candidates,
     limit,
   );
   const difficulty = String(requestedDifficulty ?? "").toUpperCase();
@@ -545,24 +599,57 @@ export function buildGrammarSourceCandidateBlock(
       : difficulty === "BASIC"
         ? "- BASIC priority: choose a visible but still meaningful one-step grammar relation; avoid exotic reduced clauses as the answer."
         : "- INTERMEDIATE priority: choose at least one candidate whose trap requires checking clause boundary, semantic subject, or collocation.",
-    ...candidates.map((candidate, index) => {
+    // (26-07-06 2차: "5자리 지정 설계" 실험은 기각·원복 — 다지문 재측정에서
+    // ST-K 63→56. 후보 탐지기의 tier 라벨이 얕은 자리를 killer 로 태깅하면 지정이
+    // 그 자리를 고정해 재시도가 전부 같은 나쁜 자리를 렌더 → 구제 출하 38점.
+    // 모델의 자리 선택 자유(STEP 1 톱다운 + 게이트 압박)가 결정론 지정보다 낫다.)
+    // KILLER 설계 순서 — 실측 26-07-06(스모크 KILLER 4/4의 마지막 strict 거절이
+    // grammar-killer-answer-point-repeated): 제약 나열만으론 모델이 정답 코드와
+    // 같은 코드의 자리를 디코이로 고른다. "정답 먼저 → 코드 X 기록 → 디코이는
+    // X 금지 → 자기검증"의 절차를 명시해 자리 선택 단계에서 충돌을 제거한다.
+    difficulty === "KILLER" && mode === "judgment"
+      ? [
+          "- ⭐ KILLER design order (follow these steps in this exact order):",
+          "  STEP 1 — Choose the ANSWER site first: walk the candidate list below from the top and take the FIRST tier=killer candidate whose mutation (follow its mutation= hint) survives the counter-parse check (no alternative reading makes the mutated form grammatical). Do not settle for a shallower or more mechanical site further down while a higher-listed killer candidate is usable — the list is sorted by answer quality. The answer must sit inside a structurally layered sentence and require a long-distance dependency (true subject head across modifiers ↔ verb / antecedent ↔ relative clause / semantic subject ↔ participle / first parallel item onward). A single-token participle-adjective swap before a noun or a locally-resolvable flip is rejected as the answer.",
+          "  STEP 2 — Write down the answer's pointCode X. Every non-answer underline must then use a pointCode DIFFERENT from X. If another candidate in this list shares code X — even a tempting one — do not underline it at all; place that decoy on a different grammar frame instead. A KILLER item that repeats the answer's code in any decoy is rejected whole.",
+          "  STEP 3 — Self-check before returning JSON: (i) no non-answer label carries pointCode X; (ii) the five underlines span at least 3 distinct pointCodes with at most 2 per code; (iii) the answer's surroundingText quotes the full dependency span from the source (10+ words); (iv) every decoy is defensibly correct and structurally meaningful, not a decorative token; (v) no underlined surface appears in the forbidden-surface list above — if one does, relocate it before returning.",
+        ].join("\n")
+      : "",
+    ...(() => {
+      const killerCodeSeen = new Map<GrammarPointCode, number>();
+      return candidates.map((candidate, index) => {
       const info = GRAMMAR_POINT_CATALOG[candidate.code];
+      const killerSeen = killerCodeSeen.get(candidate.code) ?? 0;
+      if (difficulty === "KILLER" && candidate.tier === "killer") {
+        killerCodeSeen.set(candidate.code, killerSeen + 1);
+      }
       const preferredUse =
         difficulty === "KILLER" && candidate.tier === "killer"
-          ? "answer-preferred"
+          ? killerSeen > 0
+            // 같은 코드의 killer 후보가 이미 answer-preferred 로 나열됐다면, 이
+            // 후보를 정답과 나란히 디코이로 쓰는 순간 answer-point-repeated 로
+            // 문항 전체가 거부된다 — 대체 정답으로만 허용.
+            ? "alternate-answer-only — never underline this as a decoy while the answer uses the same code"
+            : "answer-preferred"
           : candidate.tier === "basic" && difficulty !== "BASIC"
             ? "decoy-preferred"
             : "answer-or-decoy";
+      const wideSpanNote =
+        countWordsForQuality(candidate.expression) > 5
+          ? `span="wide match — underline only ONE decision token inside this span, never the whole span"`
+          : "";
       return [
         `${index + 1}. code=(${candidate.code}) ${info.label}`,
         `tier=${candidate.tier}`,
         `use=${preferredUse}`,
         `expression="${escapePromptSnippet(candidate.expression)}"`,
+        wideSpanNote,
         `trap="${escapePromptSnippet(candidate.trap)}"`,
         `mutation="${escapePromptSnippet(candidate.mutationHint)}"`,
         `context="${escapePromptSnippet(candidate.surroundingText)}"`,
-      ].join(" | ");
-    }),
+      ].filter(Boolean).join(" | ");
+      });
+    })(),
   ].filter(Boolean).join("\n");
 }
 
@@ -602,12 +689,77 @@ export function escapePromptSnippet(value: string): string {
 
 
 
+// ── 게이트-일관 정답자리 사전 판정 (26-07-06 1회호출 캠페인) ─────────────────
+// 정답 사이트를 반려하는 게이트와 '같은 논리'를 생성 전에 후보에 역적용해
+// "정답 금지/안전"을 가른다. 기각된 '자리 지정' 실험(정규식 tier 오라벨이 모델을
+// 나쁜 자리에 고정, ST-K 63→56)과 달리 판정기=반려 게이트라 오라벨이 원리적으로
+// 없고, 모델은 안전 풀 안에서 자유 선택한다(지정이 아니라 지뢰 지도).
+// 실측 근거: 최종 스윕에서 잔여 반려 전부가 정답자리 코드(overdrilled that↔what·
+// generic a/m·인접 수일치·관형 분사) — 모델 프라이어가 금지 자리를 반복 선택.
+function escapeGrammarCandidateRegex(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function classifyGrammarKillerAnswerBan(
+  candidate: GrammarGenerationCandidate,
+  passage: string,
+): string | null {
+  const surface = normalizeText(candidate.expression).toLowerCase();
+  const tokens = surface.split(/\s+/).filter(Boolean);
+  // (1) grammar-killer-generic-answer-point 짝 — a/m 은 KILLER 정답 코드 금지.
+  if (candidate.code === "a" || candidate.code === "m") {
+    return "코드 (a)/(m)은 KILLER 정답 금지";
+  }
+  // (2) findGrammarKillerOverdrilledAnswer(과훈련) 짝 — that/what 표면의 b 코드는
+  // 사실상 that↔what 변형으로 흘러 전면 반려된다.
+  if (
+    candidate.code === "b" &&
+    (tokens.includes("that") || tokens.includes("what"))
+  ) {
+    return "that↔what 계열은 과훈련 반려 — 정답은 where↔which·전치사+관계대명사 방향으로";
+  }
+  // (3) grammar-killer-thin-answer/인접 수일치 짝 — 동사 앞 같은 절에 실재 개입
+  // 수식어가 없으면 수일치 정답은 thin 반려된다.
+  if (candidate.code === "d") {
+    const located = extractContainingSentence(
+      passage,
+      candidate.expression,
+      candidate.surroundingText,
+    );
+    if (
+      !located ||
+      !hasLongDistanceAgreementBeforeTarget(located.sentence, located.targetStart)
+    ) {
+      return "동사 앞 개입 수식어 없는 인접 수일치 — thin 반려";
+    }
+  }
+  // (4) shallow-participle 짝 — 명사 앞 관형 -ed 분사 단독 플립은 반려.
+  // 등위 동사열(", V-ed"/"and V-ed" = 병렬 깨기)은 게이트도 허용하므로 제외.
+  if (candidate.code === "c" && tokens.length === 1 && /ed$/.test(surface)) {
+    const attributive = new RegExp(
+      `\\b${escapeGrammarCandidateRegex(surface)}\\s+[a-z][a-z'-]*s?\\b`,
+      "i",
+    ).test(candidate.surroundingText);
+    const coordinated = new RegExp(
+      `(?:,|\\band\\b|\\bor\\b)\\s+${escapeGrammarCandidateRegex(surface)}\\b`,
+      "i",
+    ).test(candidate.surroundingText);
+    if (attributive && !coordinated) {
+      return "명사 앞 관형 분사 단독 플립 — shallow 반려 (병렬 깨기로 쓸 때만 정답 가능)";
+    }
+  }
+  return null;
+}
+
 export function buildGrammarErrorCandidateBlock(
   passage: string,
   requestedMarkerCount = 5,
   requestedAnswerCount = 1,
   requestedDifficulty?: string,
   diversity?: CandidateDiversityOptions,
+  /** 결핍(제한 지문) 판정 기준 개수 — 스페어 과잉생성(G=K+1) 시 검증 기준 K 를
+   * 전달해, 요청 개수(G)가 커졌다는 이유로 결핍 모드가 조기 발동하지 않게 한다. */
+  scarcityBaseCount?: number,
 ): string {
   const sentences = splitPassageSentences(passage);
   const markedCount = normalizeGrammarMarkedCount(requestedMarkerCount);
@@ -627,12 +779,39 @@ export function buildGrammarErrorCandidateBlock(
     ? `- 🚫 절대 밑줄 금지 자리: 지문의 "...${disputedSourceMatch[0].slice(-60)}..." 구간(복수 등위 주어 + each + 동사 — 표준 규범과 실사용이 갈리는 논쟁 자리)에는 정답으로도 디코이로도 어떤 라벨도 배치하지 마세요. 이 자리를 밑줄 치면 문항이 거부됩니다.`
     : "";
 
-  const forbiddenSurfaceBlock = buildForbiddenGrammarSurfaceBlock(passage);
+  // 금지 표면 블록은 아래 buildGrammarSourceCandidateBlock 이 한 번 인쇄한다
+  // (26-07-06: 여기서 forbiddenSurfaceBlock 을 또 넣어 프롬프트에 2회 중복
+  // 인쇄되던 것을 제거 — source-candidate 사본 1회만 유지. GRAMMAR_CORRECTION
+  // 경로도 source-candidate 로만 1회 인쇄되므로 무영향).
+
+  // 제한 지문 모드 — 금지 표면을 걷어낸 실사용 후보가 요청 마커 수를 감당하지
+  // 못하는 지문(실측: glass 지문 — 금지 표면 20+개가 후보 대부분과 겹침)에서는
+  // 모델이 장식 표면·논쟁 자리로 빠지며 게이트 거부 루프에 갇힌다. 그 대신
+  // "정직한 같은 코드 재사용"을 명시적으로 허용해 깨끗한 자리 안에서 문항이
+  // 성립하게 한다(monotony 게이트는 3회+에서만 발화 — 2회/코드는 안전).
+  const { candidates: usableCandidates } = selectUsableGrammarCandidates(
+    passage,
+    requestedDifficulty,
+  );
+  const usableCodes = new Set(usableCandidates.map((candidate) => candidate.code));
+  const scarcityBase = normalizeGrammarMarkedCount(
+    scarcityBaseCount ?? requestedMarkerCount,
+  );
+  const isScarcePassage =
+    usableCandidates.length < scarcityBase + 2 || usableCodes.size < 3;
+  const scarcePassageBlock = isScarcePassage
+    ? [
+        "- ⚠️ 제한 지문 모드 (이 지문은 깨끗한 어법 판단 자리가 부족합니다):",
+        "  · 밑줄은 금지 표면 목록에 없는 **명백한 구조 자리**만 사용하세요. 장식 표면이나 논쟁 자리를 채워 넣는 순간 문항 전체가 거부됩니다.",
+        "  · 서로 다른 pointCode 가 부족하면, **같은 코드를 최대 2회까지**(반드시 서로 다른 문장·서로 다른 세부 판단으로) 정직하게 재사용하는 것이 장식 디코이보다 낫습니다.",
+        `  · 그래도 ${markedCount}개 자리가 안 나오면 한 문장 안에서 서로 다른 절의 자리를 나눠 쓰세요(절당 1개, 8단어 이상 간격). 무리한 비문이나 규범 논쟁 자리를 만들어 개수를 채우지 마세요.`,
+      ].join("\n")
+    : "";
 
   return [
     "## GRAMMAR_ERROR target planning guardrail",
     disputedBanLine,
-    forbiddenSurfaceBlock,
+    scarcePassageBlock,
     "- Do not underline mixed connector+pronoun chunks such as 'as it'. If testing concessive as, underline only 'as'; if testing pronoun reference, underline only the pronoun.",
     "- ⭐ Underline span = the minimal grammatical unit only (usually 1-3 words, never more than 5). expression/errorExpression IS the exact underlined surface, so keep it to the single token that carries the grammar decision (the verb / participle / relative word / pronoun / adjective-adverb / to-V / connector). NEVER underline a full clause (subject + finite verb + object) or a whole sentence — e.g. 'create', not 'these digital platforms create a trusting environment'.",
     "- ⭐ pointCode must be true to the underlined surface: the code's required token must actually appear inside the underline (b→relative word, c→participle -ing/p.p., k→to-V or -ing, g→pronoun, l→during/while/despite/because, m→comparative marker). Never fabricate a code just to fill decoy diversity.",
@@ -646,17 +825,18 @@ export function buildGrammarErrorCandidateBlock(
       : "- In the direction, use single-answer wording for one grammatically incorrect part.",
     "- If the requested answer count is lower than the marked count, keep the remaining labels grammatically correct as non-answer decoys. If it equals the marked count, every label must be intentionally incorrect and 오답 분석 can be empty.",
     "- Use the original passage as correct source text. For every answer, mutate only the marked expression and keep the original expression/correction verbatim.",
-    "- Across all difficulties, never create grotesquely broken surfaces such as modal/auxiliary + V-ing ('can paying'), modal/auxiliary + to-V ('can to pay'), passive forms of intransitive verbs ('be appeared'), seem + V-ing ('seems obeying'), fake inversion fragments ('had some church endured'), double -ing ('being employing'), adjacent local agreement flips ('the glass are'), local pronoun-auxiliary clashes ('it are', 'they is'), object pronouns in subject position ('them pushes'), before/after + to-V errors ('before to flow'), or fake grammar keywords not present in the source. BASIC may be simpler, but it must still look like a real exam trap.",
-    "- Avoid cheap filler underlines such as standalone hard, quite, more, thicker, than, one/ones, this/these/those, as a, As one, local it in it is/as it might appear/the way it does, demonstrative that way, simple does/do/did, it's, former/latter, uneven, simple depends on, looks/looks more like, seems to V, lexicalized adjectives like misshapen, or shallow correlative fragments like both liquid and; every non-answer underline must still look like a meaningful grammar decision.",
-    "- Correct decoy quality: each non-answer label must have its own plausible grammar question (agreement, voice, relative/nominal clause, participle, complement form, dummy it, inversion, adjective/adverb, connector, comparison). If a decoy can be dismissed without reading its clause, replace it.",
+    // 오류형 3원칙 — 개별 실측 사례 나열 대신 위반 '계열'로 묶는다(게이트 짝:
+    // grammar-obvious-* / grammar-debatable-* 계열). 지문 특이 표면은
+    // buildForbiddenGrammarSurfaceBlock 이 그 지문에서만 조건부 주입한다.
+    "- Wrong-form principle 1 (no locally broken surfaces): never create errors a student rejects at a glance without reading the clause — modal/auxiliary + V-ing or to-V ('can paying', 'can to pay'), passive intransitives ('be appeared'), seem + V-ing, double -ing ('being employing'), adjacent agreement flips ('the glass are', 'it are', 'they is'), object pronouns as subject ('them pushes'), any preposition + to-V ('by to disturb', 'before to flow'), fake inversion fragments, or any token not present in the source. BASIC may be simpler, but it must still look like a real exam trap.",
+    "- Wrong-form principle 2 (no debatable mutations): if the mutated sentence can be read as grammatical under ANY standard interpretation (tense-only change, active/passive infinitive preference, collocational preference such as 'attention to finding', formal-register disputes like 'despite it being', colloquial object who, discourse though), it cannot be the answer. Re-run the mutated sentence through every plausible parse before committing.",
+    "- Wrong-form principle 2a (pronoun answers): before committing a pronoun-number answer (g), enumerate every candidate antecedent across the WHOLE passage, beyond sentence boundaries. If any antecedent semantically licenses the underlined number, discard the site. Never plant a pronoun-number error as the object of pay/afford/buy-type verbs when a plural goods/treatment noun exists in the discourse.",
+    "- Wrong-form principle 3 (structure over vocabulary): the answer must break a structural frame, not a lexical preference — do not use shallow participle-adjective swaps before a noun, semantic who/what readings, or single connector swaps unless tied to a deeper cross-clause dependency.",
+    "- Shallow 'depends on' ban (always applies): a plain 'X depends on Y' subject-verb agreement (depends <-> depend) offers little trap value and is rejected. Never use such a bare agreement flip as the answer OR as a decoy unless a long intervening modifier genuinely separates the true subject head from the verb.",
+    "- Decoy quality: each non-answer label must carry its own plausible grammar question (agreement, voice, relative/nominal clause, participle, complement form, dummy it, inversion, adjective/adverb, connector, comparison) and must be clearly, defensibly correct in that context. If a decoy can be dismissed without reading its clause — or could be argued wrong by a careful reader — replace it. Avoid decorative surfaces (standalone comparatives, tiny pronoun/article/do-support tokens, discourse markers, tokens inside frozen idioms such as 'that is,') and side-by-side subject+passive pairs.",
+    "- Answer-site giveaway check: reject an answer site when an unmarked token adjacent to the underline resolves the judgment by pattern-matching alone (e.g. an unmarked parallel '-ing' such as 'or delaying' right after a to-V/-ing answer). The student must need the grammar frame, not the neighbor.",
+    "- Decoy pre-exposure check: if the exact grammatical form a decoy tests (same participle/adjective/pronoun pattern) already appears unmarked elsewhere in the passage, the decoy is answerable by copying — relocate it.",
     "- Option uniqueness: every markedExpressions.expression must be a different visible option. Do not reuse the same word/phrase under two labels, even if the pointCode differs.",
-    "- Avoid shallow nearby voice decoys such as 'they were blown' or 'it was made' when the subject and passive verb sit side by side; choose a target with intervening structure or a real active/passive decision.",
-    "- Do not use overly visible, overdrilled, or debatable answer mutations such as has endured temperatures -> has been endured temperatures, depends on ...: -> depending on ...:, is sinking -> was sunk, were blown and solidified -> were blown and solidifying, because -> despite before a finite clause, despite -> although before it being, looks more like -> looks most like, afford to pay -> afford paying, seems to obey -> seems obeying/to obeying, despite it being -> despite it to be, even if -> what, imperceptibly viscous -> imperceptible viscous, people living in -> people lives/lived in, the disease -> what the disease, that is, -> that being, or KILLER missing-auxiliary fragments like has been neglected -> neglected.",
-    "- Avoid formal-dispute decoys: do not mark colloquial object who (e.g. 'who you are asking'), discourse-adverb though, or the demonstrative that in 'that's the way' as a correct grammar option.",
-    "- Avoid formal-dispute gerund decoys: do not mark 'it being' after a preposition (e.g. despite it being...) as a correct grammar option, because formal tests may prefer 'its being' and the point becomes noisy.",
-    "- For INTERMEDIATE/KILLER, do not make who/what with 'asking' the answer; that is mostly semantic/person-vs-thing reading, not a structural grammar trap.",
-    "- For INTERMEDIATE/KILLER, do not make a shallow participle-adjective swap before a noun the answer (e.g. traditionally neglected populations -> traditionally neglecting populations). Use a clause, complement, semantic-subject, or long-modifier dependency.",
-    "- Avoid debatable to-V -> V-ing answer mutations when the nearby noun can take 'to + gerund' as a legitimate collocation, especially attention to finding. The answer must be structurally airtight.",
     requestedDifficulty === "KILLER"
       ? "- KILLER point-code discipline: the answer's grammar point must not be repeated as a same-point decoy; each non-answer underline should test a different frame so the option set feels curated, not padded."
       : "",
@@ -669,24 +849,51 @@ export function buildGrammarErrorCandidateBlock(
     requestedDifficulty === "KILLER"
       ? "- KILLER answer ban: do not make a one-token connector/preposition swap such as because -> because of, although -> despite, or while -> during the answer. Connector/preposition errors are allowed only when tied to a deeper cross-clause dependency."
       : "",
-    "- Terminology precision: do not label a plain pronoun-reference check as a noun-clause issue; name the actual school-grammar structure tested by the underline.",
-    "- Terminology precision: do not call passive participles or parallel participle phrases phrasal verbs. A phrasal verb is a verb + particle/preposition combination, not 'were blown and solidified'.",
-    "- Terminology precision: do not explain 'look(s) more like + noun phrase' as an adjective-complement test; it is a comparative/prepositional pattern.",
-    "- Terminology precision: do not call 'that' in 'that way' a demonstrative adverb; it is a demonstrative determiner modifying the noun way. Do not call seem + to-V an object pattern; the to-infinitive is a complement clause. Do not call human-made before a noun a post-nominal participle.",
+    "- Terminology precision: name only the actual school-grammar structure the underline tests, with standard terms (주어/목적어/정동사/조동사/접속사/전치사/동명사/분사/관계대명사/명사절/보어). Never mislabel: a pronoun-reference check is not a noun-clause issue; parallel participles are not phrasal verbs; seem + to-V is a complement, not an object; appear is a linking verb, never an adverb or passive; 'that' in 'that way' is a determiner. If unsure of a category name, describe the structure instead — never invent terms such as '전사구'.",
     "- Polish discipline: spellcheck all Korean and English explanation text. Never return typos such as 'dsepite'.",
-    "- Terminology discipline: never call appear an adverb. In 'as it might appear', appear is a linking/intransitive verb taking a complement, and it must not be tagged as passive voice. Use only standard school grammar terms; do not invent terms such as '전사구'.",
     "- Explanation quality: for every incorrect label, cite the student-visible wrong surface first, then the correction. Write '(C) been associating is wrong; it should be been associated', never '(C) been associated is ...'.",
     "- Explanation quality: for long-distance subject-verb agreement, the main explanation must name the intervening modifier/relative/appositive phrase and the true subject head; do not stop at 'the subject is plural'.",
-    "- Explanation length cap: main explanation must be a polished student-facing paragraph of 120-450 Korean characters; each wrongOptionExplanations value should be one concise sentence. Do not quote full source sentences, narrate failed hypotheses, expose scratchpad/self-correction, or write meta-review phrases such as 'let me check again', 'I will re-check the question', or Korean equivalents.",
+    "- Explanation length cap: main explanation must be a polished student-facing paragraph of 200-450 Korean characters following the 4-step structure (sentence skeleton -> verdict with the syntactic reason -> correction -> optional one-line trap note); each wrongOptionExplanations value should be one concise sentence. Do not quote full source sentences, narrate failed hypotheses, expose scratchpad/self-correction, or write meta-review phrases such as 'let me check again', 'I will re-check the question', or Korean equivalents.",
     "- Explanation label discipline: never use a shorthand range such as 'remaining (B)~(F)' or '나머지 (B)~(F)'. Label reordering can make ranges wrong or ugly; enumerate only the actual non-answer labels individually.",
     "- KeyPoints discipline: mention only grammar tokens actually tested by marked options. Do not add unrelated source tokens such as unless/although if no underline tests them.",
     "- Tag discipline: tags must name real tested grammar frames only. Do not invent vague/padded tags such as noun flow analysis, vocabulary flow analysis, or general content-flow labels.",
     "- If the passage has fewer source sentences than requested marked expressions, you may mark more than one expression in a sentence only when they test clearly different clauses or grammar relations.",
     requestedDifficulty === "KILLER"
-      ? "- KILLER calibration: make the wrong forms look locally natural until the full sentence structure is checked. Do not use a lone main-verb/subject-verb/local -s error as the answer; it must require checking a relation, reduced clause, semantic subject, long modifier, complement pattern, or parallel range."
+      ? "- KILLER calibration: make the wrong forms look locally natural until the full sentence structure is checked. Do not use a lone main-verb/subject-verb/local -s error as the answer; it must require checking a relation, reduced clause, semantic subject, long modifier, complement pattern, or parallel range. Also never use a visibly broken local form — including a noun directly followed by 'what' ('N what ...', a post-nominal relative 'that' mutated into 'what') — as the answer; that one-glance error is rejected, so keep an 'N what' form only for decoy disproof, never as the KILLER answer."
       : requestedDifficulty === "INTERMEDIATE"
         ? "- INTERMEDIATE calibration: avoid visibly broken local errors such as 'it are', 'N what ...', 'depends -> depending' before a colon, 'seems V-ing', or 'afford/want/decide to V-ing'. Do not pad with one/that/those/does decoys; the wrong form should still look locally tempting until the student checks a clause boundary, antecedent, semantic subject, complement pattern, or modifier scope."
         : "",
+    requestedDifficulty === "KILLER"
+      ? "- ⭐ KILLER answer-site selection: put the answer in the passage's most structurally layered sentence (two or more of: relative clause, inserted phrase, participial clause, parallel range, long pre-verbal modifier). The answer's surroundingText MUST contain the full dependency span the student needs (true subject head to verb / antecedent to relative clause / semantic subject to participle / first parallel item onward) — a short local snippet will be rejected as thin."
+      : "",
+    requestedDifficulty === "KILLER"
+      ? (() => {
+          // 게이트-일관 정답자리 사전 판정 — 위 classifyGrammarKillerAnswerBan 주석 참조.
+          const safe: string[] = [];
+          const banned: string[] = [];
+          for (const candidate of usableCandidates) {
+            const ban = classifyGrammarKillerAnswerBan(candidate, passage);
+            const entry = `"${escapePromptSnippet(candidate.expression)}"(${candidate.code})`;
+            if (ban) {
+              if (banned.length < 8) banned.push(`${entry} → ${ban}`);
+            } else if (safe.length < 8) {
+              safe.push(entry);
+            }
+          }
+          if (!safe.length && !banned.length) return "";
+          return [
+            "- 🎯 정답(오류) 자리 사전 판정 — 출하 게이트와 동일한 판정기로 미리 계산했습니다. '정답 금지' 자리를 정답으로 만들면 반드시 반려되어 재생성됩니다:",
+            safe.length
+              ? `  · 정답 후보로 안전: ${safe.join(", ")} — 이 목록은 지정이 아니라 안전 지도입니다. 목록 밖이라도 장거리 의존이 실재하는 더 다층적인 자리가 보이면 그쪽이 우선이지만, 아래 금지 계열만은 반드시 피하세요.`
+              : "  · 사전 판정을 통과한 정답 후보가 목록에 없습니다 — 후보 목록 밖이라도 장거리 의존이 실재하는 자리를 정답으로 삼되, 아래 금지 계열은 반드시 피하세요.",
+            banned.length
+              ? `  · 정답 금지(미끼로만 사용): ${banned.join("; ")}`
+              : "",
+          ]
+            .filter(Boolean)
+            .join("\n");
+        })()
+      : "",
     buildGrammarNineFrameGuide("judgment", requestedDifficulty),
     // 어법끝 28년 빈도 증류 가이드 — 정답 포인트 코어 풀 + 함정 디코이 카드 +
     // (다양성 모드) variantIndex 로테이션 정답 포인트 지정.

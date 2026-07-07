@@ -1,6 +1,7 @@
 import { resolveQuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 import type { QuestionQualityIssue } from "@/lib/question-quality";
-import type { QuestionGenerationRejectionIssue, QuestionGenerationRejectionSummary, RejectionPhase, RejectionRecorder, RunGenerationInput } from "./run-question-generation-types";
+import { SALVAGE_RELAXABLE_CODES } from "./run-question-generation-constants";
+import type { QuestionGenerationRejectionIssue, QuestionGenerationRejectionSummary, RejectedQuestionCandidate, RejectionPhase, RejectionRecorder, RunGenerationInput } from "./run-question-generation-types";
 export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
@@ -37,6 +38,104 @@ export function summarizeQualityIssues(issues: QuestionQualityIssue[]): string {
     .map((issue) => `${issue.code}: ${issue.message}`)
     .join(" | ")
     .slice(0, 800);
+}
+
+// ── never-fail 구제 사다리(26-07-06 유저 결정: "생성 실패"는 최악의 결과) ──────
+// quality 단계에서 탈락한 "구조 완성" 후보를 보존해 두었다가, 모든 재시도가
+// 소진되면 craft(완성도) 결함만 있는 최선 후보를 경고 부착으로 재승인한다.
+
+const REJECTION_POOL_CAP = 12;
+
+export function recordRejectedCandidate(
+  recorder: RejectionRecorder | undefined,
+  candidate: RejectedQuestionCandidate,
+) {
+  if (!recorder) return;
+  if (!recorder.pool) recorder.pool = [];
+  if (recorder.pool.length >= REJECTION_POOL_CAP) return;
+  recorder.pool.push(candidate);
+}
+
+function candidateDedupeKey(question: Record<string, unknown>): string {
+  const pick = (value: unknown): string =>
+    typeof value === "string" ? value.slice(0, 120) : JSON.stringify(value)?.slice(0, 120) ?? "";
+  return [
+    pick(question.correctAnswer),
+    pick(question.questionText ?? question.direction),
+    pick(question.options),
+    pick(question.modelAnswer),
+  ].join("|");
+}
+
+// craft 코드 → 검수자용 한국어 사유 요약. 코드명이 아니라 사람이 읽는 문장으로.
+const SALVAGE_NOTICE_CATEGORIES: Array<{
+  test: (code: string) => boolean;
+  label: string;
+}> = [
+  { test: (c) => /verbatim|not-transformed|source-copy|source-exact/.test(c), label: "본문 표현이 크게 변형되지 않았을 수 있음" },
+  { test: (c) => /killer|too-easy|thin|difficulty|basic/.test(c), label: "요청 난이도 대비 깊이가 얕을 수 있음" },
+  { test: (c) => /decoy|filler|giveaway|distractor|trap|imbalance|awkward/.test(c), label: "오답 선지(함정) 완성도가 낮을 수 있음" },
+  { test: (c) => /explanation|mislabel|terminology|keypoint|shorthand|surface-order/.test(c), label: "해설 표현이 다듬어지지 않았을 수 있음" },
+  { test: (c) => /obvious|shallow|local|adjacent/.test(c), label: "일부 포인트가 평이할 수 있음" },
+  { test: (c) => /underline|marker|dense/.test(c), label: "밑줄·표기 배치가 표준과 다를 수 있음" },
+  { test: (c) => /language|direction-frame|collocation/.test(c), label: "형식·표현 스펙과 일부 다를 수 있음" },
+];
+
+export function buildSalvageNotice(codes: string[]): string {
+  // salvage LLM 패스가 강등 경고 없이 깨끗하게 통과한 경우 — 완성도 경고를
+  // 날조하지 않고 "재시도 끝에 생성"만 알린다.
+  if (codes.length === 0) {
+    return "여러 번 재시도한 끝에 생성된 문항입니다. 검수 후 사용을 권장합니다.";
+  }
+  const labels: string[] = [];
+  for (const category of SALVAGE_NOTICE_CATEGORIES) {
+    if (labels.includes(category.label)) continue;
+    if (codes.some((code) => category.test(code))) labels.push(category.label);
+  }
+  const detail = labels.length > 0 ? labels.join(" · ") : "일부 완성도 기준 미충족";
+  return `여러 번 재생성해도 모든 품질 기준을 충족하는 문항이 나오지 않아, 완성도 경고가 있는 최선 문항을 제공합니다 — ${detail}. 검수 후 사용을 권장하며, 다시 생성하면 더 나은 문항이 나올 수 있습니다.`;
+}
+
+/**
+ * 거절 후보 풀에서 "craft 결함만 있는" 최선 후보를 최대 needed 개 재승인한다.
+ * F급 코드(SALVAGE_RELAXABLE 밖)가 하나라도 있으면 후보는 영구 탈락 — 틀린 문항은
+ * notice 로도 출하하지 않는다. 결함 수 오름차순, 동수면 늦은 시도(교정 피드백이
+ * 더 반영된 쪽) 우선.
+ */
+export function admitSalvageCandidatesFromPool(
+  recorder: RejectionRecorder | undefined,
+  { needed }: { needed: number },
+): Record<string, unknown>[] {
+  const pool = recorder?.pool ?? [];
+  const eligible = pool.filter(
+    (candidate) =>
+      candidate.blockingCodes.length > 0 &&
+      candidate.blockingCodes.every((code) => SALVAGE_RELAXABLE_CODES.has(code)),
+  );
+  const ranked = [...eligible].sort(
+    (a, b) =>
+      a.blockingCodes.length - b.blockingCodes.length ||
+      b.attemptIndex - a.attemptIndex,
+  );
+  const admitted: Record<string, unknown>[] = [];
+  const seen = new Set<string>();
+  for (const candidate of ranked) {
+    if (admitted.length >= Math.max(1, needed)) break;
+    const key = candidateDedupeKey(candidate.question);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const question = candidate.question;
+    const demoted = candidate.blockingIssues.map((issue) => ({
+      ...issue,
+      severity: "warning" as const,
+    }));
+    question._qualityWarnings = [...candidate.warnings, ...demoted];
+    question._qualityMode = "relaxed";
+    question._reviewRecommended = true;
+    question._generationNotice = buildSalvageNotice(candidate.blockingCodes);
+    admitted.push(question);
+  }
+  return admitted;
 }
 
 export function buildRejectionSample(
@@ -237,7 +336,7 @@ function correctiveActionForCode(code: string): string | null {
       return "Space grammar markers apart: no back-to-back labels, no labels within fewer than two source words, and prefer one marker per sentence or clearly separated clauses.";
     case "grammar-killer-thin-answer":
     case "killer-answer-not-structurally-loaded":
-      return "For KILLER, the answer must require long-distance structure, semantic subject, reduced clause, complement pattern, or modifier-scope reasoning.";
+      return "For KILLER, the answer must require long-distance structure, semantic subject, reduced clause, complement pattern, or modifier-scope reasoning. Move the answer to the passage's most structurally layered sentence (relative clause + inserted phrase + parallel range), and make the answer's surroundingText contain the FULL dependency span (true subject head to verb / antecedent to relative clause / semantic subject to participle) — a short local snippet around the underline is judged thin.";
     case "grammar-killer-thin-concessive-as":
       return "For KILLER grammar, do not use a single concessive as/though -> how idiom as the answer; choose a deeper cross-clause or long-distance structural dependency.";
     case "grammar-killer-thin-connector":
@@ -288,6 +387,27 @@ function correctiveActionForCode(code: string): string | null {
       return "In explanations, mention the student-visible wrong surface first, then the correct source form.";
     case "grammar-surrounding-missing-marker":
       return "Ensure every marker's surroundingText contains the exact marked expression and points to the same source location.";
+    // ── 빈칸(BLANK_INFERENCE) 교정 액션 ──────────────────────────────────
+    case "blank-missing-answer":
+      return "정답 선지가 비어 있습니다. correctAnswer 라벨과 정확히 일치하는 options 항목에 빈칸에 들어갈 영어 표현(text)을 채우고, 라벨-정답 대응을 제출 전에 다시 확인하세요.";
+    case "blank-paraphrase-answer-not-transformed":
+      return "PARAPHRASE 모드인데 정답 선지가 originalExpression 을 그대로 복사했습니다. originalExpression 은 원문 그대로 두되, 정답 선지는 같은 의미·같은 문법 슬롯의 추상적 재진술(내용어 표면을 바꾼 패러프레이즈)로 다시 작성하세요.";
+    case "blank-paraphrase-answer-too-verbatim":
+      return "정답 선지가 원문 스팬의 내용어를 거의 그대로 재사용해 표면 매칭만으로 풀립니다. 핵심 내용어를 동의어·상위 개념으로 치환한 더 추상적인 재진술로 바꾸되, 의미·극성·문법 슬롯은 그대로 보존하세요.";
+    case "blank-paraphrase-missing-answer-logic":
+      return "answerLogic 이 비었거나 너무 짧습니다. 정답이 원문 스팬을 어떤 논리로 재진술했는지(무엇을 어떻게 바꿨고 왜 의미가 보존되는지)를 한국어 1~2문장으로 answerLogic 에 기록하세요.";
+    case "blank-paraphrase-option-source-copy":
+      return "오답 선지가 지문 구절을 그대로 복사해 정답과 문체가 갈립니다. 오답도 정답과 같은 수준으로 패러프레이즈하되, 본문 개념을 빌리면서 논리(극성·범위·인과)를 비틀어 틀리게 만드세요.";
+    case "blank-target-list-like":
+      return "빈칸 타깃(originalExpression)이 나열/구두점 구간이라 거부되었습니다. 쉼표 2개 이상·콜론·세미콜론·'A, B, and C' 나열·문장 경계를 포함하지 않는, 한 문장 안에서 깔끔하게 떨어지는 논리 구/술부를 다시 고르세요.";
+    case "blank-awkward-correct-option":
+      return "정답 선지가 수능식 자연스러운 영어가 아닙니다. 어색한 콜로케이션과 과장된 라틴계 어휘를 버리고, 실제 기출 선지처럼 읽히는 자연스러운 학술 영어 표현으로 정답을 다시 쓰세요.";
+    case "blank-killer-target-too-easy":
+      return "KILLER 인데 빈칸 타깃이 지엽적·상호수식 잡동사니(both parties review each other 류)입니다. 글의 핵심 논지(주제문·결론·인과의 귀결)가 담긴 문장에서 간결한 핵심 술부를 빈칸으로 다시 고르고, 서로 다른 근거 2문장을 연결해야만 정답이 나오게 만드세요.";
+    case "multi-blank-answer-visible":
+      return "빈칸으로 만든 표현이 지문 다른 곳에 그대로 남아 정답이 노출됩니다. 지문 전체에서 정확히 1회만 등장하는 표현을 각 빈칸 타깃(blanks[].originalExpression)으로 다시 고르세요.";
+    case "blank-answer-residual-visible":
+      return "정답(또는 정답과 동일한 표면 표현)이 빈칸 처리 후에도 지문에 그대로 남아 있어 베껴 풀립니다. 지문에 정확히 1회만 등장하는 스팬을 타깃으로 고르거나, 남은 출현이 정답을 누설하지 않는 다른 자리로 빈칸을 옮기세요.";
     default:
       return null;
   }
@@ -508,4 +628,115 @@ export function getLargestGrammarAnswerCount(input: RunGenerationInput): number 
     );
   }
   return maxAnswerCount;
+}
+
+// ── 미끼 스페어 과잉생성(G=K+1) 드랍 선별 — 26-07-06 1회호출 캠페인 Wave 3-lite ──
+// KILLER 어법은 스키마로 미끼를 1개 더 받아(G=K+1), 조합 위반 미끼를 여기서
+// 결정론 드랍해 K개로 후처리에 넘긴다 — "미끼 1개 불량 → 전체 재생성(~40k tok)"
+// 루프의 0-콜 대체. 드랍 우선순위: 정답 pointCode 반복(KILLER 하드 게이트)
+// > 미끼 코드 3회+ 편중(monotony) > 장식 필러 표면 > 배열 후순위.
+// 산문 가드(적대검토): explanation/answerLogic/keyPoints 가 "(X)" 라벨로 참조하는
+// 미끼는 드랍 금지(유령 라벨 오염 방지). 드랍 가능 미끼가 없으면 무변형 반환 —
+// 기존 marker-count 게이트가 반려해 오늘까지의 재시도 경로로 흐른다(무회귀).
+// 선별 후에도 전체 품질 게이트를 K 기준으로 그대로 통과해야 출하된다.
+
+const GRAMMAR_WEAK_FILLER_DROP_SURFACES = new Set([
+  // dispatcher 의 장식 필러 목록과 취지 동일(닫힌 소집합) — 선별은 힌트일 뿐이고
+  // 최종 판정은 여전히 dispatcher 게이트가 하므로 목록 드리프트는 안전하다.
+  "only", "given", "that", "this", "it", "does", "do", "its", "their",
+  "and", "or", "but", "as", "so", "even", "just",
+]);
+
+function grammarLabelChar(value: unknown): string {
+  const match = String(value ?? "").match(/[A-Ja-j]/);
+  return match ? match[0].toUpperCase() : "";
+}
+
+function grammarPointCodeChar(value: unknown): string {
+  const match = String(value ?? "").match(/[a-m]/i);
+  return match ? match[0].toLowerCase() : "";
+}
+
+export function trimGrammarDecoySurplus(
+  draft: Record<string, unknown>,
+  options: { finalMarkerCount: number; finalAnswerCount: number },
+): Record<string, unknown> {
+  const marked = Array.isArray(draft.markedExpressions)
+    ? draft.markedExpressions.filter(isRecord)
+    : [];
+  if (marked.length <= options.finalMarkerCount) return draft;
+
+  const errors = marked.filter((me) => me.isError === true);
+  const decoys = marked.filter((me) => me.isError !== true);
+  // 오류 개수가 계약과 다르면 어느 쪽을 잘라야 할지 추정하지 않는다 — 게이트가 반려.
+  if (errors.length !== options.finalAnswerCount) return draft;
+
+  const answerCodes = new Set(
+    errors.map((me) => grammarPointCodeChar(me.pointCode)).filter(Boolean),
+  );
+  const decoyCodeCounts = new Map<string, number>();
+  for (const decoy of decoys) {
+    const code = grammarPointCodeChar(decoy.pointCode);
+    if (code) decoyCodeCounts.set(code, (decoyCodeCounts.get(code) ?? 0) + 1);
+  }
+
+  const proseTexts = [
+    draft.explanation,
+    draft.answerLogic,
+    ...(Array.isArray(draft.keyPoints) ? draft.keyPoints : []),
+  ]
+    .map((value) => String(value ?? ""))
+    .join("\n");
+  const referencedLabels = new Set(
+    Array.from(proseTexts.matchAll(/\(([A-Ja-j])\)/g), (m) => m[1].toUpperCase()),
+  );
+
+  const surplus = decoys.length - (options.finalMarkerCount - options.finalAnswerCount);
+  if (surplus <= 0) return draft;
+
+  const scored = decoys.map((decoy, index) => {
+    const code = grammarPointCodeChar(decoy.pointCode);
+    const surface = String(decoy.expression ?? "").trim().toLowerCase();
+    let badness = index * 0.01; // 동률이면 배열 후순위(모델의 후순위 슬롯)를 먼저 버린다
+    if (code && answerCodes.has(code)) badness += 100;
+    if (code && (decoyCodeCounts.get(code) ?? 0) >= 3) badness += 60;
+    else if (code && (decoyCodeCounts.get(code) ?? 0) >= 2) badness += 20;
+    if (!surface.includes(" ") && GRAMMAR_WEAK_FILLER_DROP_SURFACES.has(surface)) {
+      badness += 25;
+    }
+    return { decoy, badness, label: grammarLabelChar(decoy.label) };
+  });
+
+  const droppable = scored
+    .filter((entry) => !entry.label || !referencedLabels.has(entry.label))
+    .sort((a, b) => b.badness - a.badness);
+  if (droppable.length < surplus) return draft;
+
+  const droppedSet = new Set(droppable.slice(0, surplus).map((entry) => entry.decoy));
+  const droppedLabels = new Set(
+    droppable.slice(0, surplus).map((entry) => entry.label).filter(Boolean),
+  );
+
+  const keptMarked = marked.filter((me) => !droppedSet.has(me));
+  const next: Record<string, unknown> = { ...draft, markedExpressions: keptMarked };
+
+  // 드랍 라벨의 파생 필드 정리 — options 는 후처리가 markedExpressions 로 전량
+  // 재생성하지만, 초안이 repair 프롬프트에 실릴 수 있어 좌표계를 맞춰 둔다.
+  if (Array.isArray(draft.options)) {
+    next.options = draft.options.filter(
+      (option) => !isRecord(option) || !droppedLabels.has(grammarLabelChar(option.label)),
+    );
+  }
+  if (Array.isArray(draft.wrongOptionExplanations)) {
+    next.wrongOptionExplanations = draft.wrongOptionExplanations.filter(
+      (entry) => !isRecord(entry) || !droppedLabels.has(grammarLabelChar(entry.label)),
+    );
+  } else if (isRecord(draft.wrongOptionExplanations)) {
+    const rest: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(draft.wrongOptionExplanations)) {
+      if (!droppedLabels.has(grammarLabelChar(key))) rest[key] = value;
+    }
+    next.wrongOptionExplanations = rest;
+  }
+  return next;
 }

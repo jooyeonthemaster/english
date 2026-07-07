@@ -1,0 +1,119 @@
+{
+  "plan": "STANDARD",
+  "difficulty": "KILLER",
+  "passage": null,
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "being employed",
+        "isError": false,
+        "errorExpression": "being employed",
+        "surroundingText": "algorithms are being employed to find treatments and drugs",
+        "pointCode": "e"
+      },
+      {
+        "label": "(B)",
+        "expression": "devotes",
+        "isError": false,
+        "errorExpression": "devotes",
+        "surroundingText": "pharma devotes more research and development resources to",
+        "pointCode": "d"
+      },
+      {
+        "label": "(C)",
+        "expression": "associated",
+        "isError": false,
+        "errorExpression": "associated",
+        "surroundingText": "associated with poor ― that is, even if a disease is quite prevalent",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "it",
+        "isError": true,
+        "correction": "it",
+        "errorExpression": "them",
+        "surroundingText": "that cannot afford to pay for it (for example, people living in the developing world)",
+        "pointCode": "g"
+      },
+      {
+        "label": "(E)",
+        "expression": "to find",
+        "isError": false,
+        "errorExpression": "to find",
+        "surroundingText": "communities to find cures to traditionally neglected health issues",
+        "pointCode": "k"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "being employed"
+      },
+      {
+        "label": "(B)",
+        "text": "devotes"
+      },
+      {
+        "label": "(C)",
+        "text": "associated"
+      },
+      {
+        "label": "(D)",
+        "text": "them"
+      },
+      {
+        "label": "(E)",
+        "text": "to find"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 주어인 algorithms가 빈번히 이용되는 대상이므로 진행형 수동태를 구성하는 'being employed'는 어법상 옳습니다.",
+      "(B)": "이 자리는 명사절 내의 주어인 단수 명사 pharma와 호응하는 단수 동사 'devotes'를 쓰는 것이 어법상 대단히 적절합니다.",
+      "(C)": "이 자리는 수동의 의미를 갖는 완료 수동태 분사구조이며, 주어인 The definition of rare가 결합하는 대상이므로 'associated'는 수동 표현으로 옳습니다.",
+      "(E)": "이 자리는 앞의 명사적 표현을 수식하여 목적이나 결과를 나타내는 to부정사의 형용사적/부사적 용법으로 'to find'가 쓰인 것은 적절합니다."
+    },
+    "explanation": "(D) \"them\"는 어법상 틀린 표현이며 \"it\"로 고쳐야 한다. 이 문장의 조건절 구조를 살펴보면, 'even if a disease is quite prevalent in a population that cannot afford to pay for...' 내에서 대명사가 가리키는 대상은 문맥상 단수 명사인 'a disease'입니다. 따라서 복수형 대명사인 them은 단수 지시 대상인 a disease를 지칭할 수 없어 통사적으로 명백한 비문입니다. 가리키는 대상의 수일치에 맞춰 단수 대명사 'it'으로 고쳐야 합니다. 단수 명사구와 복수 명사구(people 등)가 혼재된 삽입구 구조에 현혹되지 않고 진짜 지시 대상을 파악하는 능력이 요구됩니다.",
+    "keyPoints": [
+      "대명사의 수일치 (it vs. them)",
+      "조건절 내부의 지시 대상 파악",
+      "수동태 및 분사의 수동 의미 분석"
+    ],
+    "tags": [
+      "대명사 일치",
+      "수일치",
+      "준동사",
+      "수동태"
+    ],
+    "difficulty": "KILLER",
+    "passageWithMarkers": "In the pharmaceutical industry, algorithms are __(A) being employed__ to find treatments and drugs for rare diseases that to date haven't received much attention. The hard truth has always been that pharma __(B) devotes__ more research and development resources to diseases that affect the rich. The definition of rare has too often been __(C) associated__ with poor ― that is, even if a disease is quite prevalent in a population that cannot afford to pay for __(D) them__ (for example, people living in the developing world), the disease has been neglected compared to First World illnesses. By lowering the cost of data collection, mining, and analysis in drug development and clinical trials, AI can help offset imbalances in the pharmaceutical industry that direct attention to diseases that \"pay,\" whether because the disease is more common or because it is prevalent among demographics that can pay more. We see the democratizing power of AI to broaden the attention of the medical and research communities __(E) to find__ cures to traditionally neglected health issues and among traditionally neglected populations.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  },
+  "judge": {
+    "verdict": "fail",
+    "score": 88,
+    "fatalIssues": [],
+    "majorIssues": [
+      "The (D) pronoun trap only spans one sentence (disease→population→it), a fairly short reach for a KILLER label rather than true long-distance/cross-clause reasoning.",
+      "Distractors (A),(B),(C),(E) test basic passive/agreement/infinitive patterns with little depth, so the item leans on one strong point rather than a uniformly hard set.",
+      "The 'people living in the developing world' distractor lure is a parenthetical example following the blank, but the explanation doesn't clearly justify why a forward-appearing noun can't be the antecedent."
+    ],
+    "minorIssues": [
+      "Semantically 'pay for it/them' is a bit abstract (paying for a disease vs. its treatment), which could raise minor comprehension friction beyond the grammar point."
+    ],
+    "strengths": [
+      "Target error (it vs. them) is source-backed and grammatically unambiguous once the antecedent is traced correctly.",
+      "Explanations correctly distinguish displayed wrong form vs. corrected form without contradicting the passage.",
+      "Overall formatting and option structure are clean and CSAT-style compliant."
+    ],
+    "improvementHint": "Strengthen the killer point by making the antecedent chain span more clauses/sentences, and elevate at least one distractor to a subtler point (e.g., participle vs. gerund ambiguity) rather than straightforward SV agreement."
+  }
+}

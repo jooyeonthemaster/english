@@ -50,6 +50,7 @@ import {
 } from "./question-bank-card/set-member-passage";
 import { RenderedSections } from "./question-bank-card/rendered-sections";
 import { QuestionQuickActionsMenu } from "./question-bank-card/quick-actions-menu";
+import { GenerationHistoryPopover } from "./question-bank-card/generation-history-popover";
 import type { QuestionBankItem } from "./question-bank-card/types";
 import {
   clearCardTextSelection,
@@ -140,6 +141,12 @@ export function QuestionBankCard({
   // 하단 날짜줄 오른쪽에 "내보내기(⋯)" 액션 매트릭스(복사×2 + 한글/워드 다운로드)를 띄운다.
   // 문제 관리·문제 생성 목록 등 관리 화면에서만 켠다(기본 꺼짐).
   showQuickActions = false,
+  // 헤더 오른쪽에 "생성된 문제 N개"(같은 지문 × 같은 유형 생성 이력) 팝오버를 띄운다.
+  // 문제 관리·문제 생성 목록 등 관리 화면에서만 켠다(기본 꺼짐 — 타 표면 무영향).
+  showGenerationHistory = false,
+  // 이력 팝오버에서 형제 문항을 클릭했을 때 상세 모달을 여는 핸들러(openDetail).
+  // 미지정 시 화면 내 카드 스크롤 → 문제 관리 페이지 이동 순으로 폴백한다.
+  onOpenSiblingDetail,
   dragRequiresSelection = false,
   getDragQuestionIds,
   getDuplicateDragQuestionIds,
@@ -218,6 +225,10 @@ export function QuestionBankCard({
   showDetailButton?: boolean;
   // 하단 날짜줄 오른쪽 "내보내기(⋯)" 액션 매트릭스 노출 여부(복사·한글·워드).
   showQuickActions?: boolean;
+  // 헤더 오른쪽 "생성된 문제 N개"(지문×유형 생성 이력) 팝오버 노출 여부.
+  showGenerationHistory?: boolean;
+  // 생성 이력 팝오버의 형제 문항 클릭 → 상세 모달 열기 핸들러.
+  onOpenSiblingDetail?: (id: string) => void;
   // 영역 선택(마키) 우선 모드: 카드가 "선택된 상태"일 때만 네이티브 드래그를
   // 허용한다. 미선택 카드를 끌면 드래그 영역 선택이 동작한다.
   dragRequiresSelection?: boolean;
@@ -330,6 +341,19 @@ export function QuestionBankCard({
     (structuredPlan === "PREMIUM" || structuredPlan === "STANDARD"
       ? structuredPlan
       : null);
+  // 결핍 지문 최선 생성 notice — 생성 엔진이 품질 기준을 일부 완화해 만든 문항에
+  // 부착하는 사유 문구(_generationNotice). 펼침 시 본문 상단 안내로만 노출한다
+  // ("품질 제한" 빨간 배지는 유저 결정 26-07-07 로 제거 — 카드 표면을 어지럽히고
+  // 시험지 생성 픽커에서 위압적. 사유 전문은 펼침 안내가 계속 전달).
+  const generationNotice =
+    q.structuredData &&
+    typeof q.structuredData === "object" &&
+    "_generationNotice" in q.structuredData &&
+    typeof (q.structuredData as { _generationNotice?: unknown })
+      ._generationNotice === "string"
+      ? ((q.structuredData as { _generationNotice?: string })
+          ._generationNotice as string)
+      : "";
   // 프리미엄은 항상, 일반은 플래그(SHOW_MODEL_SELECTOR) ON일 때 노출 — 코드베이스 공통 게이트.
   const planBadge =
     generationPlan &&
@@ -685,6 +709,21 @@ export function QuestionBankCard({
             )}
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
+            {/* 생성 이력 팝오버 — 같은 지문 × 같은 유형으로 생성된 형제 문항 목록.
+                관리 화면 옵트인 전용(showGenerationHistory). 임베드/휴지통에서는 숨긴다. */}
+            {showGenerationHistory &&
+              !embedded &&
+              !trashMode &&
+              q.passage?.id &&
+              q.subType && (
+                <GenerationHistoryPopover
+                  passageId={q.passage.id}
+                  subType={q.subType}
+                  currentQuestionId={q.id}
+                  compact={compact}
+                  onOpenQuestion={onOpenSiblingDetail}
+                />
+              )}
             {difficultyBadge}
             {planBadge}
             {typeof duplicateCount === "number" && duplicateCount > 1 && (
@@ -725,6 +764,13 @@ export function QuestionBankCard({
           <div className="flex shrink-0 flex-wrap items-center gap-1.5">
             {headerExtra}
           </div>
+        )}
+
+        {/* 결핍 지문 최선 생성 안내 — 왜 품질이 제한적인지 카드에서 바로 읽힌다. */}
+        {generationNotice && !collapsed && (
+          <p className="rounded-md border border-red-100 bg-red-50/60 px-2.5 py-1.5 text-[11px] leading-snug text-red-700">
+            {generationNotice}
+          </p>
         )}
 
         <div className="flex flex-col gap-2">
@@ -902,6 +948,7 @@ export function QuestionBankCard({
           {(collapsed || !structuredQuestion || (embedded && hideOptionList)) && (
             <ExplanationSection
               explanation={q.explanation}
+              subType={q.subType}
               rightSlot={
                 onShowAnalysis ? (
                   <button

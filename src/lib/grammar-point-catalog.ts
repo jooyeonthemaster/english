@@ -10,7 +10,13 @@
 // pointCode 체계(a~m)는 기존 스키마/후처리/렌더러와 공유되므로 변경하지 않는다.
 // ============================================================================
 
-import { describeGrammarMinimalPairs } from "./grammar-minimal-pairs";
+import { GRAMMAR_MINIMAL_PAIRS } from "./grammar-minimal-pairs";
+
+// KILLER 과훈련 게이트(findGrammarKillerOverdrilledAnswer)가 정답 변형으로 전면
+// 반려하는 방향 — KILLER 프롬프트의 기출 변형 가르침에서 제외해 가르침-처벌
+// 상충(생성→반려 루프)을 끊는다. 게이트 자체는 유저 피드백(동일 표면 26회
+// 반복) 산물이라 유지.
+const KILLER_OVERDRILLED_PAIR_KEYS = new Set(["that→what", "what→that"]);
 
 export type GrammarPointCode =
   | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m";
@@ -72,7 +78,7 @@ export const GRAMMAR_POINT_CATALOG: Record<GrammarPointCode, GrammarPointInfo> =
     tier: "core",
     traps: [
       "의미상 주어와 분사의 능/수동 관계로 판단. 분사 뒤 목적어가 있으면 능동(v-ing).",
-      "자동사 분사는 목적어가 없어도 v-ing(a missing child, a retired teacher) — '목적어 없으면 p.p.' 규칙의 예외 함정.",
+      "자동사 분사는 태 공식의 예외 함정 — 진행·미완 의미면 목적어 없이도 v-ing(a missing child, a sleeping baby), 완료 의미면 p.p.(a retired teacher, fallen leaves — 수동 아님·완료). '목적어 없으면 p.p.' 암기의 반례.",
       "with + 명사 + 분사(부대상황)에서 with 뒤 명사가 의미상 주어.",
       "감정 동사: 감정을 유발하면 v-ing, 느끼면 p.p. (boring lecturer vs bored students).",
       "접속사 잔류 절축약: if/when/while + (주어+be 생략) + 분사 (if eaten, when asked, if left untreated) — 절 축약을 읽어야 능수동이 판별되는 기출 빈출 형태.",
@@ -449,7 +455,24 @@ export function buildGrammarPointGuidance(
             .slice(0, 2)
             .map((trap) => `  · 지정 포인트 설계 힌트: ${trap}`);
           // 기출 1000제 최소대립쌍 — 이 포인트의 검증된 오류 변형 방향.
-          const pairs = describeGrammarMinimalPairs(code);
+          // KILLER 는 과훈련 게이트(findGrammarKillerOverdrilledAnswer)가 that↔what
+          // 정답을 전면 반려한다 — 기출 빈도 1·2위라도 가르치면 곧장 반려되는
+          // 가르침-처벌 상충(26-07-06 RCA: 반려 총량의 ~30%)이라 KILLER 에서는
+          // 그 방향을 목록에서 제외하고 다음 순위(where↔which 등)를 노출한다.
+          const isKillerJudgment =
+            mode === "judgment" &&
+            normalizeAuditDifficultyLevel(requestedDifficulty) === "상";
+          const usablePairs = (GRAMMAR_MINIMAL_PAIRS[code] ?? []).filter(
+            (pair) =>
+              !isKillerJudgment ||
+              !KILLER_OVERDRILLED_PAIR_KEYS.has(
+                `${pair.correct}→${pair.wrong}`.toLowerCase(),
+              ),
+          );
+          const pairs = usablePairs
+            .slice(0, 5)
+            .map((pair) => `${pair.correct}→${pair.wrong}`)
+            .join(", ");
           return pairs
             ? [...trapHints, `  · 기출 검증 오류 변형(이 방향으로 오류를 만드세요): ${pairs}`]
             : trapHints;
@@ -480,7 +503,13 @@ export function buildGrammarPointGuidance(
     ...designatedLines,
     "- 디코이(밑줄만 치고 어법상 옳게 두는 자리)는 최근 6년 학생 오답 선택률이 가장 높은 함정 카드를 우선 배치하세요:",
     ...decoyLines,
-    "- 디코이는 되도록 서로 다른 문법 포인트의 자리를 고르세요. 단, pointCode 는 **항상 그 자리의 실제 문법 성격대로** 기재해야 합니다 — 코드 중복을 피하려고 다른 코드를 거짓으로 적으면 안 됩니다 (중복되면 중복된 대로 정직하게 기재). '한눈에 옳음이 보이는' 자리(병렬 형용사 바로 옆, 지시 대상이 붙어 있는 대명사 등)는 함정 가치가 없습니다.",
+    // KILLER 분기 — 실측 26-07-06: "중복되면 정직하게 기재" 문구가 KILLER 하드
+    // 게이트(정답 코드의 디코이 반복 = 문항 전체 거부)와 자기모순을 일으켜
+    // strict 전멸의 1주범이 됐다. KILLER 는 기재 정직성이 아니라 **자리 선택
+    // 단계**에서 정답 코드와의 충돌을 제거하도록 지시한다.
+    mode === "judgment" && normalizeAuditDifficultyLevel(requestedDifficulty) === "상"
+      ? "- 디코이는 서로 다른 문법 포인트의 자리를 고르세요. pointCode 는 **항상 그 자리의 실제 문법 성격대로** 기재해야 하며, 코드 중복을 피하려고 다른 코드를 거짓으로 적으면 안 됩니다. KILLER 에서는 한 걸음 더: **정답과 같은 코드가 되는 자리는 디코이로 아예 선택하지 마세요** — 코드 기재를 속이는 것이 아니라 밑줄 자리 자체를 다른 프레임으로 옮기는 것입니다(정답 코드가 디코이에 반복되면 문항 전체가 거부됩니다). 정답이 아닌 디코이끼리의 정직한 중복(최대 2회)은 허용됩니다. '한눈에 옳음이 보이는' 자리(병렬 형용사 바로 옆, 지시 대상이 붙어 있는 대명사 등)는 함정 가치가 없습니다."
+      : "- 디코이는 되도록 서로 다른 문법 포인트의 자리를 고르세요. 단, pointCode 는 **항상 그 자리의 실제 문법 성격대로** 기재해야 합니다 — 코드 중복을 피하려고 다른 코드를 거짓으로 적으면 안 됩니다 (중복되면 중복된 대로 정직하게 기재). '한눈에 옳음이 보이는' 자리(병렬 형용사 바로 옆, 지시 대상이 붙어 있는 대명사 등)는 함정 가치가 없습니다.",
     "- ⚠️ 원문 표현 자체가 표준 규범과 어긋나 보이거나 어법 논쟁이 있는 자리(예: 복수 주어 + 동격 each 뒤 동사의 수, 집합명사 수일치, 사용역에 따라 갈리는 변이형)는 정답으로도 디코이로도 밑줄을 긋지 마세요. 원문을 오류로 판정하지 말고, 의심스러운 자리는 피해서 다른 곳에 출제하세요.",
     "- 자기검증: 각 밑줄의 pointCode 는 그 밑줄의 해설(wrongOptionExplanations/explanation)이 설명하는 문법 범주와 일치해야 합니다. 분사구문 능수동이면 (c), 수일치면 (d), 명사절·관계절의 that/what 은 (b)입니다. 제출 전 5개 밑줄의 코드-해설 일치를 확인하세요.",
     mode === "judgment"

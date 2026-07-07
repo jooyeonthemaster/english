@@ -1,0 +1,121 @@
+{
+  "plan": "STANDARD",
+  "difficulty": "INTERMEDIATE",
+  "passage": null,
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "being employed",
+        "isError": false,
+        "errorExpression": "being employed",
+        "surroundingText": "In the pharmaceutical industry, algorithms are being employed to find treatments and drugs",
+        "pointCode": "e"
+      },
+      {
+        "label": "(B)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "find treatments and drugs for rare diseases that to date haven't received much attention",
+        "pointCode": "b"
+      },
+      {
+        "label": "(C)",
+        "expression": "is",
+        "isError": false,
+        "errorExpression": "is",
+        "surroundingText": "with poor ― that is, even if a disease is quite prevalent in a population",
+        "pointCode": "d"
+      },
+      {
+        "label": "(D)",
+        "expression": "has been neglected",
+        "isError": true,
+        "correction": "has been neglected",
+        "errorExpression": "have been neglected",
+        "surroundingText": "the developing world), the disease has been neglected compared to First World illnesses",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "traditionally",
+        "isError": false,
+        "errorExpression": "traditionally",
+        "surroundingText": "communities to find cures to traditionally neglected health issues and among",
+        "pointCode": "f"
+      }
+    ],
+    "correctAnswers": [
+      "(D)"
+    ],
+    "correctAnswer": "(D)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "being employed"
+      },
+      {
+        "label": "(B)",
+        "text": "that"
+      },
+      {
+        "label": "(C)",
+        "text": "is"
+      },
+      {
+        "label": "(D)",
+        "text": "have been neglected"
+      },
+      {
+        "label": "(E)",
+        "text": "traditionally"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "알고리즘(algorithms)이 '이용되는' 대상이므로 진행형 수동태를 구성하는 'being employed'는 어법상 옳다.",
+      "(B)": "선행사인 rare diseases를 수식하며 뒤에 주어가 빠진 불완전한 절을 이끄는 주격 관계대명사 'that'은 어법상 옳다.",
+      "(C)": "even if가 이끄는 조건절 내의 주어가 단수 명사인 'a disease'이므로 단수 동사 'is'는 어법상 옳다.",
+      "(E)": "과거분사형 형용사인 'neglected'를 수식하기 위해 부사 'traditionally'가 쓰인 것은 어법상 옳다."
+    },
+    "explanation": "(D) \"have been neglected\"는 어법상 틀린 표현이며 \"has been neglected\"로 고쳐야 한다. 이 문장의 주절 주어는 단수 명사인 'the disease'이며, 'compared to First World illnesses'는 부사구에 불과합니다. 따라서 동격 또는 수식 구조를 걷어낸 진짜 주어 'the disease'에 맞추어 단수 동사인 'has been neglected'가 와야 하므로, 복수형 조동사를 사용한 'have been neglected'는 비문입니다. 바로 앞에 위치한 복수 명사 'illnesses'에 이끌려 수일치를 혼동하지 않도록 주의해야 합니다.",
+    "keyPoints": [
+      "주어와 동사의 수일치",
+      "진행형 수동태",
+      "주격 관계대명사의 쓰임"
+    ],
+    "tags": [
+      "수일치",
+      "수동태",
+      "관계대명사",
+      "형용사부사"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "In the pharmaceutical industry, algorithms are __(A) being employed__ to find treatments and drugs for rare diseases __(B) that__ to date haven't received much attention. The hard truth has always been that pharma devotes more research and development resources to diseases that affect the rich. The definition of rare has too often been associated with poor ― that __(C) is__, even if a disease is quite prevalent in a population that cannot afford to pay for it (for example, people living in the developing world), the disease __(D) have been neglected__ compared to First World illnesses. By lowering the cost of data collection, mining, and analysis in drug development and clinical trials, AI can help offset imbalances in the pharmaceutical industry that direct attention to diseases that \"pay,\" whether because the disease is more common or because it is prevalent among demographics that can pay more. We see the democratizing power of AI to broaden the attention of the medical and research communities to find cures to __(E) traditionally__ neglected health issues and among traditionally neglected populations.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  },
+  "judge": {
+    "verdict": "fail",
+    "score": 68,
+    "fatalIssues": [
+      "(C)의 설명이 실제 밑줄 위치('that is,'의 is)가 아니라 다른 절('a disease is quite prevalent')의 주어-동사 일치를 근거로 들어 설명과 표시가 어긋남."
+    ],
+    "majorIssues": [
+      "pointCode가 (C)와 (D) 모두 'd'로 부여되어 서로 다른 문법 포인트(관용표현 vs 수일치)를 같은 항목처럼 오인시킴.",
+      "distractor (C)의 실제 문법 근거인 'that is'(관용구, 즉)에 대한 설명이 전혀 제시되지 않아 학생이 정확한 이유를 배울 수 없음.",
+      "전체적으로 (C) 항목의 근거 오류가 시험지 신뢰도를 크게 떨어뜨림."
+    ],
+    "minorIssues": [
+      "pointCode 체계(e,b,d,d,f)가 임의적이라 각 보기의 문법 범주가 직관적으로 구분되지 않음."
+    ],
+    "strengths": [
+      "핵심 오답(D)은 단수 주어 'the disease'와 그 사이에 낀 복수 명사(population, people, developing world)를 이용해 장거리 수일치 함정을 잘 구현함.",
+      "(A),(B),(E)는 각각 진행수동태, 관계대명사 격, 분사수식 부사로 논쟁 여지 없이 명확히 옳은 보기임.",
+      "오답 설명 대부분이 문법 용어를 정확히 사용함(수일치, 관계대명사, 분사)."
+    ],
+    "improvementHint": "(C)의 밑줄 위치를 명확히 하고, 만약 'that is'의 is라면 관용표현으로서 항상 단수형이라는 근거로 설명을 교체하며, pointCode도 (C)와 (D)를 구분되게 재부여할 것."
+  }
+}

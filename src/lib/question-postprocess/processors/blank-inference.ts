@@ -89,10 +89,18 @@ export function processBlankInference(
   // Replace expression with blank
   const passageWithBlank = replaceAtPosition(passage, found.index, found.length, BLANK);
 
+  // blankDesign 은 스키마가 생성 순서(설계→빈칸→선지→해설)를 강제하려고 받는 내부
+  // 설계 메모다(grammar-error 의 errorDesign 과 동일 장치) — 학생/저장 데이터에
+  // 절대 남기지 않는다.
+  const { blankDesign: _blankDesign, ...aiWithoutDesign } = ai as Record<string, unknown> & {
+    blankDesign?: unknown;
+  };
+  void _blankDesign;
+
   return {
     success: true,
     data: {
-      ...ai,
+      ...aiWithoutDesign,
       originalExpression: canonicalExpression,
       passageWithBlank,
     },
@@ -263,10 +271,16 @@ function processMultiBlankInference(
     );
   }
 
+  // blankDesign 내부 설계 메모 제거 — 단일 빈칸 경로와 동일 (학생 비노출 계약).
+  const { blankDesign: _blankDesign, ...aiWithoutDesign } = ai as Record<string, unknown> & {
+    blankDesign?: unknown;
+  };
+  void _blankDesign;
+
   return {
     success: true,
     data: {
-      ...ai,
+      ...aiWithoutDesign,
       blankAnswerMode: isParaphraseMode ? "PARAPHRASE" : ai.blankAnswerMode,
       blanks: normalizedBlanks,
       passageWithBlank,

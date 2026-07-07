@@ -71,6 +71,7 @@ import {
   setCustomBlock,
   setMeta,
   setSection,
+  setVocabularyStudyLayout,
   setVocabularyTestLayout,
   setVocabularyTestMode,
   setVocabularyTierFilter,
@@ -941,6 +942,13 @@ export function AnalysisReportEditor({
     setReport((r) => setVocabularyTestLayout(r, si, layout));
     scrollToBlock(`s${si}-vocab-test-head`);
   }, [scrollToBlock, setReport]);
+  const onVocabStudyLayout = useCallback((si: number, layout: VocabTestLayout) => {
+    setReport((r) => setVocabularyStudyLayout(r, si, layout));
+    // 레이아웃이 바뀌면 행 블록 id 가 바뀌어(row↔study-grid) 선택이 풀린다 —
+    // 섹션 헤더로 선택을 옮겨 패널의 단어장 토글이 계속 떠 있게 한다.
+    setActiveId(`s${si}-head`);
+    scrollToBlock(`s${si}-head`);
+  }, [scrollToBlock, setReport]);
   const onVocabTierFilter = useCallback((si: number, tiers: VocabularyTier[]) => {
     setReport((r) => setVocabularyTierFilter(r, si, tiers));
   }, [setReport]);
@@ -1784,6 +1792,7 @@ export function AnalysisReportEditor({
                   onToggleWorksheetClozeTranslations={onToggleWorksheetClozeTranslations}
                   onVocabTestMode={onVocabTestMode}
                   onVocabTestLayout={onVocabTestLayout}
+                  onVocabStudyLayout={onVocabStudyLayout}
                   onVocabTestOnly={onVocabTestOnly}
                   onRestoreVocabTestRows={onRestoreVocabTestRows}
                   onVocabTierFilter={onVocabTierFilter}

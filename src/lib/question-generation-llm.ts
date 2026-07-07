@@ -1,4 +1,4 @@
-import { generateObject, generateText, Output } from "ai";
+import { generateObject, generateText, Output, type JSONValue } from "ai";
 import { z } from "zod";
 
 import {
@@ -6,6 +6,7 @@ import {
   ATLAS_PREMIUM_MODEL_ID,
   ATLAS_STANDARD_MODEL_ID,
   atlasChatModel,
+  isAtlasClaudeModel,
 } from "@/lib/atlas-ai";
 import { GEMINI_QUESTION_MAX_RETRIES } from "@/lib/concurrency-config";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
@@ -41,6 +42,30 @@ function getQuestionGenerationModelConfig(plan: QuestionGenerationPlan) {
   return QUESTION_GENERATION_MODEL_CONFIGS[plan];
 }
 
+// PREMIUM(Claude) 문제생성 reasoning 제어 — OpenRouter 는 claude-sonnet-5 에
+// reasoning 파라미터를 안 보내면 thinking 을 기본 활성화한다(26-07-04 실측:
+// 동일 프롬프트 default 31s·completion 2.9k(본문 ~0.8k, 숨은 사고 ~1.8k) vs
+// reasoning off 13s·1.1k — 출력 품질 길이 동일). 실전 프롬프트에선 사고 토큰이
+// 출력 예산(12k)을 잠식해 호출당 200~255s → 180s 타임아웃·JSON 잘림·repair
+// 연쇄의 주범이었다. 우리 스키마는 errorDesign 설계 필드로 계획을 출력 안에서
+// 수행시키므로 숨은 thinking 은 기본 비활성. 품질 회귀 시 env 로 예산을
+// 재부여할 수 있다(≥1024 = Anthropic thinking budget tokens).
+const PREMIUM_QGEN_REASONING_TOKENS = readNumberEnv(
+  "ATLASCLOUD_PREMIUM_QGEN_REASONING_TOKENS",
+  0,
+);
+
+function claudeQgenReasoningOptions(modelId: string): {
+  providerOptions?: Record<string, Record<string, JSONValue>>;
+} {
+  if (!isAtlasClaudeModel(modelId)) return {};
+  const reasoning: Record<string, JSONValue> =
+    PREMIUM_QGEN_REASONING_TOKENS >= 1024
+      ? { max_tokens: Math.floor(PREMIUM_QGEN_REASONING_TOKENS) }
+      : { enabled: false };
+  return { providerOptions: { [ATLAS_CLOUD_PROVIDER]: { reasoning } } };
+}
+
 interface GenerateQuestionObjectArgs<T> {
   schema: z.ZodType<T>;
   prompt: string;
@@ -51,6 +76,16 @@ interface GenerateQuestionObjectArgs<T> {
   system?: string;
   timeoutMs?: number;
   deadlineAt?: number;
+  /**
+   * strict 구조화 출력을 건너뛰고 프롬프트 인라인 JSON 모드로 바로 생성한다.
+   * Wave-3 TIMEOUT-RCA(26-07-05 실측): sonnet-5(OpenRouter) strict json_schema 가
+   * SUMMARY_WRITING/TOPIC_SENTENCE_WRITING 봉투(옵션 필드 20여 개)에서 응답 없이
+   * 180s abort 되거나 masked 400("Provider returned error")으로 전멸 — 재시도가
+   * 무의미한 스키마 기인 결함이라 호출측(PREMIUM 서술형 라우팅)이 이 플래그로
+   * 도밍된 strict 호출 자체를 생략한다. 스키마는 클라이언트 zod 검증 + 하류
+   * 품질게이트가 결정론 재검증하므로 provider 강제 없이도 안전하다.
+   */
+  forceJsonFallback?: boolean;
 }
 
 interface GenerateQuestionTextArgs {
@@ -163,6 +198,7 @@ export async function generateQuestionObject<T>({
   system,
   timeoutMs,
   deadlineAt,
+  forceJsonFallback = false,
 }: GenerateQuestionObjectArgs<T>): Promise<GenerateQuestionObjectResult<T>> {
   const config = getQuestionGenerationModelConfig(generationPlan);
   let lastError: unknown;
@@ -176,6 +212,53 @@ export async function generateQuestionObject<T>({
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     const attemptStartedAt = Date.now();
+
+    // 강제 JSON 모드 — strict 구조화 출력이 스키마 기인으로 전멸하는 유형
+    // (SW/TSW PREMIUM)이 도밍된 호출을 아예 생략하는 경로. 폴백 함수는 내부에서
+    // 모든 실패를 잡아 null 을 반환하므로 여기서는 재시도 카운트만 관리한다.
+    if (forceJsonFallback) {
+      if (attempt > 0 && deadlineAt && Date.now() >= deadlineAt) {
+        console.warn(
+          `[${logPrefix}] Deadline reached before forced-JSON retry ${attempt}; stopping (caller refunds).`,
+        );
+        break;
+      }
+      if (attempt > 0) {
+        console.log(
+          `[${logPrefix}] Forced-JSON retry attempt ${attempt} via ${generationPlan} plan...`,
+        );
+      }
+      const fallback = await generateObjectViaJsonFallback({
+        schema,
+        prompt,
+        system,
+        modelId: config.modelId,
+        provider: config.provider,
+        maxTokens,
+        // grammar-too-large 폴백과 동일한 240s 하드캡 — deadlineAt 은 계속 존중.
+        abortMs: computeAbortMs(Math.max(timeoutMs ?? config.timeoutMs, 240_000)),
+        deadlineAt,
+        logPrefix,
+        operationStartedAt,
+        attempt,
+      });
+      if (fallback) {
+        console.log(
+          `[${logPrefix}] ${generationPlan} ${config.modelId} forced-JSON attempt ${attempt} succeeded in ${Date.now() - attemptStartedAt}ms`,
+        );
+        return fallback;
+      }
+      lastError =
+        lastError ??
+        new Error(
+          "Forced prompt-inlined JSON generation failed (parse/schema validation)",
+        );
+      console.warn(
+        `[${logPrefix}] Forced-JSON attempt ${attempt} failed via ${generationPlan} plan.`,
+      );
+      continue;
+    }
+
     try {
       if (attempt > 0 && deadlineAt && Date.now() >= deadlineAt) {
         console.warn(
@@ -191,6 +274,7 @@ export async function generateQuestionObject<T>({
         model: atlasChatModel(config.modelId),
         schema,
         maxOutputTokens: maxTokens,
+        ...claudeQgenReasoningOptions(config.modelId),
         abortSignal: AbortSignal.timeout(
           computeAbortMs(timeoutMs ?? config.timeoutMs),
         ),
@@ -238,9 +322,12 @@ export async function generateQuestionObject<T>({
       // 결정론 오류이므로, 스키마를 프롬프트에 인라인하고 Output.json()(스키마
       // 비강제)으로 1회 폴백 생성한 뒤 클라이언트에서 zod 검증한다 — 하류
       // 품질게이트가 어차피 전 필드를 결정론 재검증하므로 안전하다.
-      if (isCompiledGrammarTooLargeError(error)) {
+      if (
+        isCompiledGrammarTooLargeError(error) ||
+        isMaskedProviderBadRequestError(error)
+      ) {
         console.warn(
-          `[${logPrefix}] Structured-output grammar too large — falling back to prompt-inlined JSON mode (schema enforced client-side).`,
+          `[${logPrefix}] Structured-output rejected by provider (grammar too large or masked 400) — falling back to prompt-inlined JSON mode (schema enforced client-side).`,
         );
         const fallback = await generateObjectViaJsonFallback({
           schema,
@@ -295,6 +382,69 @@ function isCompiledGrammarTooLargeError(error: unknown): boolean {
   return message.includes("compiled grammar is too large");
 }
 
+/**
+ * OpenRouter 가 업스트림(Anthropic) 400 을 열어보지 않고
+ * {"error":{"message":"Provider returned error","code":400}} 로 감싸 200 응답에
+ * 흘리는 경우 — strict 구조화 출력 스키마 거부가 대표 사례(26-07-05 SW/TSW 실측:
+ * AI_APICallError status=200, responseBody 에 위 페이로드). 같은 요청 재시도는
+ * 무의미한 결정론 오류이므로 grammar-too-large 와 동일하게 JSON 폴백으로 우회한다.
+ */
+export function isMaskedProviderBadRequestError(error: unknown): boolean {
+  const message = [
+    error instanceof Error ? error.message : String(error),
+    readErrorString(error, "responseBody"),
+    readErrorString(error, "body"),
+    summarizeProviderError(error) ?? "",
+  ]
+    .filter(Boolean)
+    .join("\n")
+    .toLowerCase();
+  return (
+    message.includes("provider returned error") &&
+    (message.includes('"code":400') ||
+      message.includes("code=400") ||
+      message.includes("status=400"))
+  );
+}
+
+/**
+ * 디버그 전용(폴백 경로에서만 호출): QGEN_FALLBACK_RAW_DUMP_DIR 이 설정된 경우
+ * zod/파스 실패 raw 응답을 파일로 남긴다. env 미설정(운영 기본) 시 완전 no-op.
+ */
+function dumpFallbackRawForDebug({
+  logPrefix,
+  rawText,
+  rawFinishReason,
+  brief,
+}: {
+  logPrefix: string;
+  rawText: string;
+  rawFinishReason?: string;
+  brief: string;
+}): void {
+  const dir = process.env.QGEN_FALLBACK_RAW_DUMP_DIR;
+  if (!dir) return;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const fs = require("node:fs") as typeof import("node:fs");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const path = require("node:path") as typeof import("node:path");
+    fs.mkdirSync(dir, { recursive: true });
+    const file = path.join(
+      dir,
+      `fallback-raw-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.log`,
+    );
+    fs.writeFileSync(
+      file,
+      [`logPrefix=${logPrefix}`, `finishReason=${rawFinishReason ?? "?"}`, `issues=${brief}`, "", rawText].join("\n"),
+      "utf8",
+    );
+    console.warn(`[${logPrefix}] Fallback raw dumped to ${file}`);
+  } catch {
+    /* debug-only, never throw */
+  }
+}
+
 /** ```json 펜스·전후 잡담을 벗겨 첫 {…} 블록만 남긴다 (폴백 텍스트 파싱용). */
 function stripJsonFences(text: string): string {
   const unfenced = text.replace(/```(?:json)?/gi, "").trim();
@@ -304,13 +454,78 @@ function stripJsonFences(text: string): string {
 }
 
 /** 펜스 제거 후 JSON.parse — 실패 시 undefined (throw 하지 않는다). */
-function parseJsonLoose(text: string): unknown {
+export function parseJsonLoose(text: string): unknown {
   if (!text.trim()) return undefined;
+  const stripped = stripJsonFences(text);
   try {
-    return JSON.parse(stripJsonFences(text));
+    return JSON.parse(stripped);
   } catch {
-    return undefined;
+    // 보수적 2차 시도: trailing comma(",}" / ",]")만 제거 — 1차 파스가 이미
+    // 실패한 텍스트에만 적용하므로 유효 JSON 을 훼손할 수 없다.
+    try {
+      return JSON.parse(stripped.replace(/,\s*([}\]])/g, "$1"));
+    } catch {
+      return undefined;
+    }
   }
+}
+
+/**
+ * H1(26-07-06 실측, SW PREMIUM KILLER 3/3 전멸 raw): 프롬프트 인라인 JSON
+ * 모드는 provider 문법 강제가 없어 모델이 해당 없는 optional 필드를 null 로
+ * 채운다(예: koreanGloss:null) — z.string().optional() 은 null 을 거부해
+ * 후보 전체가 기각됐다. zod 가 "received null" 로 거부한 경로 중 실제 값이
+ * null 인 "객체 속성"만 제거(undefined 승격)해 재검증한다.
+ * 안전성: 필수 필드는 키 제거 후에도 required 오류로 재실패하므로 잘못된
+ * 통과가 생기지 않고, nullable 필드는 애초에 이슈가 되지 않으며, 배열 원소
+ * null 은 인덱스가 밀리므로 건드리지 않는다.
+ */
+function promoteNullOptionalsAtIssuePaths(
+  candidate: unknown,
+  issues: ReadonlyArray<{ path: ReadonlyArray<PropertyKey> }>,
+): boolean {
+  let changed = false;
+  for (const issue of issues) {
+    if (issue.path.length === 0) continue;
+    let parent: unknown = candidate;
+    for (let i = 0; i < issue.path.length - 1 && parent !== undefined; i += 1) {
+      const key = issue.path[i];
+      if (Array.isArray(parent) && typeof key === "number") {
+        parent = parent[key];
+      } else if (isRecord(parent) && (typeof key === "string" || typeof key === "number")) {
+        parent = parent[String(key)];
+      } else {
+        parent = undefined;
+      }
+    }
+    const lastKey = issue.path[issue.path.length - 1];
+    if (
+      isRecord(parent) &&
+      !Array.isArray(parent) &&
+      typeof lastKey === "string" &&
+      parent[lastKey] === null
+    ) {
+      delete parent[lastKey];
+      changed = true;
+    }
+  }
+  return changed;
+}
+
+/**
+ * 폴백 전용 safeParse: 실패 시 null-optional 승격 후 최대 2패스 재검증.
+ * (2패스 — 첫 승격 후 중첩 경로의 후속 null 이슈가 드러나는 경우 커버.)
+ */
+export function safeParsePromotingNullOptionals<T>(
+  schema: z.ZodType<T>,
+  candidate: unknown,
+): ReturnType<z.ZodType<T>["safeParse"]> {
+  let parsed = schema.safeParse(candidate);
+  for (let pass = 0; pass < 2 && !parsed.success; pass += 1) {
+    if (!promoteNullOptionalsAtIssuePaths(candidate, parsed.error.issues)) break;
+    parsed = schema.safeParse(candidate);
+  }
+  return parsed;
 }
 
 /**
@@ -369,8 +584,10 @@ async function generateObjectViaJsonFallback<T>({
     const result = await generateText({
       model: atlasChatModel(modelId),
       // 사고(reasoning) 토큰이 출력 예산을 공유해 20k 에서도 JSON 이 잘렸다
-      // (26-07-03 실측 KO_GR_HIST) — 32k 로 넉넉히.
+      // (26-07-03 실측 KO_GR_HIST) — 32k 로 넉넉히. (reasoning 은 이제
+      // claudeQgenReasoningOptions 로 기본 비활성 — 잘림·지연의 근본 차단.)
       maxOutputTokens: 32_000,
+      ...claudeQgenReasoningOptions(modelId),
       abortSignal: AbortSignal.timeout(abortMs),
       ...(system
         ? {
@@ -382,8 +599,15 @@ async function generateObjectViaJsonFallback<T>({
         : { prompt: userContent }),
     });
     const rawText = (result.text ?? "").trim();
+    const rawFinishReason =
+      "finishReason" in result && typeof result.finishReason === "string"
+        ? result.finishReason
+        : undefined;
     let candidate = parseJsonLoose(rawText);
-    let parsed = candidate === undefined ? undefined : schema.safeParse(candidate);
+    let parsed =
+      candidate === undefined
+        ? undefined
+        : safeParsePromotingNullOptionals(schema, candidate);
     if (!parsed?.success && rawText) {
       // 잘림·따옴표 깨짐 등 — 기존 PREMIUM 복구 호출로 1회 재구성 후 재검증.
       const repairReason = parsed
@@ -409,18 +633,25 @@ async function generateObjectViaJsonFallback<T>({
         });
         if (repaired) {
           candidate = parseJsonLoose(repaired);
-          if (candidate !== undefined) parsed = schema.safeParse(candidate);
+          if (candidate !== undefined) {
+            parsed = safeParsePromotingNullOptionals(schema, candidate);
+          }
         }
       }
     }
     if (!parsed?.success) {
+      // 진단성: zod 이슈 경로를 에러 메시지에 포함(최대 8개) + finishReason/길이.
+      // finishReason=length 면 토큰 절단, 그 외면 필드 계약 위반으로 즉시 판별 가능.
       const brief = parsed
         ? parsed.error.issues
-            .slice(0, 3)
-            .map((i) => `${i.path.join(".")}: ${i.message}`)
+            .slice(0, 8)
+            .map((i) => `${i.path.join(".") || "(root)"}: ${i.message}`)
             .join(" | ")
         : "JSON parse failed";
-      console.warn(`[${logPrefix}] JSON fallback failed client-side schema validation: ${brief}`);
+      console.warn(
+        `[${logPrefix}] JSON fallback failed client-side schema validation (finishReason=${rawFinishReason ?? "?"}, rawLen=${rawText.length}): ${brief}`,
+      );
+      dumpFallbackRawForDebug({ logPrefix, rawText, rawFinishReason, brief });
       return null;
     }
     console.log(`[${logPrefix}] JSON fallback succeeded (schema validated client-side).`);
@@ -485,6 +716,9 @@ async function repairPremiumJsonOutput({
       output: Output.json(),
       temperature: 0,
       maxOutputTokens: Math.min(32_000, Math.max(maxTokens, minOutputTokens)),
+      // 복구는 기계적 JSON 재구성 — thinking 불필요(temperature 0 과 thinking 은
+      // Anthropic 에서 상충하기도 한다).
+      ...claudeQgenReasoningOptions(modelId),
       abortSignal: AbortSignal.timeout(abortMs),
     });
     const repairedResult = result as { output?: unknown; text?: string };
@@ -542,6 +776,7 @@ export async function generateQuestionText({
         prompt,
         maxOutputTokens: omitMaxTokens ? undefined : maxTokens,
         temperature,
+        ...claudeQgenReasoningOptions(config.modelId),
         abortSignal: AbortSignal.timeout(timeoutMs ?? config.timeoutMs),
         ...(responseFormat === "json_object" ? { output: Output.json() } : {}),
       });

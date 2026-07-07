@@ -1,0 +1,68 @@
+{
+  "createdAt": "2026-07-05T17:20:08.259Z",
+  "outPath": "artifacts/ai-audits/loop-blank-iter1-20260706/para-int.jsonl",
+  "total": 2,
+  "passed": 1,
+  "failed": 1,
+  "passRate": 0.5,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 83,
+      "topIssues": [
+        {
+          "code": "llmMajor:Distractors ①②⑤ are transparently contradictory to explicit textual statements (e.g., ⑤ directly contradicts 'It was wit",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The blank is answerable almost entirely from the very next clause ('then played a comparable role...') within the same s",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmMajor:Distractors ①②⑤ are transparently contradictory to explicit textual statements (e.g., ⑤ directly contradicts 'It was wit",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The blank is answerable almost entirely from the very next clause ('then played a comparable role...') within the same s",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmMajor:The blank is answerable almost entirely from the very next clause ('then played a comparable role...') within the same s": 1,
+    "llmMajor:Distractors ①②⑤ are transparently contradictory to explicit textual statements (e.g., ⑤ directly contradicts 'It was wit": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 83,
+      "issueKeys": [
+        "llmMajor:The blank is answerable almost entirely from the very next clause ('then played a comparable role...') within the same s",
+        "llmMajor:Distractors ①②⑤ are transparently contradictory to explicit textual statements (e.g., ⑤ directly contradicts 'It was wit"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

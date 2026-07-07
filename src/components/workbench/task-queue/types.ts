@@ -2,6 +2,7 @@ export type TaskDomain =
   | "extraction"
   | "passage-analysis"
   | "question-generation"
+  | "exam-report"
   | "exam-generation"
   | "webtoon";
 

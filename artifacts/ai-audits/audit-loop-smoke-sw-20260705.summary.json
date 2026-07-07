@@ -1,0 +1,91 @@
+{
+  "createdAt": "2026-07-04T15:09:00.073Z",
+  "outPath": "artifacts/ai-audits/audit-loop-smoke-sw-20260705.jsonl",
+  "total": 1,
+  "passed": 0,
+  "failed": 1,
+  "passRate": 0,
+  "byCell": {
+    "SUMMARY_WRITING:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:'being considered colors with a late start' is an awkward, non-idiomatic collocation; native English would say 'coming t",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The wordBank contains exactly the 7 tokens of the answer with zero distractors, so 'undergo the process of' + wordBank t",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:acceptableVariants like 'being recognized as colors after long waiting' don't match the required firstLetterHint 'b c c ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:explanation and koreanGloss both essentially restate the answer phrase almost verbatim ('뒤늦게 출발하여... 색으로 간주되는'), leaking",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The direction says 'select only necessary words from the 보기' but wordBank has exactly the same word count as the answer ",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:'being considered colors with a late start' is an awkward, non-idiomatic collocation; native English would say 'coming t",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The wordBank contains exactly the 7 tokens of the answer with zero distractors, so 'undergo the process of' + wordBank t",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:acceptableVariants like 'being recognized as colors after long waiting' don't match the required firstLetterHint 'b c c ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:explanation and koreanGloss both essentially restate the answer phrase almost verbatim ('뒤늦게 출발하여... 색으로 간주되는'), leaking",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The direction says 'select only necessary words from the 보기' but wordBank has exactly the same word count as the answer ",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The wordBank contains exactly the 7 tokens of the answer with zero distractors, so 'undergo the process of' + wordBank t": 1,
+    "llmFatal:'being considered colors with a late start' is an awkward, non-idiomatic collocation; native English would say 'coming t": 1,
+    "llmMajor:The direction says 'select only necessary words from the 보기' but wordBank has exactly the same word count as the answer ": 1,
+    "llmMajor:acceptableVariants like 'being recognized as colors after long waiting' don't match the required firstLetterHint 'b c c ": 1,
+    "llmMajor:explanation and koreanGloss both essentially restate the answer phrase almost verbatim ('뒤늦게 출발하여... 색으로 간주되는'), leaking": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "SUMMARY_WRITING",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The wordBank contains exactly the 7 tokens of the answer with zero distractors, so 'undergo the process of' + wordBank t",
+        "llmFatal:'being considered colors with a late start' is an awkward, non-idiomatic collocation; native English would say 'coming t",
+        "llmMajor:The direction says 'select only necessary words from the 보기' but wordBank has exactly the same word count as the answer ",
+        "llmMajor:acceptableVariants like 'being recognized as colors after long waiting' don't match the required firstLetterHint 'b c c ",
+        "llmMajor:explanation and koreanGloss both essentially restate the answer phrase almost verbatim ('뒤늦게 출발하여... 색으로 간주되는'), leaking"
+      ],
+      "answerSurfaces": [
+        "(A) being considered colors with a late start",
+        "While red held absolute dominance for thousands of years in the West, other color terms had to undergo the process of being considered colors with a late start."
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

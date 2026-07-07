@@ -91,6 +91,8 @@ interface GenerationPromptInput {
   diffLabel: string;
   diffInstruction: string;
   generationPlan: QuestionGenerationPlan;
+  subType?: string;
+  finalChecklist?: string;
   customPrompt?: string;
 }
 
@@ -109,6 +111,8 @@ export function buildGenerationPrompt({
   diffLabel,
   diffInstruction,
   generationPlan,
+  subType,
+  finalChecklist,
   customPrompt,
 }: GenerationPromptInput): { system?: string; prompt: string } {
   if (generationPlan === "STANDARD") {
@@ -126,6 +130,8 @@ export function buildGenerationPrompt({
         count: typeCount,
         difficulty: diffLabel,
         difficultyInstruction: diffInstruction,
+        typeId: subType,
+        finalChecklist,
         customPrompt,
       }),
     };
@@ -145,7 +151,7 @@ export function buildGenerationPrompt({
           .join("\n")}`
       : "";
   const providerQualityContract =
-    buildQuestionGenerationPromptContract(generationPlan);
+    buildQuestionGenerationPromptContract(generationPlan, subType);
 
   // 정적 system 프리앰블: 유형 지시·루브릭·계약·고정 출력 규칙만. 학교급/학년·지문·
   // 분석·난이도 값 등 호출마다 바뀌는 것은 전부 user 프롬프트로 내려 prefix 를
@@ -175,8 +181,8 @@ ${providerQualityContract}
 
 ## Compact JSON discipline
 - Return only the schema object. Do not add markdown, commentary, self-review, or alternative drafts.
-- Generate exactly ${typeCount} question(s); do not include extra candidate questions, planning notes, or full passage quotations outside required fields.
-- Keep explanation to 120-450 Korean characters. Keep each wrongOptionExplanations value to one concise Korean sentence under 180 characters.
+- Generate exactly ${typeCount} question(s); do not include extra candidate questions, planning notes, or full passage quotations outside required fields. (The errorDesign field, when present in the schema, IS a required field — fill it as instructed.)
+- Keep explanation to 200-450 Korean characters. Keep each wrongOptionExplanations value to one concise Korean sentence under 180 characters.
 - Keep keyPoints to exactly 3 short strings and tags to 3-5 short strings. Do not write long paragraphs inside arrays.
 - For GRAMMAR_ERROR, return the schema fields only. Do not output passageWithMarkers; the server reconstructs it. Use markedExpressions with exact source expression/correction and only the answer's wrong errorExpression.`;
 
@@ -194,7 +200,7 @@ ${targetContext}
 ## 생성 조건
 - 문제 수: ${typeCount}문제
 - 난이도: ${diffLabel} (${diffInstruction})
-- difficulty 필드에 반드시 "${diffLabel}"을 입력하세요. 다른 값을 넣지 마세요.${customPrompt ? `\n\n## Teacher instructions\n${customPrompt}` : ""}
+- difficulty 필드에 반드시 "${diffLabel}"을 입력하세요. 다른 값을 넣지 마세요.${customPrompt ? `\n\n## Teacher instructions\n${customPrompt}` : ""}${finalChecklist?.trim() ? `\n\n${finalChecklist}` : ""}
 
 위의 분석 포인트를 반드시 문제에 반영하고, 정확히 ${typeCount}문제를 생성하세요.`;
 

@@ -1,0 +1,247 @@
+{
+  "createdAt": "2026-07-05T17:40:33.833Z",
+  "outPath": "artifacts/ai-audits/loop-grammar-iter3-20260706",
+  "total": 4,
+  "passed": 1,
+  "failed": 3,
+  "passRate": 0.25,
+  "byCell": {
+    "GRAMMAR_ERROR:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-obvious-noun-what-relative",
+          "count": 2
+        },
+        {
+          "code": "llmFatal:(A), (B), (C), (D) are all fairly shallow/local grammar checks (demonstrative adjective, simple parallel past tense, par",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:(C) 'the chances are they are uneven' is actually awkward/questionable original phrasing (double 'are') that could itsel",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The (E) error is a basic what/why confusion resolvable by checking if the following clause is complete—an easy, spelling",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The error at (E) is a straightforward preposition-drop-before-relative-pronoun mistake ('which' vs 'in which'), which is",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:PREMIUM:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 1,
+      "passRate": 0.5,
+      "avgScore": 88,
+      "topIssues": [
+        {
+          "code": "llmMajor:Explanation for (A) incorrectly claims 'worthy of' is the subjective complement (주격보어) of 'was', but 'color' is the comp",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The item is labeled as KILLER, but the core error (D) is a basic subject-verb agreement ('the words' vs 'shares') of a v",
+          "count": 1
+        },
+        {
+          "code": "local:generation-notice",
+          "count": 1
+        },
+        {
+          "code": "local:quality-mode-relaxed",
+          "count": 1
+        },
+        {
+          "code": "local:review-recommended",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-obvious-noun-what-relative",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-weak-filler-decoys",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-weak-filler-decoys",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:(A), (B), (C), (D) are all fairly shallow/local grammar checks (demonstrative adjective, simple parallel past tense, par",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:(C) 'the chances are they are uneven' is actually awkward/questionable original phrasing (double 'are') that could itsel",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The (E) error is a basic what/why confusion resolvable by checking if the following clause is complete—an easy, spelling",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The error at (E) is a straightforward preposition-drop-before-relative-pronoun mistake ('which' vs 'in which'), which is",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractor quality is weak: comprehend+what vs why is a very common, well-drilled distinction that mid-level students so",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Explanation for (A) incorrectly claims 'worthy of' is the subjective complement (주격보어) of 'was', but 'color' is the comp",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:No two marked options require long-distance dependency checks beyond (C); most (A),(B),(D) are locally verifiable withou",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:None of the distractors are genuinely tempting for a top-tier student; (B) parallel structure and (D) subject-verb agree",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The explanation for (E) is correct but doesn't identify a competing 'trap' reasoning — it simply states the standard pre",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The item is labeled as KILLER, but the core error (D) is a basic subject-verb agreement ('the words' vs 'shares') of a v",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The passage's original sentence apparently already has 'the chances are they are uneven' which reads oddly; using it as ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The rubric requires KILLER items to place the error in the most syntactically complex sentence with underline kept to 1-",
+      "count": 1
+    },
+    {
+      "code": "local:generation-notice",
+      "count": 1
+    },
+    {
+      "code": "local:quality-mode-relaxed",
+      "count": 1
+    },
+    {
+      "code": "local:review-recommended",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-demonstrative-that-way-decoy",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-killer-thin-answer",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The error at (E) is a straightforward preposition-drop-before-relative-pronoun mistake ('which' vs 'in which'), which is": 1,
+    "llmFatal:(A), (B), (C), (D) are all fairly shallow/local grammar checks (demonstrative adjective, simple parallel past tense, par": 1,
+    "llmMajor:The rubric requires KILLER items to place the error in the most syntactically complex sentence with underline kept to 1-": 1,
+    "llmMajor:None of the distractors are genuinely tempting for a top-tier student; (B) parallel structure and (D) subject-verb agree": 1,
+    "llmMajor:The explanation for (E) is correct but doesn't identify a competing 'trap' reasoning — it simply states the standard pre": 1,
+    "llmFatal:The (E) error is a basic what/why confusion resolvable by checking if the following clause is complete—an easy, spelling": 1,
+    "llmFatal:(C) 'the chances are they are uneven' is actually awkward/questionable original phrasing (double 'are') that could itsel": 1,
+    "llmMajor:No two marked options require long-distance dependency checks beyond (C); most (A),(B),(D) are locally verifiable withou": 1,
+    "llmMajor:Distractor quality is weak: comprehend+what vs why is a very common, well-drilled distinction that mid-level students so": 1,
+    "llmMajor:The passage's original sentence apparently already has 'the chances are they are uneven' which reads oddly; using it as ": 1,
+    "rejection:grammar-obvious-noun-what-relative": 2,
+    "rejection:grammar-too-basic-decoys": 1,
+    "rejection:grammar-weak-filler-decoys": 2,
+    "rejectionLast:grammar-obvious-noun-what-relative": 1,
+    "rejectionLast:grammar-weak-filler-decoys": 2,
+    "local:quality-mode-relaxed": 1,
+    "local:generation-notice": 1,
+    "local:review-recommended": 1,
+    "llmMajor:The item is labeled as KILLER, but the core error (D) is a basic subject-verb agreement ('the words' vs 'shares') of a v": 1,
+    "llmMajor:Explanation for (A) incorrectly claims 'worthy of' is the subjective complement (주격보어) of 'was', but 'color' is the comp": 1,
+    "rejection:grammar-shallow-participle-adjective-answer": 1,
+    "rejection:grammar-killer-thin-answer": 1,
+    "rejectionLast:grammar-killer-thin-answer": 1,
+    "rejection:grammar-obvious-local-agreement": 1,
+    "rejection:grammar-demonstrative-that-way-decoy": 1,
+    "rejectionLast:grammar-obvious-local-agreement": 1,
+    "rejectionLast:grammar-demonstrative-that-way-decoy": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 2,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The (E) error is a basic what/why confusion resolvable by checking if the following clause is complete—an easy, spelling",
+        "llmFatal:(C) 'the chances are they are uneven' is actually awkward/questionable original phrasing (double 'are') that could itsel",
+        "llmMajor:No two marked options require long-distance dependency checks beyond (C); most (A),(B),(D) are locally verifiable withou",
+        "llmMajor:Distractor quality is weak: comprehend+what vs why is a very common, well-drilled distinction that mid-level students so",
+        "llmMajor:The passage's original sentence apparently already has 'the chances are they are uneven' which reads oddly; using it as ",
+        "rejection:grammar-obvious-noun-what-relative",
+        "rejection:grammar-too-basic-decoys",
+        "rejection:grammar-weak-filler-decoys"
+      ],
+      "answerSurfaces": [
+        "(E):why->what"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-obvious-noun-what-relative x2, grammar-too-basic-decoys x1, grammar-weak-filler-decoys x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead. | grammar-weak-filler-decoys: GRAMMAR_ERROR uses weak filler decoy(s) ((B), (C)). Replace them with structurally meaningful grammar targets."
+    },
+    {
+      "runIndex": 1,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:The error at (E) is a straightforward preposition-drop-before-relative-pronoun mistake ('which' vs 'in which'), which is",
+        "llmFatal:(A), (B), (C), (D) are all fairly shallow/local grammar checks (demonstrative adjective, simple parallel past tense, par",
+        "llmMajor:The rubric requires KILLER items to place the error in the most syntactically complex sentence with underline kept to 1-",
+        "llmMajor:None of the distractors are genuinely tempting for a top-tier student; (B) parallel structure and (D) subject-verb agree",
+        "llmMajor:The explanation for (E) is correct but doesn't identify a competing 'trap' reasoning — it simply states the standard pre"
+      ],
+      "answerSurfaces": [
+        "(E):in which->which"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 3,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmMajor:The item is labeled as KILLER, but the core error (D) is a basic subject-verb agreement ('the words' vs 'shares') of a v",
+        "llmMajor:Explanation for (A) incorrectly claims 'worthy of' is the subjective complement (주격보어) of 'was', but 'color' is the comp",
+        "rejection:grammar-shallow-participle-adjective-answer",
+        "rejection:grammar-killer-thin-answer",
+        "rejectionLast:grammar-killer-thin-answer"
+      ],
+      "answerSurfaces": [
+        "(D):share->shares"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-shallow-participle-adjective-answer x1, grammar-killer-thin-answer x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-thin-answer: KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check."
+    }
+  ]
+}

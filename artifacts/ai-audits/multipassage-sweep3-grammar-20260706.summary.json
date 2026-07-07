@@ -1,0 +1,364 @@
+{
+  "createdAt": "2026-07-06T08:08:52.241Z",
+  "outPath": "artifacts/ai-audits/multipassage-sweep3-grammar-20260706",
+  "total": 8,
+  "passed": 1,
+  "failed": 7,
+  "passRate": 0.125,
+  "byCell": {
+    "GRAMMAR_ERROR:STANDARD:KILLER": {
+      "total": 4,
+      "generated": 4,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 55.5,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-killer-overdrilled-answer",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-obvious-noun-what-relative",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-weak-filler-decoys",
+          "count": 2
+        },
+        {
+          "code": "rejectionLast:grammar-killer-overdrilled-answer",
+          "count": 2
+        },
+        {
+          "code": "rejectionLast:grammar-obvious-noun-what-relative",
+          "count": 2
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:PREMIUM:KILLER": {
+      "total": 4,
+      "generated": 4,
+      "passed": 1,
+      "passRate": 0.25,
+      "avgScore": 77.3,
+      "topIssues": [
+        {
+          "code": "local:generation-notice",
+          "count": 3
+        },
+        {
+          "code": "local:quality-mode-relaxed",
+          "count": 3
+        },
+        {
+          "code": "local:review-recommended",
+          "count": 3
+        },
+        {
+          "code": "rejection:grammar-killer-overdrilled-answer",
+          "count": 3
+        },
+        {
+          "code": "rejection:grammar-obvious-noun-what-relative",
+          "count": 3
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-killer-overdrilled-answer",
+      "count": 5
+    },
+    {
+      "code": "rejection:grammar-obvious-noun-what-relative",
+      "count": 5
+    },
+    {
+      "code": "local:generation-notice",
+      "count": 4
+    },
+    {
+      "code": "local:quality-mode-relaxed",
+      "count": 4
+    },
+    {
+      "code": "local:review-recommended",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-error-not-mutated",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-render-marker-count",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-weak-filler-decoys",
+      "count": 3
+    },
+    {
+      "code": "rejectionLast:grammar-killer-overdrilled-answer",
+      "count": 3
+    },
+    {
+      "code": "rejectionLast:grammar-obvious-noun-what-relative",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-killer-answer-point-repeated",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-too-basic-decoys",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-error-not-mutated",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:Marked expression (A) \"thicker\" is a weak filler decoy with no meaningful grammatical focus, which does not meet the sta",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The (C) segment is broken: 'which eventually it separates from' has a redundant subject 'it' after 'which', making it ne",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The (E) error is trivially spottable on a skim: 'The paradox is what, despite...' is locally ungrammatical (a bare 'what",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The error point ((B), changing 'that' to 'what' after 'rare diseases') is highly ungrammatical and extremely easy for st",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The explanation claims 'which' requires an incomplete clause and asserts the clause 'it separates from the face' is comp",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The generator itself flagged this as relaxed/low-quality with explicit review-recommended warnings, including that 'that",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The item directly violates the quality bar warnings: modifying a post-nominal relative clause to 'N what' is too obvious",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The original passage uses 'in which' correctly; the item fabricates the error by changing it to 'which', but the source ": 1,
+    "llmFatal:The KILLER rubric requires the marked error to look natural locally and only be caught via long-distance structural depe": 1,
+    "llmMajor:Distractors (A),(B),(C),(D) are all correctly-used, uncontroversial items (adjective usage, parallel past tense, paralle": 1,
+    "llmMajor:The claimed 'long-distance dependency' justification in the explanation overstates difficulty; the relative clause compl": 1,
+    "llmMajor:No non-answer marked expression is genuinely comparable in trickiness to the answer, so a strong student can eliminate (": 1,
+    "rejection:grammar-killer-overdrilled-answer": 5,
+    "rejection:grammar-obvious-noun-what-relative": 5,
+    "rejectionLast:grammar-killer-overdrilled-answer": 3,
+    "rejectionLast:grammar-obvious-noun-what-relative": 3,
+    "local:quality-mode-relaxed": 4,
+    "local:generation-notice": 4,
+    "local:review-recommended": 4,
+    "llmFatal:The generator itself flagged this as relaxed/low-quality with explicit review-recommended warnings, including that 'that": 1,
+    "llmFatal:The (E) error is trivially spottable on a skim: 'The paradox is what, despite...' is locally ungrammatical (a bare 'what": 1,
+    "llmMajor:Distractor (B) 'thicker' is padding — a comparative adjective modifier with no real competing grammar point, exactly as ": 1,
+    "llmMajor:Only 1 usable clean grammar site was available per the generator's own scarcity notice, meaning the item was built on in": 1,
+    "llmMajor:(D)'s pointCode 'k' does not correspond to any real grammar tension at 'wait' (correct modal+bare infinitive is uncontro": 1,
+    "rejection:grammar-weak-filler-decoys": 3,
+    "rejection:grammar-shallow-depends-decoy": 1,
+    "rejection:grammar-too-basic-decoys": 2,
+    "llmFatal:The pronoun 'it/them' antecedent is genuinely ambiguous: 'for it' could refer to 'the disease' (singular) but also plaus": 1,
+    "llmFatal:This is essentially a basic pronoun-agreement error (spot the number mismatch), which is a low-difficulty grammar point ": 1,
+    "llmMajor:None of the other four marked expressions (A,B,C,E) present genuinely tricky grammar; they are straightforward agreement": 1,
+    "llmMajor:The answer only requires local proximity to 'a disease' rather than any 2-step reasoning chain (context->logic->fine opt": 1,
+    "llmMajor:No non-error option is genuinely tempting; all four distractors are 'obviously correct' on simple rule application, so t": 1,
+    "rejection:grammar-error-not-mutated": 3,
+    "rejection:grammar-source-expression-not-backed": 1,
+    "rejection:grammar-nonstandard-terminology": 1,
+    "rejectionLast:grammar-error-not-mutated": 2,
+    "rejectionLast:grammar-source-expression-not-backed": 1,
+    "rejectionLast:grammar-nonstandard-terminology": 1,
+    "llmFatal:The (C) segment is broken: 'which eventually it separates from' has a redundant subject 'it' after 'which', making it ne": 1,
+    "llmFatal:The explanation claims 'which' requires an incomplete clause and asserts the clause 'it separates from the face' is comp": 1,
+    "llmMajor:The (D) explanation contains a garbled/incoherent phrase '대명사 지시 관계에서부의 주어-동사 수일치' that appears to be a text corruption,": 1,
+    "llmMajor:(B) 'it' referring back to 'a rectangular skyscraper' is grammatically odd source content (arguably should be 'the wind'": 1,
+    "llmMajor:For a KILLER item, distractors (A),(B),(D),(E) are fairly shallow single-word checks (passive participle, pronoun agreem": 1,
+    "llmFatal:The target sentence for the error (B) contains a highly debatable syntactic structure: 'playing' can easily be interpret": 1,
+    "llmMajor:The explanation logic for (C) states that 'known' post-modifies the noun ('뒤에서 수식하는 것'), but in the text 'oldest known c": 1,
+    "rejection:grammar-shallow-participle-adjective-answer": 1,
+    "rejectionLast:grammar-shallow-participle-adjective-answer": 1,
+    "llmFatal:Marked expression (A) \"thicker\" is a weak filler decoy with no meaningful grammatical focus, which does not meet the sta": 1,
+    "llmMajor:The explanation is too long and overly verbose, violating the compact quality warnings for grammar items.": 1,
+    "llmMajor:Option (B) is a very standard subjective subject-verb agreement error with a basic distractor setup, falling short of a ": 1,
+    "rejection:grammar-render-marker-count": 3,
+    "rejection:grammar-shallow-nearby-passive-decoy": 1,
+    "rejectionLast:grammar-render-marker-count": 1,
+    "llmFatal:The error point ((B), changing 'that' to 'what' after 'rare diseases') is highly ungrammatical and extremely easy for st": 1,
+    "llmFatal:The item directly violates the quality bar warnings: modifying a post-nominal relative clause to 'N what' is too obvious": 1,
+    "llmMajor:The key distractors such as (E) 'more common' and (A) 'being employed' are extremely basic and require very little conte": 1,
+    "llmMajor:The explanation is too long and wordy, failing to focus on a crisp, four-step scholastic breakdown.": 1,
+    "rejection:grammar-killer-answer-point-repeated": 2,
+    "rejectionLast:grammar-killer-answer-point-repeated": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 2,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 38,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The generator itself flagged this as relaxed/low-quality with explicit review-recommended warnings, including that 'that",
+        "llmFatal:The (E) error is trivially spottable on a skim: 'The paradox is what, despite...' is locally ungrammatical (a bare 'what",
+        "llmMajor:Distractor (B) 'thicker' is padding — a comparative adjective modifier with no real competing grammar point, exactly as ",
+        "llmMajor:Only 1 usable clean grammar site was available per the generator's own scarcity notice, meaning the item was built on in",
+        "llmMajor:(D)'s pointCode 'k' does not correspond to any real grammar tension at 'wait' (correct modal+bare infinitive is uncontro"
+      ],
+      "answerSurfaces": [
+        "(E):that->what"
+      ],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-weak-filler-decoys x2, grammar-shallow-depends-decoy x1, grammar-too-basic-decoys x1, grammar-killer-overdrilled-answer x1, grammar-obvious-noun-what-relative x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-overdrilled-answer: KILLER GRAMMAR_ERROR rejected: the answer is an over-drilled \"that ↔ what\" swap — the single most repeated CSAT grammar point (26 identical surfaces in the corpus). Move the error to a different, deeper site already present in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break. | grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead."
+    },
+    {
+      "runIndex": 3,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The pronoun 'it/them' antecedent is genuinely ambiguous: 'for it' could refer to 'the disease' (singular) but also plaus",
+        "llmFatal:This is essentially a basic pronoun-agreement error (spot the number mismatch), which is a low-difficulty grammar point ",
+        "llmMajor:None of the other four marked expressions (A,B,C,E) present genuinely tricky grammar; they are straightforward agreement",
+        "llmMajor:The answer only requires local proximity to 'a disease' rather than any 2-step reasoning chain (context->logic->fine opt",
+        "llmMajor:No non-error option is genuinely tempting; all four distractors are 'obviously correct' on simple rule application, so t",
+        "rejection:grammar-error-not-mutated",
+        "rejection:grammar-source-expression-not-backed",
+        "rejection:grammar-nonstandard-terminology"
+      ],
+      "answerSurfaces": [
+        "(D):it->them"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-error-not-mutated x1, grammar-source-expression-not-backed x1, grammar-nonstandard-terminology x1 | Last: quality/GRAMMAR_ERROR - grammar-error-not-mutated: The grammar error surface matches the original expression. | grammar-source-expression-not-backed: The source/correction expression \"what\" is not found in the original passage; GRAMMAR_ERROR must mutate a real source expression, not mark an already-correct source form as wrong. | grammar-nonstandard-terminology: Grammar explanation/keyPoints uses nonstandard/linguistics terminology ('통사적으로'); rewrite with standard school-grammar terms: '통사적으로'→'문장 구조상'."
+    },
+    {
+      "runIndex": 4,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkqu0032mmf0g9i059aa",
+      "title": "2027학년도 6월 모평 영어 38번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The (C) segment is broken: 'which eventually it separates from' has a redundant subject 'it' after 'which', making it ne",
+        "llmFatal:The explanation claims 'which' requires an incomplete clause and asserts the clause 'it separates from the face' is comp",
+        "llmMajor:The (D) explanation contains a garbled/incoherent phrase '대명사 지시 관계에서부의 주어-동사 수일치' that appears to be a text corruption,",
+        "llmMajor:(B) 'it' referring back to 'a rectangular skyscraper' is grammatically odd source content (arguably should be 'the wind'",
+        "llmMajor:For a KILLER item, distractors (A),(B),(D),(E) are fairly shallow single-word checks (passive participle, pronoun agreem"
+      ],
+      "answerSurfaces": [
+        "(C):where->which"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 1,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 68,
+      "issueKeys": [
+        "llmFatal:The original passage uses 'in which' correctly; the item fabricates the error by changing it to 'which', but the source ",
+        "llmFatal:The KILLER rubric requires the marked error to look natural locally and only be caught via long-distance structural depe",
+        "llmMajor:Distractors (A),(B),(C),(D) are all correctly-used, uncontroversial items (adjective usage, parallel past tense, paralle",
+        "llmMajor:The claimed 'long-distance dependency' justification in the explanation overstates difficulty; the relative clause compl",
+        "llmMajor:No non-answer marked expression is genuinely comparable in trickiness to the answer, so a strong student can eliminate (",
+        "rejection:grammar-killer-overdrilled-answer",
+        "rejection:grammar-obvious-noun-what-relative",
+        "rejectionLast:grammar-killer-overdrilled-answer"
+      ],
+      "answerSurfaces": [
+        "(E):in which->which"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-killer-overdrilled-answer x1, grammar-obvious-noun-what-relative x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-overdrilled-answer: KILLER GRAMMAR_ERROR rejected: the answer is an over-drilled \"that ↔ what\" swap — the single most repeated CSAT grammar point (26 identical surfaces in the corpus). Move the error to a different, deeper site already present in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break. | grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead."
+    },
+    {
+      "runIndex": 6,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 68,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:Marked expression (A) \"thicker\" is a weak filler decoy with no meaningful grammatical focus, which does not meet the sta",
+        "llmMajor:The explanation is too long and overly verbose, violating the compact quality warnings for grammar items.",
+        "llmMajor:Option (B) is a very standard subjective subject-verb agreement error with a basic distractor setup, falling short of a ",
+        "rejection:grammar-render-marker-count",
+        "rejection:grammar-error-not-mutated"
+      ],
+      "answerSurfaces": [
+        "(B):are generally not that way->is generally not that way"
+      ],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-render-marker-count x3, grammar-error-not-mutated x2, grammar-shallow-nearby-passive-decoy x1, grammar-too-basic-decoys x1, grammar-weak-filler-decoys x1 | Last: quality/GRAMMAR_ERROR - grammar-render-marker-count: Expected 5 rendered grammar markers, got 4. | grammar-error-not-mutated: Stripping the markers reproduces the original passage unchanged — no grammar error was introduced; the answer flags unmutated source text."
+    },
+    {
+      "runIndex": 7,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "llmScore": 68,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The error point ((B), changing 'that' to 'what' after 'rare diseases') is highly ungrammatical and extremely easy for st",
+        "llmFatal:The item directly violates the quality bar warnings: modifying a post-nominal relative clause to 'N what' is too obvious",
+        "llmMajor:The key distractors such as (E) 'more common' and (A) 'being employed' are extremely basic and require very little conte",
+        "llmMajor:The explanation is too long and wordy, failing to focus on a crisp, four-step scholastic breakdown.",
+        "rejection:grammar-killer-overdrilled-answer"
+      ],
+      "answerSurfaces": [
+        "(B):that->what"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-overdrilled-answer x2, grammar-obvious-noun-what-relative x2, grammar-killer-answer-point-repeated x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-overdrilled-answer: KILLER GRAMMAR_ERROR rejected: the answer is an over-drilled \"that ↔ what\" swap — the single most repeated CSAT grammar point (26 identical surfaces in the corpus). Move the error to a different, deeper site already present in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break. | grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead."
+    },
+    {
+      "runIndex": 5,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 75,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The target sentence for the error (B) contains a highly debatable syntactic structure: 'playing' can easily be interpret",
+        "llmMajor:The explanation logic for (C) states that 'known' post-modifies the noun ('뒤에서 수식하는 것'), but in the text 'oldest known c",
+        "rejection:grammar-killer-overdrilled-answer",
+        "rejection:grammar-obvious-noun-what-relative",
+        "rejection:grammar-shallow-participle-adjective-answer"
+      ],
+      "answerSurfaces": [
+        "(B):played->playing"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-overdrilled-answer x1, grammar-obvious-noun-what-relative x1, grammar-shallow-participle-adjective-answer x1 | Last: quality/GRAMMAR_ERROR - grammar-shallow-participle-adjective-answer: INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"played\" -> \"playing\" before a noun; require deeper structure."
+    }
+  ]
+}

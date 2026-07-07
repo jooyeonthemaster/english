@@ -13,6 +13,7 @@ import { normalizePassageWhitespace } from "@/lib/question-postprocess/text-util
 import { QUESTION_SCHEMAS, STRUCTURED_TYPE_PROMPTS } from "@/lib/question-schemas";
 import { buildQuestionTypeSettingsPrompt, getQuestionTypeGenerationTokenFloor, readQuestionTypeDifficultySetting, readQuestionTypeGenerationPlanSetting, readSummaryWritingBlankCountSetting, readTopicSentenceWritingBlankCountSetting, resolveQuestionTypeGenerationSettings } from "@/lib/question-type-generation-settings";
 import { buildQuestionTargetCandidateBlock, getTypeQualityRubric, type QuestionQualityIssue, validateQuestionQuality } from "@/lib/question-quality";
+import { selectUsableGrammarCandidates } from "@/lib/question-quality/candidate-blocks/grammar";
 import { buildDiversityPromptBlock, shuffleQuestionOptionsForDiversity } from "@/lib/question-diversity";
 import { DIFF_DESCRIPTION, TYPE_LABELS } from "./constants";
 import { generateWithRetry } from "./generate-with-retry";
@@ -21,8 +22,8 @@ import { fallbackResponseSchema } from "./schemas";
 import { buildGenerationPrompt, STRUCTURED_OUTPUT_INSTRUCTIONS, UNSTRUCTURED_OUTPUT_INSTRUCTIONS } from "./prompts";
 import { isNonRetryableQuestionGenerationProviderError } from "@/lib/question-generation-llm";
 import type { QualityMode, QuestionGenerationRejectionSummary, QuestionGenerationUsageEvent, RejectionRecorder, RunGenerationInput } from "./run-question-generation-types";
-import { RELAXED_BLOCKING_QUALITY_CODES } from "./run-question-generation-constants";
-import { buildCorrectiveRetryFeedback, buildRejectionSample, buildRejectionSummary, formatIssuesForLog, getLargestGrammarAnswerCount, getLargestGrammarMarkerCount, getLargestIrrelevantSlotCount, hasBlankParaphraseAnswerSetting, hasDoubleNegativeBlankSetting, hasSingleBlankInferenceSetting, isRecord, mergeCustomPromptWithTypeSettings, recordRejection, summarizeQualityIssues } from "./run-question-generation-helpers";
+import { RELAXED_BLOCKING_QUALITY_CODES, SALVAGE_RELAXABLE_CODES } from "./run-question-generation-constants";
+import { admitSalvageCandidatesFromPool, buildCorrectiveRetryFeedback, buildRejectionSample, buildRejectionSummary, buildSalvageNotice, formatIssuesForLog, getLargestGrammarAnswerCount, getLargestGrammarMarkerCount, getLargestIrrelevantSlotCount, hasBlankParaphraseAnswerSetting, hasDoubleNegativeBlankSetting, hasSingleBlankInferenceSetting, isRecord, mergeCustomPromptWithTypeSettings, recordRejectedCandidate, recordRejection, summarizeQualityIssues, trimGrammarDecoySurplus } from "./run-question-generation-helpers";
 
 export type {
   QuestionGenerationRejectionIssue,
@@ -68,6 +69,19 @@ const GRAMMAR_DESIGN_ISSUES_NOT_WORTH_REPAIR = new Set([
   "grammar-semantic-how-why-answer",
 ]);
 
+// GRAMMAR_ERROR STANDARD/PREMIUM 1차 프롬프트 말단에 붙이는 '출력 직전' 자기검증 체크리스트.
+// 오늘 실측 최다 반려 코드(오류 미주입·정답표 desync·KILLER 인접 자명 자리·필러 미끼·
+// 명사 뒤 what 비문 등)를 겨냥해, 생성기가 JSON 을 내보내기 직전에 스스로 교정하게 유도한다.
+// 종결 명령 앞에 주입되며(프롬프트 빌더가 위치 보장), 값이 없으면 기존 프롬프트와 바이트 동일.
+const GRAMMAR_ERROR_FINAL_CHECKLIST = `## 출력 직전 최종 자기검증 (하나라도 위반 시 해당 부분을 고치고 나서 JSON을 출력)
+1. 정답 밑줄: 오류형(errorExpression)이 지문에 실제로 심어져 있고, correction 은 원문 그대로인가? (오류를 심지 않으면 무효)
+2. 정답 포인트: pointCode 가 a~i,k(핵심 10) 중 하나이고, KILLER 라면 인접 주어-동사처럼 한눈에 보이는 자리가 아닌가?
+3. 미끼 밑줄 전부: only/given/does/지시사 that 같은 장식 필러가 아니라 구조적으로 의미 있는 문법 자리인가?
+4. KILLER: 어떤 미끼도 정답과 같은 pointCode 를 쓰지 않는가?
+5. 모든 expression/correction 이 지문 원문에 한 글자도 다르지 않게 실재하는가? (잘린 표현·창작 표현 무효)
+6. 명사 뒤에 what 을 넣는 변형을 정답으로 쓰지 않았는가? (한눈에 비문 = 반려됨)
+7. keyPoints 3개가 각각 실제 밑줄 라벨로 시작하고 1번이 정답 라벨인가?`;
+
 function isStandardGrammarKillerRequest(input: RunGenerationInput): boolean {
   if (input.generationPlan === "PREMIUM") return false;
   return input.plan.some(
@@ -81,6 +95,15 @@ function isStandardGrammarKillerRequest(input: RunGenerationInput): boolean {
   );
 }
 
+// 미끼(디코이)만 교체하면 해소되는 조합 위반 — 정답·설계는 무결하므로 전체
+// 재생성(~40k tok) 대신 린 교정 호출(~4k)이 정확한 처방이다 (26-07-06 스윕:
+// PREM-K 4/4런에서 answer-point-repeated 단독 반려가 전액 재생성을 유발).
+const GRAMMAR_DECOY_ONLY_REPAIRABLE_CODES = new Set([
+  "grammar-killer-answer-point-repeated",
+  "grammar-decoy-point-monotony",
+  "grammar-decoy-point-diversity",
+]);
+
 function shouldAttemptCandidateRepair(
   subType: string,
   issues: QuestionQualityIssue[],
@@ -88,6 +111,11 @@ function shouldAttemptCandidateRepair(
   if (subType !== "GRAMMAR_ERROR") return true;
   const codes = issues.map((issue) => issue.code).filter(Boolean);
   if (codes.length === 0) return true;
+  // 디코이 전용 위반만 있으면 설계 보존 교정이 가능 — NOT_WORTH_REPAIR 에
+  // 앞서 허용한다 (rescue 코드셋 경유로 point-repeated 가 금지목록에 포함됨).
+  if (codes.every((code) => GRAMMAR_DECOY_ONLY_REPAIRABLE_CODES.has(code))) {
+    return true;
+  }
   return !codes.every((code) => GRAMMAR_DESIGN_ISSUES_NOT_WORTH_REPAIR.has(code));
 }
 
@@ -244,9 +272,28 @@ export async function runQuestionGeneration(
         answerPolarity,
       } = resolvedTypeSettings;
 
+      // ── 미끼 스페어 과잉생성 (26-07-06 1회호출 캠페인 Wave 3-lite) ──────────
+      // KILLER 어법(단일 정답)은 생성 G = 검증 K + 1 로 미끼를 1개 더 받아,
+      // 조합 위반(정답 pointCode 반복 등) 미끼를 trimGrammarDecoySurplus 가
+      // 후처리 직전에 결정론 드랍한다 — "미끼 1개 불량 → 전체 재생성" 루프의
+      // 0-콜 대체. 검증·결핍판정·반려샘플은 계속 K 기준이라 게이트 계약 불변.
+      const grammarDecoySurplusActive =
+        subType === "GRAMMAR_ERROR" &&
+        effectiveDiffLabel === "KILLER" &&
+        (grammarAnswerCount ?? 1) === 1;
+      const generatedGrammarMarkerCount = grammarDecoySurplusActive
+        ? Math.min(10, (grammarMarkerCount ?? 5) + 1)
+        : grammarMarkerCount;
+      const generationTypeSettings = grammarDecoySurplusActive
+        ? {
+            ...(isRecord(effectiveTypeSettings) ? effectiveTypeSettings : {}),
+            markerCount: generatedGrammarMarkerCount,
+          }
+        : effectiveTypeSettings;
+
       const typeSettingsPrompt = buildQuestionTypeSettingsPrompt(
         subType,
-        effectiveTypeSettings,
+        generationTypeSettings,
         // 동일 전역 난이도 — EXACT-direction 프롬프트가 resolve 결과(발문·배점)와 일치하도록.
         effectiveDiffLabel,
       );
@@ -265,7 +312,7 @@ export async function runQuestionGeneration(
             vocabChoiceMarkerCount,
             vocabChoiceAnswerCount,
             antonymPairCount,
-            grammarMarkerCount,
+            grammarMarkerCount: generatedGrammarMarkerCount,
             grammarAnswerCount,
           })
         : "";
@@ -278,7 +325,8 @@ export async function runQuestionGeneration(
         passageContent,
         {
           irrelevantSlotCount,
-          grammarMarkerCount,
+          grammarMarkerCount: generatedGrammarMarkerCount,
+          grammarScarcityBaseCount: grammarMarkerCount,
           grammarAnswerCount,
           grammarCorrectionErrorCount,
           antonymPairCount,
@@ -332,7 +380,7 @@ export async function runQuestionGeneration(
       const responseSchema = hasAiSchema
         ? getAiResponseSchema(subType, {
             irrelevantSlotCount,
-            grammarMarkerCount,
+            grammarMarkerCount: generatedGrammarMarkerCount,
             grammarAnswerCount,
             grammarCorrectionErrorCount,
             summaryCompleteMcBlankCount,
@@ -379,6 +427,9 @@ export async function runQuestionGeneration(
           diffLabel: effectiveDiffLabel,
           diffInstruction: effectiveDiffInstruction,
           generationPlan: effectiveGenerationPlan,
+          subType,
+          finalChecklist:
+            subType === "GRAMMAR_ERROR" ? GRAMMAR_ERROR_FINAL_CHECKLIST : undefined,
           customPrompt: previousAttemptFeedback
             ? [mergedCustomPrompt, previousAttemptFeedback]
                 .filter(Boolean)
@@ -419,10 +470,33 @@ export async function runQuestionGeneration(
                 ),
               )
             : generationMaxTokens;
+        // PREMIUM 어법: 20k 바닥은 폭주 생성이 180s abort 까지 달리게 한다
+        // (실측 26-07-04 스윕: PREMIUM 타임아웃 3/8, 베이스라인도 동율 — 기존 지병).
+        // 단일 어법 문항(마커≤10·오답해설≤9·errorDesign 포함)은 12k로 충분 —
+        // 출력 상한으로 생성 시간 꼬리를 잘라 타임아웃 확률을 낮춘다.
+        const premiumGrammarTokenCap =
+          subType === "GRAMMAR_ERROR" && effectiveGenerationPlan === "PREMIUM"
+            ? Math.min(
+                20_000,
+                Math.max(12_000, (Number(typeCount) || 1) * 12_000),
+              )
+            : generationMaxTokens;
         const effectiveGenerationMaxTokens = Math.min(
           generationMaxTokens,
           standardGrammarTokenCap,
+          premiumGrammarTokenCap,
         );
+        // Wave-3 TIMEOUT-RCA(26-07-05 실측): sonnet-5(OpenRouter) strict 구조화
+        // 출력이 SUMMARY_WRITING/TOPIC_SENTENCE_WRITING 봉투(옵션·enum 필드 20여
+        // 개)에서 스키마 기인으로 전멸한다 — 응답 없이 180s abort 되거나 masked
+        // 400("Provider returned error"). A/B 프로브: 동일 미니 프롬프트가 trivial
+        // 스키마 8s vs SW/TSW 봉투 90s abort. STANDARD(Gemini)는 정상이므로
+        // PREMIUM 만 프롬프트 인라인 JSON 모드로 직행한다(zod 클라이언트 검증 +
+        // 하류 품질게이트 재검증 — grammar-too-large 폴백과 동일 계약).
+        const premiumForceJsonFallback =
+          effectiveGenerationPlan === "PREMIUM" &&
+          (subType === "SUMMARY_WRITING" ||
+            subType === "TOPIC_SENTENCE_WRITING");
         const object = await generateWithRetry(
           responseSchema,
           generationPrompt,
@@ -443,7 +517,11 @@ export async function runQuestionGeneration(
               durationMs: result.durationMs,
             });
           },
-          { system: generationSystem, deadlineAt },
+          {
+            system: generationSystem,
+            deadlineAt,
+            forceJsonFallback: premiumForceJsonFallback,
+          },
         );
 
         const generatedQuestionsAll =
@@ -475,19 +553,46 @@ export async function runQuestionGeneration(
           | { ok: false; error: string; normalizedDraft: Record<string, unknown> } => {
           // 과거에는 "BLANK_INFERENCE 의 typeSettings 프롬프트 존재 = 부정-부정"이었지만,
           // 언어/다중빈칸 블록이 생기면서 그 프록시가 깨졌다. resolved 플래그로만 판정한다.
-          // KILLER 단일 빈칸(비DN)은 PARAPHRASE 모드를 강제한다(정답이 원문 verbatim이면
-          // 추론 없이 풀려 KILLER 미성립).
-          const normalizedAiQuestion: Record<string, unknown> =
+          // KILLER 빈칸(비DN)은 교사 옵트인(paraphraseAnswer)과 무관하게 PARAPHRASE
+          // 모드를 강제한다 — 과거에는 이 자리에서 SOURCE_EXACT 로 강제하고 후처리가
+          // 정답 선지를 원문 verbatim 으로 재작성해, DIFFICULTY_RUBRIC 의 "정답은 원문
+          // 복사가 아닌 추상 패러프레이즈" 지시와 정면 모순이었다(추론 없이 풀려 KILLER
+          // 미성립). paraphraseAnswer 설정은 옵트인 true 만 존재(readBooleanSetting 이
+          // true 외 값을 전부 false 로 접음)하므로 "명시적 false 존중" 분기는 불가능하고
+          // 필요도 없다. BASIC/INTERMEDIATE 는 기존 동작 유지(옵트인 없으면 SOURCE_EXACT).
+          // 26-07-06: 단일빈칸 한정(count===1)을 제거 — 다중빈칸 KILLER 도 강제.
+          // 근거: 전수 실측에서 blankCount=2 KILLER 가 45~65 로 전 매트릭스 최저였고
+          // 원인이 "정답 조합 verbatim-by-design"(베껴 즉답)이었다. 옵트인 경로
+          // (paraphraseAnswer=true)가 이미 다중빈칸 PARAPHRASE 를 지원하므로 배관 동일.
+          // 26-07-06(2차): INTERMEDIATE 로도 확장 — 다지문 스윕 실측에서 STANDARD
+          // INT 빈칸의 fatal 7/8 이 전부 "정답=원문 verbatim 복사(후처리 강제)라
+          // 본문 대조만으로 풀림 + 해설은 패러프레이즈 서사(내적 모순)"였다.
+          // BASIC 은 SOURCE_EXACT 유지(기초 난이도 계약).
+          const forceKillerBlankParaphrase =
+            subType === "BLANK_INFERENCE" &&
+            (effectiveDiffLabel === "KILLER" || effectiveDiffLabel === "INTERMEDIATE") &&
+            !resolvedTypeSettings.blankInferenceDoubleNegative;
+          const normalizedBeforeTrim: Record<string, unknown> =
             subType === "BLANK_INFERENCE" &&
             resolvedTypeSettings.blankInferenceDoubleNegative
               ? { ...rawQ, blankAnswerMode: "DOUBLE_NEGATIVE" }
               : subType === "BLANK_INFERENCE" &&
-                  resolvedTypeSettings.blankInferenceParaphraseAnswer
+                  (resolvedTypeSettings.blankInferenceParaphraseAnswer ||
+                    forceKillerBlankParaphrase)
                 ? { ...rawQ, blankAnswerMode: "PARAPHRASE" }
                 : subType === "BLANK_INFERENCE" &&
                     (resolvedTypeSettings.blankInferenceBlankCount ?? 1) === 1
                   ? { ...rawQ, blankAnswerMode: "SOURCE_EXACT" }
                   : rawQ;
+          // 미끼 스페어 드랍(G→K) — 후처리·검증·repair 초안·반려 샘플이 전부
+          // 같은 K-좌표계를 보도록 파이프라인 진입 전에 트림한다.
+          const normalizedAiQuestion: Record<string, unknown> =
+            grammarDecoySurplusActive
+              ? trimGrammarDecoySurplus(normalizedBeforeTrim, {
+                  finalMarkerCount: grammarMarkerCount ?? 5,
+                  finalAnswerCount: grammarAnswerCount ?? 1,
+                })
+              : normalizedBeforeTrim;
           const ppResult = postProcessQuestion(
             subType,
             passageContent,
@@ -597,16 +702,24 @@ export async function runQuestionGeneration(
           const qualityWarnings = qualityIssues.filter(
             (issue) => issue.severity === "warning",
           );
-          const blockingQualityErrors =
-            qualityMode === "relaxed"
-              ? qualityErrors.filter((issue) =>
-                  RELAXED_BLOCKING_QUALITY_CODES.has(issue.code),
-                )
-              : qualityErrors;
+          // scarce = relaxed + 전 유형 "완성도(craft)" 게이트 추가 강등(정답
+          // 유일성·누출·렌더 무결성은 유지) — never-fail 구제 사다리의 최후 모드.
+          const isBlockingInMode = (issue: QuestionQualityIssue): boolean => {
+            if (qualityMode === "strict") return true;
+            if (!RELAXED_BLOCKING_QUALITY_CODES.has(issue.code)) return false;
+            if (
+              qualityMode === "scarce" &&
+              SALVAGE_RELAXABLE_CODES.has(issue.code)
+            ) {
+              return false;
+            }
+            return true;
+          };
+          const blockingQualityErrors = qualityErrors.filter(isBlockingInMode);
           const relaxedQualityWarnings =
-            qualityMode === "relaxed"
+            qualityMode === "relaxed" || qualityMode === "scarce"
               ? qualityErrors
-                  .filter((issue) => !RELAXED_BLOCKING_QUALITY_CODES.has(issue.code))
+                  .filter((issue) => !isBlockingInMode(issue))
                   .map((issue) => ({ ...issue, severity: "warning" as const }))
               : [];
           return {
@@ -645,9 +758,11 @@ export async function runQuestionGeneration(
           // 좌표다 — LLM 이 엉뚱한 선지를 고치는 체계적 오도(LLM 1회 낭비)가 된다.
           // KO 는 strict 재시도 루프(교정 피드백 주입)가 자체 복구 경로라 skip 이
           // 부작용 최소안이다(영어 경로는 셔플 없음 — 기존 동작 그대로).
+          // PREMIUM 도 repair 대상 — reasoning-off 이후 호출당 ~13-30s 라 후보당
+          // 1회 교정 재생성이 데드라인(270s) 안에 충분히 들어온다(26-07-06,
+          // 프리미엄 생성 실패율 완화의 일부).
           if (
             !koMod &&
-            effectiveGenerationPlan !== "PREMIUM" &&
             fin.blockingErrors.length > 0 &&
             fin.blockingErrors.length <= 3 &&
             shouldAttemptCandidateRepair(subType, fin.blockingErrors) &&
@@ -663,6 +778,7 @@ export async function runQuestionGeneration(
               perQuestionTokenFloor,
               deadlineAt,
               system: generationSystem,
+              forceJsonFallback: premiumForceJsonFallback,
               onModelUsage: (result) => {
                 onModelUsage?.({
                   phase: "question_generation",
@@ -704,6 +820,18 @@ export async function runQuestionGeneration(
               message: summarizeQualityIssues(fin.blockingErrors),
               codes: fin.blockingErrors.map((issue) => issue.code),
               sample: buildRejectionSample(subType, fin.finalQuestion),
+            });
+            // never-fail 구제 사다리용 후보 보존 — craft 결함만 있는 후보는 모든
+            // 재시도 소진 후 경고 부착으로 재승인될 수 있다(F급 혼입 후보는
+            // admitSalvageCandidatesFromPool 이 걸러낸다).
+            recordRejectedCandidate(rejectionRecorder, {
+              subType,
+              qualityMode,
+              attemptIndex,
+              question: fin.finalQuestion,
+              blockingCodes: fin.blockingErrors.map((issue) => issue.code),
+              blockingIssues: fin.blockingErrors,
+              warnings: fin.allWarnings,
             });
             continue;
           }
@@ -887,20 +1015,167 @@ export async function runQuestionGenerationWithEmptyRetry(
   // 영향 없고, 긴/어려운 지문에서 품질 게이트(list-like·too-easy) 통과 기회를 늘린다.
   // STANDARD(Gemini ~9s)는 기존 상한을 유지한다.
   const PREMIUM_STRICT_ATTEMPT_CAP = 5;
-  const STANDARD_GRAMMAR_KILLER_STRICT_ATTEMPT_CAP = 3;
+  // 26-07-06 2차: 3→4 — gemini 호출 ~10s 라 저비용이고, STANDARD KILLER 어법의
+  // 구제 의존율 3/4(다지문 실측)을 strict 재시도 1회 추가로 낮춘다(지정 설계와 병행).
+  const STANDARD_GRAMMAR_KILLER_STRICT_ATTEMPT_CAP = 4;
   const attempts =
     inputWithUsage.generationPlan === "PREMIUM"
       ? Math.max(1, Math.min(rawAttempts, PREMIUM_STRICT_ATTEMPT_CAP, requestedMaxAttempts))
       : hasStandardGrammarKiller
-        ? Math.max(
-            1,
-            Math.min(
-              rawAttempts,
-              STANDARD_GRAMMAR_KILLER_STRICT_ATTEMPT_CAP,
-              requestedMaxAttempts,
-            ),
-          )
+        ? // 26-07-06 2차: requestedMaxAttempts(기본 2)를 min 에서 제거 — 다른
+          // STANDARD 유형은 rawAttempts(≥4)를 그대로 받는데 어법 KILLER 만 2회로
+          // 조여져 구제 의존율 3/4 의 한 원인이었다. gemini ~10s 라 4회도 저비용.
+          Math.max(1, Math.min(rawAttempts, STANDARD_GRAMMAR_KILLER_STRICT_ATTEMPT_CAP))
       : rawAttempts;
+
+  // 실패 반환 직전 전용 — 어법 결핍 지문(금지 표면이 후보 대부분과 겹치는 퇴화
+  // 케이스, 실측: glass 지문 금지 31개 vs 정제 후보 1개)이면 마지막 거절 사유로
+  // 마커를 남겨, UI 가 "다시 생성하세요" 대신 "지문 부적합"을 안내하게 한다
+  // (workbench-generation-errors 의 grammar-scarce-passage 매핑 짝). 레스큐/repair
+  // 판정 이후 실패 경로에서만 호출되므로 그 결정들에는 영향이 없다.
+  const getGrammarScarceInfo = (): {
+    scarce: boolean;
+    usableCount: number;
+    codeCount: number;
+  } => {
+    if (!hasGrammarError) return { scarce: false, usableCount: 0, codeCount: 0 };
+    try {
+      const { candidates: usableSites } = selectUsableGrammarCandidates(
+        inputWithUsage.passageContent,
+        inputWithUsage.diffLabel,
+      );
+      const usableSiteCodes = new Set(usableSites.map((site) => site.code));
+      const requestedMarkerCount = Math.max(5, largestGrammarMarkerCount);
+      return {
+        scarce:
+          usableSites.length < requestedMarkerCount + 2 ||
+          usableSiteCodes.size < 3,
+        usableCount: usableSites.length,
+        codeCount: usableSiteCodes.size,
+      };
+    } catch {
+      return { scarce: false, usableCount: 0, codeCount: 0 };
+    }
+  };
+
+  const recordGrammarScarcePassageMarker = () => {
+    if (!hasGrammarError) return;
+    const hasGrammarQualityRejection = rejectionRecorder.issues.some(
+      (issue) => issue.phase === "quality" && issue.subType === "GRAMMAR_ERROR",
+    );
+    if (!hasGrammarQualityRejection) return;
+    const info = getGrammarScarceInfo();
+    if (!info.scarce) return;
+    recordRejection(rejectionRecorder, {
+      phase: "quality",
+      qualityMode: "strict",
+      subType: "GRAMMAR_ERROR",
+      message: `grammar-scarce-passage: this passage offers only ${info.usableCount} clean grammar sites across ${info.codeCount} point codes after forbidden-surface filtering; it is a poor fit for grammar-judgment items`,
+      codes: ["grammar-scarce-passage"],
+    });
+  };
+
+  // 결핍 지문 최선 생성(유저 결정 26-07-04: "못 만듭니다"로 끝내지 말고 만들어
+  // 주되 품질이 제한적인 이유를 알린다). 기존 사다리(strict→rescue/relaxed)가
+  // 전부 실패한 뒤에만, 어법 단독 요청 + 결핍 지문일 때 1회 실행한다 —
+  // 취향 게이트(GRAMMAR_SCARCE_RELAXABLE_CODES)를 경고로 강등한 scarce 모드로
+  // 생성하고, 출하물에 사유 notice·검수권장을 부착한다. 정답 유일성·무결성
+  // 게이트는 그대로라 "틀린 문항"은 여전히 출하되지 않는다.
+  const runGrammarScarceBestEffort = async (): Promise<
+    Record<string, unknown>[] | null
+  > => {
+    if (!hasGrammarError) return null;
+    if (
+      inputWithUsage.plan.length !== 1 ||
+      inputWithUsage.plan[0]?.subType !== "GRAMMAR_ERROR"
+    ) {
+      return null;
+    }
+    if (deadlineAt && Date.now() >= deadlineAt) return null;
+    const info = getGrammarScarceInfo();
+    if (!info.scarce) return null;
+    console.warn(
+      `[${logPrefix}] Scarce grammar passage (${info.usableCount} usable sites / ${info.codeCount} codes); running best-effort scarce pass with taste gates downgraded.`,
+    );
+    const scarceFeedback = [
+      pendingFeedback,
+      "Scarce-passage best effort: this passage lacks clean grammar sites. Build the most defensible item possible — the answer must still be a single unambiguous error with verbatim source backing, but decoy variety and trap depth may be simpler than usual. Do not fabricate disputed or broken-looking mutations to fill slots.",
+    ]
+      .filter(Boolean)
+      .join("\n\n");
+    const bestEffort = await runQuestionGeneration(inputWithUsage, {
+      qualityMode: "scarce",
+      rejectionRecorder,
+      attemptIndex: attempts + 1,
+      previousAttemptFeedback: scarceFeedback,
+      deadlineAt,
+    });
+    if (bestEffort.length === 0) return null;
+    const notice = `이 지문에는 어법 문제로 낼 만한 깨끗한 문법 구조가 부족해(정제 후 사용 가능 자리 ${info.usableCount}개) 일부 품질 기준을 완화하고 생성했습니다. 밑줄 구성이 단순하거나 함정 매력도가 낮을 수 있으니 검수 후 사용을 권장합니다.`;
+    for (const question of bestEffort) {
+      question._qualityMode = "relaxed";
+      question._reviewRecommended = true;
+      question._scarcePassage = true;
+      question._generationNotice = notice;
+    }
+    return bestEffort;
+  };
+
+  // ── never-fail 구제 사다리 (26-07-06 유저 결정: "생성 실패"는 최악의 결과) ──
+  // ① 거절 후보 풀 재승인(LLM 0회·즉시): strict/relaxed 에서 craft(완성도) 게이트
+  //    에만 걸려 탈락한 후보가 있으면 그 게이트를 경고로 강등하고 notice 를 붙여
+  //    출하한다. F급(정답 무효·누출·렌더 파손) 결함 후보는 절대 재승인되지 않는다.
+  // ② 풀이 비면 scarce(구제) 모드 LLM 1회 — 전 유형 craft 게이트 강등 생성.
+  // ③ 그래도 없으면 정직한 실패(모델 전면 장애·지문 부적합만 남는다).
+  const admitFromPool = (): Record<string, unknown>[] | null => {
+    const admitted = admitSalvageCandidatesFromPool(rejectionRecorder, {
+      needed: Math.max(1, requestedCount),
+    });
+    if (admitted.length === 0) return null;
+    console.warn(
+      `[${logPrefix}] Never-fail salvage: admitting ${admitted.length} craft-flagged candidate(s) from the rejection pool with review notice.`,
+    );
+    return admitted;
+  };
+
+  const runUniversalSalvage = async (): Promise<
+    Record<string, unknown>[] | null
+  > => {
+    const pooled = admitFromPool();
+    if (pooled) return pooled;
+    if (deadlineAt && Date.now() >= deadlineAt) return null;
+    console.warn(
+      `[${logPrefix}] Never-fail salvage: rejection pool empty; running one salvage-mode generation pass.`,
+    );
+    const salvageFeedback = [
+      pendingFeedback,
+      "Salvage pass: previous attempts were rejected by craft-quality gates. Produce the most defensible item possible. The answer must remain single, unambiguous, and source-backed; craft polish (decoy attractiveness, trap depth, explanation length) may be simpler than usual. Never fabricate disputed or broken-looking constructions.",
+    ]
+      .filter(Boolean)
+      .join("\n\n");
+    const salvage = await runQuestionGeneration(inputWithUsage, {
+      qualityMode: "scarce",
+      rejectionRecorder,
+      attemptIndex: attempts + 2,
+      previousAttemptFeedback: salvageFeedback,
+      deadlineAt,
+    });
+    if (salvage.length === 0) {
+      // salvage 시도의 탈락 후보도 풀에 쌓였을 수 있다 — 한 번 더 재승인 시도.
+      return admitFromPool();
+    }
+    for (const question of salvage) {
+      question._qualityMode = "relaxed";
+      question._reviewRecommended = true;
+      const warningCodes = Array.isArray(question._qualityWarnings)
+        ? (question._qualityWarnings as Array<{ code?: unknown }>)
+            .map((issue) => (typeof issue?.code === "string" ? issue.code : ""))
+            .filter(Boolean)
+        : [];
+      question._generationNotice = buildSalvageNotice(warningCodes);
+    }
+    return salvage;
+  };
 
   let pendingFeedback: string | undefined;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
@@ -949,9 +1224,21 @@ export async function runQuestionGenerationWithEmptyRetry(
   }
 
   if (deadlineAt && Date.now() >= deadlineAt) {
+    // 시간 예산 소진 — LLM 재시도는 불가하지만 풀 재승인은 무비용이라 항상 시도.
+    const pooledAtDeadline = admitFromPool();
+    if (pooledAtDeadline) {
+      return {
+        questions: pooledAtDeadline,
+        attempts,
+        relaxedFallback: true,
+        rejectionSummary: buildRejectionSummary(rejectionRecorder),
+        usageEvents,
+      };
+    }
     console.warn(
       `[${logPrefix}] Time budget reached; skipping relaxed fallback, returning empty (caller refunds).`,
     );
+    recordGrammarScarcePassageMarker();
     return {
       questions: [],
       attempts,
@@ -997,6 +1284,22 @@ export async function runQuestionGenerationWithEmptyRetry(
     console.warn(
       `[${logPrefix}] STANDARD GRAMMAR_ERROR KILLER rescue also failed; skipping relaxed KILLER fallback to avoid extra shallow retries.`,
     );
+    const killerBestEffort =
+      (await runGrammarScarceBestEffort()) ?? (await runUniversalSalvage());
+    if (killerBestEffort) {
+      for (const question of killerBestEffort) {
+        question._requestedDifficulty = "KILLER";
+        question._difficultyDowngraded = true;
+      }
+      return {
+        questions: killerBestEffort,
+        attempts: attempts + 2,
+        relaxedFallback: true,
+        rejectionSummary: buildRejectionSummary(rejectionRecorder),
+        usageEvents,
+      };
+    }
+    recordGrammarScarcePassageMarker();
     return {
       questions: [],
       attempts: attempts + 1,
@@ -1007,9 +1310,23 @@ export async function runQuestionGenerationWithEmptyRetry(
   }
 
   if (inputWithUsage.generationPlan === "PREMIUM") {
+    // 프리미엄은 relaxed LLM 폴백 대신 구제 사다리로 직행 — 풀 재승인(0비용)이
+    // 먼저라 대부분 추가 지연 없이 출하되고, 풀이 비었을 때만 salvage 1회를 쓴다.
     console.warn(
-      `[${logPrefix}] Strict premium generation exhausted after ${attempts} attempts; skipping relaxed fallback to preserve premium quality and latency.`,
+      `[${logPrefix}] Strict premium generation exhausted after ${attempts} attempts; entering never-fail salvage ladder.`,
     );
+    const premiumBestEffort =
+      (await runGrammarScarceBestEffort()) ?? (await runUniversalSalvage());
+    if (premiumBestEffort) {
+      return {
+        questions: premiumBestEffort,
+        attempts: attempts + 1,
+        relaxedFallback: true,
+        rejectionSummary: buildRejectionSummary(rejectionRecorder),
+        usageEvents,
+      };
+    }
+    recordGrammarScarcePassageMarker();
     return {
       questions: [],
       attempts,
@@ -1029,6 +1346,20 @@ export async function runQuestionGenerationWithEmptyRetry(
     previousAttemptFeedback: pendingFeedback,
     deadlineAt,
   });
+  if (relaxedQuestions.length === 0) {
+    const relaxedBestEffort =
+      (await runGrammarScarceBestEffort()) ?? (await runUniversalSalvage());
+    if (relaxedBestEffort) {
+      return {
+        questions: relaxedBestEffort,
+        attempts: attempts + 2,
+        relaxedFallback: true,
+        rejectionSummary: buildRejectionSummary(rejectionRecorder),
+        usageEvents,
+      };
+    }
+    recordGrammarScarcePassageMarker();
+  }
   return {
     questions: relaxedQuestions,
     attempts: attempts + 1,

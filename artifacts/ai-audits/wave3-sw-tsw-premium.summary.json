@@ -1,0 +1,131 @@
+{
+  "createdAt": "2026-07-04T16:45:35.772Z",
+  "outPath": "artifacts/ai-audits/wave3-sw-tsw-premium.jsonl",
+  "total": 4,
+  "passed": 2,
+  "failed": 2,
+  "passRate": 0.5,
+  "byCell": {
+    "SUMMARY_WRITING:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 83,
+      "topIssues": [
+        {
+          "code": "llmFatal:The summary sentence is highly repetitive and contains redundant phrasings: \"...other colors took a long time to be cons",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Korean gloss contains '그 결과 다른 색들은 한참이 지나서야 비슷한 지위를 얻게 되었으며', which too closely mirrors the translation of the target an",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The acceptable variants in the answer key ('had to wait...') cannot be formed using the provided wordBank (the word 'had",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The wordBank contains 'as' and 'regarded', but 'regarded as colors' would require 4 words (regarded, as, colors, be/to e",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_WRITING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "TOPIC_SENTENCE_WRITING:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 85,
+      "topIssues": [
+        {
+          "code": "llmMajor:The scrambled words contains 'the' twice, and the target sentence is 'Red historically dominated other colors in the Wes",
+          "count": 1
+        }
+      ]
+    },
+    "TOPIC_SENTENCE_WRITING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 97,
+      "topIssues": []
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:The summary sentence is highly repetitive and contains redundant phrasings: \"...other colors took a long time to be cons",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Korean gloss contains '그 결과 다른 색들은 한참이 지나서야 비슷한 지위를 얻게 되었으며', which too closely mirrors the translation of the target an",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The acceptable variants in the answer key ('had to wait...') cannot be formed using the provided wordBank (the word 'had",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The scrambled words contains 'the' twice, and the target sentence is 'Red historically dominated other colors in the Wes",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The wordBank contains 'as' and 'regarded', but 'regarded as colors' would require 4 words (regarded, as, colors, be/to e",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The summary sentence is highly repetitive and contains redundant phrasings: \"...other colors took a long time to be cons": 1,
+    "llmMajor:The acceptable variants in the answer key ('had to wait...') cannot be formed using the provided wordBank (the word 'had": 1,
+    "llmMajor:Korean gloss contains '그 결과 다른 색들은 한참이 지나서야 비슷한 지위를 얻게 되었으며', which too closely mirrors the translation of the target an": 1,
+    "llmMajor:The wordBank contains 'as' and 'regarded', but 'regarded as colors' would require 4 words (regarded, as, colors, be/to e": 1,
+    "llmMajor:The scrambled words contains 'the' twice, and the target sentence is 'Red historically dominated other colors in the Wes": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "SUMMARY_WRITING",
+      "plan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 83,
+      "issueKeys": [
+        "llmFatal:The summary sentence is highly repetitive and contains redundant phrasings: \"...other colors took a long time to be cons",
+        "llmMajor:The acceptable variants in the answer key ('had to wait...') cannot be formed using the provided wordBank (the word 'had",
+        "llmMajor:Korean gloss contains '그 결과 다른 색들은 한참이 지나서야 비슷한 지위를 얻게 되었으며', which too closely mirrors the translation of the target an",
+        "llmMajor:The wordBank contains 'as' and 'regarded', but 'regarded as colors' would require 4 words (regarded, as, colors, be/to e"
+      ],
+      "answerSurfaces": [
+        "(A) took a long time to be considered colors",
+        "In the West, red historically dominated all other colors as the only true color for so long that other colors took a long time to be considered colors, a supremacy also reflected in ancient languages "
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 3,
+      "type": "TOPIC_SENTENCE_WRITING",
+      "plan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 85,
+      "issueKeys": [
+        "llmMajor:The scrambled words contains 'the' twice, and the target sentence is 'Red historically dominated other colors in the Wes"
+      ],
+      "answerSurfaces": [
+        "Red historically dominated other colors in the West, shaping both art and language"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

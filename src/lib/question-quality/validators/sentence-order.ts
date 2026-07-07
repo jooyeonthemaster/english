@@ -1,5 +1,5 @@
 // Split from question-quality.ts — shared helpers in core.ts, public API via index.ts barrel.
-import { QuestionQualitySeverity, SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES, SENTENCE_ORDER_MIN_PARAGRAPH_WORDS, collectCorrectAnswerLabels, countDisplaySentences, countWords, findDuplicate, isRecord, normalizeLabel, normalizeText } from "../core";
+import { QuestionQualitySeverity, SENTENCE_ORDER_MIN_PARAGRAPH_SENTENCES, SENTENCE_ORDER_MIN_PARAGRAPH_WORDS, collectCorrectAnswerLabels, countDisplaySentences, countWords, findDuplicate, isRecord, normalizeComparableText, normalizeLabel, normalizeText } from "../core";
 
 
 export const SENTENCE_ORDER_PARAGRAPH_LABELS = ["(A)", "(B)", "(C)"] as const;
@@ -20,6 +20,7 @@ export const SENTENCE_ORDER_MAX_GIVEN_TO_AVG_PARAGRAPH_RATIO = 1.3;
 
 export function validateSentenceOrderQuestion(
   question: Record<string, unknown>,
+  passage: string | undefined,
   add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
 ) {
   const givenSentence = normalizeText(question.givenSentence);
@@ -153,6 +154,84 @@ export function validateSentenceOrderQuestion(
   }
 
   validateSentenceOrderOptions(question, add);
+  validateSentenceOrderAnswerReconstruction(question, passage, add);
+}
+
+
+
+/**
+ * 정답 키 재구성 게이트 (wave1) — (A)/(B)/(C) 단락은 원본 지문의 verbatim 분할이므로,
+ * 주장된 정답 순열대로 단락을 늘어놓았을 때 각 단락의 "원문 내 위치"가 엄격히
+ * 증가해야 한다. 아니면 정답 키가 원문 흐름과 어긋난 것(정답 무효급).
+ * 단락이 정규화 후에도 원문에서 verbatim 으로 발견되지 않으면 추측하지 않고
+ * sentence-order-paragraph-not-source-backed 로 차단한다. (givenSentence 는
+ * 패러프레이즈가 허용되므로 대조하지 않는다.) 두 코드 모두 RELAXED_BLOCKING.
+ */
+export function validateSentenceOrderAnswerReconstruction(
+  question: Record<string, unknown>,
+  passage: string | undefined,
+  add: (severity: QuestionQualitySeverity, code: string, message: string) => void,
+) {
+  // 구두점 무관 대조 (wave5 오탐 수정): normalizeComparableText 는 곡선따옴표만
+  // 접고 em-dash(—)·수평바(―)·말줄임(…)·NBSP 는 못 접는다 — sonnet-5 가 출력에서
+  // 구두점을 정규화하면 verbatim 대조가 깨져 정상 문항이 전멸했다(실측 26-07-05
+  // final-prem: PREMIUM 두 난이도 0생성, 베이스라인 98점 셀). 알파넘+공백만 남겨
+  // 대조하면 구두점 변형은 통과시키되 단어 수준 재작성은 여전히 차단한다.
+  const foldForSourceMatch = (value: string) =>
+    normalizeComparableText(value)
+      .replace(/[^a-z0-9 ]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  const normalizedPassage = foldForSourceMatch(passage ?? "");
+  if (!normalizedPassage) return;
+
+  const paragraphs = Array.isArray(question.paragraphs)
+    ? question.paragraphs.filter(isRecord)
+    : [];
+  if (paragraphs.length !== 3) return; // 개수 결함은 별도 게이트가 차단.
+
+  const positionByLabel = new Map<string, number>();
+  for (const paragraph of paragraphs) {
+    const label = normalizeSentenceOrderParagraphLabel(paragraph.label);
+    const text = foldForSourceMatch(normalizeText(paragraph.text));
+    if (!/^\([ABC]\)$/.test(label) || !text) return; // 라벨/본문 결함은 별도 게이트.
+    const index = normalizedPassage.indexOf(text);
+    if (index < 0) {
+      add(
+        "error",
+        "sentence-order-paragraph-not-source-backed",
+        `SENTENCE_ORDER paragraph ${label} is not found in the source passage even after punctuation-insensitive normalization; paragraphs must be verbatim source splits (do not rewrite their words), so the answer key cannot be verified.`,
+      );
+      return;
+    }
+    positionByLabel.set(label, index);
+  }
+  if (positionByLabel.size !== 3) return; // 라벨 중복 등은 별도 게이트가 차단.
+
+  const answerLabel = collectCorrectAnswerLabels(question)[0];
+  if (!answerLabel) return;
+  const options = Array.isArray(question.options) ? question.options.filter(isRecord) : [];
+  const correctOption = options.find(
+    (option) => normalizeLabel(option.label) === answerLabel,
+  );
+  const correctOrder = parseSentenceOrderPermutation(correctOption?.text);
+  if (!correctOrder) return; // 순열 형태 결함은 별도 게이트가 차단.
+
+  const orderedPositions = correctOrder.map((label) => positionByLabel.get(label) ?? -1);
+  const isStrictlyIncreasing = orderedPositions.every(
+    (position, index) => index === 0 || position > orderedPositions[index - 1],
+  );
+  if (!isStrictlyIncreasing) {
+    const sourceOrder = [...positionByLabel.entries()]
+      .sort((a, b) => a[1] - b[1])
+      .map(([label]) => label)
+      .join("-");
+    add(
+      "error",
+      "sentence-order-answer-key-mismatch",
+      `SENTENCE_ORDER answer key ${correctOrder.join("-")} does not reconstruct the source passage; reading the paragraphs in source order gives ${sourceOrder}. Fix correctAnswer to point at the option matching the source order.`,
+    );
+  }
 }
 
 

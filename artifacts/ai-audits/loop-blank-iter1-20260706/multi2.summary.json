@@ -1,0 +1,262 @@
+{
+  "createdAt": "2026-07-05T17:18:27.585Z",
+  "outPath": "artifacts/ai-audits/loop-blank-iter1-20260706/multi2.jsonl",
+  "total": 4,
+  "passed": 0,
+  "failed": 4,
+  "passRate": 0,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:Both blanks use verbatim originalExpression text directly copied from the source, making this a copy-paste detection tas",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors for (B) reference lexical confusion, different origins, common grammar rules—these are somewhat plausible bu",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Given verbatim reproduction, this reads as BASIC difficulty mislabeled as INTERMEDIATE; a mid-level student solving on a",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The blank (A) and (B) answers are simply the exact original phrases repeated in option 4, so a student can solve by matc",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:Both blanks use verbatim source spans as the correct answer ('were considered colors', 'in keeping with'), making the ta",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This is essentially a fill-in-the-blank recall task, not genuine blank inference; a mid-level student can solve it by sc",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors for (A) like 'granted symbolic status' or 'excluded from systems' are somewhat plausible, but since correct ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No paraphrase is required anywhere; blankAnswerMode should be PARAPHRASE for KILLER but the answer is the exact original",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation doesn't require connecting two separate sentences or performing genuine inference; it just restates the ",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 45,
+      "topIssues": [
+        {
+          "code": "llmFatal:The correct options are verbatim copies of the original passage, which does not meet the PARAPHRASE/INTERMEDIATE standar",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The item is configured as a dual blank (A) and (B) type, which is no longer used in standard CSAT (수능) BLANK_INFERENCE q",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The distractors are poorly constructed, simply switching 'diversify' to 'simplify' or using literal negations that do no",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 50,
+      "topIssues": [
+        {
+          "code": "llmFatal:The correct answer option 1 uses verbatim source text for both blanks, violating the strict standard where KILLER blanks",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 1 constitutes a literal copy-paste of the original text, rendering 'KILLER' difficulty completely meaningless for",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The CSAT does not use dual-blank insert-type formats like '(A) ...... (B)' for regular Blank Inference. It incorrectly c",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:Both blanks use verbatim originalExpression text directly copied from the source, making this a copy-paste detection tas",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Both blanks use verbatim source spans as the correct answer ('were considered colors', 'in keeping with'), making the ta",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The correct answer option 1 uses verbatim source text for both blanks, violating the strict standard where KILLER blanks",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The correct options are verbatim copies of the original passage, which does not meet the PARAPHRASE/INTERMEDIATE standar",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The item is configured as a dual blank (A) and (B) type, which is no longer used in standard CSAT (수능) BLANK_INFERENCE q",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:This is essentially a fill-in-the-blank recall task, not genuine blank inference; a mid-level student can solve it by sc",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors for (A) like 'granted symbolic status' or 'excluded from systems' are somewhat plausible, but since correct ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors for (B) reference lexical confusion, different origins, common grammar rules—these are somewhat plausible bu",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Given verbatim reproduction, this reads as BASIC difficulty mislabeled as INTERMEDIATE; a mid-level student solving on a",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:No paraphrase is required anywhere; blankAnswerMode should be PARAPHRASE for KILLER but the answer is the exact original",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option 1 constitutes a literal copy-paste of the original text, rendering 'KILLER' difficulty completely meaningless for",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The blank (A) and (B) answers are simply the exact original phrases repeated in option 4, so a student can solve by matc",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The CSAT does not use dual-blank insert-type formats like '(A) ...... (B)' for regular Blank Inference. It incorrectly c",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The distractors are poorly constructed, simply switching 'diversify' to 'simplify' or using literal negations that do no",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The explanation doesn't require connecting two separate sentences or performing genuine inference; it just restates the ",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:Both blanks use verbatim originalExpression text directly copied from the source, making this a copy-paste detection tas": 1,
+    "llmMajor:The blank (A) and (B) answers are simply the exact original phrases repeated in option 4, so a student can solve by matc": 1,
+    "llmMajor:Distractors for (B) reference lexical confusion, different origins, common grammar rules—these are somewhat plausible bu": 1,
+    "llmMajor:Given verbatim reproduction, this reads as BASIC difficulty mislabeled as INTERMEDIATE; a mid-level student solving on a": 1,
+    "llmFatal:Both blanks use verbatim source spans as the correct answer ('were considered colors', 'in keeping with'), making the ta": 1,
+    "llmFatal:This is essentially a fill-in-the-blank recall task, not genuine blank inference; a mid-level student can solve it by sc": 1,
+    "llmMajor:No paraphrase is required anywhere; blankAnswerMode should be PARAPHRASE for KILLER but the answer is the exact original": 1,
+    "llmMajor:Distractors for (A) like 'granted symbolic status' or 'excluded from systems' are somewhat plausible, but since correct ": 1,
+    "llmMajor:The explanation doesn't require connecting two separate sentences or performing genuine inference; it just restates the ": 1,
+    "llmFatal:The item is configured as a dual blank (A) and (B) type, which is no longer used in standard CSAT (수능) BLANK_INFERENCE q": 1,
+    "llmFatal:The correct options are verbatim copies of the original passage, which does not meet the PARAPHRASE/INTERMEDIATE standar": 1,
+    "llmMajor:The distractors are poorly constructed, simply switching 'diversify' to 'simplify' or using literal negations that do no": 1,
+    "llmFatal:The correct answer option 1 uses verbatim source text for both blanks, violating the strict standard where KILLER blanks": 1,
+    "llmMajor:The CSAT does not use dual-blank insert-type formats like '(A) ...... (B)' for regular Blank Inference. It incorrectly c": 1,
+    "llmMajor:Option 1 constitutes a literal copy-paste of the original text, rendering 'KILLER' difficulty completely meaningless for": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 3,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 45,
+      "issueKeys": [
+        "llmFatal:The item is configured as a dual blank (A) and (B) type, which is no longer used in standard CSAT (수능) BLANK_INFERENCE q",
+        "llmFatal:The correct options are verbatim copies of the original passage, which does not meet the PARAPHRASE/INTERMEDIATE standar",
+        "llmMajor:The distractors are poorly constructed, simply switching 'diversify' to 'simplify' or using literal negations that do no"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 4,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 50,
+      "issueKeys": [
+        "llmFatal:The correct answer option 1 uses verbatim source text for both blanks, violating the strict standard where KILLER blanks",
+        "llmMajor:The CSAT does not use dual-blank insert-type formats like '(A) ...... (B)' for regular Blank Inference. It incorrectly c",
+        "llmMajor:Option 1 constitutes a literal copy-paste of the original text, rendering 'KILLER' difficulty completely meaningless for"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:Both blanks use verbatim originalExpression text directly copied from the source, making this a copy-paste detection tas",
+        "llmMajor:The blank (A) and (B) answers are simply the exact original phrases repeated in option 4, so a student can solve by matc",
+        "llmMajor:Distractors for (B) reference lexical confusion, different origins, common grammar rules—these are somewhat plausible bu",
+        "llmMajor:Given verbatim reproduction, this reads as BASIC difficulty mislabeled as INTERMEDIATE; a mid-level student solving on a"
+      ],
+      "answerSurfaces": [
+        "4"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 2,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:Both blanks use verbatim source spans as the correct answer ('were considered colors', 'in keeping with'), making the ta",
+        "llmFatal:This is essentially a fill-in-the-blank recall task, not genuine blank inference; a mid-level student can solve it by sc",
+        "llmMajor:No paraphrase is required anywhere; blankAnswerMode should be PARAPHRASE for KILLER but the answer is the exact original",
+        "llmMajor:Distractors for (A) like 'granted symbolic status' or 'excluded from systems' are somewhat plausible, but since correct ",
+        "llmMajor:The explanation doesn't require connecting two separate sentences or performing genuine inference; it just restates the "
+      ],
+      "answerSurfaces": [
+        "3"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

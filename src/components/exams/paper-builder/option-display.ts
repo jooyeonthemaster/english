@@ -52,6 +52,18 @@ export function shouldRenderOptionListForSubtype(subType: string | null | undefi
   return !PASSAGE_MARKER_ONLY_SUBTYPES.has(subType || "");
 }
 
+// 오답 분석(선지별 해설) 렌더 여부 — 선지 목록이 있는 문항 + 마커 유형.
+// 마커 유형(어법·무관문장·문장삽입·어휘선택)은 선지 목록을 억제하지만 라벨이
+// 지문 속 마커(①~⑤ 등)로 실재하므로 오답 분석은 유효하다. 기존 hasOptions
+// 단독 게이트가 이 4유형의 오답 분석을 웹/DOCX/HWPX 전 경로에서 통째로
+// 누락시키던 실측 버그(26-07-06)의 공용 수정 지점.
+export function shouldRenderWrongAnalysisForSubtype(
+  subType: string | null | undefined,
+  hasOptions: boolean,
+) {
+  return hasOptions || PASSAGE_MARKER_ONLY_SUBTYPES.has(subType || "");
+}
+
 export function shouldUseSentenceInsertOptionReference(
   subType: string | null | undefined,
   optionText: string,

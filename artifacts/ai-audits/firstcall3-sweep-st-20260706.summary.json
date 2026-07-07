@@ -1,0 +1,282 @@
+{
+  "createdAt": "2026-07-06T11:13:06.128Z",
+  "outPath": "artifacts/ai-audits/firstcall3-sweep-st-20260706",
+  "total": 6,
+  "passed": 0,
+  "failed": 6,
+  "passRate": 0,
+  "byCell": {
+    "GRAMMAR_ERROR:STANDARD:KILLER": {
+      "total": 6,
+      "generated": 6,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 66,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-killer-overdrilled-answer",
+          "count": 2
+        },
+        {
+          "code": "rejectionLast:grammar-killer-overdrilled-answer",
+          "count": 2
+        },
+        {
+          "code": "llmFatal:No long-distance dependency is required for the answer as mandated by the KILLER rubric; the object 'her earbuds' sits r",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:No long-distance dependency is required to solve (D); the object+infinitive relationship is local to the underlined phra",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Only one marked expression is a genuinely hard grammar point; (B),(C),(E) are shallow/obvious correct items (simple para",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-killer-overdrilled-answer",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-killer-overdrilled-answer",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:No long-distance dependency is required for the answer as mandated by the KILLER rubric; the object 'her earbuds' sits r",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:No long-distance dependency is required to solve (D); the object+infinitive relationship is local to the underlined phra",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Only one marked expression is a genuinely hard grammar point; (B),(C),(E) are shallow/obvious correct items (simple para",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The 'enable + O + to-V' pattern is a well-known, memorized textbook rule that even mid-level students spot instantly on ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The error at (B) 'wearing→worn' is a basic, obvious participle active/passive check with a very short-distance dependenc",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The explanation text contains a visible typo/artifact 'was was made' revealing sloppy generation, undermining publicatio",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The final passage sentence is corrupted by the generator: 'it is unlikely that displays... would be awkward imitations' ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The KILLER difficulty is not achieved: the error at (A) is a fairly standard which/where relative clause check that reso",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The KILLER label is unearned: the error 'still survive and providing' is a blatant, immediately visible parallel-structu",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:(C) explanation is flawed: 'them' actually refers to 'different events... or various facts' (plural noun phrases), but e",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:(D) explanation about subject-verb agreement/voice is reasonable but doesn't add difficulty since 'is required' is clear",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractor quality for a KILLER is weak: (A),(B),(D),(E) are all textbook-simple checks (passive participle agreement, s",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors (A),(C),(D),(E) are all trivially correct with no plausible alternative reading offered anywhere in the pass",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:For a KILLER, only one marked expression (D) has meaningful long-distance dependency (parallel structure); (A),(B),(E) a",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:For KILLER, at least 2+ marked non-error options should also be defensible near-miss judgment points; here most are triv",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:No distractor is genuinely tempting; none require multi-step reasoning or resemble a subtle structural trap as required ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:No two options share multiple errors or require deep structural analysis; a student can eliminate (A),(B),(C),(E) by rot",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Only 5 marked expressions (plan calls for 5-10) and the four distractors are all shallow single-word local checks (adver",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The error at (B) 'wearing→worn' is a basic, obvious participle active/passive check with a very short-distance dependenc": 1,
+    "llmFatal:No long-distance dependency is required for the answer as mandated by the KILLER rubric; the object 'her earbuds' sits r": 1,
+    "llmMajor:Distractors (A),(C),(D),(E) are all trivially correct with no plausible alternative reading offered anywhere in the pass": 1,
+    "llmMajor:This is a simple 5-choice single-error item dressed up with a KILLER label; none of the non-answer options test a genuin": 1,
+    "llmMajor:The explanation for (C) inaccurately implies a debate about active/passive for an emotion verb, but this was never a liv": 1,
+    "llmFatal:The final passage sentence is corrupted by the generator: 'it is unlikely that displays... would be awkward imitations' ": 1,
+    "llmFatal:The explanation text contains a visible typo/artifact 'was was made' revealing sloppy generation, undermining publicatio": 1,
+    "llmMajor:Distractor quality for a KILLER is weak: (A),(B),(D),(E) are all textbook-simple checks (passive participle agreement, s": 1,
+    "llmMajor:The passage-with-markers sentence 'Without the information contained... it is unlikely that displays... would be awkward": 1,
+    "llmMajor:Only one non-trivial grammar point (relative pronoun vs 'in which') is tested; the other four marks are shallow/obvious,": 1,
+    "rejection:grammar-killer-overdrilled-answer": 2,
+    "rejection:grammar-obvious-noun-what-relative": 1,
+    "rejectionLast:grammar-killer-overdrilled-answer": 2,
+    "rejectionLast:grammar-obvious-noun-what-relative": 1,
+    "llmFatal:The KILLER label is unearned: the error 'still survive and providing' is a blatant, immediately visible parallel-structu": 1,
+    "llmMajor:Only 5 marked expressions (plan calls for 5-10) and the four distractors are all shallow single-word local checks (adver": 1,
+    "llmMajor:No distractor is genuinely tempting; none require multi-step reasoning or resemble a subtle structural trap as required ": 1,
+    "llmMajor:The passage's genuinely complex sentence (the one with 'in opposition to... which have been recorded and edited') is use": 1,
+    "rejection:grammar-obvious-adjacent-sv-agreement": 1,
+    "rejectionLast:grammar-obvious-adjacent-sv-agreement": 1,
+    "llmFatal:The 'enable + O + to-V' pattern is a well-known, memorized textbook rule that even mid-level students spot instantly on ": 1,
+    "llmFatal:No long-distance dependency is required to solve (D); the object+infinitive relationship is local to the underlined phra": 1,
+    "llmMajor:Other four marked expressions (A, B, C, E) are shallow, textbook-standard grammar points (reflexive pronoun, that-clause": 1,
+    "llmMajor:No two options share multiple errors or require deep structural analysis; a student can eliminate (A),(B),(C),(E) by rot": 1,
+    "llmMajor:The passage's genuinely complex sentence ('The avatar's bodily space... is the only way in which...') is not used for th": 1,
+    "llmMajor:For a KILLER, only one marked expression (D) has meaningful long-distance dependency (parallel structure); (A),(B),(E) a": 1,
+    "llmMajor:(C) explanation is flawed: 'them' actually refers to 'different events... or various facts' (plural noun phrases), but e": 1,
+    "llmMajor:The parallel-structure error in (D) is fairly typical/textbook (not-only-but-also verb parallelism) and somewhat visible": 1,
+    "llmFatal:The KILLER difficulty is not achieved: the error at (A) is a fairly standard which/where relative clause check that reso": 1,
+    "llmFatal:Only one marked expression is a genuinely hard grammar point; (B),(C),(E) are shallow/obvious correct items (simple para": 1,
+    "llmMajor:For KILLER, at least 2+ marked non-error options should also be defensible near-miss judgment points; here most are triv": 1,
+    "llmMajor:(D) explanation about subject-verb agreement/voice is reasonable but doesn't add difficulty since 'is required' is clear": 1,
+    "llmMajor:The passage sentence structure for (A) is not particularly complex (no nested relative clause/parenthetical layering), f": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7cba007wmm0su2vfplrv",
+      "title": "2026학년도 수능 영어 43-45번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The error at (B) 'wearing→worn' is a basic, obvious participle active/passive check with a very short-distance dependenc",
+        "llmFatal:No long-distance dependency is required for the answer as mandated by the KILLER rubric; the object 'her earbuds' sits r",
+        "llmMajor:Distractors (A),(C),(D),(E) are all trivially correct with no plausible alternative reading offered anywhere in the pass",
+        "llmMajor:This is a simple 5-choice single-error item dressed up with a KILLER label; none of the non-answer options test a genuin",
+        "llmMajor:The explanation for (C) inaccurately implies a debate about active/passive for an emotion verb, but this was never a liv"
+      ],
+      "answerSurfaces": [
+        "(B):wearing->worn"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 2,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7c3h007smm0s9gfw34jf",
+      "title": "2026학년도 수능 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The final passage sentence is corrupted by the generator: 'it is unlikely that displays... would be awkward imitations' ",
+        "llmFatal:The explanation text contains a visible typo/artifact 'was was made' revealing sloppy generation, undermining publicatio",
+        "llmMajor:Distractor quality for a KILLER is weak: (A),(B),(D),(E) are all textbook-simple checks (passive participle agreement, s",
+        "llmMajor:The passage-with-markers sentence 'Without the information contained... it is unlikely that displays... would be awkward",
+        "llmMajor:Only one non-trivial grammar point (relative pronoun vs 'in which') is tested; the other four marks are shallow/obvious,",
+        "rejection:grammar-killer-overdrilled-answer",
+        "rejection:grammar-obvious-noun-what-relative",
+        "rejectionLast:grammar-killer-overdrilled-answer"
+      ],
+      "answerSurfaces": [
+        "(C):in which->which"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-killer-overdrilled-answer x1, grammar-obvious-noun-what-relative x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-overdrilled-answer: KILLER GRAMMAR_ERROR rejected: the answer is an over-drilled \"that ↔ what\" swap — the single most repeated CSAT grammar point (26 identical surfaces in the corpus). Move the error to a different, deeper site already present in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break. | grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead."
+    },
+    {
+      "runIndex": 4,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7bnr007kmm0s7o4r91j4",
+      "title": "2026학년도 수능 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The 'enable + O + to-V' pattern is a well-known, memorized textbook rule that even mid-level students spot instantly on ",
+        "llmFatal:No long-distance dependency is required to solve (D); the object+infinitive relationship is local to the underlined phra",
+        "llmMajor:Other four marked expressions (A, B, C, E) are shallow, textbook-standard grammar points (reflexive pronoun, that-clause",
+        "llmMajor:No two options share multiple errors or require deep structural analysis; a student can eliminate (A),(B),(C),(E) by rot",
+        "llmMajor:The passage's genuinely complex sentence ('The avatar's bodily space... is the only way in which...') is not used for th",
+        "rejection:grammar-killer-overdrilled-answer",
+        "rejectionLast:grammar-killer-overdrilled-answer"
+      ],
+      "answerSurfaces": [
+        "(D):to navigate->to navigating"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-killer-overdrilled-answer x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-overdrilled-answer: KILLER GRAMMAR_ERROR rejected: the answer is a shallow subject-verb number flip (\"is\" ↔ \"are\") with the true subject sitting right next to the verb (no genuine attractor noun in between). At KILLER the agreement must span a real long-distance modifier with a misleading attractor noun so the subject head is non-obvious. Move the error to such a site, or pick another deep structure already in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break."
+    },
+    {
+      "runIndex": 3,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7bvm007omm0sg99seww5",
+      "title": "2026학년도 수능 영어 40번 · 요약문",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:The KILLER label is unearned: the error 'still survive and providing' is a blatant, immediately visible parallel-structu",
+        "llmMajor:Only 5 marked expressions (plan calls for 5-10) and the four distractors are all shallow single-word local checks (adver",
+        "llmMajor:No distractor is genuinely tempting; none require multi-step reasoning or resemble a subtle structural trap as required ",
+        "llmMajor:The passage's genuinely complex sentence (the one with 'in opposition to... which have been recorded and edited') is use",
+        "rejection:grammar-obvious-adjacent-sv-agreement",
+        "rejectionLast:grammar-obvious-adjacent-sv-agreement"
+      ],
+      "answerSurfaces": [
+        "(E):provide->providing"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-obvious-adjacent-sv-agreement x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-adjacent-sv-agreement: GRAMMAR_ERROR answer \"depends\" is a directly adjacent subject-verb -s flip; choose an agreement target with an intervening modifier, relative clause, or attractor noun."
+    },
+    {
+      "runIndex": 6,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7b83007cmm0s4m609hz1",
+      "title": "2026학년도 수능 영어 37번 · 글의순서",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:The KILLER difficulty is not achieved: the error at (A) is a fairly standard which/where relative clause check that reso",
+        "llmFatal:Only one marked expression is a genuinely hard grammar point; (B),(C),(E) are shallow/obvious correct items (simple para",
+        "llmMajor:For KILLER, at least 2+ marked non-error options should also be defensible near-miss judgment points; here most are triv",
+        "llmMajor:(D) explanation about subject-verb agreement/voice is reasonable but doesn't add difficulty since 'is required' is clear",
+        "llmMajor:The passage sentence structure for (A) is not particularly complex (no nested relative clause/parenthetical layering), f"
+      ],
+      "answerSurfaces": [
+        "(A):where->which"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 5,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7bfy007gmm0s4nr3jwom",
+      "title": "2026학년도 수능 영어 38번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmMajor:For a KILLER, only one marked expression (D) has meaningful long-distance dependency (parallel structure); (A),(B),(E) a",
+        "llmMajor:(C) explanation is flawed: 'them' actually refers to 'different events... or various facts' (plural noun phrases), but e",
+        "llmMajor:The parallel-structure error in (D) is fairly typical/textbook (not-only-but-also verb parallelism) and somewhat visible"
+      ],
+      "answerSurfaces": [
+        "(D):become->becoming"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

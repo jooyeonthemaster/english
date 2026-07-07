@@ -1,0 +1,231 @@
+{
+  "createdAt": "2026-07-05T17:21:28.626Z",
+  "outPath": "artifacts/ai-audits/loop-blank-iter1-20260706/dn.jsonl",
+  "total": 4,
+  "passed": 2,
+  "failed": 2,
+  "passRate": 0.5,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank replaces 'in keeping with pictorial practices and coloring techniques' but the correct answer drops 'pictorial",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The task artificially forces a DOUBLE_NEGATIVE mode onto a simple 'in keeping with X' phrase, producing an awkward, unna",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors reference concepts absent from the passage (purely theoretical, literary descriptions, language rules indepe",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation and wrongOptionExplanations lean on meta-labels like '부정 패러프레이즈 함정' which reads as generation scaffolding ra",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The blank is a low-value paraphrase of a descriptive phrase, not a logic-controlling element of the paragraph; removing/",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank replaces a sentence that is nearly verbatim restated by the answer option (paraphrase of 'in keeping with' as ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This is a lexical/local paraphrase task disguised as blank inference; the blanked span is a single clause immediately fo",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:blankAnswerMode is DOUBLE_NEGATIVE but schema/plan expects PARAPHRASE for single-blank KILLER items; the double-negative",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation is repetitive and somewhat circular, restating the same idea five times without clearly articulating why the",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Wrong options are mostly simple negations/opposites (decoupled, free from, failed to reflect, unlinked) that are transpa",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": [
+        {
+          "code": "rejection:double-negative-option-capitalization",
+          "count": 1
+        },
+        {
+          "code": "rejection:negative-paraphrase-negative-option-shortcut",
+          "count": 1
+        },
+        {
+          "code": "rejection:negative-paraphrase-not-enough-negative-distractors",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:double-negative-option-capitalization",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:negative-paraphrase-negative-option-shortcut",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:The blank replaces 'in keeping with pictorial practices and coloring techniques' but the correct answer drops 'pictorial",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank replaces a sentence that is nearly verbatim restated by the answer option (paraphrase of 'in keeping with' as ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The task artificially forces a DOUBLE_NEGATIVE mode onto a simple 'in keeping with X' phrase, producing an awkward, unna",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:This is a lexical/local paraphrase task disguised as blank inference; the blanked span is a single clause immediately fo",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:blankAnswerMode is DOUBLE_NEGATIVE but schema/plan expects PARAPHRASE for single-blank KILLER items; the double-negative",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors reference concepts absent from the passage (purely theoretical, literary descriptions, language rules indepe",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Explanation and wrongOptionExplanations lean on meta-labels like '부정 패러프레이즈 함정' which reads as generation scaffolding ra",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Explanation is repetitive and somewhat circular, restating the same idea five times without clearly articulating why the",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The blank is a low-value paraphrase of a descriptive phrase, not a logic-controlling element of the paragraph; removing/",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Wrong options are mostly simple negations/opposites (decoupled, free from, failed to reflect, unlinked) that are transpa",
+      "count": 1
+    },
+    {
+      "code": "rejection:double-negative-option-capitalization",
+      "count": 1
+    },
+    {
+      "code": "rejection:negative-paraphrase-negative-option-shortcut",
+      "count": 1
+    },
+    {
+      "code": "rejection:negative-paraphrase-not-enough-negative-distractors",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:double-negative-option-capitalization",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:negative-paraphrase-negative-option-shortcut",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:negative-paraphrase-not-enough-negative-distractors",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The blank replaces 'in keeping with pictorial practices and coloring techniques' but the correct answer drops 'pictorial": 1,
+    "llmFatal:The task artificially forces a DOUBLE_NEGATIVE mode onto a simple 'in keeping with X' phrase, producing an awkward, unna": 1,
+    "llmMajor:Distractors reference concepts absent from the passage (purely theoretical, literary descriptions, language rules indepe": 1,
+    "llmMajor:The blank is a low-value paraphrase of a descriptive phrase, not a logic-controlling element of the paragraph; removing/": 1,
+    "llmMajor:Explanation and wrongOptionExplanations lean on meta-labels like '부정 패러프레이즈 함정' which reads as generation scaffolding ra": 1,
+    "llmFatal:The blank replaces a sentence that is nearly verbatim restated by the answer option (paraphrase of 'in keeping with' as ": 1,
+    "llmFatal:This is a lexical/local paraphrase task disguised as blank inference; the blanked span is a single clause immediately fo": 1,
+    "llmMajor:blankAnswerMode is DOUBLE_NEGATIVE but schema/plan expects PARAPHRASE for single-blank KILLER items; the double-negative": 1,
+    "llmMajor:Wrong options are mostly simple negations/opposites (decoupled, free from, failed to reflect, unlinked) that are transpa": 1,
+    "llmMajor:Explanation is repetitive and somewhat circular, restating the same idea five times without clearly articulating why the": 1,
+    "rejection:negative-paraphrase-not-enough-negative-distractors": 1,
+    "rejection:negative-paraphrase-negative-option-shortcut": 1,
+    "rejection:double-negative-option-capitalization": 1,
+    "rejectionLast:negative-paraphrase-not-enough-negative-distractors": 1,
+    "rejectionLast:negative-paraphrase-negative-option-shortcut": 1,
+    "rejectionLast:double-negative-option-capitalization": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The blank replaces 'in keeping with pictorial practices and coloring techniques' but the correct answer drops 'pictorial",
+        "llmFatal:The task artificially forces a DOUBLE_NEGATIVE mode onto a simple 'in keeping with X' phrase, producing an awkward, unna",
+        "llmMajor:Distractors reference concepts absent from the passage (purely theoretical, literary descriptions, language rules indepe",
+        "llmMajor:The blank is a low-value paraphrase of a descriptive phrase, not a logic-controlling element of the paragraph; removing/",
+        "llmMajor:Explanation and wrongOptionExplanations lean on meta-labels like '부정 패러프레이즈 함정' which reads as generation scaffolding ra"
+      ],
+      "answerSurfaces": [
+        "①"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 2,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The blank replaces a sentence that is nearly verbatim restated by the answer option (paraphrase of 'in keeping with' as ",
+        "llmFatal:This is a lexical/local paraphrase task disguised as blank inference; the blanked span is a single clause immediately fo",
+        "llmMajor:blankAnswerMode is DOUBLE_NEGATIVE but schema/plan expects PARAPHRASE for single-blank KILLER items; the double-negative",
+        "llmMajor:Wrong options are mostly simple negations/opposites (decoupled, free from, failed to reflect, unlinked) that are transpa",
+        "llmMajor:Explanation is repetitive and somewhat circular, restating the same idea five times without clearly articulating why the"
+      ],
+      "answerSurfaces": [
+        "②"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

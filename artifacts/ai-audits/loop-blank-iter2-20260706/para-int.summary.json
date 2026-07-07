@@ -1,0 +1,98 @@
+{
+  "createdAt": "2026-07-05T17:30:16.994Z",
+  "outPath": "artifacts/ai-audits/loop-blank-iter2-20260706/para-int.jsonl",
+  "total": 2,
+  "passed": 1,
+  "failed": 1,
+  "passRate": 0.5,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank replaces a clause whose second half ('and then played a comparable role in material culture, social codes, and",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The blank sits on a low-information transitional clause (waiting period before recognition) that is resolved almost enti",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Difficulty is labeled INTERMEDIATE but the answer is resolvable from the single sentence structure (Not that they did no",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option ③ (dictionaries/lexicon) is somewhat attractive as a later-paragraph distractor, but options ① and ⑤ are almost c",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The passageWithBlank retains 'in material culture, social codes, and systems of thought' after the blank, but the correc",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:The blank replaces a clause whose second half ('and then played a comparable role in material culture, social codes, and",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank sits on a low-information transitional clause (waiting period before recognition) that is resolved almost enti",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Difficulty is labeled INTERMEDIATE but the answer is resolvable from the single sentence structure (Not that they did no",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option ③ (dictionaries/lexicon) is somewhat attractive as a later-paragraph distractor, but options ① and ⑤ are almost c",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The passageWithBlank retains 'in material culture, social codes, and systems of thought' after the blank, but the correc",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The blank replaces a clause whose second half ('and then played a comparable role in material culture, social codes, and": 1,
+    "llmFatal:The blank sits on a low-information transitional clause (waiting period before recognition) that is resolved almost enti": 1,
+    "llmMajor:The passageWithBlank retains 'in material culture, social codes, and systems of thought' after the blank, but the correc": 1,
+    "llmMajor:Difficulty is labeled INTERMEDIATE but the answer is resolvable from the single sentence structure (Not that they did no": 1,
+    "llmMajor:Option ③ (dictionaries/lexicon) is somewhat attractive as a later-paragraph distractor, but options ① and ⑤ are almost c": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:The blank replaces a clause whose second half ('and then played a comparable role in material culture, social codes, and",
+        "llmFatal:The blank sits on a low-information transitional clause (waiting period before recognition) that is resolved almost enti",
+        "llmMajor:The passageWithBlank retains 'in material culture, social codes, and systems of thought' after the blank, but the correc",
+        "llmMajor:Difficulty is labeled INTERMEDIATE but the answer is resolvable from the single sentence structure (Not that they did no",
+        "llmMajor:Option ③ (dictionaries/lexicon) is somewhat attractive as a later-paragraph distractor, but options ① and ⑤ are almost c"
+      ],
+      "answerSurfaces": [
+        "④"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

@@ -11,6 +11,27 @@
  * 절삭 후 본문이 비거나 거의 사라지면 원본을 반환(상위 게이트가 재시도 처리).
  */
 
+// 0) 비표준 문법 용어 → 표준 학교문법 용어 결정형 치환(재생성 없이 해소).
+//    findNonstandardGrammarTerminology(validators/grammar/shared.ts) 게이트가 잡는
+//    용어 중, 표면 치환만으로 학생 해설이 완결되는 **명확한 1:1 대응**만 넣는다.
+//    제외(반려 유지가 정답): '계사'(be동사↔연결동사 이중 대응 — seem/become 문맥에서
+//    be동사 치환이 오답), '보문 명사'(→ 명사로 축약 시 정보 손실), '술어부 골격'
+//    (구 단위 의역이라 1:1 아님). 이들은 게이트 반려로 재생성에 맡긴다.
+const NONSTANDARD_TERMINOLOGY_SUBSTITUTIONS: Array<[RegExp, string]> = [
+  [/통사적으로/g, "문장 구조상"],
+  // '전사구'(비표준) → 표준 '전치사구'. '전치사구' 자체는 '전사구' 부분열을
+  // 포함하지 않아(전-치-사-구) 게이트를 재발화시키지 않는다.
+  [/전사구/g, "전치사구"],
+];
+
+function substituteNonstandardGrammarTerms(text: string): string {
+  let result = text;
+  for (const [pattern, replacement] of NONSTANDARD_TERMINOLOGY_SUBSTITUTIONS) {
+    result = result.replace(pattern, replacement);
+  }
+  return result;
+}
+
 // 1) 내부 식별자/가이드 토큰 — 뒤따르는 조사까지 같이 제거.
 const INTERNAL_FIELD_TOKENS =
   /\b(errorExpression|correctExpression|wrongExpression|markedExpressions?|pointCode|_?typeId|subType|optionPlan|slotValues?|invariants?)\b\s*(?:인|은|는|이|가|을|를|의|라는|라고)?\s*/gi;
@@ -86,9 +107,9 @@ export function sanitizeGrammarExplanationMeta(input: unknown): string {
   const original = input;
   if (!original.trim()) return original;
 
-  // 1) 내부 필드명 제거
+  // 0) 비표준 문법 용어 결정형 치환 → 1) 내부 필드명 제거
   let text = normalizePronounTerminologyMislabels(
-    original.replace(INTERNAL_FIELD_TOKENS, ""),
+    substituteNonstandardGrammarTerms(original.replace(INTERNAL_FIELD_TOKENS, "")),
   );
   // 2) 메타 수식어 제거
   for (const [pattern, replacement] of META_PHRASE_REPLACEMENTS) {

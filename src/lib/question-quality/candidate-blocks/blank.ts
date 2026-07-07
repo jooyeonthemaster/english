@@ -84,6 +84,41 @@ export function buildMultiBlankAvoidBlock(passage: string): string {
 
 
 
+/**
+ * 자기설명 인접(self-giveaway) 후보 검출 — 실측 fatal 직접 대응: 빈칸 문장 바로
+ * 뒤 문장이 재진술 표지(That is / In other words / Namely / i.e. / 즉 …)로
+ * 시작하거나, 같은 문장에서 스팬 뒤에 콜론(:) 설명절이 붙으면 학생이 옆 절을
+ * 베끼는 것만으로 정답이 복원된다. 그런 스팬은 후보 블록에서 결정론적으로
+ * 제외한다(프롬프트 소프트 지시가 아니라 후보 풀 자체에서 드롭).
+ */
+export const SELF_RESTATEMENT_OPENER =
+  /^["'“”‘’()\[\]]*\s*(?:that is\b|in other words\b|namely\b|i\.e\.|put (?:simply|differently|another way)\b|simply put\b|to put it (?:simply|differently|another way)\b|this means\b|즉)/i;
+
+export function isSelfExplainedBlankCandidate(
+  sentence: string,
+  target: string | undefined,
+  nextSentence: string | undefined,
+): boolean {
+  // (a) 다음 문장이 재진술 표지로 시작 — 빈칸 답이 바로 뒤에서 그대로 풀림.
+  if (nextSentence && SELF_RESTATEMENT_OPENER.test(nextSentence.trim())) return true;
+  // (b) 같은 문장에서 스팬 뒤에 콜론 재진술/설명절이 붙음. 스팬을 모르는
+  //     호출(문장 단위 지정)에서는 콜론 판정을 건너뛴다(과잉 필터 방지).
+  if (target) {
+    const colonIndex = sentence.indexOf(":");
+    if (colonIndex >= 0) {
+      const targetIndex = sentence.indexOf(target);
+      if (targetIndex >= 0 && targetIndex < colonIndex) return true;
+    }
+  }
+  return false;
+}
+
+/** 자기설명 인접 금지 규칙 — 후보 블록 프롬프트 공용 문구. */
+const SELF_EXPLAINED_BLANK_RULE =
+  "- 자기설명 인접 금지: 빈칸 문장 바로 뒤 문장이 That is/In other words/Namely/즉 류 재진술로 시작하거나, 스팬 뒤 같은 문장에 콜론(:) 설명절이 붙는 자리는 다음 절을 베끼는 것만으로 정답이 복원되므로 선택 금지 (자기설명 인접 — 금지).";
+
+
+
 /** 결론/주장 담화 표지 — KILLER 빈칸 위치(핵심 논지부) 후보 점수에 사용. */
 export const THESIS_DISCOURSE_MARKERS =
   /\b(?:therefore|thus|hence|consequently|as a result|in short|in sum|in essence|in other words|in conclusion|ultimately|overall|this means|the point is|what matters|the key|crucially|in fact)\b/i;
@@ -117,7 +152,12 @@ export function buildKillerBlankCandidateBlock(
   const candidates = filterUsedCandidates(
     sentences
       .map((sentence, index) => ({ sentence, index }))
-      .filter(({ sentence }) => countContentTokens(sentence) >= 4),
+      .filter(({ sentence }) => countContentTokens(sentence) >= 4)
+      // 자기설명 인접(다음 문장이 재진술 표지로 시작) 문장은 후보에서 결정론 제외.
+      .filter(
+        ({ sentence, index }) =>
+          !isSelfExplainedBlankCandidate(sentence, undefined, sentences[index + 1]),
+      ),
     diversity?.usedTargets,
     ({ sentence }) => sentence,
   ).items;
@@ -153,14 +193,18 @@ export function buildKillerBlankCandidateBlock(
       : "",
     "## KILLER 빈칸 설계 (필수)",
     "이 문항은 KILLER 난이도입니다. 다음 세 가지를 모두 지키지 않으면 거부됩니다:",
-    "1. 빈칸 위치: 글의 핵심 논지가 담긴 자리 — 주제문, 결론, 인과의 귀결부, 필자 주장의 핵심 술부. 예시·나열·수치·부수적 세부사항(비용, 시간 같은 지엽)을 빈칸으로 만들지 마세요. originalExpression 은 2~7단어의 간결한 술부/구여야 하며 콤마·콜론·세 항목 이상 나열을 포함하면 거부됩니다 — 문장이 길면 핵심 술부만 잘라 선택하세요.",
+    "1. 빈칸 위치: 글의 핵심 논지가 담긴 자리 — 주제문, 결론, 인과의 귀결부, 필자 주장의 핵심 술부. 예시·나열·수치·부수적 세부사항(비용, 시간 같은 지엽)을 빈칸으로 만들지 마세요. 추가 금지 2가지(다지문 실측 fatal): ① 직전 절/문장의 내용을 근접 재진술하는 자리(옆 문장 대조만으로 풀림) ② 마지막 문장의 직접 인용·요약 라벨부(글 전체가 이미 답을 말한 자리). originalExpression 은 2~7단어의 간결한 술부/구여야 하며 콤마·콜론·세 항목 이상 나열을 포함하면 거부됩니다 — 문장이 길면 핵심 술부만 잘라 선택하세요.",
+    SELF_EXPLAINED_BLANK_RULE,
     "2. 정답 보기: blankAnswerMode 를 \"PARAPHRASE\" 로 출력하고, 정답 선지는 originalExpression 의 verbatim 복사가 아니라 같은 의미의 **추상적 재진술**이어야 합니다. originalExpression 자체는 여전히 원문 그대로(한 글자도 바꾸지 않고) 출력하세요 — 빈칸 위치 식별용입니다.",
     "2a. 의미 보존: 정답은 그 스팬이 그 자리에서 말하는 명제를 보존해야 합니다. 스팬이 긍정 외양 진술이면 정답도 같은 명제의 재진술이어야 하며, 글 전체의 결론(반대 극성)을 대신 넣으면 담화가 붕괴되어 거부됩니다.",
-    "2b. 슬롯 문법: 정답을 빈칸에 넣은 문장이 완전한 정문이어야 합니다 — 스팬이 주어로 시작하면 정답도 주어를 포함하고, 'to ___' 자리면 동사원형으로 시작하고(동명사 금지), 스팬의 동사가 3인칭 단수형이면 정답 동사도 수일치를 유지하고, 스팬 뒤에 관계절(, where/, which)이 남으면 그 선행사가 되는 명사로 끝나야 합니다.",
-    "3. 오답 설계 — 두 가지 균형을 모두 지키세요 (위반 시 거부):",
+    "2b. 슬롯 문법: 정답을 빈칸에 넣은 문장이 완전한 정문이어야 합니다 — 스팬이 주어로 시작하면 정답도 주어를 포함하고, 'to ___' 자리면 동사원형으로 시작하고(동명사 금지), 스팬의 동사가 3인칭 단수형이면 정답 동사도 수일치를 유지하고, 스팬 뒤에 관계절(, where/, which)이 남으면 그 선행사가 되는 명사로 끝나야 합니다. 또한 스팬은 구/절 경계에서 끝나야 합니다 — 스팬의 마지막 단어에 문법적으로 종속된 전치사구 꼬리('___ of the ...', '___ and among ...')를 빈칸 밖에 남기면 어떤 선지를 넣어도 잔여구가 붕 떠서 거부됩니다(경계를 넓혀 꼬리까지 스팬에 포함하거나 다른 자리를 고르세요).",
+    "2c. 교차문장 종합 (KILLER 의 핵심): 정답 재진술이 빈칸 문장 안의 어절을 1:1 고급 동의어로 바꾼 로컬 치환이면 안 됩니다 (예: 'wait a long time' → 'endure a prolonged delay' 같은 단어별 대응 — 옆 어휘 매칭만으로 풀려 KILLER 미성립). 정답은 빈칸 문장 **밖의** 근거 문장 2개 이상이 말하는 개념을 종합해 그 스팬의 명제를 재구성한 표현이어야 하고, 해설의 근거 연결(②)이 실제로 그 문장들을 가리켜야 합니다.",
+    "3. 오답 설계 — 아래 네 가지를 모두 지키세요 (위반 시 거부):",
     "   3a. 극성 균형: 정답이 부정 극성(상실·제약·실패류)이면 오답 중 최소 2개도 부정 극성이어야 합니다. 'Unfortunately' 같은 전환 뒤 빈칸에서 정답만 부정이고 오답이 전부 긍정이면 극성 스캔만으로 즉답됩니다.",
     "   3b. 추상도 균형: 오답 중 최소 2개는 정답과 같은 추상 수준(논제급 일반 진술)이어야 합니다. 정답만 추상이고 오답이 전부 구체 사실 나열이면 '가장 추상적인 선지 고르기'로 즉답됩니다.",
-    "   매력 오답은 인과 역전, 범위 과장(절대어 purely/entirely 함정), 절반-진실(본문 개념을 빌리되 결론을 비틀기)로 틀리게 만들고, 최소 2개는 본문 어휘·개념을 재활용하세요.",
+    "   3c. 소재 이탈 금지: 오답 4개 **전부** 본문의 개념·소재 어휘를 최소 1개 재활용해 같은 담화 층위에서 그럴듯해야 합니다. 본문과 무관한 화제를 짜깁기한 오답('관련성 스캔'만으로 소거되는 선지)은 0개여야 합니다 — 틀림의 근거는 소재가 아니라 논리여야 합니다.",
+    "   3d. 절대어 거울 금지: 정답이 지연·점진·부분·조건부를 말할 때 immediately/instantly/at once/overnight/forever/always/never/completely/entirely 같은 절대 부사로 정반대 극단을 만든 거울 오답을 쓰지 마세요 — 상식과 극성 스캔만으로 즉시 소거됩니다. 이런 절대어는 본문이 실제로 그 강도를 주장할 때만 허용되며, 오답 2개 이상에서 감지되면 거부됩니다.",
+    "   매력 오답의 틀림 기제는 인과 역전, 주체-대상 전도, 범위 비틀기(과협소/과확장), 절반-진실(본문 개념 두 개를 본문에 없는 관계로 잇기)로 만드세요 — 각 오답이 '본문을 대충 읽은 학생에게는 정답처럼 보이는 이유'를 하나씩 가져야 합니다.",
     pool.length ? "핵심 논지 후보 문장 (우선순위순):" : "",
     ...pool.map(
       ({ sentence, index }) => `${index + 1}. ${sentence}`,
@@ -180,27 +224,40 @@ export function buildBlankInferenceCandidateBlock(
   } = {},
 ): string {
   // 출제 포인트 집중(focus) 가이드 — 정답 형태(환언/이중부정/표준)와 직교하는
-  // "정답논리 축"이라 모드 무관하게 후보 블록 앞에 1회 주입한다. pointFocus 미지정
-  // 이면 "" 반환이라 기존(비-focus) 동작 불변.
+  // "정답논리 축"이라 모드 무관하게 후보 블록 앞에 1회 주입한다.
+  // 26-07-05부터 기본 주입: 기출 716문항 LLM 검증 정답논리 카탈로그(코어 4축=87%)를
+  // pointFocus 옵트인 없이도 모든 단일 빈칸 생성이 보게 한다. paraphraseAnswer 설정은
+  // readBooleanSetting(true 만 존재)이라 "명시적 false"와의 충돌 케이스는 없다.
   const pointGuidance = buildBlankPointGuidance({
     variantIndex: diversity?.variantIndex,
-    pointFocus: diversity?.pointFocus,
+    pointFocus: true,
     diversityEnabled: diversity?.diversityEnabled,
   });
 
-  const block = options.paraphraseAnswer
-    ? buildBlankParaphraseCandidateBlock(
-        passage,
-        options.requestedDifficulty,
-        diversity,
-      )
-    : options.doubleNegative
-      ? buildNegativeBlankInferenceCandidateBlock(passage, diversity)
-      : buildStandardBlankInferenceCandidateBlock(
-          passage,
-          options.requestedDifficulty,
-          diversity,
-        );
+  // KILLER 단일 빈칸(비DN)은 killer 전용 블록으로 라우팅 — 빈칸을 글의 핵심 논지
+  // (thesis 점수순 지정·tier 오프셋 재시도 회전)에 두고 정답을 추상 패러프레이즈로
+  // 요구한다. 기존에는 이 블록이 어디서도 호출되지 않아(dead code) KILLER 도
+  // 어휘 청결 스팬만 수확하는 standard/paraphrase 블록을 썼다(검수 실측 평균 4.0/10).
+  // DN 설정은 교사 명시 모드라 KILLER 라도 DN 블록을 유지한다.
+  // 26-07-06(2차): INTERMEDIATE 는 run-question-generation 이 PARAPHRASE 모드를
+  // 강제하므로(다지문 실측 — verbatim 정답이 STANDARD INT fatal 의 7/8), 후보
+  // 블록도 paraphrase 블록으로 정렬한다. 라우팅과 모드가 어긋나면 standard 블록의
+  // "원문 청결 스팬" 지시와 PARAPHRASE 검증 게이트가 자기모순을 일으킨다.
+  const block = options.doubleNegative
+    ? buildNegativeBlankInferenceCandidateBlock(passage, diversity)
+    : options.requestedDifficulty === "KILLER"
+      ? buildKillerBlankCandidateBlock(passage, diversity)
+      : options.paraphraseAnswer || options.requestedDifficulty === "INTERMEDIATE"
+        ? buildBlankParaphraseCandidateBlock(
+            passage,
+            options.requestedDifficulty,
+            diversity,
+          )
+        : buildStandardBlankInferenceCandidateBlock(
+            passage,
+            options.requestedDifficulty,
+            diversity,
+          );
 
   return [pointGuidance, block].filter(Boolean).join("\n\n");
 }
@@ -322,9 +379,13 @@ export function buildStandardBlankInferenceCandidateBlock(
     .map((sentence, index) => ({
       sentence,
       index,
+      // 자기설명 인접 스팬(뒤 문장 재진술 시작·스팬 뒤 콜론 설명절)은 결정론 제외.
       targets: getStandardBlankInferenceSuggestedTargets(
         sentence,
         requestedDifficulty,
+      ).filter(
+        (target) =>
+          !isSelfExplainedBlankCandidate(sentence, target, sentences[index + 1]),
       ),
     }))
     .filter((item) => item.targets.length > 0);
@@ -347,6 +408,7 @@ export function buildStandardBlankInferenceCandidateBlock(
       "- Standard blank mode is active: the correct option may match originalExpression, so the source span itself must carry the inference difficulty.",
       `- For ${requestedDifficulty || "the requested difficulty"}, choose originalExpression as a compact central relation with at least ${minWords} words and ${minContent} meaningful content words when possible.`,
     "- Avoid tiny local tails, reciprocal filler such as 'both parties review each other', long punctuation spans, comma-separated lists, example lists, and isolated abstract nouns.",
+      SELF_EXPLAINED_BLANK_RULE,
       "- KILLER items should blank a claim, causal relation, evaluative turn, or contrast that requires checking the surrounding passage logic.",
     ].join("\n");
   }
@@ -356,6 +418,7 @@ export function buildStandardBlankInferenceCandidateBlock(
     "- Standard blank mode is active: the correct option may copy originalExpression, so the blank target must be intrinsically inference-worthy.",
     `- For ${requestedDifficulty || "the requested difficulty"}, prefer a clean semantic unit with at least ${minWords} words and ${minContent} meaningful content words, while staying within 13 words and 95 characters.`,
     "- Do not blank a tiny local tail, reciprocal filler such as 'both parties review each other', a colon/semicolon span, a comma-separated list, or an example-list slot.",
+    SELF_EXPLAINED_BLANK_RULE,
     "- For KILLER, choose a passage-central claim/relation/contrast; do not make the answer recoverable from one nearby collocation alone.",
     "- Every option must fit the exact same grammatical slot as originalExpression and include at least two passage-grounded near misses.",
     "Suggested candidates:",
@@ -471,9 +534,13 @@ export function buildBlankParaphraseCandidateBlock(
     .map((sentence, index) => ({
       sentence,
       index,
+      // 자기설명 인접 스팬(뒤 문장 재진술 시작·스팬 뒤 콜론 설명절)은 결정론 제외.
       targets: getBlankParaphraseSuggestedTargets(
         sentence,
         requestedDifficulty,
+      ).filter(
+        (target) =>
+          !isSelfExplainedBlankCandidate(sentence, target, sentences[index + 1]),
       ),
     }))
     .filter((item) => item.targets.length > 0);
@@ -496,6 +563,7 @@ export function buildBlankParaphraseCandidateBlock(
       "- The blank paraphrase setting is active, but no strong automatic source target was detected.",
       `- For ${requestedDifficulty || "the requested difficulty"}, choose originalExpression as a clean semantic unit with at least ${minWords} words and ${minContent} meaningful content words when possible.`,
       "- Avoid tiny local tails, long clauses, punctuation/list spans, and dangling modal/auxiliary/function-word endings.",
+      SELF_EXPLAINED_BLANK_RULE,
       "- The visible correct option must be a non-verbatim paraphrase that fits the exact same grammatical slot.",
     ].join("\n");
   }
@@ -506,6 +574,7 @@ export function buildBlankParaphraseCandidateBlock(
     `- For ${requestedDifficulty || "the requested difficulty"}, originalExpression should have at least ${minWords} words and ${minContent} meaningful content words when possible, while staying within 12 words and 90 characters.`,
     "- Use a suggested originalExpression exactly when it fits the item; otherwise choose the same kind of compact semantic relation from the listed sentence.",
     "- Do not choose a whole clause, comma-separated list span, or a 2-3 word tail such as 'making subsequent judgments' for INTERMEDIATE/KILLER.",
+    SELF_EXPLAINED_BLANK_RULE,
     "- The visible correct option must paraphrase the selected source span, preserve polarity and grammar slot, and avoid copying source wording.",
     "Suggested candidates:",
     ...candidates.map(({ sentence, index, targets }) => (

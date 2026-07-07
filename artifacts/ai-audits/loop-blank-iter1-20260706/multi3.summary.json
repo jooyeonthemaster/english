@@ -1,0 +1,144 @@
+{
+  "createdAt": "2026-07-05T17:22:33.506Z",
+  "outPath": "artifacts/ai-audits/loop-blank-iter1-20260706/multi3.jsonl",
+  "total": 2,
+  "passed": 0,
+  "failed": 2,
+  "passRate": 0,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:Blanks (A) and (B) use verbatim original text as the 'correct' option, meaning students can solve via exact-copy matchin",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:With triple blanks using original phrasing as answer for 2 of 3, the item collapses into surface memory/pattern-matching",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor logic for (A)/(B) largely relies on options that swap in unrelated near-copy phrases (materialistic society, ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 3 differs from option 1 only in (C), meaning two blanks are irrelevant filler and the real discrimination rests o",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:This is a triple-blank format but the task functions as a same-sentence vocabulary check rather than the required 'blank",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "llmFatal:The item is a multi-blank (A, B, C) matching question, which is not a standard format for CSAT/내신 '빈칸 추론' (where single ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 1 constitutes a literal copy-paste of three long sentences, creating an extremely unnatural, bulky look that does",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The blank mode does not use paraphrase; it simply slices raw text into three fragments, yielding zero conceptual challen",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:Blanks (A) and (B) use verbatim original text as the 'correct' option, meaning students can solve via exact-copy matchin",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The item is a multi-blank (A, B, C) matching question, which is not a standard format for CSAT/내신 '빈칸 추론' (where single ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:With triple blanks using original phrasing as answer for 2 of 3, the item collapses into surface memory/pattern-matching",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractor logic for (A)/(B) largely relies on options that swap in unrelated near-copy phrases (materialistic society, ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option 1 constitutes a literal copy-paste of three long sentences, creating an extremely unnatural, bulky look that does",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option 3 differs from option 1 only in (C), meaning two blanks are irrelevant filler and the real discrimination rests o",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The blank mode does not use paraphrase; it simply slices raw text into three fragments, yielding zero conceptual challen",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:This is a triple-blank format but the task functions as a same-sentence vocabulary check rather than the required 'blank",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:Blanks (A) and (B) use verbatim original text as the 'correct' option, meaning students can solve via exact-copy matchin": 1,
+    "llmFatal:With triple blanks using original phrasing as answer for 2 of 3, the item collapses into surface memory/pattern-matching": 1,
+    "llmMajor:Option 3 differs from option 1 only in (C), meaning two blanks are irrelevant filler and the real discrimination rests o": 1,
+    "llmMajor:This is a triple-blank format but the task functions as a same-sentence vocabulary check rather than the required 'blank": 1,
+    "llmMajor:Distractor logic for (A)/(B) largely relies on options that swap in unrelated near-copy phrases (materialistic society, ": 1,
+    "llmFatal:The item is a multi-blank (A, B, C) matching question, which is not a standard format for CSAT/내신 '빈칸 추론' (where single ": 1,
+    "llmMajor:Option 1 constitutes a literal copy-paste of three long sentences, creating an extremely unnatural, bulky look that does": 1,
+    "llmMajor:The blank mode does not use paraphrase; it simply slices raw text into three fragments, yielding zero conceptual challen": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:Blanks (A) and (B) use verbatim original text as the 'correct' option, meaning students can solve via exact-copy matchin",
+        "llmFatal:With triple blanks using original phrasing as answer for 2 of 3, the item collapses into surface memory/pattern-matching",
+        "llmMajor:Option 3 differs from option 1 only in (C), meaning two blanks are irrelevant filler and the real discrimination rests o",
+        "llmMajor:This is a triple-blank format but the task functions as a same-sentence vocabulary check rather than the required 'blank",
+        "llmMajor:Distractor logic for (A)/(B) largely relies on options that swap in unrelated near-copy phrases (materialistic society, "
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 2,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 65,
+      "issueKeys": [
+        "llmFatal:The item is a multi-blank (A, B, C) matching question, which is not a standard format for CSAT/내신 '빈칸 추론' (where single ",
+        "llmMajor:Option 1 constitutes a literal copy-paste of three long sentences, creating an extremely unnatural, bulky look that does",
+        "llmMajor:The blank mode does not use paraphrase; it simply slices raw text into three fragments, yielding zero conceptual challen"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

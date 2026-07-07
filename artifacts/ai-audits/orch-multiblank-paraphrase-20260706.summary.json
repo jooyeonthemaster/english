@@ -1,0 +1,143 @@
+{
+  "createdAt": "2026-07-05T18:37:02.208Z",
+  "outPath": "artifacts/ai-audits/orch-multiblank-paraphrase-20260706",
+  "total": 4,
+  "passed": 2,
+  "failed": 2,
+  "passRate": 0.5,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:Blank (A) is a near-verbatim paraphrase of the source text negated by 'not' - the passage explicitly states glass is NOT",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Both blanks are simply near-verbatim paraphrases of adjacent original phrases ('worthy of that name'→'deserving of the t",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The core passage claims glass panes are uneven because of how they were blown/solidified, NOT because of gradual flow - ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This is effectively a local vocabulary-substitution task dressed as blank inference; a mid-level student can solve it by",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors 4 and 5 (lime, melting at high temp) are too thematically disconnected/absurd for a KILLER item - they read ",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 2,
+      "passRate": 1,
+      "avgScore": 97,
+      "topIssues": []
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:Blank (A) is a near-verbatim paraphrase of the source text negated by 'not' - the passage explicitly states glass is NOT",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Both blanks are simply near-verbatim paraphrases of adjacent original phrases ('worthy of that name'→'deserving of the t",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The core passage claims glass panes are uneven because of how they were blown/solidified, NOT because of gradual flow - ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:This is effectively a local vocabulary-substitution task dressed as blank inference; a mid-level student can solve it by",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors 4 and 5 (lime, melting at high temp) are too thematically disconnected/absurd for a KILLER item - they read ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors for (A) and (B) are somewhat generic near-synonyms/antonyms (nominal, passive, temporary) without requiring ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Explanation and wrongOptionExplanations mostly restate the sentence rather than explain why a top-tier trap would be tem",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The explanation restates the passage but never explicitly addresses why the negation ('not that way because...') doesn't",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The passage's central argument (etymological/lexical evidence of red's primacy) is never tested; the blanks only recycle",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:This is a poorly chosen blank location: the sentence structure 'are generally not that way because the glass is (A)' req",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:Both blanks are simply near-verbatim paraphrases of adjacent original phrases ('worthy of that name'→'deserving of the t": 1,
+    "llmFatal:This is effectively a local vocabulary-substitution task dressed as blank inference; a mid-level student can solve it by": 1,
+    "llmMajor:Distractors for (A) and (B) are somewhat generic near-synonyms/antonyms (nominal, passive, temporary) without requiring ": 1,
+    "llmMajor:The passage's central argument (etymological/lexical evidence of red's primacy) is never tested; the blanks only recycle": 1,
+    "llmMajor:Explanation and wrongOptionExplanations mostly restate the sentence rather than explain why a top-tier trap would be tem": 1,
+    "llmFatal:Blank (A) is a near-verbatim paraphrase of the source text negated by 'not' - the passage explicitly states glass is NOT": 1,
+    "llmFatal:The core passage claims glass panes are uneven because of how they were blown/solidified, NOT because of gradual flow - ": 1,
+    "llmMajor:This is a poorly chosen blank location: the sentence structure 'are generally not that way because the glass is (A)' req": 1,
+    "llmMajor:Distractors 4 and 5 (lime, melting at high temp) are too thematically disconnected/absurd for a KILLER item - they read ": 1,
+    "llmMajor:The explanation restates the passage but never explicitly addresses why the negation ('not that way because...') doesn't": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:Both blanks are simply near-verbatim paraphrases of adjacent original phrases ('worthy of that name'→'deserving of the t",
+        "llmFatal:This is effectively a local vocabulary-substitution task dressed as blank inference; a mid-level student can solve it by",
+        "llmMajor:Distractors for (A) and (B) are somewhat generic near-synonyms/antonyms (nominal, passive, temporary) without requiring ",
+        "llmMajor:The passage's central argument (etymological/lexical evidence of red's primacy) is never tested; the blanks only recycle",
+        "llmMajor:Explanation and wrongOptionExplanations mostly restate the sentence rather than explain why a top-tier trap would be tem"
+      ],
+      "answerSurfaces": [
+        "4"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 2,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:Blank (A) is a near-verbatim paraphrase of the source text negated by 'not' - the passage explicitly states glass is NOT",
+        "llmFatal:The core passage claims glass panes are uneven because of how they were blown/solidified, NOT because of gradual flow - ",
+        "llmMajor:This is a poorly chosen blank location: the sentence structure 'are generally not that way because the glass is (A)' req",
+        "llmMajor:Distractors 4 and 5 (lime, melting at high temp) are too thematically disconnected/absurd for a KILLER item - they read ",
+        "llmMajor:The explanation restates the passage but never explicitly addresses why the negation ('not that way because...') doesn't"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

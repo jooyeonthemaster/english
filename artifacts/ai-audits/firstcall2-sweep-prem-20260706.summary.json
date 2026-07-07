@@ -1,0 +1,256 @@
+{
+  "createdAt": "2026-07-06T10:55:50.760Z",
+  "outPath": "artifacts/ai-audits/firstcall2-sweep-prem-20260706",
+  "total": 6,
+  "passed": 1,
+  "failed": 5,
+  "passRate": 0.16666666666666666,
+  "byCell": {
+    "GRAMMAR_ERROR:PREMIUM:KILLER": {
+      "total": 6,
+      "generated": 6,
+      "passed": 1,
+      "passRate": 0.16666666666666666,
+      "avgScore": 79.3,
+      "topIssues": [
+        {
+          "code": "local:generation-notice",
+          "count": 2
+        },
+        {
+          "code": "local:quality-mode-relaxed",
+          "count": 2
+        },
+        {
+          "code": "local:review-recommended",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-killer-overdrilled-answer",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-killer-thin-answer",
+          "count": 2
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "local:generation-notice",
+      "count": 2
+    },
+    {
+      "code": "local:quality-mode-relaxed",
+      "count": 2
+    },
+    {
+      "code": "local:review-recommended",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-killer-overdrilled-answer",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-killer-thin-answer",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-killer-thin-answer",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:Explanation for (B) is inaccurate: it claims 'looking' is a participle (분사), but it is actually a gerund (동명사) serving a",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The error point in (E) ('toward' instead of 'to' in 'from drawing ... to sculpture') is an extremely weak, stylistic, an",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The explanation for (D) mistakenly states that 'sustain them' is a direct object gap, whereas 'them' serves as the objec",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The explanation that 'that' cannot follow 'the only way' as a relative adverb is grammatically incorrect. Under standard",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The item is labeled as KILLER, but the actual grammar gap (challenging and *to propose vs proposing) is extremely basic ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The item is labeled as KILLER, but the grammatical error tested is extremely basic: swapping 'was concerned' with 'was c",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The semantic logic of the final sentence is fundamentally broken in the original source text used, as it says 'Without t",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:(D)'s grammar test is too simple for a KILLER difficulty rating; identifying 'where' immediately followed by a verb is a",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Labeling this item as a 'KILLER' is highly inaccurate, as it relies on a trivial preposition swap rather than complex sy",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The distractors (A, B, D, E) are overly simple, checking basic past tense 'called', extremely basic conjunction 'that', ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The explanation falsely claims that 'that' must be accompanied by a preposition 'in' to function after 'way', which disp",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The grammar point tested in (E) (from A to/toward B) is often tolerated in descriptive English, making this highly debat",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The surrounding text for element (B) is completely empty in the JSON specification, failing to provide the local structu",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The target passage is a narrative story (typical of CSAT question 18/43-45) which is rarely, if ever, used for the high-",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "local:quality-mode-relaxed": 2,
+    "local:generation-notice": 2,
+    "local:review-recommended": 2,
+    "llmFatal:The item is labeled as KILLER, but the grammatical error tested is extremely basic: swapping 'was concerned' with 'was c": 1,
+    "llmMajor:The target passage is a narrative story (typical of CSAT question 18/43-45) which is rarely, if ever, used for the high-": 1,
+    "llmMajor:The distractors (A, B, D, E) are overly simple, checking basic past tense 'called', extremely basic conjunction 'that', ": 1,
+    "rejection:grammar-killer-overdrilled-answer": 2,
+    "rejection:grammar-obvious-noun-what-relative": 1,
+    "rejection:grammar-shallow-participle-adjective-answer": 1,
+    "rejectionLast:grammar-shallow-participle-adjective-answer": 1,
+    "llmFatal:The error point in (E) ('toward' instead of 'to' in 'from drawing ... to sculpture') is an extremely weak, stylistic, an": 1,
+    "llmFatal:The semantic logic of the final sentence is fundamentally broken in the original source text used, as it says 'Without t": 1,
+    "llmMajor:The grammar point tested in (E) (from A to/toward B) is often tolerated in descriptive English, making this highly debat": 1,
+    "llmMajor:Labeling this item as a 'KILLER' is highly inaccurate, as it relies on a trivial preposition swap rather than complex sy": 1,
+    "llmFatal:The explanation for (D) mistakenly states that 'sustain them' is a direct object gap, whereas 'them' serves as the objec": 1,
+    "llmMajor:(D)'s grammar test is too simple for a KILLER difficulty rating; identifying 'where' immediately followed by a verb is a": 1,
+    "llmFatal:The explanation that 'that' cannot follow 'the only way' as a relative adverb is grammatically incorrect. Under standard": 1,
+    "llmMajor:The surrounding text for element (B) is completely empty in the JSON specification, failing to provide the local structu": 1,
+    "llmMajor:The explanation falsely claims that 'that' must be accompanied by a preposition 'in' to function after 'way', which disp": 1,
+    "rejection:grammar-killer-answer-point-repeated": 1,
+    "rejection:grammar-killer-thin-answer": 2,
+    "rejectionLast:grammar-killer-thin-answer": 2,
+    "rejection:grammar-marker-too-dense": 1,
+    "rejection:grammar-obvious-adjacent-sv-agreement": 1,
+    "rejectionLast:grammar-marker-too-dense": 1,
+    "rejectionLast:grammar-obvious-adjacent-sv-agreement": 1,
+    "llmFatal:The item is labeled as KILLER, but the actual grammar gap (challenging and *to propose vs proposing) is extremely basic ": 1,
+    "llmFatal:Explanation for (B) is inaccurate: it claims 'looking' is a participle (분사), but it is actually a gerund (동명사) serving a": 1,
+    "llmMajor:The visual cues for (D) challenging and (E) to propose are located adjacent to each other in the same clause, which comp": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 1,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7cba007wmm0su2vfplrv",
+      "title": "2026학년도 수능 영어 43-45번 · 장문",
+      "llmScore": 68,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The item is labeled as KILLER, but the grammatical error tested is extremely basic: swapping 'was concerned' with 'was c",
+        "llmMajor:The target passage is a narrative story (typical of CSAT question 18/43-45) which is rarely, if ever, used for the high-",
+        "llmMajor:The distractors (A, B, D, E) are overly simple, checking basic past tense 'called', extremely basic conjunction 'that', ",
+        "rejection:grammar-killer-overdrilled-answer",
+        "rejection:grammar-obvious-noun-what-relative"
+      ],
+      "answerSurfaces": [
+        "(C):was concerned->was concerning"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-overdrilled-answer x1, grammar-obvious-noun-what-relative x1, grammar-shallow-participle-adjective-answer x1 | Last: quality/GRAMMAR_ERROR - grammar-shallow-participle-adjective-answer: INTERMEDIATE/KILLER GRAMMAR_ERROR should not use a shallow participle adjective swap such as \"was concerned\" -> \"was concerning\" before a noun; require deeper structure."
+    },
+    {
+      "runIndex": 2,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7c3h007smm0s9gfw34jf",
+      "title": "2026학년도 수능 영어 41-42번 · 장문",
+      "llmScore": 75,
+      "issueKeys": [
+        "llmFatal:The error point in (E) ('toward' instead of 'to' in 'from drawing ... to sculpture') is an extremely weak, stylistic, an",
+        "llmFatal:The semantic logic of the final sentence is fundamentally broken in the original source text used, as it says 'Without t",
+        "llmMajor:The grammar point tested in (E) (from A to/toward B) is often tolerated in descriptive English, making this highly debat",
+        "llmMajor:Labeling this item as a 'KILLER' is highly inaccurate, as it relies on a trivial preposition swap rather than complex sy"
+      ],
+      "answerSurfaces": [
+        "(E):to->toward"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 4,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7bnr007kmm0s7o4r91j4",
+      "title": "2026학년도 수능 영어 39번 · 문장삽입",
+      "llmScore": 75,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The explanation that 'that' cannot follow 'the only way' as a relative adverb is grammatically incorrect. Under standard",
+        "llmMajor:The surrounding text for element (B) is completely empty in the JSON specification, failing to provide the local structu",
+        "llmMajor:The explanation falsely claims that 'that' must be accompanied by a preposition 'in' to function after 'way', which disp",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-killer-overdrilled-answer"
+      ],
+      "answerSurfaces": [
+        "(B):in which->that"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-answer-point-repeated x1, grammar-killer-overdrilled-answer x1, grammar-killer-thin-answer x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-thin-answer: KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check."
+    },
+    {
+      "runIndex": 6,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7b83007cmm0s4m609hz1",
+      "title": "2026학년도 수능 영어 37번 · 글의순서",
+      "llmScore": 75,
+      "issueKeys": [
+        "llmFatal:The item is labeled as KILLER, but the actual grammar gap (challenging and *to propose vs proposing) is extremely basic ",
+        "llmFatal:Explanation for (B) is inaccurate: it claims 'looking' is a participle (분사), but it is actually a gerund (동명사) serving a",
+        "llmMajor:The visual cues for (D) challenging and (E) to propose are located adjacent to each other in the same clause, which comp",
+        "rejection:grammar-killer-thin-answer",
+        "rejectionLast:grammar-killer-thin-answer"
+      ],
+      "answerSurfaces": [
+        "(E):proposing->to propose"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-killer-thin-answer x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-thin-answer: KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check."
+    },
+    {
+      "runIndex": 3,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7bvm007omm0sg99seww5",
+      "title": "2026학년도 수능 영어 40번 · 요약문",
+      "llmScore": 85,
+      "issueKeys": [
+        "llmFatal:The explanation for (D) mistakenly states that 'sustain them' is a direct object gap, whereas 'them' serves as the objec",
+        "llmMajor:(D)'s grammar test is too simple for a KILLER difficulty rating; identifying 'where' immediately followed by a verb is a"
+      ],
+      "answerSurfaces": [
+        "(D):which->where"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

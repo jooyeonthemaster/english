@@ -1,0 +1,59 @@
+logPrefix=AUTO-GEN
+finishReason=stop
+issues=questions.0.koreanGloss: Invalid input: expected string, received null
+
+```json
+{
+  "questions": [
+    {
+      "direction": "다음 글의 요약문 빈칸 (A)에 들어갈 말을 [보기]에서 필요한 단어만 골라 (필요시 어형을 바꿔) 영작하시오. [4점]",
+      "summaryWithBlanks": "Although glass has been produced by humans for millennia and generally acts like a solid rather than a liquid in everyday conditions, (A) ____ , scientists have not fully understood its true molecular nature.",
+      "koreanGloss": null,
+      "blankGlosses": [],
+      "wordBank": ["classify", "solid", "liquid", "scientist", "definitively", "unable", "glass", "as either", "or a", "categorize"],
+      "wordBankDistractors": ["classify", "categorize"],
+      "wordBankPolicy": "usePartial",
+      "wordBankFidelity": "inflected",
+      "blankAssignment": "separate",
+      "clueMode": "none",
+      "targetWordsMode": "hidden",
+      "connectorFrame": "partial",
+      "summarySourceMode": "inference",
+      "sourceSentenceParaphrase": true,
+      "blanks": [
+        {
+          "label": "(A)",
+          "answer": "unable to categorize it definitively as either a solid or a liquid",
+          "acceptableVariants": [
+            "unable to classify it definitively as either a solid or a liquid",
+            "unable to categorize it definitively as a solid or a liquid"
+          ],
+          "requiredLemmas": ["unable", "categorize", "solid", "liquid"],
+          "targetWordCount": 11,
+          "connectorFrameAfter": ""
+        }
+      ],
+      "modelAnswer": "Although glass has been produced by humans for millennia and generally acts like a solid rather than a liquid in everyday conditions, unable to categorize it definitively as either a solid or a liquid, scientists have not fully understood its true molecular nature.",
+      "acceptableVariants": [
+        "Although glass has been produced by humans for millennia and generally acts like a solid rather than a liquid in everyday conditions, scientists remain unable to classify it definitively as either a solid or a liquid, and have not fully understood its true molecular nature."
+      ],
+      "scoringCriteria": [
+        "핵심어구 'unable'(또는 unable to) 포함 시 1점",
+        "'categorize/classify' 계열 동사 포함 및 목적어(it/glass) 사용 시 1점",
+        "'definitively' 또는 이에 준하는 확정성 표현 포함 시 1점",
+        "'either a solid or a liquid' 형태의 이분법적 대조 구조 포함 시 1점"
+      ],
+      "scoringMode": "LLM_RUBRIC",
+      "correctAnswer": "(A) unable to categorize it definitively as either a solid or a liquid",
+      "explanation": "지문은 유리가 분자 수준에서 무질서한 구조를 가지며, 과학자들에 따라 '비정질 고체'로도 '과냉각 액체'로도 불린다고 설명한다. 이론상으로는 둘 다이지만 실제 행동은 고체에 가깝고, 상온에서는 결코 액체처럼 행동하지 않는다는 근거와, 마지막에 유리가 대부분의 분자 법칙을 따르는 듯하면서도 과학자들이 왜 그렇게 행동하는지 여전히 이해하지 못한다는 역설을 연결해야 한다. 따라서 빈칸에는 '유리를 고체나 액체로 명확히 분류할 수 없다'는 과학자들의 근본적 한계를 나타내는 표현이 들어가야 하며, 이는 본문의 개별 사례(스테인드글라스, 온도 등)가 아니라 전체 논지를 요약하는 추상적 진술이어야 한다.",
+      "keyPoints": [
+        "지문 전체의 핵심 역설(오래된 물질이지만 정체가 불분명함)을 파악해야 한다",
+        "amorphous solid/supercooled liquid의 이중적 성격을 하나의 추상적 표현으로 압축해야 한다",
+        "본문 표현을 그대로 베끼지 않고 상위 개념으로 재진술하는 능력이 필요하다"
+      ],
+      "tags": ["요약문 영작", "추론 요약", "고난도", "과학 지문", "어휘 변형"],
+      "difficulty": "KILLER"
+    }
+  ]
+}
+```

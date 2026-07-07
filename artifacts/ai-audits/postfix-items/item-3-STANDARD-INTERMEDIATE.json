@@ -1,0 +1,117 @@
+{
+  "plan": "STANDARD",
+  "difficulty": "INTERMEDIATE",
+  "passage": null,
+  "question": {
+    "direction": "다음 글의 밑줄 친 부분 중, 어법상 틀린 것은?",
+    "markedExpressions": [
+      {
+        "label": "(A)",
+        "expression": "that",
+        "isError": false,
+        "errorExpression": "that",
+        "surroundingText": "red was the only color worthy of that name, the only true color.",
+        "pointCode": "b"
+      },
+      {
+        "label": "(B)",
+        "expression": "they",
+        "isError": false,
+        "errorExpression": "they",
+        "surroundingText": "Not that they did not exist, but they had to wait a long time",
+        "pointCode": "g"
+      },
+      {
+        "label": "(C)",
+        "expression": "oldest known",
+        "isError": false,
+        "errorExpression": "oldest known",
+        "surroundingText": "varied tones and shades, as the oldest known color terms demonstrate.",
+        "pointCode": "c"
+      },
+      {
+        "label": "(D)",
+        "expression": "seems",
+        "isError": false,
+        "errorExpression": "seems",
+        "surroundingText": "Here the lexicon seems in keeping with pictorial practices and coloring techniques.",
+        "pointCode": "d"
+      },
+      {
+        "label": "(E)",
+        "expression": "in which",
+        "isError": true,
+        "correction": "in which",
+        "errorExpression": "which",
+        "surroundingText": "that is the case in Russian, in which the terms krasnyy (red) and krasivy (beautiful) belong to the same lexical family.",
+        "pointCode": "b"
+      }
+    ],
+    "correctAnswers": [
+      "(E)"
+    ],
+    "correctAnswer": "(E)",
+    "options": [
+      {
+        "label": "(A)",
+        "text": "that"
+      },
+      {
+        "label": "(B)",
+        "text": "they"
+      },
+      {
+        "label": "(C)",
+        "text": "oldest known"
+      },
+      {
+        "label": "(D)",
+        "text": "seems"
+      },
+      {
+        "label": "(E)",
+        "text": "which"
+      }
+    ],
+    "wrongOptionExplanations": {
+      "(A)": "이 자리는 뒤에 오는 명사 name을 수식하는 지시형용사 'that'이 쓰였으며, 특정 명칭을 지시하므로 어법상 옳습니다.",
+      "(B)": "이 자리는 맥락상 앞 문장의 'all others(다른 모든 색깔들)'를 가리키는 복수 대명사 주어로 'they'를 쓴 것이므로 수일치 상 옳습니다.",
+      "(C)": "이 자리는 뒤에 오는 명사구 'color terms'를 앞에서 수식하는 과거분사 'known'이 쓰인 구조로, 역사적으로 '알려진' 수동의 의미를 전하므로 옳습니다.",
+      "(D)": "이 자리는 주어가 3인칭 단수인 'the lexicon'이므로 주어-동사 수일치 규칙에 따라 단수동사 'seems'를 쓴 것이 어법상 옳습니다."
+    },
+    "explanation": "Russian을 선행사로 하는 관계절 내부의 구조를 살펴보면, 'the terms krasnyy (red) and krasivy (beautiful)'가 주어이고 'belong'이 자동사이며 'to the same lexical family'가 전치사구로 연결되는 완전한 절이 이어지고 있습니다. 따라서 관계대명사 뒤에 필수 성분이 빠진 틈(gap)이 존재하지 않으므로, 불완전한 절을 이끄는 주격/목적격 관계대명사 'which'는 이 자리에 올 수 없습니다. '러시아어 안에서'라는 공간적/영역적 의미 관계를 충족시키면서 완전한 절을 이끌 수 있도록 전치사와 관계대명사가 결합한 'in which'(또는 관계부사 where)로 고쳐야 합니다.",
+    "keyPoints": [
+      "관계대명사 vs. 전치사+관계대명사의 문장 완전성 판단",
+      "명사를 앞에서 수식하는 과거분사의 수동 의미 판단",
+      "단수 주어와 3인칭 단수 동사의 주어-동사 수일치"
+    ],
+    "tags": [
+      "관계사",
+      "수일치",
+      "분사",
+      "어법오류"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "passageWithMarkers": "For thousands of years in the West, red was the only color worthy of __(A) that__ name, the only true color. As much on the historical as hierarchical level, it exceeded all others. Not that __(B) they__ did not exist, but they had to wait a long time before they were considered colors and then played a comparable role in material culture, social codes, and systems of thought. It was with red that humans did their first color experiments, achieved their first successes, and then constructed a chromatic universe. It was also within the range of reds that they learned early on to diversify the palette and to produce varied tones and shades, as the __(C) oldest known__ color terms demonstrate. Here the lexicon __(D) seems__ in keeping with pictorial practices and coloring techniques. In certain languages, the same word can mean \"red\" or simply \"colored,\" depending on the context, such as coloratus in classical Latin or colorado in modern Castilian. In other languages, the words meaning \"red\" and \"beautiful\" share a common root; for example, that is the case in Russian, __(E) which__ the terms krasnyy (red) and krasivy (beautiful) belong to the same lexical family.",
+    "_typeId": "GRAMMAR_ERROR",
+    "_typeLabel": "어법 판단",
+    "_generationPlan": "STANDARD"
+  },
+  "judge": {
+    "verdict": "fail",
+    "score": 91,
+    "fatalIssues": [],
+    "majorIssues": [
+      "Distractors (A)-(D) test very common, low-novelty points (demonstrative adjective, pronoun antecedent, participle, subj-verb agreement) without added cross-clause challenge, making the item feel like a solid but not particularly elegant academy exercise."
+    ],
+    "minorIssues": [
+      "pointCode 'b' is reused for both (A) and (E), which is inconsistent internal tagging even though it doesn't affect the exam-facing content."
+    ],
+    "strengths": [
+      "The KILLER point (E) correctly hinges on verifying that the relative clause following 'which' is already complete, requiring genuine cross-clause parsing rather than surface pattern matching.",
+      "All explanations use accurate Korean grammar terminology and correctly distinguish the displayed wrong form 'which' from the required correction 'in which'.",
+      "The correct answer is clearly source-backed, since the original passage explicitly uses 'in which' in that exact position."
+    ],
+    "improvementHint": "Sharpen at least one distractor to require similarly deep clause-level reasoning (e.g., a subtler participle vs. finite verb trap) so the whole set matches the sophistication of the killer point."
+  }
+}

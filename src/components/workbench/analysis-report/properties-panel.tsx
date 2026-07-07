@@ -9,8 +9,10 @@ import {
   FileText,
   Italic,
   Languages,
+  LayoutGrid,
   Minus,
   Plus,
+  Rows3,
   Trash2,
 } from "lucide-react";
 import { useEffect } from "react";
@@ -78,6 +80,7 @@ export function PropertiesPanel({
   onToggleWorksheetClozeTranslations,
   onVocabTestMode,
   onVocabTestLayout,
+  onVocabStudyLayout,
   onVocabTestOnly,
   onRestoreVocabTestRows,
   onVocabTierFilter,
@@ -124,6 +127,7 @@ export function PropertiesPanel({
   onToggleWorksheetClozeTranslations: (sectionIndex: number) => void;
   onVocabTestMode: (sectionIndex: number, mode: VocabTestMode) => void;
   onVocabTestLayout: (sectionIndex: number, layout: VocabTestLayout) => void;
+  onVocabStudyLayout: (sectionIndex: number, layout: VocabTestLayout) => void;
   onVocabTestOnly: (sectionIndex: number, enabled: boolean, mode?: Exclude<VocabTestMode, "study">) => void;
   onRestoreVocabTestRows: (sectionIndex: number) => void;
   onVocabTierFilter: (sectionIndex: number, tiers: VocabularyTier[]) => void;
@@ -460,6 +464,36 @@ export function PropertiesPanel({
               </div>
             </div>
           </PanelGroup>
+          ) : null}
+
+          {activeSection?.kind === "vocabulary" ? (
+            <PanelGroup label="단어장 레이아웃">
+              <div className="grid grid-cols-2 gap-1.5">
+                {([
+                  { layout: "table", label: "1열 표", icon: Rows3 },
+                  { layout: "two-column", label: "2열 카드", icon: LayoutGrid },
+                ] as const).map(({ layout, label, icon: Icon }) => {
+                  const selected = (activeSection.vocabStudyLayout ?? "table") === layout;
+                  return (
+                    <button
+                      key={layout}
+                      type="button"
+                      data-vocab-study-layout={layout}
+                      onClick={() => active && onVocabStudyLayout(active.sectionIndex, layout)}
+                      className={`flex h-9 items-center justify-center gap-1.5 rounded-md border text-[12px] font-semibold transition-colors ${
+                        selected
+                          ? "border-blue-500 bg-blue-50 text-blue-700"
+                          : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                      }`}
+                    >
+                      <Icon className="h-3.5 w-3.5" />
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="mt-1.5 text-[10.5px] text-slate-400">2열 카드는 같은 정보를 반 폭으로 압축해 한 페이지에 더 많은 단어를 담아요.</p>
+            </PanelGroup>
           ) : null}
 
           {tableGroup ? (

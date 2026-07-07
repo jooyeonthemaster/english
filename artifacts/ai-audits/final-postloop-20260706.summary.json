@@ -1,0 +1,2788 @@
+{
+  "createdAt": "2026-07-05T19:27:11.161Z",
+  "outPath": "artifacts/ai-audits/final-postloop-20260706",
+  "total": 104,
+  "passed": 24,
+  "failed": 80,
+  "passRate": 0.23076923076923078,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:blankAnswerMode is declared SOURCE_EXACT but the correct option text is a paraphrase ('gained recognition as true colors",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:answerLogic and explanation reference a paraphrased answer ('gained recognition as true colors') that does not match any",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors are largely detectable via keyword-mismatch/topic-scope without requiring real two-sentence causal/contrasti",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct answer option ① is simply the verbatim original span copied unchanged, making this a trivial 'fill in the ex",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blanked span is a nearly verbatim paraphrase near-copy: correct option '④ underwent a prolonged delay before securin",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors ①②③⑤ are somewhat implausible because they introduce fabricated causal claims (active resistance, immediate ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:For a KILLER item, the blank should hinge on the paragraph's main argument (red's dominance forcing other colors to wait",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation is overly verbose and repetitive, restating the same point three times without truly justifying why this",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "llmFatal:The item uses the SOURCE_EXACT mode where the correct answer option completely duplicates the original phrasing 'were co",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct answer option 1 is extremely simple and literal ('were considered colors'), resulting in lack of depth for a",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The distractors, especially option 5, are grammatically and semantically too weak to attract high school students, sever",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": [
+        {
+          "code": "rejection:blank-killer-giveaway-distractors",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:blank-killer-giveaway-distractors",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 90,
+      "topIssues": [
+        {
+          "code": "llmMajor:(C) 'their' referring to 'humans' is a fairly shallow agreement check compared to the other more nuanced points, slightl",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:INTERMEDIATE difficulty label is a bit generous since (E) 'what' after a comma with a clear antecedent 'Russian' is a fa",
+          "count": 1
+        },
+        {
+          "code": "rejection:grammar-shallow-nearby-passive-decoy",
+          "count": 1
+        },
+        {
+          "code": "rejection:grammar-shallow-participle-adjective-answer",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:grammar-shallow-nearby-passive-decoy",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 42,
+      "topIssues": [
+        {
+          "code": "llmFatal:Distractors (A),(B),(C) are shallow/obviously correct on a skim (basic tense/agreement/relative clause), providing no re",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The correct answer (D) is a trivial adjective/adverb spelling-level error (simple vs simply), completely inconsistent wi",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation for the error is fine but overall design fails the KILLER rubric: no 2+ step reasoning chain, no genuinely c",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No marked expression involves long-distance dependency, parallel structure, or participial modification ambiguity as req",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:System-flagged quality issues (relaxed mode, review recommended, grammar-too-basic-decoys) confirm the generator itself ",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 97,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-shallow-participle-adjective-answer",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:grammar-shallow-participle-adjective-answer",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-shallow-participle-adjective-answer",
+          "count": 2
+        },
+        {
+          "code": "llmFatal:The error target (C) 'achieving' is too easy to solve, as and then constructed is visible right after, making the parall",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation for (A) is excessively brief and fails to thoroughly explain the ellipsis or structural integrity of 'As muc",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option (A) is not a typical CSAT grammar testing point and acts as passive filler.",
+          "count": 1
+        },
+        {
+          "code": "local:generation-notice",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_CHOICE_COMBO:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmMajor:Difficulty mismatch: this is labeled INTERMEDIATE but all three slots are single-sentence, verbatim grammar checks (para",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 4 is the only true multi-error option; combined with weak single-slot distractors, the option set doesn't reflect",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Two options (2 and 5) differ from the correct answer in only one slot each but are single-slot traps like option 3, mean",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_CHOICE_COMBO:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:(A) 'played' vs 'playing' hinges on recognizing parallel structure with 'were considered', but this is a common, easily-",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Slot (B) options presented are 'what/that' but the JSON slot definition lists wrongExpression as 'what' with correctExpr",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:None of the three slots test genuine hard points like relative clauses, subjunctive, or complex parallelism at KILLER le",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Options 2 and 5 are the only 2+-slot-wrong options, but the reasoning to eliminate distractors is shallow (single-step s",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The (B) slot's 'what' as a wrongExpression is a textbook-level trap that most mid-level students would catch immediately",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_CHOICE_COMBO:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "GRAMMAR_CHOICE_COMBO:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 83,
+      "topIssues": [
+        {
+          "code": "llmMajor:Option 4 (playing - what - share) contains 'what' (wrong for B) and 'playing' (wrong for A), but 'shares' (wrong for C) ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation field for (C) is cut off mid-sentence: '주어는 meaning ' (incomplete), which looks like a corrupted generat",
+          "count": 1
+        }
+      ]
+    },
+    "VOCAB_CHOICE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:The inappropriate word 'shackles' is a noun replacing a verb 'diversify' after 'to', creating a blatant grammatical erro",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This violates the INTERMEDIATE difficulty requirement: grammatical mismatch is detectable without any semantic reasoning",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:A grammatically broken option (noun after 'to') is not a legitimate distractor pattern for CSAT-style vocab items, which",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation focuses on grammar breakage rather than testing contextual/semantic appropriateness, contradicting the t",
+          "count": 1
+        }
+      ]
+    },
+    "VOCAB_CHOICE:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:The trap for (c) is resolved immediately by 'and to produce varied tones and shades' in the very same clause (local cont",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors (a),(b),(d),(e) are all safely correct with no subtle tension, so there is no real decoy competing with the ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No option leverages register/collocation/stance nuance as required by the KILLER bar; the flaw is a simple local antonym",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation is clear and correct, but because the giveaway phrase sits in the same sentence as the error, it doesn't",
+          "count": 1
+        }
+      ]
+    },
+    "VOCAB_CHOICE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "VOCAB_CHOICE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 98,
+      "topIssues": []
+    },
+    "SENTENCE_ORDER:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:Option 4 starts with (C), whose opening sentence 'In certain languages...' uses an unresolved anaphoric-like framing tha",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The correct order relies overwhelmingly on a single pronoun cue (they=all others) plus one 'also' transition, not two in",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:(B) itself opens with 'Not that they did not exist' — an anaphor-dependent connector; using it as the intended first chu",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Chunk (B) is noticeably shorter in nuanced complexity compared to (C) which has denser cross-linguistic content, slightl",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor option 1 (A)-(C)-(B) is not superficially viable: (A) opens with 'It was also within the range of reds...' wh",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_ORDER:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:Option 5 starts with (C), whose opening sentence 'In certain languages...' has no unresolved anaphor, but option 2/3/4 a",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Options 1, 3, and 4 start with (A) or (C), which lack the necessary referent for 'they' logically established only in (B",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct order (B)-(A)-(C) is decided almost entirely by the single pronoun cue 'they' referring to 'all others', vio",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Wrong-option explanations are repetitive and circular, restating the same pronoun-link argument without surfacing a dist",
+          "count": 1
+        },
+        {
+          "code": "rejection:sentence-order-paragraph-not-source-backed",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_ORDER:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "SENTENCE_ORDER:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 98,
+      "topIssues": []
+    },
+    "SENTENCE_INSERT:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:Marker ③ is placed right before 'In certain languages...' sentence, but the given sentence 'Here the lexicon seems in ke",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The rationale claims 'Here' refers to 'the oldest known color terms' in the immediately preceding sentence, but that sen",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor explanations for gaps 4 and 5 are somewhat repetitive and rely on 'listing symmetry' logic while the real amb",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Given sentence 'Here' is a locative/discourse deictic cue but weak — it could plausibly point to 'oldest known color ter",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The passage's own auto-generated qualityWarning flags exactly this issue (neutral given sentence, weak cohesive cue), wh",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_INSERT:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:The given sentence 'Here the lexicon...' lacks a strong unique cohesive cue: 'Here' could plausibly anchor at gap ① or ②",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The passageWithMarkers shows gap ③ positioned BEFORE the Latin/Castilian sentence, but the correct answer explanation cl",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor explanations for gaps ① and ② argue lexicon 'hasn't been mentioned yet,' but this is a coincidental surface f",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:For a KILLER item, the distractors should each fail for a genuinely different decisive reason tied to structural links; ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The passage's own qualityWarnings flag the neutral-given-sentence risk, which the reviewer must weight heavily; 'Here' i",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_INSERT:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "SENTENCE_INSERT:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:The given sentence 'Here the lexicon seems...' contains 'Here' and 'the lexicon', but the passage mapping and options mi",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The choice of 3 (③) as correct overlaps with 4 in some interpretations because 'lexicon' and 'languages' show cohesive t",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The distractor explanation for option 4 states that the cue 'the lexicon' lacks an antecedent, which contradicts the act",
+          "count": 1
+        }
+      ]
+    },
+    "TOPIC:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 90,
+      "topIssues": [
+        {
+          "code": "llmMajor:Option 5 (developmental process of color vocabularies) is close enough to option 2 that a careful reader must weigh scop",
+          "count": 1
+        }
+      ]
+    },
+    "TOPIC:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:No option captures the actual core claim precisely: that red's supremacy is evidenced through both cultural/historical d",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Option 1 says 'and its reflection in language and art,' but the passage never discusses art/painting practices as a sepa",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:For a KILLER item, option 2 (linguistic shifts across eras) is very easy to eliminate since the passage isn't about chan",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 4 (Western vs non-Western comparison) is not remotely discussed in the passage, making it a shallow distractor el",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Options 3 and 5 are both narrow/side-detail distractors that are easy to spot as too specific; none of the distractors f",
+          "count": 1
+        }
+      ]
+    },
+    "TOPIC:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 97,
+      "topIssues": []
+    },
+    "TOPIC:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 98,
+      "topIssues": []
+    },
+    "MAIN_IDEA:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 91,
+      "topIssues": [
+        {
+          "code": "llmMajor:Distractor 4 is plausible but slightly weak since it's clearly a supporting detail, making it less attractive than the o",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 1 is somewhat close to a topic-restatement rather than a fully synthesized claim, though it does capture both his",
+          "count": 1
+        }
+      ]
+    },
+    "MAIN_IDEA:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:Option 1 claims red influenced 'linguistic structure' broadly, but passage only gives two anecdotal lexical examples (La",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor 4 is reasonably close but the others are weak filler-level wrong answers rather than subtle near-misses diffe",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Not a genuine KILLER: option 1 is a fairly straightforward restatement of the first two sentences, distractors 3 and 5 a",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Wrong-option explanations contain garbled repeated text ('선택지는 2번 선택지는') suggesting sloppy generation, undermining polis",
+          "count": 1
+        }
+      ]
+    },
+    "MAIN_IDEA:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "MAIN_IDEA:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 97,
+      "topIssues": []
+    },
+    "TOPIC_MAIN_IDEA:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 91,
+      "topIssues": [
+        {
+          "code": "llmMajor:Distractor ③ is reasonably close but the rest (①④⑤) are fairly easy to eliminate, making this feel more BASIC-leaning th",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option ② is somewhat wordy/meta ('역사적·언어적 근거에 따르면') rather than a clean paraphrase, slightly breaking the elegant regist",
+          "count": 1
+        }
+      ]
+    },
+    "TOPIC_MAIN_IDEA:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:Option ① claims red was 'the only color first used in the West' and dominant in both painting and vocabulary systems, bu",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This is a BASIC-level topic question dressed as KILLER: the correct answer restates the first two sentences almost verba",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors are all 'unsupported invention' type (add causal claims or details absent from text) rather than close near-",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation and wrong-option rationales are repetitive/verbose and mostly restate the option text rather than sharply is",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct option's phrase '회화와 어휘 체계 양면에서' is a specific dual-domain claim not clearly the passage's main idea (which ",
+          "count": 1
+        }
+      ]
+    },
+    "TOPIC_MAIN_IDEA:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 85,
+      "topIssues": [
+        {
+          "code": "llmMajor:오답 선택지들이 본문에서 조금만 벗어나도 쉽게 소거되는 너무 단순한 오도적 왜곡(예: 발음하기 쉬웠음, 순전히 우연한 결과 등)을 사용하고 있어, 평가원 모의고사 수준의 변별력을 확보하기 어렵습니다.",
+          "count": 1
+        }
+      ]
+    },
+    "TOPIC_MAIN_IDEA:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 97,
+      "topIssues": []
+    },
+    "TITLE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 91,
+      "topIssues": [
+        {
+          "code": "llmMajor:Option 1's phrase 'Imperial Reign' is a strong figurative flourish not directly textually grounded, though defensible as",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 4 is a fairly close distractor since red's role in pictorial experimentation is textually prominent, requiring ca",
+          "count": 1
+        }
+      ]
+    },
+    "TITLE:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:Option 1 uses 'preceded' but the passage's core claim is red's supremacy/precedence AND its unique status as 'the only t",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor 5 (blue) and option 3 (diverged, contradicting explicit 'in keeping with') are transparently wrong via simple",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors 2 and 4 focus on narrow sub-details (Latin/Castilian etymology, Russian beauty-red link) that are so obvious",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No distractor captures the passage's true nuance (red's historical primacy in color hierarchy, other colors' delayed sta",
+          "count": 1
+        }
+      ]
+    },
+    "TITLE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "TITLE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "IMPLIED_MEANING:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:A quality warning flags the underline as a peripheral-detail target rather than a central-claim/topic-level expression, ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option ① is very close to a direct restatement of the passage rather than a metaphorical/compressed insight, weakening t",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct answer largely paraphrases the sentence's literal content (built a color system starting from red) rather th",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The underlined phrase is immediately followed by elaboration ('It was also within the range of reds that they learned...",
+          "count": 1
+        }
+      ]
+    },
+    "IMPLIED_MEANING:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "rejection:implied-meaning-noncentral-target",
+          "count": 4
+        },
+        {
+          "code": "llmFatal:System flagged _qualityMode=relaxed, a deterministic low-quality signal indicating fallback generation.",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The underline is immediately followed by sentences that elaborate/restate it ('within the range of reds... diversify the",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors ②④⑤ are somewhat easy to eliminate (irrelevant science, technique details) leaving a fairly binary choice be",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option ① largely restates the passage's opening claim (red as primary/foundational) almost verbatim in meaning, making i",
+          "count": 1
+        }
+      ]
+    },
+    "IMPLIED_MEANING:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 68,
+      "topIssues": [
+        {
+          "code": "llmFatal:The underlined expression 'played a comparable role' has no metaphorical, compressed, or deep implied meaning; it is a l",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct answer option 2 is a direct, trivial paraphrase of the literal sentence in which the underline resides, maki",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The target expression is immediately preceded by the literal explanation of its meaning (having to wait a long time befo",
+          "count": 1
+        }
+      ]
+    },
+    "IMPLIED_MEANING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "rejection:implied-meaning-noncentral-target",
+          "count": 2
+        },
+        {
+          "code": "llmFatal:The options are quite weak and easily eliminated: Option 2 uses almost identical vocabulary to define the central theme,",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The underlined expression 'exceeded all others' is too literal, plain, and straightforward to function as a high-quality",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct answer option (2) is extremely explicit and lacks the subtle paraphrasing expected of a KILLER level item.",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The target phrase is a simple Subject-Verb-Object literal structure meaning 'surpassed all others,' failing the requirem",
+          "count": 1
+        }
+      ]
+    },
+    "REFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:direction text has a typo '가리키는 대상이머로' which is broken/unnatural Korean, visible to students",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Later occurrence of 'they' in the same sentence ('before they were considered colors') refers to the same referent but i",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option ③ '역사적이고 위계적인 수준들' and ⑤ combined nominal phrases are not natural standalone NPs actually present as referents in",
+          "count": 1
+        }
+      ]
+    },
+    "REFERENCE:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:Options are Korean glosses of noun phrases mostly invented/paraphrased rather than actual NPs present verbatim in the pa",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The correct answer 'all others' itself is a pronoun-like phrase referring back to 'other colors', but no option is liter",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:For a KILLER item, distractors are not close competitors semantically—'예술적 관행들' and '역사적 위계들' are easily eliminated on a",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Korean-only options in a reference (지칭 추론) item focusing on an English pronoun reduce precision and can mask whether the",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation spends effort tracing 'it' before 'they', which is good, but never justifies why the four distractor NPs",
+          "count": 1
+        }
+      ]
+    },
+    "REFERENCE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 97,
+      "topIssues": []
+    },
+    "REFERENCE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:Option 2 '다른 색들' does not strictly exist as a standalone English noun phrase in the passage (only 'others' exists in 'al",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The option '다른 색들' is in Korean, whereas 'red', 'material culture', 'systems of thought', and 'humans' are in English, v",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation fails to reconcile why Option 2 is written in Korean while the other options are in English.",
+          "count": 1
+        }
+      ]
+    },
+    "CONTENT_MATCH:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 90,
+      "topIssues": [
+        {
+          "code": "llmMajor:Option 2's distortion (cool colors like blue/green vs. red) is fairly blatant, making it solvable on a quick skim rather",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Wrong option explanations are somewhat repetitive/formulaic, though accurate",
+          "count": 1
+        }
+      ]
+    },
+    "CONTENT_MATCH:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmMajor:Correct answer (option 2) directly reverses the passage's explicit statement ('It was with red that humans...constructed",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No option is subtly distorted by degree/nuance; option 2 is a blatant reversal, so the item lacks the fine-grained distr",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Tag '중세 문화' is inaccurate/misleading since passage discusses ancient/general Western history, not medieval culture speci",
+          "count": 1
+        }
+      ]
+    },
+    "CONTENT_MATCH:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 97,
+      "topIssues": []
+    },
+    "CONTENT_MATCH:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:The item is labeled as a 'KILLER' difficulty level, but option 3 is extremely easy to eliminate because it changes 'reds",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor quality is too simple: substituting 'reds' with 'blues' lacks the sophistication expected of a premium Korean",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation fails to show why the other distractors are complex 'traps' since they are almost direct translations/pa",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_COMPLETE_MC:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:(B) 'structured' is a vague paraphrase not strongly grounded in two-sentence causal/contrastive linkage; the passage dis",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Distractor set is weak: options 4 and 5 pair implausible (A) words with implausible (B) words, giving no genuine A-only-",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:INTERMEDIATE requires evidence depth of two linked sentences (cause-effect or contrast), but blank (B) can be answered a",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Options 4 and 5 pair equality/complicated and inferiority/simplified—these combinations are so incoherent they are not g",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The summary sentence's second clause ('closely reflected in the way early societies structured their language') is a som",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_COMPLETE_MC:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:Option 4's blankA 'precedence' is nearly synonymous with the correct 'supremacy', but it's paired with an easily elimina",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Options 3 and 5 are not competitive traps: subordination and insignificance are near-instant opposites of the clearly es",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No genuinely strong distractor pairs correct-caliber blankA with a competitive wrong blankB or vice versa; per the KILLE",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The summary sentence bridging (A) 'absolute supremacy' with (B) 'deep-seated imprint in the vocabulary' is serviceable b",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:wrongOptionExplanations are repetitive template text ('선지 배열상...') that reads as mechanically generated rather than craf",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_COMPLETE_MC:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "SUMMARY_COMPLETE_MC:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 98,
+      "topIssues": []
+    },
+    "IRRELEVANT:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:The intruder sentence (④) is NOT copied verbatim from the source passage — it's fabricated ('synthetic pigment productio",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Removing ④ breaks nothing since it was never organically part of the passage; the 'remove-and-reconnect' test is trivial",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The intruder uses an explicit contrastive marker 'However' plus a blunt topic-unrelated claim (modern science vs. histor",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:This design pattern (invented off-topic sentence with 'However') is the exact 'random outside fact' intruder the rubric ",
+          "count": 1
+        }
+      ]
+    },
+    "IRRELEVANT:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:Sentence ⑤ is the last sentence of the passage; per plan, none of the four non-answer choices should be a totally unrela",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The intruder (②) directly contradicts the immediately preceding sentence with an explicit logical connector 'Consequentl",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor explanations are essentially restating why each sentence fits, but they don't address any genuinely tempting ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Passage coverage: chosen sentences are bunched in the first half (①③④ within first 4 sentences), with ⑤ at the very end,",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The answer is biased toward ②, but the reasoning bar for KILLER requires deep multi-step inference; here it's a one-step",
+          "count": 1
+        }
+      ]
+    },
+    "IRRELEVANT:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 68,
+      "topIssues": [
+        {
+          "code": "llmFatal:The formatting of 'passageWithNumbers' is deeply flawed; it includes sentences inside the numbered options that do not e",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The item crucial test, the \"remove-and-reconnect\" test, fails completely because the non-answer text surrounding the int",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option selection does not match standard CSAT formatting where the whole paragraph is presented consecutively with numbe",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation claims that removing ② preserves the flow, but in 'passageWithNumbers', the sentences surrounding ② are ",
+          "count": 1
+        }
+      ]
+    },
+    "IRRELEVANT:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 97,
+      "topIssues": []
+    },
+    "CONTEXT_MEANING:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmMajor:'practices' here is fairly transparent (paired with 'techniques'), making the correct sense guessable without deep infer",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors 'exercise routines', 'moral obligations', 'theoretical values' are largely unrelated meanings/random senses ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:INTERMEDIATE bar requires connecting two sentences via cause/contrast; here the answer is derivable from the single unde",
+          "count": 1
+        }
+      ]
+    },
+    "CONTEXT_MEANING:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:Option 5 ('habitual actions of individuals in daily lives') is barely distinguishable from option 1 in meaning; 'practic",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This is not a genuine KILLER: 'practices' paired with 'techniques' is a fairly transparent collocation cue, solvable by ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation and keyPoints slightly overstate the difficulty; the reasoning chain described (parallel structure with tech",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 2 (exercises for improving skills) is attractive but the distinction from option 1 is somewhat obvious once 'colo",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 3 (professional practice of doctors/lawyers) is a completely unrelated dictionary sense with zero contextual pull",
+          "count": 1
+        }
+      ]
+    },
+    "CONTEXT_MEANING:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "llmFatal:The non-correct options are extremely simple single-word verbs that do not match the register, and standard 'play a role",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The tested word 'played' is part of a basic collocation 'played a [...] role', making the synonymous replacement 'perfor",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:CSAT 'Contextual Meaning' (밑줄 친 부분의 의미) questions typically test metaphorical phrases (e.g., 'the only true color' or a ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Options lack parallel complexity; single verbs like 'amused', 'gambled', 'pretended' are too elementary for an intermedi",
+          "count": 1
+        }
+      ]
+    },
+    "CONTEXT_MEANING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:The target word 'exceeded' is highly transparent in this context, and its core synonym 'surpassed' is too easily accessi",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors 2, 4, and 5 represent dictionary senses that are structurally and contextually very weak, making them trivia",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The options are not strictly parallel in grammar; 'surpassed in status' introduces an adjunct prepositional phrase while",
+          "count": 1
+        }
+      ]
+    },
+    "SYNONYM:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 86,
+      "topIssues": [
+        {
+          "code": "llmMajor:'exceeded' meaning 'surpassed in importance/rank' is a fairly transparent, low-ambiguity match; the task barely requires",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractor 'transmitted' is semantically unrelated and shallow (obviously wrong), weakening overall distractor quality d",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:overtook is arguably nearly as valid a synonym for 'exceeded' in this abstract sense, making the surpassed/overtook dist",
+          "count": 1
+        }
+      ]
+    },
+    "SYNONYM:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmMajor:'outraged' is not remotely close in meaning to 'exceeded' - it's an obviously wrong distractor that a mid-level student ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:'precluded' is also semantically distant (blocking vs surpassing) and easily dismissed without deep reasoning, making th",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Only 'overtook' and 'overwhelmed' are genuinely close distractors; with 3 of 4 distractors weak, this plays more like a ",
+          "count": 1
+        }
+      ]
+    },
+    "SYNONYM:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:The distractors are too easy and lack the semantic depth or context-specific traps required for an intermediate CSAT-lev",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The target word 'exceed' and its correct option 'surpass' are direct, elementary dictionary synonyms that do not require",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors are basic verbs (included, resembled, preceded, replaced) that do not possess the same semantic weight as hi",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No deep context-based inference is needed; the question functions as a simple vocabulary quiz rather than an academic re",
+          "count": 1
+        }
+      ]
+    },
+    "SYNONYM:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:Distractors are far too simple and easily eliminated (resembled, preceded, accompanied, restricted), requiring no contex",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The target word 'exceeded' is highly high-frequency and the correct synonym 'surpassed' is a direct dictionary-level mat",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation claims that 'preceded' is wrong, but the passage states 'historical' level as well, making 'preceded' a ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The option design is extremely basic, lacking any attractive traps for high-performing students.",
+          "count": 1
+        }
+      ]
+    },
+    "ANTONYM:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:The (D) 'common' vs 'rare' distinction is contestable: 'common root' can plausibly mean both 'shared' and 'frequent/usua",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:(E) 'same' vs 'different' and (D) 'common' vs 'rare/separate' overlap conceptually (both relate to shared vs distinct), ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:INTERMEDIATE difficulty requires 2-sentence causal/contrastive linkage per rubric, but this item is solvable by reading ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation for the correct pair is reasonable but doesn't clearly preempt the objection that 'rare' could still wor",
+          "count": 1
+        }
+      ]
+    },
+    "ANTONYM:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:Option 2's pair 'exceeded-trailed' is questionable: 'trailed' typically pairs with 'led', not 'exceeded' (which means 's",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Option 5's 'beautiful-unattractive' is a weak/non-standard antonym; 'ugly' is the natural contextual antonym, making thi",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation for (D) is solid and the polysemy trap is genuinely killer-level, but the surrounding pairs' weakness dilute",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The distractor pairs are not uniformly clean; at least two pairs (B, E) have plausible objections, which for a 'wrong an",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:wrongOptionExplanations lacks an entry for option 4 (the correct answer) explaining why it's chosen among wrongOptionExp",
+          "count": 1
+        }
+      ]
+    },
+    "ANTONYM:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "ANTONYM:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 98,
+      "topIssues": []
+    },
+    "CONDITIONAL_WRITING:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:Condition text is internally contradictory/confusing: it names a 'recognized' participle condition but then instructs to",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:System-flagged qualityWarning confirms the answer's key content ('comparable role in material culture, social codes, and",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No two-sentence causal/contrastive reasoning is required per INTERMEDIATE rubric; the task is essentially a single-sente",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Scoring criteria are vague percentages with overlapping/circular descriptions (e.g., 30%/30%/40%) that don't clearly del",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The conditions overlap awkwardly: condition 2 says use participle 'recognized' modifying a noun, but modelAnswer uses 't",
+          "count": 1
+        }
+      ]
+    },
+    "CONDITIONAL_WRITING:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:The <보기> list contains 'look' but the passage/model answer uses 'considered' concept via 'looked on as' — this is not ba",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Word count claim is wrong: counting the model answer gives 20 words (or 21 depending on counting 'on' etc.), and the exp",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:'they' referent in Korean reference sentence is ambiguous ('다른 색들') but student must infer 'Other colors' as subject wit",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Only one path to a correct answer is presented with no discussion of plausible near-miss student errors (e.g., 'were con",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The flagged qualityWarning about verbatim copying from passage is unaddressed; 'wait a long time before they were' is li",
+          "count": 1
+        }
+      ]
+    },
+    "CONDITIONAL_WRITING:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 83,
+      "topIssues": [
+        {
+          "code": "llmFatal:The model answer requires predicting highly specific vocabulary substitutions like 'systems of belief' and 'social norms",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:High risk of multiple acceptable answers due to the lack of word constraints/scaffolding for minor lexical changes.",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The translation prompt is extremely lengthy, causing students to guess whether to write 'systems of thought' (from origi",
+          "count": 1
+        },
+        {
+          "code": "rejection:cond-writing-condition-violated",
+          "count": 1
+        },
+        {
+          "code": "rejectionLast:cond-writing-condition-violated",
+          "count": 1
+        }
+      ]
+    },
+    "CONDITIONAL_WRITING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 68,
+      "topIssues": [
+        {
+          "code": "llmFatal:The model answer changes 'wait a long time' from the original passage to 'wait for a long time' solely to hit an arbitra",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The item is essentially a verbatim copy of the passage sentence with a single minor insertion ('for'). A 'KILLER' level ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The requirement of combining 'were considered' and 'played' with 'and' while dropping the original 'then' is arbitrary a",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_TRANSFORM:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:Condition 2 references '수동 의미를 지닌 명사구 수식 구조' but no such structure exists in the sentence or model answer, creating conf",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This is essentially moving one phrase to the front with minimal transformation depth, not matching the claimed grammatic",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Condition 2's mention of a non-existent passive noun-phrase structure could genuinely mislead students on what change is",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:INTERMEDIATE bar requires context-linking or paraphrase beyond single-sentence relocation; this is just fronting a prepo",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation and keyPoints repeat vague filler about 'natural connection' of examples without substantively justifyin",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_TRANSFORM:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:'before being considered colors and then playing a comparable role' is grammatically odd: 'before' + gerund/participle a",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Condition 2 asks for 'It was... that 강조구문' (cleft/emphatic construction) but the model answer only produces 'It was not ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Only one 'transformation target' really exists (subordinate clause to participial phrase); the 'cleft' requirement is su",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Scoring rubric's 80-point tier docks credit for a trivial parallelism slip but doesn't address the more serious issue of",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation calls 'It was not that' an emphatic cleft structure, which is incorrect—this is a set phrase distinguish",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_TRANSFORM:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 85,
+      "topIssues": [
+        {
+          "code": "llmMajor:Here의 위치에 따라 'It seems that here the lexicon is...'와 'Here, it seems that the lexicon is...' 또는 'It seems that the lexic",
+          "count": 1
+        }
+      ]
+    },
+    "SENTENCE_TRANSFORM:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "llmFatal:The conditions are overly redundant and actually incorrect in their grammar terminology (calling 'be in keeping with' a ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The target transformation is far too basic for a 'KILLER' rating; simply changing 'A seems to be B' to 'It seems that A ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The rubric claims 'seems in keeping with' has a 'passive meaning' ('수동적 의미'), but 'in keeping with' (harmonious with) is",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:There are virtually no complex traps or multiple steps of reasoning; even low-level students can easily guess the answer",
+          "count": 1
+        }
+      ]
+    },
+    "FILL_BLANK_KEY:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmMajor:Answer restricted to exact word 'colors' but grading a constructed-response blank on singular/plural exactness without a",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The blank is a near copy-paste of the topic word already stated twice in the prior sentence ('the only color', 'exceeded",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The blanked sentence itself, combined with the immediately preceding sentence ('red was the only color... it exceeded al",
+          "count": 1
+        }
+      ]
+    },
+    "FILL_BLANK_KEY:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank text 'were considered colors' is nearly verbatim copy of the original sentence's actual wording ('before they ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:As a KILLER item, there is no distractor set testing subtle discrimination; a single modelAnswer with no wrong options f",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No answer choices are provided despite this being framed as a multiple-choice question ('가장 적절한 것을 고르시오'); the schema ex",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The blank is directly recoverable from local grammar cues (definite contrast 'Not that they did not exist, but...') with",
+          "count": 1
+        }
+      ]
+    },
+    "FILL_BLANK_KEY:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "llmFatal:The item simply deletes an existing word ('considered') from the original text instead of testing high-level paraphrase ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This is a pure memorization/grammar test of a single word already present in the source, violating the INTERMEDIATE logi",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The question asks to find the word in the text, but 'considered' is missing from the passage text provided in the questi",
+          "count": 1
+        }
+      ]
+    },
+    "FILL_BLANK_KEY:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 65,
+      "topIssues": [
+        {
+          "code": "llmFatal:The item is labeled as KILLER but is a trivial 1-word direct copy-paste recollection task from the original passage with",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The blank does not test a central inference but rather a grammatical/literal sequence of the raw text.",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The difficulty labeling is highly inaccurate; finding 'considered' in 'were _____ colors' is too simple to be styled as ",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_COMPLETE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:keyPoints contains a factual error: 'krasnyy'/'krasivy' are Russian, not Latin, and the explanation garbles the language",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The direction says '가장 적절한 것은?' implying multiple-choice options, but no answer choices are provided—format mismatch mak",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:'modern (B) structures' is misleading—the passage discusses ancient/classical language roots (Latin, Russian), not speci",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Blank (A) 'supremacy' is a fair paraphrase but the sentence structure conflates two clauses awkwardly ('deeply reflected",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No wrong-but-plausible alternative answers or distractor chips are given for either blank, so there's no real assessment",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_COMPLETE:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:No answer choices (1)~(5) provided despite the direction asking to choose 'most appropriate' option; this is presented a",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The item claims to be a selection-type summary completion ('가장 적절한 것은') but delivers open-answer blanks with only one co",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Direction text mismatches the actual answer format (asks for 'most appropriate' choice as if multiple-choice, but struct",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Labeled KILLER but the reasoning required is shallow: (A) is nearly a paraphrase of 'exceeded all others' and (B) simply",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No wrong-but-plausible alternatives are presented anywhere, so there is no distractor-based discrimination; a KILLER ite",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_COMPLETE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:The answer key for (A) lacks an exact, rigorous grading constraint (e.g., 'superior/dominant (hierarchically supreme)'),",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Blank (A) has too many loose slashes and parenthetical alternatives, making automated or strict manual scoring highly vu",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The phrase 'or \"__________ (B)__________\"' contains nested punctuation inside the summary blank, which is visually distr",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_COMPLETE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank (A) constraint is violated in the key/metadata: the direction asks for two words for (A) ('단, (A)는 두 단어...'), ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The item is labeled as KILLER difficulty, but blank (A) is a direct copy-paste from the original text ('were considered ",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_WRITING:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 68,
+      "topIssues": [
+        {
+          "code": "llmFatal:The answer phrase 'wait for a long time' is copied nearly verbatim from the passage ('they had to wait a long time befor",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This is a near word-for-word single-sentence copy task, not a genuine INTERMEDIATE two-sentence inference; it fails the ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:koreanGloss largely mirrors the answer's structure ('상당한 흐름의 시간을 필요로 했음') and back-translates closely to 'wait for a ver",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:targetWordCount is listed as 6 but the required answer 'wait for a very long time' is 6 words while direction says 'appr",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:wordBankDistractors (short, immediate, without) are extremely shallow antonyms/obviously wrong, not attractive confusabl",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_WRITING:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:The 'practical' anchor is weakly grounded: passage never states red was practically/materially superior, only that picto",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:wordBankPolicy=usePartial but wordBankDistractors is empty, violating the explicit rule that decoys must be emitted for ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:connectorFrameAfter clause 'establishing a dominant linguistic and cultural status earlier than them' is not required in",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation and keyPoints assert 'practical' ties to pictorial practices without clearly justifying why 'practical signi",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:No genuine distractors means there is no 'selecting the right words from noise' difficulty — the only task is reordering",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_WRITING:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 68,
+      "topIssues": [
+        {
+          "code": "llmFatal:Essential words required to construct the model answer (such as 'they' and 'and') are completely missing from the provid",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The word count instruction in the direction ('약 7단어로 영작시오') directly contradicts the actual model answer, which is 14 wo",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The Korean gloss closely mirrors the target English structure, facilitating simple back-translation rather than logical/",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The model answer is copied almost verbatim from the source passage ('wait a long time before they were considered colors",
+          "count": 1
+        }
+      ]
+    },
+    "SUMMARY_WRITING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 83,
+      "topIssues": [
+        {
+          "code": "llmFatal:The required word count / structure of (A) is highly complex, making it prone to multiple subjective interpretations and",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The target (A) in 'summaryWithBlanks' expects 8-10 words, but its blank in the context is open-ended. Some acceptable va",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The translation or prompt does not provide clear guidelines on grammatical constraints or exact word-count constraints f",
+          "count": 1
+        }
+      ]
+    },
+    "WORD_ORDER:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:The model answer is verbatim copied from the source passage (\"It was with red that humans did their first color experime",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The system's own _qualityWarnings flags this exact issue, confirming the item fails the non-verbatim requirement.",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:For INTERMEDIATE difficulty, this requires no context-linking or paraphrase inference — student can simply locate and co",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The chunk 'their first color experiments,' and 'their first successes,' carry trailing commas attached, which is fine, b",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The only distractor 'by humans' is a generic filler chip, not a synonym/inflected form of an answer token as required by",
+          "count": 1
+        }
+      ]
+    },
+    "WORD_ORDER:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:Distractor 'for colors' pairs naturally with 'recognized' idiom (recognized for) but not with 'as colors', creating ambi",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Model answer uses 'recognized as colors' but source says 'considered colors' — the paraphrase changes meaning (recognize",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Chunking is oddly fragmented ('before being recognized' as one chunk but 'as colors' separate, and 'they had' separate f",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation asserts 'were' and 'for colors' are distractors but never explains why 'for colors' is wrong beyond assertio",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The chip 'to wait' vs 'only to wait' are near-duplicates but not true synonym/inflected-form distractors of an answer to",
+          "count": 1
+        }
+      ]
+    },
+    "WORD_ORDER:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 85,
+      "topIssues": [
+        {
+          "code": "llmMajor:The model answer shares too many identical verbatim chunks with the original passage (e.g., 'a comparable role in materi",
+          "count": 1
+        }
+      ]
+    },
+    "WORD_ORDER:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "rejection:word-order-unreconstructable",
+          "count": 2
+        },
+        {
+          "code": "llmFatal:The target structure contains a direct overlap with the visible passage text ('they had to wait a long time before...'),",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The wordBankDistractors handling is flawed: 'and played' is listed in 'wordBankDistractors' but actually appears inside ",
+          "count": 1
+        },
+        {
+          "code": "local:generation-notice",
+          "count": 1
+        },
+        {
+          "code": "local:quality-mode-relaxed",
+          "count": 1
+        }
+      ]
+    },
+    "TOPIC_SENTENCE_WRITING:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:koreanGloss is a near 1:1 literal translation of modelAnswer ('역사적으로 빨간색은 서양 세계에서 다른 색들보다 절대적인 우위를 점했다'), directly leaki",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:acceptableVariants reordering the prepositional phrases is oddly permissive given scoringCriteria penalizes prepositiona",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Only one weak distractor (supremeness) for an INTERMEDIATE scrambled task; academy bar expects more meaningful surface-l",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct sentence is essentially a close paraphrase of the passage's second sentence ('It exceeded all others') rathe",
+          "count": 1
+        }
+      ]
+    },
+    "TOPIC_SENTENCE_WRITING:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:summaryWithBlanks contains 'The historical supremacy of red in Western culture' verbatim identical to the start of model",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The academic framing ('chromatic foundation', 'linguistic structures') is invented terminology not grounded in the passa",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:blankAssignment 'separate' plus targetWordCount/firstLetterHint essentially hand the student the exact answer structure,",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation restates the answer rationale but never addresses why the two distractor words are tempting or wrong, vi",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Word bank distractors 'temporary' and 'isolate' are almost comically unrelated/opposite in polarity, failing the KILLER ",
+          "count": 1
+        }
+      ]
+    },
+    "TOPIC_SENTENCE_WRITING:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 85,
+      "topIssues": [
+        {
+          "code": "llmMajor:Punctuation discrepancy: The modelAnswer requires a comma after 'West' ('...in the West, shaping both...'), but the scra",
+          "count": 1
+        }
+      ]
+    },
+    "TOPIC_SENTENCE_WRITING:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 83,
+      "topIssues": [
+        {
+          "code": "llmMajor:The summaryWithBlanks and modelAnswer are desynchronized. summaryWithBlanks is missing the modifiers 'absolute' and 'dee",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The wordBank contains 'embedded' but the target blank (B) expects 'deeply embedded', where 'deeply' is in the wordBank b",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_CORRECTION:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 90,
+      "topIssues": [
+        {
+          "code": "llmMajor:Difficulty label INTERMEDIATE may overstate difficulty: the parallel-verb error (playing vs played) is fairly visible on",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_CORRECTION:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 72,
+      "topIssues": [
+        {
+          "code": "llmFatal:The grammar point tested (finite verb 'played' vs participle 'playing' in parallel structure with 'were considered') is ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Explanation text is garbled/awkward Korean ('loading이 이루어지는 준동사 형태인 playing을 쓰면, 절을 이끄는 정동사 구조가 결손되므로') - reads as machi",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Only one underlined segment is tested; for KILLER standard-response items, only a single grammar point being tested (par",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The wider underline segment is good practice, but the error itself is fairly locally detectable ('and then playing' imme",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_CORRECTION:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    },
+    "GRAMMAR_CORRECTION:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 1,
+      "passRate": 1,
+      "avgScore": 96,
+      "topIssues": []
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:implied-meaning-noncentral-target",
+      "count": 6
+    },
+    {
+      "code": "local:quality-mode-relaxed",
+      "count": 5
+    },
+    {
+      "code": "local:generation-notice",
+      "count": 4
+    },
+    {
+      "code": "local:review-recommended",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-shallow-participle-adjective-answer",
+      "count": 4
+    },
+    {
+      "code": "rejection:sentence-order-paragraph-not-source-backed",
+      "count": 2
+    },
+    {
+      "code": "rejection:word-order-unreconstructable",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-shallow-participle-adjective-answer",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:implied-meaning-noncentral-target",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:sentence-order-paragraph-not-source-backed",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:'before being considered colors and then playing a comparable role' is grammatically odd: 'before' + gerund/participle a",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:(A) 'played' vs 'playing' hinges on recognizing parallel structure with 'were considered', but this is a common, easily-",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:(B) 'structured' is a vague paraphrase not strongly grounded in two-sentence causal/contrastive linkage; the passage dis",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:A quality warning flags the underline as a peripheral-detail target rather than a central-claim/topic-level expression, ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:blankAnswerMode is declared SOURCE_EXACT but the correct option text is a paraphrase ('gained recognition as true colors",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Condition 2 asks for 'It was... that 강조구문' (cleft/emphatic construction) but the model answer only produces 'It was not ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Condition 2 references '수동 의미를 지닌 명사구 수식 구조' but no such structure exists in the sentence or model answer, creating conf",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Condition text is internally contradictory/confusing: it names a 'recognized' participle condition but then instructs to",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:direction text has a typo '가리키는 대상이머로' which is broken/unnatural Korean, visible to students",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Distractor 'for colors' pairs naturally with 'recognized' idiom (recognized for) but not with 'as colors', creating ambi",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:blankAnswerMode is declared SOURCE_EXACT but the correct option text is a paraphrase ('gained recognition as true colors": 1,
+    "llmMajor:The correct answer option ① is simply the verbatim original span copied unchanged, making this a trivial 'fill in the ex": 1,
+    "llmMajor:Distractors are largely detectable via keyword-mismatch/topic-scope without requiring real two-sentence causal/contrasti": 1,
+    "llmMajor:answerLogic and explanation reference a paraphrased answer ('gained recognition as true colors') that does not match any": 1,
+    "llmFatal:The blanked span is a nearly verbatim paraphrase near-copy: correct option '④ underwent a prolonged delay before securin": 1,
+    "llmMajor:For a KILLER item, the blank should hinge on the paragraph's main argument (red's dominance forcing other colors to wait": 1,
+    "llmMajor:Distractors ①②③⑤ are somewhat implausible because they introduce fabricated causal claims (active resistance, immediate ": 1,
+    "llmMajor:The explanation is overly verbose and repetitive, restating the same point three times without truly justifying why this": 1,
+    "llmFatal:The item uses the SOURCE_EXACT mode where the correct answer option completely duplicates the original phrasing 'were co": 1,
+    "llmMajor:The correct answer option 1 is extremely simple and literal ('were considered colors'), resulting in lack of depth for a": 1,
+    "llmMajor:The distractors, especially option 5, are grammatically and semantically too weak to attract high school students, sever": 1,
+    "rejection:blank-killer-giveaway-distractors": 1,
+    "rejectionLast:blank-killer-giveaway-distractors": 1,
+    "llmMajor:INTERMEDIATE difficulty label is a bit generous since (E) 'what' after a comma with a clear antecedent 'Russian' is a fa": 1,
+    "llmMajor:(C) 'their' referring to 'humans' is a fairly shallow agreement check compared to the other more nuanced points, slightl": 1,
+    "rejection:grammar-shallow-participle-adjective-answer": 4,
+    "rejection:grammar-shallow-nearby-passive-decoy": 1,
+    "rejectionLast:grammar-shallow-nearby-passive-decoy": 1,
+    "local:quality-mode-relaxed": 5,
+    "local:generation-notice": 4,
+    "local:review-recommended": 4,
+    "llmFatal:The correct answer (D) is a trivial adjective/adverb spelling-level error (simple vs simply), completely inconsistent wi": 1,
+    "llmFatal:Distractors (A),(B),(C) are shallow/obviously correct on a skim (basic tense/agreement/relative clause), providing no re": 1,
+    "llmMajor:System-flagged quality issues (relaxed mode, review recommended, grammar-too-basic-decoys) confirm the generator itself ": 1,
+    "llmMajor:No marked expression involves long-distance dependency, parallel structure, or participial modification ambiguity as req": 1,
+    "llmMajor:Explanation for the error is fine but overall design fails the KILLER rubric: no 2+ step reasoning chain, no genuinely c": 1,
+    "rejection:grammar-killer-answer-point-repeated": 1,
+    "rejection:grammar-obvious-noun-what-relative": 1,
+    "rejection:grammar-too-basic-decoys": 1,
+    "rejection:grammar-error-not-mutated": 1,
+    "rejectionLast:grammar-error-not-mutated": 1,
+    "rejectionLast:grammar-shallow-participle-adjective-answer": 2,
+    "llmFatal:The error target (C) 'achieving' is too easy to solve, as and then constructed is visible right after, making the parall": 1,
+    "llmMajor:Option (A) is not a typical CSAT grammar testing point and acts as passive filler.": 1,
+    "llmMajor:Explanation for (A) is excessively brief and fails to thoroughly explain the ellipsis or structural integrity of 'As muc": 1,
+    "rejection:grammar-killer-generic-answer-point": 1,
+    "llmMajor:Difficulty mismatch: this is labeled INTERMEDIATE but all three slots are single-sentence, verbatim grammar checks (para": 1,
+    "llmMajor:Two options (2 and 5) differ from the correct answer in only one slot each but are single-slot traps like option 3, mean": 1,
+    "llmMajor:Option 4 is the only true multi-error option; combined with weak single-slot distractors, the option set doesn't reflect": 1,
+    "llmFatal:Slot (B) options presented are 'what/that' but the JSON slot definition lists wrongExpression as 'what' with correctExpr": 1,
+    "llmFatal:(A) 'played' vs 'playing' hinges on recognizing parallel structure with 'were considered', but this is a common, easily-": 1,
+    "llmMajor:None of the three slots test genuine hard points like relative clauses, subjunctive, or complex parallelism at KILLER le": 1,
+    "llmMajor:Options 2 and 5 are the only 2+-slot-wrong options, but the reasoning to eliminate distractors is shallow (single-step s": 1,
+    "llmMajor:The (B) slot's 'what' as a wrongExpression is a textbook-level trap that most mid-level students would catch immediately": 1,
+    "llmMajor:The explanation field for (C) is cut off mid-sentence: '주어는 meaning ' (incomplete), which looks like a corrupted generat": 1,
+    "llmMajor:Option 4 (playing - what - share) contains 'what' (wrong for B) and 'playing' (wrong for A), but 'shares' (wrong for C) ": 1,
+    "llmFatal:The inappropriate word 'shackles' is a noun replacing a verb 'diversify' after 'to', creating a blatant grammatical erro": 1,
+    "llmFatal:This violates the INTERMEDIATE difficulty requirement: grammatical mismatch is detectable without any semantic reasoning": 1,
+    "llmMajor:A grammatically broken option (noun after 'to') is not a legitimate distractor pattern for CSAT-style vocab items, which": 1,
+    "llmMajor:The explanation focuses on grammar breakage rather than testing contextual/semantic appropriateness, contradicting the t": 1,
+    "llmFatal:The trap for (c) is resolved immediately by 'and to produce varied tones and shades' in the very same clause (local cont": 1,
+    "llmMajor:Distractors (a),(b),(d),(e) are all safely correct with no subtle tension, so there is no real decoy competing with the ": 1,
+    "llmMajor:No option leverages register/collocation/stance nuance as required by the KILLER bar; the flaw is a simple local antonym": 1,
+    "llmMajor:The explanation is clear and correct, but because the giveaway phrase sits in the same sentence as the error, it doesn't": 1,
+    "llmFatal:Option 4 starts with (C), whose opening sentence 'In certain languages...' uses an unresolved anaphoric-like framing tha": 1,
+    "llmFatal:The correct order relies overwhelmingly on a single pronoun cue (they=all others) plus one 'also' transition, not two in": 1,
+    "llmMajor:Distractor option 1 (A)-(C)-(B) is not superficially viable: (A) opens with 'It was also within the range of reds...' wh": 1,
+    "llmMajor:(B) itself opens with 'Not that they did not exist' — an anaphor-dependent connector; using it as the intended first chu": 1,
+    "llmMajor:Chunk (B) is noticeably shorter in nuanced complexity compared to (C) which has denser cross-linguistic content, slightl": 1,
+    "rejection:sentence-order-paragraph-not-source-backed": 2,
+    "rejectionLast:sentence-order-paragraph-not-source-backed": 2,
+    "llmFatal:Option 5 starts with (C), whose opening sentence 'In certain languages...' has no unresolved anaphor, but option 2/3/4 a": 1,
+    "llmMajor:The correct order (B)-(A)-(C) is decided almost entirely by the single pronoun cue 'they' referring to 'all others', vio": 1,
+    "llmMajor:Options 1, 3, and 4 start with (A) or (C), which lack the necessary referent for 'they' logically established only in (B": 1,
+    "llmMajor:Wrong-option explanations are repetitive and circular, restating the same pronoun-link argument without surfacing a dist": 1,
+    "llmFatal:Marker ③ is placed right before 'In certain languages...' sentence, but the given sentence 'Here the lexicon seems in ke": 1,
+    "llmFatal:The rationale claims 'Here' refers to 'the oldest known color terms' in the immediately preceding sentence, but that sen": 1,
+    "llmMajor:The passage's own auto-generated qualityWarning flags exactly this issue (neutral given sentence, weak cohesive cue), wh": 1,
+    "llmMajor:Distractor explanations for gaps 4 and 5 are somewhat repetitive and rely on 'listing symmetry' logic while the real amb": 1,
+    "llmMajor:Given sentence 'Here' is a locative/discourse deictic cue but weak — it could plausibly point to 'oldest known color ter": 1,
+    "llmFatal:The passageWithMarkers shows gap ③ positioned BEFORE the Latin/Castilian sentence, but the correct answer explanation cl": 1,
+    "llmFatal:The given sentence 'Here the lexicon...' lacks a strong unique cohesive cue: 'Here' could plausibly anchor at gap ① or ②": 1,
+    "llmMajor:The passage's own qualityWarnings flag the neutral-given-sentence risk, which the reviewer must weight heavily; 'Here' i": 1,
+    "llmMajor:Distractor explanations for gaps ① and ② argue lexicon 'hasn't been mentioned yet,' but this is a coincidental surface f": 1,
+    "llmMajor:For a KILLER item, the distractors should each fail for a genuinely different decisive reason tied to structural links; ": 1,
+    "llmFatal:The given sentence 'Here the lexicon seems...' contains 'Here' and 'the lexicon', but the passage mapping and options mi": 1,
+    "llmMajor:The distractor explanation for option 4 states that the cue 'the lexicon' lacks an antecedent, which contradicts the act": 1,
+    "llmMajor:The choice of 3 (③) as correct overlaps with 4 in some interpretations because 'lexicon' and 'languages' show cohesive t": 1,
+    "llmMajor:Option 5 (developmental process of color vocabularies) is close enough to option 2 that a careful reader must weigh scop": 1,
+    "llmFatal:Option 1 says 'and its reflection in language and art,' but the passage never discusses art/painting practices as a sepa": 1,
+    "llmFatal:No option captures the actual core claim precisely: that red's supremacy is evidenced through both cultural/historical d": 1,
+    "llmMajor:For a KILLER item, option 2 (linguistic shifts across eras) is very easy to eliminate since the passage isn't about chan": 1,
+    "llmMajor:Option 4 (Western vs non-Western comparison) is not remotely discussed in the passage, making it a shallow distractor el": 1,
+    "llmMajor:Options 3 and 5 are both narrow/side-detail distractors that are easy to spot as too specific; none of the distractors f": 1,
+    "llmMajor:Option 1 is somewhat close to a topic-restatement rather than a fully synthesized claim, though it does capture both his": 1,
+    "llmMajor:Distractor 4 is plausible but slightly weak since it's clearly a supporting detail, making it less attractive than the o": 1,
+    "llmFatal:Option 1 claims red influenced 'linguistic structure' broadly, but passage only gives two anecdotal lexical examples (La": 1,
+    "llmMajor:Not a genuine KILLER: option 1 is a fairly straightforward restatement of the first two sentences, distractors 3 and 5 a": 1,
+    "llmMajor:Wrong-option explanations contain garbled repeated text ('선택지는 2번 선택지는') suggesting sloppy generation, undermining polis": 1,
+    "llmMajor:Distractor 4 is reasonably close but the others are weak filler-level wrong answers rather than subtle near-misses diffe": 1,
+    "llmMajor:Option ② is somewhat wordy/meta ('역사적·언어적 근거에 따르면') rather than a clean paraphrase, slightly breaking the elegant regist": 1,
+    "llmMajor:Distractor ③ is reasonably close but the rest (①④⑤) are fairly easy to eliminate, making this feel more BASIC-leaning th": 1,
+    "llmFatal:Option ① claims red was 'the only color first used in the West' and dominant in both painting and vocabulary systems, bu": 1,
+    "llmFatal:This is a BASIC-level topic question dressed as KILLER: the correct answer restates the first two sentences almost verba": 1,
+    "llmMajor:Distractors are all 'unsupported invention' type (add causal claims or details absent from text) rather than close near-": 1,
+    "llmMajor:The correct option's phrase '회화와 어휘 체계 양면에서' is a specific dual-domain claim not clearly the passage's main idea (which ": 1,
+    "llmMajor:Explanation and wrong-option rationales are repetitive/verbose and mostly restate the option text rather than sharply is": 1,
+    "llmMajor:오답 선택지들이 본문에서 조금만 벗어나도 쉽게 소거되는 너무 단순한 오도적 왜곡(예: 발음하기 쉬웠음, 순전히 우연한 결과 등)을 사용하고 있어, 평가원 모의고사 수준의 변별력을 확보하기 어렵습니다.": 1,
+    "llmMajor:Option 1's phrase 'Imperial Reign' is a strong figurative flourish not directly textually grounded, though defensible as": 1,
+    "llmMajor:Option 4 is a fairly close distractor since red's role in pictorial experimentation is textually prominent, requiring ca": 1,
+    "llmFatal:Option 1 uses 'preceded' but the passage's core claim is red's supremacy/precedence AND its unique status as 'the only t": 1,
+    "llmMajor:Distractor 5 (blue) and option 3 (diverged, contradicting explicit 'in keeping with') are transparently wrong via simple": 1,
+    "llmMajor:Distractors 2 and 4 focus on narrow sub-details (Latin/Castilian etymology, Russian beauty-red link) that are so obvious": 1,
+    "llmMajor:No distractor captures the passage's true nuance (red's historical primacy in color hierarchy, other colors' delayed sta": 1,
+    "llmFatal:A quality warning flags the underline as a peripheral-detail target rather than a central-claim/topic-level expression, ": 1,
+    "llmMajor:The underlined phrase is immediately followed by elaboration ('It was also within the range of reds that they learned...": 1,
+    "llmMajor:The correct answer largely paraphrases the sentence's literal content (built a color system starting from red) rather th": 1,
+    "llmMajor:Option ① is very close to a direct restatement of the passage rather than a metaphorical/compressed insight, weakening t": 1,
+    "llmFatal:System flagged _qualityMode=relaxed, a deterministic low-quality signal indicating fallback generation.": 1,
+    "llmFatal:The underline is immediately followed by sentences that elaborate/restate it ('within the range of reds... diversify the": 1,
+    "llmMajor:Option ① largely restates the passage's opening claim (red as primary/foundational) almost verbatim in meaning, making i": 1,
+    "llmMajor:Distractors ②④⑤ are somewhat easy to eliminate (irrelevant science, technique details) leaving a fairly binary choice be": 1,
+    "llmMajor:The 'reasoningGap' and explanation largely just repeat the topic sentence rather than showing genuine two-step inference": 1,
+    "rejection:implied-meaning-noncentral-target": 6,
+    "rejection:implied-meaning-absolute-giveaway-option": 1,
+    "rejectionLast:implied-meaning-noncentral-target": 2,
+    "llmFatal:The underlined expression 'played a comparable role' has no metaphorical, compressed, or deep implied meaning; it is a l": 1,
+    "llmMajor:The target expression is immediately preceded by the literal explanation of its meaning (having to wait a long time befo": 1,
+    "llmMajor:The correct answer option 2 is a direct, trivial paraphrase of the literal sentence in which the underline resides, maki": 1,
+    "llmFatal:The underlined expression 'exceeded all others' is too literal, plain, and straightforward to function as a high-quality": 1,
+    "llmFatal:The options are quite weak and easily eliminated: Option 2 uses almost identical vocabulary to define the central theme,": 1,
+    "llmMajor:The target phrase is a simple Subject-Verb-Object literal structure meaning 'surpassed all others,' failing the requirem": 1,
+    "llmMajor:The correct answer option (2) is extremely explicit and lacks the subtle paraphrasing expected of a KILLER level item.": 1,
+    "llmFatal:direction text has a typo '가리키는 대상이머로' which is broken/unnatural Korean, visible to students": 1,
+    "llmMajor:Option ③ '역사적이고 위계적인 수준들' and ⑤ combined nominal phrases are not natural standalone NPs actually present as referents in": 1,
+    "llmMajor:Later occurrence of 'they' in the same sentence ('before they were considered colors') refers to the same referent but i": 1,
+    "llmFatal:Options are Korean glosses of noun phrases mostly invented/paraphrased rather than actual NPs present verbatim in the pa": 1,
+    "llmFatal:The correct answer 'all others' itself is a pronoun-like phrase referring back to 'other colors', but no option is liter": 1,
+    "llmMajor:For a KILLER item, distractors are not close competitors semantically—'예술적 관행들' and '역사적 위계들' are easily eliminated on a": 1,
+    "llmMajor:The explanation spends effort tracing 'it' before 'they', which is good, but never justifies why the four distractor NPs": 1,
+    "llmMajor:Korean-only options in a reference (지칭 추론) item focusing on an English pronoun reduce precision and can mask whether the": 1,
+    "llmFatal:The option '다른 색들' is in Korean, whereas 'red', 'material culture', 'systems of thought', and 'humans' are in English, v": 1,
+    "llmFatal:Option 2 '다른 색들' does not strictly exist as a standalone English noun phrase in the passage (only 'others' exists in 'al": 1,
+    "llmMajor:The explanation fails to reconcile why Option 2 is written in Korean while the other options are in English.": 1,
+    "llmMajor:Option 2's distortion (cool colors like blue/green vs. red) is fairly blatant, making it solvable on a quick skim rather": 1,
+    "llmMajor:Wrong option explanations are somewhat repetitive/formulaic, though accurate": 1,
+    "llmMajor:Correct answer (option 2) directly reverses the passage's explicit statement ('It was with red that humans...constructed": 1,
+    "llmMajor:No option is subtly distorted by degree/nuance; option 2 is a blatant reversal, so the item lacks the fine-grained distr": 1,
+    "llmMajor:Tag '중세 문화' is inaccurate/misleading since passage discusses ancient/general Western history, not medieval culture speci": 1,
+    "llmFatal:The item is labeled as a 'KILLER' difficulty level, but option 3 is extremely easy to eliminate because it changes 'reds": 1,
+    "llmMajor:Distractor quality is too simple: substituting 'reds' with 'blues' lacks the sophistication expected of a premium Korean": 1,
+    "llmMajor:The explanation fails to show why the other distractors are complex 'traps' since they are almost direct translations/pa": 1,
+    "llmFatal:Distractor set is weak: options 4 and 5 pair implausible (A) words with implausible (B) words, giving no genuine A-only-": 1,
+    "llmFatal:(B) 'structured' is a vague paraphrase not strongly grounded in two-sentence causal/contrastive linkage; the passage dis": 1,
+    "llmMajor:INTERMEDIATE requires evidence depth of two linked sentences (cause-effect or contrast), but blank (B) can be answered a": 1,
+    "llmMajor:Options 4 and 5 pair equality/complicated and inferiority/simplified—these combinations are so incoherent they are not g": 1,
+    "llmMajor:The summary sentence's second clause ('closely reflected in the way early societies structured their language') is a som": 1,
+    "llmFatal:Options 3 and 5 are not competitive traps: subordination and insignificance are near-instant opposites of the clearly es": 1,
+    "llmFatal:Option 4's blankA 'precedence' is nearly synonymous with the correct 'supremacy', but it's paired with an easily elimina": 1,
+    "llmMajor:No genuinely strong distractor pairs correct-caliber blankA with a competitive wrong blankB or vice versa; per the KILLE": 1,
+    "llmMajor:The summary sentence bridging (A) 'absolute supremacy' with (B) 'deep-seated imprint in the vocabulary' is serviceable b": 1,
+    "llmMajor:wrongOptionExplanations are repetitive template text ('선지 배열상...') that reads as mechanically generated rather than craf": 1,
+    "llmFatal:The intruder sentence (④) is NOT copied verbatim from the source passage — it's fabricated ('synthetic pigment productio": 1,
+    "llmMajor:The intruder uses an explicit contrastive marker 'However' plus a blunt topic-unrelated claim (modern science vs. histor": 1,
+    "llmMajor:Removing ④ breaks nothing since it was never organically part of the passage; the 'remove-and-reconnect' test is trivial": 1,
+    "llmMajor:This design pattern (invented off-topic sentence with 'However') is the exact 'random outside fact' intruder the rubric ": 1,
+    "llmFatal:The intruder (②) directly contradicts the immediately preceding sentence with an explicit logical connector 'Consequentl": 1,
+    "llmFatal:Sentence ⑤ is the last sentence of the passage; per plan, none of the four non-answer choices should be a totally unrela": 1,
+    "llmMajor:The answer is biased toward ②, but the reasoning bar for KILLER requires deep multi-step inference; here it's a one-step": 1,
+    "llmMajor:Distractor explanations are essentially restating why each sentence fits, but they don't address any genuinely tempting ": 1,
+    "llmMajor:Passage coverage: chosen sentences are bunched in the first half (①③④ within first 4 sentences), with ⑤ at the very end,": 1,
+    "llmFatal:The item crucial test, the \"remove-and-reconnect\" test, fails completely because the non-answer text surrounding the int": 1,
+    "llmFatal:The formatting of 'passageWithNumbers' is deeply flawed; it includes sentences inside the numbered options that do not e": 1,
+    "llmMajor:The explanation claims that removing ② preserves the flow, but in 'passageWithNumbers', the sentences surrounding ② are ": 1,
+    "llmMajor:Option selection does not match standard CSAT formatting where the whole paragraph is presented consecutively with numbe": 1,
+    "llmMajor:'practices' here is fairly transparent (paired with 'techniques'), making the correct sense guessable without deep infer": 1,
+    "llmMajor:Distractors 'exercise routines', 'moral obligations', 'theoretical values' are largely unrelated meanings/random senses ": 1,
+    "llmMajor:INTERMEDIATE bar requires connecting two sentences via cause/contrast; here the answer is derivable from the single unde": 1,
+    "llmFatal:Option 5 ('habitual actions of individuals in daily lives') is barely distinguishable from option 1 in meaning; 'practic": 1,
+    "llmFatal:This is not a genuine KILLER: 'practices' paired with 'techniques' is a fairly transparent collocation cue, solvable by ": 1,
+    "llmMajor:Option 3 (professional practice of doctors/lawyers) is a completely unrelated dictionary sense with zero contextual pull": 1,
+    "llmMajor:Option 2 (exercises for improving skills) is attractive but the distinction from option 1 is somewhat obvious once 'colo": 1,
+    "llmMajor:Explanation and keyPoints slightly overstate the difficulty; the reasoning chain described (parallel structure with tech": 1,
+    "llmFatal:The tested word 'played' is part of a basic collocation 'played a [...] role', making the synonymous replacement 'perfor": 1,
+    "llmFatal:The non-correct options are extremely simple single-word verbs that do not match the register, and standard 'play a role": 1,
+    "llmMajor:CSAT 'Contextual Meaning' (밑줄 친 부분의 의미) questions typically test metaphorical phrases (e.g., 'the only true color' or a ": 1,
+    "llmMajor:Options lack parallel complexity; single verbs like 'amused', 'gambled', 'pretended' are too elementary for an intermedi": 1,
+    "llmFatal:The target word 'exceeded' is highly transparent in this context, and its core synonym 'surpassed' is too easily accessi": 1,
+    "llmMajor:Distractors 2, 4, and 5 represent dictionary senses that are structurally and contextually very weak, making them trivia": 1,
+    "llmMajor:The options are not strictly parallel in grammar; 'surpassed in status' introduces an adjunct prepositional phrase while": 1,
+    "llmMajor:'exceeded' meaning 'surpassed in importance/rank' is a fairly transparent, low-ambiguity match; the task barely requires": 1,
+    "llmMajor:overtook is arguably nearly as valid a synonym for 'exceeded' in this abstract sense, making the surpassed/overtook dist": 1,
+    "llmMajor:Distractor 'transmitted' is semantically unrelated and shallow (obviously wrong), weakening overall distractor quality d": 1,
+    "llmMajor:'outraged' is not remotely close in meaning to 'exceeded' - it's an obviously wrong distractor that a mid-level student ": 1,
+    "llmMajor:'precluded' is also semantically distant (blocking vs surpassing) and easily dismissed without deep reasoning, making th": 1,
+    "llmMajor:Only 'overtook' and 'overwhelmed' are genuinely close distractors; with 3 of 4 distractors weak, this plays more like a ": 1,
+    "llmFatal:The target word 'exceed' and its correct option 'surpass' are direct, elementary dictionary synonyms that do not require": 1,
+    "llmFatal:The distractors are too easy and lack the semantic depth or context-specific traps required for an intermediate CSAT-lev": 1,
+    "llmMajor:No deep context-based inference is needed; the question functions as a simple vocabulary quiz rather than an academic re": 1,
+    "llmMajor:Distractors are basic verbs (included, resembled, preceded, replaced) that do not possess the same semantic weight as hi": 1,
+    "llmFatal:The target word 'exceeded' is highly high-frequency and the correct synonym 'surpassed' is a direct dictionary-level mat": 1,
+    "llmFatal:Distractors are far too simple and easily eliminated (resembled, preceded, accompanied, restricted), requiring no contex": 1,
+    "llmMajor:The option design is extremely basic, lacking any attractive traps for high-performing students.": 1,
+    "llmMajor:The explanation claims that 'preceded' is wrong, but the passage states 'historical' level as well, making 'preceded' a ": 1,
+    "llmFatal:The (D) 'common' vs 'rare' distinction is contestable: 'common root' can plausibly mean both 'shared' and 'frequent/usua": 1,
+    "llmMajor:(E) 'same' vs 'different' and (D) 'common' vs 'rare/separate' overlap conceptually (both relate to shared vs distinct), ": 1,
+    "llmMajor:INTERMEDIATE difficulty requires 2-sentence causal/contrastive linkage per rubric, but this item is solvable by reading ": 1,
+    "llmMajor:The explanation for the correct pair is reasonable but doesn't clearly preempt the objection that 'rare' could still wor": 1,
+    "llmFatal:Option 2's pair 'exceeded-trailed' is questionable: 'trailed' typically pairs with 'led', not 'exceeded' (which means 's": 1,
+    "llmFatal:Option 5's 'beautiful-unattractive' is a weak/non-standard antonym; 'ugly' is the natural contextual antonym, making thi": 1,
+    "llmMajor:The distractor pairs are not uniformly clean; at least two pairs (B, E) have plausible objections, which for a 'wrong an": 1,
+    "llmMajor:Explanation for (D) is solid and the polysemy trap is genuinely killer-level, but the surrounding pairs' weakness dilute": 1,
+    "llmMajor:wrongOptionExplanations lacks an entry for option 4 (the correct answer) explaining why it's chosen among wrongOptionExp": 1,
+    "llmFatal:Condition text is internally contradictory/confusing: it names a 'recognized' participle condition but then instructs to": 1,
+    "llmFatal:System-flagged qualityWarning confirms the answer's key content ('comparable role in material culture, social codes, and": 1,
+    "llmMajor:The conditions overlap awkwardly: condition 2 says use participle 'recognized' modifying a noun, but modelAnswer uses 't": 1,
+    "llmMajor:No two-sentence causal/contrastive reasoning is required per INTERMEDIATE rubric; the task is essentially a single-sente": 1,
+    "llmMajor:Scoring criteria are vague percentages with overlapping/circular descriptions (e.g., 30%/30%/40%) that don't clearly del": 1,
+    "llmFatal:The <보기> list contains 'look' but the passage/model answer uses 'considered' concept via 'looked on as' — this is not ba": 1,
+    "llmFatal:Word count claim is wrong: counting the model answer gives 20 words (or 21 depending on counting 'on' etc.), and the exp": 1,
+    "llmMajor:The flagged qualityWarning about verbatim copying from passage is unaddressed; 'wait a long time before they were' is li": 1,
+    "llmMajor:'they' referent in Korean reference sentence is ambiguous ('다른 색들') but student must infer 'Other colors' as subject wit": 1,
+    "llmMajor:Only one path to a correct answer is presented with no discussion of plausible near-miss student errors (e.g., 'were con": 1,
+    "llmFatal:The model answer requires predicting highly specific vocabulary substitutions like 'systems of belief' and 'social norms": 1,
+    "llmMajor:The translation prompt is extremely lengthy, causing students to guess whether to write 'systems of thought' (from origi": 1,
+    "llmMajor:High risk of multiple acceptable answers due to the lack of word constraints/scaffolding for minor lexical changes.": 1,
+    "rejection:cond-writing-condition-violated": 1,
+    "rejectionLast:cond-writing-condition-violated": 1,
+    "llmFatal:The model answer changes 'wait a long time' from the original passage to 'wait for a long time' solely to hit an arbitra": 1,
+    "llmMajor:The item is essentially a verbatim copy of the passage sentence with a single minor insertion ('for'). A 'KILLER' level ": 1,
+    "llmMajor:The requirement of combining 'were considered' and 'played' with 'and' while dropping the original 'then' is arbitrary a": 1,
+    "llmFatal:Condition 2 references '수동 의미를 지닌 명사구 수식 구조' but no such structure exists in the sentence or model answer, creating conf": 1,
+    "llmFatal:This is essentially moving one phrase to the front with minimal transformation depth, not matching the claimed grammatic": 1,
+    "llmMajor:INTERMEDIATE bar requires context-linking or paraphrase beyond single-sentence relocation; this is just fronting a prepo": 1,
+    "llmMajor:The explanation and keyPoints repeat vague filler about 'natural connection' of examples without substantively justifyin": 1,
+    "llmMajor:Condition 2's mention of a non-existent passive noun-phrase structure could genuinely mislead students on what change is": 1,
+    "llmFatal:Condition 2 asks for 'It was... that 강조구문' (cleft/emphatic construction) but the model answer only produces 'It was not ": 1,
+    "llmFatal:'before being considered colors and then playing a comparable role' is grammatically odd: 'before' + gerund/participle a": 1,
+    "llmMajor:The explanation calls 'It was not that' an emphatic cleft structure, which is incorrect—this is a set phrase distinguish": 1,
+    "llmMajor:Only one 'transformation target' really exists (subordinate clause to participial phrase); the 'cleft' requirement is su": 1,
+    "llmMajor:Scoring rubric's 80-point tier docks credit for a trivial parallelism slip but doesn't address the more serious issue of": 1,
+    "llmMajor:Here의 위치에 따라 'It seems that here the lexicon is...'와 'Here, it seems that the lexicon is...' 또는 'It seems that the lexic": 1,
+    "llmFatal:The target transformation is far too basic for a 'KILLER' rating; simply changing 'A seems to be B' to 'It seems that A ": 1,
+    "llmFatal:The conditions are overly redundant and actually incorrect in their grammar terminology (calling 'be in keeping with' a ": 1,
+    "llmMajor:The rubric claims 'seems in keeping with' has a 'passive meaning' ('수동적 의미'), but 'in keeping with' (harmonious with) is": 1,
+    "llmMajor:There are virtually no complex traps or multiple steps of reasoning; even low-level students can easily guess the answer": 1,
+    "llmMajor:The blanked sentence itself, combined with the immediately preceding sentence ('red was the only color... it exceeded al": 1,
+    "llmMajor:The blank is a near copy-paste of the topic word already stated twice in the prior sentence ('the only color', 'exceeded": 1,
+    "llmMajor:Answer restricted to exact word 'colors' but grading a constructed-response blank on singular/plural exactness without a": 1,
+    "llmFatal:The blank text 'were considered colors' is nearly verbatim copy of the original sentence's actual wording ('before they ": 1,
+    "llmMajor:No answer choices are provided despite this being framed as a multiple-choice question ('가장 적절한 것을 고르시오'); the schema ex": 1,
+    "llmMajor:As a KILLER item, there is no distractor set testing subtle discrimination; a single modelAnswer with no wrong options f": 1,
+    "llmMajor:The blank is directly recoverable from local grammar cues (definite contrast 'Not that they did not exist, but...') with": 1,
+    "llmFatal:The item simply deletes an existing word ('considered') from the original text instead of testing high-level paraphrase ": 1,
+    "llmFatal:This is a pure memorization/grammar test of a single word already present in the source, violating the INTERMEDIATE logi": 1,
+    "llmMajor:The question asks to find the word in the text, but 'considered' is missing from the passage text provided in the questi": 1,
+    "llmFatal:The item is labeled as KILLER but is a trivial 1-word direct copy-paste recollection task from the original passage with": 1,
+    "llmMajor:The difficulty labeling is highly inaccurate; finding 'considered' in 'were _____ colors' is too simple to be styled as ": 1,
+    "llmMajor:The blank does not test a central inference but rather a grammatical/literal sequence of the raw text.": 1,
+    "llmFatal:The direction says '가장 적절한 것은?' implying multiple-choice options, but no answer choices are provided—format mismatch mak": 1,
+    "llmFatal:keyPoints contains a factual error: 'krasnyy'/'krasivy' are Russian, not Latin, and the explanation garbles the language": 1,
+    "llmMajor:'modern (B) structures' is misleading—the passage discusses ancient/classical language roots (Latin, Russian), not speci": 1,
+    "llmMajor:Blank (A) 'supremacy' is a fair paraphrase but the sentence structure conflates two clauses awkwardly ('deeply reflected": 1,
+    "llmMajor:No wrong-but-plausible alternative answers or distractor chips are given for either blank, so there's no real assessment": 1,
+    "llmFatal:No answer choices (1)~(5) provided despite the direction asking to choose 'most appropriate' option; this is presented a": 1,
+    "llmFatal:The item claims to be a selection-type summary completion ('가장 적절한 것은') but delivers open-answer blanks with only one co": 1,
+    "llmMajor:Labeled KILLER but the reasoning required is shallow: (A) is nearly a paraphrase of 'exceeded all others' and (B) simply": 1,
+    "llmMajor:No wrong-but-plausible alternatives are presented anywhere, so there is no distractor-based discrimination; a KILLER ite": 1,
+    "llmMajor:Direction text mismatches the actual answer format (asks for 'most appropriate' choice as if multiple-choice, but struct": 1,
+    "llmFatal:The answer key for (A) lacks an exact, rigorous grading constraint (e.g., 'superior/dominant (hierarchically supreme)'),": 1,
+    "llmMajor:Blank (A) has too many loose slashes and parenthetical alternatives, making automated or strict manual scoring highly vu": 1,
+    "llmMajor:The phrase 'or \"__________ (B)__________\"' contains nested punctuation inside the summary blank, which is visually distr": 1,
+    "llmFatal:The blank (A) constraint is violated in the key/metadata: the direction asks for two words for (A) ('단, (A)는 두 단어...'), ": 1,
+    "llmMajor:The item is labeled as KILLER difficulty, but blank (A) is a direct copy-paste from the original text ('were considered ": 1,
+    "llmFatal:The answer phrase 'wait for a long time' is copied nearly verbatim from the passage ('they had to wait a long time befor": 1,
+    "llmFatal:This is a near word-for-word single-sentence copy task, not a genuine INTERMEDIATE two-sentence inference; it fails the ": 1,
+    "llmMajor:koreanGloss largely mirrors the answer's structure ('상당한 흐름의 시간을 필요로 했음') and back-translates closely to 'wait for a ver": 1,
+    "llmMajor:wordBankDistractors (short, immediate, without) are extremely shallow antonyms/obviously wrong, not attractive confusabl": 1,
+    "llmMajor:targetWordCount is listed as 6 but the required answer 'wait for a very long time' is 6 words while direction says 'appr": 1,
+    "llmFatal:wordBankPolicy=usePartial but wordBankDistractors is empty, violating the explicit rule that decoys must be emitted for ": 1,
+    "llmFatal:The 'practical' anchor is weakly grounded: passage never states red was practically/materially superior, only that picto": 1,
+    "llmMajor:No genuine distractors means there is no 'selecting the right words from noise' difficulty — the only task is reordering": 1,
+    "llmMajor:connectorFrameAfter clause 'establishing a dominant linguistic and cultural status earlier than them' is not required in": 1,
+    "llmMajor:Explanation and keyPoints assert 'practical' ties to pictorial practices without clearly justifying why 'practical signi": 1,
+    "llmFatal:The word count instruction in the direction ('약 7단어로 영작시오') directly contradicts the actual model answer, which is 14 wo": 1,
+    "llmFatal:Essential words required to construct the model answer (such as 'they' and 'and') are completely missing from the provid": 1,
+    "llmMajor:The model answer is copied almost verbatim from the source passage ('wait a long time before they were considered colors": 1,
+    "llmMajor:The Korean gloss closely mirrors the target English structure, facilitating simple back-translation rather than logical/": 1,
+    "llmFatal:The required word count / structure of (A) is highly complex, making it prone to multiple subjective interpretations and": 1,
+    "llmMajor:The target (A) in 'summaryWithBlanks' expects 8-10 words, but its blank in the context is open-ended. Some acceptable va": 1,
+    "llmMajor:The translation or prompt does not provide clear guidelines on grammatical constraints or exact word-count constraints f": 1,
+    "llmFatal:The model answer is verbatim copied from the source passage (\"It was with red that humans did their first color experime": 1,
+    "llmFatal:The system's own _qualityWarnings flags this exact issue, confirming the item fails the non-verbatim requirement.": 1,
+    "llmMajor:The only distractor 'by humans' is a generic filler chip, not a synonym/inflected form of an answer token as required by": 1,
+    "llmMajor:For INTERMEDIATE difficulty, this requires no context-linking or paraphrase inference — student can simply locate and co": 1,
+    "llmMajor:The chunk 'their first color experiments,' and 'their first successes,' carry trailing commas attached, which is fine, b": 1,
+    "llmFatal:Model answer uses 'recognized as colors' but source says 'considered colors' — the paraphrase changes meaning (recognize": 1,
+    "llmFatal:Distractor 'for colors' pairs naturally with 'recognized' idiom (recognized for) but not with 'as colors', creating ambi": 1,
+    "llmMajor:The chip 'to wait' vs 'only to wait' are near-duplicates but not true synonym/inflected-form distractors of an answer to": 1,
+    "llmMajor:Chunking is oddly fragmented ('before being recognized' as one chunk but 'as colors' separate, and 'they had' separate f": 1,
+    "llmMajor:Explanation asserts 'were' and 'for colors' are distractors but never explains why 'for colors' is wrong beyond assertio": 1,
+    "llmMajor:The model answer shares too many identical verbatim chunks with the original passage (e.g., 'a comparable role in materi": 1,
+    "llmFatal:The target structure contains a direct overlap with the visible passage text ('they had to wait a long time before...'),": 1,
+    "llmMajor:The wordBankDistractors handling is flawed: 'and played' is listed in 'wordBankDistractors' but actually appears inside ": 1,
+    "rejection:word-order-unreconstructable": 2,
+    "rejection:writing-answer-verbatim-copy": 1,
+    "rejectionLast:writing-answer-verbatim-copy": 1,
+    "rejectionLast:word-order-unreconstructable": 1,
+    "llmFatal:koreanGloss is a near 1:1 literal translation of modelAnswer ('역사적으로 빨간색은 서양 세계에서 다른 색들보다 절대적인 우위를 점했다'), directly leaki": 1,
+    "llmMajor:Only one weak distractor (supremeness) for an INTERMEDIATE scrambled task; academy bar expects more meaningful surface-l": 1,
+    "llmMajor:The correct sentence is essentially a close paraphrase of the passage's second sentence ('It exceeded all others') rathe": 1,
+    "llmMajor:acceptableVariants reordering the prepositional phrases is oddly permissive given scoringCriteria penalizes prepositiona": 1,
+    "llmFatal:summaryWithBlanks contains 'The historical supremacy of red in Western culture' verbatim identical to the start of model": 1,
+    "llmFatal:The academic framing ('chromatic foundation', 'linguistic structures') is invented terminology not grounded in the passa": 1,
+    "llmMajor:Word bank distractors 'temporary' and 'isolate' are almost comically unrelated/opposite in polarity, failing the KILLER ": 1,
+    "llmMajor:The explanation restates the answer rationale but never addresses why the two distractor words are tempting or wrong, vi": 1,
+    "llmMajor:blankAssignment 'separate' plus targetWordCount/firstLetterHint essentially hand the student the exact answer structure,": 1,
+    "llmMajor:Punctuation discrepancy: The modelAnswer requires a comma after 'West' ('...in the West, shaping both...'), but the scra": 1,
+    "llmMajor:The summaryWithBlanks and modelAnswer are desynchronized. summaryWithBlanks is missing the modifiers 'absolute' and 'dee": 1,
+    "llmMajor:The wordBank contains 'embedded' but the target blank (B) expects 'deeply embedded', where 'deeply' is in the wordBank b": 1,
+    "llmMajor:Difficulty label INTERMEDIATE may overstate difficulty: the parallel-verb error (playing vs played) is fairly visible on": 1,
+    "llmFatal:The grammar point tested (finite verb 'played' vs participle 'playing' in parallel structure with 'were considered') is ": 1,
+    "llmMajor:Explanation text is garbled/awkward Korean ('loading이 이루어지는 준동사 형태인 playing을 쓰면, 절을 이끄는 정동사 구조가 결손되므로') - reads as machi": 1,
+    "llmMajor:Only one underlined segment is tested; for KILLER standard-response items, only a single grammar point being tested (par": 1,
+    "llmMajor:The wider underline segment is good practice, but the error itself is fairly locally detectable ('and then playing' imme": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 6,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 42,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The correct answer (D) is a trivial adjective/adverb spelling-level error (simple vs simply), completely inconsistent wi",
+        "llmFatal:Distractors (A),(B),(C) are shallow/obviously correct on a skim (basic tense/agreement/relative clause), providing no re",
+        "llmMajor:System-flagged quality issues (relaxed mode, review recommended, grammar-too-basic-decoys) confirm the generator itself ",
+        "llmMajor:No marked expression involves long-distance dependency, parallel structure, or participial modification ambiguity as req",
+        "llmMajor:Explanation for the error is fine but overall design fails the KILLER rubric: no 2+ step reasoning chain, no genuinely c"
+      ],
+      "answerSurfaces": [
+        "(D):simply->simple"
+      ],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-killer-answer-point-repeated x1, grammar-obvious-noun-what-relative x1, grammar-too-basic-decoys x1, grammar-error-not-mutated x1 | Last: quality/GRAMMAR_ERROR - grammar-error-not-mutated: The grammar error surface matches the original expression."
+    },
+    {
+      "runIndex": 10,
+      "type": "GRAMMAR_CHOICE_COMBO",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:Slot (B) options presented are 'what/that' but the JSON slot definition lists wrongExpression as 'what' with correctExpr",
+        "llmFatal:(A) 'played' vs 'playing' hinges on recognizing parallel structure with 'were considered', but this is a common, easily-",
+        "llmMajor:None of the three slots test genuine hard points like relative clauses, subjunctive, or complex parallelism at KILLER le",
+        "llmMajor:Options 2 and 5 are the only 2+-slot-wrong options, but the reasoning to eliminate distractors is shallow (single-step s",
+        "llmMajor:The (B) slot's 'what' as a wrongExpression is a textbook-level trap that most mid-level students would catch immediately"
+      ],
+      "answerSurfaces": [
+        "3"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 13,
+      "type": "VOCAB_CHOICE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The inappropriate word 'shackles' is a noun replacing a verb 'diversify' after 'to', creating a blatant grammatical erro",
+        "llmFatal:This violates the INTERMEDIATE difficulty requirement: grammatical mismatch is detectable without any semantic reasoning",
+        "llmMajor:A grammatically broken option (noun after 'to') is not a legitimate distractor pattern for CSAT-style vocab items, which",
+        "llmMajor:The explanation focuses on grammar breakage rather than testing contextual/semantic appropriateness, contradicting the t"
+      ],
+      "answerSurfaces": [
+        "3"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 21,
+      "type": "SENTENCE_INSERT",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:Marker ③ is placed right before 'In certain languages...' sentence, but the given sentence 'Here the lexicon seems in ke",
+        "llmFatal:The rationale claims 'Here' refers to 'the oldest known color terms' in the immediately preceding sentence, but that sen",
+        "llmMajor:The passage's own auto-generated qualityWarning flags exactly this issue (neutral given sentence, weak cohesive cue), wh",
+        "llmMajor:Distractor explanations for gaps 4 and 5 are somewhat repetitive and rely on 'listing symmetry' logic while the real amb",
+        "llmMajor:Given sentence 'Here' is a locative/discourse deictic cue but weak — it could plausibly point to 'oldest known color ter"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 22,
+      "type": "SENTENCE_INSERT",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The passageWithMarkers shows gap ③ positioned BEFORE the Latin/Castilian sentence, but the correct answer explanation cl",
+        "llmFatal:The given sentence 'Here the lexicon...' lacks a strong unique cohesive cue: 'Here' could plausibly anchor at gap ① or ②",
+        "llmMajor:The passage's own qualityWarnings flag the neutral-given-sentence risk, which the reviewer must weight heavily; 'Here' i",
+        "llmMajor:Distractor explanations for gaps ① and ② argue lexicon 'hasn't been mentioned yet,' but this is a coincidental surface f",
+        "llmMajor:For a KILLER item, the distractors should each fail for a genuinely different decisive reason tied to structural links; "
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 58,
+      "type": "IRRELEVANT",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The intruder (②) directly contradicts the immediately preceding sentence with an explicit logical connector 'Consequentl",
+        "llmFatal:Sentence ⑤ is the last sentence of the passage; per plan, none of the four non-answer choices should be a totally unrela",
+        "llmMajor:The answer is biased toward ②, but the reasoning bar for KILLER requires deep multi-step inference; here it's a one-step",
+        "llmMajor:Distractor explanations are essentially restating why each sentence fits, but they don't address any genuinely tempting ",
+        "llmMajor:Passage coverage: chosen sentences are bunched in the first half (①③④ within first 4 sentences), with ⑤ at the very end,"
+      ],
+      "answerSurfaces": [
+        "②"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 73,
+      "type": "CONDITIONAL_WRITING",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:Condition text is internally contradictory/confusing: it names a 'recognized' participle condition but then instructs to",
+        "llmFatal:System-flagged qualityWarning confirms the answer's key content ('comparable role in material culture, social codes, and",
+        "llmMajor:The conditions overlap awkwardly: condition 2 says use participle 'recognized' modifying a noun, but modelAnswer uses 't",
+        "llmMajor:No two-sentence causal/contrastive reasoning is required per INTERMEDIATE rubric; the task is essentially a single-sente",
+        "llmMajor:Scoring criteria are vague percentages with overlapping/circular descriptions (e.g., 30%/30%/40%) that don't clearly del"
+      ],
+      "answerSurfaces": [
+        "Other colors had to wait a long time to be recognized as colors before playing a comparable role in material culture, social codes, and systems of thought."
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 74,
+      "type": "CONDITIONAL_WRITING",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The <보기> list contains 'look' but the passage/model answer uses 'considered' concept via 'looked on as' — this is not ba",
+        "llmFatal:Word count claim is wrong: counting the model answer gives 20 words (or 21 depending on counting 'on' etc.), and the exp",
+        "llmMajor:The flagged qualityWarning about verbatim copying from passage is unaddressed; 'wait a long time before they were' is li",
+        "llmMajor:'they' referent in Korean reference sentence is ambiguous ('다른 색들') but student must infer 'Other colors' as subject wit",
+        "llmMajor:Only one path to a correct answer is presented with no discussion of plausible near-miss student errors (e.g., 'were con"
+      ],
+      "answerSurfaces": [
+        "Other colors had to wait a long time before they were looked on as colors and then played a comparable role."
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 78,
+      "type": "SENTENCE_TRANSFORM",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:Condition 2 asks for 'It was... that 강조구문' (cleft/emphatic construction) but the model answer only produces 'It was not ",
+        "llmFatal:'before being considered colors and then playing a comparable role' is grammatically odd: 'before' + gerund/participle a",
+        "llmMajor:The explanation calls 'It was not that' an emphatic cleft structure, which is incorrect—this is a set phrase distinguish",
+        "llmMajor:Only one 'transformation target' really exists (subordinate clause to participial phrase); the 'cleft' requirement is su",
+        "llmMajor:Scoring rubric's 80-point tier docks credit for a trivial parallelism slip but doesn't address the more serious issue of"
+      ],
+      "answerSurfaces": [
+        "It was not that they did not exist, but they had to wait a long time before being considered colors and then playing a comparable role in material culture, social codes, and systems of thought."
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 85,
+      "type": "SUMMARY_COMPLETE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The direction says '가장 적절한 것은?' implying multiple-choice options, but no answer choices are provided—format mismatch mak",
+        "llmFatal:keyPoints contains a factual error: 'krasnyy'/'krasivy' are Russian, not Latin, and the explanation garbles the language",
+        "llmMajor:'modern (B) structures' is misleading—the passage discusses ancient/classical language roots (Latin, Russian), not speci",
+        "llmMajor:Blank (A) 'supremacy' is a fair paraphrase but the sentence structure conflates two clauses awkwardly ('deeply reflected",
+        "llmMajor:No wrong-but-plausible alternative answers or distractor chips are given for either blank, so there's no real assessment"
+      ],
+      "answerSurfaces": [
+        "(A) supremacy, (B) linguistic"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 90,
+      "type": "SUMMARY_WRITING",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:wordBankPolicy=usePartial but wordBankDistractors is empty, violating the explicit rule that decoys must be emitted for ",
+        "llmFatal:The 'practical' anchor is weakly grounded: passage never states red was practically/materially superior, only that picto",
+        "llmMajor:No genuine distractors means there is no 'selecting the right words from noise' difficulty — the only task is reordering",
+        "llmMajor:connectorFrameAfter clause 'establishing a dominant linguistic and cultural status earlier than them' is not required in",
+        "llmMajor:Explanation and keyPoints assert 'practical' ties to pictorial practices without clearly justifying why 'practical signi"
+      ],
+      "answerSurfaces": [
+        "(A) preceded other chromatic tones in aesthetic and practical significance",
+        "According to the historical and linguistic development of color terms in the West, red preceded other chromatic tones in aesthetic and practical significance, establishing a dominant linguistic and cu"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 93,
+      "type": "WORD_ORDER",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The model answer is verbatim copied from the source passage (\"It was with red that humans did their first color experime",
+        "llmFatal:The system's own _qualityWarnings flags this exact issue, confirming the item fails the non-verbatim requirement.",
+        "llmMajor:The only distractor 'by humans' is a generic filler chip, not a synonym/inflected form of an answer token as required by",
+        "llmMajor:For INTERMEDIATE difficulty, this requires no context-linking or paraphrase inference — student can simply locate and co",
+        "llmMajor:The chunk 'their first color experiments,' and 'their first successes,' carry trailing commas attached, which is fine, b"
+      ],
+      "answerSurfaces": [
+        "It was with red that humans did their first color experiments, achieved their first successes, and constructed a chromatic universe."
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

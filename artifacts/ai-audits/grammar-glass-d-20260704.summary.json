@@ -1,0 +1,82 @@
+{
+  "createdAt": "2026-07-04T13:14:40.711Z",
+  "outPath": "artifacts/ai-audits/grammar-glass-d-20260704.jsonl",
+  "total": 2,
+  "passed": 2,
+  "failed": 0,
+  "passRate": 1,
+  "byPlanDifficulty": {
+    "STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "passRate": 1
+    },
+    "STANDARD:KILLER": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "passRate": 1
+    }
+  },
+  "issueCounts": {
+    "rejection:grammar-shallow-participle-adjective-answer": 1,
+    "rejectionLast:grammar-shallow-participle-adjective-answer": 1,
+    "rejection:grammar-shallow-depends-decoy": 2,
+    "rejection:grammar-obvious-noun-what-relative": 2,
+    "rejection:grammar-weak-filler-decoys": 2,
+    "rejection:grammar-killer-generic-answer-point": 1,
+    "rejection:grammar-obvious-pronoun-agreement": 1,
+    "rejectionLast:grammar-obvious-noun-what-relative": 1,
+    "rejectionLast:grammar-shallow-depends-decoy": 1,
+    "rejectionLast:grammar-too-basic-decoys": 1,
+    "rejectionLast:grammar-weak-filler-decoys": 1
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-obvious-noun-what-relative",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-shallow-depends-decoy",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-weak-filler-decoys",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-killer-generic-answer-point",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-obvious-pronoun-agreement",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-shallow-participle-adjective-answer",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-obvious-noun-what-relative",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-shallow-depends-decoy",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-shallow-participle-adjective-answer",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-too-basic-decoys",
+      "count": 1
+    },
+    {
+      "code": "rejectionLast:grammar-weak-filler-decoys",
+      "count": 1
+    }
+  ],
+  "worstSamples": []
+}

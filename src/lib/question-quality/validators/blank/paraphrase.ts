@@ -117,8 +117,13 @@ export function validateBlankAnswerParaphraseMode(
   ) {
     add(
       "error",
-      "blank-paraphrase-target-too-wide",
-      "PARAPHRASE blank originalExpression is too broad; choose a compact semantic unit instead of a long clause.",
+      // KILLER 는 strict 차단 신규 코드(비 SHIP-FIRST) — iter2 실측에서 27단어
+      // list-like 스팬이 SHIP-FIRST 경고로 그대로 출하돼 심사 미달(72점)했다.
+      // 다른 난이도는 기존 코드 유지(SHIP-FIRST warning, 무회귀).
+      requestedDifficulty === "KILLER"
+        ? "blank-killer-span-too-wide"
+        : "blank-paraphrase-target-too-wide",
+      "PARAPHRASE blank originalExpression is too broad; choose a compact semantic unit (the head predicate of the sentence) instead of a long clause.",
     );
   }
 
@@ -222,6 +227,18 @@ export function findBlankParaphraseSlotIssue(
 
 
 
+// 26-07-06 iter3: KILLER 전용 craft 게이트의 strict 차단 복원 (선별).
+// 기존 코드(blank-paraphrase-killer-* / blank-paraphrase-target-too-wide)는
+// SHIP-FIRST 전역 강등(core.ts SHIP_FIRST_WARNING_CODES)으로 warning 이 되어
+// 첫 후보가 그대로 출하됐다 (iter2 실측: 27단어 list-like 스팬이 경고만 달고
+// 출하 → 심사 72점). giveaway/span-too-wide 는 신규 코드(비 SHIP-FIRST)로
+// strict 에서만 차단(교정 재시도 유도)되고 relaxed 폴백에서는 자동 warning
+// 강등 출하된다 — never-fail 사다리(G1) 보존.
+// ⚠️ thin-span(단어수 미달)의 strict 차단은 iter3 실측(loop-blank-iter3-20260706)
+// 후 **원복**: PREM KILLER 2/2 런에서 이 게이트 단독으로 strict 소진→relaxed 출하
+// (relaxed율 100%, G3 위반)됐는데 정작 출하된 "짧은 스팬 + 문단 종합 정답" 문항이
+// 심사 95/96(fatal 0) — 개념 밀도 높은 컴팩트 스팬을 오탐한다. 짧은 스팬 자체는
+// 결함이 아니며, 진짜 품질 축은 정답의 교차문장 종합성(킬러 후보 블록 2c)이다.
 export function findBlankParaphraseKillerIssue(
   options: Record<string, unknown>[],
   correctLabel: string,
@@ -242,6 +259,7 @@ export function findBlankParaphraseKillerIssue(
     correctWordCount < 8
   ) {
     return {
+      // SHIP-FIRST 등재 코드 — warning 강등 출하(검수 배지)만, strict 차단 없음.
       code: "blank-paraphrase-killer-too-easy",
       message:
         "KILLER PARAPHRASE blank is too surface-level; use a richer central relation and a correct option with enough conceptual load.",
@@ -256,9 +274,9 @@ export function findBlankParaphraseKillerIssue(
   ).length;
   if (giveawayCount >= 2) {
     return {
-      code: "blank-paraphrase-killer-giveaway-distractors",
+      code: "blank-killer-giveaway-distractors",
       message:
-        "KILLER PARAPHRASE blank has too many obviously eliminable distractors; replace extreme/opposite options with passage-grounded near misses.",
+        "KILLER PARAPHRASE blank has too many obviously eliminable distractors; replace extreme/opposite options with passage-grounded near misses that reuse passage concepts and fail by logic (reversed cause, scope twist, half-truth).",
     };
   }
 
@@ -269,7 +287,13 @@ export function findBlankParaphraseKillerIssue(
 
 export function hasKillerBlankGiveawayCue(text: string): boolean {
   const normalized = normalizeText(text);
-  return /\b(?:unconditionally|completely|passive(?:ly)?|strict(?:ly)?|inevitably|naturally|whatever|successfully|always|never|solely|entirely|exclusively|fully|merely|simply|all|every|only|must|cannot|guarantee(?:s|d)?|definitive|flawless|seamless|error-free|automatically|altogether|indefinitely|immediate(?:ly)?|eliminate(?:s|d|ing)?|bound\s+to|any\s+form\s+of|(?:from|without|against)\s+any|without\s+\w+\s+any|fail(?:s|ed|ing)?\s+to|prevent(?:s|ed|ing)?\s+all|avoid(?:s|ed|ing)?\s+all)\b/i.test(
+  // 26-07-06 iter2 실측 보강: KILLER 오답의 시간·정도 거울 절대어(instantly/forever/
+  // at once/overnight 류)가 기존 lexicon 에 없어 게이트가 미발화했다 (iter1 실측:
+  // "immediately take the lead" 는 잡히고 "instantly establish a universal bond" 는
+  // 통과 → 심사 fatal "crude polarity traps"). 극성 스캔만으로 소거되는 절대어
+  // 계열을 추가한다. 발화 임계(오답 2개 이상)는 유지 — craft 게이트이며 salvage
+  // 사다리에 등재되어 있어 생성 실패(G1) 위험 없음.
+  return /\b(?:unconditionally|completely|passive(?:ly)?|strict(?:ly)?|inevitably|naturally|whatever|successfully|always|never|solely|entirely|exclusively|fully|merely|simply|all|every|only|must|cannot|guarantee(?:s|d)?|definitive|flawless|seamless|error-free|automatically|altogether|indefinitely|immediate(?:ly)?|instant(?:ly)?|swift(?:ly)?|at\s+once|right\s+away|overnight|forever|permanent(?:ly)?|utterly|totally|universal(?:ly)?|invariably|unquestionab(?:le|ly)|undoubtedly|effortless(?:ly)?|absolute(?:ly)?|eliminate(?:s|d|ing)?|bound\s+to|any\s+form\s+of|(?:from|without|against)\s+any|without\s+\w+\s+any|fail(?:s|ed|ing)?\s+to|prevent(?:s|ed|ing)?\s+all|avoid(?:s|ed|ing)?\s+all)\b/i.test(
     normalized,
   );
 }

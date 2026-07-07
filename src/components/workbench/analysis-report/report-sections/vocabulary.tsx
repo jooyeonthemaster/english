@@ -2,7 +2,7 @@ import { type ReactNode } from "react";
 import { type VocabTestMode } from "@/lib/passage-report/analysis-report/schema";
 import { cn } from "@/lib/utils";
 import type { VocabularyNoteRef, VocabularyRow } from "./types";
-import { DelBtn } from "./editable-field";
+import { DelBtn, Field } from "./editable-field";
 
 export function vocabTestHiddenCols(hiddenCols: string[] | undefined, mode: VocabTestMode): string[] {
   const hidden = new Set(hiddenCols ?? []);
@@ -131,6 +131,69 @@ export function VocabTestGridCard({
           {mode === "antonym" ? <span className="par-vocab-test-card-blank" /> : <span>{row.antonyms ?? ""}</span>}
         </div>
       ) : null}
+    </div>
+  );
+}
+
+/**
+ * 단어장(학습용) 2열 컴팩트 카드 — 번호 + 표제어·발음(헤드라인) / 뜻 / 유·반(푸터라인).
+ * 표 모드와 동일하게 hiddenCols·인라인 편집·행 삭제를 지원한다.
+ */
+export function VocabStudyGridCard({
+  row,
+  no,
+  hidden,
+  editable,
+  onUpdate,
+  onDelete,
+}: {
+  row: VocabularyRow;
+  no: number;
+  hidden: Set<string>;
+  editable: boolean;
+  onUpdate: (patch: Partial<VocabularyRow>) => void;
+  onDelete: () => void;
+}) {
+  const showHead = !hidden.has("headword");
+  const showPron = !hidden.has("pronunciation") && (editable || !!row.pronunciation?.trim());
+  const showMeaning = !hidden.has("meaning");
+  const showSyn = !hidden.has("synonyms") && (editable || !!row.synonyms?.trim());
+  const showAnt = !hidden.has("antonyms") && (editable || !!row.antonyms?.trim());
+  return (
+    <div className="par-vocab-study-card">
+      {editable ? <DelBtn className="par-vocab-study-card-del" title="단어 행 삭제" onClick={onDelete} /> : null}
+      <span className="par-vocab-study-no" aria-hidden>{String(no).padStart(2, "0")}</span>
+      <div className="par-vocab-study-main">
+        {showHead || showPron ? (
+          <div className="par-vocab-study-head">
+            {showHead ? (
+              <Field as="span" className="par-vocab-study-word" editable={editable} value={row.headword} onCommit={(v) => onUpdate({ headword: v })} />
+            ) : null}
+            {showPron ? (
+              <Field as="span" className="par-vocab-study-pron" editable={editable} value={row.pronunciation ?? ""} placeholder="(발음)" onCommit={(v) => onUpdate({ pronunciation: v })} />
+            ) : null}
+          </div>
+        ) : null}
+        {showMeaning ? (
+          <Field as="div" className="par-vocab-study-meaning" editable={editable} value={row.meaning} onCommit={(v) => onUpdate({ meaning: v })} />
+        ) : null}
+        {showSyn || showAnt ? (
+          <div className="par-vocab-study-rel">
+            {showSyn ? (
+              <span className="par-vocab-study-rel-item">
+                <span className="par-vocab-study-rel-k">유</span>
+                <Field as="span" editable={editable} value={row.synonyms ?? ""} placeholder="(동의어)" onCommit={(v) => onUpdate({ synonyms: v })} />
+              </span>
+            ) : null}
+            {showAnt ? (
+              <span className="par-vocab-study-rel-item">
+                <span className="par-vocab-study-rel-k">반</span>
+                <Field as="span" editable={editable} value={row.antonyms ?? ""} placeholder="(반의어)" onCommit={(v) => onUpdate({ antonyms: v })} />
+              </span>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }

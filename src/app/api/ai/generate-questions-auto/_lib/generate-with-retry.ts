@@ -19,6 +19,8 @@ export async function generateWithRetry(
     timeoutMs?: number;
     /** 시간예산 데드라인(epoch ms) — abort 를 남은예산으로 좁힘 */
     deadlineAt?: number;
+    /** strict 구조화 출력을 생략하고 프롬프트 인라인 JSON 모드로 생성 (Wave-3 SW/TSW PREMIUM) */
+    forceJsonFallback?: boolean;
   },
 ) {
   const result = await generateQuestionObject({
@@ -31,6 +33,7 @@ export async function generateWithRetry(
     system: opts?.system,
     timeoutMs: opts?.timeoutMs,
     deadlineAt: opts?.deadlineAt,
+    forceJsonFallback: opts?.forceJsonFallback,
   });
   onUsage?.(result);
   return result.object;

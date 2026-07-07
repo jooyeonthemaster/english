@@ -1,0 +1,301 @@
+{
+  "createdAt": "2026-07-06T08:15:49.017Z",
+  "outPath": "artifacts/ai-audits/multipassage-sweep4-grammar-st-20260706",
+  "total": 6,
+  "passed": 0,
+  "failed": 6,
+  "passRate": 0,
+  "byCell": {
+    "GRAMMAR_ERROR:STANDARD:KILLER": {
+      "total": 6,
+      "generated": 6,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 67,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-killer-answer-point-repeated",
+          "count": 5
+        },
+        {
+          "code": "rejection:grammar-nonstandard-terminology",
+          "count": 3
+        },
+        {
+          "code": "rejection:grammar-killer-generic-answer-point",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-killer-overdrilled-answer",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-weak-filler-decoys",
+          "count": 2
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-killer-answer-point-repeated",
+      "count": 5
+    },
+    {
+      "code": "rejection:grammar-nonstandard-terminology",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-killer-generic-answer-point",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-killer-overdrilled-answer",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-weak-filler-decoys",
+      "count": 2
+    },
+    {
+      "code": "rejectionLast:grammar-killer-answer-point-repeated",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:(E) 'witnessed' explanation is flawed: claims an omitted object relative pronoun 'who' but the actual structure is 'thos",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:(E) explanation is internally contradictory: it calls 'which' a '주격 관계대명사 계속적 용법' connecting to an '불완전한 절', but the cla",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:passageWithMarkers shows 'are __(A) employ__' which is glaringly ungrammatical on a skim (are + bare verb), making this ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The (A) error is trivially spotted just by reading 'algorithms are employ' — subject-verb form mismatch is a surface-lev",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The (A) subject-verb error 'structure...is' vs 'are' sits adjacent to its head noun with no intervening attractor noun, ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The (B) error (let X to know vs know) is a classic causative-verb rule that most mid-level students catch immediately on",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The (B) point is a fairly standard/well-known relative pronoun vs relative adverb distinction with a completeness check ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The (C) 'which'→'where' error is a classic, easily spotted local error (relative pronoun before complete clause) — this ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The generator's own quality-mode fell back to 'relaxed' with explicit warnings that this item fails KILLER standards, co",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The passage text presented to students shows 'which' at (E) without 'in', but 'belong to the same lexical family' works ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:(A) explanation is questionable: 'trigger' agreement point is trivial and not a strong distractor — it doesn't create ge",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:(D) explanation is questionable: 'benefits' could agree with either 'a call' or 'an assist' as claimed, but the ambiguit",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:(D) is presented as testing subject-verb agreement with 'the longer face' as the head noun, but there's no plausible dis",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:(D)'s point about subject-verb agreement is padding since there's no plausible intervening plural noun that would tempt ",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The passage text presented to students shows 'which' at (E) without 'in', but 'belong to the same lexical family' works ": 1,
+    "llmMajor:For a KILLER label, four of five options are transparently correct with no real competing trap (as...as, parallel to-inf": 1,
+    "llmMajor:The explanation for (E) simply states the missing preposition rule without addressing why a student might be tempted to ": 1,
+    "llmMajor:(D)'s point about subject-verb agreement is padding since there's no plausible intervening plural noun that would tempt ": 1,
+    "rejection:grammar-killer-thin-answer": 1,
+    "rejectionLast:grammar-killer-thin-answer": 1,
+    "local:quality-mode-relaxed": 1,
+    "local:generation-notice": 1,
+    "local:review-recommended": 1,
+    "llmFatal:The generator's own quality-mode fell back to 'relaxed' with explicit warnings that this item fails KILLER standards, co": 1,
+    "llmFatal:The (A) subject-verb error 'structure...is' vs 'are' sits adjacent to its head noun with no intervening attractor noun, ": 1,
+    "llmMajor:Distractors (B) given, (C) slowly, (D) because, (E) does are all shallow/obviously correct with no plausible grammatical": 1,
+    "llmMajor:keyPoints list is internally inconsistent: point 3 references (E) does but cites pointCode 'a' which doesn't match the d": 1,
+    "llmMajor:This does not meet the KILLER rubric requirement of 2+ hard structural points and long-distance dependency confirmation;": 1,
+    "rejection:grammar-killer-answer-point-repeated": 5,
+    "rejection:grammar-killer-generic-answer-point": 2,
+    "rejection:grammar-weak-filler-decoys": 2,
+    "rejection:grammar-shallow-depends-decoy": 1,
+    "rejection:grammar-nonstandard-terminology": 3,
+    "rejectionLast:grammar-killer-answer-point-repeated": 2,
+    "rejectionLast:grammar-killer-generic-answer-point": 1,
+    "rejectionLast:grammar-too-basic-decoys": 1,
+    "llmFatal:The (A) error is trivially spotted just by reading 'algorithms are employ' — subject-verb form mismatch is a surface-lev": 1,
+    "llmFatal:passageWithMarkers shows 'are __(A) employ__' which is glaringly ungrammatical on a skim (are + bare verb), making this ": 1,
+    "llmMajor:None of the other four marked expressions (B-D-E) present genuine hard-point traps (relative pronoun, parallelism, subju": 1,
+    "llmMajor:KILLER rubric requires 2+ genuinely tricky non-error options and long-distance dependency for the answer; here the answe": 1,
+    "llmMajor:(E) 'to find' explanation is vague/awkward ('결과적 대상 또는 목적을 표현하기 위해 유도된 부사적 용법') suggesting weak grammatical justificatio": 1,
+    "rejection:grammar-killer-overdrilled-answer": 2,
+    "rejection:grammar-obvious-noun-what-relative": 1,
+    "rejection:grammar-obvious-adjacent-sv-agreement": 1,
+    "rejectionLast:grammar-obvious-adjacent-sv-agreement": 1,
+    "llmFatal:The (B) point is a fairly standard/well-known relative pronoun vs relative adverb distinction with a completeness check ": 1,
+    "llmMajor:For a KILLER, all non-answer options should be hard, deceptive points; here (A) called, (C) that, (E) more aerodynamic a": 1,
+    "llmMajor:(D) is presented as testing subject-verb agreement with 'the longer face' as the head noun, but there's no plausible dis": 1,
+    "llmMajor:The explanation for (B) mentions 'behind' erroneously ('관계사 behind의 절 구조') which is a leftover/typo suggesting sloppy dr": 1,
+    "llmFatal:The (C) 'which'→'where' error is a classic, easily spotted local error (relative pronoun before complete clause) — this ": 1,
+    "llmFatal:(E) 'witnessed' explanation is flawed: claims an omitted object relative pronoun 'who' but the actual structure is 'thos": 1,
+    "llmMajor:For a KILLER label, the surrounding text for (C) does provide the clause but detecting completeness is a fairly standard": 1,
+    "llmMajor:(A) explanation is questionable: 'trigger' agreement point is trivial and not a strong distractor — it doesn't create ge": 1,
+    "llmMajor:The KILLER bar requires marked-position errors to look natural until structure is checked; 'which' immediately before a ": 1,
+    "rejectionLast:grammar-killer-overdrilled-answer": 1,
+    "rejectionLast:grammar-nonstandard-terminology": 1,
+    "llmFatal:The (B) error (let X to know vs know) is a classic causative-verb rule that most mid-level students catch immediately on": 1,
+    "llmFatal:(E) explanation is internally contradictory: it calls 'which' a '주격 관계대명사 계속적 용법' connecting to an '불완전한 절', but the cla": 1,
+    "llmMajor:For a KILLER label, none of the non-error options require multi-step reasoning or long-distance dependency checks; (A), ": 1,
+    "llmMajor:(D) explanation is questionable: 'benefits' could agree with either 'a call' or 'an assist' as claimed, but the ambiguit": 1,
+    "llmMajor:The explanation for (B) does not address why 'to know' is superficially plausible or address any near-miss reasoning, fa": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 2,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The generator's own quality-mode fell back to 'relaxed' with explicit warnings that this item fails KILLER standards, co",
+        "llmFatal:The (A) subject-verb error 'structure...is' vs 'are' sits adjacent to its head noun with no intervening attractor noun, ",
+        "llmMajor:Distractors (B) given, (C) slowly, (D) because, (E) does are all shallow/obviously correct with no plausible grammatical",
+        "llmMajor:keyPoints list is internally inconsistent: point 3 references (E) does but cites pointCode 'a' which doesn't match the d",
+        "llmMajor:This does not meet the KILLER rubric requirement of 2+ hard structural points and long-distance dependency confirmation;"
+      ],
+      "answerSurfaces": [
+        "(A):is->are"
+      ],
+      "rejectionSummary": "Rejected candidates: 5 | Top codes: grammar-killer-answer-point-repeated x3, grammar-killer-generic-answer-point x2, grammar-weak-filler-decoys x2, grammar-shallow-depends-decoy x1, grammar-nonstandard-terminology x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (a) in non-answer decoys; use different grammar frames for distractors. | grammar-killer-generic-answer-point: KILLER GRAMMAR_ERROR answer is tagged with generic pointCode (a); use a precise structural frame such as agreement with modifier, participle clause, relative/nominal clause, voice, complement, dummy it, inversion, or nonfinite pattern. | grammar-too-basic-decoys: INTERMEDIATE/KILLER GRAMMAR_ERROR uses too-basic decoy surface \"does\"; use a structurally meaningful distractor."
+    },
+    {
+      "runIndex": 3,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bll6q003ammf0pnlvyf2i",
+      "title": "2027학년도 6월 모평 영어 40번 · 요약문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The (A) error is trivially spotted just by reading 'algorithms are employ' — subject-verb form mismatch is a surface-lev",
+        "llmFatal:passageWithMarkers shows 'are __(A) employ__' which is glaringly ungrammatical on a skim (are + bare verb), making this ",
+        "llmMajor:None of the other four marked expressions (B-D-E) present genuine hard-point traps (relative pronoun, parallelism, subju",
+        "llmMajor:KILLER rubric requires 2+ genuinely tricky non-error options and long-distance dependency for the answer; here the answe",
+        "llmMajor:(E) 'to find' explanation is vague/awkward ('결과적 대상 또는 목적을 표현하기 위해 유도된 부사적 용법') suggesting weak grammatical justificatio",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-killer-overdrilled-answer",
+        "rejection:grammar-obvious-noun-what-relative"
+      ],
+      "answerSurfaces": [
+        "(A):being employed->employ"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-answer-point-repeated x2, grammar-killer-overdrilled-answer x1, grammar-obvious-noun-what-relative x1, grammar-nonstandard-terminology x1, grammar-obvious-adjacent-sv-agreement x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (d) in non-answer decoys; use different grammar frames for distractors. | grammar-obvious-adjacent-sv-agreement: GRAMMAR_ERROR answer \"directs\" is a directly adjacent subject-verb -s flip; choose an agreement target with an intervening modifier, relative clause, or attractor noun."
+    },
+    {
+      "runIndex": 1,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 68,
+      "issueKeys": [
+        "llmFatal:The passage text presented to students shows 'which' at (E) without 'in', but 'belong to the same lexical family' works ",
+        "llmMajor:For a KILLER label, four of five options are transparently correct with no real competing trap (as...as, parallel to-inf",
+        "llmMajor:The explanation for (E) simply states the missing preposition rule without addressing why a student might be tempted to ",
+        "llmMajor:(D)'s point about subject-verb agreement is padding since there's no plausible intervening plural noun that would tempt ",
+        "rejection:grammar-killer-thin-answer",
+        "rejectionLast:grammar-killer-thin-answer"
+      ],
+      "answerSurfaces": [
+        "(E):in which->which"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-killer-thin-answer x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-thin-answer: KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check."
+    },
+    {
+      "runIndex": 6,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkb9002ummf06jqvcn1u",
+      "title": "2027학년도 6월 모평 영어 36번 · 글의순서",
+      "llmScore": 68,
+      "issueKeys": [
+        "llmFatal:The (B) error (let X to know vs know) is a classic causative-verb rule that most mid-level students catch immediately on",
+        "llmFatal:(E) explanation is internally contradictory: it calls 'which' a '주격 관계대명사 계속적 용법' connecting to an '불완전한 절', but the cla",
+        "llmMajor:For a KILLER label, none of the non-error options require multi-step reasoning or long-distance dependency checks; (A), ",
+        "llmMajor:(D) explanation is questionable: 'benefits' could agree with either 'a call' or 'an assist' as claimed, but the ambiguit",
+        "llmMajor:The explanation for (B) does not address why 'to know' is superficially plausible or address any near-miss reasoning, fa"
+      ],
+      "answerSurfaces": [
+        "(B):know->to know"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 5,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkj2002ymmf0krmzsml4",
+      "title": "2027학년도 6월 모평 영어 37번 · 글의순서",
+      "llmScore": 72,
+      "issueKeys": [
+        "llmFatal:The (C) 'which'→'where' error is a classic, easily spotted local error (relative pronoun before complete clause) — this ",
+        "llmFatal:(E) 'witnessed' explanation is flawed: claims an omitted object relative pronoun 'who' but the actual structure is 'thos",
+        "llmMajor:For a KILLER label, the surrounding text for (C) does provide the clause but detecting completeness is a fairly standard",
+        "llmMajor:(A) explanation is questionable: 'trigger' agreement point is trivial and not a strong distractor — it doesn't create ge",
+        "llmMajor:The KILLER bar requires marked-position errors to look natural until structure is checked; 'which' immediately before a ",
+        "rejection:grammar-killer-overdrilled-answer",
+        "rejection:grammar-nonstandard-terminology",
+        "rejectionLast:grammar-killer-overdrilled-answer"
+      ],
+      "answerSurfaces": [
+        "(C):where->which"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-killer-overdrilled-answer x1, grammar-nonstandard-terminology x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-overdrilled-answer: KILLER GRAMMAR_ERROR rejected: the answer is a shallow subject-verb number flip (\"has been\" ↔ \"have been\") with the true subject sitting right next to the verb (no genuine attractor noun in between). At KILLER the agreement must span a real long-distance modifier with a misleading attractor noun so the subject head is non-obvious. Move the error to such a site, or pick another deep structure already in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break. | grammar-nonstandard-terminology: Grammar explanation/keyPoints uses nonstandard/linguistics terminology ('통사적으로'); rewrite with standard school-gr"
+    },
+    {
+      "runIndex": 4,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkqu0032mmf0g9i059aa",
+      "title": "2027학년도 6월 모평 영어 38번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:The (B) point is a fairly standard/well-known relative pronoun vs relative adverb distinction with a completeness check ",
+        "llmMajor:For a KILLER, all non-answer options should be hard, deceptive points; here (A) called, (C) that, (E) more aerodynamic a",
+        "llmMajor:(D) is presented as testing subject-verb agreement with 'the longer face' as the head noun, but there's no plausible dis",
+        "llmMajor:The explanation for (B) mentions 'behind' erroneously ('관계사 behind의 절 구조') which is a leftover/typo suggesting sloppy dr"
+      ],
+      "answerSurfaces": [
+        "(B):where->which"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

@@ -54,6 +54,21 @@ export function validateSummaryCompleteMcQuestion(
     );
   }
 
+  // 요약문 미종결 검출 (wave5): 문장 종결 부호 없이 끝나는 stem 은 생성이 중간에
+  // 잘린 것 — 실측(26-07-05 final-prem INT 40점): "...the words for " 로 끊긴
+  // 요약문이 마커 2개를 갖춰 마커 게이트는 통과하고 출하됐다. 끝의 닫는
+  // 따옴표/괄호를 걷어낸 뒤 마지막 문자가 [.!?] 가 아니면 차단한다.
+  if (summary) {
+    const trimmedTail = summary.replace(/["'”’)\]\s]+$/g, "");
+    if (trimmedTail && !/[.!?]$/.test(trimmedTail)) {
+      add(
+        "error",
+        "summary-mc-stem-unterminated",
+        `summaryWithBlanks가 문장 종결 부호 없이 끝납니다("...${trimmedTail.slice(-25)}") — 생성이 잘린 요약문입니다. 완결된 한 문장으로 다시 쓰세요.`,
+      );
+    }
+  }
+
   if (summary && containsHangul(summary)) {
     add(
       "error",

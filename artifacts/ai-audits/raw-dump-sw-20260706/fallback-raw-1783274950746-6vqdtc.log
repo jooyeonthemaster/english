@@ -1,0 +1,59 @@
+logPrefix=AUTO-GEN
+finishReason=stop
+issues=questions.0.koreanGloss: Invalid input: expected string, received null | questions.0.blanks.0.targetWordCount: Invalid input: expected number, received null
+
+```json
+{
+  "questions": [
+    {
+      "direction": "다음 글의 요약문 빈칸 (A)에 들어갈 말을 [보기]에서 필요한 단어만 골라 (필요시 어형을 바꿔) 영작하시오. [4점]",
+      "summaryWithBlanks": "Even though glass has been made by humans for thousands of years, its true molecular nature remains unsettled, since (A) , which keeps scientists from placing it neatly into a single category of matter.",
+      "koreanGloss": null,
+      "blankGlosses": [],
+      "wordBank": ["behave", "solid", "consistently", "a", "like", "yet", "classified", "liquid", "be", "properly", "cannot"],
+      "wordBankDistractors": [],
+      "wordBankPolicy": "usePartial",
+      "wordBankFidelity": "inflected",
+      "blankAssignment": "separate",
+      "clueMode": "none",
+      "targetWordsMode": "hidden",
+      "connectorFrame": "partial",
+      "summarySourceMode": "inference",
+      "sourceSentenceParaphrase": true,
+      "blanks": [
+        {
+          "label": "(A)",
+          "answer": "it behaves consistently like a solid yet cannot be properly classified as one",
+          "acceptableVariants": [
+            "it consistently behaves like a solid but cannot be properly classified as one",
+            "glass behaves consistently like a solid yet cannot be properly classified as such"
+          ],
+          "requiredLemmas": ["behave", "solid", "classify"],
+          "targetWordCount": null,
+          "connectorFrameAfter": ""
+        }
+      ],
+      "modelAnswer": "Even though glass has been made by humans for thousands of years, its true molecular nature remains unsettled, since it behaves consistently like a solid yet cannot be properly classified as one, which keeps scientists from placing it neatly into a single category of matter.",
+      "acceptableVariants": [
+        "Even though glass has been made by humans for thousands of years, its true molecular nature remains unsettled, since it consistently behaves like a solid but cannot be properly classified as such, which keeps scientists from placing it neatly into a single category of matter."
+      ],
+      "scoringCriteria": [
+        "'behave(s)' 또는 이에 준하는 표현으로 유리가 '고체처럼 작용/행동한다'는 의미를 담으면 1점",
+        "'consistently/always' 등 '항상, 일관되게'라는 의미 요소가 있으면 1점",
+        "'cannot be classified/categorized' 등 '분류될 수 없다'는 의미가 정확히 담기면 1점",
+        "solid와 liquid(또는 amorphous solid/supercooled liquid) 사이의 역설적 관계가 문맥상 자연스럽게 드러나면 1점"
+      ],
+      "scoringMode": "LLM_RUBRIC",
+      "correctAnswer": "(A) it behaves consistently like a solid yet cannot be properly classified as one",
+      "explanation": "지문은 유리가 '비정질 고체'인지 '과냉각 액체'인지 과학자들 사이에서도 용어가 갈리며(이론상 둘 다이지만), 실제 행동은 늘 고체처럼 작동한다고 설명한다. 그럼에도 결론부에서 '유리는 대부분의 분자 법칙을 따르지만' 여전히 왜 그렇게 행동하는지 과학자들이 이해하지 못한다는 역설(paradox)을 제시하며, 한 유리 제작자의 말을 빌려 '유리는 물질이 아니라 상태'라고 마무리한다. 따라서 요약문 (A)에는 '유리가 일관되게 고체처럼 행동하지만 하나의 범주로 명확히 분류될 수 없다'는 추론적 상위 진술이 들어가야 한다. 단순히 지문 문장을 그대로 베끼는 것이 아니라 '실온에서는 액체처럼 행동하지 않는다', '비정질 고체/과냉각 액체 논쟁', '역설(paradox)' 등 여러 문장을 종합해 도출해야 하는 고난도 추론이다.",
+      "keyPoints": [
+        "amorphous solid와 supercooled liquid라는 용어 대립이 곧 분류 불가능성을 의미함을 추론해야 함",
+        "실온에서 유리가 액체처럼 행동하지 않는다는 근거와 '역설(paradox)'이라는 결론을 연결해야 함",
+        "단일 문장 표절이 아니라 지문 전체를 관통하는 상위 명제로 요약문을 완성해야 함"
+      ],
+      "tags": ["요약문영작", "추론요약", "물질의상태", "킬러문항", "어형변형"],
+      "difficulty": "KILLER"
+    }
+  ]
+}
+```

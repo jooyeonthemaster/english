@@ -1,0 +1,305 @@
+{
+  "createdAt": "2026-07-06T10:29:08.885Z",
+  "outPath": "artifacts/ai-audits/firstcall-sweep-st-20260706",
+  "total": 6,
+  "passed": 0,
+  "failed": 6,
+  "passRate": 0,
+  "byCell": {
+    "GRAMMAR_ERROR:STANDARD:KILLER": {
+      "total": 6,
+      "generated": 6,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58.7,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-killer-overdrilled-answer",
+          "count": 6
+        },
+        {
+          "code": "rejection:grammar-obvious-noun-what-relative",
+          "count": 4
+        },
+        {
+          "code": "rejectionLast:grammar-killer-overdrilled-answer",
+          "count": 4
+        },
+        {
+          "code": "rejection:grammar-killer-answer-point-repeated",
+          "count": 3
+        },
+        {
+          "code": "rejectionLast:grammar-obvious-noun-what-relative",
+          "count": 3
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "rejection:grammar-killer-overdrilled-answer",
+      "count": 6
+    },
+    {
+      "code": "rejection:grammar-obvious-noun-what-relative",
+      "count": 4
+    },
+    {
+      "code": "rejectionLast:grammar-killer-overdrilled-answer",
+      "count": 4
+    },
+    {
+      "code": "rejection:grammar-killer-answer-point-repeated",
+      "count": 3
+    },
+    {
+      "code": "rejectionLast:grammar-obvious-noun-what-relative",
+      "count": 3
+    },
+    {
+      "code": "local:generation-notice",
+      "count": 2
+    },
+    {
+      "code": "local:quality-mode-relaxed",
+      "count": 2
+    },
+    {
+      "code": "local:review-recommended",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-killer-thin-answer",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-marker-too-dense",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-obvious-adjacent-sv-agreement",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:(D) is a trivial spelling/word-form error (draw vs drawing) — this is a shallow, obvious slip once the reader glances at",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Generator explicitly flagged relaxed quality mode and review-recommended, and the (A) error is a trivially obvious paral",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Generator itself flagged relaxed quality mode and review-recommended, indicating known deficiency; the parallel-verb err",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:passageWithMarkers shows (D) as lowercase 'that' starting a new quoted sentence after a period, which is actually ungram",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The 'felt lost' vs 'feeling lost' error is a well-known, easily spotted comma-splice/participle pattern that most mid-le",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The (C) error (encompassing->encompassed) is a fairly obvious participle vs. past-participle swap detectable by local ph",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The explanation self-contradicts: it argues (A) should be gerund via parallelism with 'looking', then confusingly also f",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The explanation/passage logic is broken: original passage says 'Without X, it is unlikely displays would be awkward imit",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The passage itself contains a clearly malformed sentence ('is the only way in which the reality of the external reality ",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The 'felt lost' vs 'feeling lost' error is a well-known, easily spotted comma-splice/participle pattern that most mid-le": 1,
+    "llmFatal:passageWithMarkers shows (D) as lowercase 'that' starting a new quoted sentence after a period, which is actually ungram": 1,
+    "llmMajor:No distractor requires deep multi-step reasoning; (A), (B), (E) are fairly standard textbook checks (passive vomiting, a": 1,
+    "llmMajor:The rubric for KILLER underline-based grammar items requires the correct answer to sit in the structurally most complex ": 1,
+    "llmMajor:(D)'s explanation calls 'that' a demonstrative pronoun referring back to the whole prior sentence, but in context it app": 1,
+    "rejection:grammar-shallow-participle-adjective-answer": 1,
+    "rejection:grammar-killer-overdrilled-answer": 6,
+    "rejection:grammar-obvious-noun-what-relative": 4,
+    "rejectionLast:grammar-killer-overdrilled-answer": 4,
+    "rejectionLast:grammar-obvious-noun-what-relative": 3,
+    "llmFatal:The explanation/passage logic is broken: original passage says 'Without X, it is unlikely displays would be awkward imit": 1,
+    "llmFatal:(D) is a trivial spelling/word-form error (draw vs drawing) — this is a shallow, obvious slip once the reader glances at": 1,
+    "llmMajor:Flagged qualityWarning about (C)/pointCode mismatch is unresolved and suggests fabricated grammar point labeling, underm": 1,
+    "llmMajor:For a KILLER label, all distractors should be highly deceptive; here (A), (B), (C), (E) are basic-level checks (subject-": 1,
+    "llmMajor:The correct answer's underline area is easily spotted because 'draw'/'drawing' clashes visibly with the parallel noun 's": 1,
+    "rejection:grammar-killer-generic-answer-point": 1,
+    "local:quality-mode-relaxed": 2,
+    "local:generation-notice": 2,
+    "local:review-recommended": 2,
+    "llmFatal:Generator itself flagged relaxed quality mode and review-recommended, indicating known deficiency; the parallel-verb err": 1,
+    "llmFatal:The passageWithMarkers shows '__(C) engaging__' as the underlined text but option (C) also lists 'engaging' as the optio": 1,
+    "llmMajor:For a KILLER item, only one marked expression (C) tests a meaningful hard point; (A) voice, (B) pronoun reference, (D) a": 1,
+    "llmMajor:The distance between 'unfold' and 'engaging' is short and the subject list is a simple list of nouns right before the ve": 1,
+    "llmMajor:Explanation is clear but the trap is not subtle — 'engaging audiences' immediately reads oddly in context (no clear func": 1,
+    "rejection:grammar-obvious-adjacent-sv-agreement": 2,
+    "rejection:grammar-killer-thin-answer": 2,
+    "rejection:grammar-keypoint-choice-mismatch": 1,
+    "rejection:grammar-marker-too-dense": 2,
+    "rejection:grammar-tense-only-error": 1,
+    "rejectionLast:grammar-obvious-adjacent-sv-agreement": 1,
+    "rejectionLast:grammar-killer-thin-answer": 1,
+    "llmFatal:The passage itself contains a clearly malformed sentence ('is the only way in which the reality of the external reality ": 1,
+    "llmFatal:The (C) error (encompassing->encompassed) is a fairly obvious participle vs. past-participle swap detectable by local ph": 1,
+    "llmMajor:For a KILLER, the correct answer should hinge on a long-distance dependency verified via structure outside the underline": 1,
+    "llmMajor:Distractor (B) is built on a corrupted source sentence ('the reality of the external reality'), which looks like a passa": 1,
+    "llmMajor:Only 5 marked expressions used when detailed settings likely call for the fuller 5-10 range with more robust hard points": 1,
+    "rejection:grammar-killer-answer-point-repeated": 3,
+    "llmMajor:KILLER 요건 미달: (E) 오류는 not only A but also B 병렬 구조로 becoming vs become 판별이 상대적으로 단순하며, 상위권 학생이 구조를 보면 빠르게 잡아낼 수 있는 수준으로 진": 1,
+    "llmMajor:(B) 설명이 부정확함: 'them'의 선행사는 병렬 명사구가 아니라 'different events'와 'various facts' 전체를 가리키는 것으로 설명해야 하는데, wrongOptionExplanation": 1,
+    "llmMajor:오답 매력도 부족: (A),(C),(D)는 매우 명확하고 교과서적인 정오 판정이라 진짜 변별력 있는 오답 후보로 기능하지 못하고 스킴만으로 배제 가능함": 1,
+    "llmFatal:Generator explicitly flagged relaxed quality mode and review-recommended, and the (A) error is a trivially obvious paral": 1,
+    "llmFatal:The explanation self-contradicts: it argues (A) should be gerund via parallelism with 'looking', then confusingly also f": 1,
+    "llmMajor:Distractors (B)-(E) are shallow textbook points (relative adverb, subject-verb agreement, adjective modifier, passive vo": 1,
+    "llmMajor:No distractor is genuinely tempting; all can be dismissed by a basic local grammar check, so the item fails the 'resista": 1,
+    "llmMajor:QualityWarnings flag mislabeled grammar terminology in explanation, confirming internal inconsistency between keyPoints ": 1,
+    "rejection:grammar-render-marker-count": 1,
+    "rejectionLast:grammar-keypoint-choice-mismatch": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 6,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7b83007cmm0s4m609hz1",
+      "title": "2026학년도 수능 영어 37번 · 글의순서",
+      "llmScore": 42,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:Generator explicitly flagged relaxed quality mode and review-recommended, and the (A) error is a trivially obvious paral",
+        "llmFatal:The explanation self-contradicts: it argues (A) should be gerund via parallelism with 'looking', then confusingly also f",
+        "llmMajor:Distractors (B)-(E) are shallow textbook points (relative adverb, subject-verb agreement, adjective modifier, passive vo",
+        "llmMajor:No distractor is genuinely tempting; all can be dismissed by a basic local grammar check, so the item fails the 'resista",
+        "llmMajor:QualityWarnings flag mislabeled grammar terminology in explanation, confirming internal inconsistency between keyPoints "
+      ],
+      "answerSurfaces": [
+        "(A):providing->provide"
+      ],
+      "rejectionSummary": "Rejected candidates: 5 | Top codes: grammar-killer-overdrilled-answer x2, grammar-obvious-noun-what-relative x2, grammar-killer-answer-point-repeated x1, grammar-render-marker-count x1, grammar-marker-too-dense x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-overdrilled-answer: KILLER GRAMMAR_ERROR rejected: the answer is an over-drilled \"that ↔ what\" swap — the single most repeated CSAT grammar point (26 identical surfaces in the corpus). Move the error to a different, deeper site already present in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break. | grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead. | grammar-keypoint-choice-mismatch: Grammar keyPoints are not grounded in this item's actual choices: keyPoint 2"
+    },
+    {
+      "runIndex": 1,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7cba007wmm0su2vfplrv",
+      "title": "2026학년도 수능 영어 43-45번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The 'felt lost' vs 'feeling lost' error is a well-known, easily spotted comma-splice/participle pattern that most mid-le",
+        "llmFatal:passageWithMarkers shows (D) as lowercase 'that' starting a new quoted sentence after a period, which is actually ungram",
+        "llmMajor:No distractor requires deep multi-step reasoning; (A), (B), (E) are fairly standard textbook checks (passive vomiting, a",
+        "llmMajor:The rubric for KILLER underline-based grammar items requires the correct answer to sit in the structurally most complex ",
+        "llmMajor:(D)'s explanation calls 'that' a demonstrative pronoun referring back to the whole prior sentence, but in context it app",
+        "rejection:grammar-shallow-participle-adjective-answer",
+        "rejection:grammar-killer-overdrilled-answer",
+        "rejection:grammar-obvious-noun-what-relative"
+      ],
+      "answerSurfaces": [
+        "(C):feeling->felt"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-shallow-participle-adjective-answer x1, grammar-killer-overdrilled-answer x1, grammar-obvious-noun-what-relative x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-overdrilled-answer: KILLER GRAMMAR_ERROR rejected: the answer is an over-drilled \"that ↔ what\" swap — the single most repeated CSAT grammar point (26 identical surfaces in the corpus). Move the error to a different, deeper site already present in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break. | grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead."
+    },
+    {
+      "runIndex": 2,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7c3h007smm0s9gfw34jf",
+      "title": "2026학년도 수능 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The explanation/passage logic is broken: original passage says 'Without X, it is unlikely displays would be awkward imit",
+        "llmFatal:(D) is a trivial spelling/word-form error (draw vs drawing) — this is a shallow, obvious slip once the reader glances at",
+        "llmMajor:Flagged qualityWarning about (C)/pointCode mismatch is unresolved and suggests fabricated grammar point labeling, underm",
+        "llmMajor:For a KILLER label, all distractors should be highly deceptive; here (A), (B), (C), (E) are basic-level checks (subject-",
+        "llmMajor:The correct answer's underline area is easily spotted because 'draw'/'drawing' clashes visibly with the parallel noun 's",
+        "rejection:grammar-killer-generic-answer-point",
+        "rejection:grammar-killer-overdrilled-answer",
+        "rejection:grammar-obvious-noun-what-relative"
+      ],
+      "answerSurfaces": [
+        "(D):drawing->draw"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-killer-generic-answer-point x1, grammar-killer-overdrilled-answer x1, grammar-obvious-noun-what-relative x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-overdrilled-answer: KILLER GRAMMAR_ERROR rejected: the answer is an over-drilled \"that ↔ what\" swap — the single most repeated CSAT grammar point (26 identical surfaces in the corpus). Move the error to a different, deeper site already present in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break. | grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead."
+    },
+    {
+      "runIndex": 3,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7bvm007omm0sg99seww5",
+      "title": "2026학년도 수능 영어 40번 · 요약문",
+      "llmScore": 58,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:Generator itself flagged relaxed quality mode and review-recommended, indicating known deficiency; the parallel-verb err",
+        "llmFatal:The passageWithMarkers shows '__(C) engaging__' as the underlined text but option (C) also lists 'engaging' as the optio",
+        "llmMajor:For a KILLER item, only one marked expression (C) tests a meaningful hard point; (A) voice, (B) pronoun reference, (D) a",
+        "llmMajor:The distance between 'unfold' and 'engaging' is short and the subject list is a simple list of nouns right before the ve",
+        "llmMajor:Explanation is clear but the trap is not subtle — 'engaging audiences' immediately reads oddly in context (no clear func"
+      ],
+      "answerSurfaces": [
+        "(C):engage->engaging"
+      ],
+      "rejectionSummary": "Rejected candidates: 5 | Top codes: grammar-obvious-adjacent-sv-agreement x2, grammar-killer-thin-answer x2, grammar-keypoint-choice-mismatch x1, grammar-marker-too-dense x1, grammar-tense-only-error x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-adjacent-sv-agreement: GRAMMAR_ERROR answer \"provides\" is a directly adjacent subject-verb -s flip; choose an agreement target with an intervening modifier, relative clause, or attractor noun. | grammar-killer-thin-answer: KILLER GRAMMAR_ERROR answer looks like a local one-token change without a long-distance clause, modifier, relation, or parallel-structure check."
+    },
+    {
+      "runIndex": 4,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7bnr007kmm0s7o4r91j4",
+      "title": "2026학년도 수능 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:The passage itself contains a clearly malformed sentence ('is the only way in which the reality of the external reality ",
+        "llmFatal:The (C) error (encompassing->encompassed) is a fairly obvious participle vs. past-participle swap detectable by local ph",
+        "llmMajor:For a KILLER, the correct answer should hinge on a long-distance dependency verified via structure outside the underline",
+        "llmMajor:Distractor (B) is built on a corrupted source sentence ('the reality of the external reality'), which looks like a passa",
+        "llmMajor:Only 5 marked expressions used when detailed settings likely call for the fuller 5-10 range with more robust hard points",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejection:grammar-killer-overdrilled-answer",
+        "rejectionLast:grammar-killer-overdrilled-answer"
+      ],
+      "answerSurfaces": [
+        "(C):encompassing->encompassed"
+      ],
+      "rejectionSummary": "Rejected candidates: 4 | Top codes: grammar-killer-answer-point-repeated x2, grammar-killer-overdrilled-answer x2 | Last: quality/GRAMMAR_ERROR - grammar-killer-overdrilled-answer: KILLER GRAMMAR_ERROR rejected: the answer is a shallow subject-verb number flip (\"is\" ↔ \"are\") with the true subject sitting right next to the verb (no genuine attractor noun in between). At KILLER the agreement must span a real long-distance modifier with a misleading attractor noun so the subject head is non-obvious. Move the error to such a site, or pick another deep structure already in the passage: a long-distance subject-verb agreement across a genuine intervening relative/appositive or of/with phrase, a nominal vs relative clause-gap, a participle voice error, or a parallel-structure break."
+    },
+    {
+      "runIndex": 5,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr8z7bfy007gmm0s4nr3jwom",
+      "title": "2026학년도 수능 영어 38번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmMajor:KILLER 요건 미달: (E) 오류는 not only A but also B 병렬 구조로 becoming vs become 판별이 상대적으로 단순하며, 상위권 학생이 구조를 보면 빠르게 잡아낼 수 있는 수준으로 진",
+        "llmMajor:(B) 설명이 부정확함: 'them'의 선행사는 병렬 명사구가 아니라 'different events'와 'various facts' 전체를 가리키는 것으로 설명해야 하는데, wrongOptionExplanation",
+        "llmMajor:오답 매력도 부족: (A),(C),(D)는 매우 명확하고 교과서적인 정오 판정이라 진짜 변별력 있는 오답 후보로 기능하지 못하고 스킴만으로 배제 가능함"
+      ],
+      "answerSurfaces": [
+        "(E):become->becoming"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

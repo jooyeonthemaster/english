@@ -3304,11 +3304,12 @@ test("grammar candidate blocks include PDF-derived difficulty policy and source-
 });
 
 test("grammar candidate blocks encode the requested nine-frame policy and detect advanced frames", () => {
-  assert.match(result.advancedCandidateBlock, /CSAT nine-frame grammar design policy/);
-  assert.match(result.advancedCandidateBlock, /Dummy[- ]object it/i);
-  assert.match(result.advancedCandidateBlock, /Inversion|fronted negative/i);
+  // 9프레임 가이드는 grammar-frames.ts 정본(한국어)으로 교체됨 — 새 헤더/프레임 명칭 기준.
+  assert.match(result.advancedCandidateBlock, /어법 9프레임 — 구조 문법 출제의 정본/);
+  assert.match(result.advancedCandidateBlock, /가목적어 it 구문/);
+  assert.match(result.advancedCandidateBlock, /부정어구 도치와 수일치/);
   assert.match(result.advancedCandidateBlock, /Marker spacing is mandatory/);
-  assert.match(result.advancedCandidateBlock, /Correct decoy quality/);
+  assert.match(result.advancedCandidateBlock, /Decoy quality/);
   assert.match(result.advancedCandidateBlock, /code=\(g\)/);
   assert.match(result.advancedCandidateBlock, /code=\(d\)/);
 });
@@ -3376,7 +3377,8 @@ test("STANDARD KILLER GRAMMAR_ERROR can downgrade to INTERMEDIATE rescue instead
   assert.match(source, /shouldAttemptCandidateRepair/);
   assert.match(source, /shouldRunStandardGrammarKillerRescue/);
   assert.match(source, /input\.generationPlan\s*===\s*"PREMIUM"\)\s*return\s+false/);
-  assert.match(source, /STANDARD_GRAMMAR_KILLER_STRICT_ATTEMPT_CAP\s*=\s*3/);
+  // 26-07-06 2차: 3→4 (지정 설계와 병행해 STANDARD KILLER 구제 의존율 완화).
+  assert.match(source, /STANDARD_GRAMMAR_KILLER_STRICT_ATTEMPT_CAP\s*=\s*4/);
   assert.match(source, /shouldAttemptCandidateRepair\(subType,\s*fin\.blockingErrors\)/);
   assert.match(source, /difficulty:\s*"INTERMEDIATE"/);
   assert.match(source, /_requestedDifficulty\s*=\s*"KILLER"/);
@@ -3385,23 +3387,33 @@ test("STANDARD KILLER GRAMMAR_ERROR can downgrade to INTERMEDIATE rescue instead
   assert.match(source, /rescue also failed; skipping relaxed KILLER fallback/);
 });
 
-test("PREMIUM grammar generation skips slow partial repair calls", () => {
+// 정책 반전(26-07-06 never-fail): reasoning-off 이후 PREMIUM 호출이 ~13-30s 라
+// 후보당 1회 repair 가 데드라인 안에 들어온다 — PREMIUM 제외 가드는 의도적으로
+// 제거됐고, 실패 종결 대신 구제 사다리(salvage ladder)로 진입한다.
+test("PREMIUM grammar generation participates in repair and the never-fail salvage ladder", () => {
   const source = readFileSync(
     path.join(repoRoot, "src", "app", "api", "ai", "generate-questions-auto", "_lib", "run-question-generation.ts"),
     "utf8",
   );
-  const repairGuard = source.match(
+  const premiumRepairGuard = source.match(
     /if\s*\(\s*[\s\S]{0,500}?effectiveGenerationPlan\s*!==\s*"PREMIUM"[\s\S]{0,500}?repairQuestionCandidate/,
   );
-  assert.ok(repairGuard, "PREMIUM repair guard missing");
+  assert.equal(
+    premiumRepairGuard,
+    null,
+    "PREMIUM must no longer be excluded from candidate repair",
+  );
+  assert.match(source, /shouldAttemptCandidateRepair\(subType,\s*fin\.blockingErrors\)/);
   assert.match(
     source,
     /inputWithUsage\.generationPlan\s*===\s*"PREMIUM"[\s\S]{0,180}?Math\.min\([^)]*requestedMaxAttempts/,
   );
   assert.match(
     source,
-    /generationPlan\s*===\s*"PREMIUM"[\s\S]{0,220}?skipping relaxed fallback/,
+    /generationPlan\s*===\s*"PREMIUM"[\s\S]{0,400}?entering never-fail salvage ladder/,
   );
+  assert.match(source, /runUniversalSalvage/);
+  assert.match(source, /admitSalvageCandidatesFromPool/);
 });
 
 test("GRAMMAR_ERROR retry feedback accumulates failed surfaces across repeated issue codes", () => {

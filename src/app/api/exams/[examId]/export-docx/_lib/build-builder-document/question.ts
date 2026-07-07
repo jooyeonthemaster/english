@@ -740,6 +740,7 @@ export function buildQuestionBlock(
         }),
         explanation: item.sourceQuestion.explanation,
         hasOptions: options.length > 0,
+        subType: item.sourceQuestion.subType,
       }),
     );
   }

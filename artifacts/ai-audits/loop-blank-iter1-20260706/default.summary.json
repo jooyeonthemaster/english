@@ -1,0 +1,378 @@
+{
+  "createdAt": "2026-07-05T17:19:15.268Z",
+  "outPath": "artifacts/ai-audits/loop-blank-iter1-20260706/default.jsonl",
+  "total": 6,
+  "passed": 0,
+  "failed": 6,
+  "passRate": 0,
+  "byCell": {
+    "BLANK_INFERENCE:STANDARD:BASIC": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 62,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank is a removable prepositional phrase modifying how a word's meaning shifts, not a logic-controlling element of ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:This is functionally a vocabulary/collocation-fill item disguised as blank inference; the answer is simply the verbatim ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Choosing 'depending on the context' as a blank target is a poor design choice since it's a generic phrase carrying littl",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Options 1, 4, 5 are semantically distant and easily eliminated on a skim, making this too shallow even for BASIC; there'",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation calls this 'restate_paraphrase' logic but the answer is the exact original text (SOURCE_EXACT), so the a",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:STANDARD:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 58,
+      "topIssues": [
+        {
+          "code": "llmFatal:blankAnswerMode is SOURCE_EXACT but answerLogic/explanation describe the answer as a paraphrase ('gained recognition as ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The correct answer is literally the original sentence's exact wording copied into the blank, so solving requires no infe",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors don't require deep 2-sentence causal/contrast reasoning; a student can eliminate them by simple keyword mism",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The explanation and answerLogic present a paraphrase framing for what is actually a verbatim-copy answer, which will con",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The self-flagged qualityWarning ('blank-weak-distractors') is a genuine problem: none of the wrong options plausibly fit",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:STANDARD:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 78,
+      "topIssues": [
+        {
+          "code": "llmFatal:The blank is placed on a near-verbatim paraphrase of the immediately adjacent clause, not on a claim requiring synthesis",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Distractors 3 and 5 are thematically distant patchwork (blending with red, pictorial practices) and not genuinely tempti",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The correct answer just restates local wording with fancier vocabulary rather than requiring inference across the passag",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:This is a single defining sentence early in the paragraph—the blank does not control the paragraph's overall thesis or r",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:BASIC": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:The correct answer option (3) is 'were considered colors', which is verbatim from the source passage but used as a blank",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Using the exact 100% verbatim text 'were considered colors' makes the question trivial and lacks the 'elegant, exam-like",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The distractors are too weak and straightforward, offering very little challenge even for a BASIC difficulty tier.",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:INTERMEDIATE": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 75,
+      "topIssues": [
+        {
+          "code": "llmFatal:The correct answer option is verbatim copied from the source text (\"were considered colors\") with blankAnswerMode \"SOURC",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The distractors, especially Option 3 (\"ceased to exist entirely\"), are too weak and grammatically/semantically awkward i",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Does not meet the INTERMEDIATE difficulty criteria requiring paraphrased logical connections; instead, it is a literal, ",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:Option 4 is conceptually disconnected from the passage's primary focus on lexical development and cultural categorizatio",
+          "count": 1
+        }
+      ]
+    },
+    "BLANK_INFERENCE:PREMIUM:KILLER": {
+      "total": 1,
+      "generated": 1,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 85,
+      "topIssues": [
+        {
+          "code": "llmMajor:Option 1 contains 'gradually earned a recognized status only after a long delay' which structurally repeats 'wait a long",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The placement of the blank inside the adverbial clause structure 'before they were considered colors and then [blank]' m",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "llmFatal:blankAnswerMode is SOURCE_EXACT but answerLogic/explanation describe the answer as a paraphrase ('gained recognition as ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank is a removable prepositional phrase modifying how a word's meaning shifts, not a logic-controlling element of ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The blank is placed on a near-verbatim paraphrase of the immediately adjacent clause, not on a claim requiring synthesis",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The correct answer is literally the original sentence's exact wording copied into the blank, so solving requires no infe",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The correct answer option (3) is 'were considered colors', which is verbatim from the source passage but used as a blank",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The correct answer option is verbatim copied from the source text (\"were considered colors\") with blankAnswerMode \"SOURC",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The distractors, especially Option 3 (\"ceased to exist entirely\"), are too weak and grammatically/semantically awkward i",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:This is functionally a vocabulary/collocation-fill item disguised as blank inference; the answer is simply the verbatim ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Using the exact 100% verbatim text 'were considered colors' makes the question trivial and lacks the 'elegant, exam-like",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Choosing 'depending on the context' as a blank target is a poor design choice since it's a generic phrase carrying littl",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors 3 and 5 are thematically distant patchwork (blending with red, pictorial practices) and not genuinely tempti",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors don't require deep 2-sentence causal/contrast reasoning; a student can eliminate them by simple keyword mism",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Does not meet the INTERMEDIATE difficulty criteria requiring paraphrased logical connections; instead, it is a literal, ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option 1 contains 'gradually earned a recognized status only after a long delay' which structurally repeats 'wait a long",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Option 4 is conceptually disconnected from the passage's primary focus on lexical development and cultural categorizatio",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Options 1, 4, 5 are semantically distant and easily eliminated on a skim, making this too shallow even for BASIC; there'",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The correct answer just restates local wording with fancier vocabulary rather than requiring inference across the passag",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The distractors are too weak and straightforward, offering very little challenge even for a BASIC difficulty tier.",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The explanation and answerLogic present a paraphrase framing for what is actually a verbatim-copy answer, which will con",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The explanation calls this 'restate_paraphrase' logic but the answer is the exact original text (SOURCE_EXACT), so the a",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The blank is a removable prepositional phrase modifying how a word's meaning shifts, not a logic-controlling element of ": 1,
+    "llmFatal:This is functionally a vocabulary/collocation-fill item disguised as blank inference; the answer is simply the verbatim ": 1,
+    "llmMajor:Options 1, 4, 5 are semantically distant and easily eliminated on a skim, making this too shallow even for BASIC; there'": 1,
+    "llmMajor:The explanation calls this 'restate_paraphrase' logic but the answer is the exact original text (SOURCE_EXACT), so the a": 1,
+    "llmMajor:Choosing 'depending on the context' as a blank target is a poor design choice since it's a generic phrase carrying littl": 1,
+    "llmFatal:blankAnswerMode is SOURCE_EXACT but answerLogic/explanation describe the answer as a paraphrase ('gained recognition as ": 1,
+    "llmFatal:The correct answer is literally the original sentence's exact wording copied into the blank, so solving requires no infe": 1,
+    "llmMajor:Distractors don't require deep 2-sentence causal/contrast reasoning; a student can eliminate them by simple keyword mism": 1,
+    "llmMajor:The self-flagged qualityWarning ('blank-weak-distractors') is a genuine problem: none of the wrong options plausibly fit": 1,
+    "llmMajor:The explanation and answerLogic present a paraphrase framing for what is actually a verbatim-copy answer, which will con": 1,
+    "llmFatal:The blank is placed on a near-verbatim paraphrase of the immediately adjacent clause, not on a claim requiring synthesis": 1,
+    "llmMajor:The correct answer just restates local wording with fancier vocabulary rather than requiring inference across the passag": 1,
+    "llmMajor:Distractors 3 and 5 are thematically distant patchwork (blending with red, pictorial practices) and not genuinely tempti": 1,
+    "llmMajor:This is a single defining sentence early in the paragraph—the blank does not control the paragraph's overall thesis or r": 1,
+    "llmFatal:The correct answer option (3) is 'were considered colors', which is verbatim from the source passage but used as a blank": 1,
+    "llmFatal:Using the exact 100% verbatim text 'were considered colors' makes the question trivial and lacks the 'elegant, exam-like": 1,
+    "llmMajor:The distractors are too weak and straightforward, offering very little challenge even for a BASIC difficulty tier.": 1,
+    "llmFatal:The correct answer option is verbatim copied from the source text (\"were considered colors\") with blankAnswerMode \"SOURC": 1,
+    "llmFatal:The distractors, especially Option 3 (\"ceased to exist entirely\"), are too weak and grammatically/semantically awkward i": 1,
+    "llmMajor:Does not meet the INTERMEDIATE difficulty criteria requiring paraphrased logical connections; instead, it is a literal, ": 1,
+    "llmMajor:Option 4 is conceptually disconnected from the passage's primary focus on lexical development and cultural categorizatio": 1,
+    "llmMajor:The placement of the blank inside the adverbial clause structure 'before they were considered colors and then [blank]' m": 1,
+    "llmMajor:Option 1 contains 'gradually earned a recognized status only after a long delay' which structurally repeats 'wait a long": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 2,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 58,
+      "issueKeys": [
+        "llmFatal:blankAnswerMode is SOURCE_EXACT but answerLogic/explanation describe the answer as a paraphrase ('gained recognition as ",
+        "llmFatal:The correct answer is literally the original sentence's exact wording copied into the blank, so solving requires no infe",
+        "llmMajor:Distractors don't require deep 2-sentence causal/contrast reasoning; a student can eliminate them by simple keyword mism",
+        "llmMajor:The self-flagged qualityWarning ('blank-weak-distractors') is a genuine problem: none of the wrong options plausibly fit",
+        "llmMajor:The explanation and answerLogic present a paraphrase framing for what is actually a verbatim-copy answer, which will con"
+      ],
+      "answerSurfaces": [
+        "④"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 1,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "BASIC",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 62,
+      "issueKeys": [
+        "llmFatal:The blank is a removable prepositional phrase modifying how a word's meaning shifts, not a logic-controlling element of ",
+        "llmFatal:This is functionally a vocabulary/collocation-fill item disguised as blank inference; the answer is simply the verbatim ",
+        "llmMajor:Options 1, 4, 5 are semantically distant and easily eliminated on a skim, making this too shallow even for BASIC; there'",
+        "llmMajor:The explanation calls this 'restate_paraphrase' logic but the answer is the exact original text (SOURCE_EXACT), so the a",
+        "llmMajor:Choosing 'depending on the context' as a blank target is a poor design choice since it's a generic phrase carrying littl"
+      ],
+      "answerSurfaces": [
+        "③"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 4,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "BASIC",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 75,
+      "issueKeys": [
+        "llmFatal:The correct answer option (3) is 'were considered colors', which is verbatim from the source passage but used as a blank",
+        "llmFatal:Using the exact 100% verbatim text 'were considered colors' makes the question trivial and lacks the 'elegant, exam-like",
+        "llmMajor:The distractors are too weak and straightforward, offering very little challenge even for a BASIC difficulty tier."
+      ],
+      "answerSurfaces": [
+        "3"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 5,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "INTERMEDIATE",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 75,
+      "issueKeys": [
+        "llmFatal:The correct answer option is verbatim copied from the source text (\"were considered colors\") with blankAnswerMode \"SOURC",
+        "llmFatal:The distractors, especially Option 3 (\"ceased to exist entirely\"), are too weak and grammatically/semantically awkward i",
+        "llmMajor:Does not meet the INTERMEDIATE difficulty criteria requiring paraphrased logical connections; instead, it is a literal, ",
+        "llmMajor:Option 4 is conceptually disconnected from the passage's primary focus on lexical development and cultural categorizatio"
+      ],
+      "answerSurfaces": [
+        "2"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 3,
+      "type": "BLANK_INFERENCE",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 78,
+      "issueKeys": [
+        "llmFatal:The blank is placed on a near-verbatim paraphrase of the immediately adjacent clause, not on a claim requiring synthesis",
+        "llmMajor:The correct answer just restates local wording with fancier vocabulary rather than requiring inference across the passag",
+        "llmMajor:Distractors 3 and 5 are thematically distant patchwork (blending with red, pictorial practices) and not genuinely tempti",
+        "llmMajor:This is a single defining sentence early in the paragraph—the blank does not control the paragraph's overall thesis or r"
+      ],
+      "answerSurfaces": [
+        "②"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    },
+    {
+      "runIndex": 6,
+      "type": "BLANK_INFERENCE",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 85,
+      "issueKeys": [
+        "llmMajor:The placement of the blank inside the adverbial clause structure 'before they were considered colors and then [blank]' m",
+        "llmMajor:Option 1 contains 'gradually earned a recognized status only after a long delay' which structurally repeats 'wait a long"
+      ],
+      "answerSurfaces": [
+        "1"
+      ],
+      "rejectionSummary": "Rejected candidates: 0"
+    }
+  ]
+}

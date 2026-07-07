@@ -1,4 +1,9 @@
 import { formatStoredQuestionCorrectAnswer } from "@/lib/question-answer-display";
+import {
+  circleGrammarLabelMentions,
+  grammarMarkerDisplayLabel,
+  shouldRenderWrongAnalysisForSubtype,
+} from "./option-display";
 import type { PaperItem } from "./types";
 
 // ---------------------------------------------------------------------------
@@ -42,6 +47,12 @@ export function explanationCorrectAnswer(item: PaperItem): string {
 export function buildExplanationRows(item: PaperItem): ExplanationRow[] {
   const rows: ExplanationRow[] = [];
   const hasOptions = item.options.length > 0;
+  const subType = item.sourceQuestion.subType;
+  // 어법(GRAMMAR_ERROR)만 해설 산문의 "(A)" 라벨을 지문 마커와 같은 원형숫자
+  // (①②③)로 변환한다 — 데이터는 (A) 유지, 표시 전용(카드 팝오버·클립보드 규약 동일).
+  const isGrammarError = subType === "GRAMMAR_ERROR";
+  const prose = (text: string) =>
+    isGrammarError ? circleGrammarLabelMentions(text) : text;
   rows.push({ type: "answer", text: explanationCorrectAnswer(item), hasOptions });
 
   const explanation = item.sourceQuestion.explanation;
@@ -52,7 +63,7 @@ export function buildExplanationRows(item: PaperItem): ExplanationRow[] {
     rows.push({ type: "label", text: "해설" });
     for (const line of content.split("\n")) {
       const trimmed = line.trim();
-      if (trimmed) rows.push({ type: "text", text: trimmed });
+      if (trimmed) rows.push({ type: "text", text: prose(trimmed) });
     }
   }
 
@@ -61,7 +72,7 @@ export function buildExplanationRows(item: PaperItem): ExplanationRow[] {
   );
   if (keyPoints.length > 0) {
     rows.push({ type: "label", text: "핵심 포인트" });
-    for (const kp of keyPoints) rows.push({ type: "bullet", text: kp.trim() });
+    for (const kp of keyPoints) rows.push({ type: "bullet", text: prose(kp.trim()) });
   }
 
   // KO 봉투는 배열형([{label, explanation}]) 계약 — Record 로 정규화해야 소실되지 않는다.
@@ -83,11 +94,19 @@ export function buildExplanationRows(item: PaperItem): ExplanationRow[] {
   const wrongEntries = Object.entries(wrong).filter(
     ([, v]) => typeof v === "string" && v.trim().length > 0,
   );
-  // 오답 분석은 선택지가 있는 문항에서만(DOCX 와 동일).
-  if (wrongEntries.length > 0 && hasOptions) {
+  // 오답 분석 — 선지 목록 문항 + 마커 유형(어법 등, 라벨이 지문 마커로 실재).
+  // 어법 라벨 키는 "(A)" → "①" 로 표시 변환(지문 마커·해설 산문과 정합).
+  if (
+    wrongEntries.length > 0 &&
+    shouldRenderWrongAnalysisForSubtype(subType, hasOptions)
+  ) {
     rows.push({ type: "label", text: "오답 분석" });
     for (const [label, v] of wrongEntries) {
-      rows.push({ type: "wrong", label, text: v.trim() });
+      rows.push({
+        type: "wrong",
+        label: isGrammarError ? grammarMarkerDisplayLabel(label) : label,
+        text: prose(v.trim()),
+      });
     }
   }
 

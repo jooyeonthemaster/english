@@ -1,0 +1,281 @@
+{
+  "createdAt": "2026-07-05T17:27:13.629Z",
+  "outPath": "artifacts/ai-audits/loop-grammar-iter1-20260706",
+  "total": 4,
+  "passed": 0,
+  "failed": 4,
+  "passRate": 0,
+  "byCell": {
+    "GRAMMAR_ERROR:STANDARD:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 60,
+      "topIssues": [
+        {
+          "code": "rejection:grammar-obvious-noun-what-relative",
+          "count": 2
+        },
+        {
+          "code": "rejection:grammar-shallow-depends-decoy",
+          "count": 2
+        },
+        {
+          "code": "llmFatal:Distractors (A),(B),(C),(E) are shallow textbook points (past tense agreement, plural possessive, to-infinitive after le",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:Generator explicitly flagged relaxed quality mode and review-recommended due to insufficient clean grammar spots in the ",
+          "count": 1
+        },
+        {
+          "code": "llmFatal:The claimed KILLER trap (long-distance subject-verb agreement) is undermined by (A) using the identical pointCode 'd' as",
+          "count": 1
+        }
+      ]
+    },
+    "GRAMMAR_ERROR:PREMIUM:KILLER": {
+      "total": 2,
+      "generated": 2,
+      "passed": 0,
+      "passRate": 0,
+      "avgScore": 82,
+      "topIssues": [
+        {
+          "code": "local:generation-notice",
+          "count": 2
+        },
+        {
+          "code": "local:quality-mode-relaxed",
+          "count": 2
+        },
+        {
+          "code": "local:review-recommended",
+          "count": 2
+        },
+        {
+          "code": "llmFatal:The explanation states '(C) \"enduring\" is grammatically incorrect and should be corrected to \"endured\"' because 'unless'",
+          "count": 1
+        },
+        {
+          "code": "llmMajor:The distractors, especially (B) 'thicker' and (D) 'developed', are too easy, obvious, and passive as non-error options, ",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "topIssues": [
+    {
+      "code": "local:generation-notice",
+      "count": 3
+    },
+    {
+      "code": "local:quality-mode-relaxed",
+      "count": 3
+    },
+    {
+      "code": "local:review-recommended",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-obvious-noun-what-relative",
+      "count": 3
+    },
+    {
+      "code": "rejection:grammar-shallow-depends-decoy",
+      "count": 2
+    },
+    {
+      "code": "rejection:grammar-too-basic-decoys",
+      "count": 2
+    },
+    {
+      "code": "llmFatal:Distractors (A),(B),(C),(E) are shallow textbook points (past tense agreement, plural possessive, to-infinitive after le",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:Generator explicitly flagged relaxed quality mode and review-recommended due to insufficient clean grammar spots in the ",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The claimed KILLER trap (long-distance subject-verb agreement) is undermined by (A) using the identical pointCode 'd' as",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The error at (D) is 'depending on' → 'dependent on' confusion, which is a well-known but fairly mechanical/local pattern",
+      "count": 1
+    },
+    {
+      "code": "llmFatal:The explanation states '(C) \"enduring\" is grammatically incorrect and should be corrected to \"endured\"' because 'unless'",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Distractors (A) depends, (B) given, (D) to comprehend, (E) it's are all locally obvious correct usages with no plausible",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:KILLER rubric requires the answer to sit in the most syntactically complex sentence with long-distance dependency; here ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:None of the four non-error options test genuinely hard grammar interactions (e.g., relative clause with distant antecede",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:Self-reported quality warnings (grammar-killer-answer-point-repeated, grammar-too-basic-decoys, grammar-weak-filler-deco",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The distractors, especially (B) 'thicker' and (D) 'developed', are too easy, obvious, and passive as non-error options, ",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The explanation's justification for why 'dependent on' fails is convoluted and slightly circular ('구성하는 자리...형용사구로...통사적",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The question maker explicitly admitted in '_generationNotice' that the passage lacked sufficient quality grammar structu",
+      "count": 1
+    },
+    {
+      "code": "llmMajor:The subject-verb distance in (C) is fairly short and 'sheets...are' is a common textbook-level trap, not a subtle top-ti",
+      "count": 1
+    },
+    {
+      "code": "rejection:grammar-error-not-mutated",
+      "count": 1
+    }
+  ],
+  "issueCounts": {
+    "llmFatal:The error at (D) is 'depending on' → 'dependent on' confusion, which is a well-known but fairly mechanical/local pattern": 1,
+    "llmFatal:Distractors (A),(B),(C),(E) are shallow textbook points (past tense agreement, plural possessive, to-infinitive after le": 1,
+    "llmMajor:KILLER rubric requires the answer to sit in the most syntactically complex sentence with long-distance dependency; here ": 1,
+    "llmMajor:The explanation's justification for why 'dependent on' fails is convoluted and slightly circular ('구성하는 자리...형용사구로...통사적": 1,
+    "llmMajor:None of the four non-error options test genuinely hard grammar interactions (e.g., relative clause with distant antecede": 1,
+    "rejection:grammar-error-not-mutated": 1,
+    "rejection:grammar-source-expression-not-backed": 1,
+    "rejectionLast:grammar-error-not-mutated": 1,
+    "rejectionLast:grammar-source-expression-not-backed": 1,
+    "local:quality-mode-relaxed": 3,
+    "local:generation-notice": 3,
+    "local:review-recommended": 3,
+    "llmFatal:Generator explicitly flagged relaxed quality mode and review-recommended due to insufficient clean grammar spots in the ": 1,
+    "llmFatal:The claimed KILLER trap (long-distance subject-verb agreement) is undermined by (A) using the identical pointCode 'd' as": 1,
+    "llmMajor:Distractors (A) depends, (B) given, (D) to comprehend, (E) it's are all locally obvious correct usages with no plausible": 1,
+    "llmMajor:The subject-verb distance in (C) is fairly short and 'sheets...are' is a common textbook-level trap, not a subtle top-ti": 1,
+    "llmMajor:Self-reported quality warnings (grammar-killer-answer-point-repeated, grammar-too-basic-decoys, grammar-weak-filler-deco": 1,
+    "rejection:grammar-shallow-depends-decoy": 2,
+    "rejection:grammar-obvious-noun-what-relative": 3,
+    "rejection:grammar-killer-thin-connector": 1,
+    "rejection:grammar-shallow-despite-although-gerund": 1,
+    "rejection:grammar-too-basic-decoys": 2,
+    "rejectionLast:grammar-obvious-noun-what-relative": 1,
+    "rejectionLast:grammar-shallow-depends-decoy": 1,
+    "rejection:grammar-shallow-participle-adjective-answer": 1,
+    "rejection:grammar-killer-answer-point-repeated": 1,
+    "rejectionLast:grammar-killer-answer-point-repeated": 1,
+    "llmFatal:The explanation states '(C) \"enduring\" is grammatically incorrect and should be corrected to \"endured\"' because 'unless'": 1,
+    "llmMajor:The distractors, especially (B) 'thicker' and (D) 'developed', are too easy, obvious, and passive as non-error options, ": 1,
+    "llmMajor:The question maker explicitly admitted in '_generationNotice' that the passage lacked sufficient quality grammar structu": 1,
+    "rejection:grammar-tense-only-error": 1,
+    "rejection:grammar-shallow-nearby-passive-decoy": 1,
+    "rejection:grammar-weak-filler-decoys": 1,
+    "rejectionLast:grammar-tense-only-error": 1,
+    "rejectionLast:grammar-too-basic-decoys": 1,
+    "rejectionLast:grammar-shallow-nearby-passive-decoy": 1,
+    "rejectionLast:grammar-weak-filler-decoys": 1
+  },
+  "worstSamples": [
+    {
+      "runIndex": 2,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 58,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:Generator explicitly flagged relaxed quality mode and review-recommended due to insufficient clean grammar spots in the ",
+        "llmFatal:The claimed KILLER trap (long-distance subject-verb agreement) is undermined by (A) using the identical pointCode 'd' as",
+        "llmMajor:Distractors (A) depends, (B) given, (D) to comprehend, (E) it's are all locally obvious correct usages with no plausible",
+        "llmMajor:The subject-verb distance in (C) is fairly short and 'sheets...are' is a common textbook-level trap, not a subtle top-ti",
+        "llmMajor:Self-reported quality warnings (grammar-killer-answer-point-repeated, grammar-too-basic-decoys, grammar-weak-filler-deco"
+      ],
+      "answerSurfaces": [
+        "(C):are->is"
+      ],
+      "rejectionSummary": "Rejected candidates: 3 | Top codes: grammar-shallow-depends-decoy x2, grammar-obvious-noun-what-relative x2, grammar-killer-thin-connector x1, grammar-shallow-despite-although-gerund x1, grammar-too-basic-decoys x1 | Last: quality/GRAMMAR_ERROR - grammar-obvious-noun-what-relative: INTERMEDIATE/KILLER GRAMMAR_ERROR should not mutate a post-nominal relative 'that' into the visibly ungrammatical 'N what ...'. Test that/what in a nominal-clause slot instead. | grammar-shallow-depends-decoy: Do not use a simple 'depends on' subject-verb match as a grammar decoy; it offers little trap value."
+    },
+    {
+      "runIndex": 1,
+      "type": "GRAMMAR_ERROR",
+      "plan": "STANDARD",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 62,
+      "issueKeys": [
+        "llmFatal:The error at (D) is 'depending on' → 'dependent on' confusion, which is a well-known but fairly mechanical/local pattern",
+        "llmFatal:Distractors (A),(B),(C),(E) are shallow textbook points (past tense agreement, plural possessive, to-infinitive after le",
+        "llmMajor:KILLER rubric requires the answer to sit in the most syntactically complex sentence with long-distance dependency; here ",
+        "llmMajor:The explanation's justification for why 'dependent on' fails is convoluted and slightly circular ('구성하는 자리...형용사구로...통사적",
+        "llmMajor:None of the four non-error options test genuinely hard grammar interactions (e.g., relative clause with distant antecede",
+        "rejection:grammar-error-not-mutated",
+        "rejection:grammar-source-expression-not-backed",
+        "rejectionLast:grammar-error-not-mutated"
+      ],
+      "answerSurfaces": [
+        "(D):depending on->dependent on"
+      ],
+      "rejectionSummary": "Rejected candidates: 1 | Top codes: grammar-error-not-mutated x1, grammar-source-expression-not-backed x1 | Last: quality/GRAMMAR_ERROR - grammar-error-not-mutated: The grammar error surface matches the original expression. | grammar-source-expression-not-backed: The source/correction expression \"playing\" is not found in the original passage; GRAMMAR_ERROR must mutate a real source expression, not mark an already-correct source form as wrong."
+    },
+    {
+      "runIndex": 4,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3bllej003emmf0f1dptmn9",
+      "title": "2027학년도 6월 모평 영어 41-42번 · 장문",
+      "llmScore": 68,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "llmFatal:The explanation states '(C) \"enduring\" is grammatically incorrect and should be corrected to \"endured\"' because 'unless'",
+        "llmMajor:The distractors, especially (B) 'thicker' and (D) 'developed', are too easy, obvious, and passive as non-error options, ",
+        "llmMajor:The question maker explicitly admitted in '_generationNotice' that the passage lacked sufficient quality grammar structu",
+        "rejection:grammar-obvious-noun-what-relative",
+        "rejection:grammar-tense-only-error"
+      ],
+      "answerSurfaces": [
+        "(C):endured->enduring"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-obvious-noun-what-relative x1, grammar-tense-only-error x1, grammar-too-basic-decoys x1, grammar-shallow-nearby-passive-decoy x1, grammar-weak-filler-decoys x1 | Last: quality/GRAMMAR_ERROR - grammar-tense-only-error: The grammar error is a tense-only change (\"solidified\" ↔ \"solidify\"), which is contextually disputable; use a proven mutation type instead. | grammar-too-basic-decoys: INTERMEDIATE/KILLER GRAMMAR_ERROR uses too-basic decoy surface \"one\"; use a structurally meaningful distractor. | grammar-shallow-nearby-passive-decoy: Do not use a nearby pronoun + be p.p. phrase as a passive-voice decoy; it is too local and shallow. | grammar-weak-filler-decoys: GRAMMAR_ERROR uses weak filler decoy(s) ((A)). Replace them with structurally meaningful grammar targets."
+    },
+    {
+      "runIndex": 3,
+      "type": "GRAMMAR_ERROR",
+      "plan": "PREMIUM",
+      "difficulty": "KILLER",
+      "passageId": "cmr3blkyt0036mmf0orai1ibu",
+      "title": "2027학년도 6월 모평 영어 39번 · 문장삽입",
+      "llmScore": 96,
+      "issueKeys": [
+        "local:quality-mode-relaxed",
+        "local:generation-notice",
+        "local:review-recommended",
+        "rejection:grammar-shallow-participle-adjective-answer",
+        "rejection:grammar-killer-answer-point-repeated",
+        "rejectionLast:grammar-killer-answer-point-repeated"
+      ],
+      "answerSurfaces": [
+        "(E):in which->which"
+      ],
+      "rejectionSummary": "Rejected candidates: 2 | Top codes: grammar-shallow-participle-adjective-answer x1, grammar-killer-answer-point-repeated x1 | Last: quality/GRAMMAR_ERROR - grammar-killer-answer-point-repeated: KILLER GRAMMAR_ERROR repeats the answer pointCode (b) in non-answer decoys; use different grammar frames for distractors."
+    }
+  ]
+}

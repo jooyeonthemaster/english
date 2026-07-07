@@ -145,7 +145,7 @@ export const KO_SOURCE_LINE_RE = /^-\s.+\s-$/;
 export const KO_FOOTNOTE_LINE_RE = /^\*\S/;
 
 /** 지문 파트 1개 → "passage" 박스 행 텍스트 ((가) 라벨 + 본문 + 출처 + 각주 행). */
-function koPassagePartText(part: NonNullable<KoRenderModel["passage"]>["parts"][number]): string {
+export function koPassagePartText(part: NonNullable<KoRenderModel["passage"]>["parts"][number]): string {
   const lines: string[] = [];
   lines.push(part.label ? `${part.label} ${part.text}` : part.text);
   if (part.sourceLine) lines.push(part.sourceLine);

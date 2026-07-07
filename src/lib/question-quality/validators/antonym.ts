@@ -285,7 +285,14 @@ export function findAntonymSurfaceFormIssue(word: string, pairedWord: string): s
   const sourcePast = sourceRegularPast || IRREGULAR_PAST_FORMS.has(sourceLower);
   const pairPast = pairRegularPast || IRREGULAR_PAST_FORMS.has(pairLower);
   if ((sourceRegularPast && !pairPast) || (pairRegularPast && !sourcePast)) {
-    return `"${source}" and "${pairedWord}" do not share past/participle form`;
+    // 26-07-06 정밀화: -ed 형이 "확립된 분사형용사"(varied 등)로 쓰인 경우,
+    // 일반 형용사(uniform 등)와의 짝은 실전 정합이므로 오탐이다(실측: varied↔uniform
+    // 이 strict 2회 거부 → relaxed 강등의 직접 원인). 동사 시제 불일치(exceeded↔lag
+    // 류)는 화이트리스트 밖이므로 기존대로 차단 — 게이트 자체는 유지.
+    const edSide = sourceRegularPast && !pairPast ? sourceLower : pairLower;
+    if (!ADJECTIVAL_PARTICIPLES.has(edSide)) {
+      return `"${source}" and "${pairedWord}" do not share past/participle form`;
+    }
   }
 
   const sourceComparative = isLikelyComparativeForm(sourceLower);
@@ -314,6 +321,68 @@ export function isLikelyComparativeForm(word: string): boolean {
 export function isLikelySuperlativeForm(word: string): boolean {
   return /^(?:easiest|hardest|largest|smallest|biggest|longest|shortest|highest|lowest|greatest|least|most|best|worst|fastest|slowest|strongest|weakest|brightest|darkest|earliest|latest|oldest|newest)$/.test(word);
 }
+
+
+
+// -ed 로 끝나지만 형용사로 확립되어 일반 형용사와 짝지어도 표면형 위반이 아닌
+// 분사형용사 화이트리스트. 여기 없는 -ed 형(exceeded, arrived 등)은 동사 굴절로
+// 간주되어 기존 past/participle 검사를 그대로 받는다.
+export const ADJECTIVAL_PARTICIPLES = new Set([
+  "advanced",
+  "balanced",
+  "biased",
+  "bored",
+  "celebrated",
+  "complicated",
+  "concentrated",
+  "confused",
+  "crowded",
+  "dedicated",
+  "delighted",
+  "depressed",
+  "detached",
+  "detailed",
+  "determined",
+  "disciplined",
+  "distinguished",
+  "diversified",
+  "educated",
+  "engaged",
+  "established",
+  "exaggerated",
+  "excited",
+  "experienced",
+  "informed",
+  "integrated",
+  "interested",
+  "involved",
+  "isolated",
+  "limited",
+  "motivated",
+  "organized",
+  "pleased",
+  "prolonged",
+  "qualified",
+  "refined",
+  "relaxed",
+  "repeated",
+  "reserved",
+  "restricted",
+  "satisfied",
+  "skilled",
+  "sophisticated",
+  "specialized",
+  "standardized",
+  "structured",
+  "talented",
+  "tired",
+  "unbiased",
+  "unexpected",
+  "uninterested",
+  "unlimited",
+  "unqualified",
+  "varied",
+]);
 
 
 
