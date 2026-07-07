@@ -110,17 +110,6 @@ export const aiChatMessageSchema = z.object({
   message: z.string().min(1, "메시지를 입력하세요").max(2000),
 });
 
-// Notice
-export const noticeSchema = z.object({
-  title: z.string().min(1, "제목을 입력하세요").max(200),
-  content: z.string().min(1, "내용을 입력하세요"),
-  targetType: z.enum(["ALL", "CLASS", "INDIVIDUAL", "PARENTS"]),
-  targetId: z.string().optional(),
-  isPinned: z.boolean().default(false),
-  publishAt: z.string().optional(), // ISO datetime
-  sendKakao: z.boolean().default(false),
-});
-
 // Calendar Event
 export const calendarEventSchema = z.object({
   title: z.string().min(1, "제목을 입력하세요").max(200),
@@ -154,7 +143,6 @@ export const consultationSchema = z.object({
 });
 
 // Export types
-export type NoticeInput = z.infer<typeof noticeSchema>;
 export type CalendarEventInput = z.infer<typeof calendarEventSchema>;
 export type MessageInput = z.infer<typeof messageSchema>;
 export type ConsultationInput = z.infer<typeof consultationSchema>;

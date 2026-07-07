@@ -44,7 +44,6 @@ model Academy {
   invoices                  Invoice[]
   expenses                  Expense[]
   salaries                  Salary[]
-  notices                   Notice[]
   calendarEvents            CalendarEvent[]
   consultations             Consultation[]
   assignments               Assignment[]
@@ -502,41 +501,11 @@ model Salary {
 // ============================================================================
 // 5. COMMUNICATION
 // ============================================================================
-
-/// Notice — Announcements
-/// targetType: "ALL" | "CLASS" | "INDIVIDUAL" | "PARENTS"
-model Notice {
-  id         String   @id @default(cuid())
-  academyId  String
-  title      String
-  content    String   @db.Text
-  targetType String   @default("ALL") // "ALL" | "CLASS" | "INDIVIDUAL" | "PARENTS"
-  targetId   String? // classId or studentId depending on targetType
-  isPinned   Boolean  @default(false)
-  publishAt  DateTime @default(now()) // Scheduled publish time
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  academy Academy      @relation(fields: [academyId], references: [id])
-  reads   NoticeRead[]
-
-  @@index([academyId, publishAt])
-  @@map("notices")
-}
-
-/// NoticeRead — Track who read the notice
-model NoticeRead {
-  id         String   @id @default(cuid())
-  noticeId   String
-  readerId   String // parentId or studentId
-  readerType String // "PARENT" | "STUDENT"
-  readAt     DateTime @default(now())
-
-  notice Notice @relation(fields: [noticeId], references: [id], onDelete: Cascade)
-
-  @@unique([noticeId, readerId, readerType])
-  @@map("notice_reads")
-}
+//
+// 학원 내부 공지(Notice/NoticeRead)는 플랫폼 공지(PlatformAnnouncement)로 교체되어
+// 제거되었습니다. 개발 DB 의 기존 두 테이블은 notices_backup_20260707 /
+// notice_reads_backup_20260707 로 이름만 바꿔 보존했고, 운영 DB 정리 SQL 은
+// prisma/backups/retire-notices-prod.sql 에 있습니다.
 
 /// Message — 1:1 messages (Teacher ↔ Parent, Director ↔ Anyone)
 model Message {

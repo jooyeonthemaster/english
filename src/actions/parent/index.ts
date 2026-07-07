@@ -10,7 +10,6 @@ export type {
   ChildDashboard,
   ChildGradesData,
   ChildBillingData,
-  ParentNotice,
   MessageConversation,
   MessageItem,
   ParentReportSummary,
@@ -21,7 +20,6 @@ export { getParentDashboard } from "./dashboard";
 export { getChildGrades } from "./grades";
 export { getChildAttendance } from "./attendance";
 export { getChildBillingInfo } from "./billing";
-export { getParentNotices, markNoticeAsRead } from "./notices";
 export {
   getParentMessages,
   getConversation,

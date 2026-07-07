@@ -1,0 +1,4 @@
+# 실제 사용자 공지 본문이 담긴 데이터 덤프는 git 에 올리지 않는다(로컬 안전 사본 전용).
+# 데이터 자체는 개발 DB 의 notices_backup_* 테이블로도 보존돼 있다.
+notices-backup-*.json
+notices-backup-*.sql

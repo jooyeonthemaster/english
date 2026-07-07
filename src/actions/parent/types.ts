@@ -85,13 +85,6 @@ export interface ChildBillingData {
   hasOverdue: boolean;
 }
 
-export interface ParentNotice {
-  id: string;
-  title: string;
-  content: string;
-  publishAt: string;
-  isRead: boolean;
-}
 
 export interface MessageConversation {
   staffId: string;
