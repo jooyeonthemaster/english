@@ -26,7 +26,7 @@ function digitsOnly(value: string) {
 export const BUSINESS_INFO: BusinessInfo = {
   companyName: publicEnv(
     process.env.NEXT_PUBLIC_BUSINESS_COMPANY_NAME,
-    "NEANDER Co.,LTD",
+    "주식회사 네안데르",
   ),
   brandName: publicEnv(process.env.NEXT_PUBLIC_BUSINESS_BRAND_NAME, "SMOAT"),
   representativeName: publicEnv(
