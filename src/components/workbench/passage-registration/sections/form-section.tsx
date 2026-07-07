@@ -274,7 +274,11 @@ export function FormSection(props: FormSectionProps) {
                 위로 지문 입력·필기 스택(워크스페이스)을 오버레이로 띄운다. */}
             <div
               ref={materialBoundaryRef}
-              className="flex w-full min-w-0 max-w-full flex-col overflow-hidden rounded-md border border-slate-200"
+              // 모바일(<lg)은 formHeight(데스크톱 드래그 높이)를 무시하고 내용에 맞춰
+              // 자동 높이로 둔다(빈 여백 박스 방지). IntakeSurface 가 자체적으로
+              // 모바일 높이(오버레이 min-h-[55vh]·입력탭 max-lg 높이)를 관리한다.
+              // `!h-auto`(important)로 인라인 height 를 덮는다. 데스크톱은 formHeight 유지.
+              className="flex w-full min-w-0 max-w-full flex-col overflow-hidden rounded-md border border-slate-200 max-lg:!h-auto"
               style={{ height: `${formHeight}px` }}
             >
               <IntakeSurface
@@ -354,7 +358,9 @@ export function FormSection(props: FormSectionProps) {
           </div>
 
           {/* ─── Form pane vertical resize handle ─── */}
-          <div className="relative pb-2.5">
+          {/* 데스크톱 전용: 폼 높이 드래그 조절 + 접기. 모바일은 스텝 플로우가
+              레이아웃을 관리하므로 그랩바/접기 모두 숨긴다. */}
+          <div className="relative hidden pb-2.5 lg:block">
             <div
               onPointerDown={beginFormResize}
               onDoubleClick={resetFormHeight}

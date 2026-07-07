@@ -432,21 +432,29 @@ export function ExamListClient({
         selectedCount={selection.selectedIds.size}
         onCopy={onAddToFolder}
         onMove={onMoveToFolder}
+        // 모바일은 아이콘 전용(텍스트 제거). 데스크톱은 기존 텍스트 버튼 유지.
+        compact={isMobile}
       />
 
-      {/* Bulk delete */}
+      {/* Bulk delete — 모바일은 아이콘 전용, 데스크톱은 텍스트 유지 */}
       <button
         type="button"
         onClick={() => void handleBulkDelete()}
         disabled={selection.selectedIds.size === 0 || bulkDeleting}
-        className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+        title="삭제"
+        aria-label="삭제"
+        className={
+          isMobile
+            ? "flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+            : "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+        }
       >
         {bulkDeleting ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
         ) : (
           <Trash2 className="w-3.5 h-3.5" />
         )}
-        삭제
+        {isMobile ? null : "삭제"}
       </button>
     </>
   );
@@ -454,7 +462,7 @@ export function ExamListClient({
   // ─── Toolbar row (mirrors question-bank-client) ───
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-      <div className="flex w-full min-w-0 flex-wrap items-center gap-2 md:w-auto md:flex-nowrap">
+      <div className="flex min-w-0 flex-wrap items-center gap-2 md:flex-nowrap">
         <SelectAllCheckbox
           checked={selection.isAllSelected && selection.selectedIds.size > 0}
           indeterminate={
@@ -489,7 +497,7 @@ export function ExamListClient({
           ) : null}
         </div>
       </div>
-      <div className="ml-auto flex w-full shrink-0 flex-wrap items-center justify-end gap-2 md:w-auto">
+      <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
         <FiltersToolbar
           search={search}
           setSearch={setSearch}

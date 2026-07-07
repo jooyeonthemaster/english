@@ -17,7 +17,9 @@ import {
 } from "@/lib/announcements/server";
 import { staffRoleToAnnouncementRole } from "@/lib/announcements/shared";
 
-export type { AnnouncementListItem };
+// NOTE: "use server" 파일은 async 함수만 export 해야 한다(Turbopack 서버액션 코드젠이
+// 모든 export 를 런타임 액션으로 재-export). 타입은 여기서 재-export 하지 말고
+// 소비처가 @/lib/announcements/server 에서 직접 import 한다.
 
 // ── 원장/강사(Staff) ──────────────────────────────────────────────────────────
 

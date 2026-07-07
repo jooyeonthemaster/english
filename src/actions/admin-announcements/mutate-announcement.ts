@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdminAuth } from "@/lib/auth-admin";
 import { isSuperAdmin } from "@/actions/admin-members/_shared";
 import { ANNOUNCEMENT_STATUSES } from "@/lib/announcements/shared";
+import { notifyStaffOfPublishedAnnouncement } from "@/lib/announcements/notify";
 import { fail, type ActionResult } from "./_shared";
 
 async function requireSuper() {
@@ -25,19 +26,31 @@ export async function setAnnouncementStatus(
   try {
     const existing = await prisma.platformAnnouncement.findUnique({
       where: { id },
-      select: { publishedAt: true },
+      select: {
+        publishedAt: true,
+        title: true,
+        category: true,
+        audiences: true,
+      },
     });
     if (!existing) return fail("공지를 찾을 수 없습니다.");
+    const firstPublish = status === "PUBLISHED" && !existing.publishedAt;
     await prisma.platformAnnouncement.update({
       where: { id },
       data: {
         status,
-        publishedAt:
-          status === "PUBLISHED" && !existing.publishedAt
-            ? new Date()
-            : undefined,
+        publishedAt: firstPublish ? new Date() : undefined,
       },
     });
+    // 초안/보관 → 발행 최초 전환 시 대상 staff 벨에 알림(best-effort).
+    if (firstPublish) {
+      await notifyStaffOfPublishedAnnouncement({
+        id,
+        title: existing.title,
+        category: existing.category,
+        audiences: existing.audiences,
+      }).catch((e) => console.error("[announcement notify] setStatus", e));
+    }
     revalidatePath("/admin/announcements");
     return { success: true };
   } catch {

@@ -18,11 +18,14 @@ import { getActiveCreditTopUpProductByCredits } from "@/lib/credit-top-up-produc
 import { isCardTopUpAllowed } from "@/lib/card-topup-access";
 import { PROMO_COOKIE, parsePromoTokens } from "@/lib/promo-link";
 import { BUSINESS_INFO } from "@/lib/legal/business-info";
+import { resolveCouponVsPromo } from "@/lib/printable-coupon-discount";
 
 const prepareSchema = z.object({
   credits: z.number().int().positive(),
   payMethod: z.string().optional(),
   easyPayProvider: z.string().optional(),
+  // 보유 실물 할인 쿠폰(선택). 서버에서 소유권·상태·만료 재검증 후 프로모와 비교 적용.
+  couponCodeId: z.string().optional(),
 });
 
 const EASY_PAY_PROVIDERS = [
@@ -153,10 +156,22 @@ export async function POST(request: NextRequest) {
     const pgProvider = getPortOnePgProvider();
     const appUrl = getAppUrl();
     const paymentId = buildPortOnePaymentId();
-    // 지급 크레딧 = 기본 + 프로모션 보너스(활성 시). 결제금액(price)은 그대로.
-    // 상품 식별은 여전히 product.creditAmount(고유키)로 하되, 실제 적립·주문명은
-    // 지급 총액을 스냅샷한다(모든 하위 지급/표시가 이 값을 읽는다).
-    const grantedCredits = product.grantedCreditAmount;
+
+    // 실물 할인 쿠폰 ↔ 프로모 비중첩(§9): 두 경로 price를 서버에서 재계산해 더 저렴한
+    // 하나만 적용한다. 쿠폰이 이기면 프로모(보너스 포함) 미적용, 프로모가 이기면 쿠폰은
+    // 소진하지 않고 CLAIMED 유지. 미적용 쿠폰은 customData에 기록하지 않는다.
+    const applied = await resolveCouponVsPromo({
+      academyId: staff.academyId,
+      couponCodeId: parsed.data.couponCodeId,
+      basePrice: product.basePrice,
+      baseCredits: product.creditAmount,
+      promoPrice: product.price,
+      promoCredits: product.grantedCreditAmount,
+    });
+    const finalPrice = applied.price;
+    // 지급 크레딧 = 적용된 경로의 크레딧(쿠폰=기본, 프로모=기본+보너스). 주문명·적립이 이 값을 읽는다.
+    const grantedCredits = applied.credits;
+    const couponApplied = applied.source === "coupon";
     const orderName = buildTopUpOrderName(grantedCredits);
     const staffProfile = await getStaffPaymentProfile(staff.id);
     const customer = buildPaymentCustomer({
@@ -169,11 +184,21 @@ export async function POST(request: NextRequest) {
       staffPhone: staffProfile?.phone,
     });
 
+    // 쿠폰이 이기면 프로모는 미적용 → discountRate/bonusRate는 0, 쿠폰 필드로 기록.
+    const promoActive = product.isPromotionActive && !couponApplied;
+    const couponCustomData = couponApplied
+      ? {
+          couponCodeId: applied.appliedCouponId,
+          couponDiscount: applied.couponDiscount,
+          discountSource: "coupon" as const,
+        }
+      : { discountSource: promoActive ? ("promo" as const) : ("none" as const) };
+
     const topUp = await prisma.creditTopUp.create({
       data: {
         academyId: staff.academyId,
         creditAmount: grantedCredits,
-        price: product.price,
+        price: finalPrice,
         paymentMethod: payMethod,
         paymentId,
         orderName,
@@ -186,11 +211,12 @@ export async function POST(request: NextRequest) {
           academyId: staff.academyId,
           staffId: staff.id,
           credits: grantedCredits,
-          price: product.price,
+          price: finalPrice,
           productCode: product.code,
           basePrice: product.basePrice,
-          discountRate: product.isPromotionActive ? product.discountRate : 0,
-          bonusRate: product.isPromotionActive ? product.bonusRate : 0,
+          discountRate: promoActive ? product.discountRate : 0,
+          bonusRate: promoActive ? product.bonusRate : 0,
+          ...couponCustomData,
         },
       },
       select: { id: true },
@@ -201,11 +227,12 @@ export async function POST(request: NextRequest) {
       academyId: staff.academyId,
       staffId: staff.id,
       credits: grantedCredits,
-      price: product.price,
+      price: finalPrice,
       productCode: product.code,
       basePrice: product.basePrice,
-      discountRate: product.isPromotionActive ? product.discountRate : 0,
-      bonusRate: product.isPromotionActive ? product.bonusRate : 0,
+      discountRate: promoActive ? product.discountRate : 0,
+      bonusRate: promoActive ? product.bonusRate : 0,
+      ...couponCustomData,
     };
 
     await prisma.creditTopUp.update({
@@ -217,7 +244,7 @@ export async function POST(request: NextRequest) {
       try {
         await preRegisterPortOnePayment({
           paymentId,
-          totalAmount: product.price,
+          totalAmount: finalPrice,
         });
       } catch (err) {
         const portOneErrorMessage = getPortOneErrorMessage(err);
@@ -249,7 +276,7 @@ export async function POST(request: NextRequest) {
         channelKey,
         paymentId,
         orderName,
-        totalAmount: product.price,
+        totalAmount: finalPrice,
         pgProvider,
         payMethod,
         easyPayProvider: parsed.data.easyPayProvider,

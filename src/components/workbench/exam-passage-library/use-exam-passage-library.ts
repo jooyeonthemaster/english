@@ -319,6 +319,17 @@ export function useExamPassageLibrary() {
 
   const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
 
+  // 담긴(선택된) 지문 레코드 — 하단 장바구니 목록 표시용. 선택은 보이는 카드/
+  // 시험지 단위로만 이뤄져 그 레코드가 recordCache 에 캐시돼 있으므로 여기서
+  // 되살린다. (미캐시분은 건너뜀 — collectSelectedPicks 가 나중에 채운다.)
+  const selectedRecords = useMemo(
+    () =>
+      [...selectedIds]
+        .map((id) => recordCache.current.get(id))
+        .filter((r): r is ExamPassage => Boolean(r)),
+    [selectedIds],
+  );
+
   // ── 시험지(paper) 단위 선택 ──
   // 시험지 카드의 체크박스 = 그 시험지의 모든 지문을 한 번에 담기/해제.
   // 시험지 요약(ExamPaper)은 지문 id 를 들고 있지 않으므로, examId 로 그 시험지의
@@ -522,6 +533,7 @@ export function useExamPassageLibrary() {
     pageAllSelected,
     toggleSelectPage,
     clearSelection,
+    selectedRecords,
     collectSelectedPicks,
     // 시험지 단위 선택
     togglePaper,

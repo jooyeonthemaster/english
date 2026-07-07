@@ -12,10 +12,8 @@ import { cn, formatRelativeTime, formatKoreanDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { getConversation, sendParentMessage } from "@/actions/parent";
 import type { MessageConversation, MessageItem } from "@/actions/parent";
-import {
-  markParentAnnouncementsRead,
-  type AnnouncementListItem,
-} from "@/actions/platform-announcements";
+import { markParentAnnouncementsRead } from "@/actions/platform-announcements";
+import type { AnnouncementListItem } from "@/lib/announcements/server";
 import {
   CATEGORY_LABELS,
   type AnnouncementCategory,

@@ -18,6 +18,10 @@ import {
   expiresAtConflictSql,
   expiresAtInsertSql,
 } from "@/lib/credit-expiry";
+import {
+  markCouponUsedTx,
+  rollbackCouponByTopUpTx,
+} from "@/lib/printable-coupon-discount";
 
 export const PORTONE_TOP_UP_PAY_METHODS = [
   "CARD",
@@ -690,6 +694,12 @@ async function completePaidTopUp(
         },
       });
 
+      // 실물 할인 쿠폰이 적용된 결제면 같은 트랜잭션에서 CLAIMED→USED로 확정(멱등).
+      const couponCodeId = readCustomDataString(customData, "couponCodeId");
+      if (couponCodeId) {
+        await markCouponUsedTx(tx, couponCodeId, topUp.id);
+      }
+
       return {
         topUpId: topUp.id,
         paymentId: payment.id,
@@ -840,6 +850,11 @@ async function updateCancelledTopUp(
           cancelledAt,
         },
       });
+
+      // 취소/환불 확정 시 이 충전이 소진한 실물 할인 쿠폰을 CLAIMED로 원복(재사용 가능).
+      if (isFullCancellation) {
+        await rollbackCouponByTopUpTx(tx, locked.id);
+      }
 
       return {
         topUpId: locked.id,

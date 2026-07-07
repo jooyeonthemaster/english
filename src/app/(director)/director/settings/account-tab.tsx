@@ -235,7 +235,7 @@ export default function AccountTab() {
                     onChange={(e) => set("displayTitle", e.target.value)}
                     placeholder="원장"
                     maxLength={20}
-                    className={inputClass + " pl-9"}
+                    className={inputClass + " pl-9!"}
                   />
                 </div>
               </div>

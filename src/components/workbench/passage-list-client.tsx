@@ -941,14 +941,14 @@ export function PassageListClient({
       onClick={handleBulkReview}
       disabled={selection.selectedIds.size === 0 || bulkReviewing}
       title="검수완료"
-      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-emerald-300 bg-white px-2.5 text-[11px] font-semibold text-emerald-600 transition-colors hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+      aria-label="검수완료"
+      className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-emerald-300 bg-white text-emerald-600 transition-colors hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {bulkReviewing ? (
         <Loader2 className="w-3.5 h-3.5 animate-spin" />
       ) : (
         <CheckCircle2 className="w-3.5 h-3.5" />
       )}
-      검수완료
     </button>
   );
 

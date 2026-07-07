@@ -97,3 +97,21 @@ export function expiresAtInsertSql(addDays: number): Prisma.Sql {
   // See expiresAtConflictSql: cast to int4 so make_interval resolves.
   return Prisma.sql`NOW() + make_interval(days => ${addDays}::int)`;
 }
+
+// ── 절대 만료일로 연장(EXTEND-TO-DATE) ───────────────────────────────────────
+// "이 크레딧은 특정 날짜까지 유효" 규칙. add-days 대신 목표일로 연장하되, 기존 소멸일이
+// 더 나중이면 유지한다(GREATEST — 단축 없음). 상대일수 EXTEND와 달리 발급~등록 사이
+// 시간이 흘러도 만료일이 밀리지 않는다(캘린더로 고른 실물 쿠폰 만료일에 적합).
+
+/**
+ * `INSERT ... ON CONFLICT DO UPDATE`의 conflict 절: 기존 소멸일과 목표일 중 더 나중.
+ *   SET "expiresAt" = GREATEST(COALESCE(credit_balances."expiresAt", <date>), <date>)
+ */
+export function expiresAtConflictSqlToDate(date: Date): Prisma.Sql {
+  return Prisma.sql`GREATEST(COALESCE(credit_balances."expiresAt", ${date}), ${date})`;
+}
+
+/** 신규 잔액(prior 없음)의 `VALUES (...)`: 목표일 그대로. */
+export function expiresAtInsertSqlToDate(date: Date): Prisma.Sql {
+  return Prisma.sql`${date}`;
+}

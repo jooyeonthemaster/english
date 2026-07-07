@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils";
 import {
   getStudentAnnouncements,
   markStudentAnnouncementsRead,
-  type AnnouncementListItem,
 } from "@/actions/platform-announcements";
+import type { AnnouncementListItem } from "@/lib/announcements/server";
 import {
   CATEGORY_LABELS,
   type AnnouncementCategory,

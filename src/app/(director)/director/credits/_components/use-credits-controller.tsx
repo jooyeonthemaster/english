@@ -13,6 +13,7 @@ import {
   VISIBLE_PAY_METHOD_OPTIONS,
 } from "./top-up-panel";
 import type { BankDepositGuideData, CreditTopUp, CreditTopUpProduct, EasyPayProvider, TopUpPayMethod } from "./top-up-panel";
+import type { HeldCoupon } from "@/lib/printable-coupon-discount";
 
 export function useCreditsController() {
   const [summary, setSummary] = useState<CreditSummary | null>(null);
@@ -46,6 +47,9 @@ export function useCreditsController() {
   bankDepositGuideRef.current = bankDepositGuide;
   const [selectedProduct, setSelectedProduct] =
     useState<CreditTopUpProduct | null>(null);
+  // 보유 실물 할인 쿠폰 + 선택(충전 결제 시 서버가 프로모와 비교해 더 저렴한 쪽 적용).
+  const [heldCoupons, setHeldCoupons] = useState<HeldCoupon[]>([]);
+  const [selectedCouponId, setSelectedCouponId] = useState<string | null>(null);
   const [payingCredits, setPayingCredits] = useState<number | null>(null);
   const [paymentMessage, setPaymentMessage] = useState<{
     type: "success" | "error" | "info";
@@ -138,6 +142,25 @@ export function useCreditsController() {
     }
   }, []);
 
+  const fetchHeldCoupons = useCallback(async () => {
+    try {
+      const res = await fetch("/api/coupons/printable/held", {
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const coupons: HeldCoupon[] = data.coupons ?? [];
+        setHeldCoupons(coupons);
+        // 선택된 쿠폰이 더 이상 보유목록에 없으면(사용/만료) 선택 해제.
+        setSelectedCouponId((prev) =>
+          prev && coupons.some((c) => c.id === prev) ? prev : null,
+        );
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   const refreshAllCreditData = useCallback(async () => {
     await Promise.all([
       fetchSummary(),
@@ -145,6 +168,7 @@ export function useCreditsController() {
       fetchTopUps(),
       fetchTopUpProducts(),
       fetchSubscriptionBilling(),
+      fetchHeldCoupons(),
     ]);
   }, [
     fetchSummary,
@@ -152,6 +176,7 @@ export function useCreditsController() {
     fetchTopUps,
     fetchTopUpProducts,
     fetchSubscriptionBilling,
+    fetchHeldCoupons,
   ]);
 
   const completePayment = useCallback(
@@ -213,6 +238,7 @@ export function useCreditsController() {
           body: JSON.stringify({
             credits: product.creditAmount,
             depositorName: trimmedName,
+            couponCodeId: selectedCouponId ?? undefined,
           }),
         });
         const data = await res.json();
@@ -244,7 +270,7 @@ export function useCreditsController() {
         setPayingCredits(null);
       }
     },
-    [depositorName, fetchTopUps],
+    [depositorName, fetchTopUps, selectedCouponId],
   );
 
   const startTopUp = useCallback(
@@ -263,6 +289,7 @@ export function useCreditsController() {
             credits: product.creditAmount,
             payMethod,
             easyPayProvider,
+            couponCodeId: selectedCouponId ?? undefined,
           }),
         });
         const prepared = await prepareRes.json();
@@ -306,7 +333,14 @@ export function useCreditsController() {
         setPayingCredits(null);
       }
     },
-    [completePayment, easyPayProvider, fetchTopUps, payMethod, startBankDeposit],
+    [
+      completePayment,
+      easyPayProvider,
+      fetchTopUps,
+      payMethod,
+      startBankDeposit,
+      selectedCouponId,
+    ],
   );
 
   // 충전 요청 목록에서 무통장입금 주문을 클릭하면 해당 주문의 입금 안내 모달을 연다.
@@ -494,6 +528,7 @@ export function useCreditsController() {
       fetchTopUps(),
       fetchTopUpProducts(),
       fetchSubscriptionBilling(),
+      fetchHeldCoupons(),
     ]).then(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -654,6 +689,9 @@ export function useCreditsController() {
     clearPaymentMessage: () => setPaymentMessage(null),
     refreshAllCreditData,
     selectedProduct,
+    heldCoupons,
+    selectedCouponId,
+    setSelectedCouponId,
     setDepositorName,
     setEasyPayProvider,
     setFilterType,

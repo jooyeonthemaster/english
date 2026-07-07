@@ -59,7 +59,7 @@ export function EditableRestoredTextBox({
   const highlightRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div className="flex h-full min-h-0 flex-col rounded-lg border border-slate-200 bg-white">
+    <div className="flex flex-col rounded-lg border border-slate-200 bg-white lg:h-full lg:min-h-0">
       <div className="flex h-12 shrink-0 items-center justify-between border-b border-slate-100 px-4">
         <span className="text-[13px] font-bold text-slate-900">복원문</span>
         {onRerestore ? (
@@ -101,11 +101,15 @@ export function EditableRestoredTextBox({
           />
         </div>
       ) : null}
-      <div className="relative min-h-0 flex-1">
+      {/* 모바일(<lg): 하이라이트 <div>를 in-flow로 두어 이 컨테이너 높이를
+          내용에 맞춰 자라게 하고(내부 스크롤 없음), 투명 textarea 는 absolute
+          inset-0 로 그 위를 덮어 정렬을 유지한다. 데스크톱(lg+): 기존처럼
+          absolute inset-0 + 내부 스크롤(스크롤 동기화)로 복원. */}
+      <div className="relative lg:min-h-0 lg:flex-1">
         <div
           ref={highlightRef}
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 overflow-y-auto whitespace-pre-wrap px-4 py-3 text-[14px] leading-7 text-slate-800"
+          className="pointer-events-none whitespace-pre-wrap px-4 py-3 text-[14px] leading-7 text-slate-800 lg:absolute lg:inset-0 lg:overflow-y-auto"
         >
           <HighlightedText
             rawText={rawText}
@@ -134,7 +138,7 @@ export function EditableRestoredTextBox({
             el.scrollLeft = event.currentTarget.scrollLeft;
           }}
           spellCheck={false}
-          className="absolute inset-0 h-full w-full resize-none overflow-y-auto rounded-b-lg border-0 bg-transparent px-4 py-3 text-[14px] leading-7! text-transparent caret-slate-950 outline-none selection:bg-sky-200/60 focus:ring-2 focus:ring-sky-200"
+          className="absolute inset-0 h-full w-full resize-none overflow-hidden rounded-b-lg border-0 bg-transparent px-4 py-3 text-[14px] leading-7! text-transparent caret-slate-950 outline-none selection:bg-sky-200/60 focus:ring-2 focus:ring-sky-200 lg:overflow-y-auto"
         />
       </div>
     </div>

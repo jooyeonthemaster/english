@@ -571,7 +571,9 @@ export function DraftCard({
       <p
         className={
           "text-[13px] leading-relaxed text-slate-600 " +
-          (expanded ? "whitespace-pre-wrap" : "line-clamp-6")
+          // 모바일은 미리보기 분량을 절반(3줄)로 줄여 카드 세로를 낮춘다.
+          // 데스크톱(lg+)은 기존 6줄 유지(PC 화면 무변경).
+          (expanded ? "whitespace-pre-wrap" : "line-clamp-3 lg:line-clamp-6")
         }
       >
         {(expanded ? fullText : preview) || "추출된 본문이 비어있습니다."}

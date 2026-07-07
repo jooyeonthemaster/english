@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "postinstall": "prisma generate",
+    "prebuild": "tsx scripts/auto-release-draft.ts || true",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",

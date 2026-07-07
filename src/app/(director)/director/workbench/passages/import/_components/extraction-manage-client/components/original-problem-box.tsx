@@ -105,7 +105,7 @@ export function OriginalProblemBox({
   }, [draft.jobId, indicesKey, effectiveMode, pages.length]);
 
   return (
-    <div className="flex h-full min-h-0 min-w-0 flex-col rounded-lg border border-slate-200 bg-white">
+    <div className="flex min-w-0 flex-col rounded-lg border border-slate-200 bg-white lg:h-full lg:min-h-0">
       <div className="flex h-12 shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-4">
         <span className="text-[13px] font-bold text-slate-900">
           문제 원문
@@ -134,10 +134,10 @@ export function OriginalProblemBox({
       {/* Body wrapper — relative parent for the scroll container. The
           zoom/page controls now live in the header (portaled to the
           header slot), not floating over the image. */}
-      <div className="relative flex min-h-0 min-w-0 flex-1">
+      <div className="relative min-w-0 lg:flex lg:min-h-0 lg:flex-1">
         <div
           data-pannable-scroll
-          className="absolute inset-0 overflow-auto px-4 py-3"
+          className="px-4 py-3 lg:absolute lg:inset-0 lg:overflow-auto"
         >
           {effectiveMode === "text" ? (
             <div className="whitespace-pre-wrap text-[14px] leading-7 text-slate-800">

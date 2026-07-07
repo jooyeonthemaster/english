@@ -230,9 +230,10 @@ export function DraftDetailModal({
           </div>
         </div>
 
-        {/* Body — min-h-0 lets the inner panels claim their own scroll
-            container instead of overflowing the modal as a whole. */}
-        <div className="flex min-h-0 flex-1 flex-col p-5 xl:p-6">
+        {/* Body — 모바일(<lg)은 패널을 자연 높이로 펼치고 이 컨테이너(모달 본문)
+            하나만 스크롤한다(패널별 개별 스크롤 폐지). 데스크톱(lg+)은 min-h-0로
+            내부 패널이 각자 스크롤 컨테이너를 갖는 기존 레이아웃을 복원한다. */}
+        <div className="flex flex-1 flex-col overflow-y-auto p-5 lg:min-h-0 lg:overflow-visible xl:p-6">
           <PassageCompare
             draft={draft}
             onTextChange={(value) => onTextChange(draft.id, value)}

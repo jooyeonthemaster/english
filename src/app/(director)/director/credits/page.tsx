@@ -165,6 +165,9 @@ export default function CreditsPage() {
     clearPaymentMessage,
     refreshAllCreditData,
     selectedProduct,
+    heldCoupons,
+    selectedCouponId,
+    setSelectedCouponId,
     setDepositorName,
     setEasyPayProvider,
     setFilterType,
@@ -279,6 +282,9 @@ export default function CreditsPage() {
         onDepositorNameChange={setDepositorName}
         payingCredits={payingCredits}
         cardEnabled={cardEnabled}
+        heldCoupons={heldCoupons}
+        selectedCouponId={selectedCouponId}
+        onSelectCoupon={setSelectedCouponId}
         onConfirm={confirmSelectedTopUp}
         onClose={() => setSelectedProduct(null)}
       />
@@ -497,11 +503,15 @@ export default function CreditsPage() {
                           </span>
                         </td>
                         <td className="px-4 py-3 text-[12px] text-gray-600">
-                          {tx.operationType
-                            ? OPERATION_LABELS[
-                                tx.operationType as OperationType
-                              ] || tx.operationType
-                            : tx.description || "-"}
+                          {/* 알려진 AI 작업은 매핑 라벨, 그 외에는 사람이 읽을 수 있는
+                              description(예: "실물쿠폰 …") 우선, 그마저 없으면 원문. */}
+                          {(tx.operationType &&
+                            OPERATION_LABELS[
+                              tx.operationType as OperationType
+                            ]) ||
+                            tx.description ||
+                            tx.operationType ||
+                            "-"}
                         </td>
                         <td className="px-4 py-3 text-right">
                           <span

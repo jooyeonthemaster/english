@@ -2824,6 +2824,80 @@ model NotificationState {
   @@map("notification_states")
 }
 
+/// PrintableCouponBatch — 실물(인쇄형) 쿠폰 발급 건. 한 배치 = 한 발급, 발급 후 조건 불변(freeze).
+/// effectType: "CREDIT_GRANT"(등록 즉시 크레딧 지급) | "DISCOUNT_AMOUNT"(N원 할인) | "DISCOUNT_PERCENT"(N% 할인)
+model PrintableCouponBatch {
+  id                  String   @id @default(cuid())
+  batchName           String // 관리자용 라벨 "신규가입 쿠폰 2026.07.07"
+  title               String // 인쇄 카드 쿠폰명
+  description         String?  @db.Text
+
+  effectType          String   @default("CREDIT_GRANT") // "CREDIT_GRANT" | "DISCOUNT_AMOUNT" | "DISCOUNT_PERCENT"
+  // CREDIT_GRANT 전용
+  grantCredits        Int? // 지급 크레딧 수
+  grantExpiryDays     Int? // (레거시) 지급 크레딧 유효기간(일). null/0=RIDE, >0=EXTEND
+  grantExpiryAt       DateTime? // 지급 크레딧 절대 만료일(캘린더 선택). null=무기한(RIDE)
+  // DISCOUNT 전용 (효과에 맞는 하나만 채움)
+  discountAmount      Int? // 원 (DISCOUNT_AMOUNT)
+  discountPercent     Int? // 1~100 (DISCOUNT_PERCENT)
+
+  validUntil          DateTime? // 쿠폰 "등록" 마감일 (nullable)
+  quantity            Int // 발급 장수 (1~500)
+  perAcademyLimit     Int      @default(1) // 한 학원이 이 배치에서 등록 가능한 최대 장수
+  isActive            Boolean  @default(true) // 킬스위치
+  createdByAdminId    String?
+  createdByAdminEmail String?
+  createdAt           DateTime @default(now())
+
+  codes PrintableCouponCode[]
+
+  @@index([createdAt])
+  @@map("printable_coupon_batches")
+}
+
+/// PrintableCouponCode — 인쇄 코드 + 학원 보유 쿠폰(핵심). 한 행이 "인쇄 코드 + 보유 쿠폰"을 겸함.
+/// status: "ACTIVE" | "CLAIMED" | "USED" | "VOID"
+model PrintableCouponCode {
+  id           String @id @default(cuid())
+  batchId      String
+  serialNumber String @unique @db.VarChar(16) // 종이 인쇄 8자리(사람 입력)
+  tokenHash    String @unique // QR 토큰 SHA-256 (원본 미저장)
+  status       String @default("ACTIVE") // "ACTIVE" | "CLAIMED" | "USED" | "VOID"
+
+  claimedByAcademyId String? // 등록한 학원
+  claimedByStaffId   String? // 등록 실행 원장
+  claimedAt          DateTime?
+
+  // CREDIT_GRANT: 지급 시 채움 / DISCOUNT: 충전 결제 사용 시 채움
+  creditTxId  String?   @unique // 지급 원장 링크(CREDIT_GRANT 멱등 증빙)
+  usedTopUpId String?   @unique // 사용된 충전(CreditTopUp) 링크(DISCOUNT)
+  usedAt      DateTime?
+
+  expiresAt DateTime? // 개별 등록마감 오버라이드(옵션)
+  printedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  batch PrintableCouponBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@index([batchId, status])
+  @@index([claimedByAcademyId, status])
+  @@map("printable_coupon_codes")
+}
+
+/// PrintableCouponClaimRateLimit — 쿠폰 등록 시도 rate-limit(코드 추측 방지).
+/// scope="ip"|"academy", key=IP 또는 academyId, fixed window 카운터(tutorLoginRateLimit 패턴).
+model PrintableCouponClaimRateLimit {
+  id          String   @id @default(cuid())
+  scope       String   @db.VarChar(16) // "ip" | "academy"
+  key         String   @db.VarChar(128)
+  windowStart DateTime
+  count       Int      @default(0)
+
+  @@unique([scope, key, windowStart])
+  @@map("printable_coupon_claim_rate_limits")
+}
+
 // ============================================================================
 // 23. ACADEMY REGISTRATION
 // ============================================================================

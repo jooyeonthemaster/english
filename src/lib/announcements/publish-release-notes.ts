@@ -9,6 +9,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { readReleaseNotes } from "@/lib/release-notes";
+import { notifyStaffOfPublishedAnnouncement } from "./notify";
 
 export interface PublishReleaseNotesResult {
   scanned: number;
@@ -29,7 +30,7 @@ export async function publishReleaseNotes(): Promise<PublishReleaseNotesResult> 
     if (existing) continue;
 
     try {
-      await prisma.platformAnnouncement.create({
+      const created = await prisma.platformAnnouncement.create({
         data: {
           title: note.title,
           content: note.content,
@@ -41,8 +42,16 @@ export async function publishReleaseNotes(): Promise<PublishReleaseNotesResult> 
           sourceType: "RELEASE",
           releaseSlug: note.slug,
         },
+        select: { id: true },
       });
       createdSlugs.push(note.slug);
+      // 새로 발행된 릴리즈 소식을 대상 staff 벨에 알림(신규 slug 1회, best-effort).
+      await notifyStaffOfPublishedAnnouncement({
+        id: created.id,
+        title: note.title,
+        category: note.category,
+        audiences: note.audiences,
+      }).catch((e) => console.error("[announcement notify] release", e));
     } catch {
       // 동시 콜드스타트 경합으로 유니크 충돌 시 무시(다른 인스턴스가 이미 생성).
     }

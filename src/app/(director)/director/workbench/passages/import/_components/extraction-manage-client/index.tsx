@@ -961,20 +961,16 @@ export function ExtractionManageClient({
       // 실행 중엔 진짜 비활, 미선택은 aria-disabled(눌리면 힌트 글로우).
       disabled={anyBulkRunning}
       aria-disabled={noSelection}
-      title={embedded ? "AI 복원 다시" : undefined}
-      aria-label={embedded ? "AI 복원 다시" : undefined}
-      className={
-        embedded
-          ? "flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
-          : "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-white px-2.5 text-[11px] font-medium text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
-      }
+      // 아이콘 전용 버튼 — 라벨은 툴팁/스크린리더용으로만 유지.
+      title="AI 복원 다시"
+      aria-label="AI 복원 다시"
+      className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
     >
       {isRerestoring ? (
         <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
       ) : (
         <RefreshCw className="h-3.5 w-3.5" aria-hidden="true" />
       )}
-      {embedded ? null : "AI 복원 다시"}
     </button>
   );
 
@@ -1039,14 +1035,17 @@ export function ExtractionManageClient({
           ? `미검수 ${pendingReviewSelectedCount}개 검수완료`
           : "검수완료"
       }
-      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border bg-white px-2.5 text-[11px] font-semibold shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600"
+      aria-label="검수완료"
+      // 모바일(<lg)은 삭제·이동/복사처럼 아이콘 전용 정사각(텍스트 생략), 데스크톱은
+      // lg:부터 기존 텍스트 버튼 복원(PC 무변경).
+      className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border bg-white shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 border-red-200/80 text-red-300 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-600 lg:w-auto lg:justify-start lg:gap-1.5 lg:whitespace-nowrap lg:px-2.5 lg:text-[11px] lg:font-semibold"
     >
       {isPromoting ? (
         <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
       ) : (
         <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
       )}
-      검수완료
+      <span className="hidden lg:inline">검수완료</span>
     </button>
   );
 
@@ -1120,7 +1119,10 @@ export function ExtractionManageClient({
             <div
               ref={jobListStickyRef}
               className={
-                "shrink-0 px-6 pb-6 pt-2 sm:px-8 " +
+                // 모바일(<lg)에서는 이 가로 '자료 목록' 밴드가 아래 '전체 자료'
+                // 그리드와 같은 잡을 중복 노출하고 세로 공간만 잡아먹어 숨긴다.
+                // 데스크톱은 그대로(개요 + 잡 필터 밴드로 유용). PC 무영향.
+                "max-lg:hidden shrink-0 px-6 pb-6 pt-2 sm:px-8 " +
                 (shouldPinManageHeaders ? "sticky top-0 z-40 bg-[#F4F6F9]" : "")
               }
             >

@@ -17,6 +17,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ComingSoonOverlay } from "./shared";
+import {
+  couponEffectHeadline,
+  computeCouponDiscount,
+} from "@/lib/printable-coupon-format";
+import type { HeldCoupon } from "@/lib/printable-coupon-discount";
 
 export interface CreditTopUp {
   id: string;
@@ -628,6 +633,9 @@ export function TopUpMethodDialog({
   onDepositorNameChange,
   payingCredits,
   cardEnabled,
+  heldCoupons = [],
+  selectedCouponId = null,
+  onSelectCoupon,
   onConfirm,
   onClose,
 }: {
@@ -640,6 +648,9 @@ export function TopUpMethodDialog({
   onDepositorNameChange: (name: string) => void;
   payingCredits: number | null;
   cardEnabled: boolean;
+  heldCoupons?: HeldCoupon[];
+  selectedCouponId?: string | null;
+  onSelectCoupon?: (couponId: string | null) => void;
   onConfirm: () => void;
   onClose: () => void;
 }) {
@@ -752,6 +763,42 @@ export function TopUpMethodDialog({
               </p>
             </div>
           )}
+
+          {heldCoupons.length > 0 && onSelectCoupon && (
+            <div className="space-y-1.5 rounded-xl border border-gray-100 bg-gray-50/60 p-2.5">
+              <p className="px-0.5 text-[11px] font-semibold text-gray-500">
+                보유 할인 쿠폰
+                <span className="ml-1 font-normal text-gray-400">
+                  — 프로모션과 비교해 더 큰 할인만 자동 적용됩니다
+                </span>
+              </p>
+              <div className="space-y-1">
+                <CouponOption
+                  active={selectedCouponId === null}
+                  onClick={() => onSelectCoupon(null)}
+                  label="쿠폰 미적용"
+                />
+                {heldCoupons.map((c) => (
+                  <CouponOption
+                    key={c.id}
+                    active={selectedCouponId === c.id}
+                    onClick={() => onSelectCoupon(c.id)}
+                    label={c.title}
+                    sub={couponEffectHeadline(c)}
+                    preview={
+                      product
+                        ? `≈ ${Math.max(
+                            0,
+                            product.basePrice -
+                              computeCouponDiscount(c, product.basePrice),
+                          ).toLocaleString("ko-KR")}원`
+                        : undefined
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <DialogFooter>
@@ -774,6 +821,55 @@ export function TopUpMethodDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function CouponOption({
+  active,
+  onClick,
+  label,
+  sub,
+  preview,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+  sub?: string;
+  preview?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "flex w-full items-center gap-2.5 rounded-lg border px-3 py-2 text-left transition",
+        active
+          ? "border-blue-500 bg-blue-50/70"
+          : "border-gray-200 bg-white hover:border-blue-200",
+      )}
+    >
+      <span
+        className={cn(
+          "flex size-4 shrink-0 items-center justify-center rounded-full border",
+          active ? "border-blue-500" : "border-gray-300",
+        )}
+      >
+        {active && <span className="size-2 rounded-full bg-blue-500" />}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[13px] font-semibold text-gray-800">
+          {label}
+        </span>
+        {sub && (
+          <span className="block truncate text-[11px] text-gray-400">{sub}</span>
+        )}
+      </span>
+      {preview && (
+        <span className="shrink-0 text-[12px] font-bold tabular-nums text-blue-600">
+          {preview}
+        </span>
+      )}
+    </button>
   );
 }
 
@@ -1247,7 +1343,99 @@ export function TopUpHistory({
           충전 요청이 없습니다
         </div>
       ) : (
-        <div className="overflow-x-auto">
+        <>
+        {/* 모바일: 좌우 스크롤 없이 카드로 쌓아서 보여준다. */}
+        <div className="divide-y divide-gray-50 lg:hidden">
+          {topUps.map((topUp) => {
+            const displayStatus = getTopUpDisplayStatus(topUp);
+            const clickable =
+              topUp.paymentMethod === "BANK_TRANSFER" && !!onSelectTopUp;
+            const isWaiting =
+              topUp.paymentMethod === "BANK_TRANSFER" &&
+              topUp.status === "WAITING_FOR_DEPOSIT";
+            return (
+              <div
+                key={topUp.id}
+                onClick={clickable ? () => onSelectTopUp?.(topUp) : undefined}
+                className={cn(
+                  "px-4 py-3.5 transition",
+                  clickable && "cursor-pointer active:bg-sky-50/70",
+                )}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[12px] font-semibold tabular-nums text-gray-700">
+                    {formatOrderNo(topUp.id)}
+                  </span>
+                  {isWaiting ? (
+                    <WaitingDepositBadge
+                      confirmStartedAt={parseConfirmStartedAt(
+                        topUp.confirmStartedAt,
+                      )}
+                      expiresAt={
+                        new Date(topUp.createdAt).getTime() +
+                        BANK_DEPOSIT_WINDOW_MINUTES * 60_000
+                      }
+                    />
+                  ) : (
+                    <span
+                      className={cn(
+                        "inline-flex h-6 shrink-0 items-center rounded-md px-2 text-[11px] font-semibold",
+                        displayStatus.style,
+                      )}
+                    >
+                      {displayStatus.label}
+                    </span>
+                  )}
+                </div>
+                <div className="mt-1.5 flex items-center gap-2 text-[12px] text-gray-400">
+                  <span className="whitespace-nowrap">
+                    {new Date(topUp.createdAt).toLocaleDateString("ko-KR", {
+                      month: "short",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                  {topUp.paymentMethod && (
+                    <span
+                      className={cn(
+                        "inline-flex h-5 shrink-0 items-center rounded-md px-1.5 text-[10px] font-semibold",
+                        TOP_UP_METHOD_STYLES[topUp.paymentMethod] ??
+                          "bg-gray-100 text-gray-600",
+                      )}
+                    >
+                      {TOP_UP_METHOD_LABELS[topUp.paymentMethod] ??
+                        topUp.paymentMethod}
+                    </span>
+                  )}
+                </div>
+                <div className="mt-2 flex items-end justify-between gap-2">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-[15px] font-bold tabular-nums text-gray-900">
+                      {topUp.price.toLocaleString("ko-KR")}원
+                    </span>
+                    <span className="text-[12px] font-semibold tabular-nums text-blue-700">
+                      {topUp.creditAmount.toLocaleString("ko-KR")}C
+                    </span>
+                  </div>
+                  {topUp.receiptUrl && (
+                    <a
+                      href={topUp.receiptUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-[12px] font-medium text-blue-600 hover:text-blue-700"
+                    >
+                      영수증 보기
+                    </a>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {/* 데스크톱: 표 형태 유지 */}
+        <div className="hidden overflow-x-auto lg:block">
           <table className="w-full text-left">
             <thead>
               <tr className="bg-gray-50/50 text-[11px] font-semibold text-gray-400">
@@ -1352,6 +1540,7 @@ export function TopUpHistory({
             </tbody>
           </table>
         </div>
+        </>
       )}
 
       {onPageChange && totalPages > 1 && (

@@ -61,11 +61,12 @@ export function statusLabel(value: string): string {
 
 // ── 발행 출처 ─────────────────────────────────────────────────────────────────
 
-export type AnnouncementSourceType = "MANUAL" | "RELEASE";
+export type AnnouncementSourceType = "MANUAL" | "RELEASE" | "AUTO";
 
 export const SOURCE_TYPE_LABELS: Record<AnnouncementSourceType, string> = {
   MANUAL: "직접 작성",
   RELEASE: "자동 발행",
+  AUTO: "AI 초안",
 };
 
 // ── 노출 대상(audiences) ──────────────────────────────────────────────────────

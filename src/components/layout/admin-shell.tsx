@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { BrandIcon } from "@/components/brand/brand-mark";
+import { BrandIcon, BrandMark } from "@/components/brand/brand-mark";
 import { BusinessInfoBlock } from "@/components/legal/business-info-block";
 import {
   Sheet,
@@ -750,10 +750,13 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             </Sheet>
 
             <div className="min-w-0 flex-1 px-3 text-center">
-              <div className="truncate text-[15px] font-bold text-slate-900">{activeNavLabel}</div>
-              <div className="truncate text-[11px] font-medium text-slate-400">
-                {basePath === "/director" ? "원장" : "교사"} 워크스페이스
+              <div className="flex items-center justify-center gap-1">
+                <BrandMark className="size-3 shrink-0 rounded-[3px]" />
+                <span className="truncate text-[10px] font-bold leading-none tracking-[0.25em] text-slate-400">
+                  SMOAT
+                </span>
               </div>
+              <div className="truncate text-[15px] font-bold text-slate-900">{activeNavLabel}</div>
             </div>
             <div className="size-10" aria-hidden />
           </header>

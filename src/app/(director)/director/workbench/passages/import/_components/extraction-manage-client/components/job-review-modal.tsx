@@ -8,6 +8,7 @@ import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-co
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import { useReviewDrawer } from "@/components/layout/review-drawer-context";
 import { DragSelect } from "@/components/ui/drag-select";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 import type { M1PassageDraftWithJob } from "../types";
 import type { JobMetaSnapshot } from "../drafts-cache";
@@ -136,6 +137,9 @@ export function JobReviewModal({
   // right margin so the page compresses (not just gets covered) and stays in
   // sync as the user drags.
   const reviewDrawer = useReviewDrawer();
+  // 모바일(<lg)에서는 우측 드로어 대신 가운데 팝업으로 띄운다. 드로어처럼 본문을
+  // 밀지 않고(오버레이) 좌우/상하 여백 있는 카드로 표시한다.
+  const isMobile = useIsMobile();
   const DRAWER_WIDTH_KEY = "smoat:job-review-drawer:width";
   const DRAWER_MIN_WIDTH = 360;
   const DRAWER_DEFAULT_WIDTH = 760;
@@ -157,9 +161,10 @@ export function JobReviewModal({
   });
 
   useEffect(() => {
-    reviewDrawer.setOpen({ isOpen: true, width: drawerWidth });
+    // 모바일 팝업 모드에서는 width 0으로 열어 본문을 밀지 않게 한다(오버레이).
+    reviewDrawer.setOpen({ isOpen: true, width: isMobile ? 0 : drawerWidth });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drawerWidth]);
+  }, [drawerWidth, isMobile]);
 
   useEffect(() => {
     return () => reviewDrawer.setOpen({ isOpen: false });
@@ -455,23 +460,38 @@ export function JobReviewModal({
   }
 
   return (
-    <aside
-      role="dialog"
-      aria-label={`${jobLabel} 검수 패널`}
-      style={{ width: drawerWidth }}
-      className="fixed inset-y-0 right-0 z-40 flex flex-col overflow-hidden border-l border-slate-200 bg-[#F8FAFB] shadow-2xl"
-    >
-      {/* Left-edge drag handle to resize the drawer */}
-      <div
-        onPointerDown={beginDrawerResize}
-        onDoubleClick={resetDrawerWidth}
-        title="드래그하여 너비 조절 · 더블 클릭하여 초기화"
-        aria-label="검수 패널 너비 조절"
-        role="separator"
-        className="group/whandle absolute left-0 top-1/2 z-30 inline-flex h-[200px] w-3 -translate-y-1/2 cursor-col-resize items-center justify-center py-1 select-none"
+    <>
+      {/* 모바일: 팝업 뒤 백드롭(클릭하면 닫힘). 데스크톱 드로어에는 없음. */}
+      {isMobile ? (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px]"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      ) : null}
+      <aside
+        role="dialog"
+        aria-label={`${jobLabel} 검수 패널`}
+        style={isMobile ? undefined : { width: drawerWidth }}
+        className={
+          isMobile
+            ? "fixed inset-0 z-50 m-4 flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#F8FAFB] shadow-2xl"
+            : "fixed inset-y-0 right-0 z-40 flex flex-col overflow-hidden border-l border-slate-200 bg-[#F8FAFB] shadow-2xl"
+        }
       >
-        <div className="h-full w-0.5 rounded-full bg-slate-200 transition-colors group-hover/whandle:bg-blue-400 group-active/whandle:bg-blue-500" />
-      </div>
+        {/* Left-edge drag handle to resize the drawer — 데스크톱 전용 */}
+        {!isMobile ? (
+          <div
+            onPointerDown={beginDrawerResize}
+            onDoubleClick={resetDrawerWidth}
+            title="드래그하여 너비 조절 · 더블 클릭하여 초기화"
+            aria-label="검수 패널 너비 조절"
+            role="separator"
+            className="group/whandle absolute left-0 top-1/2 z-30 inline-flex h-[200px] w-3 -translate-y-1/2 cursor-col-resize items-center justify-center py-1 select-none"
+          >
+            <div className="h-full w-0.5 rounded-full bg-slate-200 transition-colors group-hover/whandle:bg-blue-400 group-active/whandle:bg-blue-500" />
+          </div>
+        ) : null}
       {/* Header */}
       <div className="flex shrink-0 items-center justify-between gap-4 border-b border-slate-200 bg-white px-5 py-3 xl:px-6">
         <div className="flex min-w-0 items-center gap-3">
@@ -497,11 +517,21 @@ export function JobReviewModal({
         </button>
       </div>
 
-      {/* Body: image (top) + drafts (bottom) stacked so each gets full drawer width */}
-      <div ref={splitContainerRef} className="flex min-h-0 flex-1 flex-col">
-        {/* Image preview — resizable top section */}
+      {/* Body: image (top) + drafts (bottom) stacked so each gets full drawer width.
+          모바일 팝업에서는 이 본문 하나만 스크롤하고(단일 스크롤), 이미지 영역은
+          리사이즈 없이 이미지 크기에 맞춰 자동 높이로 표시한다. 데스크톱은 기존처럼
+          이미지/목록 각각 스크롤 + 가운데 그랩바로 높이 조절. */}
+      <div
+        ref={splitContainerRef}
+        className={
+          isMobile
+            ? "flex flex-1 flex-col overflow-y-auto"
+            : "flex min-h-0 flex-1 flex-col"
+        }
+      >
+        {/* Image preview — 데스크톱은 리사이즈 가능한 고정 높이, 모바일은 자동 높이 */}
         <div
-          style={{ height: imageHeight }}
+          style={isMobile ? undefined : { height: imageHeight }}
           className="relative shrink-0 overflow-y-auto bg-white p-3"
         >
           <div
@@ -517,21 +547,30 @@ export function JobReviewModal({
           />
         </div>
 
-        {/* Horizontal drag handle between preview and drafts list */}
-        <div
-          onPointerDown={beginSplitResize}
-          onDoubleClick={resetSplit}
-          title="드래그하여 높이 조절 · 더블 클릭하여 초기화"
-          aria-label="미리보기 영역 높이 조절"
-          role="separator"
-          aria-orientation="horizontal"
-          className="group/hhandle relative z-10 flex h-1.5 shrink-0 cursor-row-resize items-center justify-center border-y border-slate-200 bg-slate-50 transition-colors hover:bg-blue-50 select-none"
-        >
-          <div className="h-0.5 w-32 rounded-full bg-slate-300 transition-colors group-hover/hhandle:bg-blue-400 group-active/hhandle:bg-blue-500" />
-        </div>
+        {/* Horizontal drag handle between preview and drafts list — 데스크톱 전용
+            (모바일은 이미지 자동 높이라 그랩바 없음) */}
+        {!isMobile ? (
+          <div
+            onPointerDown={beginSplitResize}
+            onDoubleClick={resetSplit}
+            title="드래그하여 높이 조절 · 더블 클릭하여 초기화"
+            aria-label="미리보기 영역 높이 조절"
+            role="separator"
+            aria-orientation="horizontal"
+            className="group/hhandle relative z-10 flex h-1.5 shrink-0 cursor-row-resize items-center justify-center border-y border-slate-200 bg-slate-50 transition-colors hover:bg-blue-50 select-none"
+          >
+            <div className="h-0.5 w-32 rounded-full bg-slate-300 transition-colors group-hover/hhandle:bg-blue-400 group-active/hhandle:bg-blue-500" />
+          </div>
+        ) : null}
 
         {/* Drafts list */}
-        <div className="flex min-h-0 flex-1 flex-col bg-[#F8FAFB]">
+        <div
+          className={
+            isMobile
+              ? "flex flex-col bg-[#F8FAFB]"
+              : "flex min-h-0 flex-1 flex-col bg-[#F8FAFB]"
+          }
+        >
           <div className="flex shrink-0 items-center gap-2 border-b border-slate-200 bg-white px-4 py-2">
             <label
               className={`flex size-7 shrink-0 items-center justify-center ${
@@ -620,7 +659,10 @@ export function JobReviewModal({
             </div>
           </div>
 
-          <div ref={draftListRef} className="min-h-0 flex-1 overflow-y-auto p-3">
+          <div
+            ref={draftListRef}
+            className={isMobile ? "p-3" : "min-h-0 flex-1 overflow-y-auto p-3"}
+          >
             {orderedDrafts.length === 0 ? (
               <p className="py-12 text-center text-[12px] text-slate-400">
                 추출된 자료가 없습니다.
@@ -666,6 +708,7 @@ export function JobReviewModal({
           </div>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

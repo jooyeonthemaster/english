@@ -1,7 +1,14 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { GraduationCap, Loader2, Download } from "lucide-react";
+import {
+  GraduationCap,
+  Loader2,
+  Download,
+  ShoppingBasket,
+  ChevronDown,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { triggerHintGlowWithin } from "@/lib/hint-glow";
@@ -46,6 +53,8 @@ export function ExamPassageLibrary({
   const api = useExamPassageLibrary();
   const [preview, setPreview] = useState<ExamPassage | null>(null);
   const [picking, setPicking] = useState(false);
+  // 모바일 하단 고정 장바구니 펼침 상태(내 지문함·워크스페이스 장바구니와 동형).
+  const [cartOpen, setCartOpen] = useState(false);
   // 비활(처럼 보이는) 담기 버튼을 눌렀을 때 어디를 골라야 하는지 카드들을 글로우.
   const bodyRef = useRef<HTMLDivElement>(null);
 
@@ -86,8 +95,8 @@ export function ExamPassageLibrary({
         ref={bodyRef}
         className={
           "min-h-0 flex-1 overflow-y-auto px-3 py-3" +
-          // 하단 고정 바에 마지막 카드가 가리지 않게 모바일 여백 예약.
-          (mobileFixedFooter ? " max-lg:pb-24" : "")
+          // 하단 고정 바(장바구니 + 담기 버튼)에 마지막 카드가 가리지 않게 여백 예약.
+          (mobileFixedFooter ? " max-lg:pb-32" : "")
         }
       >
         {api.loading ? (
@@ -203,8 +212,83 @@ export function ExamPassageLibrary({
             : "")
         }
       >
+        {/* 모바일 하단 고정 장바구니 — 내 지문함·워크스페이스 장바구니와 동형.
+            담기 버튼 위에 얹혀, 담은 지문을 펼쳐 보고 하나씩 뺄 수 있다.
+            mobileFixedFooter(문제 생성 스텝 플로우)일 때만, <lg 에서만 노출. */}
+        {mobileFixedFooter ? (
+          <div className="mb-2 lg:hidden">
+            {cartOpen && api.selectedRecords.length > 0 ? (
+              <div className="mb-2 flex max-h-[38vh] min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-50/70">
+                <div className="min-h-0 flex-1 overflow-y-auto p-2">
+                  {api.selectedRecords.map((r, i) => (
+                    <div
+                      key={r.id}
+                      className="mb-1.5 flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-2 last:mb-0"
+                    >
+                      <span className="inline-flex size-5 shrink-0 items-center justify-center rounded bg-blue-600 text-[10.5px] font-bold text-white">
+                        {i + 1}
+                      </span>
+                      <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-slate-700">
+                        {examCartLabel(r)}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => api.toggleSelect(r.id)}
+                        aria-label="담기에서 빼기"
+                        className="shrink-0 rounded-md p-1 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                      >
+                        <X className="size-3.5" aria-hidden="true" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            <button
+              type="button"
+              onClick={() => setCartOpen((open) => !open)}
+              aria-expanded={cartOpen}
+              aria-label={
+                cartOpen ? "담긴 지문 목록 접기" : "담긴 지문 목록 펼치기"
+              }
+              className="flex w-full items-center gap-2.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-left"
+            >
+              <span className="relative inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                <ShoppingBasket className="size-5" aria-hidden="true" />
+                {api.selectedCount > 0 ? (
+                  <span className="absolute -right-1.5 -top-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-extrabold leading-none text-white ring-2 ring-white">
+                    {api.selectedCount}
+                  </span>
+                ) : null}
+              </span>
+              <span className="flex min-w-0 flex-1 flex-col">
+                <span className="text-[12.5px] font-bold text-slate-900">
+                  담긴 지문 {api.selectedCount}개
+                </span>
+                <span className="truncate text-[10.5px] text-slate-400">
+                  {api.selectedCount > 0
+                    ? "탭하여 담긴 지문 보기·빼기"
+                    : "지문 카드를 선택하면 여기 모여요"}
+                </span>
+              </span>
+              <ChevronDown
+                className={
+                  "size-4 shrink-0 text-slate-400 transition-transform" +
+                  (cartOpen ? " rotate-180" : "")
+                }
+                aria-hidden="true"
+              />
+            </button>
+          </div>
+        ) : null}
         {api.selectedCount > 0 ? (
-          <div className="mb-1.5 flex items-center justify-between gap-2 text-[12.5px] text-slate-600">
+          <div
+            className={
+              "mb-1.5 flex items-center justify-between gap-2 text-[12.5px] text-slate-600" +
+              // 모바일은 위 장바구니 바가 대신하므로 이 요약 줄은 PC 에서만.
+              (mobileFixedFooter ? " max-lg:hidden" : "")
+            }
+          >
             <span>
               <span className="font-bold text-blue-700">
                 {api.selectedCount}개
@@ -261,4 +345,10 @@ export function ExamPassageLibrary({
       />
     </div>
   );
+}
+
+/** 장바구니 한 줄 라벨 — "2027 6월 32번" 처럼 연도·회차·문항번호로 간결히. */
+function examCartLabel(r: ExamPassage): string {
+  const q = r.qNumbers.length > 0 ? `${r.qNumbers.join("·")}번` : "";
+  return [r.year, r.exam, q].filter(Boolean).join(" ") || "기출 지문";
 }

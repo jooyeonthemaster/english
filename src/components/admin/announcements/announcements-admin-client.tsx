@@ -9,10 +9,7 @@ import {
   PinOff,
   Plus,
   Search,
-  Send,
   Trash2,
-  Archive,
-  Undo2,
   Sparkles,
   MonitorUp,
 } from "lucide-react";
@@ -23,7 +20,6 @@ import { AdminPagination } from "@/components/admin/admin-pagination";
 import {
   CATEGORY_LABELS,
   CATEGORY_BADGE_CLASS,
-  STATUS_LABELS,
   parseAnnouncementAudiences,
   ROLE_LABELS,
   ALL_ANNOUNCEMENT_ROLES,
@@ -47,28 +43,22 @@ const CATEGORY_PILLS: { value: "ALL" | AnnouncementCategory; label: string }[] =
   { value: "GENERAL", label: CATEGORY_LABELS.GENERAL },
 ];
 
-const STATUS_PILLS = [
-  { value: "ALL", label: "전체 상태" },
-  { value: "PUBLISHED", label: "발행됨" },
-  { value: "DRAFT", label: "초안" },
-  { value: "ARCHIVED", label: "보관됨" },
+// 노출 체계: 이용자에게 보이면 "노출 중"(PUBLISHED), 아니면 "미노출"(DRAFT·ARCHIVED).
+const VISIBILITY_PILLS = [
+  { value: "ALL", label: "전체" },
+  { value: "VISIBLE", label: "노출 중" },
+  { value: "HIDDEN", label: "미노출" },
 ];
+
+/** 이용자에게 노출되는 상태인지. */
+function isVisible(status: string): boolean {
+  return status === "PUBLISHED";
+}
 
 function audienceLabel(audiences: string): string {
   const roles = parseAnnouncementAudiences(audiences);
   if (roles.length === ALL_ANNOUNCEMENT_ROLES.length) return "전체";
   return roles.map((r) => ROLE_LABELS[r]).join("·");
-}
-
-function statusBadgeClass(status: string): string {
-  switch (status) {
-    case "PUBLISHED":
-      return "bg-emerald-50 text-emerald-600";
-    case "ARCHIVED":
-      return "bg-slate-100 text-slate-500";
-    default:
-      return "bg-amber-50 text-amber-700";
-  }
 }
 
 export function AnnouncementsAdminClient({
@@ -99,7 +89,8 @@ export function AnnouncementsAdminClient({
     const q = search.trim().toLowerCase();
     return items.filter((a) => {
       if (category !== "ALL" && a.category !== category) return false;
-      if (status !== "ALL" && a.status !== status) return false;
+      if (status === "VISIBLE" && !isVisible(a.status)) return false;
+      if (status === "HIDDEN" && isVisible(a.status)) return false;
       if (q && !(`${a.title} ${a.content}`.toLowerCase().includes(q))) return false;
       return true;
     });
@@ -121,16 +112,11 @@ export function AnnouncementsAdminClient({
     setEditorOpen(true);
   }
 
-  async function handleStatus(a: AdminAnnouncementDto, next: string) {
+  async function toggleVisible(a: AdminAnnouncementDto) {
+    const next = isVisible(a.status) ? "ARCHIVED" : "PUBLISHED";
     const res = await setAnnouncementStatus(a.id, next);
     if (res.success) {
-      toast.success(
-        next === "PUBLISHED"
-          ? "발행했어요."
-          : next === "ARCHIVED"
-            ? "보관했어요."
-            : "초안으로 되돌렸어요.",
-      );
+      toast.success(next === "PUBLISHED" ? "이용자에게 노출했어요." : "노출을 껐어요.");
       refresh();
     } else {
       toast.error(res.error);
@@ -208,7 +194,7 @@ export function AnnouncementsAdminClient({
             onChange={(e) => setStatus(e.target.value)}
             className="h-9 rounded-lg border border-gray-200 bg-white px-2.5 text-[12px] text-gray-600 outline-none focus:border-blue-400"
           >
-            {STATUS_PILLS.map((s) => (
+            {VISIBILITY_PILLS.map((s) => (
               <option key={s.value} value={s.value}>
                 {s.label}
               </option>
@@ -239,7 +225,11 @@ export function AnnouncementsAdminClient({
         ) : (
           <ul className="divide-y divide-gray-50">
             {paged.map((a) => (
-              <li key={a.id} className="flex items-start gap-3 px-4 py-3.5">
+              <li
+                key={a.id}
+                onClick={() => openEdit(a)}
+                className="flex cursor-pointer items-start gap-3 px-4 py-3.5 transition-colors hover:bg-slate-50"
+              >
                 <div className="min-w-0 flex-1">
                   <div className="mb-1 flex flex-wrap items-center gap-1.5">
                     {a.isPinned && (
@@ -254,18 +244,16 @@ export function AnnouncementsAdminClient({
                     >
                       {CATEGORY_LABELS[a.category as AnnouncementCategory] ?? a.category}
                     </span>
-                    <span
-                      className={cn(
-                        "rounded-md px-1.5 py-0.5 text-[10px] font-semibold",
-                        statusBadgeClass(a.status),
-                      )}
-                    >
-                      {STATUS_LABELS[a.status as keyof typeof STATUS_LABELS] ?? a.status}
-                    </span>
                     {a.sourceType === "RELEASE" && (
                       <span className="inline-flex items-center gap-0.5 rounded-md bg-indigo-50 px-1.5 py-0.5 text-[10px] font-semibold text-indigo-600">
                         <Sparkles className="size-2.5" />
                         자동 발행
+                      </span>
+                    )}
+                    {a.sourceType === "AUTO" && (
+                      <span className="inline-flex items-center gap-0.5 rounded-md bg-violet-50 px-1.5 py-0.5 text-[10px] font-semibold text-violet-600">
+                        <Sparkles className="size-2.5" />
+                        AI 초안
                       </span>
                     )}
                   </div>
@@ -273,29 +261,46 @@ export function AnnouncementsAdminClient({
                     {a.title}
                   </p>
                   <p className="mt-0.5 text-[11.5px] text-gray-400">
-                    노출 {audienceLabel(a.audiences)}
+                    대상 {audienceLabel(a.audiences)}
                     {a.publishedAt
                       ? ` · 게시 ${formatDateTime(a.publishedAt)}`
                       : " · 게시일 미정"}
                   </p>
                 </div>
 
-                {/* 액션 */}
-                <div className="flex shrink-0 items-center gap-0.5">
-                  {a.status !== "PUBLISHED" ? (
-                    <IconBtn title="발행" onClick={() => handleStatus(a, "PUBLISHED")}>
-                      <Send className="size-3.5" />
-                    </IconBtn>
-                  ) : (
-                    <IconBtn title="보관" onClick={() => handleStatus(a, "ARCHIVED")}>
-                      <Archive className="size-3.5" />
-                    </IconBtn>
-                  )}
-                  {a.status === "ARCHIVED" && (
-                    <IconBtn title="초안으로" onClick={() => handleStatus(a, "DRAFT")}>
-                      <Undo2 className="size-3.5" />
-                    </IconBtn>
-                  )}
+                {/* 액션 — 행 클릭(수정 열기)과 분리 */}
+                <div
+                  className="flex shrink-0 items-center gap-1"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* 노출 상태 텍스트 + ON/OFF 스위치 */}
+                  <span
+                    className={cn(
+                      "text-[11.5px] font-semibold",
+                      isVisible(a.status) ? "text-blue-600" : "text-slate-400",
+                    )}
+                  >
+                    {isVisible(a.status) ? "노출 중" : "미노출"}
+                  </span>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={isVisible(a.status)}
+                    onClick={() => toggleVisible(a)}
+                    title={isVisible(a.status) ? "노출 중 · 끄기" : "미노출 · 켜기"}
+                    aria-label={isVisible(a.status) ? "노출 끄기" : "노출 켜기"}
+                    className={cn(
+                      "relative mr-1 inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors",
+                      isVisible(a.status) ? "bg-blue-600" : "bg-slate-300",
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "inline-block size-5 rounded-full bg-white shadow-sm transition-transform",
+                        isVisible(a.status) ? "translate-x-[22px]" : "translate-x-0.5",
+                      )}
+                    />
+                  </button>
                   <IconBtn
                     title={a.isPinned ? "고정 해제" : "상단 고정"}
                     onClick={() => handlePin(a)}
@@ -323,6 +328,7 @@ export function AnnouncementsAdminClient({
         open={editorOpen}
         onOpenChange={setEditorOpen}
         editing={editing}
+        initialCategory={category !== "ALL" ? category : undefined}
         onSaved={refresh}
       />
     </div>

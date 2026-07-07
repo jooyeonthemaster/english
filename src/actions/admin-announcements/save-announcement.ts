@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdminAuth } from "@/lib/auth-admin";
 import { isSuperAdmin } from "@/actions/admin-members/_shared";
 import { serializeAnnouncementAudiences } from "@/lib/announcements/shared";
+import { notifyStaffOfPublishedAnnouncement } from "@/lib/announcements/notify";
 import {
   announcementInputSchema,
   fail,
@@ -52,6 +53,15 @@ export async function createAnnouncement(
       data: { ...normalized.data, sourceType: "MANUAL" },
       select: { id: true },
     });
+    // 발행 상태로 새로 만들면 대상 staff 벨에 알림(best-effort).
+    if (normalized.data.status === "PUBLISHED") {
+      await notifyStaffOfPublishedAnnouncement({
+        id: created.id,
+        title: normalized.data.title,
+        category: normalized.data.category,
+        audiences: normalized.data.audiences,
+      }).catch((e) => console.error("[announcement notify] create", e));
+    }
     revalidatePath("/admin/announcements");
     return { success: true, id: created.id };
   } catch {
@@ -71,10 +81,24 @@ export async function updateAnnouncement(
   if (!normalized.ok) return fail(normalized.error);
 
   try {
+    // 최초 발행 전환 감지용으로 직전 게시일을 읽는다(이미 발행됐던 글 재저장 시 재알림 방지).
+    const prior = await prisma.platformAnnouncement.findUnique({
+      where: { id },
+      select: { publishedAt: true },
+    });
     await prisma.platformAnnouncement.update({
       where: { id },
       data: normalized.data,
     });
+    // 초안/보관 → 발행으로 처음 넘어갈 때만 벨 알림(best-effort).
+    if (normalized.data.status === "PUBLISHED" && !prior?.publishedAt) {
+      await notifyStaffOfPublishedAnnouncement({
+        id,
+        title: normalized.data.title,
+        category: normalized.data.category,
+        audiences: normalized.data.audiences,
+      }).catch((e) => console.error("[announcement notify] update", e));
+    }
     revalidatePath("/admin/announcements");
     return { success: true, id };
   } catch {
