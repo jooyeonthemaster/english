@@ -20,6 +20,7 @@ import {
   LifeBuoy,
   Banknote,
   Megaphone,
+  Image,
   Package,
   Ticket,
   type LucideIcon,
@@ -100,7 +101,8 @@ const NAV_SECTIONS: Array<{ title: string; items: NavItem[] }> = [
     title: "마케팅",
     items: [
       { label: "추천·미션", icon: Gift, href: "/admin/referrals" },
-      { label: "배너 관리", icon: Megaphone, href: "/admin/banners" },
+      { label: "스모트 소식", icon: Megaphone, href: "/admin/announcements" },
+      { label: "배너 관리", icon: Image, href: "/admin/banners" },
     ],
   },
   {

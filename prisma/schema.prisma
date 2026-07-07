@@ -129,6 +129,9 @@ model Staff {
   kakaoId        String?   @unique @map("kakao_id")
   authProvider   String?   @map("auth_provider") // credentials | google | kakao
   lastLoginAt    DateTime? @map("last_login_at") @db.Timestamptz(6)
+  // 스모트 소식(플랫폼 공지) 마지막 확인 시각 — 이 시각 이후 발행된 글이 있으면
+  // "새 소식" 배지를 띄운다. 공지별 읽음 레코드 대신 프로필당 타임스탬프 1개로 추적.
+  lastAnnouncementReadAt DateTime? @map("last_announcement_read_at")
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -223,6 +226,9 @@ model Student {
   streakFreezeCount Int       @default(0) // max 3
   lastStudyDate     DateTime?
 
+  // 스모트 소식(플랫폼 공지) 마지막 확인 시각 — 프로필당 타임스탬프 1개로 신규 여부 판단.
+  lastAnnouncementReadAt DateTime? @map("last_announcement_read_at")
+
   // Relations
   academy                   Academy                    @relation(fields: [academyId], references: [id])
   school                    School?                    @relation(fields: [schoolId], references: [id])
@@ -278,6 +284,8 @@ model Parent {
   emergencyContact String?
   memo             String?  @db.Text
   loginToken       String?  @unique // For passwordless parent login via link
+  // 스모트 소식(플랫폼 공지) 마지막 확인 시각 — 프로필당 타임스탬프 1개로 신규 여부 판단.
+  lastAnnouncementReadAt DateTime? @map("last_announcement_read_at")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -2239,6 +2247,33 @@ model PlatformSetting {
   updatedAt DateTime @updatedAt
 
   @@map("platform_settings")
+}
+
+/// PlatformAnnouncement — 스모트 운영진 → 전체 이용자 플랫폼 공지("스모트 소식").
+/// 기존 학원 내부 Notice 를 대체한다. 원장/강사/학생/학부모가 각 앱에서 읽고,
+/// 읽음 추적은 공지별 레코드 대신 프로필(Staff/Student/Parent)의
+/// lastAnnouncementReadAt 타임스탬프 1개로 한다.
+/// category: "UPDATE"(업데이트) | "MAINTENANCE"(점검) | "EVENT"(이벤트) | "GENERAL"(일반)
+/// status: "DRAFT"(초안) | "PUBLISHED"(발행) | "ARCHIVED"(보관)
+/// audiences: "ALL" 또는 "DIRECTOR,TEACHER,STUDENT,PARENT" 콤마 조인(SiteBanner 규약).
+/// sourceType: "MANUAL"(직접 작성) | "RELEASE"(배포 시 release-notes 에서 자동 발행)
+/// releaseSlug: 자동 발행 멱등성 키(파일 slug). 같은 slug 는 두 번 발행되지 않는다.
+model PlatformAnnouncement {
+  id          String    @id @default(cuid())
+  title       String
+  content     String    @db.Text // 마크다운 본문
+  category    String    @default("GENERAL")
+  status      String    @default("DRAFT")
+  publishedAt DateTime? @map("published_at") // 소급 게시용 과거 날짜 허용
+  isPinned    Boolean   @default(false) @map("is_pinned")
+  audiences   String    @default("ALL")
+  sourceType  String    @default("MANUAL") @map("source_type")
+  releaseSlug String?   @unique @map("release_slug")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([status, isPinned, publishedAt])
+  @@map("platform_announcements")
 }
 
 // ============================================================================

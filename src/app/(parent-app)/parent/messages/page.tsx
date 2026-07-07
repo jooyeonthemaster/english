@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getParentSession } from "@/lib/auth-parent";
-import { getParentNotices, getParentMessages } from "@/actions/parent";
+import { getParentMessages } from "@/actions/parent";
+import { getParentAnnouncements } from "@/actions/platform-announcements";
 import { MessagesClient } from "./messages-client";
 
 export default async function ParentMessagesPage() {
@@ -8,7 +9,7 @@ export default async function ParentMessagesPage() {
   if (!session) redirect("/parent/login");
 
   const [notices, conversations] = await Promise.all([
-    getParentNotices(),
+    getParentAnnouncements(),
     getParentMessages(),
   ]);
 

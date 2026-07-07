@@ -25,6 +25,7 @@ import { getNavGroups, type NavGroup } from "./nav-config";
 import { MaybeComingSoon } from "./maybe-coming-soon";
 import { SidebarTopActions } from "./admin-shell/sidebar-top-actions";
 import { NavItem } from "./admin-shell/nav-item";
+import { getStaffHasNewAnnouncements } from "@/actions/platform-announcements";
 import { useReviewDrawer } from "./review-drawer-context";
 import { useSidebarFocus } from "./sidebar-focus-context";
 import { MarqueeBoundaryContext } from "./marquee-boundary-context";
@@ -251,6 +252,17 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     () => getNavGroups(basePath, navWorkspace),
     [basePath, navWorkspace],
   );
+
+  // 새 스모트 소식 여부 — 공지 진입점(/notices)에 빨간 점 배지로 표시.
+  const noticesHref = `${basePath}/notices`;
+  const [hasNewAnnouncements, setHasNewAnnouncements] = useState(false);
+  useEffect(() => {
+    void getStaffHasNewAnnouncements()
+      .then(setHasNewAnnouncements)
+      .catch(() => {});
+    // 공지 페이지에 들어오면 읽음 처리되므로 점을 즉시 지운다.
+    if (pathname.startsWith(noticesHref)) setHasNewAnnouncements(false);
+  }, [pathname, noticesHref]);
 
   const filteredGroups: NavGroup[] = useMemo(
     () =>
@@ -529,6 +541,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                           onNavClick={handleNavClick}
                           onToggleMenu={toggleMenu}
                           onSetOpenMenu={setOpenMenu}
+                          showNewDot={hasNewAnnouncements && item.href === noticesHref}
                         />
                       ))}
                     </ul>

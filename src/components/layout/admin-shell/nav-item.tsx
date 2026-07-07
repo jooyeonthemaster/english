@@ -30,6 +30,8 @@ interface NavItemProps {
   onNavClick: (href: string, e: React.MouseEvent) => void;
   onToggleMenu: (href: string) => void;
   onSetOpenMenu: (href: string, open: boolean) => void;
+  /** 새 스모트 소식이 있을 때 빨간 점 배지 노출(공지 진입점 전용). */
+  showNewDot?: boolean;
 }
 
 export function NavItem({
@@ -42,6 +44,7 @@ export function NavItem({
   onNavClick,
   onToggleMenu,
   onSetOpenMenu,
+  showNewDot,
 }: NavItemProps) {
   const Icon = item.icon;
   const isWorkflowIcon = WORKFLOW_ICON_NAMES.has(Icon.displayName);
@@ -203,9 +206,16 @@ export function NavItem({
         )}
         strokeWidth={linkActive ? 2 : 1.7}
       />
+      {/* 접힘 상태: 아이콘 우상단에 새 소식 점 */}
+      {collapsed && showNewDot && (
+        <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-red-500 ring-2 ring-white" />
+      )}
       {!collapsed && (
         <>
           <span className="truncate flex-1 min-w-0">{item.label}</span>
+          {showNewDot && (
+            <span className="size-2 shrink-0 rounded-full bg-red-500" />
+          )}
           {item.beta && (
             <span className="shrink-0 rounded border border-blue-200 bg-blue-50 px-1 py-px text-[8.5px] font-bold leading-none tracking-wide text-blue-500">
               BETA

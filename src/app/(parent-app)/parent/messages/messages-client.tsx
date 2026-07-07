@@ -10,16 +10,17 @@ import {
 } from "lucide-react";
 import { cn, formatRelativeTime, formatKoreanDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { getConversation, sendParentMessage } from "@/actions/parent";
+import type { MessageConversation, MessageItem } from "@/actions/parent";
 import {
-  getConversation,
-  sendParentMessage,
-  markNoticeAsRead,
-} from "@/actions/parent";
-import type {
-  ParentNotice,
-  MessageConversation,
-  MessageItem,
-} from "@/actions/parent";
+  markParentAnnouncementsRead,
+  type AnnouncementListItem,
+} from "@/actions/platform-announcements";
+import {
+  CATEGORY_LABELS,
+  type AnnouncementCategory,
+} from "@/lib/announcements/shared";
+import { AnnouncementBody } from "@/components/announcements/announcement-body";
 
 type Tab = "notices" | "messages";
 type View = "list" | "notice-detail" | "chat";
@@ -29,17 +30,16 @@ export function MessagesClient({
   conversations: initialConversations,
   parentId,
 }: {
-  notices: ParentNotice[];
+  notices: AnnouncementListItem[];
   conversations: MessageConversation[];
   parentId: string;
 }) {
   const [tab, setTab] = useState<Tab>("notices");
   const [view, setView] = useState<View>("list");
-  const [notices, setNotices] = useState(initialNotices);
+  const [notices] = useState(initialNotices);
   const [conversations] = useState(initialConversations);
-  const [selectedNotice, setSelectedNotice] = useState<ParentNotice | null>(
-    null
-  );
+  const [selectedNotice, setSelectedNotice] =
+    useState<AnnouncementListItem | null>(null);
   const [selectedStaffId, setSelectedStaffId] = useState<string | null>(null);
   const [selectedStaffName, setSelectedStaffName] = useState("");
   const [chatMessages, setChatMessages] = useState<MessageItem[]>([]);
@@ -53,19 +53,14 @@ export function MessagesClient({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages]);
 
-  async function openNotice(notice: ParentNotice) {
+  // 소식 목록을 연 시점에 "마지막 확인 시각"을 갱신해 새 소식 표시를 지운다.
+  useEffect(() => {
+    void markParentAnnouncementsRead().catch(() => {});
+  }, []);
+
+  function openNotice(notice: AnnouncementListItem) {
     setSelectedNotice(notice);
     setView("notice-detail");
-    if (!notice.isRead) {
-      try {
-        await markNoticeAsRead(notice.id);
-        setNotices((prev) =>
-          prev.map((n) => (n.id === notice.id ? { ...n, isRead: true } : n))
-        );
-      } catch {
-        // ignore
-      }
-    }
   }
 
   async function openChat(staffId: string, staffName: string) {
@@ -230,22 +225,27 @@ export function MessagesClient({
           목록으로
         </button>
         <article>
+          <p className="mb-1 text-[11px] font-semibold text-blue-600">
+            {CATEGORY_LABELS[selectedNotice.category as AnnouncementCategory] ??
+              selectedNotice.category}
+          </p>
           <h1 className="text-lg font-bold text-gray-900 mb-2">
             {selectedNotice.title}
           </h1>
           <p className="text-xs text-gray-400 mb-6">
-            {formatKoreanDate(selectedNotice.publishAt)}
+            {formatKoreanDate(selectedNotice.publishedAt)}
           </p>
-          <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
-            {selectedNotice.content}
-          </div>
+          <AnnouncementBody
+            content={selectedNotice.content}
+            className="text-sm text-gray-700"
+          />
         </article>
       </div>
     );
   }
 
   // List view
-  const unreadNotices = notices.filter((n) => !n.isRead).length;
+  const unreadNotices = notices.filter((n) => n.isNew).length;
   const unreadMessages = conversations.reduce(
     (sum, c) => sum + c.unreadCount,
     0
@@ -315,7 +315,7 @@ export function MessagesClient({
                 <div
                   className={cn(
                     "flex-shrink-0 w-2 h-2 rounded-full",
-                    notice.isRead ? "bg-gray-300" : "bg-blue-500"
+                    notice.isNew ? "bg-blue-500" : "bg-gray-300"
                   )}
                   aria-hidden="true"
                 />
@@ -323,15 +323,15 @@ export function MessagesClient({
                   <p
                     className={cn(
                       "text-sm truncate",
-                      notice.isRead
-                        ? "text-gray-600"
-                        : "text-gray-800 font-medium"
+                      notice.isNew
+                        ? "text-gray-800 font-medium"
+                        : "text-gray-600"
                     )}
                   >
                     {notice.title}
                   </p>
                   <p className="text-[11px] text-gray-400 mt-0.5">
-                    {formatKoreanDate(notice.publishAt)}
+                    {formatKoreanDate(notice.publishedAt)}
                   </p>
                 </div>
                 <ChevronRight className="size-4 text-gray-300 flex-shrink-0" />

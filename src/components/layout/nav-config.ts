@@ -271,7 +271,7 @@ export function getNavGroups(
         ...(showResults
           ? [{ label: "학습 현황", icon: Activity, href: `${basePath}/tutor/monitor`, directorOnly: true, beta: true }]
           : []),
-        { label: "공지사항", icon: Megaphone, href: `${basePath}/notices`, beta: true },
+        { label: "스모트 소식", icon: Megaphone, href: `${basePath}/notices` },
       ],
     },
     {
