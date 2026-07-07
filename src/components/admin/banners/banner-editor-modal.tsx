@@ -114,6 +114,32 @@ function draftFromDto(dto: AdminBannerDto | null): Draft {
   };
 }
 
+/** 공지 → 배너 원클릭 프리필 payload(announcement 템플릿 필드에 매핑). */
+export interface BannerPrefill {
+  title?: string;
+  eyebrow?: string;
+  heading?: string;
+  body?: string;
+  linkUrl?: string;
+  audiences?: BannerAudience[];
+}
+
+function draftFromPrefill(prefill: BannerPrefill): Draft {
+  const base = draftFromDto(null);
+  return {
+    ...base,
+    title: prefill.title ?? base.title,
+    linkUrl: prefill.linkUrl ?? base.linkUrl,
+    audiences: prefill.audiences?.length ? prefill.audiences : base.audiences,
+    content: {
+      ...base.content,
+      ...(prefill.eyebrow !== undefined ? { eyebrow: prefill.eyebrow } : {}),
+      ...(prefill.heading !== undefined ? { heading: prefill.heading } : {}),
+      ...(prefill.body !== undefined ? { body: prefill.body } : {}),
+    },
+  };
+}
+
 const FIELD_LABEL = "block text-[12px] font-semibold text-slate-600 mb-1";
 const FIELD_INPUT =
   "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-[13px] text-slate-900 outline-none transition-colors focus:border-blue-400 focus:ring-2 focus:ring-blue-100";
@@ -123,13 +149,18 @@ export function BannerEditorModal({
   onOpenChange,
   editing,
   onSaved,
+  prefill,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   editing: AdminBannerDto | null;
   onSaved: () => void;
+  /** 신규 작성 시 초기값(공지 → 배너 원클릭). editing 이 있으면 무시. */
+  prefill?: BannerPrefill | null;
 }) {
-  const [draft, setDraft] = useState<Draft>(() => draftFromDto(editing));
+  const [draft, setDraft] = useState<Draft>(() =>
+    editing ? draftFromDto(editing) : prefill ? draftFromPrefill(prefill) : draftFromDto(null),
+  );
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [livePreview, setLivePreview] = useState(false);
@@ -148,10 +179,12 @@ export function BannerEditorModal({
 
   // Re-seed the draft whenever the editor opens for a (different) banner.
   const seededFor = useRef<string | null>(editing?.id ?? "__new__");
-  const currentKey = editing?.id ?? "__new__";
+  const currentKey = editing?.id ?? (prefill ? "__prefill__" : "__new__");
   if (open && seededFor.current !== currentKey) {
     seededFor.current = currentKey;
-    setDraft(draftFromDto(editing));
+    setDraft(
+      editing ? draftFromDto(editing) : prefill ? draftFromPrefill(prefill) : draftFromDto(null),
+    );
     setTab("edit");
     setZoom(0.9);
     setEditingTitle(false);

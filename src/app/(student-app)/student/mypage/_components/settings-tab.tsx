@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { LogOut, ChevronRight, Bell, User, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { APP_VERSION } from "@/lib/app-version";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -54,7 +55,7 @@ export function SettingsTab({ student, onLogout }: SettingsTabProps) {
 
       {/* 앱 정보 */}
       <SettingsCard title="앱 정보" icon={<Info size={16} />}>
-        <InfoRow label="버전" value="1.0.0" />
+        <InfoRow label="버전" value={APP_VERSION} />
       </SettingsCard>
 
       {/* 로그아웃 */}

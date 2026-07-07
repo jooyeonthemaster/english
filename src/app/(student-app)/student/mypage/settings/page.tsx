@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { getStudentInbadi } from "@/actions/student-app";
 import { logoutStudentAction } from "@/actions/auth";
+import { APP_VERSION } from "@/lib/app-version";
 
 type StudentInfo = {
   name: string;
@@ -55,7 +56,7 @@ export default function SettingsPage() {
       {/* App info */}
       <div className="bg-white rounded-3xl p-5 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
         <h3 className="text-xs font-semibold text-gray-500 mb-3">앱 정보</h3>
-        <InfoRow label="버전" value="0.1.0" />
+        <InfoRow label="버전" value={APP_VERSION} />
       </div>
 
       {/* Logout */}

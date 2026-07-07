@@ -10,6 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { APP_VERSION_LABEL } from "@/lib/app-version";
 import {
   Menu,
   Home,
@@ -171,7 +172,7 @@ export function HamburgerMenu({
               <span>로그인</span>
             </Link>
           )}
-          <p className="text-[11px] text-[#C8CCC2]">SMOAT v0.1.0</p>
+          <p className="text-[11px] text-[#C8CCC2]">SMOAT {APP_VERSION_LABEL}</p>
         </div>
       </SheetContent>
     </Sheet>

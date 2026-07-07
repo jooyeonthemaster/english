@@ -14,6 +14,7 @@ import {
   Archive,
   Undo2,
   Sparkles,
+  MonitorUp,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -140,6 +141,34 @@ export function AnnouncementsAdminClient({
     const res = await toggleAnnouncementPinned(a.id, !a.isPinned);
     if (res.success) refresh();
     else toast.error(res.error);
+  }
+
+  // 공지 본문을 배너 문구용으로 정리(마크다운 기호 제거, 앞 몇 줄만).
+  function bannerBodyFromContent(content: string): string {
+    return content
+      .split("\n")
+      .map((l) =>
+        l
+          .replace(/^\s*[-*•]\s+/, "· ")
+          .replace(/^#{1,6}\s+/, "")
+          .replace(/\*\*/g, "")
+          .trim(),
+      )
+      .filter(Boolean)
+      .slice(0, 4)
+      .join("\n")
+      .slice(0, 300);
+  }
+
+  function openAsBanner(a: AdminAnnouncementDto) {
+    const params = new URLSearchParams({
+      prefill: "announcement",
+      title: a.title,
+      eyebrow: CATEGORY_LABELS[a.category as AnnouncementCategory] ?? "공지",
+      heading: a.title,
+      body: bannerBodyFromContent(a.content),
+    });
+    router.push(`/admin/banners?${params.toString()}`);
   }
 
   async function handleDelete(a: AdminAnnouncementDto) {
@@ -272,6 +301,9 @@ export function AnnouncementsAdminClient({
                     onClick={() => handlePin(a)}
                   >
                     {a.isPinned ? <PinOff className="size-3.5" /> : <Pin className="size-3.5" />}
+                  </IconBtn>
+                  <IconBtn title="배너로 띄우기" onClick={() => openAsBanner(a)}>
+                    <MonitorUp className="size-3.5" />
                   </IconBtn>
                   <IconBtn title="수정" onClick={() => openEdit(a)}>
                     <Pencil className="size-3.5" />

@@ -13,11 +13,14 @@ import {
   type AnnouncementCategory,
 } from "@/lib/announcements/shared";
 import { AnnouncementBody } from "@/components/announcements/announcement-body";
+import { APP_VERSION_LABEL } from "@/lib/app-version";
 
 export default function NoticesClient({
   initialAnnouncements,
+  buildRef,
 }: {
   initialAnnouncements: AnnouncementListItem[];
+  buildRef?: string | null;
 }) {
   const [announcements] = useState(initialAnnouncements);
   const [expandedId, setExpandedId] = useState<string | null>(
@@ -106,6 +109,11 @@ export default function NoticesClient({
           })}
         </div>
       )}
+
+      <p className="pt-2 text-center text-[11px] text-slate-300">
+        스모트 {APP_VERSION_LABEL}
+        {buildRef ? ` · ${buildRef}` : ""}
+      </p>
     </div>
   );
 }
