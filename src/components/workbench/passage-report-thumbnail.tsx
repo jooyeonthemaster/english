@@ -95,17 +95,21 @@ export function PassageReportThumbnail({
     <div
       ref={hostRef}
       className={cn(
-        "absolute inset-0 overflow-hidden bg-white",
+        // passage-report-thumb: globals.css 에서 모바일 --par-zoom(뷰용 축소)을 1 로
+        // 되돌려(.par-sheet 이중축소 방지) A4 가 칸 폭을 좌우로 꽉 채우게 한다.
+        "passage-report-thumb absolute inset-0 overflow-hidden bg-white",
         className,
       )}
     >
       {state === "ready" && report && scale > 0 ? (
         // par-root 는 자체 폭(210mm)으로 렌더되므로 scale 로 칸 폭에 맞춘다.
-        // 첫 장만 보이도록 부모(absolute inset-0)에서 세로를 clip 한다.
+        // 높이를 A4 한 장(폭×297/210)으로 clip 해 첫 페이지만 보이게 한다
+        // (박스가 한 장보다 커도 다음 페이지가 비치지 않도록).
         <div
-          className="pointer-events-none absolute left-0 top-0 origin-top-left select-none"
+          className="pointer-events-none absolute left-0 top-0 origin-top-left select-none overflow-hidden"
           style={{
             width: `${REPORT_A4_WIDTH_PX}px`,
+            height: `${REPORT_A4_WIDTH_PX * A4_RATIO}px`,
             transform: `scale(${scale})`,
           }}
         >

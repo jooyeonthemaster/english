@@ -189,6 +189,7 @@ export async function POST(req: NextRequest, ctx: RouteContext) {
             extractedText: ocr.extractedText,
             inputTokens: ocr.inputTokens,
             outputTokens: ocr.outputTokens,
+            aiCostUsd: ocr.aiCostUsd,
             latencyMs: Date.now() - startTs,
             structured: ocr.structured ?? undefined,
             modelUsed: ocr.modelUsed,

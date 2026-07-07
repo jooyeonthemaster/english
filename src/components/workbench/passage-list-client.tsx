@@ -1024,7 +1024,9 @@ export function PassageListClient({
               type="button"
               onClick={() => void handleSelectAllPages()}
               disabled={selectingAllPages}
-              className="whitespace-nowrap text-xs font-medium text-blue-600 underline-offset-2 hover:underline disabled:opacity-50"
+              // 모바일에선 숨김 — 헤더 체크박스가 이미 '스코프 전체 선택'을 하므로 중복.
+              // (데스크톱은 lg: 로 기존 그대로 노출, PC 무변경)
+              className="hidden whitespace-nowrap text-xs font-medium text-blue-600 underline-offset-2 hover:underline disabled:opacity-50 lg:inline-block"
               title={
                 koScope
                   ? "현재 필터의 모든 페이지에 있는 지문을 선택"

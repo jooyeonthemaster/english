@@ -4,6 +4,7 @@ import { z } from "zod";
 import {
   ATLAS_CLOUD_PROVIDER,
   atlasChatModel,
+  atlasUsageWithCost,
   normalizeAtlasModelId,
 } from "@/lib/atlas-ai";
 import { isNonRetryableQuestionGenerationProviderError } from "@/lib/question-generation-llm";
@@ -30,6 +31,8 @@ export interface RunEditModelResult<T> {
   durationMs: number;
   inputTokens?: number;
   outputTokens?: number;
+  /** OpenRouter 실측 청구액(USD) — 원가 원장 RECORDED 기록용. */
+  costUsd?: number;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -94,6 +97,7 @@ export async function runEditModel<T>({
         durationMs: Date.now() - operationStartedAt,
         inputTokens: usageInput(result),
         outputTokens: usageOutput(result),
+        costUsd: usageCost(result),
       };
     } catch (error) {
       lastError = error;
@@ -121,4 +125,15 @@ function usageOutput(result: unknown): number | undefined {
   const u = result.usage;
   const v = u.outputTokens ?? u.completionTokens;
   return typeof v === "number" ? v : undefined;
+}
+
+function usageCost(result: unknown): number | undefined {
+  if (!isRecord(result)) return undefined;
+  const merged = atlasUsageWithCost(
+    result as { usage?: unknown; providerMetadata?: unknown },
+  );
+  if (!isRecord(merged)) return undefined;
+  return typeof merged.costUsd === "number" && merged.costUsd > 0
+    ? merged.costUsd
+    : undefined;
 }

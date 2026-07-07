@@ -6,6 +6,7 @@ import {
   ATLAS_PREMIUM_MODEL_ID,
   ATLAS_STANDARD_MODEL_ID,
   atlasChatModel,
+  atlasUsageWithCost,
 } from "@/lib/atlas-ai";
 import { GEMINI_QUESTION_MAX_RETRIES } from "@/lib/concurrency-config";
 import type { QuestionGenerationPlan } from "@/lib/question-generation-plans";
@@ -223,7 +224,9 @@ export async function generateQuestionObject<T>({
 
       return {
         object: result.object as T,
-        usage: "usage" in result ? result.usage : undefined,
+        // usage 에 OpenRouter 실측 원가(costUsd/generationId)를 병합해 하류
+        // recordAiCost 가 RECORDED 단가로 기록하게 한다.
+        usage: atlasUsageWithCost(result),
         provider: config.provider,
         modelId: config.modelId,
         attempts: attempt + 1,
@@ -426,7 +429,7 @@ async function generateObjectViaJsonFallback<T>({
     console.log(`[${logPrefix}] JSON fallback succeeded (schema validated client-side).`);
     return {
       object: parsed.data as T,
-      usage: result.usage,
+      usage: atlasUsageWithCost(result),
       provider,
       modelId,
       attempts: attempt + 2,
@@ -555,7 +558,7 @@ export async function generateQuestionText({
           responseFormat === "json_object" && "output" in result
             ? JSON.stringify(result.output)
             : result.text,
-        usage: "usage" in result ? result.usage : undefined,
+        usage: atlasUsageWithCost(result),
         finishReason:
           "finishReason" in result && typeof result.finishReason === "string"
             ? result.finishReason

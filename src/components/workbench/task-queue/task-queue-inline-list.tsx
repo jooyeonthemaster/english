@@ -248,9 +248,13 @@ export function TaskQueueInlineList({
   const grid = layout === "grid";
   const isList = grid && effectiveViewMode === "list";
   // Column count follows effectiveViewMode, which already accounts for the
-  // auto width-collapse above — so grid and toggle stay in sync.
+  // auto width-collapse above — so grid and toggle stay in sync. 모바일(<lg)은
+  // 카드가 가로형(썸네일+정보/버튼)이라 항상 한 줄에 하나씩 세워야 제목·상태·
+  // 버튼이 안 눌린다(모바일 우선: base=1열, lg:부터 2/3열). [[tailwind-v4-max-lg-override]]
   const gridColsClass =
-    effectiveViewMode === "grid-2" ? "grid-cols-2" : "grid-cols-3";
+    effectiveViewMode === "grid-2"
+      ? "grid-cols-1 lg:grid-cols-2"
+      : "grid-cols-1 lg:grid-cols-3";
 
   const bodyPadding = bare ? "" : "p-3";
   const sectionClass = bare

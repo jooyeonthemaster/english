@@ -523,6 +523,7 @@ export function PassageInputRow({
 
   return (
     <div
+      data-passage-row-card
       onAnimationEnd={(e) => {
         if (justAdded && e.animationName === "passage-added-glow") {
           onGlowEnd?.();

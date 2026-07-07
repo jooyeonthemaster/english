@@ -1,5 +1,6 @@
 import { generateObject, type LanguageModel } from "ai";
 
+import { atlasUsageWithCost } from "@/lib/atlas-ai";
 import { recordAiCost } from "@/lib/platform-api-costs";
 import { buildQuestionAnalysisPrompt } from "./prompt";
 import {
@@ -88,7 +89,7 @@ export async function generateAnalysisWithRetries(
         academyId: args.academyId,
         model: args.modelId,
         operationType: "SIMILAR_EXAM_GEN",
-        usage: result.usage,
+        usage: atlasUsageWithCost(result),
       });
       return {
         ok: true,

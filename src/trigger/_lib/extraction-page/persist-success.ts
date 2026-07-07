@@ -11,6 +11,8 @@ export async function persistPageSuccess(params: {
   extractedText: string;
   inputTokens: number | undefined;
   outputTokens: number | undefined;
+  /** OpenRouter 실측 청구액(USD) — 원가 원장 sync 가 RECORDED 단가로 흡수. */
+  aiCostUsd?: number | undefined;
   latencyMs: number;
   structured: StructuredOcrResponse | undefined;
   /** 실제 사용된 OCR 엔진(dispatch가 보고). 미지정 시 설정상 Gemini 모델명. */
@@ -24,6 +26,7 @@ export async function persistPageSuccess(params: {
     extractedText,
     inputTokens,
     outputTokens,
+    aiCostUsd,
     latencyMs,
     structured,
     modelUsed,
@@ -49,6 +52,7 @@ export async function persistPageSuccess(params: {
         modelUsed: modelUsed ?? getExtractionAiModelName("ocr"),
         inputTokens: inputTokens ?? null,
         outputTokens: outputTokens ?? null,
+        aiCostUsd: aiCostUsd ?? null,
         latencyMs,
         completedAt: new Date(),
         leaseOwner: null,

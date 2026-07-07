@@ -18,6 +18,7 @@ import {
 } from "@/lib/credits";
 import {
   providerFromModel,
+  readAiUsageCost,
   readAiUsageTokens,
   recordPlatformApiUsageCost,
 } from "@/lib/platform-api-costs";
@@ -297,6 +298,7 @@ export const workbenchQuestionGenerationTask = task({
       const questions = generationResult.questions;
       for (const [idx, event] of generationResult.usageEvents.entries()) {
         const usage = readAiUsageTokens(event.usage);
+        const actualCost = readAiUsageCost(event.usage);
         await recordPlatformApiUsageCost({
           sourceKey: `workbench_ai_job:${jobId}:generation:${idx}`,
           sourceType: "WORKBENCH_AI_JOB",
@@ -309,6 +311,7 @@ export const workbenchQuestionGenerationTask = task({
           unitType: "TOKENS",
           inputTokens: usage.inputTokens,
           outputTokens: usage.outputTokens,
+          recordedCostUsd: actualCost.costUsd,
           usageAt: new Date(),
           metadata: {
             passageId: job.passage.id,
@@ -317,6 +320,9 @@ export const workbenchQuestionGenerationTask = task({
             qualityMode: event.qualityMode,
             attempts: event.attempts,
             durationMs: event.durationMs,
+            ...(actualCost.generationId
+              ? { generationId: actualCost.generationId }
+              : {}),
           },
         });
       }

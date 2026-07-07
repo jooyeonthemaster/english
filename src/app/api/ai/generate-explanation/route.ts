@@ -1,5 +1,6 @@
 import { generateObject } from "ai";
 import { GEMINI_MODEL_ID, model } from "@/lib/ai";
+import { atlasUsageWithCost } from "@/lib/atlas-ai";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
@@ -64,7 +65,7 @@ export async function POST(request: NextRequest) {
     let object: z.infer<typeof explanationSchema>;
     let aiUsage: unknown;
     try {
-    const { object: _object, usage } = await generateObject({
+    const { object: _object, usage, providerMetadata } = await generateObject({
       model,
       schema: explanationSchema,
       prompt: `당신은 한국 중고등학교 영어 시험 해설을 작성하는 전문가입니다.
@@ -94,7 +95,7 @@ ${question.correctAnswer}
 5. 학생이 쉽게 이해할 수 있는 명확한 한국어로 작성하세요`,
     });
     object = _object;
-    aiUsage = usage;
+    aiUsage = atlasUsageWithCost({ usage, providerMetadata });
     } catch (aiError) {
       await refundCredits(staff.academyId, "QUESTION_EXPLANATION", creditResult.transactionId, "Explanation generation failed");
       throw aiError;

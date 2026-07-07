@@ -2297,6 +2297,10 @@ body.smoat-large-ui :where(.exam-preview-page-frame, .exam-a4-page, .par-root) :
 @media (max-width: 365px) {
   body.smoat-large-ui .par-root { --par-zoom: 0.42; }
 }
+/* 학습지 카드 썸네일: 컴포넌트가 자체 scale(칸폭/794)로 축소하므로, 뷰용 모바일
+   축소(--par-zoom)가 겹치면 .par-sheet 가 이중축소돼 칸을 좌우로 못 채운다. 썸네일
+   안에서만 무력화해 A4 가 폭을 꽉 채우게 한다(데스크톱은 원래 1 이라 무영향). */
+body.smoat-large-ui .passage-report-thumb .par-root { --par-zoom: 1 !important; }
 
 /* 무통장입금 "입금 확인 실패" 시 문의하기 버튼 점멸 글로우 */
 @keyframes red-glow-blink {

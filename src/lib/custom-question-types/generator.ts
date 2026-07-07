@@ -2,6 +2,7 @@ import { generateObject, NoObjectGeneratedError } from "ai";
 import { z } from "zod";
 
 import { model as geminiModel, GEMINI_MODEL_ID } from "@/lib/ai";
+import { atlasUsageWithCost } from "@/lib/atlas-ai";
 import { recordAiCost } from "@/lib/platform-api-costs";
 // ── 경계: 기본 문제 생성 엔진은 import 만(절대 수정 금지). customPrompt/typeSettings 인자를 그대로 활용. ──
 import { DIFF_DESCRIPTION } from "@/app/api/ai/generate-questions-auto/_lib/constants";
@@ -408,7 +409,7 @@ async function generateGeneric(
         academyId: args.academyId,
         model: GEMINI_MODEL_ID,
         operationType: "CUSTOM_QTYPE_GEN",
-        usage: result.usage,
+        usage: atlasUsageWithCost(result),
       });
       const obj = result.object;
 

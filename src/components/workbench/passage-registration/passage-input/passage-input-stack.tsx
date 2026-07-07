@@ -63,6 +63,13 @@ interface PassageInputStackProps {
     mode: import("@/lib/passage-transform/schema").WholePassageTransformMode;
     direction?: import("@/lib/passage-transform/schema").VariantDirection;
   }) => Promise<boolean>;
+  /**
+   * 학습지 구성(기본/실전 포함) 제어 리프트 — 모바일 스텝 플로우에서 부모(하단
+   * 고정 바)가 '생성하기'를 대신 눌러야 하므로, 선택 상태를 부모로 끌어올린다.
+   * 미전달(PC·기존 소비처) 시 내부 usePersistedState 로 폴백해 무회귀.
+   */
+  includeWorksheet?: boolean;
+  onIncludeWorksheetChange?: (v: boolean) => void;
 }
 
 /**
@@ -80,6 +87,8 @@ export function PassageInputStack({
   onAnalyze,
   onAddPassage,
   onAddVariant,
+  includeWorksheet: includeWorksheetProp,
+  onIncludeWorksheetChange,
 }: PassageInputStackProps) {
   // 지문 입력 행 영역 — '생성하기'가 비활(유효 지문 0개)일 때 눌리면 이 안의
   // 행 카드들을 글로우해 "지문을 먼저 입력하세요"를 유도한다.
@@ -153,11 +162,19 @@ export function PassageInputStack({
   const primaryUnitCost = PASSAGE_ANALYSIS_BASE_CREDIT_COST;
 
   // ── 학습지 구성 선택 — 기본 vs 실전 학습지 포함 (선택은 브라우저에 기억) ──
-  const [includeWorksheet, setIncludeWorksheet] = usePersistedState<boolean>(
-    "smoat:passages-create:include-worksheet",
-    false,
-    (v): v is boolean => typeof v === "boolean",
-  );
+  // 부모가 제어 값을 넘기면(모바일 스텝 플로우) 그것을 쓰고, 아니면 내부에
+  // 로컬 저장한다. 두 경로 모두 같은 저장 키를 공유해 값이 어긋나지 않는다.
+  const [localIncludeWorksheet, setLocalIncludeWorksheet] =
+    usePersistedState<boolean>(
+      "smoat:passages-create:include-worksheet",
+      false,
+      (v): v is boolean => typeof v === "boolean",
+    );
+  const includeWorksheet = includeWorksheetProp ?? localIncludeWorksheet;
+  const setIncludeWorksheet = (v: boolean) => {
+    setLocalIncludeWorksheet(v);
+    onIncludeWorksheetChange?.(v);
+  };
   const [previewVariant, setPreviewVariant] =
     useState<LearningSheetVariant | null>(null);
 
@@ -449,8 +466,9 @@ export function PassageInputStack({
         </div>
       </div>
 
-      {/* Generate footer */}
-      <div className="mt-2 w-full shrink-0">
+      {/* Generate footer — 모바일(<lg)에서는 하단 고정 스텝 바가 '생성하기'를
+          대신 소유하므로 숨긴다(PC 는 그대로). */}
+      <div className="mt-2 w-full shrink-0 max-lg:hidden">
         <Button
           // aria-disabled — 비활처럼 보이되 클릭은 살려, 유효 지문이 없을 때 누르면
           // 입력 행을 글로우해 "지문을 먼저 입력하세요"를 유도한다.

@@ -84,5 +84,7 @@ export interface RunQuestionEditResult {
     durationMs: number;
     inputTokens?: number;
     outputTokens?: number;
+    /** OpenRouter 실측 청구액(USD) — 재시도 합산. */
+    costUsd?: number;
   };
 }

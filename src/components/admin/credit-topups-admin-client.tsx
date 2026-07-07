@@ -36,6 +36,10 @@ import {
   formatDate,
 } from "@/components/admin/credit-promotion-editor";
 import { cn } from "@/lib/utils";
+import {
+  getTransactionTypeLabel,
+  getOperationTypeLabel,
+} from "@/lib/admin-members-labels";
 import { SaveButton } from "@/components/ui/save-button";
 import {
   Dialog,
@@ -116,9 +120,27 @@ type AdminRelatedCreditTransaction = {
   createdAt: Date | string;
 };
 
+type AdminCreditActivity = {
+  id: string;
+  type: string;
+  amount: number;
+  balanceAfter: number;
+  operationType: string | null;
+  description: string | null;
+  staffId: string | null;
+  createdAt: Date | string;
+};
+
 type AdminTopUpDetail = AdminTopUp & {
   webhookEvents: AdminWebhookEvent[];
   relatedCreditTransactions: AdminRelatedCreditTransaction[];
+  academyCreditActivity: AdminCreditActivity[];
+  academyActivityTotal: number;
+  academyActivityPageSize: number;
+  academyUsageSummary: {
+    totalConsumed: number;
+    consumptionCount: number;
+  };
 };
 
 type AdminTopUpStats = {
@@ -1116,7 +1138,7 @@ export function CreditTopUpsAdminClient({
       >
         <DialogContent
           showCloseButton={false}
-          className="gap-0 overflow-y-auto p-0 sm:max-w-[880px]"
+          className="gap-0 overflow-y-auto p-0 sm:max-w-[880px] lg:max-w-[1180px]"
         >
           <DialogTitle className="sr-only">결제 상세</DialogTitle>
           <TopUpDetailPanel
@@ -1317,7 +1339,7 @@ function TopUpDetailPanel({
           {loading ? "상세 내역을 불러오는 중입니다" : "충전 내역을 선택해주세요"}
         </div>
       ) : (
-        <div className="grid gap-5 p-5 lg:grid-cols-2 lg:items-start">
+        <div className="grid gap-5 p-5 lg:grid-cols-3 lg:items-start">
           {/* 왼쪽: 결제 정보 · 운영 처리 */}
           <div className="space-y-5">
           <div className="grid grid-cols-2 gap-3">
@@ -1511,9 +1533,138 @@ function TopUpDetailPanel({
             )}
           </DetailSection>
           </div>
+
+          {/* 오른쪽 3열: 학원 크레딧 사용 로그 (전체·페이지네이션) */}
+          <div className="space-y-5">
+            <AcademyCreditActivitySection
+              key={topUp.id}
+              academyId={topUp.academyId}
+              initialItems={topUp.academyCreditActivity}
+              initialTotal={topUp.academyActivityTotal}
+              pageSize={topUp.academyActivityPageSize}
+              usageSummary={topUp.academyUsageSummary}
+            />
+          </div>
         </div>
       )}
     </div>
+  );
+}
+
+function AcademyCreditActivitySection({
+  academyId,
+  initialItems,
+  initialTotal,
+  pageSize,
+  usageSummary,
+}: {
+  academyId: string;
+  initialItems: AdminCreditActivity[];
+  initialTotal: number;
+  pageSize: number;
+  usageSummary: { totalConsumed: number; consumptionCount: number };
+}) {
+  const [page, setPage] = useState(1);
+  const [items, setItems] = useState(initialItems);
+  const [total, setTotal] = useState(initialTotal);
+  const [loading, setLoading] = useState(false);
+  const totalPages = Math.max(1, Math.ceil(total / Math.max(pageSize, 1)));
+
+  async function goToPage(next: number) {
+    if (next === page || loading || next < 1 || next > totalPages) return;
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `/api/admin/credits/academies/${academyId}/credit-activity?page=${next}&pageSize=${pageSize}`,
+      );
+      if (!res.ok) throw new Error("failed");
+      const data = (await res.json()) as {
+        items: AdminCreditActivity[];
+        total: number;
+      };
+      setItems(data.items);
+      setTotal(data.total);
+      setPage(next);
+    } catch {
+      // 조회 실패 시 현재 페이지 유지
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <DetailSection
+      title={
+        <span className="flex items-center justify-between gap-2">
+          <span>학원 크레딧 사용 로그</span>
+          <span className="text-[11px] font-normal text-gray-400">
+            누적 사용 {usageSummary.totalConsumed.toLocaleString("ko-KR")}C ·{" "}
+            {usageSummary.consumptionCount.toLocaleString("ko-KR")}건
+          </span>
+        </span>
+      }
+    >
+      {items.length === 0 ? (
+        <EmptyLine text="크레딧 활동 내역이 없습니다" />
+      ) : (
+        <>
+          <div className={cn("space-y-2 transition-opacity", loading && "opacity-40")}>
+            {items.map((tx) => (
+              <div
+                key={tx.id}
+                className="rounded-lg border border-gray-100 px-3 py-2"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="flex min-w-0 items-center gap-1.5">
+                    <span className="shrink-0 rounded-md bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold text-gray-500">
+                      {getTransactionTypeLabel(tx.type)}
+                    </span>
+                    {tx.operationType && (
+                      <span className="truncate text-[11px] text-gray-500">
+                        {getOperationTypeLabel(tx.operationType)}
+                      </span>
+                    )}
+                  </span>
+                  <span
+                    className={cn(
+                      "shrink-0 text-[12px] font-semibold",
+                      tx.amount < 0 ? "text-rose-700" : "text-blue-700",
+                    )}
+                  >
+                    {tx.amount > 0 ? "+" : ""}
+                    {tx.amount.toLocaleString("ko-KR")}C
+                  </span>
+                </div>
+                <div className="mt-1 flex items-center justify-between gap-2">
+                  <span className="min-w-0 truncate text-[11px] text-gray-400">
+                    {tx.description ?? formatDate(tx.createdAt)}
+                  </span>
+                  <span className="shrink-0 text-[11px] text-gray-400">
+                    잔고 {tx.balanceAfter.toLocaleString("ko-KR")}C
+                  </span>
+                </div>
+                {tx.description && (
+                  <div className="mt-0.5 text-[11px] text-gray-400">
+                    {formatDate(tx.createdAt)}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          {totalPages > 1 && (
+            <AdminPagination
+              page={page}
+              totalPages={totalPages}
+              disabled={loading}
+              onChange={goToPage}
+            />
+          )}
+          <div className="text-center text-[11px] text-gray-400">
+            전체 {total.toLocaleString("ko-KR")}건 · {page}/{totalPages} 페이지
+          </div>
+        </>
+      )}
+    </DetailSection>
   );
 }
 
@@ -1556,7 +1707,7 @@ function DetailSection({
   title,
   children,
 }: {
-  title: string;
+  title: ReactNode;
   children: ReactNode;
 }) {
   return (

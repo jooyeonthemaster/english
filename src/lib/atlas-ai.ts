@@ -1,4 +1,7 @@
-import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
+import {
+  createOpenAICompatible,
+  type MetadataExtractor,
+} from "@ai-sdk/openai-compatible";
 
 export const ATLAS_CLOUD_PROVIDER = "atlascloud" as const;
 
@@ -76,6 +79,16 @@ export const ATLASCLOUD_BASE_URL =
 
 export const ATLASCLOUD_API_KEY =
   readFirstEnv(["OPENROUTER_API_KEY", "ATLASCLOUD_TEXT_API_KEY", "ATLASCLOUD_API_KEY"]) ?? "";
+
+/**
+ * 텍스트/비전 LLM 트래픽이 실제로 통과하는 게이트웨이. 원가 원장(platform-api-costs)의
+ * provider 버킷으로 그대로 쓰인다 — OpenRouter 로 라우팅 중이면 OPENROUTER,
+ * 아니면 레거시 ATLASCLOUD. (이미지 생성 atlas.ts 는 항상 AtlasCloud 직행.)
+ */
+export const ATLAS_GATEWAY_PROVIDER: "OPENROUTER" | "ATLASCLOUD" =
+  ATLASCLOUD_BASE_URL.toLowerCase().includes("openrouter")
+    ? "OPENROUTER"
+    : "ATLASCLOUD";
 
 export const ATLAS_FREE_MODEL_ID = resolveAtlasModel(
   [
@@ -288,6 +301,114 @@ function normalizeClaudeResponseFormat(
   };
 }
 
+// ── 실측 원가(usage accounting) ─────────────────────────────────────────────
+// OpenRouter 는 모든 응답(스트리밍은 마지막 SSE 청크)의 usage 에 실제 청구액
+// usage.cost(USD)를 담아준다. metadataExtractor 로 이를 providerMetadata 에
+// 노출하고, atlasUsageWithCost() 가 usage 객체에 병합해 recordAiCost 까지
+// 흘려보낸다 → 원장 pricingSource 가 ESTIMATE(정가표 추정) 대신 RECORDED(실측).
+
+interface AtlasCostMetadata {
+  /** 이 호출의 실제 청구액(USD). BYOK 면 upstream 비용까지 합산한 총지출. */
+  costUsd?: number;
+  /** OpenRouter generation id — GET /api/v1/generation?id= 로 행 단위 감사 가능. */
+  generationId?: string;
+  /** 실제 라우팅된 상위 프로바이더명 (예: "Google", "Anthropic"). */
+  upstreamProvider?: string;
+  /** 실제 서빙된 모델 id (라우팅 변동 감사용). */
+  servedModel?: string;
+}
+
+function readAtlasCostFields(parsedBody: unknown): AtlasCostMetadata | undefined {
+  if (!isRecord(parsedBody)) return undefined;
+  const usage = isRecord(parsedBody.usage) ? parsedBody.usage : undefined;
+  const fields: AtlasCostMetadata = {};
+
+  if (usage && typeof usage.cost === "number" && Number.isFinite(usage.cost)) {
+    let costUsd = usage.cost;
+    // BYOK 요청은 usage.cost 가 OpenRouter 수수료뿐 — upstream 실비를 합산해야
+    // 총지출이 된다. (일반 크레딧 결제에선 upstream_inference_cost 가 0/null.)
+    if (usage.is_byok === true && isRecord(usage.cost_details)) {
+      const upstream = usage.cost_details.upstream_inference_cost;
+      if (typeof upstream === "number" && Number.isFinite(upstream)) {
+        costUsd += upstream;
+      }
+    }
+    if (costUsd > 0) fields.costUsd = costUsd;
+  }
+  if (typeof parsedBody.id === "string" && parsedBody.id) {
+    fields.generationId = parsedBody.id;
+  }
+  if (typeof parsedBody.provider === "string" && parsedBody.provider) {
+    fields.upstreamProvider = parsedBody.provider;
+  }
+  if (typeof parsedBody.model === "string" && parsedBody.model) {
+    fields.servedModel = parsedBody.model;
+  }
+  return Object.keys(fields).length > 0 ? fields : undefined;
+}
+
+function toAtlasProviderMetadata(fields: AtlasCostMetadata | undefined) {
+  if (!fields) return undefined;
+  return {
+    [ATLAS_CLOUD_PROVIDER]: Object.fromEntries(
+      Object.entries(fields).filter(([, value]) => value !== undefined),
+    ),
+  };
+}
+
+const atlasCostMetadataExtractor: MetadataExtractor = {
+  extractMetadata: async ({ parsedBody }) =>
+    toAtlasProviderMetadata(readAtlasCostFields(parsedBody)),
+  createStreamExtractor: () => {
+    // usage 는 마지막 청크에만 실리고 id/provider/model 은 첫 청크부터 온다 —
+    // 청크별 필드를 누적 병합해 마지막에 빌드한다.
+    const accumulated: AtlasCostMetadata = {};
+    return {
+      processChunk(parsedChunk: unknown) {
+        const fields = readAtlasCostFields(parsedChunk);
+        if (fields) Object.assign(accumulated, fields);
+      },
+      buildMetadata: () =>
+        toAtlasProviderMetadata(
+          Object.keys(accumulated).length > 0 ? accumulated : undefined,
+        ),
+    };
+  },
+};
+
+/**
+ * generateText/generateObject 결과(또는 onFinish 이벤트)의 usage 에 실측 원가
+ * 필드(costUsd/generationId/…)를 병합해 반환한다. 하류의 recordAiCost 가 이
+ * 필드를 읽어 pricingSource=RECORDED 로 기록한다. 메타데이터가 없으면 원본
+ * usage 를 그대로 돌려주므로 어디에나 안전하게 감쌀 수 있다.
+ */
+export function atlasUsageWithCost(result: {
+  usage?: unknown;
+  providerMetadata?: unknown;
+}): unknown {
+  const metadata = isRecord(result.providerMetadata)
+    ? result.providerMetadata[ATLAS_CLOUD_PROVIDER]
+    : undefined;
+  if (!isRecord(metadata)) return result.usage;
+
+  const merged: Record<string, unknown> = isRecord(result.usage)
+    ? { ...result.usage }
+    : {};
+  if (typeof metadata.costUsd === "number" && metadata.costUsd > 0) {
+    merged.costUsd = metadata.costUsd;
+  }
+  if (typeof metadata.generationId === "string") {
+    merged.generationId = metadata.generationId;
+  }
+  if (typeof metadata.upstreamProvider === "string") {
+    merged.upstreamProvider = metadata.upstreamProvider;
+  }
+  if (typeof metadata.servedModel === "string") {
+    merged.servedModel = metadata.servedModel;
+  }
+  return Object.keys(merged).length > 0 ? merged : result.usage;
+}
+
 export const atlasCloud = createOpenAICompatible({
   baseURL: ATLASCLOUD_BASE_URL,
   name: ATLAS_CLOUD_PROVIDER,
@@ -295,6 +416,7 @@ export const atlasCloud = createOpenAICompatible({
   headers: getAtlasCloudHeaders(),
   includeUsage: true,
   supportsStructuredOutputs: true,
+  metadataExtractor: atlasCostMetadataExtractor,
   transformRequestBody(args) {
     const model = normalizeAtlasModelId(String(args.model ?? ""));
     const reasoningRequest = atlasReasoningRequestFor(

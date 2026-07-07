@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { getStaffSession } from "@/lib/auth";
 import { googleGenerativeAI } from "@/lib/ai";
-import { ATLAS_RESTORATION_MODEL_ID } from "@/lib/atlas-ai";
+import { ATLAS_RESTORATION_MODEL_ID, atlasUsageWithCost } from "@/lib/atlas-ai";
 import {
   deductCredits,
   refundCredits,
@@ -187,7 +187,7 @@ export async function POST(req: NextRequest) {
       for (let attempt = 0; attempt < RESTORE_MAX_ATTEMPTS; attempt += 1) {
         const startedAt = Date.now();
         try {
-          const { object, usage } = await generateObject({
+          const { object, usage, providerMetadata } = await generateObject({
             model: googleGenerativeAI(RESTORE_MODEL_ID),
             schema: restorationSchema,
             prompt,
@@ -195,9 +195,9 @@ export async function POST(req: NextRequest) {
             maxOutputTokens: 8192,
             maxRetries: 0,
             abortSignal: AbortSignal.timeout(RESTORE_TIMEOUT_MS),
-            
+
           });
-          restoreUsage = usage;
+          restoreUsage = atlasUsageWithCost({ usage, providerMetadata });
           console.log(
             `[WORKBENCH-PASTE-RESTORE] ${RESTORE_MODEL_ID} attempt ${attempt + 1} ok in ${Date.now() - startedAt}ms`,
           );

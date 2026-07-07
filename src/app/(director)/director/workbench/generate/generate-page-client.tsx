@@ -205,7 +205,12 @@ export function GeneratePageClient({
   // 마키(영역 드래그) 시작 영역을 "생성된 문제" 섹션 전체로 넓힌다(카드만 선택). 상단의
   // 지문 그리드(PassageCardGrid)는 자체 스크롤 영역을 boundary 로 쓰므로 서로 겹치지 않는다.
   const bottomQueueBoundaryRef = useRef<HTMLElement>(null);
-  const previousSessionQueueLengthRef = useRef<number | null>(null);
+  // 이미 관측한 큐 항목 id — 새로고침 시 서버 폴링이 과거 잡 N개를 한꺼번에
+  // 채우며 큐가 0 → N 으로 커지는데(하이드레이션), 이를 '사용자가 방금 생성함'
+  // 으로 오인해 결과 섹션으로 스크롤하면 매 새로고침마다 화면이 중간으로 튄다.
+  // 새로 등장한 항목 중 '방금(수 초 내)' 만들어진 것이 있을 때만 스크롤해
+  // 하이드레이션(과거 createdAt)과 실제 생성(최근 createdAt)을 구분한다.
+  const seenQueueIdsRef = useRef<Set<string> | null>(null);
   // dedupe and cap at 100 ids so downstream `Set` construction + the cross-
   // tenant validity filter (useEffect below) never have to chew on junk.
   const initialPassageIdsRef = useRef<string[]>(
@@ -359,12 +364,25 @@ export function GeneratePageClient({
   const [queueFilter, setQueueFilter] = useState<"all" | "error">("all");
 
   useEffect(() => {
-    const previousLength = previousSessionQueueLengthRef.current;
-    previousSessionQueueLengthRef.current = sessionQueue.length;
-
-    if (previousLength === null || sessionQueue.length <= previousLength) {
+    // 최초 마운트(첫 하이드레이션 포함): 현재 항목을 모두 '관측함'으로 등록만
+    // 하고 스크롤하지 않는다. 이후 등장하는 항목만 후보로 본다.
+    if (seenQueueIdsRef.current === null) {
+      seenQueueIdsRef.current = new Set(sessionQueue.map((item) => item.id));
       return;
     }
+    const seen = seenQueueIdsRef.current;
+    const fresh = sessionQueue.filter((item) => !seen.has(item.id));
+    for (const item of fresh) seen.add(item.id);
+
+    // 새로 등장한 항목 중 '방금(8초 내) 생성된 것'이 하나라도 있을 때만 스크롤.
+    // 폴링이 느려 하이드레이션이 지연돼도 과거 createdAt 은 최근이 아니므로
+    // 새로고침 튐이 발생하지 않는다.
+    const now = Date.now();
+    const hasJustCreated = fresh.some((item) => {
+      const t = item.createdAt ? Date.parse(item.createdAt) : NaN;
+      return Number.isFinite(t) && now - t < 8_000;
+    });
+    if (!hasJustCreated) return;
 
     window.requestAnimationFrame(() => {
       bottomQueueBoundaryRef.current?.scrollIntoView({
@@ -372,7 +390,7 @@ export function GeneratePageClient({
         block: "start",
       });
     });
-  }, [sessionQueue.length]);
+  }, [sessionQueue]);
 
   // ── Review modal ──
   const [reviewModalId, setReviewModalId] = useState<string | null>(null);
@@ -2449,6 +2467,8 @@ export function GeneratePageClient({
   const isMobileViewport = useIsMobileViewport();
   // 워크스페이스 스텝 하단 고정 '담긴 유형' 장바구니 펼침 상태(모바일).
   const [workspaceCartOpen, setWorkspaceCartOpen] = useState(false);
+  // 내 지문함(library) 스텝 하단 고정 '담긴 지문'(선택한 지문) 장바구니 펼침 상태(모바일).
+  const [libraryCartOpen, setLibraryCartOpen] = useState(false);
 
   // 스텝이 가리키는 인테이크 상태를 함께 맞춘다. results 는 하단 결과
   // 섹션만 보여주므로 인테이크 상태를 건드리지 않는다(뒤로가면 그대로 복귀).
@@ -3612,6 +3632,77 @@ export function GeneratePageClient({
     </>
   );
 
+  // ── 내 지문함(library) 하단 고정 '담긴 지문'(선택한 지문) 장바구니 (모바일) ──
+  // 내 지문함에서 체크한 지문들이 여기 모여, 펼치면 목록·빼기. 바로 아래 '워크스페이스로'
+  // 버튼이 담긴 지문을 워크스페이스로 보낸다(워크스페이스 장바구니와 동형).
+  const librarySelectedPassages = passages.filter((p) =>
+    selectedIds.has(p.id),
+  );
+  const libraryCart = (
+    <>
+      {libraryCartOpen && librarySelectedPassages.length > 0 ? (
+        <div className="flex max-h-[38vh] min-h-0 flex-col border-b border-slate-100 bg-slate-50/70">
+          <div className="min-h-0 flex-1 overflow-y-auto p-2">
+            {librarySelectedPassages.map((p, i) => (
+              <div
+                key={p.id}
+                className="mb-1.5 flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-2 last:mb-0"
+              >
+                <span className="inline-flex size-5 shrink-0 items-center justify-center rounded bg-blue-600 text-[10.5px] font-bold text-white">
+                  {i + 1}
+                </span>
+                <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-slate-700">
+                  {p.title?.trim() || "제목 없는 지문"}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => toggleCheckbox(p.id)}
+                  aria-label="선택에서 빼기"
+                  className="shrink-0 rounded-md p-1 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                >
+                  <X className="size-3.5" aria-hidden="true" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+      <button
+        type="button"
+        onClick={() => setLibraryCartOpen((open) => !open)}
+        aria-expanded={libraryCartOpen}
+        aria-label={libraryCartOpen ? "담긴 지문 목록 접기" : "담긴 지문 목록 펼치기"}
+        className="flex w-full shrink-0 items-center gap-2.5 border-b border-slate-100 bg-white px-3 py-2 text-left"
+      >
+        <span className="relative inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+          <ShoppingBasket className="size-5" aria-hidden="true" />
+          {librarySelectedPassages.length > 0 ? (
+            <span className="absolute -right-1.5 -top-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-extrabold leading-none text-white ring-2 ring-white">
+              {librarySelectedPassages.length}
+            </span>
+          ) : null}
+        </span>
+        <span className="flex min-w-0 flex-1 flex-col">
+          <span className="text-[12.5px] font-bold text-slate-900">
+            담긴 지문 {librarySelectedPassages.length}개
+          </span>
+          <span className="truncate text-[10.5px] text-slate-400">
+            {librarySelectedPassages.length > 0
+              ? "탭하여 담긴 지문 보기·빼기"
+              : "지문 카드를 선택하면 여기 모여요"}
+          </span>
+        </span>
+        <ChevronDown
+          className={
+            "size-4 shrink-0 text-slate-400 transition-transform" +
+            (libraryCartOpen ? " rotate-180" : "")
+          }
+          aria-hidden="true"
+        />
+      </button>
+    </>
+  );
+
   return (
     // min-h 뷰포트 채움은 PC 전용 — 모바일은 콘텐츠만큼만 차지해 아래
     // 사이트 푸터 위에 빈 공간이 생기지 않게 한다.
@@ -3722,8 +3813,14 @@ export function GeneratePageClient({
             prev={mobilePrev}
             next={mobileNext}
             hint={mobileNextHint}
-            // 워크스페이스 스텝: 이전/생성 버튼 위에 '담긴 유형' 장바구니 바를 얹는다.
-            cart={mobileStep === "workspace" ? workspaceCart : undefined}
+            // 내 지문함: '담긴 지문', 워크스페이스: '담긴 유형' 장바구니 바를 버튼 위에 얹는다.
+            cart={
+              mobileStep === "library"
+                ? libraryCart
+                : mobileStep === "workspace"
+                  ? workspaceCart
+                  : undefined
+            }
           />
         ) : null}
       </main>

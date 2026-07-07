@@ -15,6 +15,7 @@ import {
 } from "@/lib/credits";
 import {
   providerFromModel,
+  readAiUsageCost,
   readAiUsageTokens,
   recordPlatformApiUsageCost,
 } from "@/lib/platform-api-costs";
@@ -133,6 +134,8 @@ async function recordCostSafely(input: {
   operationType: OperationType;
   inputTokens: number;
   outputTokens: number;
+  /** OpenRouter 실측 청구액(USD) — 있으면 RECORDED 단가로 기록. */
+  recordedCostUsd?: number | null;
   usageAt: Date;
   metadata: Record<string, unknown>;
 }) {
@@ -149,6 +152,7 @@ async function recordCostSafely(input: {
       unitType: "TOKENS",
       inputTokens: input.inputTokens,
       outputTokens: input.outputTokens,
+      recordedCostUsd: input.recordedCostUsd,
       usageAt: input.usageAt,
       metadata: input.metadata as Prisma.InputJsonValue,
     });
@@ -437,6 +441,7 @@ export async function POST(req: NextRequest) {
     const questions = generationResult.questions;
     for (const [idx, event] of generationResult.usageEvents.entries()) {
       const usage = readAiUsageTokens(event.usage);
+      const actualCost = readAiUsageCost(event.usage);
       await recordCostSafely({
         sourceKey: `workbench_ai_job:${job.id}:generation:${idx}`,
         sourceId: job.id,
@@ -447,6 +452,7 @@ export async function POST(req: NextRequest) {
         operationType,
         inputTokens: usage.inputTokens,
         outputTokens: usage.outputTokens,
+        recordedCostUsd: actualCost.costUsd,
         usageAt: new Date(),
         metadata: {
           passageId: passage.id,
@@ -456,6 +462,9 @@ export async function POST(req: NextRequest) {
           qualityMode: event.qualityMode,
           attempts: event.attempts,
           durationMs: event.durationMs,
+          ...(actualCost.generationId
+            ? { generationId: actualCost.generationId }
+            : {}),
         },
       });
     }

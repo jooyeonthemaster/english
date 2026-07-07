@@ -108,6 +108,17 @@ interface FormSectionProps {
   ) => boolean | void | Promise<boolean | void>;
   pasteSaving?: boolean;
 
+  // ── 모바일 스텝 플로우(<lg 전용) — PC 무영향 ──
+  /** IntakeSurface 탭 노출 제어(스텝이 이동을 담당하면 "hidden"/"sources"). */
+  mobileStepTabs?: "sources" | "hidden";
+  /** 직접 입력 보드의 시작 동작을 하단 고정 바가 대신 호출. */
+  pasteStartRef?: import("react").MutableRefObject<(() => void) | null>;
+  /** 직접 입력 누적 지문 수·작업 상태 알림(하단 바 라벨용). */
+  onPasteStateChange?: (state: { count: number; busy: boolean }) => void;
+  /** 학습지 구성(기본/실전) 제어 리프트 — 하단 고정 바 '생성하기'용. */
+  includeWorksheet?: boolean;
+  setIncludeWorksheet?: (v: boolean) => void;
+
   // Metadata + Prompt — vestigial (not rendered by FormSection). Optional so
   // reuse paths (웹툰 생성) can omit them; the 학습지 container still passes them.
   schools?: Array<{
@@ -222,8 +233,15 @@ export function FormSection(props: FormSectionProps) {
 
   return (
     <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-4 py-3">
+      {/* 모바일은 상단 헤더·스텝바에 이미 제목이 있어 카드 내부 제목을 숨긴다.
+          (PC는 그대로) 접힘 상태일 때만 '펼치기' 버튼을 위해 헤더 바를 남긴다. */}
+      <div
+        className={`${
+          formCollapsed ? "flex" : "hidden lg:flex"
+        } flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-4 py-3`}
+      >
         <WorkflowPageTitle
+          className="hidden lg:flex"
           icon={props.titleIcon ?? PassageAnalysisIcon}
           title={props.title ?? "학습지 생성"}
           description={
@@ -247,7 +265,10 @@ export function FormSection(props: FormSectionProps) {
 
       {!formCollapsed ? (
         <>
-          <div className="px-4 pt-4 pb-3">
+          {/* 모바일 좌우 여백을 문제생성(WorkspaceShell)과 동일하게 px-1.5 로 맞춘다.
+              스텝퍼 아래 상단 여백도 문제생성과 맞추려 모바일에서 pt-6(WorkspaceShell
+              내부 구조가 더 주는 ~8px 보정). 데스크톱은 lg: 로 기존과 동일(PC 무변경). */}
+          <div className="px-1.5 pt-6 pb-2 lg:px-4 lg:pt-4 lg:pb-3">
             {/* ─── 단일 흐름: 직접 입력 · 파일업로드 › 자료함 › 워크스페이스 ───
                 문제생성과 동일하게, 자료를 모으는 탭(직접 입력·파일업로드·자료함)
                 위로 지문 입력·필기 스택(워크스페이스)을 오버레이로 띄운다. */}
@@ -269,6 +290,9 @@ export function FormSection(props: FormSectionProps) {
                 showPasteTab={!!props.onSubmitPastedRows}
                 onSubmitPastedRows={props.onSubmitPastedRows}
                 pasteSaving={props.pasteSaving}
+                mobileStepTabs={props.mobileStepTabs}
+                pasteStartRef={props.pasteStartRef}
+                onPasteStateChange={props.onPasteStateChange}
                 examBrowser={props.examBrowser}
                 upload={
                   <GenerateUploadPanel
@@ -318,6 +342,8 @@ export function FormSection(props: FormSectionProps) {
                             onAnalyze={props.onAnalyze}
                             onAddPassage={props.onAddPassage}
                             onAddVariant={props.onAddVariant}
+                            includeWorksheet={props.includeWorksheet}
+                            onIncludeWorksheetChange={props.setIncludeWorksheet}
                           />
                         </div>
                       ) : null))

@@ -38,6 +38,8 @@ export interface OcrDispatchResult {
   structured: StructuredOcrResponse | null;
   inputTokens: number | undefined;
   outputTokens: number | undefined;
+  /** 게이트웨이(OpenRouter) 실측 청구액(USD) — 원가 원장의 RECORDED 단가 근거. */
+  aiCostUsd: number | undefined;
   /** 실제 사용된 OCR 엔진 — "document-ai" | "document-ai+<gemini>" | <gemini>.
    *  persist가 그대로 기록한다(과거엔 엔진 무관 Gemini 모델명을 적던 버그). */
   modelUsed: string;
@@ -138,6 +140,7 @@ export async function runOcrForPage(params: {
       extractedText,
       inputTokens: usage?.inputTokens,
       outputTokens: usage?.outputTokens,
+      aiCostUsd: usage?.costUsd,
       modelUsed: getExtractionAiModelName("ocr"),
     };
   }
@@ -155,6 +158,7 @@ export async function runOcrForPage(params: {
     extractedText: result.text,
     inputTokens: result.usage?.inputTokens,
     outputTokens: result.usage?.outputTokens,
+    aiCostUsd: result.usage?.costUsd,
     modelUsed: getExtractionAiModelName("ocr"),
   };
 }
@@ -193,6 +197,7 @@ async function runDocumentAiVerbatim(params: {
     extractedText: text,
     inputTokens: undefined,
     outputTokens: undefined,
+    aiCostUsd: undefined,
     modelUsed: "document-ai",
   };
 }
@@ -241,6 +246,7 @@ async function runDocumentAiTwoStep(params: {
   let structured: StructuredOcrResponse = classified.object;
   const inputTokens = classified.usage?.inputTokens;
   const outputTokens = classified.usage?.outputTokens;
+  const aiCostUsd = classified.usage?.costUsd;
 
   // pageMeta is needed by finalize for cluster fingerprinting and page
   // reordering. Gemini sometimes drops these fields in multimodal mode —
@@ -281,6 +287,7 @@ async function runDocumentAiTwoStep(params: {
     structured,
     inputTokens,
     outputTokens,
+    aiCostUsd,
     modelUsed: `document-ai+${getExtractionAiModelName("ocr")}`,
   };
 }

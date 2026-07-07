@@ -238,8 +238,9 @@ export async function runCropNativeRestore(args: {
         pageId: page.id,
         pageIndex,
         extractedText: result.rawText,
-        inputTokens: undefined,
-        outputTokens: undefined,
+        inputTokens: result.usage?.inputTokens,
+        outputTokens: result.usage?.outputTokens,
+        aiCostUsd: result.usage?.costUsd,
         latencyMs: Date.now() - startTs,
         structured,
       });

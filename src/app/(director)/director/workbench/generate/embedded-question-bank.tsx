@@ -1328,12 +1328,15 @@ export function EmbeddedQuestionBank({
 
   // 페이지 이동(필터.page 변경) 시 카드 목록 맨 위로 부드럽게 스크롤한다.
   // 최초 마운트에서는 스크롤하지 않는다(불필요한 점프 방지).
-  const pageScrollSkipRef = useRef(true);
+  //
+  // 불리언 skip 플래그는 개발 모드 StrictMode 의 effect 이중 실행에 뚫린다
+  // (1차: 플래그 해제 후 return → 2차: 이미 해제돼 스크롤 발동 → 새로고침마다
+  // 페이지가 중간으로 튐). 이전 page '값'과 비교해 실제로 바뀔 때만 스크롤하면
+  // StrictMode 이중 실행에도 안전하다(마운트 시엔 값이 같아 스킵).
+  const prevPageRef = useRef(filters.page);
   useEffect(() => {
-    if (pageScrollSkipRef.current) {
-      pageScrollSkipRef.current = false;
-      return;
-    }
+    if (prevPageRef.current === filters.page) return;
+    prevPageRef.current = filters.page;
     cardZoneRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [filters.page]);
 

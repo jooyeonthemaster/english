@@ -2,6 +2,7 @@ import { generateObject, NoObjectGeneratedError } from "ai";
 import { z } from "zod";
 
 import { model as geminiModel, GEMINI_MODEL_ID } from "@/lib/ai";
+import { atlasUsageWithCost } from "@/lib/atlas-ai";
 import { recordAiCost } from "@/lib/platform-api-costs";
 
 import type { QuestionAnalysis } from "./analysis-input";
@@ -309,7 +310,7 @@ async function compileWithLlm(
     academyId,
     model: GEMINI_MODEL_ID,
     operationType: "CUSTOM_QTYPE_GEN",
-    usage: result.usage,
+    usage: atlasUsageWithCost(result),
   });
   const out = result.object;
   const cls = analysis.classification;
@@ -536,7 +537,7 @@ export async function reviseCustomTypeDetailed(args: {
     academyId: args.academyId,
     model: GEMINI_MODEL_ID,
     operationType: "CUSTOM_QTYPE_GEN",
-    usage: result.usage,
+    usage: atlasUsageWithCost(result),
   });
   const out = result.object;
   let next = compiledCustomTypeSchema.parse({

@@ -6,6 +6,7 @@
 import { generateText, Output } from "ai";
 import { z } from "zod";
 import { getTutorModel, getTutorModelNameForAudit } from "@/lib/tutor/ai";
+import { atlasUsageWithCost } from "@/lib/atlas-ai";
 import { recordAiCost } from "@/lib/platform-api-costs";
 
 export const AiGradeResultSchema = z.object({
@@ -72,7 +73,7 @@ export async function aiGradeText(input: AiGradeInput): Promise<AiGradeResult & 
     academyId: input.academyId,
     model,
     operationType: "AI_GRADING",
-    usage: result.usage,
+    usage: atlasUsageWithCost(result),
   });
   return {
     ...result.output,

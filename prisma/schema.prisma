@@ -2664,7 +2664,7 @@ model BankDepositNotification {
   amount         Int // 입금 금액 (원)
   depositorName  String? // 입금자명 (정규화 전 원본)
   bankName       String?
-  status         String    @default("UNMATCHED")
+  status         String    @default("UNMATCHED") // "UNMATCHED" | "MATCHED" | "MANUAL_GRANT" | "AMBIGUOUS" | "IGNORED" | "FAILED"
   matchedTopUpId String? // CreditTopUp matched & credited
   note           String?   @db.Text
   occurredAt     DateTime? // 은행이 알려준 입금 시각
@@ -2984,6 +2984,9 @@ model ExtractionPage {
   modelUsed     String?
   inputTokens   Int?
   outputTokens  Int?
+  /// 이 페이지 OCR 호출들의 실측 청구액 합(USD) — OpenRouter usage.cost.
+  /// platform-api-costs sync 가 recordedCostUsd(RECORDED 단가)로 흡수한다.
+  aiCostUsd     Decimal? @db.Decimal(12, 8)
   latencyMs     Int?
 
   /// Per-page metadata captured by the structured OCR call (pageNumber /

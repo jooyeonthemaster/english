@@ -4,16 +4,18 @@ import { BigQuery } from "@google-cloud/bigquery";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
-export type ProviderBillingSyncTarget = "ALL" | "GOOGLE";
+export type ProviderBillingSyncTarget = "ALL" | "GOOGLE" | "OPENROUTER";
 
 export interface ProviderBillingSyncStatus {
   googleConfigured: boolean;
   atlasConfigured: boolean;
+  /** OpenRouter 활동(실지출) 동기화 가능 여부 — management key 필요. */
+  openRouterConfigured: boolean;
   missingEnv: string[];
 }
 
 export interface ProviderBillingSyncResult {
-  provider: "GOOGLE";
+  provider: "GOOGLE" | "OPENROUTER";
   importedRows: number;
   actualCostUsd: number;
   actualCostKrw: number;
@@ -36,6 +38,8 @@ type BillingImportRow = {
 
 const DEFAULT_USD_KRW_RATE = 1350;
 const GOOGLE_BILLING_SOURCE = "GOOGLE_BILLING_EXPORT";
+const OPENROUTER_BILLING_SOURCE = "OPENROUTER_ACTIVITY";
+const OPENROUTER_ACTIVITY_URL = "https://openrouter.ai/api/v1/activity";
 const DEFAULT_GOOGLE_BILLING_PATTERNS = [
   "%gemini%",
   "%generative ai%",
@@ -52,14 +56,25 @@ export function getProviderBillingSyncStatus(): ProviderBillingSyncStatus {
       readEnv("ATLASCLOUD_API_KEY") ||
       readEnv("OPENROUTER_API_KEY"),
   );
+  // /api/v1/activity 는 일반 추론 키가 아니라 management key 를 요구한다
+  // (openrouter.ai/settings/management-keys 에서 발급, 읽기 전용).
+  const openRouterConfigured = Boolean(readOpenRouterManagementKey());
 
   if (!googleConfigured) missingEnv.push("GOOGLE_BILLING_BIGQUERY_TABLE");
+  if (!openRouterConfigured) missingEnv.push("OPENROUTER_MANAGEMENT_KEY");
 
   return {
     googleConfigured,
     atlasConfigured,
+    openRouterConfigured,
     missingEnv,
   };
+}
+
+function readOpenRouterManagementKey(): string | null {
+  return (
+    readEnv("OPENROUTER_MANAGEMENT_KEY") ?? readEnv("OPENROUTER_PROVISIONING_KEY")
+  );
 }
 
 export async function syncProviderBillingCostsForRange({
@@ -78,8 +93,108 @@ export async function syncProviderBillingCostsForRange({
   if (target === "ALL" || target === "GOOGLE") {
     results.push(await syncGoogleBillingExport(periodStart, periodEnd, usdToKrwRate));
   }
+  if (target === "ALL" || target === "OPENROUTER") {
+    results.push(await syncOpenRouterActivity(periodStart, periodEnd, usdToKrwRate));
+  }
 
   return results;
+}
+
+interface OpenRouterActivityRow {
+  date?: string;
+  model?: string;
+  model_permaslug?: string;
+  endpoint_id?: string;
+  provider_name?: string;
+  /** 해당 일×모델×엔드포인트의 실지출(USD). */
+  usage?: number;
+  /** BYOK 요청의 upstream 실비(USD) — usage 와 합산해야 총지출. */
+  byok_usage_inference?: number;
+  requests?: number;
+  prompt_tokens?: number;
+  completion_tokens?: number;
+  reasoning_tokens?: number;
+}
+
+/**
+ * OpenRouter 활동 API(GET /api/v1/activity)에서 일 단위 실지출을 끌어와
+ * ProviderBillingReconciliation(source=OPENROUTER_ACTIVITY)로 적재한다.
+ * 원장(토큰×단가/RECORDED)과 독립적인 "계정 실지출" 대사 축.
+ *
+ * 제약: management key 필요, 최근 30 완료 UTC 일만 제공(오늘/부분일 미포함).
+ */
+async function syncOpenRouterActivity(
+  periodStart: Date,
+  periodEnd: Date,
+  usdToKrwRate: number,
+): Promise<ProviderBillingSyncResult> {
+  const managementKey = readOpenRouterManagementKey();
+  if (!managementKey) {
+    return skipped(
+      "OPENROUTER",
+      "OPENROUTER_MANAGEMENT_KEY is not configured (management key required for /activity).",
+    );
+  }
+
+  const response = await fetch(OPENROUTER_ACTIVITY_URL, {
+    headers: { Authorization: `Bearer ${managementKey}` },
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    const body = await response.text().catch(() => "");
+    throw new Error(
+      `OpenRouter activity API failed (HTTP ${response.status}): ${body.slice(0, 300)}`,
+    );
+  }
+  const payload = (await response.json()) as { data?: OpenRouterActivityRow[] };
+  const rows = Array.isArray(payload.data) ? payload.data : [];
+
+  // 일 단위로 합산(모델×엔드포인트 → 일 총액). 날짜는 UTC 완료일 기준.
+  const daily = new Map<
+    string,
+    { costUsd: number; requests: number; models: Set<string> }
+  >();
+  for (const row of rows) {
+    const date = typeof row.date === "string" ? row.date.slice(0, 10) : "";
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
+    const dayStart = new Date(`${date}T00:00:00.000Z`);
+    const dayEnd = new Date(dayStart.getTime() + 86_400_000);
+    if (dayEnd <= periodStart || dayStart >= periodEnd) continue;
+
+    const usage = Number(row.usage ?? 0);
+    const byok = Number(row.byok_usage_inference ?? 0);
+    const costUsd =
+      (Number.isFinite(usage) ? usage : 0) + (Number.isFinite(byok) ? byok : 0);
+    const entry =
+      daily.get(date) ?? { costUsd: 0, requests: 0, models: new Set<string>() };
+    entry.costUsd += costUsd;
+    entry.requests += Number.isFinite(Number(row.requests)) ? Number(row.requests) : 0;
+    if (row.model) entry.models.add(row.model);
+    daily.set(date, entry);
+  }
+
+  const importRows = [...daily.entries()]
+    .filter(([, entry]) => Math.abs(entry.costUsd) > 0)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, entry]) => {
+      const dayStart = new Date(`${date}T00:00:00.000Z`);
+      return {
+        provider: "OPENROUTER",
+        unitType: null,
+        modelPattern: null,
+        periodStart: dayStart,
+        periodEnd: new Date(dayStart.getTime() + 86_400_000),
+        actualCostUsd: entry.costUsd,
+        actualCostKrw: Math.round(entry.costUsd * usdToKrwRate),
+        usdToKrwRate,
+        source: OPENROUTER_BILLING_SOURCE,
+        referenceId: `openrouter:${date}`,
+        notes: `OpenRouter activity (UTC day). requests=${entry.requests}, models=${entry.models.size}`,
+      } satisfies BillingImportRow;
+    });
+
+  await replaceImportedRows(OPENROUTER_BILLING_SOURCE, periodStart, periodEnd, importRows);
+  return summarizeImport("OPENROUTER", importRows);
 }
 
 async function syncGoogleBillingExport(

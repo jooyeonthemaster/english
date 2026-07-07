@@ -21,6 +21,9 @@ interface GeminiGenerateContentResponse {
   usageMetadata?: {
     promptTokenCount?: number;
     candidatesTokenCount?: number;
+    /** OpenRouter 실측 청구액(USD) — atlas-chat-rest 가 usage.cost 에서 병합. */
+    costUsd?: number;
+    generationId?: string;
   };
   error?: {
     code?: number;
@@ -53,6 +56,8 @@ export interface GeminiGroundingMetadata {
 interface GeminiUsage {
   inputTokens?: number;
   outputTokens?: number;
+  /** OpenRouter 실측 청구액(USD). ExtractionPage.aiCostUsd 로 영속. */
+  costUsd?: number;
 }
 
 interface GeminiOcrParams {
@@ -133,6 +138,7 @@ function usageOf(body: GeminiGenerateContentResponse): GeminiUsage {
   return {
     inputTokens: body.usageMetadata?.promptTokenCount,
     outputTokens: body.usageMetadata?.candidatesTokenCount,
+    costUsd: body.usageMetadata?.costUsd,
   };
 }
 

@@ -4,6 +4,22 @@
  * 인쇄 시 편집 chrome 은 모두 숨겨 깨끗한 A4 가 나온다.
  */
 export const ANALYSIS_REPORT_EDIT_CSS = `
+/* 에디터는 자체 미리보기 줌(transform: scale)을 쓴다. 뷰 모드용 모바일 축소
+   변수(globals.css 의 --par-zoom: .par-sheet{zoom})가 상속되면 이중으로 곱해져
+   지문이 절반 크기로 쪼그라들고 왼쪽에 붙는다 → 에디터에선 무력화(1)해서
+   오직 transform 배율만 적용되게 한다. 데스크톱은 원래 1 이라 무영향. */
+.par-root-edit { --par-zoom: 1 !important; }
+
+/* 모바일(<lg): A4 미리보기 캔버스를 가로 가운데 정렬 — 확대해 폭을 넘겨도
+   가운데를 기준으로 스크롤되게 flex 로 센터링(데스크톱은 기존 mx-auto 유지). */
+@media (max-width: 1023.98px) {
+  .par-root-edit-scroller {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+}
+
 /* 인라인 편집 필드 */
 .par-root-edit .par-edit-field {
   cursor: text;
@@ -202,6 +218,15 @@ body.par-img-resizing { user-select: none !important; }
 }
 .par-root-edit .par-edit-hcell .par-egrip2 { position: static; left: auto; top: auto; opacity: .45; }
 .par-root-edit tr.par-eline:hover .par-edit-hcell .par-egrip2 { opacity: 1; }
+
+/* 모바일(<lg) — 정밀 편집 chrome 숨김 + 인라인 contentEditable 비활성.
+   축소된 A4 에서 캐럿·호버 컨트롤은 터치로 조작 불가 → 탭이 편집 필드를 뚫고
+   블록(.par-eline)으로 전달돼 '블록 선택'이 되고, 편집은 하단 액션 바
+   (MobileReportActionBar)의 상세 편집 시트가 담당한다. */
+@media (max-width: 1023.98px) {
+  .par-edit-chrome, .par-egrip2, .par-eblock-del, .par-edit-hcell, .par-eresize, .par-page-controls, .par-cov-logo-resize, .par-edit-del, .par-edit-add { display: none !important; }
+  .par-root-edit .par-edit-field { pointer-events: none; background: none !important; box-shadow: none !important; }
+}
 
 /* 인쇄 시 편집 chrome 전부 숨김 → 깨끗한 A4 */
 @media print {

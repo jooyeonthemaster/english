@@ -109,6 +109,13 @@ interface FormSectionContainerProps {
     rows: PastedPassageInput[],
   ) => boolean | void | Promise<boolean | void>;
   pasteSaving: boolean;
+
+  // ── 모바일 스텝 플로우(<lg 전용) — PC 무영향 ──
+  mobileStepTabs?: "sources" | "hidden";
+  pasteStartRef?: import("react").MutableRefObject<(() => void) | null>;
+  onPasteStateChange?: (state: { count: number; busy: boolean }) => void;
+  includeWorksheet?: boolean;
+  setIncludeWorksheet?: (v: boolean) => void;
 }
 
 export function FormSectionContainer(p: FormSectionContainerProps) {
@@ -184,6 +191,11 @@ export function FormSectionContainer(p: FormSectionContainerProps) {
       workspaceActive={p.workspaceActive}
       onSubmitPastedRows={p.onSubmitPastedRows}
       pasteSaving={p.pasteSaving}
+      mobileStepTabs={p.mobileStepTabs}
+      pasteStartRef={p.pasteStartRef}
+      onPasteStateChange={p.onPasteStateChange}
+      includeWorksheet={p.includeWorksheet}
+      setIncludeWorksheet={p.setIncludeWorksheet}
     />
   );
 }

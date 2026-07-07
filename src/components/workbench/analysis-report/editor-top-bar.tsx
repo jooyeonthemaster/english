@@ -55,7 +55,9 @@ export function EditorTopBar({
     <div className="no-print flex h-11 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-4">
       <div className="flex min-w-0 items-center gap-2">
         <FileText className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-        <span className="truncate text-[12px] font-bold text-slate-600">지문 학습자료 편집</span>
+        {/* 모바일(<sm)은 우측 컨트롤(정답 토글+되돌리기 3버튼)만으로 폭이 차서
+            정적 라벨을 숨긴다 — 안 그러면 칩·토글이 겹침. 문서 제목은 모달 헤더에 있음. */}
+        <span className="hidden truncate text-[12px] font-bold text-slate-600 sm:inline">지문 학습자료 편집</span>
         <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
           {pageCount || 1}페이지
         </span>

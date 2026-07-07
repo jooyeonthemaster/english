@@ -1,5 +1,6 @@
 import { generateObject } from "ai";
 import { model, GEMINI_MODEL_ID } from "@/lib/ai";
+import { atlasUsageWithCost } from "@/lib/atlas-ai";
 import { prisma } from "@/lib/prisma";
 import { recordAiCost } from "@/lib/platform-api-costs";
 import { z } from "zod";
@@ -176,7 +177,7 @@ export async function POST(request: NextRequest) {
     let object: z.infer<typeof responseSchema>;
     let aiUsage: unknown;
     try {
-      const { object: _object, usage: _usage } = await generateObject({
+      const { object: _object, usage: _usage, providerMetadata: _providerMetadata } = await generateObject({
         model,
         schema: responseSchema,
         prompt: `당신은 한국 ${schoolType} ${gradeInfo} 영어 내신 시험 출제 전문가입니다.
@@ -226,7 +227,7 @@ ${analysisContext}
 15. 빈칸은 반드시 언더스코어 5개 이상으로 표시하세요 (예: "The key is to focus on _____ rather than goals.")`,
       });
       object = _object;
-      aiUsage = _usage;
+      aiUsage = atlasUsageWithCost({ usage: _usage, providerMetadata: _providerMetadata });
     } catch (aiError) {
       await refundCredits(staff.academyId, "QUESTION_GEN_SINGLE", creditResult.transactionId, "AI generation failed");
       throw aiError;

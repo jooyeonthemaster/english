@@ -367,6 +367,48 @@ export function PassageAnalysisModal({
     }
   };
 
+  // 헤더 메타 뱃지 — PC(제목 아래)와 모바일(헤더 둘째 줄)이 같은 목록을 공유한다.
+  const hasMetaBadges = !!(
+    passage.school ||
+    passage.grade ||
+    passage.semester ||
+    passage.unit ||
+    tags.length > 0
+  );
+  const metaBadges = (
+    <>
+      {passage.school && (
+        <Badge variant="outline" className="text-[10px] h-5">
+          {passage.school.name}
+        </Badge>
+      )}
+      {passage.grade && (
+        <Badge variant="secondary" className="text-[10px] h-5">
+          {passage.grade}학년
+        </Badge>
+      )}
+      {passage.semester && (
+        <Badge variant="secondary" className="text-[10px] h-5">
+          {passage.semester === "FIRST" ? "1학기" : "2학기"}
+        </Badge>
+      )}
+      {passage.unit && (
+        <Badge variant="secondary" className="text-[10px] h-5">
+          {passage.unit}
+        </Badge>
+      )}
+      {tags.map((t) => (
+        <Badge
+          key={t}
+          variant="outline"
+          className="text-[10px] h-5 text-slate-500"
+        >
+          {t}
+        </Badge>
+      ))}
+    </>
+  );
+
   return (
     <div className="fixed inset-0 z-50 flex items-stretch justify-center">
       {/* Backdrop */}
@@ -388,8 +430,11 @@ export function PassageAnalysisModal({
             </div>
           )}
 
-          {/* ─── Modal Header ─── */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-white shrink-0">
+          {/* ─── Modal Header ───
+              모바일(<lg)은 1줄(아이콘·제목·저장·인쇄·삭제·닫기) + 2줄(뱃지)로 나누고,
+              PC(lg+)는 기존처럼 제목 아래(왼쪽 컬럼 안)에 뱃지를 둔다. */}
+          <div className="px-6 py-4 border-b border-slate-200 bg-white shrink-0">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
                 <FileText className="w-4.5 h-4.5 text-blue-600" />
@@ -447,36 +492,9 @@ export function PassageAnalysisModal({
                     </button>
                   </div>
                 )}
-                <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                  {passage.school && (
-                    <Badge variant="outline" className="text-[10px] h-5">
-                      {passage.school.name}
-                    </Badge>
-                  )}
-                  {passage.grade && (
-                    <Badge variant="secondary" className="text-[10px] h-5">
-                      {passage.grade}학년
-                    </Badge>
-                  )}
-                  {passage.semester && (
-                    <Badge variant="secondary" className="text-[10px] h-5">
-                      {passage.semester === "FIRST" ? "1학기" : "2학기"}
-                    </Badge>
-                  )}
-                  {passage.unit && (
-                    <Badge variant="secondary" className="text-[10px] h-5">
-                      {passage.unit}
-                    </Badge>
-                  )}
-                  {tags.map((t) => (
-                    <Badge
-                      key={t}
-                      variant="outline"
-                      className="text-[10px] h-5 text-slate-500"
-                    >
-                      {t}
-                    </Badge>
-                  ))}
+                {/* PC(lg+) 전용 — 제목 아래 뱃지(기존 위치). 모바일은 헤더 둘째 줄로. */}
+                <div className="hidden lg:flex items-center gap-1.5 mt-0.5 flex-wrap">
+                  {metaBadges}
                 </div>
               </div>
             </div>
@@ -572,7 +590,11 @@ export function PassageAnalysisModal({
                 onClick={handleDelete}
                 disabled={deleting}
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                {/* Trash2 는 뷰박스 안 그림이 저장·인쇄 아이콘보다 작게 그려져 있어 같은
+                    박스에서도 작아 보인다. 박스(w/h) 를 키우는 건 모바일 대형UI 레이어의
+                    svg 크기 !important 규칙과 충돌하니, 박스는 저장·인쇄와 동일하게 두고
+                    그림만 transform 으로 키워 시각 크기를 맞춘다(모바일 전용, lg: 로 PC 복원). */}
+                <Trash2 className="h-3.5 w-3.5 scale-125 lg:scale-100" />
               </Button>
               <button
                 onClick={() => closeGuard.requestClose()}
@@ -581,6 +603,13 @@ export function PassageAnalysisModal({
                 <X className="w-4 h-4 text-slate-500" />
               </button>
             </div>
+          </div>
+          {/* 모바일(<lg) 전용 — 뱃지를 헤더 둘째 줄로 (1줄엔 제목·액션만) */}
+          {hasMetaBadges && (
+            <div className="mt-2 flex flex-wrap items-center gap-1.5 lg:hidden">
+              {metaBadges}
+            </div>
+          )}
           </div>
 
           {/* ─── Content area — PRIME A4 (있으면) / 기존 5-layer 인터랙티브 (폴백) ─── */}

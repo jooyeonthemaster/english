@@ -3,7 +3,7 @@
 import { type CSSProperties, type FormEvent, type PointerEvent as ReactPointerEvent, useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { ChevronDown, ChevronLeft, ChevronRight, CirclePlay, GripVertical, RotateCcw, ShoppingBasket, Trash2, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, CirclePlay, Download, GripVertical, Loader2, Printer, RotateCcw, Save, ShoppingBasket, Trash2, X } from "lucide-react";
 import { MobileStepHeader } from "@/components/workbench/mobile-step-flow";
 import { toast } from "sonner";
 import { type BuilderQuestion, type BuilderQuestionSetRender, DEFAULT_PAPER_COVER, type Density, type HeaderPatch, LINE_GAP_MARKER, type PaginationSettings, type PaperCover, type PaperSize, type PaperTemplate, type PassageStyle } from "./paper-builder/types";
@@ -331,6 +331,8 @@ export function ExamPaperBuilderClient({
   );
   // 모바일(<lg) 전용 2단계 흐름: 1) 문제 선택 ↔ 2) 미리보기·저장. 데스크톱은 영향 없음.
   const [mobileStep, setMobileStep] = useState<"select" | "preview">("select");
+  // 모바일 하단 바 '다운로드' 메뉴(위로 열림) 펼침 상태.
+  const [mobileDownloadOpen, setMobileDownloadOpen] = useState(false);
   // 모바일 하단 고정 '담긴 문제' 장바구니 펼침 상태.
   const [cartOpen, setCartOpen] = useState(false);
   // 모바일 미리보기에서 텍스트·섹션 블록 '내용 수정' 풀스크린 시트 열림 상태.
@@ -2606,17 +2608,101 @@ export function ExamPaperBuilderClient({
           />
         ) : (
           <div className="shrink-0 border-t border-slate-200 bg-white p-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))]">
-            <button
-              type="button"
-              onClick={() => {
-                setMobileStep("select");
-                window.scrollTo({ top: 0 });
-              }}
-              className="inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-[13.5px] font-bold text-slate-600 transition-colors hover:bg-slate-50"
-            >
-              <ChevronLeft className="size-4" aria-hidden="true" />
-              이전 (문제 선택)
-            </button>
+            <div className="flex items-stretch gap-2">
+              {/* 이전 — 왼쪽 1/4, '< 이전'만 표시 */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileStep("select");
+                  window.scrollTo({ top: 0 });
+                }}
+                aria-label="이전 (문제 선택)"
+                className="inline-flex h-11 basis-1/4 shrink-0 items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white text-[13.5px] font-bold text-slate-600 transition-colors hover:bg-slate-50"
+              >
+                <ChevronLeft className="size-4" aria-hidden="true" />
+                이전
+              </button>
+
+              {/* 이전 ↔ 액션 구분선 */}
+              <span
+                aria-hidden="true"
+                className="my-1 w-px shrink-0 self-stretch bg-slate-200"
+              />
+
+              {/* 남은 3/4 — 저장 · 인쇄 · 다운로드 */}
+              <div className="flex min-w-0 flex-1 items-stretch gap-2">
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={isPending || questionItemsCount === 0}
+                  className="inline-flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg border border-blue-600 bg-blue-600 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:border-blue-200 disabled:bg-blue-300 disabled:shadow-none"
+                >
+                  {isPending ? (
+                    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                  ) : (
+                    <Save className="size-4" aria-hidden="true" />
+                  )}
+                  저장
+                </button>
+                <button
+                  type="button"
+                  onClick={handlePrint}
+                  disabled={questionItemsCount === 0}
+                  className="inline-flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-[13px] font-bold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <Printer className="size-4" aria-hidden="true" />
+                  인쇄
+                </button>
+                <div className="relative min-w-0 flex-1">
+                  <button
+                    type="button"
+                    onClick={() => setMobileDownloadOpen((v) => !v)}
+                    disabled={questionItemsCount === 0}
+                    aria-expanded={mobileDownloadOpen}
+                    className="inline-flex h-11 w-full min-w-0 items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white text-[13px] font-bold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <Download className="size-4 shrink-0" aria-hidden="true" />
+                    <span className="truncate">다운로드</span>
+                    <ChevronDown className="size-3 shrink-0 text-slate-400" aria-hidden="true" />
+                  </button>
+                  {mobileDownloadOpen && (
+                    <>
+                      {/* 바깥 탭 시 닫힘 */}
+                      <button
+                        type="button"
+                        aria-hidden="true"
+                        tabIndex={-1}
+                        onClick={() => setMobileDownloadOpen(false)}
+                        className="fixed inset-0 z-30 cursor-default"
+                      />
+                      {/* 위로 열리는 메뉴 */}
+                      <div className="absolute bottom-[calc(100%+6px)] right-0 z-40 w-52 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-xl shadow-slate-300/50">
+                        {[
+                          { label: "PDF", onClick: handlePrint },
+                          { label: "PDF 해설", onClick: handlePrintWithAnswers },
+                          { label: "DOCX", onClick: handleDownloadDocx },
+                          { label: "DOCX 해설", onClick: handleDownloadDocxWithAnswers },
+                          { label: "HWPX", onClick: handleDownloadHwpx },
+                          { label: "HWPX 해설", onClick: handleDownloadHwpxWithAnswers },
+                        ].map((opt) => (
+                          <button
+                            key={opt.label}
+                            type="button"
+                            onClick={() => {
+                              setMobileDownloadOpen(false);
+                              opt.onClick();
+                            }}
+                            className="flex h-10 w-full items-center px-3 text-left text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

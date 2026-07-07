@@ -201,7 +201,7 @@ export function TaskGridCard({
       role="button"
       tabIndex={0}
       className={
-        `group relative flex min-h-[241px] flex-row overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${gridCardClass(task.status)} ` +
+        `group relative flex min-h-[132px] flex-row overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 lg:min-h-[241px] ${gridCardClass(task.status)} ` +
         (selectionMode
           ? "cursor-pointer"
           : draggableEnabled
@@ -216,7 +216,10 @@ export function TaskGridCard({
       ) : null}
 
       {showThumbnail ? (
-        <div className="relative aspect-[210/297] w-[170px] shrink-0 self-start overflow-hidden border-r border-slate-100 bg-white">
+        // 모바일(<lg)은 한 줄에 한 카드라 썸네일을 좁혀(시험지 카드처럼) 오른쪽
+        // 정보/버튼 자리를 확보하고 카드 높이를 낮춘다. self-stretch 로 카드 높이에
+        // 맞춰 채운다(데스크톱은 lg:부터 기존 170px·self-start 복원).
+        <div className="relative aspect-[210/297] w-[24%] min-w-[74px] max-w-[96px] shrink-0 self-stretch overflow-hidden border-r border-slate-100 bg-white lg:w-[170px] lg:min-w-0 lg:max-w-none lg:self-start">
           {task.thumbnailUrl ? (
             // Signed URLs change per fetch; no point in next/image optimization
             // eslint-disable-next-line @next/next/no-img-element
@@ -244,7 +247,7 @@ export function TaskGridCard({
         </div>
       ) : null}
 
-      <div className="flex min-w-0 flex-1 flex-col p-4">
+      <div className="flex min-w-0 flex-1 flex-col p-3 lg:p-4">
         <div className="flex items-start justify-between gap-2">
           <div className="flex min-w-0 flex-1 items-start gap-2.5">
             {onToggleCheck ? (
@@ -307,21 +310,36 @@ export function TaskGridCard({
         </div>
 
         {task.stats?.length ? (
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            {task.stats.slice(0, 4).map((stat) => (
-              <div
-                key={stat.label}
-                className={`rounded-lg px-2.5 py-2 ${statToneClass(stat.tone)}`}
-              >
-                <div className="text-[10px] font-medium opacity-75">
-                  {stat.label}
+          <>
+            {/* 모바일(<lg): 컴팩트 인라인 칩 — 카드 높이를 시험지 카드 수준으로 낮춘다. */}
+            <div className="mt-2 flex flex-wrap gap-1 lg:hidden">
+              {task.stats.slice(0, 4).map((stat) => (
+                <span
+                  key={stat.label}
+                  className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] leading-none ${statToneClass(stat.tone)}`}
+                >
+                  <span className="font-medium opacity-75">{stat.label}</span>
+                  <span className="font-bold tabular-nums">{stat.value}</span>
+                </span>
+              ))}
+            </div>
+            {/* 데스크톱(lg+): 기존 2×2 타일 그대로 */}
+            <div className="mt-3 hidden grid-cols-2 gap-2 lg:grid">
+              {task.stats.slice(0, 4).map((stat) => (
+                <div
+                  key={stat.label}
+                  className={`rounded-lg px-2.5 py-2 ${statToneClass(stat.tone)}`}
+                >
+                  <div className="text-[10px] font-medium opacity-75">
+                    {stat.label}
+                  </div>
+                  <div className="mt-0.5 text-[13px] font-bold tabular-nums">
+                    {stat.value}
+                  </div>
                 </div>
-                <div className="mt-0.5 text-[13px] font-bold tabular-nums">
-                  {stat.value}
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </>
         ) : (
           <p className="mt-3 text-[11px] font-medium text-slate-400">
             {task.subtitle}

@@ -1,5 +1,40 @@
 import { prisma } from "@/lib/prisma";
 
+/** 결제 상세 모달의 "학원 크레딧 사용 로그" 한 페이지 크기. */
+export const ACADEMY_ACTIVITY_PAGE_SIZE = 20;
+
+const ACADEMY_ACTIVITY_SELECT = {
+  id: true,
+  type: true,
+  amount: true,
+  balanceAfter: true,
+  operationType: true,
+  description: true,
+  staffId: true,
+  createdAt: true,
+} as const;
+
+/** 학원의 전체 크레딧 활동(사용/충전/조정 등)을 페이지 단위로 조회. */
+export async function getAcademyCreditActivity(
+  academyId: string,
+  page = 1,
+  pageSize = ACADEMY_ACTIVITY_PAGE_SIZE,
+) {
+  const size = Math.min(Math.max(pageSize, 1), 100);
+  const currentPage = Math.max(page, 1);
+  const [items, total] = await Promise.all([
+    prisma.creditTransaction.findMany({
+      where: { academyId },
+      orderBy: { createdAt: "desc" },
+      skip: (currentPage - 1) * size,
+      take: size,
+      select: ACADEMY_ACTIVITY_SELECT,
+    }),
+    prisma.creditTransaction.count({ where: { academyId } }),
+  ]);
+  return { items, total, page: currentPage, pageSize: size };
+}
+
 export async function getAdminCreditTopUpTotalCount() {
   return prisma.creditTopUp.count();
 }
@@ -116,9 +151,28 @@ export async function getAdminCreditTopUpDetail(topUpId: string) {
     },
   });
 
+  // 이 학원의 크레딧 사용/충전 흐름(결제 건과 무관하게 전체 활동)을 함께 노출해
+  // 어드민이 "이 학원이 크레딧을 어떻게 쓰고 있는지" 파악할 수 있게 한다. 첫 페이지만
+  // 실어 보내고, 나머지 페이지는 클라이언트가 credit-activity 엔드포인트로 이어 받는다.
+  const [activityPage, consumptionAgg] = await Promise.all([
+    getAcademyCreditActivity(topUp.academyId, 1),
+    prisma.creditTransaction.aggregate({
+      where: { academyId: topUp.academyId, type: "CONSUMPTION" },
+      _sum: { amount: true },
+      _count: true,
+    }),
+  ]);
+
   return {
     ...topUp,
     relatedCreditTransactions,
+    academyCreditActivity: activityPage.items,
+    academyActivityTotal: activityPage.total,
+    academyActivityPageSize: activityPage.pageSize,
+    academyUsageSummary: {
+      totalConsumed: Math.abs(consumptionAgg._sum.amount ?? 0),
+      consumptionCount: consumptionAgg._count,
+    },
   };
 }
 

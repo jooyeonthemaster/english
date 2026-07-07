@@ -2,7 +2,7 @@ import { APICallError, generateObject } from "ai";
 import type { z } from "zod";
 
 import { googleGenerativeAI } from "@/lib/ai";
-import { ATLAS_TRANSFORM_MODEL_ID } from "@/lib/atlas-ai";
+import { ATLAS_TRANSFORM_MODEL_ID, atlasUsageWithCost } from "@/lib/atlas-ai";
 import {
   paraphraseResultSchema,
   prependResultSchema,
@@ -53,7 +53,7 @@ async function runTransform<T>({
       console.log(
         `[${logPrefix}] ${TRANSFORM_MODEL_ID} attempt ${attempt + 1} ok in ${Date.now() - startedAt}ms`,
       );
-      return { object: result.object as T, usage: result.usage };
+      return { object: result.object as T, usage: atlasUsageWithCost(result) };
     } catch (err) {
       lastError = err;
       console.warn(

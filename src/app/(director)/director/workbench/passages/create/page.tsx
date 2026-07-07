@@ -156,33 +156,37 @@ export default async function PassageRegistrationPage({
           draftMembership={draftMembership}
           initialDraftIds={initialDraftIds}
           initialPassageIds={initialPassageIds}
+          // ─── 학습지 목록 — /director/workbench/passages 페이지를 그대로 이식한
+          //     별도 블록. 클라이언트가 PC 에서는 폼 아래에 그대로 쌓고, 모바일
+          //     에서는 '학습지 확인' 스텝에서만 노출한다(문제 생성과 동일 구조). ───
+          resultsSlot={
+            <LearningListWithQueue
+              academyId={staff.academyId}
+              passagesData={listData}
+              schools={schools}
+              filters={effectiveListFilters}
+              collections={collections as any}
+              collectionMembership={Object.fromEntries(
+                Object.entries(listMembershipRaw).map(([k, v]) => [
+                  k,
+                  new Set(v),
+                ]),
+              )}
+              sourceMaterialBadge={
+                sourceMaterial && sourceMaterialLabel
+                  ? { id: sourceMaterial.id, label: sourceMaterialLabel }
+                  : null
+              }
+              collectionBadge={
+                activeCollection
+                  ? { id: activeCollection.id, label: activeCollection.name }
+                  : null
+              }
+              basePath={PASSAGE_MANAGER_BASE_PATH}
+              embedded
+            />
+          }
         />
-
-        {/* ─── 학습지 목록 — /director/workbench/passages 페이지를 그대로 이식한 별도 블록 ─── */}
-        <section className="flex flex-col gap-2">
-          <LearningListWithQueue
-            academyId={staff.academyId}
-            passagesData={listData}
-            schools={schools}
-            filters={effectiveListFilters}
-            collections={collections as any}
-            collectionMembership={Object.fromEntries(
-              Object.entries(listMembershipRaw).map(([k, v]) => [k, new Set(v)]),
-            )}
-            sourceMaterialBadge={
-              sourceMaterial && sourceMaterialLabel
-                ? { id: sourceMaterial.id, label: sourceMaterialLabel }
-                : null
-            }
-            collectionBadge={
-              activeCollection
-                ? { id: activeCollection.id, label: activeCollection.name }
-                : null
-            }
-            basePath={PASSAGE_MANAGER_BASE_PATH}
-            embedded
-          />
-        </section>
       </div>
     </LearningGenerationProvider>
   );

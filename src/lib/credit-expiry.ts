@@ -79,7 +79,9 @@ export function expiresAtConflictSql(addDays: number): Prisma.Sql {
     // (진짜 무기한 null 을 만들지 않는다).
     return Prisma.sql`COALESCE(credit_balances."expiresAt", ${NO_EXPIRY_FALLBACK})`;
   }
-  return Prisma.sql`GREATEST(COALESCE(credit_balances."expiresAt", NOW()), NOW()) + make_interval(days => ${addDays})`;
+  // ${addDays} binds as bigint via Prisma; make_interval's `days` arg is int4,
+  // so cast explicitly (make_interval(days => bigint) has no overload).
+  return Prisma.sql`GREATEST(COALESCE(credit_balances."expiresAt", NOW()), NOW()) + make_interval(days => ${addDays}::int)`;
 }
 
 /**
@@ -92,5 +94,6 @@ export function expiresAtInsertSql(addDays: number): Prisma.Sql {
     // 신규 잔액인데 유효기간이 없으면 무기한 대신 대체 시한을 부여한다.
     return Prisma.sql`${NO_EXPIRY_FALLBACK}`;
   }
-  return Prisma.sql`NOW() + make_interval(days => ${addDays})`;
+  // See expiresAtConflictSql: cast to int4 so make_interval resolves.
+  return Prisma.sql`NOW() + make_interval(days => ${addDays}::int)`;
 }
