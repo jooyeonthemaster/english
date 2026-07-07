@@ -970,7 +970,8 @@ export function QuestionBankClient({
         ) : (
           <CheckCircle2 className="w-3.5 h-3.5" />
         )}
-        검수완료
+        {/* 좁은 폭(모바일 컨테이너)에서는 라벨을 숨겨 아이콘만 남긴다. */}
+        <span className="@max-[30rem]:hidden">검수완료</span>
       </button>
 
       <button
@@ -988,7 +989,7 @@ export function QuestionBankClient({
         disabled={selectedIds.size === 0 || bulkDeleting}
         title="삭제"
         aria-label="삭제"
-        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-red-50 @max-[30rem]:bg-white text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {bulkDeleting ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1113,8 +1114,8 @@ export function QuestionBankClient({
   }, [currentPage]);
 
   const toolbarRow = (
-    <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-      <div className="flex w-full min-w-0 flex-wrap items-center gap-2 md:w-auto md:flex-1 md:flex-nowrap">
+    <div className="flex min-h-9 flex-nowrap items-center gap-x-1.5 gap-y-1.5 md:flex-wrap md:gap-x-2">
+      <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-1.5 md:gap-2">
         <SelectAllCheckbox
           checked={allFilteredSelected}
           indeterminate={someSelected}
@@ -1132,7 +1133,7 @@ export function QuestionBankClient({
         />
         <div
           className={
-            "flex min-w-0 flex-wrap items-center gap-1.5 md:shrink-0 md:flex-nowrap md:gap-3 " +
+            "flex min-w-0 shrink-0 flex-nowrap items-center gap-1.5 md:gap-3 " +
             (selectedIds.size > 0 ? "" : "pointer-events-none opacity-50")
           }
           aria-disabled={selectedIds.size === 0}
@@ -1144,16 +1145,16 @@ export function QuestionBankClient({
               onClick={handleRemoveFromFolder}
               title="폴더에서 삭제"
               aria-label="폴더에서 삭제"
-              className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-red-50 px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700"
+              className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-red-50 @max-[30rem]:bg-white @max-[30rem]:px-0 @max-[30rem]:w-7 px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700"
             >
               <FolderX className="h-3.5 w-3.5" />
-              폴더에서 삭제
+              <span className="@max-[30rem]:hidden">폴더에서 삭제</span>
             </button>
           ) : null}
         </div>
-        {/* 휴지통 — 삭제 버튼 바로 오른쪽에 두어 "삭제 → 휴지통" 흐름을 잇는다.
-            삭제(빨강)와 달리 무채색(슬레이트)으로 두어 단순 이동 링크임을 구분.
-            텍스트 펄이라 h-9로 살짝 키웠다. 선택과 무관하게 항상 활성. */}
+        {/* 휴지통 — 삭제 버튼 오른쪽에 두어 "삭제 → 휴지통" 흐름을 잇는다.
+            좁은 폭(모바일 컨테이너)에서는 아이콘만 남겨 한 줄에 맞춘다.
+            선택과 무관하게 항상 활성. */}
         <Link
           // 국어 문제 은행에서는 국어 휴지통으로 — KO_* 문항만 보이는 대칭 라우트.
           href={
@@ -1163,13 +1164,13 @@ export function QuestionBankClient({
           }
           title="삭제한 문제 보관함"
           aria-label="휴지통"
-          className="flex h-9 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-slate-50 px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-100 hover:text-slate-700"
+          className="flex h-7 shrink-0 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-slate-50 @max-[30rem]:w-7 @max-[30rem]:px-0 px-2.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-100 hover:text-slate-700 md:h-9"
         >
           <Trash2 className="h-3.5 w-3.5" />
-          휴지통
+          <span className="@max-[30rem]:hidden">휴지통</span>
         </Link>
         {/* 시험지 만들기 — 흐림 처리되는 액션 클러스터 밖에 둬 비활성 시
-            또렷한 회색으로 보이게 한다. */}
+            또렷한 회색으로 보이게 한다. 모바일에선 남은 폭을 채우며 줄어든다. */}
         <button
           type="button"
           // 네이티브 disabled 대신 aria-disabled — 비활성처럼 보이되 클릭은 살려
@@ -1191,7 +1192,7 @@ export function QuestionBankClient({
             setCreateExamOpen(true);
           }}
           className={
-            "flex h-10 min-w-[9rem] flex-[1_1_9rem] items-center justify-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[13px] font-bold text-white shadow-sm transition-colors md:h-12 md:min-w-0 md:basis-auto md:grow md:text-[14px] " +
+            "flex h-10 min-w-0 flex-[1_1_auto] items-center justify-center gap-1.5 overflow-hidden whitespace-nowrap rounded-md border px-2.5 text-[13px] font-bold text-white shadow-sm transition-colors md:h-12 md:min-w-0 md:basis-auto md:grow md:text-[14px] " +
             (selectedIds.size === 0 || creatingExam
               ? "cursor-not-allowed border-blue-200 bg-blue-300 shadow-none"
               : "cursor-pointer border-blue-600 bg-blue-600 hover:border-blue-700 hover:bg-blue-700")
@@ -1202,9 +1203,10 @@ export function QuestionBankClient({
           <span className="hidden md:inline">다음으로 (시험지 생성)</span>
         </button>
       </div>
-      <div className="ml-auto flex w-full shrink-0 flex-wrap items-center justify-end gap-2 md:w-auto">
+      <div className="flex shrink-0 flex-nowrap items-center justify-end gap-1.5 md:ml-auto md:w-auto md:flex-wrap md:gap-2">
         {filtersToolbar}
-        {gridToggle}
+        {/* 2·3열 그리드 토글 — 모바일(<lg)은 항상 1열이라 숨긴다. */}
+        <div className="hidden lg:block">{gridToggle}</div>
       </div>
     </div>
   );
@@ -1331,7 +1333,7 @@ export function QuestionBankClient({
 
             <div
               style={{ top: folderStickyHeight }}
-              className="sticky z-20 shrink-0 border-t border-slate-200 bg-slate-50/95 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-slate-50/90"
+              className="@container sticky z-20 shrink-0 border-t border-slate-200 bg-slate-50/95 px-2 py-2 backdrop-blur supports-[backdrop-filter]:bg-slate-50/90 lg:px-4"
             >
               {toolbarRow}
             </div>

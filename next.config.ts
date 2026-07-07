@@ -19,6 +19,12 @@ const nextConfig: NextConfig = {
   // 동적 require가 있어 번들 대신 node_modules에서 직접 로드한다.
   serverExternalPackages: ["iconv-lite"],
 
+  // release-notes/*.md 는 런타임에 fs 로 읽어(배포 시 자동 공지 발행, src/instrumentation.ts)
+  // 파일 추적으로는 안 잡히므로 서버 번들에 강제 포함한다. 광범위 키로 모든 진입점에 포함.
+  outputFileTracingIncludes: {
+    "/**": ["./release-notes/**/*.md"],
+  },
+
   experimental: {
     // 시험지 빌더 저장은 문항·지문 본문 + 학원 로고(최대 1.5MB)·삽입 이미지(base64,
     // ~33% 팽창)를 통째로 서버 액션 본문에 실어 보낸다. 기본 1MB 한도를 넘기면 HTTP 413

@@ -40,27 +40,28 @@ export async function getParentDashboard(): Promise<ParentDashboardData> {
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-  // Notices query is the same for all children — fetch once
-  const notices = await prisma.notice.findMany({
+  // 최근 소식 — 학원 공지 폐지 후 플랫폼 공지(스모트 소식)로 교체. 학부모 대상만.
+  // 읽음 여부는 학부모 프로필의 lastAnnouncementReadAt(마지막 확인 시각) 기준.
+  const lastReadAt = parent.lastAnnouncementReadAt;
+  const notices = await prisma.platformAnnouncement.findMany({
     where: {
-      academyId: session.academyId,
-      targetType: { in: ["ALL", "PARENTS"] },
-      publishAt: { lte: now },
+      status: "PUBLISHED",
+      publishedAt: { lte: now },
+      OR: [{ audiences: "ALL" }, { audiences: { contains: "PARENT" } }],
     },
-    orderBy: { publishAt: "desc" },
+    orderBy: [{ isPinned: "desc" }, { publishedAt: "desc" }],
     take: 5,
-    include: {
-      reads: {
-        where: { readerId: session.parentId, readerType: "PARENT" },
-      },
-    },
+    select: { id: true, title: true, publishedAt: true, createdAt: true },
   });
-  const recentNotices = notices.map((n) => ({
-    id: n.id,
-    title: n.title,
-    publishAt: n.publishAt.toISOString(),
-    isRead: n.reads.length > 0,
-  }));
+  const recentNotices = notices.map((n) => {
+    const pub = n.publishedAt ?? n.createdAt;
+    return {
+      id: n.id,
+      title: n.title,
+      publishAt: pub.toISOString(),
+      isRead: lastReadAt ? pub <= lastReadAt : false,
+    };
+  });
 
   // Process all children in parallel — each child's queries are independent
   const childEntries = await Promise.all(

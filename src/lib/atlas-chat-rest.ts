@@ -64,6 +64,10 @@ export interface AtlasGeminiLikeResponse {
   usageMetadata?: {
     promptTokenCount?: number;
     candidatesTokenCount?: number;
+    /** OpenRouter 실측 청구액(USD) — recordAiCost 가 RECORDED 원가로 기록. */
+    costUsd?: number;
+    /** OpenRouter generation id — /api/v1/generation?id= 행 단위 감사용. */
+    generationId?: string;
   };
   error?: {
     code?: number;
@@ -86,6 +90,7 @@ interface OpenRouterAnnotation {
 }
 
 interface OpenAIChatCompletionResponse {
+  id?: string;
   choices?: Array<{
     message?: {
       content?: string | Array<{ type?: string; text?: string }>;
@@ -98,6 +103,12 @@ interface OpenAIChatCompletionResponse {
     completion_tokens?: number;
     input_tokens?: number;
     output_tokens?: number;
+    /** OpenRouter usage accounting — 실제 청구액(USD). */
+    cost?: number;
+    is_byok?: boolean;
+    cost_details?: {
+      upstream_inference_cost?: number | null;
+    };
   };
   error?: {
     code?: number | string;
@@ -231,8 +242,26 @@ function toGeminiLike(body: OpenAIChatCompletionResponse): AtlasGeminiLikeRespon
     usageMetadata: {
       promptTokenCount: body.usage?.prompt_tokens ?? body.usage?.input_tokens,
       candidatesTokenCount: body.usage?.completion_tokens ?? body.usage?.output_tokens,
+      costUsd: readActualCostUsd(body),
+      generationId: body.id,
     },
   };
+}
+
+/** OpenRouter usage.cost(USD) — BYOK 요청은 upstream 실비까지 합산한 총지출. */
+function readActualCostUsd(body: OpenAIChatCompletionResponse): number | undefined {
+  const usage = body.usage;
+  if (!usage || typeof usage.cost !== "number" || !Number.isFinite(usage.cost)) {
+    return undefined;
+  }
+  let costUsd = usage.cost;
+  if (usage.is_byok === true) {
+    const upstream = usage.cost_details?.upstream_inference_cost;
+    if (typeof upstream === "number" && Number.isFinite(upstream)) {
+      costUsd += upstream;
+    }
+  }
+  return costUsd > 0 ? costUsd : undefined;
 }
 
 function normalizeFinishReason(reason: string | undefined): string | undefined {

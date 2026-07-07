@@ -35,6 +35,12 @@ export interface CropRestoreResult {
   restoredText: string;
   /** 마커별 변경 근거 — 리뷰 변경점 패널/하이라이트로 표시. */
   changes: CropRestoreChange[];
+  /** 토큰/실측 청구액(USD) — 원가 원장(ExtractionPage.aiCostUsd) 기록용. */
+  usage?: {
+    inputTokens?: number;
+    outputTokens?: number;
+    costUsd?: number;
+  };
 }
 
 const SYSTEM_PROMPT = `You are an expert assistant for Korean high-school English exams.
@@ -166,6 +172,11 @@ export async function restoreCropImage(params: {
           reason: String(c?.reason ?? ""),
         }))
       : [],
+    usage: {
+      inputTokens: body.usageMetadata?.promptTokenCount,
+      outputTokens: body.usageMetadata?.candidatesTokenCount,
+      costUsd: body.usageMetadata?.costUsd,
+    },
   };
 }
 
@@ -174,4 +185,10 @@ interface GeminiResponse {
     finishReason?: string;
     content?: { parts?: Array<{ text?: string }> };
   }>;
+  usageMetadata?: {
+    promptTokenCount?: number;
+    candidatesTokenCount?: number;
+    costUsd?: number;
+    generationId?: string;
+  };
 }

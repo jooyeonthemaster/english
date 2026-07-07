@@ -49,13 +49,18 @@ type PageProps = {
   }>;
 };
 
-type CostView = "dashboard" | "margin";
+type CostView = "dashboard" | "margin" | "settings";
 
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 
 export default async function AdminCostsPage({ searchParams }: PageProps) {
   const params = await searchParams;
-  const view: CostView = params.view === "margin" ? "margin" : "dashboard";
+  const view: CostView =
+    params.view === "margin"
+      ? "margin"
+      : params.view === "settings"
+        ? "settings"
+        : "dashboard";
 
   if (view === "margin") {
     // 손익 대시보드와 동일한 기간 파라미터(mode/date/month/start/end)를 재사용.
@@ -203,7 +208,12 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
   const reconciliationPeriodEndValue =
     selectedRangeEndValue ?? (mode === "monthly" ? lastDayOfMonthInput(monthValue) : dateValue);
   const hasActualReconciliation = dashboard.billingReconciliation.hasActual;
-  const canSyncBilling = dashboard.billingSync.googleConfigured;
+  const canSyncBilling =
+    dashboard.billingSync.googleConfigured ||
+    dashboard.billingSync.openRouterConfigured;
+  const confidence = dashboard.costConfidence;
+  const confidenceTotalKrw =
+    confidence.recordedCostKrw + confidence.pricedCostKrw + confidence.estimatedCostKrw;
 
   return (
     <div className="space-y-6">
@@ -216,7 +226,7 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
 
       <CostTabs view="dashboard" />
 
-      {dashboard.missingPricingKeys.length > 0 && (
+      {view === "dashboard" && dashboard.missingPricingKeys.length > 0 && (
         <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-[13px] text-amber-800">
           <AlertTriangle className="mt-0.5 size-4 shrink-0" strokeWidth={1.8} />
           <div>
@@ -237,7 +247,9 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
               <ChevronLeft className="size-4" />
             </IconLink>
             <div className="min-w-0 px-2">
-              <p className="text-[12px] font-medium text-gray-400">요약 기준</p>
+              <p className="text-[12px] font-medium text-gray-400">
+                {view === "settings" ? "정산 기간" : "요약 기준"}
+              </p>
               <p className="truncate text-[18px] font-bold text-gray-900">
                 {dashboard.summaryLabel}
               </p>
@@ -258,6 +270,8 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
         </div>
       </section>
 
+      {view === "dashboard" && (
+        <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         <MetricCard
           label={summaryMetricLabel(dashboard.summaryMode, dashboard.summaryLabel, "매출")}
@@ -347,12 +361,65 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
         </section>
 
         <section className="rounded-xl border border-gray-100 bg-white">
-          <div className="border-b border-gray-50 px-5 py-4">
-            <h2 className="text-[14px] font-semibold text-gray-800">원가 구성</h2>
-            <p className="mt-1 text-[12px] text-gray-400">
-              {dashboard.summaryLabel} 합계 {formatCurrency(dashboard.current.totalCostKrw)}
-            </p>
+          <div className="flex items-start justify-between border-b border-gray-50 px-5 py-4">
+            <div>
+              <h2 className="text-[14px] font-semibold text-gray-800">원가 구성</h2>
+              <p className="mt-1 text-[12px] text-gray-400">
+                {dashboard.summaryLabel} 합계 {formatCurrency(dashboard.current.totalCostKrw)}
+              </p>
+            </div>
+            <Badge
+              variant="secondary"
+              className={cn(
+                "border-0 text-[11px]",
+                confidence.recordedSharePercent >= 80
+                  ? "bg-emerald-50 text-emerald-700"
+                  : confidence.recordedSharePercent > 0
+                    ? "bg-sky-50 text-sky-700"
+                    : "bg-gray-100 text-gray-500",
+              )}
+              title="변동원가 중 게이트웨이(OpenRouter) 실제 청구액으로 기록된 비중 — 높을수록 손익 숫자를 그대로 신뢰 가능"
+            >
+              실측 {formatPercent(confidence.recordedSharePercent)}
+            </Badge>
           </div>
+          {confidenceTotalKrw > 0 && (
+            <div className="border-b border-gray-50 px-5 py-3">
+              <div className="flex h-1.5 overflow-hidden rounded-full bg-gray-100">
+                <div
+                  className="h-full bg-emerald-500"
+                  style={{ width: `${(confidence.recordedCostKrw / confidenceTotalKrw) * 100}%` }}
+                />
+                <div
+                  className="h-full bg-slate-400"
+                  style={{ width: `${(confidence.pricedCostKrw / confidenceTotalKrw) * 100}%` }}
+                />
+                <div
+                  className="h-full bg-sky-400"
+                  style={{ width: `${(confidence.estimatedCostKrw / confidenceTotalKrw) * 100}%` }}
+                />
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-400">
+                <span className="inline-flex items-center gap-1">
+                  <span className="size-2 rounded-full bg-emerald-500" />
+                  실측 청구 {formatCurrency(confidence.recordedCostKrw)}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <span className="size-2 rounded-full bg-slate-400" />
+                  등록 단가 {formatCurrency(confidence.pricedCostKrw)}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <span className="size-2 rounded-full bg-sky-400" />
+                  추정 단가 {formatCurrency(confidence.estimatedCostKrw)}
+                </span>
+                {confidence.missingCalls > 0 && (
+                  <span className="text-amber-600">
+                    미단가 {formatNumber(confidence.missingCalls)}회 0원 처리
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
           <div className="space-y-3 p-5">
             {dashboard.sources.length === 0 ? (
               <div className="rounded-lg bg-gray-50 px-4 py-8 text-center text-[13px] text-gray-400">
@@ -370,6 +437,14 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
                           <p className="text-[13px] font-medium text-gray-800">
                             {source.label}
                           </p>
+                          {source.recordedCalls > 0 && (
+                            <Badge
+                              className="border-0 bg-emerald-100 px-1.5 py-0 text-[10px] font-semibold text-emerald-700"
+                              title="OpenRouter가 응답마다 돌려준 실제 청구액(usage.cost)으로 기록된 호출"
+                            >
+                              실측 단가
+                            </Badge>
+                          )}
                           {source.unpricedCalls > 0 && (
                             <Badge className="border-0 bg-amber-100 px-1.5 py-0 text-[10px] font-semibold text-amber-700">
                               단가 미설정
@@ -383,6 +458,7 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
                         </div>
                         <p className="text-[12px] text-gray-400">
                           {formatNumber(source.calls)}회 · {formatNumber(source.inputTokens + source.outputTokens)} tokens
+                          {source.recordedCalls > 0 && ` · ${formatNumber(source.recordedCalls)}회 실측 반영`}
                           {source.unpricedCalls > 0 && ` · ${formatNumber(source.unpricedCalls)}회 0원 처리`}
                           {source.estimatedCalls > 0 && ` · ${formatNumber(source.estimatedCalls)}회 추정 반영`}
                         </p>
@@ -416,7 +492,11 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
         summaryLabel={dashboard.summaryLabel}
         variableCostKrw={dashboard.current.variableCostKrw}
       />
+        </>
+      )}
 
+      {view === "settings" && (
+        <>
       <section className="rounded-xl border border-gray-100 bg-white">
         <div className="flex items-center justify-between border-b border-gray-50 px-5 py-4">
           <div>
@@ -473,6 +553,17 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
                 )}>
                   Google {dashboard.billingSync.googleConfigured ? "연결" : "미설정"}
                 </Badge>
+                <Badge
+                  className={cn(
+                    "border-0 px-1.5 py-0 text-[10px] font-semibold",
+                    dashboard.billingSync.openRouterConfigured
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-gray-200 text-gray-500",
+                  )}
+                  title="OpenRouter 활동 API 동기화 — management key(OPENROUTER_MANAGEMENT_KEY) 필요"
+                >
+                  OpenRouter {dashboard.billingSync.openRouterConfigured ? "연결" : "미설정"}
+                </Badge>
                 <Badge className={cn(
                   "border-0 px-1.5 py-0 text-[10px] font-semibold",
                   dashboard.billingSync.atlasConfigured
@@ -489,8 +580,9 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
                   defaultValue="ALL"
                   className="h-9 rounded-md border border-gray-200 bg-white px-2 text-[12px] text-gray-700 outline-none focus:border-slate-400"
                 >
-                  <option value="ALL">Google Billing</option>
+                  <option value="ALL">전체 (Google + OpenRouter)</option>
                   <option value="GOOGLE">Google</option>
+                  <option value="OPENROUTER">OpenRouter</option>
                 </select>
                 <input
                   type="number"
@@ -536,9 +628,10 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
             <form action={createProviderBillingReconciliation} className="grid grid-cols-2 gap-2">
               <select
                 name="provider"
-                defaultValue="GOOGLE_GEMINI"
+                defaultValue="OPENROUTER"
                 className="h-9 rounded-md border border-gray-200 bg-white px-2 text-[12px] text-gray-700 outline-none focus:border-slate-400"
               >
+                <option value="OPENROUTER">OpenRouter</option>
                 <option value="GOOGLE_GEMINI">Google Gemini</option>
                 <option value="ANTHROPIC">Anthropic</option>
                 <option value="GOOGLE_DOCUMENT_AI">Google Document AI</option>
@@ -568,6 +661,7 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
               >
                 <option value="MANUAL">Manual</option>
                 <option value="GOOGLE_BILLING_EXPORT">Google Billing</option>
+                <option value="OPENROUTER_ACTIVITY">OpenRouter Activity</option>
                 <option value="ATLAS_INVOICE">Atlas Invoice</option>
                 <option value="INVOICE">Invoice</option>
               </select>
@@ -712,9 +806,10 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
           <form action={createProviderPricing} className="grid grid-cols-2 gap-2">
             <select
               name="provider"
-              defaultValue="GOOGLE_GEMINI"
+              defaultValue="OPENROUTER"
               className="h-9 rounded-md border border-gray-200 bg-white px-2 text-[12px] text-gray-700 outline-none focus:border-slate-400"
             >
+              <option value="OPENROUTER">OpenRouter</option>
               <option value="GOOGLE_GEMINI">Google Gemini</option>
               <option value="ANTHROPIC">Anthropic</option>
               <option value="GOOGLE_DOCUMENT_AI">Google Document AI</option>
@@ -845,14 +940,17 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
           </div>
         </div>
       </section>
+        </>
+      )}
 
+      {view === "dashboard" && (
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
         <section className="rounded-xl border border-gray-100 bg-white xl:col-span-2">
           <div className="flex items-center justify-between border-b border-gray-50 px-5 py-4">
             <div>
               <h2 className="text-[14px] font-semibold text-gray-800">크레딧 사용</h2>
               <p className="mt-1 text-[12px] text-gray-400">
-                환불 반영 후 순사용량 기준
+                {dashboard.summaryLabel} · 환불 반영 후 순사용량
               </p>
             </div>
             <Coins className="size-4 text-gray-400" strokeWidth={1.8} />
@@ -903,7 +1001,7 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
           <div className="border-b border-gray-50 px-5 py-4">
             <h2 className="text-[14px] font-semibold text-gray-800">추적 현황</h2>
             <p className="mt-1 text-[12px] text-gray-400">
-              토큰 단위 원가 산정 범위
+              {dashboard.summaryLabel} · 토큰 단위 원가 산정 범위
             </p>
           </div>
           <div className="grid grid-cols-2 gap-3 p-5">
@@ -936,6 +1034,7 @@ export default async function AdminCostsPage({ searchParams }: PageProps) {
           </div>
         </section>
       </div>
+      )}
     </div>
   );
 }
@@ -944,6 +1043,7 @@ function CostTabs({ view }: { view: CostView }) {
   const tabs: { key: CostView; label: string; href: string }[] = [
     { key: "dashboard", label: "손익 대시보드", href: "/admin/costs" },
     { key: "margin", label: "기능별 마진", href: "/admin/costs?view=margin" },
+    { key: "settings", label: "정산·단가", href: "/admin/costs?view=settings" },
   ];
   return (
     <div className="inline-flex h-9 w-fit items-center rounded-lg border border-gray-200 bg-white p-1">

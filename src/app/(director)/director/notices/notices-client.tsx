@@ -1,215 +1,248 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { NoticeFormDialog } from "@/components/notices/notice-form-dialog";
-import { getNotices } from "@/actions/communication";
-import { NOTICE_TARGET_TYPES } from "@/lib/constants";
-import { formatRelativeTime, truncate } from "@/lib/utils";
+import { useEffect, useMemo, useState } from "react";
 import {
-  Plus,
+  ChevronDown,
+  ChevronUp,
+  Inbox,
+  ListFilter,
   Pin,
   Search,
-  Megaphone,
-  Users,
-  UserCheck,
-  BookOpen,
 } from "lucide-react";
-import Link from "next/link";
+import { cn, formatDateTime } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { markStaffAnnouncementsRead } from "@/actions/platform-announcements";
+import type { AnnouncementListItem } from "@/lib/announcements/server";
+import {
+  ANNOUNCEMENT_CATEGORIES,
+  CATEGORY_LABELS,
+  CATEGORY_BADGE_CLASS,
+  type AnnouncementCategory,
+} from "@/lib/announcements/shared";
+import { AnnouncementBody } from "@/components/announcements/announcement-body";
+import { APP_VERSION_LABEL } from "@/lib/app-version";
 
-type Notice = Awaited<ReturnType<typeof getNotices>>[number];
-
-const FILTER_TABS = [
-  { value: "ALL_FILTER", label: "전체" },
-  ...NOTICE_TARGET_TYPES,
-];
-
-const TARGET_BADGE_MAP: Record<string, { label: string; variant: "default" | "secondary" | "outline" | "destructive" }> = {
-  ALL: { label: "전체", variant: "default" },
-  CLASS: { label: "반별", variant: "secondary" },
-  INDIVIDUAL: { label: "개인", variant: "outline" },
-  PARENTS: { label: "학부모", variant: "secondary" },
-};
-
-const TARGET_ICON_MAP: Record<string, React.ElementType> = {
-  ALL: Megaphone,
-  CLASS: BookOpen,
-  INDIVIDUAL: UserCheck,
-  PARENTS: Users,
-};
-
-interface NoticesClientProps {
-  initialNotices: Notice[];
-  initialClasses: { id: string; name: string }[];
+/** 본문 첫 줄을 마크다운 기호 없이 미리보기 문구로. */
+function previewOf(content: string): string {
+  for (const raw of content.split("\n")) {
+    const line = raw
+      .replace(/^\s*[-*•]\s+/, "")
+      .replace(/^#{1,6}\s+/, "")
+      .replace(/\*\*/g, "")
+      .trim();
+    if (line) return line;
+  }
+  return "";
 }
 
-export default function NoticesClient({ initialNotices, initialClasses }: NoticesClientProps) {
-  const [notices, setNotices] = useState<Notice[]>(initialNotices);
-  const [classes] = useState(initialClasses);
-  const [filter, setFilter] = useState("ALL_FILTER");
+const CATEGORY_FILTERS: { value: "ALL" | AnnouncementCategory; label: string }[] = [
+  { value: "ALL", label: "전체 분류" },
+  ...ANNOUNCEMENT_CATEGORIES.map((c) => ({ value: c, label: CATEGORY_LABELS[c] })),
+];
+
+export default function NoticesClient({
+  initialAnnouncements,
+  buildRef,
+}: {
+  initialAnnouncements: AnnouncementListItem[];
+  buildRef?: string | null;
+}) {
+  const [announcements] = useState(initialAnnouncements);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [category, setCategory] = useState<"ALL" | AnnouncementCategory>("ALL");
   const [search, setSearch] = useState("");
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
 
-  function loadData() {
-    startTransition(async () => {
-      const noticeData = await getNotices({
-        targetType: filter === "ALL_FILTER" ? undefined : filter,
-        search: search || undefined,
-      });
-      setNotices(noticeData);
+  // 진입하면 "마지막 확인 시각"을 갱신해 사이드바 새 소식 배지를 지운다.
+  useEffect(() => {
+    void markStaffAnnouncementsRead().catch(() => {});
+  }, []);
+
+  const filtersActive = category !== "ALL";
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return announcements.filter((a) => {
+      if (category !== "ALL" && a.category !== category) return false;
+      if (q && !`${a.title} ${a.content}`.toLowerCase().includes(q)) return false;
+      return true;
     });
-  }
-
-  function handleFilterChange(newFilter: string) {
-    setFilter(newFilter);
-    startTransition(async () => {
-      const noticeData = await getNotices({
-        targetType: newFilter === "ALL_FILTER" ? undefined : newFilter,
-        search: search || undefined,
-      });
-      setNotices(noticeData);
-    });
-  }
-
-  function handleSearch() {
-    loadData();
-  }
-
-  const filteredNotices = search
-    ? notices.filter(
-        (n) =>
-          n.title.toLowerCase().includes(search.toLowerCase()) ||
-          n.content.toLowerCase().includes(search.toLowerCase())
-      )
-    : notices;
+  }, [announcements, category, search]);
 
   return (
-    <div className="space-y-6">
+    <div className="bg-card rounded-2xl border border-border shadow-sm p-5 sm:p-6 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">공지사항</h1>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold tracking-tight">스모트 소식</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            학원 공지를 작성하고 관리합니다
+            스모트의 새로운 기능과 업데이트 소식을 여기에서 모아 보실 수 있어요.
           </p>
         </div>
-        <Button onClick={() => setDialogOpen(true)}>
-          <Plus className="size-4" />
-          공지 작성
-        </Button>
       </div>
 
-      {/* Search */}
-      <div className="flex gap-2">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-          <Input
-            placeholder="공지 검색..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            className="pl-9"
-          />
-        </div>
-      </div>
-
-      {/* Filter Tabs */}
-      <div className="flex gap-1 border-b">
-        {FILTER_TABS.map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => handleFilterChange(tab.value)}
-            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
-              filter === tab.value
-                ? "border-blue-500 text-blue-600"
-                : "border-transparent text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Notice List */}
-      <div className="space-y-3">
-        {isPending && notices.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground">
-            불러오는 중...
-          </div>
-        )}
-
-        {!isPending && filteredNotices.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground">
-            <Megaphone className="size-12 mx-auto mb-3 opacity-30" />
-            <p>등록된 공지사항이 없습니다</p>
-          </div>
-        )}
-
-        {filteredNotices.map((notice) => {
-          const TargetIcon = TARGET_ICON_MAP[notice.targetType] || Megaphone;
-          const badge = TARGET_BADGE_MAP[notice.targetType];
-          const readCount = notice.reads.length;
-          const totalTarget = 30;
-          const readPercent =
-            totalTarget > 0 ? Math.round((readCount / totalTarget) * 100) : 0;
-
-          return (
-            <Link
-              key={notice.id}
-              href={`/director/notices/${notice.id}`}
-              className="block"
+      {/* Toolbar: 필터 · 검색 */}
+      <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+        {/* 필터 popover */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              title="필터"
+              aria-label="필터"
+              className={cn(
+                "relative flex size-7 shrink-0 items-center justify-center rounded-md border bg-white shadow-sm transition-colors hover:bg-slate-50",
+                filtersActive
+                  ? "border-blue-300 text-blue-600"
+                  : "border-slate-200 text-slate-600 hover:text-slate-800",
+              )}
             >
-              <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-transparent hover:border-l-blue-500 gap-0">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      {notice.isPinned && (
-                        <Pin className="size-3.5 text-amber-500 fill-amber-500 shrink-0" />
+              <ListFilter className="size-3.5 shrink-0" />
+              {filtersActive && (
+                <span className="absolute -right-1 -top-1 size-2 rounded-full bg-blue-500 ring-2 ring-white" />
+              )}
+            </button>
+          </PopoverTrigger>
+          <PopoverContent align="end" className="w-72 space-y-3 p-3">
+            <div className="space-y-1.5">
+              <p className="text-[11px] font-semibold text-slate-400">분류</p>
+              <div className="flex flex-wrap gap-1.5">
+                {CATEGORY_FILTERS.map((c) => (
+                  <button
+                    key={c.value}
+                    onClick={() => setCategory(c.value)}
+                    className={cn(
+                      "inline-flex h-7 shrink-0 items-center justify-center rounded-md border px-2.5 text-[11px] font-semibold shadow-sm transition-colors",
+                      category === c.value
+                        ? "border-blue-500 bg-blue-50 text-blue-700"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50",
+                    )}
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* 검색 popover */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              title="검색"
+              aria-label="검색"
+              className={cn(
+                "relative flex size-7 shrink-0 items-center justify-center rounded-md border bg-white shadow-sm transition-colors hover:bg-slate-50",
+                search
+                  ? "border-blue-300 text-blue-600"
+                  : "border-slate-200 text-slate-600 hover:text-slate-800",
+              )}
+            >
+              <Search className="size-3.5 shrink-0" />
+              {search && (
+                <span className="absolute -right-1 -top-1 size-2 rounded-full bg-blue-500 ring-2 ring-white" />
+              )}
+            </button>
+          </PopoverTrigger>
+          <PopoverContent align="end" className="w-72 p-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Input
+                autoFocus
+                placeholder="소식 검색..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      {/* List */}
+      <div className="space-y-3">
+        {filtered.length === 0 && (
+          <div className="text-center py-16 text-muted-foreground">
+            <Inbox className="size-12 mx-auto mb-3 opacity-30" />
+            <p>{announcements.length === 0 ? "아직 등록된 소식이 없어요" : "조건에 맞는 소식이 없어요"}</p>
+          </div>
+        )}
+
+        {filtered.map((a) => {
+          const expanded = expandedId === a.id;
+          const cat = a.category as AnnouncementCategory;
+          return (
+            <div
+              key={a.id}
+              className={cn(
+                "rounded-xl border transition-colors",
+                expanded
+                  ? "border-blue-300 bg-slate-50/60"
+                  : "border-slate-200 hover:border-blue-300 hover:bg-slate-50/60",
+              )}
+            >
+              <button
+                onClick={() => setExpandedId(expanded ? null : a.id)}
+                className="flex w-full items-start gap-3 p-4 text-left"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="mb-1.5 flex flex-wrap items-center gap-2">
+                    {a.isPinned && (
+                      <Pin className="size-3.5 shrink-0 fill-amber-500 text-amber-500" />
+                    )}
+                    <span
+                      className={cn(
+                        "rounded-md px-1.5 py-0.5 text-[10px] font-semibold",
+                        CATEGORY_BADGE_CLASS[cat] ?? "bg-slate-100 text-slate-600",
                       )}
-                      <h3 className="font-semibold text-sm truncate">
-                        {notice.title}
-                      </h3>
-                      <Badge variant={badge?.variant || "default"} className="shrink-0 text-xs">
-                        <TargetIcon className="size-3 mr-1" />
-                        {badge?.label || notice.targetType}
-                      </Badge>
-                    </div>
-                    <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
-                      {truncate(notice.content, 120)}
-                    </p>
-                    <div className="flex items-center gap-4">
-                      <span className="text-xs text-muted-foreground">
-                        {formatRelativeTime(notice.publishAt)}
+                    >
+                      {CATEGORY_LABELS[cat] ?? a.category}
+                    </span>
+                    {a.isNew && (
+                      <span className="rounded bg-red-50 px-1.5 py-px text-[10px] font-bold text-red-500">
+                        NEW
                       </span>
-                      <div className="flex items-center gap-2 flex-1 max-w-[200px]">
-                        <Progress value={readPercent} className="h-1.5" />
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">
-                          {readCount}/{totalTarget}명 읽음
-                        </span>
-                      </div>
-                    </div>
+                    )}
+                    <h3 className="truncate text-sm font-semibold">{a.title}</h3>
+                  </div>
+
+                  {!expanded && previewOf(a.content) && (
+                    <p className="mb-2 line-clamp-2 text-sm text-muted-foreground">
+                      {previewOf(a.content)}
+                    </p>
+                  )}
+
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span>{formatDateTime(a.publishedAt)}</span>
                   </div>
                 </div>
-              </Card>
-            </Link>
+
+                {expanded ? (
+                  <ChevronUp className="mt-0.5 size-4 shrink-0 text-slate-400" />
+                ) : (
+                  <ChevronDown className="mt-0.5 size-4 shrink-0 text-slate-400" />
+                )}
+              </button>
+
+              {expanded && (
+                <div className="border-t border-slate-100 px-4 pb-4 pt-3">
+                  <AnnouncementBody
+                    content={a.content}
+                    className="text-[13.5px] text-slate-600"
+                  />
+                </div>
+              )}
+            </div>
           );
         })}
       </div>
 
-      {/* Create Dialog */}
-      <NoticeFormDialog
-        open={dialogOpen}
-        onOpenChange={(open) => {
-          setDialogOpen(open);
-          if (!open) loadData();
-        }}
-        classes={classes}
-      />
+      <p className="text-center text-[11px] text-slate-300">
+        스모트 {APP_VERSION_LABEL}
+        {buildRef ? ` · ${buildRef}` : ""}
+      </p>
     </div>
   );
 }

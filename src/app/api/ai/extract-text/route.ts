@@ -2,6 +2,7 @@ import { generateText } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 
 import { GEMINI_MODEL_ID, model } from "@/lib/ai";
+import { atlasUsageWithCost } from "@/lib/atlas-ai";
 import { getStaffSession } from "@/lib/auth";
 import { recordAiCost } from "@/lib/platform-api-costs";
 
@@ -62,7 +63,7 @@ export async function POST(req: NextRequest) {
       academyId: staff.academyId,
       model: GEMINI_MODEL_ID,
       operationType: "TEXT_EXTRACTION",
-      usage: result.usage,
+      usage: atlasUsageWithCost(result),
     });
 
     return NextResponse.json({ text: result.text.trim() });

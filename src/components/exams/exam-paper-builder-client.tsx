@@ -3,7 +3,8 @@
 import { type CSSProperties, type FormEvent, type PointerEvent as ReactPointerEvent, useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { ChevronRight, GripVertical, RotateCcw, Trash2, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, CirclePlay, Download, GripVertical, Loader2, Printer, RotateCcw, Save, ShoppingBasket, Trash2, X } from "lucide-react";
+import { MobileStepHeader } from "@/components/workbench/mobile-step-flow";
 import { toast } from "sonner";
 import { type BuilderQuestion, type BuilderQuestionSetRender, DEFAULT_PAPER_COVER, type Density, type HeaderPatch, LINE_GAP_MARKER, type PaginationSettings, type PaperCover, type PaperSize, type PaperTemplate, type PassageStyle } from "./paper-builder/types";
 import { DEFAULT_INSTRUCTIONS, PAPER_SIZE_SPECS } from "./paper-builder/constants";
@@ -19,6 +20,7 @@ import { PrintStyles } from "./paper-builder/components/print-styles";
 import { BuilderPropertiesPanel } from "./paper-builder/components/builder-properties-panel";
 import { QuestionDetailModal } from "./paper-builder/components/question-detail-modal";
 import { BlockFormatToolbar } from "./paper-builder/components/block-format-toolbar";
+import { MobileBlockActionBar, MobileBlockEditSheet } from "./paper-builder/components/mobile-block-actions";
 import { QuestionLibraryPanel } from "./paper-builder/components/question-library-panel";
 import { TemplateSettingsPanel } from "./paper-builder/components/template-settings-panel";
 import { PreviewPages } from "./exam-paper-builder-client-parts/preview-pages";
@@ -42,6 +44,8 @@ import {
   getExamPaperBuilderQuestionPageOf,
 } from "@/actions/exam-paper-builder";
 import { BUILDER_PAGE_SIZE } from "@/actions/workbench/_question-where";
+import { useIsMobile } from "@/hooks/use-is-mobile";
+import { DEFAULT_MOBILE_PAGE_SIZE } from "@/hooks/use-mobile-pagination";
 import type { WorkbenchQuestionFilters } from "@/actions/workbench/_types";
 import {
   getAcademyQuestionSetMemberMap,
@@ -327,6 +331,31 @@ export function ExamPaperBuilderClient({
   );
   // 모바일(<lg) 전용 2단계 흐름: 1) 문제 선택 ↔ 2) 미리보기·저장. 데스크톱은 영향 없음.
   const [mobileStep, setMobileStep] = useState<"select" | "preview">("select");
+  // 모바일 하단 바 '다운로드' 메뉴(위로 열림) 펼침 상태.
+  const [mobileDownloadOpen, setMobileDownloadOpen] = useState(false);
+  // 모바일 하단 고정 '담긴 문제' 장바구니 펼침 상태.
+  const [cartOpen, setCartOpen] = useState(false);
+  // 모바일 미리보기에서 텍스트·섹션 블록 '내용 수정' 풀스크린 시트 열림 상태.
+  const [mobileEditOpen, setMobileEditOpen] = useState(false);
+  // 모바일 컨텍스트 바 대상 — activeItem 은 activeItemId 가 null 이어도 첫 블록으로
+  // 폴백(PC 편집 패널용)하므로, 사용자가 실제로 탭한 블록만 잡는다.
+  const mobileSelectedItem = activeItemId
+    ? paperItems.find((it) => it.localId === activeItemId) ?? null
+    : null;
+  // 모바일 컨텍스트 바의 위로/아래로 — 터치 드래그 대신 인접 블록과 자리를 바꾼다.
+  const mobileSelectedIndex = mobileSelectedItem
+    ? paperItems.findIndex((it) => it.localId === mobileSelectedItem.localId)
+    : -1;
+  const moveActiveItem = (direction: -1 | 1) => {
+    if (!mobileSelectedItem || mobileSelectedIndex < 0) return;
+    const target = paperItems[mobileSelectedIndex + direction];
+    if (!target) return;
+    moveItemToDropTarget(
+      mobileSelectedItem.localId,
+      target.localId,
+      direction === -1 ? "before" : "after",
+    );
+  };
   const [thumbnailsWidth, setThumbnailsWidth] = useState(
     readStoredThumbnailsWidth,
   );
@@ -466,11 +495,16 @@ export function ExamPaperBuilderClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [academyId, subjectScope]);
 
+  // 모바일(<lg)에선 한 페이지에 10개만 보이도록 서버 조회 limit 을 낮춘다(데스크톱은
+  // 기존 BUILDER_PAGE_SIZE 그대로 → PC 무변경). 마운트 후 승격되므로 최초 100개 →
+  // 10개 재조회가 한 번 일어난다(기존 모바일 페이지네이션 패턴과 동일한 트레이드오프).
+  const isMobile = useIsMobile();
+
   // 현재 필터 상태 → 서버 조회 파라미터. 폴더 활성값은 collectionId 로 서버에 전달한다.
   const buildListFilters = useCallback(
     (targetPage: number): WorkbenchQuestionFilters => ({
       page: targetPage,
-      limit: BUILDER_PAGE_SIZE,
+      limit: isMobile ? DEFAULT_MOBILE_PAGE_SIZE : BUILDER_PAGE_SIZE,
       sort,
       // 과목 스코프 — 국어 시험지 편집이면 좌측 피커가 KO_* 문항만 조회한다.
       // 영어(미지정)는 필드 자체가 undefined 라 종전 where 와 byte 동일(무회귀).
@@ -488,6 +522,7 @@ export function ExamPaperBuilderClient({
       collectionId: folders.activeFolder ?? undefined,
     }),
     [
+      isMobile,
       sort,
       subjectScope,
       debouncedSearch,
@@ -574,6 +609,16 @@ export function ExamPaperBuilderClient({
       if (item.blockType === "question") ids.add(item.questionId);
     }
     return ids;
+  }, [paperItems]);
+
+  // 모바일 장바구니 목록 — 담긴 문제를 questionId 기준 1개씩(중복 제거) 담은 표시용 블록.
+  const selectedQuestionBlocks = useMemo(() => {
+    const seen = new Set<string>();
+    return paperItems.filter((item) => {
+      if (item.blockType !== "question" || seen.has(item.questionId)) return false;
+      seen.add(item.questionId);
+      return true;
+    });
   }, [paperItems]);
 
   // 드래그한 문제를 폴더에 담기/이동. 체크된(=시험지에 올라간) 문항 전체가 선택으로
@@ -2022,7 +2067,11 @@ export function ExamPaperBuilderClient({
     <div
       id="exam-builder-shell"
       className={cn(
-        "relative flex h-[100dvh] min-h-0 flex-col overflow-hidden md:-m-6",
+        // 모바일: 상단 앱바(sticky h-14=3.5rem)만큼 뺀 높이로 맞추고 -m-4 로 main 의
+        // p-4 를 상쇄해 풀블리드로. → 셸이 뷰포트를 넘치지 않아 페이지 스크롤이 사라지고
+        // 하단 shrink-0 푸터(장바구니/다음 버튼)가 화면 바닥에 고정된다.
+        // 데스크톱(md:)은 기존 -m-6 / h-[100dvh] 그대로.
+        "relative -m-4 flex h-[calc(100dvh-3.5rem)] min-h-0 flex-col overflow-hidden md:-m-6 md:h-[100dvh]",
         // 기존 시험지 '수정' 모드는 새로 만드는 화면과 헷갈리지 않도록 배경을
         // 살짝 어둡게 한다 (미리보기 종이 자체는 흰색 그대로).
         isEditingExistingExam ? "bg-slate-200" : "bg-[#F4F6F9]",
@@ -2031,7 +2080,9 @@ export function ExamPaperBuilderClient({
       <div
         aria-hidden={!headerVisible}
         className={cn(
-          "no-print shrink-0 overflow-hidden border-b bg-white px-5 transition-[max-height,padding,opacity,transform,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          // 모바일(<lg)에선 자동 숨김 헤더를 아예 렌더하지 않는다 — 잠깐 보였다 사라지는
+          // 플래시 방지 + 상단 앱바와 중복 제거. 데스크톱(lg 이상)만 노출(자동 숨김 동작 유지).
+          "no-print hidden shrink-0 overflow-hidden border-b bg-white px-5 transition-[max-height,padding,opacity,transform,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] lg:block",
           headerVisible
             ? "max-h-20 translate-y-0 border-slate-200/80 py-3 opacity-100"
             : "pointer-events-none max-h-0 -translate-y-3 border-transparent py-0 opacity-0",
@@ -2062,72 +2113,29 @@ export function ExamPaperBuilderClient({
         title="헤더 보기"
         aria-label="헤더 보기"
         className={cn(
-          "no-print absolute left-0 top-0 z-40 h-4 w-4 bg-slate-900/10 shadow-[2px_2px_8px_rgba(15,23,42,0.12)] backdrop-blur-sm transition-[opacity,transform,background-color] duration-300 ease-out [clip-path:polygon(0_0,100%_0,0_100%)] hover:bg-blue-500/20 focus:bg-blue-500/20 focus:outline-none focus:ring-2 focus:ring-blue-200",
+          // 모바일(<lg)에선 '헤더 보기' 삼각형을 숨긴다 — 터치엔 mousemove 자동숨김이
+          // 무의미하고 상단 앱바와 중복이라 불필요. 데스크톱(lg 이상)은 그대로 노출.
+          "no-print hidden lg:block absolute left-0 top-0 z-40 h-4 w-4 bg-slate-900/10 shadow-[2px_2px_8px_rgba(15,23,42,0.12)] backdrop-blur-sm transition-[opacity,transform,background-color] duration-300 ease-out [clip-path:polygon(0_0,100%_0,0_100%)] hover:bg-blue-500/20 focus:bg-blue-500/20 focus:outline-none focus:ring-2 focus:ring-blue-200",
           headerVisible
             ? "pointer-events-none -translate-x-1 -translate-y-1 opacity-0"
             : "translate-x-0 translate-y-0 opacity-100",
         )}
       />
-      {/* 모바일 전용 단계 전환 바 — 1) 문제 선택 ↔ 2) 미리보기·저장 */}
-      <div className="no-print flex shrink-0 items-center gap-1.5 border-b border-slate-200 bg-white px-2 py-1.5 lg:hidden">
-        <button
-          type="button"
-          onClick={() => setMobileStep("select")}
-          aria-pressed={mobileStep === "select"}
-          className={cn(
-            "flex h-9 flex-1 items-center justify-center gap-1.5 rounded-md text-[13px] font-bold transition-colors",
-            mobileStep === "select"
-              ? "bg-blue-600 text-white shadow-sm"
-              : "bg-slate-100 text-slate-500 active:bg-slate-200",
-          )}
-        >
-          <span
-            className={cn(
-              "flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-black",
-              mobileStep === "select"
-                ? "bg-white/25 text-white"
-                : "bg-white text-slate-400",
-            )}
-          >
-            1
-          </span>
-          문제 선택
-          {questionItemsCount > 0 && (
-            <span
-              className={cn(
-                "ml-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums",
-                mobileStep === "select"
-                  ? "bg-white/20 text-white"
-                  : "bg-blue-50 text-blue-600",
-              )}
-            >
-              {questionItemsCount}
-            </span>
-          )}
-        </button>
-        <button
-          type="button"
-          onClick={() => setMobileStep("preview")}
-          aria-pressed={mobileStep === "preview"}
-          className={cn(
-            "flex h-9 flex-1 items-center justify-center gap-1.5 rounded-md text-[13px] font-bold transition-colors",
-            mobileStep === "preview"
-              ? "bg-blue-600 text-white shadow-sm"
-              : "bg-slate-100 text-slate-500 active:bg-slate-200",
-          )}
-        >
-          <span
-            className={cn(
-              "flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-black",
-              mobileStep === "preview"
-                ? "bg-white/25 text-white"
-                : "bg-white text-slate-400",
-            )}
-          >
-            2
-          </span>
-          미리보기 · 저장
-        </button>
+      {/* 모바일 전용 진행 스텝 — 문제 생성 페이지와 동일한 공용 스텝 헤더(번호 원형+연결선).
+          선택 개수는 아래 하단 고정 '담긴 문제' 장바구니가 대신 보여준다. */}
+      <div className="no-print shrink-0 border-b border-slate-200 bg-white px-2 py-2 lg:hidden">
+        <MobileStepHeader
+          steps={[
+            { key: "select", label: "문제 선택" },
+            { key: "preview", label: "미리보기 · 저장" },
+          ]}
+          currentKey={mobileStep}
+          onSelect={(key) => {
+            setMobileStep(key as "select" | "preview");
+            setCartOpen(false);
+            window.scrollTo({ top: 0 });
+          }}
+        />
       </div>
       <div
         ref={builderGridRef}
@@ -2481,6 +2489,224 @@ export function ExamPaperBuilderClient({
         )}
       </div>
 
+      {/* ── 모바일 전용 하단 고정 바 (셸 shrink-0 푸터, lg:hidden) ──
+          문제 선택 단계: '담긴 문제' 장바구니(펼치면 목록·빼기) + 다음 단계 버튼.
+          미리보기 단계: 이전(문제 선택)으로 돌아가는 버튼. 데스크톱은 전부 숨김. */}
+      <div className="no-print shrink-0 lg:hidden">
+        {mobileStep === "select" ? (
+          <>
+            {cartOpen && selectedQuestionBlocks.length > 0 ? (
+              <div className="flex max-h-[40vh] min-h-0 flex-col border-t border-slate-100 bg-slate-50/70">
+                <div className="min-h-0 flex-1 overflow-y-auto p-2">
+                  {selectedQuestionBlocks.map((item, i) => (
+                    <div
+                      key={item.localId}
+                      className="mb-1.5 flex items-start gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-2 last:mb-0"
+                    >
+                      <span className="mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded bg-blue-600 text-[10.5px] font-bold text-white">
+                        {i + 1}
+                      </span>
+                      <span className="line-clamp-2 min-w-0 flex-1 text-[12px] font-medium leading-relaxed text-slate-700">
+                        {item.questionText?.trim() ||
+                          item.passageTitle?.trim() ||
+                          "문제"}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => removeQuestionIdFromPaper(item.questionId)}
+                        aria-label="시험지에서 빼기"
+                        className="shrink-0 rounded-md p-1 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                      >
+                        <X className="size-3.5" aria-hidden="true" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            <button
+              type="button"
+              onClick={() => setCartOpen((open) => !open)}
+              aria-expanded={cartOpen}
+              aria-label={cartOpen ? "담긴 문제 목록 접기" : "담긴 문제 목록 펼치기"}
+              className="flex w-full shrink-0 items-center gap-2.5 border-t border-slate-100 bg-white px-3 py-2 text-left"
+            >
+              <span className="relative inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                <ShoppingBasket className="size-5" aria-hidden="true" />
+                {selectedQuestionBlocks.length > 0 ? (
+                  <span className="absolute -right-1.5 -top-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-extrabold leading-none text-white ring-2 ring-white">
+                    {selectedQuestionBlocks.length}
+                  </span>
+                ) : null}
+              </span>
+              <span className="flex min-w-0 flex-1 flex-col">
+                <span className="text-[12.5px] font-bold text-slate-900">
+                  담긴 문제 {selectedQuestionBlocks.length}개
+                </span>
+                <span className="truncate text-[10.5px] text-slate-400">
+                  {selectedQuestionBlocks.length > 0
+                    ? "탭하여 담긴 문제 보기·빼기"
+                    : "문제를 눌러 시험지에 담아보세요"}
+                </span>
+              </span>
+              <ChevronDown
+                className={cn(
+                  "size-4 shrink-0 text-slate-400 transition-transform",
+                  cartOpen && "rotate-180",
+                )}
+                aria-hidden="true"
+              />
+            </button>
+            <div className="shrink-0 border-t border-slate-100 bg-white p-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))]">
+              <button
+                type="button"
+                aria-disabled={selectedQuestionBlocks.length === 0}
+                onClick={() => {
+                  if (selectedQuestionBlocks.length === 0) return;
+                  setCartOpen(false);
+                  // 로드/추가 시 자동 활성화된 블록이 남아 있으면 미리보기 진입 즉시
+                  // 컨텍스트 바가 떠 버린다 — 탭하기 전엔 선택 없음으로 시작.
+                  setActiveItemId(null);
+                  setMobileStep("preview");
+                  window.scrollTo({ top: 0 });
+                }}
+                className={cn(
+                  "inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg border text-[14px] font-extrabold text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2",
+                  selectedQuestionBlocks.length === 0
+                    ? "cursor-not-allowed border-blue-200 bg-blue-300"
+                    : "cursor-pointer border-blue-600 bg-blue-600 hover:bg-blue-700",
+                )}
+              >
+                <CirclePlay className="size-5" aria-hidden="true" />
+                다음으로 (미리보기 · 저장)
+              </button>
+            </div>
+          </>
+        ) : mobileSelectedItem ? (
+          // 미리보기에서 블록을 탭하면 '이전' 버튼 자리에 블록 컨텍스트 바가 나타난다.
+          // (좌측 액션 레일·인라인 편집은 모바일에서 비활성 — 이 바가 유일한 편집 경로)
+          <MobileBlockActionBar
+            item={mobileSelectedItem}
+            canMoveUp={mobileSelectedIndex > 0}
+            canMoveDown={
+              mobileSelectedIndex >= 0 &&
+              mobileSelectedIndex < paperItems.length - 1
+            }
+            onMoveUp={() => moveActiveItem(-1)}
+            onMoveDown={() => moveActiveItem(1)}
+            onUpdateItem={updateItem}
+            onUngroupItem={ungroupItem}
+            onRegroupByPassage={regroupByPassage}
+            onRemoveItem={(localId) => {
+              removeItem(localId);
+              // removeItem 은 남은 첫 블록을 활성화하므로(PC 편집 패널용), 모바일에선
+              // 선택을 풀어 컨텍스트 바가 다른 블록으로 튀지 않게 한다.
+              setActiveItemId(null);
+            }}
+            onEditContent={() => setMobileEditOpen(true)}
+            onClose={() => setActiveItemId(null)}
+          />
+        ) : (
+          <div className="shrink-0 border-t border-slate-200 bg-white p-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))]">
+            <div className="flex items-stretch gap-2">
+              {/* 이전 — 왼쪽 1/4, '< 이전'만 표시 */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileStep("select");
+                  window.scrollTo({ top: 0 });
+                }}
+                aria-label="이전 (문제 선택)"
+                className="inline-flex h-11 basis-1/4 shrink-0 items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white text-[13.5px] font-bold text-slate-600 transition-colors hover:bg-slate-50"
+              >
+                <ChevronLeft className="size-4" aria-hidden="true" />
+                이전
+              </button>
+
+              {/* 이전 ↔ 액션 구분선 */}
+              <span
+                aria-hidden="true"
+                className="my-1 w-px shrink-0 self-stretch bg-slate-200"
+              />
+
+              {/* 남은 3/4 — 저장 · 인쇄 · 다운로드 */}
+              <div className="flex min-w-0 flex-1 items-stretch gap-2">
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={isPending || questionItemsCount === 0}
+                  className="inline-flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg border border-blue-600 bg-blue-600 text-[13px] font-bold text-white shadow-sm transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:border-blue-200 disabled:bg-blue-300 disabled:shadow-none"
+                >
+                  {isPending ? (
+                    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                  ) : (
+                    <Save className="size-4" aria-hidden="true" />
+                  )}
+                  저장
+                </button>
+                <button
+                  type="button"
+                  onClick={handlePrint}
+                  disabled={questionItemsCount === 0}
+                  className="inline-flex h-11 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-[13px] font-bold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <Printer className="size-4" aria-hidden="true" />
+                  인쇄
+                </button>
+                <div className="relative min-w-0 flex-1">
+                  <button
+                    type="button"
+                    onClick={() => setMobileDownloadOpen((v) => !v)}
+                    disabled={questionItemsCount === 0}
+                    aria-expanded={mobileDownloadOpen}
+                    className="inline-flex h-11 w-full min-w-0 items-center justify-center gap-1 rounded-lg border border-slate-200 bg-white text-[13px] font-bold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <Download className="size-4 shrink-0" aria-hidden="true" />
+                    <span className="truncate">다운로드</span>
+                    <ChevronDown className="size-3 shrink-0 text-slate-400" aria-hidden="true" />
+                  </button>
+                  {mobileDownloadOpen && (
+                    <>
+                      {/* 바깥 탭 시 닫힘 */}
+                      <button
+                        type="button"
+                        aria-hidden="true"
+                        tabIndex={-1}
+                        onClick={() => setMobileDownloadOpen(false)}
+                        className="fixed inset-0 z-30 cursor-default"
+                      />
+                      {/* 위로 열리는 메뉴 */}
+                      <div className="absolute bottom-[calc(100%+6px)] right-0 z-40 w-52 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-xl shadow-slate-300/50">
+                        {[
+                          { label: "PDF", onClick: handlePrint },
+                          { label: "PDF 해설", onClick: handlePrintWithAnswers },
+                          { label: "DOCX", onClick: handleDownloadDocx },
+                          { label: "DOCX 해설", onClick: handleDownloadDocxWithAnswers },
+                          { label: "HWPX", onClick: handleDownloadHwpx },
+                          { label: "HWPX 해설", onClick: handleDownloadHwpxWithAnswers },
+                        ].map((opt) => (
+                          <button
+                            key={opt.label}
+                            type="button"
+                            onClick={() => {
+                              setMobileDownloadOpen(false);
+                              opt.onClick();
+                            }}
+                            className="flex h-10 w-full items-center px-3 text-left text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
       <Dialog
         open={saveAsOpen}
         onOpenChange={(open) => {
@@ -2570,6 +2796,16 @@ export function ExamPaperBuilderClient({
             </div>
           </div>
         </div>
+      )}
+
+      {mobileEditOpen && mobileSelectedItem && (
+        <MobileBlockEditSheet
+          // key: 다른 블록을 이어서 수정할 때 시트 내부 draft 가 초기화되도록.
+          key={mobileSelectedItem.localId}
+          item={mobileSelectedItem}
+          onCommit={(patch) => updateItem(mobileSelectedItem.localId, patch)}
+          onClose={() => setMobileEditOpen(false)}
+        />
       )}
 
       {detailQuestion && (

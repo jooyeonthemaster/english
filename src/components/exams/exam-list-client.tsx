@@ -29,6 +29,7 @@ import { confirmNative } from "@/lib/browser-confirm";
 import type { CollectionItem } from "@/components/workbench/shared/types";
 import { FolderSection } from "@/components/workbench/shared/folder-section";
 import { MoveOrCopyFolderPicker } from "@/components/workbench/shared/move-or-copy-folder-picker";
+import { Pagination } from "@/components/workbench/shared/pagination";
 import {
   ViewModeCycleButton,
   type ViewModeCycleOption,
@@ -37,6 +38,7 @@ import {
 // Hooks
 import { useSelection } from "@/components/workbench/hooks/use-selection";
 import { useFolderManager } from "@/hooks/use-folder-manager";
+import { useMobilePagination } from "@/hooks/use-mobile-pagination";
 
 // Exam card
 import { ExamFileCard } from "./exam-file-card";
@@ -214,6 +216,20 @@ export function ExamListClient({
 
   const examIds = useMemo(() => displayedExams.map((e) => e.id), [displayedExams]);
   const selection = useSelection(examIds);
+
+  // ─── 모바일 전용: 폴더(전체 시험 포함)마다 한 페이지 10개 제한 ───
+  // 데스크톱은 useMobilePagination 이 전체를 그대로 반환해 변화 없음.
+  // 폴더 이동·검색·필터가 바뀌면 resetKey 로 1페이지로 되돌린다.
+  const {
+    isMobile,
+    page: mobilePage,
+    setPage: setMobilePage,
+    totalPages: mobileTotalPages,
+    visibleItems: visibleExams,
+    scrollTargetRef: listSectionRef,
+  } = useMobilePagination(displayedExams, {
+    resetKey: `${folder.activeFolder ?? "root"}|${search}|${typeFilter}|${statusFilter}|${classFilter}`,
+  });
 
   // ─── Folder action wrappers ───
   const onAddToFolder = useCallback(
@@ -416,21 +432,29 @@ export function ExamListClient({
         selectedCount={selection.selectedIds.size}
         onCopy={onAddToFolder}
         onMove={onMoveToFolder}
+        // 모바일은 아이콘 전용(텍스트 제거). 데스크톱은 기존 텍스트 버튼 유지.
+        compact={isMobile}
       />
 
-      {/* Bulk delete */}
+      {/* Bulk delete — 모바일은 아이콘 전용, 데스크톱은 텍스트 유지 */}
       <button
         type="button"
         onClick={() => void handleBulkDelete()}
         disabled={selection.selectedIds.size === 0 || bulkDeleting}
-        className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+        title="삭제"
+        aria-label="삭제"
+        className={
+          isMobile
+            ? "flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-white text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+            : "flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-red-200 bg-white px-2.5 text-[11px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+        }
       >
         {bulkDeleting ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
         ) : (
           <Trash2 className="w-3.5 h-3.5" />
         )}
-        삭제
+        {isMobile ? null : "삭제"}
       </button>
     </>
   );
@@ -438,7 +462,7 @@ export function ExamListClient({
   // ─── Toolbar row (mirrors question-bank-client) ───
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-      <div className="flex w-full min-w-0 flex-wrap items-center gap-2 md:w-auto md:flex-nowrap">
+      <div className="flex min-w-0 flex-wrap items-center gap-2 md:flex-nowrap">
         <SelectAllCheckbox
           checked={selection.isAllSelected && selection.selectedIds.size > 0}
           indeterminate={
@@ -473,7 +497,7 @@ export function ExamListClient({
           ) : null}
         </div>
       </div>
-      <div className="ml-auto flex w-full shrink-0 flex-wrap items-center justify-end gap-2 md:w-auto">
+      <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
         <FiltersToolbar
           search={search}
           setSearch={setSearch}
@@ -507,7 +531,10 @@ export function ExamListClient({
             </p>
           </div>
         ) : (
-          <section className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <section
+            ref={listSectionRef}
+            className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+          >
             {/* Sticky layer 1 — folder section (page identity + folders) */}
             <div
               ref={folderStickyRef}
@@ -583,7 +610,7 @@ export function ExamListClient({
                   value={selection.selectedIds}
                   onChange={selection.setSelectedIds}
                 >
-                  {displayedExams.map((exam) => (
+                  {visibleExams.map((exam) => (
                     <ExamFileCard
                       key={exam.id}
                       exam={exam}
@@ -607,7 +634,7 @@ export function ExamListClient({
                   value={selection.selectedIds}
                   onChange={selection.setSelectedIds}
                 >
-                  {displayedExams.map((exam) => (
+                  {visibleExams.map((exam) => (
                     <ExamListRow
                       key={exam.id}
                       exam={exam}
@@ -624,6 +651,18 @@ export function ExamListClient({
                     />
                   ))}
                 </DragSelect>
+              )}
+
+              {/* 모바일 전용 페이지 넘김 — 폴더당 10개씩(데스크톱은 렌더 안 함) */}
+              {isMobile && displayedExams.length > 0 && (
+                <div className="pt-3">
+                  <Pagination
+                    page={mobilePage}
+                    totalPages={mobileTotalPages}
+                    onGoToPage={setMobilePage}
+                    scrollTargetRef={listSectionRef}
+                  />
+                </div>
               )}
             </div>
           </section>

@@ -210,7 +210,16 @@ export function IntakeSurface({
         ) : null}
       </div>
 
-      <div className="relative flex min-h-0 flex-1 flex-col">
+      {/* 모바일(<lg) 최소 높이는 워크스페이스 오버레이가 떠 있을 때만 확보 —
+          오버레이는 absolute 라 자기 높이를 못 만드므로 이 컨테이너가 바닥을
+          제공한다. 입력 탭만 있을 땐 콘텐츠 높이만 차지해 아래 사이트 푸터
+          위에 빈 공간이 생기지 않는다. */}
+      <div
+        className={
+          "relative flex min-h-0 flex-1 flex-col" +
+          (overlay ? " max-lg:min-h-[55vh]" : "")
+        }
+      >
         {/* Upload stays mounted (hidden when inactive) so its in-flight extraction
             survives the auto-flip to 내 지문 right after 추출 시작. */}
         <div

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import {
   Sparkles,
   Coins,
@@ -13,6 +14,10 @@ import {
   getPromoBundleLanding,
   type PromoBundleLandingItem,
 } from "@/lib/credit-promotion-bundles";
+import {
+  recordPromoLinkEvent,
+  readClientHints,
+} from "@/lib/promo-link-events";
 
 // ============================================================================
 // 프로모션 번들 랜딩 — /credits/promo/b/{slug}
@@ -130,6 +135,20 @@ export default async function PromoBundleLandingPage({
   const staff = await getStaffSession();
   const isDirector = staff?.role === "DIRECTOR";
 
+  // 랜딩 방문(VIEW) 기록 — 유효(구성원≥1) 번들에 한해. 실패해도 흐름을 막지 않음.
+  if (bundle && bundle.items.length > 0) {
+    const { ip, userAgent } = readClientHints(await headers());
+    await recordPromoLinkEvent({
+      kind: "VIEW",
+      targetType: "BUNDLE",
+      linkRef: slug,
+      bundleId: bundle.id,
+      staff,
+      ip,
+      userAgent,
+    });
+  }
+
   // 번들 없음/비활성/유효 프로모션 0개 → 만료 안내(단일 랜딩과 동일 UI).
   if (!bundle || bundle.items.length === 0) {
     return (
@@ -171,9 +190,6 @@ export default async function PromoBundleLandingPage({
             {bundle.description}
           </p>
         )}
-        <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-[11.5px] font-semibold">
-          혜택 {bundle.items.length}개 한 번에 받기
-        </div>
       </div>
 
       {/* 구성원 프로모션 카드들 */}

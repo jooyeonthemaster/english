@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { Prisma } from "@prisma/client";
+import { ATLAS_GATEWAY_PROVIDER } from "@/lib/atlas-ai";
 import { getExtractionAiModelName } from "@/lib/extraction/model-config";
 import { resolveUsdKrwRate } from "@/lib/fx-rate";
 import { resolveEstimatedPricing } from "@/lib/platform-api-cost-estimates";
@@ -11,6 +12,7 @@ export type PlatformCostProvider =
   | "ANTHROPIC"
   | "GOOGLE_DOCUMENT_AI"
   | "ATLASCLOUD"
+  | "OPENROUTER"
   | "UNKNOWN";
 
 interface RecordApiUsageCostInput {
@@ -83,6 +85,7 @@ export async function syncPlatformApiUsageCostsForRange(
         completedAt: true,
         inputTokens: true,
         outputTokens: true,
+        aiCostUsd: true,
         modelUsed: true,
         job: { select: { academyId: true, mode: true } },
       },
@@ -138,13 +141,15 @@ export async function syncPlatformApiUsageCostsForRange(
       sourceId: page.id,
       sourceDetail: "ATLASCLOUD_OCR",
       academyId: page.job.academyId,
-      provider: "ATLASCLOUD",
+      // OCR 텍스트 호출도 텍스트 게이트웨이(OpenRouter/AtlasCloud)를 통과한다.
+      provider: ATLAS_GATEWAY_PROVIDER,
       model: page.modelUsed ?? getExtractionAiModelName("ocr"),
       operationType: "TEXT_EXTRACTION",
       unitType: "TOKENS",
       inputTokens: page.inputTokens ?? 0,
       outputTokens: page.outputTokens ?? 0,
       usageAt: page.completedAt,
+      recordedCostUsd: Number(page.aiCostUsd ?? 0) > 0 ? Number(page.aiCostUsd) : null,
       metadata: { mode: page.job.mode },
     });
   }
@@ -394,6 +399,8 @@ export async function recordAiCost(input: {
   usage?: unknown;
   inputTokens?: number;
   outputTokens?: number;
+  /** 게이트웨이가 돌려준 실측 청구액(USD). 없으면 usage 객체에서 자동 추출. */
+  recordedCostUsd?: number | null;
   usageAt?: Date;
   metadata?: Prisma.InputJsonValue;
 }): Promise<void> {
@@ -405,6 +412,23 @@ export async function recordAiCost(input: {
           inputTokens: input.inputTokens ?? 0,
           outputTokens: input.outputTokens ?? 0,
         };
+    // OpenRouter 실측 원가: atlasUsageWithCost()/REST usageMetadata 가 usage 에
+    // 병합해 둔 costUsd·generationId 를 읽어 RECORDED 단가로 기록한다.
+    const actual = readAiUsageCost(input.usage);
+    const recordedCostUsd = input.recordedCostUsd ?? actual.costUsd;
+    const auditMetadata: Record<string, string> = {};
+    if (actual.generationId) auditMetadata.generationId = actual.generationId;
+    if (actual.upstreamProvider) auditMetadata.upstreamProvider = actual.upstreamProvider;
+    if (actual.servedModel && actual.servedModel !== input.model) {
+      auditMetadata.servedModel = actual.servedModel;
+    }
+    const metadata =
+      Object.keys(auditMetadata).length > 0
+        ? {
+            ...(isJsonObject(input.metadata) ? input.metadata : {}),
+            ...auditMetadata,
+          }
+        : input.metadata;
     await recordPlatformApiUsageCost({
       sourceKey: `${input.sourceType.toLowerCase()}:${randomUUID()}`,
       sourceType: input.sourceType,
@@ -417,12 +441,48 @@ export async function recordAiCost(input: {
       unitType: "TOKENS",
       inputTokens: tokens.inputTokens,
       outputTokens: tokens.outputTokens,
+      recordedCostUsd,
       usageAt: input.usageAt ?? new Date(),
-      metadata: input.metadata,
+      metadata,
     });
   } catch (error) {
     console.warn(`[ai-cost] failed to record ${input.sourceType}`, error);
   }
+}
+
+function isJsonObject(
+  value: Prisma.InputJsonValue | undefined,
+): value is Prisma.JsonObject {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * usage 객체(atlasUsageWithCost 병합본 또는 REST usageMetadata)에서 실측 원가
+ * 필드를 읽는다. 없으면 전부 null — 호출측은 기존 단가표 폴백으로 진행.
+ */
+export function readAiUsageCost(usage: unknown): {
+  costUsd: number | null;
+  generationId: string | null;
+  upstreamProvider: string | null;
+  servedModel: string | null;
+} {
+  const record = usage && typeof usage === "object" ? (usage as Record<string, unknown>) : {};
+  const meta =
+    record.usageMetadata && typeof record.usageMetadata === "object"
+      ? (record.usageMetadata as Record<string, unknown>)
+      : record;
+  const rawCost = meta.costUsd ?? meta.cost;
+  const costUsd =
+    typeof rawCost === "number" && Number.isFinite(rawCost) && rawCost > 0
+      ? rawCost
+      : null;
+  return {
+    costUsd,
+    generationId: typeof meta.generationId === "string" ? meta.generationId : null,
+    upstreamProvider:
+      typeof meta.upstreamProvider === "string" ? meta.upstreamProvider : null,
+    servedModel: typeof meta.servedModel === "string" ? meta.servedModel : null,
+  };
 }
 
 export function readAiUsageTokens(usage: unknown) {
@@ -644,19 +704,27 @@ export function providerFromModel(model: string): PlatformCostProvider {
     lower.includes("moonshot") ||
     lower.includes("kimi")
   ) {
-    return "ATLASCLOUD";
+    // 실제 트래픽이 통과하는 게이트웨이 버킷(OPENROUTER | ATLASCLOUD).
+    // 과거 행은 ATLASCLOUD 로 남고 새 행부터 활성 게이트웨이로 기록된다.
+    return ATLAS_GATEWAY_PROVIDER;
   }
   return "UNKNOWN";
 }
 
 function readEnvPricing(provider: PlatformCostProvider, unitType: PlatformCostUnitType) {
-  if (unitType === "TOKENS" && provider === "ATLASCLOUD") {
+  if (unitType === "TOKENS" && (provider === "ATLASCLOUD" || provider === "OPENROUTER")) {
     const inputUsdPer1M =
-      readPositiveEnv("ATLASCLOUD_PRICE_INPUT_PER_1M_USD") ??
-      readPositiveEnv("OPENROUTER_PRICE_INPUT_PER_1M_USD");
+      provider === "OPENROUTER"
+        ? readPositiveEnv("OPENROUTER_PRICE_INPUT_PER_1M_USD") ??
+          readPositiveEnv("ATLASCLOUD_PRICE_INPUT_PER_1M_USD")
+        : readPositiveEnv("ATLASCLOUD_PRICE_INPUT_PER_1M_USD") ??
+          readPositiveEnv("OPENROUTER_PRICE_INPUT_PER_1M_USD");
     const outputUsdPer1M =
-      readPositiveEnv("ATLASCLOUD_PRICE_OUTPUT_PER_1M_USD") ??
-      readPositiveEnv("OPENROUTER_PRICE_OUTPUT_PER_1M_USD");
+      provider === "OPENROUTER"
+        ? readPositiveEnv("OPENROUTER_PRICE_OUTPUT_PER_1M_USD") ??
+          readPositiveEnv("ATLASCLOUD_PRICE_OUTPUT_PER_1M_USD")
+        : readPositiveEnv("ATLASCLOUD_PRICE_OUTPUT_PER_1M_USD") ??
+          readPositiveEnv("OPENROUTER_PRICE_OUTPUT_PER_1M_USD");
     if (inputUsdPer1M !== null || outputUsdPer1M !== null) {
       return { inputUsdPer1M, outputUsdPer1M, unitUsd: null };
     }

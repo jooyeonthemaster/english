@@ -7,8 +7,10 @@ import { parsePassageAnalysis } from "@/lib/tutor/passage-analysis";
 import { sanitizeTutorUserText } from "@/lib/tutor/ui-copy";
 import { sha256Json } from "@/lib/tutor/crypto";
 import { openTutorAssignmentWhere } from "@/lib/tutor/access";
+import { atlasUsageWithCost } from "@/lib/atlas-ai";
 import {
   providerFromModel,
+  readAiUsageCost,
   readAiUsageTokens,
   recordPlatformApiUsageCost,
 } from "@/lib/platform-api-costs";
@@ -439,6 +441,22 @@ export async function POST(
         try {
           usageTokens = readAiUsageTokens(await result.totalUsage);
         } catch {}
+        // OpenRouter 실측 청구액(USD) — 스트리밍 마지막 청크의 usage.cost 를
+        // metadataExtractor 가 providerMetadata 로 노출한다.
+        let actualCost: ReturnType<typeof readAiUsageCost> = {
+          costUsd: null,
+          generationId: null,
+          upstreamProvider: null,
+          servedModel: null,
+        };
+        try {
+          actualCost = readAiUsageCost(
+            atlasUsageWithCost({
+              usage: undefined,
+              providerMetadata: await result.providerMetadata,
+            }),
+          );
+        } catch {}
 
         const aiLog = await prisma.$transaction(async (tx) => {
           await tx.tutorMessage.create({
@@ -477,7 +495,7 @@ export async function POST(
               promptHash: sha256Json({ lessonId, message, missionId, compactAnalysisVersion: lesson.passage.analysis?.version }),
               tokensIn: usageTokens.inputTokens,
               tokensOut: usageTokens.outputTokens,
-              costUsd: 0,
+              costUsd: actualCost.costUsd ?? 0,
               latencyMs: Date.now() - startedAt,
               status: "ok",
               outputPreview: fullText.slice(0, 240),
@@ -499,6 +517,7 @@ export async function POST(
             unitType: "TOKENS",
             inputTokens: usageTokens.inputTokens,
             outputTokens: usageTokens.outputTokens,
+            recordedCostUsd: actualCost.costUsd,
             usageAt: aiLog.createdAt,
             metadata: {
               lessonId: lesson.id,
@@ -506,6 +525,9 @@ export async function POST(
               programId: programId ?? null,
               activityId: activityId ?? null,
               responseMode: isVisualization ? "visualization" : "chat",
+              ...(actualCost.generationId
+                ? { generationId: actualCost.generationId }
+                : {}),
             },
           });
         } catch (error) {

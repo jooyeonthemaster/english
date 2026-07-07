@@ -29,6 +29,8 @@ export interface CostSourceSummary {
   unpricedInputTokens: number;
   unpricedOutputTokens: number;
   estimatedCalls: number;
+  /** 게이트웨이(OpenRouter) 실측 청구액으로 기록된 호출 수(pricingSource=RECORDED). */
+  recordedCalls: number;
   inputTokens: number;
   outputTokens: number;
   costUsd: number;
@@ -134,7 +136,28 @@ export interface OperationsCostDashboard {
   billingSync: {
     googleConfigured: boolean;
     atlasConfigured: boolean;
+    openRouterConfigured: boolean;
     missingEnv: string[];
+  };
+  /**
+   * 원가 신뢰도 — 선택 기간의 변동원가가 어떤 단가 근거로 산정됐는지의 구성.
+   * RECORDED(게이트웨이 실측 청구액) 비중이 높을수록 손익 숫자를 그대로 믿어도 된다.
+   */
+  costConfidence: {
+    /** 실측(RECORDED) 원가 합. */
+    recordedCostKrw: number;
+    recordedCostUsd: number;
+    recordedCalls: number;
+    /** 어드민/env 단가표(DB·ENV) 기반 원가 합. */
+    pricedCostKrw: number;
+    pricedCalls: number;
+    /** 공개 정가표 추정(ESTIMATE) 원가 합. */
+    estimatedCostKrw: number;
+    estimatedCalls: number;
+    /** 단가 미설정으로 0원 처리된 호출 수. */
+    missingCalls: number;
+    /** 실측 비중(%) — recordedCostKrw / 변동원가 합. */
+    recordedSharePercent: number;
   };
   activeSubscriptions: {
     count: number;
@@ -205,6 +228,7 @@ export type SourceAccumulator = {
   unpricedInputTokens: number;
   unpricedOutputTokens: number;
   estimatedCalls: number;
+  recordedCalls: number;
   inputTokens: number;
   outputTokens: number;
   costUsd: number;

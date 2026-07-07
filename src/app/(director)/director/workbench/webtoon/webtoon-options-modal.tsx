@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FileText, Loader2, Palette, Wand2, X } from "lucide-react";
+import { Check, FileText, Loader2, Palette, Wand2, X } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -33,8 +33,14 @@ interface WebtoonOptionsModalProps {
   setLanguage: (l: WebtoonLanguageId) => void;
   customPrompt: string;
   setCustomPrompt: (v: string) => void;
-  /** 이 지문 하나로 웹툰을 큐잉한다. 성공하면 true → 모달이 닫힌다. */
+  /** 이 지문 하나로 웹툰을 큐잉한다(또는 담는다). 성공하면 true → 모달이 닫힌다. */
   onConfirm: () => Promise<boolean>;
+  /**
+   * "generate"(기본, PC): 확인 시 곧바로 웹툰을 생성한다.
+   * "save"(모바일 스텝 플로우): 확인 시 이 유형을 지문에 '담기'만 한다(무과금).
+   *   담긴 지문들은 워크스페이스 하단 '웹툰 N개 생성'에서 한 번에 생성된다.
+   */
+  confirmMode?: "generate" | "save";
 }
 
 /**
@@ -57,8 +63,10 @@ export function WebtoonOptionsModal({
   customPrompt,
   setCustomPrompt,
   onConfirm,
+  confirmMode = "generate",
 }: WebtoonOptionsModalProps) {
   const [submitting, setSubmitting] = useState(false);
+  const saveMode = confirmMode === "save";
 
   const handleConfirm = async () => {
     if (submitting) return;
@@ -93,7 +101,10 @@ export function WebtoonOptionsModal({
                 <b className="font-semibold text-slate-700">
                   {passageTitle || "지문"}
                 </b>{" "}
-                — 이 지문 하나로 한 장의 세로형 웹툰을 생성합니다.
+                —{" "}
+                {saveMode
+                  ? "이 유형을 지문에 담습니다. 담긴 지문은 한 번에 생성합니다."
+                  : "이 지문 하나로 한 장의 세로형 웹툰을 생성합니다."}
               </DialogDescription>
             </div>
             <DialogClose asChild>
@@ -145,7 +156,12 @@ export function WebtoonOptionsModal({
             {submitting ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                생성 시작 중…
+                {saveMode ? "담는 중…" : "생성 시작 중…"}
+              </>
+            ) : saveMode ? (
+              <>
+                <Check className="size-4" />
+                이 유형으로 담기
               </>
             ) : (
               <>
@@ -159,8 +175,9 @@ export function WebtoonOptionsModal({
             )}
           </button>
           <p className="mt-1.5 text-center text-[11px] leading-relaxed text-slate-400">
-            생성에는 약 3분 정도 걸려요. 시작한 뒤 다른 작업을 계속하셔도
-            완료되면 결과 목록에 표시됩니다.
+            {saveMode
+              ? "담기는 과금되지 않아요. 담긴 지문들은 하단 버튼에서 한 번에 생성됩니다."
+              : "생성에는 약 3분 정도 걸려요. 시작한 뒤 다른 작업을 계속하셔도 완료되면 결과 목록에 표시됩니다."}
           </p>
         </div>
       </DialogContent>

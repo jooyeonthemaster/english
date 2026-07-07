@@ -70,6 +70,17 @@ export async function getOperationsCostDashboard(
   );
   const sources = new Map<string, SourceAccumulator>();
   const academyUsageMap = new Map<string, AcademyUsageAccumulator>();
+  // 원가 신뢰도 — 선택 기간의 변동원가를 단가 근거(pricingSource)별로 집계.
+  const confidence = {
+    recordedCostKrw: 0,
+    recordedCostUsd: 0,
+    recordedCalls: 0,
+    pricedCostKrw: 0,
+    pricedCalls: 0,
+    estimatedCostKrw: 0,
+    estimatedCalls: 0,
+    missingCalls: 0,
+  };
 
   await syncPlatformApiUsageCostsForRange(range.start, range.end);
 
@@ -83,6 +94,7 @@ export async function getOperationsCostDashboard(
     activePricingRows,
     providerPricings,
     billingReconciliations,
+    bankDepositManualGrants,
   ] = await Promise.all([
     prisma.subscriptionPayment.findMany({
       where: {
@@ -179,6 +191,20 @@ export async function getOperationsCostDashboard(
       orderBy: [{ periodStart: "desc" }, { createdAt: "desc" }],
       take: 30,
     }),
+    // 수동지급(MANUAL_GRANT) 무통장입금 — 시스템 외에서 크레딧을 지급해
+    // creditTopUp(COMPLETED) 레코드가 없는 실입금. 매출에 누락되지 않도록
+    // 알림 자체의 금액을 매출에 포함한다. MATCHED(자동지급)는 이미 creditTopUp
+    // 으로 집계되고 manual_grant 전환도 막혀 있어 이중집계 위험이 없다.
+    prisma.bankDepositNotification.findMany({
+      where: {
+        status: "MANUAL_GRANT",
+        OR: [
+          { occurredAt: { gte: range.start, lt: range.end } },
+          { occurredAt: null, receivedAt: { gte: range.start, lt: range.end } },
+        ],
+      },
+      select: { amount: true, occurredAt: true, receivedAt: true },
+    }),
   ]);
 
   for (const payment of subscriptionPayments) {
@@ -193,6 +219,13 @@ export async function getOperationsCostDashboard(
     const bucket = buckets.get(key);
     if (!bucket) continue;
     bucket.revenueKrw += topUp.paidAmount ?? topUp.price;
+  }
+
+  for (const grant of bankDepositManualGrants) {
+    const key = bucketKeyForDate(grant.occurredAt ?? grant.receivedAt, normalizedMode);
+    const bucket = buckets.get(key);
+    if (!bucket) continue;
+    bucket.revenueKrw += grant.amount;
   }
 
   for (const cost of apiUsageCosts) {
@@ -214,6 +247,20 @@ export async function getOperationsCostDashboard(
 
     if (cost.pricingSource === "MISSING") {
       missingPricingKeys.add(formatMissingPricingKey(cost));
+    }
+
+    if (cost.pricingSource === "RECORDED") {
+      confidence.recordedCostKrw += cost.costKrw;
+      confidence.recordedCostUsd += Number(cost.costUsd);
+      confidence.recordedCalls += cost.calls;
+    } else if (cost.pricingSource === "DB" || cost.pricingSource === "ENV") {
+      confidence.pricedCostKrw += cost.costKrw;
+      confidence.pricedCalls += cost.calls;
+    } else if (cost.pricingSource === "ESTIMATE") {
+      confidence.estimatedCostKrw += cost.costKrw;
+      confidence.estimatedCalls += cost.calls;
+    } else if (cost.pricingSource === "MISSING") {
+      confidence.missingCalls += cost.calls;
     }
 
     addSourceApiCost(sources, getApiCostSourceKey(cost), getApiCostSourceLabel(cost), {
@@ -385,6 +432,7 @@ export async function getOperationsCostDashboard(
       fixedMonthlyCostKrw: pricing.fixedMonthlyCostKrw,
       hasAtlasCloudTokenPricing:
         hasProviderPricing(activePricingRows, "ATLASCLOUD", "TOKENS") ||
+        hasProviderPricing(activePricingRows, "OPENROUTER", "TOKENS") ||
         (pricing.atlasInputUsdPer1M !== null && pricing.atlasOutputUsdPer1M !== null),
       hasGeminiPricing:
         hasProviderPricing(activePricingRows, "GOOGLE_GEMINI", "TOKENS") ||
@@ -420,6 +468,20 @@ export async function getOperationsCostDashboard(
     })),
     billingReconciliation,
     billingSync: getProviderBillingSyncStatus(),
+    costConfidence: {
+      ...confidence,
+      recordedSharePercent:
+        confidence.recordedCostKrw +
+          confidence.pricedCostKrw +
+          confidence.estimatedCostKrw >
+        0
+          ? (confidence.recordedCostKrw /
+              (confidence.recordedCostKrw +
+                confidence.pricedCostKrw +
+                confidence.estimatedCostKrw)) *
+            100
+          : 0,
+    },
     activeSubscriptions: {
       count: activeSubscriptions.length,
       estimatedMrrKrw: activeSubscriptionMrr,
@@ -547,6 +609,7 @@ export async function createProviderPricing(formData: FormData) {
     "ANTHROPIC",
     "GOOGLE_DOCUMENT_AI",
     "ATLASCLOUD",
+    "OPENROUTER",
   ]);
   const allowedUnits = new Set(["TOKENS", "PAGE", "IMAGE", "CALL"]);
   if (!allowedProviders.has(provider) || !allowedUnits.has(unitType)) {
@@ -586,7 +649,7 @@ export async function syncProviderBillingReconciliation(formData: FormData) {
     readOptionalFormNumber(formData, "syncUsdToKrwRate") ??
     readNumberEnv("PLATFORM_BILLING_USD_KRW_RATE", readNumberEnv("PLATFORM_USD_KRW_RATE", DEFAULT_USD_KRW_RATE));
 
-  const allowedTargets = new Set(["ALL", "GOOGLE"]);
+  const allowedTargets = new Set(["ALL", "GOOGLE", "OPENROUTER"]);
   if (!allowedTargets.has(targetValue)) {
     throw new Error("Invalid billing sync target.");
   }
@@ -653,12 +716,14 @@ export async function createProviderBillingReconciliation(formData: FormData) {
     "ANTHROPIC",
     "GOOGLE_DOCUMENT_AI",
     "ATLASCLOUD",
+    "OPENROUTER",
     "UNKNOWN",
   ]);
   const allowedUnits = new Set(["TOKENS", "PAGE", "IMAGE", "CALL"]);
   const allowedSources = new Set([
     "MANUAL",
     "GOOGLE_BILLING_EXPORT",
+    "OPENROUTER_ACTIVITY",
     "ATLAS_INVOICE",
     "INVOICE",
   ]);

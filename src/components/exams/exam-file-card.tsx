@@ -120,13 +120,13 @@ export function ExamFileCard({
         onClick(exam.id);
       }}
       className={cn(
-        "group relative flex min-h-[232px] w-full min-w-0 max-w-full flex-row overflow-hidden rounded-xl border bg-white transition-all duration-200 hover:shadow-md cursor-pointer",
+        "group relative flex min-h-[128px] w-full min-w-0 max-w-full flex-row overflow-hidden rounded-xl border bg-white transition-all duration-200 hover:shadow-md cursor-pointer md:min-h-[232px]",
         selected ? "ring-2 ring-blue-400 border-blue-300" : "border-slate-200 hover:border-slate-300",
         isDragging && "opacity-40 scale-95",
       )}
     >
       {/* 좌측: 첫 장 실제 렌더 미리보기 — 카드 높이를 위→아래로 가득 채운다 */}
-      <div className="relative w-[42%] min-w-[118px] max-w-[164px] shrink-0 self-stretch overflow-hidden border-r border-slate-100 bg-white md:w-[164px]">
+      <div className="relative w-[24%] min-w-[74px] max-w-[96px] shrink-0 self-stretch overflow-hidden border-r border-slate-100 bg-white md:w-[164px] md:min-w-[118px] md:max-w-[164px]">
         <ExamCardPaperPreview examId={exam.id} />
       </div>
 
@@ -230,7 +230,9 @@ export function ExamFileCard({
             className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold tabular-nums text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 disabled:cursor-not-allowed disabled:bg-white disabled:text-slate-400 disabled:opacity-70 disabled:hover:border-slate-200 disabled:hover:bg-white disabled:hover:text-slate-400"
           >
             <Pencil className="h-3 w-3 shrink-0" />
-            <span className="truncate">수정 {exam.editCount}회</span>
+            <span className="truncate">
+              수정<span className="hidden md:inline"> {exam.editCount}회</span>
+            </span>
           </button>
 
           {/* 인쇄: 페이지를 벗어나지 않고 숨김 iframe 으로 인쇄 대화상자를 띄운다.
@@ -266,7 +268,9 @@ export function ExamFileCard({
             className="flex h-7 min-w-0 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold tabular-nums text-slate-600 transition-colors hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
           >
             <Printer className="h-3 w-3 shrink-0" />
-            <span className="truncate">인쇄 {exam.printCount}회</span>
+            <span className="truncate">
+              인쇄<span className="hidden md:inline"> {exam.printCount}회</span>
+            </span>
           </button>
         </div>
 

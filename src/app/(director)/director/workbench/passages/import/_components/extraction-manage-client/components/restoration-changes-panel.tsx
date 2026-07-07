@@ -58,7 +58,7 @@ export function RestorationChangesPanel({
     }
   }
   return (
-    <div className="flex h-full min-h-0 flex-col rounded-lg border border-slate-200 bg-white">
+    <div className="flex flex-col rounded-lg border border-slate-200 bg-white lg:h-full lg:min-h-0">
       <div className="flex h-12 shrink-0 items-center justify-between border-b border-slate-100 px-4">
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="text-[13px] font-bold text-slate-900">복원 근거</span>
@@ -101,7 +101,7 @@ export function RestorationChangesPanel({
           본문의 형광펜과 동기화됩니다
         </span>
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div className="lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
         {changes.length === 0 ? (
           <EmptyState methodKind={methodKind} />
         ) : (

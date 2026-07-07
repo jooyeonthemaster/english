@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useIsMobile } from "./use-is-mobile";
 
 export const DEFAULT_MOBILE_PAGE_SIZE = 10;
@@ -11,6 +11,8 @@ export const DEFAULT_MOBILE_PAGE_SIZE = 10;
  * - 모바일에선 pageSize(기본 10)개씩 잘라 현재 페이지 분량만 반환.
  * - resetKey 가 바뀌면(폴더 이동·검색·필터 등) 1페이지로 되돌리고, 목록이 줄어
  *   현재 페이지가 범위를 벗어나면 마지막 페이지로 보정한다.
+ * - scrollTargetRef: 목록 상단 요소에 연결하고 Pagination 에 그대로 넘기면,
+ *   모바일에서 페이지를 넘길 때 그 요소(맨 윗 카드) 위로 부드럽게 스크롤된다.
  */
 export function useMobilePagination<T>(
   items: T[],
@@ -20,6 +22,7 @@ export function useMobilePagination<T>(
   const resetKey = opts?.resetKey;
   const isMobile = useIsMobile();
   const [page, setPage] = useState(1);
+  const scrollTargetRef = useRef<HTMLDivElement | null>(null);
 
   const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
 
@@ -39,5 +42,5 @@ export function useMobilePagination<T>(
     [isMobile, items, page, pageSize],
   );
 
-  return { isMobile, page, setPage, totalPages, visibleItems };
+  return { isMobile, page, setPage, totalPages, visibleItems, scrollTargetRef };
 }

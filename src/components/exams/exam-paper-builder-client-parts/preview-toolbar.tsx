@@ -238,34 +238,37 @@ export function PreviewToolbar({
             <Redo2 className="h-3.5 w-3.5" />
           </button>
         )}
+        {/* 저장·인쇄·다운로드 — 모바일(<lg)에서는 하단 고정 바로 옮겨 숨긴다. */}
         {onSave && (
-          <SaveButton
-            onClick={onSave}
-            saving={isPending}
-            disabled={actionDisabled}
-            secondaryActions={
-              onSaveAs
-                ? [
-                    {
-                      label: "다른 이름으로 저장",
-                      icon: <Copy className="h-3.5 w-3.5" />,
-                      onClick: onSaveAs,
-                      disabled: actionDisabled,
-                    },
-                  ]
-                : undefined
-            }
-          />
+          <div className="hidden lg:flex">
+            <SaveButton
+              onClick={onSave}
+              saving={isPending}
+              disabled={actionDisabled}
+              secondaryActions={
+                onSaveAs
+                  ? [
+                      {
+                        label: "다른 이름으로 저장",
+                        icon: <Copy className="h-3.5 w-3.5" />,
+                        onClick: onSaveAs,
+                        disabled: actionDisabled,
+                      },
+                    ]
+                  : undefined
+              }
+            />
+          </div>
         )}
         <button
           onClick={onPrint}
           disabled={actionDisabled}
-          className="flex h-8 items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:min-w-[64px]"
+          className="hidden h-8 items-center justify-center gap-1 rounded-md border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 lg:flex lg:min-w-[64px]"
         >
           <Printer className="h-3.5 w-3.5" />
           <span className="hidden lg:inline">인쇄</span>
         </button>
-        <div ref={downloadMenuRef} className="relative">
+        <div ref={downloadMenuRef} className="relative hidden lg:block">
           <button
             type="button"
             onClick={() => setDownloadOpen((open) => !open)}

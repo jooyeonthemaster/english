@@ -10,10 +10,16 @@ import {
   ArrowLeft,
   Loader2,
   CheckCircle2,
+  ChevronDown,
   Eye,
+  ShoppingBasket,
   X,
   Calendar,
 } from "lucide-react";
+import {
+  MobileStepHeader,
+  MobileStepNav,
+} from "@/components/workbench/mobile-step-flow";
 import { saveNaeshinQuestions } from "@/actions/learning-questions";
 import { notifyCreditsChanged } from "@/lib/credits-client";
 import {
@@ -130,6 +136,23 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
     "all",
   );
 
+  // ── 모바일(<lg) 전용 스텝 플로우 — 문제 생성 페이지와 동일한 UX 문법.
+  //    데스크톱은 3구역 대시보드 그대로(모든 분기 max-lg 한정). 스텝 전환은
+  //    CSS 숨김(언마운트 아님)이라 생성 큐 폴링·설정 상태가 유지된다. ──
+  const [mobileStep, setMobileStep] = useState<"select" | "config" | "results">(
+    "select",
+  );
+  // 하단 고정 '담긴 지문' 장바구니 펼침 상태(선택 스텝 전용).
+  const [cartOpen, setCartOpen] = useState(false);
+  const goToMobileStep = useCallback(
+    (step: "select" | "config" | "results") => {
+      setMobileStep(step);
+      setCartOpen(false);
+      window.scrollTo({ top: 0 });
+    },
+    [],
+  );
+
   // ── Save modal ──
   const [showSaveModal, setShowSaveModal] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -189,6 +212,12 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
       error: sessionQueue.filter((q) => q.status === "error").length,
     }),
     [sessionQueue],
+  );
+
+  // 모바일 장바구니 목록 — 선택된 지문(제목 표시·개별 빼기용).
+  const selectedPassages = useMemo(
+    () => passages.filter((p) => selectedIds.has(p.id)),
+    [passages, selectedIds],
   );
 
   const filteredQueue = useMemo(() => {
@@ -484,7 +513,14 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-[100dvh] overflow-x-hidden lg:h-[calc(100vh-64px)] lg:min-h-0 lg:overflow-hidden">
+    // 모바일: 하단 고정 바(장바구니/스텝 네비)에 가리지 않게 바 높이만큼 아래
+    // 여백을 예약한다(선택 스텝은 장바구니+버튼이라 더 크게). 데스크톱 무변경.
+    <div
+      className={
+        "flex flex-col min-h-[100dvh] overflow-x-hidden lg:h-[calc(100vh-64px)] lg:min-h-0 lg:overflow-hidden " +
+        (mobileStep === "select" ? "max-lg:pb-[136px]" : "max-lg:pb-[96px]")
+      }
+    >
       {/* ═══ HEADER ═══ */}
       <div className="flex items-center gap-4 px-4 py-4 bg-white border-b shrink-0 lg:px-8">
         <Link
@@ -528,10 +564,29 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
         </div>
       </div>
 
+      {/* ═══ 모바일 전용 진행 스텝 — 문제 생성 페이지와 동일한 공용 스텝 헤더 ═══ */}
+      <div className="shrink-0 border-b border-slate-200 bg-white px-2 py-2 lg:hidden">
+        <MobileStepHeader
+          steps={[
+            { key: "select", label: "지문 선택" },
+            { key: "config", label: "유형 설정" },
+            { key: "results", label: "자료 확인" },
+          ]}
+          currentKey={mobileStep}
+          onSelect={(key) => goToMobileStep(key as typeof mobileStep)}
+        />
+      </div>
+
       {/* ═══ MAIN: 지문 그리드 + 설정 사이드바 ═══ */}
       <div className="grid grid-cols-1 bg-white shrink-0 lg:grid-cols-[1fr_420px] lg:h-[420px]">
-        {/* LEFT: Passage Grid */}
-        <div className="grid h-[60vh] overflow-hidden lg:contents">
+        {/* LEFT: Passage Grid — 모바일은 '지문 선택' 스텝에서만 노출(콘텐츠 높이,
+            10개/페이지 페이지네이션이 목록을 바운드). PC는 lg:contents 그대로. */}
+        <div
+          className={
+            "grid overflow-hidden lg:contents" +
+            (mobileStep === "select" ? "" : " max-lg:hidden")
+          }
+        >
         <LearningPassageGrid
           passages={filteredPassages}
           totalPassages={passages.length}
@@ -565,8 +620,13 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
         />
         </div>
 
-        {/* RIGHT: Config Panel */}
-        <div className="grid overflow-hidden lg:contents">
+        {/* RIGHT: Config Panel — 모바일은 '유형 설정' 스텝에서만 노출. */}
+        <div
+          className={
+            "grid overflow-hidden lg:contents" +
+            (mobileStep === "config" ? "" : " max-lg:hidden")
+          }
+        >
         <LearningConfigPanel
           genMode={genMode}
           setGenMode={setGenMode}
@@ -585,23 +645,142 @@ export function GenerateLearningClient({ academyId }: { academyId: string }) {
         </div>
       </div>
 
-      {/* ═══ DIVIDER ═══ */}
-      <div className="h-3 bg-[#E8EAEE] shrink-0 border-y border-slate-200/60" />
+      {/* ═══ DIVIDER — 모바일 스텝 화면에선 구역 경계가 없으므로 숨김 ═══ */}
+      <div className="h-3 bg-[#E8EAEE] shrink-0 border-y border-slate-200/60 max-lg:hidden" />
 
-      {/* ═══ BOTTOM: Queue + Results ═══ */}
-      <LearningQueueSection
-        queue={filteredQueue}
-        queueFilter={queueFilter}
-        setQueueFilter={setQueueFilter}
-        queueCounts={queueCounts}
-        showSaveModal={showSaveModal}
-        setShowSaveModal={setShowSaveModal}
-        saving={saving}
-        onSave={handleSave}
-        onRemove={(id) =>
-          setSessionQueue((prev) => prev.filter((q) => q.id !== id))
+      {/* ═══ BOTTOM: Queue + Results — 모바일은 '자료 확인' 스텝에서만 노출.
+          숨김은 CSS(max-lg:hidden)라 큐 폴링·저장 상태는 계속 산다. ═══ */}
+      <div
+        className={
+          "lg:contents" + (mobileStep === "results" ? "" : " max-lg:hidden")
         }
-      />
+      >
+        <LearningQueueSection
+          queue={filteredQueue}
+          queueFilter={queueFilter}
+          setQueueFilter={setQueueFilter}
+          queueCounts={queueCounts}
+          showSaveModal={showSaveModal}
+          setShowSaveModal={setShowSaveModal}
+          saving={saving}
+          onSave={handleSave}
+          onRemove={(id) =>
+            setSessionQueue((prev) => prev.filter((q) => q.id !== id))
+          }
+        />
+      </div>
+
+      {/* ═══ 모바일 전용 하단 고정 바 (lg:hidden) ═══
+          선택 스텝: '담긴 지문' 장바구니(펼치면 목록·빼기) + 다음 버튼.
+          설정 스텝: 이전/생성 실행(성공 시 자료 확인으로). 확인 스텝: 이전만. */}
+      {mobileStep === "select" ? (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+          {cartOpen && selectedPassages.length > 0 ? (
+            <div className="flex max-h-[40vh] min-h-0 flex-col border-b border-slate-100 bg-slate-50/70">
+              <div className="min-h-0 flex-1 overflow-y-auto p-2">
+                {selectedPassages.map((p, i) => (
+                  <div
+                    key={p.id}
+                    className="mb-1.5 flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 py-2 last:mb-0"
+                  >
+                    <span className="inline-flex size-5 shrink-0 items-center justify-center rounded bg-blue-600 text-[10.5px] font-bold text-white">
+                      {i + 1}
+                    </span>
+                    <span className="min-w-0 flex-1 truncate text-[12px] font-medium text-slate-700">
+                      {p.title || "제목 없는 지문"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => toggleCheckbox(p.id)}
+                      aria-label="선택에서 빼기"
+                      className="shrink-0 rounded-md p-1 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                    >
+                      <X className="size-3.5" aria-hidden="true" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+          <button
+            type="button"
+            onClick={() => setCartOpen((open) => !open)}
+            aria-expanded={cartOpen}
+            aria-label={cartOpen ? "담긴 지문 목록 접기" : "담긴 지문 목록 펼치기"}
+            className="flex w-full shrink-0 items-center gap-2.5 border-b border-slate-100 bg-white px-3 py-2 text-left"
+          >
+            <span className="relative inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+              <ShoppingBasket className="size-5" aria-hidden="true" />
+              {selectedPassages.length > 0 ? (
+                <span className="absolute -right-1.5 -top-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-extrabold leading-none text-white ring-2 ring-white">
+                  {selectedPassages.length}
+                </span>
+              ) : null}
+            </span>
+            <span className="flex min-w-0 flex-1 flex-col">
+              <span className="text-[12.5px] font-bold text-slate-900">
+                담긴 지문 {selectedPassages.length}개
+              </span>
+              <span className="truncate text-[10.5px] text-slate-400">
+                {selectedPassages.length > 0
+                  ? "탭하여 담긴 지문 보기·빼기"
+                  : "지문을 눌러 담아보세요"}
+              </span>
+            </span>
+            <ChevronDown
+              className={
+                "size-4 shrink-0 text-slate-400 transition-transform" +
+                (cartOpen ? " rotate-180" : "")
+              }
+              aria-hidden="true"
+            />
+          </button>
+          <div className="p-2.5">
+            <button
+              type="button"
+              aria-disabled={selectedPassages.length === 0}
+              onClick={() => {
+                if (selectedPassages.length === 0) return;
+                goToMobileStep("config");
+              }}
+              className={
+                "inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg border text-[14px] font-extrabold text-white shadow-sm transition-colors " +
+                (selectedPassages.length === 0
+                  ? "cursor-not-allowed border-blue-200 bg-blue-300"
+                  : "cursor-pointer border-blue-600 bg-blue-600 hover:bg-blue-700")
+              }
+            >
+              다음으로 (유형 설정)
+            </button>
+          </div>
+        </div>
+      ) : mobileStep === "config" ? (
+        <MobileStepNav
+          prev={{ label: "이전", onClick: () => goToMobileStep("select") }}
+          next={{
+            label: canGenerate
+              ? `${selectedIds.size}개 지문 · ${genMode === "auto" ? `총 ${autoCount * 4}문제` : `총 ${totalQuestions}문제`} 생성`
+              : "유형을 설정하세요",
+            onClick: () => {
+              handleBatchGenerate();
+              goToMobileStep("results");
+            },
+            disabled: !canGenerate,
+          }}
+          hint={
+            !canGenerate
+              ? selectedIds.size === 0
+                ? "지문을 먼저 선택하세요 (이전 단계)"
+                : "생성할 문제 수를 설정하세요"
+              : undefined
+          }
+        />
+      ) : (
+        <MobileStepNav
+          prev={{ label: "이전", onClick: () => goToMobileStep("config") }}
+          next={null}
+        />
+      )}
     </div>
   );
 }

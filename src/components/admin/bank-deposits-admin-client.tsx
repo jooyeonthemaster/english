@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { AlertCircle, Banknote, CheckCircle2, Link2, RefreshCw, X } from "lucide-react";
+import { AlertCircle, Banknote, CheckCircle2, HandCoins, Link2, RefreshCw, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Notification = {
@@ -30,6 +30,7 @@ type PendingOrder = {
 
 const STATUS_LABELS: Record<string, string> = {
   MATCHED: "지급 완료",
+  MANUAL_GRANT: "수동지급",
   UNMATCHED: "미매칭",
   AMBIGUOUS: "확인 필요",
   IGNORED: "무시됨",
@@ -38,6 +39,7 @@ const STATUS_LABELS: Record<string, string> = {
 
 const STATUS_STYLES: Record<string, string> = {
   MATCHED: "bg-emerald-50 text-emerald-700",
+  MANUAL_GRANT: "bg-teal-50 text-teal-700",
   UNMATCHED: "bg-amber-50 text-amber-700",
   AMBIGUOUS: "bg-orange-50 text-orange-700",
   IGNORED: "bg-gray-100 text-gray-500",
@@ -48,7 +50,9 @@ const FILTERS = [
   { value: "ACTION", label: "미처리" },
   { value: "UNMATCHED", label: "미매칭" },
   { value: "AMBIGUOUS", label: "확인 필요" },
+  { value: "FAILED", label: "처리 실패" },
   { value: "MATCHED", label: "지급 완료" },
+  { value: "MANUAL_GRANT", label: "수동지급" },
   { value: "IGNORED", label: "무시됨" },
   { value: "ALL", label: "전체" },
 ];
@@ -115,7 +119,9 @@ export function BankDepositsAdminClient({
               ? data.credited
                 ? `크레딧을 지급했습니다. (잔액 ${data.balanceAfter?.toLocaleString("ko-KR")})`
                 : "이미 지급된 주문입니다."
-              : "무시 처리했습니다.",
+              : data.status === "MANUAL_GRANT"
+                ? "수동지급 처리했습니다. (크레딧은 별도로 이미 지급됨)"
+                : "무시 처리했습니다.",
         });
         setMatchingFor(null);
         await fetchData();
@@ -271,7 +277,10 @@ export function BankDepositsAdminClient({
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {notifications.map((n) => {
-                  const actionable = n.status === "UNMATCHED" || n.status === "AMBIGUOUS";
+                  const actionable =
+                    n.status === "UNMATCHED" ||
+                    n.status === "AMBIGUOUS" ||
+                    n.status === "FAILED";
                   return (
                     <>
                       <tr key={n.id} className="align-top hover:bg-blue-50/20">
@@ -325,6 +334,17 @@ export function BankDepositsAdminClient({
                               >
                                 <Link2 className="size-3" strokeWidth={2} />
                                 주문 연결
+                              </button>
+                              <button
+                                disabled={busyId === n.id}
+                                onClick={() =>
+                                  void act(n.id, { action: "manual_grant" })
+                                }
+                                title="이미 수동으로 크레딧을 지급한 입금 — 상태만 '수동지급'으로 기록(재지급 안 함)"
+                                className="inline-flex h-7 items-center gap-1 rounded-md border border-teal-200 px-2 text-[11px] font-semibold text-teal-600 transition hover:bg-teal-50 disabled:opacity-50"
+                              >
+                                <HandCoins className="size-3" strokeWidth={2} />
+                                수동지급
                               </button>
                               <button
                                 disabled={busyId === n.id}

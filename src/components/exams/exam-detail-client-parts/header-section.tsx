@@ -38,8 +38,8 @@ export function HeaderSection({ exam, isPending, onPublish }: HeaderSectionProps
   const router = useRouter();
   const showResults = FEATURE_FLAGS.SHOW_USER_RESULTS;
   return (
-    <div className="flex items-start justify-between">
-      <div className="flex items-start gap-3">
+    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+      <div className="flex items-start gap-3 min-w-0">
         <Button
           variant="ghost"
           size="icon"
@@ -48,9 +48,9 @@ export function HeaderSection({ exam, isPending, onPublish }: HeaderSectionProps
         >
           <ArrowLeft className="size-5" />
         </Button>
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <h1 className="text-xl font-bold text-[#191F28]">{exam.title}</h1>
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-1">
+            <h1 className="text-xl font-bold text-[#191F28] break-keep">{exam.title}</h1>
             <span
               className={cn(
                 "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
@@ -60,7 +60,7 @@ export function HeaderSection({ exam, isPending, onPublish }: HeaderSectionProps
               {STATUS_LABELS[exam.status]}
             </span>
           </div>
-          <div className="flex items-center gap-4 text-sm text-[#8B95A1]">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[#8B95A1]">
             <span>{TYPE_LABELS[exam.type]}</span>
             {exam.class && <span>{exam.class.name}</span>}
             {exam.examDate && (
@@ -80,7 +80,7 @@ export function HeaderSection({ exam, isPending, onPublish }: HeaderSectionProps
         </div>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2 md:flex-nowrap md:shrink-0">
         <Button asChild variant="outline">
           <Link href={`/director/workbench/exams/${exam.id}/edit`}>
             <PencilLine className="size-4 mr-1.5" />

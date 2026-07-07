@@ -114,10 +114,12 @@ export function LearningPassageGrid({
             {selectedIds.size === passages.length ? "선택 해제" : "전체 선택"}
           </button>
           <div className="flex-1" />
+          {/* 모바일 스텝 플로우에선 생성은 '유형 설정' 스텝의 하단 고정 버튼이
+              담당 — 여기 인라인 생성 버튼은 PC 전용으로 숨긴다. */}
           <button
             onClick={handleBatchGenerate}
             disabled={!canGenerate}
-            className="h-8 px-4 text-[12px] font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-40 flex items-center gap-1"
+            className="h-8 px-4 text-[12px] font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-40 flex items-center gap-1 max-lg:hidden"
           >
             <Zap className="w-3.5 h-3.5" />
             {selectedIds.size}개 지문 일괄 생성
@@ -366,7 +368,7 @@ export function LearningPassageGrid({
             totalPages={totalPages}
             onGoToPage={(next) => {
               setPage(next);
-              scrollRef.current?.scrollTo({ top: 0 });
+              scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
             }}
           />
         ) : null}

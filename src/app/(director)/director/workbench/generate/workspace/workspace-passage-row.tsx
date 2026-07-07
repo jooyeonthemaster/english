@@ -2051,7 +2051,10 @@ export function WorkspacePassageRow({
           <Cpu className="h-4 w-4 shrink-0" aria-hidden="true" />
           {genStats && genStats.questions > 0 ? (
             <>
-              <span className="shrink-0">다음으로 (문제생성)</span>
+              {/* 모바일: 모달이 '유형 담기'만 하고 생성은 하단 '문제 확인' 일괄 처리라
+                  '문제생성' 표현이 오해 → '유형 설정'. 데스크톱은 지문별 생성이라 그대로. */}
+              <span className="shrink-0 max-lg:hidden">다음으로 (문제생성)</span>
+              <span className="shrink-0 lg:hidden">유형 설정</span>
               <span className="shrink-0 rounded-md bg-white/20 px-1.5 py-0.5 text-[11px] font-bold tabular-nums">
                 {genStats.questions}문제
               </span>
@@ -2063,7 +2066,12 @@ export function WorkspacePassageRow({
               ) : null}
             </>
           ) : (
-            <span>다음으로 (유형선택)</span>
+            <>
+              {/* 모바일: 유형을 골라 하단 장바구니에 담는 흐름 → '유형선택하고 지문 담기'.
+                  데스크톱은 지문별 즉시 생성이라 기존 '다음으로 (유형선택)' 유지. */}
+              <span className="max-lg:hidden">다음으로 (유형선택)</span>
+              <span className="lg:hidden">유형선택하고 지문 담기</span>
+            </>
           )}
         </button>
       </div>

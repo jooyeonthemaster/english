@@ -63,16 +63,25 @@ const STATUS_FILTERS: { id: WebtoonStatus | "ALL"; label: string }[] = [
 
 type GridCols = "grid3" | "grid4" | "grid5";
 
-const GRID_CLASS: Record<GridCols, string> = {
-  grid3: "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3",
-  grid4: "grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4",
-  grid5: "grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5",
+// PC(≥lg) 열 수만 담당한다 — 모바일(<lg) 기본열은 아래 mobileCols 로 따로 제어해
+// PC 렌더는 기존과 동일하게 유지한다(lg 에서 3/4/5(4→xl:5), 원본과 픽셀 동일).
+const GRID_LG_CLASS: Record<GridCols, string> = {
+  grid3: "lg:grid-cols-3",
+  grid4: "lg:grid-cols-4",
+  grid5: "lg:grid-cols-4 xl:grid-cols-5",
 };
 
 const GRID_OPTIONS: { value: GridCols; cols: number }[] = [
   { value: "grid3", cols: 3 },
   { value: "grid4", cols: 4 },
   { value: "grid5", cols: 5 },
+];
+
+// 모바일(<lg) 전용 열 수 — 1열/2열만 토글한다(PC 무영향).
+type MobileCols = 1 | 2;
+const MOBILE_GRID_OPTIONS: { value: MobileCols; cols: number }[] = [
+  { value: 1, cols: 1 },
+  { value: 2, cols: 2 },
 ];
 
 interface WebtoonLibraryClientProps {
@@ -139,6 +148,12 @@ export function WebtoonLibraryClient({
     "grid4",
     (v): v is GridCols => v === "grid3" || v === "grid4" || v === "grid5",
   );
+  // 모바일(<lg) 전용 열 수(1/2). PC 의 gridCols 와 독립 — 모바일만 변형.
+  const [mobileCols, setMobileCols] = usePersistedState<MobileCols>(
+    "smoat:view-mode:webtoon-library:mobile",
+    2,
+    (v): v is MobileCols => v === 1 || v === 2,
+  );
   const [editingId, setEditingId] = useState<string | null>(null);
   const editingItem = useMemo(
     () => items.find((it) => it.id === editingId) ?? null,
@@ -199,6 +214,8 @@ export function WebtoonLibraryClient({
   // Host-triggered refresh (e.g. after a new webtoon is queued from the
   // generate page). Skips the initial mount (handled by the fetch-on-mount).
   const didMountRef = useRef(false);
+  // 모바일 페이지 넘김 시 목록 상단(스티키 헤더 포함)으로 부드럽게 스크롤.
+  const listSectionRef = useRef<HTMLElement>(null);
   useEffect(() => {
     if (!didMountRef.current) {
       didMountRef.current = true;
@@ -486,6 +503,7 @@ export function WebtoonLibraryClient({
           </div>
         ) : (
           <section
+            ref={listSectionRef}
             className={
               embedded
                 ? "flex flex-col"
@@ -585,16 +603,19 @@ export function WebtoonLibraryClient({
                       compact
                     />
                   </div>
-                  {/* 검수완료 — 자체 disabled 를 관리하므로 게이트 밖에 둔다 */}
+                  {/* 검수완료 — 자체 disabled 를 관리하므로 게이트 밖에 둔다.
+                      모바일(<lg)은 아이콘만(정사각형), PC(≥lg)는 아이콘+텍스트.
+                      mobile-first: base=정사각 아이콘, lg:=텍스트/패딩 추가. */}
                   <button
                     type="button"
                     onClick={handleBulkApprove}
                     disabled={!hasSelection}
                     title="검수완료"
-                    className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-emerald-200 bg-white px-2.5 text-[11px] font-semibold text-emerald-600 shadow-sm transition-colors hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    aria-label="검수완료"
+                    className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center whitespace-nowrap rounded-md border border-emerald-200 bg-white text-[11px] font-semibold text-emerald-600 shadow-sm transition-colors hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 lg:w-auto lg:gap-1.5 lg:px-2.5"
                   >
                     <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
-                    검수완료
+                    <span className="hidden lg:inline">검수완료</span>
                   </button>
                   <div
                     className={
@@ -631,9 +652,13 @@ export function WebtoonLibraryClient({
                 <div className="ml-auto flex shrink-0 items-center justify-end gap-1.5">
                   <Link
                     href={routes.generate}
-                    className="flex h-7 items-center gap-1.5 rounded-md bg-blue-600 px-2.5 text-[12px] font-semibold text-white transition-colors hover:bg-blue-700"
+                    title="새 웹툰 생성"
+                    aria-label="새 웹툰 생성"
+                    // 모바일은 아이콘 전용(공간 확보 → 툴바 한 줄). 데스크톱은 텍스트 유지.
+                    className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-600 text-[12px] font-semibold text-white transition-colors hover:bg-blue-700 lg:w-auto lg:gap-1.5 lg:px-2.5"
                   >
-                    <Palette className="h-3.5 w-3.5" />새 웹툰 생성
+                    <Palette className="h-3.5 w-3.5" />
+                    <span className="hidden lg:inline">새 웹툰 생성</span>
                   </Link>
 
                   {/* Filter popover (상태 + 화풍) */}
@@ -764,16 +789,35 @@ export function WebtoonLibraryClient({
                     </PopoverContent>
                   </Popover>
 
-                  {/* Grid column cycle */}
-                  <ViewModeCycleButton
-                    value={gridCols}
-                    onChange={setGridCols}
-                    options={GRID_OPTIONS.map((g) => ({
-                      value: g.value,
-                      label: `${g.cols}열 보기`,
-                      Icon: (props) => <GridColsIcon cols={g.cols} {...props} />,
-                    }))}
-                  />
+                  {/* Grid column cycle — PC(≥lg)는 3/4/5, 모바일(<lg)은 1/2 로 분리.
+                      display 토글은 mobile-first(base=보임, lg:=숨김)로 작성한다
+                      (Tailwind v4 에서 max-lg 로 base 를 못 덮는 이슈 회피). */}
+                  <div className="hidden lg:block">
+                    <ViewModeCycleButton
+                      value={gridCols}
+                      onChange={setGridCols}
+                      options={GRID_OPTIONS.map((g) => ({
+                        value: g.value,
+                        label: `${g.cols}열 보기`,
+                        Icon: (props) => (
+                          <GridColsIcon cols={g.cols} {...props} />
+                        ),
+                      }))}
+                    />
+                  </div>
+                  <div className="lg:hidden">
+                    <ViewModeCycleButton
+                      value={mobileCols}
+                      onChange={setMobileCols}
+                      options={MOBILE_GRID_OPTIONS.map((g) => ({
+                        value: g.value,
+                        label: `${g.cols}열 보기`,
+                        Icon: (props) => (
+                          <GridColsIcon cols={g.cols} {...props} />
+                        ),
+                      }))}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -796,7 +840,15 @@ export function WebtoonLibraryClient({
                   )}
                 </div>
               ) : (
-                <div className={GRID_CLASS[gridCols]}>
+                <div
+                  className={
+                    "grid gap-4 " +
+                    // 모바일(<lg) 기본열 = mobileCols(1/2), PC(≥lg) = gridCols.
+                    (mobileCols === 1 ? "grid-cols-1" : "grid-cols-2") +
+                    " " +
+                    GRID_LG_CLASS[gridCols]
+                  }
+                >
                   {pageItems.map((item) => (
                     <WebtoonQueueCard
                       key={item.id}
@@ -823,6 +875,7 @@ export function WebtoonLibraryClient({
             onGoToPage={(p) => {
               setPage(p);
             }}
+            scrollTargetRef={listSectionRef}
           />
         ) : null}
       </div>

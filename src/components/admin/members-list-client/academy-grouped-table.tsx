@@ -79,167 +79,241 @@ export function AcademyGroupedTable({
   onResizeStart: (e: React.PointerEvent, id: ResizableColumnDef["id"]) => void;
 }) {
   return (
-    <Table className="w-max table-fixed">
-      <TableHeader>
-        <TableRow className="hover:bg-transparent border-b border-gray-50">
-          <TableHead className="h-9 pl-5 pr-0 w-9">
-            <Checkbox
-              checked={headerCheckState}
-              onCheckedChange={onToggleAll}
-              aria-label="화면의 학원 전체 선택"
-            />
-          </TableHead>
-          {columns.map((col) => (
-            <TableHead
-              key={col.id}
-              className={cn(
-                "relative text-[11px] text-gray-400 font-medium h-9",
-                col.headPad,
-                col.align === "right" && "text-right",
-              )}
-              style={{ width: `var(--mw-${col.id})` }}
-              aria-sort={ariaSortFor(col.sortKey)}
-            >
-              <SortHeader
-                label={col.label}
-                active={sortKey === col.sortKey}
-                order={sortOrder}
-                onClick={() => onToggleSort(col.sortKey)}
-              />
-              <ColumnResizeHandle onPointerDown={(e) => onResizeStart(e, col.id)} />
-            </TableHead>
-          ))}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+    <>
+      {/* 모바일: 가로 스크롤 대신 학원별 세로 카드 (트레이 위 분리된 카드) */}
+      <ul className="space-y-2 bg-gray-50/60 p-2.5 lg:hidden">
         {groups.map((g) => {
           const badge = STATUS_BADGE[g.status];
+          const selected = selectedIds.has(g.academyId);
           return (
-            <TableRow
+            <li
               key={g.academyId}
               className={cn(
-                "border-b border-gray-50/60 last:border-0 align-top",
-                selectedIds.has(g.academyId) ? "bg-blue-50/40" : "hover:bg-gray-50/50",
+                "rounded-xl border bg-white px-4 py-3.5 transition-colors",
+                selected
+                  ? "border-blue-200 bg-blue-50/40 ring-1 ring-blue-100"
+                  : "border-gray-200 shadow-[0_1px_2px_rgba(16,24,40,0.04)]",
               )}
             >
-              <TableCell className="pl-5 pr-0 pt-4">
+              <div className="flex items-start gap-3">
                 <Checkbox
-                  checked={selectedIds.has(g.academyId)}
+                  checked={selected}
                   onCheckedChange={(v) => onToggleOne(g.academyId, v === true)}
                   aria-label={`${g.academyName} 선택`}
+                  className="mt-2.5 shrink-0"
                 />
-              </TableCell>
-
-              {/* 학원 — 강조. 학원 상세(대표 원장 관점)로 이동. */}
-              <TableCell className="py-3 pl-3">
-                {(() => {
-                  const repId = g.members[0]?.id;
-                  const body = (
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div
-                        className="size-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"
-                        aria-hidden
-                      >
-                        <Building2 className="size-5" strokeWidth={1.8} />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <span
-                            className={cn(
-                              "text-[14px] font-semibold text-gray-900 truncate",
-                              repId && "group-hover/aca:text-blue-600",
-                            )}
-                          >
-                            {g.academyName}
-                          </span>
-                          {badge && (
-                            <Badge
-                              variant="secondary"
-                              className={cn(
-                                "border-0 text-[10px] px-1.5 h-4 font-medium shrink-0",
-                                badge.className,
-                              )}
-                            >
-                              {badge.label}
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="text-[11px] text-gray-400 truncate">
-                          /{g.slug} · 회원 {g.members.length}명
-                        </div>
-                      </div>
-                    </div>
-                  );
-                  return repId ? (
-                    <Link
-                      href={`/admin/members/${repId}`}
-                      className="group/aca block rounded-md -m-1 p-1 outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30"
-                    >
-                      {body}
-                    </Link>
-                  ) : (
-                    body
-                  );
-                })()}
-              </TableCell>
-
-              {/* 소속 회원 — 약하게, 복수 지원 */}
-              <TableCell className="py-3">
-                <div className="flex flex-col gap-1.5">
-                  {g.members.map((m) => (
-                    <div key={m.id} className="group/mem flex items-center gap-2 min-w-0">
-                      <span
-                        className="size-6 rounded-full bg-gray-100 text-gray-500 text-[10px] font-semibold flex items-center justify-center shrink-0"
-                        aria-hidden
-                      >
-                        {getInitials(m.name)}
-                      </span>
-                      <Link
-                        href={`/admin/members/${m.id}`}
-                        className="min-w-0 flex-1 rounded -m-0.5 p-0.5 outline-none hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-blue-500/30"
-                      >
-                        <span className="flex items-center gap-1.5 min-w-0">
-                          <span className="text-[12.5px] text-gray-700 truncate">
-                            {m.name}
-                          </span>
-                          {!m.isActive && (
-                            <span className="text-[10px] text-gray-400 shrink-0">
-                              비활성
-                            </span>
-                          )}
-                        </span>
-                        <span className="block text-[11px] text-gray-400 truncate">
-                          {m.email}
-                        </span>
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => onMoveMember(m)}
-                        className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] text-gray-400 opacity-0 transition-all hover:bg-blue-50 hover:text-blue-600 group-hover/mem:opacity-100 focus-visible:opacity-100 shrink-0"
-                        title={`${m.name} 다른 학원으로 이동`}
-                      >
-                        <MoveRight className="size-3.5" strokeWidth={2} aria-hidden />
-                        이동
-                      </button>
-                    </div>
-                  ))}
+                <div className="min-w-0 flex-1">
+                  <AcademyIdentity g={g} badge={badge} />
                 </div>
-              </TableCell>
+                <div className="shrink-0 pt-1 text-right">
+                  <BalanceCell balance={g.creditBalance?.balance ?? null} />
+                </div>
+              </div>
 
-              <TableCell className="pt-4">
-                <LatestPurchaseCell purchase={g.latestPurchase} />
-              </TableCell>
-              <TableCell className="text-right pt-4">
-                <BalanceCell balance={g.creditBalance?.balance ?? null} />
-              </TableCell>
-              <TableCell className="pt-4">
-                <ExpiryCell expiresAt={g.creditBalance?.expiresAt ?? null} now={now} />
-              </TableCell>
-            </TableRow>
+              <div className="mt-3 rounded-lg bg-gray-50/60 p-2.5">
+                <MemberRows members={g.members} onMoveMember={onMoveMember} />
+              </div>
+
+              <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1 pl-1 text-[11px] text-gray-400">
+                <span className="inline-flex items-center gap-1">
+                  <span className="text-gray-400">최근 구매</span>
+                  <LatestPurchaseCell purchase={g.latestPurchase} />
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <span className="text-gray-400">소멸</span>
+                  <ExpiryCell expiresAt={g.creditBalance?.expiresAt ?? null} now={now} />
+                </span>
+              </div>
+            </li>
           );
         })}
-      </TableBody>
-    </Table>
+      </ul>
+
+      {/* 데스크톱/태블릿: 기존 표 (가로 폭 유지) */}
+      <Table className="hidden w-max table-fixed lg:table">
+        <TableHeader>
+          <TableRow className="hover:bg-transparent border-b border-gray-50">
+            <TableHead className="h-9 pl-5 pr-0 w-9">
+              <Checkbox
+                checked={headerCheckState}
+                onCheckedChange={onToggleAll}
+                aria-label="화면의 학원 전체 선택"
+              />
+            </TableHead>
+            {columns.map((col) => (
+              <TableHead
+                key={col.id}
+                className={cn(
+                  "relative text-[11px] text-gray-400 font-medium h-9",
+                  col.headPad,
+                  col.align === "right" && "text-right",
+                )}
+                style={{ width: `var(--mw-${col.id})` }}
+                aria-sort={ariaSortFor(col.sortKey)}
+              >
+                <SortHeader
+                  label={col.label}
+                  active={sortKey === col.sortKey}
+                  order={sortOrder}
+                  onClick={() => onToggleSort(col.sortKey)}
+                />
+                <ColumnResizeHandle onPointerDown={(e) => onResizeStart(e, col.id)} />
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {groups.map((g) => {
+            const badge = STATUS_BADGE[g.status];
+            return (
+              <TableRow
+                key={g.academyId}
+                className={cn(
+                  "border-b border-gray-100 last:border-0 align-top",
+                  selectedIds.has(g.academyId) ? "bg-blue-50/40" : "hover:bg-gray-50/50",
+                )}
+              >
+                <TableCell className="pl-5 pr-0 pt-4">
+                  <Checkbox
+                    checked={selectedIds.has(g.academyId)}
+                    onCheckedChange={(v) => onToggleOne(g.academyId, v === true)}
+                    aria-label={`${g.academyName} 선택`}
+                  />
+                </TableCell>
+
+                {/* 학원 — 강조. 학원 상세(대표 원장 관점)로 이동. */}
+                <TableCell className="py-3 pl-3">
+                  <AcademyIdentity g={g} badge={badge} />
+                </TableCell>
+
+                {/* 소속 회원 — 약하게, 복수 지원 */}
+                <TableCell className="py-3">
+                  <MemberRows members={g.members} onMoveMember={onMoveMember} />
+                </TableCell>
+
+                <TableCell className="pt-4">
+                  <LatestPurchaseCell purchase={g.latestPurchase} />
+                </TableCell>
+                <TableCell className="text-right pt-4">
+                  <BalanceCell balance={g.creditBalance?.balance ?? null} />
+                </TableCell>
+                <TableCell className="pt-4">
+                  <ExpiryCell expiresAt={g.creditBalance?.expiresAt ?? null} now={now} />
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </>
+  );
+}
+
+/** 학원 아이콘 + 이름 + 상태뱃지 + slug·회원수 (표/카드 공용). */
+function AcademyIdentity({
+  g,
+  badge,
+}: {
+  g: AcademyGroup;
+  badge: { label: string; className: string } | undefined;
+}) {
+  const repId = g.members[0]?.id;
+  const body = (
+    <div className="flex items-center gap-3 min-w-0">
+      <div
+        className="size-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0"
+        aria-hidden
+      >
+        <Building2 className="size-5" strokeWidth={1.8} />
+      </div>
+      <div className="min-w-0">
+        <div className="flex items-center gap-2 min-w-0">
+          <span
+            className={cn(
+              "text-[14px] font-semibold text-gray-900 truncate",
+              repId && "group-hover/aca:text-blue-600",
+            )}
+          >
+            {g.academyName}
+          </span>
+          {badge && (
+            <Badge
+              variant="secondary"
+              className={cn(
+                "border-0 text-[10px] px-1.5 h-4 font-medium shrink-0",
+                badge.className,
+              )}
+            >
+              {badge.label}
+            </Badge>
+          )}
+        </div>
+        <div className="text-[11px] text-gray-400 truncate">
+          /{g.slug} · 회원 {g.members.length}명
+        </div>
+      </div>
+    </div>
+  );
+  return repId ? (
+    <Link
+      href={`/admin/members/${repId}`}
+      className="group/aca block rounded-md -m-1 p-1 outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30"
+    >
+      {body}
+    </Link>
+  ) : (
+    body
+  );
+}
+
+/** 소속 회원 목록 (표/카드 공용). */
+function MemberRows({
+  members,
+  onMoveMember,
+}: {
+  members: MemberListItem[];
+  onMoveMember: (member: MemberListItem) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      {members.map((m) => (
+        <div key={m.id} className="group/mem flex items-center gap-2 min-w-0">
+          <span
+            className="size-6 rounded-full bg-gray-100 text-gray-500 text-[10px] font-semibold flex items-center justify-center shrink-0"
+            aria-hidden
+          >
+            {getInitials(m.name)}
+          </span>
+          <Link
+            href={`/admin/members/${m.id}`}
+            className="min-w-0 flex-1 rounded -m-0.5 p-0.5 outline-none hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-blue-500/30"
+          >
+            <span className="flex items-center gap-1.5 min-w-0">
+              <span className="text-[12.5px] text-gray-700 truncate">
+                {m.name}
+              </span>
+              {!m.isActive && (
+                <span className="text-[10px] text-gray-400 shrink-0">
+                  비활성
+                </span>
+              )}
+            </span>
+            <span className="block text-[11px] text-gray-400 truncate">
+              {m.email}
+            </span>
+          </Link>
+          <button
+            type="button"
+            onClick={() => onMoveMember(m)}
+            className="inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-[11px] text-gray-400 opacity-100 transition-all hover:bg-blue-50 hover:text-blue-600 lg:opacity-0 lg:group-hover/mem:opacity-100 focus-visible:opacity-100 shrink-0"
+            title={`${m.name} 다른 학원으로 이동`}
+          >
+            <MoveRight className="size-3.5" strokeWidth={2} aria-hidden />
+            이동
+          </button>
+        </div>
+      ))}
+    </div>
   );
 }
 

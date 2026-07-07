@@ -1,5 +1,6 @@
 import { streamText } from "ai";
 import { GEMINI_MODEL_ID, model } from "@/lib/ai";
+import { atlasUsageWithCost } from "@/lib/atlas-ai";
 import { prisma } from "@/lib/prisma";
 import { getStudentSession } from "@/lib/auth-student";
 import { NextRequest, NextResponse } from "next/server";
@@ -171,7 +172,7 @@ ${teacherPromptsText}
       model,
       system: systemPrompt,
       messages: aiMessages,
-      onFinish: async ({ text, finishReason, usage }) => {
+      onFinish: async ({ text, finishReason, usage, providerMetadata }) => {
         // Refund if the generation was aborted or errored
         if (finishReason === "error") {
           try {
@@ -187,7 +188,7 @@ ${teacherPromptsText}
           operationType: "QUESTION_EXPLANATION",
           academyId: session.academyId,
           model: GEMINI_MODEL_ID,
-          usage,
+          usage: atlasUsageWithCost({ usage, providerMetadata }),
         });
         const updatedMessages = [
           ...conversationHistory,

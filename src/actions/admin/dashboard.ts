@@ -116,6 +116,11 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
     // --- 리스크 ---
     lowCreditRows,
     trialEndingRows,
+    // --- 수동지급(MANUAL_GRANT) 무통장입금 매출 ---
+    grantRevenueToday,
+    grantRevenueYesterday,
+    grantRevenueMonth,
+    grantTrendRows,
   ] = await Promise.all([
     prisma.bankDepositNotification.count({
       where: { status: { in: ["UNMATCHED", "AMBIGUOUS"] } },
@@ -207,6 +212,16 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
       take: 8,
       select: { academyId: true, trialEndsAt: true, academy: { select: { name: true } } },
     }),
+
+    // 수동지급(MANUAL_GRANT) 무통장입금 — creditTopUp 없이 시스템 외 지급된
+    // 실입금. 충전/구독 매출과 함께 오늘·어제·이번 달·추이에 합산한다.
+    sumManualGrant(todayStart),
+    sumManualGrant(yesterdayStart, todayStart),
+    sumManualGrant(monthStart),
+    prisma.bankDepositNotification.findMany({
+      where: { status: "MANUAL_GRANT", receivedAt: { gte: trendStart } },
+      select: { receivedAt: true, amount: true },
+    }),
   ]);
 
   // 액션 스트립 조립 (0인 항목도 노출하되 색으로 구분)
@@ -267,6 +282,10 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
     const b = buckets.get(kstDayKey(r.paidAt));
     if (b) b.revenue += r.amount;
   }
+  for (const r of grantTrendRows) {
+    const b = buckets.get(kstDayKey(r.receivedAt));
+    if (b) b.revenue += r.amount;
+  }
   for (const r of signupTrendRows) {
     const b = buckets.get(kstDayKey(r.createdAt));
     if (b) b.signups += 1;
@@ -276,14 +295,14 @@ export async function getDashboardOverview(): Promise<DashboardOverview> {
     return { date: `${key.slice(5, 7)}/${key.slice(8, 10)}`, ...b };
   });
 
-  const monthRevenue = topupRevenueMonth + subRevenueMonth;
+  const monthRevenue = topupRevenueMonth + subRevenueMonth + grantRevenueMonth;
   const monthAiCost = aiCostMonth._sum.costKrw ?? 0;
 
   return {
     actionItems,
     revenue: {
-      today: topupRevenueToday + subRevenueToday,
-      yesterday: topupRevenueYesterday + subRevenueYesterday,
+      today: topupRevenueToday + subRevenueToday + grantRevenueToday,
+      yesterday: topupRevenueYesterday + subRevenueYesterday + grantRevenueYesterday,
     },
     signups: { today: signupsToday, yesterday: signupsYesterday },
     questions: { today: questionsToday, yesterday: questionsYesterday },
@@ -326,6 +345,22 @@ async function sumSubscription(gte: Date, lt?: Date): Promise<number> {
   const res = await prisma.subscriptionPayment.aggregate({
     _sum: { amount: true },
     where: { status: "PAID", paidAt: lt ? { gte, lt } : { gte } },
+  });
+  return res._sum.amount ?? 0;
+}
+
+/**
+ * 수동지급(MANUAL_GRANT) 무통장입금 매출 합계 — receivedAt 기준.
+ * creditTopUp 레코드가 없는 시스템 외 지급이라 별도로 합산한다. MATCHED(자동
+ * 지급)는 creditTopUp 으로 이미 집계되고 manual_grant 전환도 막혀 이중집계 없음.
+ */
+async function sumManualGrant(gte: Date, lt?: Date): Promise<number> {
+  const res = await prisma.bankDepositNotification.aggregate({
+    _sum: { amount: true },
+    where: {
+      status: "MANUAL_GRANT",
+      receivedAt: lt ? { gte, lt } : { gte },
+    },
   });
   return res._sum.amount ?? 0;
 }

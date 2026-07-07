@@ -19,6 +19,7 @@ import {
   Loader2,
   PlayCircle,
   Scissors,
+  ShoppingBasket,
   UploadCloud,
   X,
 } from "lucide-react";
@@ -112,6 +113,7 @@ export function UploadPanel({
   onStartAborted,
   outputMode,
   onOutputModeChange,
+  mobileFixedFooter = false,
 }: {
   busy: boolean;
   dragActive: boolean;
@@ -139,6 +141,9 @@ export function UploadPanel({
   // ── P7-D2: 출력 방식(원문 vs AI복원) ──
   outputMode?: "verbatim" | "restored";
   onOutputModeChange?: (mode: "verbatim" | "restored") => void;
+  /** 모바일(<lg) 스텝 플로우: 텍스트/크롭 보드가 하단 고정 액션 바(담긴 지문 + 다음)를
+   *  렌더하도록 켠다. PC(≥lg)에는 영향 없음(보드가 isBelowLg로 내부 게이팅). */
+  mobileFixedFooter?: boolean;
 }) {
   const boardRef = useRef<InlineCropBoardHandle>(null);
   // 파일이 아직 없을 때 '추출 시작'을 누르면 글로우시킬 업로드 영역.
@@ -631,6 +636,7 @@ export function UploadPanel({
             busy={busy}
             onStart={onStartText}
             outputMode={selectedOutput}
+            mobileFixedFooter={mobileFixedFooter}
           />
         </div>
 
@@ -669,7 +675,9 @@ export function UploadPanel({
                 <div
                   ref={uploadZoneRef}
                   className={
-                    "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors " +
+                    // 모바일(<lg)은 우측 '추출될 지문' 패널을 접고 드롭존만 크게 —
+                    // 문제 생성 파일업로드와 동일(최소 45vh).
+                    "flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border p-3 transition-colors max-lg:min-h-[45vh] " +
                     (dragActive
                       ? "border-sky-500 bg-sky-50"
                       : "border-slate-200 bg-slate-50/70")
@@ -701,13 +709,15 @@ export function UploadPanel({
                 style={{ width: fileGuideWidth }}
                 className="flex min-h-0 flex-col bg-white max-lg:!w-full lg:shrink-0"
               >
-                <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-2.5">
+                {/* 헤더·'사용 순서' 가이드는 PC 전용 — 모바일은 하단 장바구니 바가
+                    대신하고 드롭존을 크게 쓴다(삭제와 동일 효과). */}
+                <div className="flex shrink-0 items-center justify-between gap-2 border-b border-slate-100 px-3.5 py-2.5 max-lg:hidden">
                   <span className="inline-flex items-center gap-1.5 text-[12.5px] font-bold text-slate-900">
                     <Layers className="size-4 text-blue-600" aria-hidden="true" />
                     추출될 지문 0개
                   </span>
                 </div>
-                <div className="smoat-file-guide-scroll min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5">
+                <div className="smoat-file-guide-scroll min-h-0 flex-1 overflow-y-auto bg-slate-50/40 p-2.5 max-lg:hidden">
                   <div className="smoat-file-empty-guide mx-auto flex w-full max-w-[640px] flex-col rounded-lg border border-slate-200 bg-slate-50/80 p-4">
                     <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                       <div className="inline-flex w-fit items-center gap-1.5 rounded-md bg-blue-600 px-2 py-1 text-[11px] font-bold text-white">
@@ -737,9 +747,38 @@ export function UploadPanel({
                     </ol>
                   </div>
                 </div>
-                {/* 하단: 추출 시작(파일 없을 땐 음영 처리된 비활성 버튼으로 노출) */}
-                <div className="shrink-0 border-t border-slate-100 bg-white p-2.5">
-                  {fileStartArea}
+                {/* 파일 0개(빈 상태)에서도 모바일은 '담긴 지문' 장바구니 바 + '다음으로'
+                    버튼을 하단 고정 클러스터로 노출한다 — 파일 추가 후(InlineCropBoard)와
+                    동일. PC(lg)는 contents로 투명 처리해 시작 버튼만 아사이드 흐름대로.
+                    페이지가 max-lg:pb-[...]로 자리 예약함. mobileFixedFooter 가 아닐 때
+                    (있진 않지만)는 기존처럼 흐름 안 버튼만. */}
+                <div
+                  className={
+                    mobileFixedFooter
+                      ? "max-lg:fixed max-lg:inset-x-0 max-lg:bottom-0 max-lg:z-40 max-lg:flex max-lg:flex-col max-lg:border-t max-lg:border-slate-200 max-lg:bg-white max-lg:pb-[env(safe-area-inset-bottom)] max-lg:shadow-[0_-6px_20px_-10px_rgba(15,23,42,0.28)] lg:contents"
+                      : "contents"
+                  }
+                >
+                  {/* 빈 상태 장바구니 바(담긴 지문 0개) — 파일 업로드 후 InlineCropBoard의
+                      장바구니 바로 자연스럽게 대체된다. 담긴 게 없어 펼침은 없다. */}
+                  {mobileFixedFooter ? (
+                    <div className="flex w-full shrink-0 items-center gap-2.5 border-t border-slate-100 bg-white px-3 py-2 lg:hidden">
+                      <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                        <ShoppingBasket className="size-5" aria-hidden="true" />
+                      </span>
+                      <span className="flex min-w-0 flex-1 flex-col">
+                        <span className="text-[12.5px] font-bold text-slate-900">
+                          담긴 지문 0개
+                        </span>
+                        <span className="truncate text-[10.5px] text-slate-400">
+                          파일을 올려 지문 영역을 잘라 담아보세요
+                        </span>
+                      </span>
+                    </div>
+                  ) : null}
+                  <div className="shrink-0 border-t border-slate-100 bg-white p-2.5">
+                    {fileStartArea}
+                  </div>
                 </div>
               </aside>
             </div>
@@ -756,6 +795,7 @@ export function UploadPanel({
               footer={fileStartArea}
               onClear={onClear}
               outputMode={selectedOutput}
+              mobileFixedFooter={mobileFixedFooter}
             />
           )}
         </div>

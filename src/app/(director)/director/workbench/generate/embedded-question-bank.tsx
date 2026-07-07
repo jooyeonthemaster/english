@@ -1214,7 +1214,8 @@ export function EmbeddedQuestionBank({
         ) : (
           <CheckCircle2 className="w-3.5 h-3.5" />
         )}
-        검수완료
+        {/* 내 지문함과 동일 — 좁은 폭(모바일)에서는 라벨을 숨겨 아이콘만 남긴다. */}
+        <span className="@max-[30rem]:hidden">검수완료</span>
       </button>
 
       <button
@@ -1232,7 +1233,9 @@ export function EmbeddedQuestionBank({
         disabled={selectedIds.size === 0 || bulkDeleting}
         title="삭제"
         aria-label="삭제"
-        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+        // 모바일(<30rem 컨테이너)에서만 내 지문함과 동일한 흰 배경으로 맞춘다.
+        // PC 폭에서는 기존 red-50 배경·hover 언어를 그대로 유지(데스크톱 무변경).
+        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-red-200 bg-red-50 @max-[30rem]:bg-white text-red-600 transition-colors hover:border-red-300 hover:bg-red-100 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {bulkDeleting ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1325,18 +1328,23 @@ export function EmbeddedQuestionBank({
 
   // 페이지 이동(필터.page 변경) 시 카드 목록 맨 위로 부드럽게 스크롤한다.
   // 최초 마운트에서는 스크롤하지 않는다(불필요한 점프 방지).
-  const pageScrollSkipRef = useRef(true);
+  //
+  // 불리언 skip 플래그는 개발 모드 StrictMode 의 effect 이중 실행에 뚫린다
+  // (1차: 플래그 해제 후 return → 2차: 이미 해제돼 스크롤 발동 → 새로고침마다
+  // 페이지가 중간으로 튐). 이전 page '값'과 비교해 실제로 바뀔 때만 스크롤하면
+  // StrictMode 이중 실행에도 안전하다(마운트 시엔 값이 같아 스킵).
+  const prevPageRef = useRef(filters.page);
   useEffect(() => {
-    if (pageScrollSkipRef.current) {
-      pageScrollSkipRef.current = false;
-      return;
-    }
+    if (prevPageRef.current === filters.page) return;
+    prevPageRef.current = filters.page;
     cardZoneRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [filters.page]);
 
   const toolbarRow = (
-    <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
-      <div className="flex w-full min-w-0 flex-wrap items-center gap-2 md:w-auto md:flex-1 md:flex-nowrap">
+    // 모바일에서도 한 줄로 — 그룹을 w-full로 쌓지 않고 nowrap으로 배치.
+    // PC(md:)는 기존 flex-wrap/gap 그대로 복원해 데스크톱 무변경.
+    <div className="flex min-h-9 flex-nowrap items-center gap-x-1.5 gap-y-1.5 md:flex-wrap md:gap-x-2">
+      <div className="flex min-w-0 flex-1 flex-nowrap items-center gap-1.5 md:gap-2">
         <SelectAllCheckbox
           checked={allFilteredSelected}
           indeterminate={someSelected}
@@ -1351,7 +1359,7 @@ export function EmbeddedQuestionBank({
         />
         <div
           className={
-            "flex min-w-0 flex-wrap items-center gap-1.5 md:shrink-0 md:flex-nowrap md:gap-3 " +
+            "flex min-w-0 shrink-0 flex-nowrap items-center gap-1.5 md:gap-3 " +
             (selectedIds.size > 0 ? "" : "pointer-events-none opacity-50")
           }
           aria-disabled={selectedIds.size === 0}
@@ -1402,7 +1410,9 @@ export function EmbeddedQuestionBank({
             router.push("/director/workbench/exams/create");
           }}
           className={
-            "flex h-10 min-w-[9rem] flex-[1_1_9rem] items-center justify-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 text-[13px] font-bold text-white shadow-sm transition-colors md:h-12 md:min-w-0 md:basis-auto md:grow md:text-[14px] " +
+            // 모바일: min-w-0 + basis-auto 로 좁으면 줄어들어 한 줄을 유지(요청대로
+            // 시험지 생성 폭을 필요한 만큼 축소). PC(md:)는 기존과 동일.
+            "flex h-10 min-w-0 flex-[1_1_auto] items-center justify-center gap-1.5 overflow-hidden whitespace-nowrap rounded-md border px-2.5 text-[13px] font-bold text-white shadow-sm transition-colors md:h-12 md:min-w-0 md:basis-auto md:grow md:text-[14px] " +
             (selectedIds.size === 0 || creatingExam
               ? "cursor-not-allowed border-blue-200 bg-blue-300 shadow-none"
               : "cursor-pointer border-blue-600 bg-blue-600 hover:border-blue-700 hover:bg-blue-700")
@@ -1413,7 +1423,10 @@ export function EmbeddedQuestionBank({
           <span className="hidden md:inline">다음으로 (시험지 생성)</span>
         </button>
       </div>
-      <div className="ml-auto flex w-full shrink-0 flex-wrap items-center justify-end gap-2 md:w-auto">
+      {/* 모바일은 ml-auto 제거 — auto 마진이 free space를 먹어 좌측 flex-1(시험지
+          생성 grow)이 못 자라던 문제를 풀어, 시험지 생성이 오른쪽까지 채워지고
+          필터와의 간격이 좁아진다. PC(md:)는 기존 ml-auto 정렬 그대로. */}
+      <div className="flex shrink-0 flex-nowrap items-center justify-end gap-1.5 md:ml-auto md:w-auto md:flex-wrap md:gap-2">
         <QuestionFiltersToolbar
           filters={filters}
           subjectScope={subjectScope}
@@ -1424,7 +1437,9 @@ export function EmbeddedQuestionBank({
           updateFilters={updateFilters}
           popoverExtra={filterPopoverExtra}
         />
-        {gridToggle}
+        {/* 2·3열/목록 그리드 토글 — 모바일(<lg)은 항상 1열이라 의미가 없어 숨긴다.
+            PC(lg 이상)에서는 그대로 노출한다. */}
+        <div className="hidden lg:block">{gridToggle}</div>
       </div>
     </div>
   );
@@ -1436,7 +1451,7 @@ export function EmbeddedQuestionBank({
       <div className="mb-4 space-y-2.5">
         {queueStripItems.length > 0 ? (
           <div
-            className={`grid gap-3 ${
+            className={`grid gap-2 lg:gap-3 ${
               gridCols === 2
                 ? "grid-cols-1 md:grid-cols-2"
                 : gridCols === 3
@@ -1571,7 +1586,9 @@ export function EmbeddedQuestionBank({
             </div>
 
             <div
-              className="sticky z-10 shrink-0 border-t border-slate-200 bg-slate-50/95 px-2 py-2 backdrop-blur-sm lg:px-4"
+              // @container: 내 지문함 툴바와 동일하게, 패널 폭 기준으로 일괄 액션
+              // 버튼의 라벨(예: 검수완료)을 좁은 폭에서 숨겨 아이콘만 남긴다.
+              className="@container sticky z-10 shrink-0 border-t border-slate-200 bg-slate-50/95 px-2 py-2 backdrop-blur-sm lg:px-4"
               style={{ top: folderStickyHeight }}
             >
               {toolbarRow}
@@ -1612,7 +1629,7 @@ export function EmbeddedQuestionBank({
                       onToggleSetSelection={handleToggleSetSelection}
                       collectionId={folders.activeFolder ?? undefined}
                       filters={effectiveFilters}
-                      gridClassName={`grid items-start gap-3 ${
+                      gridClassName={`grid items-start gap-2 lg:gap-3 ${
                         gridCols === 2
                           ? "grid-cols-1 md:grid-cols-2"
                           : gridCols === 3
@@ -1670,7 +1687,7 @@ export function EmbeddedQuestionBank({
                   value={selectedIds}
                   onChange={setSelectedIds}
                   boundaryRef={marqueeBoundaryRef}
-                  className={`grid items-start gap-3 ${
+                  className={`grid items-start gap-2 lg:gap-3 ${
                     gridCols === 2
                       ? "grid-cols-1 md:grid-cols-2"
                       : gridCols === 3

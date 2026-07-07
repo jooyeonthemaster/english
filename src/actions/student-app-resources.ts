@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getStudentSession } from "@/lib/auth-student";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { getStudentAnnouncements } from "@/actions/platform-announcements";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -114,86 +115,8 @@ export async function studentCheckIn() {
   return { alreadyCheckedIn: false, checkInTime: today.toISOString() };
 }
 
-// ---------------------------------------------------------------------------
-// getStudentNotices — 학생 대상 공지사항
-// ---------------------------------------------------------------------------
-export async function getStudentNotices() {
-  const session = await requireStudent();
-  const studentId = session.studentId;
-
-  const student = await prisma.student.findUnique({
-    where: { id: studentId },
-    select: {
-      academyId: true,
-      classEnrollments: {
-        where: { status: "ENROLLED" },
-        select: { classId: true },
-      },
-    },
-  });
-
-  if (!student) return [];
-
-  const classIds = student.classEnrollments.map((e) => e.classId);
-
-  const notices = await prisma.notice.findMany({
-    where: {
-      academyId: student.academyId,
-      OR: [
-        { targetType: "ALL" },
-        { targetType: "CLASS", targetId: { in: classIds } },
-        { targetType: "INDIVIDUAL", targetId: studentId },
-      ],
-      publishAt: { lte: new Date() },
-    },
-    orderBy: [{ isPinned: "desc" }, { publishAt: "desc" }],
-    take: 50,
-  });
-
-  const readNoticeIds = new Set(
-    (await prisma.noticeRead.findMany({
-      where: {
-        noticeId: { in: notices.map((n) => n.id) },
-        readerId: studentId,
-        readerType: "STUDENT",
-      },
-      select: { noticeId: true },
-    })).map((r) => r.noticeId),
-  );
-
-  return notices.map((n) => ({
-    id: n.id,
-    title: n.title,
-    content: n.content,
-    isPinned: n.isPinned,
-    publishedAt: n.publishAt?.toISOString() ?? n.createdAt.toISOString(),
-    isRead: readNoticeIds.has(n.id),
-    targetType: n.targetType,
-  }));
-}
-
-// ---------------------------------------------------------------------------
-// markNoticeAsRead — 공지 읽음 처리
-// ---------------------------------------------------------------------------
-export async function markNoticeAsRead(noticeId: string) {
-  const session = await requireStudent();
-
-  await prisma.noticeRead.upsert({
-    where: {
-      noticeId_readerId_readerType: {
-        noticeId,
-        readerId: session.studentId,
-        readerType: "STUDENT",
-      },
-    },
-    update: {},
-    create: {
-      noticeId,
-      readerId: session.studentId,
-      readerType: "STUDENT",
-    },
-  });
-}
+// 학생 대상 공지는 플랫폼 공지(스모트 소식)로 교체되었습니다.
+// 조회는 @/actions/platform-announcements 의 getStudentAnnouncements 를 사용합니다.
 
 // ---------------------------------------------------------------------------
 // getStudentAssignmentList — 학생 숙제 목록
@@ -402,11 +325,14 @@ async function getNotificationContext() {
 // getNotificationsData — 알림 페이지 통합 로드
 // ---------------------------------------------------------------------------
 export async function getNotificationsData() {
-  const [dashboard, notices, assignments] = await Promise.all([
+  const [dashboard, announcements, assignments] = await Promise.all([
     getNotificationContext(),
-    getStudentNotices(),
+    getStudentAnnouncements(),
     getStudentAssignmentList(),
   ]);
+
+  // 알림 페이지는 기존 공지 shape(isRead)를 기대하므로 신규 여부를 뒤집어 매핑.
+  const notices = announcements.map((a) => ({ ...a, isRead: !a.isNew }));
 
   return { dashboard, notices, assignments };
 }

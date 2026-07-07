@@ -1,5 +1,6 @@
 import { generateObject } from "ai";
 import { GEMINI_MODEL_ID, model } from "@/lib/ai";
+import { atlasUsageWithCost } from "@/lib/atlas-ai";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
     let object: z.infer<typeof modifiedQuestionSchema>;
     let aiUsage: unknown;
     try {
-    const { object: _object, usage } = await generateObject({
+    const { object: _object, usage, providerMetadata } = await generateObject({
       model,
       schema: modifiedQuestionSchema,
       prompt: `당신은 한국 ${schoolType} 영어 시험 출제 전문가입니다.
@@ -122,7 +123,7 @@ ${instruction}
 수정된 문제 1개를 출력하세요.`,
     });
     object = _object;
-    aiUsage = usage;
+    aiUsage = atlasUsageWithCost({ usage, providerMetadata });
     } catch (aiError) {
       await refundCredits(staff.academyId, "QUESTION_MODIFY", creditResult.transactionId, "Question modification failed");
       throw aiError;

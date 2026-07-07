@@ -241,6 +241,7 @@ export async function POST(request: NextRequest) {
       model: result.meta.modelId,
       inputTokens: result.meta.inputTokens,
       outputTokens: result.meta.outputTokens,
+      recordedCostUsd: result.meta.costUsd ?? null,
     });
 
     return NextResponse.json({

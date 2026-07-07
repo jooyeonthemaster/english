@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { BrandIcon } from "@/components/brand/brand-mark";
+import { BrandIcon, BrandMark } from "@/components/brand/brand-mark";
 import { BusinessInfoBlock } from "@/components/legal/business-info-block";
 import {
   Sheet,
@@ -25,6 +25,7 @@ import { getNavGroups, type NavGroup } from "./nav-config";
 import { MaybeComingSoon } from "./maybe-coming-soon";
 import { SidebarTopActions } from "./admin-shell/sidebar-top-actions";
 import { NavItem } from "./admin-shell/nav-item";
+import { getStaffHasNewAnnouncements } from "@/actions/platform-announcements";
 import { useReviewDrawer } from "./review-drawer-context";
 import { useSidebarFocus } from "./sidebar-focus-context";
 import { MarqueeBoundaryContext } from "./marquee-boundary-context";
@@ -251,6 +252,17 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
     () => getNavGroups(basePath, navWorkspace),
     [basePath, navWorkspace],
   );
+
+  // 새 스모트 소식 여부 — 공지 진입점(/notices)에 빨간 점 배지로 표시.
+  const noticesHref = `${basePath}/notices`;
+  const [hasNewAnnouncements, setHasNewAnnouncements] = useState(false);
+  useEffect(() => {
+    void getStaffHasNewAnnouncements()
+      .then(setHasNewAnnouncements)
+      .catch(() => {});
+    // 공지 페이지에 들어오면 읽음 처리되므로 점을 즉시 지운다.
+    if (pathname.startsWith(noticesHref)) setHasNewAnnouncements(false);
+  }, [pathname, noticesHref]);
 
   const filteredGroups: NavGroup[] = useMemo(
     () =>
@@ -529,6 +541,7 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                           onNavClick={handleNavClick}
                           onToggleMenu={toggleMenu}
                           onSetOpenMenu={setOpenMenu}
+                          showNewDot={hasNewAnnouncements && item.href === noticesHref}
                         />
                       ))}
                     </ul>
@@ -651,8 +664,21 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
                                   ) : null}
                                 </div>
                                 <div className="mt-1 space-y-0.5 pl-6">
-                                  {item.children.map((child) => {
-                                    const childIsActive = routeMatches(child.href, effectivePath);
+                                  {item.children.map((child, ci) => {
+                                    // 활성 판정: 정확히 일치하거나, prefix 일치이되 더 긴(더 구체적인)
+                                    // 형제가 일치하지 않을 때만. (예: /questions[문제 관리] 는
+                                    // /questions/generate[문제 생성] 의 prefix 라 둘 다 켜지던 버그 방지)
+                                    const exactMatch = effectivePath === child.href;
+                                    const prefixMatch =
+                                      routeMatches(child.href, effectivePath) && !exactMatch;
+                                    const siblingHasBetterMatch = item.children!.some(
+                                      (other, oi) =>
+                                        oi !== ci &&
+                                        routeMatches(other.href, effectivePath) &&
+                                        other.href.length > child.href.length,
+                                    );
+                                    const childIsActive =
+                                      exactMatch || (prefixMatch && !siblingHasBetterMatch);
                                     return (
                                       <Link
                                         key={child.href}
@@ -724,10 +750,13 @@ export function AdminShell({ children, staff, basePath }: AdminShellProps) {
             </Sheet>
 
             <div className="min-w-0 flex-1 px-3 text-center">
-              <div className="truncate text-[15px] font-bold text-slate-900">{activeNavLabel}</div>
-              <div className="truncate text-[11px] font-medium text-slate-400">
-                {basePath === "/director" ? "원장" : "교사"} 워크스페이스
+              <div className="flex items-center justify-center gap-1">
+                <BrandMark className="size-3 shrink-0 rounded-[3px]" />
+                <span className="truncate text-[10px] font-bold leading-none tracking-[0.25em] text-slate-400">
+                  SMOAT
+                </span>
               </div>
+              <div className="truncate text-[15px] font-bold text-slate-900">{activeNavLabel}</div>
             </div>
             <div className="size-10" aria-hidden />
           </header>

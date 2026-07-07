@@ -37,7 +37,7 @@ export const SITE = {
   /** 한글 표기(스모트). 엔터티 인식 보조. */
   nameKo: "스모트",
   /** 운영 법인(Organization legalName). */
-  legalName: "NEANDER Co.,LTD",
+  legalName: "주식회사 네안데르",
   locale: "ko_KR",
 
   /** 홈/기본 타이틀. layout 의 title.default 로 사용. */

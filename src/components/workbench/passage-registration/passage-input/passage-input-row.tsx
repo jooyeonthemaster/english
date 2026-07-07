@@ -136,6 +136,11 @@ interface PassageInputRowProps {
    */
   hideToolbar?: boolean;
   /**
+   * 헤더의 'N words' 글자수 표기를 숨긴다. 카드 폭이 좁은 경로(웹툰 생성 모바일)에서
+   * 글자수가 헤더 버튼과 겹쳐 켠다(기본 false → 기존대로 노출).
+   */
+  hideWordCount?: boolean;
+  /**
    * 변형 지문 생성 → 새 Passage 로 저장하고 새 행으로 추가한다(부모가 처리).
    * 주어지지 않으면 '변형 지문 생성' 버튼을 숨긴다.
    */
@@ -173,6 +178,7 @@ export function PassageInputRow({
   enableAiTransforms = false,
   disableMarking = false,
   hideToolbar = false,
+  hideWordCount = false,
   onAddVariant,
 }: PassageInputRowProps) {
   const [restoring, setRestoring] = useState(false);
@@ -523,6 +529,7 @@ export function PassageInputRow({
 
   return (
     <div
+      data-passage-row-card
       onAnimationEnd={(e) => {
         if (justAdded && e.animationName === "passage-added-glow") {
           onGlowEnd?.();
@@ -538,7 +545,9 @@ export function PassageInputRow({
       <div
         onClick={() => setCollapsed(!collapsed)}
         title={collapsed ? "펼치기" : "접기"}
-        className="flex cursor-pointer select-none items-center gap-2 border-b border-slate-100 px-3 py-2 transition-colors hover:bg-slate-50/70"
+        // 모바일(<lg)은 카드 폭이 좁아 헤더 버튼이 '지문 N' 이름을 가릴 수 있어
+        // 버튼 간격을 좁힌다(gap-1). PC(≥lg)는 기존 간격(gap-2) 그대로.
+        className="flex cursor-pointer select-none items-center gap-1 border-b border-slate-100 px-3 py-2 transition-colors hover:bg-slate-50/70 lg:gap-2"
       >
         {onToggleSelected ? (
           <button
@@ -573,7 +582,7 @@ export function PassageInputRow({
               {preview}
             </span>
           ) : null}
-          {wordCount > 0 && (
+          {wordCount > 0 && !hideWordCount && (
             <span className="ml-auto shrink-0 text-[11px] tabular-nums text-slate-400">
               {wordCount} words
             </span>
@@ -582,7 +591,7 @@ export function PassageInputRow({
             <span
               className={
                 "shrink-0 rounded border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700" +
-                (wordCount > 0 ? "" : " ml-auto")
+                (wordCount > 0 && !hideWordCount ? "" : " ml-auto")
               }
             >
               마킹 {row.annotations.length}
@@ -618,7 +627,9 @@ export function PassageInputRow({
             }}
             disabled={!canRestore}
             title="문제 형태 지문을 원문으로 AI 복원"
-            className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-5 text-[11.5px] font-bold text-white shadow-lg shadow-blue-500/60 ring-1 ring-blue-300/60 transition-all hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/80 disabled:cursor-not-allowed disabled:opacity-60"
+            // px-5 는 넓은 화면 강조용 — 좁은 모바일에선 '지문 N' 이름과 겹쳐
+            // px-2.5 로 좁힌다(mobile-first, PC ≥lg 는 px-5 유지).
+            className="flex h-7 shrink-0 items-center gap-1.5 rounded-md bg-blue-600 px-2.5 text-[11.5px] font-bold text-white shadow-lg shadow-blue-500/60 ring-1 ring-blue-300/60 transition-all hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/80 disabled:cursor-not-allowed disabled:opacity-60 lg:px-5"
           >
             {restoring ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />

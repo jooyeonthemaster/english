@@ -185,6 +185,7 @@ export async function runQuestionEdit(
   let durationMs = 0;
   let inputTokens: number | undefined;
   let outputTokens: number | undefined;
+  let costUsd: number | undefined;
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const { system, prompt } = buildEditPrompt({
@@ -218,6 +219,8 @@ export async function runQuestionEdit(
       durationMs += res.durationMs;
       inputTokens = res.inputTokens ?? inputTokens;
       outputTokens = res.outputTokens ?? outputTokens;
+      // 실측 원가는 시도별 실비이므로 합산해야 총지출이 된다.
+      if (typeof res.costUsd === "number") costUsd = (costUsd ?? 0) + res.costUsd;
     } catch (err) {
       // provider 호출 자체 실패 — 비재시도 에러는 즉시 전파(호출자 환불).
       // 스키마 미스매치(선지/밑줄/빈칸 개수·유형 변경 등 구조 위반)는 원시 영어 메시지
@@ -323,7 +326,7 @@ export async function runQuestionEdit(
     return baseResult({
       error:
         "정답이 학생에게 노출되거나 정답 표시가 누락되는 등 안전하게 출시할 수 없는 수정본입니다. 지시를 더 구체적으로 입력해 다시 시도해 주세요.",
-      meta: { modelId, provider, attempts: totalAttempts, durationMs, inputTokens, outputTokens },
+      meta: { modelId, provider, attempts: totalAttempts, durationMs, inputTokens, outputTokens, costUsd },
     });
   }
 
@@ -368,6 +371,7 @@ export async function runQuestionEdit(
         durationMs,
         inputTokens,
         outputTokens,
+        costUsd,
       },
     };
   }

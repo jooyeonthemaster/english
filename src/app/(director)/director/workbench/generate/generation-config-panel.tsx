@@ -854,7 +854,7 @@ export function GenerationConfigPanel({
             ) : (
               <div className="mt-2 flex items-center gap-2 rounded-lg border border-dashed border-blue-200 bg-blue-50/50 px-3 py-2 text-[11px] font-semibold text-blue-700">
                 <Plus className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                <span>유형 이름이나 + 를 눌러 문제 수를 더하세요.</span>
+                <span>+ 를 눌러 문제 수를 더하세요.</span>
               </div>
             )
           ) : null}
@@ -1132,9 +1132,9 @@ export function GenerationConfigPanel({
                                       align="start"
                                       sideOffset={0}
                                       collisionPadding={12}
-                                      className="max-h-[60vh] w-[var(--radix-popover-trigger-width)] overflow-y-auto rounded-t-none border border-t-0 border-blue-300 p-0 shadow-lg max-lg:max-h-[80vh]"
+                                      className="max-h-[var(--radix-popover-content-available-height)] lg:max-h-[60vh] w-[var(--radix-popover-trigger-width)] overflow-y-auto rounded-t-none border border-t-0 border-blue-300 p-0 shadow-lg"
                                     >
-                                      <div className="flex h-9 items-center gap-2 border-b border-slate-200 bg-white px-3 max-lg:h-8">
+                                      <div className="flex h-8 lg:h-9 items-center gap-2 border-b border-slate-200 bg-white px-3">
                                         <Settings2
                                           className="h-3.5 w-3.5 shrink-0 text-blue-500"
                                           aria-hidden="true"
@@ -1143,12 +1143,13 @@ export function GenerationConfigPanel({
                                           {item.label} 세부 설정
                                         </span>
                                       </div>
-                                      {/* 모바일은 스크롤 없이 한 화면에 들어오도록 간격·패딩을 조밀하게. */}
-                                      <div className="space-y-2.5 bg-slate-100 px-3 pb-3 pt-2.5 max-lg:space-y-1.5 max-lg:px-2 max-lg:pb-2 max-lg:pt-1.5">
-                                        <div className="rounded-lg border border-slate-200 bg-white px-2.5 py-2 max-lg:px-2 max-lg:py-1.5">
+                                      {/* 모바일은 조밀하게(mobile-first) — 팝오버는 위 available-height로
+                                          뷰포트에 맞춰 잘리고 내부 overflow-y-auto로 자연스럽게 스크롤된다. */}
+                                      <div className="space-y-1.5 lg:space-y-2.5 bg-slate-100 px-2 lg:px-3 pb-2 lg:pb-3 pt-1.5 lg:pt-2.5">
+                                        <div className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 lg:px-2.5 lg:py-2">
                                           {renderPerTypeDifficulty(item.id)}
                                         </div>
-                                        <div className="rounded-lg border border-slate-200 bg-white px-3 py-2.5 max-lg:px-2 max-lg:py-1.5">
+                                        <div className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 lg:px-3 lg:py-2.5">
                                           {renderTypeDetailContent(item.id)}
                                         </div>
                                       </div>

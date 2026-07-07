@@ -76,12 +76,12 @@ export function PassageCompare({
   const [activeChangeId, setActiveChangeId] = useState<string | null>(null);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4">
+    <div className="flex flex-col gap-4 lg:min-h-0 lg:flex-1">
       {/* The 복원 근거 column is always rendered (even with zero inline
           changes) so the layout never jumps when an "AI 복원 다시 실행" run
           happens to return no sentence-level evidence. The panel shows its
           own empty state in that case. */}
-      <div className="grid min-h-0 flex-1 gap-4 [grid-auto-rows:minmax(0,1fr)] grid-cols-[minmax(0,1fr)_minmax(0,1fr)_340px]">
+      <div className="grid grid-cols-1 gap-4 lg:min-h-0 lg:flex-1 lg:[grid-auto-rows:minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_340px]">
         <OriginalProblemBox
           draft={draft}
           changes={highlightableChanges}

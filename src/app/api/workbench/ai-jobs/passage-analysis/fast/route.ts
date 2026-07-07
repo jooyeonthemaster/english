@@ -11,6 +11,7 @@ import {
 import { hashContent } from "@/lib/passage-utils";
 import {
   providerFromModel,
+  readAiUsageCost,
   readAiUsageTokens,
   recordPlatformApiUsageCost,
 } from "@/lib/platform-api-costs";
@@ -101,6 +102,8 @@ async function recordCostSafely(input: {
   model: string;
   inputTokens: number;
   outputTokens: number;
+  /** OpenRouter 실측 청구액 합(USD) — 있으면 RECORDED 단가로 기록. */
+  recordedCostUsd?: number | null;
   usageAt: Date;
   metadata: Record<string, unknown>;
 }) {
@@ -117,6 +120,7 @@ async function recordCostSafely(input: {
       unitType: "TOKENS",
       inputTokens: input.inputTokens,
       outputTokens: input.outputTokens,
+      recordedCostUsd: input.recordedCostUsd,
       usageAt: input.usageAt,
       metadata: input.metadata as Prisma.InputJsonValue,
     });
@@ -251,15 +255,17 @@ export async function POST(req: NextRequest) {
       );
       generationMs = Date.now() - generationStartedAt;
 
-      // KO LLM 호출 토큰 합산 기록(플랫폼 원가 추적 — 영어 경로와 parity).
+      // KO LLM 호출 토큰·실측 원가 합산 기록(플랫폼 원가 추적 — 영어 경로와 parity).
       const koTokens = koResilient.usages.reduce(
         (acc, u) => {
           const t = readAiUsageTokens(u.usage);
+          const c = readAiUsageCost(u.usage);
           acc.input += t.inputTokens;
           acc.output += t.outputTokens;
+          if (c.costUsd) acc.costUsd += c.costUsd;
           return acc;
         },
-        { input: 0, output: 0 },
+        { input: 0, output: 0, costUsd: 0 },
       );
       if (koTokens.input > 0 || koTokens.output > 0) {
         const koModelId = koResilient.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.5-flash";
@@ -272,6 +278,7 @@ export async function POST(req: NextRequest) {
           model: koModelId,
           inputTokens: koTokens.input,
           outputTokens: koTokens.output,
+          recordedCostUsd: koTokens.costUsd > 0 ? koTokens.costUsd : null,
           usageAt: new Date(),
           metadata: { passageId: passage.id, generationPlan, koPrime: true, fastPath: true, calls: koResilient.usages.length },
         });
@@ -541,11 +548,13 @@ export async function POST(req: NextRequest) {
     const analysisTokens = resilient.usages.reduce(
       (acc, u) => {
         const t = readAiUsageTokens(u.usage);
+        const c = readAiUsageCost(u.usage);
         acc.input += t.inputTokens;
         acc.output += t.outputTokens;
+        if (c.costUsd) acc.costUsd += c.costUsd;
         return acc;
       },
-      { input: 0, output: 0 },
+      { input: 0, output: 0, costUsd: 0 },
     );
     if (analysisTokens.input > 0 || analysisTokens.output > 0) {
       const usageModelId = resilient.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.5-flash";
@@ -558,6 +567,7 @@ export async function POST(req: NextRequest) {
         model: usageModelId,
         inputTokens: analysisTokens.input,
         outputTokens: analysisTokens.output,
+        recordedCostUsd: analysisTokens.costUsd > 0 ? analysisTokens.costUsd : null,
         usageAt: new Date(),
         metadata: { passageId: passage.id, generationPlan, fastPath: true, calls: resilient.usages.length },
       });
@@ -644,11 +654,13 @@ export async function POST(req: NextRequest) {
       const wsTokens = worksheet.usages.reduce(
         (acc, u) => {
           const t = readAiUsageTokens(u.usage);
+          const c = readAiUsageCost(u.usage);
           acc.input += t.inputTokens;
           acc.output += t.outputTokens;
+          if (c.costUsd) acc.costUsd += c.costUsd;
           return acc;
         },
-        { input: 0, output: 0 },
+        { input: 0, output: 0, costUsd: 0 },
       );
       if (wsTokens.input > 0 || wsTokens.output > 0) {
         const wsModelId = worksheet.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.5-flash";
@@ -661,6 +673,7 @@ export async function POST(req: NextRequest) {
           model: wsModelId,
           inputTokens: wsTokens.input,
           outputTokens: wsTokens.output,
+          recordedCostUsd: wsTokens.costUsd > 0 ? wsTokens.costUsd : null,
           usageAt: new Date(),
           metadata: { passageId: passage.id, generationPlan, fastPath: true, calls: worksheet.usages.length },
         });

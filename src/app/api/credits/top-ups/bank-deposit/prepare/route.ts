@@ -9,10 +9,12 @@ import {
   getBankDepositConfig,
   normalizeDepositorName,
 } from "@/lib/bank-deposit";
+import { resolveCouponVsPromo } from "@/lib/printable-coupon-discount";
 
 const prepareSchema = z.object({
   credits: z.number().int().positive(),
   depositorName: z.string().trim().min(1).max(40),
+  couponCodeId: z.string().optional(),
 });
 
 /**
@@ -56,6 +58,19 @@ export async function POST(request: NextRequest) {
 
     const depositorName = parsed.data.depositorName;
 
+    // 실물 할인 쿠폰 ↔ 프로모 비중첩(§9) — 서버 재검증 후 더 저렴한 하나만.
+    const applied = await resolveCouponVsPromo({
+      academyId: staff.academyId,
+      couponCodeId: parsed.data.couponCodeId,
+      basePrice: product.basePrice,
+      baseCredits: product.creditAmount,
+      promoPrice: product.price,
+      promoCredits: product.grantedCreditAmount,
+    });
+    const finalPrice = applied.price;
+    const couponApplied = applied.source === "coupon";
+    const promoActive = product.isPromotionActive && !couponApplied;
+
     // 동일 학원 + 동일 입금자명 + 동일 금액의 입금 대기 주문이 시간창 내에 이미
     // 있으면 중복 생성을 막는다(같은 입금 1건이 어느 주문인지 구분 불가해지는 것 방지).
     const windowStart = new Date(
@@ -66,7 +81,7 @@ export async function POST(request: NextRequest) {
         academyId: staff.academyId,
         paymentMethod: BANK_TRANSFER_PAY_METHOD,
         status: "WAITING_FOR_DEPOSIT",
-        price: product.price,
+        price: finalPrice,
         createdAt: { gte: windowStart },
       },
       select: { customData: true },
@@ -93,14 +108,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 지급 크레딧 = 기본 + 프로모션 보너스(활성 시). 결제금액(price)은 그대로.
-    const grantedCredits = product.grantedCreditAmount;
+    // 지급 크레딧 = 적용된 경로(쿠폰=기본, 프로모=기본+보너스). 결제금액=finalPrice.
+    const grantedCredits = applied.credits;
+    const couponCustomData = couponApplied
+      ? {
+          couponCodeId: applied.appliedCouponId,
+          couponDiscount: applied.couponDiscount,
+          discountSource: "coupon" as const,
+        }
+      : { discountSource: promoActive ? ("promo" as const) : ("none" as const) };
 
     const topUp = await prisma.creditTopUp.create({
       data: {
         academyId: staff.academyId,
         creditAmount: grantedCredits,
-        price: product.price,
+        price: finalPrice,
         paymentMethod: BANK_TRANSFER_PAY_METHOD,
         orderName: `SMOAT 크레딧 ${grantedCredits.toLocaleString("ko-KR")}C`,
         currency: "KRW",
@@ -110,13 +132,14 @@ export async function POST(request: NextRequest) {
           academyId: staff.academyId,
           staffId: staff.id,
           credits: grantedCredits,
-          price: product.price,
+          price: finalPrice,
           productCode: product.code,
           basePrice: product.basePrice,
-          discountRate: product.isPromotionActive ? product.discountRate : 0,
-          bonusRate: product.isPromotionActive ? product.bonusRate : 0,
+          discountRate: promoActive ? product.discountRate : 0,
+          bonusRate: promoActive ? product.bonusRate : 0,
           flow: "bank_manual",
           depositorName,
+          ...couponCustomData,
         },
       },
       select: { id: true, price: true, creditAmount: true, createdAt: true },

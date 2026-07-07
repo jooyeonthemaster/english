@@ -1,12 +1,12 @@
-import { getNotices } from "@/actions/communication";
-import { getClassList } from "@/actions/consultations";
+import { getStaffAnnouncements } from "@/actions/platform-announcements";
+import { getBuildRef } from "@/lib/app-version";
 import NoticesClient from "./notices-client";
 
-export default async function NoticesPage() {
-  const [notices, classes] = await Promise.all([
-    getNotices({}),
-    getClassList(),
-  ]);
+export const dynamic = "force-dynamic";
 
-  return <NoticesClient initialNotices={notices} initialClasses={classes} />;
+export default async function NoticesPage() {
+  const announcements = await getStaffAnnouncements();
+  return (
+    <NoticesClient initialAnnouncements={announcements} buildRef={getBuildRef()} />
+  );
 }

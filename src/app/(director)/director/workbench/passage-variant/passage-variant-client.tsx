@@ -19,6 +19,10 @@ import {
 } from "lucide-react";
 import { SaveButton } from "@/components/ui/save-button";
 
+import {
+  MobileStepHeader,
+  MobileStepNav,
+} from "@/components/workbench/mobile-step-flow";
 import { CREDIT_COSTS } from "@/lib/credit-costs";
 import { CreditCostChip } from "@/components/credits/credit-cost-chip";
 import { useMobilePagination } from "@/hooks/use-mobile-pagination";
@@ -162,6 +166,16 @@ export function PassageVariantClient({ passages }: PassageVariantClientProps) {
     visibleItems: visibleSources,
   } = useMobilePagination(filtered, { resetKey: search });
   const sourceListRef = useRef<HTMLDivElement>(null);
+
+  // ── 모바일(<lg) 전용 2스텝 플로우 — 문제 생성 페이지와 동일한 UX 문법.
+  //    ① 원본 선택 → ② 변형·저장. 데스크톱 2컬럼 레이아웃은 그대로(max-lg 한정). ──
+  const [mobileStep, setMobileStep] = useState<"select" | "transform">(
+    "select",
+  );
+  const goToMobileStep = useCallback((step: "select" | "transform") => {
+    setMobileStep(step);
+    window.scrollTo({ top: 0 });
+  }, []);
 
   // ── 생성 상태 / 결과 / 저장 ──
   const [busyKey, setBusyKey] = useState<string | null>(null);
@@ -319,8 +333,21 @@ export function PassageVariantClient({ passages }: PassageVariantClientProps) {
     : "";
 
   return (
-    <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 sm:px-6 xl:px-8">
+    // 모바일: 하단 고정 스텝 네비에 가리지 않게 네비 높이만큼 아래 여백 예약.
+    <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] px-4 py-4 max-lg:pb-[96px] sm:px-6 xl:px-8">
       <main className="mx-auto flex w-full min-w-0 max-w-[1400px] flex-col gap-4">
+        {/* ── 모바일 전용 진행 스텝 — 공용 스텝 헤더(문제 생성과 동일) ── */}
+        <div className="lg:hidden">
+          <MobileStepHeader
+            steps={[
+              { key: "select", label: "원본 선택" },
+              { key: "transform", label: "변형 · 저장" },
+            ]}
+            currentKey={mobileStep}
+            onSelect={(key) => goToMobileStep(key as typeof mobileStep)}
+          />
+        </div>
+
         {/* ── 헤더 ── */}
         <header className="flex flex-wrap items-center gap-2.5">
           <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-600 ring-1 ring-violet-100">
@@ -336,8 +363,15 @@ export function PassageVariantClient({ passages }: PassageVariantClientProps) {
         </header>
 
         <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-[340px_minmax(0,1fr)]">
-          {/* ───────────────── 원본 지문 선택기 ───────────────── */}
-          <section className="flex h-[70vh] min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm lg:h-auto lg:max-h-[calc(100vh-160px)]">
+          {/* ───────────────── 원본 지문 선택기 ─────────────────
+              모바일: '원본 선택' 스텝에서만 노출, 높이는 콘텐츠(10개/페이지)만큼.
+              PC: 기존 lg:h-auto·max-h 그대로. */}
+          <section
+            className={
+              "flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm lg:h-auto lg:max-h-[calc(100vh-160px)]" +
+              (mobileStep === "select" ? "" : " max-lg:hidden")
+            }
+          >
             <div className="flex items-center gap-2 border-b border-slate-100 px-3 py-2.5">
               <FileText
                 className="h-4 w-4 shrink-0 text-violet-500"
@@ -439,15 +473,21 @@ export function PassageVariantClient({ passages }: PassageVariantClientProps) {
                   totalPages={sourceTotalPages}
                   onGoToPage={(next) => {
                     setSourcePage(next);
-                    sourceListRef.current?.scrollTo({ top: 0 });
+                    sourceListRef.current?.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 />
               ) : null}
             </div>
           </section>
 
-          {/* ───────────────── 변형 작업 영역 ───────────────── */}
-          <section className="flex min-w-0 flex-col gap-4">
+          {/* ───────────────── 변형 작업 영역 ─────────────────
+              모바일: '변형 · 저장' 스텝에서만 노출. PC: 그대로. */}
+          <section
+            className={
+              "flex min-w-0 flex-col gap-4" +
+              (mobileStep === "transform" ? "" : " max-lg:hidden")
+            }
+          >
             {!selected ? (
               <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 bg-white px-6 py-20 text-center shadow-sm">
                 <span className="flex size-11 items-center justify-center rounded-full bg-slate-50 text-slate-300 ring-1 ring-slate-100">
@@ -456,9 +496,14 @@ export function PassageVariantClient({ passages }: PassageVariantClientProps) {
                 <p className="text-[13px] font-semibold text-slate-500">
                   변형할 원본 지문을 선택하세요
                 </p>
-                <p className="max-w-sm text-[12px] text-slate-400">
+                {/* 안내 문구 — PC는 좌측 컬럼, 모바일은 이전 스텝을 가리킨다(PC 문구 무변경). */}
+                <p className="max-w-sm text-[12px] text-slate-400 max-lg:hidden">
                   왼쪽 목록에서 지문을 고르면 6가지 변형(관련/상반 주제·난이도·길이)을
                   실행할 수 있어요.
+                </p>
+                <p className="max-w-sm text-[12px] text-slate-400 lg:hidden">
+                  이전 단계(원본 선택)에서 지문을 고르면 6가지 변형(관련/상반
+                  주제·난이도·길이)을 실행할 수 있어요.
                 </p>
               </div>
             ) : (
@@ -698,6 +743,30 @@ export function PassageVariantClient({ passages }: PassageVariantClientProps) {
           </section>
         </div>
       </main>
+
+      {/* ── 모바일 전용 하단 고정 스텝 네비 (lg:hidden) ──
+          원본 선택 스텝: '다음으로 (변형 만들기)' — 지문 미선택 시 비활 + 힌트.
+          변형 스텝: '이전 (원본 선택)'으로 복귀. */}
+      {mobileStep === "select" ? (
+        <MobileStepNav
+          prev={null}
+          next={{
+            label: "다음으로 (변형 만들기)",
+            onClick: () => goToMobileStep("transform"),
+            disabled: !selected,
+          }}
+          hint={
+            selected
+              ? `선택됨 — ${selected.title}`
+              : "원본 지문을 선택하세요"
+          }
+        />
+      ) : (
+        <MobileStepNav
+          prev={{ label: "이전", onClick: () => goToMobileStep("select") }}
+          next={null}
+        />
+      )}
     </div>
   );
 }

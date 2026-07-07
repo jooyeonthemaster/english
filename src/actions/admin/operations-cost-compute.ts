@@ -289,6 +289,7 @@ export function addSourceApiCost(
       unpricedInputTokens: 0,
       unpricedOutputTokens: 0,
       estimatedCalls: 0,
+      recordedCalls: 0,
       inputTokens: 0,
       outputTokens: 0,
       costUsd: 0,
@@ -302,6 +303,9 @@ export function addSourceApiCost(
   }
   if (pricingSource === "ESTIMATE") {
     source.estimatedCalls += calls;
+  }
+  if (pricingSource === "RECORDED") {
+    source.recordedCalls += calls;
   }
   source.inputTokens += inputTokens;
   source.outputTokens += outputTokens;

@@ -223,14 +223,6 @@ export const CONSULTATION_CATEGORIES = [
   { value: "OTHER", label: "기타" },
 ] as const;
 
-// Notice Target Types
-export const NOTICE_TARGET_TYPES = [
-  { value: "ALL", label: "학원 전체" },
-  { value: "CLASS", label: "반별" },
-  { value: "INDIVIDUAL", label: "개인별" },
-  { value: "PARENTS", label: "학부모" },
-] as const;
-
 // Calendar Event Types
 export const CALENDAR_EVENT_TYPES = [
   { value: "EXAM", label: "시험", color: "bg-blue-500", textColor: "text-blue-700", dotColor: "bg-blue-500" },

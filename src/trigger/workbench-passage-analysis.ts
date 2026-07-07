@@ -13,6 +13,7 @@ import {
 import { hashContent } from "@/lib/passage-utils";
 import {
   providerFromModel,
+  readAiUsageCost,
   readAiUsageTokens,
   recordPlatformApiUsageCost,
 } from "@/lib/platform-api-costs";
@@ -201,15 +202,17 @@ export const workbenchPassageAnalysisTask = task({
           { contentHash: currentHash, deadlineAt: Date.now() + 240_000 },
         );
         generationMs = Date.now() - generationStartedAt;
-        // 회복형 KO 생성의 LLM 호출 토큰 합산 기록(플랫폼 원가 추적).
+        // 회복형 KO 생성의 LLM 호출 토큰·실측 원가 합산 기록(플랫폼 원가 추적).
         const koTokens = koResult.usages.reduce(
           (acc, u) => {
             const t = readAiUsageTokens(u.usage);
+            const c = readAiUsageCost(u.usage);
             acc.input += t.inputTokens;
             acc.output += t.outputTokens;
+            if (c.costUsd) acc.costUsd += c.costUsd;
             return acc;
           },
-          { input: 0, output: 0 },
+          { input: 0, output: 0, costUsd: 0 },
         );
         if (koTokens.input > 0 || koTokens.output > 0) {
           const koModelId = koResult.usages.find((u) => u.modelId)?.modelId ?? "gemini-3.5-flash";
@@ -225,6 +228,7 @@ export const workbenchPassageAnalysisTask = task({
             unitType: "TOKENS",
             inputTokens: koTokens.input,
             outputTokens: koTokens.output,
+            recordedCostUsd: koTokens.costUsd > 0 ? koTokens.costUsd : null,
             usageAt: new Date(),
             metadata: { passageId: job.passage.id, generationPlan, koPrime: true, calls: koResult.usages.length },
           });
@@ -370,6 +374,7 @@ export const workbenchPassageAnalysisTask = task({
       const usageEvent = primeResult.usage;
       if (usageEvent) {
         const usage = readAiUsageTokens(usageEvent.usage);
+        const actualCost = readAiUsageCost(usageEvent.usage);
         await recordPlatformApiUsageCost({
           sourceKey: `workbench_ai_job:${jobId}:analysis`,
           sourceType: "WORKBENCH_AI_JOB",
@@ -382,6 +387,7 @@ export const workbenchPassageAnalysisTask = task({
           unitType: "TOKENS",
           inputTokens: usage.inputTokens,
           outputTokens: usage.outputTokens,
+          recordedCostUsd: actualCost.costUsd,
           usageAt: new Date(),
           metadata: {
             passageId: job.passage.id,
@@ -416,6 +422,7 @@ export const workbenchPassageAnalysisTask = task({
             const wUsage = worksheet.usage;
             if (wUsage) {
               const usage = readAiUsageTokens(wUsage.usage);
+              const actualCost = readAiUsageCost(wUsage.usage);
               await recordPlatformApiUsageCost({
                 sourceKey: `workbench_ai_job:${jobId}:worksheet`,
                 sourceType: "WORKBENCH_AI_JOB",
@@ -428,6 +435,7 @@ export const workbenchPassageAnalysisTask = task({
                 unitType: "TOKENS",
                 inputTokens: usage.inputTokens,
                 outputTokens: usage.outputTokens,
+                recordedCostUsd: actualCost.costUsd,
                 usageAt: new Date(),
                 metadata: {
                   passageId: job.passage.id,

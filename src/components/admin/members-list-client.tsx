@@ -22,7 +22,7 @@ import type {
   MemberSortKey,
   SortOrder,
 } from "@/actions/admin-members";
-import { MemberRow } from "./members-list-client/member-row";
+import { MemberRow, MemberCard } from "./members-list-client/member-row";
 import { BulkActionsBar } from "./members-list-client/bulk-actions-bar";
 import {
   EmptyState,
@@ -609,7 +609,7 @@ export function MembersListClient({ members }: MembersListClientProps) {
               }}
               onKeyDown={(e) => e.key === "Enter" && flush(searchInput)}
               placeholder="이름·이메일·학원·메모 검색"
-              className="pl-9 pr-9 h-9 text-[13px] bg-gray-50 border-gray-100 focus-visible:bg-white"
+              className="pl-9! pr-9! h-9 text-[13px] bg-gray-50 border-gray-100 focus-visible:bg-white"
               aria-label="회원 검색"
             />
             {searchInput && (
@@ -885,7 +885,26 @@ export function MembersListClient({ members }: MembersListClientProps) {
             />
           </div>
         ) : (
-          <div className="overflow-x-auto" ref={tableWrapRef} style={columnCssVars}>
+          <>
+            {/* 모바일: 가로 스크롤 대신 회원 세로 카드 (트레이 위 분리된 카드) */}
+            <ul className="space-y-2 bg-gray-50/60 p-2.5 lg:hidden">
+              {sorted.map((m) => (
+                <MemberCard
+                  key={m.id}
+                  member={m}
+                  now={renderNow}
+                  selected={selectedIds.has(m.id)}
+                  onSelectChange={(checked) => toggleOne(m.id, checked)}
+                />
+              ))}
+            </ul>
+
+            {/* 데스크톱/태블릿: 기존 표 (가로 폭 유지) */}
+            <div
+              className="hidden overflow-x-auto lg:block"
+              ref={tableWrapRef}
+              style={columnCssVars}
+            >
             <Table className="w-max table-fixed">
               <TableHeader>
                 <TableRow className="hover:bg-transparent border-b border-gray-50">
@@ -934,7 +953,8 @@ export function MembersListClient({ members }: MembersListClientProps) {
                 ))}
               </TableBody>
             </Table>
-          </div>
+            </div>
+          </>
         )}
       </div>
 

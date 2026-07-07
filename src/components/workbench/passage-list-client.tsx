@@ -941,14 +941,14 @@ export function PassageListClient({
       onClick={handleBulkReview}
       disabled={selection.selectedIds.size === 0 || bulkReviewing}
       title="검수완료"
-      className="flex h-7 shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border border-emerald-300 bg-white px-2.5 text-[11px] font-semibold text-emerald-600 transition-colors hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+      aria-label="검수완료"
+      className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-emerald-300 bg-white text-emerald-600 transition-colors hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {bulkReviewing ? (
         <Loader2 className="w-3.5 h-3.5 animate-spin" />
       ) : (
         <CheckCircle2 className="w-3.5 h-3.5" />
       )}
-      검수완료
     </button>
   );
 
@@ -994,6 +994,8 @@ export function PassageListClient({
 
   const [folderStickyRef, folderStickyHeight] = useMeasuredHeight(true);
   const passageListBoundaryRef = useRef<HTMLDivElement | null>(null);
+  // 모바일 페이지 넘김 시 목록 상단(스티키 헤더 포함)으로 부드럽게 스크롤.
+  const listSectionRef = useRef<HTMLElement>(null);
 
   const toolbarRow = (
     <div className="flex min-h-9 flex-wrap items-center gap-x-2 gap-y-1.5">
@@ -1022,7 +1024,9 @@ export function PassageListClient({
               type="button"
               onClick={() => void handleSelectAllPages()}
               disabled={selectingAllPages}
-              className="whitespace-nowrap text-xs font-medium text-blue-600 underline-offset-2 hover:underline disabled:opacity-50"
+              // 모바일에선 숨김 — 헤더 체크박스가 이미 '스코프 전체 선택'을 하므로 중복.
+              // (데스크톱은 lg: 로 기존 그대로 노출, PC 무변경)
+              className="hidden whitespace-nowrap text-xs font-medium text-blue-600 underline-offset-2 hover:underline disabled:opacity-50 lg:inline-block"
               title={
                 koScope
                   ? "현재 필터의 모든 페이지에 있는 지문을 선택"
@@ -1118,7 +1122,10 @@ export function PassageListClient({
           </div>
           )
         ) : (
-          <section className="mt-2 flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <section
+            ref={listSectionRef}
+            className="mt-2 flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm"
+          >
             <div
               ref={folderStickyRef}
               className="sticky top-0 z-30 shrink-0 overflow-hidden rounded-t-2xl bg-white"
@@ -1395,6 +1402,7 @@ export function PassageListClient({
             page={passagesData.page}
             totalPages={passagesData.totalPages}
             onGoToPage={goToPage}
+            scrollTargetRef={listSectionRef}
           />
         )}
       </div>

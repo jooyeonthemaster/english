@@ -49,7 +49,7 @@ export function MemberRow({
     <TableRow
       onClick={handleRowClick}
       className={cn(
-        "group border-b border-gray-50/60 last:border-0 cursor-pointer",
+        "group border-b border-gray-100 last:border-0 cursor-pointer",
         selected ? "bg-blue-50/50 hover:bg-blue-50/70" : "hover:bg-gray-50/60",
       )}
     >
@@ -136,6 +136,124 @@ export function MemberRow({
         />
       </TableCell>
     </TableRow>
+  );
+}
+
+/**
+ * 회원별 보기 모바일 카드 — 가로 스크롤 없이 한 회원의 핵심 정보를 세로로 쌓는다.
+ * 표(MemberRow)와 같은 셀 컴포넌트(Avatar/LatestPurchaseCell/BalanceCell/ExpiryCell)를
+ * 재사용해 데스크톱과 표시 내용이 어긋나지 않게 한다.
+ */
+export function MemberCard({
+  member,
+  now,
+  selected,
+  onSelectChange,
+}: {
+  member: MemberListItem;
+  now: number;
+  selected: boolean;
+  onSelectChange: (checked: boolean) => void;
+}) {
+  const href = `/admin/members/${member.id}`;
+  return (
+    <li
+      className={cn(
+        "rounded-xl border bg-white px-4 py-3.5 transition-colors",
+        selected
+          ? "border-blue-200 bg-blue-50/40 ring-1 ring-blue-100"
+          : "border-gray-200 shadow-[0_1px_2px_rgba(16,24,40,0.04)]",
+      )}
+    >
+      <div className="flex items-start gap-3">
+        <Checkbox
+          checked={selected}
+          onCheckedChange={(v) => onSelectChange(v === true)}
+          aria-label={`${member.name} 선택`}
+          className="mt-2.5 shrink-0"
+        />
+        <Link
+          href={href}
+          className="flex min-w-0 flex-1 items-center gap-3 rounded-md -m-1 p-1 outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40"
+        >
+          <Avatar name={member.name} avatarUrl={member.avatarUrl} />
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="text-[13px] font-medium text-gray-900 truncate">
+                {member.name}
+              </span>
+              {!member.isActive && (
+                <Badge
+                  variant="secondary"
+                  className="bg-gray-100 text-gray-500 border-0 text-[11px] px-1.5 h-4 font-medium shrink-0"
+                >
+                  비활성
+                </Badge>
+              )}
+            </div>
+            <div className="text-[11px] text-gray-400 truncate">
+              {member.email}
+            </div>
+          </div>
+        </Link>
+        {/* 크레딧 잔고 + 바로 아래 소멸시효(작은 회색 글씨) */}
+        <div className="flex shrink-0 flex-col items-end gap-0.5 pt-1">
+          <BalanceCell balance={member.creditBalance?.balance ?? null} />
+          <CardExpiryHint
+            expiresAt={member.creditBalance?.expiresAt ?? null}
+            now={now}
+          />
+        </div>
+      </div>
+
+      <div className="mt-2.5 space-y-1 pl-1 text-[11px] text-gray-400">
+        {/* 학원 (+ 문자수신 토글 우측) */}
+        <div className="flex items-center gap-1">
+          <span className="shrink-0">학원</span>
+          <span className="min-w-0 flex-1 truncate text-gray-600">
+            {member.academy.name}
+          </span>
+          <span className="shrink-0">
+            <SmsToggle
+              memberId={member.id}
+              optOut={member.smsOptOut}
+              isInternal={member.isInternal}
+            />
+          </span>
+        </div>
+        {/* 최근 구매 — 학원 아래로, 한 줄로 */}
+        <div className="flex items-center gap-1">
+          <span className="shrink-0">최근 구매</span>
+          {member.latestPurchase ? (
+            <span className="min-w-0 truncate text-gray-600 tabular-nums">
+              {member.latestPurchase.name} ·{" "}
+              {member.latestPurchase.creditAmount.toLocaleString("ko-KR")} C ·{" "}
+              {formatDate(member.latestPurchase.purchasedAt)}
+            </span>
+          ) : (
+            <span className="text-gray-300">구입 없음</span>
+          )}
+        </div>
+      </div>
+    </li>
+  );
+}
+
+/** 카드에서 크레딧 잔고 바로 아래 표시하는 소멸시효 — 작은 회색 글씨 한 줄. */
+function CardExpiryHint({
+  expiresAt,
+  now,
+}: {
+  expiresAt: Date | string | null;
+  now: number;
+}) {
+  if (!expiresAt) return null;
+  const days = Math.ceil((new Date(expiresAt).getTime() - now) / 86_400_000);
+  return (
+    <span className="text-[10.5px] leading-tight text-gray-400 tabular-nums">
+      소멸 {formatDate(expiresAt)}
+      {days >= 0 ? ` · D-${days}` : " · 만료"}
+    </span>
   );
 }
 

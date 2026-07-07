@@ -50,7 +50,9 @@ function FilterMenu<T extends string | number>({
           type="button"
           aria-label={active ? `${label} 필터, ${count}개 선택됨` : `${label} 필터`}
           className={
-            "inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg border px-2.5 text-[12px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 " +
+            // 모바일(base): flex-1 로 한 줄에서 5개 균등 분배(줄바꿈 방지) + 컴팩트 패딩.
+            // 데스크톱(lg): 기존 자연폭·패딩 그대로.
+            "inline-flex h-8 min-w-0 flex-1 items-center justify-center gap-1 rounded-lg border px-2 text-[12px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 lg:flex-none lg:shrink-0 lg:justify-start lg:gap-1.5 lg:px-2.5 " +
             (active
               ? "border-blue-600 bg-blue-50 text-blue-700 shadow-sm"
               : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50")
@@ -224,6 +226,10 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
           모바일(<lg)은 줄바꿈해 토글·'← 시험지' 뒤로 버튼이 화면 밖으로 밀려
           잘리지 않게 한다(검색창은 아래 전체폭으로 내림). PC 는 기존 한 줄 유지. */}
       <div className="flex flex-wrap items-center gap-1.5 lg:flex-nowrap">
+        {/* 체크박스 + facet 드롭다운 5개를 한 묶음으로. 모바일(base)은 전체폭
+            한 줄에 flex-1 균등 분배(줄바꿈 방지), 데스크톱(lg:contents)은 래퍼를
+            투명화해 기존 한 줄 인라인 레이아웃을 그대로 둔다. */}
+        <div className="flex w-full min-w-0 items-center gap-1 lg:contents">
         {/* 전체선택 체크박스 — 상시 노출(시험지별/문제별 공통, 맨 왼쪽) */}
         <input
           type="checkbox"
@@ -288,6 +294,7 @@ export function ExamFilterBar({ api }: { api: ExamPassageLibraryApi }) {
           onToggle={api.toggleRecon}
           onClear={() => filters.recons.forEach((v) => api.toggleRecon(v))}
         />
+        </div>
 
         {/* 검색창 + 토글/뒤로 묶음 — 모바일은 전체폭 한 줄로 내려(order-last)
             검색창과 '← 시험지' 뒤로 버튼을 같은 줄에 둔다. lg:contents 로

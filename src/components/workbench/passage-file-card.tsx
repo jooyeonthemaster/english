@@ -217,17 +217,18 @@ export function PassageFileCard({
         e.preventDefault();
         onViewDetail(passage.id);
       }}
-      className={`group relative flex h-full min-h-[212px] flex-row overflow-hidden rounded-xl border ${borderColor} ${reviewGlow} bg-white transition-all duration-200 cursor-pointer ${
+      className={`group relative flex h-full min-h-[128px] flex-row overflow-hidden rounded-xl border md:min-h-[212px] ${borderColor} ${reviewGlow} bg-white transition-all duration-200 cursor-pointer ${
         selected ? "ring-2 ring-blue-400" : ""
       } ${isDragging ? "opacity-40 scale-95" : ""}
       `}>
-        {/* ─── 좌측: 분석 보고서(학습지) 첫 장 실제 렌더 미리보기 ─── */}
-        <div className="relative w-[148px] shrink-0 self-stretch overflow-hidden border-r border-slate-100 bg-white">
+        {/* ─── 좌측: 분석 보고서(학습지) 첫 장 실제 렌더 미리보기 ───
+            모바일(<md)은 시험지 관리 카드처럼 썸네일을 좁혀 카드 세로를 줄인다. */}
+        <div className="relative w-[24%] min-w-[74px] max-w-[96px] shrink-0 self-stretch overflow-hidden border-r border-slate-100 bg-white md:w-[148px] md:min-w-[148px] md:max-w-[148px]">
           <PassageReportThumbnail passageId={passage.id} />
         </div>
 
         {/* ─── 우측: 카드 본문 ─── */}
-        <div className="flex min-w-0 flex-1 flex-col px-3.5 py-2.5">
+        <div className="flex min-w-0 flex-1 flex-col px-3 py-2 md:px-3.5 md:py-2.5">
           <div className="flex items-center gap-2.5 min-w-0">
             <DragHandle ref={dragHandleRef} className="shrink-0" />
             <button
@@ -310,7 +311,7 @@ export function PassageFileCard({
           </div>
 
           {(passage.school || passage.grade || passage.unit || passage.publisher) && (
-            <div className="flex items-center gap-1.5 flex-wrap mt-2">
+            <div className="flex items-center gap-1.5 flex-wrap mt-1.5 md:mt-2">
               {passage.school && <Badge variant="outline" className="text-[9px] h-5 px-1.5 font-medium">{passage.school.name}</Badge>}
               {passage.grade && <Badge variant="secondary" className="text-[9px] h-5 px-1.5">{passage.grade}학년</Badge>}
               {passage.semester && <Badge variant="secondary" className="text-[9px] h-5 px-1.5">{getSemesterLabel(passage.semester)}</Badge>}
@@ -322,13 +323,13 @@ export function PassageFileCard({
           {/* 본문 미리보기 — 상세 내용을 더 길게 노출해 카드 가운데 여백을 줄인다.
               분석 요지(mainIdea)보다 실제 지문 본문이 길어 빈 공간을 잘 채운다. */}
           {(passage.content?.trim() || mainIdea) && (
-            <p className="text-[11px] text-slate-500 leading-relaxed mt-2 line-clamp-5">
+            <p className="text-[11px] text-slate-500 leading-relaxed mt-1.5 line-clamp-2 md:mt-2 md:line-clamp-5">
               {passage.content?.trim() || mainIdea}
             </p>
           )}
 
           {/* ─── 하단: 생성/수정 시각(연월일시분) + 액션 버튼 행 ─── */}
-          <div className="mt-auto pt-3">
+          <div className="mt-auto pt-2 md:pt-3">
             {(cardTimestamp || isDirectInput || (dupCount && dupCount > 0)) ? (
               <div className="mb-1.5 flex items-center gap-1.5">
                 {cardTimestamp ? (

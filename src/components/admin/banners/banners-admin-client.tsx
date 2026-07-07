@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ChevronDown,
   ChevronUp,
@@ -25,7 +25,7 @@ import {
   toggleBannerActive,
   type AdminBannerDto,
 } from "@/actions/admin-banners";
-import { BannerEditorModal } from "./banner-editor-modal";
+import { BannerEditorModal, type BannerPrefill } from "./banner-editor-modal";
 
 function dismissLabel(mode: string): string {
   return DISMISS_MODES.find((m) => m.value === mode)?.label ?? mode;
@@ -41,18 +41,37 @@ function fmtDate(iso: string | null): string | null {
 
 export function BannersAdminClient({ initialBanners }: { initialBanners: AdminBannerDto[] }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [items, setItems] = useState(initialBanners);
   const [, startTransition] = useTransition();
   const [editorOpen, setEditorOpen] = useState(false);
   const [editing, setEditing] = useState<AdminBannerDto | null>(null);
+  const [prefill, setPrefill] = useState<BannerPrefill | null>(null);
 
   // Re-sync when the server sends a fresh list (after router.refresh()).
   useEffect(() => {
     setItems(initialBanners);
   }, [initialBanners]);
 
+  // 공지 상세 "배너로 띄우기" → /admin/banners?prefill=announcement&... 로 진입하면
+  // announcement 템플릿을 프리필한 새 배너 편집기를 자동으로 연다(1회, URL 정리).
+  useEffect(() => {
+    if (searchParams.get("prefill") !== "announcement") return;
+    setPrefill({
+      title: searchParams.get("title") ?? undefined,
+      eyebrow: searchParams.get("eyebrow") ?? undefined,
+      heading: searchParams.get("heading") ?? searchParams.get("title") ?? undefined,
+      body: searchParams.get("body") ?? undefined,
+    });
+    setEditing(null);
+    setEditorOpen(true);
+    router.replace("/admin/banners");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
   function openCreate() {
     setEditing(null);
+    setPrefill(null);
     setEditorOpen(true);
   }
   function openEdit(banner: AdminBannerDto) {
@@ -261,8 +280,12 @@ export function BannersAdminClient({ initialBanners }: { initialBanners: AdminBa
 
       <BannerEditorModal
         open={editorOpen}
-        onOpenChange={setEditorOpen}
+        onOpenChange={(open) => {
+          setEditorOpen(open);
+          if (!open) setPrefill(null);
+        }}
         editing={editing}
+        prefill={prefill}
         onSaved={() => router.refresh()}
       />
     </div>

@@ -7,12 +7,16 @@ import { grantBankDepositTopUp } from "@/lib/bank-deposit";
 const bodySchema = z.union([
   z.object({ action: z.literal("match"), topUpId: z.string().min(1) }),
   z.object({ action: z.literal("ignore") }),
+  z.object({ action: z.literal("manual_grant") }),
 ]);
 
 /**
  * Admin actions on a bank deposit notification (SUPER_ADMIN):
- *  - match:  attach to a pending bank-transfer order and grant credits
- *  - ignore: mark as IGNORED (e.g. not a real top-up deposit)
+ *  - match:        attach to a pending bank-transfer order and grant credits
+ *  - ignore:       mark as IGNORED (e.g. not a real top-up deposit)
+ *  - manual_grant: mark as MANUAL_GRANT — a real deposit whose credits were
+ *                  already granted by hand (outside the auto-match flow). Only
+ *                  records the status; it does NOT credit again (no double-grant).
  */
 export async function POST(
   request: NextRequest,
@@ -53,6 +57,26 @@ export async function POST(
       },
     });
     return NextResponse.json({ status: "IGNORED" });
+  }
+
+  if (parsed.data.action === "manual_grant") {
+    // 시스템 외에서 이미 수동으로 크레딧을 지급한 실입금 → 상태만 '수동지급'으로
+    // 기록한다. 자동 지급(MATCHED)된 건은 이중지급 오인을 막기 위해 전환 불가.
+    if (notification.status === "MATCHED") {
+      return NextResponse.json(
+        { error: "이미 자동 지급된 입금입니다. 수동지급으로 변경할 수 없습니다." },
+        { status: 409 },
+      );
+    }
+    await prisma.bankDepositNotification.update({
+      where: { id },
+      data: {
+        status: "MANUAL_GRANT",
+        note: `관리자(${admin.adminId}) 수동지급 처리 — 시스템 외 수동 지급 완료로 기록.`,
+        processedAt: new Date(),
+      },
+    });
+    return NextResponse.json({ status: "MANUAL_GRANT" });
   }
 
   // action === "match"

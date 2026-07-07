@@ -44,7 +44,6 @@ model Academy {
   invoices                  Invoice[]
   expenses                  Expense[]
   salaries                  Salary[]
-  notices                   Notice[]
   calendarEvents            CalendarEvent[]
   consultations             Consultation[]
   assignments               Assignment[]
@@ -131,6 +130,9 @@ model Staff {
   kakaoId        String?   @unique @map("kakao_id")
   authProvider   String?   @map("auth_provider") // credentials | google | kakao
   lastLoginAt    DateTime? @map("last_login_at") @db.Timestamptz(6)
+  // 스모트 소식(플랫폼 공지) 마지막 확인 시각 — 이 시각 이후 발행된 글이 있으면
+  // "새 소식" 배지를 띄운다. 공지별 읽음 레코드 대신 프로필당 타임스탬프 1개로 추적.
+  lastAnnouncementReadAt DateTime? @map("last_announcement_read_at")
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -225,6 +227,9 @@ model Student {
   streakFreezeCount Int       @default(0) // max 3
   lastStudyDate     DateTime?
 
+  // 스모트 소식(플랫폼 공지) 마지막 확인 시각 — 프로필당 타임스탬프 1개로 신규 여부 판단.
+  lastAnnouncementReadAt DateTime? @map("last_announcement_read_at")
+
   // Relations
   academy                   Academy                    @relation(fields: [academyId], references: [id])
   school                    School?                    @relation(fields: [schoolId], references: [id])
@@ -280,6 +285,8 @@ model Parent {
   emergencyContact String?
   memo             String?  @db.Text
   loginToken       String?  @unique // For passwordless parent login via link
+  // 스모트 소식(플랫폼 공지) 마지막 확인 시각 — 프로필당 타임스탬프 1개로 신규 여부 판단.
+  lastAnnouncementReadAt DateTime? @map("last_announcement_read_at")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -496,41 +503,11 @@ model Salary {
 // ============================================================================
 // 5. COMMUNICATION
 // ============================================================================
-
-/// Notice — Announcements
-/// targetType: "ALL" | "CLASS" | "INDIVIDUAL" | "PARENTS"
-model Notice {
-  id         String   @id @default(cuid())
-  academyId  String
-  title      String
-  content    String   @db.Text
-  targetType String   @default("ALL") // "ALL" | "CLASS" | "INDIVIDUAL" | "PARENTS"
-  targetId   String? // classId or studentId depending on targetType
-  isPinned   Boolean  @default(false)
-  publishAt  DateTime @default(now()) // Scheduled publish time
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  academy Academy      @relation(fields: [academyId], references: [id])
-  reads   NoticeRead[]
-
-  @@index([academyId, publishAt])
-  @@map("notices")
-}
-
-/// NoticeRead — Track who read the notice
-model NoticeRead {
-  id         String   @id @default(cuid())
-  noticeId   String
-  readerId   String // parentId or studentId
-  readerType String // "PARENT" | "STUDENT"
-  readAt     DateTime @default(now())
-
-  notice Notice @relation(fields: [noticeId], references: [id], onDelete: Cascade)
-
-  @@unique([noticeId, readerId, readerType])
-  @@map("notice_reads")
-}
+//
+// 학원 내부 공지(Notice/NoticeRead)는 플랫폼 공지(PlatformAnnouncement)로 교체되어
+// 제거되었습니다. 개발 DB 의 기존 두 테이블은 notices_backup_20260707 /
+// notice_reads_backup_20260707 로 이름만 바꿔 보존했고, 운영 DB 정리 SQL 은
+// prisma/backups/retire-notices-prod.sql 에 있습니다.
 
 /// Message — 1:1 messages (Teacher ↔ Parent, Director ↔ Anyone)
 model Message {
@@ -2321,6 +2298,33 @@ model PlatformSetting {
   @@map("platform_settings")
 }
 
+/// PlatformAnnouncement — 스모트 운영진 → 전체 이용자 플랫폼 공지("스모트 소식").
+/// 기존 학원 내부 Notice 를 대체한다. 원장/강사/학생/학부모가 각 앱에서 읽고,
+/// 읽음 추적은 공지별 레코드 대신 프로필(Staff/Student/Parent)의
+/// lastAnnouncementReadAt 타임스탬프 1개로 한다.
+/// category: "UPDATE"(업데이트) | "MAINTENANCE"(점검) | "EVENT"(이벤트) | "GENERAL"(일반)
+/// status: "DRAFT"(초안) | "PUBLISHED"(발행) | "ARCHIVED"(보관)
+/// audiences: "ALL" 또는 "DIRECTOR,TEACHER,STUDENT,PARENT" 콤마 조인(SiteBanner 규약).
+/// sourceType: "MANUAL"(직접 작성) | "RELEASE"(배포 시 release-notes 에서 자동 발행)
+/// releaseSlug: 자동 발행 멱등성 키(파일 slug). 같은 slug 는 두 번 발행되지 않는다.
+model PlatformAnnouncement {
+  id          String    @id @default(cuid())
+  title       String
+  content     String    @db.Text // 마크다운 본문
+  category    String    @default("GENERAL")
+  status      String    @default("DRAFT")
+  publishedAt DateTime? @map("published_at") // 소급 게시용 과거 날짜 허용
+  isPinned    Boolean   @default(false) @map("is_pinned")
+  audiences   String    @default("ALL")
+  sourceType  String    @default("MANUAL") @map("source_type")
+  releaseSlug String?   @unique @map("release_slug")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([status, isPinned, publishedAt])
+  @@map("platform_announcements")
+}
+
 // ============================================================================
 // 21. SUBSCRIPTION & BILLING
 // ============================================================================
@@ -2633,6 +2637,33 @@ model CreditPromotionTarget {
   @@map("credit_promotion_targets")
 }
 
+/// CreditPromotionLinkEvent — 프로모션/번들 공유 링크에 대한 사용자 활동 로그.
+/// "VIEW"=랜딩(/credits/promo/...) 방문, "CLAIM"="혜택 받기" 버튼 클릭.
+/// 로그인한 원장이면 staffId/academyId 를 스냅샷하고, 비로그인(익명)이면 그
+/// 값이 null 이며 visitorKey(IP+UA 해시)로만 순 방문자를 근사한다. 링크가
+/// 재발급돼도 집계가 끊기지 않도록 token 이 아니라 promotionId/bundleId 로 묶는다.
+model CreditPromotionLinkEvent {
+  id          String   @id @default(cuid())
+  kind        String   @default("VIEW") // "VIEW" | "CLAIM"
+  targetType  String   @default("PROMO") // "PROMO" | "BUNDLE"
+  promotionId String? // targetType=PROMO 일 때
+  bundleId    String? // targetType=BUNDLE 일 때
+  linkRef     String // 클릭된 식별자: 프로모션=linkToken, 번들=slug (감사용 원본)
+  staffId     String? // 로그인한 원장 (익명이면 null)
+  academyId   String?
+  academyName String? // 표시용 스냅샷
+  visitorName String? // staff 이름 스냅샷
+  visitorKey  String? // 순 방문자 근사(로그인=staff:{id}, 익명=ip+ua+날짜 해시)
+  createdAt   DateTime @default(now())
+
+  @@index([promotionId])
+  @@index([bundleId])
+  @@index([academyId])
+  @@index([staffId])
+  @@index([createdAt])
+  @@map("credit_promotion_link_events")
+}
+
 model CreditTopUp {
   id                   String    @id @default(cuid())
   academyId            String
@@ -2717,7 +2748,7 @@ model BankDepositNotification {
   amount         Int // 입금 금액 (원)
   depositorName  String? // 입금자명 (정규화 전 원본)
   bankName       String?
-  status         String    @default("UNMATCHED")
+  status         String    @default("UNMATCHED") // "UNMATCHED" | "MATCHED" | "MANUAL_GRANT" | "AMBIGUOUS" | "IGNORED" | "FAILED"
   matchedTopUpId String? // CreditTopUp matched & credited
   note           String?   @db.Text
   occurredAt     DateTime? // 은행이 알려준 입금 시각
@@ -2871,6 +2902,80 @@ model NotificationState {
   staff Staff @relation(fields: [staffId], references: [id])
 
   @@map("notification_states")
+}
+
+/// PrintableCouponBatch — 실물(인쇄형) 쿠폰 발급 건. 한 배치 = 한 발급, 발급 후 조건 불변(freeze).
+/// effectType: "CREDIT_GRANT"(등록 즉시 크레딧 지급) | "DISCOUNT_AMOUNT"(N원 할인) | "DISCOUNT_PERCENT"(N% 할인)
+model PrintableCouponBatch {
+  id                  String   @id @default(cuid())
+  batchName           String // 관리자용 라벨 "신규가입 쿠폰 2026.07.07"
+  title               String // 인쇄 카드 쿠폰명
+  description         String?  @db.Text
+
+  effectType          String   @default("CREDIT_GRANT") // "CREDIT_GRANT" | "DISCOUNT_AMOUNT" | "DISCOUNT_PERCENT"
+  // CREDIT_GRANT 전용
+  grantCredits        Int? // 지급 크레딧 수
+  grantExpiryDays     Int? // (레거시) 지급 크레딧 유효기간(일). null/0=RIDE, >0=EXTEND
+  grantExpiryAt       DateTime? // 지급 크레딧 절대 만료일(캘린더 선택). null=무기한(RIDE)
+  // DISCOUNT 전용 (효과에 맞는 하나만 채움)
+  discountAmount      Int? // 원 (DISCOUNT_AMOUNT)
+  discountPercent     Int? // 1~100 (DISCOUNT_PERCENT)
+
+  validUntil          DateTime? // 쿠폰 "등록" 마감일 (nullable)
+  quantity            Int // 발급 장수 (1~500)
+  perAcademyLimit     Int      @default(1) // 한 학원이 이 배치에서 등록 가능한 최대 장수
+  isActive            Boolean  @default(true) // 킬스위치
+  createdByAdminId    String?
+  createdByAdminEmail String?
+  createdAt           DateTime @default(now())
+
+  codes PrintableCouponCode[]
+
+  @@index([createdAt])
+  @@map("printable_coupon_batches")
+}
+
+/// PrintableCouponCode — 인쇄 코드 + 학원 보유 쿠폰(핵심). 한 행이 "인쇄 코드 + 보유 쿠폰"을 겸함.
+/// status: "ACTIVE" | "CLAIMED" | "USED" | "VOID"
+model PrintableCouponCode {
+  id           String @id @default(cuid())
+  batchId      String
+  serialNumber String @unique @db.VarChar(16) // 종이 인쇄 8자리(사람 입력)
+  tokenHash    String @unique // QR 토큰 SHA-256 (원본 미저장)
+  status       String @default("ACTIVE") // "ACTIVE" | "CLAIMED" | "USED" | "VOID"
+
+  claimedByAcademyId String? // 등록한 학원
+  claimedByStaffId   String? // 등록 실행 원장
+  claimedAt          DateTime?
+
+  // CREDIT_GRANT: 지급 시 채움 / DISCOUNT: 충전 결제 사용 시 채움
+  creditTxId  String?   @unique // 지급 원장 링크(CREDIT_GRANT 멱등 증빙)
+  usedTopUpId String?   @unique // 사용된 충전(CreditTopUp) 링크(DISCOUNT)
+  usedAt      DateTime?
+
+  expiresAt DateTime? // 개별 등록마감 오버라이드(옵션)
+  printedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  batch PrintableCouponBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@index([batchId, status])
+  @@index([claimedByAcademyId, status])
+  @@map("printable_coupon_codes")
+}
+
+/// PrintableCouponClaimRateLimit — 쿠폰 등록 시도 rate-limit(코드 추측 방지).
+/// scope="ip"|"academy", key=IP 또는 academyId, fixed window 카운터(tutorLoginRateLimit 패턴).
+model PrintableCouponClaimRateLimit {
+  id          String   @id @default(cuid())
+  scope       String   @db.VarChar(16) // "ip" | "academy"
+  key         String   @db.VarChar(128)
+  windowStart DateTime
+  count       Int      @default(0)
+
+  @@unique([scope, key, windowStart])
+  @@map("printable_coupon_claim_rate_limits")
 }
 
 // ============================================================================
@@ -3037,6 +3142,9 @@ model ExtractionPage {
   modelUsed     String?
   inputTokens   Int?
   outputTokens  Int?
+  /// 이 페이지 OCR 호출들의 실측 청구액 합(USD) — OpenRouter usage.cost.
+  /// platform-api-costs sync 가 recordedCostUsd(RECORDED 단가)로 흡수한다.
+  aiCostUsd     Decimal? @db.Decimal(12, 8)
   latencyMs     Int?
 
   /// Per-page metadata captured by the structured OCR call (pageNumber /

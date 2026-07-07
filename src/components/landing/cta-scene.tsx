@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 export function CtaScene() {
   return (
     <section
-      className="relative w-full min-h-[80vh] pb-32 overflow-hidden border-t border-gray-200"
+      className="relative w-full min-h-[52vh] pb-14 sm:min-h-[80vh] sm:pb-32 overflow-hidden border-t border-gray-200"
       style={{
         background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)",
       }}
@@ -21,7 +21,7 @@ export function CtaScene() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center text-center pt-32 pb-16"
+          className="flex flex-col items-center text-center pt-16 pb-10 sm:pt-32 sm:pb-16"
         >
           <div
             aria-hidden

@@ -21,5 +21,4 @@ export {
   getWrongQuestions,
 } from "./student-app/vocab";
 export { getStudentProgress } from "./student-app/progress";
-export { getStudentNotices, markNoticeAsRead } from "./student-app/notices";
 export { getStudentAssignmentList, getStudentEnrollments } from "./student-app/enrollments";

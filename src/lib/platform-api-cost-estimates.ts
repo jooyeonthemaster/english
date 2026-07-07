@@ -50,9 +50,11 @@ export function resolveEstimatedPricing(
     return { inputUsdPer1M: 1.5, outputUsdPer1M: 9, unitUsd: null };
   }
 
-  // AtlasCloud는 여러 모델(anthropic/*, google/*)을 토큰 단위로 중계 → 모델명으로
-  // 원 프로바이더 티어를 추정한다(직접 호출과 동일 단가). 없으면 0원 처리되던 것을 방지.
-  if (unitType === "TOKENS" && provider === "ATLASCLOUD") {
+  // 게이트웨이(OpenRouter/AtlasCloud)는 여러 모델(anthropic/*, google/*)을 토큰
+  // 단위로 중계 → 모델명으로 원 프로바이더 티어를 추정한다(직접 호출과 동일 단가).
+  // 없으면 0원 처리되던 것을 방지. OpenRouter 는 응답에 실측 cost 가 실려
+  // RECORDED 로 먼저 잡히므로, 이 추정은 실측 누락 시 폴백으로만 쓰인다.
+  if (unitType === "TOKENS" && (provider === "ATLASCLOUD" || provider === "OPENROUTER")) {
     if (lowerModel.includes("opus")) {
       return { inputUsdPer1M: 5, outputUsdPer1M: 25, unitUsd: null };
     }

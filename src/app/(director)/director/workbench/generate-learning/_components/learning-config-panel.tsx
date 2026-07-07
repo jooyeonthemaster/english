@@ -323,8 +323,9 @@ export function LearningConfigPanel({
         )}
       </div>
 
-      {/* 생성 버튼 (하단 고정) */}
-      <div className="mt-auto p-5 pt-3 border-t border-slate-200">
+      {/* 생성 버튼 (하단 고정) — 모바일 스텝 플로우에선 페이지 하단 고정 네비의
+          생성 버튼이 대신하므로 중복을 피해 PC 전용으로 숨긴다. */}
+      <div className="mt-auto p-5 pt-3 border-t border-slate-200 max-lg:hidden">
         <button
           onClick={handleBatchGenerate}
           disabled={!canGenerate}

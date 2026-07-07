@@ -109,7 +109,9 @@ import {
   type SavedReportSettings,
 } from "./editor-storage";
 import { FloatingFormatToolbar } from "./floating-format-toolbar";
+import { MobilePanelSheet, MobileReportActionBar } from "./mobile-editor-chrome";
 import { PropertiesPanel } from "./properties-panel";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { SettingsTemplatePopover } from "./cover-logo-panels";
 
 const REPORT_A4_WIDTH_PX = Math.round((210 * 96) / 25.4);
@@ -120,6 +122,10 @@ const REPORT_A4_HEIGHT_PX = Math.round((297 * 96) / 25.4);
 const REPORT_EDIT_PAGE_GAP_PX = Math.round((18 * 96) / 25.4);
 const REPORT_EDIT_TOP_INSET_PX = Math.round((18 * 96) / 25.4);
 const LOGO_FILE_MAX_BYTES = 1.5 * 1024 * 1024;
+// fit(자동 맞춤) 배율 하한 — 좁은 모바일 캔버스에서도 한 페이지가 폭을 채우도록
+// 수동 줌 하한(PREVIEW_ZOOM_MIN=0.5)보다 낮게 둔다. 데스크톱은 캔버스가 넓어
+// fit 값이 늘 1로 수렴하므로 이 하한은 사실상 모바일에서만 작동한다.
+const FIT_ZOOM_MIN = 0.2;
 
 export type ReportEditorToolbarState = {
   dirty: boolean;
@@ -534,6 +540,22 @@ export function AnalysisReportEditor({
   const [vocabTestActivateNonce, setVocabTestActivateNonce] = useState(0);
   // 편집창에 처음 들어오면 '설정' 패널이 열려 있고, 블록을 선택하면 '편집' 패널로 전환된다.
   const [materialSettingsOpen, setMaterialSettingsOpen] = useState(true);
+  // 모바일(<lg): 팔레트·페이지 레일·우측 패널을 숨기고 캔버스를 전체 폭으로.
+  // 우측 패널은 하단 바에서 여는 풀스크린 시트(mobilePanelOpen)로 대체한다.
+  const isMobile = useIsMobile();
+  const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
+  // 모바일 인라인 편집 차단 2겹: pointer-events:none(CSS)에 더해, 크롬 터치 타깃 보정이
+  // pointer-events 를 무시하고 contentEditable 을 네이티브 포커스하는 경로를 즉시 blur 로
+  // 끊는다(가상 키보드 팝업 방지). 블록 선택(mousedown)은 이미 끝난 뒤라 영향 없음.
+  useEffect(() => {
+    if (!isMobile) return;
+    const onFocusIn = (e: FocusEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.classList?.contains("par-edit-field")) target.blur();
+    };
+    document.addEventListener("focusin", onFocusIn);
+    return () => document.removeEventListener("focusin", onFocusIn);
+  }, [isMobile]);
   // 블록을 선택하면 학습자료 설정에서 편집 패널로 자동 전환(그 블록 도구를 바로 보여주기 위해)
   useEffect(() => {
     if (activeId) setMaterialSettingsOpen(false);
@@ -551,6 +573,19 @@ export function AnalysisReportEditor({
     previewPageCount * (REPORT_A4_HEIGHT_PX + REPORT_EDIT_PAGE_GAP_PX) +
     REPORT_EDIT_TOP_INSET_PX;
 
+  // 모바일(<lg): 줌을 바꾸면 페이지가 뷰포트보다 넓어질 때 브라우저가 좌측으로 붙여
+  // 스크롤 시작점을 잡는다 → 가로 스크롤을 가운데로 맞춰 페이지가 화면 중앙에 오게 한다.
+  // (데스크톱은 건드리지 않는다 — 확대 중 스크롤 위치가 튀지 않도록.)
+  useEffect(() => {
+    if (!isMobile) return;
+    const scroller = previewScrollerRef.current;
+    if (!scroller) return;
+    const raf = requestAnimationFrame(() => {
+      scroller.scrollLeft = Math.max(0, (scroller.scrollWidth - scroller.clientWidth) / 2);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [zoom, isMobile]);
+
   useEffect(() => {
     const scroller = previewScrollerRef.current;
     if (!scroller) return;
@@ -559,10 +594,10 @@ export function AnalysisReportEditor({
     const updateFitZoom = () => {
       const styles = window.getComputedStyle(scroller);
       const paddingX = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
-      const availableWidth = Math.max(320, scroller.clientWidth - paddingX);
+      const availableWidth = Math.max(200, scroller.clientWidth - paddingX);
       if (lastFitWidth > 0 && Math.abs(availableWidth - lastFitWidth) < 24) return;
       lastFitWidth = availableWidth;
-      const nextFit = Math.min(1, Math.max(PREVIEW_ZOOM_MIN, availableWidth / REPORT_A4_WIDTH_PX));
+      const nextFit = Math.min(1, Math.max(FIT_ZOOM_MIN, availableWidth / REPORT_A4_WIDTH_PX));
       setFitZoom(Math.round(nextFit * 100) / 100);
     };
 
@@ -1073,6 +1108,10 @@ export function AnalysisReportEditor({
 
     const onPointerDown = (e: PointerEvent) => {
       if (e.button !== 0) return;
+      // 모바일(<lg): 인라인 캐럿 배치·삽입 메뉴를 통째로 끈다. 여기서 preventDefault 를
+      // 호출하면 터치의 호환 mousedown 이 취소돼 블록 탭 선택(chromeProps.onMouseDown)이
+      // 죽는다 — 데스크톱 마우스는 네이티브 이벤트라 영향이 없어 그동안 안 드러났던 차이.
+      if (window.matchMedia("(max-width: 1023.98px)").matches) return;
       const target = e.target as HTMLElement | null;
       if (!target) return;
       // 삽입 메뉴 자체 클릭은 버튼 onClick 에 맡긴다.
@@ -1465,229 +1504,13 @@ export function AnalysisReportEditor({
   const canToggleToolbarVocabTestOnly =
     toolbarVocabularySection?.kind === "vocabulary" && toolbarVocabularySection.rows.length > 0;
 
-  return (
-    <div className="are-shell flex h-full min-h-0 flex-col overflow-hidden bg-[#F4F6F9]">
-      <style dangerouslySetInnerHTML={{ __html: ANALYSIS_REPORT_EDIT_CSS }} />
-
-      <div className="flex min-h-0 flex-1 overflow-hidden bg-white">
-        {/* 좌측 컬럼 — 상단바 + 작업 영역(팔레트·페이지·캔버스). 상단바가 미리보기(캔버스) 우측 끝에서
-            끝나도록, 우측 편집 패널은 이 컬럼 바깥의 전체 높이 형제로 둔다(패널이 위까지 채워짐). */}
-        <div className="flex min-w-0 min-h-0 flex-1 flex-col overflow-hidden">
-          <EditorTopBar
-            pageCount={pageList.length}
-            themeId={report.themeId}
-            error={error}
-            dirty={dirty}
-            saving={saving}
-            canUndo={canUndo}
-            canRedo={canRedo}
-            worksheetBusy={worksheetBusy}
-            worksheetHasContent={toolbarWorksheetHasContent}
-            showGenerateWorksheet={!onToolbarStateChange && !koReport}
-            answerKeyIncluded={toolbarAnswerKeyIncluded}
-            onToggleAnswers={() => onToggleWorksheetAnswers(toolbarWorksheetIndex)}
-            onUndo={undo}
-            onRedo={redo}
-            onRevert={revert}
-            onGenerateWorksheet={generateWorksheet}
-          />
-          <div className="flex min-h-0 flex-1 overflow-hidden">
-        {/* 좌측 끝 — 학습 활동 팔레트 (편집 패널과 같은 세로 탭 여닫힘 매커니즘 + 부드러운 폭 애니메이션) */}
-        <ActivityPaletteRail
-          koMode={koReport}
-          collapsed={activityPanelCollapsed}
-          onToggleCollapsed={() => setActivityPanelCollapsed((v) => !v)}
-          activityWidth={activityWidth}
-          widthDragging={widthDragging}
-          onStartActivityDrag={(event) => startWidthDrag(event, "activity")}
-          onConsumeDragClick={consumeWidthDragClick}
-          webtoonPickerOpen={webtoonPickerOpen}
-          passageId={passageId}
-          onOpenWebtoonPicker={() => setWebtoonPickerOpen(true)}
-          onCloseWebtoonPicker={() => setWebtoonPickerOpen(false)}
-          onPickWebtoon={insertImageBlock}
-          report={report}
-          onPickActivity={insertActivity}
-          activityCounts={activityCountByKind}
-          onToggleOffKind={removeActivityKind}
-          vocabTestSlot={
-                  !koReport && canToggleToolbarVocabTestOnly ? (
-                    // 헤더의 스위치가 실제 <button> 이라 카드 자체는 div[role=button] 으로(중첩 버튼 금지).
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => (toolbarVocabTestEnabled ? deactivateVocabTest() : activateVocabTest())}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter" || event.key === " ") {
-                          event.preventDefault();
-                          if (toolbarVocabTestEnabled) deactivateVocabTest();
-                          else activateVocabTest();
-                        }
-                      }}
-                      title={toolbarVocabTestEnabled ? "단어 시험지 끄기" : "단어 시험지 켜기"}
-                      className={`group flex w-full cursor-pointer flex-col gap-1.5 rounded-xl border p-3 text-left transition-colors ${
-                        toolbarVocabTestEnabled
-                          ? "border-blue-200 bg-blue-50/30 hover:border-blue-300 hover:bg-blue-50/60"
-                          : "border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/40"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[12.5px] font-bold text-slate-800">단어 시험지</span>
-                        <ActivityToggleSwitch
-                          on={toolbarVocabTestEnabled}
-                          title={toolbarVocabTestEnabled ? "단어 시험지 끄기" : "단어 시험지 켜기"}
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            if (toolbarVocabTestEnabled) deactivateVocabTest();
-                            else activateVocabTest();
-                          }}
-                        />
-                      </div>
-                      <p className="text-[11px] leading-snug text-slate-500">뜻·단어·동의어·반의어 시험 + 난이도 단계 선택 — 지문 단어로 시험지 페이지 생성</p>
-                      <div className="mt-0.5 rounded-md border border-slate-100 bg-slate-50/80 px-2 py-1.5">
-                        <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">현재</span>
-                        <p className="mt-0.5 text-[11px] font-semibold text-slate-700">
-                          {toolbarVocabTestEnabled ? `${VOCAB_TEST_MODE_LABEL[toolbarVocabMode]}${report.vocabTestOnly ? " · 시험지만" : ""}` : "꺼짐 — 누르면 켜져요"}
-                        </p>
-                      </div>
-                    </div>
-                  ) : null
-          }
-        />
-
-        {/* 좌측 — 페이지 인디케이터 */}
-        <PageThumbnailRail
-          collapsed={pagesPanelCollapsed}
-          onExpand={() => setPagesPanelCollapsed(false)}
-          onCollapse={() => setPagesPanelCollapsed(true)}
-          railWidth={railWidth}
-          pageList={pageList}
-          scrollerRef={pagesPanelScrollerRef}
-          activePageIndex={activePageIndex}
-          onSelectPage={scrollToPage}
-          report={deferredReport}
-          itemsById={thumbItemsById}
-          pageInfo={thumbPageInfo}
-          onDeletePage={deletePage}
-          onStartRailDrag={(event) => startWidthDrag(event, "rail")}
-          onReorderPages={reorderPages}
-        />
-
-        {/* 중앙 — A4 캔버스 (자연 크기, 드래그 autoscroll 용 id) */}
-        <EditorCanvas
-          pageList={pageList}
-          zoom={zoom}
-          zoomControlsPos={zoomControlsPos}
-          onZoomIn={zoomPreviewIn}
-          onZoomOut={zoomPreviewOut}
-          onReset={resetPreviewZoom}
-          onFit={fitPreviewToScreen}
-          onZoomControlsDragStart={handlePreviewZoomControlsDragStart}
-          scrollerRef={previewScrollerRef}
-          onDeselect={() => setActiveId(null)}
-          a4Width={REPORT_A4_WIDTH_PX}
-          contentHeight={previewContentHeight}
-          report={report}
-          edit={edit}
-          onPagesChange={setPageList}
-        />
-
-        {/* 인라인 텍스트 편집용 떠다니는 서식 툴바 */}
-        <FloatingFormatToolbar
-          blockMeta={report.blockMeta}
-          onBlockMeta={onBlockMeta}
-          onClozeBlank={(blockId, itemIndex, start, end) => onActivity(blockId, { type: "blankItem", index: itemIndex, start, end })}
-        />
-
-        {/* 학습 활동 팔레트는 우측 편집 패널 '활동' 탭으로 이동 (모달 제거) */}
-
-        {/* 빈 영역 클릭 시 뜨는 블록 삽입 메뉴(여백/텍스트) */}
-        {insertMenu
-          ? createPortal(
-              <div
-                data-insert-menu
-                role="menu"
-                style={{
-                  position: "fixed",
-                  left: insertMenu.x,
-                  top: insertMenu.y - 10,
-                  transform: "translate(-50%, -100%)",
-                }}
-                className="no-print z-[80] flex items-center gap-1 rounded-lg border border-slate-200 bg-white p-1 text-[12px] shadow-xl"
-              >
-                <span className="px-1.5 text-[11px] font-semibold text-slate-400">
-                  여기에 추가
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    insertBlockAt("text", insertMenu.anchorId, "after");
-                    setInsertMenu(null);
-                  }}
-                  className="rounded px-2 py-1 font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-700"
-                >
-                  텍스트
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    insertBlockAt("spacer", insertMenu.anchorId, "after");
-                    setInsertMenu(null);
-                  }}
-                  className="rounded px-2 py-1 font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-700"
-                >
-                  여백
-                </button>
-                <span
-                  aria-hidden="true"
-                  className="absolute left-1/2 -bottom-1 size-2 -translate-x-1/2 rotate-45 border-b border-r border-slate-200 bg-white"
-                />
-              </div>,
-              document.body,
-            )
-          : null}
-          </div>
-        </div>
-
-        {/* 우측 — 속성(편집) 패널. 세로 탭 = 여닫기 + 폭조절 겸용 핸들(시험지 생성 UI와 동일).
-            펼친 상태: 드래그로 폭 조절, 클릭으로 닫기. 접힌 상태: 클릭으로 열기. */}
-        <button
-          type="button"
-          onPointerDown={
-            propertiesPanelCollapsed ? undefined : (event) => startWidthDrag(event, "panel")
-          }
-          onClick={() => {
-            if (!propertiesPanelCollapsed && consumeWidthDragClick()) return;
-            setPropertiesPanelCollapsed((v) => !v);
-          }}
-          title={propertiesPanelCollapsed ? "편집 패널 열기" : "드래그하여 폭 조절 · 클릭하여 닫기"}
-          aria-label={propertiesPanelCollapsed ? "편집 패널 열기" : "편집 패널 닫기"}
-          aria-expanded={!propertiesPanelCollapsed}
-          className={cn(
-            "group/rhandle no-print hidden h-full min-h-0 w-5 shrink-0 touch-none select-none flex-col items-center justify-center gap-1 border-l border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 lg:flex",
-            !propertiesPanelCollapsed && "cursor-col-resize",
-          )}
-        >
-          {propertiesPanelCollapsed ? (
-            <ChevronLeft className="h-3.5 w-3.5" />
-          ) : (
-            <ChevronRight className="h-3.5 w-3.5" />
-          )}
-          <span style={{ writingMode: "vertical-rl" }}>편집 패널</span>
-          {!propertiesPanelCollapsed ? (
-            <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/rhandle:opacity-70" />
-          ) : null}
-        </button>
-        {/* 애니메이션 컨테이너 — 폭을 0↔패널폭으로 부드럽게 전환 */}
-        <div
-          aria-hidden={propertiesPanelCollapsed}
-          className="no-print flex h-full min-h-0 shrink-0 overflow-hidden"
-          style={{
-            width: propertiesPanelCollapsed ? 0 : panelWidth,
-            transition: widthDragging ? "none" : "width 300ms cubic-bezier(0.4, 0, 0.2, 1)",
-          }}
-        >
-            <aside style={{ width: panelWidth }} className="flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-l border-slate-200 bg-slate-50/80">
+  // 우측 편집 패널(세그먼트 토글 + PropertiesPanel) — 데스크톱 aside 와 모바일
+  // 풀스크린 시트가 같은 JSX 를 공유한다(프롭 중복·드리프트 방지). 한 시점엔 한쪽만 렌더.
+  const editPanelAside = (
+    <aside
+      style={{ width: isMobile ? "100%" : panelWidth }}
+      className="flex h-full min-h-0 shrink-0 flex-col overflow-hidden border-l border-slate-200 bg-slate-50/80"
+    >
               <div className="shrink-0 border-b border-slate-200 bg-white px-3 py-2">
                 {/* 편집 ↔ 설정 세그먼트 토글 (시험지 생성 패널과 동일 패턴) */}
                 <div
@@ -1813,9 +1636,272 @@ export function AnalysisReportEditor({
                 />
                 </div>
               </div>
-            </aside>
+    </aside>
+  );
+
+  return (
+    <div className="are-shell flex h-full min-h-0 flex-col overflow-hidden bg-[#F4F6F9]">
+      <style dangerouslySetInnerHTML={{ __html: ANALYSIS_REPORT_EDIT_CSS }} />
+
+      <div className="flex min-h-0 flex-1 overflow-hidden bg-white">
+        {/* 좌측 컬럼 — 상단바 + 작업 영역(팔레트·페이지·캔버스). 상단바가 미리보기(캔버스) 우측 끝에서
+            끝나도록, 우측 편집 패널은 이 컬럼 바깥의 전체 높이 형제로 둔다(패널이 위까지 채워짐). */}
+        <div className="flex min-w-0 min-h-0 flex-1 flex-col overflow-hidden">
+          <EditorTopBar
+            pageCount={pageList.length}
+            themeId={report.themeId}
+            error={error}
+            dirty={dirty}
+            saving={saving}
+            canUndo={canUndo}
+            canRedo={canRedo}
+            worksheetBusy={worksheetBusy}
+            worksheetHasContent={toolbarWorksheetHasContent}
+            showGenerateWorksheet={!onToolbarStateChange && !koReport}
+            answerKeyIncluded={toolbarAnswerKeyIncluded}
+            onToggleAnswers={() => onToggleWorksheetAnswers(toolbarWorksheetIndex)}
+            onUndo={undo}
+            onRedo={redo}
+            onRevert={revert}
+            onGenerateWorksheet={generateWorksheet}
+          />
+          <div className="flex min-h-0 flex-1 overflow-hidden">
+        {/* 좌측 끝 — 학습 활동 팔레트 (편집 패널과 같은 세로 탭 여닫힘 매커니즘 + 부드러운 폭 애니메이션)
+            모바일(<lg)에선 페이지 레일과 함께 숨겨 캔버스가 전체 폭을 쓴다. */}
+        {!isMobile && (
+        <>
+        <ActivityPaletteRail
+          koMode={koReport}
+          collapsed={activityPanelCollapsed}
+          onToggleCollapsed={() => setActivityPanelCollapsed((v) => !v)}
+          activityWidth={activityWidth}
+          widthDragging={widthDragging}
+          onStartActivityDrag={(event) => startWidthDrag(event, "activity")}
+          onConsumeDragClick={consumeWidthDragClick}
+          webtoonPickerOpen={webtoonPickerOpen}
+          passageId={passageId}
+          onOpenWebtoonPicker={() => setWebtoonPickerOpen(true)}
+          onCloseWebtoonPicker={() => setWebtoonPickerOpen(false)}
+          onPickWebtoon={insertImageBlock}
+          report={report}
+          onPickActivity={insertActivity}
+          activityCounts={activityCountByKind}
+          onToggleOffKind={removeActivityKind}
+          vocabTestSlot={
+                  !koReport && canToggleToolbarVocabTestOnly ? (
+                    // 헤더의 스위치가 실제 <button> 이라 카드 자체는 div[role=button] 으로(중첩 버튼 금지).
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => (toolbarVocabTestEnabled ? deactivateVocabTest() : activateVocabTest())}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          if (toolbarVocabTestEnabled) deactivateVocabTest();
+                          else activateVocabTest();
+                        }
+                      }}
+                      title={toolbarVocabTestEnabled ? "단어 시험지 끄기" : "단어 시험지 켜기"}
+                      className={`group flex w-full cursor-pointer flex-col gap-1.5 rounded-xl border p-3 text-left transition-colors ${
+                        toolbarVocabTestEnabled
+                          ? "border-blue-200 bg-blue-50/30 hover:border-blue-300 hover:bg-blue-50/60"
+                          : "border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/40"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[12.5px] font-bold text-slate-800">단어 시험지</span>
+                        <ActivityToggleSwitch
+                          on={toolbarVocabTestEnabled}
+                          title={toolbarVocabTestEnabled ? "단어 시험지 끄기" : "단어 시험지 켜기"}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            if (toolbarVocabTestEnabled) deactivateVocabTest();
+                            else activateVocabTest();
+                          }}
+                        />
+                      </div>
+                      <p className="text-[11px] leading-snug text-slate-500">뜻·단어·동의어·반의어 시험 + 난이도 단계 선택 — 지문 단어로 시험지 페이지 생성</p>
+                      <div className="mt-0.5 rounded-md border border-slate-100 bg-slate-50/80 px-2 py-1.5">
+                        <span className="text-[9px] font-semibold uppercase tracking-wider text-slate-400">현재</span>
+                        <p className="mt-0.5 text-[11px] font-semibold text-slate-700">
+                          {toolbarVocabTestEnabled ? `${VOCAB_TEST_MODE_LABEL[toolbarVocabMode]}${report.vocabTestOnly ? " · 시험지만" : ""}` : "꺼짐 — 누르면 켜져요"}
+                        </p>
+                      </div>
+                    </div>
+                  ) : null
+          }
+        />
+
+        {/* 좌측 — 페이지 인디케이터 */}
+        <PageThumbnailRail
+          collapsed={pagesPanelCollapsed}
+          onExpand={() => setPagesPanelCollapsed(false)}
+          onCollapse={() => setPagesPanelCollapsed(true)}
+          railWidth={railWidth}
+          pageList={pageList}
+          scrollerRef={pagesPanelScrollerRef}
+          activePageIndex={activePageIndex}
+          onSelectPage={scrollToPage}
+          report={deferredReport}
+          itemsById={thumbItemsById}
+          pageInfo={thumbPageInfo}
+          onDeletePage={deletePage}
+          onStartRailDrag={(event) => startWidthDrag(event, "rail")}
+          onReorderPages={reorderPages}
+        />
+        </>
+        )}
+
+        {/* 중앙 — A4 캔버스 (자연 크기, 드래그 autoscroll 용 id) */}
+        <EditorCanvas
+          pageList={pageList}
+          zoom={zoom}
+          zoomControlsPos={zoomControlsPos}
+          onZoomIn={zoomPreviewIn}
+          onZoomOut={zoomPreviewOut}
+          onReset={resetPreviewZoom}
+          onFit={fitPreviewToScreen}
+          onZoomControlsDragStart={handlePreviewZoomControlsDragStart}
+          scrollerRef={previewScrollerRef}
+          onDeselect={() => setActiveId(null)}
+          a4Width={REPORT_A4_WIDTH_PX}
+          contentHeight={previewContentHeight}
+          report={report}
+          edit={edit}
+          onPagesChange={setPageList}
+        />
+
+        {/* 인라인 텍스트 편집용 떠다니는 서식 툴바 — 모바일은 인라인 편집 자체가 꺼져 있어 미렌더 */}
+        {!isMobile && (
+        <FloatingFormatToolbar
+          blockMeta={report.blockMeta}
+          onBlockMeta={onBlockMeta}
+          onClozeBlank={(blockId, itemIndex, start, end) => onActivity(blockId, { type: "blankItem", index: itemIndex, start, end })}
+        />
+        )}
+
+        {/* 학습 활동 팔레트는 우측 편집 패널 '활동' 탭으로 이동 (모달 제거) */}
+
+        {/* 빈 영역 클릭 시 뜨는 블록 삽입 메뉴(여백/텍스트) — 모바일 제외(오조작 방지) */}
+        {insertMenu && !isMobile
+          ? createPortal(
+              <div
+                data-insert-menu
+                role="menu"
+                style={{
+                  position: "fixed",
+                  left: insertMenu.x,
+                  top: insertMenu.y - 10,
+                  transform: "translate(-50%, -100%)",
+                }}
+                className="no-print z-[80] flex items-center gap-1 rounded-lg border border-slate-200 bg-white p-1 text-[12px] shadow-xl"
+              >
+                <span className="px-1.5 text-[11px] font-semibold text-slate-400">
+                  여기에 추가
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    insertBlockAt("text", insertMenu.anchorId, "after");
+                    setInsertMenu(null);
+                  }}
+                  className="rounded px-2 py-1 font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-700"
+                >
+                  텍스트
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    insertBlockAt("spacer", insertMenu.anchorId, "after");
+                    setInsertMenu(null);
+                  }}
+                  className="rounded px-2 py-1 font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-700"
+                >
+                  여백
+                </button>
+                <span
+                  aria-hidden="true"
+                  className="absolute left-1/2 -bottom-1 size-2 -translate-x-1/2 rotate-45 border-b border-r border-slate-200 bg-white"
+                />
+              </div>,
+              document.body,
+            )
+          : null}
+          </div>
         </div>
+
+        {/* 우측 — 속성(편집) 패널. 세로 탭 = 여닫기 + 폭조절 겸용 핸들(시험지 생성 UI와 동일).
+            펼친 상태: 드래그로 폭 조절, 클릭으로 닫기. 접힌 상태: 클릭으로 열기. */}
+        <button
+          type="button"
+          onPointerDown={
+            propertiesPanelCollapsed ? undefined : (event) => startWidthDrag(event, "panel")
+          }
+          onClick={() => {
+            if (!propertiesPanelCollapsed && consumeWidthDragClick()) return;
+            setPropertiesPanelCollapsed((v) => !v);
+          }}
+          title={propertiesPanelCollapsed ? "편집 패널 열기" : "드래그하여 폭 조절 · 클릭하여 닫기"}
+          aria-label={propertiesPanelCollapsed ? "편집 패널 열기" : "편집 패널 닫기"}
+          aria-expanded={!propertiesPanelCollapsed}
+          className={cn(
+            "group/rhandle no-print hidden h-full min-h-0 w-5 shrink-0 touch-none select-none flex-col items-center justify-center gap-1 border-l border-slate-200 bg-white/80 py-2 text-[11px] font-semibold text-sky-400 transition-colors hover:bg-sky-50 hover:text-sky-600 lg:flex",
+            !propertiesPanelCollapsed && "cursor-col-resize",
+          )}
+        >
+          {propertiesPanelCollapsed ? (
+            <ChevronLeft className="h-3.5 w-3.5" />
+          ) : (
+            <ChevronRight className="h-3.5 w-3.5" />
+          )}
+          <span style={{ writingMode: "vertical-rl" }}>편집 패널</span>
+          {!propertiesPanelCollapsed ? (
+            <GripVertical className="h-3 w-3 opacity-40 transition-opacity group-hover/rhandle:opacity-70" />
+          ) : null}
+        </button>
+        {/* 애니메이션 컨테이너 — 폭을 0↔패널폭으로 부드럽게 전환. 모바일은 시트로 대체. */}
+        {!isMobile && (
+        <div
+          aria-hidden={propertiesPanelCollapsed}
+          className="no-print flex h-full min-h-0 shrink-0 overflow-hidden"
+          style={{
+            width: propertiesPanelCollapsed ? 0 : panelWidth,
+            transition: widthDragging ? "none" : "width 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+          }}
+        >
+            {editPanelAside}
+        </div>
+        )}
       </div>
+
+      {/* ── 모바일 전용(<lg) — 하단 액션 바(셸 푸터) + 편집 패널 풀스크린 시트 ──
+          블록 미선택: '학습지 설정' 진입 버튼. 블록 선택: 위로/아래로/상세 편집/삭제.
+          데스크톱은 isMobile=false 라 전부 미렌더. */}
+      {isMobile && (
+        <MobileReportActionBar
+          active={active}
+          canMove={activePos >= 0}
+          onMoveUp={() => moveActive(-1)}
+          onMoveDown={() => moveActive(1)}
+          onOpenDetail={() => setMobilePanelOpen(true)}
+          onDelete={() => {
+            if (logicalActiveId) deleteActive(logicalActiveId);
+          }}
+          onDeselect={() => setActiveId(null)}
+          onOpenSettings={() => {
+            setMaterialSettingsOpen(true);
+            setMobilePanelOpen(true);
+          }}
+        />
+      )}
+      {isMobile && mobilePanelOpen && (
+        <MobilePanelSheet
+          title={materialSettingsOpen ? "학습지 설정" : active ? "블록 상세 편집" : "문서 설정"}
+          onClose={() => setMobilePanelOpen(false)}
+        >
+          {editPanelAside}
+        </MobilePanelSheet>
+      )}
     </div>
   );
 }

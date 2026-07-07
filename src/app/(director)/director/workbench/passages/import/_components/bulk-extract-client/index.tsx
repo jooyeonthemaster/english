@@ -7,6 +7,12 @@ import { AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { WorkflowPageTitle } from "@/components/workbench/workflow-page-title";
 import { MaterialExtractionIcon } from "@/components/icons/workflow-icons";
 import {
+  MobileStepHeader,
+  MobileStepNav,
+  useIsMobileViewport,
+  type MobileFlowStep,
+} from "@/components/workbench/mobile-step-flow";
+import {
   isInlineExtractionInFlight,
   useExtractionUpload,
 } from "@/hooks/use-extraction-upload";
@@ -34,6 +40,14 @@ import { TEXT_EXTRACTION_MIN_LENGTH } from "./constants";
 import type { FileSourceType, InputMode, Props } from "./types";
 import { summarizeFileNames } from "./utils";
 import { UploadPanel } from "./components/upload-panel";
+
+// 모바일(<lg) 2스텝 플로우: 1) 지문 입력(업로드·붙여넣기·크롭) → 2) 자료 확인(자료 관리).
+// PC(≥lg)는 한 화면에 위=입력, 아래=자료 관리를 함께 쓰므로 스텝을 나누지 않는다.
+type MobileStep = "input" | "confirm";
+const MOBILE_FLOW_STEPS: readonly MobileFlowStep[] = [
+  { key: "input", label: "지문 입력" },
+  { key: "confirm", label: "자료 확인" },
+];
 
 export function BulkExtractClient({
   academyId,
@@ -85,6 +99,48 @@ export function BulkExtractClient({
   );
   const bootstrapped = useRef(false);
   const fileInputId = "m1-passage-workroom-file-input";
+
+  // ── 모바일(<lg) 2스텝 플로우 ──────────────────────────────────────────
+  const isMobileViewport = useIsMobileViewport();
+  const initialMobileStepRef = useRef<MobileStep>(
+    typeof window !== "undefined" &&
+      new URLSearchParams(window.location.search).get("step") === "confirm"
+      ? "confirm"
+      : "input",
+  );
+  const [mobileStep, setMobileStep] = useState<MobileStep>(
+    initialMobileStepRef.current,
+  );
+
+  const pushMobileStepUrl = useCallback((step: MobileStep) => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("step") === step) return;
+    url.searchParams.set("step", step);
+    // router.push 대신 네이티브 pushState — 서버 리페치 없이 히스토리만 쌓아
+    // 브라우저 뒤로가기가 '이전 단계'로 동작하게 한다.
+    window.history.pushState(null, "", url.toString());
+  }, []);
+
+  const goToMobileStep = useCallback(
+    (step: MobileStep) => {
+      setMobileStep(step);
+      pushMobileStepUrl(step);
+      window.scrollTo({ top: 0 });
+    },
+    [pushMobileStepUrl],
+  );
+
+  // 브라우저 뒤로/앞으로 — URL 의 step 을 그대로 적용.
+  useEffect(() => {
+    if (!isMobileViewport) return;
+    const onPop = () => {
+      const raw = new URLSearchParams(window.location.search).get("step");
+      setMobileStep(raw === "confirm" ? "confirm" : "input");
+      window.scrollTo({ top: 0 });
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [isMobileViewport]);
 
   const UPLOAD_COLLAPSE_KEY = "smoat:extraction-bulk:upload:collapsed";
   const UPLOAD_HEIGHT_KEY = "smoat:extraction-bulk:upload:height";
@@ -454,6 +510,9 @@ export function BulkExtractClient({
       // 제출 완료 → 입력 영역을 중립(idle)으로 되돌려 곧바로 다음 추출을 시작할 수
       // 있게 한다. 진행 중인 잡은 "자료 목록"이 추적한다(인라인은 백그라운드 진행).
       setPhase("idle");
+      // 모바일: 사용자가 추출을 시작하면 '자료 확인' 스텝으로 넘겨 방금 만든 작업이
+      // 자료 관리 목록에 나타나는 것을 바로 보게 한다.
+      if (isMobileViewport) goToMobileStep("confirm");
     }
     },
     [
@@ -469,6 +528,8 @@ export function BulkExtractClient({
       sourceType,
       startUpload,
       subjectScope,
+      isMobileViewport,
+      goToMobileStep,
     ],
   );
 
@@ -510,6 +571,8 @@ export function BulkExtractClient({
         const data = (await res.json()) as { jobId: string };
         setJobId(data.jobId);
         setPhase("reviewing");
+        // 모바일: 텍스트 추출 시작 → '자료 확인' 스텝으로 이동.
+        if (isMobileViewport) goToMobileStep("confirm");
         return true;
       } catch (err) {
         setError(
@@ -527,6 +590,8 @@ export function BulkExtractClient({
       setJobId,
       setPhase,
       subjectScope,
+      isMobileViewport,
+      goToMobileStep,
     ],
   );
 
@@ -540,10 +605,33 @@ export function BulkExtractClient({
   const inputBusy =
     phase === "preparing" || phase === "uploading" || phase === "starting";
 
+  // 지문 입력 스텝에서는 텍스트/크롭 보드(및 파일 빈 상태 드롭존)가 자체 하단 고정
+  // 액션 바(담긴 지문 장바구니 + 다음)를 렌더하므로, 중복되는 공용 스텝 네비를 숨기고
+  // 그 높이만큼 아래 여백을 예약한다. 스텝 이동은 상단 스테퍼 탭으로 한다.
+  const boardFixedFooterActive = mobileStep === "input";
+
   return (
-    <div className="-m-6 min-h-[calc(100vh-56px)] min-w-0 bg-[#F4F6F9] py-4">
+    <div
+      className={
+        "-m-6 min-w-0 bg-[#F4F6F9] pt-4 lg:min-h-[calc(100vh-56px)] lg:pb-4 " +
+        (boardFixedFooterActive ? "max-lg:pb-[150px]" : "max-lg:pb-[84px]")
+      }
+    >
       <main className="flex w-full min-w-0 flex-col gap-4 px-4 sm:px-6 xl:px-8">
-        <section className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+        {/* 모바일 전용 스테퍼 — 현재 단계 표시 + 탭으로 즉시 이동 */}
+        <MobileStepHeader
+          steps={MOBILE_FLOW_STEPS}
+          currentKey={mobileStep}
+          onSelect={(key) => goToMobileStep(key as MobileStep)}
+        />
+        <section
+          className={
+            "flex min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm " +
+            // 모바일 '자료 확인' 스텝에서는 입력 섹션을 숨긴다(언마운트 아님 —
+            // 진행 중 업로드·크롭 상태 유지). PC(≥lg)는 항상 노출.
+            (mobileStep === "confirm" ? "max-lg:hidden" : "")
+          }
+        >
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 px-4 py-3">
             <WorkflowPageTitle
               icon={MaterialExtractionIcon}
@@ -584,8 +672,10 @@ export function BulkExtractClient({
           {!uploadCollapsed ? (
             <>
               <div
-                className="grid min-h-0 grid-cols-1 overflow-hidden"
-                style={{ height: uploadHeight }}
+                // PC 는 드래그로 조절한 uploadHeight, 모바일은 화면에 맞춰 채운다
+                // (하단 고정 액션 바에 가리지 않게 뷰포트 기준 높이).
+                className="grid min-h-0 grid-cols-1 overflow-hidden max-lg:h-[calc(100dvh-22rem)] max-lg:min-h-[360px]"
+                style={isMobileViewport ? undefined : { height: uploadHeight }}
               >
                 <UploadPanel
                   busy={inputBusy}
@@ -610,9 +700,11 @@ export function BulkExtractClient({
                   }}
                   outputMode={adaptiveIntake ? outputMode : undefined}
                   onOutputModeChange={adaptiveIntake ? setOutputMode : undefined}
+                  mobileFixedFooter
                 />
               </div>
-              <div className="relative flex items-center justify-end px-4 pb-1 pt-1">
+              {/* 높이 조절 핸들 + 접기 — 데스크톱 전용 편의(모바일은 화면 채움·스텝 네비). */}
+              <div className="relative flex items-center justify-end px-4 pb-1 pt-1 max-lg:hidden">
                 <div
                   onPointerDown={beginUploadResize}
                   onDoubleClick={resetUploadHeight}
@@ -641,7 +733,9 @@ export function BulkExtractClient({
           이 페이지를 벗어나지 않는다. 진행 중인 추출 작업은 ExtractionManageClient의
           작업 목록(자료 목록) 행에 그대로 나타나고, manageRefreshToken 으로 즉시
           새로고침된다. 페이지 배경/패딩은 위 래퍼가 제공하므로 pageBleed=false. */}
-      <div className="mt-4">
+      {/* 모바일 '지문 입력' 스텝에서는 자료 관리를 숨긴다(언마운트 아님 —
+          목록 상태·폴링 유지). PC(≥lg)는 입력 아래에 항상 함께 노출. */}
+      <div className={"mt-4 " + (mobileStep === "input" ? "max-lg:hidden" : "")}>
         <ExtractionManageClient
           academyId={academyId}
           initialCollections={initialCollections}
@@ -652,6 +746,17 @@ export function BulkExtractClient({
           subjectScope={subjectScope}
         />
       </div>
+
+      {/* 모바일 전용 하단 고정 바. 지문 입력 스텝은 보드가 자체 고정 액션 바(장바구니
+          + 다음)를 렌더하므로(boardFixedFooterActive) 공용 네비를 숨기고, 자료 확인
+          스텝에서만 '지문 입력'으로 돌아가는 이전 버튼을 노출한다. 앞으로 이동은
+          상단 스테퍼 탭으로 한다. */}
+      {!boardFixedFooterActive ? (
+        <MobileStepNav
+          prev={{ label: "지문 입력", onClick: () => goToMobileStep("input") }}
+          next={null}
+        />
+      ) : null}
     </div>
   );
 }

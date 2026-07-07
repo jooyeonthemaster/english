@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import {
   Sparkles,
   Coins,
@@ -11,6 +12,10 @@ import { BrandIcon } from "@/components/brand/brand-mark";
 import { getStaffSession } from "@/lib/auth";
 import { getPromoLandingProduct } from "@/lib/credit-top-up-products";
 import { isValidPromoToken } from "@/lib/promo-link";
+import {
+  recordPromoLinkEvent,
+  readClientHints,
+} from "@/lib/promo-link-events";
 
 export const dynamic = "force-dynamic";
 
@@ -58,6 +63,20 @@ export default async function PromoLandingPage({
     : null;
   const staff = await getStaffSession();
   const isDirector = staff?.role === "DIRECTOR";
+
+  // 랜딩 방문(VIEW) 기록 — 유효한 프로모션에 한해. 실패해도 흐름을 막지 않음.
+  if (data?.valid) {
+    const { ip, userAgent } = readClientHints(await headers());
+    await recordPromoLinkEvent({
+      kind: "VIEW",
+      targetType: "PROMO",
+      linkRef: token,
+      promotionId: data.promotionId,
+      staff,
+      ip,
+      userAgent,
+    });
+  }
 
   // 만료·무효·없음 → 안내 후 기본 크레딧 페이지로.
   if (!data || !data.valid) {

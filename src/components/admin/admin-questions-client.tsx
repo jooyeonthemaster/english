@@ -349,7 +349,7 @@ export function AdminQuestionsClient({ questions, academyId }: Props) {
   return (
     <div className="flex flex-col h-[calc(100vh-64px)]">
       {/* Header */}
-      <div className="px-6 py-2.5 bg-white border-b border-slate-200 flex items-center gap-3 shrink-0">
+      <div className="px-4 md:px-6 py-2.5 bg-white border-b border-slate-200 flex flex-wrap md:flex-nowrap items-center gap-x-2 gap-y-2 md:gap-3 shrink-0">
         <Link
           href={`/admin/academies/${academyId}`}
           className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors"
@@ -357,22 +357,22 @@ export function AdminQuestionsClient({ questions, academyId }: Props) {
           <ArrowLeft className="w-4 h-4 text-slate-500" />
         </Link>
         <HelpCircle className="w-4.5 h-4.5 text-emerald-600 shrink-0" />
-        <h1 className="text-[15px] font-bold text-slate-900">문제 은행</h1>
+        <h1 className="text-[15px] font-bold text-slate-900 shrink-0 whitespace-nowrap">문제 은행</h1>
         <span className="text-[12px] text-slate-400">
           {questions.length}개
         </span>
 
-        <div className="flex-1" />
+        <div className="hidden md:block flex-1" />
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex w-full md:w-auto flex-wrap md:flex-nowrap items-center gap-2 shrink-0">
           {/* Search */}
-          <div className="relative">
+          <div className="relative flex-1 md:flex-none min-w-[140px]">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" />
             <input
               placeholder="검색..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-44 h-8 pl-8 pr-3 text-[12px] rounded-lg border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
+              className="w-full md:w-44 h-8 pl-8 pr-3 text-[12px] rounded-lg border border-slate-200 bg-slate-50 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10"
             />
           </div>
 

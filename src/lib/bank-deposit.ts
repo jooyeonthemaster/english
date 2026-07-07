@@ -5,6 +5,7 @@ import {
   expiresAtConflictSql,
   expiresAtInsertSql,
 } from "@/lib/credit-expiry";
+import { markCouponUsedTx } from "@/lib/printable-coupon-discount";
 
 /**
  * 무통장입금 자동확인 (manual bank transfer, auto-credited via deposit alerts)
@@ -340,10 +341,12 @@ export async function grantBankDepositTopUp(
           requestedBy: string | null;
           creditTransactionId: string | null;
           productCode: string | null;
+          couponCodeId: string | null;
         }>
       >`
         SELECT id, "academyId", "creditAmount", price, status, "requestedBy",
-               "creditTransactionId", "customData"->>'productCode' AS "productCode"
+               "creditTransactionId", "customData"->>'productCode' AS "productCode",
+               "customData"->>'couponCodeId' AS "couponCodeId"
         FROM credit_top_ups
         WHERE id = ${topUpId}
         FOR UPDATE
@@ -447,6 +450,11 @@ export async function grantBankDepositTopUp(
           creditTransactionId: transaction.id,
         },
       });
+
+      // 실물 할인 쿠폰이 적용된 무통장입금이면 CLAIMED→USED로 확정(멱등).
+      if (topUp.couponCodeId) {
+        await markCouponUsedTx(tx, topUp.couponCodeId, topUp.id);
+      }
 
       return {
         topUpId: topUp.id,

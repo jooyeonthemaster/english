@@ -1,6 +1,7 @@
 import { generateObject } from "ai";
 
 import { model as geminiModel, GEMINI_MODEL_ID } from "@/lib/ai";
+import { atlasUsageWithCost } from "@/lib/atlas-ai";
 import { recordAiCost } from "@/lib/platform-api-costs";
 import { downloadAsBuffer } from "@/lib/supabase-storage";
 
@@ -96,7 +97,7 @@ async function runMultimodalAnalysis(
         academyId,
         model: GEMINI_MODEL_ID,
         operationType: "SIMILAR_EXAM_GEN",
-        usage: result.usage,
+        usage: atlasUsageWithCost(result),
       });
       return { object: result.object as ExamPatternProfile, attempts: attempt + 1 };
     } catch (error) {

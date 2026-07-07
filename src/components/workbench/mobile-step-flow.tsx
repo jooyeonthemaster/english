@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 
 /**
@@ -53,53 +53,64 @@ export function MobileStepHeader({
       aria-label="진행 단계"
       className="rounded-lg border border-slate-200 bg-white px-2 py-2.5 shadow-sm lg:hidden"
     >
-      <ol className="flex items-start">
+      {/* 스텝 = 숫자 원(고정폭). 라벨은 원 아래에 절대배치로 흐름에서 빼서, 라벨 길이가
+          달라도 연결선이 원 좌우와 '같은 간격'으로 붙도록 한다(연결선 mx-2 = 양쪽 8px).
+          pb-6 은 절대배치된 라벨이 들어갈 아래 공간을 확보한다. */}
+      <ol className="flex items-start justify-center pb-6">
         {steps.map((step, i) => {
           const done = i < currentIndex;
           const active = i === currentIndex;
           return (
-            <li key={step.key} className="flex min-w-0 flex-1 items-start">
+            <Fragment key={step.key}>
               {i > 0 ? (
-                <span
+                // 연결선 박스: 원(size-[26px])과 같은 높이 → 세로는 원 중앙, 가로는
+                // mx-2 로 원과 동일 간격.
+                <li
                   aria-hidden="true"
-                  className={
-                    "mt-[13px] h-0.5 min-w-3 flex-1 rounded-full " +
-                    (i <= currentIndex ? "bg-blue-500" : "bg-slate-200")
-                  }
-                />
+                  className="mx-2 flex h-[26px] w-12 shrink-0 items-center sm:w-16"
+                >
+                  <span
+                    className={
+                      "h-0.5 w-full rounded-full " +
+                      (i <= currentIndex ? "bg-blue-500" : "bg-slate-200")
+                    }
+                  />
+                </li>
               ) : null}
-              <button
-                type="button"
-                onClick={() => onSelect(step.key)}
-                aria-current={active ? "step" : undefined}
-                className="flex shrink-0 cursor-pointer flex-col items-center gap-1 px-1.5"
-              >
-                <span
-                  className={
-                    "flex size-[26px] items-center justify-center rounded-full border text-[12px] font-bold transition-colors " +
-                    (active
-                      ? "border-blue-600 bg-blue-600 text-white shadow-sm"
-                      : done
-                        ? "border-blue-200 bg-blue-50 text-blue-600"
-                        : "border-slate-200 bg-white text-slate-400")
-                  }
+              <li className="relative shrink-0">
+                <button
+                  type="button"
+                  onClick={() => onSelect(step.key)}
+                  aria-current={active ? "step" : undefined}
+                  className="flex cursor-pointer items-center justify-center"
                 >
-                  {done ? <Check className="size-3.5" /> : i + 1}
-                </span>
-                <span
-                  className={
-                    "text-[10.5px] font-semibold leading-tight " +
-                    (active
-                      ? "text-blue-700"
-                      : done
-                        ? "text-slate-600"
-                        : "text-slate-400")
-                  }
-                >
-                  {step.label}
-                </span>
-              </button>
-            </li>
+                  <span
+                    className={
+                      "flex size-[26px] items-center justify-center rounded-full border text-[12px] font-bold transition-colors " +
+                      (active
+                        ? "border-blue-600 bg-blue-600 text-white shadow-sm"
+                        : done
+                          ? "border-blue-200 bg-blue-50 text-blue-600"
+                          : "border-slate-200 bg-white text-slate-400")
+                    }
+                  >
+                    {done ? <Check className="size-3.5" /> : i + 1}
+                  </span>
+                  <span
+                    className={
+                      "absolute left-1/2 top-full mt-1 -translate-x-1/2 whitespace-nowrap text-[10.5px] font-semibold leading-tight " +
+                      (active
+                        ? "text-blue-700"
+                        : done
+                          ? "text-slate-600"
+                          : "text-slate-400")
+                    }
+                  >
+                    {step.label}
+                  </span>
+                </button>
+              </li>
+            </Fragment>
           );
         })}
       </ol>
@@ -119,6 +130,7 @@ export function MobileStepNav({
   prev,
   next,
   hint,
+  cart,
 }: {
   prev: { label: string; onClick: () => void } | null;
   next: {
@@ -130,10 +142,13 @@ export function MobileStepNav({
   } | null;
   /** 다음 버튼 위에 얇게 띄우는 안내 문구 (비활성 사유 등). */
   hint?: ReactNode;
+  /** 이전/다음 버튼 위(고정 바 최상단)에 얹는 장바구니 등 부가 UI. */
+  cart?: ReactNode;
 }) {
   const nextDisabled = next ? next.disabled || !next.onClick : false;
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+      {cart ?? null}
       {hint ? (
         <p className="border-b border-slate-100 px-4 py-1.5 text-center text-[11.5px] text-slate-500">
           {hint}

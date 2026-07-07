@@ -57,7 +57,7 @@ export function EditorCanvas({
         <div
           id="exam-paper-print-root"
           ref={scrollerRef}
-          className="par-scroll h-full min-h-0 overflow-auto overscroll-contain px-5 py-5 [scrollbar-gutter:stable]"
+          className="par-root-edit-scroller par-scroll h-full min-h-0 overflow-auto overscroll-contain px-5 py-5 [scrollbar-gutter:stable]"
           onMouseDown={(e) => {
             if (e.target === e.currentTarget) onDeselect();
           }}

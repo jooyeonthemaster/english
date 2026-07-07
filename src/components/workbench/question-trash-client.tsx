@@ -680,6 +680,8 @@ export function QuestionTrashClient({
     </div>
   );
 
+  // 모바일 페이지 넘김 시 목록 상단(스티키 헤더 포함)으로 부드럽게 스크롤.
+  const listSectionRef = useRef<HTMLElement>(null);
   // 메인 그리드 sticky 오프셋 계산용 — FolderSection 높이를 측정한다(은행과 동일).
   const folderStickyRef = useRef<HTMLDivElement>(null);
   const [folderStickyHeight, setFolderStickyHeight] = useState(0);
@@ -701,7 +703,10 @@ export function QuestionTrashClient({
   return (
     <div className="flex min-h-[calc(100vh-64px)] flex-col">
       <div className="-mx-6 flex-1 bg-[#F4F6F9] px-6 pt-2 pb-4 sm:px-8">
-        <section className="flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <section
+          ref={listSectionRef}
+          className="flex flex-col rounded-2xl border border-slate-200 bg-white shadow-sm"
+        >
           {/* ─── Header (FolderSection with REAL folders, synced with 문제 관리) ─── */}
           <div
             ref={folderStickyRef}
@@ -835,6 +840,7 @@ export function QuestionTrashClient({
           page={currentPage}
           totalPages={totalPages}
           onGoToPage={goToPage}
+          scrollTargetRef={listSectionRef}
         />
       </div>
 

@@ -1,7 +1,7 @@
 import { APICallError, generateObject } from "ai";
 
 import { googleGenerativeAI } from "@/lib/ai";
-import { ATLAS_VARIANT_MODEL_ID } from "@/lib/atlas-ai";
+import { ATLAS_VARIANT_MODEL_ID, atlasUsageWithCost } from "@/lib/atlas-ai";
 import {
   wholePassageResultSchema,
   type VariantDirection,
@@ -160,7 +160,7 @@ export async function runWholePassageTransform({
           Date.now() - startedAt
         }ms (${wordCount(cleaned.passage)}w from ${srcWords}w)`,
       );
-      return { ...cleaned, usage: result.usage, modelId };
+      return { ...cleaned, usage: atlasUsageWithCost(result), modelId };
     } catch (err) {
       lastError = err;
       console.warn(

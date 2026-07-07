@@ -112,22 +112,16 @@ export async function getStudentDashboard() {
       },
       select: { status: true, checkInTime: true },
     }),
-    // Recent notices for home page
-    prisma.notice.findMany({
+    // 홈 화면 최근 소식 — 학원 공지 폐지 후 플랫폼 공지(스모트 소식)로 교체.
+    prisma.platformAnnouncement.findMany({
       where: {
-        academyId: student.academyId,
-        publishAt: { lte: now },
-        OR: [
-          { targetType: "ALL" },
-          { targetType: "INDIVIDUAL", targetId: studentId },
-          ...(student.classEnrollments.length > 0
-            ? [{ targetType: "CLASS", targetId: { in: student.classEnrollments.map((e) => e.classId) } }]
-            : []),
-        ],
+        status: "PUBLISHED",
+        publishedAt: { lte: now },
+        OR: [{ audiences: "ALL" }, { audiences: { contains: "STUDENT" } }],
       },
-      orderBy: [{ isPinned: "desc" }, { publishAt: "desc" }],
+      orderBy: [{ isPinned: "desc" }, { publishedAt: "desc" }],
       take: 3,
-      select: { id: true, title: true, isPinned: true, publishAt: true },
+      select: { id: true, title: true, isPinned: true, publishedAt: true, createdAt: true },
     }),
   ]);
 
@@ -299,7 +293,7 @@ export async function getStudentDashboard() {
       id: n.id,
       title: n.title,
       isPinned: n.isPinned,
-      publishAt: n.publishAt.toISOString(),
+      publishAt: (n.publishedAt ?? n.createdAt).toISOString(),
     })),
   };
 }

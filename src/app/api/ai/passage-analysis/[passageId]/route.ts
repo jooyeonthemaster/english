@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateObject, generateText } from "ai";
 
 import { GEMINI_MODEL_ID, model } from "@/lib/ai";
+import { atlasUsageWithCost } from "@/lib/atlas-ai";
 import { buildAnalysisPrompt } from "@/lib/annotation-prompt";
 import { getStaffSession } from "@/lib/auth";
 import {
@@ -295,7 +296,7 @@ export async function POST(
 
       try {
         const { english } = body;
-        const { text, usage } = await generateText({
+        const { text, usage, providerMetadata } = await generateText({
           model,
           prompt: `다음 영어 문장을 자연스러운 한국어로 번역하세요. 번역만 출력하세요.\n\n영어: ${english}\n\n한국어 번역:`,
         });
@@ -305,7 +306,7 @@ export async function POST(
           operationType: "PASSAGE_ANALYSIS",
           academyId: staff.academyId,
           model: GEMINI_MODEL_ID,
-          usage,
+          usage: atlasUsageWithCost({ usage, providerMetadata }),
         });
         return NextResponse.json({
           korean: text.trim(),
@@ -348,7 +349,7 @@ export async function POST(
 
       try {
         const { grammarPoint } = body;
-        const { object: enhanced, usage } = await generateObject({
+        const { object: enhanced, usage, providerMetadata } = await generateObject({
           model,
           schema: passageAnalysisSchema.shape.grammarPoints.element,
           prompt: `다음 영어 문법 포인트를 더 자세하고 정확하게 보완해주세요.
@@ -371,7 +372,7 @@ id는 "${grammarPoint.id}"로 유지하세요.`,
           operationType: "PASSAGE_ANALYSIS",
           academyId: staff.academyId,
           model: GEMINI_MODEL_ID,
-          usage,
+          usage: atlasUsageWithCost({ usage, providerMetadata }),
         });
         return NextResponse.json({
           grammarPoint: enhanced,
