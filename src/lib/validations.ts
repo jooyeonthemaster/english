@@ -203,6 +203,7 @@ export const groupSeminarSchema = z.object({
   title: z.string().min(1, "제목을 입력하세요").max(120),
   summary: z.string().max(200).optional(),
   description: z.string().max(5000).optional(),
+  benefit: z.string().max(500).optional(),
   host: z.string().max(80).optional(),
   target: z.string().max(120).optional(),
   location: z.string().max(200).optional(),

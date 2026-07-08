@@ -500,6 +500,7 @@ export interface AdminGroupSeminarDetail {
   title: string;
   summary: string | null;
   description: string | null;
+  benefit: string | null;
   host: string | null;
   target: string | null;
   location: string | null;
@@ -554,6 +555,7 @@ export async function adminGetGroupSeminarDetail(
     title: s.title,
     summary: s.summary,
     description: s.description,
+    benefit: s.benefit,
     host: s.host,
     target: s.target,
     location: s.location,
@@ -598,6 +600,7 @@ function toSeminarData(input: Record<string, unknown>) {
   if (v.title !== undefined) data.title = v.title;
   if (v.summary !== undefined) data.summary = v.summary || null;
   if (v.description !== undefined) data.description = v.description || null;
+  if (v.benefit !== undefined) data.benefit = v.benefit?.trim() || null;
   if (v.host !== undefined) data.host = v.host || null;
   if (v.target !== undefined) data.target = v.target || null;
   if (v.location !== undefined) data.location = v.location || null;

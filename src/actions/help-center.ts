@@ -458,6 +458,7 @@ export interface GroupSeminarView {
   title: string;
   summary: string | null;
   description: string | null;
+  benefit: string | null;
   host: string | null;
   target: string | null;
   location: string | null;
@@ -590,6 +591,7 @@ export async function getOpenGroupSeminars(): Promise<GroupSeminarView[]> {
       title: s.title,
       summary: s.summary,
       description: s.description,
+      benefit: s.benefit,
       host: s.host,
       target: s.target,
       location: s.location,
