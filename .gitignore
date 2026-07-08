@@ -150,3 +150,15 @@ docs/grammar_1000_analysis/
 /scripts/_sc-leak-test.ts
 /e2e-v3-round2/
 /.playwright-mcp/
+
+# ── 사이트 이용 매뉴얼 로컬 저작 산출물·툴링 — 배포 불필요 (2026-07-09) ──
+/manual/
+/manual-slides/
+/manual.zip
+/manual-slides.zip
+/manual-slides2.zip
+/public/manual/
+/scripts/build-manual.ts
+/scripts/manual-screenshots.ts
+# 스크래치 관리자 점검 스크립트
+/scripts/_tmp-*

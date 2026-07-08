@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdminAuth } from "@/lib/auth-admin";
 import { notifyAcademyDirector } from "@/lib/growth/notifications";
+import { groupSeminarSchema } from "@/lib/validations";
 import { revalidatePath } from "next/cache";
 
 // ============================================================================
@@ -452,5 +453,274 @@ export async function adminUpdateSeminarRequest(
 
   revalidatePath("/admin/seminars");
   revalidatePath("/director/help/seminar");
+  return { success: true };
+}
+
+// ============================================================================
+// 단체 세미나 — 운영자 측
+// 세미나 클래스 개설/수정/삭제 + 신청자 관리.
+// ============================================================================
+
+const GROUP_SEMINAR_ADMIN_PATH = "/admin/group-seminars";
+const GROUP_SEMINAR_DIRECTOR_PATH = "/director/help/group-seminar";
+
+export interface AdminGroupSeminarListItem {
+  id: string;
+  title: string;
+  status: string;
+  scheduledAt: string | null;
+  capacity: number | null;
+  registeredCount: number;
+}
+
+export interface AdminGroupSeminarRegistrationView {
+  id: string;
+  applicantName: string;
+  academyName: string | null;
+  phone: string;
+  email: string | null;
+  headCount: number;
+  selectedDate: string | null;
+  message: string | null;
+  status: string;
+  createdAt: string;
+  // 참가 보증금
+  depositStatus: string;
+  depositAmount: number | null;
+  depositorName: string | null;
+  refundBankName: string | null;
+  refundAccountNumber: string | null;
+  refundAccountHolder: string | null;
+  depositPaidAt: string | null;
+  depositRefundedAt: string | null;
+}
+
+export interface AdminGroupSeminarDetail {
+  id: string;
+  title: string;
+  summary: string | null;
+  description: string | null;
+  host: string | null;
+  target: string | null;
+  location: string | null;
+  mapUrl: string | null;
+  meetingUrl: string | null;
+  scheduledAt: string | null;
+  sessionDates: string[];
+  durationMin: number | null;
+  capacity: number | null;
+  registerCloseDays: number | null;
+  depositAmount: number | null;
+  coverImageUrl: string | null;
+  status: string;
+  registeredCount: number;
+  registrations: AdminGroupSeminarRegistrationView[];
+  createdAt: string;
+}
+
+export async function adminGetGroupSeminars(): Promise<AdminGroupSeminarListItem[]> {
+  await requireAdminAuth();
+  const rows = await prisma.groupSeminar.findMany({
+    orderBy: [{ createdAt: "desc" }],
+    include: {
+      registrations: {
+        where: { status: { in: ["REGISTERED", "ATTENDED"] } },
+        select: { headCount: true },
+      },
+    },
+  });
+  return rows.map((s) => ({
+    id: s.id,
+    title: s.title,
+    status: s.status,
+    scheduledAt: s.scheduledAt?.toISOString() ?? null,
+    capacity: s.capacity,
+    registeredCount: s.registrations.reduce((sum, r) => sum + r.headCount, 0),
+  }));
+}
+
+export async function adminGetGroupSeminarDetail(
+  seminarId: string,
+): Promise<AdminGroupSeminarDetail | null> {
+  await requireAdminAuth();
+  const s = await prisma.groupSeminar.findUnique({
+    where: { id: seminarId },
+    include: { registrations: { orderBy: { createdAt: "desc" } } },
+  });
+  if (!s) return null;
+  const active = s.registrations.filter((r) => r.status !== "CANCELED");
+  return {
+    id: s.id,
+    title: s.title,
+    summary: s.summary,
+    description: s.description,
+    host: s.host,
+    target: s.target,
+    location: s.location,
+    mapUrl: s.mapUrl,
+    meetingUrl: s.meetingUrl,
+    scheduledAt: s.scheduledAt?.toISOString() ?? null,
+    sessionDates: Array.isArray(s.sessionDates) ? (s.sessionDates as string[]) : [],
+    durationMin: s.durationMin,
+    capacity: s.capacity,
+    registerCloseDays: s.registerCloseDays,
+    depositAmount: s.depositAmount,
+    coverImageUrl: s.coverImageUrl,
+    status: s.status,
+    registeredCount: active.reduce((sum, r) => sum + r.headCount, 0),
+    registrations: s.registrations.map((r) => ({
+      id: r.id,
+      applicantName: r.applicantName,
+      academyName: r.academyName,
+      phone: r.phone,
+      email: r.email,
+      headCount: r.headCount,
+      selectedDate: r.selectedDate?.toISOString() ?? null,
+      message: r.message,
+      status: r.status,
+      createdAt: r.createdAt.toISOString(),
+      depositStatus: r.depositStatus,
+      depositAmount: r.depositAmount,
+      depositorName: r.depositorName,
+      refundBankName: r.refundBankName,
+      refundAccountNumber: r.refundAccountNumber,
+      refundAccountHolder: r.refundAccountHolder,
+      depositPaidAt: r.depositPaidAt?.toISOString() ?? null,
+      depositRefundedAt: r.depositRefundedAt?.toISOString() ?? null,
+    })),
+    createdAt: s.createdAt.toISOString(),
+  };
+}
+
+function toSeminarData(input: Record<string, unknown>) {
+  const v = groupSeminarSchema.partial().parse(input);
+  const data: Record<string, unknown> = {};
+  if (v.title !== undefined) data.title = v.title;
+  if (v.summary !== undefined) data.summary = v.summary || null;
+  if (v.description !== undefined) data.description = v.description || null;
+  if (v.host !== undefined) data.host = v.host || null;
+  if (v.target !== undefined) data.target = v.target || null;
+  if (v.location !== undefined) data.location = v.location || null;
+  if (v.mapUrl !== undefined) data.mapUrl = v.mapUrl?.trim() || null;
+  if (v.meetingUrl !== undefined) data.meetingUrl = v.meetingUrl?.trim() || null;
+  if (v.coverImageUrl !== undefined) data.coverImageUrl = v.coverImageUrl || null;
+  if (v.status !== undefined) data.status = v.status;
+  if (v.durationMin !== undefined) data.durationMin = v.durationMin ?? null;
+  if (v.capacity !== undefined) data.capacity = v.capacity ?? null;
+  if (v.registerCloseDays !== undefined) {
+    data.registerCloseDays = v.registerCloseDays ?? null;
+  }
+  if (v.depositAmount !== undefined) data.depositAmount = v.depositAmount ?? null;
+  if (v.scheduledAt !== undefined) {
+    data.scheduledAt = v.scheduledAt ? new Date(v.scheduledAt) : null;
+  }
+  // 세션 날짜 목록(사용자가 이 중 하루 선택)이 오면 정렬 저장하고, 대표 일시는 가장 이른 날짜로.
+  if (v.sessionDates !== undefined) {
+    const dates = (v.sessionDates ?? [])
+      .map((s) => new Date(s))
+      .filter((d) => !Number.isNaN(d.getTime()))
+      .sort((a, b) => a.getTime() - b.getTime());
+    data.sessionDates = dates.map((d) => d.toISOString());
+    data.scheduledAt = dates[0] ?? null;
+  }
+  return data;
+}
+
+export async function adminCreateGroupSeminar(input: {
+  title: string;
+  [key: string]: unknown;
+}) {
+  const admin = await requireAdminAuth();
+  const data = toSeminarData(input);
+  if (!data.title) throw new Error("제목을 입력하세요.");
+  const seminar = await prisma.groupSeminar.create({
+    data: { ...data, title: data.title as string, createdByAdminId: admin.adminId },
+  });
+  revalidatePath(GROUP_SEMINAR_ADMIN_PATH);
+  revalidatePath(GROUP_SEMINAR_DIRECTOR_PATH);
+  return { success: true, id: seminar.id };
+}
+
+export async function adminUpdateGroupSeminar(
+  seminarId: string,
+  input: Record<string, unknown>,
+) {
+  await requireAdminAuth();
+  const data = toSeminarData(input);
+
+  const seminar = await prisma.groupSeminar.update({
+    where: { id: seminarId },
+    data,
+    select: { status: true, title: true },
+  });
+
+  // 세미나가 취소되면 신청 확정자(원장)에게 알림.
+  if (data.status === "CANCELED") {
+    const regs = await prisma.groupSeminarRegistration.findMany({
+      where: { seminarId, status: "REGISTERED", academyId: { not: null } },
+      select: { academyId: true },
+    });
+    const academyIds = [...new Set(regs.map((r) => r.academyId).filter(Boolean) as string[])];
+    await Promise.all(
+      academyIds.map((academyId) =>
+        notifyAcademyDirector(academyId, {
+          category: "SYSTEM",
+          type: "GROUP_SEMINAR_STATUS",
+          title: `단체 세미나 "${seminar.title}"가 취소되었습니다`,
+          body: null,
+          actionUrl: GROUP_SEMINAR_DIRECTOR_PATH,
+        }),
+      ),
+    );
+  }
+
+  revalidatePath(GROUP_SEMINAR_ADMIN_PATH);
+  revalidatePath(GROUP_SEMINAR_DIRECTOR_PATH);
+  return { success: true };
+}
+
+export async function adminDeleteGroupSeminar(seminarId: string) {
+  await requireAdminAuth();
+  await prisma.groupSeminar.delete({ where: { id: seminarId } });
+  revalidatePath(GROUP_SEMINAR_ADMIN_PATH);
+  revalidatePath(GROUP_SEMINAR_DIRECTOR_PATH);
+  return { success: true };
+}
+
+/** 신청자 상태 변경(참석 처리·취소 등). */
+export async function adminSetGroupSeminarRegistrationStatus(
+  registrationId: string,
+  status: "REGISTERED" | "ATTENDED" | "CANCELED",
+) {
+  await requireAdminAuth();
+  await prisma.groupSeminarRegistration.update({
+    where: { id: registrationId },
+    data: { status },
+  });
+  revalidatePath(GROUP_SEMINAR_ADMIN_PATH);
+  revalidatePath(GROUP_SEMINAR_DIRECTOR_PATH);
+  return { success: true };
+}
+
+/**
+ * 참가 보증금 상태 수동 변경. 입금은 웹훅이 자동 확정(PAID)하지만, 관리자가
+ * 수동 입금확인(WAITING→PAID)·환급완료(PAID→REFUNDED)·몰수(FORFEITED)도 할 수 있다.
+ * 환급은 자동 송금이 불가하므로 관리자가 실제 이체 후 REFUNDED로 표시한다.
+ */
+export async function adminSetSeminarDepositStatus(
+  registrationId: string,
+  status: "WAITING" | "PAID" | "REFUNDED" | "FORFEITED",
+) {
+  await requireAdminAuth();
+  const now = new Date();
+  const data: Record<string, unknown> = { depositStatus: status };
+  if (status === "PAID") data.depositPaidAt = now;
+  if (status === "REFUNDED") data.depositRefundedAt = now;
+  await prisma.groupSeminarRegistration.update({
+    where: { id: registrationId },
+    data,
+  });
+  revalidatePath(GROUP_SEMINAR_ADMIN_PATH);
+  revalidatePath(GROUP_SEMINAR_DIRECTOR_PATH);
   return { success: true };
 }

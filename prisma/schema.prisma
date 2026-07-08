@@ -4769,3 +4769,72 @@ model SeminarRequest {
   @@index([status, createdAt])
   @@map("seminar_requests")
 }
+
+// ─── 단체 세미나 ──────────────────────────────────────────────────────────────
+// 1:1 세미나(SeminarRequest)와 달리 운영자가 "세미나 클래스"를 개설(GroupSeminar)해
+// 두면 여러 원장이 정보를 보고 신청(GroupSeminarRegistration)하는 1-대-다 구조.
+// 개설=SuperAdmin, 신청=Staff(원장). 정원(capacity)까지 REGISTERED 인원으로 마감.
+
+model GroupSeminar {
+  id               String    @id @default(cuid())
+  title            String
+  summary          String? // 목록 카드용 한 줄 소개
+  description      String?   @db.Text // 상세 안내(커리큘럼 등)
+  host             String? // 강사/진행자
+  target           String? // 대상(예: 신규 원장)
+  location         String? // 오프라인 장소 또는 "온라인(줌)"
+  mapUrl           String? // 지도 링크(네이버/카카오 등) — "지도에서 위치 확인하기" 버튼
+  meetingUrl       String? // 온라인 접속 링크 — 신청 확정자에게 노출
+  scheduledAt      DateTime? // 대표 일시(세션 목록의 가장 이른 날짜로 자동 설정)
+  sessionDates     Json? // string[] ISO — 여러 날짜 중 사용자가 하루를 선택. 비면 단일 일정.
+  durationMin      Int? // 진행 시간(분)
+  capacity         Int? // 정원(null=제한 없음)
+  registerCloseDays Int? // 신청 마감: 각 세션 실행 N일 전까지 접수(null/0=당일까지)
+  depositAmount    Int? // 참가 보증금(원). null/0=없음. 계좌이체로 받고 세미나 당일 환급.
+  coverImageUrl    String?
+  status           String    @default("DRAFT") // DRAFT→OPEN→CLOSED→ENDED / CANCELED
+  createdByAdminId String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  registrations GroupSeminarRegistration[]
+
+  @@index([status, scheduledAt])
+  @@map("group_seminars")
+}
+
+model GroupSeminarRegistration {
+  id            String   @id @default(cuid())
+  seminarId     String
+  academyId     String?
+  staffId       String?
+  applicantName String
+  phone         String
+  email         String?
+  academyName   String?
+  headCount     Int      @default(1) // 참석 인원수
+  selectedDate  DateTime? // 여러 날짜 중 신청자가 선택한 세션 일시(단일 일정이면 null)
+  message       String?  @db.Text
+  status        String   @default("REGISTERED") // REGISTERED→ATTENDED / CANCELED
+
+  // ── 참가 보증금(계좌이체) ──────────────────────────────────────────────
+  depositAmount     Int? // 신청 시점 보증금 스냅샷(원). null=보증금 없는 세미나
+  depositStatus     String   @default("NONE") // NONE | WAITING(입금대기) | PAID(입금확인) | REFUNDED(환급완료) | FORFEITED(몰수)
+  depositorName     String? // 입금자명 — 자동 매칭 키(금액+입금자명+시간창)
+  refundBankName    String? // 환급받을 은행
+  refundAccountNumber String? // 환급받을 계좌번호
+  refundAccountHolder String? // 환급받을 예금주
+  depositPaidAt     DateTime?
+  depositRefundedAt DateTime?
+  depositRef        String? // 매칭된 입금 알림 externalId(감사용)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  seminar GroupSeminar @relation(fields: [seminarId], references: [id], onDelete: Cascade)
+
+  @@unique([seminarId, staffId]) // 원장 1인당 세미나당 1건(중복 신청 방지)
+  @@index([seminarId, status])
+  @@index([depositStatus, depositAmount, createdAt]) // 보증금 자동매칭 쿼리
+  @@map("group_seminar_registrations")
+}

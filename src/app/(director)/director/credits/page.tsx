@@ -18,6 +18,7 @@ import { FILTER_OPTIONS, OverviewCard, TYPE_LABELS } from "./_components/credit-
 import type { DanalLegacyPaymentParams, DanalLegacyPaymentResponse } from "./_components/payment-sdk";
 import { SubscriptionBillingPanel } from "./_components/subscription-billing-panel";
 import { BankDepositGuide, TopUpHistory, TopUpMethodDialog, TopUpPanel } from "./_components/top-up-panel";
+import { CouponRegisterCard } from "./_components/coupon-register-card";
 import { useCreditsController } from "./_components/use-credits-controller";
 
 declare global {
@@ -264,6 +265,8 @@ export default function CreditsPage() {
         </>
       )}
 
+      <CouponRegisterCard onRegistered={refreshAllCreditData} />
+
       <TopUpPanel
         products={topUpProducts}
         costEntries={costEntries}
@@ -467,11 +470,11 @@ export default function CreditsPage() {
               <table className="w-full text-left">
                 <thead>
                   <tr className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider bg-gray-50/50">
-                    <th className="px-5 py-2.5">일시</th>
-                    <th className="px-4 py-2.5">유형</th>
-                    <th className="px-4 py-2.5">기능</th>
-                    <th className="px-4 py-2.5 text-right">금액</th>
-                    <th className="px-5 py-2.5 text-right">잔액</th>
+                    <th className="px-4 py-2.5 whitespace-nowrap">일시</th>
+                    <th className="px-3 py-2.5 whitespace-nowrap">유형</th>
+                    <th className="px-3 py-2.5">기능</th>
+                    <th className="px-4 py-2.5 text-right whitespace-nowrap">금액</th>
+                    <th className="px-5 py-2.5 text-right whitespace-nowrap">잔액</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
@@ -482,18 +485,28 @@ export default function CreditsPage() {
                         key={tx.id}
                         className="hover:bg-gray-50/50 transition-colors"
                       >
-                        <td className="px-5 py-3 text-[12px] text-gray-500 tabular-nums whitespace-nowrap">
-                          {new Date(tx.createdAt).toLocaleDateString("ko-KR", {
-                            month: "short",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                        <td className="px-4 py-3 text-[12px] text-gray-500 tabular-nums whitespace-nowrap leading-tight">
+                          <div>
+                            {new Date(tx.createdAt).toLocaleDateString(
+                              "ko-KR",
+                              { month: "short", day: "numeric" },
+                            )}
+                          </div>
+                          <div className="text-gray-400">
+                            {new Date(tx.createdAt).toLocaleTimeString(
+                              "ko-KR",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: false,
+                              },
+                            )}
+                          </div>
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-3 py-3 whitespace-nowrap">
                           <span
                             className={cn(
-                              "inline-flex items-center h-[20px] px-2 text-[10px] font-semibold rounded-md",
+                              "inline-flex items-center h-[20px] px-2 text-[10px] font-semibold rounded-md whitespace-nowrap",
                               isPositive
                                 ? "text-emerald-600 bg-emerald-500/[0.08]"
                                 : "text-red-500 bg-red-500/[0.08]",
@@ -502,7 +515,7 @@ export default function CreditsPage() {
                             {TYPE_LABELS[tx.type] || tx.type}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-[12px] text-gray-600">
+                        <td className="px-3 py-3 text-[12px] text-gray-600">
                           {/* 알려진 AI 작업은 매핑 라벨, 그 외에는 사람이 읽을 수 있는
                               description(예: "실물쿠폰 …") 우선, 그마저 없으면 원문. */}
                           {(tx.operationType &&
