@@ -157,7 +157,9 @@ docs/grammar_1000_analysis/
 /manual.zip
 /manual-slides.zip
 /manual-slides2.zip
-/public/manual/
+/public/manual/*
+!/public/manual/redesign-185/
+!/public/manual/redesign-185/**
 /scripts/build-manual.ts
 /scripts/manual-screenshots.ts
 # 스크래치 관리자 점검 스크립트

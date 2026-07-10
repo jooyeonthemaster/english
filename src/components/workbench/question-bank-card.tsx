@@ -161,9 +161,9 @@ export function QuestionBankCard({
   active = false,
   // 방금 상세를 열어봤다가 닫은 카드 — 한 번 배경이 반짝여 "여기 봤었지"를 알려준다.
   recentlyViewed = false,
-  // 접힘(콤팩트) 모드 — 시험지 빌더 등 목록을 콤팩트하게 볼 때. 기본은 펼침(전체) 유지.
+  // 접힘(콤팩트) 모드 — 시험지 생성 등 목록을 콤팩트하게 볼 때. 기본은 펼침(전체) 유지.
   collapsible = false,
-  // 시험지 빌더 좌측 라이브러리 전용 — 카드 전체 크기를 한 단계 줄인다(여백·간격·글자).
+  // 시험지 생성 좌측 라이브러리 전용 — 카드 전체 크기를 한 단계 줄인다(여백·간격·글자).
   // 문제생성/문제관리/휴지통 등 다른 화면은 기본(false)이라 영향 없음.
   compact = false,
   // 접힌(콤팩트) 카드일 때만 적용할 min-height 클래스. 같은 줄의 접힌 카드들을
@@ -206,6 +206,9 @@ export function QuestionBankCard({
   hideCheckbox = false,
   // 영역선택(마키) 대상에서 제외 — data-drag-item-id 를 찍지 않는다(세트 카드 오선택 방지).
   suppressDragItem = false,
+  // 마키 선택 id 재정의 — 세트 카드처럼 카드 1장이 여러 문항을 대표할 때 "set:<setId>"
+  // 같은 토큰을 찍고, 호출부 onChange 에서 멤버 문항 id 로 펼친다. suppressDragItem 보다 우선.
+  dragItemId,
 }: {
   q: QuestionBankItem;
   num: number;
@@ -223,12 +226,12 @@ export function QuestionBankCard({
   showManagementActions?: boolean;
   showStar?: boolean;
   enableDrag?: boolean;
-  // 시험지 빌더(exams/create)용 간결 표기: 미사용 "0개 시험지에 미사용",
+  // 시험지 생성(exams/create)용 간결 표기: 미사용 "0개 시험지에 미사용",
   // 사용 "N개 시험지에 사용". 기본(questions 페이지)은 기존 문구 유지.
   compactUsageLabel?: boolean;
   // 카드 본문 단일 클릭은 선택, 더블클릭은 상세/편집을 실행한다.
   cardClickSelects?: boolean;
-  // 시험지 빌더: 해설보기 줄 오른쪽에 '상세 보기' 버튼을 띄운다.
+  // 시험지 생성: 해설보기 줄 오른쪽에 '상세 보기' 버튼을 띄운다.
   showDetailButton?: boolean;
   // 하단 날짜줄 오른쪽 "내보내기(⋯)" 액션 매트릭스 노출 여부(복사·한글·워드).
   showQuickActions?: boolean;
@@ -245,13 +248,13 @@ export function QuestionBankCard({
   getDuplicateDragQuestionIds?: (draggedId: string) => string[];
   // 체크한 순서(1,2,3…). 드롭 시 이 순서대로 미리보기에 들어간다.
   selectionIndex?: number;
-  // 시험지 빌더: 이미 들어간 문항은 일반 선택/드래그를 막고 흐리게 표시한다.
+  // 시험지 생성: 이미 들어간 문항은 일반 선택/드래그를 막고 흐리게 표시한다.
   selectionDisabled?: boolean;
-  // 시험지 빌더: 같은 문항이 여러 번 들어간 경우 총 포함 개수를 숫자만 표시한다.
+  // 시험지 생성: 같은 문항이 여러 번 들어간 경우 총 포함 개수를 숫자만 표시한다.
   duplicateCount?: number;
-  // 시험지 빌더: 이미 들어간 문항을 다시 선택할지 확인한 뒤 체크 상태로 만든다.
+  // 시험지 생성: 이미 들어간 문항을 다시 선택할지 확인한 뒤 체크 상태로 만든다.
   onDuplicateSelectConfirm?: () => void;
-  // 시험지 빌더처럼 체크박스/순서 뱃지만으로 선택 상태를 표시할 때 카드 배경 강조를 끈다.
+  // 시험지 생성처럼 체크박스/순서 뱃지만으로 선택 상태를 표시할 때 카드 배경 강조를 끈다.
   selectedCardHighlight?: boolean;
   // 시험지 미리보기에서 현재 클릭한 문항이면 진한 파란 테두리로 강조한다.
   active?: boolean;
@@ -272,6 +275,7 @@ export function QuestionBankCard({
   promptInlineBadge?: React.ReactNode;
   hideCheckbox?: boolean;
   suppressDragItem?: boolean;
+  dragItemId?: string;
 }) {
   const [isDragging, setIsDragging] = useState(false);
   // 카드 접힘/펼침 — 기본은 접힘(의문문 + 지문 2줄 + 정답만 보이는 미리보기).
@@ -595,7 +599,11 @@ export function QuestionBankCard({
   const card = (
     <Card
       ref={dragRef}
-      data-drag-item-id={selectionDisabled || suppressDragItem ? undefined : q.id}
+      data-drag-item-id={
+        selectionDisabled
+          ? undefined
+          : dragItemId ?? (suppressDragItem ? undefined : q.id)
+      }
       data-question-card-id={q.id}
       onMouseDown={preventCardDoubleClickTextSelection}
       onClick={handleCardClick}
@@ -1098,7 +1106,7 @@ export function QuestionBankCard({
         })()}
 
         {/* Footer: review actions (검수완료/취소 + 수정) — '사용 이력' 밴드 아래로 이동.
-            compactUsageLabel(시험지 빌더)에서는 날짜+스탬프 줄을 생략하고
+            compactUsageLabel(시험지 생성)에서는 날짜+스탬프 줄을 생략하고
             스탬프를 위 '사용 이력' 밴드 우측으로 옮긴다. */}
         {(showTrashActions ||
           (embedded ? showReviewActions : !compactUsageLabel || showReviewActions)) && (

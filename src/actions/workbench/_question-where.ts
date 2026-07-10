@@ -1,7 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import type { WorkbenchQuestionFilters } from "./_types";
 
-// 시험지 빌더 좌측 목록 서버 페이지네이션의 페이지 크기. "use server" 파일은 async
+// 시험지 생성 좌측 목록 서버 페이지네이션의 페이지 크기. "use server" 파일은 async
 // 함수만 export 할 수 있어 상수를 이 플레인 모듈에 둔다(서버 액션·클라이언트 공용).
 export const BUILDER_PAGE_SIZE = 100;
 
@@ -10,7 +10,7 @@ type QuestionWhereOptions = {
   includeSetMembers?: boolean;
 };
 
-// 문제 조회 where 빌더 — 문제은행/지문별 뷰/시험지 빌더 피커가 공유한다. "use server"
+// 문제 조회 where 빌더 — 문제은행/지문별 뷰/시험지 생성 피커가 공유한다. "use server"
 // 모듈에서는 동기 헬퍼를 export 할 수 없으므로(모든 export 가 async 여야 함) 이 순수
 // 모듈로 분리해 questions.ts(문제은행)와 exam-paper-builder.ts(빌더)가 함께 import 한다.
 export function buildWorkbenchQuestionWhere(
@@ -27,7 +27,7 @@ export function buildWorkbenchQuestionWhere(
   where.deletedAt = scope === "trash" ? { not: null } : null;
 
   // 기본 워크벤치 목록은 세트 멤버를 일반 문항 카드로 중복 노출하지 않는다.
-  // 세트는 QuestionSetSection 이 한 장 카드로 렌더하고, 시험지 빌더처럼 멤버 ID가
+  // 세트는 QuestionSetSection 이 한 장 카드로 렌더하고, 시험지 생성처럼 멤버 ID가
   // 필요한 표면만 includeSetMembers=true 로 명시적으로 opt-in 한다.
   if (!options.includeSetMembers) where.setId = null;
 

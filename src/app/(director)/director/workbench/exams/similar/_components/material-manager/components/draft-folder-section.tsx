@@ -14,7 +14,7 @@ import {
   Check,
   X,
   CornerUpLeft,
-  Grid3X3,
+  Grid3x3,
   List,
   ListFilter,
   Search,
@@ -49,7 +49,7 @@ type FolderSortOrder = "name_asc" | "name_desc" | "newest" | "oldest";
 type FolderViewMode = "grid" | "list";
 
 const DRAFT_FOLDER_VIEW_OPTIONS = [
-  { value: "grid", label: "그리드 보기", Icon: Grid3X3 },
+  { value: "grid", label: "그리드 보기", Icon: Grid3x3 },
   { value: "list", label: "목록 보기", Icon: List },
 ] satisfies ReadonlyArray<ViewModeCycleOption<FolderViewMode>>;
 

@@ -4,8 +4,8 @@ import { useRef } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import {
   ClipboardList,
-  Grid2X2,
-  Grid3X3,
+  Grid2x2,
+  Grid3x3,
   List,
   RefreshCw,
   Trash2,
@@ -99,8 +99,8 @@ interface QueueSectionContainerProps {
 }
 
 const QUEUE_GRID_OPTIONS = [
-  { value: "grid3", label: "3열 보기", Icon: Grid3X3 },
-  { value: "grid2", label: "2열 보기", Icon: Grid2X2 },
+  { value: "grid3", label: "3열 보기", Icon: Grid3x3 },
+  { value: "grid2", label: "2열 보기", Icon: Grid2x2 },
   { value: "list", label: "목록 보기", Icon: List },
 ] satisfies ReadonlyArray<ViewModeCycleOption<QueueGridCols>>;
 

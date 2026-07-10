@@ -12,7 +12,7 @@
 //   - 지문(clipboardPassageText): 유형별로 지문이 questionText 에 baked 되지 않는 경우
 //     (출처지문형·국어·세트멤버)에 한해 leak-safe 하게 지문을 발문 뒤에 끼워 "지문이 딸려오게"
 //     한다. embedded 유형은 마스킹 지문이 이미 questionText 안에 있어 아무것도 붙이지 않는다
-//     (원본 raw 를 붙이면 정답 누출). 판정은 시험지 빌더와 동일한 정책 헬퍼를 재사용한다.
+//     (원본 raw 를 붙이면 정답 누출). 판정은 시험지 생성와 동일한 정책 헬퍼를 재사용한다.
 
 import { parseJSON } from "../shared/helpers";
 import { repairGrammarCorrectionQuestionText } from "@/lib/grammar-correction-display";
@@ -129,7 +129,7 @@ function formatKeyPoints(raw: unknown): string {
 // embedded 유형은 이미 마스킹된 지문이 questionText 에 들어 있으므로(원본 raw 를 붙이면
 // 빈칸/마커가 채워진 정답이 새어 나감) null 을 돌려 아무것도 붙이지 않는다.
 //   반환: 붙일 지문 텍스트(마커 __밑줄__ 유지) 또는 null(붙일 것 없음/이미 포함/누출 위험).
-// 정책 판단은 시험지 빌더와 동일한 헬퍼(passage-policy·ko-paper-adapter·
+// 정책 판단은 시험지 생성와 동일한 헬퍼(passage-policy·ko-paper-adapter·
 // source-passage-markers)를 재사용해 다운로드(한글/워드) 산출물과 정합을 맞춘다.
 function clipboardPassageText(
   q: QuestionBankItem,

@@ -1422,7 +1422,15 @@ export function PassageCardGrid({
             onChange={setSelectedIds}
             boundaryRef={marqueeBoundaryRef}
           >
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-2 lg:gap-3">
+            <div
+              className={
+                // 모바일은 한 줄짜리 리스트 행이므로 항상 1열(태블릿 세로·폰 가로에서
+                // 260px 다열로 구겨지지 않게). 데스크톱은 기존 auto-fill 카드 그리드.
+                isMobile
+                  ? "grid grid-cols-1 gap-2"
+                  : "grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-2 lg:gap-3"
+              }
+            >
               {visiblePassages.map((p, cardIndex) => {
                 // Parse analysis
                 let aData: ParsedAnalysisSummary | null = null;

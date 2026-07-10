@@ -76,6 +76,7 @@ interface FormState {
   depositAmount: string;
   status: string;
   coverImageUrl: string;
+  publicEnabled: boolean;
 }
 
 const EMPTY_FORM: FormState = {
@@ -95,6 +96,7 @@ const EMPTY_FORM: FormState = {
   depositAmount: "",
   status: "DRAFT",
   coverImageUrl: "",
+  publicEnabled: false,
 };
 
 function detailToForm(d: AdminGroupSeminarDetail): FormState {
@@ -120,6 +122,7 @@ function detailToForm(d: AdminGroupSeminarDetail): FormState {
     depositAmount: d.depositAmount != null ? String(d.depositAmount) : "",
     status: d.status,
     coverImageUrl: d.coverImageUrl ?? "",
+    publicEnabled: d.publicEnabled,
   };
 }
 
@@ -278,6 +281,7 @@ export function AdminGroupSeminarsClient({
       depositAmount: form.depositAmount ? Number(form.depositAmount) : null,
       status: form.status as FormState["status"],
       coverImageUrl: form.coverImageUrl,
+      publicEnabled: form.publicEnabled,
     };
   }
 
@@ -378,8 +382,13 @@ export function AdminGroupSeminarsClient({
                   >
                     <StatusBadge status={statusOf(GROUP_SEMINAR_STATUSES, s.status)} />
                     <div className="flex-1 min-w-0">
-                      <div className="text-[13px] font-semibold text-gray-900 truncate">
-                        {s.title}
+                      <div className="flex items-center gap-1.5 truncate text-[13px] font-semibold text-gray-900">
+                        <span className="truncate">{s.title}</span>
+                        {s.publicEnabled && (
+                          <span className="shrink-0 rounded-md border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700">
+                            공개
+                          </span>
+                        )}
                       </div>
                       <div className="text-[11px] text-gray-400 mt-0.5">
                         {s.scheduledAt
@@ -388,6 +397,7 @@ export function AdminGroupSeminarsClient({
                         {" · "}
                         {s.registeredCount}
                         {s.capacity != null ? `/${s.capacity}` : ""}명
+                        {s.guestCount > 0 ? ` · 비회원 ${s.guestCount}` : ""}
                       </div>
                     </div>
                   </button>
@@ -729,6 +739,41 @@ export function AdminGroupSeminarsClient({
                   <p className="text-[11px] text-gray-400">
                     &quot;모집중(OPEN)&quot; 상태에서만 원장이 신청할 수 있습니다.
                   </p>
+
+                  {/* 비회원(랜딩) 공개 신청 토글 */}
+                  <Field label="비회원 공개 신청">
+                    <button
+                      type="button"
+                      onClick={() => set("publicEnabled", !form.publicEnabled)}
+                      className={`flex w-full items-center justify-between rounded-xl border px-3.5 py-2.5 text-left transition-colors ${
+                        form.publicEnabled
+                          ? "border-blue-200 bg-blue-50"
+                          : "border-gray-200 bg-white hover:bg-gray-50"
+                      }`}
+                    >
+                      <span className="text-[13px]">
+                        <span className="font-semibold text-gray-800">
+                          {form.publicEnabled ? "공개 중" : "비공개"}
+                        </span>
+                        <span className="ml-1 text-gray-400">
+                          {form.publicEnabled
+                            ? "랜딩페이지(/seminar)에서 비회원도 신청 가능"
+                            : "로그인한 원장만 신청 가능"}
+                        </span>
+                      </span>
+                      <span
+                        className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors ${
+                          form.publicEnabled ? "bg-blue-600" : "bg-gray-300"
+                        }`}
+                      >
+                        <span
+                          className={`inline-block size-4 transform rounded-full bg-white transition-transform ${
+                            form.publicEnabled ? "translate-x-4" : "translate-x-0.5"
+                          }`}
+                        />
+                      </span>
+                    </button>
+                  </Field>
                 </div>
               </div>
               </div>
@@ -996,6 +1041,15 @@ function RegistrationCard({
       >
         <div className="min-w-0">
           <div className="text-[13px] font-semibold text-gray-900">
+            <span
+              className={`mr-1.5 rounded-md border px-1.5 py-0.5 align-middle text-[10px] font-semibold ${
+                r.isGuest
+                  ? "border-amber-200 bg-amber-50 text-amber-700"
+                  : "border-blue-200 bg-blue-50 text-blue-700"
+              }`}
+            >
+              {r.isGuest ? "비회원" : "회원"}
+            </span>
             {r.applicantName}
             {r.academyName && (
               <span className="font-normal text-gray-400"> · {r.academyName}</span>

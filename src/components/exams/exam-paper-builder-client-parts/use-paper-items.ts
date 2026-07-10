@@ -113,7 +113,7 @@ export function computeRegroupedByPassage(current: PaperItem[]): PaperItem[] {
 }
 
 // ---------------------------------------------------------------------------
-// 시험지 빌더의 paperItems 상태 + mutation 헬퍼들을 한 곳에 묶은 훅.
+// 시험지 생성의 paperItems 상태 + mutation 헬퍼들을 한 곳에 묶은 훅.
 // 메인 컴포넌트는 markDirty 콜백만 전달하면 된다.
 // ---------------------------------------------------------------------------
 

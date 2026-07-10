@@ -301,7 +301,7 @@ export function getNavGroups(
             { label: "단체 세미나 신청", href: `${basePath}/help/group-seminar` },
             { label: "피드백 게시판", href: `${basePath}/help/feedback` },
             { label: "문의 게시판", href: `${basePath}/help/support` },
-            { label: "사용 매뉴얼", href: `${basePath}/help/manual` },
+            { label: "사용 매뉴얼", href: `${basePath}/help/manual`, beta: true },
           ],
         },
       ],

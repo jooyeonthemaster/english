@@ -45,9 +45,9 @@ const CONTENT: FeaturePageContent = {
   sections: [
     {
       title: "Word 영어 시험지로 자동 조판, 바로 편집",
-      body: "생성하거나 보유한 영어 문항을 편집 가능한 Word(.docx) 시험지로 자동 조판해 내려받습니다. 객관식부터 서술형까지 내신·수능 19유형을 시험지에 그대로 배치하니, 받은 파일에서 발문이나 배점을 바로 손봐 학원 시험에 사용할 수 있습니다. 한글(HWPX, 베타) 내보내기와 PDF 다운로드도 지원합니다.",
+      body: "생성하거나 보유한 영어 문항을 편집 가능한 Word(.docx) 시험지로 자동 조판해 내려받습니다. 객관식부터 서술형까지 내신·수능 25유형을 시험지에 그대로 배치하니, 받은 파일에서 발문이나 배점을 바로 손봐 학원 시험에 사용할 수 있습니다. 한글(HWPX, 베타) 내보내기와 PDF 다운로드도 지원합니다.",
       bullets: [
-        "객관식~서술형 내신·수능 19유형 그대로 조판",
+        "객관식~서술형 내신·수능 25유형 그대로 조판",
         "편집 가능한 Word(.docx)로 발문·배점 바로 수정",
         "한글(HWPX, 베타) 내보내기 지원 · PDF 다운로드 메뉴",
       ],
@@ -109,7 +109,12 @@ const CONTENT: FeaturePageContent = {
     {
       href: "/features/ai-question-generation",
       label: "AI 영어 문제 생성",
-      description: "지문 하나로 19유형 변형문제 자동 출제",
+      description: "지문 하나로 25유형 변형문제 자동 출제",
+    },
+    {
+      href: "/features/exam-report",
+      label: "시험 리포트",
+      description: "시험지 배포 후 채점 결과를 학생별 리포트로",
     },
     {
       href: "/features/passage-analysis",

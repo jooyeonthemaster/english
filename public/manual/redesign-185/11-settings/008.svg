@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080" font-family="Apple SD Gothic Neo, Malgun Gothic, -apple-system, BlinkMacSystemFont, sans-serif">
+<rect width="1920" height="1080" fill="#f6f8fb"/>
+<rect x="0" y="0" width="1920" height="10" fill="url(#topGrad)"/>
+<defs>
+  <linearGradient id="topGrad" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#1f5df5"/>
+    <stop offset="0.47" stop-color="#12b886"/>
+    <stop offset="1" stop-color="#f59f00"/>
+  </linearGradient>
+  <filter id="softShadow" x="-20%" y="-20%" width="140%" height="150%">
+    <feDropShadow dx="0" dy="20" stdDeviation="26" flood-color="#1e293b" flood-opacity="0.14"/>
+  </filter>
+  <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="150%">
+    <feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#1e293b" flood-opacity="0.08"/>
+  </filter>
+</defs>
+<text x="84" y="88" font-size="28" font-weight="950" fill="#495057">⑪ 설정 · 팁</text>
+<text font-size="58" font-weight="950" fill="#111827" letter-spacing="0"><tspan x="84" y="164">작업 전에 기억할 포인트</tspan></text>
+
+<g><rect x="84.00" y="1028" width="214.63" height="7" rx="3.5" fill="#495057" opacity="0.52"/><rect x="303.63" y="1028" width="214.63" height="7" rx="3.5" fill="#495057" opacity="0.52"/><rect x="523.25" y="1028" width="214.63" height="7" rx="3.5" fill="#495057" opacity="0.52"/><rect x="742.88" y="1028" width="214.63" height="7" rx="3.5" fill="#495057" opacity="0.52"/><rect x="962.50" y="1028" width="214.63" height="7" rx="3.5" fill="#495057" opacity="0.52"/><rect x="1182.13" y="1028" width="214.63" height="7" rx="3.5" fill="#495057" opacity="0.52"/><rect x="1401.75" y="1028" width="214.63" height="7" rx="3.5" fill="#495057" opacity="0.52"/><rect x="1621.38" y="1028" width="214.63" height="7" rx="3.5" fill="#495057" opacity="1"/></g>
+<rect x="164" y="342" width="1380" height="112" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
+<rect x="196" y="362" width="72" height="72" rx="8" fill="#f1f3f5"/>
+<text x="232" y="407" text-anchor="middle" font-size="24" font-weight="950" fill="#495057">01</text>
+<text font-size="25" font-weight="850" fill="#243247"><tspan x="306" y="387">저장 아이콘을 눌러야 변경사항이 반영됩니다.</tspan></text><rect x="164" y="488" width="1380" height="112" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
+<rect x="196" y="508" width="72" height="72" rx="8" fill="#f1f3f5"/>
+<text x="232" y="553" text-anchor="middle" font-size="24" font-weight="950" fill="#495057">02</text>
+<text font-size="25" font-weight="850" fill="#243247"><tspan x="306" y="533">과외쌤 접속 코드는 과외쌤 로그인에 사용됩니다.</tspan></text><rect x="164" y="634" width="1380" height="112" rx="8" fill="#ffffff" stroke="#d9e2ef" filter="url(#cardShadow)"/>
+<rect x="196" y="654" width="72" height="72" rx="8" fill="#f1f3f5"/>
+<text x="232" y="699" text-anchor="middle" font-size="24" font-weight="950" fill="#495057">03</text>
+<text font-size="25" font-weight="850" fill="#243247"><tspan x="306" y="679">테마는 브라우저별로 저장됩니다.</tspan></text>
+<rect x="1558" y="150" width="240" height="54" rx="8" fill="#111827"/>
+<text x="1678" y="186" text-anchor="middle" font-size="24" font-weight="950" fill="#ffffff">팁 &amp; 주의사항</text>
+</svg>

@@ -680,7 +680,7 @@ export function EmbeddedQuestionBank({
     useSelection(getDisplayedIds);
 
   // 세트 카드 체크박스 — 세트의 멤버 문항 id 전체를 선택/해제(일반 카드와 동일 selectedIds 공유).
-  // 시험지 빌더가 setId 로 묶어 렌더하므로 멤버를 개별 id 로 담아도 세트가 유지된다.
+  // 시험지 생성가 setId 로 묶어 렌더하므로 멤버를 개별 id 로 담아도 세트가 유지된다.
   const handleToggleSetSelection = useCallback(
     (memberQuestionIds: string[], select: boolean) => {
       setSelectedIds((prev) => {

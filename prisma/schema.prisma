@@ -2289,6 +2289,48 @@ model SiteBanner {
   @@map("site_banners")
 }
 
+/// OfflineMarketingCampaign — 오프라인 홍보(캠페인) 단위. 전단지·세미나 등 홍보 하나를
+/// 나타내며 그 아래 여러 PDF 파일(OfflineMarketingAsset)을 담는다. 관리자는 홍보별로
+/// 파일을 모아 관리하고, 관리자 페이지에서 파일별로 바로 인쇄한다.
+/// category: 자유 분류 라벨(전단지/세미나/학습지 샘플/포스터/기타 등).
+model OfflineMarketingCampaign {
+  id               String                  @id @default(cuid())
+  title            String // 홍보 이름(운영자 표시)
+  description      String?                 @db.Text // 설명/메모(선택)
+  category         String                  @default("기타") // 분류 라벨
+  sortOrder        Int                     @default(0) @map("sort_order") // 낮을수록 먼저
+  isActive         Boolean                 @default(true) @map("is_active")
+  createdByAdminId String?                 @map("created_by_admin_id")
+  createdAt        DateTime                @default(now()) @map("created_at")
+  updatedAt        DateTime                @updatedAt @map("updated_at")
+  assets           OfflineMarketingAsset[]
+
+  @@index([isActive, sortOrder])
+  @@map("offline_marketing_campaigns")
+}
+
+/// OfflineMarketingAsset — 홍보(캠페인)에 속한 개별 PDF 파일. 파일은 공개 Supabase
+/// 버킷(offline-marketing)에 저장하고 공개 URL을 보관한다.
+model OfflineMarketingAsset {
+  id               String                   @id @default(cuid())
+  campaignId       String                   @map("campaign_id")
+  campaign         OfflineMarketingCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  title            String // 파일 표시 이름
+  description      String?                  @db.Text // 파일 메모(선택)
+  fileUrl          String                   @db.Text @map("file_url") // 공개 PDF URL
+  storagePath      String                   @map("storage_path") // 버킷 내 경로(삭제용)
+  fileName         String                   @map("file_name") // 원본 파일명
+  fileSize         Int                      @default(0) @map("file_size") // 바이트
+  pageCount        Int?                     @map("page_count") // 페이지 수(선택)
+  sortOrder        Int                      @default(0) @map("sort_order") // 홍보 내 순서
+  createdByAdminId String?                  @map("created_by_admin_id")
+  createdAt        DateTime                 @default(now()) @map("created_at")
+  updatedAt        DateTime                 @updatedAt @map("updated_at")
+
+  @@index([campaignId, sortOrder])
+  @@map("offline_marketing_assets")
+}
+
 /// PlatformSetting — 전역 운영 설정 key-value 저장소(예: 기본 가입 크레딧).
 model PlatformSetting {
   key       String   @id
@@ -4793,6 +4835,7 @@ model GroupSeminar {
   registerCloseDays Int? // 신청 마감: 각 세션 실행 N일 전까지 접수(null/0=당일까지)
   depositAmount    Int? // 참가 보증금(원). null/0=없음. 계좌이체로 받고 세미나 당일 환급.
   coverImageUrl    String?
+  publicEnabled    Boolean   @default(false) // 비회원(랜딩) 공개 신청 허용 여부
   status           String    @default("DRAFT") // DRAFT→OPEN→CLOSED→ENDED / CANCELED
   createdByAdminId String?
   createdAt        DateTime  @default(now())
@@ -4814,6 +4857,7 @@ model GroupSeminarRegistration {
   email         String?
   academyName   String?
   headCount     Int      @default(1) // 참석 인원수
+  isGuest       Boolean  @default(false) // 비회원(랜딩) 신청 여부. staffId 없음.
   selectedDate  DateTime? // 여러 날짜 중 신청자가 선택한 세션 일시(단일 일정이면 null)
   message       String?  @db.Text
   status        String   @default("REGISTERED") // REGISTERED→ATTENDED / CANCELED

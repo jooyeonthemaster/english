@@ -1,63 +1,73 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { Item, Stagger } from "./shared/reveal";
+import { BrandIcon } from "@/components/brand/brand-mark";
 
 export function CtaScene() {
   return (
     <section
-      className="relative w-full min-h-[52vh] pb-14 sm:min-h-[80vh] sm:pb-32 overflow-hidden border-t border-gray-200"
+      className="relative w-full pb-14 sm:pb-20 overflow-hidden border-t border-gray-200 lg:flex lg:min-h-[100svh] lg:items-center lg:pt-24 lg:pb-8"
       style={{
         background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)",
       }}
     >
-      <div className="absolute inset-0 flex items-center justify-center opacity-40 pointer-events-none">
-        <div className="w-[800px] h-[800px] bg-blue-100 rounded-full blur-[120px]" />
-      </div>
-
-      <div className="max-w-[1440px] mx-auto px-8 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center text-center pt-16 pb-10 sm:pt-32 sm:pb-16"
+      <div className="w-full max-w-[1440px] mx-auto px-8 relative z-10">
+        <Stagger
+          className="flex flex-col items-center text-center pt-16 pb-10 sm:pt-20 sm:pb-12 lg:py-0"
+          amount={0.25}
+          gap={0.12}
         >
-          <div
-            aria-hidden
-            className="w-20 h-20 bg-[#3B82F6] text-white rounded-3xl flex items-center justify-center font-black text-3xl mb-12 shadow-[0_10px_30px_rgba(59,130,246,0.3)]"
-          >
-            N
-          </div>
+          <Item className="relative mb-6 h-[clamp(140px,24vw,300px)] w-full max-w-[920px] overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-[0_24px_70px_-32px_rgba(15,23,42,0.35)] lg:h-[clamp(150px,calc(100svh-600px),300px)]">
+            <Image
+              src="/landing/generated/printed-output-stack-real-docs.webp"
+              alt="SMOAT로 생성한 시험지, 학습지, 성적 리포트 출력물 예시"
+              fill
+              sizes="(max-width: 1024px) 100vw, 920px"
+              className="object-cover"
+            />
+          </Item>
 
-          <h2
+          <Item pop>
+            <BrandIcon className="mb-6 size-14 rounded-2xl shadow-[0_10px_30px_rgba(59,130,246,0.3)]" />
+          </Item>
+
+          <Item><h2
             className="font-extrabold text-gray-900 tracking-tight max-w-4xl break-keep"
             style={{
-              fontSize: "clamp(40px, 5vw, 76px)",
+              fontSize: "clamp(34px, 3.8vw, 56px)",
               lineHeight: 1.1,
               letterSpacing: "-0.03em",
               wordBreak: "keep-all",
             }}
           >
-            가장 진보된 방식의 <br className="hidden sm:inline" />
+            가장 진보된 방식의
+            <br />
             <span className="text-[#3B82F6]">영어 출제 시스템</span>
-          </h2>
+          </h2></Item>
 
-          <p className="mt-8 text-gray-600 text-lg max-w-2xl leading-relaxed font-medium">
-            지문을 딥다이브하는 AI도, 19개 유형을 즉시 뽑는 엔진도, <br />
-            Word 시험지를 조판하는 자동화 도구도 — 모두 이곳에 있습니다.
-          </p>
+          <Item><p className="mt-5 text-gray-600 text-[16px] sm:text-lg max-w-2xl leading-relaxed font-medium">
+            분석부터 출제, 시험지, 리포트까지 — 모두 이곳에 있습니다.
+          </p></Item>
 
-          <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Item className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4" pop>
             <Link
-              href="#apply"
+              href="/register"
               className="inline-flex items-center justify-center h-14 px-10 rounded-full bg-[#3B82F6] text-white font-bold shadow-[0_10px_20px_rgba(59,130,246,0.2)] hover:bg-[#2563EB] hover:scale-105 transition-all text-[16px]"
             >
               지금 바로 시작하기
               <span className="ml-2">→</span>
             </Link>
-          </div>
-        </motion.div>
+            <Link
+              href="/credits/products"
+              className="inline-flex items-center justify-center h-14 px-10 rounded-full border border-slate-300 bg-white text-slate-800 font-bold hover:border-blue-400 hover:text-blue-600 transition-all text-[16px]"
+            >
+              가격 보기
+              <span className="ml-2">→</span>
+            </Link>
+          </Item>
+        </Stagger>
 
       </div>
     </section>

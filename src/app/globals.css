@@ -5,6 +5,9 @@
 @source "../";
 
 @custom-variant dark (&:is(.dark *));
+/* 폰 가로모드: 폭은 md(768px)를 넘지만 높이가 낮은 뷰포트.
+   데스크톱 사이드바 대신 모바일 셸(햄버거 헤더+시트)을 유지할 때 사용. */
+@custom-variant phone-landscape (@media (min-width: 768px) and (max-height: 480px));
 
 @theme inline {
   --color-background: var(--background);
@@ -984,7 +987,7 @@
 }
 
 /* 시험지 생성(exams/create) 좌측 패널의 문제 카드 전용 — 카드 내부 텍스트만
-   한 단계 작게 표시한다. #exam-question-bank-scroll 컨테이너는 시험지 빌더에만
+   한 단계 작게 표시한다. #exam-question-bank-scroll 컨테이너는 시험지 생성에만
    존재하므로 /director/workbench/questions 의 문제 카드에는 영향이 없다.
    (Tailwind v4 유틸리티는 @layer 안에 있어, 레이어 밖의 이 규칙이 우선 적용된다.) */
 #exam-question-bank-scroll .text-\[15px\] { font-size: 13px; }
@@ -2309,4 +2312,122 @@ body.smoat-large-ui .passage-report-thumb .par-root { --par-zoom: 1 !important; 
 }
 .animate-red-glow {
   animation: red-glow-blink 1.2s ease-in-out infinite;
+}
+
+/* ── 랜딩(/) 모바일 FEATURE 높이 + 스크롤 스냅 ───────────────────────────
+   데스크톱(lg↑)은 JS 풀페이지 스냅(LandingSnap)이 담당하고, 모바일/태블릿은
+   visualViewport 기반 높이(--landing-vvh)에서 고정 헤더/배너 높이를 뺀 값을
+   FEATURE 섹션 높이로 쓴다. 화면 높이가 달라도 한 화면에 한 FEATURE 씬이
+   들어오도록 맞추고, 모션 축소 사용자가 아니면 네이티브 CSS Scroll Snap 으로
+   한 스와이프에 한 섹션씩 넘어가게 한다. */
+@media (max-width: 1023.98px) {
+  html:has([data-landing-page]) {
+    --landing-fixed-offset: 4.75rem;
+    --landing-feature-screen: calc(var(--landing-vvh, 100svh) - var(--landing-fixed-offset));
+  }
+  html:has([data-landing-banner]) {
+    --landing-fixed-offset: calc(4.75rem + 2.75rem); /* + 헤더배너 44px */
+  }
+  [data-landing-feature] {
+    min-height: var(--landing-feature-screen);
+    display: flex;
+  }
+  [data-landing-feature] > section {
+    min-height: var(--landing-feature-screen);
+    width: 100%;
+    padding-top: 1.75rem !important;
+    padding-bottom: 1.75rem !important;
+  }
+}
+
+@media (max-width: 1023.98px) and (prefers-reduced-motion: no-preference) {
+  html:has([data-landing-page]) {
+    scroll-snap-type: y mandatory;
+    scroll-padding-top: var(--landing-fixed-offset); /* 축소 헤더 64px + 여유 */
+  }
+  [data-snap] {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  /* 푸터(사업자 정보) 접근은 CSS 정지점이 아니라 LandingSnap 이 처리한다 —
+     푸터가 보이는 동안 scroll-snap-type 을 JS 로 잠시 해제(자유 스크롤 존).
+     CSS 정지점(end) 방식은 mandatory 가 푸터에 가두는 역효과가 있어 폐기. */
+}
+
+/* ── 정적 매뉴얼 뷰어 전체화면 ───────────────────────────────────────────── */
+[data-manual-viewer]:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 10px;
+  background: #f1f5f9;
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+[data-manual-viewer]:fullscreen aside {
+  display: none !important;
+}
+
+[data-manual-viewer]:fullscreen [data-manual-viewer-main] {
+  display: flex;
+  min-height: 0;
+  height: 100%;
+}
+
+[data-manual-viewer]:fullscreen [data-manual-slide-card] {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+}
+
+[data-manual-viewer]:fullscreen [data-manual-slide-stage] {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+[data-manual-viewer]:fullscreen [data-manual-slide-frame] {
+  width: min(calc(100vw - 24px), calc((100vh - 72px) * 16 / 9));
+  height: min(calc(100vh - 72px), calc((100vw - 24px) * 9 / 16));
+  max-width: none;
+}
+
+[data-manual-viewer]:fullscreen [data-manual-slide-frame] img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@keyframes manual-section-toast-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  16%,
+  58% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.985);
+  }
+}
+
+[data-manual-section-toast] {
+  animation: manual-section-toast-fade 1s ease both;
+}
+
+/* 랜딩 앵커(#section-*) 이동 시 고정 헤더(세미나 배너+헤더 ≈108px)가 섹션
+   상단을 가리지 않도록. 모바일만 — PC 는 섹션 pt-28(112px)로 이미 여유가 있고,
+   스냅/앵커 위치를 바꾸면 한 화면 설계가 틀어진다. */
+@media (max-width: 1023.98px) {
+  [id^="section-"] {
+    scroll-margin-top: 112px;
+  }
 }

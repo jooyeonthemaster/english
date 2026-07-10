@@ -216,6 +216,7 @@ export const groupSeminarSchema = z.object({
   registerCloseDays: z.number().int().min(0).max(365).optional().nullable(),
   depositAmount: z.number().int().min(0).max(10_000_000).optional().nullable(),
   coverImageUrl: z.string().max(1000).optional(),
+  publicEnabled: z.boolean().optional(),
   status: z.enum(["DRAFT", "OPEN", "CLOSED", "ENDED", "CANCELED"]).optional(),
 });
 

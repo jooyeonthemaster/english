@@ -37,7 +37,8 @@ export function PassageSource({
             </span>
           )}
           <span className="text-[10px] font-bold text-blue-600 font-mono tracking-wider">
-            EXTRACTING · {tokens.length}
+            {/* 생성 완료(또는 모바일 정적 상태)에는 진행형 문구를 쓰지 않는다 */}
+            {active && !reduced ? "EXTRACTING" : "ANALYZED"} · {tokens.length}
           </span>
         </div>
       </div>

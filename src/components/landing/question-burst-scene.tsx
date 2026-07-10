@@ -1,12 +1,39 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 
 import { QUESTION_SAMPLES, type QuestionSample } from "./shared/mock-data";
 import { useReducedMotionPref } from "./shared/use-typewriter";
+import { useIsMobileViewport } from "@/components/workbench/mobile-step-flow";
 import { MainStage } from "./question-burst-scene/main-stage";
 import { SideTracker } from "./question-burst-scene/side-tracker";
+import { Item, Reveal, Stagger } from "./shared/reveal";
 import type { GenerationState } from "./question-burst-scene/types";
+import { DemoGate } from "./demo/demo-gate";
+import { TypeChipSelector } from "./demo/step3-generate/type-chip-selector";
+import type { DemoQuestionTypeId } from "./demo/fixtures/questions";
+
+// 실제 유형선택→문제생성 데모 — PC(≥lg)에서 뷰포트 근접 시에만 청크 로드.
+// 모바일은 기존 타자기 목업(MainStage/SideTracker)이 그대로 유지된다.
+const Step3GenerateDemo = dynamic(
+  () => import("./demo/step3-generate/step3-generate-demo"),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="w-full animate-pulse rounded-2xl border border-blue-100 bg-slate-50"
+        style={{ height: "max(400px, calc(100svh - 260px))" }}
+      />
+    ),
+  },
+);
+
+// 모바일 시트 전용 3스텝 데모(지문→유형→문제). 탭 시에만 로드.
+const Step3GenerateMobileDemo = dynamic(
+  () => import("./demo/step3-generate/step3-generate-mobile"),
+  { ssr: false },
+);
 
 // Phase pacing — tuned for visible "tatak tatak" character typing
 const STEM_SPEED = 26;
@@ -24,6 +51,17 @@ const EMPTY_STATE: GenerationState = {
   answerVisible: false,
 };
 
+function getCompletedGenerationState(sample: QuestionSample): GenerationState {
+  return {
+    phase: "done",
+    stem: sample.stem,
+    given: sample.given ?? sample.prompt ?? "",
+    options: sample.options ?? [],
+    activeOptionIndex: -1,
+    answerVisible: true,
+  };
+}
+
 function useGenerationSequence(
   sample: QuestionSample,
   runKey: number,
@@ -32,17 +70,7 @@ function useGenerationSequence(
   const [state, setState] = useState<GenerationState>(EMPTY_STATE);
 
   useEffect(() => {
-    if (reduced) {
-      setState({
-        phase: "done",
-        stem: sample.stem,
-        given: sample.given ?? sample.prompt ?? "",
-        options: sample.options ?? [],
-        activeOptionIndex: -1,
-        answerVisible: true,
-      });
-      return;
-    }
+    if (reduced) return;
 
     let cancelled = false;
     const timers: ReturnType<typeof setTimeout>[] = [];
@@ -53,7 +81,10 @@ function useGenerationSequence(
       timers.push(t);
     };
 
-    setState({ ...EMPTY_STATE, options: (sample.options ?? []).map(() => "") });
+    schedule(
+      () => setState({ ...EMPTY_STATE, options: (sample.options ?? []).map(() => "") }),
+      0,
+    );
 
     const givenFull = sample.given ?? sample.prompt ?? "";
     const opts = sample.options ?? [];
@@ -135,16 +166,23 @@ function useGenerationSequence(
     };
   }, [sample, runKey, reduced]);
 
-  return state;
+  return reduced ? getCompletedGenerationState(sample) : state;
 }
 
 export function QuestionBurstScene() {
-  const reduced = useReducedMotionPref();
+  // 모바일(<lg)에서는 목업의 타자기 연출을 끈다 — 시간차로 카드가 길어지며
+  // 스크롤이 튀는 문제 방지. reduced 경로가 완성 상태를 즉시 그리고 자동 순환도
+  // 멈춘다. PC 는 이 목업 대신 라이브 데모가 렌더되므로 영향 없음.
+  const prefersReducedMotion = useReducedMotionPref();
+  const isMobileViewport = useIsMobileViewport();
+  const reduced = prefersReducedMotion || isMobileViewport;
   const sectionRef = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [runKey, setRunKey] = useState(0);
   const [completed, setCompleted] = useState<Set<number>>(() => new Set([0]));
   const [autoPlay, setAutoPlay] = useState(true);
+  // PC 라이브 데모(우측)에서 생성할 유형 — 왼쪽 유형 칩이 이 상태를 조종한다.
+  const [demoType, setDemoType] = useState<DemoQuestionTypeId | null>(null);
 
   const sample = QUESTION_SAMPLES[activeIndex];
   const generation = useGenerationSequence(sample, runKey, reduced);
@@ -155,14 +193,13 @@ export function QuestionBurstScene() {
     if (!autoPlay) return;
     if (generation.phase !== "done") return;
 
-    setCompleted((prev) => {
-      if (prev.has(activeIndex)) return prev;
-      const next = new Set(prev);
-      next.add(activeIndex);
-      return next;
-    });
-
     const t = setTimeout(() => {
+      setCompleted((prev) => {
+        if (prev.has(activeIndex)) return prev;
+        const next = new Set(prev);
+        next.add(activeIndex);
+        return next;
+      });
       setActiveIndex((i) => (i + 1) % QUESTION_SAMPLES.length);
       setRunKey((k) => k + 1);
     }, FINAL_HOLD_MS);
@@ -188,59 +225,96 @@ export function QuestionBurstScene() {
     <section
       ref={sectionRef}
       id="burst"
-      className="relative w-full bg-white py-24 lg:py-32 overflow-hidden border-t border-blue-50"
+      className="relative w-full overflow-hidden border-t border-blue-50 bg-white py-8 sm:py-12 lg:flex lg:min-h-[100svh] lg:items-center lg:pb-10 lg:pt-28"
     >
-      <div className="relative px-6 lg:px-16 max-w-[1480px] mx-auto">
+      {/* PC(≥lg): 카피(좌) | 데모(우) 한 화면 배치. 모바일은 세로 스택 그대로. */}
+      <div className="relative mx-auto w-full max-w-[1480px] px-5 sm:px-6 lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-8 lg:px-16">
         {/* Headline */}
-        <div className="mb-20 max-w-[900px] text-left">
-          <div className="text-[13px] uppercase tracking-[0.25em] text-[#60A5FA] font-bold mb-4 flex items-center gap-3">
-            <span className="w-8 h-[2px] bg-[#60A5FA]" />
-            Step 2. 19유형 문제 생성
-          </div>
+        <div className="mb-4 max-w-[900px] text-left lg:mb-0">
+          <Reveal className="mb-3 flex items-center gap-3 text-[12px] font-bold uppercase tracking-[0.2em] text-[#3B82F6] sm:text-[13px] sm:tracking-[0.25em] lg:mb-4 justify-center lg:justify-start" y={16}>
+            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8" />
+            Feature · 25유형 문제 생성
+            <span className="h-[2px] w-7 bg-[#3B82F6] sm:w-8 lg:hidden" />
+          </Reveal>
+          <Reveal delay={0.08}>
           <h2
-            className="font-extrabold text-gray-900 leading-[1.3]"
+            className="text-[25px] font-extrabold leading-[1.2] text-gray-900 sm:text-[30px] lg:text-[34px] lg:leading-[1.3]"
             style={{
-              fontSize: "clamp(24px, 3.5vw, 44px)",
-              letterSpacing: "-0.02em",
               wordBreak: "keep-all",
             }}
           >
-            단순 변형이 아닙니다. 사전에{" "}
-            <span className="text-[#3B82F6] border-b-4 border-[#3B82F6] pb-1">
-              철저하게 분석된 출제 포인트
+            지문 하나로 시작하는,
+            <br />
+            <span className="text-[#3B82F6] underline decoration-[#3B82F6] decoration-4 underline-offset-[3px] sm:underline-offset-[5px] lg:underline-offset-[7px]">
+              초고속 AI 문제 생성
             </span>
-            를 기반으로 문제를 생성합니다.
           </h2>
-          <p className="mt-8 text-[17px] text-gray-600 leading-[1.8] font-medium max-w-3xl break-keep">
-            흔한 자동 생성기와 다릅니다. 선생님이 설계한 의도와 SMOAT가
-            딥다이브한 분석 결과를 바탕으로, 실제 내신과 수능에 직결되는
-            고퀄리티 문항을 단 1초 만에{" "}
-            <strong className="text-gray-900 font-bold">19개 전 유형</strong>
-            으로 폭발적으로 생성합니다.
+          </Reveal>
+          <Reveal delay={0.16}>
+          <p className="mt-3 max-w-3xl break-keep text-[14px] font-medium leading-[1.55] text-gray-600 sm:text-[15px] sm:leading-[1.7] lg:mt-4">
+            지문을 넣는 순간, 빈칸·어법·순서부터 서술형까지
+            <br className="lg:hidden" />
+            <br className="hidden lg:inline" />{" "}
+            <strong className="text-gray-900 font-bold">
+              내신·수능 25유형 문항이 단 몇 초 만에
+            </strong>{" "}
+            완성됩니다.
           </p>
+          </Reveal>
+          {/* 모바일(<lg): 기존 안내 뱃지 유지 (데모 미노출) */}
+          <Stagger className="mt-3 flex flex-wrap gap-2 lg:hidden" delay={0.3} gap={0.08}>
+            {["25유형 전 영역", "1초 생성", "장문 세트", "동형 모의고사"].map((t) => (
+              <Item key={t} pop>
+                <span className="inline-block rounded-full border border-blue-100 bg-blue-50/70 px-3 py-1 text-[12.5px] font-bold text-blue-700">
+                  {t}
+                </span>
+              </Item>
+            ))}
+          </Stagger>
+          {/* PC(≥lg): 전 유형 칩 — 실제 동작 버튼. 누르면 우측 라이브 데모가
+              그 유형의 문제를 이 지문으로 즉시 생성한다. */}
+          <Reveal className="mt-5 hidden lg:block" delay={0.3}>
+            <TypeChipSelector selected={demoType} onSelect={setDemoType} />
+          </Reveal>
         </div>
 
-        {/* Stage */}
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 lg:gap-10">
-          <div className="lg:sticky lg:top-32 self-start">
-            <MainStage
-              sample={sample}
-              generation={generation}
-              runKey={runKey}
-              reduced={reduced}
-            />
-          </div>
-          <SideTracker
-            currentIndex={activeIndex}
-            completed={completed}
-            completedCount={completedCount}
-            totalCount={totalCount}
-            autoPlay={autoPlay}
-            onTogglePlay={() => setAutoPlay((p) => !p)}
-            onSelect={handleSelect}
-            onReset={handleReset}
+        {/* Stage — PC: 실제 유형선택→생성 데모 / 모바일·로드 전: 기존 타자기 목업 */}
+        <DemoGate
+          minWidth="lg"
+          className="min-w-0"
+          fallback={
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-6 lg:gap-10">
+              <Reveal className="lg:sticky lg:top-32 self-start" delay={0.12} amount={0.2}>
+                <MainStage
+                  sample={sample}
+                  generation={generation}
+                  runKey={runKey}
+                  reduced={reduced}
+                />
+              </Reveal>
+              {/* 실시간 생성 트래커 — 모바일에선 숨김(스크롤 방해). PC 는 이 목업
+                  대신 라이브 데모가 렌더되므로 hidden lg:block 로 무영향 유지. */}
+              <div className="hidden lg:block">
+                <SideTracker
+                  currentIndex={activeIndex}
+                  completed={completed}
+                  completedCount={completedCount}
+                  totalCount={totalCount}
+                  autoPlay={autoPlay}
+                  onTogglePlay={() => setAutoPlay((p) => !p)}
+                  onSelect={handleSelect}
+                  onReset={handleReset}
+                />
+              </div>
+            </div>
+          }
+          mobileDemo={<Step3GenerateMobileDemo />}
+        >
+          <Step3GenerateDemo
+            selected={demoType}
+            onReset={() => setDemoType(null)}
           />
-        </div>
+        </DemoGate>
       </div>
     </section>
   );

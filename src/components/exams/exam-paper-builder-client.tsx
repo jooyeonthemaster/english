@@ -381,6 +381,17 @@ export function ExamPaperBuilderClient({
   const [fetchedQuestions, setFetchedQuestions] = useState<
     Map<string, BuilderQuestion>
   >(() => new Map());
+  // 세트(setId) 렌더·전체 멤버 캐시 — 세션 동안 유지(fetchedQuestions 와 동일한 수명).
+  // 목록에 세트가 보이면 프리페치로 채워 두고, 시험지 삽입(마키 포함)은 캐시를 먼저 쓴다.
+  const setDataCacheRef = useRef(
+    new Map<
+      string,
+      { render: BuilderQuestionSetRender; members: BuilderQuestion[] }
+    >(),
+  );
+  // 세트 → 멤버 questionId 목록(선택 토큰 "set:<setId>" 확장용 경량 캐시).
+  // setDataCacheRef 보다 먼저/가볍게 채워질 수 있다(프리페치·확장 폴백 조회).
+  const setMemberIdsCacheRef = useRef(new Map<string, string[]>());
 
   // ─── 좌측 목록: 서버 페이지네이션(100/page, 문제관리 페이지와 동일 구조) ───
   // 한 페이지(pageQuestions)만 메모리에 둔다. SSR 로 받은 1페이지(questions prop)로
@@ -409,6 +420,79 @@ export function ExamPaperBuilderClient({
     for (const question of pageQuestions) map.set(question.id, question);
     return map;
   }, [pageQuestions, fetchedQuestions]);
+
+  // 좌측 목록에 세트 문항이 보이면 세트 렌더+전체 멤버를 미리 받아 캐시한다.
+  // 마키(영역 드래그)로 세트 카드를 쓸어담을 때 드래그 중 서버 왕복 없이 즉시 반영된다.
+  // 실패해도 조용히 넘어간다 — 실제 삽입 시 resolveQuestionsForPaperInsertion 이 재시도.
+  useEffect(() => {
+    const seedByUncachedSetId = new Map<string, string>();
+    for (const question of pageQuestions) {
+      if (
+        !question.setId ||
+        setDataCacheRef.current.has(question.setId) ||
+        seedByUncachedSetId.has(question.setId)
+      )
+        continue;
+      seedByUncachedSetId.set(question.setId, question.id);
+    }
+    if (seedByUncachedSetId.size === 0) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const [members, sets] = await Promise.all([
+          getExamPaperBuilderSetMemberQuestionsByQuestionIds(
+            academyId,
+            Array.from(seedByUncachedSetId.values()),
+          ) as Promise<BuilderQuestion[]>,
+          getExamPaperBuilderQuestionSetsBySetIds(
+            academyId,
+            Array.from(seedByUncachedSetId.keys()),
+          ),
+        ]);
+        if (cancelled) return;
+        const renderById = new Map(
+          sets.map((set) => [set.id, toBuilderQuestionSetRender(set)]),
+        );
+        const renderedMembers = members.map((question) =>
+          attachSetRender(question, renderById),
+        );
+        const membersBySetId = new Map<string, BuilderQuestion[]>();
+        for (const question of renderedMembers) {
+          if (!question.setId) continue;
+          const bucket = membersBySetId.get(question.setId) ?? [];
+          bucket.push(question);
+          membersBySetId.set(question.setId, bucket);
+        }
+        for (const setId of seedByUncachedSetId.keys()) {
+          const render = renderById.get(setId);
+          const setMembers = membersBySetId.get(setId);
+          if (render && setMembers?.length) {
+            setDataCacheRef.current.set(setId, {
+              render,
+              members: setMembers,
+            });
+            setMemberIdsCacheRef.current.set(
+              setId,
+              setMembers.map((question) => question.id),
+            );
+          }
+        }
+        if (renderedMembers.length > 0) {
+          setFetchedQuestions((prev) => {
+            const next = new Map(prev);
+            for (const question of renderedMembers)
+              next.set(question.id, question);
+            return next;
+          });
+        }
+      } catch {
+        // 프리페치 실패는 무시 — 삽입 경로에서 다시 시도한다.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [academyId, pageQuestions]);
 
   // ─── 파일(폴더) 관리 — questions 페이지와 동일한 중첩 폴더 구조를 컴팩트하게 ───
   // 초기 컬렉션을 폴더 매니저가 기대하는 CollectionItem 형태로 변환한다.
@@ -855,9 +939,6 @@ export function ExamPaperBuilderClient({
       }
       if (seedQuestions.length === 0) return [];
 
-      const setSeedIds = seedQuestions
-        .filter((question) => Boolean(question.setId))
-        .map((question) => question.id);
       const setIds = Array.from(
         new Set(
           seedQuestions
@@ -868,14 +949,33 @@ export function ExamPaperBuilderClient({
       const setRenderById = new Map<string, BuilderQuestionSetRender>();
       const setMembersBySetId = new Map<string, BuilderQuestion[]>();
 
-      if (setSeedIds.length > 0) {
+      // 캐시된 세트(프리페치 or 이전 삽입에서 받아 둔 것)는 서버를 다시 부르지 않는다.
+      // 마키로 세트 카드를 쓸어담을 때 드래그 중 왕복이 없어져 선택 반영이 즉시가 된다.
+      const uncachedSetIds: string[] = [];
+      for (const setId of setIds) {
+        const cached = setDataCacheRef.current.get(setId);
+        if (cached) {
+          setRenderById.set(setId, cached.render);
+          setMembersBySetId.set(setId, cached.members);
+        } else {
+          uncachedSetIds.push(setId);
+        }
+      }
+      const uncachedSeedIds = seedQuestions
+        .filter(
+          (question) =>
+            question.setId && uncachedSetIds.includes(question.setId),
+        )
+        .map((question) => question.id);
+
+      if (uncachedSeedIds.length > 0) {
         try {
           const [members, sets] = await Promise.all([
             getExamPaperBuilderSetMemberQuestionsByQuestionIds(
               academyId,
-              setSeedIds,
+              uncachedSeedIds,
             ) as Promise<BuilderQuestion[]>,
-            getExamPaperBuilderQuestionSetsBySetIds(academyId, setIds),
+            getExamPaperBuilderQuestionSetsBySetIds(academyId, uncachedSetIds),
           ]);
           for (const set of sets) {
             setRenderById.set(set.id, toBuilderQuestionSetRender(set));
@@ -894,6 +994,20 @@ export function ExamPaperBuilderClient({
               const bucket = setMembersBySetId.get(question.setId) ?? [];
               bucket.push(question);
               setMembersBySetId.set(question.setId, bucket);
+            }
+          }
+          for (const setId of uncachedSetIds) {
+            const render = setRenderById.get(setId);
+            const cachedMembers = setMembersBySetId.get(setId);
+            if (render && cachedMembers?.length) {
+              setDataCacheRef.current.set(setId, {
+                render,
+                members: cachedMembers,
+              });
+              setMemberIdsCacheRef.current.set(
+                setId,
+                cachedMembers.map((question) => question.id),
+              );
             }
           }
         } catch {
@@ -986,17 +1100,102 @@ export function ExamPaperBuilderClient({
     void addQuestionIdsToPaper([id]);
   }, [addQuestionIdsToPaper, removeQuestionIdFromPaper, selectedPaperQuestionIds]);
 
-  const applyPaperQuestionSelection = useCallback((nextSelectedIds: Set<string>) => {
-    const toRemove = Array.from(selectedPaperQuestionIds).filter(
-      (id) => !nextSelectedIds.has(id),
-    );
-    const toAdd = Array.from(nextSelectedIds).filter(
-      (id) => !selectedPaperQuestionIds.has(id),
-    );
+  // 마키(영역 드래그)는 mousemove 마다 onChange 를 부른다. 호출마다 곧장
+  // addQuestionIdsToPaper 를 돌리면 세트 문항이 걸릴 때 서버 액션(세트 멤버/렌더 조회)이
+  // 홍수처럼 직렬 큐에 쌓여 선택 반영이 수 초씩 밀린다. 그래서 "목표 선택"만 ref 에
+  // 갱신하고, reconcile 루프는 한 번에 하나만 돌린다 — 루프가 도는 동안 들어온 목표는
+  // 마지막 것으로 코얼레싱된다. (함수/선택 상태는 ref 로 최신을 읽어 드래그 내내
+  // 낡은 클로저에 갇히지 않는다.)
+  const selectionSyncRef = useRef<{ running: boolean; target: Set<string> | null }>(
+    { running: false, target: null },
+  );
+  const selectionSyncFnsRef = useRef({
+    addQuestionIdsToPaper,
+    removeQuestionIdFromPaper,
+    selected: selectedPaperQuestionIds,
+  });
+  useEffect(() => {
+    selectionSyncFnsRef.current = {
+      addQuestionIdsToPaper,
+      removeQuestionIdFromPaper,
+      selected: selectedPaperQuestionIds,
+    };
+  });
 
-    for (const id of toRemove) removeQuestionIdFromPaper(id);
-    void addQuestionIdsToPaper(toAdd);
-  }, [addQuestionIdsToPaper, removeQuestionIdFromPaper, selectedPaperQuestionIds]);
+  // "set:<setId>" 토큰(세트 카드 마키 히트)을 멤버 문항 id 로 펼친다. 캐시에 없으면
+  // 세트 데이터를 즉석 조회해 멤버 id 를 얻는다(프리페치가 아직 안 끝난 드래그의 폴백).
+  const expandSelectionTarget = useCallback(
+    async (target: Set<string>): Promise<Set<string>> => {
+      const unknownSetIds: string[] = [];
+      for (const id of target) {
+        if (!id.startsWith("set:")) continue;
+        const setId = id.slice("set:".length);
+        if (
+          !setMemberIdsCacheRef.current.has(setId) &&
+          !unknownSetIds.includes(setId)
+        ) {
+          unknownSetIds.push(setId);
+        }
+      }
+      if (unknownSetIds.length > 0) {
+        try {
+          const sets = await getExamPaperBuilderQuestionSetsBySetIds(
+            academyId,
+            unknownSetIds,
+          );
+          for (const set of sets) {
+            setMemberIdsCacheRef.current.set(
+              set.id,
+              set.members.map((member) => member.questionId),
+            );
+          }
+        } catch {
+          // 조회 실패한 세트는 이번 반영에서 건너뛴다 — 다음 onChange 가 재시도한다.
+        }
+      }
+      const expanded = new Set<string>();
+      for (const id of target) {
+        if (!id.startsWith("set:")) {
+          expanded.add(id);
+          continue;
+        }
+        const memberIds = setMemberIdsCacheRef.current.get(
+          id.slice("set:".length),
+        );
+        if (memberIds) for (const memberId of memberIds) expanded.add(memberId);
+      }
+      return expanded;
+    },
+    [academyId],
+  );
+
+  const applyPaperQuestionSelection = useCallback((nextSelectedIds: Set<string>) => {
+    const sync = selectionSyncRef.current;
+    sync.target = nextSelectedIds;
+    if (sync.running) return;
+    sync.running = true;
+    void (async () => {
+      try {
+        while (sync.target) {
+          // 직전 반복의 커밋이 리렌더·이펙트로 ref 에 반영된 뒤에 읽도록 한 틱 양보한다
+          // (removeQuestionIdFromPaper 는 paperItems 클로저로 대상을 찾으므로 특히 중요).
+          await new Promise((resolve) => setTimeout(resolve, 0));
+          const rawTarget = sync.target;
+          sync.target = null;
+          if (!rawTarget) continue;
+          const target = await expandSelectionTarget(rawTarget);
+          const fns = selectionSyncFnsRef.current;
+          const current = fns.selected;
+          const toRemove = Array.from(current).filter((id) => !target.has(id));
+          const toAdd = Array.from(target).filter((id) => !current.has(id));
+          for (const id of toRemove) fns.removeQuestionIdFromPaper(id);
+          if (toAdd.length > 0) await fns.addQuestionIdsToPaper(toAdd);
+        }
+      } finally {
+        sync.running = false;
+      }
+    })();
+  }, [expandSelectionTarget]);
 
   // 전체 선택(페이지 경계 무관) — 현재 필터에 매칭되는 모든 문항 ID 를 서버에서 받아
   // 시험지에 일괄 추가/제거한다. 선택 = 시험지 구성이므로 곧바로 미리보기에 반영된다.

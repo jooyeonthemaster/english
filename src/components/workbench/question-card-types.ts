@@ -22,7 +22,7 @@ export interface QuestionCardItem {
     publisher?: string | null;
     school?: { id: string; name: string } | null;
   } | null;
-  // content 등 옵셔널 — 시험지 빌더 좌측 목록이 해설 본문을 지연 로드하므로(병합 전엔
+  // content 등 옵셔널 — 시험지 생성 좌측 목록이 해설 본문을 지연 로드하므로(병합 전엔
   // explanation:{id} 만 존재). 렌더러는 q.explanation?.content 로 안전 접근한다.
   explanation: {
     id: string;

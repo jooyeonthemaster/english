@@ -471,6 +471,8 @@ export interface AdminGroupSeminarListItem {
   scheduledAt: string | null;
   capacity: number | null;
   registeredCount: number;
+  publicEnabled: boolean;
+  guestCount: number;
 }
 
 export interface AdminGroupSeminarRegistrationView {
@@ -483,6 +485,7 @@ export interface AdminGroupSeminarRegistrationView {
   selectedDate: string | null;
   message: string | null;
   status: string;
+  isGuest: boolean;
   createdAt: string;
   // 참가 보증금
   depositStatus: string;
@@ -513,6 +516,7 @@ export interface AdminGroupSeminarDetail {
   registerCloseDays: number | null;
   depositAmount: number | null;
   coverImageUrl: string | null;
+  publicEnabled: boolean;
   status: string;
   registeredCount: number;
   registrations: AdminGroupSeminarRegistrationView[];
@@ -526,7 +530,7 @@ export async function adminGetGroupSeminars(): Promise<AdminGroupSeminarListItem
     include: {
       registrations: {
         where: { status: { in: ["REGISTERED", "ATTENDED"] } },
-        select: { headCount: true },
+        select: { headCount: true, isGuest: true },
       },
     },
   });
@@ -537,6 +541,8 @@ export async function adminGetGroupSeminars(): Promise<AdminGroupSeminarListItem
     scheduledAt: s.scheduledAt?.toISOString() ?? null,
     capacity: s.capacity,
     registeredCount: s.registrations.reduce((sum, r) => sum + r.headCount, 0),
+    publicEnabled: s.publicEnabled,
+    guestCount: s.registrations.filter((r) => r.isGuest).length,
   }));
 }
 
@@ -568,6 +574,7 @@ export async function adminGetGroupSeminarDetail(
     registerCloseDays: s.registerCloseDays,
     depositAmount: s.depositAmount,
     coverImageUrl: s.coverImageUrl,
+    publicEnabled: s.publicEnabled,
     status: s.status,
     registeredCount: active.reduce((sum, r) => sum + r.headCount, 0),
     registrations: s.registrations.map((r) => ({
@@ -580,6 +587,7 @@ export async function adminGetGroupSeminarDetail(
       selectedDate: r.selectedDate?.toISOString() ?? null,
       message: r.message,
       status: r.status,
+      isGuest: r.isGuest,
       createdAt: r.createdAt.toISOString(),
       depositStatus: r.depositStatus,
       depositAmount: r.depositAmount,
@@ -607,6 +615,7 @@ function toSeminarData(input: Record<string, unknown>) {
   if (v.mapUrl !== undefined) data.mapUrl = v.mapUrl?.trim() || null;
   if (v.meetingUrl !== undefined) data.meetingUrl = v.meetingUrl?.trim() || null;
   if (v.coverImageUrl !== undefined) data.coverImageUrl = v.coverImageUrl || null;
+  if (v.publicEnabled !== undefined) data.publicEnabled = v.publicEnabled;
   if (v.status !== undefined) data.status = v.status;
   if (v.durationMin !== undefined) data.durationMin = v.durationMin ?? null;
   if (v.capacity !== undefined) data.capacity = v.capacity ?? null;
@@ -641,6 +650,8 @@ export async function adminCreateGroupSeminar(input: {
   });
   revalidatePath(GROUP_SEMINAR_ADMIN_PATH);
   revalidatePath(GROUP_SEMINAR_DIRECTOR_PATH);
+  revalidatePath("/");
+  revalidatePath("/seminar");
   return { success: true, id: seminar.id };
 }
 
@@ -679,6 +690,8 @@ export async function adminUpdateGroupSeminar(
 
   revalidatePath(GROUP_SEMINAR_ADMIN_PATH);
   revalidatePath(GROUP_SEMINAR_DIRECTOR_PATH);
+  revalidatePath("/");
+  revalidatePath("/seminar");
   return { success: true };
 }
 
@@ -687,6 +700,8 @@ export async function adminDeleteGroupSeminar(seminarId: string) {
   await prisma.groupSeminar.delete({ where: { id: seminarId } });
   revalidatePath(GROUP_SEMINAR_ADMIN_PATH);
   revalidatePath(GROUP_SEMINAR_DIRECTOR_PATH);
+  revalidatePath("/");
+  revalidatePath("/seminar");
   return { success: true };
 }
 
@@ -702,6 +717,8 @@ export async function adminSetGroupSeminarRegistrationStatus(
   });
   revalidatePath(GROUP_SEMINAR_ADMIN_PATH);
   revalidatePath(GROUP_SEMINAR_DIRECTOR_PATH);
+  revalidatePath("/");
+  revalidatePath("/seminar");
   return { success: true };
 }
 
@@ -725,5 +742,7 @@ export async function adminSetSeminarDepositStatus(
   });
   revalidatePath(GROUP_SEMINAR_ADMIN_PATH);
   revalidatePath(GROUP_SEMINAR_DIRECTOR_PATH);
+  revalidatePath("/");
+  revalidatePath("/seminar");
   return { success: true };
 }

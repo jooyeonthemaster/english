@@ -46,7 +46,7 @@ export function CollapsedPreview({
   passageSubType?: string | null;
   /** 장문 세트(QuestionSet) 소속 문항 — 유형 라벨 앞에 "장문" 표식을 붙여 구분한다. */
   isSetMember?: boolean;
-  /** 시험지 빌더 좌측 라이브러리 전용 — 글자·여백·배지를 한 단계 줄인다. */
+  /** 시험지 생성 좌측 라이브러리 전용 — 글자·여백·배지를 한 단계 줄인다. */
   compact?: boolean;
   /** 모바일에서 발문 뒤에 인라인으로 이어붙일 세트 배지(세트 카드 전용). */
   setBadge?: React.ReactNode;
@@ -82,7 +82,7 @@ export function CollapsedPreview({
       ? Array.from(parseCorrectAnswerLabels(displayCorrectAnswer || correctAnswer))
       : [];
 
-  // 콤팩트(시험지 빌더 좌측)일 때 글자·여백·배지 한 단계 축소.
+  // 콤팩트(시험지 생성 좌측)일 때 글자·여백·배지 한 단계 축소.
   const directionTextCls = compact ? "text-[12px]" : "text-[13px]";
   const passageTextCls = compact ? "text-[11px] leading-[1.6]" : "text-[12px] leading-[1.8]";
   const passageBoxCls = compact ? "p-2" : "p-3";

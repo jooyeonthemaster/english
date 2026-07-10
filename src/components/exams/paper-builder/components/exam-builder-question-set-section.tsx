@@ -170,7 +170,9 @@ export function ExamBuilderQuestionSetCard({
       selectedCardHighlight={false}
       collapsible
       compact
-      suppressDragItem
+      // 마키(영역 드래그)가 세트 카드를 잡으면 "set:<setId>" 토큰으로 들어오고,
+      // question-library-panel 의 onChange 가 전 멤버 문항 id 로 펼친다(세트 일괄 선택).
+      dragItemId={`set:${set.id}`}
       mergedPassage={activeMergedPassage}
       headerExtra={headerExtra}
       promptInlineBadge={setBadgeNode}

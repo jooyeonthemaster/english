@@ -118,13 +118,15 @@ export function softwareApplicationSchema(opts?: {
       "@type": "Offer",
       price: "0",
       priceCurrency: "KRW",
-      description: "무료 체험 후 크레딧/구독 이용",
+      description: "무료 체험 후 크레딧 충전 이용",
       url: absoluteUrl("/credits/products"),
     },
     featureList: [
+      "사진·PDF 자료 추출과 잘린 지문 AI 복원",
       "지문 텍스트 기반 AI 심층 분석(직독직해·구문·어휘)",
-      "내신·수능 19유형 영어 문제 자동 생성",
-      "Word(.docx) 시험지·정답지·해설지 자동 조판",
+      "내신·수능 25유형 영어 문제 자동 생성",
+      "Word(.docx)·한글(HWPX) 시험지·정답지·해설지 자동 조판",
+      "채점 결과 기반 학생별 시험 리포트",
       "추출 자료·문항·시험지 클라우드 관리",
       "학생·강사·학부모 앱과 학원 운영 통합",
     ],
@@ -148,7 +150,7 @@ export function breadcrumbSchema(items: BreadcrumbItem[]) {
 }
 
 /**
- * Product + Offer — 크레딧/구독 상품. 디지털재라 itemCondition 생략(권장이지 필수 아님).
+ * Product + Offer — 크레딧 상품. 디지털재라 itemCondition 생략(권장이지 필수 아님).
  * 할인은 레거시 ListPrice 대신 별도 표기 없이 현재가만 노출(과대표기 회피).
  */
 export function productSchema(opts: {

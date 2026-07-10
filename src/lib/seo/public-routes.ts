@@ -23,6 +23,7 @@ export const PUBLIC_ROUTES: PublicRoute[] = [
   { path: "/features/ai-question-generation", changeFrequency: "weekly", priority: 0.9 },
   { path: "/features/exam-builder", changeFrequency: "weekly", priority: 0.9 },
   { path: "/features/passage-analysis", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/features/exam-report", changeFrequency: "weekly", priority: 0.8 },
   { path: "/features/academy-erp", changeFrequency: "weekly", priority: 0.8 },
 
   // 전환/상품

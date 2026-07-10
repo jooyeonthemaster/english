@@ -9,8 +9,9 @@ import { BrandIcon } from "@/components/brand/brand-mark";
 /** 기능/콘텐츠 랜딩 공통 헤더. 기능 페이지 간 내부 링크로 SEO 신호 강화. */
 const NAV_ITEMS: ReadonlyArray<{ href: string; label: string }> = [
   { href: "/features/ai-question-generation", label: "AI 문제 생성" },
-  { href: "/features/exam-builder", label: "Word 시험지" },
+  { href: "/features/exam-builder", label: "Word·한글 시험지" },
   { href: "/features/passage-analysis", label: "지문 분석" },
+  { href: "/features/exam-report", label: "시험 리포트" },
   { href: "/features/academy-erp", label: "학원 올인원" },
 ];
 
@@ -72,14 +73,13 @@ export function MarketingHeader() {
               className="inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-transparent px-3 text-[13px] font-black text-slate-700 transition hover:border-slate-200 hover:bg-white/80 hover:text-slate-950 sm:px-4"
             >
               <LogIn className="size-4" />
-              <span className="hidden sm:inline">로그인</span>
+              <span>로그인</span>
             </button>
             <Link
               href="/register"
               className="inline-flex h-10 items-center gap-2 rounded-full bg-slate-950 px-4 text-[13px] font-black text-white shadow-[0_16px_40px_-24px_rgba(15,23,42,0.8)] transition hover:-translate-y-0.5 hover:bg-blue-600"
             >
-              <span className="hidden sm:inline">학원 가입 신청</span>
-              <span className="sm:hidden">신청</span>
+              <span>회원 가입</span>
               <ArrowRight className="size-4" />
             </Link>
           </div>

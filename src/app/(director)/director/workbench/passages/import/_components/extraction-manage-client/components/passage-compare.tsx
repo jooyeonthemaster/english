@@ -81,7 +81,7 @@ export function PassageCompare({
           changes) so the layout never jumps when an "AI 복원 다시 실행" run
           happens to return no sentence-level evidence. The panel shows its
           own empty state in that case. */}
-      <div className="grid grid-cols-1 gap-4 lg:min-h-0 lg:flex-1 lg:[grid-auto-rows:minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_340px]">
+      <div className="grid grid-cols-1 gap-4 lg:min-h-0 lg:flex-1 lg:[grid-auto-rows:minmax(0,1fr)] lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_340px]">
         <OriginalProblemBox
           draft={draft}
           changes={highlightableChanges}

@@ -108,7 +108,7 @@ const CONTENT: FeaturePageContent = {
     {
       href: "/features/ai-question-generation",
       label: "AI 영어 문제 생성",
-      description: "지문 하나로 19유형 변형문제 자동 출제",
+      description: "지문 하나로 25유형 변형문제 자동 출제",
     },
     {
       href: "/features/exam-builder",
