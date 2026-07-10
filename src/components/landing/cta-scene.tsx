@@ -47,10 +47,13 @@ export function CtaScene() {
             지문을 딥다이브하는 AI도, 19개 유형을 즉시 뽑는 엔진도, <br />
             Word 시험지를 조판하는 자동화 도구도 — 모두 이곳에 있습니다.
           </p>
+          <p className="mt-4 text-slate-500 text-[15px] max-w-2xl leading-relaxed font-semibold">
+            영어학원을 위한 AI 영어 문제 생성·시험지 제작 올인원, 스모트(SMOAT).
+          </p>
 
           <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="#apply"
+              href="/register"
               className="inline-flex items-center justify-center h-14 px-10 rounded-full bg-[#3B82F6] text-white font-bold shadow-[0_10px_20px_rgba(59,130,246,0.2)] hover:bg-[#2563EB] hover:scale-105 transition-all text-[16px]"
             >
               지금 바로 시작하기

@@ -9,10 +9,14 @@ import { PUBLIC_ROUTES } from "@/lib/seo/public-routes";
  * (Next 16: generateSitemaps 의 id 인자는 Promise<string> 으로 변경됨.)
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
+  // 기본 lastmod 는 빌드 시점 1회 고정. 아티클은 실제 updatedAt 을 쓴다 —
+  // 매 요청 new Date() 는 가짜 신선도 신호라 크롤러 신뢰를 깎는다.
+  const buildDate = new Date();
   return PUBLIC_ROUTES.map((route) => ({
     url: absoluteUrl(route.path),
-    lastModified,
+    lastModified: route.lastModified
+      ? new Date(`${route.lastModified}T12:00:00+09:00`)
+      : buildDate,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));

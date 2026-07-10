@@ -66,8 +66,8 @@ function AnnotatedPreview() {
     { text: "has become", kind: "grammar" as const },
     { text: " the ", kind: null },
     { text: "most valuable currency", kind: "examPoint" as const },
-    { text: ". Every notification, every scroll, every swipe", kind: "syntax" as const },
-    { text: " demands a fragment of our consciousness.", kind: null },
+    { text: ". Every notification, every scroll", kind: "syntax" as const },
+    { text: " demands our attention.", kind: null },
   ];
 
   return (
@@ -133,8 +133,17 @@ function FloatingBadge({
 
 function ProductDashboard() {
   return (
-    <div className="relative mx-auto w-full max-w-[1080px]">
+    <div className="yshin-hero-scale relative mx-auto w-full max-w-[1140px]">
       <style>{`
+        /* 짧은 데스크톱 뷰포트에서는 목업을 비율 축소해 히어로가 한 화면에 들어오게 한다
+           (높이를 줄이면 내부 UI 가 잘리므로 scale 로 통째 축소 — 내부 무손상). */
+        @media (min-width: 1024px) and (max-height: 919px) {
+          .yshin-hero-scale { transform: scale(0.9); transform-origin: top center; }
+        }
+        @media (min-width: 1024px) and (max-height: 869px) {
+          .yshin-hero-scale { transform: scale(0.8); transform-origin: top center; }
+        }
+
         @keyframes yshin-dashboard-float {
           0%, 100% { transform: translateY(0) rotateX(14deg) rotateY(-10deg) rotateZ(4deg); }
           50% { transform: translateY(-12px) rotateX(16deg) rotateY(-12deg) rotateZ(5deg); }
@@ -198,7 +207,7 @@ function ProductDashboard() {
         />
 
         <div className="relative overflow-hidden rounded-[28px] border-[7px] border-slate-950/90 bg-slate-950/90 shadow-[0_36px_110px_-40px_rgba(15,23,42,0.8)] backdrop-blur-sm sm:border-[10px] lg:rounded-[34px]">
-        <div className="relative h-[382px] overflow-hidden rounded-[20px] border border-white/20 bg-white sm:h-[430px] lg:h-[468px] lg:rounded-[24px]">
+        <div className="relative h-[382px] overflow-hidden rounded-[20px] border border-white/20 bg-white sm:h-[410px] lg:h-[430px] lg:rounded-[24px]">
           <div className="flex h-12 items-center justify-between border-b border-slate-100 bg-white px-4 sm:px-5">
             <div className="flex items-center gap-2">
               <span className="size-2.5 rounded-full bg-red-300" />
@@ -373,7 +382,9 @@ function ProductDashboard() {
 
 export function HeroScene() {
   return (
-    <section className="relative isolate w-full h-auto min-h-0 md:h-[100svh] md:min-h-[850px] overflow-hidden bg-slate-50 pt-20 sm:pt-24 lg:pt-28 pb-12 md:pb-0">
+    // 고정 100svh 를 쓰지 않는다 — 텍스트가 길어지면 목업이 잘리거나 화면 밖으로 밀린다.
+    // 대신 텍스트 블록을 수직으로 압축해 자연 높이가 1080p 한 화면(~940px)에 들어오게 설계.
+    <section className="relative isolate w-full overflow-hidden bg-slate-50 pt-20 sm:pt-[88px] pb-12 sm:pb-14">
       <div aria-hidden className="absolute inset-0 -z-10">
         <Image
           src="/landing/hero-sky-v2.png"
@@ -386,33 +397,39 @@ export function HeroScene() {
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.92)_0%,rgba(255,255,255,0.4)_40%,rgba(248,250,252,0.7)_70%,#f8fafc_100%)]" />
       </div>
 
-      <div className="relative z-10 mx-auto flex h-full max-w-[1220px] flex-col items-center justify-start px-5 sm:px-8">
-        <div className="mx-auto max-w-[900px] text-center mt-4 sm:mt-6">
-          <h1 className="break-normal text-[34px] font-black leading-[1.15] tracking-tight text-slate-950 drop-shadow-sm sm:break-keep sm:text-5xl lg:text-7xl">
-            학습지 생성부터 시험지까지,
+      <div className="relative z-10 mx-auto flex w-full max-w-[1480px] flex-col items-center px-5 sm:px-8">
+        <div className="mx-auto max-w-[1280px] break-keep text-center mt-2">
+          {/* H1: 컨테이너를 넉넉히(1280px) 잡아 각 행이 어절 중간에서 꺾이지 않고 정확히 2행으로 떨어지게 한다 */}
+          <h1 className="break-keep text-[32px] font-black leading-[1.15] tracking-tight text-slate-950 drop-shadow-sm [overflow-wrap:anywhere] sm:text-[42px] lg:text-[48px] xl:text-[52px]">
+            AI 영어 문제 생성부터 시험지 제작까지,
             <br className="hidden sm:block" />
-            <span className="text-blue-600">SMOAT가 한 번에 완성</span>합니다
+            <span className="text-blue-600">스모트(SMOAT)가 한 번에 완성</span>합니다
           </h1>
 
-          <div className="mx-auto mt-6 max-w-[880px] break-keep">
+          <div className="mx-auto mt-4 max-w-[1080px]">
             <div className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-4 py-2 text-[12px] font-black text-white shadow-[0_18px_38px_-22px_rgba(37,99,235,0.95)] sm:text-[13px]">
-              AI 영어 워크벤치
+              영어학원 AI · 영어 문제 생성 워크벤치
             </div>
-            <p className="mt-3 text-[22px] font-black leading-[1.18] text-slate-950 sm:text-[30px]">
+            <p className="mt-2.5 text-[20px] font-black leading-[1.3] text-slate-950 sm:text-[23px]">
               <span className="text-blue-600">실제 자료로 먼저 확인하세요</span>
-              <br className="hidden sm:block" />
+              <span className="hidden lg:inline"> — </span>
+              <br className="hidden sm:block lg:hidden" />
               학습지부터 시험지까지 바로 완성됩니다.
             </p>
-            <p className="mt-2 text-[15px] font-black leading-7 text-slate-700 sm:text-[18px]">
+            <p className="mt-2 text-[15px] font-black leading-7 text-slate-700 sm:text-[17px]">
               영어 학습지 생성, 출제 포인트, 시험지 생성까지{" "}
               <span className="rounded-lg bg-yellow-300 px-2 py-0.5 text-blue-700">전부 먼저 써보고 판단하세요!!!</span>
             </p>
+            <p className="mx-auto mt-2.5 max-w-[980px] text-[13px] font-semibold leading-6 text-slate-500 sm:text-[14px]">
+              스모트(SMOAT)는 영어 지문 분석, 내신·수능 19유형 영어 문제 생성,
+              Word 시험지 자동 제작까지 한 번에 끝내는 영어학원 AI 올인원입니다.
+            </p>
           </div>
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 relative z-20">
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3 relative z-20">
             <a
               href="/register"
-              className="inline-flex h-[52px] items-center justify-center gap-2 rounded-full bg-blue-600 px-8 text-[15px] font-black text-white shadow-[0_24px_54px_-22px_rgba(37,99,235,1)] ring-4 ring-blue-500/15 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-[0_28px_64px_-24px_rgba(37,99,235,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:h-[58px] sm:px-10 sm:text-[16px]"
+              className="inline-flex h-[52px] items-center justify-center gap-2 rounded-full bg-blue-600 px-8 text-[15px] font-black text-white shadow-[0_24px_54px_-22px_rgba(37,99,235,1)] ring-4 ring-blue-500/15 transition-all hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-[0_28px_64px_-24px_rgba(37,99,235,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 sm:h-[54px] sm:px-10 sm:text-[16px]"
             >
               SMOAT 시작하기
               <ArrowRight className="size-4" strokeWidth={2.5} />
@@ -431,8 +448,8 @@ export function HeroScene() {
           </div>
         </div>
 
-        <div 
-          className="mt-12 sm:mt-16 w-full flex-1 min-h-0 z-10 pointer-events-none"
+        <div
+          className="mt-7 sm:mt-8 w-full z-10 pointer-events-none"
           style={{ perspective: "1600px", perspectiveOrigin: "top" }}
         >
           <ProductDashboard />

@@ -25,7 +25,10 @@ export const metadata: Metadata = {
   description: SITE.defaultDescription,
   applicationName: "SMOAT",
   keywords: [...SITE.keywords],
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    types: { "application/rss+xml": "/rss.xml" },
+  },
   authors: [{ name: SITE.legalName }],
   creator: SITE.legalName,
   publisher: SITE.legalName,

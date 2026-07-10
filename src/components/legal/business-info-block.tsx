@@ -26,12 +26,16 @@ export function BusinessInfoBlock({
       )}
       aria-label="사업자 정보"
     >
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-[1480px]">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="text-[13px] font-black tracking-widest text-slate-900">
-              {BUSINESS_INFO.brandName}
+              {BUSINESS_INFO.brandName} 스모트
             </div>
+            <p className="mt-1 text-[12px] leading-5 text-slate-500">
+              스모트(SMOAT)는 영어 지문 분석, AI 영어 문제 생성, Word 시험지 제작을
+              한 번에 제공하는 영어학원 AI 올인원 서비스입니다.
+            </p>
             <p className="mt-1 text-[12px] leading-5 text-slate-500">
               결제, 환불, 서비스 이용 관련 문의는{" "}
               <a
@@ -52,25 +56,69 @@ export function BusinessInfoBlock({
           </div>
 
           {showPolicyLinks && (
-            <div className="flex flex-wrap gap-x-3 gap-y-1 text-[12px] font-semibold text-slate-500">
-              <Link
-                href="/credits/products"
-                className="transition hover:text-slate-900"
+            <div className="flex flex-col items-start gap-2 lg:items-end">
+              {/* 콘텐츠 허브 — 전 공개 페이지에서 콘텐츠 클러스터로 내부링크 전달 */}
+              <nav
+                aria-label="콘텐츠"
+                className="flex flex-wrap gap-x-3 gap-y-1 text-[12px] font-semibold text-slate-500"
               >
-                상품 정보
-              </Link>
-              <Link href="/terms" className="transition hover:text-slate-900">
-                이용약관
-              </Link>
-              <Link href="/privacy" className="transition hover:text-slate-900">
-                개인정보처리방침
-              </Link>
-              <Link
-                href="/refund-policy"
-                className="transition hover:text-slate-900"
-              >
-                환불 정책
-              </Link>
+                <Link href="/about" className="transition hover:text-slate-900">
+                  스모트 소개
+                </Link>
+                <Link href="/types" className="transition hover:text-slate-900">
+                  유형백과
+                </Link>
+                <Link
+                  href="/exam-prep"
+                  className="transition hover:text-slate-900"
+                >
+                  시험 대비
+                </Link>
+                <Link
+                  href="/textbooks"
+                  className="transition hover:text-slate-900"
+                >
+                  교과서별 가이드
+                </Link>
+                <Link href="/guides" className="transition hover:text-slate-900">
+                  제작 가이드
+                </Link>
+                <Link
+                  href="/resources"
+                  className="transition hover:text-slate-900"
+                >
+                  무료자료실
+                </Link>
+                <Link href="/faq" className="transition hover:text-slate-900">
+                  FAQ
+                </Link>
+                <Link
+                  href="/glossary"
+                  className="transition hover:text-slate-900"
+                >
+                  용어사전
+                </Link>
+              </nav>
+              <div className="flex flex-wrap gap-x-3 gap-y-1 text-[12px] font-semibold text-slate-500">
+                <Link
+                  href="/credits/products"
+                  className="transition hover:text-slate-900"
+                >
+                  상품 정보
+                </Link>
+                <Link href="/terms" className="transition hover:text-slate-900">
+                  이용약관
+                </Link>
+                <Link href="/privacy" className="transition hover:text-slate-900">
+                  개인정보처리방침
+                </Link>
+                <Link
+                  href="/refund-policy"
+                  className="transition hover:text-slate-900"
+                >
+                  환불 정책
+                </Link>
+              </div>
             </div>
           )}
         </div>

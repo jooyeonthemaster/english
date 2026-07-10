@@ -59,7 +59,7 @@ export function FolderScene() {
         <div className="mb-20 max-w-[900px] text-center mx-auto">
           <div className="text-[13px] uppercase tracking-[0.25em] text-[#3B82F6] font-bold mb-4 justify-center flex items-center gap-3">
             <span className="w-8 h-[2px] bg-[#3B82F6]" />
-            Step 4. 완벽한 파일 시스템
+            Step 4. 영어 문제은행 · 파일 관리
             <span className="w-8 h-[2px] bg-[#3B82F6]" />
           </div>
           <h2 className="font-extrabold text-gray-900 leading-[1.2] break-keep" style={{ fontSize: "clamp(28px, 4vw, 52px)", letterSpacing: "-0.02em", wordBreak: "keep-all" }}>

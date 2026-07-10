@@ -40,11 +40,12 @@ export const SITE = {
   legalName: "주식회사 네안데르",
   locale: "ko_KR",
 
-  /** 홈/기본 타이틀. layout 의 title.default 로 사용. */
+  /** 홈/기본 타이틀. layout 의 title.default 로 사용. 한글 브랜드(스모트) 병기 —
+   *  '스모트' 검색 매칭을 위해 가시 타이틀에 한글 토큰을 명시한다. */
   defaultTitle:
-    "SMOAT | AI 영어 문제 생성·내신 시험지 제작 학원 올인원",
-  /** 하위 페이지 타이틀 템플릿. "기능명 | SMOAT" */
-  titleTemplate: "%s | SMOAT",
+    "스모트(SMOAT) | AI 영어 문제 생성·내신 시험지 제작 영어학원 올인원",
+  /** 하위 페이지 타이틀 템플릿. "기능명 | 스모트 SMOAT" */
+  titleTemplate: "%s | 스모트 SMOAT",
 
   defaultDescription:
     "영어 지문 분석, 내신·수능 19유형 문제 생성, Word 시험지 자동 조판까지 끝내는 영어학원 AI 올인원 SMOAT(스모트)입니다.",
@@ -56,6 +57,9 @@ export const SITE = {
   keywords: [
     "영어 문제 생성",
     "AI 영어 문제 생성",
+    "영어 AI 문제",
+    "영어 AI 내신",
+    "영어 AI 변형문제",
     "영어 변형문제 생성",
     "영어 모의고사 변형문제",
     "영어 시험지 제작",
@@ -72,6 +76,7 @@ export const SITE = {
     "EBS 변형문제",
     "Word 영어 시험지",
     "스모트",
+    "스모트 영어",
     "SMOAT",
   ],
 
@@ -118,6 +123,9 @@ export const NOINDEX_PATH_PREFIXES = [
   "/student",
   "/parent",
   "/tutor",
+  "/exams", // 학생앱 응시 표면((student-app)/exams) — 인증 뒤 화면, 색인 무의미.
+  //          ⚠️ 공개 시험대비 허브는 /exam-prep 이며 프리픽스가 겹치지 않음("/exams"≠"/exam-prep").
+  "/assignments", // 학생앱 과제 표면((student-app)/assignments)
   "/admin", // 관리자(+ /admin/login)
   "/api", // API 라우트
   "/dev", // 개발용 페이지

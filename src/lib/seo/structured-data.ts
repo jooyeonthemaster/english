@@ -175,6 +175,32 @@ export function productSchema(opts: {
   } as const;
 }
 
+/**
+ * Article — 정보성 장문 콘텐츠(유형백과·시험대비·가이드) 엔터티.
+ * author/publisher 는 Organization 참조로 통일해 브랜드 엔터티 신호를 겹친다.
+ */
+export function articleSchema(opts: {
+  headline: string;
+  description: string;
+  url: string;
+  datePublished: string; // YYYY-MM-DD
+  dateModified?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: opts.headline,
+    description: opts.description,
+    mainEntityOfPage: { "@type": "WebPage", "@id": opts.url },
+    image: absoluteUrl(SITE.ogImage.path),
+    inLanguage: "ko-KR",
+    datePublished: opts.datePublished,
+    dateModified: opts.dateModified ?? opts.datePublished,
+    author: { "@id": ORG_ID },
+    publisher: { "@id": ORG_ID },
+  } as const;
+}
+
 export type FaqItem = { question: string; answer: string };
 
 /**

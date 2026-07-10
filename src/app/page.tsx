@@ -18,6 +18,10 @@ const FEATURE_LINKS: ReadonlyArray<{ href: string; label: string }> = [
   { href: "/features/exam-builder", label: "Word 시험지" },
   { href: "/features/passage-analysis", label: "지문 분석" },
   { href: "/features/academy-erp", label: "학원 올인원" },
+  { href: "/types", label: "유형백과" },
+  { href: "/guides", label: "제작 가이드" },
+  { href: "/resources", label: "무료자료실" },
+  { href: "/about", label: "스모트 소개" },
 ];
 
 export default function RootPage() {
@@ -40,12 +44,12 @@ export default function RootPage() {
       </div>
       <nav
         aria-label="기능"
-        className="mx-auto w-full max-w-[1100px] px-5 py-10 sm:px-8"
+        className="mx-auto w-full max-w-[1480px] px-5 py-10 sm:px-8"
       >
         <h2 className="text-[13px] font-black uppercase tracking-[0.18em] text-blue-600">
-          기능
+          AI 영어 문제 생성·시험지 제작 기능
         </h2>
-        <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-8">
           {FEATURE_LINKS.map((link) => (
             <li key={link.href}>
               <Link

@@ -46,7 +46,7 @@ export function ExamPaperScene() {
         <div className="max-w-[600px]">
           <div className="text-[13px] uppercase tracking-[0.25em] text-[#3B82F6] font-bold mb-4 flex items-center gap-3">
             <span className="w-8 h-[2px] bg-[#3B82F6]" />
-            Step 3. 1초만에 워드 시험지로
+            Step 3. 영어 시험지 제작 · Word 자동조판
           </div>
           <h2 className="font-extrabold text-gray-900 leading-[1.3]" style={{ fontSize: "clamp(24px, 3.5vw, 44px)", letterSpacing: "-0.02em", wordBreak: "keep-all" }}>
             웹에서 보고 끝? 생성된 모든 문제는 <span className="text-[#3B82F6] border-b-4 border-[#3B82F6] pb-1">실제 편집 가능한 Word 파일</span>로 떨어집니다.

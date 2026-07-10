@@ -44,46 +44,47 @@ export function LandingHeader() {
             scrolled ? "h-16 px-4 sm:px-6" : "h-20 px-4 sm:px-6 lg:px-8"
           }`}
         >
-          <Link href="/" className="group flex items-center gap-2.5">
+          <Link href="/" className="group flex shrink-0 items-center gap-2.5">
             <BrandIcon className="group-hover:bg-blue-600" />
             <span className="flex flex-col leading-none">
-              <span className="text-[18px] font-black tracking-normal text-slate-950 transition-colors group-hover:text-blue-600">
+              <span className="whitespace-nowrap text-[18px] font-black tracking-normal text-slate-950 transition-colors group-hover:text-blue-600">
                 SMOAT
               </span>
-              <span className="hidden text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 sm:block">
-                English AI Workbench
+              {/* lg~xl 사이(고배율 줌 데스크톱 포함)에서 nav·CTA 와 폭 경합 → 잘림. min-[400px]~lg 미만(모바일·태블릿)과 xl 이상에서만 노출. */}
+              <span className="hidden whitespace-nowrap text-[10px] font-black uppercase tracking-[0.16em] text-slate-400 min-[400px]:block lg:hidden xl:block">
+                스모트 · English AI Workbench
               </span>
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-1 rounded-full border border-white/80 bg-white/68 p-1 text-[12px] font-black text-slate-500 shadow-[0_18px_52px_-38px_rgba(15,23,42,0.7)] backdrop-blur-2xl md:flex">
+          <nav className="hidden items-center gap-1 rounded-full border border-white/80 bg-white/68 p-1 text-[12px] font-black text-slate-500 shadow-[0_18px_52px_-38px_rgba(15,23,42,0.7)] backdrop-blur-2xl lg:flex">
             {NAV_ITEMS.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="rounded-full px-4 py-2 transition-colors hover:bg-blue-50 hover:text-blue-700"
+                className="whitespace-nowrap rounded-full px-3 py-2 transition-colors hover:bg-blue-50 hover:text-blue-700 xl:px-3.5"
               >
                 {item.label}
               </a>
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-transparent px-3 text-[13px] font-black text-slate-700 transition hover:border-slate-200 hover:bg-white/80 hover:text-slate-950 sm:px-4"
+              className="inline-flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-transparent px-3 text-[13px] font-black text-slate-700 transition hover:border-slate-200 hover:bg-white/80 hover:text-slate-950 sm:px-4"
             >
-              <LogIn className="size-4" />
-              <span className="hidden sm:inline">로그인</span>
+              <LogIn className="size-4 shrink-0" />
+              <span className="hidden whitespace-nowrap sm:inline">로그인</span>
             </button>
             <Link
               href="/register"
-              className="inline-flex h-10 items-center gap-2 rounded-full bg-slate-950 px-4 text-[13px] font-black text-white shadow-[0_16px_40px_-24px_rgba(15,23,42,0.8)] transition hover:-translate-y-0.5 hover:bg-blue-600"
+              className="inline-flex h-10 items-center gap-2 whitespace-nowrap rounded-full bg-slate-950 px-4 text-[13px] font-black text-white shadow-[0_16px_40px_-24px_rgba(15,23,42,0.8)] transition hover:-translate-y-0.5 hover:bg-blue-600"
             >
-              <span className="hidden sm:inline">학원 가입 신청</span>
-              <span className="sm:hidden">신청</span>
-              <ArrowRight className="size-4" />
+              <span className="hidden whitespace-nowrap sm:inline">학원 가입 신청</span>
+              <span className="whitespace-nowrap sm:hidden">신청</span>
+              <ArrowRight className="size-4 shrink-0" />
             </Link>
           </div>
         </div>

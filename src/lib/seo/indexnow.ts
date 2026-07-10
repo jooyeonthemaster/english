@@ -14,7 +14,11 @@
 // 서버 전용 모듈(라우트 핸들러/스크립트에서만 호출). INDEXNOW_KEY 는 서버 env.
 import { SITE_URL } from "@/lib/seo/config";
 
-const INDEXNOW_KEY = (process.env.INDEXNOW_KEY || "").trim();
+// 하드코딩 폴백(config.ts 소유확인 코드와 동일 패턴): env 미설정이어도 prod 에서
+// IndexNow 가 즉시 동작하도록 기본 키를 둔다. public/<key>.txt 가 이 값과 반드시
+// 일치해야 검증을 통과한다(키 회전 시 env INDEXNOW_KEY 설정 + public 파일도 교체).
+const DEFAULT_INDEXNOW_KEY = "e39beb436962f916e5a50f6bd74c4c4a";
+const INDEXNOW_KEY = (process.env.INDEXNOW_KEY || DEFAULT_INDEXNOW_KEY).trim();
 
 const HOST = (() => {
   try {

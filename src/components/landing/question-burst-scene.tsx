@@ -195,7 +195,7 @@ export function QuestionBurstScene() {
         <div className="mb-20 max-w-[900px] text-left">
           <div className="text-[13px] uppercase tracking-[0.25em] text-[#60A5FA] font-bold mb-4 flex items-center gap-3">
             <span className="w-8 h-[2px] bg-[#60A5FA]" />
-            Step 2. 19유형 문제 생성
+            Step 2. AI 영어 문제 생성 · 내신 19유형
           </div>
           <h2
             className="font-extrabold text-gray-900 leading-[1.3]"

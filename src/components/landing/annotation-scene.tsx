@@ -95,7 +95,7 @@ export function AnnotationScene() {
         <div className="mb-20 max-w-[900px]">
           <div className="text-[13px] uppercase tracking-[0.25em] text-[#60A5FA] font-bold mb-4 flex items-center gap-3">
             <span className="w-8 h-[2px] bg-[#60A5FA]" />
-            Step 1. 딥다이브 분석
+            Step 1. AI 영어 지문 분석 · 딥다이브
           </div>
           <h2 className="font-extrabold text-gray-900 leading-[1.3]" style={{ fontSize: "clamp(24px, 3.5vw, 44px)", letterSpacing: "-0.02em", wordBreak: "keep-all" }}>
             AI가 아무거나 분석하는 것이 아닙니다. 선생님이 <span className="text-[#3B82F6] border-b-4 border-[#3B82F6] pb-1">필기한 포인트</span>를 바탕으로 분석합니다.
