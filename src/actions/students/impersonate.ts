@@ -23,6 +23,42 @@ export interface OpenStudentAppResult {
   error?: string;
 }
 
+export interface StudentAppAccessInfo {
+  academyCode: string;
+  studentName: string;
+}
+
+/**
+ * 학생 앱 로그인 링크 조립 재료 — 학원코드(Academy.code)와 학생 이름.
+ * 학생 코드는 상세 페이지가 이미 들고 있으므로 여기선 나머지만 준다.
+ */
+export async function getStudentAppAccessInfo(
+  studentId: string,
+): Promise<{ success: boolean; data?: StudentAppAccessInfo; error?: string }> {
+  try {
+    const staff = await requireStaffAuth();
+    const [academy, student] = await Promise.all([
+      prisma.academy.findUnique({
+        where: { id: staff.academyId },
+        select: { code: true },
+      }),
+      prisma.student.findFirst({
+        where: { id: studentId, academyId: staff.academyId },
+        select: { name: true },
+      }),
+    ]);
+    if (!academy?.code || !student) {
+      return { success: false, error: "학원 코드를 불러오지 못했습니다." };
+    }
+    return {
+      success: true,
+      data: { academyCode: academy.code, studentName: student.name },
+    };
+  } catch {
+    return { success: false, error: "학원 코드를 불러오지 못했습니다." };
+  }
+}
+
 /**
  * 해당 학생의 학생 앱 세션 쿠키를 이 브라우저에 발급한다.
  * 성공 후 클라이언트가 /g/home 을 새 탭으로 연다(쿠키는 도메인 공유).

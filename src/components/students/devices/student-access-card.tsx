@@ -5,10 +5,13 @@ import { useRouter } from "next/navigation";
 import { Info, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  getStudentAppAccessInfo,
   getStudentRegisteredDevices,
+  type StudentAppAccessInfo,
   type StudentDeviceItem,
 } from "@/actions/students";
 import { StudentCodeRow } from "./student-code-row";
+import { StudentAppShareRow } from "./student-app-share-row";
 import { DeviceSlotGrid } from "./device-slot-grid";
 import { RevokeDeviceDialog } from "./revoke-device-dialog";
 import { RegenerateCodeDialog } from "./regenerate-code-dialog";
@@ -29,6 +32,7 @@ export function StudentAccessCard({
   const router = useRouter();
   const [code, setCode] = useState(studentCode);
   const [devices, setDevices] = useState<StudentDeviceItem[] | null>(null);
+  const [access, setAccess] = useState<StudentAppAccessInfo | null>(null);
   const [revokeTarget, setRevokeTarget] = useState<StudentDeviceItem | null>(null);
   const [regenOpen, setRegenOpen] = useState(false);
 
@@ -42,6 +46,10 @@ export function StudentAccessCard({
 
   useEffect(() => {
     void load();
+    // 학원코드·학생명 — 로그인 링크 조립 재료(클라 로드로 props 배선 최소화)
+    getStudentAppAccessInfo(studentId)
+      .then((res) => setAccess(res.success ? (res.data ?? null) : null))
+      .catch(() => setAccess(null));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [studentId]);
 
@@ -55,9 +63,18 @@ export function StudentAccessCard({
       <CardContent className="space-y-6 pt-5">
         <StudentCodeRow
           code={code}
+          academyCode={access?.academyCode ?? null}
           isDirector={isDirector}
           onReissueClick={() => setRegenOpen(true)}
         />
+
+        {access ? (
+          <StudentAppShareRow
+            academyCode={access.academyCode}
+            studentCode={code}
+            studentName={access.studentName}
+          />
+        ) : null}
 
         {devices === null ? (
           <div className="flex items-center justify-center py-8 text-slate-400">

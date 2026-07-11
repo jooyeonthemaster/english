@@ -26,7 +26,8 @@ export {
   reissueStudentCode,
 } from "./mutations";
 export { getStudentStats } from "./stats";
-export { openStudentAppSession } from "./impersonate";
+export { openStudentAppSession, getStudentAppAccessInfo } from "./impersonate";
+export type { StudentAppAccessInfo } from "./impersonate";
 export { getSchools, getClasses } from "./lookups";
 export { exportStudentsRosterCsv } from "./export";
 export type { ExportStudentsCsvResult } from "./export";

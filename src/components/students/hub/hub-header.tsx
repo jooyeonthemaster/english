@@ -48,11 +48,7 @@ const STATUS_META: Record<string, { label: string; tone: PillTone }> = {
   WITHDRAWN: { label: "퇴원", tone: "rose" },
 };
 
-/** 학생 코드 마스킹 — 개요 탭 접속 카드(눈 토글 정본)와 동일 정책. 평문 상시 노출 금지 */
-function maskStudentCode(code: string): string {
-  if (code.length <= 4) return code;
-  return `${code.slice(0, 2)}··${code.slice(-2)}`;
-}
+// 학생 코드는 상시 평문 노출(26-07-12 유저 확정) — 마스킹 정책 폐기.
 
 /** 010-1234-5678 하이픈 포맷 — 11자리 아닐 땐 원문 유지 */
 function formatPhone(phone: string): string {
@@ -205,10 +201,10 @@ export function StudentHubHeader({
               <h1 className="text-xl font-bold text-slate-900">{student.name}</h1>
               <StatusPill tone={statusMeta.tone}>{statusMeta.label}</StatusPill>
               <span
-                className="rounded bg-slate-50 px-2 py-0.5 font-mono text-[11px] font-medium text-slate-500 ring-1 ring-slate-100"
-                title="전체 코드는 개요 탭의 학생 코드 카드에서 확인합니다"
+                className="select-all rounded bg-slate-50 px-2 py-0.5 font-mono text-[11px] font-medium text-slate-500 ring-1 ring-slate-100"
+                title="학생 앱 로그인 코드"
               >
-                {maskStudentCode(student.studentCode)}
+                {student.studentCode}
               </span>
             </div>
             <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] text-slate-500">

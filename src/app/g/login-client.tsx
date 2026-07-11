@@ -1,30 +1,41 @@
 "use client";
 
 // 어법 드릴 로그인 — 학원코드(4자) + 학생코드(6자). 원스크린, 키보드 안전.
+// ?ac/?sc 프리필(강사 공유 링크)이 오면 자동 로그인 1회 시도 — 실패하면
+// 채워진 폼으로 떨어져 학생이 바로 수정·재시도할 수 있다.
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BookOpenCheck, KeyRound, School } from "lucide-react";
 
-export function LoginClient() {
+export function LoginClient({
+  initialAcademyCode,
+  initialStudentCode,
+}: {
+  initialAcademyCode?: string;
+  initialStudentCode?: string;
+}) {
   const router = useRouter();
-  const [academyCode, setAcademyCode] = useState("");
-  const [studentCode, setStudentCode] = useState("");
+  const [academyCode, setAcademyCode] = useState(
+    (initialAcademyCode ?? "").toUpperCase(),
+  );
+  const [studentCode, setStudentCode] = useState(
+    (initialStudentCode ?? "").toUpperCase(),
+  );
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const autoTriedRef = useRef(false);
 
   const canSubmit = academyCode.trim().length >= 3 && studentCode.trim().length >= 4;
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!canSubmit || pending) return;
+  async function doLogin(ac: string, sc: string) {
     setPending(true);
     setError(null);
     try {
       const res = await fetch("/api/grammar-drill/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ academyCode, studentCode }),
+        body: JSON.stringify({ academyCode: ac, studentCode: sc }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
@@ -41,6 +52,24 @@ export function LoginClient() {
       setError("네트워크 오류입니다. 잠시 후 다시 시도해 주십시오.");
       setPending(false);
     }
+  }
+
+  // 공유 링크 자동 로그인 — 두 코드가 모두 프리필됐을 때 1회만
+  useEffect(() => {
+    if (autoTriedRef.current) return;
+    const ac = (initialAcademyCode ?? "").trim().toUpperCase();
+    const sc = (initialStudentCode ?? "").trim().toUpperCase();
+    if (ac.length >= 3 && sc.length >= 4) {
+      autoTriedRef.current = true;
+      void doLogin(ac, sc);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!canSubmit || pending) return;
+    await doLogin(academyCode, studentCode);
   }
 
   return (
